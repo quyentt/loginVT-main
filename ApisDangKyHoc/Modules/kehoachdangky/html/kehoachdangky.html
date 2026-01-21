@@ -1,0 +1,1315 @@
+﻿<style>
+    #zoneEdit table {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .btnSelectKeHoach {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .btn-white {
+        background-color: #fff;
+        -webkit-box-shadow: 1px 1px 1px 1px #ccc;
+        -moz-box-shadow: 1px 1px 1px 1px #ccc; /* Firefox 3.5 - 3.6 */
+        box-shadow: 1px 1px 1px 1px #ccc;
+    }
+
+    .aps-form .btn-primary {
+        background-color: #fff;
+        -webkit-box-shadow: 1px 1px 1px 1px #ccc;
+        -moz-box-shadow: 1px 1px 1px 1px #ccc; /* Firefox 3.5 - 3.6 */
+        box-shadow: 1px 1px 1px 1px #ccc;
+    }
+
+    /* The container */
+    .container {
+        display: block;
+        position: relative;
+        padding-left: 35px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        font-size: 22px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+        /* Hide the browser's default radio button */
+        .container input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+    /* Create a custom radio button */
+    .checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 10px;
+        width: 10px;
+        background-color: #007f00;
+        border-radius: 50%;
+    }
+
+    /* On mouse-over, add a grey background color */
+    .container:hover input ~ .checkmark {
+        background-color: #ccc;
+    }
+
+    /* When the radio button is checked, add a blue background */
+    .container input:checked ~ .checkmark {
+        background-color: #2196F3;
+    }
+
+    /* Create the indicator (the dot/circle - hidden when not checked) */
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+    }
+
+    /* Show the indicator (dot/circle) when checked */
+    .container input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    /* Style the indicator (dot/circle) */
+    .container .checkmark:after {
+        left: 9px;
+        top: 5px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 3px 3px 0;
+        -webkit-transform: rotate(45deg);
+        -ms-transform: rotate(45deg);
+        transform: rotate(45deg);
+    }
+
+    .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"], .radio input[type="radio"], .radio-inline input[type="radio"] {
+        margin-left: 0px;
+    }
+</style>
+<!-- Main content -->
+<section class="content aps-dangkyhoc">
+    <div class="row aps-kehoach-dangky">
+        <!-- /.left-content -->
+        <div class="zone-content" id="zonebatdau">
+            <div class="box box-solid box-search pb10">
+                <div class="box-header with-border d-none">
+                    <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+                </div>
+                <div class="box-body pd0">
+                    <!-- Bộ tìm kiếm -->
+                    <div class="col-sm-3 item-search">
+                        <select id="dropSearch_ThoiGian" class="select-opt"></select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <a class="btn btn-default btn-search btnSearch_KHDK">
+                            <i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-solid pd20 pt10 aps-ds-kehoach-dangky">
+                <div class="box-header pd0">
+                    <h3 class="box-title color-blue">
+                        <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký
+                        <span class="pull-right badge bg-light-blue ml-10">
+                            <span id="lblKHDK"></span>
+                        </span>
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <a id="btnAddnew" class="btn btn-success"><i class="fa fa-plus"></i> Thêm mới</a>
+                    </div>
+                </div>
+                <div class="box-body pd0">
+                    <div class="aps-table-select">
+                        <table id="tblKHDK" class="table table-hover table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="td-fixed td-center">Stt</th>
+                                    <th rowspan="2" class="td-fixed td-center">Xem</th>
+                                    <th rowspan="2" class="td-center">Mã kế hoạch</th>
+                                    <th rowspan="2" class="td-center">Tên kế hoạch</th>
+                                    <th colspan="3" class="td-center">Thời gian bắt đầu</th>
+                                    <th colspan="3" class="td-center">Thời gian kết thúc</th>
+                                    <th rowspan="2" class="td-center">Chế độ đăng ký</th>
+                                    <th rowspan="2" class="td-center">Mô hình đăng ký</th>
+                                    <th colspan="4" class="td-center">Tình trạng đăng ký</th>
+                                    <th rowspan="2" class="td-fixed td-center">Phân quyền cán bộ</th>
+                                    <th rowspan="2" class="td-fixed td-center">Xem</th>
+                                </tr>
+                                <tr>
+                                    <th class="td-center">Ngày</th>
+                                    <th class="td-center">Giờ</th>
+                                    <th class="td-center">Phút</th>
+                                    <th class="td-center">Ngày</th>
+                                    <th class="td-center">Giờ</th>
+                                    <th class="td-center">Phút</th>
+                                    <th class="td-center">Tổng số SV</th>
+                                    <th class="td-center">Số SV đã đăng ký</th>
+                                    <th class="td-center">Số SV không đăng ký</th>
+                                    <th class="td-center">Tỷ lệ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- load from js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 2. Add/Edit CoCauToChuc -->
+    <div class="zone-content aps-add-new" id="zoneEdit" style="display: none">
+        <div class="box box-solid form-container">
+            <div class="box-header with-border aps-box-header ">
+                <h3 class="box-title">
+                    <span class="myModalLabel"><i class="fa-light fa-plus"></i> Thêm mới - </span> Kế hoạch đăng ký
+                </h3>
+                <div class="pull-right title-note pull-right-absolute mr-20">
+                    <a class="btn btn-default btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body pd0">
+                <div class="col-sm-12 box-view aps-add-new pd20">
+                    <div class="box box-solid pd0">
+                        <div class="row aps-form">
+                            <!--Thong tin co ban-->
+                            <div class="col-sm-9 pr20">
+                                <div class="row aps-form">
+                                    <!--row 1-->
+                                    <div class="row aps-lable-name">
+                                        <p class="group-group-title-name mb-0 border-0">
+                                            <span class="badge bg-blue" style="color:#3380db !important;">Thông tin cơ bản</span>
+                                        </p>
+                                    </div>
+                                    <!--row 2-->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">Tên kế hoạch</div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input id="txtTenKeHoach" class="form-control"
+                                                   placeholder="Nhập tên kế hoạch" />
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable justify-content-end pr15">
+                                            Mã kế hoạch<span class="title-colon"></span>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input id="txtMaKeHoach" class="form-control"
+                                                   placeholder="Nhập mã kế hoạch" />
+                                        </div>
+                                    </div>
+                                    <!--row 3-->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            Mô tả<span class="title-colon"></span>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <!--                                            <input id="txtMoTa" class="form-control"/>-->
+                                            <textarea class="form-control min-h-68" id="txtMoTa"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Mo hinh dang ky-->
+                            <div class="col-sm-3 pl20">
+                                <div class="row aps-form">
+                                    <!--row 1-->
+                                    <div class="row aps-lable-name">
+                                        <p class="group-group-title-name mb-0 border-0">
+                                            <span class="badge bg-blue" style="color:#198754 !important;">Cho phép hiện thông báo khi chưa đến hạn</span>
+                                        </p>
+                                    </div>
+                                    <div class="radio" id="divDenHan">
+                                        <div class="col-sm-12">
+                                            <input id="1" type="radio" name="DenHanDangKy" value="1">
+                                            <label for="1"> Đồng ý</label>
+                                        </div>
+                                        <div class="col-sm-12 mt-10">
+                                            <input id="0" type="radio" name="DenHanDangKy" value="0">
+                                            <label for="0"> Không đồng ý</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--   <div class="border-bottom aps-form"><div class="clear"></div></div>-->
+                            <!--Thoi gian dang ky-->
+                            <div class="col-sm-12 mt-20">
+                                <!--row 1-->
+                                <div class="row aps-lable-name">
+                                    <p class="group-group-title-name mb-0 border-0">
+                                        <span class="badge bg-blue"
+                                              style="color:#FF0000 !important;">Thời gian đăng ký</span>
+                                    </p>
+                                </div>
+                                <div class="clear"></div>
+
+                                <!--row 2-->
+                                <!--                                <div class="row aps-form-item">-->
+                                <!--                                    <div class="col-sm-1 td-left ">-->
+                                <!--                                        Thời gian<span class="title-colon"></span>-->
+                                <!--                                    </div>-->
+                                <!--                                </div>-->
+                                <!--row 2-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-1 aps-form-lable">
+                                        Năm học<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <select id="dropThoiGian_Nam" class="select-opt text-left">
+                                            <option id="" value="">Chọn năm</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-1 aps-form-lable justify-content-end pr15">
+                                        Học kỳ<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-2 aps-form-input">
+                                        <select id="dropThoiGian_Ky" class="select-opt">
+                                            <option id="" value="">Chọn kỳ</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-1 aps-form-lable justify-content-end pr15">
+                                        Đợt học<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-2 aps-form-input">
+                                        <select id="dropThoiGian_Dot" class="select-opt">
+                                            <option id="" value="">Chọn đợt</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-sm-1 aps-form-lable justify-content-end pr15">
+                                        Phân loại đợt<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-2 aps-form-input">
+                                        <select id="dropPhanLoaiDot" class="select-opt"></select>
+                                    </div>
+
+                                </div>
+
+                                <!--row 3-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-1 aps-form-lable">
+                                        Ngày bắt đầu<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-2 aps-form-input">
+                                        <input type="text" id="txtBD_Ngay" placeholder="dd/mm/yyyy"
+                                               class="form-control input-datepicker" />
+                                    </div>
+                                    <div class="col-sm-3 ml-10 aps-form-input d-flex gap10">
+                                        <input type="text" id="txtBD_Gio" placeholder="Giờ" class="form-control" />
+                                        <input type="text" id="txtBD_Phut" placeholder="Phút" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-1 aps-form-lable  justify-content-end pr15">
+                                        Ngày kết thúc<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-2 aps-form-input">
+                                        <input type="text" id="txtKT_Ngay" placeholder="dd/mm/yyyy"
+                                               class="form-control input-datepicker" />
+                                    </div>
+                                    <div class="col-sm-3 aps-form-input  d-flex gap10 ml-10">
+                                        <input type="text" id="txtKT_Gio" placeholder="Giờ" class="form-control" />
+
+                                        <input type="text" id="txtKT_Phut" placeholder="Phút" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="clear"></div>
+                                <div class="col-sm-1 aps-form-lable">
+                                    Số giây chờ<span class="title-colon"></span>
+                                </div>
+                                <div class="col-sm-2 aps-form-input">
+                                    <input type="text" id="txtSoGiayCho" class="form-control" />
+                                </div>
+                                <div class="col-sm-8 aps-form-lable pl15">
+                                    <span style="font-style: italic;color:#666">Ghi chú: Để áp dụng cho phương án xử lý tắc nghẽn khi cần</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Mo hinh dang ky-->
+                    <div class="col-sm-3 mt-20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#ff0081 !important;">Mô hình đăng ký</span>
+                                </p>
+                            </div>
+                            <div class="radio" id="divMoHinh">
+                                <div class="col-sm-12">
+                                    <input id="MHDK_1" type="radio" name="MoHinhDangKy" value="HangDoi">
+                                    <label for="MHDK_1"> Hàng đợi</label>
+                                </div>
+                                <div class="col-sm-12 mt-10">
+                                    <input id="MHDK_2" type="radio" name="MoHinhDangKy" value="DangKyTrucTiep">
+                                    <label for="MHDK_2"> Đăng ký trực tiếp</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--trang thai sinh vien-->
+                    <div class="col-sm-9 mt-20 pl30">
+                        <div class="row aps-form aps-state-student">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue"
+                                          style="color:#e300ff !important;">Trạng thái sinh viên</span>
+                                </p>
+                            </div>
+                            <div class="checkbox_TTSV check-list" id="DSTrangThaiSV">
+                                <div class="col-sm-6">
+                                    <input id="TTSV_1" type="checkbox" name="check_TTSV" value="ToanBoSV">
+                                    <label for="TTSV_1">Toàn bộ sinh viên</label>
+                                </div>
+                                <div class="col-sm-6">
+                                    <input id="TTSV_2" type="checkbox" name="check_TTSV" value="DangHoc">
+                                    <label for="TTSV_2">Đang học</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Kieu dang ky-->
+                    <div class="col-sm-6 mt-20 pr20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#31d2f2 !important;">Kiểu đăng ký</span>
+                                </p>
+                            </div>
+                            <div class="checkbox check-list" id="divKieuDangKy">
+                                <div class="col-sm-12">
+                                    <input id="KieuDangky_1" type="checkbox" name="check_KieuDangKy" value="HocDi">
+                                    <label for="KieuDangky_1">Dành cho học đi</label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <input id="KieuDangky_2" type="checkbox" name="check_KieuDangKy" value="HocLai">
+                                    <label for="KieuDangky_2">Dành cho học lại</label>
+                                </div>
+                                <div class="col-sm-12">
+                                    <input id="KieuDangky_3" type="checkbox" name="check_KieuDangKy"
+                                           value="HocNangDiem">
+                                    <label for="KieuDangky_3">Dành cho học nâng điểm</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Che do dang ky-->
+                    <div class="col-sm-6 mt-20 pL20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#3380db !important;">Chế độ đăng ký</span>
+                                </p>
+                            </div>
+                            <div class="radio checkradio" id="divCheDoDangKy">
+                                <input id="CDDK_1" type="radio" name="CheDoDangKy" value="1">
+                                <label for="CDDK_1"> Khóa không cho đăng ký</label>
+                                <br>
+                                <input id="CDDK_2" type="radio" name="CheDoDangKy" value="2">
+                                <label for="CDDK_2"> Chỉ mở cho cán bộ đăng ký </label>
+                                <br>
+                                <input id="CDDK_3" type="radio" name="CheDoDangKy" value="3">
+                                <label for="CDDK_3"> Chỉ mở cho sinh viên đăng ký</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Quy dinh ve giang vien-->
+                    <div class="col-sm-12 mt-20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue"
+                                          style="color:#198754 !important;">Quy định về giảng viên</span>
+                                </p>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-6">
+                                    Hiển thị thông tin giảng viên trên lịch giảng
+                                </div>
+                                <div class="radio" id="divHienThiThongTinGiangVien">
+                                    <div class="col-sm-1">
+                                        <input id="QDGV_1" type="radio" name="QDGV" value="1">
+                                        <label for="QDGV_1">Có</label>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input id="QDGV_0" type="radio" name="QDGV" value="0">
+                                        <label for="QDGV_0">Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Kiem tra tinh trang tai chinh-->
+                    <div class="col-sm-6 mt-20 pr20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#FF0000 !important;">Kiểm tra tình trạng tài chính</span>
+                                </p>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-8">
+                                    Có kiểm tra tình trạng tài chính của sinh viên?
+                                </div>
+                                <div class="radio" id="divKiemTraTinhTrangTaiChinh">
+                                    <div class="col-sm-2">
+                                        <input id="KTTC_1" type="radio" name="KiemTraTaiChinh" value="1">
+                                        <label for="KTTC_1">Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="KTTC_0" type="radio" name="KiemTraTaiChinh" value="0">
+                                        <label for="KTTC_0">Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="row td-left">
+                                <div class="col-sm-8">
+                                    Hiện thị đơn giá học phí?
+                                </div>
+                                <div class="radio" id="divHienThiDonGia">
+                                    <div class="col-sm-2">
+                                        <input id="HienThiDonGia_1" type="radio" name="HienThiDonGia" value="1">
+                                        <label for="HienThiDonGia_1">Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="HienThiDonGia_0" type="radio" name="HienThiDonGia" value="0">
+                                        <label for="HienThiDonGia_0">Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="row td-left">
+                                <div class="col-sm-8">
+                                    Tính phí tự động khi xác nhận?
+                                </div>
+                                <div class="radio" id="divTuDongTinhPhi">
+                                    <div class="col-sm-2">
+                                        <input id="TuDongTinhPhi_1" type="radio" name="TuDongTinhPhi" value="1">
+                                        <label for="TuDongTinhPhi_1">Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="TuDongTinhPhi_0" type="radio" name="TuDongTinhPhi" value="0">
+                                        <label for="TuDongTinhPhi_0">Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="row td-left">
+                                <div class="col-sm-8">
+                                    Tự động tính tiền?
+                                </div>
+                                <div class="radio" id="divTuDongTinhTien">
+                                    <div class="col-sm-2">
+                                        <input id="TuDongTinhTien_1" type="radio" name="TuDongTinhTien" value="1">
+                                        <label for="TuDongTinhTien_1">Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="TuDongTinhTien_0" type="radio" name="TuDongTinhTien" value="0">
+                                        <label for="TuDongTinhTien_0">Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="col-sm-12 radio " id="divQuyDinhKiemTraTaiChinh"></div>
+                            <div class="clear"></div>
+                            <div class="checkbox mt-10">
+                                <div class="col-sm-12">
+                                    <input id="chkHienThiDonGia" type="checkbox" name="chkHienThiDonGia" value="">
+                                    <label for="chkHienThiDonGia">Dành cho học đi</label>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-12 line-38 d-flex">
+                                    Số nợ tối đa cho phép : <span class="title-colon"></span> <input type="text"
+                                                                                                     id="txtNoToiDa"
+                                                                                                     class="form-control ml-10"
+                                                                                                     style="width: 150px" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Quy dinh ve huy/rut hoc phan-->
+                    <div class="col-sm-6 mt-20 pL20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#d54b07 !important;">Quy định về hủy/rút học phần</span>
+                                </p>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-8">
+                                    Có cho sinh viên được hủy học phần sau khi đã đăng ký và trừ tiền?
+                                </div>
+                                <div class="radio" id="divQDHuyHocPhan">
+                                    <div class="col-sm-2">
+                                        <input id="QDHuyHocPhan_1" type="radio" name="QDRHP" value="1">
+                                        <label for="QDHuyHocPhan_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="QDHuyHocPhan_0" type="radio" name="QDRHP" value="0">
+                                        <label for="QDHuyHocPhan_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-8">
+                                    Có cho cố vấn đăng ký hộ cho sinh viên?
+                                </div>
+                                <div class="radio checkradio" id="divQDCoVanDangKyChoSV">
+                                    <div class="col-sm-2">
+                                        <input id="CoVanDangKy_1" type="radio" name="CVDK" value="1">
+                                        <label for="CoVanDangKy_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="CoVanDangKy_0" type="radio" name="CVDK" value="0">
+                                        <label for="CoVanDangKy_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="row td-left mt-10">
+                                <div class="col-sm-12 line-38 d-flex gap15">
+                                    Số ngày được rút học phần: <span class="title-colon"></span>
+                                    <input type="text" id="txtSoNgayRutHP" class="form-control" style="width: 168px" />
+                                </div>
+                            </div>
+                            <div class="row td-left mt-10">
+                                <div class="col-sm-12 line-38 d-flex gap15">
+                                    Ngày bắt đầu tính mốc rút học phần: <span class="title-colon"></span>
+                                    <input type="text" id="txtNgayBDRutHP" style="width: 168px"
+                                           class="form-control input-datepicker"
+                                           placeholder="dd/mm/yyyy" />
+                                </div>
+                            </div>
+                            <div class="col-sm-8"></div>
+                        </div>
+                    </div>
+                    <!--Quy dinh so tin chi toi da/toi thieu-->
+                    <div class="col-sm-12 mt-20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#ff0081 !important;">Quy định về số tín chỉ tối đa/ tối thiểu</span>
+                                </p>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row td-left">
+                                    <div class="col-sm-3">
+                                        Có kiểm tra số tín chỉ tối đa?
+                                    </div>
+                                    <div class="radio" id="divKTTCTD">
+                                        <div class="col-sm-1">
+                                            <input id="TCTD_1" type="radio" name="QDTCTD" value="1">
+                                            <label for="TCTD_1"> Có</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input id="TCTD_0" type="radio" name="QDTCTD" value="0">
+                                            <label for="TCTD_0"> Không</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 line-38">
+                                        Số tối đa N1<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="txtSoTCToiDa" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-1 line-38 pl20">
+                                        Số tối đa N2<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-1 ">
+                                        <input type="text" id="txtSoTCToiDaN2" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="row td-left">
+                                    <div class="col-sm-3">
+                                        Có kiểm tra số tín chỉ tối thiểu?
+                                    </div>
+                                    <div class="radio" id="divKTTCTT">
+                                        <div class="col-sm-1">
+                                            <input id="TCTT_1" type="radio" name="QDTCTT" value="1">
+                                            <label for="TCTT_1"> Có</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input id="TCTT_0" type="radio" name="QDTCTT" value="0">
+                                            <label for="TCTT_0"> Không</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-1 line-38">
+                                        Số tối thiểu N1<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="txtSoTCToiThieu" class="form-control" />
+                                    </div>
+                                    <div class="col-sm-1 line-38 pl20">
+                                        Số tối thiểu N2<span class="title-colon"></span>
+                                    </div>
+                                    <div class="col-sm-1">
+                                        <input type="text" id="txtSoTCToiThieuN2" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left mt-10">
+                                <b> Quy định về cách tính số tín chỉ tối đa</b>
+                            </div>
+                            <div class="col-sm-12 radio mb-10 checkradio mt-10 pt10" id="divCachTinhTinChiToiDa">
+                                <input id="QuyDinhTinChi_1" type="radio" name="QDCTTC" value="1">
+                                <label for="QuyDinhTinChi_1"> Xét riêng theo số tín chỉ N1 và N2</label>
+                                <br>
+                                <input id="QuyDinhTinChi_2" type="radio" name="QDCTTC" value="2">
+                                <label for="QuyDinhTinChi_2">
+                                    Số tín chỉ của N1 không được vượt của N1, số tín chỉ
+                                    của N2 có thể vượt của N2. Số tín chỉ chung không được vượt tối đa của N1 và
+                                    N2
+                                </label>
+                                <br>
+                                <input id="QuyDinhTinChi_3" type="radio" name="QDCTTC" value="3">
+                                <label for="QuyDinhTinChi_3">
+                                    Số tín chỉ của N1 có thể vượt của N1, số tín chỉ của
+                                    N2 không được vượt của N2. Tổng số tín chỉ N1 và N2 không được vượt quá tổng của
+                                    N1 và N2
+                                </label>
+                                <br>
+                                <input id="QuyDinhTinChi_4" type="radio" name="QDCTTC" value="4">
+                                <label for="QuyDinhTinChi_4">
+                                    Số tín chỉ N1 không vượt tối đa N1. N2 có thể vượt tối
+                                    đa N2 nhưng không được vượt số tối đa chung của N1 và N2 cộng lại.
+                                </label>
+                                <br>
+                                <input id="QuyDinhTinChi_5" type="radio" name="QDCTTC" value="5">
+                                <label for="QuyDinhTinChi_5">
+                                    Cho phép đăng ký mở rộng cả N1 và N2 nhưng tổng số tín
+                                    chỉ đăng ký không vượt số tối đa N1 và N2
+                                </label>
+                            </div>
+
+                            <div class="row td-left">
+                                <b>Quy định tín chỉ tối đa - phạm vi</b>
+                            </div>
+                            <div class="col-sm-4 radio checkradio" id="divCachTinhTinChiToiDaPV"></div>
+                        </div>
+                    </div>
+                    <!--Kiem tra trung lich-->
+                    <div class="col-sm-6 mt-20 pr20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue"
+                                          style="color:#3380db !important;">Kiểm tra về trùng lịch</span>
+                                </p>
+                            </div>
+                            <div class="row" id="divKiemTraTrungLich">
+                                <div class="col-sm-12">
+                                    <div class="col-sm-8">
+                                        Kiểm tra trùng lịch khi đăng ký học?
+                                    </div>
+                                    <div class="radio checkradio">
+                                        <div class="col-sm-2">
+                                            <input id="KTTrungLich_1" type="radio" name="KTTLich" value="1">
+                                            <label for="KTTrungLich_1"> Có</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input id="KTTrungLich_0" type="radio" name="KTTLich" value="0">
+                                            <label for="KTTrungLich_0"> Không</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="col-sm-8">
+                                        Kiểm tra lịch trùng với những lớp không có lịch chi tiết(tức là chỉ có giai
+                                        đoạn học)?
+                                    </div>
+                                    <div class="radio checkradio" id="divKiemTraTrungLop">
+                                        <div class="col-sm-2">
+                                            <input id="KTTrungLop_1" type="radio" name="KTTLop" value="1">
+                                            <label for="KTTrungLop_1"> Có</label>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input id="KTTrungLop_0" type="radio" name="KTTLop" value="0">
+                                            <label for="KTTrungLop_0"> Không</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-10">
+                                <div class="row td-left bold pb10">
+                                    Phạm vi kiểm tra trùng lịch
+                                </div>
+                                <div class="radio checkradio mt-10" id="divKiemTranTrungThoiGian">
+                                    <input id="PhamViKTTL_1" type="radio" name="PVKTTL" value="1">
+                                    <label for="PhamViKTTL_1"> Mặc định là kiểm tra trong kế hoạch hiện hành</label>
+                                    <br>
+                                    <input id="PhamViKTTL_2" type="radio" name="PVKTTL" value="2">
+                                    <label for="PhamViKTTL_2">
+                                        Kiểm tra trong cả học kỳ (bao gồm tất cả các đợt
+                                        trong kỳ)
+                                    </label>
+                                    <br>
+                                    <input id="PhamViKTTL_3" type="radio" name="PVKTTL" value="3">
+                                    <label for="PhamViKTTL_3"> Kiểm tra toàn bộ dữ liệu</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Quy dinh ve to hop dang ky-->
+                    <div class="col-sm-6 mt-20 pl20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue"
+                                          style="color:#198754 !important;">Quy định về tổ hợp đăng ký</span>
+                                </p>
+                            </div>
+                            <div class="radio checkradio" id="divDKTheoToHopQuyDinh">
+                                <input id="QDToHopDK_1" type="radio" name="QDTHDK" value="1">
+                                <label for="QDToHopDK_1">
+                                    Sinh viên đăng ký theo tổ hợp lớp học phần quy
+                                    định
+                                </label>
+                                <div class="clear"></div>
+                                <input id="QDToHopDK_2" type="radio" name="QDTHDK" value="2">
+                                <label for="QDToHopDK_2">
+                                    Sinh viên có thể lựa chọn bất kỳ lớp học phần nào miễn đảm
+                                    bảo đủ tổ hợp theo quy định
+                                </label>
+                                <div class="clear"></div>
+                                <input id="QDToHopDK_3" type="radio" name="QDTHDK" value="3">
+                                <label for="QDToHopDK_3"> Sinh viên không bị bắt buộc chọn đủ tổ hợp</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Quy dinh dang ky mo rong-->
+                    <div class="col-sm-12 mt-20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#FF0000 !important;">Quy định về đăng ký mở rộng</span>
+                                </p>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4 line-38">
+                                    Tỷ lệ phần trăm đăng ký vượt so với số dự kiến của lớp:
+                                </div>
+                                <div class="col-sm-3">
+                                    <input type="text" id="txtTyLeVuot" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4">
+                                    Cho đăng ký mở rộng ngoài chương trình?
+                                </div>
+                                <div class="radio" id="divDKMR">
+                                    <div class="col-sm-1">
+                                        <input id="DKMR_1" type="radio" name="DKMR" value="1">
+                                        <label for="DKMR_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="DKMR_0" type="radio" name="DKMR" value="0">
+                                        <label for="DKMR_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4">
+                                    Cho phép đăng ký học phần tương đương?
+                                </div>
+                                <div class="radio" id="divDKHPTD">
+                                    <div class="col-sm-1">
+                                        <input id="DKHPTD_1" type="radio" name="DKHPTD" value="1">
+                                        <label for="DKHPTD_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="DKHPTD_0" type="radio" name="DKHPTD" value="0">
+                                        <label for="DKHPTD_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4">
+                                    Không cho phép đổi lớp học phần?
+                                </div>
+                                <div class="radio" id="divDoiHocPhan">
+                                    <div class="col-sm-1">
+                                        <input id="DoiHocPhan_1" type="radio" name="DHP" value="1">
+                                        <label for="DoiHocPhan_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="DoiHocPhan_0" type="radio" name="DHP" value="0">
+                                        <label for="DoiHocPhan_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4">
+                                    Chỉ cho phép đăng ký học phần 1 lần trong kỳ
+                                </div>
+                                <div class="radio" id="divDKMotLanTrongKy">
+                                    <div class="col-sm-1">
+                                        <input id="DKMotLanTrongKy_1" type="radio" name="DKML" value="1">
+                                        <label for="DKMotLanTrongKy_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="DKMotLanTrongKy_0" type="radio" name="DKML" value="0">
+                                        <label for="DKMotLanTrongKy_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4">
+                                    Kiểm tra điều kiện tiên quyết học phần?
+                                </div>
+                                <div class="radio" id="divKRDKTQ">
+                                    <div class="col-sm-1">
+                                        <input id="KRDKTQ_1" type="radio" name="KTDKTQ" value="1">
+                                        <label for="KRDKTQ_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="KRDKTQ_0" type="radio" name="KTDKTQ" value="0">
+                                        <label for="KRDKTQ_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-4">
+                                    Kiểm tra định hướng học tập?
+                                </div>
+                                <div class="radio" id="divHDHT">
+                                    <div class="col-sm-1">
+                                        <input id="HDHT_1" type="radio" name="HDHT" value="1">
+                                        <label for="HDHT_1"> Có</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input id="HDHT_0" type="radio" name="HDHT" value="0">
+                                        <label for="HDHT_0"> Không</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-12">
+                                    <input type="checkbox" value="" id="chkTinhHocPhan">
+                                    <label for="chkTinhHocPhan">
+                                        Có áp dụng tĩnh sẵn dữ liệu học phần
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-12">
+                                    <input type="checkbox" value="" id="chkTinhTaiChinh">
+                                    <label for="chkTinhTaiChinh">
+                                        Có áp dụng tính sẵn dữ liệu tài chính
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="row td-left">
+                                <div class="col-sm-12">
+                                    <input type="checkbox" value="" id="chkTinhLopHocPhan">
+                                    <label for="chkTinhLopHocPhan">
+                                        Có áp dụng tính sẵn dữ liệu lớp học phần
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="row td-left">
+                                <div class="col-sm-4 line-38">
+                                    Ngày bắt đầu cho phép sv xác nhận đăng ký
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="txtNgayBatDauXN" class="form-control" />
+                                </div>
+                                <div class="col-sm-4 line-38">
+                                    Ngày kết thúc cho phép sv xác nhận đăng ký
+                                </div>
+                                <div class="col-sm-2">
+                                    <input type="text" id="txtNgayKetThucXN" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--Quy dinh ve dieu kien dang ky nang diem-->
+                    <div class="col-sm-4 mt-20">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#0a6139 !important;">Tùy chọn ưu tiên kết quả ký nguyên vọng</span>
+                                </p>
+                            </div>
+                            <div class="col-sm-12">
+                                <select id="dropMucUuTienNguyenVong" class="select-opt">
+                                    <option id="" value="">Chọn mức ưu tiên nguyện vọng</option>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+                            <!--row 1-->
+                            <div class="row aps-lable-name mt-20">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue">Chọn những nguyện vọng cần ưu tiên cho kế hoạch</span>
+                                </p>
+                            </div>
+                            <div class="checkbox" id="divNguyenVongUuTien">
+                            </div>
+                        </div>
+                    </div>
+                    <!--Quy dinh ve dieu kien dang ky nang diem-->
+                    <div class="col-sm-3 mt-20 pl30">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#3380db !important;">Quy định về điều kiện đăng ký nâng điểm</span>
+                                </p>
+                            </div>
+                            <div class="col-sm-12">
+                                <select id="dropMucDiem" class="select-opt">
+                                    <option id="" value="">Chọn mức điểm</option>
+                                </select>
+                            </div>
+                            <div class=" radio " id="divQuyDinhNangDiem"></div>
+                        </div>
+                    </div>
+
+                    <!--Quy dinh ve dieu kien dang ky nang diem-->
+                    <div class="col-sm-5 mt-20 pl30">
+                        <div class="row aps-form">
+                            <!--row 1-->
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name mb-0 border-0">
+                                    <span class="badge bg-blue" style="color:#e300ff !important;">Tùy chọn có kiểm tra vượt số tín quy định của khối tự chọn không:</span>
+                                </p>
+                            </div>
+                            <div class="col-sm-12">
+                                <select id="dropTuyChonKTVuot" class="select-opt"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a class="submit btn btn-danger btnOpenDelete" id="btnDelete_KeHoach" style="display: none">
+                        <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
+                    </a>
+                    <a class="btn btn-default btnCloseToggle" href="#" title="Close">
+                        <i class="fa fa-times-circle"></i> Đóng
+                    </a>
+                    <a id="btnPhanCongCT" class="btn btn-warning">
+                        <i class="fal fa-poll-people"></i> Phân công theo
+                        nhóm kiểm soát(mức chương trình)
+                    </a>
+                    <a id="btnPhanCongKH" class="btn btn-danger">
+                        <i class="fal fa-user-chart"></i> Phân công theo
+                        nhóm kiểm soát(mức khóa học)
+                    </a>
+                    <a id="btnPhanCong" class="btn btn-success">
+                        <i class="fal fa-users-class"></i> Phân công theo
+                        nhóm kiểm soát
+                    </a>
+                    <a id="btnChuyenDuLieu" class="btn btn-secondary">
+                        <i class="fa-light fa-database"></i> Chuyển dữ
+                        liệu từ TKB sang ĐKH
+                    </a>
+                    <a id="btnSave" class="btn btn-primary btnSave"><i class="fal fa-save"></i> Lưu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- 2. Add/Edit CoCauToChuc -->
+    <div class="zone-content" id="zonePhanQuyen" style="display: none">
+        <div class="box box-solid form-container pd0">
+            <div class="box-header with-border bg-blue">
+                <h3 class="box-title">
+                    <span class="myModalLabel1"><i class="fa fa-plus"></i> </span> Kế hoạch đăng ký
+                    <span id="lblKeHoach"></span>
+                </h3>
+
+                <div class="pull-right title-note pull-right-absolute">
+                    <a class="btn btn-none-white btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="row box-view aps-add-new pd20">
+                    <div class="row aps-form">
+                        <!--row 1-->
+                        <div class="row">
+                            <p class="group-group-title-name mb-0 border-0">
+                                <span class="badge bg-blue" style="color:#3380db !important;">Phân quyền cán bộ</span>
+                        </div>
+                        <div class="row aps-form-table">
+                            <table id="tblInput_TTS_ThanhVien" class="table table-hover table-bordered mb-10">
+                                <thead>
+                                    <tr>
+                                        <td class="td-fixed td-center">#</td>
+                                        <td class="td-center">Người dùng</td>
+                                        <td class="td-center">Không cần kiểm tra số tín chỉ tối đa</td>
+                                        <td class="td-center">Không cần kiểm tra số tín chỉ tối thiểu</td>
+                                        <td class="td-center">Không cần kiểm tra học phần</td>
+                                        <td class="td-center">Không cần kiểm tra sĩ số tối đa</td>
+                                        <td class="td-center td-fixed">Xóa</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!--<tr><td colspan="5">Hãy chọn nhân sự</td></tr>-->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="pull-right">
+                                <a class="btn btn-outline-primary btnSearchTTS_NhanSu" id="">
+                                    <i class="fa fa-plus color-active"></i> Thêm thành viên
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a id="btnSavePhanQuyen" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">
+                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span>
+                    <span class="lang" key="">Danh sách đăng ký</span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <table id="tblQuanSoLop" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã số sinh viên</span></th>
+                            <th class="td-center"><span class="lang" key="">Họ đệm</span></th>
+                            <th class="td-center"><span class="lang" key="">Tên</span></th>
+                            <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
+                            <th class="td-center"><span class="lang" key="">Mã lớp</span></th>
+                            <th class="td-center"><span class="lang" key="">Tên lớp</span></th>
+                            <th class="td-center"><span class="lang" key="">Lớp quản lý</span></th>
+                            <th class="td-center"><span class="lang" key="">Kiểu học</span></th>
+                            <th class="td-center"><span class="lang" key="">Số tín chỉ</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i>
+                    <span class="lang" key="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModal_khongdangky" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">
+                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span>
+                    <span class="lang" key="">Danh sách không đăng ký</span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <table id="tblKhongDangKy" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã số sinh viên</span></th>
+                            <th class="td-center"><span class="lang" key="">Họ đệm</span></th>
+                            <th class="td-center"><span class="lang" key="">Tên</span></th>
+                            <th class="td-center"><span class="lang" key="">Trạng thái</span></th>
+                            <th class="td-center"><span class="lang" key="">Nợ phí</span></th>
+                            <th class="td-center"><span class="lang" key="">Chương trình</span></th>
+                            <th class="td-center"><span class="lang" key="">Khóa học</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i>
+                    <span class="lang" key="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalPCNhomKiemSoat" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang" key="">Phân công theo nhóm kiểm soát</span> </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="col-sm-6 item-search">
+                    <select id="dropSearch_HeDaoTao_PCNKS" class="select-opt" style="width:100% !important">
+                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                    </select>
+                </div>
+                <div class="clear"></div>
+                <table id="tblPCNhomKiemSoat" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã khóa</span></th>
+                            <th class="td-center"><span class="lang" key="">Tên khóa</span></th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" class="chkSystemSelectAll">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_PCNhomKiemSoat"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalPCChuongTrinh" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 990px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang" key="">Phân công theo nhóm kiểm soát(mức chương trình)</span> </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="col-sm-6 item-search">
+                    <select id="dropSearch_HeDaoTao_PCChuongTrinh" class="select-opt" style="width:100% !important">
+                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                    </select>
+                </div>
+                <div class="col-sm-6 item-search">
+                    <select id="dropSearch_KhoaDaoTao_PCChuongTrinh" class="select-opt" style="width:100% !important">
+                        <option id="" value=""> --Chọn khóa đào tạo-- </option>
+                    </select>
+                </div>
+                <div class="clear"></div>
+                <table id="tblPCChuongTrinh" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã chương trình</span></th>
+                            <th class="td-center"><span class="lang" key="">Tên chương trình</span></th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" class="chkSystemSelectAll">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_PCChuongTrinh"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalPCKhoaHoc" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang" key="">Phân công theo nhóm kiểm soát(mức khóa học)</span> </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="col-sm-6 item-search">
+                    <select id="dropSearch_HeDaoTao_PCKhoaHoc" class="select-opt" style="width:100% !important">
+                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                    </select>
+                </div>
+                <div class="clear"></div>
+                <table id="tblPCKhoaHoc" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã khóa</span></th>
+                            <th class="td-center"><span class="lang" key="">Tên khóa</span></th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" class="chkSystemSelectAll">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_PCKhoaHoc"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <!-- load from js -->
+</div>
+<!-- page script -->
+<script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.1"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['KeHoachDangKy'] = new KeHoachDangKy();
+    $(document).ready(function () {
+        main_doc.KeHoachDangKy.init();
+    });
+</script>

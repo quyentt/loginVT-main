@@ -1,0 +1,214 @@
+﻿<style>
+    .lbTinhTrang {
+        float: right;
+        font-weight: bold;
+        border: 4px solid;
+        opacity: 0.5;
+        color: red;
+        -ms-transform: rotate(10deg); /* IE 9 */
+        -webkit-transform: rotate(10deg); /* Safari 3-8 */
+        transform: rotate(10deg);
+    }
+
+    #txtTenSanPham {
+        width: 550px;
+        overflow: hidden !important;
+        display: block;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: left;
+        color: #4e8d42;
+    }
+
+    .btn-large {
+        width: 85px;
+        text-align: center;
+        background-color: #fff;
+        border-bottom: 1px solid #f1f1f1;
+        float: left;
+        margin-left: 5px;
+    }
+
+    .btnxacnhan_small {
+        width: 35px;
+        -webkit-box-shadow: 1px 1px 1px 1px #ccc;
+        -moz-box-shadow: 1px 1px 1px 1px #ccc; /* Firefox 3.5 - 3.6 */
+        box-shadow: 1px 1px 1px 1px #ccc;
+    }
+</style>
+<section class="content">
+
+    <div class="row">
+        <!-- /.left-content -->
+        <!-- /.right-content -->
+        <div class="col-lg-12">
+            <!-- box Notify_VBSC -->
+            <div class="box box-solid zone-bus">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="bss-item">
+
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_Nam" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KeHoachNam" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KeHoachChiTiet" class="select-opt"></select>
+                            </div>
+                            <!--<div class="col-sm-3 item-search">
+                                <select id="dropSearch_ThoiGianDaoTao" class="select-opt"></select>
+                            </div>-->
+                            <div class="col-sm-3 item-search">
+                                <select id="dropKhoaQuanLy_CB" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropHeDaoTao_CB" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropKhoaDaoTao_CB" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropChuongTrinh_CB" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a id="btnSearch" class="btn btn-default"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <div class="dropdown" id="zonebtnBaoCao_ML">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-list-alt"></i> Danh sách
+                            <div class="item-search" style="width: 220px">
+                                <select id="dropSearch_PhanLoaiLop" class="select-opt"></select>
+                            </div>
+                        </h3>
+
+                        <div class="pull-right">
+                            <a class="btn btn-primary" id="btnMoLop" href="#"><i class="fa fa-paper-plane"></i> Thực hiện tính lớp mở theo quy mô</a>
+                            <a class="btn btn-primary" id="btnLayQuyMo" href="#"><i class="fa fa-paper-plane"></i> Lấy quy mô từ CSDL Học phần</a>
+                            <a class="btn btn-primary" id="btnLuuQuyMo" href="#"><i class="fa fa-plus"></i> Lưu quy mô</a>
+                            <a class="btn btn-primary" id="btnXacNhan" href="#"><i class="fa fa-paper-plane"></i> Xác nhận</a>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 scroll-table-x">
+                                    <table id="tblHocPhan" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Thông tin học phần</th>
+                                            </tr>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã</th>
+                                                <th class="td-center">Tên</th>
+                                                <th class="td-center">Số tín chỉ</th>
+                                                <th class="td-center">Đơn vị</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title modal-name" id="myModalLabel"><span style="float: left"><i class="fa fa-wrench"></i> Xác nhận: </span><span id="txtHoSoDuTuyen"></span></h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 2. Minh chung -->
+                <div class="row zone-box">
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Nội dung</span>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="txtNoiDungXacNhanSanPham" class="form-control form-border-bottom" />
+                        </div>
+                    </div>
+                </div>
+                <!-- 2. Minh chung -->
+                <div class="row zone-box">
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Chọn loại xác nhận</span>
+                        </p>
+
+                        <div class="item-search" style="width: 220px">
+                            <select id="dropSearch_LoaiXacNhan" class="select-opt"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Chọn xác nhận</span>
+                        </p>
+                    </div>
+                    <div class="row" id="zoneBtnXacNhan">
+
+                    </div>
+                </div>
+                <div class="row zone-box">
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Lịch sử</span>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <table id="tblModal_XacNhan" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-left">Tình trạng</th>
+                                    <th class="td-left">Nội dung</th>
+                                    <th class="td-left">Người xác nhận</th>
+                                    <th class="td-center" style="width: 100px">Ngày</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel"><i class="fa fa-times-circle"></i> Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page script -->
+<script src="modules/hoatdong/script/molop.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['MoLop'] = new MoLop();
+    $(document).ready(function () {
+        main_doc.MoLop.init();
+    });
+</script>

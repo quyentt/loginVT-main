@@ -1,0 +1,290 @@
+﻿<!-- Main content -->
+<section class="content aps-cms">
+    <div class="row box-solid box-shadow aps-function aps-chucnang">
+        <div class="col-sm-3 aps-box-l aps-function-l">
+            <div class="box box-solid box-search pd15">
+                <div class="box-body pd0">
+                    <!-- Bộ tìm kiếm -->
+                    <div class="bs-item pd0">
+                        <select class="select-opt" id="dropSearch_UngDung_CN">
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-solid aps-list-chucnang pd5 mt-10">
+                <div class="box-header pl15 pr15">
+                    <h3 class="box-title  pt0 mt-0" style="margin-top: 0 !important;" title="Danh sách chức năng">
+                        <i class="fa-light fa-gear-complex"></i>Danh sách chức năng
+                    </h3>
+                    <span class="pull-right badge bg-light-blue mt-25">
+                        <span id="lblChucNang_Tong_CN"></span>
+                    </span>
+                </div>
+                <div class="box-body">
+                    <div id="treesjs_chucnang_cn">
+                        <!--Content of treejs-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 aps-box-r aps-function-r pd0">
+            <!-- Zone detail ChucNang -->
+            <div class="box box-solid zone-bus-cn mt-20" id="zone_detail_cn">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="margin-top: 10px !important;"><i class="fa fa-info-circle"></i> Thông tin chi tiết</h3>
+                    <div class="pull-right">
+                        <a id="btnDownloadFile" class="btn btn-info userAzz" style="display: none"><i class="fa fa-download"></i><span class="lang" key=""> Tải file</span></a>
+                        <a class="submit btn btn-danger" id="btnDelete_CN"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                        <a class="submit btn btn-warning btnEdit" id="btnEdit_CN"><i class="fa fa-pencil"></i> <span class="lang" key="">Sửa</span></a>
+                        <a class="submit btn btn-primary btnAddnew btnAdd"><i class="fa fa-plus color-active"></i> <span class="lang" key="">Thêm</span></a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-sm-12 box-view aps-function-detail">
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Tên</div>
+                            <div class="col-sm-4 aps-form-input aps-form-input">
+                                <span id="lblChucNang_Ten" class="color-active"></span>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Mã</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span id="lblChucNang_Ma"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Icon</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span><i id="lblChucNang_Icon"></i></span>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Thứ tự</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span id="lblChucNang_ThuTuHienThi"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">
+                                <div class="title-name">
+                                    Link hiển thị<span class="title-colon">:</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span id="lblChucNang_DuongDanHienThi"></span>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Chức năng cha</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span id="lblChucNang_Cha"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Link vật lý</div>
+                            <div class="col-sm-10">
+                                <span id="lblChucNang_DuongDanThuMuc"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Link hướng dẫn</div>
+                            <div class="col-sm-10">
+                                <span id="lblChucNang_DuongDanHuongDan"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Ứng dụng</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span id="lblChucNang_UngDung"></span>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Phạm vi</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <span id="lblChucNang_PhamViTruyCap"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Mô tả</div>
+                            <div class="col-sm-10">
+                                <span id="lblChucNang_MoTa"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-2 aps-form-lable">Nội dung ẩn</div>
+                            <div class="col-sm-10">
+                                <span id="lblChucNang_NoiDungAn"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <p>
+                        <i class="fa fa-angle-right"></i> Người dùng thuộc chức năng (<span id="lblNguoiDungChucNang_Tong_CN2"></span>)
+                        <!--<a href="#" id="btnDelete_NguoiDungChucNang_CN2" title="Xóa chức năng khỏi tất cả người dùng"> Xóa</a>-->
+                    </p>
+                    <table class="table table-hover" id="tblNguoiDungChucNang_CN2">
+                        <thead>
+                            <tr>
+                                <th class="td-center td-fixed">Stt</th>
+                                <th class="td-left"><span class="lang" key="">Mã</span></th>
+                                <th class="td-left"><span class="lang" key="">Tên</span></th>
+                                <th class="td-left"><span class="lang" key="">Email</span></th>
+                                <!--<th class="td-left"><span class="lang" key="">Nhóm</span></th>
+                    <th class="td-center td-fixed"><span class="lang" key="">Sửa</span></th>
+                    <th class="td-center td-fixed">
+                        <input type="checkbox" name="chkSelectAll_DMTB" id='chkSelectAll_DMTB' />
+                    </th>-->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- load from js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Zone add/edit ChucNang -->
+            <div class="box box-solid form-container zone-bus-cn aps-function-add" id="zone_input_cn"
+                 style="padding: 0 !important;">
+                <div class="box-header with-border bg-blue" style="border-radius: 0 !important;">
+                    <h3 class="box-title pt15 pl20"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span>Chức năng</h3>
+                    <div class="pull-right">
+                        <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="box-body pd0 aps-add-new">
+                    <div class="col-sm-12 box-view aps-form pd20">
+                        <div class="row d-none">
+                            <p class="group-title-name">
+                                - Thông tin chức năng
+                            </p>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable aps-form-lable">Tên</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <input type="text" id="txtChucNang_Ten" class="form-control" placeholder="Nhập tên chức năng" />
+                            </div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Mã</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <input type="text" id="txtChucNang_Ma" class="form-control" placeholder="Nhập mã chức năng" />
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Icon</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <input type="text" id="txtChucNang_Icon" class="form-control" placeholder="Nhập icon hiển thị" />
+                            </div>
+                            <div class="col-sm-2 aps-form-lable text-right pr10">Thứ tự</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <input type="text" id="txtChucNang_ThuTuHienThi" class="form-control" placeholder="Nhập thứ tự hiển thị" />
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Link vật lý</div>
+                            <div class="col-sm-10">
+                                <input type="text" id="txtChucNang_DuongDanThuMuc" class="form-control" placeholder="Modules/..." />
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Link hướng dẫn</div>
+                            <div class="col-sm-10">
+                                <input type="text" id="txtChucNang_DuongDanHuongDan" class="form-control" placeholder="https://youtu.be/w_VWSrabSbE" />
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Link hiển thị</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <input type="text" id="txtChucNang_DuongDanHienThi" class="form-control" placeholder="#tenchucnang" />
+                            </div>
+                            <div class="col-sm-2 aps-form-lable  text-right pr10">Chức năng cha</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <select id="dropChucNang_Cha" class="select-opt"></select>
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Ứng dụng</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <select id="dropChucNang_UngDung" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable text-right pr10">Phạm vị</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <select id="dropChucNang_PhamViTruyCap" class="select-opt">
+                                    <option value="">-- Chọn phạm vi truy cập --</option>
+                                    <option value="Internet">Internet</option>
+                                    <option value="Intranet">Intranet</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Mô tả</div>
+                            <div class="col-sm-10 aps-form-input">
+                                <input type="text" id="txtChucNang_MoTa" class="form-control" placeholder="Nhập nội dung mô tả" />
+                            </div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-form-lable">Nội dung ẩn</div>
+                            <div class="col-sm-10 aps-form-input">
+                                <textarea type="text" id="txtChucNang_NoiDungAn" class="form-control min-h-168" placeholder="Nhập id hoặc class của nội dung bạn muốn ẩn, cách nhau bởi khoảng trắng. Vd: #hotennguoidung .thongtinkhach .thongtinan\n {'me':'.btnSearchDT_SV','father':'#txtDTSV_NamThucHien,.btnSearchDTSV_SinhVien','parent':'#txtDTSV_TenDetai,#txtDTSV_NamThucHien'}"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="pull-right">
+                        <a class="btn btn-default btnClose"><span class="lang" key="lb_dong"><i class="fa fa-times-circle"></i> Đóng</span></a>
+                        <a class="submit btn btn-primary ml-5" id="btnSave_CN"><i class="fal fa-save"></i> <span class="lang" key="lb_luu">Lưu</span></a>
+                    </div>
+                </div>
+            </div>
+            <!-- Zone delete ChucNang -->
+            <div class="box box-solid form-container zone-bus-cn" id="zone_delete_cn">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-trash"></i> Vui lòng xóa các nội dung liên quan đến chức năng nếu có</h3>
+                    <div class="pull-right">
+                        <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="col-sm-4 aps-form-input">
+                        <div class="box box-solid">
+                            <div class="box-body">
+                                <p>
+                                    <i class="fa fa-angle-right"></i> Vai trò thuộc chức năng (<span id="lblVaiTroNguoiDung_Tong_CN"></span>)
+                                    <a href="#" id="btnDelete_VaiTroChucNang_CN" title="Xóa chức năng khỏi tất cả vai trò"> Xóa</a>
+                                </p>
+                                <div id="treejsVaiTroChucNang_CN">
+                                    <!-- load from js -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="box box-solid">
+                            <div class="box-body">
+                                <p>
+                                    <i class="fa fa-angle-right"></i> Người dùng thuộc chức năng (<span id="lblNguoiDungChucNang_Tong_CN"></span>)
+                                    <a href="#" id="btnDelete_NguoiDungChucNang_CN" title="Xóa chức năng khỏi tất cả người dùng"> Xóa</a>
+                                </p>
+                                <table class="table table-hover" id="tblNguoiDungChucNang_CN">
+                                    <tbody>
+                                        <!-- load from js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="notify_cn" class="color-danger"></div>
+                </div>
+                <div class="box-footer">
+                    <!--<div class="pull-right">
+                        <a class="btn btn-default btnClose"><span class="lang" key="lb_dong"><i class="fa fa-times-circle"></i> Đóng</span></a>
+                        <a class="submit btn btn-primary" id="btnSave_CN"><i class="fa fa-toggle-on"></i> <span class="lang" key="lb_luu">Lưu</span></a>
+                    </div>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- page script -->
+<script src="modules/chucnang/script/chucnang.js?v=1.0.0.1"></script>
+<script type="text/javascript">
+    //init
+    var main_doc = {};
+    main_doc['ChucNang'] = new ChucNang();
+    $(document).ready(function () {
+        main_doc.ChucNang.init();
+    });
+</script>

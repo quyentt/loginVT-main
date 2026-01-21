@@ -1,0 +1,464 @@
+﻿<style>
+    /**/
+    .btn-sms {
+        width: 90px;
+        height: 90px;
+        background: #4e8d42;
+        border-radius: 50%;
+        text-align: center;
+        padding-top: 8px;
+        color: white !important;
+        cursor: pointer;
+    }
+
+        .btn-sms:hover {
+            background: #447a3a;
+            color: white;
+        }
+
+    .btn-sms-fixed {
+        position: fixed;
+        bottom: 50px;
+        right: 20px;
+    }
+
+    .title-sms {
+        font-weight: normal;
+        text-decoration: underline;
+        font-style: italic;
+        margin-bottom: 7px;
+    }
+
+    .nav-tabs > .pull-right > .btn-default {
+        background: #f1f1f1 !important;
+        padding-top: 3px !important;
+        padding-bottom: 3px !important;
+    }
+
+    .ul-li-btn:hover {
+        background: #eae9e9 !important;
+    }
+
+    .zone-print {
+        background: #fff;
+    }
+
+    #zoneList_PhieuDaThu {
+        width: 100%;
+        border: 1px solid #f1f1f1;
+        box-shadow: 0px 0px 10px 2px grey;
+    }
+
+    .lbsymbolHD {
+        font-size: 13px;
+        font-family: 'Times New Roman', Times, serif;
+        cursor: pointer;
+    }
+
+    .activeLien {
+        background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
+    }
+</style>
+<!-- Main content -->
+<section class="content">
+    <div class="row bg-default beforeActive" id="zoneTimKiemSinhVien">
+        <div class="col-sm-3">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="search">
+                        <select id="dropKeHoachNhapHoc_ThuTien" class="select-opt">
+                            <!-- load from taichinh.js -->
+                        </select>
+                        <div class="radio-box">
+                            <p>
+                                Điều kiện:
+                                <input type="radio" class="rdThuTien" name="rdThuTien" value="1" checked="checked"> Đã nhập
+                                <input type="radio" class="rdThuTien" name="rdThuTien" value="0"> Chưa nhập
+                                <input type="radio" class="rdThuTien" name="rdThuTien" value="-1"> Toàn bộ
+                            </p>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="search-result">
+                            <div class="clear"></div>
+                            <div class="col-sm-3 item-search">
+                                <div class="dropdown" id="zonebtnTT">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <div class="dropdown" id="zonebtnTT_Import">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="input-group">
+                            <input id="txtTimKiem_ThuTien" class="form-control" type="text" placeholder="Nhập từ khóa tìm kiếm: tên, số báo danh..." style="border-right:none">
+                            <span class="input-group-addon" style="padding:5px 10px 5px 0px; border-left: none">
+                                <a id="btnDel_Keyword_ThuTien" class="color-default opacity-5 poiter" title="Xóa nội dung tìm kiếm"><i class="fa fa-times"></i></a>
+                            </span>
+                            <span id="btnSearch_NguoiHoc_ThuTien" class="input-group-addon bg-default poiter">
+                                <a class="btn-circle"><i class="fa fa-search"></i></a>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="search-result">
+                        <table id="tblThuTien" class="table">
+                            <tbody>
+                                <tr class="tr-pointer detail-hs">
+                                    <td class="td-left td-img"><img src="" class="table-img" /></td>
+                                    <td class="td-middle">
+                                        <!-- load from taichinh.js -->
+                                    </td>
+                                    <td class="td-middle"><span class="detail_tc"><a href="#">Chọn</a></span></td>
+                                </tr>
+                                <!-- load from taichinh.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div id="zoneDetail_TTTS">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-map"></i> Hồ sơ</h3>
+                        <div class="pull-right">
+                            <span class="italic label label-warning">Tổng số đã thu tiền: <span class="bold" id="lblTongDaThuTien_ThuTien"></span></span>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <div class="col-sm-7">
+                            <blockquote>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="td-left opacity-7">Họ tên</td>
+                                            <td class="td-left text-green">: <span id="lblHoTen_ThuTien"></span></td>
+                                            <td class="td-right opacity-7"> , Mã số SV</td>
+                                            <td class="td-left">: <span class="italic" id="lblMaSoSV_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7"> Ngày sinh</td>
+                                            <td class="td-left">: <span class="italic" id="lblNgaySinh_ThuTien">_/_/_</span></td>
+                                            <td class="td-right opacity-7"> , Điện thoại</td>
+                                            <td class="td-left">: <span class="italic" id="lblSoDienThoai_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Quê quán</td>
+                                            <td class="td-left" colspan="3">: <span class="italic" id="lblQueQuan_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Ngành nhập học</td>
+                                            <td class="td-left" colspan="3">: <span class="italic" id="lblNganhNhapHoc_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Lớp</td>
+                                            <td class="td-left" colspan="3">: <span class="italic" id="lblNganhLop_ThuTien"></span></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="td-left opacity-7">CMND/CCCD</td>
+                                            <td class="td-left" colspan="3">: <span class="italic" id="lblCMT"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Mã tiếp nhận</td>
+                                            <td class="td-left" colspan="3">: <span class="italic" id="lblMaTiepNHap" style="color: green"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </blockquote>
+                        </div>
+                        <div class="col-sm-5">
+                            <blockquote>
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="td-left opacity-7">SBD</td>
+                                            <td class="td-left">: <span class="text-green" id="lblSoBaoDanh_ThuTien"> </span> </td>
+                                            <td class="td-left opacity-7"> , Tổng điểm</td>
+                                            <td class="td-left">: <span class="italic" id="lblTongDiem_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Đối tượng</td>
+                                            <td colspan="3" class="td-left">: <span class="italic" id="lblDoiTuong_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">% Miễn/Giảm</td>
+                                            <td class="td-left">: <span class="italic" id="lblPhanTramMienGiam_ThuTien"></span></td>
+                                            <td class="td-left opacity-7"> , Khu vực</td>
+                                            <td class="td-left">: <span class="italic" id="lblKhuVuc_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Ngành trúng tuyển</td>
+                                            <td colspan="3" class="td-left">: <span class="italic" id="lblNganhTrungTuyen_ThuTien"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="td-left opacity-7">Thời gian</td>
+                                            <td colspan="3" class="td-left">: <span class="italic" style="color: green" id="lblThoiGianTiepNhap"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </blockquote>
+                        </div>
+                    </div>
+                    <div class="box-header with-border">
+                        <div class="pull-right">
+                            <a class="btn btn-primary" id="btnCheckInNhapHoc"><i class="fa fa-paper-plane"></i> <span class="lang" key="">Tiếp nhận</span></a>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <div class="box box-solid" style="display: none">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="float: left"><i class="fa fa-money"></i> Tài chính</h3>
+                        <!--<div class="col-sm-3 item-search">
+                            <select id="dropHinhThucThu" class="select-opt"></select>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            <input id="txtNgayThu" class="form-control input-datepicker" placeholder="Ngày thu" />
+                        </div>-->
+                        <div class="pull-right" id="zoneSign_DaThuTien">
+
+                        </div>
+                    </div>
+                    <!-- zoneInput_ThuTien -->
+                    <div class="box-body zone-bus" id="zoneInput_ThuTien">
+                        <div class="zoneList-PhieuThu">
+                            <div class="pull-left">
+                                <span class="italic">- Số phiếu đã thu:</span> <span id="listPhieuThu_ThuTien"></span>
+                            </div>
+                            <div class="pull-right">
+                                <span class="italic">- Số phiếu đã hủy:</span> <span id="listPhieuThu_Huy_ThuTien"></span>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <table id="tblKhoanNhapHoc_ThuTien" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-center td-fixed" rowspan="2">#</th>
+                                    <th class="td-left" rowspan="2">Tên phí</th>
+                                    <th class="td-center" colspan="4">Số tiền</th>
+                                    <th class="td-center" rowspan="2">Đơn vị</th>
+                                </tr>
+                                <tr>
+                                    <th class="td-right">Định mức</th>
+                                    <th class="td-right">Thực thu</th>
+                                    <th class="td-right">Đã thu</th>
+                                    <th class="td-right">Cần nộp</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!--Load from taichinh.js-->
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="td-right italic" colspan="2">Tổng</th>
+                                    <th class="td-right italic"><span id="lblTongDinhMuc_Chung_ThuTien"></span></th>
+                                    <th class="td-right italic"><span id="lblTongDinhMuc_ThuTien"></span></th>
+                                    <th class="td-right italic"><span id="lblTongDaThuThu_ThuTien"></span></th>
+                                    <th class="td-right italic"><span id="lblTongCanThu_ThuTien"></span></th>
+                                    <th class="td-center italic">vnđ</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="box-header with-border">
+                        <h3 class="box-title" style="float: left"><i class="fa fa-money"></i> Tài chính</h3>
+                        <div class="col-sm-3 item-search">
+                            <select id="dropHinhThucThu" class="select-opt"></select>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            <input id="txtNgayThu" class="form-control input-datepicker" placeholder="Ngày thu" />
+                        </div>
+                        <!--<div class="pull-right" id="zoneSign_DaThuTien">
+
+                        </div>-->
+                    </div>
+                    <!-- zoneEdit_PhieuPhu -->
+                    <div class="box-body zone-bus" id="zoneEdit_PhieuDaThu">
+                        <div class="form-container">
+                            <div class="pull-left">
+                                <h3 class="color-active fc-title"><i class="fa fa-pencil"></i> Sửa số phiếu thu: <span class="color-warning" id="lblEdit_PhieuDaThu"></span></h3>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-default btnClose" href="#"><i class="fa fa-times"></i></a>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="col-sm-12">
+                                <table id="tblEdit_PhieuDaThu" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th class="td-center td-fixed">#</th>
+                                            <th class="td-left">Tên phí</th>
+                                            <th class="td-right">Số tiền đã thu</th>
+                                            <th class="td-right">Số tiền điều chỉnh</th>
+                                            <th class="td-right">Đơn vị</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- /.from ruttien.js -->
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th class="td-center td-fixed"></th>
+                                            <th class="td-center">Hình thức</th>
+                                            <th class="td-right"><select id="dropHinhThucThu_Edit" class="select-opt"></select></th>
+                                            <th class="td-right">Ngày tạo</th>
+                                            <th class="td-right"><input id="txtNgayTao" class="form-control input-datepicker" /></th>
+                                        </tr>
+                                        <tr>
+                                            <th class="td-center" colspan="2">Tổng</th>
+                                            <th class="td-right"><span id="lblTongDaThu_ThuTien"></span></th>
+                                            <th class="td-right"><span id="lblTongSua_ThuTien"></span></th>
+                                            <th class="td-right">vnđ</th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- zoneEdit_PhieuPhu -->
+                    <div class="box-body zone-bus" id="zoneEdit_PhieuXuatHoaDon">
+                        <div class="form-container">
+                            <div class="pull-left">
+                                <h3 class="color-active fc-title"><i class="fa fa-pencil"></i> Chọn khoản cần xuất hóa đơn</h3>
+                            </div>
+                            <div class="pull-right">
+                                <a class="btn btn-default btnClose" href="#"><i class="fa fa-times"></i></a>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="col-sm-12">
+                                <div class="pull-right" style="padding-bottom: 5px">
+                                    <a class="btn btn-primary" id="btnAddnewHoaDon" href="#"><i class="fa fa-paper-plane"></i> Xuất</a>
+                                </div>
+                                <div class="clear"></div>
+                                <table id="tblEdit_PhieuXuatHoaDon" class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="td-center td-fixed">#</th>
+                                            <th class="td-center">Tên phí</th>
+                                            <th class="td-center">Nội dung</th>
+                                            <th class="td-center" style="width: 50px">Số lượng</th>
+                                            <th class="td-center" style="width: 150px">Số tiền</th>
+                                            <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll_PhieuXuatHoaDon"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- /.from ruttien.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="zone-box" id="zoneList_PhieuDaThu" style="background:#fff; display: none">
+                    <div id="print_hoadon">
+                        <!--/Upload/Files/print_template/bienlaithuhocphi.html-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row zone-action" id="zoneAction_Edit_PhieuDaThu">
+            <div class="pull-right">
+                <div class="btn-sms btn-sms-fixed" id="btnSave_Edit_PhieuDaThu">
+                    <a href="#" style="color:white">
+                        <i class="fa fa-pencil"></i> <br />
+                        <span>Lưu</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row zone-action" id="zoneAction_Phieu" style="display: none">
+            <div class="pull-right">
+                <div class="btn-sms-fixed">
+                    <a class="btn btn-danger" id="btnCancle_HoaDon" style="font-size:17px; margin-right: 300px"><i class="fa fa-times fa-lg"></i> Hủy</a>
+                    <a class="btn btn-default" id="btnClose_HoaDon" style="font-size:17px; margin-right: 300px"><i class="fa fa-times-circle fa-lg"></i> Đóng</a>
+                    <a class="btn btn-primary" id="btnSave_HoaDon" style="font-size:27px"><i class="fa fa-paper-plane fa-lg"></i> Xuất hóa đơn</a>
+                    <a class="btn btn-primary" id="btnPrint_HoaDon" style="font-size:27px"><i class="fa fa-print fa-lg"></i> In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="zoneThongTinHoaDon" class="col-sm-9 beforeActive" style="display: none; width: 100%">
+        <div id="zoneActionXuatHoaDon" style="float:left; margin-right: 3px;">
+        </div>
+        <div style="float:left; margin-right: 3px;">
+            <div id="btnHuyHoaDon" style="width:85px; text-align:center; background-color: #fff">
+                <a title="Hủy Hóa đơn" class="btn"><i style="color: #dd4b39" class="fa fa-trash-o fa-4x"></i></a>
+                <a class="color-active bold lbsymbolHD">Hủy Hóa đơn</a>
+            </div>
+        </div>
+        <div style="float: left; background: #fff !important">
+            <div id="MauInHoaDon"></div>
+        </div>
+        <div id="zoneActionHoaDon" style="float:left; margin-left: 3px">
+            <div id="btnInHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
+                <a title="In Hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-print fa-4x"></i></a>
+                <a class="color-active bold lbsymbolHD">In Hóa đơn</a>
+            </div>
+            <div id="btnCloseHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
+                <a title="Đóng Hóa đơn" class="btn"><i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i></a>
+                <a class="color-active bold lbsymbolHD">Đóng Hóa đơn</a>
+            </div>
+            <div id="btnLienHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
+                <a title="Liên Hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa fa-copy fa-4x"></i></a>
+                <div id="zoneLienHoaDon"></div>
+                <div class="clear"></div>
+                <a class="color-active bold lbsymbolHD">Liên hóa đơn</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="myModalThanhToan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1000px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Thanh toán </h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Extended+Text&display=swap" rel="stylesheet">
+                <span>Tiếp nhận thành công<br /><span class="italic" style="color: green; font-size: 40px" id="lblTiepNhapTT"></span></span>
+                <div id="tblQRNhapHoc" style="margin-top: 30px; margin-left: 30px">
+                    <table class="table table-hover table-bordered" style="font-size: 10px !important;margin-top: -30px; margin-left: -30px">
+                        <tbody style="margin-top: 10px">
+                            <tr>
+                                <td style="text-align: center; width: 100px; font-weight: bold; font-size: 13px" id="lblThuTuTT"> </td>
+                                <td style="text-align: center; font-weight: bold; text-transform: uppercase;" colspan="2" id="lblHoTenTT"></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2" id="lblQRTT"></td>
+                                <td style="text-align: center;" colspan="2" id="lblMaSVTT"></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 60px; text-align: center; font-size: 15px" id="lblSoTienTT"></td>
+                                <td id="lblKetQuaTT"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <a class="btn btn-primary" id="btnPrint_TT" style="font-size:27px"><i class="fa fa-print fa-lg"></i> In</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page script -->
+<script src="/modules/taichinh/scripts/checkinnhaphoc.js?v=1.0.7.9"></script>
+<script src="/modules/taichinh/scripts/n2vi.min.js"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['CheckInNhapHoc'] = new CheckInNhapHoc();
+    $(document).ready(function () {
+        main_doc.CheckInNhapHoc.init();
+    });
+</script>

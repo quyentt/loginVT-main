@@ -1,0 +1,190 @@
+﻿
+<section class="content">
+
+    <div class="row">
+        <!-- /.left-content -->
+        <!-- /.right-content -->
+        <div class="col-lg-12">
+            <!-- box Notify_VBSC -->
+            <div class="box box-solid zone-bus">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="bss-item">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_ThoiGian" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KeHoach" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-list-alt"></i> Thiết lập chế độ có kiểm tra tình trạng nợ phí khi đăng ký học hay không? Có tính phí tự động hay không
+                            <span class="badge bg-light-blue">
+                                <span id="lblKeHoach_Tong"></span>
+                            </span>
+                        </h3>
+
+                        <div class="pull-right">
+                            <a class="btn btn-primary " id="btnAdd_KeHoach" href="#"><i class="fa fa-paper-plane"></i> Lưu</a>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 scroll-table-x">
+                                    <table id="tblKeHoach" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã kế hoạch</th>
+                                                <th class="td-center">Tên kế hoạch</th>
+                                                <th class="td-center">Có kiểm tra tình trạng tài chính của SV?</th>
+                                                <th class="td-center">Hiện thị đơn giá học phí?</th>
+                                                <th class="td-center">Tự động tính phí khi đăng ký?</th>
+                                                <th class="td-center">Quy định kiểm tra học phí</th>
+                                                <th class="td-center">Số nợ tối đa cho phép</th>
+                                                <th class="td-center">Thời gian đăng ký chung</th>
+                                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-list-alt"></i> Thiết lập các phạm vi, thời gian không kiểm tra nợ cho kế hoạch đăng ký
+                            <span class="badge bg-light-blue">
+                                <span id="lblKhongBatNo_Tong"></span>
+                            </span>
+                        </h3>
+
+                        <div class="pull-right">
+                            <div class="dropdown" id="zonebtnBaoCao_KBN_Import" style="float: left;padding-right: 10px;">
+                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu form-container">
+                                    <li><a class="btnImportWithProce" name="IMPORTWITHPROC_DKTCTG" title="" href="#"> 1. Import sinh viên</a></li>
+                                </ul>
+                            </div>
+                            <div style="width: 220px; float: left; padding-right: 10px">
+                                <select id="dropThoiGian" class="select-opt"></select>
+                            </div>
+                            <a class="btn btn-primary " id="btnAdd_KhongBatNo" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 scroll-table-x">
+                                    <table id="tblKhongBatNo" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã kế hoạch</th>
+                                                <th class="td-center">Tên kế hoạch</th>
+                                                <th class="td-center">Thời gian không bắt nợ</th>
+                                                <th class="td-center">Phạm vi áp dụng</th>
+                                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="pull-right">
+                            <a id="btnXoaKhongBatNo" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-list-alt"></i> Thiết lập khoản sẽ kiểm tra nợ cho kế hoạch đăng ký
+                            <span class="badge bg-light-blue">
+                                <span id="lblBatNo_Tong"></span>
+                            </span>
+                        </h3>
+
+                        <div class="pull-right">
+                            <div style="width: 420px; float: left; padding-right: 10px">
+                                <select id="dropLoaiKhoan" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <a class="btn btn-primary" id="btnAdd_BatNo" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 scroll-table-x">
+                                    <table id="tblBatNo" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã kế hoạch</th>
+                                                <th class="td-center">Tên kế hoạch</th>
+                                                <th class="td-center">Loại khoản</th>
+                                                <th class="td-center">Phạm vi áp dụng</th>
+                                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+
+
+                        <div class="pull-right">
+                            <a id="btnXoaBatNo" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- load from js -->
+</div>
+
+<div class="modal fade" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- load from js -->
+</div>
+<!-- page script -->
+<script src="modules/danhmucheso/scripts/KhongBatNo.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['KhongBatNo'] = new KhongBatNo();
+    $(document).ready(function () {
+        main_doc.KhongBatNo.init();
+    });
+</script>

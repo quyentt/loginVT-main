@@ -1,0 +1,658 @@
+﻿<style>
+    .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
+        margin-left: 0px;
+    }
+</style>
+<section class="content">
+    <div class="row">
+        <div class="zone-bus" id="zonebatdau">
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="group-title">
+                        <p class="titleSearchContent">
+                            <i class="fa fa-window-restore">
+                            </i> <span class="lang" key="">Tìm kiếm</span>
+                        </p>
+                    </div>
+                    <div class="area-search">
+                        <div id="search" class="inputSearch">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_ThoiGian" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-6 item-search">
+                                <a id="btnSearch" class="btn btn-default"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="fa fa-building"></i> Danh sách
+                        <span class="pull-right badge bg-light-blue">
+                            <span id="lblCongThucTinh_Tong"></span>
+                        </span>
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <a class="btn btn-primary" id="btnAdd_TheoLopHocPhan" href="#"><i class="fa fa-plus"></i> Thêm mới theo lớp học phần</a>
+                        <a class="btn btn-primary btnAdd" id="btnAddCongThucTinh" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                        <a id="btnXoaCongThucTinh" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div>
+                        <table id="tblCongThucTinh" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Xâu công thức</th>
+                                    <th class="td-center">Phạm vi áp dụng</th>
+                                    <th class="td-center">Thời gian áp dụng</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" class="chkSystemSelectAll">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- load from js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="clear"></div>
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="fa fa-building"></i> Xem thông tin từ khóa
+                        <span class="pull-right badge bg-light-blue">
+                            <span id="lblThongTinTuKhoa_Tong"></span>
+                        </span>
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <a class="btn btn-primary btnAdd" id="btnAdd_ThongTinTuKhoa" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                        <a id="btnDelete_ThongTinTuKhoa" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="scroll-table-x">
+                        <table id="tblThongTinTuKhoa" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Từ khóa</th>
+                                    <th class="td-center">Tên từ khóa hiển thị</th>
+                                    <th class="td-center">Mô tả</th>
+                                    <th class="td-center">Tên gói</th>
+                                    <th class="td-center">Tên phương thức</th>
+                                    <th class="td-center">Tên liên kết</th>
+                                    <!--<th class="td-center">Kiểu dữ liệu</th>
+                                    <th class="td-center">Số chữ số làm tròn</th>-->
+                                    <th class="td-center">Tham số chi tiết</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<div class="modal fade" id="myModalCongThucTinh" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 1024px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Công thức tính</h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row zone-box">
+
+                    <!--row 1-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Phạp vi áp dụng</span></label>
+                        </div>
+                        <div class="col-sm-9 zoneOpenNew">
+                            <select id="dropPhamViApDung" class="select-opt"></select>
+                        </div>
+                        <div class="col-sm-9 btnOpenDelete">
+                            <span id="lblPhamViAP"></span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <!--row 1-->
+                    <div class="row zoneOpenNew">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Loại</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <select id="dropLoaiApDung" class="select-opt"></select>
+                        </div>
+                        <div class="col-sm-9 btnOpenDelete">
+                            <span id="lblLoaiApDung"></span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 1-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Thời gian</span></label>
+                        </div>
+                        <div class="col-sm-9 zoneOpenNew">
+                            <select id="dropThoiGian" class="select-opt"></select>
+                        </div>
+                        <div class="col-sm-9 btnOpenDelete">
+                            <span id="lblThoiGianApDung"></span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Xâu Công thức</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <textarea type="text" id="txtXauCongThuc" class="form-control" style="height:300px"></textarea>
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_CongThucTinh"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalCongThucTinhLHP" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thêm mới theo phạm vi theo lớp học phần</h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row zone-box">
+
+                    <!--row 1-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Phạp vi áp dụng</span></label>
+                        </div>
+                        <div class="col-sm-9">
+
+                            <div class="row">
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_ThoiGianDaoTao" class="select-opt" style="width:100% !important" multiple="multiple">
+                                        <option id="" value=""> --Chọn thời gian-- </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_HeDaoTao" class="select-opt" style="width:100% !important" multiple="multiple">
+                                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_KhoaDaoTao" class="select-opt" style="width:100% !important" multiple="multiple">
+                                        <option id="" value=""> --Chọn khóa đào tạo-- </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_KhoaQuanLy" class="select-opt" style="width:100% !important" multiple="multiple"></select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_ChuongTrinh" class="select-opt" style="width:100% !important" multiple="multiple">
+                                        <option id="" value=""> --Chọn chương trình-- </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_HocPhanAdd" class="select-opt" style="width:100% !important" multiple="multiple"></select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <a id="btnSearchAdd" class="btn btn-default"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <table id="tblLopHocPhanAdd" class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="td-center">Stt</th>
+                                            <th class="td-center">Mã lớp</th>
+                                            <th class="td-center">Tên lớp</th>
+                                            <th class="td-center td-fixed">
+                                                <input type="checkbox" id="chkSelectAll_LopHocPhanAdd" class="chkSystemSelectAll">
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- load from js -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 1-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Thời gian</span></label>
+                        </div>
+                        <div class="col-sm-9 ">
+                            <select id="dropThoiGianLHP" class="select-opt"></select>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Xâu Công thức</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <textarea type="text" id="txtXauCongThucLHP" class="form-control" style="height:300px"></textarea>
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_CongThucTinhLHP"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModalThongTinTuKhoa" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Tham số</h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row zone-box">
+
+                    <!--row 1-->
+                    <div class="row zoneOpenNew">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Từ khóa</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTuKhoa_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblKhoanThu"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Tên từ khóa</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTenTuKhoa_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Mô tả</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtMoTa_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Tên gói</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTenGoi_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Tên phương thức</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTenPhuongThuc_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Tên liên kết</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTenLienKet_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <!--<div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Kiểu dữ liệu</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtKieuDuLieu_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Số chữ số làm tròn</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtSoChuSoLamTron_ThongTinTuKhoa" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>-->
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_ThongTinTuKhoa"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalThamSoChiTiet" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel1"></span> Chi tiết tham số </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <!--<div class="pull-left">
+                    <input id="txtSearchHocPhan" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                </div>-->
+                <div class="pull-right">
+                    <a class="btn btn-primary btnAdd" id="btnAdd_ThamSoDieuKien" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                    <a class="btn btn-default" id="btnDelete_ThamSoDieuKien"><i class="fa fa-trash"></i> Xóa</a>
+                </div>
+                <div class="clear"></div>
+                <div class="scroll-table-x">
+                    <table id="tblThamSoChiTiet" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center">Stt</th>
+                                <th class="td-center">Tên tham số</th>
+                                <th class="td-center">Giá trị mặc định</th>
+                                <th class="td-center">Phân loại</th>
+                                <th class="td-center">Mô tả</th>
+                                <th class="td-center">Thứ tự</th>
+                                <th class="td-fixed td-center">Sửa</th>
+                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="myModalTSChiTiet" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Tham số chi tiết </h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row zone-box">
+
+                    <!--row 1-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Tên tham số</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTenThamSo_ChiTiet" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblKhoanThu"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Giá trị mặc định</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtGiaTriMacDinh_ChiTiet" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Phân loại</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtPhanLoai_ChiTiet" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Mô tả</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtMoTa_ChiTiet" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Thứ tự</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtThuTu_ChiTiet" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary lenhdieukien" id="btnSave_ThamSoDieuKien"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu Tham số điều kiện</span></a>
+                <!--<a class="submit btn btn-primary lenhxeploai" id="btnSave_ThamSoXepLoai"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu Tham số xếp loại</span></a>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalKeThuaChiTiet" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Kế thừa tham số <span class="lenhdieukien">ĐIỀU KIỆN</span> <span class="lenhxeploai">XẾP LOẠI</span></h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row zone-box">
+
+                    <!--row 1-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Từ khóa nguồn</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTuKhoaNguon_KeThua" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblKhoanThu"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Từ khóa đích</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtTuKhoaDich_KeThua" class="form-control" />
+                        </div>
+                        <!--<div class="col-sm-9 btnOpenDelete">
+                            <span id="lblDoiTac"></span>
+                        </div>-->
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary lenhdieukien" id="btnSave_KTDieuKien"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu Kế thừa Tham số điều kiện</span></a>
+                <a class="submit btn btn-primary lenhxeploai" id="btnSave_KTXepLoai"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu Kế thừa Tham số xếp loại</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- load from js -->
+</div>
+<div class="modal fade" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- load from js -->
+</div>
+
+<div class="modal fade" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title modal-name" id="myModalLabel"><span style="float: left"><i class="fa fa-wrench"></i> Xác nhận: </span><span id="txtTenSanPham" class="lblLichHoc_HP"></span></h4>
+            </div>
+            <div class="modal-body">
+
+                <!-- 2. Minh chung -->
+                <div class="row zone-box">
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Nội dung xác nhận</span>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <input id="txtNoiDungXacNhanSanPham" class="form-control form-border-bottom" />
+                        </div>
+                    </div>
+                </div>
+                <!-- 2. Minh chung -->
+                <div class="row zone-box">
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Chọn xác nhận</span>
+                        </p>
+                    </div>
+                    <div class="row" id="zoneBtnXacNhan">
+
+                    </div>
+                </div>
+                <div class="row zone-box">
+                    <div class="row">
+                        <p class="group-title-name">
+                            <span class="badge bg-blue">Lịch sử xác nhận</span>
+                        </p>
+                    </div>
+                    <div class="row">
+                        <table id="tblModal_XacNhan" class="table">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-left">Xác nhận</th>
+                                    <th class="td-left">Nội dung</th>
+                                    <th class="td-left">Người xác nhận</th>
+                                    <th class="td-center" style="width: 100px">Ngày</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel"><i class="fa fa-times-circle"></i> Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="modules/kehoach/script/CongThucTinh.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['CongThucTinh'] = new CongThucTinh();
+    $(document).ready(function () {
+        main_doc.CongThucTinh.init();
+    });
+</script>

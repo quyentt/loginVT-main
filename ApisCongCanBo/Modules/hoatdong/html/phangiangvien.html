@@ -1,0 +1,189 @@
+﻿<link rel="stylesheet" href="assets/css-new/styles.css">
+<div class="one-door mt-0">
+    <div class="content-tab no-tab">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+                <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Kế hoạch đồ án - khóa luận - LV</a></p>
+            </div>
+
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="function-content w-100">
+        <div class="feature-content has-tabs">
+            <div class="card today-card today-card-1 mb-40">
+                <div class="card-header">
+                    <div class="myTab-header">
+                        <div class="myTab-header-item">
+                            <a href="#" class="myTab-header-link  active" data-myTab="khoaphanconggiangvien">
+                                Khoa phân công giảng viên
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="myTab-content">
+                        <!--  Khoa phân công giảng viên -->
+                        <div class="myTab-item show" id="khoaphanconggiangvien">
+                            <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item mb-10">
+                                <div class="flex-grow-1">
+                                    <div class="row">
+                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Năm</label>
+                                                <div class="custom-select">
+                                                    <select id="dropSearch_Nam" class="select-opt form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Kế hoạch năm</label>
+                                                <div class="custom-select">
+                                                    <select id="dropSearch_KeHoachNam" class="select-opt form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Kế hoạch chi tiết</label>
+                                                <div class="custom-select">
+                                                    <select id="dropSearch_KeHoachChiTiet" class="select-opt form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="col-12 col-md-6 col-lg-4 mb-15">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Thời gian</label>
+                                                <div class="custom-select">
+                                                    <select id="dropSearch_ThoiGianDaoTao" class="select-opt form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>-->
+                                        <div class="col-12 col-md-6 col-lg-4 mb-15">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Hệ đào tạo</label>
+                                                <div class="custom-select">
+                                                    <select id="dropHeDaoTao_CB" class="select-opt form-select"></select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6 col-lg-4 mb-15">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Học phần</label>
+                                                <div class="custom-select">
+                                                    <select id="dropSearch_HocPhan" class="select-opt form-select"></select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6  col-lg-4 mb-15">
+                                            <div class="input-label-left">
+                                                <label class="mt-5">Thông tin</label>
+                                                <input type="text" id="txtSearch" class="form-control" placeholder="Thông tin">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <div id="btnSearch" class="btn btn-view ms-20 mb-15">Xem danh sách</div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-lg-3 col-md-3 mb-15">
+                                    <div class="dropdown ms-4" id="zonebtnBaoCao_PG">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="table-wrap">
+                                <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                    <table class="table table-bordered" id="tblHocPhan">
+                                        <thead>
+
+
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- modal Khoa phân công giảng viên -->
+<div class="modal fade" id="khoaphancong_giangvien">
+    <div class="modal-dialog modal-dialog-centered modal-1400">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">Phân giảng viên</div>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive fs-14 no-swiper">
+                    <table class="table" id="tblPhanCong">
+                        <thead>
+                            <tr>
+                                <th class="text-center border-top-1" scope="col">STT</th>
+                                <th class="min-w-60p border-top-1" scope="col">Mã</th>
+                                <th class="min-w-120p border-top-1" scope="col">Họ đệm</th>
+                                <th class="min-w-85p border-top-1" scope="col">Tên</th>
+                                <th class="min-w-120p border-top-1 py-11" scope="col">Đơn vị</th>
+                                <th class="min-w-185p border-top-1 py-11 text-center" scope="col">Thông tin phân giảng</th>
+                                <th class="text-center border-top-1  py-11" scope="col">
+                                    <input type="checkbox" class="chkSystemSelectAll">
+                                </th>
+
+                            </tr>
+
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex flex-wrap justify-content-end">
+                    <button class="btn btn-add mb-15" id="btnAddGiangVien">
+                        <i class="fal fa-plus"></i>
+                        <span>Thêm mới</span>
+                    </button>
+                    <button class="btn btn-save ms-15 mb-15" id="btnSave_GiangVien">
+                        <i class="fal fa-save"></i>
+                        <span>Lưu</span>
+                    </button>
+                    <button class="btn btn-delete ms-15 mb-15" id="btnDelete_GiangVien">
+                        <i class="fal fa-trash-alt"></i>
+                        <span>Xóa</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade register-wish " id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1800">
+    </div>
+</div>
+<!-- page script -->
+<script src="modules/hoatdong/script/phangiangvien.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['PhanGiangVien'] = new PhanGiangVien();
+    $(document).ready(function () {
+        main_doc.PhanGiangVien.init();
+    });
+</script>

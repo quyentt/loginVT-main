@@ -1,0 +1,148 @@
+﻿<style>
+    .progress{
+        margin-bottom: 5px;
+    }
+    .small-box{
+        margin-bottom: 10px;
+    }
+    .box{
+        margin-bottom: 5px;
+    }
+    .widget-user-2 .widget-user-header{
+        padding: 10px;
+    }
+</style>
+    <!-- Main content -->
+<section class="content">
+    <div class="row bg-default">
+        <!-- /.left-content -->
+        <!-- /.right-content -->
+        <div class="zone-cat-12 col-sm-12">
+            <!-- /.right-content -UP -->
+            <div class="box box-solid" id="zoneTimKiem">
+                <div class="box-body">
+                    <div class="bss-item">
+                        <div class="col-sm-3 item-search">
+                            <select id="dropSearch_ChuongTrinh" class="select-opt"></select>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="col-sm-3 item-search">
+                            Họ tên: <span class="bold" style="color: #333" id="lblHoTen">Nguyễn Văn A</span>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            Mã số: <span class="bold" style="color: #333" id="lblMaSo">Nguyễn Văn A</span>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            Ngày sinh: <span class="bold" style="color: #333" id="lblNgaySinh">Nguyễn Văn A</span>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            Giới tính: <span class="bold" style="color: #333" id="lblGioiTinh">Nguyễn Văn A</span>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            Trạng thái: <span class="bold" style="color: #333" id="lblTrangThai">Nguyễn Văn A</span>
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            Lớp: <span class="bold" style="color: #333" id="lblLop">Nguyễn Văn A</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="zone-cat-3 col-sm-3">
+            <!-- Widget: DIEM MOI -->
+            <div class="box box-widget widget-user-2">
+                <!-- Add the bg color to the header using any of the bg-* classes -->
+                <div class="widget-user-header">
+                    <p class="bold"><a><i class="fa fa-bullhorn"></i></a> ĐIỂM MỚI</p>
+                </div>
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-stacked" id="zoneDiemMoi">
+                        <li><a href="#">Tư tưởng hồ chí minh <span class="pull-right badge bg-aqua">6.5</span></a></li>
+                        <li><a href="#">Cơ học <span class="pull-right color-active"><i class="fa fa-eye"></i></span></a></li>
+                        <li><a href="#">Toán cao cấp <span class="pull-right badge bg-green">9.0</span></a></li>
+                        <li><a href="#">Kỹ thuật thủy khí <span class="pull-right badge bg-red">3.7</span></a></li>
+                        <li><a href="#">Máy điện <span class="pull-right color-active"><i class="fa fa-eye-slash"></i></span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Widget: TONG DIEM CHO TOAN KHOA HOC -->
+            <div class="box box-widget widget-user-2">
+                <!-- Add the bg color to the header using any of the bg-* classes -->
+                <div class="widget-user-header">
+                    <p class="bold"><a><i class="fa fa-bullhorn"></i></a> TỔNG ĐIỂM</p>
+                </div>
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-stacked">
+                        <li class="italic"><a href="#">Tổng số tín chỉ <span class="pull-right" id="lblTongTinChi"></span></a></li>
+                        <li class="italic"><a href="#">Điểm trung bình trung hệ 10 <span class="pull-right" id="lblTrungBinh10"></span></a></li>
+                        <li class="italic"><a href="#">Điểm trung bình trung hệ 4 <span class="pull-right" id="lblTrungBinh4"></span></a></li>
+                        <li class="italic"><a href="#">Tổng số tín chỉ tích lũy <span class="pull-right" id="lblTichLuy">110</span></a></li>
+                        <li class="italic"><a href="#">Điểm trung bình trung tích lũy hệ 10 <span class="pull-right" id="lblTichLuy10"></span></a></li>
+                        <li class="italic"><a href="#">Điểm trung bình trung tích lũy hệ 4 <span class="pull-right" id="lblTichLuy4"></span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- /.widget-user -->
+        </div>
+        <!-- /.right-content -->
+        <div class="zone-cat-9 col-sm-9">
+            <!-- /.right-content -UP -->
+            <div class="box box-solid" id="zoneKhoanThu">
+                <div class="box-body">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_bangdiem" data-toggle="tab" aria-expanded="true"><span class="lang" key=""><i class="fa fa-file-text-o"></i> Bảng điểm</span></a></li>
+                            <li class=""><a href="#tab_hocphanchuaqua" data-toggle="tab" aria-expanded="true"><span class="lang" key=""><i class="fa fa-clipboard"></i> Học phần chưa qua</span></a></li>
+                            <li class=""><a href="#tab_khoikienthuc" data-toggle="tab" aria-expanded="true"><span class="lang" key=""><i class="fa fa-retweet"></i> Hiển thị theo khối kiến thức</span></a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_bangdiem">
+                                <div class="row row-tab row-align" id="zone_bangdiem">
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab_hocphanchuaqua">
+                                <div class="row row-tab row-align">
+
+                                    <div class="zone-content scroll-table-x">
+                                        <table class="table" id="tblHocPhanChuaQua">
+                                            <thead>
+                                                <tr>
+                                                    <th class="td-center td-fixed">Stt</th>
+                                                    <th class="td-left">Mã học phần</th>
+                                                    <th class="td-left">Tên học phần</th>
+                                                    <th class="td-center">Số tín chỉ</th>
+                                                    <th class="td-center">Lần học</th>
+                                                    <th class="td-center">Lần thi</th>
+                                                    <th class="td-center">Điểm hệ 10</th>
+                                                    <th class="td-center">Điển hệ 4</th>
+                                                    <th class="td-center">Điểm chữ</th>
+                                                    <th class="td-center">Đánh giá</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot></tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab_khoikienthuc">
+                                <div class="row row-tab row-align">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- page script -->
+<script src="modules/hoctap/script/diemhoc.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['DiemHoc'] = new DiemHoc();
+    $(document).ready(function () {
+        main_doc.DiemHoc.init();
+    });
+</script>

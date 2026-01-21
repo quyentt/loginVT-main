@@ -1,0 +1,517 @@
+﻿<div class="one-door">
+    <div class="overlay"></div>
+    <div class="content-tab no-tab">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+
+                <p class="link"><a href="#">Góc học tập</a><i class="fal fa-angle-right"></i><a href="#">Khoa chuyên môn
+                        sửa chuyên đề</a></p>
+
+            </div>
+
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- đăng ký nguyện vọng -->
+    <div class="box-shadow register-wish pt-0 ">
+        <div class="form-top">
+            <div class="row">
+                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                            <select class="form-select select-opt" id="dropSearch_KeHoach"
+                                aria-label="Default select example">
+                                <option selected>Chọn kế hoạch công nhận điểm</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid px-20 ">
+
+            <div class="dkcn_diem">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
+                            type="button" role="tab" aria-controls="home" aria-selected="true">
+                            Công nhận từ bảng điểm
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
+                            type="button" role="tab" aria-controls="profile" aria-selected="false">
+                            Công nhận từ chứng chỉ
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        <div class="d-flex flex-wrap align-items-end w-100 calendar-top px-0">
+
+                            <div class="left">
+
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <select class="form-select select-opt" id="dropSearch_HocPhan"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn học phần đăng ký công nhận điểm</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <select class="form-select select-opt" id="dropSearch_KhoaQuanLy_QD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn khoa quản lý chương trình</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <select class="form-select select-opt" id="dropSearch_HeDaoTao_QD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn hệ đào tạo</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <select class="form-select select-opt" id="dropSearch_KhoaDaoTao_QD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn khóa đào tạo</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+                                            <select class="form-select select-opt" id="dropSearch_ChuongTrinh_QD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn chương trình</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <select class="form-select select-opt" id="dropSearch_Lop_QD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn lớp</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-50p">
+
+                                    <div class="form-item d-flex form-add-info">
+
+                                        <div class="input-group no-icon">
+                                            <input type="text" class="form-control" id="txtSearch_BangDiem"
+                                                placeholder="Nhập thông tin hồ sơ(Mã hồ sơ)">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="right">
+                                <div class="btn btn-default btn-search" id="btnSearch_BangDiem">
+                                    <i class="fal fa-search"></i> Xem danh sách</div>
+                            </div>
+                        </div>
+                        <div class="title-is-paging">
+                            <p class="color-dask-blue fw-bold title"><i class="fa-solid fa-book-open-reader"></i> Danh
+                                sách</p>
+                        </div>
+                        <table class="table transcrip-table tabs-scores" id="tblBangDiem">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col">STT</th>
+                                    <th class="text-center" scope="col">Mã hồ sơ đăng ký</th>
+                                    <th class="text-center" scope="col">Mã hồ sinh viên</th>
+                                    <th scope="col">Họ và tên</th>
+                                    <th scope="col">Chương trình</th>
+                                    <th class="text-center" scope="col">Ngày tạo</th>
+                                    <th scope="col">Học phần xin công nhận</th>
+                                    <th class="text-center" scope="col">Xác nhận</th>
+                                    <th class="text-center" scope="col">Chi tiết</th>
+                                    <th class="text-center" scope="col"><input class="chkSystemSelectAll"
+                                            type="checkbox"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="d-flex flex-wrap align-items-end w-100 calendar-top px-0">
+
+                            <div class="left">
+
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+
+                                            <select class="form-select select-opt" id="dropSearch_LoaiChungChi"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn loại chứng chỉ</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+
+                                            <select class="form-select select-opt" id="dropSearch_ChungChi"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn tên chứng chỉ</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <select class="form-select select-opt" id="dropSearch_CapDo"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn cấp độ</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn khoa quản lý chương trình</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+
+                                            <select class="form-select select-opt" id="dropSearch_HeDaoTao_BD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn hệ đào tạo</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+
+                                            <select class="form-select select-opt" id="dropSearch_KhoaDaoTao_BD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn khóa đào tạo</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+
+                                            <select class="form-select select-opt" id="dropSearch_ChuongTrinh_BD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn chương trình</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="w-25p">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+
+
+                                            <select class="form-select select-opt" id="dropSearch_Lop_BD"
+                                                aria-label="Default select example">
+                                                <option selected="">Chọn lớp</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="right d-flex flex-column">
+                                <div class="form-item d-flex form-add-info w-100 p-0">
+
+                                    <div class="input-group no-icon">
+
+                                        <input type="text" class="form-control" id="txtSeach_CC"
+                                            placeholder="Nhập thông tin hồ sơ(Mã hồ sơ)">
+                                    </div>
+                                </div>
+                                <div class="btn btn-default btn-search" id="btnSearch_ChungChi">
+                                    <i class="fal fa-search"></i> Xem danh sách</div>
+                            </div>
+                        </div>
+                        <table class="table transcrip-table tabs-scores" id="tblChungChi">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col">STT</th>
+                                    <th class="text-center" scope="col">Mã hồ sơ đăng ký</th>
+                                    <th class="text-center" scope="col">Mã hồ sinh viên</th>
+                                    <th scope="col">Họ và tên</th>
+                                    <th scope="col">Chương trình</th>
+                                    <th class="text-center" scope="col">Ngày tạo</th>
+                                    <th class="text-center" scope="col">Loại chứng chỉ</th>
+                                    <th scope="col">Học phần xin công nhận</th>
+                                    <th class="text-center" scope="col">Xác nhận</th>
+                                    <th class="text-center" scope="col">Chi tiết</th>
+                                    <th class="text-center" scope="col"><input class="chkSystemSelectAll"
+                                            type="checkbox"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal chitiet công nhận từ bảng điểm -->
+<div class="modal fade register-wish xlts" id="myModalBangDiem" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1360">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p><b>Chi tiết</b></p>
+
+
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 pb-3">
+                    <div class="title-is-paging">
+                        <p class="color-dask-blue fw-bold mt-3">Học phần công nhận</p>
+                    </div>
+                    <table class="table tabs-scores  transcrip-table table-bordered" id="tblHocPhanCongNhan_BangDiem">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center" scope="col">Mã học phần</th>
+                                <th scope="col">Tên học phần</th>
+                                <th scope="col" class="text-center">Điểm công nhận</th>
+                                <th scope="col">Cơ sở đào tạo</th>
+                                <th scope="col">tblHocPhanCongNhan_BangDiem</th>
+                                <th scope="col" class="text-center">Tình trạng xác nhận</th>
+                                <th class="text-center" scope="col"><input class="chkSystemSelectAll" type="checkbox">
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+                <div class="col-12 pb-3">
+                    <div class="title-is-paging">
+                        <p class="color-dask-blue fw-bold mt-3">Minh chứng</p>
+                    </div>
+                    <table class="table tabs-scores  transcrip-table table-bordered" id="tblMinhChung_BangDiem">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">STT</th>
+                                <th scope="col">Cơ sở đào tạo</th>
+                                <th scope="col">Minh chứng</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="d-flex align-items-center justify-content-end px-3 px-sm-0">
+
+                    <div class="btn btn-success min-w-auto px-4 ms-auto ms-lg-0 w-auto-i" id="btnXacNhan_BangDiem"><i
+                            class="fal fa-check me-2"></i> Xác nhận</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- modal chitiet công nhận từ chứng chỉ -->
+<div class="modal fade register-wish xlts" id="myModalChungChi" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1360">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p><b>Chi tiết</b></p>
+
+
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col-12 pb-3">
+                    <div class="title-is-paging">
+                        <p class="color-dask-blue fw-bold mt-3">Học phần công nhận</p>
+                    </div>
+                    <table class="table tabs-scores  transcrip-table table-bordered" id="tblHocPhanCongNhan_ChungChi">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center" scope="col">Mã học phần</th>
+                                <th scope="col">Tên học phần</th>
+                                <th scope="col" class="text-center">Điểm công nhận</th>
+                                <th scope="col" class="text-center">Cấp độ</th>
+                                <th scope="col">Cơ sở đào tạo</th>
+                                <th scope="col" class="text-center">Ngày cấp</th>
+                                <th scope="col" class="text-center">Tình trạng xác nhận</th>
+                                <th class="text-center" scope="col"><input class="chkSystemSelectAll" type="checkbox">
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="col-12 pb-3">
+                    <div class="title-is-paging">
+                        <p class="color-dask-blue fw-bold mt-3">Minh chứng</p>
+                    </div>
+                    <table class="table tabs-scores  transcrip-table table-bordered" id="tblMinhChung_ChungChi">
+                        <thead>
+                            <tr>
+                                <th class="text-center" scope="col">STT</th>
+                                <th scope="col">Loại chứng chỉ</th>
+                                <th scope="col">Tên chứng chỉ</th>
+                                <th scope="col">Cấp độ</th>
+                                <th scope="col">Minh chứng</th>
+
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="d-flex align-items-center justify-content-end px-3 px-sm-0">
+
+                    <div class="btn btn-success min-w-auto px-4 ms-auto ms-lg-0 w-auto-i" id="btnXacNhan_ChungChi"><i
+                            class="fal fa-check me-2"></i> Xác nhận</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade finance-modal my-calendar confirm_scores" id="modal_XacNhan" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-700 ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p><b>Xác nhận hoàn thành</b></p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="action-group">
+                    <div class="select-group">
+                        <div class="label">Loại công nhận</div>
+                        <div class="form-item d-flex  form-add-info">
+                            <div class="input-group no-icon">
+
+                                <select class="form-select select-opt" aria-label="Default select example"
+                                    id="dropLoaiCongNhan"></select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="select-group">
+                        <div class="label">Trạng thái</div>
+                        <div class="form-item d-flex  form-add-info">
+                            <div class="input-group no-icon">
+
+                                <select class="form-select select-opt" aria-label="Default select example"
+                                    id="dropLoaiXacNhan"></select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <a class="btn btn-success" id="btnDongYXacNhan"><i class="fal fa-check me-2"></i> <span>Xác
+                            nhận</span></a>
+
+                </div>
+                <div class="action-group">
+
+                    <div class="select-group">
+                        <div class="label">Nội dung</div>
+                        <div class="form-item d-flex  form-add-info">
+                            <div class="input-group no-icon">
+                                <input type="text" class="form-control" id="txtNoiDungXacNhanSanPham">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <p class="fw-bold mb-2">Lịch sử</p>
+                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhan">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">STT</th>
+                            <th scope="col">Trạng thái</th>
+                            <th class="text-center" scope="col">Nội dung</th>
+                            <th scope="col">Người thực hiện</th>
+                            <th class="text-center" scope="col">Thời gian</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- page script -->
+<script src="modules/nhapdiem/script/duyetchuyendiem.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['DuyetChuyenDiem'] = new DuyetChuyenDiem();
+    $(document).ready(function () {
+        main_doc.DuyetChuyenDiem.init();
+    });
+</script>

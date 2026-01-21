@@ -1,0 +1,303 @@
+﻿<style>
+    .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
+        margin-left: 0px;
+    }
+</style>
+<section class="content aps-tintuc">
+    <div class="row aps-tintuc-detail">
+        <div class="zone-bus" id="zonebatdau">
+            <!--Box search-->
+            <div class="box box-solid box-search pd20">
+                <div class="box-body pd0">
+                    <div class="group-title d-none">
+                        <p class="titleSearchContent">
+                            <i class="fa fa-window-restore">
+                            </i> <span class="lang" key="">Tìm kiếm</span>
+                        </p>
+                    </div>
+                    <div class="area-search">
+                        <div id="search" class="inputSearch">
+                            <div class="col-sm-3 item-search">
+                                <input type="text" id="txtSearch_TuNgay" class="form-control input-datepicker" placeholder="Từ ngày">
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <input type="text" id="txtSearch_DenNgay" class="form-control input-datepicker" placeholder="Đến ngày">
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_DonVi" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_UngDung" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_ChuyenMuc" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_TinhTrang" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <!--Danh sách danh mục-->
+            <div class="box box-solid aps-danhsach pd20">
+                <div class="box-header">
+                    <h3 class="box-title">
+                        <i class="fa-light fa-newspaper"></i> Danh sách
+                        <span class="pull-right badge bg-light-blue ml-15">
+                            <span id="lblTinTuc_Tong"></span>
+                        </span>
+                    </h3>
+                    <div class="box-tools pull-right right-0">
+                        <a id="btnXoaTinTuc" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                        <a class="btn btnAdd btn-primary" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                    </div>
+                </div>
+                <div class="box-body pd0">
+                    <div class="aps-table-select mt-15">
+                        <table id="tblTinTuc" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Tiêu đề</th>
+                                    <th class="td-center">Chuyên mục</th>
+                                    <!--<th class="td-center">Học kỳ</th>-->
+                                    <th class="td-center">Ngày bắt đầu đăng</th>
+                                    <th class="td-center">Ngày hết hạn đăng</th>
+                                    <th class="td-center">Thông tin từ đơn vị</th>
+                                    <th class="td-center">Hiển thị cho ứng dụng</th>
+                                    <th class="td-center">Mục ưu tiên</th>
+                                    <th class="td-center">Ngày tạo</th>
+                                    <th class="td-center">Người tạo</th>
+                                    <th class="td-center">Phạm vi áp dụng</th>
+                                    <th class="td-center">Duyệt</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <!--<th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_TinTuc">
+                                    </th>-->
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- load from js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Thêm mới Tin tức-->
+        <div class="box box-solid zone-bus form-container add-absolue add-news" id="zoneEdit" style="display: none">
+            <div class="box-header with-border">
+                <h3 class="box-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> Tin tức</h3>
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body pd0">
+                <div class="col-sm-12 box-view aps-add-new pd20">
+                    <!-- 1. Noi dung bai bao -->
+                    <div class="row aps-form">
+                        <div class="row d-none">
+                            <p class="group-title-name">
+                                <span class="badge bg-blue"> Thông tin chung</span>
+                            </p>
+                        </div>
+                        <div class="row aps-form">
+                            <div class="col col-lg-9 col-sm-10 mt-10 pr20">
+                                <!--row 1-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable">Tiêu đề</div>
+                                    <div class="col-sm-10 aps-form-input">
+                                        <input id="txtTieuDe" class="form-control" />
+                                    </div>
+                                </div>
+                                <!--row 2-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable">Chuyên mục</div>
+                                    <div class="col-sm-10 aps-form-input">
+                                        <select id="dropChuyenMuc" class="select-opt"></select>
+                                    </div>
+                                </div>
+                                <!--row 3-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable">Ngày bắt đầu đăng</div>
+                                    <div class="col-sm-4 aps-form-input">
+                                        <input id="txtNgayBatDau" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
+                                    </div>
+                                    <div class="col-sm-2 aps-form-lable text-right pr15">Ngày hết hạn</div>
+                                    <div class="col-sm-4 aps-form-input">
+                                        <input id="txtNgayHetHan" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
+                                    </div>
+                                </div>
+                                <!--row 4-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable">Tin tức từ đơn vị</div>
+                                    <div class="col-sm-10 aps-form-input">
+                                        <select id="dropDonVi" class="select-opt"></select>
+                                    </div>
+                                </div>
+                                <!--row 5-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable">Hiển thị ở ứng dụng</div>
+                                    <div class="col-sm-10 aps-form-input">
+                                        <select id="dropUngDung" class="select-opt"></select>
+                                    </div>
+                                </div>
+                                <!--Nội dung-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable"><span class="lang" key="">Nội dung</span></div>
+                                    <div class="col-sm-10">
+                                        <textarea name="editor_NoiDung" id="editor_NoiDung"></textarea>
+                                    </div>
+                                </div>
+                                <!--row 7-->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-2 aps-form-lable"><span class="lang" key="">File đính kèm</span></div>
+                                    <div class="col-sm-10 mt-5">
+                                        <textarea name="txtFileDinhKem" id="txtFileDinhKem"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col col-lg-3 col-sm-2 pl20">
+                                <!--row 2-->
+                                <div class="row">
+                                    <div class="col-sm-12 aps-form-lable">Ảnh trang bìa</div>
+                                    <div class="col-sm-12">
+                                        <div id="uploadPicture_TinTuc"></div>
+                                    </div>
+                                    <div class="col-sm-12 aps-form-input  checkbox-inline user-check-print mt-10" style="padding-left: 20px">
+                                        <input checked="checked" type="checkbox" style="float: left;" id="ckhTinUuTien" />
+                                        <span><p>Tin được ưu tiên</p></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
+                    <a id="btnSave_TinTuc" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phạm vi áp dụng-->
+        <div class="box box-solid zone-bus form-container add-absolue aps-phamvi" id="zonePhamVi" style="display: none">
+            <div class="box-header with-border">
+                <h3 class="box-title"><span class="myModalLabel1"><i class="fa fa-plus"></i> </span> Phạm vi áp dụng</h3>
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-sm-12 box-view aps-add-new pd20">
+                    <div class="row aps-form">
+                        <div class="row aps-lable">
+                            <p class="group-group-title-name border-0 mb-5">
+                                <span class="badge bg-blue">Danh sách phạm vi áp dụng</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <table id="tblInput_DTSV_SinhVien" class="table mr-0 mb-10">
+                                <thead>
+                                    <tr>
+                                        <td class="td-fixed td-center">Stt</td>
+                                        <td class="td-center">Phân cấp áp dụng</td>
+                                        <td class="td-center">Tên phạm vi</td>
+                                        <td class="td-center">Trạng thái sinh viên áp dụng</td>
+                                        <td class="td-center">Ngày tạo</td>
+                                        <th class="td-center td-fixed">
+                                            <input type="checkbox" id="chkSelectAll_SinhVien">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="pull-left">
+                                <div id="ApDungChoHe"></div>
+                                <div id="ApDungChoKhoa"></div>
+                                <div id="ApDungChoChuongTrinh"></div>
+                                <div id="ApDungChoLop"></div>
+                            </div>
+                            <div class="pull-right">
+                                <div class="group-title-name">
+                                    <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id=""><i class="fa fa-plus color-active"></i> Thêm thành viên</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
+                    <a id="btnSave_PhamVi" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- aps-modal_nhansu -->
+<div class="modal fade aps-modal_nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!-- load from js -->
+</div>
+<script src="modules/kehoach/script/tintuc.js?v=1.0.0.0"></script>
+<script>
+
+    CKEDITOR.replace('ckeditor', {
+        on: {
+            focus: onFocus,
+            blur: onBlur,
+
+
+            pluginsLoaded: function (evt) {
+                var doc = CKEDITOR.document, ed = evt.editor;
+                if (!ed.getCommand('bold'))
+                    doc.getById('exec-bold').hide();
+                if (!ed.getCommand('link'))
+                    doc.getById('exec-link').hide();
+            }
+        }
+    });
+    function Focus() {
+        CKEDITOR.instances.editor1.focus();
+    }
+
+    function onFocus() {
+        document.getElementById('eMessage').innerHTML = '<b>' + this.name + ' is focused </b>';
+    }
+
+    function onBlur() {
+        document.getElementById('eMessage').innerHTML = this.name + ' lost focus';
+    }
+
+</script>
+
+<script type="text/javascript">
+    function OpenNewWindow(bigurl, width, height) {
+        var newWindow = window.open("", "pictureViewer", "location=no, directories=no, fullscreen=no, menubar=no, status=no, toolbar=no, width=" + width + ", height=" + height + ", scrollbars=no");
+        newWindow.document.writeln("<html>");
+        newWindow.document.writeln("<body style='margins: 0 0 0 0;'>");
+        newWindow.document.writeln("<a href='javascript:window.close();'>");
+        newWindow.document.writeln("<img src='" + bigurl + "' alt='Click to close' id='bigImage' border='0'/>");
+        newWindow.document.writeln("</a>");
+        newWindow.document.writeln("</body></html>");
+        newWindow.document.close();
+    };
+
+    var main_doc = {};
+    main_doc['TinTuc'] = new TinTuc();
+    $(document).ready(function () {
+        main_doc.TinTuc.init();
+    });
+</script>

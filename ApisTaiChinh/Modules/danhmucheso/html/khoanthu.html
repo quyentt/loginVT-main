@@ -1,0 +1,377 @@
+﻿
+<section class="content aps-taichinh">
+    <div class="row aps-khoanthu box-shadow">
+        <!--Search zone-->
+        <div class="col-lg-12 aps-khoanthu-search">
+            <div class="box box-solid box-search pb10">
+                <div class="box-body pd0">
+                    <div class="group-title d-none">
+                        <p>
+                            <i class="fa fa-window-restore">
+                            </i> <span class="lang" key="">Tìm kiếm dữ liệu</span>
+                        </p>
+                    </div>
+                    <div class="area-search">
+                        <div id="search" class="inputSearch collapse in">
+                            <div class="col-sm-3 item-search">
+                                <input id="txtTuKhoa_Search" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--  Bang Danh sách-->
+        <div class="col-lg-12 aps-khoanthu-detail">
+            <div class="box box-solid pt10">
+                <div class="box-body pd0">
+                    <div class="zoneMainContent">
+                        <div class="zone-action" style="float: left ; width: 100%;">
+                            <div class="pull-left">
+                                <div class="group-title pl0 pt10 pb15">
+                                    <p>
+                                        <i class="fa-light fa-sack-dollar"></i>
+                                        </i> <span class="lang" key="">Danh sách</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="pull-right">
+                                <a id="btnAddnew" class="btn btn-primary ml-5"><i class="fa fa-plus"></i> <span class="lang" key="">Tạo mới</span></a>
+                                <a id="btnRefresh" class="btn btn-warning lblRefresh ml-5"><i class="fa fa-refresh"></i> <span class="lang" key="">Tải lại</span></a>
+                                <a id="btnDelete" class="btn btn-default lblDelete ml-5"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                            </div>
+                        </div>
+                        <div class="zone-content aps-table-select">
+                            <table id="tbldata_DMLKT" class="table table-hover" style="margin-bottom: 10px !important;">
+                                <thead>
+                                    <tr>
+                                        <th class="td-center td-fixed">Stt</th>
+                                        <th class="td-left" style="width: 160px"><span class="lang" key="">Mã khoản</span></th>
+                                        <th class="td-left"><span class="lang" key="">Tên khoản</span></th>
+                                        <th class="td-center"><span class="lang" key="">Nhóm khoản</span></th>
+                                        <th class="td-center">Mô tả</th>
+                                        <th class="td-center">Thứ tự hiện thị</th>
+                                        <th class="td-center">Thứ tự ưu tiên gạch nợ</th>
+                                        <th class="td-center">Ngày tạo</th>
+                                        <th class="td-center">Người tạo</th>
+                                        <th class="td-center td-fixed"><span class="lang" key="">Sửa</span></th>
+                                        <th class="td-center td-fixed">
+                                            <input type="checkbox" name="chkSelectAll_DMLKT" id='chkSelectAll_DMLKT' />
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Modal -->
+<div class="modal fade aps-add-khoanthu" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 740px !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Danh mục loại khoản thu </h4>
+            </div>
+            <div class="modal-body" style="">
+                <div class="aps-form">
+                    <!--row 1-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Mã khoản thu (*)</span></label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <input type="text" id="txtMaKhoanThu" class="form-control required" name="required" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 2-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Tên khoản thu</span> (*)</label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <input type="text" id="txtTenKhoanThu" class="form-control required" name="required" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 3-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Nhóm khoản thu</span> (*)</label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <select id="dropNhomKhoanThuEdit" class="select-opt" name="required"></select>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 4-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Mô tả</span></label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <textarea id="txtMoTa" style="height: auto" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 5-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Thứ tự hiển thị</span> (*)</label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <input type="text" id="txtThuTuHienThi" class="form-control required" name="required" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 6-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Thứ tự ưu tiên gạch nợ</span> (*)</label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <input type="text" id="txtThuTuGachNo" class="form-control required" name="required" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 7-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Khoản riêng</span></label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <select id="dropKhoanRieng" class="select-opt">
+                                <option value="1">Là khoản riêng</option>
+                                <option value="0">Không phải khoản riêng</option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div style="width:100%">
+                        <div style="width:20%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Mã định danh dùng cho thanh toán định danh</span> (*)</label>
+                        </div>
+                        <div style="width:80%; float:left">
+                            <input type="text" id="txtMaThanhToanDinhDanh" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 8-->
+                    <div class="aps-form-item" style="width:100%">
+                        <div class="aps-form-lable" style="width:30%; float:left">
+                            <label style="font-weight:normal"><span class="lang" key="">Tính phí tự động</span></label>
+                        </div>
+                        <div class="aps-form-input" style="width:70%; float:left">
+                            <select id="dropTinhPhiTuDong" class="select-opt">
+                                <option value="1">Tính phí tự động</option>
+                                <option value="0">Không tính phí tự động</option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <div style="width:20%; float:left">
+                                <label style="font-weight:normal"><span class="lang" key="">Mã định danh dùng cho thanh toán định danh</span> (*)</label>
+                            </div>
+                            <div style="width:80%; float:left">
+                                <input type="text" id="txtMaThanhToanDinhDanh" class="form-control" />
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <!--row 6-->
+
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkKhoanRieng">
+                            <label for="chkKhoanRieng">
+                                Là khoản riêng
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkTinhPhiTuDong">
+                            <label for="chkTinhPhiTuDong">
+                                Tính phí tự động
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkThanhToanOCong">
+                            <label for="chkThanhToanOCong">
+                                Cho phép thanh toán nộp trước ở cổng thanh toán
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkXuatHoaDonTuDong">
+                            <label for="chkXuatHoaDonTuDong">
+                                Khoản xuất hóa đơn tự động
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkKhongXuatHoaDon">
+                            <label for="chkKhongXuatHoaDon">
+                                Khoản không xuất hóa đơn
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkKiemTraNoKhiXetHocBong">
+                            <label for="chkKiemTraNoKhiXetHocBong">
+                                Khoản kiểm tra bắt nợ khi xét học bổng
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkKiemTraNoKhiXetHocVu">
+                            <label for="chkKiemTraNoKhiXetHocVu">
+                                Khoản kiểm tra bắt nợ khi xét học vụ
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkKiemTraNoKhiXetTotNghiep">
+                            <label for="chkKiemTraNoKhiXetTotNghiep">
+                                Kiểm tra nợ khi xét tốt nghiệp
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkKiemTraNoKhiDangKyHoc">
+                            <label for="chkKiemTraNoKhiDangKyHoc">
+                                Kiểm tra nợ khi đăng ký học
+                            </label>
+                        </div>
+                        <div  class="aps-form-item" style="width:100%">
+                            <input type="checkbox" value="" id="chkTinhPhiTuDongLopRieng">
+                            <label for="chkTinhPhiTuDongLopRieng">
+                                Khoản tính tự động lớp riêng
+                            </label>
+                        </div>
+
+                        <div  class="aps-form-item" style="width:100%">
+                            <div style="width:20%; float:left">
+                                <label style="font-weight:normal"><span class="lang" key="">Đơn vị tính</span></label>
+                            </div>
+                            <div style="width:80%; float:left">
+                                <select id="dropDonViTinh" class="select-opt"></select>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                    <!--End row-->
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary btnSave" id="btnSave"><i class="fal fa-save"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModalKeHoachHD" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Kế hoạch xuất hóa đơn</h4>
+            </div>
+            <div class="modal-body" style="">
+                <div class="box-header with-border">
+                    <div class="pull-right">
+                        <a class="btn btn-primary btnAdd" id="btnAdd_KeHoachHD" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="modal-body">
+                    <div class="col-sm-12 scroll-table-x">
+                        <table id="tblKeHoachHD" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Năm</th>
+                                    <th class="td-center">Ngày bắt đầu</th>
+                                    <th class="td-center">Ngày kết thúc</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="box-header with-border">
+                    <div class="pull-right">
+                        <a id="btnDelete_KeHoachHD" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                    </div>
+                </div>
+                <!--End row-->
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalHoaDon" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Kế hoạch xuất hóa đơn</h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row zone-box">
+                    <!--row 2-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Năm</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtNam" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 2-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Ngày bắt đầu</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtNgayBatDau" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <!--row 2-->
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <label style="font-weight: normal"><span class="lang" key="">Ngày kết thúc</span></label>
+                        </div>
+                        <div class="col-sm-9">
+                            <input type="text" id="txtNgayKetThuc" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_HoaDon"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page script -->
+<script src="modules/danhmucheso/scripts/khoanthu.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['KhoanThu'] = new KhoanThu();
+    $(document).ready(function () {
+        main_doc.KhoanThu.init();
+    });
+</script>

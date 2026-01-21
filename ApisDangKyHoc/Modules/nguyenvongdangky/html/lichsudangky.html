@@ -1,0 +1,85 @@
+﻿<section class="content aps-lichsu-dangky">
+    <div class="row">
+        <!-- /.left-content -->
+        <!-- /.right-content -->
+        <div class="col-lg-12">
+            <!-- box Notify_VBSC -->
+            <div class="box zone-bus">
+                <div class="box box-solid box-search aps-lichsu-dangky-search">
+                    <div class="box-header d-none">
+                        <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+                    </div>
+                    <div class="box-body pt20 pr20 pl20 pb10">
+                        <div class="bss-item">
+                            <div class="col-sm-1 item-search line-38">
+                                Mã số:
+                            </div>
+                            <div class="col-sm-7 item-search">
+                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a class="btn btn-default btn-search" id="btnSearch"><i class="fa fa-search"></i> <span
+                                        class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <div class="dropdown" id="zonebtnBaoCao_LichSuDangKy">
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="col-sm-1 item-search line-38">
+                                Kế hoạch:
+                            </div>
+                            <div class="col-sm-6 item-search">
+                                <select id="dropSearch_KeHoach" multiple="multiple" class="select-opt"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="box box-solid aps-lichsu-dangky-ds pd20">
+                    <div class="box-header">
+                        <h3 class="box-title">
+                            <i class="fa-solid fa-user-graduate fz24"></i>
+                            <span class="lblLichSu_Tong mt-5" style="font-size: 24px" id="lblLichSu_Tong"></span>
+                        </h3>
+                    </div>
+                    <div class="box-body ">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 scroll-table-x mt-5">
+                                    <table id="tblLichSu" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Người thực hiện</th>
+                                                <th class="td-center">Hành động</th>
+                                                <th class="td-center">Kết quả</th>
+                                                <th class="td-center">Thời gian thực hiện</th>
+                                                <th class="td-center">Mã học phần</th>
+                                                <th class="td-center">Tên học phần</th>
+                                                <th class="td-center">Lớp học phần</th>
+                                                <th class="td-center">Mã chương trình</th>
+                                                <th class="td-center">Tên chương trình</th>
+                                            </tr>
+                                            <tr>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- page script -->
+<script src="modules/nguyenvongdangky/script/lichsudangky.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['LichSu'] = new LichSu();
+    $(document).ready(function () {
+        main_doc.LichSu.init();
+    });
+</script>

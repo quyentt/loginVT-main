@@ -1,0 +1,292 @@
+﻿<style>
+    .todo-list {
+        overflow: unset;
+    }
+
+    .checkbox-inline+.checkbox-inline,
+    .radio-inline+.radio-inline {
+        margin-left: 0px;
+    }
+
+    .dr-progress {
+        font-size: 16px;
+        margin-left: 10px;
+        border-radius: 0.25em;
+        font-weight: 700;
+    }
+
+    .dr-progress-content {
+        border-radius: 0.25em;
+        padding: 0.2em 0.6em 0.3em;
+    }
+
+    .w3-light {
+        margin-top: -5px;
+        margin-bottom: -10px;
+        font-weight: 700;
+        margin-left: 10px
+    }
+
+    .w3-light-grey,
+    .w3-hover-light-grey:hover,
+    .w3-light-gray,
+    .w3-hover-light-gray:hover {
+        background-color: #f1f1f1 !important;
+        color: #000 !important;
+    }
+
+    .w3-container,
+    .w3-panel {
+        padding: 0.01em 16px;
+    }
+
+    .w3-green,
+    .w3-hover-green:hover {
+        background-color: #4caf50 !important;
+        color: #fff !important;
+    }
+
+    .w3-round,
+    .w3-round-medium {
+        border-radius: 4px;
+    }
+
+    .w3-round-xlarge {
+        border-radius: 16px;
+    }
+
+    .box {
+        margin-bottom: 5px
+    }
+
+    .callsuccess {
+        color: green;
+        font-weight: bold;
+    }
+
+
+    .table-hoadon td {
+        font-size: 11pt;
+        font-family: 'Times New Roman';
+        border: 1px solid black;
+    }
+
+    .table-hoadon th {
+        font-size: 11pt;
+        font-family: 'Times New Roman';
+    }
+
+    .table-hoadon {
+        text-align: center;
+        width: 100%;
+        border: 1px solid black;
+    }
+
+    .tr-bg {
+        background: #f1f1f1 !important;
+    }
+
+    dropdown-menu>li>a:hover {
+        background-color: gray !important;
+    }
+</style>
+<!-- Danh sách còn nợ phí -->
+<section class="content aps-phieuthu">
+    <div id="MainContent" class="aps-notien">
+        <div class="box box-solid box-shadow pd0 mb-20">
+            <div class="row box-search pd20" style="padding-bottom: 10px !important;">
+                <!--Search zone-->
+                <div class="box-body pd0">
+                    <div class="group-title d-none">
+                        <p>
+                            <i class="fa fa-window-restore">
+                            </i> <span class="lang" key="">Tìm kiếm 2</span>
+                        </p>
+                    </div>
+                    <div class="area-search pd0">
+                        <div id="search" class="inputSearch collapse in">
+                            <!-- Bộ tìm kiếm -->
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_HeDaoTao_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KhoaDaoTao_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn khóa đào tạo-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_ChuongTrinh_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn chương trình-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_Lop_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn lớp-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search" style="display: none">
+                                <select id="dropSearch_NguoiThu_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn người thu-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_HocKy_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn học kỳ-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search" style="display: none">
+                                <select id="dropSearch_KyThucHien_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value="1"> Trong kỳ này </option>
+                                    <option id="" value="0"> Đến kỳ này </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_NamNhapHoc_IHD" class="select-opt" style="width:100% !important"
+                                    multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KhoaQuanLy_IHD" class="select-opt" style="width:100% !important"
+                                    multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search pr0" style="padding-right: 0 !important;">
+                                <select id="dropSearch_SoLuong_NT" class="select-opt" style="width:100% !important">
+                                    <option id="" value="10">10 luồng cùng chạy</option>
+                                    <option id="" value="1">1 luồng chạy</option>
+                                    <option id="" value="2">2 luồng chạy</option>
+                                    <option id="" value="30">30 luồng cùng chạy</option>
+                                    <option id="" value="50">50 luồng cùng chạy</option>
+                                    <option id="" value="100">100 luồng cùng chạy</option>
+                                    <option id="" value="200">200 luồng cùng chạy</option>
+                                    <option id="" value="500">500 luồng cùng chạy</option>
+                                    <option id="" value="1000">1000 luồng cùng chạy</option>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="col-sm-2 item-search">
+                                <input id="txtSearch_TuNgay_NT" class="form-control input-datepicker" placeholder="Từ ngày dd/mm/yyyy" />
+                            </div>
+                            <div class="col-sm-2 item-search">
+                                <input id="txtSearch_DenNgay_NT" class="form-control input-datepicker" placeholder="Đến ngày dd/mm/yyyy" />
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <input id="txtSearch_NT" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-3 item-search d-flex">
+                                <a id="btnSearch_NT" class="btn btn-default btn-search"><i class="fa fa-search"></i>
+                                    <span class="lang" key="">Tìm kiếm</span></a>
+                                <div class="dropdown ml-10" id="zonebtnBaoCao_SVNT">
+                                    <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+                                        <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu form-container">
+                                        <li><a class="btnBaoCao_LHD" name="ThongKe_TongHopNoHocPhi" href="#"> Xuất BC
+                                                tổng hợp nợ</a></li>
+                                        <li><a class="btnBaoCao_LHD" name="ThongKe_TongHopNoHocPhiRieng" href="#"> Xuất
+                                                BC tổng hợp nợ riêng</a></li>
+
+                                    </ul>
+                                </div>
+                                <a id="btnSearch_TongHopDuLieu" class="btn btn-danger">
+                                    <i class="fa-solid fa-circle-dollar-to-slot"></i> 
+                                    <span class="lang" key="">Tổng hợp dữ liệu</span>
+                                </a>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row box-select"><!--Search zone-->
+                <div class="col-lg-8 box-select-khoanno">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="group-title pl5 pt0">
+                                <p class="titleSearchContent" data-target="#DSKhoanThu">
+                                    <i class="fal fa-usd-circle"></i>
+                                    <span class="lang" key="">Chọn khoản nợ</span>
+                                </p>
+                            </div>
+                            <div class="area-search">
+                                <div id="DSKhoanThu" style="padding-left: 25px" class="inputSearch collapse in">
+                                    <div id="zoneLoaiKhoanPhi"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 box-select-trangthai">
+                    <div class="box box-solid">
+                        <div class="box-body">
+                            <div class="group-title  pl5 pr5 pt0">
+                                <p class="titleSearchContent color-red" data-target="#DSTrangThaiSV_LHD">
+                                    <i class="fal fa-user-graduate"></i>
+                                    <span class="lang color-red" key="">Chọn trạng thái sinh viên</span>
+                                </p>
+                            </div>
+                            <div class="area-search">
+                                <div style="padding-left: 25px" id="DSTrangThaiSV_LHD" class="inputSearch collapse in">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row box-shadow pd0 mb-20 aps-dssv-notien">
+            <div class="box box-solid box-KhoanThu pd0" id="mainKhoanThu">
+                <div class="box-body pd0">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab_khoanthu_chuaxuat" data-toggle="tab"
+                                    aria-expanded="true">1. <span class="lang" key="">Sinh viên nợ tiền</span></a></li>
+                        </ul>
+                        <div class="tab-content mt-20">
+                            <!-- Danh sách khoản thu -->
+                            <div class="tab-pane active" id="tab_khoanthu_chuaxuat">
+                                <div class="row row-tab row-align">
+                                    <div class="clear"></div>
+                                    <div class="zone-content-table scroll-table-x">
+                                        <table id="tbldata_KhoanThu_ChuaXuat_NT" class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th class="td-fixed td-center">Stt</th>
+                                                    <th class="td-left"><span class="lang" key="">Mã số</span></th>
+                                                    <th class="td-left"><span class="lang" key="">Họ tên</span></th>
+                                                    <th class="td-left"><span class="lang" key="">Lớp</span></th>
+                                                    <th class="td-center"><span class="lang" key="">Học kỳ</span></th>
+                                                    <th class="td-left"><span class="lang" key="">Khoản thu</span></th>
+                                                    <th class="td-left"><span class="lang" key="">Nội dung</span></th>
+                                                    <th class="td-right"><span class="lang" key="">Số tiền</span></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="7" class="td-center">Hãy ấn nút tìm kiếm để tải danh
+                                                        sách</td>
+                                                </tr>
+                                            </tbody>
+                                            <tfoot></tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.box-Nhap Tui Ho So -->
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- page script -->
+<div id="DSPhieuRut" style="display:none" class="DSPhieuRut"></div>
+<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.6"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['SinhVienNoTien'] = new SinhVienNoTien();
+    $(document).ready(function () {
+        main_doc.SinhVienNoTien.init();
+    });
+</script>

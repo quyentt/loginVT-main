@@ -1,0 +1,133 @@
+﻿<style>
+    .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
+        margin-left: 0px;
+    }
+</style>
+<section class="content aps-TotNghiep">
+    <div class="row aps-thuchienin">
+        <div class="zone-bus" id="zonebatdau">
+            <!--Tìm kiếm-->
+            <div class="box box-solid box-search pd20 pb10">
+                <div class="box-body pd0">
+                    <div class="group-title d-none">
+                        <p class="titleSearchContent">
+                            <i class="fa fa-window-restore">
+                            </i> <span class="lang" key="">Tìm kiếm</span>
+                        </p>
+                    </div>
+                    <div class="area-search">
+                        <div id="search" class="inputSearch">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_HeDaoTao" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KhoaDaoTao" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn khóa đào tạo-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_ChuongTrinh" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn chương trình-- </option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_Lop" class="select-opt" style="width:100% !important">
+                                    <option id="" value=""> --Chọn lớp-- </option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_PhanLoai" class="select-opt"></select>
+                            </div>
+
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_DoiTuong" class="select-opt">
+                                    <option id="" value="-1"> Tất cả đối tượng </option>
+                                    <option id="" value="0"> Đối tượng trong trường</option>
+                                    <option id="" value="1"> Đối tượng ngoài trường</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_Phoi" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropMauPhoi_BanSao" class="select-opt"></select>
+                            </div>
+                            <div class="clear"></div>
+                            <div class="col-sm-6 item-search">
+                                <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+
+            <!--Danh sách kế hoạch-->
+            <div class="box box-solid aps-ds-kehoach pl20 pr20 mt-10 pb0">
+                <div class="box-header pd0 pb5">
+                    <h3 class="box-title pt5">
+                        <i class="fal fa-file-certificate"></i> Danh sách kế hoạch
+                        <span class="pull-right badge bg-light-blue ml-10">
+                            <span id="lblThucHienIn_Tong"></span>
+                        </span>
+                    </h3>
+                    <div class="box-tools pull-right right-0">
+                        <a class="btn btn-default" id="btnThucHienIn" href="#"><i class="fa fa-print"></i> In lần lượt</a>
+                    </div>
+                </div>
+                <div class="box-body pd0" style="display: none">
+                    <div class="aps-table-select mt-15 scroll-table-x">
+                        <table id="tblThucHienIn" class="table table-hover table-bordered mb-15">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center"><span class="lang" key="">Ảnh cá nhân</span></th>
+                                    <th class="td-center"><span class="lang" key="">Mã số</span></th>
+                                    <th class="td-center"><span class="lang" key="">Họ tên</span></th>
+                                    <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
+                                    <th class="td-center"><span class="lang" key="">Giới tính</span></th>
+                                    <th class="td-center"><span class="lang" key="">Dân tộc</span></th>
+                                    <th class="td-center"><span class="lang" key="">Nơi sinh</span></th>
+                                    <th class="td-center"><span class="lang" key="">Ngành nghề</span></th>
+                                    <th class="td-center"><span class="lang" key="">Số hiệu bằng</span></th>
+                                    <th class="td-center"><span class="lang" key="">Số vào sổ cấp bằng</span></th>
+                                    <th class="td-center"><span class="lang" key="">Số quyết định</span></th>
+                                    <th class="td-center"><span class="lang" key="">Ngày quyết định</span></th>
+                                    <th class="td-center"><span class="lang" key="">Ngày ký bằng</span></th>
+                                    <th class="td-center"><span class="lang" key="">Ngày vào sổ cấp bằng</span></th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_ThucHienIn">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- load from js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="box-footer" id="zoneMotherPhoi"></div>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- page script -->
+<script src="modules/vanbang/script/thuchienin.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['ThucHienIn'] = new ThucHienIn();
+    $(document).ready(function () {
+        main_doc.ThucHienIn.init();
+    });
+</script>

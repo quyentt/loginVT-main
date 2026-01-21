@@ -1,0 +1,190 @@
+﻿<div class="one-door">
+    <div class="overlay"></div>
+    <div class="content-tab no-tab">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+                <p class="link"><a href="#">Đăng ký học</a><i class="fal fa-angle-right"></i><a href="#">Đăng ký - quản
+                        lý sự kiện</a></p>
+
+            </div>
+
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- đăng ký nguyện vọng -->
+    <div class="box-shadow register-wish pt-0">
+        <div class="form-top">
+            <div class="row pr0">
+                <!--<div class="col-12 col-lg-3 col-md-6 mb-15">
+                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                            <select id="dropSearch_KeHoach" class="select-opt form-select" aria-label="Default select example"></select>
+                        </div>
+                    </div>
+                </div>-->
+                <div class="row box-header pr0 pl0">
+                    <div class="pull-left col-lg-6 col-md-6">
+                        <p class="color-dask-blue fz24 pl15 mb-10">
+                            <i class="fa-solid fa-calendar-lines-pen pr10"></i>Xem lịch chấm thi và nhập điểm
+                        </p>
+                    </div>
+                    <div class="pull-right col-lg-6 col-md-6 text-right pr0">
+                        <div class="btn btn-primary" id="btnSearch">
+                            <i class="fa-solid fa-magnifying-glass"></i> Xem
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid px-20">
+            <p class="title-txt fw-bold mb-10"><i class="fa-light fa-list-dropdown pr5"></i>Danh sách túi bài (thi viết)</p>
+            <div class="aps-table-select">
+                <table class="tblTuiBai table transcrip-table tabs-scores h-auto table-bordered mb-10" id="tblTuiBai">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th class="" scope="col">Túi bài</th>
+                            <th class="" scope="col">Cán bộ chấm thi</th>
+                            <th class="text-center" scope="col">Số bài chấm</th>
+                            <th class="" scope="col">Mã học phần</th>
+                            <th class="" scope="col">Tên học phần</th>
+                            <th class="text-center" scope="col">Ngày giao bài</th>
+                            <th class="text-center" scope="col">Thời gian hoàn thiện điểm</th>
+                            <th class="text-center" scope="col">Thời gian nhận bài từ VPK</th>
+                            <th class="text-center" scope="col">Tình trạng chấm</th>
+                            <th class="text-center" scope="col">Ghi chú</th>
+                            <th class="text-center" scope="col">Đợt thi</th>
+                            <th class="text-center" scope="col">
+                                <input type="checkbox" id="chkSelectAll_TuiBai">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                <div class="btn btn-outline-primary px-4 ms-auto btnXacNhan" id="tblTuiBai"><i
+                        class="fal fa-money-check-edit me-2"></i> Thiết đặt tình trạng chấm</div>
+            </div>
+            <p class="title-txt fw-bold mb-10 mt-10 color-red"><i class="fa-solid fa-clipboard-list pr5"></i>Danh sách thi VĐ/ TH</p>
+            <div class="aps-table-select">
+                <table class="table transcrip-table tabs-scores h-auto table-bordered tblThi mb-10" id="tblThi">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th class="" scope="col">Danh sách thi</th>
+                            <th class="" scope="col">Cán bộ chấm thi</th>
+                            <th class="text-center" scope="col">Số bài chấm</th>
+                            <th class="" scope="col">Mã học phần</th>
+                            <th class="" scope="col">Tên học phần</th>
+                            <th class="text-center" scope="col">Ngày hỏi thi</th>
+                            <th class="text-center" scope="col">Ca thi</th>
+                            <th class="text-center" scope="col">Phòng thi</th>
+                            <th class="text-center" scope="col">Thời gian hoàn thiện điểm</th>
+                            <th class="text-center" scope="col">Thời gian nhận bài từ VPK</th>
+                            <th class="text-center" scope="col">Tình trạng chấm</th>
+                            <th class="text-center" scope="col">Ghi chú</th>
+                            <th class="text-center" scope="col">Đợt thi</th>
+                            <!--<th class="text-center" scope="col">Ngày thi</th>-->
+                            <th class="text-center" scope="col">
+                                <input type="checkbox" id="chkSelectAll_Thi">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                <div class="btn  btn-outline-danger  px-4 ms-auto btnXacNhan" id="tblThi"><i
+                        class="fal fa-money-check-edit me-2"></i> Thiết đặt tình trạng chấm</div>
+            </div>
+
+            <!--<p class="color-dask-blue fw-bold mt-3 mb-1">Sự kiện đã tham gia</p>
+            <div class="bus-wrp">
+                <table class="table transcrip-table tabs-scores h-auto" id="tblDaThamGia">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th class="" scope="col">Tên sự kiện</th>
+                            <th class="text-center" scope="col">Thời gian</th>
+                            <th class="text-center" scope="col">Diễn giả</th>
+                            <th class="text-center" scope="col">Tư liệu</th>
+                            <th class="text-center" scope="col">Hình ảnh</th>
+                            <th class="text-center" scope="col">
+                                Điểm
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>-->
+
+
+
+
+        </div>
+    </div>
+    <!-- end đăng ký nguyện vọng -->
+
+</div>
+
+<div class="modal fade finance-modal my-calendar confirm_scores" id="modal_XacNhan" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-700 ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p><b>Xác nhận hoàn thành</b></p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+                <div class="action-group">
+                    <div class="select-group">
+                        <div class="label">Trạng thái</div>
+                        <div class="form-item d-flex  form-add-info">
+                            <div class="input-group no-icon">
+
+                                <select class="form-select select-opt" aria-label="Default select example"
+                                    id="dropLoaiXacNhan">
+                                    <option value="1">Đã chấm</option>
+                                    <option value="0">Chưa chấm</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    </div>
+                    <a class="btn btn-success" id="btnDongYXacNhan" data-bs-dismiss="modal"><i
+                            class="fal fa-check me-2"></i> <span>Đồng ý</span></a>
+                </div>
+                <p class="fw-bold mb-2">Lịch sử</p>
+                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhan">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">STT</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Người thực hiện</th>
+                            <th class="text-center" scope="col">Thời gian</th>
+
+
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="modules/nhapdiem/script/lichchamthi.js?v=1.0.0.2"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['LichChamThi'] = new LichChamThi();
+    $(document).ready(function () {
+        main_doc.LichChamThi.init();
+    });
+</script>

@@ -1,0 +1,34 @@
+﻿<style>
+    .btn-large {
+        width: 108px;
+        text-align: center;
+        background-color: #fff;
+        border-bottom: 1px solid #f1f1f1;
+        float: left;
+        margin-left: 5px;
+    }
+    .color-active {
+        width: 108px;
+        overflow: hidden !important;
+    }
+</style>
+<section class="content">
+    <div class="row">
+        <!-- Zone Add DonNghi-->
+        <div class="box box-solid">
+            <div class="row zone-box">
+                <div class="row" id="zoneBtnBaoCao">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- page script -->
+<script src="modules/baocao/script/baocao.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['BaoCao'] = new BaoCao();
+    $(document).ready(function () {
+        main_doc.BaoCao.init();
+    });
+</script>

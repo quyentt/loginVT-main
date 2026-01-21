@@ -1,0 +1,189 @@
+﻿<!-- Main content -->
+<style>
+    /*.btnEvent {
+        list-style-position: inside;
+        border-bottom: 1px solid #c1c1c1;
+        border-left-width: -5px;
+    }*/
+    .jstree-leaf:hover {
+        background: #f1f1f1 !important;
+    }
+</style>
+<section class="content aps-cms">
+    <div class="row aps-vaitro-cn">
+        <!-- /.left-content -->
+        <div class="col-sm-3 aps-box-l aps-vaitro-cn-l">
+            <div class="box box-solid box-shadow">
+                <div class="box-header with-border box-search">
+                    <h3 class="box-title" title="Tổng bài báo trong nước">
+                        <i class="fa-light fa-users-gear"></i> Danh sách vai trò
+                    </h3>
+                    <span class="pull-right badge bg-light-blue">
+                        <span id="lblDanhMucTenBang_Tong"></span>
+                    </span>
+                </div>
+                <div class="box-body mt-5">
+                    <div id="treesjs_vaitro_vtcn">
+                        <!--Content of treejs-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.right-content -->
+        <div class="col-sm-9 aps-box-r aps-vaitro-cn-r">
+            <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        <i class="fa-light fa-rectangle-history-circle-user"></i> Danh sách chức năng theo vai trò
+                    </h3>
+                    <div class="pull-right">
+                        <a class="submit btn btn-primary btnAddnew"><i class="fa fa-plus color-active"></i> <span
+                                class="lang" key="">Thêm</span></a>
+                        <a class="submit btn btn-success" id="btnSync_VTCN"><i class="fa fa-recycle"></i> <span
+                                class="lang" key="">Đồng bộ tất cả</span></a>
+                        <a class="submit btn btn-default" id="btnChucNangV2"><i class="fa fa fa-bullseye"></i> <span
+                                class="lang" key="">View mới</span></a>
+                    </div>
+                </div>
+                <div class="box-body pd0">
+                    <!-- Zone danh sach UngDung cua VaiTro -->
+                    <div class="col-sm-3">
+                        <div class="box box-solid">
+                            <div class="box-body">
+                                <p><b><i class="fa fa-hdd-o mr-5"></i> Danh sách ứng dụng </b>(<span
+                                        id="lblVaiTroUngDung_Tong_VTCN"></span>)</p>
+                                <div id="zone_vaitroungdung">
+                                    <!-- Load from js -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <!-- 1. Zone danh sach ChucNang cua VaiTro -->
+                        <div class="box box-solid zone-bus-vtcn" id="zone_list_vtcn">
+                            <div class="box-body">
+                                <i class="fa-light fa-gear mr-10"></i><span
+                                    style="font-weight: 700">Danh sách chức năng</span>(<span id="lblTong_VTCN"></span>)
+                                <table class="table table-hover mt-10" id="tableVaiTroChucNang_VTCN">
+                                    <thead>
+                                    <tr>
+                                        <th class="td-center">Stt</th>
+                                        <th>Tên chức năng</th>
+                                        <th>Tình trạng</th>
+                                        <th class="td-center">Xóa</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="box box-solid zone-bus-vtcn" id="zone_list_vtcnv2" style="display: none">
+                            <div class="box-body">
+                                <i class="fa-light fa-gear mr-10"></i><span style="font-weight: 700"> Danh sách chức năng</span>
+                                <div id="treesjs_ungdungchucnang_vtcn">
+                                    <!--Content of treejs-->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 2. Zone them ChucNang cho VaiTro -->
+                        <div class="box box-solid form-container zone-bus-vtcn" id="zone_input_vtcn">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="fa-light fa-user-gear"></i> Thêm Chức năng cho Vai trò (<span
+                                        id="lblChucNang_Tong_VTCN"></span>)</h3>
+                                <div class="pull-right">
+                                    <a class="btn btn-default btnClose" href="#" title="Close"><i
+                                            class="fa fa-times"></i></a>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <div class="col-sm-12 box-view aps-form">
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">
+                                                Ứng dụng
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <select id="dropUngDung_VTCN" class="select-opt"></select>
+                                        </div>
+                                    </div>
+                                    <div class="row aps-form-item mt-10 mb-20">
+                                        <div class="col-sm-2">
+                                            <div class="title-name">
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input aps-form-radio">
+                                            <input type="radio" class="rdLoaiVaiTro_ChucNang"
+                                                   name="rdLoaiVaiTro_ChucNang" value=""/>
+                                            Toàn bộ
+                                            <input type="radio" class="rdLoaiVaiTro_ChucNang ml-10"
+                                                   name="rdLoaiVaiTro_ChucNang" value="fa fa-plus" checked="checked"/>
+                                            Chưa thêm
+                                            <input type="radio" class="rdLoaiVaiTro_ChucNang ml-10"
+                                                   name="rdLoaiVaiTro_ChucNang" value="fa fa-times-circle"/>
+                                            Đã thêm
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-hover" id="tblChucNang_VTCN">
+                                    <thead>
+                                    <tr>
+                                        <th class=" td-fixed td-center">Stt</th>
+                                        <th>Chức năng</th>
+                                        <th class="td-center">Thêm</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td colspan="3" class="td-center color-warning">Vui lòng chọn ứng dụng!</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Modal -->
+<div class="modal fade" id="myModalChucNang_VTCN" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title color-active"><span class="lang" key="lb_themmoichucnang"><i
+                        class="fa fa-plus"></i> Thêm mới chức năng cho vai trò</span></h4>
+            </div>
+            <div class="modal-body">
+                <table class="table table-hover" id="tableChucNang_VTCN">
+                    <thead>
+                    <tr>
+                        <th class="td-center">Stt</th>
+                        <th>Tên chức năng</th>
+                        <th class="td-center">Thêm</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="lang" key="lb_dong"><i
+                        class="fa fa-times-circle"></i> Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page script -->
+<script src="modules/vaitro/script/vaitrochucnang.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    //init
+    var main_doc = {};
+    main_doc['VaiTroChucNang'] = new VaiTroChucNang();
+    $(document).ready(function () {
+        main_doc.VaiTroChucNang.init();
+    });
+</script>

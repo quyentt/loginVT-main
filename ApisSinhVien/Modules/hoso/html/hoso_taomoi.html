@@ -1,0 +1,352 @@
+﻿<!-- Main content -->
+<style>
+    .popover {
+        max-width: 100%;
+        /* Max Width of the popover (depending on the container!) */
+    }
+
+    .colorcard {
+        color: #009688
+    }
+
+    .pcard {
+        font-size: 18px !important;
+        line-height: 1.7 !important;
+    }
+
+    .pcard i {
+        width: 30px;
+    }
+
+    .activeOnSearch,
+    .activeSelect {
+        background-color: #f1f1f1;
+    }
+</style>
+<section class="content aps-sinhvien">
+    <div class="row aps-hoso-taomoi">
+        <!-- /.left-content -->
+        <div class="col-sm-3 aps-hoso-taomoi-l aps-box-l box-shadow pd0 ">
+            <!--Box search-->
+            <div class="box box-solid box-search pd15">
+                <div class="box-body pd0">
+                    <!-- Bộ tìm kiếm -->
+                    <div class="bs-item ">
+                        <input type="text" id="txtSearchSinhVien_TuKhoa" class="form-control"
+                            placeholder="Nhập từ khóa tìm kiếm">
+                    </div>
+                    <div class="bs-item pull-right mt-10 w-100">
+                        <a id="btnSearch_HSSV" class="btn btn-default  w-100 btn-search ml-0"><i
+                                class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                    </div>
+                </div>
+            </div>
+            <!--Danh sách danh mục-->
+            <div class="box box-solid aps-list-danhmuc pd0 mt-15">
+                <div class="box-header pl15 pr15 pt15 mb-10">
+                    <h3 class="box-title mt-0" title="Danh sách sinh viên">
+                        <i class="fa-light fa-address-book"></i> Danh sách sinh viên
+                    </h3>
+                    <span class="pull-right badge bg-light-blue">
+                        <span id="lblHSLL_NhanSu_Tong"></span>
+                    </span>
+                </div>
+                <div class="box-body pd0 aps-hoso-table">
+                    <table id="tblHoSoKhoiTao" class="table table-hover tblHoSoKhoiTao mb-10">
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- /.right-content -->
+        <div class="col-sm-9 aps-hoso-taomoi-r pl20 aps-box-r">
+            <!-- Khởi tạo hồ sơ  -->
+            <div class="box box-solid box-shadow aps-dm-tapchiqt-detail pd0">
+                <div class="box-header with-border bg-header">
+                    <h3 class="box-title color-blue"><i class="fa-light fa-address-card"></i> Khởi tạo hồ sơ </h3>
+                </div>
+                <div class="box-body pd0">
+                    <div class="row aps-add-new">
+                        <div class="row aps-form pd20 ">
+                            <div class="row aps-lable-name">
+                                <p class="group-group-title-name border-0 mb-0">
+                                    <span class="badge bg-blue">1) Thông tin cơ bản</span>
+                                </p>
+                            </div>
+                            <!-- Row 1 -->
+                            <div class="row aps-form-item">
+                                <div class="col-sm-2 aps-form-img">
+                                    <div id="txtAnh"></div>
+                                </div>
+                                <div class="col-sm-10 aps-form-detail pl30">
+                                    <!-- Row 1 -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">Họ <span class="title-colon">:</span></div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input aps-form-input">
+                                            <input type="text" id="txtSinhVien_Ho" placeholder="Nhập họ"
+                                                class="form-control form-border" />
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable pr15 text-right">
+                                            <div class="title-name">
+                                                Tên <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input type="text" id="txtSinhVien_Ten" placeholder="Nhập tên"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 2 -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Mã số <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input type="text" id="txtSinhVien_MaSo" placeholder="Mã sinh viên"
+                                                class="form-control form-border" />
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable pr15 text-right">
+                                            <div class="title-name">
+                                                Sinh ngày <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <input type="text" id="txtSinhVien_NgaySinh"
+                                                class="form-control form-border" placeholder="dd" />
+                                        </div>
+                                        <div class="col-sm-1 pl10">
+                                            <input type="text" id="txtSinhVien_ThangSinh"
+                                                class="form-control form-border" placeholder="mm" />
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable pl10">
+                                            <input type="text" id="txtSinhVien_NamSinh" class="form-control form-border"
+                                                placeholder="yyyy" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 3 -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Quốc tịch <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <select id="dropSinhVien_QuocTich" class="select-opt">
+                                                <option>--Chọn quốc tịch--</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable pr15 text-right">
+                                            <div class="title-name">
+                                                Giới tính <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <select id="dropSinhVien_GioiTinh" class="select-opt">
+                                                <option id="" value="">--Chọn giới tính-- </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Row 4 -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Dân tộc <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <select id="dropSinhVien_DanToc" class="select-opt">
+                                                <option id="" value="">--Chọn dân tộc-- </option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable pr15 text-right">
+                                            <div class="title-name">
+                                                Tôn giáo <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <select id="dropSinhVien_TonGiao" class="select-opt">
+                                                <option id="" value="">--Chọn tôn giáo-- </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- Row 5 -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Email <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input type="text" id="txtSinhVien_Email" placeholder="client@mail.com"
+                                                class="form-control form-border" />
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable  pr15 text-right">
+                                            <div class="title-name">
+                                                Điện thoại:
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input type="text" id="txtSinhVien_DienThoai" placeholder="035 789 567"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 6 -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Cơ quan<span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input type="text" id="txtCoQuanCongTac" class="form-control form-border" />
+                                        </div>
+                                        <div class="col-sm-2 aps-form-lable pr15 text-right">
+                                            <div class="title-name">
+                                                Mã số thuế:
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 aps-form-input">
+                                            <input type="text" id="txtMaSoThue" class="form-control form-border" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Row 7 - Que quan -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Nơi sinh <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <input type="text" id="txtSinhVien_NoiSinh"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 8 - Que quan -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Quê quán <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <input type="text" id="txtSinhVien_QueQuan"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 9 - Ho khau thuong tru -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Hộ khẩu thường trú <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <input type="text" id="txtSinhVien_HoKhauThuongTru"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 10 - No o hien nay -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Nơi ở hiện nay <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <input type="text" id="txtSinhVien_NoiOHienNay"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                    <!-- Row 11 - Khi can bao tin cho ai -->
+                                    <div class="row aps-form-item">
+                                        <div class="col-sm-2 aps-form-lable">
+                                            <div class="title-name">
+                                                Cần báo tin cho ai <span class="title-colon">:</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-10 aps-form-input">
+                                            <input type="text" id="txtSinhVien_DiaChiBaoTin"
+                                                class="form-control form-border" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form">
+                                <div class="row aps-lable-name">
+                                    <p class="group-group-title-name border-0 mb-0">
+                                        <span class="badge bg-blue">2) Lớp</span>
+                                    </p>
+                                </div>
+                                <!-- Row 2 - Que quan -->
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-3 aps-form-input">
+                                        <select id="dropHeDaoTao" class="select-opt">
+                                            <option value="">--Chọn hệ--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3 aps-form-input pl15">
+                                        <select id="dropKhoaDaoTao" class="select-opt">
+                                            <option value="">--Chọn khóa đào tạo--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3 aps-form-input pl15">
+                                        <select id="dropChuongTrinhDaoTao" class="select-opt">
+                                            <option value="">--Chọn chương trình--</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-3 aps-form-input pl15">
+                                        <select id="dropLop" class="select-opt">
+                                            <option value="">--Chọn lớp--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div style="text-align: center;">
+                            <div class="dropdown btn pd0" id="zonebtnHSSV_Import" style="padding: 0 !important;">
+                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <i class="fa-light fa-upload"></i> Import <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu form-container">
+                                    <li><a class="btnImportWithProce" name="IMPORTWITHPROC_HSSV" title="hồ sơ" href="#">
+                                            1. Import hồ sơ sinh viên</a></li>
+                                    <li><a class="btnImportWithProce" name="IMPORTWITHPROC_HSDD" title="hồ sơ đầy đủ"
+                                            href="#"> 2. Import hồ sơ sinh viên đầy đủ</a></li>
+                                </ul>
+                            </div>
+                            <!--<a id="btnHSLL_Import" class="btn btn-success"><i class="fa fa-cloud-upload"></i><span class="lang" key=""> Import</span></a>-->
+                            <a id="btnHSLL_Add" class="btn btn-primary"><i class="fa fa-save"></i><span class="lang"
+                                    key=""> Lưu</span></a>
+                            <a id="btnHSLL_Rewrite" class="btn btn-warning"><i class="fa fa-refresh"></i><span
+                                    class="lang" key=""> Làm mới</span></a>
+                            <a id="btnHSLL_AddMode" class="btn btn-primary"><i class="fa fa-plus"></i><span class="lang"
+                                    key=""> Thêm hồ sơ khác</span></a>
+                            <a id="btnHSLL_Save" class="btn btn-warning"><i class="fal fa-edit"></i> <span class="lang"
+                                    key=""> Cập nhật</span></a>
+                            <a id="btnHSLL_Delete" class="btn btn-default"><i class="fa fa-trash"></i><span class="lang"
+                                    key=""> Xóa</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</section>
+<!-- page script -->
+<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.122"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['HoSoTaoMoi'] = new HoSoTaoMoi();
+    $(document).ready(function () {
+        main_doc.HoSoTaoMoi.init();
+    });
+</script>

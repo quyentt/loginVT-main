@@ -1,0 +1,173 @@
+﻿<!-- Main content -->
+<style>
+    #tbl_hienthi td {
+        padding: 3px
+    }
+
+    .popover {
+        max-width: 100%; /* Max Width of the popover (depending on the container!) */
+    }
+    #tblKhoiTao_NhanSu td{
+        text-align: right;
+    }
+</style>
+<section class="content aps-congcanbo">
+    <div class="row aps-bangtinhluongnam">
+        <!-- /.left-content -->
+        <div class="box box-solid box-search pt15 pb15">
+            <div class="box-header with-border d-none">
+                <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+            </div>
+            <div class="box-body pd0">
+                <div style="margin-left: auto; margin-right: auto; width: 860px">
+                    <table id="tbl_hienthi">
+                        <tr class="d-flex line-38">
+                            <td class="d-flex line-38">
+                                <label style="float: left; width: 55px">Tháng: </label>
+                                <input style="float: left; width: 68px" id="txtSearch_Thang" class="form-control" />
+                            </td>
+                            <td class="d-flex line-38">
+                                <label style="float: left; width: 52px; padding-left: 10px">Năm: </label>
+                                <input style="float: left; width: 60px" id="txtSearch_Nam" class="form-control" />
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" id="btnViewLuong"><i class="fa fa-search"></i> <span class="lang" key="">Xem</span></a>
+                            </td>                       
+                            <td style="width: 300px">
+                                <select id="dropLoaiBangLuong" class="select-opt">
+                                    <option value="">--Chọn bảng lương--</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="dropdown" id="zonebtnBaoCao_TinhLuong">
+                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                        <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu form-container" id="zonebtnBaoCao_TL">
+                                        <li><a class="btnBaoCao_TL" name="BangLuong" href="#"> 1. Bảng lương</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- BẢNG TÍNH LƯƠNG VÀ PHỤ CẤP -->
+        <div class="col-lg-12 zoneview aps-bangtinh-phucap pd0 mt-20" style="display: block;">
+            <div class="box box-solid pd0">
+                <div class="box-header with-border color-blue" style="text-align: center; font-weight: bold">
+                    <h2><span id="lblForm_KhoiTao_NO" style="font-size: 24px;" class="font-bold"> BẢNG TÍNH LƯƠNG VÀ PHỤ CẤP</span> 
+                        <span id="lblNamTinhLuong" style="font-size: 24px;" class="font-bold color-red" ></span></h2>
+                </div>
+                <div class="box-body pl20 pr20 pb15">
+                    <div class="col-sm-12 box-view">
+                        <div id="table-container">
+                            <div class="aps-table-select">
+                                <table id="tblKhoiTao_NhanSu" class="table table-hover table-bordered tblKhoiTao_NhanSu">
+                                    <thead>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- BẢNG TỔNG HỢP CẢ NĂM -->
+        <div class="col-lg-12 zoneview aps-bangtonghop pd0 mt-20" style="display: block">
+            <div class="box box-solid pd0">
+                <div class="box-header with-border color-red" style="text-align: center; font-weight: bold">
+                    <h2><span style="font-size: 24px;" class="font-bold"> BẢNG TỔNG HỢP CẢ NĂM</span></h2>
+                </div>
+                <div class="box-body pl20 pr20 pb15">
+                    <div class="col-sm-12 box-view">
+                        <div id="table-container">
+                            <div class="aps-table-select">
+                                <table id="tblKhoiTao_NhanSu_CaNam" class="table table-hover table-bordered tblKhoiTao_NhanSu_CaNam">
+                                    <thead>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                        <tr></tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="bottom_anchor"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /.right-content -->
+    </div>
+</section>
+
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width: 800px">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> <span class="lang" key="">Chi tiết bảng lương</span> </h4>
+                <input type="hidden" value="" id="txtId" />
+            </div>
+            <div class="modal-body" id="modal_body">
+                <table id="tblLuongThang" class="table table-hover table-bordered tblLuongThang">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-left"><span class="lang" key="">Nội dung</span></th>
+                            <th class="td-center" style="width: 150px"><span class="lang" key="">Số tiền</span></th>
+                            <th class="td-center" style="width: 120px"><span class="lang" key="">Ngày</span></th>
+                            <th class="td-center"><span class="lang" key="">Thuế TNCN</span></th>
+                            <th class="td-left"><span class="lang" key="">Ghi chú</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- page script -->
+<script src="modules/luong/script/bangtinhluongnam.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['BangLuong'] = new BangLuong();
+    $(document).ready(function () {
+        main_doc.BangLuong.init();
+    });
+</script>
