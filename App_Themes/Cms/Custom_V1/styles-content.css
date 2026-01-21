@@ -1308,8 +1308,7 @@
 .aps-form-item .aps-form-lable .lang,
 .aps-form-lable,
 .aps-form-item .aps-form-lable label,
-.aps-lable,
-.aps-form-lable {
+.aps-lable,.aps-form-lable {
     color: #666;
     line-height: 38px;
 }
