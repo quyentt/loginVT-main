@@ -340,6 +340,7 @@ input:focus-visible {
   z-index: 0;
   left: 13px;
   opacity: 0.6;
+  display: none;
 }
 
 .today-card .card-header {

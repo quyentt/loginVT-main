@@ -558,10 +558,13 @@
 
  .form-control {
      padding: 5px 12px !important;
-     height: 38px;
+     height: 38px !important;
      font-size: 14px !important;
      line-height: 44px !important;
      border-radius: 5px;
+ }
+ .form-control.form-control-textarea {
+     height: auto !important;
  }
 
  .item-search .form-control {
