@@ -558,10 +558,14 @@
 
  .form-control {
      padding: 5px 12px !important;
-     height: 38px !important;
+     height: 38px;
      font-size: 14px !important;
      line-height: 44px !important;
      border-radius: 5px;
+ }
+
+ .item-search .form-control {
+     height: 38px !important;
  }
 
  .aps-form-select-opt .select-opt {
@@ -3316,6 +3320,38 @@
      float: left;
      margin-bottom: 10px;
  }
- td:has(input[type="checkbox"]){
-    text-align: center;
+
+ td:has(input[type="checkbox"]) {
+     text-align: center;
+ }
+
+ /* --- */
+ .tblThongTinTuKhoa tr td:nth-last-child(1),
+ .tblThongTinTuKhoa tr td:nth-last-child(2),
+ .tblThongTinTuKhoa tr td:nth-last-child(3),
+ .tblThongTinTuKhoa tr td:nth-child(8) {
+     text-align: center;
+     align-items: center;
+ }
+
+ .btn-outline-primary.btnThamSo,
+ .btn-outline-primary.btnEdit {
+     width: 100%;
+     line-height: 36px;
+ }
+
+ .aps-search-phamvi .item-search {
+     padding-right: 10px !important;
+     padding-bottom: 10px;
+ }
+
+ .aps-search-phamvi .item-search .select2 {
+     margin-top: 0 !important;
+ }
+
+ .aps-search-phamvi .item-search .select2-container {
+     padding: 0 !important;
+ }
+ .aps-form-input .form-control{
+    height: 38px;
  }

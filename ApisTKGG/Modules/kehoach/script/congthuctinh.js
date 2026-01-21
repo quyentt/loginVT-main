@@ -888,12 +888,12 @@ CongThucTinh.prototype = {
                 //},
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnThamSo" id="' + aData.ID + '" title="Sửa">Xem</a></span>';
+                        return '<span><a class="btn btn-outline-primary btnThamSo" id="' + aData.ID + '" title="Sửa">Xem</a></span>';
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
+                        return '<span><a class="btn btn-outline-primary btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
                     }
                 }
                 , {
