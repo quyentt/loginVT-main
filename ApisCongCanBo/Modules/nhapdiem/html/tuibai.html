@@ -189,10 +189,10 @@
             </div>
             <div class="modal-body p-3">
                 <div class="aps-add-new pd0">
-                     <!-- 1. Trạng thái xác nhận -->
+                    <!-- 1. Trạng thái xác nhận -->
                     <div class="action-group aps-form">
                         <div class="select-group">
-                            <div class="label aps-lable">Trạng thái</div>
+                            <div class="label aps-lable color-666">Trạng thái</div>
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group no-icon aps-form-input">
                                     <select class="form-select select-opt" aria-label="Default select example"
@@ -201,11 +201,11 @@
 
                             </div>
                         </div>
-                        <a class="btn btn-success" id="btnDongYXacNhan">
-                            <i class="fal fa-check me-2"></i> <span>Đồng ý</span></a>
+                        <a class="btn btn-primary" id="btnDongYXacNhan">
+                            <i class="fa-solid fa-circle-check"></i> <span>Đồng ý</span></a>
                     </div>
                     <!-- 2. Lịch sử xác nhận -->
-                    <div class="row aps-form mt-20 ">
+                    <div class="row aps-form mt-20">
                         <div class="row aps-lable text-left mb-0">
                             <p class="group-group-title-name border-0 mb-0 pl-0">
                                 <span class="badge bg-blue">Lịch sử</span>
@@ -244,42 +244,64 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="action-group">
-                    <div class="select-group">
-                        <div class="label">Trạng thái</div>
-                        <div class="form-item d-flex  form-add-info">
-                            <div class="input-group no-icon">
+                <div class="aps-add-new pd0">
+                    <!-- 1. Trạng thái xác nhận -->
+                    <div class="action-group aps-form">
+                        <div class="select-group">
+                            <div class="label aps-lable color-666">Trạng thái</div>
+                            <div class="form-item d-flex  form-add-info">
+                                <div class="input-group no-icon">
 
-                                <select class="form-select select-opt" aria-label="Default select example"
-                                    id="dropLoaiXacNhanDS"></select>
+                                    <select class="form-select select-opt" aria-label="Default select example"
+                                        id="dropLoaiXacNhanDS"></select>
+                                </div>
+
                             </div>
+                        </div>
+                        <a class="btn btn-primary" id="btnDongYXacNhanDS">
+                            <i class="fa-solid fa-circle-check"></i><span>Đồng ý</span></a>
+                    </div>
+                    <!-- 2. Danh sách xác nhận -->
+                    <div class="row aps-form mt-20">
+                        <div class="row aps-lable text-left mb-0">
+                            <p class="group-group-title-name border-0 mb-0 pl-0">
+                                <span class="badge bg-blue">Danh sách xác nhận</span>
+                            </p>
+                        </div>
+                        <div class="row aps-form-table">
+                            <table class="table transcrip-table tabs-scores fs-14 tblModal_DanhSachXacNhan "
+                                id="tblModal_DanhSachXacNhan">
+                                <thead>
 
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
-                    <a class="btn btn-success" id="btnDongYXacNhanDS"><i class="fal fa-check me-2"></i> <span>Đồng
-                            ý</span></a>
+                    <!-- 3. Lịch sử -->
+                    <div class="row aps-form mt-20">
+                        <div class="row aps-lable text-left mb-0">
+                            <p class="group-group-title-name border-0 mb-0 pl-0">
+                                <span class="badge bg-blue">Lịch sử</span>
+                            </p>
+                        </div>
+                        <div class="row aps-form-table">
+                            <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanDSTungSinhVien" id="tblModal_XacNhanDSTungSinhVien">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" scope="col">STT</th>
+                                        <th scope="col">Trạng thái</th>
+                                        <th scope="col">Người thực hiện</th>
+                                        <th class="text-center" scope="col">Thời gian</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <p class="fw-bold mb-2">Danh sách xác nhận</p>
-                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_DanhSachXacNhan">
-                    <thead>
-
-                    </thead>
-                    <tbody></tbody>
-                </table>
-                <p class="fw-bold mb-2">Lịch sử</p>
-                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhanDSTungSinhVien">
-                    <thead>
-                        <tr>
-                            <th class="text-center" scope="col">STT</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Người thực hiện</th>
-                            <th class="text-center" scope="col">Thời gian</th>
-
-
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
 
         </div>

@@ -48,7 +48,13 @@
 .mb-30 {
   margin-bottom: 30px !important;
 }
-
+.row {
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
 /*-----------------------*/
 body {
   color: #222;
@@ -7379,4 +7385,7 @@ tr:last-child .d-flex.gap-3 {
     padding: 0 !important;
     margin: 0 !important;
     font-size: 18px;
+}
+.action-group.aps-form {
+    width: 100% !important;
 }
