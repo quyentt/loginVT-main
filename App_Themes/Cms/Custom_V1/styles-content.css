@@ -12,6 +12,13 @@
     justify-content: flex-end !important;
 }
 
+.border-radius-0 {
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
 .zoneChucNang .btnDelete_VaiTroChucNang:hover,
 .zoneChucNang .btnAdd_ChucNang:hover,
 .zoneChucNang .btnSync:hover,
@@ -9931,13 +9938,14 @@ table#clone {
 }
 
 .aps-kehoach-add .title-name .btnDelete_PhamVi {
-    position: relative !important;s
+    position: relative !important;
+    s
     /* top: 0; */
     right: 0px !important;
 }
 
 .aps-form-item .select2-container--default .select2-selection--single,
-.aps-form-input  .select2-container--default .select2-selection--single{
+.aps-form-input .select2-container--default .select2-selection--single {
     height: 38px !important;
     line-height: 44px !important;
     padding: 3px 5px !important;
@@ -9952,6 +9960,6 @@ table#clone {
 
 .aps-form-item .select2-container--default .select2-selection--single .select2-selection__arrow,
 .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
-        top: 6px !important;
+    top: 6px !important;
     right: 12px !important;
 }
