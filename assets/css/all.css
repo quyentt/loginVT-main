@@ -56,7 +56,10 @@
   padding-right: 0;
   padding-left: 0;
 }
-
+/*-----------------------*/
+.border-bottom-0{
+  border-bottom: 0 !important;
+}
 /*-----------------------*/
 body {
   color: #222;
@@ -7431,3 +7434,4 @@ tr:last-child .d-flex.gap-3 {
   width: 86px !important;
   text-align: center !important;
 }
+

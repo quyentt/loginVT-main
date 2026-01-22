@@ -1308,7 +1308,8 @@
 .aps-form-item .aps-form-lable .lang,
 .aps-form-lable,
 .aps-form-item .aps-form-lable label,
-.aps-lable,.aps-form-lable {
+.aps-lable,
+.aps-form-lable {
     color: #666;
     line-height: 38px;
 }
@@ -1463,10 +1464,12 @@
 .jstree-default>.jstree-container-ul>.jstree-node:first-child {
     padding-top: 10px;
 }
+
 .zone_khoibatbuoc.jstree-default>.jstree-container-ul>.jstree-node:first-child,
 .zone_khoibatbuoc.jstree-default>.jstree-container-ul>.jstree-node:first-child {
     padding-top: 2px !important;
 }
+
 .jstree-default .jstree-clicked {
     background: rgba(51, 128, 219, 0.2) !important;
 }
@@ -2706,7 +2709,7 @@
 /*--aps-modal-nhansu-------------*/
 .aps-modal-nhansu .modal-body {
     padding: 0 !important;
-    background: #f1f1f1;
+    background: #fff;
 }
 
 .aps-modal-nhansu .modal-body>.row {
@@ -2825,6 +2828,12 @@
     position: absolute;
     top: 10px;
     right: 20px;
+}
+
+.aps-modal-nhansu .col-sm-9 .item-modal .pull-right .btn-primary {
+    position: absolute;
+    top: 10px;
+    right: 0px !important;
 }
 
 .aps-modal-nhansu .col-sm-9 .pull-right #btnChonNhanSu {
@@ -5324,7 +5333,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .modal_sinhvien .search .item-modal #btnSearch_ModalSinhVien {
     background-color: var(--color-blue) !important;
     border-color: var(--color-blue) !important;
-    color: #fff;
+    color: #fff !important;
     width: 100%;
 }
 
@@ -5334,8 +5343,8 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .modal_sinhvien .search .item-modal #btnSearch_ModalSinhVien:hover {
-    background-color: #06438d !important;
-    border-color: #06438d !important;
+    background-color: var(--color-link-hover) !important;
+    border-color: var(--color-link-hover) !important;
     color: #fff !important;
 }
 
@@ -8187,7 +8196,7 @@ input#tblInput_DTSV_SinhVien_input {
     padding-top: 2px !important;
     padding-left: 12px !important;
     padding-right: 12px !important;
-        width: auto !important;
+    width: auto !important;
 }
 
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
@@ -8208,22 +8217,28 @@ input#tblInput_DTSV_SinhVien_input {
     height: 60px;
     line-height: 60px;
 }
+
 .zone_chuongtrinhhocphan .box-header.bg-greenr .pull-right .btn {
     margin-top: -17px !important;
 }
+
 .zone_chuongtrinhhocphan .box-header.bg-green .pull-right .btn {
     margin-top: -18px;
 }
+
 .zone_chuongtrinhhocphan-left .box-title.color-blue {
     padding-top: 8px;
     margin-bottom: 12px;
 }
+
 .zone_chuongtrinhhocphan-right .box-header {
     margin-top: 20px;
 }
+
 .zone_chuongtrinhhocphan-right .box-header .pull-right {
     margin-top: -5px;
 }
+
 /* ----------- */
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li:hover .submit.btn,
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li:hover .submit.btn i.fa-circle-check {
@@ -9882,19 +9897,61 @@ table#clone {
 .border-fff {
     border: 1px solid #fff !important;
 }
- .modal_KhoaDuLieu .modal-content .select2-container--default .select2-selection--single,
-  .modal_XacNhan .modal-content .select2-container--default .select2-selection--single  {
+
+.modal_KhoaDuLieu .modal-content .select2-container--default .select2-selection--single,
+.modal_XacNhan .modal-content .select2-container--default .select2-selection--single {
     border: 1px solid #d2d6de !important;
     border-radius: 5px !important;
     padding: 12px 3px !important;
     height: 38px;
 }
+
 .modal_XacNhan .select2-container--default .select2-selection--single .select2-selection__arrow,
 .modal_KhoaDuLieu .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 6px !important;
     right: 8px !important;
 }
+
 .lblLichSu_Tong {
     font-size: 24px;
     line-height: 34px !important;
+}
+
+.border-bottom-0 {
+    border-bottom: 0 !important;
+}
+
+.border-top-0.aps-lable-name:before {
+    border-top: 0 !important;
+    border-bottom: 0 !important;
+}
+
+#btnSearch_SV {
+    padding: 0px 15px 7.6px 15px !important;
+}
+
+.aps-kehoach-add .title-name .btnDelete_PhamVi {
+    position: relative !important;s
+    /* top: 0; */
+    right: 0px !important;
+}
+
+.aps-form-item .select2-container--default .select2-selection--single,
+.aps-form-input  .select2-container--default .select2-selection--single{
+    height: 38px !important;
+    line-height: 44px !important;
+    padding: 3px 5px !important;
+    border-radius: 5px !important;
+}
+
+.aps-form-item .select2-container--default .select2-selection--single .select2-selection__rendered,
+.aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 46px;
+}
+
+.aps-form-item .select2-container--default .select2-selection--single .select2-selection__arrow,
+.aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
+        top: 6px !important;
+    right: 12px !important;
 }
