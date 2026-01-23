@@ -11,23 +11,23 @@
                     <div class="box-body pd0">
                         <div class="bss-item">
                             <!--<div class="col-sm-3 item-search">
-        <select id="dropSearch_ThoiGian" class="select-opt"></select>
-    </div>
-    <div class="col-sm-3 item-search">
-        <select id="dropSearch_HoatDong" class="select-opt"></select>
-    </div>
-    <div class="col-sm-3 item-search">
-        <select id="dropSearch_DiaDiem" class="select-opt"></select>
-    </div>
-    <div class="col-sm-3 item-search">
-        <select id="dropSearch_PhamVi" class="select-opt"></select>
-    </div>
-    <div class="clear"></div>
-    <div class="col-sm-3 item-search">
-        <select id="dropSearch_MoHinhHoc" class="select-opt"></select>
-    </div>-->
+                                    <select id="dropSearch_ThoiGian" class="select-opt"></select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_HoatDong" class="select-opt"></select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_DiaDiem" class="select-opt"></select>
+                                </div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_PhamVi" class="select-opt"></select>
+                                </div>
+                                <div class="clear"></div>
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_MoHinhHoc" class="select-opt"></select>
+                                </div>-->
                             <div class="col-sm-5 item-search">
-                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm"/>
+                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-6 item-search d-flex">
                                 <a class="btn btn-default btn-search mr-10" id="btnSearch"><i class="fa fa-search"></i>
@@ -35,13 +35,12 @@
                                 <div class="item-search-dropdowm">
                                     <div class="dropdown" id="zonebtnKDD"></div>
                                     <div class="dropdown" id="zonebtnKDD_Import">
-                                        <button class="btn btn-success dropdown-toggle" type="button"
-                                                data-toggle="dropdown">
-                                            <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                                        <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                            <i class="fa-light fa-file-import"></i> Import <span class="caret"></span>
                                         </button>
                                         <ul class="dropdown-menu form-container" style="width: 360px">
                                             <li><a class="btnImportWithProce" name="IMPORTWITHPROC_CCTGN"
-                                                   title="Chuyên cần" href="#"> 1. Import chuyên cần tự ghi nhận</a>
+                                                    title="Chuyên cần" href="#"> 1. Import chuyên cần tự ghi nhận</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -55,33 +54,32 @@
                 <!-- box danh sach -->
                 <div class="box box-solid aps-khongdiemdanh-list pl20 pr20 pt20">
                     <div class="box-header pd0">
-                        <h3 class="box-title color-blue">
+                        <h3 class="box-title color-blue mt-10">
                             <i class="fa-light fa-list-timeline"></i> Danh sách
                             <span class="badge bg-light-blue">
                                 <span id="lblKhongDiemDanh_Tong"></span>
                             </span>
                         </h3>
 
-                        <div class="pull-right">
+                        <div class="pull-right">                         
+                            <a id="btnDelete_KhongDiemDanh" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
+                            <a class="btn btn-primary" id="btnSave_KhongDiemDanh" href="#"><i class="fal fa-save"></i>Lưu</a>
                             <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm</a>
-                            <a class="btn btn-primary" id="btnSave_KhongDiemDanh" href="#"><i class="fal fa-save"></i>
-                                Lưu</a>
-                            <a id="btnDelete_KhongDiemDanh" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
                         </div>
                     </div>
                     <div class="box-body pd0 mt-10">
                         <div class="col-sm-12 aps-table-select aps-khongdiemdanh-table mb-20">
                             <table id="tblKhongDiemDanh" class="table table-hover table-bordered mb-0">
                                 <thead>
-                                <tr>
-                                    <th class="td-fixed td-center">Stt</th>
-                                    <th class="td-center">Mã số</th>
-                                    <th class="td-center">Họ đệm</th>
-                                    <th class="td-center">Tên</th>
-                                    <th class="td-center">Lớp</th>
-                                    <th class="td-center">Lý do</th>
-                                    <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll"></th>
-                                </tr>
+                                    <tr>
+                                        <th class="td-fixed td-center">Stt</th>
+                                        <th class="td-center">Mã số</th>
+                                        <th class="td-center">Họ đệm</th>
+                                        <th class="td-center">Tên</th>
+                                        <th class="td-center">Lớp</th>
+                                        <th class="td-center">Lý do</th>
+                                        <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll"></th>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -95,7 +93,7 @@
 </section>
 
 <div class="modal fade aps-modal-nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <!-- load from js -->
 </div>
 <!-- page script -->
