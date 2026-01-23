@@ -1,5 +1,6 @@
 ﻿<style>
-    .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
+    .checkbox-inline+.checkbox-inline,
+    .radio-inline+.radio-inline {
         margin-left: 0px;
     }
 </style>
@@ -10,7 +11,7 @@
             <div class="box box-solid zone-bus box-shadow pd0" id="zone_notify_detai">
                 <!--Search zone-->
                 <div class="box box-solid box-search pd20 pb10 border-0"
-                     style="border-radius: 12px !important; border-bottom: 0 !important;">
+                    style="border-radius: 12px !important; border-bottom: 0 !important;">
                     <div class="box-body pd0">
                         <div class="group-title d-none">
                             <p class="titleSearchContent" data-toggle="collapse" data-target="#search">
@@ -23,19 +24,19 @@
                                 <!-- Bộ tìm kiếm -->
                                 <div class="col-sm-3 item-search">
                                     <select id="dropSearch_HeDaoTao_IHD" class="select-opt"
-                                            style="width:100% !important">
+                                        style="width:100% !important">
                                         <option id="" value=""> --Chọn hệ đào tạo--</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <select id="dropSearch_KhoaDaoTao_IHD" class="select-opt"
-                                            style="width:100% !important">
+                                        style="width:100% !important">
                                         <option id="" value=""> --Chọn khóa đào tạo--</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <select id="dropSearch_ChuongTrinh_IHD" class="select-opt"
-                                            style="width:100% !important">
+                                        style="width:100% !important">
                                         <option id="" value=""> --Chọn chương trình--</option>
                                     </select>
                                 </div>
@@ -46,28 +47,28 @@
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <select id="dropSearch_NamNhapHoc_IHD" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <select id="dropSearch_KhoaQuanLy_IHD" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <select id="dropSearch_KieuChuyenCan_IHD" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
                                 <div class="clear"></div>
 
                                 <div class="col-sm-3 item-search">
                                     <input id="txtSearch_TuNgay_IHD" class="form-control input-datepicker"
-                                           placeholder="Từ ngày dd/mm/yyyy"/>
+                                        placeholder="Từ ngày dd/mm/yyyy" />
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <input id="txtSearch_DenNgay_IHD" class="form-control input-datepicker"
-                                           placeholder="Đến ngày dd/mm/yyyy"/>
+                                        placeholder="Đến ngày dd/mm/yyyy" />
                                 </div>
                                 <div class="col-sm-3 item-search">
-                                    <input id="txtSearch_DT" class="form-control" placeholder="Nhập từ khóa tìm kiếm"/>
+                                    <input id="txtSearch_DT" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i>
@@ -81,15 +82,15 @@
 
                                 <!-- Chọn trạng thái sinh viên -->
                                 <div class="col-sm-12 item-search mt-10">
-                                    <div class="group-title">
-                                        <p class="titleSearchContent">
-                                            <i class="fal fa-user-check"></i>
+                                    <div class="group-title pb0">
+                                        <p class="titleSearchContent ">
+                                            <i class="fa-solid fa-user-graduate"></i>
                                             <span class="lang" key="">Chọn trạng thái sinh viên</span>
                                         </p>
                                     </div>
                                     <div class="area-search">
-                                        <div id="DSTrangThaiSV_LHD" style="padding-left: 25px"
-                                             class="inputSearch collapse in">
+                                        <div id="DSTrangThaiSV_LHD" style="padding-left: 20px"
+                                            class="inputSearch collapse in">
                                         </div>
                                     </div>
                                 </div>
@@ -98,13 +99,13 @@
                     </div>
                 </div>
 
-                <!-- box Edit_VBSC -->
+                <!-- box Danh sách -->
                 <div class="box box-solid form-container zone-bus aps_tonghoptheongay" id="zone_tonghoptheongay"
-                     style="display: none;border-radius: 12px !important; position: absolute !important;top: 0;">
+                    style="display: none;border-radius: 12px !important; position: absolute !important;top: 0;">
                     <div class="box box-solid">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-white ml-5"><span id="lblForm_KhoiTao_NO"><i
-                                    class="color-white fa fa-plus-square"></i> Danh sách</span></h3>
+                            <h3 class="box-title color-white ml-5"><span id="lblForm_KhoiTao_NO">
+                                <i class="fa-solid fa-list-timeline"></i> Danh sách</span></h3>
 
                             <div class="pull-right">
                                 <a class="btn btn-default btnClose" href="#" title="Close"><i
@@ -118,19 +119,19 @@
                             <div class="clear"></div>
                             <div class="row mt-20">
                                 <div class="col-sm-12">
-                                    <table id="tblTongHopTheoNgay" class="table table-hover table-bordered">
+                                    <table id="tblTongHopTheoNgay" class="tblTongHopTheoNgay table table-hover table-bordered">
                                         <thead>
-                                        <tr>
-                                            <th class="td-fixed td-center">Stt</th>
-                                            <th class="td-center">Hệ đào tạo</th>
-                                            <th class="td-center">Khóa học</th>
-                                            <th class="td-center">Khoa quản lý</th>
-                                            <th class="td-center">Chương trình</th>
-                                            <th class="td-center">Lớp</th>
-                                            <th class="td-center">Mã số</th>
-                                            <th class="td-center">Học tên</th>
-                                            <th class="td-center">Ngày sinh</th>
-                                        </tr>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Hệ đào tạo</th>
+                                                <th class="td-center">Khóa học</th>
+                                                <th class="td-center">Khoa quản lý</th>
+                                                <th class="td-center">Chương trình</th>
+                                                <th class="td-center">Lớp</th>
+                                                <th class="td-center">Mã số</th>
+                                                <th class="td-center">Học tên</th>
+                                                <th class="td-center">Ngày sinh</th>
+                                            </tr>
                                         </thead>
                                         <tbody></tbody>
                                         <tfoot></tfoot>
@@ -141,8 +142,8 @@
 
                         <div class="box-footer">
                             <div class="pull-right pr0">
-                                <a id="btnSaveChuyenCan" class="btn btn-primary"><i class="fal fa-save"></i> <span
-                                        class="lang" key="">Lưu</span></a>
+                                <a id="btnSaveChuyenCan" class="btn btn-primary"><i class="fal fa-save"></i> 
+                                    <span class="lang" key="">Lưu</span></a>
                             </div>
                         </div>
                     </div>
