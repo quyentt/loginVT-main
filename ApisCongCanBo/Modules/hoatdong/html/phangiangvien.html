@@ -31,7 +31,7 @@
                             <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item mb-10">
                                 <div class="flex-grow-1">
                                     <div class="row">
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-15 col-xxl-4">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Năm</label>
                                                 <div class="custom-select">
@@ -39,7 +39,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-15 col-xxl-4">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Kế hoạch năm</label>
                                                 <div class="custom-select">
@@ -47,7 +47,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-15 col-xxl-4">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Kế hoạch chi tiết</label>
                                                 <div class="custom-select">
@@ -102,10 +102,8 @@
                             </div>
                             <div class="table-wrap">
                                 <div class="table-responsive fs-14 no-swiper aps-table-select">
-                                    <table class="table table-bordered" id="tblHocPhan">
+                                    <table class="table table-bordered tblHocPhan mt-5 pb-5" id="tblHocPhan">
                                         <thead>
-
-
                                         </thead>
                                         <tbody></tbody>
                                     </table>
@@ -121,20 +119,19 @@
     </div>
 </div>
 
-<!-- modal Khoa phân công giảng viên -->
+<!-- modal Phân giảng viên -->
 <div class="modal fade" id="khoaphancong_giangvien">
     <div class="modal-dialog modal-dialog-centered modal-1400">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Phân giảng viên</div>
-
+                    <div class="title"><i class="fa-regular fa-chalkboard-user mr-5"></i> Phân giảng viên</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
                 <div class="table-responsive fs-14 no-swiper">
-                    <table class="table" id="tblPhanCong">
+                    <table class="table tblPhanCong" id="tblPhanCong">
                         <thead>
                             <tr>
                                 <th class="text-center border-top-1" scope="col">STT</th>
@@ -156,28 +153,30 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex flex-wrap justify-content-end">
-                    <button class="btn btn-add mb-15" id="btnAddGiangVien">
+                     <button class="btn btn-success" id="btnAddGiangVien">
                         <i class="fal fa-plus"></i>
                         <span>Thêm mới</span>
                     </button>
-                    <button class="btn btn-save ms-15 mb-15" id="btnSave_GiangVien">
+                     <button class="btn btn-delete ms-10" id="btnDelete_GiangVien">
+                        <i class="fal fa-trash-alt"></i>
+                        <span>Xóa</span>
+                    </button>                   
+                    <button class="btn btn-primary ms-10" id="btnSave_GiangVien">
                         <i class="fal fa-save"></i>
                         <span>Lưu</span>
                     </button>
-                    <button class="btn btn-delete ms-15 mb-15" id="btnDelete_GiangVien">
-                        <i class="fal fa-trash-alt"></i>
-                        <span>Xóa</span>
-                    </button>
+                   
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade register-wish " id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade register-wish aps-tim-nhansu" id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
     </div>
 </div>
+
 <!-- page script -->
 <script src="modules/hoatdong/script/phangiangvien.js?v=1.0.0.2"></script>
 <script type="text/javascript">

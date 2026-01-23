@@ -12,15 +12,12 @@ a.btn {
 
 .btn {
   height: 38px;
-  min-width: 146px;
+  /* min-width: 146px; */
   border-radius: 4px;
   font-weight: 500;
   font-size: 15px;
 }
 
-.btn i {
-  margin-right: 5px !important;
-}
 
 .btn-link {
   border: 1px solid var(--color-link);

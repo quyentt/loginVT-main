@@ -5771,3 +5771,7 @@ background-color: #e3e4e5 !important;
 .tblModal_XacNhan tr td:last-child {
   text-align: center !important;
 }
+.aps-time-dx .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 1px !important;
+    right: 5px !important;
+}
