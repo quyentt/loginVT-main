@@ -56,10 +56,12 @@
   padding-right: 0;
   padding-left: 0;
 }
+
 /*-----------------------*/
-.border-bottom-0{
+.border-bottom-0 {
   border-bottom: 0 !important;
 }
+
 /*-----------------------*/
 body {
   color: #222;
@@ -6655,7 +6657,7 @@ tr:last-child .d-flex.gap-3 {
 
 .gv-paging-group .gv-paging span,
 .gv-paging-group span {
-  color: #888;
+  /* color: #888; */
 }
 
 .gv-paging-group .ms-3.fs-14 {
@@ -7351,9 +7353,9 @@ tr:last-child .d-flex.gap-3 {
 
 .progress,
 .progress-stacked {
-  height: 24px;
-  line-height: 26px;
-  border-radius: 50px;
+  height: 24px !important;
+    line-height: 26px;
+    border-radius: 50px !important;
 }
 
 .modal-dialog-scrollable .modal-body {
@@ -7427,11 +7429,164 @@ tr:last-child .d-flex.gap-3 {
 .action-group.aps-form {
   width: 100% !important;
 }
-.tblTuiThi tr td:last-child(4){
+
+.tblTuiThi tr td:last-child(4) {
   width: 100px;
 }
-.form-control.he10{
+
+.form-control.he10 {
   width: 86px !important;
   text-align: center !important;
 }
 
+
+
+/* width */
+
+.table-responsive::-webkit-scrollbar {
+  width: 1px !important;
+}
+
+/* Track */
+
+.table-responsive::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+.table-responsive::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 20px !important;
+}
+
+/* Handle on hover */
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px !important;
+}
+
+.modal-860,
+.modal_XacNhan .modal-860 {
+  width: 860px !important;
+}
+
+.doituongchecktanggiam {
+  text-align: center;
+}
+
+.action-group {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1512px;
+  margin-top: 12px;
+  margin: 0 10px;
+  padding: 0 20px;
+}
+
+.modal_XacNhan .modal-dialog {
+  max-width: fit-content !important;
+}
+
+.tblModal_XacNhan tr td:nth-child(1) {
+  width: 5%;
+}
+
+.tblModal_XacNhan tr td:nth-child(2) {
+  width: 15%;
+}
+
+.tblModal_XacNhan tr td:nth-child(3) {
+  width: 30%;
+}
+
+.tblModal_XacNhan tr td:nth-child(4) {
+  width: 30%;
+}
+
+.tblHocPhan .btn-default.btnEdit {
+  min-width: 110px;
+}
+
+.modal .modal-header .title {
+  color: #fff;
+}
+
+/* ------------------- */
+
+.aps-tim-nhansu .inputs-tksv {
+  padding-top: 14px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.aps-tim-nhansu .btn-dask-blue {
+  background: #e1e1e1 !important;
+  border: 1px solid #e1e1e1 !important;
+  height: 38px;
+  color: #222 !important;
+  padding: 9px 15px 7.6px 15px !important;
+}
+
+.aps-tim-nhansu .btn-dask-blue:hover {
+  background: var(--color-blue) !important;
+  color: #fff !important;
+  border-color: var(--color-blue) !important;
+}
+
+.aps-tim-nhansu .input-group .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 0px !important;
+  right: 5px !important;
+}
+
+.aps-tim-nhansu .title-is-paging {
+  margin-top: 15px;
+  padding-bottom: 5px;
+  padding-left: 20px;
+}
+
+.aps-tim-nhansu .bus-wrp {
+  max-height: unset;
+  padding-left: 20px;
+  padding-right: 10px;
+  padding-bottom: 30px;
+  border-bottom: solid 0px #e1e1e1;
+  border-top: solid 0px #e1e1e1;
+}
+
+.aps-tim-nhansu .bus-wrp .title-is-paging {
+  padding-left: 0px !important;
+}
+
+#txtSearchModal_CauTrucGiang_NS {
+  padding-left: 10px;
+  width: 200px;
+  position: absolute;
+  right: 23px;
+  top: 86px;
+}
+
+#btnChonNhanSu {
+  height: 28px;
+  position: absolute;
+  right: 240px;
+  margin-top: 2px;
+}
+
+#btnChonNhanSu:hover {
+  background: #fff;
+  color: var(--color-blue);
+  border:1px solid #fff !important;
+}
+
+.aps-tim-nhansu .inputs-wr .item {
+  width: 35% !important;
+}
+
+.aps-tim-nhansu .table {
+  margin-bottom: 10px !important;
+}

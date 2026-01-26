@@ -1,7 +1,7 @@
 /* @import "../../App_Themes/Cms/Custom_V1/styles.css"; */
 /* @import "../../App_Themes/Cms/Custom_V1/styles-content.css"; */
 body {
-  font-family: "Mulish";
+  font-family: "Mulish", Arial, Helvetica, sans-serif !important;
   background: var(--color-bg-main);
 }
 
@@ -377,6 +377,7 @@ input:focus-visible {
   font-size: 18px;
   margin-top: 0;
   margin-right: auto;
+  font-family: Arial, Helvetica, sans-serif !important;
 }
 
 .today-card-1 .card-header .icon {
@@ -5769,4 +5770,8 @@ background-color: #e3e4e5 !important;
 .tblModal_XacNhan tr td:first-child,
 .tblModal_XacNhan tr td:last-child {
   text-align: center !important;
+}
+.aps-time-dx .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 1px !important;
+    right: 5px !important;
 }
