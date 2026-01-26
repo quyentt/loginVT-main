@@ -768,10 +768,9 @@ TongHopPhanTram.prototype = {
     },
     getList_KetQua: function (strId, strDoiTuong_Id, strDaoTao_ChuongTrinh_Id, strQLSV_NguoiHoc_Id) {
         var me = this;
-        var obj_save = {
-            'action': 'SV_ChinhSach_MH/DSA4ChACKSgvKRIgIikeESkgLxUzICwP',
-            'func': 'PKG_HOSOSINHVIEN_CHINHSACH.LayKQChinhSach_PhanTram',
-            'iM': edu.system.iM,
+        var obj_list = {
+            'action': 'SV_ChinhSach/LayKQChinhSach_PhanTram',
+
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strDaoTao_ChuongTrinh_Id': strDaoTao_ChuongTrinh_Id,
             'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
@@ -779,7 +778,6 @@ TongHopPhanTram.prototype = {
             'strKieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_HocKy'),
             'strDoiTuong_Id': strDoiTuong_Id,
-            'strCheDoChinhSach_Id': edu.system.getValById('dropSearch_CheDo'),
         };
         edu.system.beginLoading();
         edu.system.makeRequest({
@@ -800,11 +798,11 @@ TongHopPhanTram.prototype = {
                 edu.system.endLoading();
             },
             error: function (er) { edu.system.endLoading(); },
-            type: "POST",
+            type: "GET",
             versionAPI: "v1.0",
             contentType: true,
-            action: obj_save.action,
-            data: obj_save,
+            action: obj_list.action,
+            data: obj_list,
             fakedb: [
             ]
         }, false, false, false, null);

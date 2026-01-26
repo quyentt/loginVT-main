@@ -31,7 +31,7 @@ ChinhSachPhanTram.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("QLTC.CDCS", "dropSearch_CheDo");
 
         $("#btnSearch").click(function (e) {
-            
+
             me.getList_TongHop();
         });
         $("#txtSearch_DT").keypress(function (e) {
@@ -42,35 +42,35 @@ ChinhSachPhanTram.prototype = {
         $(".btnClose").click(function (e) {
             edu.util.toggle_overide("zone-bus", "zonebatdau");
         });
-                $("#btnSearch_Lop").click(function (e) {
+        $("#btnSearch_Lop").click(function (e) {
             edu.util.toggle_overide("zone-bus", "zone_nhapchonhieulop");
             me.getList_KetQuaLop();
         });
         $('#dropSearch_HeDaoTao').on('select2:select', function (e) {
-            
+
             me.getList_KhoaDaoTao();
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
             me.resetCombobox(this);
         });
         $('#dropSearch_KhoaDaoTao').on('select2:select', function (e) {
-            
+
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
             me.resetCombobox(this);
         });
         $('#dropSearch_ChuongTrinh').on('select2:select', function (e) {
-            
+
             me.getList_LopQuanLy();
             me.resetCombobox(this);
         });
         $('#dropSearch_Lop').on('select2:select', function (e) {
-            
+
             var x = $(this).val();
             me.resetCombobox(this);
         });
         $('#dropSearch_HocKy').on('select2:select', function (e) {
-            
+
             var strValue = $('#dropSearch_HocKy').val();
             if (!(strValue.length > 1 || strValue[0] != "")) {
                 $("#dropSearch_KyThucHien").parent().hide();
@@ -80,29 +80,29 @@ ChinhSachPhanTram.prototype = {
             me.resetCombobox(this);
         });
         $('#dropSearch_NguoiThu').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
         $('#dropSearch_KhoaQuanLy').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
         $('#dropSearch_NamNhapHoc').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
         $('#dropSearch_CheDo').on('select2:select', function () {
             me.getList_DoiTuong_CheDo(this);
         });
         $("#MainContent").delegate(".ckbDSTrangThaiSV_LHD_ALL", "click", function (e) {
-            
+
             var checked_status = this.checked;
             $(".ckbDSTrangThaiSV_LHD").each(function () {
                 this.checked = checked_status;
             });
         });
         $("#MainContent").delegate(".ckbLKT_RT_All", "click", function (e) {
-            
+
             var checked_status = this.checked;
             $(".ckbLKT").each(function () {
                 this.checked = checked_status;
@@ -326,7 +326,7 @@ ChinhSachPhanTram.prototype = {
             'versionAPI': 'v1.0',
 
             'strNguoiThucHien_Id': '',
-        }        
+        }
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -685,7 +685,7 @@ ChinhSachPhanTram.prototype = {
         $("#tblKetQua thead").html(me.strHead);
         var arrDoiTuong = me.dtDoiTuong;
         var strDoiTuong_Id = edu.util.getValById("dropSearch_DoiTuong");
-        
+
         if (strDoiTuong_Id != "") {
             arrDoiTuong = edu.util.objGetDataInData(strDoiTuong_Id, arrDoiTuong, "ID");
         }
@@ -770,9 +770,21 @@ ChinhSachPhanTram.prototype = {
     },
     getList_KetQua: function (strQLSV_NguoiHoc_Id, strDoiTuong_Id, strDaoTao_ChuongTrinh_Id) {
         var me = this;
-        var obj_list = {
-            'action': 'SV_ChinhSach/LayKQChinhSach_PhanTram',
+        //var obj_list = {
+        //    'action': 'SV_ChinhSach/LayKQChinhSach_PhanTram',
 
+        //    'strChucNang_Id': edu.system.strChucNang_Id,
+        //    'strDaoTao_ChuongTrinh_Id': strDaoTao_ChuongTrinh_Id,
+        //    'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+        //    'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropSearch_KhoanThu'),
+        //    'strKieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
+        //    'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_HocKy'),
+        //    'strDoiTuong_Id': strDoiTuong_Id,
+        //};
+        var obj_save = {
+            'action': 'SV_ChinhSach_MH/DSA4ChACKSgvKRIgIikeESkgLxUzICwP',
+            'func': 'PKG_HOSOSINHVIEN_CHINHSACH.LayKQChinhSach_PhanTram',
+            'iM': edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strDaoTao_ChuongTrinh_Id': strDaoTao_ChuongTrinh_Id,
             'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
@@ -780,6 +792,7 @@ ChinhSachPhanTram.prototype = {
             'strKieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_HocKy'),
             'strDoiTuong_Id': strDoiTuong_Id,
+            'strCheDoChinhSach_Id': edu.system.getValById('dropSearch_CheDo'),
         };
         edu.system.beginLoading();
         edu.system.makeRequest({
@@ -800,11 +813,11 @@ ChinhSachPhanTram.prototype = {
                 edu.system.endLoading();
             },
             error: function (er) { edu.system.endLoading(); },
-            type: "GET",
+            type: "POST",
             versionAPI: "v1.0",
             contentType: true,
-            action: obj_list.action,
-            data: obj_list,
+            action: obj_save.action,
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);
@@ -814,8 +827,9 @@ ChinhSachPhanTram.prototype = {
         var arrId = point.id.split("_");
         var objSV = edu.util.objGetOneDataInData(arrId[1], me.dtSinhVien, "ID");
         var obj_save = {
-            'action': 'TC_DoiTuong_MienGiam/ThemMoi',
-
+            'action': 'TC_ThuChi_MH/FSkkLB4VICgCKSgvKR4FFR4MKCQvBiggLAPP',
+            'func': 'pkg_taichinh_thuchi.Them_TaiChinh_DT_MienGiam',
+            'iM': edu.system.iM,
             'strId': $(point).attr("name"),
             'strDaoTao_LopQuanLy_Id': objSV.LOP_ID,
             'strQLSV_TrangThaiNguoiHoc_Id': objSV.QLSV_NGUOIHOC_TRANGTHAI_ID,
@@ -827,12 +841,13 @@ ChinhSachPhanTram.prototype = {
             'dSoThang': $(point).val(),
             'strDiem_KieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
             'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropSearch_KhoanThu'),
+            'strDoiTuongChinhSach_Id': edu.system.getValById('dropSearch_DoiTuong'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var strQuyetDinh_Id = "";                    
+                    var strQuyetDinh_Id = "";
                 }
                 else {
                     edu.system.alert(data.Message);

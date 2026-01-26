@@ -20,7 +20,7 @@ HeSoHocPhanMoi.prototype = {
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
-        
+
 
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao("");
@@ -120,7 +120,7 @@ HeSoHocPhanMoi.prototype = {
             me.viewForm_HeSoHocPhan(data[0]);
         });
         edu.system.getList_MauImport("zonebtnBaoCao_HSHPM", function (addKeyValue) {
-            
+
         });
     },
     /*------------------------------------------
@@ -265,7 +265,7 @@ HeSoHocPhanMoi.prototype = {
                         }
                         edu.system.alertOnModal(objNotify);
                     }
-                    
+
                     me.getList_ThoiGian_HocPhan_HeSo();
                 }
                 else {
@@ -406,7 +406,7 @@ HeSoHocPhanMoi.prototype = {
             'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropKhoanThu_HSHP'),
             'strNguoiThucHien_Id': "",
         }
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -708,7 +708,7 @@ HeSoHocPhanMoi.prototype = {
             'strCanBoQuanLy_Id': '',
             'strNguoiThucHien_Id': '',
         }
-        
+
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {

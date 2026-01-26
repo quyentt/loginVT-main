@@ -2828,6 +2828,7 @@ PhieuThu.prototype = {
         thead += '<th class="td-center">Đợt</th>';
         thead += '<th class="td-left">Loại khoản</th>';
         thead += '<th class="td-left">Nội dung</th>';
+        thead += '<th class="td-left">Chính sách</th>';
         thead += '<th class="td-right">Số tiền được miễn</th>';
         thead += '<th class="td-center">Phần trăm miễn</th>';
         thead += '<th class="td-center">Ngày tạo</th>';
@@ -2859,6 +2860,9 @@ PhieuThu.prototype = {
                     "mRender": function (nRow, aData) {
                         return '<span title="' + aData.NOIDUNG + '">' + edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) + '</span>'
                     }
+                }
+                , {
+                    "mDataProp": "CHEDOCHINHSACH_TEN"
                 }
                 , {
                     "mData": "SOTIEN",
