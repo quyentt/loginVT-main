@@ -524,7 +524,8 @@ systemroot.prototype = {
         me.strChucNang_Id = strChucNang_Id;
         var objChucNang = me.dtChucNang.find(e => e.ID === strChucNang_Id);
         if (objChucNang) {
-            me.appCode = objChucNang.MAUNGDUNG
+            me.appCode = objChucNang.MAUNGDUNG;
+            me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
             if (objChucNang.MAUNGDUNG != "ApisCongCanBo" || (objChucNang.DUONGDANFILE && objChucNang.TENANH && objChucNang.TENANH.indexOf('fa ') == 0)) {
                 location.href="./indexi.aspx"
