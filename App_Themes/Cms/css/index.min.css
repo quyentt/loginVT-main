@@ -603,8 +603,8 @@ thead {
 }
 
 .scroll-table-x {
-    /*overflow-x: auto;*/
-    overflow-y: visible !important
+    overflow-x: scroll !important;
+    overflow-y: visible;
 }
 
 .table-img {
