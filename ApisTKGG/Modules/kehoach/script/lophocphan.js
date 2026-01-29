@@ -260,6 +260,13 @@ LopHocPhan.prototype = {
             edu.util.toggle_overide("zone-bus", "zoneDuyetBuoiHoc");
             me.getList_GiangVien();
         });
+
+        $("#tblLopHocPhan").delegate(".btnApDat", "click", function () {
+            var strId = this.id;
+            me.strLopHocPhan_Id = strId;
+            $("#myModalApDat").modal("show");
+            me.getList_ApDat();
+        });
         $("#tblLopHocPhan").delegate(".btnKhoiLuongCaNhan", "click", function () {
             var strId = this.id;
             var strGiangVien_Id = $(this).attr('name');
@@ -340,6 +347,9 @@ LopHocPhan.prototype = {
             for (var i = 0; i < arrChecked_Id.length; i++) {
                 me.save_XacNhanTuDong(arrChecked_Id[i]);
             }
+        });
+        $("#btnSave_ApDat").click(function () {
+            me.save_ApDat();
         });
     },
     resetCombobox: function (point) {
@@ -1026,7 +1036,10 @@ LopHocPhan.prototype = {
                     "mDataProp": "DAOTAO_HOCPHAN_MA"
                 },
                 {
-                    "mDataProp": "DAOTAO_HOCPHAN_TEN"
+                    //"mDataProp": "DAOTAO_HOCPHAN_TEN",
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnApDat" id="' + aData.ID + '" title="Sửa">' + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + '</a></span>';
+                    }
                 },
                 {
                     "mDataProp": "DAOTAO_LOPHOCPHAN_TEN"
@@ -2644,6 +2657,87 @@ LopHocPhan.prototype = {
             action: obj_save.action,
             data: obj_save,
             fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: [3] AccessDB HOC
+    --ULR:  Modules
+    -------------------------------------------*/
+    save_ApDat: function () {
+        var me = this;
+        var obj_notify = {};
+        //--Edit
+        var obj_save = {
+            'action': 'NS_KLGD_KeHoach_MH/EjQgHgoNBgUeBTQNKCQ0HhIuDTQuLyYP',
+            'func': 'PKG_KLGV_V2_KEHOACH.Sua_KLGD_DuLieu_SoLuong',
+            'iM': edu.system.iM,
+            'strId': me.strLopHocPhan_Id,
+            'dSoLuongApDat': edu.system.getValById('txtSoLuongApDat'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Cập nhật thành công!");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    getList_ApDat: function (strDanhSach_Id) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'NS_KLGD_KeHoach_MH/DSA4FRUKDQYFHgU0DSgkNAPP',
+            'func': 'PKG_KLGV_V2_KEHOACH.LayTTKLGD_DuLieu',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strId': strDanhSach_Id,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    var data = dtReRult[0];
+                    me["strApDat_Id"] = data.ID;
+                    edu.util.viewHTMLById("lblMaApDat", data.DULIEUXACNHAN_MA);
+                    edu.util.viewHTMLById("lblTenApDat", data.DULIEUXACNHAN_TEN);
+                    edu.util.viewHTMLById("lblQuyMoApDat", data.QUYMO);
+                    edu.util.viewValById("txtSoLuongApDat", data.SOLUONGAPDAT);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
             ]
         }, false, false, false, null);
     },

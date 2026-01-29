@@ -52,6 +52,7 @@
                                     <th class="td-center">Tên</th>
                                     <th class="td-center">Mô tả</th>
                                     <th class="td-center">Thời gian</th>
+                                    <th class="td-center">Đợt tách dữ liệu theo ngày</th>
                                     <th class="td-center">Cán bộ giảng viên</th>
                                     <th class="td-center">Nhân sự tham gia</th>
                                     <th class="td-center">Các kế hoạch chi tiết</th>
@@ -189,8 +190,8 @@
                                 <div class="row zone-box">
                                     <div class="row">
                                         <!--<p class="group-title-name">
-                            <span class="badge bg-blue">Kế hoạch chi tiết</span>
-                        </p>-->
+                                            <span class="badge bg-blue">Kế hoạch chi tiết</span>
+                                        </p>-->
                                         <div class="pull-right">
                                             <a class="submit btn btn-primary" id="btnKeThua_PhanLoaiTinh"><i class="fa fa-check-circle"></i><span class="lang" key=""> Kế thừa</span></a>
                                             <a id="btnAdd_PhanLoaiTinh" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
@@ -212,10 +213,10 @@
                                         </table>
                                     </div>
                                     <!--<div class="row">
-                        <div class="pull-right">
-                            <a class="btn btn-default" id="btnDelete_PhanLoaiTinh"><i class="fa fa-trash"></i> Xóa</a>
-                        </div>
-                    </div>-->
+                                        <div class="pull-right">
+                                            <a class="btn btn-default" id="btnDelete_PhanLoaiTinh"><i class="fa fa-trash"></i> Xóa</a>
+                                        </div>
+                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -244,8 +245,8 @@
                                 <div class="row zone-box">
                                     <div class="row">
                                         <!--<p class="group-title-name">
-                            <span class="badge bg-blue">Kế hoạch chi tiết</span>
-                        </p>-->
+                                            <span class="badge bg-blue">Kế hoạch chi tiết</span>
+                                        </p>-->
                                         <div class="pull-right">
                                             <!--<a class="submit btn btn-primary" id="btnKeThua_CongThucTinh"><i class="fa fa-check-circle"></i><span class="lang" key=""> Kế thừa</span></a>-->
                                             <a id="btnAdd_CongThucTinh" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
@@ -648,6 +649,108 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
                 <a class="submit btn btn-primary" id="btnSave_CongThucTinh"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModalDotTach" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 900px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel1">Đợt tách dữ liệu theo ngày</span> </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row">
+                    <div class="pull-right">
+                        <a id="btnAdd_DotTach" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
+                        <a class="submit btn btn-danger btnOpenDelete" id="btnDelete_DotTach" style="display: none">
+                            <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="row">
+                    <table id="tblDotTach" class="table table-hover table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed">Stt</th>
+                                <th class="td-center"><span class="lang" key="">Từ ngày</span></th>
+                                <th class="td-center"><span class="lang" key="">Đến ngày</span></th>
+                                <th class="td-center"><span class="lang" key="">Tên</span></th>
+                                <th class="td-center"><span class="lang" key="">Kết quả</span></th>
+                                <th class="td-center"><span class="lang" key="">Sửa</span></th>
+                                <th class="td-center td-fixed">
+                                    <input type="checkbox" class="chkSystemSelectAll">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade  aps-modal-hesohocphan" id="myModalAddDotTach" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Đợt tách</h3>
+            </div>
+            <div class="modal-body  aps-form mt-10" id="modal_body">
+                <div class="row zone-box">
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Từ ngày </span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtTuNgay_DT" class="form-control" placeholder="dd/mm/yyyy" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Đến ngày </span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtDenNgay_DT" class="form-control" placeholder="dd/mm/yyyy" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Tên </span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtTen_DT" class="form-control" />
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Mô tả</span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <textarea type="text" id="txtMoTa_DT" class="form-control" style="height:300px"></textarea>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_DotTach"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
             </div>
         </div>
     </div>
