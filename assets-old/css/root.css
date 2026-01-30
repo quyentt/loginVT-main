@@ -1,0 +1,39 @@
+:root {
+  --color-main: #14375f;
+  --color-bg-main: #f5f6f8;
+  --color-link: #1a71e8 !important;
+  --color-link-hover:#0043a0 !important;
+  /* --color-green: #63fa87; */
+  --color-green: #008000;
+  --color-green-hover: #007200;
+  --color-orange: #f76620;
+  --color-orange-hover: #ff4500;
+  --color-yellow: #ffb400;
+  --color-white: #ffffff;
+  --color-puple: #9f22d6;
+  --color-red: #df322b;
+  --color-add: #6610f2;
+  --color-view: #8601af;
+  --color-edit: #ffb400;
+  --color-delete: #df322b;
+  --color-save: #28a745;
+  --color-upload: #66b032;
+  --color-border: #e1e1e1;
+  --color-text-gray: #565656;
+  --color-text: #222222;
+  --color-text-3: #333333;
+  --color-text-3-80: rgba(51, 51, 51, 0.8);
+  --color-bg-light-sky: #edf1fb;
+  --color-dask-link: #2262ab;
+  --color-nv: #d4145a;
+  --color-blue: #1a71e8 !important;
+  --color-yellow: #ffe600 !important;
+  --color-red: #FF0000 !important;
+  --color-red-hover: #ca0000 !important;
+  --color-orange: #d54b07 !important;
+  --color-green: #198754 !important;
+  --color-green1: #0a6139 !important;
+  --color-pink: #ff0081 !important;
+  --color-purple: #e300ff !important;
+  --color-info: #31d2f2 !important;
+}

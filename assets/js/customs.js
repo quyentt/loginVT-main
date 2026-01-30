@@ -361,7 +361,7 @@ $(document).ready(function () {
   // select custom -----------------------------------------------------------
   var x, i, j, l, ll, selElmnt, a, b, c;
   /*Tìm class "custom-select":*/
-  x = document.getElementsByClassName("custom-select");
+  x = document.getElementsByClassName("custom-select----------------------------------------------------------------------------------------------------------");
   l = x.length;
 
   for (i = 0; i < l; i++) {

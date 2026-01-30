@@ -10,6 +10,8 @@
 @import "tai-chinh.css";
 @import "news.css";
 
+
+
 /* css cổng cũ */
 @import "all.css";
 @import "1cuaSV.css";
@@ -33,3 +35,11 @@
 /* css chính */
 @import "main.css";
 @import "responsive.css";
+
+
+/* css App_themes */
+@import "../../App_Themes/Cms/Custom_V1/styles.css";
+@import "../../App_Themes/Cms/Custom_V1/styles-content.css";
+@import "../../App_Themes/Cms/Custom_V1/styles-V1.css";
+@import "../../App_Themes/Cms/Custom_V1/responsive.css";
+@import "../../App_Themes/Cms/Custom_V1/styles-responsive.css";

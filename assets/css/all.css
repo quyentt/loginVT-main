@@ -6781,7 +6781,7 @@ tr:last-child .d-flex.gap-3 {
   /* border-color: var(--color-orange) !important; */
 }
 
-.form-control:focus {
+.form-control:focus;.form-control:focus {
   border-color: #28a745;
   /* A custom border color */
   box-shadow: 0 0 0 0.2rem rgba(26, 113, 232, 0.1) !important;
@@ -7008,10 +7008,9 @@ tr:last-child .d-flex.gap-3 {
   border-top-right-radius: 10px !important;
 }
 
-.table td,
-.table th {
-  padding-top: 13px !important;
-  padding-bottom: 12px !important;
+.table td,.table th {
+  padding-top: 13px;
+  padding-bottom: 12px;
 }
 
 .one-door.study-space .register-school .register-school-left .reg-money.pd-15 {
@@ -7227,7 +7226,7 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .box-header.with-border .box-title i {
-  padding-right: 10px;
+  /* padding-right: 10px; */
 }
 
 .box-header .box-title {
@@ -7441,34 +7440,6 @@ tr:last-child .d-flex.gap-3 {
 
 
 
-/* width */
-
-.table-responsive::-webkit-scrollbar {
-  width: 1px !important;
-}
-
-/* Track */
-
-.table-responsive::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-/* Handle */
-.table-responsive::-webkit-scrollbar-thumb {
-  background: transparent;
-}
-
-.table-responsive::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 20px !important;
-}
-
-/* Handle on hover */
-
-.table-responsive::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 20px !important;
-}
 
 .modal-860,
 .modal_XacNhan .modal-860 {

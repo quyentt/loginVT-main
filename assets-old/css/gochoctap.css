@@ -1,0 +1,384 @@
+.department-selector .form-select {
+  background: var(--dask-blue);
+  border: none;
+  padding: 0 15px;
+  color: #fff;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+  height: 40px;
+}
+
+.register-school-left .department-selector .form-select {}
+
+.register-school-left .reg-money .sspace-profile {
+  padding: 0 12px 10px 12px;
+}
+
+.register-school-left .reg-money .form-add-info {
+  margin-bottom: 8px !important;
+}
+
+.register-school-left .mt-4.box-shadow {
+  margin-top: 15px !important;
+}
+
+.register-school-left .mt-2.box-total-scores {
+  margin-top: 15px !important;
+}
+
+.sspace-profile {
+  font-size: 14px;
+  line-height: 32px;
+}
+
+.sspace-profile i {
+  width: 16px;
+  text-align: center;
+  margin-right: 8px;
+}
+
+.sspace-profile span {
+  width: 70px;
+  display: inline-block;
+  color: #666;
+  margin-right: 5px;
+}
+
+.box-scores {
+  padding: 3px;
+}
+
+.block-label {
+  background-color: var(--orange);
+  padding: 8px 15px;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.wrapper .content-page .register-school-left .block-label i {
+  padding-right: 3px;
+}
+
+.top-radius {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.top-radius-none {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.bottom-radius-none {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.light-blue-bg {
+  background-color: var(--light-blue) !important;
+}
+
+.light-gray-bg {
+  background-color: var(--light-gray) !important;
+}
+
+.label-top-radius i {
+  margin-right: 5px;
+}
+
+.box-scores li {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: solid 1px #f1f1f1;
+  font-size: 14px;
+  line-height: 36px;
+  padding: 0 10px;
+}
+
+.box-scores li:last-child {
+  border: none;
+}
+
+.subject {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.box-total-scores {
+  color: #222222;
+}
+
+.box-total-scores .subject {
+  color: #666666;
+}
+
+.tabs-scores .nav {
+  border-bottom: none;
+}
+
+.tabs-scores .box-shadow {
+  border-top-left-radius: 0;
+  padding: 20px;
+}
+
+.tabs-scores .nav-link {
+  color: #222222;
+  padding: 11px 25px;
+}
+
+.tabs-scores .nav-link:hover {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-color: white;
+}
+
+.tabs-scores .nav-link.active {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-color: white;
+  color: var(--orange);
+  font-weight: bold;
+}
+
+.tabs-scores .nav-link i {
+  margin-right: 5px;
+}
+
+.tabs-scores .nav-link.active i {
+  font-weight: bold;
+}
+
+.transcrip-accordion .accordion-item {
+  border-left: none;
+  border-right: none;
+}
+
+.transcrip-accordion .accordion-item:first-child {
+  border-top: none;
+}
+
+.transcrip-accordion .accordion-item:last-child {
+  border-bottom: none;
+}
+
+.transcrip-accordion .accordion-item .header {
+  font-size: 14px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  color: #222222;
+}
+
+.transcrip-accordion .accordion-item .header i {
+  margin-right: 10px;
+}
+
+.transcrip-accordion .accordion-item .header:not(.collapsed) {
+  background-color: var(--light-gray);
+  color: var(--dask-blue);
+  font-weight: bold;
+}
+
+.transcrip-accordion .accordion-item .header:not(.collapsed) i {
+  transform: rotate(90deg);
+  font-weight: 700;
+}
+
+.show-in-mobi {
+  display: none;
+}
+
+.transcrip-table {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.transcrip-accordion .accordion-item .accordion-body {
+  padding: 0;
+  border-left: solid 1px #e1e1e1;
+  border-right: solid 1px #e1e1e1;
+  border-top: solid 1px #e1e1e1;
+}
+
+.summary-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 280px;
+  justify-content: space-between;
+  padding: 0 20px;
+  line-height: 28px;
+  font-size: 14px;
+}
+
+.accodion-block .accordion-item {
+  border: none;
+}
+
+.accodion-block .header:not(.collapsed) .fa-plus,
+.accodion-block .header.collapsed .fa-minus {
+  display: none;
+}
+
+.accodion-block {
+  font-size: 14px;
+}
+
+.accodion-block .header {
+  color: #222222;
+  display: block;
+  padding: 5px 0;
+}
+
+.accodion-block .header:hover {
+  color: var(--orange);
+}
+
+.accodion-block .header i {
+  margin-right: 5px;
+}
+
+.accodion-block .sub-block-header {
+  color: var(--dask-blue);
+  font-weight: bold;
+}
+
+.accodion-block .sub-block-header i {
+  font-size: 12px;
+  margin-right: 5px;
+}
+
+.accodion-block .block-table {
+  border: solid 1px #e1e1e1;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
+.tabs-scores {
+  height: 100%;
+}
+
+.tabs-scores .tab-content {
+  min-height: calc(100% - 40px);
+}
+
+.table-not-content {
+  font-size: 18px;
+  color: #86a6b1;
+}
+
+.transcrip-accordion .accordion-item .header:hover {
+  color: var(--orange);
+}
+
+.reg-money.pd-15 {
+  padding: 0 !important;
+}
+
+.reg-money.pd-15 .sidebar-menu-header {
+  font-weight: 700;
+  color: var(--color-white);
+  background: var(--color-link);
+}
+
+.reg-money .department-selector .form-select {
+  font-size: 16px;
+}
+
+.reg-money .department-selector .form-item i {
+  color: #fff !important;
+  top: 14px;
+  right: 19px;
+  margin-right: 12px;
+}
+
+.register-school-right .table td,
+.register-school-right .table th {
+  padding-top: 13px !important;
+  padding-bottom: 12px !important;
+}
+
+.register-school-right .accordion-body .py-4 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.register-wish .title-is-paging .color-dask-blue {
+  margin-bottom: 8px;
+}
+
+.register-wish .form-top {
+  margin-bottom: 25px;
+}
+
+.calendar-modal-table {
+  border-top: 1px solid #cccccc !important;
+}
+
+.table tr:hover,
+.table th:hover {
+  background: #f8f8f8;
+}
+
+.table .btn.btn-default:hover {
+  background-color: var(--color-link) !important;
+  color: #fff !important;
+}
+
+.title-detai #lblTenHoc span,.modal .modal-header .finance-user-info span.color-66 {
+  color: var(--color-yellow) !important;
+  font-size: 20px !important;
+  font-weight: bold;
+}
+
+.modal .modal-header .modal-title.title-detai {
+  line-height: 40px;
+  margin-top: 15px;
+  padding-top: 5px;
+}
+
+.my-calendar .modal-dialog {
+  width: 98% !important;
+}
+.modal .modal-header .finance-user-info {
+    color: #fff !important;
+    font-size: 20px;
+    font-weight: 400;
+}
+.modal .modal-header .finance-user-info .button-gr .btn:first-child {
+    margin-right: 0px !important;
+    background: transparent !important;
+    border: 0 !important;
+    color: #fff !important;
+    font-size: 14px !important;
+}
+
+
+
+.tblNhapDiem tr td a {
+    text-decoration: none !important;
+    font-style: inherit !important;
+    color:#222 !important;
+    cursor: pointer;
+}
+.tblNhapDiem tr td a:hover {
+    color:var(--color-link) !important;
+}
+.tblTuiThi {
+  border-top: 1px solid #e1e1e1 ;
+}
+.register-wish .table.tblTuiThi th:nth-last-child(2),
+.register-wish .table.tblTuiThi th:nth-last-child(1) {
+    text-align: center;
+}
+.lblLichSu_Tong {
+    font-size: 24px;
+    line-height: 34px !important;
+}
