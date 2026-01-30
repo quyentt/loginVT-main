@@ -5,3 +5,7 @@
 /.vs
 Config.js
 Web.config
+
+# System logs
+Logs/
+*.log
