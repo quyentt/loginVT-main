@@ -1,0 +1,256 @@
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 1400px) {
+
+    .aps-thanhtoan-naptien .col-sm-3,
+    .aps-tinnhanthongthong-l .col-sm-3,
+    .col-sm-3.aps-tinnhandiem-l,
+    .aps-RenLuyen-danhmuc-l {
+        width: 100%;
+        margin-bottom: 20px !important;
+    }
+
+    .aps-thanhtoan-naptien .zone-cat-9.col-sm-9,
+    .aps-tinnhanthongthong-r.pl20,
+    .aps-tinnhandiem-r.pl20,
+    .aps-RenLuyen-danhmuc-r {
+        width: 100%;
+        padding-left: 0 !important;
+    }
+
+    .col-lg-3.checkbox-inline {
+        padding-left: 40px;
+    }
+
+}
+
+@media only screen and (max-width: 1200px) {
+    .box-header .pull-right {
+        position: relative;
+    }
+
+    .bo .aps-danhmucDL-l,
+    .aps-danhmucDL-r {
+        width: 100%;
+        margin-bottom: 20px !important;
+    }
+
+    .aps-danhmucDL-r,
+    .aps-khaibaothanhphandiemapdung-r.pl20 {
+        padding-left: 0 !important;
+    }
+
+    .zone-bus .bss-item .item-search {
+        width: 33.333333%;
+    }
+
+    .zone-bus .bss-item .item-search:last-child {
+        width: 66.666667%;
+    }
+
+    .asp-dangky-dv-tab .nav-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .asp-dangky-dv-tab .nav-tabs li:nth-child(3) {
+        margin-left: auto;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+
+    .viewchungtu {
+        width: 100% !important;
+    }
+
+    .zone-bus .bss-item .item-search {
+        width: 100%;
+    }
+
+    .zone-bus .bss-item .item-search:last-child {
+        width: 100%;
+    }
+}
+
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    ...
+}
+
+/* Extra small devices (phones, 768px and down) */
+@media only screen and (max-width: 768px) {
+
+    /*----------------start----------------------*/
+    .box-header>.box-tools {
+        position: relative;
+        right: 10px;
+        top: 0px;
+    }
+
+    .box-header>.box-tools a {
+        margin-top: 10px;
+    }
+
+    .box-search .box-body .row {
+        flex-wrap: wrap;
+    }
+
+    .item-search .btn-search#btnSearchSinhVien,
+    .item-search #zonebtnBaoCao_DangKyHoc_Import {
+        width: auto !important;
+    }
+
+    .col-lg-3.checkbox-inline.user-check-print {
+
+        padding-left: 40px;
+    }
+
+    .col-sm-3.item-search.d-flex.gap {
+        flex-direction: column;
+    }
+
+    .scroll-table-x {
+        overflow-x: auto;
+    }
+
+    .scroll-table-x table {
+        min-width: 1200px;
+    }
+
+    .aps-box-table .nav-tabs-custom>.nav-tabs {
+        margin-left: 0 !important;
+        width: 100%;
+        padding-left: 0;
+        padding-bottom: 20px;
+        padding-right: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+        gap: 9px;
+    }
+
+    .aps-box-table .nav-tabs-custom>.nav-tabs>li.active>a {
+
+        border-radius: 6px;
+    }
+
+    .aps-box-table .nav-tabs-custom>.nav-tabs>li.pull-right {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
+
+    .aps-box-table .nav-tabs-custom>.nav-tabs>li.pull-right~li.pull-right {
+        margin-left: 0 !important;
+    }
+
+    /*.........................................*/
+    .content-wrapper,
+    .main-footer {
+        margin-left: 0px !important;
+    }
+
+    .main-sidebar {
+        -webkit-transform: translate(-280px, 0) !important;
+        -ms-transform: translate(-280px, 0) !important;
+        -o-transform: translate(-280px, 0) !important;
+        transform: translate(-280px, 0) !important;
+    }
+
+    .sidebar-open .main-sidebar {
+        transform: translate(0, 0) !important;
+    }
+
+    .aps-taichinh-r {
+        padding-left: 0 !important;
+        margin-top: 15px !important;
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+
+    .zoneThongTinBoSung .col-lg-3 {
+        /*padding-right: 15px;*/
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1680px) {
+    .zoneThongTinBoSung .col-lg-3:nth-child(4n) {
+        padding-right: 0 !important;
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (max-width: 1900px) and (min-width: 1380px) {
+        .viewchungtu {
+            width: 25% !important;
+        }
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (max-width: 1500px) and (min-width: 1200px) {
+        .aps-table-fileimport tr td {
+            display: flex;
+            height: 38px !important;
+        }
+
+        .aps-table-fileimport tr .aps-form-input,
+        .aps-table-fileimport tr .aps-form-btn {
+            height: 48px !important;
+        }
+
+        .aps-table-fileimport tr:first-child td:nth-child(3) {
+            display: none;
+        }
+
+        .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
+            height: 73px !important;
+        }
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (max-width: 1380px) and (min-width: 1140px) {
+        .viewchungtu {
+            width: 33.3333% !important;
+        }
+    }
+
+    /* Extra large devices (large laptops and desktops, 1200px and up) */
+    @media only screen and (max-width: 1140px) and (min-width: 600px) {
+        .viewchungtu {
+            width: 50% !important;
+        }
+    }
+
+
+    @media only screen and (max-width: 1920px) {
+        .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
+            max-width: 135px;
+            text-align: center;
+            height: 68px;
+        }
+
+        .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
+            height: 66px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .modal-xl {
+            width: 1140px;
+        }
+    }
+
+    @media (min-width: 576px) {
+        .modal-sm {
+            --bs-modal-width: 300px;
+        }
+    }

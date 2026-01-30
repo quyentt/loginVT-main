@@ -784,8 +784,8 @@ input:focus-visible {
 }
 
 .swiper-slide .function-nav {
-  padding-left: 15px;
-  padding-right: 15px;
+  /* padding-left: 15px;
+  padding-right: 15px; */
 }
 
 .action-function {
@@ -1646,11 +1646,14 @@ a.other-action_item:hover {
 }
 
 .table th {
-  background: #f4fbfd;
+  background: #ffffff;
 }
 
 .table tbody tr:nth-child(even) td {
   background: #f8f9fa;
+}
+.table tbody tr:nth-child(even) td:first-child,.table tbody tr:nth-child(even) th:first-child {
+  background: #f8f9fa !important;
 }
 
 .chart-full .chart-wrap {
@@ -1872,11 +1875,11 @@ a.other-action_item:hover {
 }
 
 .my-paging_wrap li:first-child a {
-  border-radius: 6px 0 0 6px;
+  border-radius: 4px 0 0 4px;
 }
 
 .my-paging_wrap li:last-child a {
-  border-radius: 0 6px 6px 0;
+  border-radius: 0 4px 4px 0;
 }
 
 .input {

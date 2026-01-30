@@ -14,7 +14,7 @@
      border-radius: 5px;
  }
  .btn {
-     padding: 9px 15px 7.6px 15px !important;
+     padding: 8px 15px 7.6px 15px !important;
      font-size: 15px !important;
      border-radius: 5px !important;
  }
@@ -53,11 +53,7 @@
      padding: 5px !important;
      top: 2px !important;;
  }
- .btn-primary:hover {
-     background-color: #fff !important;
-     color:#4e8d42 !important;
-     border: 1px solid #4e8d42 !important;
- }
+
  input:focus ,.select2-container--default .select2-selection--single:focus{
      border: 1px solid #3c8dee !important;
      box-shadow: none !important;
@@ -73,10 +69,15 @@
  }
 .table > thead > tr > td,
 .table > thead > tr > th {
-     border-color: #2A72C7FF !important;
-     border-top: 1px solid #2A72C7FF !important;
-    border-left: 1px solid #2A72C7FF !important;
-    border-right: 1px solid #2A72C7FF !important;
+     border-color: #2A72C7FF;
+     border-top: 1px solid #2A72C7FF;
+    border-left: 1px solid #2A72C7FF;
+    border-right: 1px solid #2A72C7FF;
+ }
+.table > thead > .text-th2 {
+    border: 0 !important;
+    font-weight: 400;
+    padding-top: 0 !important;
  }
  .table-hover > tbody > tr:hover,.table-hover > tbody > tr:hover a {
      color: #fff !important;
@@ -87,7 +88,7 @@
  .table > tfoot > tr > td,
  .table > tfoot > tr > th
 {
-     border-color: #d1d1d1 !important;
+     /* border-color: #d1d1d1 !important; */
      /*border:0px;*/
      vertical-align: middle !important;
  }
@@ -95,14 +96,14 @@
  .table > tbody > tr > th:first-child,
  .table > tfoot > tr > td:first-child,
  .table > tfoot > tr > th:first-child {
-     border-left:1px solid #fff !important;
-     font-weight: 400;
+     border-left:1px solid #d1d1d1 !important;
+     /* font-weight: 400; */
  }
  .table > tbody > tr > td:last-child,
  .table > tbody > tr > th:last-child,
  .table > tfoot > tr > td:last-child,
  .table > tfoot > tr > th:last-child{
-     border-right:1px solid #fff !important;
+     border-right:1px solid #d1d1d1 !important;
  }
  thead {
      color: #fff !important;

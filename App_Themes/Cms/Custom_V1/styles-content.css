@@ -410,9 +410,16 @@
 }
 
 .btn i {
-    padding-right: 5px;
+    padding-right: 8px;
 }
-
+.btn-add-table{
+    padding: 8px 15px 7.6px 15px !important;
+    height: 38px !important;
+    line-height: 38px !important;
+}
+.btn-add-table:hover{
+    line-height: 38px !important;
+}
 /*--------*/
 .chosse-status-student {
     margin-top: 15px;
@@ -1839,8 +1846,24 @@
 
 .aps-form-input .form-control {
     color: #222 !important;
+    border: 1px solid #d2d6de !important;
 }
-
+.aps-form-textarea .form-control {
+    color: #222 !important;
+    border: 1px solid #d2d6de !important;
+    line-height: 24px !important;
+    text-align: left;
+}
+.aps-form-input .form-control {
+    color: #222 !important;
+    border: 1px solid #d2d6de !important;
+}
+.form-control:focus {
+    background-color: #fff;
+    border-color: #86b7fe !important;
+    outline: 0;
+    box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .15) !important;
+}
 /*--Quản lý vai trò / Vai trò - Chức năng--------*/
 .aps-vaitro-cn-l .box.box-solid,
 .aps-vaitro-cn-r .box.box-solid {
@@ -2252,7 +2275,9 @@
     font-weight: 400;
     padding: 4px 10px;
 }
-
+.bg-light-blue.badge {   
+    border-radius: 20px;
+}
 .aps-nguoidung-r .box.box-solid {
     padding: 0 !important;
 }
@@ -2572,7 +2597,7 @@
     border-bottom: 0px solid #e1e1e1;
     padding: 0px !important;
     margin-bottom: 0 !important;
-    line-height: 38px !important;
+    line-height: 38px;
 }
 
 .aps-taichinh-r .aps-form .aps-form-item {
@@ -2888,7 +2913,7 @@
 }
 
 .modal-footer .btn {
-    margin-left: 10px !important;
+    margin-left: 5px !important;
 }
 
 .zone-action .pull-right .btn {
@@ -3208,7 +3233,7 @@
 
 .aps-tabs .nav-tabs-custom>.nav-tabs>li,
 .zone-phanbodoanhthu-tab.zone-tinhhocphi-tab .nav-tabs-custom>.nav-tabs>li {
-    margin-bottom: 0 !important;
+    margin-bottom: 8px !important;
 }
 
 .aps-tabs .nav>li>a,
@@ -3236,7 +3261,7 @@
     border-right: 0 !important;
     font-weight: 700;
     text-align: center;
-    font-size: 17px;
+    font-size: 16px;
 }
 
 .aps-tabs.aps-tabs-blue .nav-tabs-custom>.nav-tabs>li.active>a,
@@ -9962,4 +9987,9 @@ table#clone {
 .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 6px !important;
     right: 12px !important;
+}
+/* -------------- */
+.aps-form.aps-form-user-view .aps-form-lable,
+.aps-form.aps-form-user-view .aps-form-lable .group-title-name {
+    line-height: 24px !important;
 }

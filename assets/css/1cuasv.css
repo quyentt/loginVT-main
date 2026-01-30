@@ -75,7 +75,7 @@
   /* background: #fff; */
   width: 100%;
   /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); */
-  padding: 12px 0px 0px 25px;
+  padding: 12px 0px 0px 20px;
 }
 
 .content-tab .dashboad-item-box {
@@ -428,9 +428,10 @@
 .form-select {
   font-size: 14px;
   color: var(--dask-blue);
-  border: 0px solid #acbeec;
-  background: #acbeec;
+  border: 1px solid #acbeec;
+  background: #fff;
   color: #222;
+  border-radius: 6px !important;
 }
 
 .filter-group .fa-angle-down {
@@ -536,13 +537,12 @@
 }
 
 .form-add-info .form-select {
-  border-radius: 4px !important;
+  border-radius: 5px !important;
   height: 38px;
   line-height: 27px;
   font-size: 14px;
   padding-left: 40px;
-  border: 1px solid #d2d6de;
-  ;
+  border: 1px solid #d2d6de !important;
   background: #fff;
   position: relative;
   z-index: 1;
@@ -592,7 +592,7 @@
   position: absolute;
   top: 11px;
   left: 10px;
-  z-index: 99999;
+  z-index: 99;
   font-size: 18px;
   color: var(--dask-blue) !important;
 }
