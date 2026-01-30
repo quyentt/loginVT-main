@@ -59,19 +59,51 @@
                         </div>
                     </div>
                     <div class="col-sm-9">
+
+                        <div class="box box-solid">
+
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="pull-left"><i class="fa fa-angle-right"></i> Quyền chức năng</div>
+                                    <div class="pull-right">
+                                        <a id="btnAdd_QuyenCN" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
+                                        <a class="submit btn btn-danger" id="btnDelete_QuyenCN"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table id="tblQuyenCN" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed">Stt</th>
+                                                <th class="td-center"><span class="lang" key="">Mã chức năng</span></th>
+                                                <th class="td-center"><span class="lang" key="">Tên chức năng</span></th>
+                                                <th class="td-center"><span class="lang" key="">Quyền</span></th>
+                                                <th class="td-center"><span class="lang" key="">Đã phân rồi</span></th>
+                                                <th class="td-center"><span class="lang" key="">Mô tả</span></th>
+                                                <!--<th class="td-center"><span class="lang" key="">Người tạo</span></th>
+                                                <th class="td-center"><span class="lang" key="">Sửa</span></th>-->
+                                                <th class="td-center td-fixed">
+                                                    <input type="checkbox" class="chkSystemSelectAll">
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                         <!-- 1. Zone danh sach ChucNang cua VaiTro -->
                         <div class="box box-solid zone-bus-vtcn" id="zone_list_vtcn">
                             <div class="box-body">
-                                <i class="fa-light fa-gear mr-10"></i><span
-                                    style="font-weight: 700">Danh sách chức năng</span>(<span id="lblTong_VTCN"></span>)
+                                <i class="fa-light fa-gear mr-10"></i><span style="font-weight: 700">Danh sách chức năng</span>(<span id="lblTong_VTCN"></span>)
                                 <table class="table table-hover mt-10" id="tableVaiTroChucNang_VTCN">
                                     <thead>
-                                    <tr>
-                                        <th class="td-center">Stt</th>
-                                        <th>Tên chức năng</th>
-                                        <th>Tình trạng</th>
-                                        <th class="td-center">Xóa</th>
-                                    </tr>
+                                        <tr>
+                                            <th class="td-center">Stt</th>
+                                            <th>Tên chức năng</th>
+                                            <th>Tình trạng</th>
+                                            <th class="td-center">Xóa</th>
+                                        </tr>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
@@ -85,14 +117,17 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- 2. Zone them ChucNang cho VaiTro -->
                         <div class="box box-solid form-container zone-bus-vtcn" id="zone_input_vtcn">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><i class="fa-light fa-user-gear"></i> Thêm Chức năng cho Vai trò (<span
-                                        id="lblChucNang_Tong_VTCN"></span>)</h3>
+                                <h3 class="box-title">
+                                    <i class="fa-light fa-user-gear"></i> Thêm Chức năng cho Vai trò (<span id="lblChucNang_Tong_VTCN"></span>)
+                                </h3>
                                 <div class="pull-right">
-                                    <a class="btn btn-default btnClose" href="#" title="Close"><i
-                                            class="fa fa-times"></i></a>
+                                    <a class="btn btn-default btnClose" href="#" title="Close">
+                                        <i class="fa fa-times"></i>
+                                    </a>
                                 </div>
                             </div>
                             <div class="box-body">
@@ -114,29 +149,29 @@
                                         </div>
                                         <div class="col-sm-10 aps-form-input aps-form-radio">
                                             <input type="radio" class="rdLoaiVaiTro_ChucNang"
-                                                   name="rdLoaiVaiTro_ChucNang" value=""/>
+                                                   name="rdLoaiVaiTro_ChucNang" value="" />
                                             Toàn bộ
                                             <input type="radio" class="rdLoaiVaiTro_ChucNang ml-10"
-                                                   name="rdLoaiVaiTro_ChucNang" value="fa fa-plus" checked="checked"/>
+                                                   name="rdLoaiVaiTro_ChucNang" value="fa fa-plus" checked="checked" />
                                             Chưa thêm
                                             <input type="radio" class="rdLoaiVaiTro_ChucNang ml-10"
-                                                   name="rdLoaiVaiTro_ChucNang" value="fa fa-times-circle"/>
+                                                   name="rdLoaiVaiTro_ChucNang" value="fa fa-times-circle" />
                                             Đã thêm
                                         </div>
                                     </div>
                                 </div>
                                 <table class="table table-hover" id="tblChucNang_VTCN">
                                     <thead>
-                                    <tr>
-                                        <th class=" td-fixed td-center">Stt</th>
-                                        <th>Chức năng</th>
-                                        <th class="td-center">Thêm</th>
-                                    </tr>
+                                        <tr>
+                                            <th class=" td-fixed td-center">Stt</th>
+                                            <th>Chức năng</th>
+                                            <th class="td-center">Thêm</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td colspan="3" class="td-center color-warning">Vui lòng chọn ứng dụng!</td>
-                                    </tr>
+                                        <tr>
+                                            <td colspan="3" class="td-center color-warning">Vui lòng chọn ứng dụng!</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

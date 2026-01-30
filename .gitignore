@@ -3,5 +3,11 @@
 ################################################################################
 
 /.vs
+/bin
+/Hander
+/Log
+/pages
+/Scripts
+/ServicesConfig
 Config.js
 Web.config

@@ -22,6 +22,7 @@ ChucNang.prototype = {
         edu.system.page_load();
         me.toggle_detail();
         me.getList_UngDung();
+        edu.system.loadToCombo_DanhMucDuLieu("CHUNG.HANHDONG", "dropQuyen_QuyenCN");
         /*------------------------------------------
         --Discription: [0] Action Common
         --Order: 
@@ -57,6 +58,7 @@ ChucNang.prototype = {
             me.toggle_input();
         });
         $("#btnEdit_CN").click(function () {
+            if (!me.strChucNang_Id) me.strChucNang_Id = me.strChucNangTemp_Id;
             me.getDetail_ChucNang(me.strChucNang_Id, constant.setting.ACTION.EDIT);
             me.toggle_input();
         });
@@ -105,6 +107,50 @@ ChucNang.prototype = {
             else {
                 edu.system.alert("Vui lòng chọn dữ liệu cần xóa!");
             }
+        });
+
+        $("#tblQuyenCN").delegate(".btnEdit", "click", function () {
+            var strId = this.id;
+            var data = me.dtQuyenCN.find(e => e.ID == strId);
+            me["strQuyenCN_Id"] = data.ID;
+            edu.util.viewValById("dropQuyen_QuyenCN", data.HANHDONG_ID);
+            edu.util.viewValById("txtMoTa_QuyenCN", data.MOTA);
+            edu.util.viewValById("dropHieuLuc_QuyenCN", data.HIEULUC);
+            $("#myModal_QuyenCN").modal("show");
+        });
+        $("#btnAdd_QuyenCN").click(function () {
+            var data = {};
+            me["strQuyenCN_Id"] = data.ID;
+            edu.util.viewValById("dropQuyen_QuyenCN", data.HANHDONG_ID);
+            edu.util.viewValById("txtMoTa_QuyenCN", data.MOTA);
+            edu.util.viewValById("dropHieuLuc_QuyenCN", 1);
+            $("#myModal_QuyenCN").modal("show");
+        });
+        $("#btnSave_QuyenCN").click(function () {
+            var arrCheck = $("#dropQuyen_QuyenCN").val();
+            if (!arrCheck) {
+                edu.system.alert("Vui lòng chọn dữ liệu");
+                return;
+            }
+            edu.system.alert('<div id="zoneprocessXXXX"></div>');
+            edu.system.genHTML_Progress("zoneprocessXXXX", arrCheck.length);
+            arrCheck.forEach(e => me.save_QuyenCN(e));
+           
+        });
+        $("#btnDelete_QuyenCN").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblQuyenCN", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.delete_QuyenCN(arrChecked_Id[i]);
+                }
+            });
         });
     },
     /*----------------------------------------------
@@ -452,6 +498,7 @@ ChucNang.prototype = {
         //2. Action
         $('#treesjs_chucnang_cn').on("select_node.jstree", function (e, data) {
             me.strChucNang_Id = data.node.id;
+            me["strChucNangTemp_Id"] = me.strChucNang_Id;
             me.getDetail_ChucNang(me.strChucNang_Id, constant.setting.ACTION.VIEW);
 
             me.getList_NguoiDungChucNang();
@@ -604,14 +651,22 @@ ChucNang.prototype = {
     getList_NguoiDungChucNang: function () {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action'            : 'CMS_TaiKhoan/LayDanhSachNguoiDungChucNang',
-            'versionAPI'        : 'v1.0',
+        //var obj_list = {
+        //    'action'            : 'CMS_TaiKhoan/LayDanhSachNguoiDungChucNang',
+        //    'versionAPI'        : 'v1.0',
 
-            'strTuKhoa'         : "",
-            'pageIndex'         : edu.system.pageIndex_default,
-            'pageSize'          : edu.system.pageSize_default,
-            'strChucNang_Id'    : me.strChucNang_Id
+        //    'strTuKhoa'         : "",
+        //    'pageIndex'         : edu.system.pageIndex_default,
+        //    'pageSize'          : edu.system.pageSize_default,
+        //    'strChucNang_Id'    : me.strChucNang_Id
+        //};
+        var obj_save = {
+            'action': 'CMS_QuanTri01_MH/DSA4BRIPJjQuKAU0LyYCLhA0OCQvAik0Ig8gLyYP',
+            'func': 'PKG_CORE_QUANTRI_01.LayDSNguoiDungCoQuyenChucNang',
+            'iM': edu.system.iM,
+            'strChucNang_Id': me.strChucNang_Id,
+            'strHanhDong_Id': edu.system.getValById('dropAAAA'),
+            'strNguoiThucHien_Id': edu.system.userId,
         };
 
         
@@ -633,20 +688,20 @@ ChucNang.prototype = {
                     //}
                 }
                 else {
-                    edu.system.alert("CMS_TaiKhoan/LayDanhSachNguoiDungChucNang: " + data.Message);
+                    edu.system.alert( data.Message);
                 }
                 
             },
             error: function (er) {
-                edu.system.alert("CMS_TaiKhoan/LayDanhSachNguoiDungChucNang (er): " + JSON.stringify(er), "w");
+                edu.system.alert(JSON.stringify(er), "w");
                 
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
@@ -771,5 +826,205 @@ ChucNang.prototype = {
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
         
-    }
+    },
+
+    save_QuyenCN: function (strHanhDong_Id) {
+        var me = this;
+        var obj_notify = {};
+        //--Edit
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/FSkkLB4CLjMkHhA0OCQv',
+            'func': 'PKG_CORE_QUANTRI_02.Them_Core_Quyen',
+            'iM': edu.system.iM,
+            'strId': me.strQuyenCN_Id,
+            'strChucNang_Id': me.strChucNang_Id,
+            'strUngDung_Id': me.strUngDung_Id,
+            'strHanhDong_Id': strHanhDong_Id,
+            'strMoTa': edu.system.getValById('txtMoTa_QuyenCN'),
+            'dHieuLuc': edu.system.getValById('dropHieuLuc_QuyenCN'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        if (obj_save.strId) {
+            obj_save.action = 'CMS_QuanTri02_MH/EjQgHgIuMyQeEDQ4JC8P';
+            obj_save.func = 'PKG_CORE_QUANTRI_02.Sua_Core_Quyen'
+        }
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    if (!obj_save.strId) {
+                        edu.system.alert("Thêm mới thành công!");
+                    }
+                    else {
+                        edu.system.alert("Cập nhật thành công!");
+                    }
+                    
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_QuyenCN();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    getList_QuyenCN: function (strDanhSach_Id) {
+        var me = this;//--Edit
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHhA0OCQv',
+            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Quyen',
+            'iM': edu.system.iM,
+            'strChucNang_Id': me.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    me["dtQuyenCN"] = dtReRult;
+                    me.genTable_QuyenCN(dtReRult, data.Pager);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    delete_QuyenCN: function (Ids) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeEDQ4JC8P',
+            'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_Quyen',
+            'iM': edu.system.iM,
+            'strId': Ids,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    obj = {
+                        title: "",
+                        content: "Xóa dữ liệu thành công!",
+                        code: ""
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+                else {
+                    obj = {
+                        title: "",
+                        content: data.Message,
+                        code: "w"
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+
+            },
+            error: function (er) {
+
+                obj = {
+                    title: "",
+                    content: JSON.stringify(er),
+                    code: "w"
+                };
+                edu.system.afterComfirm(obj);
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_QuyenCN();
+                });
+            },
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    /*------------------------------------------
+    --Discription: [4] GenHTML Tiến độ đề tài
+    --ULR:  Modules
+    -------------------------------------------*/
+    genTable_QuyenCN: function (data, iPager) {
+        $("#lblQuyenCN_Tong").html(iPager);
+        var jsonForm = {
+            strTable_Id: "tblQuyenCN",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.QuyenCN.getList_QuyenCN()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "HANHDONG_TEN"
+                },
+                {
+                    "mDataProp": "MOTA"
+                },
+                {
+                    //"mDataProp": "HIEULUC",
+                    "mRender": function (nRow, aData) {
+                        var x = aData.HIEULUC ? "" : "Hết hiệu lực";
+                        return x;
+                    }
+                },
+                {
+                    "mDataProp": "CHUCNANG_TEN"
+                },
+                {
+                    "mDataProp": "NGAYTAO_DD_MM_YYYY_HHMMSS"
+                },
+                {
+                    "mDataProp": "NGUOITAO_TAIKHOAN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
+                    }
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
 };

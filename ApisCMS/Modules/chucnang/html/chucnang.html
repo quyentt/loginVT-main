@@ -6,8 +6,7 @@
                 <div class="box-body pd0">
                     <!-- Bộ tìm kiếm -->
                     <div class="bs-item pd0">
-                        <select class="select-opt" id="dropSearch_UngDung_CN">
-                        </select>
+                        <select class="select-opt" id="dropSearch_UngDung_CN"></select>
                     </div>
                 </div>
             </div>
@@ -124,16 +123,50 @@
                                 <th class="td-left"><span class="lang" key="">Tên</span></th>
                                 <th class="td-left"><span class="lang" key="">Email</span></th>
                                 <!--<th class="td-left"><span class="lang" key="">Nhóm</span></th>
-                    <th class="td-center td-fixed"><span class="lang" key="">Sửa</span></th>
-                    <th class="td-center td-fixed">
-                        <input type="checkbox" name="chkSelectAll_DMTB" id='chkSelectAll_DMTB' />
-                    </th>-->
+                                <th class="td-center td-fixed"><span class="lang" key="">Sửa</span></th>
+                                <th class="td-center td-fixed">
+                                    <input type="checkbox" name="chkSelectAll_DMTB" id='chkSelectAll_DMTB' />
+                                </th>-->
                             </tr>
                         </thead>
                         <tbody>
                             <!-- load from js -->
                         </tbody>
                     </table>
+                </div>
+
+                <div class="box-body">
+                    <p>
+
+                        <!--<a href="#" id="btnDelete_NguoiDungChucNang_CN2" title="Xóa chức năng khỏi tất cả người dùng"> Xóa</a>-->
+                    </p>
+                    <div class="row">
+                        <div class="pull-left"><i class="fa fa-angle-right"></i> Quyền cho chức năng</div>
+                        <div class="pull-right">
+                            <a id="btnAdd_QuyenCN" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
+                            <a class="submit btn btn-danger" id="btnDelete_QuyenCN"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <table id="tblQuyenCN" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed">Stt</th>
+                                    <th class="td-center"><span class="lang" key="">Quyền</span></th>
+                                    <th class="td-center"><span class="lang" key="">Mô tả</span></th>
+                                    <th class="td-center"><span class="lang" key="">Hiệu lực</span></th>
+                                    <th class="td-center"><span class="lang" key="">Chức năng</span></th>
+                                    <th class="td-center"><span class="lang" key="">Ngày tạo</span></th>
+                                    <th class="td-center"><span class="lang" key="">Người tạo</span></th>
+                                    <th class="td-center"><span class="lang" key="">Sửa</span></th>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" class="chkSystemSelectAll">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <!-- Zone add/edit ChucNang -->
@@ -278,6 +311,60 @@
         </div>
     </div>
 </section>
+
+
+<div class="modal fade  aps-modal-hesohocphan" id="myModalQuyenCN" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Quyền</h3>
+            </div>
+            <div class="modal-body  aps-form mt-10" id="modal_body">
+                <div class="row zone-box">
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Quyền </span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <select id="dropQuyen_QuyenCN" class="select-opt" multiple="multiple">
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Mô tả</span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtMoTa_QuyenCN" class="form-control" style="height:300px" />
+                        <div class="clear"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-3 aps-form-lable">
+                            <label style="font-weight: normal"><span class="lang" key="">Hiệu lực</span></label>
+                        </div>
+                        <div class="col-sm-9 aps-form-input">
+                            <select id="dropHieuLuc_QuyenCN" class="select-opt">
+                                <option value="1">Hiệu lực</option>
+                                <option value="0">Hết hiệu lực</option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="clear"></div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_QuyenCN"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
 <script src="modules/chucnang/script/chucnang.js?v=1.0.0.1"></script>
 <script type="text/javascript">

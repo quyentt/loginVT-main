@@ -42,8 +42,25 @@ VaiTroNguoiDung.prototype = {
             }
             edu.system.confirm("Bạn có chắc chắn muốn kế thừa không");
             $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.save_NguoiDungVaiTro(arrChecked_Id[i]);
+                }
+            });
+        });
+        $("#btnDelete_NguoiDung").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblNguoiDungDaThem", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.delete_NguoiDungVaiTro(arrChecked_Id[i]);
                 }
             });
         });
@@ -151,7 +168,7 @@ VaiTroNguoiDung.prototype = {
             colPos: {
                 left: [1],
                 fix: [0],
-                center:[0, 3]
+                center: [0, 3]
             },
             aoColumns: [
                 {
@@ -169,19 +186,98 @@ VaiTroNguoiDung.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
     },
+    getList_NguoiDungDaThem: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'CMS_QuanTri01_MH/DSA4BRIPJjQuKAU0LyYXICgVMy4P',
+            'func': 'PKG_CORE_QUANTRI_01.LayDSNguoiDungVaiTro',
+            'iM': edu.system.iM,
+            'strVaiTro_Id': me.strVaiTro_Id,
+            'strHanhDong_Id': edu.system.getValById('dropAAAA'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    me["dtQuyenCN"] = dtReRult;
+                    me.genTable_QuyenCN(dtReRult, data.Pager);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_NguoiDungDaThem: function (data, iPager) {
+        edu.util.viewHTMLById("lblNguoiDung_Tong", iPager);
+        var jsonForm = {
+            strTable_Id: "tblNguoiDungDaThem",
+            aaData: data,
+            bPaginate: {
+                strFuntionName: "main_doc.VaiTroNguoiDung.getList_NguoiDungDaThem()",
+                iDataRow: iPager
+            },
+            arrClassName: ["tr-pointer", "btnEdit"],
+            colPos: {
+                left: [1],
+                fix: [0],
+                center:[0, 3]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "TAIKHOAN"
+                },
+                {
+                    "mDataProp": "TENDAYDU"
+                },
+                {
+                    "mDataProp": "EMAIL"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '" class="checkOne">';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
 
     save_NguoiDungVaiTro: function (strNguoiDung_Id) {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action': 'CMS_NguoiDungVaiTro/ThemMoi',
-            
-
-            'strId': "",
-            'strVaiTro_Id': me.strVaiTro_Id,
-            'strNguoiDung_Id': strNguoiDung_Id,
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/FSkkLB4CLjMkHg8pIC8SNB4XICgVMy4P',
+            'func': 'PKG_CORE_QUANTRI_02.Them_Core_NhanSu_VaiTro',
+            'iM': edu.system.iM,
+            'strCore_NhanSu_Id': strNguoiDung_Id,
+            'strVaiTro_Id': e.strVaiTro_Id,
+            'strPhanLoaiNguonTao_Id': edu.system.getValById('dropAAAA'),
+            'dLaVaiTroChinh': edu.system.getValById('txtAAAA'),
+            'strNguonDuLieu_Id': edu.system.getValById('dropAAAA'),
+            'strNgayHieuLuc': edu.system.getValById('txtAAAA'),
+            'strNgayHetHieuLuc': edu.system.getValById('txtAAAA'),
+            'strCoChePhatSinh_Id': edu.system.getValById('dropAAAA'),
+            'dHieuLuc': edu.system.getValById('txtAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
+		* /
         //
         
         edu.system.makeRequest({
@@ -190,22 +286,82 @@ VaiTroNguoiDung.prototype = {
                     edu.system.alert("Thêm thành công!");
                 }
                 else {
-                    edu.system.alert("CMS_VaiTro/ThemMoi: " + data.Message);
+                    edu.system.alert(data.Message);
                 }
                 
             },
             error: function (er) {
                 
-                edu.system.alert("CMS_VaiTro/ThemMoi (er): " + JSON.stringify(er), "w");
+                edu.system.alert(JSON.stringify(er), "w");
             },
             type: 'POST',
-            action: obj_list.action,
-            
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_NguoiDungDaThem();
+                });
+            },
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
+            ]
+        }, false, false, false, null);
+    },
+
+    delete_NguoiDungVaiTro: function (Ids) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeDykgLxI0HhcgKBUzLgPP',
+            'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_NhanSu_VaiTro',
+            'iM': edu.system.iM,
+            'strId': Ids,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    obj = {
+                        title: "",
+                        content: "Xóa dữ liệu thành công!",
+                        code: ""
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+                else {
+                    obj = {
+                        title: "",
+                        content: data.Message,
+                        code: "w"
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+
+            },
+            error: function (er) {
+
+                obj = {
+                    title: "",
+                    content: JSON.stringify(er),
+                    code: "w"
+                };
+                edu.system.afterComfirm(obj);
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_NguoiDungDaThem();
+                });
+            },
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
             ]
         }, false, false, false, null);
     },

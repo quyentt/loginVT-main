@@ -31,6 +31,40 @@
         </div>
         <!-- /.right-content -->
         <div class="col-sm-9 aps-vaitro-nguoidung-r">
+
+            <div class="box box-solid">
+                <div class="box-body">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa-light fa-users"></i> Danh sách người dùng đã thêm
+                            <span class="pull-right badge bg-light-blue">
+                                <span id="lblNguoiDungDaThem_Tong"></span>
+                            </span>
+                        </h3>
+                    </div>
+                    <div class="aps-vaitro-nguoidung-table">
+                        <table id="tblNguoiDungDaThem" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Mã</th>
+                                    <th class="td-center">Tên</th>
+                                    <th class="td-center">Email</th>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_VaiTro">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="row">
+                        <div class="pull-right">
+                            <a class="submit btn btn-danger" id="btnDelete_NguoiDung"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="box box-solid">
                 <div class="box box-solid box-search">
                     <div class="box-header with-border d-none">
@@ -62,30 +96,35 @@
                     </div>
                 </div>
                 <div class="box-body">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">
-                                <i class="fa-light fa-users"></i> Danh sách người dùng
-                                <span class="pull-right badge bg-light-blue">
-                                    <span id="lblNguoiDung_Tong"></span>
-                                </span>
-                            </h3>
-                        </div>
-                        <div class="aps-vaitro-nguoidung-table">
-                          <table id="tblNguoiDung" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-fixed td-center">Stt</th>
-                                                <th class="td-center">Mã</th>
-                                                <th class="td-center">Tên</th>
-                                                <th class="td-center td-fixed">
-                                                    <input type="checkbox" id="chkSelectAll_VaiTro">
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                        </div>
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa-light fa-users"></i> Danh sách người dùng
+                            <span class="pull-right badge bg-light-blue">
+                                <span id="lblNguoiDung_Tong"></span>
+                            </span>
+                        </h3>
                     </div>
+                    <div class="aps-vaitro-nguoidung-table">
+                        <table id="tblNguoiDung" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Mã</th>
+                                    <th class="td-center">Tên</th>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_VaiTro">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <!--<div class="row">
+                        <div class="pull-right">
+                            <a class="submit btn btn-danger" id="btnDelete_NguoiDung"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                        </div>
+                    </div>-->
+                </div>
             </div>
         </div>
     </div>

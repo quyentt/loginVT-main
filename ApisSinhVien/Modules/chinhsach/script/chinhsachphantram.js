@@ -189,7 +189,9 @@ ChinhSachPhanTram.prototype = {
 
         $("#tblKetQua").delegate('.btnDSDoiTuong', 'click', function (e) {
             $('#myModal').modal('show');
-            me.getList_QuanSoTheoLop(this.id);
+            var strId = this.id;
+            var aData = me.dtSinhVien.find(e => e.ID == strId)
+            me.getList_QuanSoTheoLop(aData.QLSV_NGUOIHOC_ID);
         });
     },
     resetCombobox: function (point) {

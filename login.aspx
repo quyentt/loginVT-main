@@ -88,7 +88,7 @@
                                 <div class="row login-notify">
                                     <div class="social-auth-links text-center">
                                       <p>- OR -</p>
-                                        <a type="submit" id="btnDangNhapMicrosoft" href="<%=urlmicrosoft %>" class="btn btn-primary btn-microsoft"><img src="assets/images/microsoft_logg.svg" class="logo-google"> Sign in using Microsoft</a>
+                                        <a type="submit" id="btnDangNhapMicrosoft" href="<%=urlmicrosoft %>" class="btn btn-primary btn-microsoft btn-flat"><img src="assets/images/microsoft_logg.svg" class="logo-google"> Sign in using Microsoft</a>
                                     </div>
                                 </div>    
                          <%
@@ -98,7 +98,8 @@
                             %>
                                 <div class="row login-notify">
                                     <div class="social-auth-links text-center">
-                                        <a type="submit" href="<%=urlKeyCloak %>" class="btn btn-primary btn-microsoft"><img src="assets/images/icon-Keycloak.png" class="logo-google"> Đăng nhập bằng SSO</a>
+                                      <p>- OR -</p>
+                                        <a type="submit" href="<%=urlKeyCloak %>" class="btn btn-block btn-social btn-google btn-flat"><img src="assets/images/icon-Keycloak.png" style="padding-top: 10px"> Đăng nhập bằng SSO</a>
                                     </div>
                                 </div>    
                             <%

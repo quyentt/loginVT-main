@@ -170,7 +170,9 @@ TongHopPhanTram.prototype = {
 
         $("#tblKetQua").delegate('.btnDSDoiTuong', 'click', function (e) {
             $('#myModal').modal('show');
-            me.getList_QuanSoTheoLop(this.id);
+            var strId = this.id;
+            var aData = me.dtSinhVien.find(e => e.ID == strId)
+            me.getList_QuanSoTheoLop(aData.QLSV_NGUOIHOC_ID);
         });
     },
     resetCombobox: function (point) {
@@ -814,19 +816,21 @@ TongHopPhanTram.prototype = {
         var arrId = point.id.split("_");
         var objSV = edu.util.objGetOneDataInData(arrId[1], me.dtSinhVien, "ID");
         var obj_save = {
-            'action': 'TC_DoiTuong_MienGiam/ThemMoi',
-
+            'action': 'TC_ThuChi_MH/FSkkLB4VICgCKSgvKR4FFR4MKCQvBiggLAPP',
+            'func': 'pkg_taichinh_thuchi.Them_TaiChinh_DT_MienGiam',
+            'iM': edu.system.iM,
             'strId': $(point).attr("name"),
-            'strDaoTao_LopQuanLy_Id': objSV.DAOTAO_LOPQUANLY_ID,
-            'strQLSV_TrangThaiNguoiHoc_Id': objSV.QLSV_TRANGTHAINGUOIHOC_ID,
-            'strDaoTao_ToChucCT_Id': objSV.DAOTAO_TOCHUCCHUONGTRINH_ID,
-            'strQLSV_NguoiHoc_Id': objSV.QLSV_NGUOIHOC_ID,
+            'strDaoTao_LopQuanLy_Id': objSV.LOP_ID,
+            'strQLSV_TrangThaiNguoiHoc_Id': objSV.QLSV_NGUOIHOC_TRANGTHAI_ID,
+            'strDaoTao_ToChucCT_Id': objSV.CHUONGTRINH_ID,
+            'strQLSV_NguoiHoc_Id': objSV.ID,
             'strQLSV_DoiTuong_Id': arrId[2],
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_HocKy'),
             'dPhanTramMienGiam': $("#txtPhanTram_" + arrId[1] + "_" + arrId[2]).val(),
             'dSoThang': $(point).val(),
             'strDiem_KieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
             'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropSearch_KhoanThu'),
+            'strDoiTuongChinhSach_Id': edu.system.getValById('dropSearch_DoiTuong'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({
