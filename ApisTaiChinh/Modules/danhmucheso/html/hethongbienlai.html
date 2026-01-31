@@ -1,5 +1,4 @@
-﻿
-<!-- Main content -->
+﻿<!-- Main content -->
 <section class="content aps-taichinh">
     <div class="row aps-hethong-bienlai">
         <!-- /.left-content -->
@@ -8,7 +7,8 @@
                 <div class="box-body pd0">
                     <!-- Bộ tìm kiếm -->
                     <div class="bss-item input-group mb-0">
-                        <input type="text" id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                        <input type="text" id="txtSearch_TuKhoa" class="form-control"
+                            placeholder="Nhập từ khóa tìm kiếm">
                         <span class="input-group-addon poiter" id="btnSearch_HeThongBienLai" title="Search">
                             <i class="fa fa-search"></i>
                         </span>
@@ -43,8 +43,10 @@
                     </div>
                     <div class="box-body">
                         <div class="col-sm-12">
-                            <p>- Hôm nay bạn có sản phẩm mới không? 
-                                <a class="btn btnAdd btn-outline-primary" href="#"><i class="fa fa-plus"></i> Thêm mới</a></p>
+                            <p>Hôm nay bạn có sản phẩm mới không?
+                                <a class="btn btnAdd btn-outline-primary ml-10" href="#"><i class="fa fa-plus"></i> Thêm
+                                    mới</a>
+                            </p>
                             <!--<p>- Bạn có 3 giải thưởng mới được xác nhận, <a class="btn" href="#"><i class="fa fa-eye btn-circle"></i> Xem</a></p>-->
                         </div>
                     </div>
@@ -52,13 +54,15 @@
                 <!-- box Edit_GT -->
                 <div class="box box-solid form-container zone-bus" id="zone_input">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-plus"></i> Thêm mới - </span> Hệ thống biên lai</h3>
+                        <h3 class="box-title"><span class="myModalLabel"> 
+                            <i class="fa fa-plus"></i> Thêm mới - </span>
+                            Hệ thống biên lai</h3>
                         <div class="pull-right">
                             <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="col-sm-12 box-view">
+                        <div class="col-sm-12 box-view aps-add-new">
                             <!-- 1. Thông tin giải thưởng -->
                             <div class="row zone-box aps-form">
                                 <div class="col col-sm-6 aps-form-item">
@@ -75,7 +79,7 @@
                                 </div>
                                 <div class="col col-sm-6 aps-form-item">
                                     <div class="row">
-                                        <div class="col-sm-4 aps-form-lable pl20">
+                                        <div class="col-sm-4 aps-form-lable text-right pr15">
                                             <div class="group-title-name">
                                                 Ký hiệu<span class="title-colon">:</span>
                                             </div>
@@ -101,7 +105,7 @@
                                 </div>
                                 <div class="col col-sm-6 aps-form-item">
                                     <div class="row">
-                                        <div class="col-sm-4 aps-form-lable pl20">
+                                        <div class="col-sm-4 aps-form-lable text-right pr15">
                                             <div class="group-title-name">
                                                 Độ dài phiếu thu<span class="title-colon">:</span>
                                             </div>
@@ -127,7 +131,7 @@
                                 </div>
                                 <div class="col col-sm-6 aps-form-item">
                                     <div class="row">
-                                        <div class="col-sm-4 aps-form-lable pl20">
+                                        <div class="col-sm-4 aps-form-lable text-right pr15">
                                             <div class="group-title-name">
                                                 Số khởi tạo<span class="title-colon">:</span>
                                             </div>
@@ -153,7 +157,7 @@
                                 </div>
                                 <div class="col col-sm-6 aps-form-item">
                                     <div class="row">
-                                        <div class="col-sm-4 aps-form-lable pl20">
+                                        <div class="col-sm-4 aps-form-lable text-right pr15">
                                             <div class="group-title-name">
                                                 Số phiếu/quyển<span class="title-colon">:</span>
                                             </div>
@@ -179,7 +183,7 @@
                                 </div>
                                 <div class="col-sm-6 aps-form-item">
                                     <div class="row">
-                                        <div class="col-sm-4 aps-form-lable pl20">
+                                        <div class="col-sm-4 aps-form-lable text-right pr15">
                                             <div class="group-title-name">
                                                 Địa chỉ<span class="title-colon">:</span>
                                             </div>
@@ -194,10 +198,16 @@
                     </div>
                     <div class="box-footer">
                         <div class="pull-right">
-                            <a class="btn btn-danger btnOpenDelete" style="display: none" id="deleteBienLai"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
-                            <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
-                            <a class="btn btn-success btnReWrite btnAdd" href="#" title="Xóa trắng toàn bộ thông tin nhập"><i class="fa-light fa-pen-line"></i> Nhập tiếp</a>
-                            <a id="btnSave_BienLai" class="btn btn-primary"><i class="fa-light fa-floppy-disk"></i> Lưu</a>
+                            
+                            <a class="btn btn-default btnClose" href="#" title="Close"><i
+                                    class="fa fa-times-circle"></i> Đóng</a>
+                                    <a class="btn btn-danger btnOpenDelete" style="display: none" id="deleteBienLai"><i
+                                    class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                            <a class="btn btn-success btnReWrite btnAdd" href="#"
+                                title="Xóa trắng toàn bộ thông tin nhập"><i class="fa-light fa-pen-line"></i> Nhập
+                                tiếp</a>
+                            <a id="btnSave_BienLai" class="btn btn-primary"><i class="fa-light fa-floppy-disk"></i>
+                                Lưu</a>
                         </div>
                     </div>
                 </div>
@@ -205,7 +215,7 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- load from js -->
 </div>
 <!-- page script -->

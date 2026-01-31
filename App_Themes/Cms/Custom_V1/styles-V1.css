@@ -21,8 +21,9 @@
  .select2-container--default .select2-selection--single {
      border: 1px solid #d2d6de !important;
      border-radius: 5px !important;
-     padding: 12px 3px !important;
+     padding: 7px 3px !important;
      height: 38px;
+     font-weight: normal !important;
  }
  .select2-container--default .select2-selection--single .select2-selection__arrow b {
      border-color: #d2d6de transparent transparent transparent !important;

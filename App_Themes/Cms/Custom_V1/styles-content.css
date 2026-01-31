@@ -146,7 +146,7 @@
 
 /*---------*/
 .btn {
-    padding: 9px 15px 7.6px 15px !important;
+    padding: 10px 15px 7.6px 15px !important;
     font-size: 14px !important;
     border-radius: 5px !important;
     height: 38px;
@@ -410,7 +410,7 @@
 }
 
 .btn i {
-    padding-right: 8px;
+    padding-right: 6px;
 }
 .btn-add-table{
     padding: 8px 15px 7.6px 15px !important;
@@ -2480,7 +2480,7 @@
     font-size: 64px;
     position: absolute;
     top: -25px;
-    left: -17px;
+    left: -16px;
     color: #d1d1d1;
     transform: rotate(90deg);
     letter-spacing: -6px;
@@ -2635,7 +2635,7 @@
 }
 
 .box-list .box-header .box-title {
-    margin-top: 3px;
+    /* margin-top: 3px; */
 }
 
 /*-Khai báo chung hệ thống / Kế hoạch hoạt động tài chính------------------*/
@@ -9964,7 +9964,6 @@ table#clone {
 
 .aps-kehoach-add .title-name .btnDelete_PhamVi {
     position: relative !important;
-    s
     /* top: 0; */
     right: 0px !important;
 }
@@ -9973,7 +9972,7 @@ table#clone {
 .aps-form-input .select2-container--default .select2-selection--single {
     height: 38px !important;
     line-height: 44px !important;
-    padding: 3px 5px !important;
+    padding: 3px 10px 3px 10px!important;
     border-radius: 5px !important;
 }
 
