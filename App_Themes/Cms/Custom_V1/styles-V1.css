@@ -4,7 +4,7 @@
  }
  /* ------------------- */
  .fa, .fa-brands, .fa-classic, .fa-duotone, .fa-light, .fa-regular, .fa-sharp, .fa-sharp-solid, .fa-solid, .fa-thin, .fab, .fad, .fal, .far, .fas, .fasl, .fasr, .fass, .fat {
-   font-weight: 300 !important;
+   font-weight: 300;
 }
  .form-control {
      padding: 5px 12px !important;

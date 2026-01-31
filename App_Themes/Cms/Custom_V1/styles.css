@@ -165,7 +165,9 @@
  .table>thead>tr>th {
      padding: 12px 8px 7px 8px !important;
  }
-
+.table>tbody>tr>td {
+     font-weight: 400;
+ }
  .table>tbody>tr>td,
  .table>tbody>tr>th {
      min-height: 42px !important;
@@ -336,7 +338,7 @@
      font-weight: 600 !important;
  }
 
- .td-center {}
+ .td-center { text-align: center;}
 
  .table.talbe-border-0 {
      border: 0 !important;
@@ -443,14 +445,17 @@
      border-right: 0 !important;
  }
 
- .table-noborder.table tbody tr td {
+ .table-noborder.table tbody tr td, 
+ .table-noborder.table tbody tr th {
      border-bottom: 1px solid #e9e9e9 !important;
  }
 
  .table-noborder.table thead tr th {
      border-left: 0 solid #e9e9e9 !important;
  }
-
+ .table-noborder.table>tbody>tr>td,  .table-noborder.table>tbody>tr>th {
+    border-right: 0px solid #d1d1d1 !important;
+}
  /* ------------------- */
  .form-check-input {
      width: 1em !important;
@@ -850,7 +855,7 @@
  .fasr,
  .fass,
  .fat {
-     font-weight: 300 !important;
+     font-weight: 300;
  }
 
  .form-control {
@@ -948,7 +953,9 @@
  .w-85px {
      width: 85px !important;
  }
-
+ .w-50px {
+     width: 50px !important;
+ }
  /* ---------Login---------- */
  .login-box,
  .register-box {

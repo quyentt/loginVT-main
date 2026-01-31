@@ -84,6 +84,12 @@ blockquote {
 .color-blue {
   color: var(--color-blue) !important;
 }
+.color-orange {
+  color: var(--color-orange) !important;
+}
+.color-yellow {
+  color:#FEE500 !important;
+}
 
 .color-green,
 .color-green.box-title {
