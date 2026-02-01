@@ -44,10 +44,6 @@ body {
     border-bottom: 1px solid #f1f1f1;
 }
 
-.form-control {
-    padding: 0px !important;
-    height: 30px;
-}
 
 .icon-login {
     background: #3c8dee;

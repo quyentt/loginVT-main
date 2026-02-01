@@ -277,9 +277,9 @@ label {
 }
 
 .form-control {
-    padding: 3px 10px !important;
+    padding:10px 10px 5px 10px !important;
     height: 28px;
-    font-size: 17px
+    font-size: 14px
 }
 
 .checkbox, .radio {
@@ -640,8 +640,8 @@ thead {
 }
 
 .td-font {
-    font-family: italia !important;
-    font-style: italic !important
+    font-family: italia ;
+    font-style: italic;
 }
 
 .td-fixed {
