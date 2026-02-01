@@ -105,8 +105,8 @@
                             <%
                         }
                         %>           
-                    <div class="row login-notify" style="margin-bottom: -60px">
-                        <p class="box-notify">
+                    <div class="row login-notify" style="margin-bottom: -40px">
+                        <p class="box-notify" style="text-align: center">
                             <asp:Label Width="100%" runat="server" ForeColor="Red" Text="" ID="lblNotify"></asp:Label>
                         </p>
                     </div>

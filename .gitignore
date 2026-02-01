@@ -4,11 +4,17 @@
 
 /.vs
 /bin
-/Hander
+/Handler
 /Log
 /pages
 /Scripts
 /ServicesConfig
+/Upload
+index.aspx
+indexi.aspx
+login.aspx
+logout.aspx
+Global.asax
 Config.js
 Web.config
 
