@@ -91,7 +91,7 @@
 }
 
 .group-title {
-    padding: 16px 0 0 0;
+    padding: 10px 0 0 0;
 }
 
 .group-title .lang {
@@ -281,7 +281,7 @@
 }
 
 .box-header .pull-right .btn {
-    margin-left: 8px !important;
+    margin-left: 10px !important;
 }
 
 #btnDelete_RutHocPhan,
@@ -412,14 +412,17 @@
 .btn i {
     padding-right: 6px;
 }
-.btn-add-table{
+
+.btn-add-table {
     padding: 8px 15px 7.6px 15px !important;
     height: 38px !important;
     line-height: 38px !important;
 }
-.btn-add-table:hover{
+
+.btn-add-table:hover {
     line-height: 38px !important;
 }
+
 /*--------*/
 .chosse-status-student {
     margin-top: 15px;
@@ -706,6 +709,7 @@
     font-size: 18px !important;
     color: var(--color-blue) !important;
     line-height: 24px;
+    display: flex;
 }
 
 .form-container .box-header.with-border {
@@ -1848,22 +1852,26 @@
     color: #222 !important;
     border: 1px solid #d2d6de !important;
 }
+
 .aps-form-textarea .form-control {
     color: #222 !important;
     border: 1px solid #d2d6de !important;
     line-height: 24px !important;
     text-align: left;
 }
+
 .aps-form-input .form-control {
     color: #222 !important;
     border: 1px solid #d2d6de !important;
 }
+
 .form-control:focus {
     background-color: #fff;
     border-color: #86b7fe !important;
     outline: 0;
     box-shadow: 0 0 0 .25rem rgba(13, 110, 253, .15) !important;
 }
+
 /*--Quản lý vai trò / Vai trò - Chức năng--------*/
 .aps-vaitro-cn-l .box.box-solid,
 .aps-vaitro-cn-r .box.box-solid {
@@ -2275,9 +2283,12 @@
     font-weight: 400;
     padding: 4px 10px;
 }
-.bg-light-blue.badge {   
+
+.bg-light-blue.badge {
     border-radius: 20px;
+    margin-top: 2px;
 }
+
 .aps-nguoidung-r .box.box-solid {
     padding: 0 !important;
 }
@@ -9972,7 +9983,7 @@ table#clone {
 .aps-form-input .select2-container--default .select2-selection--single {
     height: 38px !important;
     line-height: 44px !important;
-    padding: 3px 10px 3px 10px!important;
+    padding: 3px 10px 3px 10px !important;
     border-radius: 5px !important;
 }
 
@@ -9987,11 +9998,18 @@ table#clone {
     top: 6px !important;
     right: 12px !important;
 }
+
 /* -------------- */
 .aps-form.aps-form-user-view .aps-form-lable,
 .aps-form.aps-form-user-view .aps-form-lable .group-title-name {
     line-height: 24px !important;
 }
-.aps-btn-list-right .btn{
+
+.aps-btn-list-right .btn {
     margin-bottom: 10px;
+}
+
+.aps-lable-name {
+    line-height: 40px;
+    color: #666;
 }

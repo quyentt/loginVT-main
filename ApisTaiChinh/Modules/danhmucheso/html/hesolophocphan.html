@@ -1,6 +1,6 @@
 ﻿
 <section class="content aps-danhmuccheso">
-    <div class="row bg-default aps-hesolophocphan">
+    <div class="row aps-hesolophocphan">
         <div class="col-sm-3 aps-hesohocphan-l aps-hesolophocphan-l   box-shadow pr0">
             <div class="box box-solid pd0">
                 <div class="box-body pd0">
@@ -40,7 +40,7 @@
             <div class="box box-solid box-shadow pd0">
                 <div class="box-header with-border pd20">
                     <h3 class="box-title">../<span id="lblHocPhan"></span></h3>
-                    <div class="pull-right">
+                    <div class="pull-right mt-3">
                         <div style="float:left">
                             <a class="btn btn-success btnAddNew">
                                 <i class="fa fa-plus-circle"></i> <span class="lang" key="CHUNG_TAOMOI">Tạo mới</span>
@@ -83,15 +83,15 @@
                         <div class="form-container">
                             <div class="form-container-header">
                                 <div class="pull-left">
-                                    <h3 class="color-active" style="padding:15px"><i class="fa fa-pencil"></i> Thêm mới Hệ số học phần</h3>
+                                    <h3 class="color-active"><i class="fa fa-pencil"></i> Thêm mới Hệ số học phần</h3>
                                 </div>
                                 <div class="pull-right">
-                                    <a class="btn btn-default btnClose" href="#"><i class="fa fa-times-circle"></i></a>
+                                    <a class="btn btn-default btnClose mt-15 mr-5" href="#"><i class="fa fa-times-circle"></i></a>
                                 </div>
                                 <div class="clear"></div>
                             </div>
                             <div class="form-container-body">
-                                <table class="table table-noborder table-hocphan">
+                                <table class="table table-noborder table-hocphan table-add-form">
                                     <tbody>
                                         <tr>
                                             <td class="td-fixed-title">Học kỳ</td>
@@ -141,7 +141,7 @@
                                         <tr>
                                             <td></td>
                                             <td colspan="3">
-                                                <table id="tbldata_HocPhan_Selected" class="table table-condensed table-hover tbldata_HocPhan_Selected">
+                                                <table id="tbldata_HocPhan_Selected" class="table table-condensed table-hover tbldata_HocPhan_Selected table-noborder">
                                                     <thead>
                                                         <tr>
                                                             <td class="td-fixed td-center">Stt</td>
@@ -162,7 +162,7 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="form-container-footer">
+                            <div class="form-container-footer" style="height: auto !important;">
                                 <div class="col-sm-12">
                                     <div class="pull-right">
                                         <a class="btn btn-default btnClose" href="#"><i class="fa fa-times-circle"></i> Đóng</a>
@@ -181,11 +181,12 @@
 </section>
 <!--Modal ChuongTrinh-->
 <div class="modal fade myModalChuongTrinh_HSLHP" id="myModalChuongTrinh_HSLHP" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-680">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="pull-left">
-                    <h4 class="modal-title modal-name"><a><i class="fal fa-chalkboard-teacher"></i> Chọn học phần</a> </h4>
+                    <h4 class="modal-title modal-name"><a>
+                        <i class="fal fa-chalkboard-teacher"></i> Chọn học phần</a> </h4>
                 </div>
                 <div class="pull-right">
 
@@ -193,7 +194,7 @@
                 <div class="clear"></div>
             </div>
             <div class="modal-body">
-                <div class="row" id="zoneTable_HocPhan">
+                <div class="row pd0" id="zoneTable_HocPhan">
                     <div class="col-sm-12 searchTable_HocPhan mb-20">
                         <div class="input-group">
                             <input type="text" id="txtKeyword_HocPhan" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
@@ -207,7 +208,7 @@
                             <table id="tbldata_HocPhan_HSLHP" class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th class="td-fixed center">Stt</th>
+                                        <th class="td-fixed">Stt</th>
                                         <th class="td-left"><span class="lang" key="">Tên học phần</span></th>
                                         <th class="td-center"><span class="lang" key="">Mã học phần</span></th>
                                         <th class="td-fixed td-center"><span class="lang" key="">#</span></th>
