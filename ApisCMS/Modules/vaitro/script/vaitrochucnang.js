@@ -78,6 +78,16 @@ VaiTroChucNang.prototype = {
                 edu.util.toggle_overide("zone-bus-vtcn", "zone_list_vtcn");
             }
         });
+        //if (this.classList.contains("btn-default")) {
+        //    this.classList.remove("btn-default");
+        //    this.classList.add("btn-primary");
+        //    edu.util.toggle_overide("zone-bus-vtcn", "zone_list_vtcnv2");
+        //}
+        //else {
+        //    this.classList.add("btn-default");
+        //    this.classList.remove("btn-primary");
+        //    edu.util.toggle_overide("zone-bus-vtcn", "zone_list_vtcn");
+        //}
          /*------------------------------------------
         --Discription: [2] Action VaiTro_ChucNang
         -------------------------------------------*/
@@ -142,11 +152,11 @@ VaiTroChucNang.prototype = {
         /*------------------------------------------
         --Discription: [2] Tính năng dành riêng cho GM Azz
         -------------------------------------------*/
-        if (edu.system.userId == "4038E6FD0FFA4D339FA991E740348F01") {
-            $("#btnChucNangV2").trigger("click");
-        }
+        //if (edu.system.userId == "4038E6FD0FFA4D339FA991E740348F01") {
+        //    $("#btnChucNangV2").trigger("click");
+        //}
 
-        $("#btnSave_QuyenCN").click(function () {
+        $("#btnAdd_QuyenCN").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblQuyenCN", "checkX");
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng ?");
@@ -257,8 +267,9 @@ VaiTroChucNang.prototype = {
         $('#treesjs_vaitro_vtcn').on("select_node.jstree", function (e, data) {
             var strNameNode = data.node.id;
             me.strVaiTro_Id = strNameNode;
-            me.getList_VaiTroChucNang();
-            me.getList_QuyenCN();
+            //me.getList_VaiTroChucNang();
+            //me.getList_QuyenCN();
+            me.getList_UngDungVT();
             //----------------------------------------------------------------------------------------------
             //1. acess data.node obj
             // get name ==> data.node.name, 
@@ -357,7 +368,7 @@ VaiTroChucNang.prototype = {
             'action': 'CMS_QuanTri01_MH/DSA4BRICKTQiDyAvJhUpJC4UBRcgKBUzLgPP',
             'func': 'PKG_CORE_QUANTRI_01.LayDSChucNangTheoUDVaiTro',
             'iM': edu.system.iM,
-            'strUngDung_Id': '',
+            'strUngDung_Id': me.strUngDung_Id,
             'strVaiTro_Id': me.strVaiTro_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
@@ -373,8 +384,8 @@ VaiTroChucNang.prototype = {
                         iPager = data.Pager;
                     }
                     me.dtVaiTroChucNang = dtResult;
-                    me.genTable_VaiTroChucNang(dtResult, iPager);
-                    me.process_VaiTroUngDung(dtResult);
+
+                    me.getList_ChucNang();
                 }
                 else {
                     edu.system.alert( data.Message);
@@ -496,14 +507,13 @@ VaiTroChucNang.prototype = {
     ----------------------------------------------*/
     getList_UngDung: function () {
         var me = this;
-        //--Edit
-        //var obj_save = {
-        //    'action': 'CMS_QuanTri01_MH/DSA4BRIULyYFNC8mFSkkLhcgKBUzLgPP',
-        //    'func': 'PKG_CORE_QUANTRI_01.LayDSUngDungTheoVaiTro',
-        //    'iM': edu.system.iM,
-        //    'strVaiTro_Id': me.strVaiTro_Id,
-        //    'strNguoiThucHien_Id': edu.system.userId,
-        //};
+        var obj_save = {
+            'action': 'CMS_QuanTri01_MH/DSA4BRIULyYFNC8mFSkkLhcgKBUzLgPP',
+            'func': 'PKG_CORE_QUANTRI_01.LayDSUngDungTheoVaiTro',
+            'iM': edu.system.iM,
+            'strVaiTro_Id': me.strVaiTro_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
         var obj_list = {
             'action': 'CMS_UngDung/LayDanhSach',
             'strTuKhoa': "",
@@ -559,28 +569,71 @@ VaiTroChucNang.prototype = {
         };
         edu.system.loadToCombo_data(obj);
     },
+    
+    getList_UngDungVT: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'CMS_QuanTri01_MH/DSA4BRIULyYFNC8mFSkkLhcgKBUzLgPP',
+            'func': 'PKG_CORE_QUANTRI_01.LayDSUngDungTheoVaiTro',
+            'iM': edu.system.iM,
+            'strVaiTro_Id': me.strVaiTro_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = [];
+                    var iPager = 0;
+                    if (edu.util.checkValue(data.Data)) {
+                        dtResult = data.Data;
+                        iPager = data.Pager;
+                    }
+                    me["dtUngDung2"] = dtResult;
+                    me.genTreeJs_VaiTroUngDung(dtResult);
+                }
+                else {
+                    edu.system.alert(data.Message);
+
+                }
+            },
+            error: function (er) {
+                edu.system.alert(er);
+
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
 
     getList_ChucNang: function () {
         var me = this;
         var obj_list = {
             'action'            : 'CMS_ChucNang/LayDanhSach',
             'versionAPI'        : 'v1.0',
-            'strTuKhoa'         : "",
-            'strChung_UngDung_Id'     : edu.util.getValById("dropUngDung_VTCN"),
+            'strTuKhoa': "",
+            'strChung_UngDung_Id': me.strUngDung_Id,
             'strCha_Id'         : "",
             'pageIndex'         : 1,
             'pageSize'          : 1000,
             'strPhamViTruyCap_Id': "",
             'dTrangThai'        : 1
         };
-        var obj_save = {
-            'action': 'CMS_QuanTri01_MH/DSA4BRICKTQiDyAvJhUpJC4UBRcgKBUzLgPP',
-            'func': 'PKG_CORE_QUANTRI_01.LayDSChucNangTheoUDVaiTro',
-            'iM': edu.system.iM,
-            'strUngDung_Id': edu.util.getValById("dropUngDung_VTCN"),
-            'strVaiTro_Id': me.strVaiTro_Id,
-            'strNguoiThucHien_Id': edu.system.userId,
-        };
+        //var obj_save = {
+        //    'action': 'CMS_QuanTri01_MH/DSA4BRICKTQiDyAvJhUpJC4UBRcgKBUzLgPP',
+        //    'func': 'PKG_CORE_QUANTRI_01.LayDSChucNangTheoUDVaiTro',
+        //    'iM': edu.system.iM,
+        //    'strUngDung_Id': me.strUngDung_Id,
+        //    'strVaiTro_Id': me.strVaiTro_Id,
+        //    'strNguoiThucHien_Id': edu.system.userId,
+        //};
 
         
         edu.system.makeRequest({
@@ -614,12 +667,12 @@ VaiTroChucNang.prototype = {
                 };
                 edu.system.alertOnModal(objNotify);
             },
-            type: "POST",
-            action: obj_save.action,
+            type: "GET",
+            action: obj_list.action,
             
             contentType: true,
             
-            data: obj_save,
+            data: obj_list,
             fakedb: [
 
             ]
@@ -698,15 +751,15 @@ VaiTroChucNang.prototype = {
                 }
             }
         }
-        me.genTreeJs_VaiTroUngDung(dtVaiTroUngDung);
+        //me.genTreeJs_VaiTroUngDung(dtVaiTroUngDung);
     },
     genTreeJs_VaiTroUngDung: function (dtResult) {
         var me = this;
         edu.util.viewHTMLById("lblVaiTroUngDung_Tong_VTCN", dtResult.length);
-        if (dtResult.length > 0) {
-            $("#dropUngDung_VTCN").val(dtResult[0].ID).trigger("change");
-            me.getList_ChucNang();
-        }
+        //if (dtResult.length > 0) {
+        //    $("#dropUngDung_VTCN").val(dtResult[0].ID).trigger("change");
+        //    me.getList_ChucNang();
+        //}
         var obj = {
             data: dtResult,
             renderInfor: {
@@ -722,7 +775,10 @@ VaiTroChucNang.prototype = {
         //2. Action
         $('#zone_vaitroungdung').on("select_node.jstree", function (e, data) {
             var strUngDung_Id = data.node.id;
-            me.process_UngDung_ChucNang(strUngDung_Id);
+            me.strUngDung_Id = strUngDung_Id;
+            me.getList_VaiTroChucNang();
+            me.getList_QuyenCN();
+            //me.process_UngDung_ChucNang(strUngDung_Id);
             //----------------------------------------------------------------------------------------------
             //1. acess data.node obj
             // get name ==> data.node.name, 
@@ -744,6 +800,13 @@ VaiTroChucNang.prototype = {
             //}, "a_attr": { "href": "#", "id": "BA65941F4DB94384B6A8334D6540986D_anchor" }, "original": false
             //---------------------------------------------------------------------------------------------------------
         });
+        if (dtResult.length > 0) {
+            //$('#zone_vaitroungdung #' + dtResult[0].ID).trigger("click");
+            var strUngDung_Id = dtResult[0].ID;
+            me.strUngDung_Id = strUngDung_Id;
+            me.getList_VaiTroChucNang();
+            me.getList_QuyenCN();
+        }
     },
     /*----------------------------------------------
     --Discription: [5] Access DB/GenHTML - UngDung_ChucNang

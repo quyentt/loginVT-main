@@ -116,6 +116,7 @@ VaiTroNguoiDung.prototype = {
     },
     genTreeJs_Vaitro: function (dtResult, iPager) {
         var me = this;
+        console.log(1222222222);
         edu.util.viewHTMLById("lblDanhMucTenBang_Tong", iPager);
         var obj = {
             data: dtResult,
@@ -133,6 +134,8 @@ VaiTroNguoiDung.prototype = {
         $('#treesjs_vaitro_vtnd').on("select_node.jstree", function (e, data) {
             var strNameNode = data.node.id;
             me.strVaiTro_Id = strNameNode;
+            console.log(1222222222);
+            me.getList_NguoiDungDaThem();
         });
     },
 
@@ -203,7 +206,7 @@ VaiTroNguoiDung.prototype = {
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me["dtQuyenCN"] = dtReRult;
-                    me.genTable_QuyenCN(dtReRult, data.Pager);
+                    me.genTable_NguoiDungDaThem(dtReRult, data.Pager);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -241,10 +244,10 @@ VaiTroNguoiDung.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "TAIKHOAN"
+                    "mDataProp": "NAME"
                 },
                 {
-                    "mDataProp": "TENDAYDU"
+                    "mDataProp": "FULLNAME"
                 },
                 {
                     "mDataProp": "EMAIL"
@@ -267,7 +270,7 @@ VaiTroNguoiDung.prototype = {
             'func': 'PKG_CORE_QUANTRI_02.Them_Core_NhanSu_VaiTro',
             'iM': edu.system.iM,
             'strCore_NhanSu_Id': strNguoiDung_Id,
-            'strVaiTro_Id': e.strVaiTro_Id,
+            'strVaiTro_Id': me.strVaiTro_Id,
             'strPhanLoaiNguonTao_Id': edu.system.getValById('dropAAAA'),
             'dLaVaiTroChinh': edu.system.getValById('txtAAAA'),
             'strNguonDuLieu_Id': edu.system.getValById('dropAAAA'),
@@ -277,8 +280,6 @@ VaiTroNguoiDung.prototype = {
             'dHieuLuc': edu.system.getValById('txtAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-		* /
-        //
         
         edu.system.makeRequest({
             success: function (data) {

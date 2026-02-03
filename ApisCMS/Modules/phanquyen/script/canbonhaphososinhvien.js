@@ -43,7 +43,7 @@ PhanQuyenCBNHSSV.prototype = {
             });
         });
         $("#btnPhanQuyenCBNHSSV").click(function () {
-            var arrThem = []; 
+            var arrThem = [];
             var arrXoa = [];
             var x = $("#tblViewCauTrucPhanQuyenCBNHSSV .checkPhanQuyenCBNHSSV");
             for (var i = 0; i < x.length; i++) {
@@ -111,7 +111,7 @@ PhanQuyenCBNHSSV.prototype = {
                         })
                     })
 
-                    
+
                 });
             }
             else {
@@ -120,44 +120,44 @@ PhanQuyenCBNHSSV.prototype = {
         });
 
         $('#dropSearch_HeDaoTao_IHD').on('select2:select', function (e) {
-            
+
             me.getList_KhoaDaoTao();
             me.getList_LopQuanLy();
             me.resetCombobox(this);
             me.getList_TruongThongTin();
         });
         $('#dropSearch_KhoaDaoTao_IHD').on('select2:select', function (e) {
-            
+
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
             me.getList_TruongThongTin();
             me.resetCombobox(this);
         });
         $('#dropSearch_ChuongTrinh_IHD').on('select2:select', function (e) {
-            
+
             me.getList_LopQuanLy();
             me.resetCombobox(this);
         });
         $('#dropSearch_Lop_IHD').on('select2:select', function (e) {
-            
+
             var x = $(this).val();
             me.resetCombobox(this);
         });
         $('#dropSearch_NguoiThu_IHD').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
         $('#dropSearch_KhoaQuanLy_IHD').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
         $('#dropSearch_NamNhapHoc_IHD').on('select2:select', function (e) {
-            
+
             me.resetCombobox(this);
         });
 
         $("#zonebatdau").delegate(".ckbDSTrangThaiSV_LHD_ALL", "click", function (e) {
-            
+
             var checked_status = this.checked;
             $(".ckbDSTrangThaiSV_LHD").each(function () {
                 this.checked = checked_status;
@@ -491,7 +491,7 @@ PhanQuyenCBNHSSV.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -501,17 +501,17 @@ PhanQuyenCBNHSSV.prototype = {
                 else {
                     edu.system.alert(obj_list.action + " : " + data.Message, "w");
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "GET",
             action: obj_list.action,
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -548,7 +548,7 @@ PhanQuyenCBNHSSV.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -558,17 +558,17 @@ PhanQuyenCBNHSSV.prototype = {
                 else {
                     edu.system.alert(obj_list.action + " : " + data.Message, "w");
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "GET",
             action: obj_list.action,
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -636,7 +636,7 @@ PhanQuyenCBNHSSV.prototype = {
     genData_NguoiDungTheoChucNang: function (data) {
         var me = main_doc.PhanQuyenCBNHSSV;
         var html = '<tr><th id="lblThongTinBang" class="td-center">Thông tin lớp được thiết lập quyền ' + $("#dropSearch_QuyenThietLap option:selected").text() + '</th>';
-        
+
         for (var i = 0; i < data.length; i++) {
             html += '<th class="td-center">' + data[i].FULLNAME + " - " + data[i].NAME + ' <br/> <input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + data[i].ID + '"></th>';
         }
@@ -668,7 +668,7 @@ PhanQuyenCBNHSSV.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -680,15 +680,15 @@ PhanQuyenCBNHSSV.prototype = {
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: obj_list.action,
-            
+
             contentType: true,
             data: obj_list,
             fakedb: [
@@ -770,7 +770,7 @@ PhanQuyenCBNHSSV.prototype = {
         for (var i = 0; i < me.arrHead_Id.length; i++) {
             var x = $("#tblViewCauTrucPhanQuyenCBNHSSV tbody tr");
             for (var j = 0; j < me.dtNguoiDung.length; j++) {
-                $(x[i]).append('<td style="text-align: center"><input type="checkbox" class="check' + me.dtNguoiDung[j].ID + ' check' + me.arrHead_Id[i] + ' checkPhanQuyenCBNHSSV poiter" id="chkSelect' + me.arrHead_Id[i] + '_' + me.dtNguoiDung[j].ID +'"></td>');
+                $(x[i]).append('<td style="text-align: center"><input type="checkbox" class="check' + me.dtNguoiDung[j].ID + ' check' + me.arrHead_Id[i] + ' checkPhanQuyenCBNHSSV poiter" id="chkSelect' + me.arrHead_Id[i] + '_' + me.dtNguoiDung[j].ID + '"></td>');
             }
             $(x[i]).append('<td style="text-align: center"><input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + me.arrHead_Id[i] + '"></td>');
         }
@@ -793,7 +793,7 @@ PhanQuyenCBNHSSV.prototype = {
             'strHanhDong_Id': edu.util.getValById('dropSearch_QuyenThietLap'),
         };
         //
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -810,7 +810,7 @@ PhanQuyenCBNHSSV.prototype = {
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
                 }
-                
+
                 edu.system.start_Progress("divprogessPhanQuyenCBNHSSV", me.endGetPhanQuyenCBNHSSV);
             },
             error: function (er) {
@@ -819,7 +819,7 @@ PhanQuyenCBNHSSV.prototype = {
             },
             type: 'GET',
             action: obj_list.action,
-            
+
             contentType: true,
             data: obj_list,
             fakedb: [
@@ -1080,15 +1080,15 @@ PhanQuyenCBNHSSV.prototype = {
             aoColumns: [{
                 "mDataProp": "NHOM",
             }
-                , 
-                {
-                    "mDataProp": "TEN",
-                }
+                ,
+            {
+                "mDataProp": "TEN",
+            }
                 , {
-                    "mRender": function (nRow, aData) {
-                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
-                    }
+                "mRender": function (nRow, aData) {
+                    return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
                 }
+            }
             ]
         };
         edu.system.loadToTable_data(jsonForm);

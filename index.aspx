@@ -26,7 +26,7 @@
         </div>
         <div class="head-logo refeshlogo">
           <a href="#">
-            <img class="logo-icon" src="assets/images/logo/logo-icon.png" />
+            <img class="logo-icon" src="logo.png" />
             <img class="logo-text" src="assets/images/logo/logo-text.png" />
           </a>
         </div>
