@@ -1,19 +1,16 @@
-﻿
-<section class="content">
-
-    <div class="row">
-        <!-- /.left-content -->
-        <!-- /.right-content -->
-        <div class="col-lg-12">
-            <!-- box Notify_VBSC -->
-            <div class="box box-solid zone-bus">
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
-                    </div>
-                    <div class="box-body">
-                        <div class="bss-item">
-                            <!--<div class="col-sm-3 item-search">
+﻿<!-- Main content -->
+<section class="content aps-taichinh">
+    <div class="row aps-danhmucnganhang">
+        <!-- box Notify_VBSC -->
+        <div class="box box-solid zone-bus pd0">
+            <!--Search zone-->
+            <div class="box box-solid box-search pd20 pb10">
+                <div class="box-header with-border d-none">
+                    <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
+                </div>
+                <div class="box-body pd0">
+                    <div class="bss-item">
+                        <!--<div class="col-sm-3 item-search">
                                 <select id="dropSearch_KhoanThu" class="select-opt"></select>
                             </div>
                             <div class="col-sm-3 item-search">
@@ -22,71 +19,72 @@
                             <div class="col-sm-3 item-search">
                                 <select id="dropSearch_HinhThuc" class="select-opt"></select>
                             </div>-->
-                            <div class="col-sm-3 item-search">
-                                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <a class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
-                            </div>
+                        <div class="col-sm-3 item-search">
+                            <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                        </div>
+                        <div class="col-sm-3 item-search">
+                            <a class="btn btn-default btn-search" id="btnSearch"><i class="fa fa-search"></i> <span
+                                    class="lang" key="">Tìm kiếm</span></a>
                         </div>
                     </div>
                 </div>
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            <i class="fa fa-list-alt"></i> Danh sách
-                            <span class="badge bg-light-blue">
-                                <span id="lblDanhMucNganHang_Tong"></span>
-                            </span>
-                        </h3>
+            </div>
 
-                        <!--<div class="pull-right">
+            <!-- Danh sách -->
+            <div class="box box-solid aps-danhmucnganhang-list pd20">
+                <div class="box-header pd0">
+                    <h3 class="box-title">
+                        <i class="fa-solid fa-money-bill-transfer"></i> Danh sách
+                        <span class="badge bg-light-blue">
+                            <span id="lblDanhMucNganHang_Tong"></span>
+                        </span>
+                    </h3>
+
+                    <!--<div class="pull-right">
                             <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
                             <a id="btnXoaDanhMucNganHang" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
                         </div>-->
-                    </div>
-                    <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="col-sm-12 scroll-table-x">
-                                    <table id="tblDanhMucNganHang" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-fixed td-center">Stt</th>
-                                                <th class="td-center">Mã</th>
-                                                <th class="td-center">Tên </th>
-                                                <th class="td-center">Trạng thái</th>
-                                                <th class="td-fixed td-center">Sửa</th>
-                                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
+                </div>
+                <div class="box-body pd0">
+                    <div class="aps-table-select mt-10">
+                        <table id="tblDanhMucNganHang"
+                            class="tblDanhMucNganHang table table-hover table-bordered table-noborder table-reponsize">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Mã</th>
+                                    <th class="td-center">Tên </th>
+                                    <th class="td-center">Trạng thái</th>
+                                    <th class="td-fixed td-center">Sửa</th>
+                                    <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--  Chỉnh sửa - Thông tin -->
+<div class="modal fade modal-editInfo" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
                 <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Thông tin</h3>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="row zone-box">
-
+                <div class="aps-form mb-0">
                     <!--row 1-->
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name">
                             <label style="font-weight: normal"><span class="lang" key="">Trạng thái</span></label>
                         </div>
-                        <div class="col-sm-9 <!--zoneOpenNew-->">
+                        <div class="col-sm-9 zoneOpenNew aps-form-input">
                             <select id="dropTrangThai" class="select-opt">
                                 <option value="1"> Hoạt động</option>
                                 <option value="0"> Ẩn</option>
@@ -94,14 +92,16 @@
                         </div>
                         <div class="clear"></div>
                     </div>
-                    
+
                 </div>
             </div>
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_DanhMucNganHang"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                    <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_DanhMucNganHang">
+                    <i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
             </div>
         </div>
     </div>
