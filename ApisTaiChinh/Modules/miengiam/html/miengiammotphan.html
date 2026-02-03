@@ -60,12 +60,8 @@
                             </div>
                         </div>
                         <div class="pull-right mr-20">
-                            <div style="float:left">
-                                <a class="btn btn-success btnAddNew">
-                                    <i class="fa fa-plus-circle"></i> <span class="lang" key="CHUNG_TAOMOI">Tạo mới</span>
-                                </a>
-                            </div>
-                            <div style="float:left; padding-left:10px;">
+                           
+                            <div style="float:left; padding-left:0px;">
                                 <div class="dropdown">
                                     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                         <i class="fa fa fa-file-excel-o"></i> Truy/xuất <span class="caret"></span>
@@ -77,21 +73,26 @@
                                     </ul>
                                 </div>
                             </div>
-                            <div style="float:left; margin-left:10px;">
+                            <div style="float:left; margin-left:0px;">
                                 <a id="btnRefresh_MGMP" class="btn btn-warning">
                                     <i class="fa fa-refresh"></i> <span class="lang" key="CHUNG_TAILAI">Tải lại</span>
                                 </a>
                             </div>
-                            <div style="float:left; margin-left:10px;">
-                                <a id="btnDelete_MGMP" class="btn btn-default">
+                            <div style="float:left; margin-left:0px;">
+                                <a id="btnDelete_MGMP" class="btn btn-danger">
                                     <i class="fa fa-trash"></i> <span class="lang" key="CHUNG_XOA">Xóa</span>
+                                </a>
+                            </div>
+                             <div style="float:left">
+                                <a class="btn btn-success btnAddNew">
+                                    <i class="fa fa-plus-circle"></i> <span class="lang" key="CHUNG_TAOMOI">Tạo mới</span>
                                 </a>
                             </div>
                             <div class="clear"></div>
                         </div>
                         <div class="clear"></div>
                         <div class="scroll-table-x pl20 pr20 mt-10">
-                            <table id="tbldata_MGMP" class="table table-condensed table-hover tbldata_MGMP">
+                            <table id="tbldata_MGMP" class="table table-condensed table-hover tbldata_MGMP table-noborder">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed td-center">Stt</th>
@@ -130,7 +131,7 @@
                                     <table class="table table-noborder table-form-add">
                                         <thead>
                                             <tr>
-                                                <td class="aps-form-lable">Chương trình</td>
+                                                <td class="aps-form-lable" style="width: 200px;">Chương trình</td>
                                                 <td class="aps-form-input" colspan="3">
                                                     <select class="select-opt" id="dropChuongTrinhDaoTao_Input_MGMP">
                                                         <!-- gen genCombo_ChuongTrinhDaoTao() in mientoanphan.js -->
@@ -244,8 +245,8 @@
                         </div>
                     </div>
                     <div class="col-sm-12 box-content-search-sv pd20">
-                        <div class="scroll-table-x">  
-                            <table id="tbldata_SinhVien_MGMP" class="table table-hover tbldata_SinhVien_MGMP">
+                        <div class="aps-table-select aps-page-modal">  
+                            <table id="tbldata_SinhVien_MGMP" class="table table-hover tbldata_SinhVien_MGMP table-noborder table-bordered">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed center">Stt</th>

@@ -2899,7 +2899,7 @@
 }
 
 .inputSearch .col-sm-3 {
-    padding-right: 15px;
+    padding-right: 10px;
 }
 
 /*----*/
@@ -2924,7 +2924,7 @@
 }
 
 .modal-footer .btn {
-    margin-left: 5px !important;
+    margin-left: 10px !important;
 }
 
 .zone-action .pull-right .btn {
@@ -2946,11 +2946,16 @@
     color: #222 !important;
 }
 
-#notify #btnNotifyModal {
+#notify #btnNotifyModal,.modal-content .alert {
     padding: 20px 35px 15px 20px;
     border-radius: 6px;
+    background: rgba(224, 201, 11, .2);
+    font-weight: normal;
+    color: #222 !important;
 }
-
+.modal-content .alert .close {
+    color: #222 !important;
+}
 .alert .close {
     color: #fff !important;
     opacity: 1;
@@ -3203,10 +3208,10 @@
 .table.aps-table-tinhhocphi thead {
     background: rgba(255, 255, 255, .1) !important;
 }
-
+/* 
 .aps-table-tinhhocphi tr td {
     height: 50px;
-}
+} */
 
 @media (min-width: 1200px) {
     .aps-quytrinh .inputSearch .col-lg-3 {
@@ -3244,7 +3249,7 @@
 
 .aps-tabs .nav-tabs-custom>.nav-tabs>li,
 .zone-phanbodoanhthu-tab.zone-tinhhocphi-tab .nav-tabs-custom>.nav-tabs>li {
-    margin-bottom: 8px !important;
+    margin-bottom: 0px !important;
 }
 
 .aps-tabs .nav>li>a,
@@ -3493,7 +3498,7 @@
     min-width: 30px;
     height: 22px;
     border-radius: 100px;
-    line-height: 22px;
+    line-height: 25px;
     margin-top: 0 !important;
     margin-left: 10px;
 }
@@ -5514,7 +5519,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .pull-right .btn {
-    margin-left: 8px;
+    margin-left: 10px;
 }
 
 .aps-pay .box-header .pull-right {
@@ -10012,4 +10017,19 @@ table#clone {
 .aps-lable-name {
     line-height: 40px;
     color: #666;
+}
+
+.aps-table-tinhhocphi.table tr td{
+    padding-bottom: 0 !important;
+    padding-top: 10px !important;
+}
+.table-form-add.table,.table-form-add.table tr td,.table-form-add.table tr,
+.table-form-add.table>thead>tr:first-child,
+.table-form-add.table tr td:first-child,.table-form-add.table tr td:last-child{
+    border-top: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border: 0 !important;
+    padding-bottom: 0 !important;
+    padding-top: 10px !important;
 }
