@@ -1,26 +1,22 @@
-﻿
-<!-- Main content -->
+﻿<!-- Main content -->
 <section class="content aps-hoadon-nhap">
-    <div id="MainContent"  class="aps-hoadon-nhap-in box-shadow row">
+    <div id="MainContent" class="aps-hoadon-nhap-in box-shadow row">
         <div class="col-lg-12 aps-hoadon-search">
-            <div class="box box-solid  box-search pd20"  style="padding-bottom: 10px !important; padding-top: 15px !important;">
+            <div class="box box-solid  box-search pd20"
+                style="padding-bottom: 10px !important; padding-top: 15px !important;">
                 <div class="box-body pd0">
-                    <div class="area-search row mb-0">
+                    <div class="area-search">
                         <div id="search" class="inputSearch collapse in">
                             <!-- Bộ tìm kiếm -->
-                            <div class="col-sm-6 aps-search-hoadon">
-                                <table class="table table-noborder table-form-add mb0">
-                                    <tbody>
-                                        <tr>
-                                            <td style="width: 168px" class="aps-form-lable-search d-none">Nhập từ khoá</td>
-                                            <td class="aps-form-input-search">
-                                                <input id="txtKeyword_Search_HoaDon" class="form-control" placeholder="Nhập từ khóa tìm kiếm: số phiếu, mã người thu..." />
-                                            </td>
-                                            <td><a id="btnSearch_HoaDon" class="btn btn-default btn-search ml-10"><i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                            <div class="col-sm-3 item-search mb-10">
+
+                                <input id="txtKeyword_Search_HoaDon" class="form-control"
+                                    placeholder="Nhập từ khóa tìm kiếm: số phiếu, mã người thu..." />
                             </div>
+                            <div class="col-sm-3 item-search mb-10"><a id="btnSearch_HoaDon"
+                                    class="btn btn-default btn-search ml-10"><i class="fa fa-search"></i><span
+                                        class="lang" key="">Tìm kiếm</span></a></div>
+
                         </div>
                     </div>
                 </div>
@@ -36,68 +32,79 @@
                             </p>
                         </div>
                     </div>
-                    <div class="scroll-table-x" id="zonePhieuThu_HoaDon"></div>
+                    <div class="scroll-table-x zonePhieuThu_HoaDon mt-10" id="zonePhieuThu_HoaDon"></div>
+                </div>
+            </div>
+            <!-- ...... -->
+            <div id="zoneThongTinPhieuThu" class="col-sm-12 beforeActive zoneThongTinPhieuThu"
+                style="width: 100%; display: none">
+                <div class="box-zoneThongTinPhieuThu box-footer height-auto">
+                    <div id="zoneActionHoaDon" class="aps-gap-10">
+                        <!-- Xuất hóa đơn -->
+                        <div id="btnXuat_HD">
+                            <a title="Xuất hóa đơn" class="btn btn-primary">
+                                <i class="fa-solid fa-file-invoice"></i>Xuất hóa đơn</a>
+                        </div>
+                        <!-- Hủy bản nháp -->
+                        <div id="btnHuyHoaDon" class="btnMauInChungTu btnHuyHoaDon">
+                            <a title="Hủy bản nháp" class="btn btn-danger">
+                                <i class="fa fa-trash-o"></i>Hủy bản nháp</a>
+                        </div>                        
+                        <!-- Đóng -->
+                        <div id="btnCloseHoaDon" class="btnMauInChungTu">
+                            <a class="btn btn-default">
+                                <i class="fa fa-times"></i>Đóng</a>
+                        </div>
+
+                        <div style="float:left; background-color: #fff">
+                            <div style="float: left">
+                                <div id="MauInHoaDon"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div id="zoneThongTinPhieuThu" class="col-sm-9 beforeActive" style="padding-right: 15px; width: 100%; display: none">
-        <div style="float:left; margin-right: 3px;">
-            <div id="btnHuyHoaDon" class="btnMauInChungTu">
-                <a title="Hủy bản nháp" class="btn"><i style="color: #dd4b39" class="fa fa-trash-o fa-4x"></i></a>
-                <a class="color-active bold lbsymbolHD">Hủy bản nháp</a>
-            </div>
-        </div>
-        <div style="float:left; background-color: #fff">
-            <div style="float: left">
-                <div id="MauInHoaDon" style="width: 800px"></div>
-            </div>
-        </div>
-        <div id="zoneActionHoaDon" style="float:left; margin-left: 3px">
-            <div id="btnXuat_HD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
-                <a title="Xuất hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a>
-                <a class="color-active bold lbsymbolHD">Xuất hóa đơn</a>
-            </div>
-            <div id="btnCloseHoaDon" class="btnMauInChungTu">
-                <a class="btn"><i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i></a>
-                <a class="color-active bold lbsymbolHD">Đóng</a>
-            </div>
-        </div>
-    </div>
+
 </section>
 
 <section class="content" id="zonePreView" style="display: none">
     <div class="row"><!--Search zone-->
         <div class="box box-warning box-solid form-container">
-        <div class="box-header with-border">
-            <h3 class="box-title"><i style="color: #fff" class='fa fa-exclamation-triangle fa-warning'></i> <span id="lbTieuDeXacNhan">Xác nhận thông tin xuất hóa đơn</span></h3>
-                        
-            <div class="box-tools pull-right">
-                <a class="btn btn-default closeKhoanThu" href="#"><i class="fa fa-times-circle"></i></a>
-            </div>
-        </div>
-                    
-        <div class="box-body">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i style="color: #fff" class='fa fa-exclamation-triangle fa-warning'></i> <span
+                        id="lbTieuDeXacNhan">Xác nhận thông tin xuất hóa đơn</span></h3>
 
-            <i>Bạn đang chọn Liên: </i>
-            <div class="clear"></div>
-            <div class="pull-left">
-                <div class="group-title">
-                    <p class="titleSearchContent">
-                        <i class="fa fa-window-restore"></i> <span class="lang" key="">Danh sách chứng từ xem trước</span>
-                    </p>
+                <div class="box-tools pull-right">
+                    <a class="btn btn-default closeKhoanThu" href="#"><i class="fa fa-times-circle"></i></a>
                 </div>
             </div>
-            <div class="clear"></div>
-            <div class="scroll-table-x" id="zoneChungTu">
-                Đang tải danh sách chứng từ trước khi sinh số tự động. Vui lòng đợi ... 
+
+            <div class="box-body">
+
+                <i>Bạn đang chọn Liên: </i>
+                <div class="clear"></div>
+                <div class="pull-left">
+                    <div class="group-title">
+                        <p class="titleSearchContent">
+                            <i class="fa fa-window-restore"></i> <span class="lang" key="">Danh sách chứng từ xem
+                                trước</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="scroll-table-x" id="zoneChungTu">
+                    Đang tải danh sách chứng từ trước khi sinh số tự động. Vui lòng đợi ...
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="btnXacNhanSinhSo"><i class="fa fa-check-circle"></i>
+                    Đồng ý</button>
+                <button type="button" class="btn btn-default closeKhoanThu"><i class="fa fa-times-circle"></i>
+                    Đóng</button>
             </div>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-warning" id="btnXacNhanSinhSo"><i class="fa fa-check-circle"></i> Đồng ý</button>
-            <button type="button" class="btn btn-default closeKhoanThu"><i class="fa fa-times-circle"></i> Đóng</button>
-        </div>
-    </div>
     </div>
 </section>
 <script src="modules/hoadon/scripts/hoadonnhap.js?v=1"></script>

@@ -337,9 +337,8 @@
                             <input name="q" id="txtSearch_App" class="form-control" placeholder="Tìm kiếm ứng dụng" type="text">
                             <span class="input-group-btn"><button name="search" class="btn btn-flat"><i class="fa fa-search"></i></button></span>
                         </div>
-                        <table id="tblApp" class="table table-hover">
-                            <tbody>
-                                
+                        <table id="tblApp" class="table table-hover tblApp table-noborder table-bordered">
+                            <tbody>                                
                             </tbody>
                         </table>
                     </div>               

@@ -2946,16 +2946,19 @@
     color: #222 !important;
 }
 
-#notify #btnNotifyModal,.modal-content .alert {
+#notify #btnNotifyModal,
+.modal-content .alert {
     padding: 20px 35px 15px 20px;
     border-radius: 6px;
     background: rgba(224, 201, 11, .2);
     font-weight: normal;
     color: #222 !important;
 }
+
 .modal-content .alert .close {
     color: #222 !important;
 }
+
 .alert .close {
     color: #fff !important;
     opacity: 1;
@@ -3208,6 +3211,7 @@
 .table.aps-table-tinhhocphi thead {
     background: rgba(255, 255, 255, .1) !important;
 }
+
 /* 
 .aps-table-tinhhocphi tr td {
     height: 50px;
@@ -3651,11 +3655,16 @@
 }
 
 .btnMauInChungTu {
-    width: 85px;
+    /* width: 85px; */
     text-align: center;
-    background-color: #fff;
-    border-bottom: 1px solid #f1f1f1;
-    cursor: pointer
+    cursor: pointer;
+    height: 38px;
+    border-radius: 6px !important;
+}
+
+.btnInBienLai {
+    /* background-color: var(--color-blue) !important; */
+    /* color: #fff !important; */
 }
 
 .activeLien {
@@ -3926,6 +3935,12 @@
 
 .table-form-add .aps-note {
     line-height: 30px;
+}
+
+.table-form-add tr td {
+    border: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 10px !important;
 }
 
 /*-----------------*/
@@ -10019,17 +10034,43 @@ table#clone {
     color: #666;
 }
 
-.aps-table-tinhhocphi.table tr td{
+.aps-table-tinhhocphi.table tr td {
     padding-bottom: 0 !important;
     padding-top: 10px !important;
 }
-.table-form-add.table,.table-form-add.table tr td,.table-form-add.table tr,
+
+.table-form-add.table,
+.table-form-add.table tr td,
+.table-form-add.table tr,
 .table-form-add.table>thead>tr:first-child,
-.table-form-add.table tr td:first-child,.table-form-add.table tr td:last-child{
+.table-form-add.table tr td:first-child,
+.table-form-add.table tr td:last-child {
     border-top: 0 !important;
     border-left: 0 !important;
     border-right: 0 !important;
     border: 0 !important;
     padding-bottom: 0 !important;
     padding-top: 10px !important;
+}
+
+.zoneThongTinPhieuThu,.zoneThongTinPhieuThu,
+.zoneThongTinPhieuThu {
+    padding: 0 !important;
+}
+
+.box-zoneThongTinPhieuThu {
+    display: flex;
+    padding: 20px !important;
+    width: 100%;
+    justify-content: center;
+}
+.no-data-bienlai{
+    display:flex ;
+    justify-content: center;
+    width: 100%;
+    color: #888;
+    font-size: 16px;
+}
+.info-zonePhieuThu_HoaDon,.change-zonePhieuThu_HoaDon{
+    color: #666;
 }

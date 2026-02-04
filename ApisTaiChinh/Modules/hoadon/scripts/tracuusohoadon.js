@@ -697,7 +697,7 @@ HeThongHoaDon.prototype = {
             $(".zone-pag-footer" + strzoneId).replaceWith('');
             $(".change-" + strzoneId).html('');
             $(".light-pagination" + strzoneId).remove();
-            $("#" + strzoneId).html("Không tìm thấy dữ liệu");
+            $("#" + strzoneId).html('<div class="no-data-bienlai"> Không tìm thấy dữ liệu </div>');
         }
     },
     printPhieu: function () {
