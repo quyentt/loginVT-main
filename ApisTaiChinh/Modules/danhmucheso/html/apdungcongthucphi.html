@@ -1,10 +1,9 @@
-﻿
-<!-- Main content -->
+﻿<!-- Main content -->
 <section class="content aps-danhmuccheso">
     <div class="row aps-congthuctinhphi box-shadow">
         <!--Search zone-->
         <div class="col-lg-12 aps-search aps-congthuctinhphi-search">
-            <div class="box box-solid box-search">
+            <div class="box box-solid box-search pb10">
                 <div class="box-body pd0">
                     <div class="group-title d-none">
                         <p>
@@ -38,35 +37,40 @@
                                 <input id="txtTuKhoa_Search" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 mb-10">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
+                                        class="lang" key="">Tìm kiếm</span></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--Detail zone-->
+        <!--Danh sách-->
         <div class="col-lg-12 aps-detail aps-congthuctinhphi-detail">
             <div class="box box-solid pt15">
                 <div class="box-body pl5">
                     <div id="zoneMainContent">
                         <div class="zone-action pt0">
-                            <div class="pull-left">
+                            <div class="pull-left mt-5">
                                 <div class="group-title pl0 pt10">
                                     <p>
-                                        <i class="fal fa-list-alt"></i>
-                                        </i> <span class="lang" key="">Danh sách</span>
+                                        <i class="fa-light fa-list-timeline"></i>
+                                        <span class="lang" key="">Danh sách</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="pull-right">
-                                <a id="btnSearchTuKhoa" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Xem từ khóa</span></a>
-                                <a id="btnUpdate" class="btn btn-primary"><i class="fal fa-edit"></i><span class="lang" key="">Cập nhật</span></a>
-                                <a id="btnAddNew" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
+                                <a id="btnSearchTuKhoa" class="btn btn-default btn-search"><i class="fa fa-search"></i>
+                                    <span class="lang" key="">Xem từ khóa</span></a>
+                                <a id="btnUpdate" class="btn btn-primary"><i class="fal fa-edit"></i><span class="lang"
+                                        key="">Cập nhật</span></a>
+                                <a id="btnAddNew" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span
+                                        class="lang" key="">Thêm mới</span></a>
                             </div>
                         </div>
-                        <div class="zone-content">
-                            <table id="tblApDungCongThuc" class="table table-hover table-bordered tblApDungCongThuc">
+                        <div class="zone-content mt-5">
+                            <table id="tblApDungCongThuc"
+                                class="table table-hover table-bordered tblApDungCongThuc table-noborder">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -103,15 +107,20 @@
         </div>
     </div>
 </section>
-<!-- Modal -->
-<div class="modal fade aps-modal-congthuctinhphi" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+
+<button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal">Công thức tính phí</button>
+
+<!-- Modal Công thức tính phí-->
+<div class="modal fade aps-modal-congthuctinhphi" id="myModal" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-680">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Công thức tính phí</h4>
+                <h4 class="modal-title"><span class="myModalLabel">
+                        <i class="fa-solid fa-circle-dollar-to-slot"></i></span>Công thức tính phí</h4>
             </div>
-            <div class="modal-body" style="">
-                <div class="aps-form mt-10">
+            <div class="modal-body">
+                <div class="aps-form mt-10 mb-0">
                     <!--row 1-->
                     <div class="aps-form-item" style="width:100%">
                         <div class="aps-form-lable" style="width:30%; float:left">
@@ -171,7 +180,8 @@
                             <label style="font-weight:normal"><span class="lang" key="">Xâu công thức</span></label>
                         </div>
                         <div class="aps-form-input" style="width:70%; float:left">
-                            <textarea style="height: 200px !important;" type="text" id="txtNew_XauCongThuc" class="form-control"></textarea>
+                            <textarea style="height: 200px !important;" type="text" id="txtNew_XauCongThuc"
+                                class="form-control"></textarea>
                         </div>
                         <div class="clear"></div>
                     </div>
@@ -180,9 +190,12 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fal fa-times-circle"></i><span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-danger" id="btnDelete"><i class="fa fa-trash"></i><span class="lang" key=""> Xóa</span></a>
-                <a class="submit btn btn-primary" id="btnSave"><i class="fal fa-save"></i><span class="lang" key=""> Lưu</span></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                        class="fal fa-times-circle"></i><span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-danger" id="btnDelete"><i class="fa fa-trash"></i><span class="lang" key="">
+                        Xóa</span></a>
+                <a class="submit btn btn-primary" id="btnSave"><i class="fal fa-save"></i><span class="lang" key="">
+                        Lưu</span></a>
             </div>
         </div>
     </div>
@@ -196,4 +209,3 @@
         main_doc.ApDungCongThuc.init();
     });
 </script>
-

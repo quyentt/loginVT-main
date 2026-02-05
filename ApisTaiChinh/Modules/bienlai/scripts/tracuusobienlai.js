@@ -362,23 +362,23 @@ HeThongBienLai.prototype = {
                 data = me.dtChungTu[i];
         }
         var row = "";
-        row += '<div class="pcard" style="width: 330px; float: left; padding-left: 0px; margin-top: -7px; font-size: 18px"></td>';
+        row += '<div class="pcard" style="width: 360px; float: left; padding-left: 0px; margin-top: -7px; font-size: 18px"></td>';
         row += '<table>';
         row += '<tbody>';
         row += '<tr>';
-        row += '<td><i class="fa fa-empire colorcard"></i> <span class="lang" key="">Số</span></td><td>: ' + edu.util.checkEmpty(data.SOBIENLAI) + '</td>';
+        row += '<td><i class="fa-solid fa-arrow-down-1-9 colorcard"></i><span class="lang" key="">Số</span></td><td>: ' + edu.util.checkEmpty(data.SOBIENLAI) + '</td>';
         row += '</tr>';
         row += '<tr>';
-        row += '<td><i class="fa fa-star colorcard"></i> <span class="lang" key="">Năm</span></td><td>: ' + edu.util.checkEmpty(data.HETHONGBIENLAI_NAM) + '</td>';
+        row += '<td><i class="fa-solid fa-calendar-days colorcard"></i><span class="lang" key="">Năm</span></td><td>: ' + edu.util.checkEmpty(data.HETHONGBIENLAI_NAM) + '</td>';
         row += '</tr>';
         row += '<tr>';
-        row += '<td><i class="fa fa-expeditedssl colorcard"></i> <span class="lang" key="">Tổng tiền tiền</span></td><td>: ' + edu.system.convertFloat(data.TONGTIEN) + '</td>';
+        row += '<td><i class="fa-solid fa-circle-dollar-to-slot colorcard"></i><span class="lang" key="">Tổng tiền tiền</span></td><td>: ' + edu.system.convertFloat(data.TONGTIEN) + '</td>';
         row += '</tr>';
         row += '<tr>';
-        row += '<td><i class="fa fa-users colorcard"></i> <span class="lang" key="">Người cập nhật</span></td><td>: ' + edu.util.checkEmpty(data.NGUOICUOI_TENDAYDU) + '</td>';
+        row += '<td><i class="fa-solid fa-user colorcard"></i><span class="lang" key="">Người cập nhật</span></td><td>: ' + edu.util.checkEmpty(data.NGUOICUOI_TENDAYDU) + '</td>';
         row += '</tr>';
         row += '<tr>';
-        row += '<td><i class="fa fa-users colorcard"></i> <span class="lang" key="">Ngày cập nhật</span></td><td>: ' + edu.util.checkEmpty(data.NGAYCUOI_DD_MM_YYYY_HHMMSS) + '</td>';
+        row += '<td><i class="fa-regular fa-calendar-day colorcard"></i><span class="lang" key="">Ngày cập nhật</span></td><td>: ' + edu.util.checkEmpty(data.NGAYCUOI_DD_MM_YYYY_HHMMSS) + '</td>';
         row += '</tr>';
         row += '</tbody>';
         row += '</table>';
@@ -434,7 +434,7 @@ HeThongBienLai.prototype = {
             $(".zone-pag-footer" + strzoneId).replaceWith('');
             $(".change-" + strzoneId).html('');
             $(".light-pagination" + strzoneId).remove();
-            $("#" + strzoneId).html("Không tìm thấy dữ liệu");
+            $("#" + strzoneId).html('<div class="no-data-bienlai"> Không tìm thấy dữ liệu </div>');
         }
     },
     printPhieu: function () {

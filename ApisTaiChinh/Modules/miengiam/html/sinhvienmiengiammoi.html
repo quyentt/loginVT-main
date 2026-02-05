@@ -77,8 +77,8 @@
                                 <a id="btnAddNew" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
                             </div>
                         </div>
-                        <div class="zone-content pl20 pr20 mt-5">
-                            <table id="tblSinhVienMienGiam" class="table table-hover table-bordered tblSinhVienMienGiam">
+                        <div class="zone-content pl20 pr20 mt-10">
+                            <table id="tblSinhVienMienGiam" class="table table-hover table-bordered tblSinhVienMienGiam table-noborder">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -86,11 +86,12 @@
                             </table>
                         </div>
                     </div>
+                    <!-- Thêm sinh viên miễn giảm -->
                     <div id="zone_input" class="box-body aps-add-svMienGiam" style="display: none">
                         <div class="form-container-add-svMienGiam">
                             <div class="form-container-header">
                                 <div class="pull-left">
-                                    <h3 class="fc-title color-active"><i class="fa fa-pencil"></i> Thêm sinh viên miễn giảm</h3>
+                                    <h3 class="fc-title color-active"><i class="fa-solid fa-user-plus"></i> Thêm sinh viên miễn giảm</h3>
                                 </div>
                                 <div class="pull-right">
                                     <a class="btn btn-default btnClose" href="#"><i class="fa fa-times"></i></a>
@@ -130,7 +131,7 @@
                                             <p><b>Phần trăm miễn mặc định</b></p>
                                         </div>
                                         <div class="clear"></div>
-                                        <div class="col-sm-3">
+                                        <div class="col-sm-6">
                                             <input id="txtPhanTramMienMacDinh" class="form-control" placeholder="Nhập phần trăm miễn mặc định" />
                                         </div>
                                         <div class="col-sm-3 ml-10">
@@ -141,17 +142,17 @@
                                             <p><b> Danh sách sinh viên</b></p>
                                         </div>
                                         <div class="clear"></div>
-                                        <table id="tbldata_SinhVien_Selected" class="table table-bordered table-hover mt-5">
+                                        <table id="tbldata_SinhVien_Selected" class="table table-bordered table-hover mt-5 tbldata_SinhVien_Selected table-noborder">
                                             <thead>
                                                 <tr>
                                                     <th class="td-fixed td-center">Stt</th>
-                                                    <th class="td-center">Mã học viên</th>
-                                                    <th class="td-center">Họ tên</th>
-                                                    <th class="td-center">Ngày sinh</th>
-                                                    <th class="td-center">Lớp</th>
-                                                    <th class="td-center">Chương trình</th>
-                                                    <th class="td-center">Đối tượng</th>
-                                                    <th class="td-center">Phần trăm miễn</th>
+                                                    <th class="td-left">Mã học viên</th>
+                                                    <th class="td-left">Họ tên</th>
+                                                    <th class="td-left">Ngày sinh</th>
+                                                    <th class="td-left">Lớp</th>
+                                                    <th class="td-left">Chương trình</th>
+                                                    <th class="td-left">Đối tượng</th>
+                                                    <th class="td-left">Phần trăm miễn</th>
                                                     <th class="td-fixed td-center">
                                                         <input type="checkbox" name="chkSelectAll_SVMG" id='chkSelectAll_SVMG' />
                                                     </th>
@@ -179,15 +180,18 @@
         </div>
     </div>
 </section>
-<!-- Modal -->
-<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+ <button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal">Mở Popup </button>
+
+<!-- Modal Sinh viên - miễn giảm-->
+<div class="modal fade modal-sv-miengiam" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-680">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Sinh viên - miễn giảm</h4>
+                <h4 class="modal-title"><span class="myModalLabel"> 
+                    <i class="fa-solid fa-user-graduate"></i></span> Sinh viên - miễn giảm</h4>
             </div>
-            <div class="modal-body" style="">
-                <div class="aps-form">
+            <div class="modal-body pd0">
+                <div class="aps-form pd20">
                 <!--row 1-->
                 <div class="aps-form-item" style="width:100%">
                     <div class="aps-form-lable" style="width:30%; float:left">

@@ -67,7 +67,8 @@
                                 <table class="table table-noborder table-form-add mb0">
                                     <tbody>
                                         <tr>
-                                            <td style="width: 168px" class="aps-form-lable-search">Chọn mẫu biên lai</td>
+                                            <td style="width: 168px" class="aps-form-lable-search">Chọn mẫu biên lai
+                                            </td>
                                             <td class="aps-form-input-search">
                                                 <select class="select-opt" id="dropMau_BienLai"></select>
                                             </td>
@@ -75,25 +76,32 @@
                                         <tr>
                                             <td class="aps-form-lable-search">Nhập từ khoá</td>
                                             <td class="aps-form-input-search">
-                                                <input id="txtKeyword_Search_BienLai" class="form-control" placeholder="Nhập từ khóa tìm kiếm: số phiếu, mã người thu..." />
+                                                <input id="txtKeyword_Search_BienLai" class="form-control"
+                                                    placeholder="Nhập từ khóa tìm kiếm: số phiếu, mã người thu..." />
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="aps-form-lable-search">Loại phiếu</td>
                                             <td class="aps-form-input-search">
-                                                <input type="radio" class="rdLoaiPhieu_BienLai" name="rdLoaiPhieu_BienLai" value="-1" checked="checked" />
+                                                <input type="radio" class="rdLoaiPhieu_BienLai"
+                                                    name="rdLoaiPhieu_BienLai" value="-1" checked="checked" />
                                                 Toàn bộ
-                                                <input type="radio" class="rdLoaiPhieu_BienLai ml-10" name="rdLoaiPhieu_BienLai" value="1" />
+                                                <input type="radio" class="rdLoaiPhieu_BienLai ml-10"
+                                                    name="rdLoaiPhieu_BienLai" value="1" />
                                                 Phiếu thu
-                                                <input type="radio" class="rdLoaiPhieu_BienLai ml-10" name="rdLoaiPhieu_BienLai" value="2" />
+                                                <input type="radio" class="rdLoaiPhieu_BienLai ml-10"
+                                                    name="rdLoaiPhieu_BienLai" value="2" />
                                                 Phiếu đã sửa
-                                                <input type="radio" class="rdLoaiPhieu_BienLai ml-10" name="rdLoaiPhieu_BienLai" value="0" />
+                                                <input type="radio" class="rdLoaiPhieu_BienLai ml-10"
+                                                    name="rdLoaiPhieu_BienLai" value="0" />
                                                 Phiếu hủy
                                             </td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td><a id="btnSearch_BienLai" class="btn btn-default btn-search"><i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a></td>
+                                            <td><a id="btnSearch_BienLai" class="btn btn-default btn-search"><i
+                                                        class="fa fa-search"></i><span class="lang" key="">Tìm
+                                                        kiếm</span></a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -110,7 +118,8 @@
                                             <span class="progress-number" id="lbPhieuDaDung">
                                             </span>
                                             <div class="progress sm">
-                                                <div id="lbpPhieuDaDung" class="progress-bar progress-bar-green" style="width: 100%"></div>
+                                                <div id="lbpPhieuDaDung" class="progress-bar progress-bar-green"
+                                                    style="width: 100%"></div>
                                             </div>
                                         </div>
                                         <div class="progress-group mt-15">
@@ -118,7 +127,8 @@
                                             <span class="progress-number" id="lbPhieuDaSua">
                                             </span>
                                             <div class="progress sm">
-                                                <div id="lbpPhieuDaSua" class="progress-bar progress-bar-yellow" style="width: 100%"></div>
+                                                <div id="lbpPhieuDaSua" class="progress-bar progress-bar-yellow"
+                                                    style="width: 100%"></div>
                                             </div>
                                         </div>
                                         <div class="progress-group mt-15">
@@ -126,13 +136,14 @@
                                             <span class="progress-number" id="lbPhieuDaHuy">
                                             </span>
                                             <div class="progress sm">
-                                                <div id="lbpPhieuDaHuy" class="progress-bar progress-bar-red" style="width: 100%"></div>
+                                                <div id="lbpPhieuDaHuy" class="progress-bar progress-bar-red"
+                                                    style="width: 100%"></div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-sm-1"></div>
                                     <div class="col-sm-3">
-                                        <div class="aps-img pt10 pb15"> <img src="Upload/images/bien-lai.png"/></div>
+                                        <div class="aps-img pt10 pb15"> <img src="Upload/images/bien-lai.png" /></div>
                                     </div>
                                 </div>
                             </div>
@@ -145,57 +156,59 @@
         <div class="col-lg-12 aps-ds-bienlai">
             <div class="box box-solid pr10">
                 <div class="box-body pr0">
-                <div class="pull-left">
-                    <div class="group-title pl0 pt5">
-                        <p class="titleSearchContent">
-                            <i class="fal fa-receipt"></i> <span class="lang" key="">Danh sách số biên lai</span>
-                        </p>
+                    <div class="pull-left">
+                        <div class="group-title pl0 pt5">
+                            <p class="titleSearchContent">
+                                <i class="fal fa-receipt"></i> <span class="lang" key="">Danh sách số biên lai</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="scroll-table-x" id="zonePhieuThu_BienLai">
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="zoneThongTinPhieuThu" class="col-sm-9 beforeActive" style="display: none; width: 100%">
-        <div class="box-shadow">
-            <div  style="float:left; margin-right: 3px;">
-                <div id="btnHuyBienLai" class="btnMauInChungTu">
-                    <a title="Hủy biên lai" class="btn"><i style="color: #dd4b39" class="fa fa-trash-o fa-4x"></i></a>
-                    <a class="color-active bold lbsymbolHD">Hủy Biên Lai</a>
-                </div>
-
-            </div>
-            <div style="float:left; background-color: #fff">
-                <div style="margin: 20px">
-                    <div id="MauInPhieuThu"></div>
-                </div>
-            </div>
-            <div id="zoneActionHoaDon" style="float:left; margin-left: 3px;">
-                <div id="btnInBienLai" class="btnMauInChungTu">
-                    <a title="In biên lai" class="btn"><i style="color: #00a65a" class="fa fa-print fa-4x"></i></a>
-                    <a class="color-active bold lbsymbolHD">In Biên Lai</a>
-                </div>
-                <div id="btnCloseBienLai" class="btnMauInChungTu">
-                    <a title="Đóng biên lai" class="btn"><i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i></a>
-                    <a class="color-active bold lbsymbolHD">Đóng Biên Lai</a>
-                </div>
-                <div id="btnLienHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
-                    <a title="Liên Hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa fa-copy fa-4x"></i></a>
-                    <div id="zoneLienHoaDon"></div>
-                    <div class="clear"></div>
-                    <a class="color-active bold lbsymbolHD">Liên hóa đơn</a>
-                </div>
-                <div id="btnChuyenMauIn" class="btnMauInChungTu" style="display: none">
-                    <a title="Chuyển mẫu in" class="btn"><i style="color: #337ab7" class="fa fa-angle-right fa-4x"></i></a>
-                    <div class="dropdown">
-                        <a class="color-active bold lbsymbolHD dropdown-toggle" data-toggle="dropdown">Đổi mẫu in <span class="caret"></span></a>
-                        <ul class="dropdown-menu" id="zoneMauInChungTu"></ul>
+                    <div class="scroll-table-x zonePhieuThu_BienLai" id="zonePhieuThu_BienLai">
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div id="zoneThongTinPhieuThu" class="col-sm-12 beforeActive zoneThongTinPhieuThu"
+            style="display: none; width: 100%;">
+            <div class="box-zoneThongTinPhieuThu box-footer">
+                <div id="zoneActionHoaDon" class="zoneActionHoaDon aps-all-btn" style="float:left; margin-left: 3px;">
+                    <div style="float:left; background-color: #fff">
+                        <div style="margin: 20px">
+                            <div id="MauInPhieuThu"></div>
+                        </div>
+                    </div>
+                    <!-- Hủy Phiếu -->
+                    <div id="btnHuyBienLai" class="btnMauInChungTu">
+                        <a title="Hủy biên lai" class="btn btn-danger"><i class="fa fa-trash-o"></i>Hủy Biên Lai</a>
+                    </div>
+                    <!-- In Biên Lai -->
+                    <div id="btnInBienLai" class="btnMauInChungTu btnInBienLai">
+                        <a title="In biên lai" class="btn btn-primary">
+                            <i class="fa fa-print"></i> In Biên Lai</a>
+                    </div>
+                    <!-- Đóng Biên Lai -->
+                    <div id="btnCloseBienLai" class="btnMauInChungTu btnCloseBienLai ">
+                        <a title="Đóng biên lai" class="btn btn-default">
+                            <i class="fa-solid fa-receipt"></i> Đóng Biên Lai</a>
+                    </div>
+                    <!-- Liên hóa đơn -->
+                    <div id="btnLienHoaDon" class="btnLienHoaDon btnMauInChungTu">
+                        <a title="Liên Hóa đơn" class="btn btn-danger"><i class="fa fa fa-copy"></i>Liên hóa đơn</a>
+                        <div id="zoneLienHoaDon"></div>
+                    </div>
+                    <!-- Đổi mẫu in -->
+                    <div id="btnChuyenMauIn" class="btnMauInChungTu btnChuyenMauIn" style="display: none">
+                        <div class="dropdown">
+                            <a title="Chuyển mẫu in" class="color-fff bold lbsymbolHD dropdown-toggle btn btn-info"
+                                data-toggle="dropdown">
+                                Đổi mẫu in <span class="caret"></span></a>
+                            <ul class="dropdown-menu" id="zoneMauInChungTu"></ul>
+                        </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
 </section>
 <!-- page script -->
 <script src="modules/bienlai/scripts/tracuusobienlai.js?v=1.0.0.20"></script>

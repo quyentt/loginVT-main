@@ -1,5 +1,4 @@
-﻿
-<!-- Main content -->
+﻿<!-- Main content -->
 <section class="content aps-miengiam">
     <div class="row aps-mucmiengiammoi box-shadow">
         <!--Search zone-->
@@ -29,7 +28,7 @@
                                     <option value="">-- Chọn chương trình đào tạo --</option>
                                 </select>
                             </div>
-<!--                            <div class="clear"></div>-->
+                            <!--                            <div class="clear"></div>-->
                             <div class="col-sm-3 item-search mb-10">
                                 <select class="select-opt" id="dropKhoanThu_MMG">
                                     <option value="">-- Chọn khoản thu --</option>
@@ -44,7 +43,8 @@
                                 <select id="dropThoiGian_MMG" class="select-opt"></select>
                             </div>
                             <div class="col-sm-3 item-search mb-10">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
+                                        class="lang" key="">Tìm kiếm</span></a>
                             </div>
                         </div>
                     </div>
@@ -58,20 +58,23 @@
                     <div class="zoneMainContent">
                         <div class="zone-action pt20">
                             <div class="pull-left pl20">
-                                <div class="group-title pl0 pt10">
+                                <div class="group-title pl0 pt15">
                                     <p>
-                                        <i class="fal fa-list-alt"></i>
+                                        <i class="fa-light fa-list-timeline"></i>
                                         <span class="lang" key="">Danh sách</span>
                                     </p>
                                 </div>
                             </div>
                             <div class="pull-right mr-20 mb-15">
-                                <a id="btnUpdate" class="btn btn-primary"><i class="fal fa-edit"></i> <span class="lang" key="">Cập nhật</span></a>
-                                <a id="btnAddNew" class="btnAdd btn btn-success"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm mới</span></a>
+                                <a id="btnUpdate" class="btn btn-primary"><i class="fal fa-edit"></i> <span class="lang"
+                                        key="">Cập nhật</span></a>
+                                <a id="btnAddNew" class="btnAdd btn btn-success"><i class="fa fa-plus"></i> <span
+                                        class="lang" key="">Thêm mới</span></a>
                             </div>
                         </div>
                         <div class="zone-content  pl20 pr20">
-                            <table id="tblMucMienGiam" class="table table-hover table-bordered tblMucMienGiam">
+                            <table id="tblMucMienGiam"
+                                class="table table-hover table-bordered tblMucMienGiam table-noborder">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -84,15 +87,19 @@
         </div>
     </div>
 </section>
-<!-- Modal -->
-<div class="modal fade aps-modal-dinhmucmiengiam" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+<button type="button" class="btn btn-primary d-none" data-toggle="modal" data-target="#myModal">Mở Popup </button>
+<!-- Modal Định mức miễn giảm-->
+<div class="modal fade aps-modal-dinhmucmiengiam" id="myModal" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Định mức miễn giảm</h4>
+                <h4 class="modal-title"><span class="myModalLabel">
+                        <i class="fa-solid fa-chalkboard-user"></i></span> Định mức miễn giảm</h4>
             </div>
-            <div class="modal-body" style="">
-                <div class="aps-form mt-10">
+            <div class="modal-body">
+                <div class="aps-form mt-10 mb-0">
                     <!--row 1-->
                     <div class="aps-form-item" style="width:100%">
                         <div class="aps-form-lable" style="width:30%; float:left">
@@ -148,9 +155,12 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-danger" id="btnDelete"><i class="fa fa-trash"></i><span class="lang" key=""> Xóa</span></a>
-                <a class="submit btn btn-primary" id="btnSave"><i class="fal fa-save"></i><span class="lang" key=""> Lưu</span></a>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i>
+                    <span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-danger" id="btnDelete"><i class="fa fa-trash"></i><span class="lang" key="">
+                        Xóa</span></a>
+                <a class="submit btn btn-primary" id="btnSave"><i class="fal fa-save"></i><span class="lang" key="">
+                        Lưu</span></a>
             </div>
         </div>
     </div>
@@ -164,4 +174,3 @@
         main_doc.MucMienGiamMoi.init();
     });
 </script>
-
