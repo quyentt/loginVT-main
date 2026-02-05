@@ -46,8 +46,9 @@
                     <div class="col-sm-3">
                         <div class="box box-solid">
                             <div class="box-body">
-                                <p><b><i class="fa fa-hdd-o mr-5"></i> Danh sách ứng dụng </b>(<span
-                                        id="lblVaiTroUngDung_Tong_VTCN"></span>)</p>
+                                <p>
+                                    <b><i class="fa fa-hdd-o mr-5"></i> Danh sách ứng dụng </b>(<span id="lblVaiTroUngDung_Tong_VTCN"></span>)
+                                </p>
                                 <div id="zone_vaitroungdung">
                                     <!-- Load from js -->
                                 </div>
@@ -161,7 +162,7 @@
                                                 <th class="td-center"><span class="lang" key="">Đã phân rồi</span></th>
                                                 <th class="td-center"><span class="lang" key="">Mô tả</span></th>
                                                 <!--<th class="td-center"><span class="lang" key="">Người tạo</span></th>
-                            <th class="td-center"><span class="lang" key="">Sửa</span></th>-->
+                                                <th class="td-center"><span class="lang" key="">Sửa</span></th>-->
                                                 <th class="td-center td-fixed">
                                                     <input type="checkbox" class="chkSystemSelectAll">
                                                 </th>
@@ -184,27 +185,77 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title color-active"><span class="lang" key="lb_themmoichucnang"><i
-                        class="fa fa-plus"></i> Thêm mới chức năng cho vai trò</span></h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title color-active">
+                    <span class="lang" key="lb_themmoichucnang">
+                        <i class="fa fa-plus"></i> Thêm mới chức năng cho vai trò
+                    </span>
+                </h4>
             </div>
             <div class="modal-body">
                 <table class="table table-hover" id="tableChucNang_VTCN">
                     <thead>
-                    <tr>
-                        <th class="td-center">Stt</th>
-                        <th>Tên chức năng</th>
-                        <th class="td-center">Thêm</th>
-                    </tr>
+                        <tr>
+                            <th class="td-center">Stt</th>
+                            <th>Tên chức năng</th>
+                            <th class="td-center">Thêm</th>
+                        </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="lang" key="lb_dong"><i
-                        class="fa fa-times-circle"></i> Đóng</span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="lang" key="lb_dong">
+                        <i class="fa fa-times-circle"></i> Đóng
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade modal_lichgiang" id="modalSuaQuyen" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title modal-name" id="myModalLabel1"><i class="fa-solid fa-server"></i> Các quyền chức năng</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="pull-right">
+                        <a id="btnAdd_SuaQuyen" class="btnAdd btn btn-primary"><i class="fa fa-plus"></i> <span class="lang" key="">Thêm quyền</span></a>
+                        <a class="submit btn btn-danger" id="btnDelete_SuaQuyen"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
+                    </div>
+                </div>
+                <table class="table table-hover table-bordered tblModalLichGiang" id="tblSuaQuyen">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Tên chức năng</span></th>
+                            <th class="td-center"><span class="lang" key="">Quyền</span></th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" class="chkSystemSelectAll">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <!--<a id="btnSave_KhoaDuLieu" class="btn btn-primary btnSave_KhoaDuLieu"><i class="fa fa-check"></i> Lưu</a>-->
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel">
+                    <i class="fa fa-times-circle"></i> Đóng
+                </button>
             </div>
         </div>
     </div>

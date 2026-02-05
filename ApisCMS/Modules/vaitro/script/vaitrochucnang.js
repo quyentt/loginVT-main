@@ -48,6 +48,13 @@ VaiTroChucNang.prototype = {
                 edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
             }
         });
+        $("#treesjs_ungdungchucnang_vtcn").delegate(".btnSuaQuyen", "click", function (e) {
+            var strChucNang_Id = this.id;
+            me.strChucNang_Id = strChucNang_Id;
+            me.getList_SuaQuyen();
+            $("#modalSuaQuyen").modal("show");
+
+        });
         $("#treesjs_ungdungchucnang_vtcn").delegate(".btnAdd_ChucNang", "click", function (e) {
             var strChucNang_Id = this.id;
             e.preventDefault();
@@ -174,6 +181,37 @@ VaiTroChucNang.prototype = {
         });
         $("#btnDelete_QuyenCN").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblQuyenCN", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.delete_QuyenCN(arrChecked_Id[i]);
+                }
+            });
+        });
+        $("#btnAdd_SuaQuyen").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblSuaQuyen", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng ?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn lưu dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_QuyenCN(arrChecked_Id[i]);
+                }
+            });
+
+        });
+        $("#btnDelete_SuaQuyen").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblSuaQuyen", "checkX");
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
                 return;
@@ -846,7 +884,10 @@ VaiTroChucNang.prototype = {
                     strDelete = '<i class="fa fa-trash color-active poiter btnDelete_VaiTroChucNang" id="delete_vaitrochucnang' + dtResult[i].ID + '" ></i>';
                     if (dtCheck.TINHTRANGDONGBO == 0) strSync = '<i class="fa fa-recycle color-active poiter btnSync" id="sync_' + dtResult[i].ID + '"></i>';
                 }
-                $($("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID)[0]).append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px">' + strThemMoi + '</span><span style="padding-right: 20px;">' + strSync + '</span><span>' + strDelete + '</span></span>');
+                $($("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID)[0]).append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px"><i class="fa fa-eye color-active poiter btnSuaQuyen" id="' + dtResult[i].ID + '"></i></span><span style="padding-right: 20px">' + strThemMoi + '</span><span style="padding-right: 20px;">' + strSync + '</span><span>' + strDelete + '</span></span>');
+
+            } else {
+                $("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID + "_anchor").append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px"><i class="fa fa-eye color-active poiter btnSuaQuyen" id="' + dtResult[i].ID + '"></i></span>');
 
             }
         }
@@ -1137,6 +1178,85 @@ VaiTroChucNang.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+
+
+    getList_SuaQuyen: function (strDanhSach_Id) {
+        var me = this;//--Edit
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHhA0OCQv',
+            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Quyen',
+            'iM': edu.system.iM,
+            'strChucNang_Id': me.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    me["dtSuaQuyen"] = dtReRult;
+                    me.genTable_SuaQuyen(dtReRult, data.Pager);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+
+    genTable_SuaQuyen: function (data, iPager) {
+        var me = this;
+        $("#lblQuyenCN_Tong").html(iPager);
+        var jsonForm = {
+            strTable_Id: "tblSuaQuyen",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.QuyenCN.getList_QuyenCN()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "CHUCNANG_TEN"
+                }
+                ,
+                {
+                    "mDataProp": "HANHDONG_TEN"
+                }, {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        data.forEach(e => {
+            var ocheck = me.dtQuyenCN.find(ele => ele.ID == e.ID);
+            if (ocheck && ocheck.DAPHAN == 1) {
+                var poit = $("#tblSuaQuyen #checkX" + ocheck.ID);
+                $(poit).attr('checked', true);
+                $(poit).prop('checked', true);
+            }
+        })
         /*III. Callback*/
     },
 };

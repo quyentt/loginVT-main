@@ -527,7 +527,7 @@ systemroot.prototype = {
             me.appCode = objChucNang.MAUNGDUNG;
             me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
-            if (objChucNang.MAUNGDUNG != "ApisCongCanBo" || (objChucNang.DUONGDANFILE && objChucNang.TENANH && objChucNang.TENANH.indexOf('fa ') == 0)) {
+            if ((objChucNang.DUONGDANFILE && objChucNang.TENANH && objChucNang.TENANH.indexOf('fa ') == 0)) {
                 location.href="./indexi.aspx"
             }
             $("#sidebar-menu .active").removeClass('active');
