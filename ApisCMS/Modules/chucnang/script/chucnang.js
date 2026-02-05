@@ -41,6 +41,7 @@ ChucNang.prototype = {
         -------------------------------------------*/
         $("#dropSearch_UngDung_CN").on("select2:select", function () {
             var strUngDung_Id = edu.util.getValById("dropSearch_UngDung_CN");
+            me.strUngDung_Id = strUngDung_Id;
             if (edu.util.checkValue(strUngDung_Id)) {
                 me.getList_ChucNang();
                 $("#dropChucNang_UngDung").val(strUngDung_Id).trigger("change");
@@ -116,7 +117,7 @@ ChucNang.prototype = {
             edu.util.viewValById("dropQuyen_QuyenCN", data.HANHDONG_ID);
             edu.util.viewValById("txtMoTa_QuyenCN", data.MOTA);
             edu.util.viewValById("dropHieuLuc_QuyenCN", data.HIEULUC);
-            $("#myModal_QuyenCN").modal("show");
+            $("#myModalQuyenCN").modal("show");
         });
         $("#btnAdd_QuyenCN").click(function () {
             var data = {};
@@ -124,7 +125,7 @@ ChucNang.prototype = {
             edu.util.viewValById("dropQuyen_QuyenCN", data.HANHDONG_ID);
             edu.util.viewValById("txtMoTa_QuyenCN", data.MOTA);
             edu.util.viewValById("dropHieuLuc_QuyenCN", 1);
-            $("#myModal_QuyenCN").modal("show");
+            $("#myModalQuyenCN").modal("show");
         });
         $("#btnSave_QuyenCN").click(function () {
             var arrCheck = $("#dropQuyen_QuyenCN").val();
@@ -502,6 +503,7 @@ ChucNang.prototype = {
             me.getDetail_ChucNang(me.strChucNang_Id, constant.setting.ACTION.VIEW);
 
             me.getList_NguoiDungChucNang();
+            me.getList_QuyenCN();
             //----------------------------------------------------------------------------------------------
             //1. acess data.node obj
             // get name ==> data.node.name, 

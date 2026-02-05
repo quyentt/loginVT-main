@@ -84,7 +84,7 @@ systemextend.prototype = {
         html += '<div class=" item">';
         html += '<div class="form-item d-flex  form-add-info flex-grow-1">';
         html += '<div class="input-group no-icon">';
-        html += '<select id="dropSearchModal_CCTC_NS" class="select-opt"></select>';
+        html += '<select id="dropSearchModal_CCTC_NS" class="select-opt" multiple="multiple"></select>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
@@ -109,6 +109,13 @@ systemextend.prototype = {
         html += '</div>';
 
         html += '<div class="btn btn-dask-blue min-w-auto px-4" id="btnSearch_ModalNhanSu"><i class="fal fa-search me-2"></i> Tìm kiếm</div>';
+        html += '</div>';
+
+        html += '<div class="d-flex flex-wrap align-items-start list-title-first" id="addNhieuNguoiDung">';
+        html += '<p class="fw-bold  mt-1 mb-1">Thêm nhiều</p>';
+        html += '<div class="d-flex flex-wrap list">';
+        html += '<a class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_TungDonVi"> <i class="fal fa-plus me-2"></i> Thêm từng đơn vị</a>';
+        html += '</div>';
         html += '</div>';
         html += '</div>';
         html += '<div class="px-3 pb-5">';
@@ -343,6 +350,14 @@ systemextend.prototype = {
         html += '<div class="item-modal">';
         html += '<a class="btn btn-default" href="#" id="btnSearch_ModalNhanSu"><i class="fa fa-search fa-customer"></i> Tìm kiếm</a>';
         html += '</div>';
+
+        html += '<div class="d-flex flex-wrap align-items-start list-title-first" id="addNhieuNguoiDung">';
+        html += '<p class="fw-bold  mt-1 mb-1">Thêm nhiều</p>';
+        html += '<div class="d-flex flex-wrap list">';
+        html += '<a class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_TungDonVi"> <i class="fal fa-plus me-2"></i> Thêm từng đơn vị</a>';
+        html += '</div>';
+        html += '</div>';
+
         html += '</div>';
         html += '</div>';
         html += '</div>';
