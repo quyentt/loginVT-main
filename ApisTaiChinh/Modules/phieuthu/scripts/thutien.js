@@ -1194,9 +1194,9 @@ PhieuThu.prototype = {
                         var strMaSo = edu.util.checkEmpty(aData.MASO);
                         var html = '';
                         html += '<a class="color-default">';
-                        html += '<span id="sl_hoten' + aData.ID + '" class="">' + strHoTen + '</span><br />';
-                        html += '<span id="sl_ma' + aData.ID + '" class="italic">' + strMaSo + '</span><br />';
-                        html += '<span class="italic">Lớp: ' + edu.util.checkEmpty(aData.DAOTAO_LOPQUANLY_N1_TEN) + '</span>';
+                        html += '<span id="sl_hoten' + aData.ID + '" class="sl_hoten bold">' + strHoTen + '</span><br />';
+                        html += '<span id="sl_ma' + aData.ID + '" class="italic sl_ma">' + strMaSo + '</span>';
+                        html += '<span class="italic sl_lop">Lớp: ' + edu.util.checkEmpty(aData.DAOTAO_LOPQUANLY_N1_TEN) + '</span>';
                         html += '</a>';
                         return html;
                     }
@@ -1308,20 +1308,20 @@ PhieuThu.prototype = {
         }
         if (data == null || data == undefined) data = me.dt_HS;
         var row = "";
-        row += '<div style="width: 550px">';
+        row += '<div style="width:680px;padding-bottom: 20px !important" class="info-user">';
         row += '<div style="width: 200px; float: left">';
         row += '<img style="margin: 0 auto; display: block" src="' + edu.system.getRootPathImg(data.ANH) + '">';
         row += '</div>';
-        row += '<div style="width: 330px; float: left; padding-left: 20px; margin-top: -7px">';
-        row += '<p class="pcard"><i class="fa fa-credit-card-alt colorcard"></i> <span class="lang" key="">Mã</span>: ' + edu.util.checkEmpty(data.MASO) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-users colorcard"></i> <span class="lang" key="">Tên</span>: ' + edu.util.checkEmpty(data.HODEM) + " " + edu.util.checkEmpty(data.TEN) + '</p>';
+        row += '<div style="width: 480px; float: left; padding-left: 20px; margin-top: -7px">';
+        row += '<p class="pcard"><i class="fa-solid fa-laptop-binary colorcard"></i><span class="lang" key="">Mã</span>: ' + edu.util.checkEmpty(data.MASO) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-circle-user colorcard"></i> <span class="lang" key="">Tên</span>: ' + edu.util.checkEmpty(data.HODEM) + " " + edu.util.checkEmpty(data.TEN) + '</p>';
         row += '<p class="pcard"><i class="fa fa-birthday-cake colorcard"></i> <span class="lang" key="">Ngày sinh</span>: ' + edu.util.checkEmpty(data.NGAYSINH_NGAY) + '/' + edu.util.checkEmpty(data.NGAYSINH_THANG) + '/' + edu.util.checkEmpty(data.NGAYSINH_NAM) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o colorcard"></i> <span class="lang" key="">Lớp</span>: ' + edu.util.checkEmpty(data.DAOTAO_LOPQUANLY_N1_TEN) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-sitemap colorcard"></i> <span class="lang" key="">Ngành</span>: ' + edu.util.checkEmpty(data.NGANHHOC_N1_TEN) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o colorcard"></i> <span class="lang" key="">Khóa</span>: ' + edu.util.checkEmpty(data.KHOAHOC_N1_MA) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-heartbeat colorcard"></i> <span class="lang" key="">Hệ</span>: ' + edu.util.checkEmpty(data.TENHEDAOTAO) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-envelope-o colorcard"></i> <span class="lang" key="">Địa chỉ</span>: ' + edu.util.checkEmpty(data.TTLL_KHICANBAOTINCHOAI_ODAU) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-phone colorcard"></i> <span class="lang" key="">Số điện thoại</span>: ' + edu.util.checkEmpty(data.TTLL_DIENTHOAICANHAN) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-screen-users colorcard"></i> <span class="lang" key="">Lớp</span>: ' + edu.util.checkEmpty(data.DAOTAO_LOPQUANLY_N1_TEN) + '</p>';
+        row += '<p class="pcard"><i class="fa-brands fa-leanpub colorcard"></i> <span class="lang" key="">Ngành</span>: ' + edu.util.checkEmpty(data.NGANHHOC_N1_TEN) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-chalkboard-user colorcard"></i> <span class="lang" key="">Khóa</span>: ' + edu.util.checkEmpty(data.KHOAHOC_N1_MA) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-graduation-cap colorcard"></i> <span class="lang" key="">Hệ</span>: ' + edu.util.checkEmpty(data.TENHEDAOTAO) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-location-dot colorcard"></i> <span class="lang" key="">Địa chỉ</span>: ' + edu.util.checkEmpty(data.TTLL_KHICANBAOTINCHOAI_ODAU) + '</p>';
+        row += '<p class="pcard" style="padding-bottom: 20px !important"><i class="fa fa-phone colorcard"></i> <span class="lang" key="">Số điện thoại</span>: ' + edu.util.checkEmpty(data.TTLL_DIENTHOAICANHAN) + '</p>';
         row += '</div>';
         row += '</div>';
         $(point).popover({
@@ -1342,11 +1342,11 @@ PhieuThu.prototype = {
         }
         if (data == null || data == undefined) data = me.dt_HS;
         var row = "";
-        row += '<div style="width: 550px">';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o  colorcard"></i> <span class="lang" key="">Số quyết định</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_SOQD) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o  colorcard"></i> <span class="lang" key="">Ngày quyết định</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_NGAYQD) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o  colorcard"></i> <span class="lang" key="">Ngày hiệu lực</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_NGAYHIEULUC) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o  colorcard"></i> <span class="lang" key="">Nội dung</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_NOIDUNGQD) + '</p>';
+        row += '<div style="width: 550px" class="box-TinhTrang">';
+        row += '<p class="pcard"><i class="fa-solid fa-laptop-binary colorcard"></i> <span class="lang" key="">Số quyết định</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_SOQD) + '</p>';
+        row += '<p class="pcard"><i class="fa-regular fa-calendar-day colorcard"></i> <span class="lang" key="">Ngày quyết định</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_NGAYQD) + '</p>';
+        row += '<p class="pcard"><i class="fa-regular fa-calendar-day colorcard"></i> <span class="lang" key="">Ngày hiệu lực</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_NGAYHIEULUC) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-address-card colorcard"></i> <span class="lang" key="">Nội dung</span>: ' + edu.util.checkEmpty(data.QLSV_QUYETDINH_N1_NOIDUNGQD) + '</p>';
         row += '</div>';
         $(point).popover({
             container: 'body',
@@ -1449,7 +1449,7 @@ PhieuThu.prototype = {
                 break;
             default:
                 colorLable = 'label-success';
-                icon = 'fa-snowflake-o';
+                icon = 'fa-graduation-cap';
                 displayTinhTrang(colorLable, icon);
                 break;
         }
