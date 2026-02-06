@@ -4685,14 +4685,16 @@
 }
 
 #txtTinhTrang {
-       font-size: 16px !important;
+    font-size: 16px !important;
     padding: 8px 15px;
     margin-right: 5px;
     margin-top: -2px;
 }
-#txtTinhTrang i{
+
+#txtTinhTrang i {
     margin-right: 5px;
 }
+
 /*.aps-ThongTinHSSV .pull-right {*/
 /*    position: absolute;*/
 /*    top: 20px;*/
@@ -4935,7 +4937,8 @@
 
 .activeOnSearch,
 .activeSelect,
-.tbldata_HSSV tr:active,.tbldata_HSSV tr:hover,
+.tbldata_HSSV tr:active,
+.tbldata_HSSV tr:hover,
 .tbldata_HSSV tr:focus {
     background-color: var(--color-blue) !important;
 }
@@ -4945,14 +4948,16 @@
 .activeOnSearch,
 .activeSelect .sl_maso,
 .activeOnSearch,
-.activeSelect .sl_hoten,.activeSelect .sl_ma,
+.activeSelect .sl_hoten,
+.activeSelect .sl_ma,
 .activeOnSearch,
 .activeSelect .sl_lop {
     color: #fff !important;
 }
 
 .activeSelect:hover .color-default,
-.activeSelect:hover .sl_maso,.activeSelect:hover .sl_ma,
+.activeSelect:hover .sl_maso,
+.activeSelect:hover .sl_ma,
 .activeSelect:hover .sl_hoten,
 .activeSelect:hover .sl_lop {
     color: #000 !important;
@@ -10095,23 +10100,49 @@ table#clone {
 .change-zonePhieuThu_HoaDon {
     color: #666;
 }
+
 .aps-baocao-tab .box-KhoanThu .nav-tabs-custom>.nav-tabs>li {
     margin-bottom: -3px !important;
-} 
-.aps-baocao-tab  .nav-tabs-custom>.nav-tabs>li:hover>a {
+}
+
+.aps-baocao-tab .nav-tabs-custom>.nav-tabs>li:hover>a {
     color: var(--color-green) !important;
 }
-.aps-baocao-tab  .nav-tabs-custom>.nav-tabs>li.active:hover>a {
+
+.aps-baocao-tab .nav-tabs-custom>.nav-tabs>li.active:hover>a {
     color: #fff !important;
 }
+
 .info-user {
     padding-bottom: 10px !important;
     margin-bottom: 20px !important;
     display: block !important;
 }
-.info-user .pcard,.box-TinhTrang  .pcard{
+
+.info-user .pcard,
+.box-TinhTrang .pcard {
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
     font-size: 14px;
     height: 38px !important;
+}
+
+.form-container-header-bg {
+    background: transparent !important;
+    border-bottom: 0px solid #e1e1e1 !important;
+    padding-left: 0 !important;
+    height: auto !important;
+    font-weight: 600 !important;
+    min-height: auto !important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+    font-size: 20px !important;
+}
+
+.form-container-header-bg i {
+    font-weight: 700 !important;
+    padding-right: 5px !important;
+}
+.bg-none{
+    background: transparent !important;
 }
