@@ -801,7 +801,7 @@ input:focus-visible {
 }
 
 .function-content {
-  padding: 25px;
+  padding: 25px 20px;
   flex: 1;
   width: calc(100% - 205px);
 }
@@ -1735,9 +1735,9 @@ a.other-action_item:hover {
 .input-label-left label {
   flex-shrink: 0;
   font-size: 14px;
-  color: #222222;
+  color: #666;
   margin-right: 15px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .input-label-left .input {

@@ -2293,7 +2293,7 @@
 .modal-primary .modal-body {
     font-size: 14px;
     font-weight: 400;
-    padding: 4px 10px;
+    padding: 3px 10px;
 }
 
 .bg-light-blue.badge {
@@ -5620,7 +5620,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .table-bordered .btn.btnChonDanhSach {
-    padding: 4.5px 10px !important;
+    padding: 1.5px 10px !important;
     height: 30px !important;
     margin-bottom: 4px;
 }
@@ -10143,6 +10143,14 @@ table#clone {
     font-weight: 700 !important;
     padding-right: 5px !important;
 }
-.bg-none{
+.bg-transparent{
     background: transparent !important;
+}
+#btnHSLL_Import{
+    font-size: 19px !important;
+}
+.aps-tblNhapChuyenCan tbody tr td:nth-last-child(2),
+.aps-tblNhapChuyenCan tbody tr td:nth-last-child(3),
+.aps-tblNhapChuyenCan tbody tr td:nth-last-child(4){
+    text-align: left !important;
 }

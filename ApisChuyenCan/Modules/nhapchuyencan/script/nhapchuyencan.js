@@ -715,7 +715,7 @@ NhapChuyenCan.prototype = {
         $("#tblNhapChuyenCan thead").html(me.strHead);
         var row = '';
         for (var i = 0; i < data.rsNgay.length; i++) {
-            row += '<th class="td-center">' + data.rsNgay[i].NGAYGHINHAN + ' <br/> <input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + data.rsNgay[i].ID + '"></th>';
+            row += '<th class="td-left">' + data.rsNgay[i].NGAYGHINHAN + ' <br/> <input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + data.rsNgay[i].ID + '"></th>';
         }
         row += '<th class="td-center td-fixed">Tổng</th>';
         $("#tblNhapChuyenCan thead tr:eq(0)").append(row);
@@ -821,7 +821,7 @@ NhapChuyenCan.prototype = {
                     }
                 }
             }
-            html += '<td style="text-align: center">' + iSumNgay + '(' + iBuoi +')</td>';
+            html += '<td style="text-align: left">' + iSumNgay + '(' + iBuoi +')</td>';
         }
         html += '<td style="text-align: center">' + iSumTong + '(' + iBuoiTong +')</td></tr>';
         $("#tblNhapChuyenCan tfoot").html(html);

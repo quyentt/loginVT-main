@@ -88,19 +88,20 @@
                 <!-- box danh sach -->
                 <div class="box box-solid aps-nhaptheolop-list pd20 pt15">
                     <div class="box-body">
-                        <div class="scroll-table-x aps-nhaptheolop-table">
-                            <table id="tblLopHoc" class="table table-hover table-bordered aps-nhaptheolop-table mb-0">
+                        <div class="aps-table-select aps-nhaptheolop-table">
+                            <table id="tblLopHoc"
+                                class="table table-hover table-bordered tblLopHoc mb-0 table-noborder">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed td-center">Stt</th>
-                                        <th class="td-center">Loại danh sách</th>
-                                        <th class="td-center">Mã danh sách</th>
-                                        <th class="td-center">Tên danh sách</th>
-                                        <th class="td-center">Mã học phần</th>
-                                        <th class="td-center">Tên học phần</th>
-                                        <th class="td-center">Số lượng</th>
+                                        <th class="td-left" style="min-width: 130px;">Loại danh sách</th>
+                                        <th class="td-left">Mã danh sách</th>
+                                        <th class="td-left">Tên danh sách</th>
+                                        <th class="td-left" style="min-width: 104px;">Mã học phần</th>
+                                        <th class="td-left">Tên học phần</th>
+                                        <th class="td-centercenter" style="min-width: 86px;">Số lượng</th>
                                         <th class="td-center">Thời gian</th>
-                                        <th class="td-center">Hiển thị</th>
+                                        <th class="td-center" style="min-width: 76px;">Hiển thị</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -119,7 +120,7 @@
         <div class="box box-solid">
             <div class="box-header with-border">
                 <h3 class="box-title"><span id="lblForm_KhoiTao_NO">
-                    <i class="fa-solid fa-list-timeline"></i> Danh sách</span>
+                        <i class="fa-solid fa-list-timeline"></i> Danh sách</span>
                 </h3>
 
                 <div class="pull-right">
@@ -147,23 +148,22 @@
                                 class="lang" key="">Xác nhận</span></a>
                         <div class="dropdown ml-10" id="zonebtnBaoCao_NTL"></div>
                     </div>
-
                 </div>
-
                 <div class="clear"></div>
-                <div class="col-sm-12 scroll-table-x pd20">
-                    <table id="tblNhapChuyenCan" class="table table-hover table-bordered aps-tblNhapChuyenCan mb-0">
+                
+                <div class="col-sm-12 aps-table-select pd20">
+                    <table id="tblNhapChuyenCan"
+                        class="table table-hover table-bordered aps-tblNhapChuyenCan mb-0 table-noborder">
                         <thead>
                             <tr>
                                 <th class="td-fixed td-center">Stt</th>
-                                <th class="td-center">Hệ đào tạo</th>
-                                <th class="td-center">Khóa học</th>
-                                <th class="td-center">Khoa quản lý</th>
-                                <th class="td-center">Chương trình</th>
-                                <th class="td-center">Lớp</th>
-                                <th class="td-center">Mã số</th>
-                                <th class="td-center">Học tên</th>
-                                <th class="td-center">Ngày sinh</th>
+                                <th class="td-left">Hệ đào tạo</th>
+                                <th class="td-left">Khóa học</th>
+                                <th class="td-left">Khoa quản lý</th>
+                                <th class="td-left">Chương trình</th>
+                                <th class="td-left">Mã số</th>
+                                <th class="td-left">Học tên</th>
+                                <th class="td-left">Ngày sinh</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -239,15 +239,16 @@
                             <span class="badge">Lịch sử <span class="loaiXacNhan" title="">Xác nhận</span></span>
                         </p>
                     </div>
-                    <div class="row">
-                        <table id="tblModal_XacNhan" class="table tblModal_XacNhan  mb-0 mr-0">
+                    <div class="row aps-table-select">
+                        <table id="tblModal_XacNhan"
+                            class="table tblModal_XacNhan  mb-0 mr-0 table-bordered table-noborder">
                             <thead>
                                 <tr>
                                     <th class="td-fixed td-center">Stt</th>
                                     <th class="td-left"><span class="loaiXacNhan" title="">Xác nhận</span></th>
                                     <!--<th class="td-left">Nội dung</th>-->
                                     <th class="td-left">Người xác nhận</th>
-                                    <th class="td-center" style="width: 100px">Ngày</th>
+                                    <th class="td-left">Ngày</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>

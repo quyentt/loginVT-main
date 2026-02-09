@@ -71,7 +71,7 @@ systemextend.prototype = {
         html += '<div class="modal-content">';
         html += '<div class="modal-header">';
         html += '<div class="finance-user-info in-modal ">';
-        html += '<p><b>Tìm kiếm giảng viên</b></p>';
+        html += '<p><i class="fa-solid fa-user-magnifying-glass"></i> Tìm kiếm giảng viên</p>';
         html += '</div>';
         html += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
         html += '</div>';
@@ -112,19 +112,19 @@ systemextend.prototype = {
         html += '</div>';
 
         html += '<div class="d-flex flex-wrap align-items-start list-title-first" id="addNhieuNguoiDung">';
-        html += '<p class="fw-bold  mt-1 mb-1">Thêm nhiều</p>';
+        html += '<p class="fw-bold  mt-8 mb-1">Thêm nhiều</p>';
         html += '<div class="d-flex flex-wrap list">';
-        html += '<a class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_TungDonVi"> <i class="fal fa-plus me-2"></i> Thêm từng đơn vị</a>';
+        html += '<a class="btn btn-outline-success ms-3 mb-3" id="btnAdd_TungDonVi"> <i class="fal fa-plus me-2"></i> Thêm từng đơn vị</a>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
         html += '<div class="px-3 pb-5">';
         html += '<div class="title-is-paging">';
-        html += '<p class="color-dask-blue fw-bold mt-3">Danh sách</p>';
+        html += '<p class="color-dask-blue fw-bold mt-3"><i class="fa-regular fa-users-between-lines"></i>Danh sách</p>';
         html += '<button id="btnChonNhanSu" class="btn btn-sm ms-auto btn-outline-dask-blue min-w-auto ms-3 px-3 btn-on-paging" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn nhân sự</button>';
         html += '</div>';
         html += '<div class="bus-wrp" style="max-height: unset;">';
-        html += '<table class="table transcrip-table tabs-scores" id="tblModal_NhanSu">';
+        html += '<table class="table transcrip-table tabs-scores table-noborder table-bordered" id="tblModal_NhanSu">';
         html += '<thead>';
         html += '<tr>';
         html += '<th class="text-center w-50px" scope="col">STT</th>';
