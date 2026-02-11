@@ -4,9 +4,8 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
-                <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Giao đề tài</a></p>
-
+                <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Giao đề
+                        tài</a></p>
             </div>
 
             <div class="nav-content-right">
@@ -22,35 +21,40 @@
                     <div class="myTab-header">
                         <div class="myTab-header-item">
                             <a href="#" class="myTab-header-link  active" data-myTab="giaodetai">
-                                Giao đề tài
+                                <i class="fa-solid fa-books"></i> Giao đề tài
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-
                     <div class="myTab-content">
                         <div class="myTab-item show" id="giaodetai">
                             <div class="filter-sm mb-20">
                                 <div class="filter-item w-lg-40 w-md-60">
                                     <div class="input-label-left">
-                                        <label class="mt-5">Chọn kế hoạch thực hiện</label>
+                                        <label class="mt-5">Kế hoạch thực hiện</label>
                                         <div class="custom-select">
                                             <select id="dropSearch_KeHoach" class="form-select select-opt"></select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="filter-item">
-                                    <div class="btn btn-view" id="btnSearch"><i class="fa-solid fa-list-timeline"></i>Xem danh sách</div>
+                                    <div class="btn btn-view btn-default btn-search" id="btnSearch"><i
+                                            class="fa fa-search"></i>Xem danh sách</div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center  flex-wrap my-15">
-                                <p class="mb-0 color-dask-blue fw-bold">Danh sách</p>
-                                <a href="#themDeTai" data-bs-toggle="modal" class="btn btn-success  px-4 ms-auto " id="btnThemDeTai"><i class="fal fa-plus-circle me-10"></i> Thêm đề tài</a>
+                            <div class="d-flex align-items-center justify-content-between  flex-wrap my-10 w-100">
+                                <p class="mb-0 color-dask-blue fw-bold"><i class="fa-solid fa-list-timeline"></i> Danh
+                                    sách</p>
+                                <div class="pull-right">
+                                    <a href="#themDeTai" data-bs-toggle="modal" class="btn btn-success"
+                                        id="btnThemDeTai">
+                                        <i class="fa fa-plus"></i> Thêm đề tài</a>
+                                </div>
                             </div>
                             <div class="table-wrap">
-                                <div class="table-responsive fs-14 no-swiper">
-                                    <table class="table" id="tblGiaoDeTai">
+                                <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                    <table class="table table-bordered table-noborder tblGiaoDeTai" id="tblGiaoDeTai">
                                         <thead>
                                             <tr>
                                                 <th class="text-center border-top-1" scope="col">STT</th>
@@ -61,14 +65,15 @@
                                                 <th class="min-w-110p border-top-1" scope="col">Chương trình </th>
                                                 <th class="min-w-110p border-top-1 " scope="col">Khóa học </th>
                                                 <th class="min-w-85p border-top-1  " scope="col">Hệ đào tạo </th>
-                                                <th class="min-w-100p border-top-1 " scope="col">Học phần đã đăng ký </th>
+                                                <th class="min-w-100p border-top-1 " scope="col">Học phần đã đăng ký
+                                                </th>
                                                 <th class="min-w-100p border-top-1 " scope="col">Thông tin đề tài</th>
-                                                <th class="min-w-130p border-top-1  "scope="col">GVHD</th>
-                                                <th class="min-w-110p border-top-1  " scope="col">Đã có QĐ giao đề tài</th>
+                                                <th class="min-w-130p border-top-1  " scope="col">GVHD</th>
+                                                <th class="min-w-110p border-top-1  " scope="col">Đã có QĐ giao đề tài
+                                                </th>
                                                 <th class="min-w-110p border-top-1  " scope="col">Đã có QĐ bảo vệ </th>
-                                                <th class="text-center min-w-110p border-top-1  py-11" scope="col">Chọn</th>
+                                                <th class="text-center" scope="col">Chọn</th>
                                             </tr>
-
                                         </thead>
                                         <tbody></tbody>
                                     </table>
@@ -88,21 +93,28 @@
         </div>
     </div>
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 mb-20" style="display: block !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">Chi tiết đề
+        tài</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalDeTai">Người hướng dẫn</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalAddDeTai">Giao đề tài</button>
+    <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalThemDeTai">Danh sách đề tài</button>
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalDSDeTai">Đề tài</button>
+</div>
 
-<!-- modal  Giao đề tài Chi tiết -->
-<div class="modal fade" id="giaoDeTai_chitiet">
+<!-- modal Chi tiết đề tài -->
+<div class="modal fade giaoDeTai_chitiet" id="giaoDeTai_chitiet">
     <div class="modal-dialog modal-dialog-centered modal-1400">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Chi tiết đề tài</div>
-
+                    <div class="title"><i class="fa-solid fa-memo-circle-info"></i> Chi tiết đề tài</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
                 <div class="d-flex flex-wrap align-items-center justify-content-between fs-14">
-
                     <div class=" d-flex align-items-center mb-20">
                         <span class="text-gray me-5">Mã số:</span>
                         <span class="fw-bold" id="lblMaSo"></span>
@@ -121,8 +133,8 @@
                     </div>
                 </div>
 
-                <div class="table-responsive fs-14 no-swiper ">
-                    <table class="table" id="tblDeTai">
+                <div class="table-responsive fs-14 no-swiper aps-table-select">
+                    <table class="table tblDeTai table-bordered table-noborder" id="tblDeTai">
                         <thead>
                             <tr>
                                 <th class="text-center border-top-1" scope="col">STT</th>
@@ -134,40 +146,35 @@
                                 <th class="min-w-130p border-top-1  py-11" scope="col">Tình trạng duyệt</th>
                                 <th class="min-w-130p border-top-1  py-11" scope="col">GVHD</th>
                                 <th class="text-center min-w-90p border-top-1  py-11" scope="col">Chọn</th>
-                                <th class="text-center  border-top-1 min-w-65p  py-11" scope="col">
+                                <th class="text-center  border-top-1" scope="col">
                                     <input class="chkSystemSelectAll" type="checkbox" id="chkSelectAll_DeTai">
                                 </th>
-
                             </tr>
-
                         </thead>
                         <tbody></tbody>
                         <tfoot></tfoot>
                     </table>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <div class="file mt-7" id="txtFileDinhKem">
+                <div class="d-flex justify-content-end aps-all-btn mt-10">
+                    <div class="btn-taifile d-flex mt-7 mr-20">
+                        <span class="mr-5" style="margin-top: 1px ;">Tải file</span>
+                        <div class="file mt-7" id="txtFileDinhKem">
+                        </div>
                     </div>
-                </div>
-                <div style="display: flex">
-                    <div class="d-flex">
-                        <a class="btn btn-delete btn-sm btnDelete_DeTai">
-                            <i class="fal fa-trash "></i>
-                            <span>Xóa</span>
-                        </a>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a class="btn btn-add btn-sm btnAdd btnSearch_DeTai ">
-                            <i class="fal fa-plus "></i>
-                            <span>Thêm người hướng dẫn</span>
-                        </a>
-                    </div>
-                    <div class="d-flex ms-auto">
-                        <a class="btn btn-add btn-sm btnAdd btnSearch_AddDeTai ">
-                            <i class="fal fa-plus "></i>
-                            <span>Thêm đề tài - bản giao đề tài cho Người học chọn</span>
-                        </a>
-                    </div>
+                    <a class="btn btn-delete  btnDelete_DeTai">
+                        <i class="fal fa-trash "></i>
+                        <span>Xóa</span>
+                    </a>
+
+                    <a class="btn btnSearch_DeTai btn-primary">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Thêm người hướng dẫn</span>
+                    </a>
+
+                    <a class="btn btn-add btn-success btnAdd btnSearch_AddDeTai ">
+                        <i class="fal fa-plus "></i>
+                        <span>Thêm đề tài - bản giao đề tài cho Người học chọn</span>
+                    </a>
                 </div>
             </div>
             <div class="modal-footer">
@@ -182,13 +189,13 @@
     </div>
 </div>
 
-<!-- modal Giao đề tài Chi tiết chọn(chi tiết)-->
-<div class="modal fade" id="modalDeTai">
+<!-- modal người hướng dẫn-->
+<div class="modal fade modalDeTai" id="modalDeTai">
     <div class="modal-dialog modal-dialog-centered modal-800">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span>Người hướng dẫn</div>
+                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-user"></i> Người hướng dẫn</div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -213,7 +220,7 @@
                     <label id="lblTinhTrang"></label>
                 </div>
                 <div class="table-responsive fs-14 no-swiper ">
-                    <table class="table" id="tblNguoiHuongDan">
+                    <table class="table tblNguoiHuongDan table-bordered table-noborder" id="tblNguoiHuongDan">
                         <thead>
                             <tr>
                                 <th class="text-center border-top-1 py-12" scope="col">STT</th>
@@ -222,7 +229,6 @@
                                 <th class="min-w-185p border-top-1  py-11" scope="col">File</th>
                                 <th class="text-center border-top-1"></th>
                             </tr>
-
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -233,22 +239,21 @@
                         </a>
                     </div>-->
                     <div class="d-flex justify-content-end ">
-                        <a class="btn btn-add btn-sm btnSearch_NguoiHuongDan">
-                            <i class="fal fa-plus "></i>
-                            <span>Thêm</span>
+                        <a class="btn btnSearch_NguoiHuongDan btn-outline-primary">
+                            <i class="fal fa-plus "></i><span>Thêm dòng</span>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-save" id="btnSave_DeTai">
-                        <i class="fal fa-save"></i>
-                        <span>Lưu</span>
-                    </button>
+                <div class="d-flex justify-content-end">                    
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Đóng</span>
+                    </button>
+                    <button class="btn btn-save btn-primary" id="btnSave_DeTai">
+                        <i class="fal fa-save"></i>
+                        <span>Lưu</span>
                     </button>
                 </div>
             </div>
@@ -256,12 +261,13 @@
     </div>
 </div>
 
-<div class="modal fade" id="modalAddDeTai">
-    <div class="modal-dialog modal-dialog-centered modal-800">
+<!-- modal Giao đề tài-->
+<div class="modal fade modalAddDeTai" id="modalAddDeTai">
+    <div class="modal-dialog modal-dialog-centered modal-680">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span>Giao đề tài</div>
+                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-books"></i> Giao đề tài</div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -279,14 +285,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-save" id="btnSave_AddDeTai">
-                        <i class="fal fa-save"></i>
-                        <span>Lưu</span>
-                    </button>
+                <div class="d-flex justify-content-end mg-0">                  
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Đóng</span>
+                    </button>
+                      <button class="btn btn-save btn-primary" id="btnSave_AddDeTai">
+                        <i class="fal fa-save"></i>
+                        <span>Lưu</span>
                     </button>
                 </div>
             </div>
@@ -294,20 +300,19 @@
     </div>
 </div>
 
-<!-- modal Giao đề tài thêm đề tài -->
-<div class="modal fade" id="modalThemDeTai">
+<!-- modal Danh sách đề tài -->
+<div class="modal fade modalThemDeTai" id="modalThemDeTai">
     <div class="modal-dialog modal-dialog-centered modal-1140">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Danh sách đề tài</div>
-
+                    <div class="title"><i class="fa-solid fa-books-medical"></i> Danh sách đề tài</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
-                <div class="table-responsive fs-14 no-swiper py-20">
-                    <table class="table" id="tblDSDeTai">
+                <div class="table-responsive fs-14 no-swiper py-20 pb-10">
+                    <table class="table tblDSDeTai table-bordered table-noborder" id="tblDSDeTai">
                         <thead>
                             <tr>
                                 <th class="text-center border-top-1" scope="col">STT</th>
@@ -318,28 +323,25 @@
                                 <th class="min-w-85p border-top-1  py-11" scope="col">Ngày nhập</th>
                                 <th class="text-center min-w-100p border-top-1  py-11" scope="col">Đã sử dụng</th>
                                 <th class="text-center border-top-1  py-11" scope="col">Sửa </th>
-                                <th class="text-center border-top-1  py-11" scope="col"><input class="chkSystemSelectAll" type="checkbox" id="chkSelectAll_DSDeTai"></th>
-
+                                <th class="text-center border-top-1  py-11" scope="col"><input
+                                        class="chkSystemSelectAll" type="checkbox" id="chkSelectAll_DSDeTai"></th>
                             </tr>
-
                         </thead>
                         <tbody></tbody>
                     </table>
                     <div style="display: flex">
-                        <div class="d-flex">
-                            <a class="btn btn-delete btn-sm btnDelete_DSDeTai">
+                        <div class="d-flex"></div>
+                        <div class="d-flex ms-auto aps-all-btn">
+                             <a class="btn btn-delete btnDelete_DSDeTai">
                                 <i class="fal fa-trash "></i>
                                 <span>Xóa</span>
                             </a>
-                        </div>
-                        <div class="d-flex ms-auto">
-                            <a class="btn btn-add btn-sm btnSearch_DSDeTai">
+                            <a class="btn btn-add btnSearch_DSDeTai btn-success">
                                 <i class="fal fa-plus "></i>
                                 <span>Thêm</span>
                             </a>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="modal-footer">
@@ -353,40 +355,40 @@
         </div>
     </div>
 </div>
-<!-- modal Giao đề tài Chi tiết thêm mới-->
-<div class="modal fade" id="modalDSDeTai">
+
+<!-- modal Đề tài-->
+<div class="modal fade modalDSDeTai" id="modalDSDeTai">
     <div class="modal-dialog modal-dialog-centered modal-800">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span> - Đề tài</div>
-
+                    <div class="title "><span class="myModalLabel"></span> Đề tài</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
             <div class="modal-body">
                 <div class="input-label-left mb-20">
-                    <label class="mt-5 w-110p">Mã số</label>
+                    <label class="mt-5 w-200p">Mã số</label>
                     <input type="text" id="txtMaSo" class="form-control">
                 </div>
                 <div class="input-label-left mb-20">
-                    <label class="mt-5 w-110p">Tên đề tài tiếng việt</label>
+                    <label class="mt-5 w-200p">Tên đề tài tiếng việt</label>
                     <input type="text" id="txtTenDeTaiTiengViet" class="form-control">
                 </div>
                 <div class="input-label-left mb-20">
-                    <label class="mt-5 w-110p">Tên đề tài tiếng anh</label>
+                    <label class="mt-5 w-200p">Tên đề tài tiếng anh</label>
                     <input type="text" id="txtTenDeTaiTiengAnh" class="form-control">
                 </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-save" id="btnSave_DSDeTai">
-                        <i class="fal fa-save"></i>
-                        <span>Lưu</span>
-                    </button>
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
+                    </button>
+                     <button class="btn btn-save btn-primary" id="btnSave_DSDeTai">
+                        <i class="fal fa-save"></i>
+                        <span>Lưu</span>
                     </button>
                 </div>
             </div>

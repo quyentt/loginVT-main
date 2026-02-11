@@ -147,8 +147,8 @@
 /*---------*/
 .btn {
     padding: 9px 15px 7.6px 15px !important;
-    font-size: 14px !important;
-    border-radius: 5px !important;
+     font-size: 14px !important;
+     border-radius: 5px !important;
     height: 38px;
     /* display: flex; */
     /* position: relative; */
@@ -169,7 +169,7 @@
 }
 
 .btn .fa {
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 }
 
 .btn-primary,
@@ -10153,4 +10153,7 @@ table#clone {
 .aps-tblNhapChuyenCan tbody tr td:nth-last-child(3),
 .aps-tblNhapChuyenCan tbody tr td:nth-last-child(4){
     text-align: left !important;
+}
+.modal-footer>* {
+    margin: calc(var(--bs-modal-footer-gap) * 0) !important;
 }

@@ -4,8 +4,7 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-                <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Giao đề
-                        tài</a></p>
+                <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Giao đề tài</a></p>
             </div>
 
             <div class="nav-content-right">
@@ -21,28 +20,25 @@
                     <div class="myTab-header">
                         <div class="myTab-header-item">
                             <a href="#" class="myTab-header-link  active" data-myTab="DuyetDeTai">
-                                Duyệt Giao đề tài
+                                <i class="fa-solid fa-check-to-slot"></i> Duyệt Giao đề tài
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-
                     <div class="myTab-content">
-
                         <div class="myTab-item show" id="DuyetDeTai">
                             <div class="filter-sm mb-20">
                                 <div class="filter-item w-lg-40 w-md-60">
                                     <div class="input-label-left">
-                                        <label class="mt-5">Chọn kế hoạch thực hiện</label>
+                                        <label class="mt-5">Kế hoạch thực hiện</label>
                                         <div class="custom-select">
                                             <select id="dropSearch_KeHoach" class="form-select select-opt"></select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="filter-item">
-                                    <div class="btn btn-view" id="btnSearch"><i
-                                            class="fa-solid fa-list-timeline"></i>Xem danh sách</div>
+                                    <div class="btn btn-view btn-default btn-search" id="btnSearch"><i class="fa fa-search"></i>Xem danh sách</div>
                                 </div>
                             </div>
                             <!--Nhóm button xử lý tác vụ sẽ được inner sang trái -->
@@ -50,28 +46,23 @@
 
                             </div>
                             <div class="table-wrap">
-                                <div class="table-responsive fs-14 no-swiper">
-                                    <table class="table" id="tblDuyetDeTai">
+                                <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                    <table class="table table-bordered table-noborder tblDuyetDeTai" id="tblDuyetDeTai">
                                         <thead>
                                             <tr>
                                                 <th class="text-center border-top-1" scope="col">STT</th>
                                                 <th class="min-w-85p border-top-1" scope="col">Mã số</th>
                                                 <th class="min-w-100p border-top-1" scope="col">Họ đệm</th>
                                                 <th class="min-w-85p border-top-1" scope="col">Tên</th>
-                                                <th class="min-w-100p border-top-1 py-11" scope="col">Lớp</th>
-                                                <th class="min-w-110p border-top-1  py-11" scope="col">Chương trình
-                                                </th>
-                                                <th class="min-w-110p border-top-1  py-11" scope="col">Khóa học </th>
-                                                <th class="min-w-85p border-top-1  py-11" scope="col">Hệ đào tạo </th>
-                                                <th class="min-w-100p border-top-1  py-11" scope="col">Thông tin đề tài
-                                                </th>
-                                                <th class="min-w-110p border-top-1  py-11" scope="col">Đã giao đề tài
-                                                </th>
-                                                <th class="min-w-110p border-top-1  py-11" scope="col">Đã có QĐ giao đề
-                                                    tài</th>
-                                                <th class="min-w-110p border-top-1  py-11" scope="col">Đã có QĐ bảo vệ
-                                                </th>
-                                                <th class="text-center min-w-110p border-top-1  py-11" scope="col">Chọn
+                                                <th class="min-w-100p border-top-1" scope="col">Lớp</th>
+                                                <th class="min-w-110p border-top-1" scope="col">Chương trình</th>
+                                                <th class="min-w-110p border-top-1" scope="col">Khóa học </th>
+                                                <th class="min-w-85p border-top-1" scope="col">Hệ đào tạo </th>
+                                                <th class="min-w-100p border-top-1" scope="col">Thông tin đề tài</th>
+                                                <th class="min-w-110p border-top-11" scope="col">Đã giao đề tài</th>
+                                                <th class="min-w-110p border-top-11" scope="col">Đã có QĐ giao đề tài</th>
+                                                <th class="min-w-110p border-top-1" scope="col">Đã có QĐ bảo vệ</th>
+                                                <th class="text-center" scope="col">Chọn
                                                 </th>
                                             </tr>
 
@@ -83,13 +74,19 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 mb-20" style="display: block !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">Chi tiết đề
+        tài</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalDeTai">Người hướng dẫn</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalAddDeTai">Giao đề tài</button>
+    <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalThemDeTai">Danh sách đề tài</button>
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalDSDeTai">Đề tài</button>
+</div>
 <!-- modal  Giao đề tài Chi tiết -->
 <div class="modal fade" id="giaoDeTai_chitiet">
     <div class="modal-dialog modal-dialog-centered modal-1400">
@@ -181,8 +178,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span>Người hướng dẫn</div>
-
+                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-user"></i> Người hướng dẫn</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -206,7 +202,7 @@
                     <label id="lblTinhTrang"></label>
                 </div>-->
                 <div class="table-responsive fs-14 no-swiper ">
-                    <table class="table" id="tblNguoiHuongDan">
+                    <table class="table tblNguoiHuongDan table-bordered table-noborder" id="tblNguoiHuongDan">
                         <thead>
                             <tr>
                                 <th class="text-center border-top-1 py-12" scope="col">STT</th>

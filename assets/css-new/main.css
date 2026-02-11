@@ -1657,7 +1657,7 @@
    align-items: center;
    flex-wrap: wrap;
    width: 100%;
-   gap: 20px;
+   gap: 10px;
  }
 
  .filter-item {

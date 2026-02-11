@@ -325,21 +325,20 @@
      border-right: 1px solid #d1d1d1 !important;
  }
 
- .table .btn {
-     height: 28px;
-     padding: 0px 12px 5px 12px !important;
-     line-height: 28px;
- }
+
+.table td .btn,.table td .btn:hover, .table .btn  {
+    padding: 2px 6px 2px 6px !important;
+  border-radius: 5px !important;
+  line-height: 28px !important;
+  height: 28px !important;
+}
 
  .table .btn:hover {
-     height: 28px;
-     padding: 0px 12px 5px 12px !important;
      color: #fff !important;
-     line-height: 28px;
-     border: 0px solid #fff !important;
  }
 
- .table .btn:hover .lang {
+ .table .btn:hover .lang,
+ .table .btn:hover i {
      color: #fff !important
  }
 
