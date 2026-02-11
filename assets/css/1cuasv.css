@@ -71,11 +71,12 @@
 
 /*tab*/
 
-.content-tab {
+.main-wrap .content-tab {
   /* background: #fff; */
   width: 100%;
   /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); */
-  padding: 0px;
+  padding-left: 20px;
+  padding-top: 10px;
 }
 
 .content-tab .dashboad-item-box {
@@ -1432,30 +1433,38 @@ input:active,
 
 .modal .modal-header {
   text-align: center;
-    height: 60px;
-    /* line-height: 62px; */
-    width: 100%;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    background-color: var(--color-blue) !important;
-    display: flex;
-    align-items: center;
-   font-size: 18px !important;
-       line-height: 24px;
+  height: 60px;
+  /* line-height: 62px; */
+  width: 100%;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background-color: var(--color-blue) !important;
+  display: flex;
+  align-items: center;
+  font-size: 18px !important;
+  line-height: 24px;
 }
 
 .modal .modal-header .modal-title {
   color: #fff !important;
   font-size: 20px !important;
 }
+
 .modal-header .btn-close {
-    color: #fff !important;
+  color: #fff !important;
 }
+
 .modal .modal-header .modal-title i,
-.modal .modal-footer .btn-default i{
+.modal .modal-footer .btn-default i {
   font-family: Arial, Helvetica, sans-serif !important;
 }
+
 .modal .modal-header .modal-title i::before,
-.modal .modal-footer .btn-default i::before{
-      font-family: "Font Awesome 5 Pro" !important;
+.modal .modal-footer .btn-default i::before {
+  font-family: "Font Awesome 5 Pro" !important;
+}
+
+/* --------- */
+.main-wrap .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px;
 }

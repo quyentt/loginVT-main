@@ -3,10 +3,8 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
                 <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Kế hoạch
                         đồ án - khóa luận - LV</a></p>
-
             </div>
 
             <div class="nav-content-right">
@@ -22,7 +20,7 @@
                     <div class="myTab-header">
                         <div class="myTab-header-item">
                             <a href="#" class="myTab-header-link  active" data-myTab="daotaodukien_hocphan">
-                                Đào tạo dự kiến học phần
+                                <i class="fa-solid fa-chalkboard-user mr-5"></i> Đào tạo dự kiến học phần
                             </a>
                         </div>
                     </div>
@@ -33,8 +31,8 @@
                         <div class="myTab-item show" id="daotaodukien_hocphan">
                             <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item mb-10">
                                 <div class="flex-grow-1">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                    <div class="row box-search-hocphan">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Năm</label>
                                                 <div class="custom-select">
@@ -42,16 +40,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
-                                                <label class="mt-5">Kế hoạch năm</label>
+                                                <label class="mt-5"> Kế hoạch năm</label>
                                                 <div class="custom-select">
                                                     <select id="dropSearch_KeHoachNam"
                                                         class="select-opt form-select"></select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Kế hoạch chi tiết</label>
                                                 <div class="custom-select">
@@ -60,7 +58,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!--<div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <!--<div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left"> 
                                                 <label class="mt-5">Thời gian</label>
                                                 <div class="custom-select">
@@ -68,7 +66,7 @@
                                                 </div>
                                             </div>
                                         </div>-->
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Khoa quản lý</label>
                                                 <div class="custom-select">
@@ -79,8 +77,7 @@
                                             </div>
                                         </div>
                                         <div class="clear"></div>
-
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Hệ đào tạo</label>
                                                 <div class="custom-select">
@@ -89,27 +86,25 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Khóa đào tạo</label>
                                                 <div class="custom-select">
                                                     <select id="dropKhoaDaoTao_CB"
                                                         class="select-opt form-select"></select>
                                                 </div>
-
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Chương trình</label>
                                                 <div class="custom-select">
                                                     <select id="dropChuongTrinh_CB"
                                                         class="select-opt form-select"></select>
                                                 </div>
-
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Thông tin</label>
                                                 <input type="text" id="txtSearch" class="form-control"
@@ -120,7 +115,7 @@
                                     </div>
                                 </div>
                                 <div class="flex-shrink-0">
-                                    <div id="btnSearch" class="btn btn-view ms-20 mb-15">Xem danh sách</div>
+                                    <div id="btnSearch" class="btn btn-view ms-10 mb-10 mt-5">Xem danh sách</div>
                                 </div>
                             </div>
                             <div class="row">
@@ -129,24 +124,20 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="flex-shrink-0">
-                                    <div class="btn btn-primary min-w-auto mb-15 ml-10" id="btnLuuTangGiam"
-                                        style="margin-left: 10px; float: right"><i class="fal fa-save"></i><span>Lưu đề
-                                            xuất tăng/giảm </span></div>
-                                    <div class="btn btn-success min-w-auto mb-15 ml-10" id="btnXacNhan"
-                                        style="margin-left: 10px; float: right"><i
-                                            class="fa-solid fa-circle-check"></i><span>Xác nhận </span></div>
-                                </div>
-                                <div class="fw-bold text-main mb-10">Danh sách học phần dự kiến của đào tạo</div>
+                            <!-- Danh sách học phần dự kiến của đào tạo -->
+                            <div class="fw-bold color-blue mb-10 mt-10">
+                                <i class="fa-light fa-list-timeline fw-bold"></i>
+                                Danh sách học phần dự kiến của đào tạo
                             </div>
                             <div class="table-wrap aps-table-select">
                                 <div class="table-responsive fs-14 no-swiper aps-table-select">
-                                    <table class="table table-bordered" id="tblHocPhanDuKien">
+                                    <table class="table table-border table-bordered tblHocPhanDuKien"
+                                        id="tblHocPhanDuKien">
                                         <thead>
                                             <tr>
-                                                <th colspan="11" class="text-center border-top-1 py-11">Thông tin học
-                                                    phần dự kiến</th>
+                                                <th colspan="11" class="text-center border-top-1 py-11 bg-th fw-bold"
+                                                    style="font-weight: bold !important;">
+                                                    Thông tin học phần dự kiến</th>
                                                 <!--<th id="lblSLTheoTinhChat" colspan="4" class="text-center border-top-1 border-left-1 py-11">Số lượng theo tính chất</th>-->
                                                 <th rowspan="2"
                                                     class="text-center border-top-1 border-left-1 py-11 min-w-130p">Số
@@ -176,25 +167,32 @@
 
                                             </tr>
                                             <tr>
-                                                <th class="text-center border-top-1" scope="col">STT</th>
-                                                <th class="min-w-60p border-top-1" scope="col">Mã</th>
-                                                <th class="min-w-130p border-top-1" scope="col">Tên</th>
-                                                <th class="min-w-85p border-top-1 py-11 text-center" scope="col">Số tín
+                                                <th class="text-center border-top-1 bg-th" scope="col">STT</th>
+                                                <th class="min-w-60p border-top-1 bg-th" scope="col">Mã</th>
+                                                <th class="min-w-130p border-top-1 bg-th" scope="col">Tên</th>
+                                                <th class="min-w-85p border-top-1 py-11 text-center bg-th" scope="col">
+                                                    Số tín
                                                     chỉ</th>
-                                                <th class="min-w-130p border-top-1 py-11" scope="col">Đơn vị</th>
-                                                <th class="min-w-130p border-top-1 py-11" scope="col">Chương trình</th>
-                                                <th class="min-w-100p border-top-1 py-11" scope="col">Khóa học</th>
-                                                <th class="min-w-100p border-top-1 py-11 text-center" scope="col">Hệ đào
-                                                    tạo</th>
-                                                <th class="min-w-130p border-top-1 py-11" scope="col">Khối kiến thức
+                                                <th class="min-w-130p border-top-1 py-11 bg-th" scope="col">Đơn vị</th>
+                                                <th class="min-w-130p border-top-1 py-11 bg-th" scope="col">Chương trình
                                                 </th>
-                                                <th class="min-w-100p border-top-1 py-11" scope="col">Định hướng</th>
-                                                <th class="min-w-210p border-top-1 py-11" scope="col">Thời gian trong
+                                                <th class="min-w-100p border-top-1 py-11 bg-th" scope="col">Khóa học
+                                                </th>
+                                                <th class="min-w-100p border-top-1 py-11 text-center bg-th" scope="col">
+                                                    Hệ đào
+                                                    tạo</th>
+                                                <th class="min-w-130p border-top-1 py-11 bg-th" scope="col">Khối kiến
+                                                    thức
+                                                </th>
+                                                <th class="min-w-100p border-top-1 py-11 bg-th" scope="col">Định hướng
+                                                </th>
+                                                <th class="min-w-210p border-top-1 py-11 bg-th" scope="col">Thời gian
+                                                    trong
                                                     chương trình</th>
-                                                <!--<th class="min-w-100p text-center border-top-1 border-left-1 py-11" scope="col">Số chưa học</th>
-                                                <th class="min-w-100p text-center border-top-1 py-11" scope="col">Số đã đạt</th>
-                                                <th class="min-w-120p text-center border-top-1 py-11" scope="col">Số đã đăng ký</th>
-                                                <th class="min-w-210p text-center border-top-1 py-11" scope="col">Số đã học nhưng không đạt</th>-->
+                                                <!--<th class="min-w-100p text-center border-top-1 border-left-1 py-11 bg-th" scope="col">Số chưa học</th>
+                                                <th class="min-w-100p text-center border-top-1 py-11 bg-th" scope="col">Số đã đạt</th>
+                                                <th class="min-w-120p text-center border-top-1 py-11 bg-th" scope="col">Số đã đăng ký</th>
+                                                <th class="min-w-210p text-center border-top-1 py-11 bg-th" scope="col">Số đã học nhưng không đạt</th>-->
 
                                             </tr>
                                         </thead>
@@ -214,25 +212,39 @@
                                     <span>Xóa</span>
                                 </button>
                             </div>-->
+
+                            <!-- Danh sách học phần khoa đề xuất -->
                             <div class="d-flex justify-content-between mt-40 flex-wrap">
-                                <div class="fw-bold text-main mb-10 mt-10 pt-10">Danh sách học phần khoa đề xuất</div>
+                                <div class="fw-bold color-blue mb-10 mt-10 pt-10">
+                                    <i class="fa-light fa-list-timeline fw-bold"></i> Danh sách học phần khoa đề xuất
+                                </div>
                                 <div class="d-flex align-items-center justify-content-end flex-wrap">
-                                    <button class="btn btn-add mb-10" id="btnAddHPTheoChuongTrinh">
+                                    <button class="btn btn-outline-primary mb-10" id="btnAddHPTheoChuongTrinh">
                                         <i class="fa fa-plus"></i>Thêm học phần theo CTĐT
                                     </button>
-                                    <button class="btn btn-success ms-15 mb-10" id="btnAddHPTheoDonVi">
+                                    <button class="btn btn-outline-success ms-10 mb-10" id="btnAddHPTheoDonVi">
                                         <i class="fa fa-plus"></i> Thêm học phần theo đơn vị
+                                    </button>
+
+                                    <!--<button class="btn btn-save" title="Phản hồi kết quả của đào tạo">
+                                    <i class="fal fa-reply-all"></i>
+                                    <span>Phản hồi</span>
+                                        </button>-->
+                                    <button class="btn btn-outline-danger ms-10  mb-10" id="btnDelete_HocPhanDonVi"
+                                        title="Xóa các mục đã chọn"> <i class="fal fa-trash-alt"></i>
+                                        <span>Xóa</span>
                                     </button>
                                 </div>
                             </div>
                             <div class="table-wrap">
-
                                 <div class="table-responsive fs-14 no-swiper aps-table-select">
-                                    <table class="table table-bordered" id="tblHocPhanKhoaDeXuat">
+                                    <table class="table table-border table-bordered tblHocPhanKhoaDeXuat"
+                                        id="tblHocPhanKhoaDeXuat">
                                         <thead>
                                             <tr>
-                                                <th colspan="11" class="text-center border-top-1 py-11">Thông tin học
-                                                    phần dự kiến</th>
+                                                <th colspan="11" class="text-center border-top-1 py-11 bg-th"
+                                                    style="font-weight: bold !important;">
+                                                    Thông tin học phần dự kiến</th>
                                                 <th rowspan="2" class=" border-top-1 py-11 min-w-130p">Người tạo</th>
                                                 <th rowspan="2" class="text-center border-top-1 py-11 min-w-130p">Ngày
                                                     tạo</th>
@@ -243,20 +255,27 @@
                                                 </th>
                                             </tr>
                                             <tr>
-                                                <th class="text-center border-top-1" scope="col">STT</th>
-                                                <th class="min-w-60p border-top-1" scope="col">Mã</th>
-                                                <th class="min-w-130p border-top-1" scope="col">Tên</th>
-                                                <th class="min-w-85p border-top-1 py-11 text-center" scope="col">Số tín
+                                                <th class="text-center border-top-1 bg-th" scope="col">STT</th>
+                                                <th class="min-w-60p border-top-1 bg-th" scope="col">Mã</th>
+                                                <th class="min-w-130p border-top-1 bg-th" scope="col">Tên</th>
+                                                <th class="min-w-85p border-top-1 py-11 text-center bg-th" scope="col">
+                                                    Số tín
                                                     chỉ</th>
-                                                <th class="min-w-130p border-top-1 py-11" scope="col">Đơn vị</th>
-                                                <th class="min-w-130p border-top-1 py-11" scope="col">Chương trình</th>
-                                                <th class="min-w-100p border-top-1 py-11" scope="col">Khóa học</th>
-                                                <th class="min-w-100p border-top-1 py-11 text-center" scope="col">Hệ đào
-                                                    tạo</th>
-                                                <th class="min-w-130p border-top-1 py-11" scope="col">Khối kiến thức
+                                                <th class="min-w-130p border-top-1 py-11 bg-th" scope="col">Đơn vị</th>
+                                                <th class="min-w-130p border-top-1 py-11 bg-th" scope="col">Chương trình
                                                 </th>
-                                                <th class="min-w-100p border-top-1 py-11" scope="col">Định hướng</th>
-                                                <th class="min-w-210p border-top-1 py-11" scope="col">Thời gian trong
+                                                <th class="min-w-100p border-top-1 py-11 bg-th" scope="col">Khóa học
+                                                </th>
+                                                <th class="min-w-100p border-top-1 py-11 text-center bg-th" scope="col">
+                                                    Hệ đào
+                                                    tạo</th>
+                                                <th class="min-w-130p border-top-1 py-11 bg-th" scope="col">Khối kiến
+                                                    thức
+                                                </th>
+                                                <th class="min-w-100p border-top-1 py-11 bg-th" scope="col">Định hướng
+                                                </th>
+                                                <th class="min-w-210p border-top-1 py-11 bg-th" scope="col">Thời gian
+                                                    trong
                                                     chương trình</th>
                                             </tr>
 
@@ -264,49 +283,54 @@
                                         <tbody></tbody>
                                     </table>
                                 </div>
-
                             </div>
-                            <div class="d-flex align-items-center justify-content-end gap-3  flex-wrap my-15">
-
-                                <!--<button class="btn btn-save" title="Phản hồi kết quả của đào tạo">
-                                    <i class="fal fa-reply-all"></i>
-                                    <span>Phản hồi</span>
-                                </button>-->
-                                <button class="btn btn-delete " id="btnDelete_HocPhanDonVi" title="Xóa các mục đã chọn">
-                                    <i class="fal fa-trash-alt"></i>
-                                    <span>Xóa</span>
-                                </button>
+                            <div class="flex-shrink-0 mt-15">
+                                <div class="btn btn-primary min-w-auto mb-15 ml-10" id="btnLuuTangGiam"
+                                    style="margin-left: 10px; float: right"><i class="fal fa-save"></i><span>Lưu đề
+                                        xuất tăng/giảm </span></div>
+                                <div class="btn btn-success min-w-auto mb-15 ml-10" id="btnXacNhan"
+                                    style="margin-left: 10px; float: right"><i
+                                        class="fa-solid fa-circle-check"></i><span>Xác nhận </span></div>
                             </div>
                         </div>
                     </div>
+
                 </div>
 
             </div>
-
         </div>
     </div>
 </div>
 <!-- ---------- -->
-<div class="aps-all-button" style="display: none;">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#themhocphantheochuongtrinhdaotao">Mở
-        Popup </button>
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+        data-bs-target="#themhocphantheochuongtrinhdaotao">
+        Thêm học phần theo chương trình đào tạo vào kế hoạch </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#themhocphantheodonvi">
+        Thêm học phần theo đơn vị</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModalEditHocKy">
+        Thời gian đề xuất</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
+        Xác nhận</button>
 </div>
+
 <!-- modal Thêm học phần theo chương trình đào tạo -->
 <div class="modal fade themhocphantheochuongtrinhdaotao" id="themhocphantheochuongtrinhdaotao" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    aria-labelledby="exampleModalLabel" aria-hidden="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Thêm học phần theo chương trình đào tạo vào kế hoạch</div>
+                    <div class="title"><i class="fa-solid fa-plus"></i> Thêm học phần theo chương trình đào tạo vào kế
+                        hoạch</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
-            <div class="modal-body">
-                <div class="d-flex align-items-end flex-wrap flex-md-nowrap mb-10">
-                    <div class="flex-grow-1">
+            <div class="modal-body pd0">
+                <div class="d-flex align-items-end flex-wrap flex-md-nowrap box-search">
+                    <div class="flex-grow-1 pd20 pb-5">
                         <div class="row">
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Khoa quản lý</label>
                                     <div class="custom-select">
@@ -314,7 +338,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Hệ đào tạo</label>
                                     <div class="custom-select">
@@ -322,7 +346,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Khóa học</label>
                                     <div class="custom-select">
@@ -330,7 +354,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Chương trình</label>
                                     <div class="custom-select">
@@ -338,7 +362,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Thời gian</label>
                                     <div class="custom-select">
@@ -346,43 +370,45 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Thông tin</label>
                                     <input type="text" id="txtSearch_CT" class="form-control" placeholder="Thông tin">
                                 </div>
                             </div>
-
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
+                                <div id="btnSearch_CT" class="btn btn-default btn-search mb-10"><i
+                                        class="fa fa-search"></i> Xem danh sách</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex-shrink-0">
-                        <div id="btnSearch_CT" class="btn btn-view ms-20 mb-15">Xem danh sách</div>
-                    </div>
+
                 </div>
-                <div class="table-responsive fs-14 no-swiper">
-                    <table class="table tblAddHocPhanChuongTrinh" id="tblAddHocPhanChuongTrinh">
+                <div class="table-responsive fs-14 no-swiper pd20">
+                    <table class="table tblAddHocPhanChuongTrinh table-border table-bordered mb-0"
+                        id="tblAddHocPhanChuongTrinh">
                         <thead>
                             <tr>
-                                <th colspan="5" class="text-center border-top-1 py-11">Thông tin học phần</th>
-                                <th colspan="6" class="text-center border-top-1 border-left-1 py-11">Thông tin chương
-                                    trình</th>
+                                <th colspan="5" class="text-center border-top-1 py-11 bg-th"
+                                    style="font-weight: bold !important;">Thông tin học phần</th>
+                                <th colspan="6" class="text-center border-top-1 border-left-1 py-11"
+                                    style="font-weight: bold !important;">
+                                    Thông tin chương trình</th>
                                 <th rowspan="2" class="text-center border-top-1 border-left-1 py-11"><input
                                         type="checkbox" class="chkSystemSelectAll"></th>
                             </tr>
                             <tr>
-                                <th class="text-center border-top-1" scope="col">STT</th>
-                                <th class="min-w-60p border-top-1" scope="col">Mã</th>
-                                <th class="min-w-130p border-top-1" scope="col">Tên</th>
-                                <th class="min-w-85p border-top-1 py-11 text-center" scope="col">Số tín chỉ</th>
-                                <th class="min-w-130p border-top-1  py-11" scope="col">Đơn vị</th>
+                                <th class="text-center border-top-1 bg-th" scope="col">STT</th>
+                                <th class="min-w-60p border-top-1 bg-th" scope="col">Mã</th>
+                                <th class="min-w-130p border-top-1 bg-th" scope="col">Tên</th>
+                                <th class="min-w-85p border-top-1 py-11 text-center bg-th" scope="col">Số tín chỉ</th>
+                                <th class="min-w-130p border-top-1  py-11 bg-th" scope="col">Đơn vị</th>
                                 <th class="min-w-85p text-center border-top-1 border-left-1  py-11" scope="col">Hệ</th>
                                 <th class="min-w-120p text-center border-top-1  py-11" scope="col">Khóa</th>
                                 <th class="min-w-110p border-top-1  py-11" scope="col">Chương trình</th>
                                 <th class="min-w-85p text-center border-top-1  py-11" scope="col">Số tín chỉ</th>
                                 <th class="min-w-120p  border-top-1  py-11" scope="col">Khối kiến thức</th>
                                 <th class="min-w-120p  border-top-1  py-11" scope="col">Định hướng</th>
-
                             </tr>
 
                         </thead>
@@ -392,35 +418,37 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-save" id="btnSave_HocPhanChuongTrinh">
+
+                    <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i> <span>Hủy</span>
+                    </button>
+                    <button class="btn btn-success" id="btnSave_HocPhanChuongTrinh">
                         <i class="fal fa-check-circle"></i>
                         <span>Đồng ý</span>
-                    </button>
-                    <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
-                        <i class="fal fa-times"></i>
-                        <span>Hủy</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- modal Thêm học phần theo đơn vị -->
-<div class="modal fade themhocphantheodonvi" id="themhocphantheodonvi">
+<div class="modal fade themhocphantheodonvi" id="themhocphantheodonvi" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Thêm học phần theo đơn vị vào kế hoạch</div>
-
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="title"><i class="fa-solid fa-plus"></i> Thêm học phần theo đơn vị vào kế hoạch</div>
+                    <button type="button" class="btn-close color-fff" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
             </div>
-            <div class="modal-body">
-                <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item">
+            <div class="modal-body pd0">
+                <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item box-search pd20 pb-5">
                     <div class="flex-grow-1">
                         <div class="row">
-                            <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                            <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                 <div class="input-label-left">
                                     <label class="mt-5">Đơn vị</label>
                                     <div class="custom-select">
@@ -428,7 +456,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Hệ đào tạo</label>
                                     <div class="custom-select">
@@ -436,7 +464,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Khóa học</label>
                                     <div class="custom-select">
@@ -444,7 +472,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Khóa học</label>
                                     <div class="custom-select">
@@ -452,7 +480,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 col-xxl-3 mb-15">
+                            <div class="col-12 col-md-6 col-xxl-3 mb-10">
                                 <div class="input-label-left">
                                     <label class="mt-7">Thời gian</label>
                                     <div class="custom-select">
@@ -461,36 +489,40 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6 mb-15 col-xxl-3">
+                            <div class="col-12 col-md-6 mb-10 col-xxl-3">
                                 <div class="input-label-left">
                                     <label class="mt-5">Thông tin</label>
                                     <input type="text" id="txtSearch_DV" class="form-control" placeholder="Thông tin">
                                 </div>
                             </div>
-
+                            <div class="col-12 col-md-6 mb-10 col-xxl-3">
+                                <div id="btnSearch_DV" class="btn btn-default btn-search mb-10"> <i
+                                        class="fa fa-search"></i>
+                                    Xem danh sách</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="flex-shrink-0">
-                        <div id="btnSearch_DV" class="btn btn-view ms-20 mb-15">Xem danh sách</div>
-                    </div>
                 </div>
-                <div class="table-responsive fs-14 no-swiper mt-15">
-                    <table class="table" id="tblAddHocPhanDonVi">
+                <div class="table-responsive fs-14 no-swiper pd20">
+                    <table class="table table-bordered table-border" id="tblAddHocPhanDonVi">
                         <thead>
                             <tr>
-                                <th colspan="5" class="text-center border-top-1 py-11">Thông tin học phần</th>
-                                <th colspan="6" class="text-center border-top-1 border-left-1 py-11">Thông tin chương
-                                    trình</th>
+                                <th colspan="5" class="text-center border-top-1 py-11 bg-th"
+                                    style="font-weight: bold !important">Thông tin học phần</th>
+                                <th colspan="6" class="text-center border-top-1 border-left-1 py-11"
+                                    style="font-weight: bold !important;">
+                                    Thông tin chương trình</th>
                                 <th rowspan="2" class="text-center border-top-1 border-left-1 py-11"><input
                                         type="checkbox" class="chkSystemSelectAll"></th>
                             </tr>
                             <tr>
-                                <th class="text-center border-top-1" scope="col">STT</th>
-                                <th class="min-w-60p border-top-1" scope="col">Mã</th>
-                                <th class="min-w-130p border-top-1" scope="col">Tên</th>
-                                <th class="min-w-85p border-top-1 py-11 text-center" scope="col">Số tín chỉ</th>
-                                <th class="min-w-130p border-top-1  py-11" scope="col">Đơn vị</th>
-                                <th class="min-w-85p text-center border-top-1 border-left-1  py-11" scope="col">Hệ</th>
+                                <th class="text-center border-top-1 bg-th" scope="col">STT</th>
+                                <th class="min-w-60p border-top-1 bg-th" scope="col">Mã</th>
+                                <th class="min-w-130p border-top-1 bg-th" scope="col">Tên</th>
+                                <th class="min-w-85p border-top-1 py-11 text-center bg-th" scope="col">Số tín chỉ</th>
+                                <th class="min-w-130p border-top-1  py-11 bg-th" scope="col">Đơn vị</th>
+                                <th class="min-w-85p text-center border-top-1 border-left-1  py-11" scope="col">Hệ
+                                </th>
                                 <th class="min-w-120p text-center border-top-1  py-11" scope="col">Khóa</th>
                                 <th class="min-w-110p border-top-1  py-11" scope="col">Chương trình</th>
                                 <th class="min-w-85p text-center border-top-1  py-11" scope="col">Số tín chỉ</th>
@@ -505,21 +537,23 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-save" id="btnSave_HocPhanDonVi">
-                        <i class="fal fa-check-circle"></i>
-                        <span>Đồng ý</span>
-                    </button>
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
+                    </button>
+                    <button class="btn btn-success" id="btnSave_HocPhanDonVi">
+                        <i class="fal fa-check-circle"></i>
+                        <span>Đồng ý</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- Thời gian đề xuất -->
-<div class="modal fade myModalEditHocKy" id="myModalEditHocKy">
+<div class="modal fade myModalEditHocKy" id="myModalEditHocKy" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -530,10 +564,10 @@
             </div>
             <div class="modal-body">
                 <div class="aps-add-new aps-time-dx">
-                    <div class="aps-form">
-                        <div class="aps-form-item">
-                            <label class="aps-lable-name">Thời gian đề xuất</label>
-                            <div class="aps-form-input mt-5">
+                    <div class="aps-form mb-5">
+                        <div class="aps-form-item row">
+                            <label class="aps-lable-name col-lg-4">Thời gian đề xuất</label>
+                            <div class="aps-form-input aps-form-input-time col-lg-8">
                                 <div class="input-group no-icon">
                                     <select id="dropEditHocKy" class="select-opt form-select"></select>
                                 </div>
@@ -543,7 +577,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end mr-0">
                     <button class="btn btn-success" id="btnSave_EditHocKy">
                         <i class="fal fa-check-circle"></i>
                         <span>Đồng ý</span>
@@ -557,23 +591,23 @@
 <!-- Xác nhận -->
 <div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-860" style="width: 860px !important;">
+    <div class="modal-dialog modal-dialog-centered" style="width: 680px !important;">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b><i class="fa-solid fa-check-to-slot mr-5"></i> Xác nhận</b></p>
+                    <p><i class="fa-light fa-circle-check"></i> Xác nhận</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="aps-add-new pd10">
+                <div class="aps-add-new pd20">
                     <div class="row aps-form">
                         <!-- 1. Nội dung xác nhận -->
-                        <div class="aps-form-item action-group d-flex" style="padding:0 20px !important;">
+                        <div class="aps-form-item action-group d-flex">
                             <div class="select-group">
                                 <div class="label aps-form-lable">Trạng thái</div><br>
                                 <div class="form-item d-flex  form-add-info aps-form-input">
-                                    <div class="input-group no-icon">
+                                    <div class="input-group no-icon  select-status">
                                         <select class="form-select select-opt" aria-label="Default select example"
                                             id="dropLoaiXacNhan">
                                             <option selected value="0">Chọn xác nhận</option>
@@ -586,23 +620,25 @@
                                     <i class="fal fa-check-circle mr-5"></i> <span>Đồng ý</span></a>
                             </div>
                         </div>
-
+                        
                         <!-- 2. Lịch sử xác nhận -->
-                        <div class="aps-form-item mt-20 pl20 pr20">
+                         <div class="aps-form mt-20">
                             <div class="aps-form-lable text-left mb-0">
-                                <p class="group-group-title-name border-0 mb-0">
-                                    <span class="badge bg-blue">Lịch sử xác nhận</span>
+                                <p class="group-group-title-name border-0 mb-0" style="line-height: 20px !important;">
+                                    <span class="badge bg-blue fz16 mb-0">Lịch sử xác nhận</span>
                                 </p>
                             </div>
-                            <div class="aps-form-table">
-                                <table class="table transcrip-table tblModal_XacNhan" id="tblModal_XacNhan">
+                            <div class="aps-form-table pd0">
+                                <table class="table tblModal_XacNhan table-bordered table-noborder" id="tblModal_XacNhan">
                                     <thead>
                                         <tr>
-                                            <th class="text-center" scope="col" style="width: 5% !important">STT</th>
+                                            <th class="text-center" scope="col" style="width: 5% !important">STT
+                                            </th>
                                             <th scope="col" style="width: 15% !important;">Trạng thái</th>
                                             <th scope="col" style="width: 20% !important;"></th>
                                             <th scope="col" style="width: 30% !important;">Người thực hiện</th>
-                                            <th class="text-center" scope="col" style="width: 30% !important">Thời gian
+                                            <th class="text-center" scope="col" style="width: 30% !important">Thời
+                                                gian
                                             </th>
                                         </tr>
                                     </thead>
@@ -610,7 +646,6 @@
                                 </table>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

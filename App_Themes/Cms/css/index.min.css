@@ -277,7 +277,7 @@ label {
 }
 
 .form-control {
-    padding:10px 10px 5px 10px !important;
+    padding:8px 10px 5px 10px;
     height: 28px;
     font-size: 14px
 }

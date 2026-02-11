@@ -84,11 +84,13 @@ blockquote {
 .color-blue {
   color: var(--color-blue) !important;
 }
+
 .color-orange {
   color: var(--color-orange) !important;
 }
+
 .color-yellow {
-  color:#FEE500 !important;
+  color: #FEE500 !important;
 }
 
 .color-green,
@@ -6787,7 +6789,9 @@ tr:last-child .d-flex.gap-3 {
   /* border-color: var(--color-orange) !important; */
 }
 
-.form-control:focus;.form-control:focus {
+.form-control:focus;
+
+.form-control:focus {
   border-color: #28a745;
   /* A custom border color */
   box-shadow: 0 0 0 0.2rem rgba(26, 113, 232, 0.1) !important;
@@ -6876,10 +6880,6 @@ tr:last-child .d-flex.gap-3 {
   color: #fff;
   background-color: #0aaacad8;
   border-color: #0aaacad8;
-}
-
-.input-label-left label.mt-5 {
-  margin-top: 7px !important;
 }
 
 .filter-item .btn-view {
@@ -7014,7 +7014,8 @@ tr:last-child .d-flex.gap-3 {
   border-top-right-radius: 10px !important;
 }
 
-.table td,.table th {
+.table td,
+.table th {
   padding-top: 13px;
   padding-bottom: 12px;
 }
@@ -7359,8 +7360,8 @@ tr:last-child .d-flex.gap-3 {
 .progress,
 .progress-stacked {
   height: 24px !important;
-    line-height: 26px;
-    border-radius: 50px !important;
+  line-height: 26px;
+  border-radius: 50px !important;
 }
 
 .modal-dialog-scrollable .modal-body {
@@ -7522,7 +7523,7 @@ tr:last-child .d-flex.gap-3 {
 
 .aps-tim-nhansu .title-is-paging {
   margin-top: 15px;
-  padding-bottom: 5px;
+  padding-bottom:10px;
   padding-left: 20px;
 }
 
@@ -7541,7 +7542,7 @@ tr:last-child .d-flex.gap-3 {
 
 #txtSearchModal_CauTrucGiang_NS {
   padding-left: 10px;
-  width: 200px;
+  width: 205px;
   position: absolute;
   right: 23px;
   top: 86px;
@@ -7557,13 +7558,55 @@ tr:last-child .d-flex.gap-3 {
 #btnChonNhanSu:hover {
   background: #fff;
   color: var(--color-blue);
-  border:1px solid #fff !important;
+  border: 1px solid #fff !important;
 }
 
 .aps-tim-nhansu .inputs-wr .item {
-  width: 35% !important;
+  width: 33.33333% !important;
 }
 
 .aps-tim-nhansu .table {
   margin-bottom: 10px !important;
+}
+
+.aps-tim-nhansu .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
+  margin-top: 0 !important;
+}
+
+.aps-tim-nhansu .inputs-wr {
+  /* width: 70% !important; */
+}
+
+.aps-tim-nhansu .inputs-tksv .select2 {
+  margin-top: 0 !important;
+}
+.aps-tim-nhansu .title-is-paging{
+  position: relative ;
+}
+#addNhieuNguoiDung{
+  padding-left: 20px !important;
+  margin-bottom: 15px !important;
+}
+.aps-tim-nhansu #btnChonNhanSu {
+    position: absolute;
+    top: 0px;
+    right: 20px;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.aps-tim-nhansu .title-is-paging.zone-pag-headertblModal_NhanSu {
+    margin-top: 5px !important;
+}
+.aps-tim-nhansu  .light-paginationtblModal_NhanSu{
+  padding: 0 0px 5px 0 !important;
+}
+.aps-tim-nhansu  .gv-paging-group .form-add-info .form-select {
+    margin-left: 5PX !important;
+}
+.aps-tim-nhansu .gv-paging-group {
+    color: #888;
+}
+.aps-tim-nhansu #txtSearchModal_CauTrucGiang_NS {
+    right: 150px !important;
+    top: -7px !important;
 }
