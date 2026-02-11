@@ -222,7 +222,7 @@ GVXacNhan.prototype = {
                 {
                     //"mDataProp": "BV_XACNHAN_HD_TEN",
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.BV_XACNHAN_HD_TEN) + ' <span><a class="btn btn-default btnDuyet" id="' + aData.ID + '" title="Duyệt"><i class="fal fa-edit color-active"></i> Xác nhận</a></span>';
+                        return edu.util.returnEmpty(aData.BV_XACNHAN_HD_TEN) + ' <span><a class="btn btn-default btnDuyet" id="' + aData.ID + '" title="Duyệt"><i class="fal fa-check-circle color-active"></i> Xác nhận</a></span>';
                     }
                 },
                 {
@@ -521,7 +521,7 @@ GVXacNhan.prototype = {
             row += '<td><input type="text" id="txtDenNgay' + strKetQua_Id + '" value="' + edu.util.returnEmpty(aData.DENNGAY) + '" class="form-control" style="padding-left: 10px" /></td>';
             row += '<td>' + edu.util.returnEmpty(aData.NGAYTAO_DD_MM_YYYY_HHMMSS) + '</td>';
             row += '<td>' + edu.util.returnEmpty(aData.NGUOITAO_TENDAYDU) + '</td>';
-            row += '<td ><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
+            row += '<td class="txtFileDinhKem"><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
             row += '<td style="text-align: center"><a title="Xóa" class="deleteKetQua" id="' + strKetQua_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             row += '</tr>';
             $("#tblTienDo tbody").append(row);
@@ -540,7 +540,7 @@ GVXacNhan.prototype = {
         row += '<td><input type="text" id="txtDenNgay' + strKetQua_Id + '" value="' + edu.util.returnEmpty(aData.DENNGAY) + '" class="form-control" style="padding-left: 10px" /></td>';
         row += '<td>' + edu.util.returnEmpty(aData.NGAYTAO_DD_MM_YYYY_HHMMSS) + '</td>';
         row += '<td>' + edu.util.returnEmpty(aData.NGUOITAO_TENDAYDU) + '</td>';
-        row += '<td ><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
+        row += '<td class="txtFileDinhKem"><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
         row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strKetQua_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
         row += '</tr>';
         $("#tblTienDo tbody").append(row);

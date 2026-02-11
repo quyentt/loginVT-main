@@ -326,12 +326,14 @@
  }
 
 
-.table td .btn,.table td .btn:hover, .table .btn  {
-    padding: 2px 6px 2px 6px !important;
-  border-radius: 5px !important;
-  line-height: 28px !important;
-  height: 28px !important;
-}
+ .table td .btn,
+ .table td .btn:hover,
+ .table .btn {
+     padding: 2px 8px 2px 8px !important;
+     border-radius: 5px !important;
+     line-height: 28px !important;
+     height: 28px !important;
+ }
 
  .table .btn:hover {
      color: #fff !important;
@@ -4009,4 +4011,18 @@
      border: 0 !important;
      border-left: 0 !important;
      border-bottom: 0 !important;
+ }
+
+ .tblGVXacNhan tr td .btn.btnDuyet {
+     display: inline-flex !important;
+     color: #1a71e8 !important;
+     border: 0 !important;
+ }
+
+ .tblGVXacNhan tr td .btn.btnDuyet i {
+     padding-right: 5px;
+ }
+
+ .tblGVXacNhan tr td:nth-last-child(2) {
+     text-align: center !important;
  }

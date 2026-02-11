@@ -5871,3 +5871,31 @@ background-color: #e3e4e5 !important;
   font-size: 11px;
   margin-right: 5px;
 }
+.deleteRowButton{
+  color: var(--color-red) !important;
+}
+#divuploadtxtFileDinhKemGIvaoSKQ0OYac1CQvtIQpB1FHniIJk,
+#divuploadtxtFileDinhKemGIvaoSKQ0OYac1CQvtIQpB1FHniIJk:hover{
+  border: 0 !important;
+}
+.tblTienDo tr td .file-upload .btn-default.btn-delete-file {
+   border: 0;
+    background: #fff !important;
+    padding: 0px !important;
+    color: #666 !important;
+    height: 14px !important;
+    margin-top: 3px;
+}
+.tblTienDo tr td .file-upload .btn-default.btn-delete-file:hover i {
+     color: var(--color-red) !important;
+}
+.tblTienDo .file-data span{
+  line-height: 31px !important;
+}
+.tblTienDo tr td .file-upload  {
+    width: 120px !important;
+    margin-bottom: 5px !important;
+}
+#txtFileDinhKem image:hover{
+  border: 0 !important;
+}
