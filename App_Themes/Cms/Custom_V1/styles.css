@@ -173,7 +173,10 @@
  .table>tbody>tr>td {
      font-weight: 400;
  }
-
+ .table>thead>tr>th  {
+    /* height: 48px !important; */
+    color: #666;
+}
  .table>tbody>tr>td,
  .table>tbody>tr>th {
      min-height: 42px !important;
@@ -4038,7 +4041,9 @@
 
  .tblDeXuatHoiDong tr td:first-child,
  .tblDeXuatHoiDong tr td:last-child,
- .tblDeXuatHoiDong tr td:nth-last-child(2) {
+ .tblDeXuatHoiDong tr td:nth-last-child(2) ,
+ .tblDeXuatHoiDong tr td:last-child,
+ .tblDeXuatHoiDong tr td:nth-last-child(2){
      text-align: center !important;
  }
 

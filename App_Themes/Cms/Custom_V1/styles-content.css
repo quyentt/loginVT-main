@@ -10170,3 +10170,6 @@ table#clone {
 .modal_XacNhan_ht_diem .modal-dialog{
     max-width: 800px !important;
 }
+#divuploadtxtFileDinhKem {
+    margin-top: 10px;
+}
