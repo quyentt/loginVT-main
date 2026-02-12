@@ -940,7 +940,7 @@ input:active,
 .select2-container--default .select2-selection--single:focus,
 .select2-container--default .select2-selection--single:hover,
 .select2-container--default .select2-selection--single:active {
-  border: 1px solid #3c8dee !important;
+  border: 1px solid #3c8dee;
   box-shadow: none !important;
 }
 

@@ -296,7 +296,7 @@ GVXacNhan.prototype = {
             row += '<td style="text-align: center"><label id="txtStt' + strKetQua_Id + '">' + (i + 1) + '</label></td>';
             row += '<td>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN) + '</td>';
             row += '<td>' + edu.util.returnEmpty(aData.VAITRO_TEN) + '</td>';
-            row += '<td ><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
+            row += '<td class="txtFileDinhKem"><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
             row += '<td style="text-align: center"></td>';
             row += '</tr>';
             $("#tblNguoiHuongDan tbody").append(row);

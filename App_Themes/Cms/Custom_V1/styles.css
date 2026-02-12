@@ -978,7 +978,7 @@
  .select2-container--default .select2-selection--single:focus,
  .select2-container--default .select2-selection--single:hover,
  .select2-container--default .select2-selection--single:active {
-     border: 1px solid #3c8dee !important;
+     border: 1px solid #3c8dee;
      box-shadow: none !important;
  }
 
@@ -4013,16 +4013,40 @@
      border-bottom: 0 !important;
  }
 
- .tblGVXacNhan tr td .btn.btnDuyet {
+ .tblGVXacNhan tr td .btn.btnDuyet,
+ .tblKhoaPhanBien tr td .btn.btnDuyet {
      display: inline-flex !important;
      color: #1a71e8 !important;
      border: 0 !important;
  }
 
- .tblGVXacNhan tr td .btn.btnDuyet i {
+ .tblGVXacNhan tr td .btn.btnDuyet i,
+ .tblKhoaPhanBien tr td .btn.btnDuyet i {
      padding-right: 5px;
  }
 
- .tblGVXacNhan tr td:nth-last-child(2) {
+ .tblGVXacNhan tr td:nth-last-child(2),
+ .tblKhoaPhanBien tr td:nth-last-child(2),
+ .tblKhoaPhanBien tr td:first-child {
      text-align: center !important;
+ }
+
+ .tblKhoaPhanBien tr td,
+ .tblDeXuatHoiDong tr td {
+     text-align: left !important;
+ }
+
+ .tblDeXuatHoiDong tr td:first-child,
+ .tblDeXuatHoiDong tr td:last-child,
+ .tblDeXuatHoiDong tr td:nth-last-child(2) {
+     text-align: center !important;
+ }
+
+ .table tr td .file-upload.file-data span {
+     line-height: 28px;
+ }
+
+ .table tr td .file-data {
+     border: 0px solid #d1d1d1;
+     padding: 5px 0px;
  }

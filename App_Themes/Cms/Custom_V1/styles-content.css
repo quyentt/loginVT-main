@@ -6765,7 +6765,7 @@ input#tblInput_DTSV_SinhVien_input {
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 38px !important;
     padding-left: 2px !important;
-    padding-top: 4px !important;
+    padding-top: 0px !important;
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -10162,4 +10162,11 @@ table#clone {
 }
 .modal-content .aps-form-select .select2-container--default .select2-selection--single .select2-selection__rendered {
     padding-top: 0px !important;
+}
+.modal_XacNhan_ht_diem .custom-select .select2-selection__rendered{
+    /* padding-top: 7px !important; */
+    /* padding-left: 0px !important; */
+}
+.modal_XacNhan_ht_diem .modal-dialog{
+    max-width: 800px !important;
 }
