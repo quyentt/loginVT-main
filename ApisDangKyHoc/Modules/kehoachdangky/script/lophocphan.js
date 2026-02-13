@@ -167,12 +167,12 @@ LopHocPhan.prototype = {
             var html = '';
             html += '<div class="radio" id="divMoHinh" style="padding-left: 20px;padding-bottom: 40px">';
             html += '<div class="col-sm-12">';
-            html += '<input id="ThietLapLopRieng_0" type="radio" name="ThietLapLopRieng" value="1">';
-            html += '<label for="ThietLapLopRieng_0"> Là lớp riêng</label>';
+            html += '<input id="ThietLapLopRieng_1" type="radio" name="ThietLapLopRieng" value="1">';
+            html += '<label for="ThietLapLopRieng_1"> Là lớp riêng</label>';
             html += '</div>';
             html += '<div class="col-sm-12">';
-            html += '<input id="ThietLapLopRieng_1" type="radio" name="ThietLapLopRieng" value="0">';
-            html += '<label for="ThietLapLopRieng_1"> Không phải lớp riêng</label>';
+            html += '<input id="ThietLapLopRieng_0" type="radio" name="ThietLapLopRieng" value="0">';
+            html += '<label for="ThietLapLopRieng_0"> Không phải lớp riêng</label>';
             html += '</div>';
             html += '</div>';
             edu.system.confirm("Chọn thiết lập lớp riêng? <br/>" + html);
@@ -180,6 +180,56 @@ LopHocPhan.prototype = {
                 var dLopRieng = $('input[name="ThietLapLopRieng"]:checked').val()
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.save_ThietLapLopRieng(arrChecked_Id[i], dLopRieng);
+                }
+            });
+        });
+        $("#btnThietLapKhongTinhPhi").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            var html = '';
+            html += '<div class="radio" id="divMoHinh" style="padding-left: 20px;padding-bottom: 40px">';
+            html += '<div class="col-sm-12">';
+            html += '<input id="ThietLapKhongTinhPhi_0" type="radio" name="ThietLapKhongTinhPhi" value="1">';
+            html += '<label for="ThietLapKhongTinhPhi_0"> Lớp không tính phí</label>';
+            html += '</div>';
+            html += '<div class="col-sm-12">';
+            html += '<input id="ThietLapLopRieng_1" type="radio" name="ThietLapLopRieng" value="0">';
+            html += '<label for="ThietLapLopRieng_1"> Lớp tính phí</label>';
+            html += '</div>';
+            html += '</div>';
+            edu.system.confirm("Chọn Thiết đặt lớp không tín phí? <br/>" + html);
+            $("#btnYes").click(function (e) {
+                var dLopRieng = $('input[name="ThietLapLopRieng"]:checked').val()
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_ThietLapKhongTinhPhi(arrChecked_Id[i], dLopRieng);
+                }
+            });
+        });
+        $("#btnThietLapKhongToChucThi").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            var html = '';
+            html += '<div class="radio" id="divMoHinh" style="padding-left: 20px;padding-bottom: 40px">';
+            html += '<div class="col-sm-12">';
+            html += '<input id="ThietLapKhongToChucThi_1" type="radio" name="ThietLapLopRieng" value="1">';
+            html += '<label for="ThietLapKhongToChucThi_1"> Lớp không tổ chức thi</label>';
+            html += '</div>';
+            html += '<div class="col-sm-12">';
+            html += '<input id="ThietLapKhongToChucThi_0" type="radio" name="ThietLapLopRieng" value="0">';
+            html += '<label for="ThietLapKhongToChucThi_0"> Lớp tổ chức thi</label>';
+            html += '</div>';
+            html += '</div>';
+            edu.system.confirm("Thiết đặt lớp không tổ chức thi? <br/>" + html);
+            $("#btnYes").click(function (e) {
+                var dLopRieng = $('input[name="ThietLapLopRieng"]:checked').val()
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_ThietLapKhongToChucThi(arrChecked_Id[i], dLopRieng);
                 }
             });
         });
@@ -1785,6 +1835,80 @@ LopHocPhan.prototype = {
             'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'dLopRieng': dLopRieng,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thành công");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            complete: function () {
+                me.getList_LopHocPhan();
+                //edu.system.start_Progress("zoneprocessXXXX", function () {
+                //    me.getList_DangKyHoc();
+                //});
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    save_ThietLapKhongTinhPhi: function (strDaoTao_LopHocPhan_Id, dKhongTinhPhi) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/FSkoJDUFIDUKKS4vJhUoLykRKSgP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.ThietDatKhongTinhPhi',
+            'iM': edu.system.iM,
+            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dKhongTinhPhi': dKhongTinhPhi,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thành công");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            complete: function () {
+                me.getList_LopHocPhan();
+                //edu.system.start_Progress("zoneprocessXXXX", function () {
+                //    me.getList_DangKyHoc();
+                //});
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    save_ThietLapKhongToChucThi: function (strDaoTao_LopHocPhan_Id, dKhongToChucThi) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/FSkoJDUFIDUKKS4vJhUuAik0IhUpKAPP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.ThietDatKhongToChucThi',
+            'iM': edu.system.iM,
+            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dKhongToChucThi': dKhongToChucThi,
         };
         edu.system.makeRequest({
             success: function (data) {
