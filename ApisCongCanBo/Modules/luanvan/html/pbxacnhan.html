@@ -4,11 +4,8 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
                 <p class="link"><a href="#">Luận văn - Luận án</a><i class="fal fa-angle-right"></i><a href="#">Giao đề tài</a></p>
-
             </div>
-
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
@@ -22,15 +19,13 @@
                     <div class="myTab-header">
                         <div class="myTab-header-item">
                             <a href="#" class="myTab-header-link  active">
-                                Danh sách
+                                <i class="fa-solid fa-list-timeline mr-5"></i> Danh sách
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body">
-
                     <div class="myTab-content">
-
                         <div class="myTab-item show">
                             <div class="filter-sm mb-20">
                                 <div class="filter-item w-lg-40 w-md-60">
@@ -42,19 +37,17 @@
                                     </div>
                                 </div>
                                 <div class="filter-item">
-                                    <div class="btn btn-view" id="btnSearch"><i class="fa-solid fa-list-timeline"></i>Xem danh sách</div>
+                                    <div class="btn btn-view btn-default btn-search" id="btnSearch"><i class="fa-solid fa-search"></i>Xem danh sách</div>
                                 </div>
                             </div>
                             <!--Nhóm button xử lý tác vụ sẽ được inner sang trái -->
-                            <div class="feature-action-group d-none feature-action-group-first">
-
-                            </div>
+                            <div class="feature-action-group d-none feature-action-group-first"></div>
                             <div class="table-wrap">
-                                <div class="table-responsive fs-14 no-swiper">
-                                    <table class="table" id="tblKhoaPhanBien">
+                                <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                    <table class="table table-bordered table-noborder tblKhoaPhanBien" id="tblKhoaPhanBien">
                                         <thead>
                                             <tr>
-                                                <th class="text-center border-top-1" scope="col">STT</th>
+                                                <th class="text-center border-top-1 w-50px" scope="col">STT</th>
                                                 <th class="min-w-85p border-top-1" scope="col">Mã số</th>
                                                 <th class="min-w-100p border-top-1" scope="col">Họ đệm</th>
                                                 <th class="min-w-85p border-top-1" scope="col">Tên</th>
@@ -65,11 +58,9 @@
                                                 <th class="min-w-185p border-top-1  py-11" scope="col">Để tài </th>
                                                 <th class="min-w-110p border-top-1  py-11" scope="col">Quyết định </th>
                                                 <th class="min-w-150p border-top-1  py-11" scope="col">Lý do điều chỉnh </th>
-
-                                                <th class="min-w-150p border-top-1  py-11 text-center" scope="col">Tình trạng GVHD </th>
-                                                <th class="text-center min-w-110p border-top-1  py-11" scope="col">Chọn</th>
+                                                <th class=" border-top-1 text-center" scope="col">Tình trạng GVHD </th>
+                                                <th class="text-center" scope="col">Chọn</th>
                                             </tr>
-
                                         </thead>
                                         <tbody></tbody>
                                     </table>
@@ -78,20 +69,29 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
     </div>
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 mb-20" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#khoadexuat_phanbien">
+        Đề xuất phản biện</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalQuyetDinh">
+        Duyệt Giao đề tài Chi tiết Quyết định</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalDuyet">
+        Duyệt Giao đề tài Chi tiết Duyệt</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
+        Xác nhận hoàn thành nhập điểm</button>
+</div>
 
-<div class="modal fade" id="khoadexuat_phanbien">
+<!-- Đề xuất phản biện -->
+<div class="modal fade khoadexuat_phanbien" id="khoadexuat_phanbien">
     <div class="modal-dialog modal-dialog-centered modal-1400">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Đề xuất phản biện</div>
-
+                    <div class="title"><i class="fa-solid fa-file-zipper mr-5"></i> Đề xuất phản biện</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -106,7 +106,6 @@
 
                 <div class="line-1"></div>
                 <div class="-me-10 -ms-10 pb-8 mt-20">
-
                     <div class="d-flex align-items-center fs-14 mb-8 px-10">
                         <span class="text-gray me-10 flex-shrink-0 w-135p">Mã số:</span>
                         <span class="fw-bold" id="lblMaSo"></span>
@@ -144,11 +143,11 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-15">
-                    <div class="fw-bold mt-15 text-main">Hướng dẫn</div>
+                <div class="d-flex justify-content-between align-items-center mb-10">
+                    <div class="mt-15 color-blue fz18">Hướng dẫn</div>
                 </div>
                 <div class="table-responsive fs-14 no-swiper">
-                    <table class="table" id="tblNguoiHuongDan1">
+                    <table class="table tblNguoiHuongDan1 table-bordered table-noborder" id="tblNguoiHuongDan1">
                         <thead>
                             <tr>
                                 <th class="text-center border-top-1 py-12" scope="col">STT</th>
@@ -157,52 +156,50 @@
                                 <th class="min-w-185p border-top-1  py-11" scope="col">File</th>
                                 <th class="text-center border-top-1"></th>
                             </tr>
-
                         </thead>
                         <tbody></tbody>
                     </table>
-                    <!--<div class="d-flex justify-content-end ">
-                        <a class="btn btn-add btn-sm btnSearch_NguoiHuongDan">
-                            <i class="fal fa-plus "></i>
-                            <span>Thêm</span>
+                    <div class="d-flex justify-content-end d-none">
+                        <a class="btn btn-outline-primary btnSearch_NguoiHuongDan">
+                            <i class="fal fa-plus"></i>
+                            <span>Thêm dòng</span>
                         </a>
-                    </div>-->
+                    </div>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-15">
-                    <div class="fw-bold mt-15 text-main">Phản biện đề xuất</div>
+                <div class="d-flex justify-content-between align-items-center mb-10">
+                    <div class="mt-15 color-green fz18">Phản biện đề xuất</div>
                 </div>
                 <div class="table-responsive fs-14 no-swiper">
-                    <table class="table" id="tblNguoiHuongDan">
+                    <table class="table tblNguoiHuongDan table-bordered table-noborder" id="tblNguoiHuongDan">
                         <thead>
                             <tr>
-                                <th class="text-center border-top-1 py-12" scope="col">STT</th>
+                                <th class="text-center border-top-1 py-12 w-50px" scope="col">STT</th>
                                 <th class="min-w-130p border-top-1" scope="col">Người hướng dẫn</th>
                                 <th class="min-w-130p border-top-1" scope="col">Vai trò</th>
                                 <th class="min-w-185p border-top-1  py-11" scope="col">File</th>
-                                <th class="text-center border-top-1"></th>
+                                <th class="text-center border-top-1 w-100p"></th>
                             </tr>
-
                         </thead>
                         <tbody></tbody>
                     </table>
-                    <!--<div class="d-flex justify-content-end ">
-                        <a class="btn btn-add btn-sm btnSearch_NguoiHuongDan">
+                    <div class="d-flex justify-content-end d-none">
+                        <a class="btn btn-outline-primary btnSearch_NguoiHuongDan">
                             <i class="fal fa-plus "></i>
-                            <span>Thêm</span>
+                            <span>Thêm dòng</span>
                         </a>
-                    </div>-->
+                    </div>
                 </div>
-                <!--<div class="d-flex align-items-center justify-content-end mb-25">
-                    <button class="btn btn-add me-20 btnQuyetDinh">
+                <div class="d-flex align-items-center justify-content-end mb-25 mt-15 d-none">
+                    <button class="btn btn-success me-10 btnQuyetDinh">
                         <i class="fal fa-plus"></i>
                         <span>Tạo QĐ </span>
                     </button>
-                    <button class="btn btn-edit btnDuyet">
+                    <button class="btn btn-edit btnDuyet btn-primary">
                         <i class="fal fa-check"></i>
                         <span>Duyệt đề xuất PB</span>
                     </button>
-                </div>-->
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
@@ -217,13 +214,12 @@
 </div>
 
 <!-- modal Duyệt Giao đề tài Chi tiết Quyết định -->
-<div class="modal fade" id="modalQuyetDinh">
-    <div class="modal-dialog modal-dialog-centered modal-800">
+<div class="modal fade modalQuyetDinh" id="modalQuyetDinh">
+    <div class="modal-dialog modal-dialog-centered modal-860">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Tạo quyết định</div>
-
+                    <div class="title"><i class="fa-solid fa-pen-to-square mr-5"></i> Tạo quyết định</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -236,7 +232,7 @@
 
                 </div>
                 <div class="line-1"></div>
-                <div class="-me-10 -ms-10 pb-8">
+                <div class="-me-10 -ms-10 pb-8 mt-20">
                     <div class="d-flex align-items-center fs-14 mb-8 px-10">
                         <span class="text-gray me-10 flex-shrink-0 w-135p">Mã số:</span>
                         <span class="fw-bold lblMaSo"></span>
@@ -266,17 +262,17 @@
                 </div>
                 <div class="line-1"></div>
                 <div class="d-flex align-items-center flex-wrap justify-content-between py-20 fs-14">
-                    <div class="input-label-left mb-15">
+                    <div class="input-label-left mb-10">
                         <label class="mt-7 w-100p">Số QĐ</label>
                         <input type="text" class="form-control w-200p" id="txtSoQuyetDinh">
                     </div>
                     <div class="input-label-left mb-15">
-                        <label class="mt-7 w-100p">Ngày QĐ</label>
+                        <label class="mt-7 w-100p text-right pr-10">Ngày QĐ</label>
                         <div class="input input-icon-right">
                             <input type="text" class="form-control max-w-200p" placeholder="--/--/--" id="txtNgayQuyetDinh">
                         </div>
                     </div>
-                    <div class="input-label-left w-100 mb-15">
+                    <div class="input-label-left w-100 mb-10">
                         <label class="mt-7 w-100p">Files</label>
                         <div class="d-flex flex-wrap flex-grow-1">
                             <div class="file mt-7" id="txtFileDinhKem">
@@ -284,38 +280,37 @@
 
                         </div>
                     </div>
-                    <div class="input-label-left mb-15 w-100">
+                    <div class="input-label-left mb-10 w-100">
                         <label class="mt-7 w-100p">Nội dung</label>
                         <div class="input input-icon-right">
-                            <textarea class="form-control" rows="4" id="txtNoiDung"></textarea>
-
+                            <textarea class="form-control min-h-86" rows="4" id="txtNoiDung"></textarea>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-save ms-20" id="btnSave_QuyetDinh">
-                        <i class="fal fa-save"></i>
-                        <span>Lưu</span>
-                    </button>
-                    <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
+                <div class="d-flex justify-content-end">                    
+                    <button class="btn btn-outline-secondary ms-10" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
+                    </button>
+                    <button class="btn btn-primary ms-10" id="btnSave_QuyetDinh">
+                        <i class="fal fa-save"></i>
+                        <span>Lưu</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- modal Duyệt Giao đề tài Chi tiết Duyệt -->
-<div class="modal fade" id="modalDuyet">
-    <div class="modal-dialog modal-dialog-centered modal-800">
+<div class="modal fade modalDuyet" id="modalDuyet">
+    <div class="modal-dialog modal-dialog-centered modal-860">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Duyệt giao đề tài</div>
-
+                    <div class="title"><i class="fa-solid fa-check-to-slot"></i> Duyệt giao đề tài</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -384,14 +379,14 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end">
-                    <button class="btn btn-save ms-20 btnXacNhan">
-                        <i class="fal fa-check-circle"></i>
-                        <span>Duyệt</span>
-                    </button>
+                <div class="d-flex justify-content-end">                    
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
+                    </button>
+                    <button class="btn btn-success ms-20 btnXacNhan">
+                        <i class="fal fa-check-circle"></i>
+                        <span>Duyệt</span>
                     </button>
                 </div>
             </div>
@@ -399,15 +394,13 @@
     </div>
 </div>
 
-<!-- modal Duyệt Giao đề tài Chi tiết Duyệt đồng ý -->
 <!-- modal xác nhận hoàn thành nhập điểm -->
-<div class="modal fade" id="modal_XacNhan">
-    <div class="modal-dialog modal-dialog-centered modal-680">
+<div class="modal fade modal_XacNhan" id="modal_XacNhan">
+    <div class="modal-dialog modal-dialog-centered modal-860">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
                     <div class="title"><i class="fa-light fa-check-circle me-10"></i>Xác nhận</div>
-
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -422,22 +415,20 @@
                         </div>
                     </div>
                     <div class="flex-shrink-0">
-                        <div class="btn btn-save ms-20 mb-15 btnSave_XacNhan"><i class="fa-light fa-check"></i><span>Đồng ý</span></div>
+                        <div class="btn btn-success ms-10 mb-15 btnSave_XacNhan"><i class="fa-light fa-check"></i><span>Đồng ý</span></div>
                     </div>
                 </div>
 
                 <div class="fw-bold text-main mt-20 mb-10">Lịch sử xác nhận</div>
                 <div class="table-responsive fs-14 no-swiper">
-                    <table class="table" id="tblModal_XacNhan">
+                    <table class="table tblModal_XacNhan table-bordered table-noborder" id="tblModal_XacNhan">
                         <thead>
                             <tr>
-                                <th class="text-center border-top-1" scope="col">STT</th>
+                                <th class="text-center border-top-1 w-50px" scope="col">STT</th>
                                 <th class=" border-top-1" scope="col">Trạng thái</th>
                                 <th class=" border-top-1 py-11" scope="col">Người xác nhận</th>
                                 <th class=" border-top-1  py-11" scope="col">Thời gian </th>
-
                             </tr>
-
                         </thead>
                         <tbody></tbody>
                     </table>

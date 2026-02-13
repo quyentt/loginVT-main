@@ -10157,8 +10157,11 @@ table#clone {
 .modal-footer>* {
     margin: calc(var(--bs-modal-footer-gap) * 0) !important;
 }
-.aps-form-select .select2-container--default .select2-selection--single, .modal_XacNhan .modal-content .select2-container--default .select2-selection--single {
+.aps-form-select .select2-container--default .select2-selection--single{
     padding: 0px 10px !important;
+}
+.modal_XacNhan .modal-content .select2-container--default .select2-selection--single {
+    padding: 7px 10px !important;
 }
 .modal-content .aps-form-select .select2-container--default .select2-selection--single .select2-selection__rendered {
     padding-top: 0px !important;
@@ -10171,5 +10174,5 @@ table#clone {
     max-width: 800px !important;
 }
 #divuploadtxtFileDinhKem {
-    margin-top: 10px;
+    /* margin-top: 10px; */
 }

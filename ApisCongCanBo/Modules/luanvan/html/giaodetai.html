@@ -97,9 +97,12 @@
 <div class="aps-all-button ml-20 aps-gap-10 mb-20" style="display: none !important;">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">Chi tiết đề
         tài</button>
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalDeTai">Người hướng dẫn</button>
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalAddDeTai">Giao đề tài</button>
-    <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalThemDeTai">Danh sách đề tài</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalDeTai">Người hướng
+        dẫn</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalAddDeTai">Giao đề
+        tài</button>
+    <button type="button" class="btn btn-delete" data-bs-toggle="modal" data-bs-target="#modalThemDeTai">Danh sách đề
+        tài</button>
     <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modalDSDeTai">Đề tài</button>
 </div>
 
@@ -155,26 +158,29 @@
                         <tfoot></tfoot>
                     </table>
                 </div>
-                <div class="d-flex justify-content-end aps-all-btn mt-10">
-                    <div class="btn-taifile d-flex mt-7 mr-20">
-                        <span class="mr-5" style="margin-top: 1px ;">Tải file</span>
-                        <div class="file mt-7" id="txtFileDinhKem">
+                <div class="row mt-10">
+                    <div class="col-lg-5">
+                        <div class="btn-taifile d-flex mt-7 mr-20">
+                            <span class="mr-10" style="margin-top: 1px;">Tải file</span>
+                            <div class="file txtFileDinhKem-giaodt" id="txtFileDinhKem"></div>
                         </div>
                     </div>
-                    <a class="btn btn-delete  btnDelete_DeTai">
-                        <i class="fal fa-trash "></i>
-                        <span>Xóa</span>
-                    </a>
+                    <div class="col-lg-7 aps-all-btn justify-content-end">
+                        <a class="btn btn-delete  btnDelete_DeTai">
+                            <i class="fal fa-trash "></i>
+                            <span>Xóa</span>
+                        </a>
 
-                    <a class="btn btnSearch_DeTai btn-primary">
-                        <i class="fa-solid fa-user-plus"></i>
-                        <span>Thêm người hướng dẫn</span>
-                    </a>
+                        <a class="btn btnSearch_DeTai btn-primary">
+                            <i class="fa-solid fa-user-plus"></i>
+                            <span>Thêm người hướng dẫn</span>
+                        </a>
 
-                    <a class="btn btn-add btn-success btnAdd btnSearch_AddDeTai ">
-                        <i class="fal fa-plus "></i>
-                        <span>Thêm đề tài - bản giao đề tài cho Người học chọn</span>
-                    </a>
+                        <a class="btn btn-add btn-success btnAdd btnSearch_AddDeTai ">
+                            <i class="fal fa-plus "></i>
+                            <span>Thêm đề tài - bản giao đề tài cho Người học chọn</span>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -195,7 +201,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-user"></i> Người hướng dẫn</div>
+                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-user"></i> Người hướng
+                        dẫn</div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -246,7 +253,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end">                    
+                <div class="d-flex justify-content-end">
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Đóng</span>
@@ -267,7 +274,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-books"></i> Giao đề tài</div>
+                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-books"></i> Giao đề tài
+                    </div>
 
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -285,12 +293,12 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex justify-content-end mg-0">                  
+                <div class="d-flex justify-content-end mg-0">
                     <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Đóng</span>
                     </button>
-                      <button class="btn btn-save btn-primary" id="btnSave_AddDeTai">
+                    <button class="btn btn-save btn-primary" id="btnSave_AddDeTai">
                         <i class="fal fa-save"></i>
                         <span>Lưu</span>
                     </button>
@@ -332,7 +340,7 @@
                     <div style="display: flex">
                         <div class="d-flex"></div>
                         <div class="d-flex ms-auto aps-all-btn">
-                             <a class="btn btn-delete btnDelete_DSDeTai">
+                            <a class="btn btn-delete btnDelete_DSDeTai">
                                 <i class="fal fa-trash "></i>
                                 <span>Xóa</span>
                             </a>
@@ -386,7 +394,7 @@
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
                     </button>
-                     <button class="btn btn-save btn-primary" id="btnSave_DSDeTai">
+                    <button class="btn btn-save btn-primary" id="btnSave_DSDeTai">
                         <i class="fal fa-save"></i>
                         <span>Lưu</span>
                     </button>

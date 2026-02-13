@@ -336,6 +336,7 @@
      border-radius: 5px !important;
      line-height: 28px !important;
      height: 28px !important;
+     display: inline-flex !important;
  }
 
  .table .btn:hover {
@@ -4043,7 +4044,10 @@
  .tblDeXuatHoiDong tr td:last-child,
  .tblDeXuatHoiDong tr td:nth-last-child(2) ,
  .tblDeXuatHoiDong tr td:last-child,
- .tblDeXuatHoiDong tr td:nth-last-child(2){
+ .tblDeXuatHoiDong tr td:nth-last-child(2),
+ .tblKhoaPhanBien tr td:last-child,
+ .tblKhoaPhanBien tr td:nth-last-child(2),
+ .tblHDThanhVien tr td:nth-last-child(2){
      text-align: center !important;
  }
 
@@ -4055,3 +4059,6 @@
      border: 0px solid #d1d1d1;
      padding: 5px 0px;
  }
+ .txtFileDinhKem-giaodt #divuploadtxtFileDinhKem {
+    margin-top: 0px !important;
+}
