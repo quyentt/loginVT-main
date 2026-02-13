@@ -137,7 +137,6 @@ KhoaPhanBien.prototype = {
             $(".lblNgayQuyetDinh").html(edu.util.returnEmpty(aData.QLSV_QUYETDINH_NGAYQD));
             $(".lblNoiDung").html(edu.util.returnEmpty(aData.QLSV_QUYETDINH_LYDO));
             $(".lblTinhTrang").html(edu.util.returnEmpty(aData.BV_XACNHAN_GIAODETAI_TEN));
-
         });
         $("#tblKhoaPhanBien").delegate('.btnDuyet', 'click', function (e) {
             var strId = this.id;
@@ -272,7 +271,7 @@ KhoaPhanBien.prototype = {
                 {
                     //"mDataProp": "BV_XACNHAN_HD_TEN",
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.BV_XACNHAN_HD_TEN) + ' <span><a class="btn btn-default btnDuyet" id="' + aData.ID + '" title="Duyệt"><i class="fal fa-edit color-active"></i> Xác nhận</a></span>';
+                        return edu.util.returnEmpty(aData.BV_XACNHAN_HD_TEN) + ' <span><a class="btn btn-default btnDuyet color-active" id="' + aData.ID + '" title="Duyệt"><i class="fal fa-check-circle color-active"></i> Xác nhận</a></span>';
                     }
                 },
                 {
@@ -379,7 +378,6 @@ KhoaPhanBien.prototype = {
             },
             error: function (er) {
                 edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
-
             },
             type: "GET",
             action: obj_list.action,
@@ -462,7 +460,7 @@ KhoaPhanBien.prototype = {
             row += '<td style="text-align: center"><label id="txtStt' + strKetQua_Id + '">' + (i + 1) + '</label></td>';
             row += '<td><select id="dropCanBo' + strKetQua_Id + '" class="select-opt"></select ></td>';
             row += '<td><select id="dropVaiTro' + strKetQua_Id + '" class="select-opt"></select ></td>';
-            row += '<td ><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
+            row += '<td class="txtFileDinhKem"><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
             row += '<td style="text-align: center"><a title="Xóa" class="deleteKetQua" id="' + strKetQua_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             row += '</tr>';
             $("#tblNguoiHuongDan tbody").append(row);
@@ -480,7 +478,7 @@ KhoaPhanBien.prototype = {
         row += '<td style="text-align: center"><label id="txtStt' + strKetQua_Id + '">' + iViTri + '</label></td>';
         row += '<td><select id="dropCanBo' + strKetQua_Id + '" class="select-opt"></select ></td>';
         row += '<td><select id="dropVaiTro' + strKetQua_Id + '" class="select-opt"></select ></td>';
-        row += '<td ><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
+        row += '<td class="txtFileDinhKem"><div id="txtFileDinhKem' + strKetQua_Id + '"></div></td>';
         row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strKetQua_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
         row += '</tr>';
         $("#tblNguoiHuongDan tbody").append(row);
@@ -516,7 +514,6 @@ KhoaPhanBien.prototype = {
             },
             type: "POST",
             action: obj_save.action,
-
             contentType: true,
             data: obj_save,
             fakedb: [
@@ -541,8 +538,7 @@ KhoaPhanBien.prototype = {
         };
         edu.system.loadToCombo_data(obj);
         $("#" + strTinhTrang_Id).select2();
-    },
-    
+    },    
     getList_CanBo: function () {
         var me = this;
         //--Edit
@@ -710,7 +706,6 @@ KhoaPhanBien.prototype = {
                 me.loadBtnXacNhan(data.Data, strZoneXacNhan_Id);
             },
             error: function (er) {
-
                 edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "GET",

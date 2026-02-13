@@ -940,7 +940,7 @@ input:active,
 .select2-container--default .select2-selection--single:focus,
 .select2-container--default .select2-selection--single:hover,
 .select2-container--default .select2-selection--single:active {
-  border: 1px solid #3c8dee !important;
+  border: 1px solid #3c8dee;
   box-shadow: none !important;
 }
 
@@ -1466,5 +1466,34 @@ input:active,
 
 /* --------- */
 .main-wrap .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 24px;
+  line-height: 24px;
+}
+
+.btn-delete-file.btnDeleteFileUptxtFileDinhKem ,
+.btn-delete-file.btnDelUploadedFile{
+  height: 14px !important;
+  width: 14px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: #fff !important;
+  top: -7px !important;
+  right: -7px !important;
+  color: #666 !important;
+  border: 0 !important;
+}
+
+.btn-delete-file.btnDeleteFileUptxtFileDinhKem i,
+.btn-delete-file.btnDelUploadedFile i {
+  padding-right: 0 !important;
+}
+.btn-delete-file.btnDeleteFileUptxtFileDinhKem:hover,
+.btn-delete-file.btnDelUploadedFile:hover {
+  color: var(--orange) !important;
+  background: #fff !important;
+}
+.file-data span.upload-file{
+    line-height: 29px !important;
+}
+.file-data {   
+    margin-bottom: 10px;
 }

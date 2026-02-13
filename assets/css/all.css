@@ -1089,7 +1089,9 @@ a:hover {
 .color-66 {
   color: #666666 !important;
 }
-
+.color-88 {
+  color: #888888 !important;
+}
 .text-right-i {
   text-align: right !important;
 }
@@ -2292,6 +2294,8 @@ input::placeholder {
   display: flex;
   align-items: center;
   margin-left: auto;
+  font-weight: 400;
+    color: #666;
 }
 
 .gv-paging-group .form-add-info .form-select {
@@ -2299,6 +2303,7 @@ input::placeholder {
   padding: 0 5px;
   flex-shrink: 0;
   height: 28px;
+  margin-left: 5px !important;
 }
 
 .gv-paging-group .gv-paging {
@@ -7031,9 +7036,6 @@ tr:last-child .d-flex.gap-3 {
   font-size: 16px;
 }
 
-.table td .btn {
-  border-radius: 5px !important;
-}
 
 .bus-info .avata-up .mb-0 {
   margin-bottom: 10px !important;
@@ -7074,9 +7076,7 @@ tr:last-child .d-flex.gap-3 {
   height: 38px;
 }
 
-.btn .fa {
-  margin-bottom: 5px;
-}
+
 
 .btn-primary,
 .btn-primary.btnSave {
@@ -7467,7 +7467,7 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .modal_XacNhan .modal-dialog {
-  max-width: fit-content !important;
+  /* max-width: fit-content !important; */
 }
 
 .tblModal_XacNhan tr td:nth-child(1) {
@@ -7609,4 +7609,19 @@ tr:last-child .d-flex.gap-3 {
 .aps-tim-nhansu #txtSearchModal_CauTrucGiang_NS {
     right: 150px !important;
     top: -7px !important;
+}
+/* ------------------------ */
+.gv-paging-group .info-pag {
+    margin-top: -10px;
+}
+.modal-680 .modal-content{
+  width: 100% !important;
+  max-width: 680px !important;
+}
+.modal-860 .modal-content{
+  width: 100% !important;
+  max-width: 860px !important;
+}
+.modal-860, .modal_XacNhan .modal-860{
+  max-width: 860px !important;
 }

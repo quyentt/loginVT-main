@@ -147,8 +147,8 @@
 /*---------*/
 .btn {
     padding: 9px 15px 7.6px 15px !important;
-    font-size: 14px !important;
-    border-radius: 5px !important;
+     font-size: 14px !important;
+     border-radius: 5px !important;
     height: 38px;
     /* display: flex; */
     /* position: relative; */
@@ -169,7 +169,7 @@
 }
 
 .btn .fa {
-    margin-bottom: 5px;
+    /* margin-bottom: 5px; */
 }
 
 .btn-primary,
@@ -6765,7 +6765,7 @@ input#tblInput_DTSV_SinhVien_input {
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 38px !important;
     padding-left: 2px !important;
-    padding-top: 4px !important;
+    padding-top: 0px !important;
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -8565,7 +8565,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 #alert_content .progress {
-    padding: 0px 15px !important;
+    padding: 3px 15px !important;
 }
 
 .modal-body#alert_content {
@@ -10153,4 +10153,26 @@ table#clone {
 .aps-tblNhapChuyenCan tbody tr td:nth-last-child(3),
 .aps-tblNhapChuyenCan tbody tr td:nth-last-child(4){
     text-align: left !important;
+}
+.modal-footer>* {
+    margin: calc(var(--bs-modal-footer-gap) * 0) !important;
+}
+.aps-form-select .select2-container--default .select2-selection--single{
+    padding: 0px 10px !important;
+}
+.modal_XacNhan .modal-content .select2-container--default .select2-selection--single {
+    padding: 7px 10px !important;
+}
+.modal-content .aps-form-select .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-top: 0px !important;
+}
+.modal_XacNhan_ht_diem .custom-select .select2-selection__rendered{
+    /* padding-top: 7px !important; */
+    /* padding-left: 0px !important; */
+}
+.modal_XacNhan_ht_diem .modal-dialog{
+    max-width: 800px !important;
+}
+#divuploadtxtFileDinhKem {
+    /* margin-top: 10px; */
 }
