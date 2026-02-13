@@ -1,5 +1,4 @@
-﻿
-<style>
+﻿<style>
     .overflow-y-hidden {
         overflow-y: hidden;
     }
@@ -23,6 +22,7 @@
     .min-w-1600px-i {
         min-width: 1600px !important;
     }
+
     .table-respo .table {
         width: unset;
     }
@@ -32,9 +32,8 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
-                <p class="link"><a href="#">Báo cáo thống kê</a><i class="fal fa-angle-right"></i><a href="#">Khối lượng cá nhân</a></p>
-
+                <p class="link"><a href="#">Báo cáo thống kê</a>
+                    <i class="fal fa-angle-right"></i><a href="#">Khối lượng cá nhân</a></p>
             </div>
 
             <div class="nav-content-right">
@@ -50,71 +49,65 @@
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
                     <div class="form-item d-flex  form-add-info flex-grow-1">
                         <div class="input-group no-icon">
-                            <select id="dropSearch_KeHoach" class="select-opt form-select" aria-label="Default select example">
+                            <select id="dropSearch_KeHoach" class="select-opt form-select"
+                                aria-label="Default select example">
                                 <option selected>Chọn kế hoạch khảo sát</option>
                             </select>
                         </div>
-
                     </div>
-
                 </div>
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
                     <div class="form-item d-flex  form-add-info flex-grow-1">
                         <div class="input-group no-icon">
-                            <select id="dropSearch_Phieu" class="select-opt form-select" aria-label="Default select example">
+                            <select id="dropSearch_Phieu" class="select-opt form-select"
+                                aria-label="Default select example">
                                 <option selected>Chọn phiếu khảo sát</option>
                             </select>
                         </div>
-
                     </div>
-
                 </div>
                 <div class="col-12 col-lg-4  mb-15">
-                    <div class="d-flex align-items-center">                     
+                    <div class="d-flex align-items-center">
                         <button class="btn btn-default btn-search min-w-auto px-4 ms-auto ms-lg-0" id="btnSearch">
-                            <i class="fa-solid fa-magnifying-glass"></i> Xem</button>
+                            <i class="fa-solid fa-magnifying-glass"></i>Tìm kiếm</button>
                         <div class="dropdown" id="zonebtnBaoCao_KetQuaKhaoSat"></div>
                     </div>
-
                 </div>
-
-
             </div>
-
         </div>
         <div class="container-fluid px-20 mb-30">
             <div class="row fs-14 lh-1 mt-4">
-                <div class="col-12 col-lg-6">
+                <div class="col-12 col-lg-6 pl0">
                     <div class="row justify-content-between">
-                        <div class="col-12 col-md-6 col-lg-4 w-auto">
+                        <div class="col-12 col-md-6 col-lg-4 w-auto pl0">
                             <p>
-                                <span class="color-66">Học phần:</span>
+                                <span class="color-88">Học phần:</span>
                                 <b id="lblHocPhan"></b>
                             </p>
                             <p>
-                                <span class="color-66">Giáo viên giảng dạy:</span>
+                                <span class="color-88ss">Giáo viên giảng dạy:</span>
                                 <b class="d-inline-block" id="lblGiangVien"></b>
                             </p>
                             <p>
-                                <span class="color-66">Khoá sinh viên khảo sát:</span>
+                                <span class="color-88ss">Khoá sinh viên khảo sát:</span>
                                 <b id="lblKhoaDaoTao"></b>
                             </p>
                         </div>
-                        <div class="col-12 col-md-6 col-lg-4 w-auto">
+                        <div class="col-12 col-md-6 col-lg-4 w-auto pl0">
                             <p>
-                                <span class="color-66">Hình thức khảo sát:</span>
+                                <span class="color-88ss">Hình thức khảo sát:</span>
                                 <b id="lblHinhThuc"></b>
                             </p>
                             <p>
-                                <span class="color-66">Thời gian thực hiện:</span>
+                                <span class="color-88ss">Thời gian thực hiện:</span>
                                 <b class="d-inline-block" id="lblThucHien"></b>
                             </p>
                         </div>
-                        <div class="col-12 col-md-6 col-lg-4 w-auto">
+                        <div class="col-12 col-md-6 col-lg-4 w-auto pl0">
                             <p>
                                 <span class="text-uppercase d-block mb-3 fw-bold">Kết quả khảo sát</span>
-                                <span class="d-block">
-                                    <span class="color-66">Số lượng khảo sát:</span>
+                                <span class="d-block mt-15">
+                                    <span class="color-88ss">Số lượng khảo sát:</span>
                                     <b id="lblSoLuongKhaoSat"></b>
                                 </span>
                             </p>
@@ -156,27 +149,26 @@
                 </div>
             </div>
 
-            <div class="title-is-paging">
-                <!-- <p class="color-dask-blue fw-bold mt-3">Danh sách</p> -->
-                <div class="group-title pl0">
+            <div class="title-is-paging mt-0 pb-5 mt-10">
+                <div class="group-title pl0 pt-0">
                     <p class="mb-0">
                         <i class="fa-solid fa-list-timeline"></i>
-                        <span class="lang" key="">
-                            Danh sách
-                        </span>
+                        <span class="lang" key="">Danh sách</span>
                     </p>
                 </div>
-
             </div>
-            <div class="table-respo fs-14 thongke-khaosat h-auto overflow-y-hidden">
-                <table class="table min-w-1600px-i w-fill-i" id="tblKetQuaKhaoSat">
+            <div class="aps-table-select fs-14 thongke-khaosat h-auto">
+                <table class="table table-bordered table-noborder table-responsive tblKetQuaKhaoSat w-100"
+                    id="tblKetQuaKhaoSat">
                     <thead>
                         <tr>
-                            <th rowspan="2" class="text-center" scope="col">STT</th>
-                            <th rowspan="2" class="" scope="col">Nội dung đánh giá</th>
-                            <th id="lbltblSoPhieu" class="text-center border-bottom border-left" scope="col">Số phiếu</th>
-                            <th id="lbltblTyLe" class="text-center border-bottom border-left" scope="col">Tỉ lệ mức độ hài lòng</th>
-                            <th rowspan="2" class="text-center border-bottom border-left" scope="col">Điểm đánh giá</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th class="" scope="col">Nội dung đánh giá</th>
+                            <th id="lbltblSoPhieu" class="text-center border-bottom border-left" scope="col">Số phiếu
+                            </th>
+                            <th id="lbltblTyLe" class="text-center border-bottom border-left" scope="col">Tỉ lệ mức độ
+                                hài lòng</th>
+                            <th class="text-center border-bottom border-left" scope="col">Điểm đánh giá</th>
                         </tr>
                         <tr></tr>
                     </thead>
@@ -187,11 +179,10 @@
             <div class="col-12">
                 <p></p>
             </div>
-
         </div>
-        <div class="container-fluid px-20 mt-15">
-            <div class="title-is-paging">
-                <div class="group-title pl0">
+        <div class="container-fluid px-20 mt-5">
+           <div class="title-is-paging mt-0 pb-5 mt-10">
+                <div class="group-title pl0 pt-0">
                     <p class="mb-0">
                         <i class="fa-solid fa-file-circle-question"></i>
                         <span class="lang" key="">
@@ -202,7 +193,7 @@
                 <!-- <p class="color-dask-blue fw-bold mt-3">KẾT QUẢ KHẢO SÁT CÂU HỎI MỞ</p> -->
             </div>
             <div class="col-12" id="zoneDapAnCauHoiMo">
-                
+
             </div>
 
         </div>

@@ -57,7 +57,16 @@
      top: 6px !important;
      right: 8px !important;
  }
-
+.form-top .select2-container--default .select2-selection--single .select2-selection__arrow,
+.form-item .select2-container--default .select2-selection--single .select2-selection__arrow
+ {
+    top: 1px !important;
+    right: 5px !important;
+}
+.form-top .form-item .input-group .select2-container--default .select2-selection--multiple .select2-selection__choice
+ {   
+    margin-top: 2px !important;
+}
  .select2-container--default .select2-search--dropdown .select2-search__field {
      border: 1px solid #d2d6de !important;
      border-radius: 4px !important;

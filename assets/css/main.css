@@ -5822,7 +5822,7 @@ a.other-action_item:hover {
 .group-title i {
   margin-right: 9px;
   float: left;
-  font-size: 20px !important;
+  font-size: 18px !important;
   color: var(--color-blue) !important;
   font-weight: 700 !important;
 }

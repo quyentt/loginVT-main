@@ -8565,7 +8565,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 #alert_content .progress {
-    padding: 0px 15px !important;
+    padding: 3px 15px !important;
 }
 
 .modal-body#alert_content {

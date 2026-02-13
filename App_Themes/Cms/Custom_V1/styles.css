@@ -168,15 +168,18 @@
  .table>thead>tr>td,
  .table>thead>tr>th {
      padding: 10px 8px 9px 8px !important;
+     /* height: 42px !important; */
  }
 
  .table>tbody>tr>td {
      font-weight: 400;
  }
- .table>thead>tr>th  {
-    /* height: 48px !important; */
-    color: #666;
-}
+
+ .table>thead>tr>th {
+     /* height: 48px !important; */
+     color: #666;
+ }
+
  .table>tbody>tr>td,
  .table>tbody>tr>th {
      min-height: 42px !important;
@@ -4042,12 +4045,13 @@
 
  .tblDeXuatHoiDong tr td:first-child,
  .tblDeXuatHoiDong tr td:last-child,
- .tblDeXuatHoiDong tr td:nth-last-child(2) ,
+ .tblDeXuatHoiDong tr td:nth-last-child(2),
  .tblDeXuatHoiDong tr td:last-child,
  .tblDeXuatHoiDong tr td:nth-last-child(2),
  .tblKhoaPhanBien tr td:last-child,
  .tblKhoaPhanBien tr td:nth-last-child(2),
- .tblHDThanhVien tr td:nth-last-child(2){
+ .tblHDThanhVien tr td:nth-last-child(2),
+ .tblThongKe tr td:last-child {
      text-align: center !important;
  }
 
@@ -4059,6 +4063,7 @@
      border: 0px solid #d1d1d1;
      padding: 5px 0px;
  }
+
  .txtFileDinhKem-giaodt #divuploadtxtFileDinhKem {
-    margin-top: 0px !important;
-}
+     margin-top: 0px !important;
+ }
