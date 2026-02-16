@@ -532,9 +532,12 @@
   font-size: 14px;
   padding-left: 42px;
   border: 1px solid #d2d6de;
-  ;
   background: #fff;
-  padding-top: 9px;
+  padding-top: 10px;
+}
+.form-add-info .form-control-textarea {
+  padding-top: 10px !important;
+  line-height: 20px !important;
 }
 
 .form-add-info .form-select {
@@ -551,7 +554,7 @@
 
 .form-add-info .form-label {
   font-size: 14px;
-  color: #666;
+  color: #666 !important;
   min-width: 29%;
   margin: 0px;
   padding: 0px;
