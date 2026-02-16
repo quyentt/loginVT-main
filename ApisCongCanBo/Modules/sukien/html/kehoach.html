@@ -14,7 +14,6 @@
             </div>
         </div>
     </div>
-
     <!-- đăng ký nguyện vọng -->
     <div class="box-shadow register-wish pt-0 zone-bus" id="zonebatdau">
         <div class="form-top">
@@ -268,107 +267,109 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><i class="fa-solid fa-user-magnifying-glass"></i>Tìm kiếm sinh viên</p>
+                    <p><i class="fa-solid fa-user-magnifying-glass mr-5"></i>Tìm kiếm sinh viên</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pd0">
-                <div class="col-12 pd20">
-                    <div class="d-flex inputs-tksv">
-                        <div class="inputs-wr row w-100">
-                            <div class="item-search col-12 col-lg-3 col-md-6 pr0">
-                                <div class="form-item d-flex  form-add-info flex-grow-1">
-                                    <div class="input-group no-icon">
-                                        <select id="dropSearchModal_He_SV" class="select-opt"
-                                            multiple="multiple"></select>
+                <div class="col-12 box-search-student bg-white">
+                    <div class="box-search pd20 w100">
+                        <div class="d-flex inputs-tksv">
+                            <div class="row w-100">
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
+                                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <select id="dropSearchModal_He_SV" class="select-opt"
+                                                multiple="multiple"></select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item-search col-12 col-lg-3 col-md-6 pr0">
-                                <div class="form-item d-flex  form-add-info flex-grow-1">
-                                    <div class="input-group no-icon">
-                                        <select id="dropSearchModal_Khoa_SV" class="select-opt"
-                                            multiple="multiple"></select>
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
+                                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <select id="dropSearchModal_Khoa_SV" class="select-opt"
+                                                multiple="multiple"></select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item-search col-12 col-lg-3 col-md-6 pr0">
-                                <div class="form-item d-flex  form-add-info flex-grow-1">
-                                    <div class="input-group no-icon">
-                                        <select id="dropSearchModal_ChuongTrinh_SV" class="select-opt"
-                                            multiple="multiple"></select>
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
+                                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <select id="dropSearchModal_ChuongTrinh_SV" class="select-opt"
+                                                multiple="multiple"></select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item-search  col-12 col-lg-3 col-md-6">
-                                <div class="form-item d-flex  form-add-info flex-grow-1">
-                                    <div class="input-group no-icon">
-                                        <select id="dropSearchModal_Lop_SV" class="select-opt"
-                                            multiple="multiple"></select>
+                                <div class="item  col-12 col-lg-3 col-md-6">
+                                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <select id="dropSearchModal_Lop_SV" class="select-opt"
+                                                multiple="multiple"></select>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item-search col-12 col-lg-3 col-md-6">
-                                <div class="form-item d-flex  form-add-info flex-grow-1">
-                                    <div class="input-group no-icon">
-                                        <input id="txtSearchModal_TuKhoa_SV" class="form-control"
-                                            placeholder="Nhập từ khóa tìm kiếm" style="margin-top: 10px">
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
+                                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <input id="txtSearchModal_TuKhoa_SV" class="form-control"
+                                                placeholder="Nhập từ khóa tìm kiếm" style="margin-top: 10px">
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="item-search col-12 col-lg-3 col-md-6 pr0" style="padding-right: 0 !important;">
+                                    <div class="btn btn-default btn-search ml-0 mt-10"
+                                        style="width: 100% !important;margin-left: 0 !important;"
+                                        id="btnSearch_ModalSinhVien"><i class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                </div>
                             </div>
-                            <div class="item-search col-12 col-lg-3 col-md-6">
-                            <div class="btn btn-default btn-search" id="btnSearch_ModalSinhVien"><i
-                                    class="fal fa-search me-2"></i> Tìm kiếm</div></div>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-start list-title-first box-list-adds mt-15 mb-15">
+                            <p class="mt-8 mb-1">Thêm nhiều</p>
+                            <div class="d-flex flex-wrap list">
+                                <a href="" class="btn btn-outline-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i>
+                                    Thêm từng khóa</a>
+                                <a href="" class="btn btn-outline-success" id="btnAdd_ChuongTrinh"> <i
+                                        class="fal fa-plus"></i> Thêm từng chương trình</a>
+                                <a href="" class="btn btn-outline-danger" id="btnAdd_Lop">
+                                    <i class="fal fa-plus"></i> Thêm từng lớp</a>
+                            </div>
+                        </div>
+                        <div class="d-flex flex-wrap align-items-start list-title-first">
+                            <p class="mt-1 mb-1">Trạng thái</p>
+                            <div class="d-flex flex-wrap lists" id="DSTrangThaiSV_MD">
+                            </div>
                         </div>
                     </div>
-                    <div class="d-flex flex-wrap align-items-start list-title-first">
-                        <p class="fw-bold  mt-1 mb-1">Thêm nhiều</p>
-                        <div class="d-flex flex-wrap list">
-                            <a href="" class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3"
-                                id="btnAdd_Khoa"> <i class="fal fa-plus me-2"></i> Thêm từng khóa</a>
-                            <a href="" class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3"
-                                id="btnAdd_ChuongTrinh"> <i class="fal fa-plus me-2"></i> Thêm từng chương trình</a>
-                            <a href="" class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_Lop">
-                                <i class="fal fa-plus me-2"></i> Thêm từng lớp</a>
+                    <div class="px-3 pb-5 pd20 pt-0 list-sv">
+                        <div class="title-is-paging">
+                            <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
+                            <button id="btnChonSinhVien" class="btn btnChonSinhVien btn-on-paging"
+                                style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>
                         </div>
-                    </div>
-                    <div class="d-flex flex-wrap align-items-start list-title-first">
-                        <p class="fw-bold  mt-1 mb-1">Trạng thái</p>
-                        <div class="d-flex flex-wrap lists" id="DSTrangThaiSV_MD">
+                        <div class="bus-wrp" style="max-height: 505px;">
+                            <table class="table transcrip-table tabs-scores h-auto table-bordered table-noborder"
+                                id="tblModal_SinhVien">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50px" scope="col">STT</th>
+                                        <th scope="col">Mã số</th>
+                                        <th class="" scope="col">Họ tên</th>
+                                        <th class="" scope="col">Ngày sinh</th>
+                                        <th class="" scope="col">Lớp</th>
+                                        <th class="" scope="col">Chương trình</th>
+                                        <th class="" scope="col">Khóa</th>
+                                        <th class="" scope="col">Trạng thái</th>
+                                        <th class="text-right" scope="col">
+                                            <input type="checkbox" id="chkSelectAll_SinhVien" />
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
-                    </div>
-                </div>
-                <div class="px-3 pb-5 pd20 pt-0">
-                    <div class="title-is-paging">
-                        <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
-                        <button id="btnChonSinhVien"
-                            class="btn btn-sm ms-auto btn-outline-dask-blue min-w-auto ms-3 px-3 btn-on-paging"
-                            style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>
-                    </div>
-                    <div class="bus-wrp" style="max-height: 505px;">
-                        <table class="table transcrip-table tabs-scores h-auto" id="tblModal_SinhVien">
-                            <thead>
-                                <tr>
-                                    <th class="text-center w-50px" scope="col">STT</th>
-                                    <th scope="col">Mã số</th>
-                                    <th class="" scope="col">Họ tên</th>
-                                    <th class="" scope="col">Ngày sinh</th>
-                                    <th class="" scope="col">Lớp</th>
-                                    <th class="" scope="col">Chương trình</th>
-                                    <th class="" scope="col">Khóa</th>
-                                    <th class="" scope="col">Trạng thái</th>
-                                    <th class="text-right" scope="col">
-                                        <input type="checkbox" id="chkSelectAll_SinhVien" />
-                                    </th>
-
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -4067,3 +4067,34 @@
  .txtFileDinhKem-giaodt #divuploadtxtFileDinhKem {
      margin-top: 0px !important;
  }
+ /* ------------- */
+ .register-wish.modal_sinhvien #btnSearch_ModalSinhVien {
+    width: 7% !important;
+    margin-bottom: 0 !important;
+}
+.box-list-adds .btn{
+    margin-right: 10px;
+}
+.register-wish .box-table-sv{
+    border-bottom: solid 0 #e1e1e1 !important;
+}
+.register-wish .box-table-sv .title-is-paging {
+    padding-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+.register-wish .box-table-sv .gv-paging-group {
+    margin-top: 12px;
+}
+.btnChonSinhVien {
+    height: 28px;
+    line-height: 16px !important;
+    background: transparent !important;
+    border: 0 !important;
+}
+.btnChonSinhVien:hover{
+   color: var(--color-blue) !important;
+}
+.modal-content .box-search-student .box-search .select2 {
+    margin-top: 0 !important;
+    padding: 0px !important;
+}
