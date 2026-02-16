@@ -3882,7 +3882,7 @@ table>tbody>tr:hover .view-in-table-sticky {
   display: flex;
   align-items: center;
   font-size: 14px;
-  padding: 8px 7px;
+  padding: 7px;
 }
 
 .st-info-row .info-row:hover {

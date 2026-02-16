@@ -66,12 +66,12 @@
     </div>
 
     <!-- Check In -->
-    <div class="fake-modal box-checkIn  modal-aps-add" id="zoneEdit" style="display: block">
+    <div class="fake-modal box-checkIn  modal-aps-add" id="zoneEdit" style="display: none">
         <div class="box-shadow register-wish pt-0 position-relative" style="padding-bottom: 0px">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
                     <p class="link"><a> <span class="myModalLabel">
-                        <i class="fa-solid fa-check-to-slot"></i></span>Check In</a>
+                                <i class="fa-solid fa-check-to-slot"></i></span>Check In</a>
                     </p>
                 </div>
                 <div class="nav-content-right mt mt-5">
@@ -103,7 +103,8 @@
                         </div>
                     </div>
                     <div class="btn btn-success" id="btnKiemTraCheckIn">
-                        <i class="fal fa-check me-2"></i> Kiểm tra</div>
+                        <i class="fal fa-check me-2"></i> Kiểm tra
+                    </div>
                 </div>
             </div>
             <div class="container-fluid px-20">
@@ -179,7 +180,8 @@
 
                 </div>
                 <p class="color-blue fz16 fw-bold mb-5 mt-15">Danh sách check In</p>
-                <table class="table transcrip-table tabs-scores h-auto tblCheckIn table-bordered table-noborder" id="tblCheckIn">
+                <table class="table transcrip-table tabs-scores h-auto tblCheckIn table-bordered table-noborder"
+                    id="tblCheckIn">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
@@ -197,29 +199,26 @@
 </div>
 <!-- ---------- -->
 <div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaldangky">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#danhsachdangky">
         Danh sách đã đăng ký tham gia </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaldathamgia">
-        Danh sách đã tham gia</button>
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_sinhvien">
-        Tìm kiếm sinh viên</button>
 </div>
-<div class="modal fade register-wish " id="danhsachdangky" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade register-wish danhsachdangky" id="danhsachdangky" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Danh sách đã đăng ký tham gia</b></p>
+                    <p><i class="fa-regular fa-users mr-5"></i> Danh sách đã đăng ký tham gia</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="col-12">
-                    <table class="table tabs-scores  transcrip-table border-l-0 border-right-0" id="tblXacNhanSuKien">
+                <div class="col-12 aps-table-select">
+                    <table class="table tabs-scores transcrip-table border-l-0 border-right-0 tblXacNhanSuKien table-bordered table-noborder mb-20"
+                        id="tblXacNhanSuKien">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col">Mã số</th>
                                 <th class="" scope="col">Tên</th>
                                 <th class="" scope="col">Lớp</th>
@@ -227,21 +226,22 @@
                                 <th class="" scope="col">Khóa</th>
                                 <th class="text-center" scope="col">Xác nhận tham gia</th>
                                 <th class="text-center" scope="col">Thời gian xác nhận</th>
-
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
-                    <div class="btn btn-dask-blue  px-4 ms-auto "><i class="fal fa-save me-2" id="btnSave_SuKien"></i>
-                        Lưu</div>
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4 mt-10">
+                    <div class="btn btn-primary px-4 ms-auto ">
+                        <i class="fal fa-save" id="btnSave_SuKien"></i> Lưu
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+<!-- js -->
 <script src="modules/sukien/script/theodoi.js?v=1.0.0.0"></script>
 <script type="text/javascript">
     var main_doc = {};
