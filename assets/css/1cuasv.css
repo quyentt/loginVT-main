@@ -558,11 +558,14 @@
   min-width: 29%;
   margin: 0px;
   padding: 0px;
-  line-height: 40px;
+  line-height: 38px;
   z-index: 1;
 }
-
-.form-add-info .form-label span {
+.form-add-info .form-label {
+  width: 110px !important;
+  min-width: 110px !important;
+}
+.box-kehoach .form-top .form-label span {
   color: var(--orange);
 }
 

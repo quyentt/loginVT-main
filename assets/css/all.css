@@ -7339,6 +7339,7 @@ tr:last-child .d-flex.gap-3 {
   font-size: 18px !important;
   color: #ffff !important;
   opacity: 1 !important;
+  font-weight: 500 !important;
 }
 
 .modal-aps-add .box-header .link i {
@@ -7346,7 +7347,7 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .modal-aps-add .form-add-info .form-label {
-  min-width: auto !important;
+  /* min-width: auto !important; */
   padding-right: 10px !important;
 }
 

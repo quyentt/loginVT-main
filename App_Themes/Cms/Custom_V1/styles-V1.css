@@ -1033,3 +1033,8 @@
      padding: 15px 22px;
      border-top: 0px solid #d2d6de !important;
  }
+
+ /* ----------- */
+ .tblKeHoach tr td:n(3){
+    text-align: left !important;
+ }

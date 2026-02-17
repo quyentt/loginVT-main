@@ -490,6 +490,13 @@
      border-right: 0px solid #d1d1d1 !important;
  }
 
+ .table  tr .btnKetQua.btn-default,
+ .table  tr .btn.btn-default {
+    border-width: 0 !important;
+    border-color: var(--color-blue) !important;
+    color: var(--color-blue) !important;
+}
+
  /* ------------------- */
  .form-check-input {
      width: 1em !important;
@@ -998,6 +1005,15 @@
 
  .w-50px {
      width: 50px !important;
+ }
+.w-100px {
+     width: 100px !important;
+ }
+.w-150px {
+     width: 150px !important;
+ }
+.w-200px {
+     width: 200px !important;
  }
 
  /* ---------Login---------- */
@@ -4069,34 +4085,59 @@
  .txtFileDinhKem-giaodt #divuploadtxtFileDinhKem {
      margin-top: 0px !important;
  }
+
  /* ------------- */
  .register-wish.modal_sinhvien #btnSearch_ModalSinhVien {
-    width: 7% !important;
-    margin-bottom: 0 !important;
-}
-.box-list-adds .btn{
-    margin-right: 10px;
-}
-.register-wish .box-table-sv{
-    border-bottom: solid 0 #e1e1e1 !important;
-}
-.register-wish .box-table-sv .title-is-paging {
-    padding-bottom: 0 !important;
-    margin-top: 0 !important;
-}
-.register-wish .box-table-sv .gv-paging-group {
-    margin-top: 12px;
-}
-.btnChonSinhVien {
-    height: 28px;
-    line-height: 16px !important;
-    background: transparent !important;
-    border: 0 !important;
-}
-.btnChonSinhVien:hover{
-   color: var(--color-blue) !important;
-}
-.modal-content .box-search-student .box-search .select2 {
-    margin-top: 0 !important;
-    padding: 0px !important;
-}
+     width: 7% !important;
+     margin-bottom: 0 !important;
+ }
+
+ .box-list-adds .btn {
+     margin-right: 10px;
+ }
+
+ .register-wish .box-table-sv {
+     border-bottom: solid 0 #e1e1e1 !important;
+ }
+
+ .register-wish .box-table-sv .title-is-paging {
+     padding-bottom: 0 !important;
+     margin-top: 0 !important;
+ }
+
+ .register-wish .box-table-sv .gv-paging-group {
+     margin-top: 12px;
+ }
+
+ .btnChonSinhVien {
+     height: 28px;
+     line-height: 16px !important;
+     background: transparent !important;
+     border: 0 !important;
+ }
+
+ .btnChonSinhVien:hover {
+     color: var(--color-blue) !important;
+ }
+
+ .modal-content .box-search-student .box-search .select2 {
+     margin-top: 0 !important;
+     padding: 0px !important;
+ }
+
+ /* --------- */
+ .input-group-select .select2 {
+     margin-top: 0 !important;
+     padding: 0 !important;
+ }
+
+ .input-group-select .select2-container--default .select2-selection--single {
+     border: 1px solid #d2d6de !important;
+     border-radius: 4px !important;
+     padding: 7px 3px !important;
+     height: 38px !important;
+ }
+  /* ----------- */
+ .tblKeHoach tr td:n(3){
+    text-align: left !important;
+ }
