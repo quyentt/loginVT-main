@@ -81,11 +81,12 @@
     </div>
 
     <!-- Kế hoạch -->
-    <div class="fake-modal zoneEdit box-kehoach" id="zoneEdit" style="display: block">
+    <div class="fake-modal zoneEdit box-kehoach" id="zoneEdit" style="display: none">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
-                    <p class="link"><a> <span class="myModalLabel"> <i class="fa fa-plus"></i></span>Kế hoạch</a></p>
+                    <p class="link"><a> <span class="myModalLabel">
+                        <i class="fa-solid fa-rectangle-history-circle-plus"></i></span>Kế hoạch</a></p>
                 </div>
                 <div class="nav-content-right mt">
                     <a class="d-block text-right fs-16 color-fff btnClose"><i class="fal fa-times"></i></a>
@@ -209,22 +210,21 @@
                             <button class="btn-sm btn btn-outline-secondary min-w-auto px-3 ms-auto btnDelete_PhamVi"><i
                                     class="fal fa-trash me-1"></i> Xóa</button>
                             <a class="btn-sm btn btn-outline-success" style="float: right; margin-left: 10px !important"
-                                id="btnAdd_PhamVi"><i class="fa-solid fa-user-graduate"></i> Thêm người học</a>
+                                id="btnAdd_PhamVi"><i class="fa-solid fa-user-graduate"></i>Thêm người học</a>
                             <a class="btn-sm btn btn-outline-primary" style="float: right; margin-left: 10px !important"
                                 id="btnAdd_GV_PhamVi">
-                                <i class="fa-solid fa-chalkboard-user"></i> Thêm Giảng viên</a>
+                                <i class="fa-solid fa-chalkboard-user"></i>Thêm Giảng viên</a>
                             <a class="btn-sm btn btn-outline-info" style="float: right; margin-left: 10px !important"
                                 id="btnAdd_DTK_PhamVi">
                                 <i class="fa-solid fa-user"></i>Thêm đối tượng</a>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 mt-6">
+                    <div class="col-12 col-lg-6 mt-10">
                         <div class="d-flex align-items-center">
                             <span class="fw-bold text-success fz16">Đối tượng tham gia khảo sát</span>
                         </div>
                         <div class="mt-10">
-                            <table class="table transcrip-table tabs-scores table-bordered table-noborder"
-                                id="tblDoiTuong">
+                            <table class="table transcrip-table tabs-scores table-bordered table-noborder" id="tblDoiTuong">
                                 <thead>
                                     <tr>
                                         <th class="text-center" scope="col">STT</th>
@@ -244,12 +244,12 @@
                             <button class="btn-sm btn btn-outline-danger btnDelete_DoiTuong">
                                 <i class="fal fa-trash me-1"></i> Xóa</button>
                             <a class="btn-sm btn btn-outline-success" style="float: right; margin-left: 10px !important"
-                                id="btnAdd_DoiTuong"><i class="fal fa-plus me-1"></i> Thêm người học</a>
+                                id="btnAdd_DoiTuong"><i class="fa-solid fa-user-graduate"></i>Thêm người học</a>
                             <a class="btn-sm btn btn-outline-primary" style="float: right; margin-left: 10px !important"
                                 id="btnAdd_GV_DoiTuong">
-                                <i class="fa-solid fa-chalkboard-user"></i> Thêm giảng viên</a>
-                            <a class="btn-sm btn btn-outline-success" style="float: right; margin-left: 10px !important"
-                                id="btnAdd_DTK_DoiTuong"><i class="fal fa-plus me-1"></i> Thêm dòng</a>
+                                <i class="fa-solid fa-chalkboard-user"></i>Thêm giảng viên</a>
+                            <a class="btn-sm btn btn-outline-primary" style="float: right; margin-left: 10px !important"
+                                id="btnAdd_DTK_DoiTuong"><i class="fal fa-plus me-1"></i>Thêm dòng</a>
                         </div>
                     </div>
                 </div>
@@ -257,42 +257,42 @@
             <div class="container-fluid px-20">
                 <hr />
                 <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
-                    <div class="ms-auto">
-                        <div class="btn btn-outline-secondary  px-4 min-w-auto px-4 btnClose"><i
-                                class="fal fa-times-circle me-2"></i> Đóng</div>
-                        <div class="btn btn-success  px-4 min-w-auto px-4" id="btnSave_KeHoach"><i
-                                class="fal fa-save me-2"></i> Lưu</div>
+                    <div class="ms-auto aps-gap-10">
+                        <div class="btn btn-outline-secondary btnClose">
+                            <i class="fal fa-times"></i> Đóng</div>
+                        <div class="btn btn-primary" id="btnSave_KeHoach"><i
+                                class="fal fa-save"></i> Lưu</div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <div class="fake-modal zone-bus" id="zoneDSPhieu" style="display: none">
-        <div class="box-shadow register-wish pt-0 position-relative">
-            <div class="d-flex justify-content-between pt-3 px-20">
+    <!-- Phiếu khảo sát -->
+    <div class="fake-modal zoneDSPhieu" id="zoneDSPhieu" style="display: none">
+        <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
+            <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
-                    <p class="link"><a> <span class="myModalLabel"> <i class="fa fa-plus"></i></span>Phiếu khảo sát</a>
+                    <p class="link"><a> <span class="myModalLabel"><i class="fa fa-plus"></i></span>Phiếu khảo sát</a>
                     </p>
                 </div>
                 <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-20 color-66 btnClose"><i class="fal fa-times-circle"></i></a>
+                    <a class="d-block text-right fs-16 color-fff btnClose mt-5"><i class="fal fa-times"></i></a>
                 </div>
             </div>
             <div class="form-top rounded-0 border-top" style="margin-bottom: 10px"></div>
             <div class="container-fluid px-20">
                 <div class="row">
-                    <div class="col-12 col-lg-12 mt-12">
+                    <div class="col-12 col-lg-12 mt-12 pd0">
                         <div class="d-flex align-items-center">
-                            <span class="fw-bold text-success">Phiếu khảo sát</span>
-                            <a class="btn btn-outline-secondary ms-auto mr-5 btnAdd" style="margin-right: 5px"
-                                id="btnAdd_PhieuTuDong"><i class="fal fa-plus me-2"></i> Thêm phiếu tự động</a>
+                            <span class="fw-bold color-blue fz16 mt-15">Phiếu khảo sát</span>
+                            <a class="btn btn-outline-success ms-auto mr-10 btnAdd" style="margin-right: 10px"
+                                id="btnAdd_PhieuTuDong"><i class="fal fa-plus"></i>Thêm phiếu tự động</a>
                             <a class="btn btn-success btnAdd" id="btnAdd_DSPhieu"><i
-                                    class="fal fa-plus-circle me-2"></i> Thêm phiếu</a>
+                                    class="fal fa-plus"></i>Thêm phiếu</a>
                         </div>
-                        <div class="mt-2">
-                            <table class="table transcrip-table tabs-scores" id="tblDSPhieu">
+                        <div class="mt-10 aps-table-select">
+                            <table class="table transcrip-table tabs-scores table-bordered table-noborder" id="tblDSPhieu">
                                 <thead>
                                     <tr>
                                         <th class="text-center" scope="col">STT</th>
@@ -314,45 +314,44 @@
                         <div class="ApDungChoChuongTrinh"></div>
                         <div class="ApDungChoLop"></div>-->
                         <div style="width: 100%; margin-top: 10px">
-                            <a class="btn-sm btn btn-outline-secondary min-w-auto px-3 ms-auto btnDelete_DSPhieu"
-                                style="float: right;"><i class="fal fa-trash me-1"></i> Xóa</a>
-                            <!--<a class="btn-sm btn btn-outline-success min-w-auto  ms-auto px-3 ms-2 ml-2" style="float: right; margin-left: 5px !important" id="btnAdd_PhamVi"><i class="fal fa-plus me-1"></i> Thêm người học</a>-->
-                            <!--<a class="btn-sm btn btn-outline-success min-w-auto  ms-auto px-3 ms-2 ml-2" style="float: right; margin-left: 5px !important" id="btnAdd_GV_PhamVi"><i class="fal fa-plus me-1"></i> Thêm Giảng viên</a>
-                            <a class="btn-sm btn btn-outline-success min-w-auto  ms-auto px-3 ms-2 ml-2" style="float: right; margin-left: 5px !important" id="btnAdd_DTK_PhamVi"><i class="fal fa-plus me-1"></i> Thêm đối tượng</a>-->
+                            <a class="btn-sm btn btn-outline-danger min-w-auto px-3 ms-auto btnDelete_DSPhieu"
+                                style="float: right; margin-left: 10px !important"><i class="fal fa-trash"></i> Xóa</a>
+                            <!-- <a class="btn-sm btn btn-outline-success min-w-auto ms-auto px-3" style="float: right; margin-left: 10px !important" id="btnAdd_PhamVi"><i class="fa-solid fa-user-graduate"></i>Thêm người học</a> -->
+                            <!-- <a class="btn-sm btn btn-outline-primary min-w-auto  ms-auto px-3" style="float: right; margin-left: 10px !important" id="btnAdd_GV_PhamVi"><i class="fa-solid fa-user-graduate"></i>Thêm Giảng viên</a> -->
+                            <!-- <a class="btn-sm btn btn-outline-info min-w-auto  ms-auto px-3" style="float: right; margin-left: 10px !important" id="btnAdd_DTK_PhamVi"><i class="fa-solid fa-user"></i>Thêm đối tượng</a> -->
                         </div>
                     </div>
                 </div>
             </div>
             <div class="container-fluid px-20">
-                <hr />
+                <hr/>
                 <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
-                    <div class="ms-auto">
-                        <div class="btn btn-outline-secondary  px-4 min-w-auto px-4 btnClose"><i
-                                class="fal fa-times-circle me-2"></i> Đóng</div>
-                        <!--<div class="btn btn-success  px-4 min-w-auto px-4" id="btnSave_KeHoach"><i class="fal fa-save me-2"></i> Lưu</div>-->
+                    <div class="ms-auto aps-gap-10">
+                        <div class="btn btn-outline-secondary  px-4 min-w-auto  btnClose"><i class="fal fa-times"></i> Đóng</div>
+                        <!-- <div class="btn btn-primary px-4 min-w-auto " id="btnSave_KeHoach"><i class="fal fa-save"></i> Lưu</div> -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="fake-modal zone-bus" id="zonePhieu" style="display: none">
-        <div class="box-shadow register-wish pt-0 position-relative">
-            <div class="d-flex justify-content-between pt-3 px-20">
+    
+    <!-- Chỉnh sửa - Phiếu khảo sát -->
+    <div class="fake-modal zonePhieu" id="zonePhieu" style="display: block">
+        <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
+            <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
-                    <p class="link"><a> <span class="myModalLabel"> <i class="fa fa-pencil"></i> Chỉnh sửa -</span>Phiếu
+                    <p class="link"><a> <span class="myModalLabel"><i class="fa-solid fa-pen-field"></i>Chỉnh sửa -</span>Phiếu
                             khảo sát</a></p>
                 </div>
                 <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-20 color-66 btnCloseDSPhieu"><i class="fal fa-times-circle"></i></a>
+                    <a class="d-block text-right fs-16 mt-5 color-fff btnCloseDSPhieu"><i class="fal fa-times"></i></a>
                 </div>
             </div>
             <div class="form-top rounded-0 border-top" style="background: unset">
                 <div class="cmc-page">
-
                     <div class="cmc-con">
-                        <div class="container">
-                            <div class="cmc-con-before" style="z-index: unset">
+                        <div class="container" style="max-width: 100% !important;">
+                            <div class="cmc-con-before d-none" style="z-index: unset">
                                 <div class="cmc-main-title" id="lblTieuDe">
                                 </div>
                                 <!--<a href="" class="btn">
@@ -360,42 +359,40 @@
                                     <span>Lưu</span>
                                 </a>-->
                             </div>
-                            <div class="cmc-suvery">
+                            <div class="cmc-suvery pt-10 pl-10 pr-10">
                                 <div class="cmc-suvery-head">
                                     <div class="tern-name" id="lblMoTaPhieu">
                                     </div>
-                                    <div class="align-items-center">
-                                        <button class="btn btn-outline-success" id="btnKhoiTaoPhieu">
-                                            <!-- <i class="fal fa-plus"></i> -->
-                                            <span>Khởi tạo theo phiếu mẫu</span>
+                                    <div class="align-items-end w-100 ms-auto text-right">
+                                        <button class="btn btn-outline-success mr-10 ms-auto" id="btnKhoiTaoPhieu">
+                                            <i class="fal fa-plus"></i><span>Khởi tạo theo phiếu mẫu</span>
                                         </button>
-                                        <button class="btn btn-outline-warning" id="btnGenPhieu">
-                                            <!-- <i class="fal fa-plus"></i> -->
-                                            <span>Gen phiếu</span>
+                                        <button class="btn btn-outline-warning mr-0" id="btnGenPhieu">
+                                            <i class="fal fa-plus"></i><span>Gen phiếu</span>
                                         </button>
                                     </div>
                                     <div style="clear: both"></div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-12 col-lg-12">
-                                            <div class="form-item mb-5 form-add-info no-icon">
-                                                <label class="form-label">Tên phiếu</label>
-                                                <div class="input-group  no-icon">
-                                                    <input class="form-control" id="txtTenPhieu" />
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 col-md-12 col-lg-12">
-                                            <div class="form-item mb-5 form-add-info no-icon">
+                                    <div class="row pd0">
+                                         <div class="col-12 col-md-3 col-lg-3 pl0">
+                                            <div class="form-item mb-5 form-add-info no-icon d-flex">
                                                 <label class="form-label">Mã</label>
                                                 <div class="input-group  no-icon">
                                                     <input class="form-control" id="txtMaPhieu" />
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 col-md-9 col-lg-9 pr0">
+                                            <div class="form-item mb-5 form-add-info no-icon  d-flex">
+                                                <label class="form-label text-right pr-15">Tên phiếu</label>
+                                                <div class="input-group  no-icon">
+                                                    <input class="form-control" id="txtTenPhieu" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
                                         <div style="clear: both"></div>
                                         <div class="col-12 col-md-12 col-lg-12">
-                                            <div class="form-item mb-5 form-add-info">
+                                            <div class="form-item mb-5 form-add-info d-flex">
                                                 <label class="form-label">Mô tả</label>
                                                 <div class="input-group  no-icon">
                                                     <textarea id="txtMoTaPhieu" class="form-control"
@@ -407,9 +404,9 @@
                                     </div>
                                 </div>
 
-                                <div class="container-fluid px-20 zoneEdit">
+                                <div class="container-fluid zoneEdit">
                                     <div class="d-flex align-items-center mt-1 flex-wrap mb-1">
-                                        <p class="mb-0 color-dask-blue fw-bold">Đối tượng cần khảo sát</p>
+                                        <p class="mb-0 color-dask-blue fw-bold fz16">Đối tượng cần khảo sát</p>
                                         <div class="ms-auto">
                                             <!--<div class="btn btn-outline-secondary min-w-auto" id="btnDelete_KeHoach"><i class="fal fa-times-circle me-2"></i> Xóa</div>-->
                                             <div class="btn btn-success min-w-auto" id="btnLuuDoiTuongDuocKhaoSat"><i
