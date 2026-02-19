@@ -998,7 +998,6 @@
      box-shadow: none !important;
  }
 
-
  .w-85px {
      width: 85px !important;
  }
@@ -4141,3 +4140,5 @@
  .tblKeHoach tr td:n(3){
     text-align: left !important;
  }
+ /* ----------- */
+ .tab-Phieu .cmc-tabs{}

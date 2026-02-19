@@ -1089,9 +1089,11 @@ a:hover {
 .color-66 {
   color: #666666 !important;
 }
+
 .color-88 {
   color: #888888 !important;
 }
+
 .text-right-i {
   text-align: right !important;
 }
@@ -2295,7 +2297,7 @@ input::placeholder {
   align-items: center;
   margin-left: auto;
   font-weight: 400;
-    color: #666;
+  color: #666;
 }
 
 .gv-paging-group .form-add-info .form-select {
@@ -3778,13 +3780,15 @@ table>tbody>tr:hover .view-in-table-sticky {
   width: 20%;
   padding: 0 3px 0 0;
 }
- .modal-content .inputs-wr .item  .select2 
- {
-    margin-top: 0 !important;
+
+.modal-content .inputs-wr .item .select2 {
+  margin-top: 0 !important;
 }
+
 .modal-content .inputs-wr .item .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    margin-top: 0 !important;
+  margin-top: 0 !important;
 }
+
 .list-title-first p {
   width: 110px;
 }
@@ -5124,8 +5128,8 @@ img.st-1-img {
 }
 
 .btn-cmc-outline {
-  border: solid 1px #018ed5;
-  color: #018ed5;
+  border: solid 1px var(--color-blue);
+  color: var(--color-blue);
   height: 44px;
   width: 135px;
   border-radius: 6px;
@@ -5147,19 +5151,19 @@ img.st-1-img {
 
 .btn-cmc-outline i,
 .btn-cmc i {
-  margin-right: 10px;
+  /* margin-right: 10px; */
 }
 
 .cmc-modal .btn:hover,
 .btn-cmc:hover,
 .btn-cmc-outline:hover {
   color: white;
-  background: #002958;
+  background:var(--color-blue);
 }
 
 .btn-cmc {
-  border: solid 1px #018ed5;
-  background: #018ed5;
+  border: solid 1px var(--color-blue);
+  background: var(--color-blue);
   color: white;
   height: 44px;
   width: 135px;
@@ -5246,6 +5250,11 @@ img.st-1-img {
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
   margin-bottom: 0;
+  font-family: Arial, Helvetica, sans-serif !important;
+  --fa-style-family-sharp: "Arial" !important;
+  --fa-font-sharp-solid: normal 900 1em / 1 "Arial" !important;
+  --fa-style-family-brands: "Arial" !important;
+  --fa-font-brands: normal 400 1em / 1 "Arial" !important;
 }
 
 .cmc-tabs .nav-item {
@@ -5263,10 +5272,10 @@ img.st-1-img {
 }
 
 .cmc-tabs .nav-link.active {
-  background: #018ed5;
+  background: var(--color-blue);
   color: #ffffff;
   line-height: 20px;
-  border-color: #018ed5;
+  border-color: var(--color-blue);
 }
 
 .cmc-tabs .nav-link.active span {
@@ -6655,8 +6664,8 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .btn-cmc-outline:hover {
-  border: solid 1px #018ed5;
-  background: #018ed5;
+  border: solid 1px var(--color-blue);
+  background: var(--color-blue);
 }
 
 .cmc-question-content-wrapper {
@@ -7530,7 +7539,7 @@ tr:last-child .d-flex.gap-3 {
 
 .aps-tim-nhansu .title-is-paging {
   margin-top: 15px;
-  padding-bottom:10px;
+  padding-bottom: 10px;
   padding-left: 20px;
 }
 
@@ -7587,48 +7596,61 @@ tr:last-child .d-flex.gap-3 {
 .aps-tim-nhansu .inputs-tksv .select2 {
   margin-top: 0 !important;
 }
-.aps-tim-nhansu .title-is-paging{
-  position: relative ;
+
+.aps-tim-nhansu .title-is-paging {
+  position: relative;
 }
-#addNhieuNguoiDung{
+
+#addNhieuNguoiDung {
   padding-left: 20px !important;
   margin-bottom: 15px !important;
 }
+
 .aps-tim-nhansu #btnChonNhanSu {
-    position: absolute;
-    top: 0px;
-    right: 20px;
-    padding: 0 !important;
-    margin: 0 !important;
+  position: absolute;
+  top: 0px;
+  right: 20px;
+  padding: 0 !important;
+  margin: 0 !important;
 }
+
 .aps-tim-nhansu .title-is-paging.zone-pag-headertblModal_NhanSu {
-    margin-top: 5px !important;
+  margin-top: 5px !important;
 }
-.aps-tim-nhansu  .light-paginationtblModal_NhanSu{
+
+.aps-tim-nhansu .light-paginationtblModal_NhanSu {
   padding: 0 0px 5px 0 !important;
 }
-.aps-tim-nhansu  .gv-paging-group .form-add-info .form-select {
-    margin-left: 5PX !important;
+
+.aps-tim-nhansu .gv-paging-group .form-add-info .form-select {
+  margin-left: 5PX !important;
 }
+
 .aps-tim-nhansu .gv-paging-group {
-    color: #888;
+  color: #888;
 }
+
 .aps-tim-nhansu #txtSearchModal_CauTrucGiang_NS {
-    right: 150px !important;
-    top: -7px !important;
+  right: 150px !important;
+  top: -7px !important;
 }
+
 /* ------------------------ */
 .gv-paging-group .info-pag {
-    margin-top: -10px;
+  margin-top: -10px;
 }
-.modal-680 .modal-content{
+
+.modal-680 .modal-content {
   width: 100% !important;
   max-width: 680px !important;
 }
-.modal-860 .modal-content{
+
+.modal-860 .modal-content {
   width: 100% !important;
   max-width: 860px !important;
 }
-.modal-860, .modal_XacNhan .modal-860{
+
+.modal-860,
+.modal_XacNhan .modal-860 {
   max-width: 860px !important;
 }
