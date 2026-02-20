@@ -97,7 +97,9 @@ blockquote {
 .color-green.box-title {
   color: var(--color-green) !important;
 }
-
+.color-88{
+  color: #888 !important;
+}
 .bg-blue {
   background-color: var(--color-blue) !important;
 }
@@ -7605,7 +7607,9 @@ tr:last-child .d-flex.gap-3 {
   padding-left: 20px !important;
   margin-bottom: 15px !important;
 }
-
+.box-search-GV #addNhieuNguoiDung {
+  padding-left: 0px !important;
+}
 .aps-tim-nhansu #btnChonNhanSu {
   position: absolute;
   top: 0px;
