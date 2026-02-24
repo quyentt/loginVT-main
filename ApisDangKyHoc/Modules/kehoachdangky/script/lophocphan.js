@@ -933,6 +933,16 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
+                        return aData.KHONGTINHPHI ? 'Không tính phí' : '';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return aData.KHONGTOCHUCTHI ? 'Không tổ chức thi' : '';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnDonLop" id="' + aData.ID + '" name="' + aData.TENLOP  +'" title="Dồn lớp">Dồn lớp</a></span>';
                     }
                 },
