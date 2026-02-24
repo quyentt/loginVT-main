@@ -3,10 +3,10 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-                <p class="link"><a href="#">quản lý chung</a><i class="fal fa-angle-right"></i><a href="#">Quản lý sự
-                        kiện - hoạt động</a></p>
+                <p class="link"><a href="#">quản lý chung</a>
+                    <i class="fal fa-angle-right"></i><a href="#">Quản lý sự kiện - hoạt động</a>
+                </p>
             </div>
-
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
@@ -29,7 +29,7 @@
                 <div class="col-12 col-lg-4 col-md-3 mb-15">
                     <div class="d-flex align-items-center">
                         <div class="btn btn-default btn-search min-w-auto px-4 ms-auto ms-lg-0" id="btnSearch">
-                            <i class="fa-solid fa-magnifying-glass"></i> Xem
+                            <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
                         </div>
                     </div>
                 </div>
@@ -46,7 +46,8 @@
                 </p>
             </div>
             <!-- <p class="color-dask-blue fw-bold mt-3 mb-1">Danh sách sự kiện</p> -->
-            <table class="table transcrip-table tabs-scores h-auto mt-10" id="tblTheoDoi">
+            <table class="table transcrip-table tabs-scores h-auto mt-10 tblTheoDoi table-noborder table-bordered"
+                id="tblTheoDoi">
                 <thead>
                     <tr>
                         <th class="text-center w-50px" scope="col">STT</th>
@@ -61,165 +62,164 @@
                 </thead>
                 <tbody></tbody>
             </table>
-
-
-
-
         </div>
     </div>
-    <!-- end đăng ký nguyện vọng -->
 
-    <div class="fake-modal zone-bus" id="zoneEdit" style="display: none">
+    <!-- Check In -->
+    <div class="fake-modal box-checkIn  modal-aps-add" id="zoneEdit" style="display: none">
         <div class="box-shadow register-wish pt-0 position-relative" style="padding-bottom: 0px">
-            <div class="box-shadow pt-0">
-                <div class="d-flex justify-content-between pt-3 px-20">
-                    <div class="nav-content-left">
-                        <p class="link"><a> <span class="myModalLabel"> <i class="fa fa-plus"></i></span>Check In</a>
-                        </p>
+            <div class="d-flex justify-content-between pt-3 px-20 box-header">
+                <div class="nav-content-left">
+                    <p class="link"><a> <span class="myModalLabel">
+                                <i class="fa-solid fa-check-to-slot"></i></span>Check In</a>
+                    </p>
+                </div>
+                <div class="nav-content-right mt mt-5">
+                    <a class="d-block text-right fs-16 color-fff btnClose pl-10 pr-5"><i class="fal fa-times"></i></a>
+                </div>
+            </div>
+            <!-- box search -->
+            <div class="form-top rounded-0 border-top" style="position: relative;">
+                <div class="d-flex flex-wrap ft-row-check align-items-center">
+                    <!-- <p class="ft-label">Thông tin sự kiện:</p> -->
+                    <p class="mb-0 fw-bold lblSuKien"></p>
+                </div>
+                <div class="d-flex ft-row-check align-items-center flex-wrap mb-15">
+                    <div class="d-flex align-items-center flex-wrap iform">
+                        <p class="ft-label color-66">Tìm theo mã số đăng ký</p>
+                        <div class="form-item d-flex form-add-info">
+                            <div class="input-group no-icon">
+                                <input type="text" id="txtMaDangKy" class="form-control" placeholder="Nhập mã đăng ký">
+                            </div>
+                        </div>
                     </div>
-                    <div class="nav-content-right mt">
-                        <a class="d-block text-right fs-20 color-66 btnClose"><i class="fal fa-times-circle"></i></a>
+                    <div class="d-flex align-items-center flex-wrap iform">
+                        <p class="ft-label text-right pe-3 color-66 mr-10">Tìm theo mã số sinh viên</p>
+                        <div class="form-item d-flex form-add-info">
+                            <div class="input-group no-icon">
+                                <input type="text" id="txtMaSinhVien" class="form-control"
+                                    placeholder="Nhập mã sinh viên">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn btn-success" id="btnKiemTraCheckIn">
+                        <i class="fal fa-check me-2"></i> Kiểm tra
                     </div>
                 </div>
-                <div class="form-top">
-                    <div class="d-flex flex-wrap ft-row-check align-items-center">
-                        <!-- <p class="ft-label">Thông tin sự kiện:</p> -->
-                        <p class="mb-0 fw-bold lblSuKien"></p>
+            </div>
+            <div class="container-fluid px-20">
+                <p class="color-blue fz16 fw-bold mb-0">Thông tin sinh viên</p>
+                <div class="st-info-row">
+                    <div class="image" id="lblHinhAnh">
+                        <img src="assets/images/avata-form.jpg" alt="">
                     </div>
-                    <div class="d-flex ft-row-check align-items-center flex-wrap">
-                        <div class="d-flex align-items-center flex-wrap iform">
-                            <p class="ft-label">Tìm theo mã số đăng ký:</p>
-                            <div class="form-item d-flex form-add-info">
-                                <div class="input-group no-icon">
+                    <div class="info">
 
-                                    <input type="text" id="txtMaDangKy" class="form-control"
-                                        placeholder="Nhập mã đăng ký">
-                                </div>
-                            </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Họ và tên:
+                            </p>
+                            <p class="fw-bold" id="lblHoTen"></p>
                         </div>
-                        <div class="d-flex align-items-center flex-wrap iform">
-                            <p class="ft-label text-right pe-3">Tìm theo mã số sinh viên:</p>
-                            <div class="form-item d-flex form-add-info">
-                                <div class="input-group no-icon">
-
-                                    <input type="text" id="txtMaSinhVien" class="form-control"
-                                        placeholder="Nhập mã sinh viên">
-                                </div>
-                            </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Hệ đào tạo:
+                            </p>
+                            <p class="fw-bold" id="lblHeDaoTao"></p>
                         </div>
-                        <div class="btn btn-dask-blue " id="btnKiemTraCheckIn"><i class="fal fa-check me-2"></i> Kiểm
-                            tra</div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Khóa đào tạo:
+                            </p>
+                            <p class="fw-bold" id="lblKhoaHoc"></p>
+                        </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Chương trình đào tạo:
+                            </p>
+                            <p class="fw-bold" id="lblChuongTrinh"></p>
+                        </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Lớp quản lý:
+                            </p>
+                            <p class="fw-bold" id="lblLopQuanLy"></p>
+                        </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Tình trạng:
+                            </p>
+                            <p class="fw-bold" id="lblTinhTrang"></p>
+                        </div>
 
+                    </div>
+                    <div class="info">
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Tình trạng đăng ký tham gia:
+                            </p>
+                            <p id="lblTinhTrangDangKy"></p>
+                        </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Mã số đăng ký:
+                            </p>
+                            <p class="fw-bold" id="lblMaDangKy"></p>
+                        </div>
+                        <div class="info-row">
+                            <p class="st-info-label">
+                                Mã số:
+                            </p>
+                            <p class="fw-bold" id="lblMaSo"></p>
+                        </div>
+                        <div class="mt-5">
+                            <div class="btn btn-success " id="btnCheckIn"><i class="fal fa-map-marker-check me-2"></i>
+                                Check In</div>
+                        </div>
                     </div>
 
                 </div>
-                <div class="container-fluid px-20">
-                    <p class="color-dask-blue fw-bold mt-3 mb-1">Thông tin sinh viên</p>
-                    <div class="st-info-row">
-                        <div class="image" id="lblHinhAnh">
-                            <img src="assets/images/avata-form.jpg" alt="">
-                        </div>
-                        <div class="info">
+                <p class="color-blue fz16 fw-bold mb-5 mt-15">Danh sách check In</p>
+                <table class="table transcrip-table tabs-scores h-auto tblCheckIn table-bordered table-noborder"
+                    id="tblCheckIn">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th class="" scope="col">Mã số</th>
+                            <th class="" scope="col">Họ tên</th>
+                            <th class="text-center" scope="col">Thời gian</th>
+                            <th class="text-center" scope="col">Đã đang ký tham gia</th>
+                            <th class="text-center" scope="col">Người check in</th>
 
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Họ và tên:
-                                </p>
-                                <p class="fw-bold" id="lblHoTen"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Hệ đào tạo:
-                                </p>
-                                <p class="fw-bold" id="lblHeDaoTao"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Khóa đào tạo:
-                                </p>
-                                <p class="fw-bold" id="lblKhoaHoc"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Chương trình đào tạo:
-                                </p>
-                                <p class="fw-bold" id="lblChuongTrinh"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Lớp quản lý:
-                                </p>
-                                <p class="fw-bold" id="lblLopQuanLy"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Tình trạng:
-                                </p>
-                                <p class="fw-bold" id="lblTinhTrang"></p>
-                            </div>
-
-                        </div>
-                        <div class="info">
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Tình trạng đăng ký tham gia:
-                                </p>
-                                <p id="lblTinhTrangDangKy"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Mã số đăng ký:
-                                </p>
-                                <p class="fw-bold" id="lblMaDangKy"></p>
-                            </div>
-                            <div class="info-row">
-                                <p class="st-info-label">
-                                    Mã số:
-                                </p>
-                                <p class="fw-bold" id="lblMaSo"></p>
-                            </div>
-                            <div class="mt-5">
-                                <div class="btn btn-success " id="btnCheckIn"><i
-                                        class="fal fa-map-marker-check me-2"></i> Check In</div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <p class="color-dask-blue fw-bold mt-3 mb-1">Danh sách check In</p>
-                    <table class="table transcrip-table tabs-scores h-auto" id="tblCheckIn">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-50px" scope="col">STT</th>
-
-                                <th class="" scope="col">Mã số</th>
-                                <th class="" scope="col">Họ tên</th>
-                                <th class="text-center" scope="col">Thời gian</th>
-                                <th class="text-center" scope="col">Đã đang ký tham gia</th>
-                                <th class="text-center" scope="col">Người check in</th>
-
-                        </thead>
-                    </table>
-                </div>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade register-wish " id="danhsachdangky" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#danhsachdangky">
+        Danh sách đã đăng ký tham gia </button>
+</div>
+<!-- ---------- -->
+<div class="modal fade register-wish danhsachdangky" id="danhsachdangky" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Danh sách đã đăng ký tham gia</b></p>
+                    <p><i class="fa-regular fa-users mr-5"></i> Danh sách đã đăng ký tham gia</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="col-12">
-                    <table class="table tabs-scores  transcrip-table border-l-0 border-right-0" id="tblXacNhanSuKien">
+                <div class="col-12 aps-table-select">
+                    <table class="table tabs-scores transcrip-table border-l-0 border-right-0 tblXacNhanSuKien table-bordered table-noborder mb-20"
+                        id="tblXacNhanSuKien">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col">Mã số</th>
                                 <th class="" scope="col">Tên</th>
                                 <th class="" scope="col">Lớp</th>
@@ -227,21 +227,22 @@
                                 <th class="" scope="col">Khóa</th>
                                 <th class="text-center" scope="col">Xác nhận tham gia</th>
                                 <th class="text-center" scope="col">Thời gian xác nhận</th>
-
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
-                    <div class="btn btn-dask-blue  px-4 ms-auto "><i class="fal fa-save me-2" id="btnSave_SuKien"></i>
-                        Lưu</div>
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4 mt-10">
+                    <div class="btn btn-primary px-4 ms-auto ">
+                        <i class="fal fa-save" id="btnSave_SuKien"></i> Lưu
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </div>
+<!-- js -->
 <script src="modules/sukien/script/theodoi.js?v=1.0.0.0"></script>
 <script type="text/javascript">
     var main_doc = {};

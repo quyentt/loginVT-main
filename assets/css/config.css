@@ -779,7 +779,9 @@ textarea.form-control {
 .modal-1800 {
   max-width: 1800px !important;
 }
-
+.modal-90 {
+  max-width: 90% !important;
+}
 .link-base {
   color: var(--color-link);
 }

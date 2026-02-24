@@ -75,12 +75,11 @@ systemextend.prototype = {
         html += '</div>';
         html += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
         html += '</div>';
-        html += '<div class="modal-body p-0">';
-        html += '<div class="col-12">';
-        html += '<div class="bg-f4 px-3 pt-3 pb-3">';
+        html += '<div class="modal-body pd-0" style="padding:0px !important;">';
+        html += '<div class="col-12 pd-0">';
+        html += '<div class="bg-f4 box-search-GV pd-20">';
         html += '<div class="d-flex inputs-tksv ">';
         html += '<div class="inputs-wr">';
-
         html += '<div class=" item">';
         html += '<div class="form-item d-flex  form-add-info flex-grow-1">';
         html += '<div class="input-group no-icon">';
@@ -106,24 +105,24 @@ systemextend.prototype = {
         html += '</div>';
         html += '</div>';
         html += '</div>';
+         html += '<div class=" item">';
+        html += '<div class="btn btn-default btn-search" id="btnSearch_ModalNhanSu"><i class="fal fa-search"></i> Tìm kiếm</div>';
         html += '</div>';
-
-        html += '<div class="btn btn-dask-blue min-w-auto px-4" id="btnSearch_ModalNhanSu"><i class="fal fa-search me-2"></i> Tìm kiếm</div>';
         html += '</div>';
-
-        html += '<div class="d-flex flex-wrap align-items-start list-title-first" id="addNhieuNguoiDung">';
-        html += '<p class="fw-bold  mt-8 mb-1">Thêm nhiều</p>';
+        html += '</div>';
+        html += '<div class="d-flex flex-wrap align-items-start list-title-first addNhieuNguoiDung pl0" id="addNhieuNguoiDung">';
+        html += '<p class="mt-8 mb-1 color-88">Thêm nhiều</p>';
         html += '<div class="d-flex flex-wrap list">';
-        html += '<a class="btn btn-outline-success ms-3 mb-3" id="btnAdd_TungDonVi"> <i class="fal fa-plus me-2"></i> Thêm từng đơn vị</a>';
+        html += '<a class="btn btn-sm btn-outline-success min-w-auto" id="btnAdd_TungDonVi"> <i class="fal fa-plus"></i> Thêm từng đơn vị</a>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="px-3 pb-5">';
-        html += '<div class="title-is-paging">';
+        html += '<div class="box-list-gv position-relative pd-20">';
+        html += '<div class="title-is-paging mt-0" style="margin-top:0 !important">';
         html += '<p class="color-dask-blue fw-bold mt-3"><i class="fa-regular fa-users-between-lines"></i>Danh sách</p>';
-        html += '<button id="btnChonNhanSu" class="btn btn-sm ms-auto btn-outline-dask-blue min-w-auto ms-3 px-3 btn-on-paging" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn nhân sự</button>';
+        html += '<button id="btnChonNhanSu" class="btn btn-sm ms-auto btn-outline-dask-blue min-w-auto btnChonSinhVien btn-on-paging" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn nhân sự</button>';
         html += '</div>';
-        html += '<div class="bus-wrp" style="max-height: unset;">';
+        html += '<div class="bus-wrp box-table-gv aps-table-select" style="max-height: unset;">';
         html += '<table class="table transcrip-table tabs-scores table-noborder table-bordered" id="tblModal_NhanSu">';
         html += '<thead>';
         html += '<tr>';
@@ -132,7 +131,7 @@ systemextend.prototype = {
         html += '<th class="" scope="col">Họ tên</th>';
         html += '<th class="" scope="col">Ngày sinh</th>';
         html += '<th class="" scope="col">Giới tính</th>';
-        html += '<th class="text-center" scope="col">';
+        html += '<th class="text-center w-50px" scope="col">';
         html += '<input type="checkbox" id="chkSelectAll_ModalNhanSu" />';
         html += '</th>';
         html += '</tr>';
@@ -193,7 +192,7 @@ systemextend.prototype = {
             strCoCauToChuc_Id: edu.util.getValById("dropSearchModal_CCTC_NS"),
             strTinhTrangNhanSu_Id: "",
             strNguoiThucHien_Id: "",
-            dLaCanBoNgoaiTruong: edu.util.getValById("dropSearchModal_CB_NS") ? edu.util.getValById("dropSearchModal_CB_NS"): 1
+            dLaCanBoNgoaiTruong: edu.util.getValById("dropSearchModal_CB_NS") ? edu.util.getValById("dropSearchModal_CB_NS") : 1
         };
         edu.system.getList_NhanSu(obj, "", "", me.cbGetListModal_NhanSu);
     },
@@ -923,17 +922,17 @@ systemextend.prototype = {
         html += '<div class="modal-content">';
         html += '<div class="modal-header">';
         html += '<div class="finance-user-info in-modal ">';
-        html += '<p><b>Tìm kiếm sinh viên</b></p>';
+        html += '<p><i class="fa-solid fa-user-magnifying-glass"></i> Tìm kiếm sinh viên</p>';
         html += '</div>';
         html += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
         html += '</div>';
         html += '<div class="modal-body p-0">';
-        html += '<div class="col-12">';
-        html += '<div class="bg-f4 px-3 pt-3 pb-3">';
+        html += '<div class="col-12 box-search-student bg-white">';
+        html += '<div class="box-search pd20">';
         html += '<div class="d-flex inputs-tksv ">';
         html += '<div class="inputs-wr">';
         html += '<div class=" item">';
-        html += '<div class="form-item d-flex  form-add-info flex-grow-1">';
+        html += '<div class="form-item d-flex form-add-info flex-grow-1">';
         html += '<div class="input-group no-icon">';
         html += '<select id="dropSearchModal_He_SV" class="select-opt" multiple="multiple"></select>';
         html += '</div>';
@@ -941,7 +940,7 @@ systemextend.prototype = {
         html += '</div>';
         html += '<div class=" item">';
         html += '<div class="form-item d-flex  form-add-info flex-grow-1">';
-        html += '<div class="input-group no-icon">';
+        html += '<div class="input-group no-icon">'
         html += '<select id="dropSearchModal_Khoa_SV" class="select-opt" multiple="multiple"></select>';
         html += '</div>';
         html += '</div>';
@@ -963,34 +962,34 @@ systemextend.prototype = {
         html += '<div class=" item">';
         html += '<div class="form-item d-flex  form-add-info flex-grow-1">';
         html += '<div class="input-group no-icon">';
-        html += '<input id="txtSearchModal_TuKhoa_SV" class="form-control" placeholder="Nhập từ khóa tìm kiếm" style="margin-top: 10px">';
+        html += '<input id="txtSearchModal_TuKhoa_SV" class="form-control" placeholder="Nhập từ khóa tìm kiếm">';
         html += '</div>';
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="btn btn-dask-blue min-w-auto px-4" id="btnSearch_ModalSinhVien"><i class="fal fa-search me-2"></i> Tìm</div>';
+        html += '<div class="btn btn-default btn-search" id="btnSearch_ModalSinhVien"><i class="fal fa-search me-2"></i> Tìm kiếm</div>';
         html += '</div>';
-        html += '<div class="d-flex flex-wrap align-items-start list-title-first">';
-        html += '<p class="fw-bold  mt-1 mb-1">Thêm nhiều</p>';
+        html += '<div class="d-flex flex-wrap align-items-start list-title-first box-list-adds mt-15 mb-15">';
+        html += '<p class="mt-5">Thêm nhiều</p>';
         html += '<div class="d-flex flex-wrap list">';
-        html += '<a class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_Khoa"> <i class="fal fa-plus me-2"></i> Thêm từng khóa</a>';
-        html += '<a class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_ChuongTrinh"> <i class="fal fa-plus me-2"></i> Thêm từng chương trình</a>';
-        html += '<a class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3" id="btnAdd_Lop"> <i class="fal fa-plus me-2"></i> Thêm từng lớp</a>';
+        html += '<a class="btn btn-outline-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i> Thêm từng khóa</a>';
+        html += '<a class="btn btn-outline-success" id="btnAdd_ChuongTrinh"> <i class="fal fa-plus"></i> Thêm từng chương trình</a>';
+        html += '<a class="btn btn-outline-danger" id="btnAdd_Lop"> <i class="fal fa-plus"></i> Thêm từng lớp</a>';
         html += '</div>';
         html += '</div>';
         html += '<div class="d-flex flex-wrap align-items-start list-title-first">';
-        html += '<p class="fw-bold  mt-1 mb-1">Trạng thái</p>';
+        html += '<p class="mt-1 mb-1">Trạng thái</p>';
         html += '<div class="d-flex flex-wrap lists" id="DSTrangThaiSV_MD">';
         html += '</div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="px-3 pb-5">';
-        html += '<div class="title-is-paging">';
+        html += '<div class="pd20 list-sv">';
+        html += '<div class="title-is-paging pb-0">';
         html += '<p class="color-dask-blue fw-bold mt-3">Danh sách</p>';
-        html += '<button id="btnChonSinhVien" class="btn btn-sm ms-auto btn-outline-dask-blue min-w-auto ms-3 px-3 btn-on-paging" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>';
+        html += '<button id="btnChonSinhVien" class="btn btn-on-paging btnChonSinhVien" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>';
         html += '</div>';
-        html += '<div class="bus-wrp" style="max-height: unset;">';
-        html += '<table class="table transcrip-table tabs-scores h-auto" id="tblModal_SinhVien">';
+        html += '<div class="bus-wrp box-table-sv" style="max-height: unset;border-top: solid 0px #e1e1e1">';
+        html += '<table class="table transcrip-table tabs-scores h-auto tblModal_SinhVien table-bordered table-noborder" id="tblModal_SinhVien">';
         html += '<thead>';
         html += '<tr>';
         html += '<th class="text-center w-50px" scope="col">STT</th>';
@@ -1001,7 +1000,7 @@ systemextend.prototype = {
         html += '<th class="" scope="col">Chương trình</th>';
         html += '<th class="" scope="col">Khóa</th>';
         html += '<th class="" scope="col">Trạng thái</th>';
-        html += '<th class="text-center" scope="col">';
+        html += '<th class="text-center w-50px" scope="col">';
         html += '<input type="checkbox" id="chkSelectAll_SinhVien" />';
         html += '</th>';
 
@@ -1439,7 +1438,7 @@ systemextend.prototype = {
             };
             console.log(obj)
             $.ajax(obj);
-        } catch{
+        } catch {
 
         }
         return;
@@ -1469,7 +1468,7 @@ systemextend.prototype = {
                         localStorage.removeItem("strTinhThanh6");
                         localStorage.setItem("strTinhThanh6", JSON.stringify(arr));
                     }
-                    
+
                 }
 
             },
@@ -1651,7 +1650,7 @@ systemextend.prototype = {
                                     getData_Tinh(arr);
                                 }
                             }
-                            
+
                         }
 
                     },
@@ -1946,7 +1945,7 @@ systemextend.prototype = {
                                 localStorage.setItem("strTinhThanh6", JSON.stringify(arr));
                                 getData_Tinh(arr);
                             }
-                            
+
                         }
 
                     },
@@ -2108,7 +2107,7 @@ systemextend.prototype = {
 
             ]
         }, false, false, false, null);
-        
+
     },
     /*----------------------------------------------
     --Author        : nnthuong
@@ -2799,7 +2798,7 @@ systemextend.prototype = {
 
     getData_Phieu: function (strSoPhieu_Id, strLoaiPhieu, zoneMauIn, callback, bInTheoLo) {
         var me = this;
-        switch (strLoaiPhieu) {            
+        switch (strLoaiPhieu) {
             case "PHIEUTHU": me.getData_PhieuThu(strSoPhieu_Id, zoneMauIn, "DHTL_PHIEUTHU_NHAPHOC_2018", callback, bInTheoLo); break;
             case "BIENLAI": me.getData_PhieuThu(strSoPhieu_Id, zoneMauIn, "DHGTVT_PHIEUTHU_2018", callback, bInTheoLo); break;
             case "BIENLAIRUT": me.getData_PhieuThu(strSoPhieu_Id, zoneMauIn, "DHCNTTTN_BIENLAIRUT_2018", callback, bInTheoLo); break;
@@ -3070,7 +3069,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
                     row += '</tbody>';
@@ -3082,7 +3081,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
@@ -3094,7 +3093,7 @@ systemextend.prototype = {
                 for (var i = 0; i < irowlength; i++) {
                     row += '<tr>'
                     row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     row += '</tr>';
@@ -3214,7 +3213,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
                     row += '</tbody>';
@@ -3226,7 +3225,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
@@ -3238,7 +3237,7 @@ systemextend.prototype = {
                 for (var i = 0; i < irowlength; i++) {
                     row += '<tr>';
                     row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     row += '</tr>';
@@ -3305,7 +3304,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
                     row += '</tbody>'
@@ -3317,7 +3316,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
@@ -3329,7 +3328,7 @@ systemextend.prototype = {
                 for (var i = 0; i < irowlength; i++) {
                     row += '<tr>';
                     row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     row += '</tr>';
@@ -3462,7 +3461,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
                     row += '</tbody>';
@@ -3474,7 +3473,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
@@ -3486,7 +3485,7 @@ systemextend.prototype = {
                 for (var i = 0; i < irowlength; i++) {
                     row += '<tr>'
                     row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     row += '</tr>';
@@ -3553,7 +3552,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
                     row += '</tbody>';
@@ -3565,7 +3564,7 @@ systemextend.prototype = {
                     for (var i = 0; i < irowlength; i++) {
                         row += '<tr>'
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
@@ -3577,7 +3576,7 @@ systemextend.prototype = {
                 for (var i = 0; i < irowlength; i++) {
                     row += '<tr>'
                     row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     row += '</tr>';
@@ -4821,7 +4820,7 @@ systemextend.prototype = {
                     for (i = 0; i < irowlength; i++) {
                         row += '<tr>';
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
                     row += '</tbody>';
@@ -4833,7 +4832,7 @@ systemextend.prototype = {
                     for (i = 0; i < irowlength; i++) {
                         row += '<tr>';
                         row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                         row += '</tr>';
                     }
@@ -4845,7 +4844,7 @@ systemextend.prototype = {
                 for (i = 0; i < irowlength; i++) {
                     row += '<tr>';
                     row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i+ irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
+                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].NOIDUNG + ' : ' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU).replace(/,/g, '.') + 'đ</span></td>';
                     row += '</tr>';
@@ -6397,7 +6396,7 @@ systemextend.prototype = {
                     }
                 }
                 else {
-                    edu.system.alert( data.Message, "w");
+                    edu.system.alert(data.Message, "w");
                 }
                 edu.system.endLoading();
             },

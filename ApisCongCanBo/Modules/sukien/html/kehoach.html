@@ -3,21 +3,17 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
                 <p class="link">
                     <a href="#">quản lý chung</a><i class="fal fa-angle-right"></i><a href="#">
                         Quản lý kế hoạch
                     </a>
                 </p>
-
             </div>
-
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
         </div>
     </div>
-
     <!-- đăng ký nguyện vọng -->
     <div class="box-shadow register-wish pt-0 zone-bus" id="zonebatdau">
         <div class="form-top">
@@ -50,11 +46,10 @@
                 </div>
                 <div class="ms-auto aps-gap-10">
                     <div class="btn btn-danger" id="btnDelete_KeHoach"><i class="fa-solid fa-trash"></i> Xóa</div>
-                    <div class="btn btn-success btnAdd"><i class="fal fa-plus-circle me-2"></i> Thêm mới</div>
+                    <div class="btn btn-success btnAdd"><i class="fal fa-plus"></i> Thêm mới</div>
                 </div>
-
             </div>
-            <table class="table transcrip-table tabs-scores h-auto" id="tblKeHoach">
+            <table class="table transcrip-table tabs-scores h-auto table-bordered table-noborder" id="tblKeHoach">
                 <thead>
                     <tr>
                         <th class="text-center w-50px" scope="col">STT</th>
@@ -72,20 +67,19 @@
                 <tbody></tbody>
             </table>
         </div>
-
     </div>
-
-    <div class="fake-modal zone-bus modal-aps-add" id="zoneEdit" style="display: none">
+    <div class="fake-modal modal-aps-add" id="zoneEdit" style="display: none">
         <div class="box-shadow register-wish pt-0 position-relative">
-            <div class="d-flex justify-content-between pt-3 px-20 box-header">
+            <div class="d-flex justify-content-between pt-5 px-20 box-header pr0">
                 <div class="nav-content-left">
                     <p class="link"><a> <span class="myModalLabel"> <i class="fa fa-plus"></i></span>Kế hoạch</a></p>
                 </div>
-                <div class="nav-content-right mt">
-                    <a class="d-block text-right fs-20 color-fff btnClose"><i class="fal fa-times-circle"></i></a>
+                <div class="nav-content-right mt mt-5">
+                    <a class="d-block text-right fs-16 color-fff btnClose pl-10 pr-15"><i class="fal fa-times"></i></a>
                 </div>
             </div>
-            <div class="form-top rounded-0 border-top">
+            <!-- box search -->
+            <div class="form-top rounded-0 border-top" style="position: relative;">
                 <div class="row">
                     <!--<div class="col-12 col-md-6 col-lg-4">
                         <div class="form-item d-flex mb-15 form-add-info">
@@ -131,21 +125,21 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
-            <div class="container-fluid px-20">
+            <div class="container-fluid px-20" style="position: relative;">
                 <div class="row">
-                    <div class="col-12 col-lg-4 mt-4">
-                        <div class="d-flex align-items-center justify-content-between">
+                    <div class="col-12 col-lg-4 mt-4 pl0">
+                        <div class="d-flex align-items-center justify-content-between position-relative">
                             <div class="pull-left">
-                            <span class="fw-bold text-success">Phạm vi áp dụng</span></div>
-                            <div class="pull-right aps-gap-10 mb-5">
-                                <button
-                                    class="btn-sm btn btn-outline-danger min-w-auto px-3 ms-auto btnDelete_PhamVi"><i
-                                        class="fal fa-trash me-1"></i> Xóa</button>
-                                <button class="btn-sm btn btn-outline-success min-w-auto px-3 ms-2 btnAdd_PhamVi"><i
-                                        class="fal fa-plus me-1"></i> Thêm</button>
+                                <span class="fw-bold text-success">Phạm vi áp dụng</span>
+                            </div>
+                            <div class="pull-right mb-5"
+                                style="min-width: 183px;right:0 !important;margin-right: 0 !important;">
+                                <button class="btn-sm btn btn-outline-danger min-w-auto px-3 ms-auto btnDelete_PhamVi">
+                                    <i class="fal fa-trash"></i>Xóa</button>
+                                <button class="btn-sm btn btn-outline-success min-w-auto px-3 ms-2 btnAdd_PhamVi">
+                                    <i class="fal fa-plus"></i>Thêm</button>
                             </div>
                         </div>
                         <div class="mt-2">
@@ -182,25 +176,34 @@
 
         </div>
     </div>
-
     <!-- end đăng ký nguyện vọng -->
 </div>
-<div class="modal fade register-wish " id="modaldangky" tabindex="-1" aria-labelledby="exampleModalLabel"
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaldangky">
+        Danh sách đã đăng ký tham gia </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modaldathamgia">
+        Danh sách đã tham gia</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_sinhvien">
+        Tìm kiếm sinh viên</button>
+</div>
+<!-- Danh sách đã đăng ký tham gia -->
+<div class="modal fade register-wish modaldangky" id="modaldangky" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Danh sách đã đăng ký tham gia</b></p>
+                    <p><i class="fa-solid fa-user-pen mr-10"></i>Danh sách đã đăng ký tham gia</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="col-12">
-                    <table class="table tabs-scores  transcrip-table border-l-0 border-right-0" id="tblDangKyThamGia">
+                    <table class="table tblDangKyThamGia table-bordered table-noborder" id="tblDangKyThamGia">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col">Mã số</th>
                                 <th class="" scope="col">Tên</th>
                                 <th class="" scope="col">Lớp</th>
@@ -212,65 +215,68 @@
                         <tbody></tbody>
                     </table>
                 </div>
-                <!--<div class="d-flex align-items-center mt-4 flex-wrap mb-4">
-                    <div class="btn btn-dask-blue  px-4 ms-auto "><i class="fal fa-save me-2" id="btnSave_SuKien"></i> Lưu</div>
-                </div>-->
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4 d-none" style="display: none !important;">
+                    <div class="btn btn-primary px-4 ms-auto "><i class="fal fa-save me-2" id="btnSave_SuKien"></i> Lưu
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
-<div class="modal fade register-wish " id="modaldathamgia" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<!-- Danh sách đã tham gia -->
+<div class="modal fade register-wish modaldathamgia" id="modaldathamgia" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Danh sách đã tham gia</b></p>
+                    <p><i class="fa-regular fa-users mr-10"></i>Danh sách đã tham gia</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="col-12">
-                    <table class="table tabs-scores  transcrip-table border-l-0 border-right-0" id="tblDaThamGia">
+                    <table class="table  table-bordered table-noborder tblDaThamGia" id="tblDaThamGia">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col">Mã số</th>
                                 <th class="" scope="col">Tên</th>
                                 <th class="" scope="col">Lớp</th>
                                 <th class="" scope="col">Ngành</th>
                                 <th class="" scope="col">Khóa</th>
-
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <!--<div class="d-flex align-items-center mt-4 flex-wrap mb-4">
-                    <div class="btn btn-dask-blue  px-4 ms-auto "><i class="fal fa-save me-2" id="btnSave_SuKien"></i> Lưu</div>
-                </div>-->
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4 d-none" style="display: none !important;">
+                    <div class="btn btn-primary  px-4 ms-auto "><i class="fal fa-save me-2" id="btnSave_SuKien"></i> Lưu
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
-<div class="modal fade register-wish " id="modal_sinhvien" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<!-- Tìm kiếm sinh viên -->
+<div class="modal fade register-wish modal_sinhvien" id="modal_sinhvien" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Tìm kiếm sinh viên</b></p>
+                    <p><i class="fa-solid fa-user-magnifying-glass mr-5"></i>Tìm kiếm sinh viên</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0">
-                <div class="col-12">
-                    <div class="bg-f4 px-3 pt-3 pb-3">
-                        <div class="d-flex inputs-tksv ">
-                            <div class="inputs-wr">
-                                <div class=" item">
+            <div class="modal-body pd0">
+                <div class="col-12 box-search-student bg-white">
+                    <div class="box-search pd20 w100">
+                        <div class="d-flex inputs-tksv">
+                            <div class="row w-100">
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
                                     <div class="form-item d-flex  form-add-info flex-grow-1">
                                         <div class="input-group no-icon">
                                             <select id="dropSearchModal_He_SV" class="select-opt"
@@ -278,7 +284,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class=" item">
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
                                     <div class="form-item d-flex  form-add-info flex-grow-1">
                                         <div class="input-group no-icon">
                                             <select id="dropSearchModal_Khoa_SV" class="select-opt"
@@ -286,7 +292,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class=" item">
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
                                     <div class="form-item d-flex  form-add-info flex-grow-1">
                                         <div class="input-group no-icon">
                                             <select id="dropSearchModal_ChuongTrinh_SV" class="select-opt"
@@ -294,7 +300,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class=" item">
+                                <div class="item  col-12 col-lg-3 col-md-6">
                                     <div class="form-item d-flex  form-add-info flex-grow-1">
                                         <div class="input-group no-icon">
                                             <select id="dropSearchModal_Lop_SV" class="select-opt"
@@ -302,7 +308,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class=" item">
+                                <div class="item col-12 col-lg-3 col-md-6 pr0">
                                     <div class="form-item d-flex  form-add-info flex-grow-1">
                                         <div class="input-group no-icon">
                                             <input id="txtSearchModal_TuKhoa_SV" class="form-control"
@@ -310,36 +316,39 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="item-search col-12 col-lg-3 col-md-6 pr0" style="padding-right: 0 !important;">
+                                    <div class="btn btn-default btn-search ml-0 mt-10"
+                                        style="width: 100% !important;margin-left: 0 !important;"
+                                        id="btnSearch_ModalSinhVien"><i class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                </div>
                             </div>
-                            <div class="btn btn-dask-blue min-w-auto px-4" id="btnSearch_ModalSinhVien"><i
-                                    class="fal fa-search me-2"></i> Tìm</div>
                         </div>
-                        <div class="d-flex flex-wrap align-items-start list-title-first">
-                            <p class="fw-bold  mt-1 mb-1">Thêm nhiều</p>
+                        <div class="d-flex flex-wrap align-items-start list-title-first box-list-adds mt-15 mb-15">
+                            <p class="mt-8 mb-1">Thêm nhiều</p>
                             <div class="d-flex flex-wrap list">
-                                <a href="" class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3"
-                                    id="btnAdd_Khoa"> <i class="fal fa-plus me-2"></i> Thêm từng khóa</a>
-                                <a href="" class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3"
-                                    id="btnAdd_ChuongTrinh"> <i class="fal fa-plus me-2"></i> Thêm từng chương trình</a>
-                                <a href="" class="btn btn-sm btn-outline-success min-w-auto px-4 ms-3 mb-3"
-                                    id="btnAdd_Lop"> <i class="fal fa-plus me-2"></i> Thêm từng lớp</a>
+                                <a href="" class="btn btn-outline-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i>
+                                    Thêm từng khóa</a>
+                                <a href="" class="btn btn-outline-success" id="btnAdd_ChuongTrinh"> <i
+                                        class="fal fa-plus"></i> Thêm từng chương trình</a>
+                                <a href="" class="btn btn-outline-danger" id="btnAdd_Lop">
+                                    <i class="fal fa-plus"></i> Thêm từng lớp</a>
                             </div>
                         </div>
                         <div class="d-flex flex-wrap align-items-start list-title-first">
-                            <p class="fw-bold  mt-1 mb-1">Trạng thái</p>
+                            <p class="mt-1 mb-1">Trạng thái</p>
                             <div class="d-flex flex-wrap lists" id="DSTrangThaiSV_MD">
                             </div>
                         </div>
                     </div>
-                    <div class="px-3 pb-5">
+                    <div class="px-3 pb-5 pd20 pt-0 list-sv">
                         <div class="title-is-paging">
                             <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
-                            <button id="btnChonSinhVien"
-                                class="btn btn-sm ms-auto btn-outline-dask-blue min-w-auto ms-3 px-3 btn-on-paging"
+                            <button id="btnChonSinhVien" class="btn btnChonSinhVien btn-on-paging"
                                 style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>
                         </div>
                         <div class="bus-wrp" style="max-height: 505px;">
-                            <table class="table transcrip-table tabs-scores h-auto" id="tblModal_SinhVien">
+                            <table class="table transcrip-table tabs-scores h-auto table-bordered table-noborder"
+                                id="tblModal_SinhVien">
                                 <thead>
                                     <tr>
                                         <th class="text-center w-50px" scope="col">STT</th>
@@ -353,7 +362,6 @@
                                         <th class="text-right" scope="col">
                                             <input type="checkbox" id="chkSelectAll_SinhVien" />
                                         </th>
-
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -362,7 +370,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

@@ -349,8 +349,8 @@
 }
 .modal .modal-header .finance-user-info {
     color: #fff !important;
-    font-size: 20px;
-    font-weight: 400;
+    font-size: 18px;
+    font-weight: 400 !important;
 }
 .modal .modal-header .finance-user-info .button-gr .btn:first-child {
     margin-right: 0px !important;
