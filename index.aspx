@@ -26,8 +26,8 @@
         </div>
         <div class="head-logo refeshlogo">
           <a href="#">
-            <img class="logo-icon" src="logo.png" />
-            <img class="logo-text" src="assets/images/logo/logo-text.png" />
+            <img class="logo-icon" src="logo.png" title="QTDH" />
+            <img class="logo-text" src="assets/images/logo/logo-text.png" title="QTDH"  />
           </a>
         </div>
         <div class="head-search-form">
@@ -49,7 +49,7 @@
         </div>
         <div class="main-menu">
           <ul class="list-unstyled">
-            <li class="item active">
+            <%--<li class="item active">
               <a class="menu-link" href="index.html">
                 <i class="fal fa-home"></i>
                 <span>Trang chủ</span>
@@ -74,14 +74,14 @@
               <a class="menu-link" href="tintuc.html">
                 <span>Tin tức</span>
               </a>
-            </li>
+            </li>--%>
           </ul>
           <div class="menu-toggle">
             <i class="fal fa-bars"></i>
           </div>
         </div>
         <div class="account-group">
-          <div class="dropdown">
+          <%--<div class="dropdown">
             <div class="item" data-bs-toggle="dropdown">
               <i class="fal fa-circle-check"></i>
               <span>3</span>
@@ -113,10 +113,10 @@
               <li><a class="dropdown-item" href="#">Another action</a></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
-          </div>
+          </div>--%>
           <div class="dropdown">
             <div class="item" data-bs-toggle="dropdown">
-              <img src="assets/images/avatar.jpg" class="avatar" />
+              <img src="assets/images/avata-user.png" class="avatar" />
             </div>
             <ul class="dropdown-menu user-action">
               <li>
@@ -132,7 +132,7 @@
                 </a>
               </li>
               <li>
-                <a class="dropdown-item" href="theme-option.html">
+                <a class="dropdown-item" href="#">
                   <i class="fa-light fa-browser text-red"></i>
                   <span>Theme Option</span>
                 </a>
@@ -173,7 +173,7 @@
             <div class="action-group" id="zonedashbroad">
             </div>
           </div>
-          <div class="for-u-today">
+          <div class="for-u-today" style="display: none">
             <div class="title-main">Thông tin chung</div>
             <div class="today-group">
               <div class="item">
