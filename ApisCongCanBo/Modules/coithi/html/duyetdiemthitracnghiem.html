@@ -6,7 +6,8 @@
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
 
-                <p class="link"><a href="#">Quản lý điểm</a><i class="fal fa-angle-right"></i><a href="#">Phê duyệt điểm</a></p>
+                <p class="link"><a href="#">Quản lý điểm</a><i class="fal fa-angle-right"></i><a href="#">Phê duyệt
+                        điểm</a></p>
 
             </div>
 
@@ -15,11 +16,11 @@
             </div>
         </div>
     </div>
-    <div class="accep-point">
-        <div class="tab-list swiper service-slider" id="zoneTab">
+    <div class="accep-point tab-diemThi-tracNghiem">
+        <div class="tab-list swiper service-slider " id="zoneTab">
             <div class="swiper-wrapper">
-                <div class="tab-item swiper-slide" name="tab1" id="tab_1">
-                    <a href="#">Phòng thi đã xong 1</a>
+                <div class="tab-item swiper-slide swiper-slide-thumb-active" name="tab1" id="tab_1">
+                    <a href="#">Phòng thi đã xong</a>
                 </div>
                 <div class="tab-item swiper-slide" name="tab2" id="tab_2">
                     <a href="#">Phòng thi khảo thí duyệt</a>
@@ -34,12 +35,9 @@
                     <a href="#">Phòng thi đã chốt điểm</a>
                 </div>
             </div>
-
-
         </div>
         <div class="swiper service-content-slider" id="swiperGiayTo">
             <div class="swiper-wrapper">
-
                 <div class="swiper-slide" id="tab1">
                     <!-- phòng thi đã xong -->
                     <div class=" bg-white rounded-8px register-wish pt-0">
@@ -49,9 +47,19 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDonVi" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDonVi"
+                                                aria-label="Default select example"></select>
                                         </div>
 
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" id="drpHocKy"
+                                                aria-label="Default select example"></select>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-6 mb-15">
@@ -59,30 +67,21 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpHocKy" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDotThi"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
                                 </div>
                                 <div class="col-12 col-lg-3 col-md-6 mb-15">
-
-                                    <div class="form-item d-flex  form-add-info">
-                                        <div class="input-group no-icon">
-                                            <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDotThi" aria-label="Default select example"></select>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <div class="col-12 col-lg-3 col-md-6 mb-15">
-
                                 </div>
                                 <div class=" col-lg-3 col-md-6 col-12 mb-15">
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
-
-                                            <input type="email" id="txtTuNgay" class="form-control" placeholder="Từ ngày">
-                                            <input type="email" id="txtDenNgay" class="form-control ms-3" placeholder="Đến ngày">
+                                            <input type="email" id="txtTuNgay" class="form-control mr-5"
+                                                placeholder="Từ ngày">
+                                            <input type="email" id="txtDenNgay" class="form-control ml-5"
+                                                placeholder="Đến ngày">
                                         </div>
                                     </div>
                                 </div>
@@ -90,191 +89,197 @@
                                 <div class=" col-lg-3 col-md-6 col-12 mb-15">
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
-
-                                            <input type="email" id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                            <input type="email" id="txtSearch_TuKhoa" class="form-control"
+                                                placeholder="Nhập từ khóa tìm kiếm">
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-3 col-md-6 col-12 mb-1 w-search">
-                                    <div class="btn btn-dask-blue btnSearch_PhongThi "><i class="fal fa-search me-2"></i> Tìm kiếm</div>
-                                    
-                                </div>
-                                <div class="col-lg-2 col-md-6 col-12 col-lg-3  d-flex mb-15 btn-g-inlist">
-                                    
-                                    <div id="btnThucHien_Duyet_Tab1" class="btn btn-success truncate-1 max-w-50 ms-3"><i class="fas fa-check-circle me-2"></i> Phê duyệt</div>
+                                <div class="col-lg-3 col-md-6 col-12 mb-1 w-search aps-gap-10">
+                                    <div class="btn btn-default btn-search btnSearch_PhongThi "><i
+                                            class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                    <div id="btnThucHien_Duyet_Tab1" class="btn btn-success truncate-1"><i
+                                            class="fas fa-check-circle"></i> Phê duyệt</div>
                                 </div>
 
                             </div>
                         </div>
                         <div class=" container-fluid px-20">
                             <div class="title-is-paging">
-                                <p class="color-dask-blue fw-bold mt-3">Danh sách phòng thi</p>                                
-                            <table class="table transcrip-table tabs-scores " id="tblPhongThi">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center" scope="col">STT</th>
-                                        <th scope="col">
-                                            <div class="d-flex align-items-center">
-                                                <span class="text-center">Phòng thi</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col">
-                                            <div class="d-flex align-items-center">
-                                                <span class="text-center">Môn thi</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col">
-                                            <div class="d-flex align-items-center">
-                                                <span class="text-center">Ngày thi</span>
-                                            </div>
-                                        </th>
+                                <p class="color-dask-blue fw-bold mt-3"><i class="fa-solid fa-screen-users"></i>Danh
+                                    sách phòng thi</p>
+                                <table
+                                    class="table transcrip-table tabs-scores tblPhongThi table-bordered table-noborder"
+                                    id="tblPhongThi">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Phòng thi</span>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Môn thi</span>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Ngày thi</span>
+                                                </div>
+                                            </th>
 
-                                        <th scope="col">
-                                            <div class="d-flex align-items-center">
-                                                <span class="text-center">Giờ thi</span>
-                                            </div>
-                                        </th>
-                                        <th scope="col">
-                                            <div class="d-flex align-items-center">
-                                                <span class="text-center">Đợt thi</span>
-                                            </div>
-                                        </th>
-                                        <th class="text-center" scope="col">
-                                            <div class="d-flex align-items-center">
-                                                <span class="text-center">SL thí sinh</span>
-                                            </div>
-                                        </th>
-                                        <th class="text-center" scope="col">Chi tiết</th>
-                                        <th scope="col"><input type="checkbox" name="" id="chkSelectAll_PhongThi"></th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Giờ thi</span>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Đợt thi</span>
+                                                </div>
+                                            </th>
+                                            <th class="text-center" scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">SL thí sinh</span>
+                                                </div>
+                                            </th>
+                                            <th class="text-center" scope="col">Chi tiết</th>
+                                            <th scope="col"><input type="checkbox" name="" id="chkSelectAll_PhongThi">
+                                            </th>
 
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    
-                                </tbody>
-                            </table>
-                           
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                            </div>
                         </div>
+                        <!-- end phòng thi đã xong -->
                     </div>
-                    <!-- end phòng thi đã xong -->
-                </div>
                 </div>
                 <div class="swiper-slide letters-block " id="tab2">
-                        <!--phòng thi khảo thí duyệt-->
-                        <div class=" bg-white rounded-8px register-wish pt-0">
-                            <div class="form-top">
-                                <div class="row">
-                                    <div class="col-12 col-lg-3 col-md-6 mb-15">
-                                        <div class="form-item d-flex  form-add-info">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" id="drpDonVi_Tab2" aria-label="Default select example"></select>
-                                            </div>
-
+                    <!--phòng thi khảo thí duyệt-->
+                    <div class=" bg-white rounded-8px register-wish pt-0">
+                        <div class="form-top">
+                            <div class="row">
+                                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" id="drpDonVi_Tab2"
+                                                aria-label="Default select example"></select>
                                         </div>
-                                    </div>
-                                    <div class="col-12 col-lg-3 col-md-6 mb-15">
-
-                                        <div class="form-item d-flex  form-add-info">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" id="drpHocKy_Tab2" aria-label="Default select example"></select>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-3 col-md-6 mb-15">
-
-                                        <div class="form-item d-flex  form-add-info">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" id="drpDotThi_Tab2" aria-label="Default select example"></select>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-lg-3 col-md-6 mb-15">
 
                                     </div>
-                                    <div class=" col-lg-3 col-md-6 col-12 mb-15">
-                                        <div class="form-item d-flex form-add-info">
-                                            <div class="input-group no-icon">
-
-                                                <input type="email" id="txtTuNgay_Tab2" class="form-control" placeholder="Từ ngày">
-                                                <input type="email" id="txtDenNgay_Tab2" class="form-control ms-3" placeholder="Đến ngày">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class=" col-lg-3 col-md-6 col-12 mb-15">
-                                        <div class="form-item d-flex form-add-info">
-                                            <div class="input-group no-icon">
-                                                <input type="email" id="txtSearch_TuKhoa_Tab2" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-3 col-md-6 col-12 mb-1 w-search">
-                                        <div class="btn btn-dask-blue btnSearch_PhongThi_Tab2 "><i class="fal fa-search me-2"></i> Tìm kiếm</div>
-
-                                    </div>
-                                    <div class="col-lg-2 col-md-6 col-12 col-lg-3  d-flex mb-15 btn-g-inlist">
-                                        <div id="btnThucHien_KhongDuyet_Tab2" class="btn btn-danger truncate-1 max-w-50 ms-auto"><i class="fas fa-times-circle me-2"></i> Không phê duyệt</div>
-                                        <div id="btnThucHien_Duyet_Tab2" class="btn btn-success truncate-1 max-w-50 ms-3"><i class="fas fa-check-circle me-2"></i> Phê duyệt</div>
-                                    </div>
-
                                 </div>
+                                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" id="drpHocKy_Tab2"
+                                                aria-label="Default select example"></select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                                    <div class="form-item d-flex  form-add-info">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" id="drpDotThi_Tab2"
+                                                aria-label="Default select example"></select>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-3 col-md-6 mb-15"></div>
+                                <div class=" col-lg-3 col-md-6 col-12 mb-15">
+                                    <div class="form-item d-flex form-add-info">
+                                        <div class="input-group no-icon">
+
+                                            <input type="email" id="txtTuNgay_Tab2" class="form-control"
+                                                placeholder="Từ ngày">
+                                            <input type="email" id="txtDenNgay_Tab2" class="form-control ms-3"
+                                                placeholder="Đến ngày">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class=" col-lg-3 col-md-6 col-12 mb-15">
+                                    <div class="form-item d-flex form-add-info">
+                                        <div class="input-group no-icon">
+                                            <input type="email" id="txtSearch_TuKhoa_Tab2" class="form-control"
+                                                placeholder="Nhập từ khóa tìm kiếm">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6 col-md-6 col-12 mb-1 w-search aps-gap-10">
+                                    <div class="btn btn-default btn-search btnSearch_PhongThi_Tab2 "><i
+                                            class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                    <div id="btnThucHien_KhongDuyet_Tab2"
+                                        class="btn btn-danger truncate-1 max-w-50 ms-auto"><i
+                                            class="fas fa-times-circle me-2"></i> Không phê duyệt</div>
+                                    <div id="btnThucHien_Duyet_Tab2" class="btn btn-success truncate-1 max-w-50 ms-3"><i
+                                            class="fas fa-check-circle me-2"></i> Phê duyệt</div>
+                                </div>
+
                             </div>
-                            <div class=" container-fluid px-20">
-                                <div class="title-is-paging">
-                                    <p class="color-dask-blue fw-bold mt-3">Danh sách phòng thi</p>
-                                    <table class="table transcrip-table tabs-scores " id="tblPhongThi_Tab2">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center" scope="col">STT</th>
-                                                <th scope="col">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="text-center">Phòng thi</span>
-                                                    </div>
-                                                </th>
-                                                <th scope="col">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="text-center">Môn thi</span>
-                                                    </div>
-                                                </th>
-                                                <th scope="col">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="text-center">Ngày thi</span>
-                                                    </div>
-                                                </th>
-
-                                                <th scope="col">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="text-center">Giờ thi</span>
-                                                    </div>
-                                                </th>
-                                                <th scope="col">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="text-center">Đợt thi</span>
-                                                    </div>
-                                                </th>
-                                                <th class="text-center" scope="col">
-                                                    <div class="d-flex align-items-center">
-                                                        <span class="text-center">SL thí sinh</span>
-                                                    </div>
-                                                </th>
-                                                <th class="text-center" scope="col">Chi tiết</th>
-                                                <th scope="col"><input type="checkbox" name="" id="chkSelectAll_PhongThi_Tab2"></th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-
-                                </div>
-                            </div> 
                         </div>
+                        <div class=" container-fluid px-20">
+                            <div class="title-is-paging">
+                                <p class="color-dask-blue fw-bold mt-3">Danh sách phòng thi</p>
+                                <table class="table transcrip-table tabs-scores  table-bordered table-noborder tblPhongThi_Tab2" id="tblPhongThi_Tab2">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center" scope="col">STT</th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Phòng thi</span>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Môn thi</span>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Ngày thi</span>
+                                                </div>
+                                            </th>
+
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Giờ thi</span>
+                                                </div>
+                                            </th>
+                                            <th scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">Đợt thi</span>
+                                                </div>
+                                            </th>
+                                            <th class="text-center" scope="col">
+                                                <div class="d-flex align-items-center">
+                                                    <span class="text-center">SL thí sinh</span>
+                                                </div>
+                                            </th>
+                                            <th class="text-center" scope="col">Chi tiết</th>
+                                            <th scope="col"><input type="checkbox" name=""
+                                                    id="chkSelectAll_PhongThi_Tab2"></th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="swiper-slide" id="tab3">
                     <!-- Giáo vụ duyệt -->
@@ -285,7 +290,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDonVi_Tab3" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDonVi_Tab3"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -295,7 +301,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpHocKy_Tab3" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpHocKy_Tab3"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -305,7 +312,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDotThi_Tab3" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDotThi_Tab3"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -317,8 +325,10 @@
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
 
-                                            <input type="email" id="txtTuNgay_Tab3" class="form-control" placeholder="Từ ngày">
-                                            <input type="email" id="txtDenNgay_Tab3" class="form-control ms-3" placeholder="Đến ngày">
+                                            <input type="email" id="txtTuNgay_Tab3" class="form-control"
+                                                placeholder="Từ ngày">
+                                            <input type="email" id="txtDenNgay_Tab3" class="form-control ms-3"
+                                                placeholder="Đến ngày">
                                         </div>
                                     </div>
                                 </div>
@@ -326,18 +336,23 @@
                                 <div class=" col-lg-3 col-md-6 col-12 mb-15">
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
-                                            <input type="email" id="txtSearch_TuKhoa_Tab3" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                            <input type="email" id="txtSearch_TuKhoa_Tab3" class="form-control"
+                                                placeholder="Nhập từ khóa tìm kiếm">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-12 mb-1 w-search">
-                                    <div class="btn btn-dask-blue btnSearch_PhongThi_Tab3 "><i class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                    <div class="btn btn-dask-blue btnSearch_PhongThi_Tab3 "><i
+                                            class="fal fa-search me-2"></i> Tìm kiếm</div>
 
                                 </div>
                                 <div class="col-lg-2 col-md-6 col-12 col-lg-3  d-flex mb-15 btn-g-inlist">
-                                    <div id="btnThucHien_KhongDuyet_Tab3" class="btn btn-danger truncate-1 max-w-50 ms-auto"><i class="fas fa-times-circle me-2"></i> Không phê duyệt</div>
-                                    <div id="btnThucHien_Duyet_Tab3" class="btn btn-success truncate-1 max-w-50 ms-3"><i class="fas fa-check-circle me-2"></i> Phê duyệt</div>
+                                    <div id="btnThucHien_KhongDuyet_Tab3"
+                                        class="btn btn-danger truncate-1 max-w-50 ms-auto"><i
+                                            class="fas fa-times-circle me-2"></i> Không phê duyệt</div>
+                                    <div id="btnThucHien_Duyet_Tab3" class="btn btn-success truncate-1 max-w-50 ms-3"><i
+                                            class="fas fa-check-circle me-2"></i> Phê duyệt</div>
                                 </div>
 
                             </div>
@@ -381,7 +396,8 @@
                                                 </div>
                                             </th>
                                             <th class="text-center" scope="col">Chi tiết</th>
-                                            <th scope="col"><input type="checkbox" name="" id="chkSelectAll_PhongThi_Tab3"></th>
+                                            <th scope="col"><input type="checkbox" name=""
+                                                    id="chkSelectAll_PhongThi_Tab3"></th>
 
                                         </tr>
                                     </thead>
@@ -389,7 +405,7 @@
                                 </table>
 
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
                 <div class="swiper-slide" id="tab4">
@@ -401,7 +417,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDonVi_Tab4" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDonVi_Tab4"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -411,7 +428,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpHocKy_Tab4" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpHocKy_Tab4"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -421,7 +439,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDotThi_Tab4" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDotThi_Tab4"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -433,8 +452,10 @@
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
 
-                                            <input type="email" id="txtTuNgay_Tab4" class="form-control" placeholder="Từ ngày">
-                                            <input type="email" id="txtDenNgay_Tab4" class="form-control ms-3" placeholder="Đến ngày">
+                                            <input type="email" id="txtTuNgay_Tab4" class="form-control"
+                                                placeholder="Từ ngày">
+                                            <input type="email" id="txtDenNgay_Tab4" class="form-control ms-3"
+                                                placeholder="Đến ngày">
                                         </div>
                                     </div>
                                 </div>
@@ -442,18 +463,23 @@
                                 <div class=" col-lg-3 col-md-6 col-12 mb-15">
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
-                                            <input type="email" id="txtSearch_TuKhoa_Tab4" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                            <input type="email" id="txtSearch_TuKhoa_Tab4" class="form-control"
+                                                placeholder="Nhập từ khóa tìm kiếm">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-12 mb-1 w-search">
-                                    <div class="btn btn-dask-blue btnSearch_PhongThi_Tab4 "><i class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                    <div class="btn btn-dask-blue btnSearch_PhongThi_Tab4 "><i
+                                            class="fal fa-search me-2"></i> Tìm kiếm</div>
 
                                 </div>
                                 <div class="col-lg-2 col-md-6 col-12 col-lg-3  d-flex mb-15 btn-g-inlist">
-                                    <div id="btnThucHien_KhongDuyet_Tab4" class="btn btn-danger truncate-1 max-w-50 ms-auto"><i class="fas fa-times-circle me-2"></i> Không phê duyệt</div>
-                                    <div id="btnThucHien_Duyet_Tab4" class="btn btn-success truncate-1 max-w-50 ms-3"><i class="fas fa-check-circle me-2"></i> Phê duyệt</div>
+                                    <div id="btnThucHien_KhongDuyet_Tab4"
+                                        class="btn btn-danger truncate-1 max-w-50 ms-auto"><i
+                                            class="fas fa-times-circle me-2"></i> Không phê duyệt</div>
+                                    <div id="btnThucHien_Duyet_Tab4" class="btn btn-success truncate-1 max-w-50 ms-3"><i
+                                            class="fas fa-check-circle me-2"></i> Phê duyệt</div>
                                 </div>
 
                             </div>
@@ -497,7 +523,8 @@
                                                 </div>
                                             </th>
                                             <th class="text-center" scope="col">Chi tiết</th>
-                                            <th scope="col"><input type="checkbox" name="" id="chkSelectAll_PhongThi_Tab4"></th>
+                                            <th scope="col"><input type="checkbox" name=""
+                                                    id="chkSelectAll_PhongThi_Tab4"></th>
 
                                         </tr>
                                     </thead>
@@ -505,7 +532,7 @@
                                 </table>
 
                             </div>
-                        </div> 
+                        </div>
                     </div>
                 </div>
                 <div class="swiper-slide" id="tab5">
@@ -517,7 +544,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDonVi_Tab5" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDonVi_Tab5"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -527,7 +555,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpHocKy_Tab5" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpHocKy_Tab5"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -537,7 +566,8 @@
                                     <div class="form-item d-flex  form-add-info">
                                         <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
-                                            <select class="form-select" id="drpDotThi_Tab5" aria-label="Default select example"></select>
+                                            <select class="form-select" id="drpDotThi_Tab5"
+                                                aria-label="Default select example"></select>
                                         </div>
 
                                     </div>
@@ -549,8 +579,10 @@
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
 
-                                            <input type="email" id="txtTuNgay_Tab5" class="form-control" placeholder="Từ ngày">
-                                            <input type="email" id="txtDenNgay_Tab5" class="form-control ms-3" placeholder="Đến ngày">
+                                            <input type="email" id="txtTuNgay_Tab5" class="form-control"
+                                                placeholder="Từ ngày">
+                                            <input type="email" id="txtDenNgay_Tab5" class="form-control ms-3"
+                                                placeholder="Đến ngày">
                                         </div>
                                     </div>
                                 </div>
@@ -558,17 +590,19 @@
                                 <div class=" col-lg-3 col-md-6 col-12 mb-15">
                                     <div class="form-item d-flex form-add-info">
                                         <div class="input-group no-icon">
-                                            <input type="email" id="txtSearch_TuKhoa_Tab5" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                            <input type="email" id="txtSearch_TuKhoa_Tab5" class="form-control"
+                                                placeholder="Nhập từ khóa tìm kiếm">
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="col-lg-3 col-md-6 col-12 mb-1 w-search">
-                                    <div class="btn btn-dask-blue btnSearch_PhongThi_Tab5 "><i class="fal fa-search me-2"></i> Tìm kiếm</div>
+                                    <div class="btn btn-dask-blue btnSearch_PhongThi_Tab5 "><i
+                                            class="fal fa-search me-2"></i> Tìm kiếm</div>
 
                                 </div>
                                 <div class="col-lg-2 col-md-6 col-12 col-lg-3  d-flex mb-15 btn-g-inlist">
-                                   
+
                                 </div>
 
                             </div>
@@ -612,7 +646,7 @@
                                                 </div>
                                             </th>
                                             <th class="text-center" scope="col">Chi tiết</th>
-                                            
+
 
                                         </tr>
                                     </thead>
@@ -623,7 +657,7 @@
                         </div>
                     </div>
                 </div>
-                 
+
 
 
             </div>
@@ -632,7 +666,8 @@
 
 
 </div>
-<div class="modal fade register-wish" id="modalDanhSachThiSinh" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade register-wish" id="modalDanhSachThiSinh" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
@@ -689,15 +724,18 @@
                         </div>
 
                     </div>
-                    <button id="btnTaiFile" class="btn btn-dask-blue min-w-auto fs-14"><i class="fal fa-download me-2"></i><span>Tải file</span></button>
+                    <button id="btnTaiFile" class="btn btn-dask-blue min-w-auto fs-14"><i
+                            class="fal fa-download me-2"></i><span>Tải file</span></button>
                     <div class="form-item d-flex  form-add-info ml-10">
                         <div class="input-group no-icon" style="width:185px;">
                             <i class="fal fa-angle-down"></i>
-                            <select id="drpExamstructPart" class="form-select " aria-label="Default select example"></select>
+                            <select id="drpExamstructPart" class="form-select "
+                                aria-label="Default select example"></select>
                         </div>
 
                     </div>
-                    <button class="btn btn-outline-secondary min-w-auto fs-14" id="btn_Refresh"><i class="fal fa-sync me-2"></i><span>Refresh</span></button>
+                    <button class="btn btn-outline-secondary min-w-auto fs-14" id="btn_Refresh"><i
+                            class="fal fa-sync me-2"></i><span>Refresh</span></button>
                 </div>
                 <div class="title-is-paging">
                     <p class="color-dask-blue fw-bold mt-3">Danh sách thí sinh</p>
@@ -771,11 +809,11 @@
                                     </div>
                                 </div>
                             </th>
-                            
+
                             <th class="text-center" scope="col">
                                 Ghi chú
                             </th>
-                           
+
 
                         </tr>
                     </thead>

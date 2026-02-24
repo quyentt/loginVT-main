@@ -624,9 +624,9 @@ NhapDiem.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
-        if (data != null && data.length == 1) {
-            me.toggle_detail(data[0].ID);
-        }
+        //if (data != null && data.length == 1) {
+        //    me.toggle_detail(data[0].ID);
+        //}
         var arrFile = [];
         data.forEach(e => {
             arrFile.push("file" + e.ID);

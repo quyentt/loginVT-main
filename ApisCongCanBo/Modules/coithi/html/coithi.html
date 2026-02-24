@@ -65,25 +65,33 @@
         cursor: pointer;
     }
 </style>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="../../../../assets/css/gochoctap.css">
+    <link rel="stylesheet" type="text/css" href="../../../../assets/css/all.css">
+</head>
+<!-- -------------------------- -->
 <div class="one-door aps-coithi">
     <div class="overlay"></div>
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-                <p class="link"><i class="fal fa-angle-right"></i><a href="#">Giám sát thi</a></p>
+                <p class="link">
+                    <a href="#"><i class="fal fa-angle-right"></i>Giám sát thi </a>
+                </p>
             </div>
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
         </div>
     </div>
-
     <!-- Danh sach phong thi -->
-    <div class="box-shadow register-wish zone-bus">
-        <div class="form-top pd20">
+    <div class="box-shadow register-wish box-ds-phongThi pt-0 zone-bus">
+        <!-- search -->
+        <div class="form-top pd20 pb10">
             <div class="row">
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
-                    <div class="form-item d-flex  form-add-info">
+                    <div class="form-item d-flex  form-add-info flex-grow-1">
                         <div class="input-group no-icon">
                             <i class="fal fa-angle-down"></i>
                             <select class="form-select" id="drpDonVi" aria-label="Default select example"></select>
@@ -92,7 +100,6 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
-
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
                             <i class="fal fa-angle-down"></i>
@@ -102,10 +109,8 @@
                     </div>
                 </div>
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
-
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
-
                             <select class="form-select select-opt" id="drpTrangThaiPhongThi"
                                 aria-label="Default select example">
                                 <option value="">Chọn trạng thái phòng(Đóng/Mở)</option>
@@ -141,7 +146,7 @@
                     </div>
                 </div>
                 <div class="col-lg-1 col-md-6 col-12 mb-1 btnSearch_PhongThi">
-                    <div class="btn btn-default btn-search"><i class="fal fa-search me-2 "></i> Tìm kiếm</div>
+                    <div class="btn btn-default btn-search"><i class="fal fa-search"></i>Tìm kiếm</div>
                 </div>
                 <div class="col-lg-5 col-md-6 col-12 col-lg-5 d-flex mb-15 btn-g-inlist aps-gap-10 justify-content-end">
                     <div class="form-item d-flex  form-add-info ms-3">
@@ -156,13 +161,15 @@
 
                     </div>
                     <div class="btn btn-success truncate-1 max-w-50" id="btnThucHienTacVu">
-                        <i class="fa-solid fa-screen-users"></i>Thực hiện tác vụ</div>
+                        <i class="fa-solid fa-screen-users"></i>Thực hiện tác vụ
+                    </div>
                 </div>
 
             </div>
         </div>
-        <div class="container-fluid px-20">
-            <div class="box-header">
+        <!-- Danh sach phong thi -->
+        <div class="container-fluid pd-20 pt-0">
+            <div class="box-header pl0 pr0">
                 <div class="group-title pl0">
                     <p class="mb-10">
                         <i class="fa-solid fa-screen-users"></i>
@@ -177,9 +184,11 @@
                         <th scope="col">
                             <div class="d-flex align-items-center">
                                 <span class="text-center">Phòng thi</span>
-                                <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                <div class="order-gr ms-auto pl-10">
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
@@ -187,8 +196,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="text-center">Môn thi</span>
                                 <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
@@ -196,8 +207,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="text-center">Ngày thi</span>
                                 <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
@@ -205,8 +218,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="text-center">Giờ thi</span>
                                 <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
@@ -214,8 +229,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="text-center">Đợt thi thi</span>
                                 <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
@@ -223,8 +240,10 @@
                             <div class="d-flex align-items-center">
                                 <span class="text-center">Trạng thái phòng</span>
                                 <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
@@ -233,116 +252,124 @@
                             <div class="d-flex align-items-center">
                                 <span class="text-center">SL thí sinh</span>
                                 <div class="order-gr ms-auto ps-1">
-                                    <i class="fas fa-triangle up"></i>
-                                    <i class="fas fa-triangle down"></i>
+                                    <i class="fa-solid fa-caret-up up color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
+                                    <i class="fa-solid fa-caret-up down color-88"
+                                        style="font-size: 15px !important;font-weight: 300 !important;"></i>
                                 </div>
                             </div>
                         </th>
 
                         <th class="text-center" scope="col">Chi tiết</th>
-                        <th scope="col"><input type="checkbox" name="" id="chkSelectAll_PhongThi"></th>
+                        <th class="text-center w-50px" scope="col"><input type="checkbox" name=""
+                                id="chkSelectAll_PhongThi"></th>
 
                     </tr>
                 </thead>
                 <tbody></tbody>
 
             </table>
-
-
         </div>
     </div>
     <!-- end đăng ký nguyện vọng -->
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalDanhSachThiSinh">
+        Phòng thi </button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#zoneTinhHuongThi">
+        Xử lý tình huống thi </button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#zoneDiaChiIP_ThiSinh">
+        Thông tin chi tiết máy đã đăng nhập </button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#zoneKetQuaThi">
+        Thông tin chi tiết máy đã đăng nhập </button>
+</div>
+<!-- ---------- -->
+
 <!-- modal phòng thi-->
-<div class="modal fade register-wish" id="modalDanhSachThiSinh" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade register-wish modal-phongthi" id="modalDanhSachThiSinh" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Phòng thi</b></p>
+                    <p><i class="fa-solid fa-screen-users mr-10"></i>Phòng thi</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="col-12">
-                    <div class="row">
+                <div class="row">
+                    <div class="col-12 col-md-6 pl0">
+                        <div class="bl-room">
+                            <div class="title">Thông tin phòng thi</div>
+                            <div class="bl-con">
+                                <div class="bl-row">
+                                    <div class="label">Đơn vị:</div>
+                                    <span> <label id="lblDonVi_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Phòng thi:</div>
+                                    <span><label id="lblPhongThi_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Đợt thi:</div>
+                                    <span> <label id="lblDotThi_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Môn thi:</div>
+                                    <span> <label id="lblMonThi_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Ngày thi:</div>
+                                    <span><label id="lblNgayThi_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row" id="zoneMatKhauPhongThi">
 
-                        <div class="col-12 col-md-6">
-                            <div class="bl-room">
-                                <div class="title">Thông tin phòng thi</div>
-                                <div class="bl-con">
-                                    <div class="bl-row">
-                                        <div class="label">Đơn vị:</div>
-                                        <span> <label id="lblDonVi_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Phòng thi:</div>
-                                        <span><label id="lblPhongThi_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Đợt thi:</div>
-                                        <span> <label id="lblDotThi_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Môn thi:</div>
-                                        <span> <label id="lblMonThi_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Ngày thi:</div>
-                                        <span><label id="lblNgayThi_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row" id="zoneMatKhauPhongThi">
-
-                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 col-other">
-                            <div class="bl-room">
-                                <div class="title">Thông tin đề thi</div>
-                                <div class="bl-con">
-                                    <div class="bl-row">
-                                        <div class="label">Kiểu tạo đề:</div>
-                                        <span><label id="lblKieuTaoDe_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Trạng thái:</div>
-                                        <span><label id="lblTrangThai_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Tổng số câu hỏi:</div>
-                                        <span><label id="lblTongSoCau_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Cấu trúc đề:</div>
-                                        <span><label id="lblCauTrucDe_ChiTiet"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Đề thi:</div>
-                                        <span><label id="lblDeThi_ChiTiet"></label></span>
-                                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-other pr0">
+                        <div class="bl-room">
+                            <div class="title">Thông tin đề thi</div>
+                            <div class="bl-con">
+                                <div class="bl-row">
+                                    <div class="label">Kiểu tạo đề:</div>
+                                    <span><label id="lblKieuTaoDe_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Trạng thái:</div>
+                                    <span><label id="lblTrangThai_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Tổng số câu hỏi:</div>
+                                    <span><label id="lblTongSoCau_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Cấu trúc đề:</div>
+                                    <span><label id="lblCauTrucDe_ChiTiet"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Đề thi:</div>
+                                    <span><label id="lblDeThi_ChiTiet"></label></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="calendar-form-top mt-3">
+                <div class="calendar-form-top mt-15 mb-10">
                     <!--<div class="form-item d-flex  form-add-info">
-        <div class="input-group no-icon" style="width:185px;">
-
-            <i class="fal fa-angle-down"></i>
-            <select id="drpBaoCao" class="form-select" aria-label="Default select example">
-                <option value="">Chọn loại báo cáo</option>
-                <option value="BAOCAODIEM">Báo cáo điểm</option>
-                 <option value="THONGKETYLESUDUNGCAUHOI">Thống kê tỷ lệ sử dụng câu hỏi</option>
-            </select>
-        </div>
-
-    </div>-->
+                        <div class="input-group no-icon" style="width:185px;">
+                            <i class="fal fa-angle-down"></i>
+                            <select id="drpBaoCao" class="form-select" aria-label="Default select example">
+                                <option value="">Chọn loại báo cáo</option>
+                                <option value="BAOCAODIEM">Báo cáo điểm</option>
+                                <option value="THONGKETYLESUDUNGCAUHOI">Thống kê tỷ lệ sử dụng câu hỏi</option>
+                            </select>
+                        </div>
+                    </div>-->
                     <div class="form-item d-flex  form-add-info">
-
-                        <div class="dropdown" id="zonebtnBaoCao" style="margin-left: 15px">
+                        <div class="dropdown" id="zonebtnBaoCao">
                         </div>
                     </div>
                     <!-- <button id="btnTaiFile" class="btn btn-dask-blue min-w-auto fs-14"><i class="fal fa-download me-2"></i><span>Tải file</span></button>-->
@@ -352,25 +379,22 @@
                             <select id="drpExamstructPart" class="form-select "
                                 aria-label="Default select example"></select>
                         </div>
-
                     </div>
-
-
-                    <button class="btn btn-danger min-w-auto fs-14 ms-auto" id="btnAdd_TinhHuongThi"
-                        data-bs-toggle="modal"><i class="fal fa-clipboard-check me-2"></i><span>Xử lý tình huống
+                    <button class="btn btn-outline-danger min-w-auto fs-14 ms-auto" id="btnAdd_TinhHuongThi"
+                        data-bs-toggle="modal"><i class="fa-solid fa-chalkboard-user me-2"></i><span>Xử lý tình huống
                             thi</span></button>
-                    <button class="btn btn-success min-w-auto fs-14" id="btnAdd_CongNhanDiem"><i
+                    <button class="btn btn-outline-success min-w-auto fs-14" id="btnAdd_CongNhanDiem"><i
                             class="fal fa-clipboard-check me-2"></i><span>Công nhận điểm</span></button>
-                    <button class="btn btn-outline-secondary min-w-auto fs-14" id="btn_Refresh"><i
+                    <button class="btn btn-outline-warning min-w-auto fs-14" id="btn_Refresh"><i
                             class="fal fa-sync me-2"></i><span>Refresh</span></button>
-                    <button class="btn btn-outline-secondary min-w-auto fs-14" id="btn_XemKetQuaThi"><i
+                    <button class="btn btn-outline-primary min-w-auto fs-14" id="btn_XemKetQuaThi"><i
                             class="fal fa-desktop me-2"></i><span>Xem kết quả thi</span></button>
                 </div>
-                <div class="title-is-paging">
-                    <p class="color-dask-blue fw-bold mt-3">Danh sách thí sinh</p>
-
+                <div class="title-is-paging mt-20">
+                    <p class="color-dask-blue fw-bold mt-3 fz18">Danh sách thí sinh</p>
                 </div>
-                <table class="table transcrip-table tabs-scores" id="tblChiTietPhongThi">
+                <table class="table transcrip-table tabs-scores  table-bordered table-noborder tblChiTietPhongThi"
+                    id="tblChiTietPhongThi">
                     <thead>
                         <tr>
                             <th class="text-center" scope="col">STT</th>
@@ -481,80 +505,77 @@
                 </table>
                 <div class="col-12">
                     <p></p>
-
                 </div>
             </div>
 
         </div>
     </div>
 </div>
-<!-- modal xử lý ts-->
-<div class="modal fade register-wish xlts" id="zoneTinhHuongThi" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+
+<!-- modal Xử lý tình huống thi-->
+<div class="modal fade register-wish xlts zoneTinhHuongThi" id="zoneTinhHuongThi" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Xử lý tình huống thi</b></p>
+                    <p><i class="fa-solid fa-chalkboard-user mr-10"></i>Xử lý tình huống thi</p>
 
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="col-12">
-                    <div class="row">
-
-                        <div class="col-12 col-md-6">
-                            <div class="bl-room">
-                                <div class="title">Thông tin phòng thi</div>
-                                <div class="bl-con">
-                                    <div class="bl-row">
-                                        <div class="label">Đơn vị:</div>
-                                        <span><label id="lblDonVi_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Phòng thi:</div>
-                                        <span><label id="lblPhongThi_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Đợt thi:</div>
-                                        <span><label id="lblDotThi_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Môn thi:</div>
-                                        <span><label id="lblMonThi_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Ngày thi:</div>
-                                        <span> <label id="lblNgayThi_TinhHuongThi"></label></span>
-                                    </div>
+                <div class="row aps-tt-phongthi">
+                    <div class="col-12 col-md-6 pl0">
+                        <div class="bl-room">
+                            <div class="title">Thông tin phòng thi</div>
+                            <div class="bl-con">
+                                <div class="bl-row">
+                                    <div class="label">Đơn vị:</div>
+                                    <span><label id="lblDonVi_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Phòng thi:</div>
+                                    <span><label id="lblPhongThi_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Đợt thi:</div>
+                                    <span><label id="lblDotThi_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Môn thi:</div>
+                                    <span><label id="lblMonThi_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Ngày thi:</div>
+                                    <span> <label id="lblNgayThi_TinhHuongThi"></label></span>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6 col-other">
-                            <div class="bl-room">
-                                <div class="title">Thông tin đề thi</div>
-                                <div class="bl-con">
-                                    <div class="bl-row">
-                                        <div class="label">Kiểu tạo đề:</div>
-                                        <span><label id="lblKieuTaoDe_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Trạng thái:</div>
-                                        <span><label id="lblTrangThai_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Tổng số câu hỏi:</div>
-                                        <span> <label id="lblTongSoCau_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Cấu trúc đề:</div>
-                                        <span> <label id="lblCauTrucDe_TinhHuongThi"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Đề thi:</div>
-                                        <span><label id="lblDeThi_TinhHuongThi" style="color: #0073b7"></label></span>
-                                    </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-other">
+                        <div class="bl-room">
+                            <div class="title">Thông tin đề thi</div>
+                            <div class="bl-con">
+                                <div class="bl-row">
+                                    <div class="label">Kiểu tạo đề:</div>
+                                    <span><label id="lblKieuTaoDe_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Trạng thái:</div>
+                                    <span><label id="lblTrangThai_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Tổng số câu hỏi:</div>
+                                    <span> <label id="lblTongSoCau_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Cấu trúc đề:</div>
+                                    <span> <label id="lblCauTrucDe_TinhHuongThi"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label">Đề thi:</div>
+                                    <span><label id="lblDeThi_TinhHuongThi" style="color: #0073b7"></label></span>
                                 </div>
                             </div>
                         </div>
@@ -571,26 +592,24 @@
                     </div>
                 </div>
                 <div class="calendar-form-top mt-3">
-                    <button class="btn btn-dask-blue min-w-auto fs-14" id="btnAdd_KetThucLamBai"><i
-                            class="fal fa-file-check me-2"></i><span>Kết thúc bài thi</span></button>
-                    <button class="btn btn-dask-blue min-w-auto fs-14" id="btn_DoiMay"><i
-                            class="fal fa-file-check me-2"></i><span>Cho phép TS đổi máy</span></button>
-                    <button class="btn btn-primary min-w-auto fs-14" id="btnAdd_LamLaiBaiTuDau"><i
-                            class="fal fa-repeat-1-alt me-2"></i><span>Làm lại từ đầu</span></button>
-                    <button class="btn btn-info min-w-auto fs-14 text-white" id="btnAdd_KhoiTaoLaiDe"><i
-                            class="fal fa-file-import me-2"></i><span>Khởi tạo lại đề</span></button>
-                    <button class="btn btn-danger min-w-auto fs-14" id="btnAdd_TamDung"><i
-                            class="fal fa-pause-circle me-2"></i><span>Tạm dừng</span></button>
-                    <button class="btn btn-success min-w-auto fs-14" id="btnAdd_TiepTucLamBai"><i
-                            class="fal fa-play-circle me-2"></i><span>Tiếp tục làm bài</span></button>
-                    <button class="btn btn-dark min-w-auto fs-14" id="btnAdd_CongThemThoiGianLamBai"><i
-                            class="fal fa-repeat-1-alt me-2"></i><span>Cộng thêm t/g làm bài</span></button>
+                    <button class="btn btn-outline-secondary fs-14" id="btnAdd_KetThucLamBai">
+                        <i class="fa-solid fa-laptop-file"></i><span>Kết thúc bài thi</span></button>
+                    <button class="btn btn-outline-primary min-w-auto fs-14" id="btn_DoiMay">
+                        <i class="fa-solid fa-chalkboard-user"></i><span>Cho phép TS đổi máy</span></button>
+                    <button class="btn btn-outline-warning min-w-auto fs-14" id="btnAdd_LamLaiBaiTuDau">
+                        <i class="fal fa-sync me-2"></i><span>Làm lại từ đầu</span></button>
+                    <button class="btn btn-outline-info min-w-auto fs-14" id="btnAdd_KhoiTaoLaiDe">
+                        <i class="fal fa-file-import me-2"></i><span>Khởi tạo lại đề</span></button>
+                    <button class="btn btn-outline-danger min-w-auto fs-14" id="btnAdd_TamDung">
+                        <i class="fal fa-pause-circle me-2"></i><span>Tạm dừng</span></button>
+                    <button class="btn btn-outline-success min-w-auto fs-14" id="btnAdd_TiepTucLamBai">
+                        <i class="fal fa-play-circle me-2"></i><span>Tiếp tục làm bài</span></button>
+                    <button class="btn btn-outline-secondary min-w-auto fs-14" id="btnAdd_CongThemThoiGianLamBai">
+                        <i class="fa-solid fa-clock"></i><span>Cộng thêm t/g làm bài</span></button>
                     <div class="input-group no-icon form-item d-flex form-add-info">
                         <input type="email" id="txtCongThemThoiGianLamBai" class="form-control" placeholder=""
                             style="width:30px; height:30px;">
-
                     </div>
-
                 </div>
                 <div class="calendar-form-top mt-3">
                     <button class="btn btn-warning min-w-auto fs-14" id="btnAdd_ViphamQuyCheThi"><i
@@ -606,7 +625,8 @@
                     </div>
                 </div>
 
-                <table class="table transcrip-table tabs-scores" id="tblThiSinh_TinhHuongThi">
+                <table class="table transcrip-table tabs-scores tblThiSinh_TinhHuongThi table-bordered table-noborder"
+                    id="tblThiSinh_TinhHuongThi">
                     <thead>
                         <tr>
                             <th class="text-center" scope="col">STT</th>
@@ -691,52 +711,51 @@
         </div>
     </div>
 </div>
-<!-- modal view IP -->
-<div class="modal fade register-wish xlts" id="zoneDiaChiIP_ThiSinh" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+
+<!-- modal Thông tin chi tiết máy đã đăng nhập -->
+<div class="modal fade register-wish xlts zoneDiaChiIP_ThiSinh" id="zoneDiaChiIP_ThiSinh" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Thông tin chi tiết máy đã đăng nhập</b></p>
-
+                    <p><i class="fa-solid fa-chalkboard-user me-2"></i> Thông tin chi tiết máy đã đăng nhập</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="col-12">
-                    <div class="row">
-                        <div class="col-12 col-md-12">
-                            <div class="bl-room">
-                                <div class="title">Thông tin thí sinh</div>
-                                <div class="bl-con">
-                                    <div class="bl-row">
-                                        <div class="label">Mã sinh viên:</div>
-                                        <span><label id="lblStudentCode"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Họ tên:</div>
-                                        <span><label id="lblHoTen"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Lớp:</div>
-                                        <span><label id="lblClassName"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Số báo danh:</div>
-                                        <span><label id="lblSoBaoDanh"></label></span>
-                                    </div>
-                                    <div class="bl-row">
-                                        <div class="label">Ngày sinh:</div>
-                                        <span> <label id="lblBirthDate"></label></span>
-                                    </div>
+                <div class="row aps-tt-thiSinh mb-20">
+                    <div class="col-12 col-md-12 pl0 pr0">
+                        <div class="bl-room">
+                            <div class="title">Thông tin thí sinh</div>
+                            <div class="bl-con">
+                                <div class="bl-row">
+                                    <div class="label" style="width: 100px !important;">Mã sinh viên:</div>
+                                    <span><label id="lblStudentCode"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label" style="width: 100px !important;">Họ tên:</div>
+                                    <span><label id="lblHoTen"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label" style="width: 100px !important;">Lớp:</div>
+                                    <span><label id="lblClassName"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label" style="width: 100px !important;">Số báo danh:</div>
+                                    <span><label id="lblSoBaoDanh"></label></span>
+                                </div>
+                                <div class="bl-row">
+                                    <div class="label" style="width: 100px !important;">Ngày sinh:</div>
+                                    <span> <label id="lblBirthDate"></label></span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <table class="table transcrip-table tabs-scores" id="tbl_DiaChiIP_ThiSinh">
+                <table class="table transcrip-table tabs-scores tbl_DiaChiIP_ThiSinh table-bordered table-noborder"
+                    id="tbl_DiaChiIP_ThiSinh">
                     <thead>
                         <tr>
                             <th class="text-center" scope="col">STT</th>
@@ -778,13 +797,9 @@
     </div>
 </div>
 
-<div class="modal fade register-wish xlts" id="zoneKetQuaThi" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-
-
+<div class="modal fade register-wish xlts zoneKetQuaThi" id="zoneKetQuaThi" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
 </div>
-
-
 <div class="clear"></div>
 <!-- page script -->
 <script src="modules/coithi/script/coithi.js?v=1.0.0.6"></script>
@@ -793,5 +808,10 @@
     main_doc['coithi'] = new coithi();
     $(document).ready(function () {
         main_doc.coithi.init();
+    });
+</script>
+<script>
+    $(wind/.,mnbvc;/p,mnow).on("load", function () {
+        //$("#zoneDiaChiIP_ThiSinh").modal("show");
     });
 </script>

@@ -156,8 +156,9 @@
  .border-info {
      border: 1px solid var(--color-info) !important;
  }
-
-
+.w-50px{
+    width: 50px !important;
+}
  .line-38 {
      line-height: 38px !important;
  }
@@ -3420,6 +3421,9 @@
  .nav-tabs-custom>.nav-tabs>li {
      margin-bottom: -2px !important;
  }
+ .aps-cacmonhocdagiangday .nav-tabs-custom>.nav-tabs>li {
+     margin-bottom: -1px !important;
+ }
 
  .aps-dangky .nav-tabs-custom>.nav-tabs>li {
      margin-bottom: -3px !important;
@@ -4142,5 +4146,15 @@
  }
  /* ----------- */
  .tab-Phieu .cmc-tabs{
-    
+
  }
+ .box-ds-phongThi{
+    padding-bottom: 40px !important;
+ }
+ .tblPhongThi .order-gr {
+    padding-left: 5px !important;
+    padding-top: 1px;
+}
+.myModalLabel {
+    padding-right: 5px;
+}
