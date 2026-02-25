@@ -97,9 +97,11 @@ blockquote {
 .color-green.box-title {
   color: var(--color-green) !important;
 }
-.color-88{
+
+.color-88 {
   color: #888 !important;
 }
+
 .bg-blue {
   background-color: var(--color-blue) !important;
 }
@@ -2697,6 +2699,10 @@ input::placeholder {
   padding: 0 40px;
 }
 
+.calendar-form-top .form-add-info .btn {
+  margin-left: 0px;
+}
+
 .bl-room {
   border: solid 1px #e1e1e1;
 }
@@ -2706,7 +2712,7 @@ input::placeholder {
   border-bottom: solid 1px #e1e1e1;
   font-size: 14px;
   font-weight: bold;
-  padding: 10px 15px 8px;
+  padding: 12px 15px 8px 15px;
   text-transform: uppercase;
   color: var(--dask-blue);
 }
@@ -2892,7 +2898,7 @@ input:checked~label {
 /* ---------------------- */
 .accep-point .tab-list {
   display: flex !important;
-  padding: 15px 60px 0;
+  padding: 0px 20px 0;
   position: relative;
   z-index: 1;
   margin-bottom: -1px;
@@ -2901,25 +2907,28 @@ input:checked~label {
 
 .accep-point .tab-item {
   min-height: 0;
-  padding: 10px 25px 5px 25px;
+  /* padding: 10px 25px 5px 25px; */
   border-radius: 10px 10px 0 0;
   background: #fff !important;
 }
 
 .accep-point .tab-item a {
   font-size: 18px;
-  color: #222222 !important;
+  /* color: #222222 !important; */
   height: auto !important;
 }
 
 
-.accep-point .tab-item:hover a {
-  color: var(--color-blue) !important;
+.accep-point .tab-item:hover a,
+.accep-point .tab-item:hover a i
+ {
+  color: var(--color-yellow) !important;
 }
 
 .accep-point .form-top {
-  border: solid 10px #fff !important;
-  background: #f8f8f8;
+  /* border: solid 10px #fff !important; */
+  background: #fff !important;
+  border-bottom: 0 solid #e1e1e1 !important;
 }
 
 .accep-point .tab-item.swiper-slide-thumb-active {
@@ -5160,7 +5169,7 @@ img.st-1-img {
 .btn-cmc:hover,
 .btn-cmc-outline:hover {
   color: white;
-  background:var(--color-blue);
+  background: var(--color-blue);
 }
 
 .btn-cmc {
@@ -7608,9 +7617,11 @@ tr:last-child .d-flex.gap-3 {
   padding-left: 20px !important;
   margin-bottom: 15px !important;
 }
+
 .box-search-GV #addNhieuNguoiDung {
   padding-left: 0px !important;
 }
+
 .aps-tim-nhansu #btnChonNhanSu {
   position: absolute;
   top: 0px;
@@ -7658,4 +7669,8 @@ tr:last-child .d-flex.gap-3 {
 .modal-860,
 .modal_XacNhan .modal-860 {
   max-width: 860px !important;
+}
+
+.modal-phongthi .bl-room {
+  min-height: 230px;
 }

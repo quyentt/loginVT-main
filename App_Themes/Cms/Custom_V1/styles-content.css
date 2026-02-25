@@ -55,6 +55,7 @@
     /*-webkit-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
     /*-moz-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
     /*box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
+    border-radius: 12px !important;
 }
 
 /*Thu tiền mặt cho sinh viên, học sinh------------------*/
@@ -147,8 +148,8 @@
 /*---------*/
 .btn {
     padding: 9px 15px 7.6px 15px !important;
-     font-size: 14px !important;
-     border-radius: 5px !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
     height: 38px;
     /* display: flex; */
     /* position: relative; */
@@ -199,7 +200,7 @@
     border: 1px solid #ffc107 !important;
     color: #000 !important;
     height: 38px;
-    line-height: 1.3;
+    /* line-height: 1.3; */
 }
 
 .btn-warning:hover {
@@ -806,7 +807,7 @@
 
 #zonebatdau .group-title .lang,
 #zonebatdau .group-title i {
-    font-size: 20px !important;
+    font-size: 18px !important;
 }
 
 .box-body .table {
@@ -10143,36 +10144,50 @@ table#clone {
     font-weight: 700 !important;
     padding-right: 5px !important;
 }
-.bg-transparent{
+
+.bg-transparent {
     background: transparent !important;
 }
-#btnHSLL_Import{
+
+#btnHSLL_Import {
     font-size: 19px !important;
 }
+
 .aps-tblNhapChuyenCan tbody tr td:nth-last-child(2),
 .aps-tblNhapChuyenCan tbody tr td:nth-last-child(3),
-.aps-tblNhapChuyenCan tbody tr td:nth-last-child(4){
+.aps-tblNhapChuyenCan tbody tr td:nth-last-child(4) {
     text-align: left !important;
 }
+
 .modal-footer>* {
     margin: calc(var(--bs-modal-footer-gap) * 0) !important;
 }
-.aps-form-select .select2-container--default .select2-selection--single{
+
+.aps-form-select .select2-container--default .select2-selection--single {
     padding: 0px 10px !important;
 }
+
 .modal_XacNhan .modal-content .select2-container--default .select2-selection--single {
     padding: 7px 10px !important;
 }
+
 .modal-content .aps-form-select .select2-container--default .select2-selection--single .select2-selection__rendered {
     padding-top: 0px !important;
 }
-.modal_XacNhan_ht_diem .custom-select .select2-selection__rendered{
+
+.modal_XacNhan_ht_diem .custom-select .select2-selection__rendered {
     /* padding-top: 7px !important; */
     /* padding-left: 0px !important; */
 }
-.modal_XacNhan_ht_diem .modal-dialog{
+
+.modal_XacNhan_ht_diem .modal-dialog {
     max-width: 800px !important;
 }
+
 #divuploadtxtFileDinhKem {
     /* margin-top: 10px; */
+}
+
+.tblPhongThi tr th .fa-caret-up {
+    height: 9px !important;
 }

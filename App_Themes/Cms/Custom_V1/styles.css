@@ -92,6 +92,10 @@
  .bg-success {
      background: var(--color-green) !important;
  }
+input::placeholder { /* Modern browsers */
+  color: #aaa !important;
+  opacity: 1; /* Fixes Firefox's default lower opacity */
+}
 
  /* --------------- */
  .color-222 {
@@ -156,8 +160,9 @@
  .border-info {
      border: 1px solid var(--color-info) !important;
  }
-
-
+.w-50px{
+    width: 50px !important;
+}
  .line-38 {
      line-height: 38px !important;
  }
@@ -3424,6 +3429,9 @@
  .nav-tabs-custom>.nav-tabs>li {
      margin-bottom: -1px !important;
  }
+ .aps-cacmonhocdagiangday .nav-tabs-custom>.nav-tabs>li {
+     margin-bottom: -1px !important;
+ }
 
  .aps-dangky .nav-tabs-custom>.nav-tabs>li {
      margin-bottom: -3px !important;
@@ -4160,6 +4168,19 @@
  }
  /* ----------- */
  .tab-Phieu .cmc-tabs{
+<<<<<<< HEAD
+
+ }
+ .box-ds-phongThi{
+    padding-bottom: 40px !important;
+ }
+ .tblPhongThi .order-gr {
+    padding-left: 5px !important;
+    padding-top: 1px;
+}
+.myModalLabel {
+    padding-right: 5px;
+=======
     
  }
  /* --------------- */
@@ -4202,4 +4223,5 @@
 .aps-thietlapQT-nhom-tab .nav-tabs-custom>.nav-tabs>li>a {
     font-size: 16px;
     padding: 12px 25px 10px 25px !important;
+>>>>>>> 6ed4e09db314319ccfd44fa573aea086f090c11e
 }
