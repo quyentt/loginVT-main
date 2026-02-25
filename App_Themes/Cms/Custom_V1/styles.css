@@ -3665,7 +3665,16 @@ input::placeholder { /* Modern browsers */
      /* background: var(--color-green) !important; */
      color: #fff !important;
  }
-
+ .aps-tabs .nav-tabs li{
+    margin-right: 10px !important;
+ }
+.aps-tabs .nav-tabs li.active i{
+    font-weight: 700 !important;
+}
+.aps-tabs .nav-tabs li i{
+    font-weight: 300 !important;
+    margin-right: 5px;
+}
  .aps-btn-list,
  .aps-gap-10 {
      display: flex !important;
