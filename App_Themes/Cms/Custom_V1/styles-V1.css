@@ -2,7 +2,9 @@
  body {
      color: #333;
  }
-
+.fw-bold{
+    font-weight: 700 !important;
+}
  /* ------------------- */
  .fa,
  .fa-brands,

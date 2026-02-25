@@ -517,15 +517,17 @@ DuLieuThi.prototype = {
         var obj_notify = {};
         //--Edit
         var obj_save = {
-            'action': 'TP_ToChucThi/ThucHienTaoDuLieuLichThi',
-            'type': 'POST',
+            'action': 'XLHV_TP_ToChucThi_MH/FSk0IgkoJC8VIC4FNA0oJDQNKCIpFSko',
+            'func': 'pkg_thi_tochucthi.ThucHienTaoDuLieuLichThi',
+            'iM': edu.system.iM,
             'strDaoTao_LopHocPhan_Id': strId[1],
             'strDiem_ThanhPhanDiem_Id': strId[2],
+            'dChiTaoDuLieuDuDKThi': edu.system.getValById('dropSearch_LoaiXepLich'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        if (edu.util.checkValue(obj_save.strId)) {
-            obj_save.action = 'NS_HeSo_DuLieuThi/CapNhat';
-        }
+        //if (edu.util.checkValue(obj_save.strId)) {
+        //    obj_save.action = 'NS_HeSo_DuLieuThi/CapNhat';
+        //}
         //default
         edu.system.makeRequest({
             success: function (data) {
