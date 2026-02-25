@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UMS_Layout_With_News</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+    <div class="header fixed-top">
+        <div class="top-nav">
+            <div class="sidebar-bars">
+                <i class="fa-light fa-bars-sort"> </i>
+            </div>
+            <div class="head-logo">
+                <a href="../index.html">
+                    <img class="logo-icon" src="../assets/images/logo/logo-icon.png" />
+                    <img class="logo-text" src="../assets/images/logo/logo-text.png" />
+                </a>
+            </div>
+            <div class="head-search-form">
+                <div class="head-search-toggle">
+                    <i class="fal fa-search"></i>
+                </div>
+                <div class="head-search-box">
+                    <div class="form">
+                        <input type="text" class="search-imput" placeholder="Tìm kiếm thông tin" />
+                        <button class="search-btn">
+                            <i class="fal fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="main-menu">
+                <ul class="list-unstyled">
+                    <li class="item">
+                        <a class="menu-link" href="../index.html">
+                            <i class="fal fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../dashboard.html">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../modul.html">
+                            <span>Modul</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../chucnang-cuaban.html">
+                            <span>Chức năng của bạn</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../tintuc.html">
+                            <span>Tin tức</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fal fa-bars"></i>
+                </div>
+            </div>
+            <div class="account-group">
+                <div class="dropdown">
+                    <div class="item" data-bs-toggle="dropdown">
+                        <i class="fal fa-circle-check"></i>
+                        <span>3</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item message" data-bs-toggle="dropdown">
+                        <i class="fal fa-messages"></i>
+                        <span>3</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item noti" data-bs-toggle="dropdown">
+                        <i class="fal fa-bell"></i>
+                        <span>9+</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item" data-bs-toggle="dropdown">
+                        <img src="../assets/images/avatar.jpg" class="avatar" />
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-wrap">
+        <div class="left-sidebar">
+            <div class="sidebar-menu">
+                <div class="accordion" id="sidebar-menu">
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="../index.html">
+                            <i class="fa-light fa-house-window item-icon"></i>
+                            <span>Dashboads</span>
+                        </a>
+                    </div>
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse1"
+                            href="javascrip:void(0)" aria-expanded="true">
+                            <i class="fa-light fa-chalkboard-user item-icon"></i>
+                            <span>Giảng viên</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse1" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class href="#">Thông tin chung</a>
+                                <a href="#">Nhập điểm theo lớp học phần</a>
+                                <a href="#">Điểm danh theo lớp học phần</a>
+                                <a href="#">Tra cứu hồ sơ sinh viên</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse2"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-building-user item-icon">
+                            </i>
+                            <span>Trưởng khoa</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse2" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="#">Profile demo 1</a>
+                                <a href="#">Profile demo 2</a>
+                                <a href="#">Profile demo 3</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse3"
+                            href="javascrip:void(0)">
+                            <i class="fa-solid fa-users item-icon"></i>
+                            <span>Nhân sự</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse3" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class="" href="nhansu/nhansu-chitiet.html" data-position="0">Kế hoạch tuyển dụng</a>
+                                <a href="nhansu/nhansu-chitiet.html" data-position="1">Đề xuất tuyển dụng</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item ">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse4"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-users-gear item-icon"></i>
+                            <span>Thiết lập quản trị nhóm</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse4" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class="" href="#" data-position="0">Danh sách thiết
+                                    lập quản trị nhóm</a>
+                                <a href="QuanTriNhom.html" data-position="1">Quản trị nhóm</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item active">
+                        <a class="sidebar-menu-header" data-bs-toggle="collapse" data-bs-target="#collapse5"
+                            href="javascrip:void(0)">
+                            <i class="fa-sharp fa-solid fa-album-collection-circle-user item-icon"></i>
+                            <span>UMS_Layout_With_News</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse show" id="collapse5" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class="active" href="QuanTriNhom.html" data-position="1">Cơ cấu tổ chức</a>
+                                <a href="#" data-position="0">Quản lý dm nghề nghiệp</a>
+                                <a href="QuanTriNhom.html" data-position="1">Quản lý vị trí công việc</a>
+                                <a href="QuanTriNhom.html" data-position="1">Quan hệ lao động</a>
+                                <a href="QuanTriNhom.html" data-position="1">Phân công lao động</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <!-- content -->
+            <div class="" style="background: none">
+                <div class="overlay"></div>
+                <div class="content-tab no-tab">
+                    <div class="d-flex justify-content-between">
+                        <div class="nav-content-left">
+                            <p class="link">
+                                <a href="#">Bảng điều khiển</a>
+                                <i class="fal fa-angle-right"></i>
+                                <a href="#">UMS_Layout_With_News</a>
+                                <i class="fal fa-angle-right"></i>
+                                <a href="#">Cơ cấu tổ chức</a>
+                            </p>
+                        </div>
+
+                        <div class="nav-content-right">
+                            <a class="d-block text-right" href>
+                                <i class="fas fa-question-circle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div id="main-content-wrapper"><!-- Main content -->
+                    <div class="row aps-app-function aps-ungdungchucnang">
+                        <div class="col-sm-3 aps-box-l aps-app-function-l">
+                            <div class="box box-solid box-shadow">
+                                <div class="box-header with-border" style="height: 60px">
+                                    <h3 class="box-title" title="Danh sách ứng dụng"
+                                        style="margin-top: 5px !important;">
+                                        <i class="fa-light fa-check-to-slot"></i> Danh sách ứng dụng
+                                    </h3>
+                                    <span class="pull-right badge bg-light-blue" style="margin-top: 5px !important;">
+                                        <span id="lblUngDung_Tong_UDCN">29</span>
+                                    </span>
+                                </div>
+                                <div class="box-body">
+                                    <div id="treesjs_ungdung_udcn" class="jstree jstree-2 jstree-default" role="tree"
+                                        aria-multiselectable="true" tabindex="0"
+                                        aria-activedescendant="80CF9E16C2D74F46A1ECE73B7C119A8F" aria-busy="false">
+                                        <ul class="jstree-container-ul jstree-children" role="group">
+                                            <li role="treeitem" title="Chuyên cần" aria-selected="false" aria-level="1"
+                                                aria-labelledby="9FE0F1BECB90438AA17FEDB72DAE48F4_anchor"
+                                                id="9FE0F1BECB90438AA17FEDB72DAE48F4"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="9FE0F1BECB90438AA17FEDB72DAE48F4_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Chuyên cần</a></li>
+                                            <li role="treeitem" title="Quản trị hệ thống" aria-selected="false"
+                                                aria-level="1" aria-labelledby="31C395F9B44748AABE0FEA1C580F8BBC_anchor"
+                                                id="31C395F9B44748AABE0FEA1C580F8BBC"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="31C395F9B44748AABE0FEA1C580F8BBC_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Quản trị hệ thống</a></li>
+                                            <li role="treeitem" title="Cổng cán bộ" aria-selected="false" aria-level="1"
+                                                aria-labelledby="B0B172E252D24251A5E650D38AC901A2_anchor"
+                                                id="B0B172E252D24251A5E650D38AC901A2"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="B0B172E252D24251A5E650D38AC901A2_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Cổng cán bộ</a></li>
+                                            <li role="treeitem" title="Cổng sinh viên" aria-selected="false"
+                                                aria-level="1" aria-labelledby="80CF9E16C2D74F46A1ECE73B7C119A8F_anchor"
+                                                id="80CF9E16C2D74F46A1ECE73B7C119A8F"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="80CF9E16C2D74F46A1ECE73B7C119A8F_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Cổng sinh viên</a></li>
+                                            <li role="treeitem" title="Đăng ký học" aria-selected="false" aria-level="1"
+                                                aria-labelledby="D7107858F15F4444B74084FE47E51B8C_anchor"
+                                                id="D7107858F15F4444B74084FE47E51B8C"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="D7107858F15F4444B74084FE47E51B8C_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Đăng ký học</a></li>
+                                            <li role="treeitem" title="Xét học bổng" aria-selected="true" aria-level="1"
+                                                aria-labelledby="D66824AF62374B2BA35E59971BF6B9BE_anchor"
+                                                id="D66824AF62374B2BA35E59971BF6B9BE"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor jstree-clicked" href="#" tabindex="-1"
+                                                    id="D66824AF62374B2BA35E59971BF6B9BE_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Xét học bổng</a></li>
+                                            <li role="treeitem" title="Học lại Thi Lại" aria-selected="false"
+                                                aria-level="1" aria-labelledby="116022EEB91F4DA98DA66D7347EC508C_anchor"
+                                                id="116022EEB91F4DA98DA66D7347EC508C"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="116022EEB91F4DA98DA66D7347EC508C_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Học lại Thi Lại</a></li>
+                                            <li role="treeitem" title="Kế hoạch chương trình" aria-selected="false"
+                                                aria-level="1" aria-labelledby="3EEBEFF3B89B48F2B7D0D6E5A246B7BB_anchor"
+                                                id="3EEBEFF3B89B48F2B7D0D6E5A246B7BB"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="3EEBEFF3B89B48F2B7D0D6E5A246B7BB_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Kế hoạch chương trình</a></li>
+                                            <li role="treeitem" title="Hệ thống thông tin" aria-selected="false"
+                                                aria-level="1" aria-labelledby="6564AB1159FB4402A28C58E8BAD7D191_anchor"
+                                                id="6564AB1159FB4402A28C58E8BAD7D191"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="6564AB1159FB4402A28C58E8BAD7D191_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Hệ thống thông tin</a></li>
+                                            <li role="treeitem" title="Ký túc xá" aria-selected="false" aria-level="1"
+                                                aria-labelledby="958101B4C2AD4B15B7075624ADF3A3A5_anchor"
+                                                id="958101B4C2AD4B15B7075624ADF3A3A5"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="958101B4C2AD4B15B7075624ADF3A3A5_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Ký túc xá</a></li>
+                                            <li role="treeitem" title="Luận Văn, Luận Án" aria-selected="false"
+                                                aria-level="1" aria-labelledby="55995954BD844801BF56CF4A1E35F149_anchor"
+                                                id="55995954BD844801BF56CF4A1E35F149"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="55995954BD844801BF56CF4A1E35F149_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Luận Văn, Luận Án</a></li>
+                                            <li role="treeitem" title="Nghiên cứu khoa học" aria-selected="false"
+                                                aria-level="1" aria-labelledby="41FCFE8609484C9BA45D7CE0F4AB5CED_anchor"
+                                                id="41FCFE8609484C9BA45D7CE0F4AB5CED"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="41FCFE8609484C9BA45D7CE0F4AB5CED_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Nghiên cứu khoa học</a></li>
+                                            <li role="treeitem" title="Nhân sự" aria-selected="false" aria-level="1"
+                                                aria-labelledby="6D5B873CA9294B7EA7FFAE9F55CACEF0_anchor"
+                                                id="6D5B873CA9294B7EA7FFAE9F55CACEF0"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="6D5B873CA9294B7EA7FFAE9F55CACEF0_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Nhân sự</a></li>
+                                            <li role="treeitem" title="Nhập học" aria-selected="false" aria-level="1"
+                                                aria-labelledby="D3FA5643EAF249D0BBD44B3F222CAFC1_anchor"
+                                                id="D3FA5643EAF249D0BBD44B3F222CAFC1"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="D3FA5643EAF249D0BBD44B3F222CAFC1_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Nhập học</a></li>
+                                            <li role="treeitem" title="Quản lý điểm" aria-selected="false"
+                                                aria-level="1" aria-labelledby="4ADAFDB21C9642F28BCE91448B6F2AA4_anchor"
+                                                id="4ADAFDB21C9642F28BCE91448B6F2AA4"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="4ADAFDB21C9642F28BCE91448B6F2AA4_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Quản lý điểm</a></li>
+                                            <li role="treeitem" title="Quản lý thi trắc nghiệm" aria-selected="false"
+                                                aria-level="1" aria-labelledby="0DD9E9FAF61D4616BE322318368FF15D_anchor"
+                                                id="0DD9E9FAF61D4616BE322318368FF15D"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="0DD9E9FAF61D4616BE322318368FF15D_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Quản lý thi trắc nghiệm</a></li>
+                                            <li role="treeitem" title="Quản lý Tuyển Sinh" aria-selected="false"
+                                                aria-level="1" aria-labelledby="FB5151C7C2A343218693AC6664E84BC9_anchor"
+                                                id="FB5151C7C2A343218693AC6664E84BC9"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="FB5151C7C2A343218693AC6664E84BC9_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Quản lý Tuyển Sinh</a></li>
+                                            <li role="treeitem" title="Điểm rèn luyện" aria-selected="false"
+                                                aria-level="1" aria-labelledby="4E653232056B4912A2881219F794FA88_anchor"
+                                                id="4E653232056B4912A2881219F794FA88"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="4E653232056B4912A2881219F794FA88_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Điểm rèn luyện</a></li>
+                                            <li role="treeitem" title="Sinh viên" aria-selected="false" aria-level="1"
+                                                aria-labelledby="2BD6D7679D854642A8C1C726817E4B12_anchor"
+                                                id="2BD6D7679D854642A8C1C726817E4B12"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="2BD6D7679D854642A8C1C726817E4B12_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Sinh viên</a></li>
+                                            <li role="treeitem" title="SMS" aria-selected="false" aria-level="1"
+                                                aria-labelledby="1E2656D9762542769615D6169B014371_anchor"
+                                                id="1E2656D9762542769615D6169B014371"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="1E2656D9762542769615D6169B014371_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>SMS</a></li>
+                                            <li role="treeitem" title="Tài chính" aria-selected="false" aria-level="1"
+                                                aria-labelledby="8CA2986BE494410182F092897BF85572_anchor"
+                                                id="8CA2986BE494410182F092897BF85572"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="8CA2986BE494410182F092897BF85572_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Tài chính</a></li>
+                                            <li role="treeitem" title="Thi phách" aria-selected="false" aria-level="1"
+                                                aria-labelledby="6F038B9A023647FBB2F7FFF2062DD45E_anchor"
+                                                id="6F038B9A023647FBB2F7FFF2062DD45E"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="6F038B9A023647FBB2F7FFF2062DD45E_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Thi phách</a></li>
+                                            <li role="treeitem" title="Tin tức" aria-selected="false" aria-level="1"
+                                                aria-labelledby="BB236D8E1E034B66B26E9718BA47F5E4_anchor"
+                                                id="BB236D8E1E034B66B26E9718BA47F5E4"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="BB236D8E1E034B66B26E9718BA47F5E4_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Tin tức</a></li>
+                                            <li role="treeitem" title="Thống kê giờ giảng" aria-selected="false"
+                                                aria-level="1" aria-labelledby="42EC44DFB03B4B9DBD172B9B1727942B_anchor"
+                                                id="42EC44DFB03B4B9DBD172B9B1727942B"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="42EC44DFB03B4B9DBD172B9B1727942B_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Thống kê giờ giảng</a></li>
+                                            <li role="treeitem" title="Xét tốt nghiệp" aria-selected="false"
+                                                aria-level="1" aria-labelledby="9C9B8FB142B3478CBFEB2782D7611195_anchor"
+                                                id="9C9B8FB142B3478CBFEB2782D7611195"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="9C9B8FB142B3478CBFEB2782D7611195_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Xét tốt nghiệp</a></li>
+                                            <li role="treeitem" title="Xử lý học vụ" aria-selected="false"
+                                                aria-level="1" aria-labelledby="7CA2C956464F47208D0705F35C91239B_anchor"
+                                                id="7CA2C956464F47208D0705F35C91239B"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="7CA2C956464F47208D0705F35C91239B_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Xử lý học vụ</a></li>
+                                            <li role="treeitem" title="App Sinh viên" aria-selected="false"
+                                                aria-level="1" aria-labelledby="FAF3569AC87845DEA2B5A04EABF5A304_anchor"
+                                                id="FAF3569AC87845DEA2B5A04EABF5A304"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="FAF3569AC87845DEA2B5A04EABF5A304_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>App Sinh viên</a></li>
+                                            <li role="treeitem" title="Cổng thông tin khảo sát" aria-selected="false"
+                                                aria-level="1" aria-labelledby="4A7D75F3419047438072EE8FE3C86564_anchor"
+                                                id="4A7D75F3419047438072EE8FE3C86564"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="4A7D75F3419047438072EE8FE3C86564_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Cổng thông tin khảo sát</a></li>
+                                            <li role="treeitem" title="Quản lý khảo sát" aria-selected="false"
+                                                aria-level="1" aria-labelledby="4D67A514676C4BFD9F7D7966E761478E_anchor"
+                                                id="4D67A514676C4BFD9F7D7966E761478E"
+                                                class="jstree-node btnEvent  jstree-leaf jstree-last"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="4D67A514676C4BFD9F7D7966E761478E_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-hdd-o color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Quản lý khảo sát</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 aps-box-r aps-app-function-r">
+                            <div class="box box-solid box-shadow">
+                                <div class="box-header with-border" style="height: 60px">
+                                    <h3 class="box-title" style="margin-top: 5px !important;">
+                                        <i class="fa-light fa-gear-complex"></i>Danh
+                                        sách chức năng
+                                    </h3>
+                                    <span class="pull-right badge bg-light-blue" style="margin-top: 5px !important;">
+                                        <span id="lblChucNang_Tong_UDCN">9</span>
+                                    </span>
+                                </div>
+                                <div class="box-body">
+                                    <div id="treesjs_ungdungchucnang_udcn" class="jstree jstree-8 jstree-default"
+                                        role="tree" aria-multiselectable="true" tabindex="0"
+                                        aria-activedescendant="ECCCC7B1C4EC4DFBA0DD77337211E683" aria-busy="false">
+                                        <ul class="jstree-container-ul jstree-children" role="group">
+                                            <li role="treeitem" title="Khai báo danh mục" aria-selected="false"
+                                                aria-level="1" aria-labelledby="D7FDAB3DB4FB4691B90965876730B937_anchor"
+                                                id="D7FDAB3DB4FB4691B90965876730B937"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="D7FDAB3DB4FB4691B90965876730B937_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Khai báo danh mục</a></li>
+                                            <li role="treeitem" title="Kế hoạch" aria-selected="false" aria-level="1"
+                                                aria-labelledby="CBF62C753E314B618E69986C96CB4F9A_anchor"
+                                                id="CBF62C753E314B618E69986C96CB4F9A"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="CBF62C753E314B618E69986C96CB4F9A_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Kế hoạch</a></li>
+                                            <li role="treeitem" title="Thực hiện xét" aria-selected="false"
+                                                aria-level="1" aria-labelledby="CC94D64F6EAC44E2A5F1748368205445_anchor"
+                                                id="CC94D64F6EAC44E2A5F1748368205445"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="CC94D64F6EAC44E2A5F1748368205445_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Thực hiện xét</a></li>
+                                            <li role="treeitem" title="Xác nhận kết quả" aria-selected="false"
+                                                aria-level="1" aria-labelledby="57EB9EFD1BCD4E119EA8DCD514654C1C_anchor"
+                                                id="57EB9EFD1BCD4E119EA8DCD514654C1C"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="57EB9EFD1BCD4E119EA8DCD514654C1C_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Xác nhận kết quả</a></li>
+                                            <li role="treeitem" title="Tổng hợp kết quả" aria-selected="false"
+                                                aria-level="1" aria-labelledby="731AAD81427A42CBBE8F62201D3719F2_anchor"
+                                                id="731AAD81427A42CBBE8F62201D3719F2"
+                                                class="jstree-node btnEvent  jstree-leaf"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="731AAD81427A42CBBE8F62201D3719F2_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Tổng hợp kết quả</a></li>
+                                            <li role="treeitem" title="Thiết lập điều kiện" aria-selected="false"
+                                                aria-level="1" aria-labelledby="DB8759B1C0974E46BC984E8BE1C46169_anchor"
+                                                aria-expanded="true" id="DB8759B1C0974E46BC984E8BE1C46169"
+                                                class="jstree-node btnEvent  jstree-open jstree-last"><i
+                                                    class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                    class="jstree-anchor" href="#" tabindex="-1"
+                                                    id="DB8759B1C0974E46BC984E8BE1C46169_anchor"><i
+                                                        class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                        role="presentation"></i>Thiết lập điều kiện</a>
+                                                <ul role="group" class="jstree-children">
+                                                    <li role="treeitem" title="Điều kiện xét" aria-selected="false"
+                                                        aria-level="2"
+                                                        aria-labelledby="E509A625DF11468B8372C25DC1A85B3E_anchor"
+                                                        id="E509A625DF11468B8372C25DC1A85B3E"
+                                                        class="jstree-node btnEvent  jstree-leaf"><i
+                                                            class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                            class="jstree-anchor" href="#" tabindex="-1"
+                                                            id="E509A625DF11468B8372C25DC1A85B3E_anchor"><i
+                                                                class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                                role="presentation"></i>Điều kiện xét</a></li>
+                                                    <li role="treeitem" title="Quỹ học bổng" aria-selected="false"
+                                                        aria-level="2"
+                                                        aria-labelledby="ECCCC7B1C4EC4DFBA0DD77337211E683_anchor"
+                                                        id="ECCCC7B1C4EC4DFBA0DD77337211E683"
+                                                        class="jstree-node btnEvent  jstree-leaf"><i
+                                                            class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                            class="jstree-anchor" href="#" tabindex="-1"
+                                                            id="ECCCC7B1C4EC4DFBA0DD77337211E683_anchor"><i
+                                                                class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                                role="presentation"></i>Quỹ học bổng</a></li>
+                                                    <li role="treeitem" title="Phân bổ học bổng" aria-selected="false"
+                                                        aria-level="2"
+                                                        aria-labelledby="2FF09C0CAFCE460C932F06D5732DC2F5_anchor"
+                                                        id="2FF09C0CAFCE460C932F06D5732DC2F5"
+                                                        class="jstree-node btnEvent  jstree-leaf jstree-last"><i
+                                                            class="jstree-icon jstree-ocl" role="presentation"></i><a
+                                                            class="jstree-anchor" href="#" tabindex="-1"
+                                                            id="2FF09C0CAFCE460C932F06D5732DC2F5_anchor"><i
+                                                                class="jstree-icon jstree-themeicon fa fa-opera color-active jstree-themeicon-custom"
+                                                                role="presentation"></i>Phân bổ học bổng</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- page script -->
+                    <script src="ApisCMS/modules/ungdung/script/ungdungchucnang.js?v=6557"></script>
+                    <script type="text/javascript">
+                        //init
+                        var main_doc = {};
+                        main_doc['UngDungChucNang'] = new UngDungChucNang();
+                        $(document).ready(function () {
+                            main_doc.UngDungChucNang.init();
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Thêm mới danh mục nghề  -->
+    <div class="modal fade modal_them_moi_dm" id="them_moi_dm">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-860">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title">
+                            <i class="fa-light fa-plus"></i> Thêm mới danh mục nghề
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body aps-add-new">
+                    <div class="aps-form mt-10">
+                        <!-- Row 1 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Mã nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <!-- Row 2 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Tên nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Nhóm chức danh</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Nhóm chức danh</option>
+                                        <option value="" selected="">Nhóm chức danh 1</option>
+                                        <option value="">Nhóm chức danh 2</option>
+                                        <option value="">Nhóm chức danh 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Cấp bậc nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-select pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Cấp bậc nghề</option>
+                                        <option value="" selected="">Cấp bậc nghề 1</option>
+                                        <option value="">Cấp bậc nghề 2</option>
+                                        <option value="">Cấp bậc nghề 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 5 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Ngày hiệu lực</div>
+                            </div>
+                            <div class="col-12 col-sm-4 aps-form-input pr0 pos-relative">
+                                <input id="txtDoDaiBienLai_BL" class="form-control" placeholder="--/--/----">
+                                <a class="btn btn-outline-primary border-0 btn-calendar" href="#" title="Calender"
+                                    style="padding-right: 5px !important;">
+                                    <i class="fa-light fa-calendar-lines-pen fz16"></i></a>
+                            </div>
+                            <div class="col-12 col-sm-2 aps-lable-name pl0 text-right pr5">
+                                <div class="title-name">Ngày hết hiệu lực</div>
+                            </div>
+                            <div class="col-12 col-sm-4 aps-form-input pr0 pos-relative">
+                                <input id="txtDoDaiBienLai_BL" class="form-control" placeholder="--/--/----">
+                                <a class="btn btn-outline-primary border-0 btn-calendar" href="#" title="Calender"
+                                    style="padding-right: 5px !important;">
+                                    <i class="fa-light fa-calendar-lines-pen fz18"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Row 6 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Mô tả</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-textarea pr0">
+                                <textarea id="txtMoTa" class="form-control" style="min-height: 200px"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Row 7 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Tình trạng</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-select pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Tình trạng</option>
+                                        <option value="" selected="">Tình trạng 1</option>
+                                        <option value="">Tình trạng 2</option>
+                                        <option value="">Tình trạng 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right d-flex">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                        <button class="btn btn-danger d-none">
+                            <i class="fa fa-trash"></i><span>Xóa</span>
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fal fa-save"></i><span>Lưu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Sửa danh mục nghề   -->
+    <div class="modal fade modal_chitiet_dm" id="chitiet_dm">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-860">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title">
+                            <i class="fa-solid fa-pen-to-square"></i> Sửa danh mục nghề
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body aps-add-new">
+                    <div class="aps-form mt-10">
+                        <!-- Row 1 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Mã nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <!-- Row 2 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Tên nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+
+                        <!-- Row 3 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Nhóm chức danh</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Nhóm chức danh</option>
+                                        <option value="" selected="">Nhóm chức danh 1</option>
+                                        <option value="">Nhóm chức danh 2</option>
+                                        <option value="">Nhóm chức danh 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Cấp bậc nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-select pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Cấp bậc nghề</option>
+                                        <option value="" selected="">Cấp bậc nghề 1</option>
+                                        <option value="">Cấp bậc nghề 2</option>
+                                        <option value="">Cấp bậc nghề 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 5 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Ngày hiệu lực</div>
+                            </div>
+                            <div class="col-12 col-sm-4 aps-form-input pr0 pos-relative">
+                                <input id="txtDoDaiBienLai_BL" class="form-control" placeholder="--/--/----">
+                                <a class="btn btn-outline-primary border-0 btn-calendar" href="#" title="Calender"
+                                    style="padding-right: 5px !important;">
+                                    <i class="fa-light fa-calendar-lines-pen fz16"></i></a>
+                            </div>
+                            <div class="col-12 col-sm-2 aps-lable-name pl0 text-right pr5">
+                                <div class="title-name">Ngày hết hiệu lực</div>
+                            </div>
+                            <div class="col-12 col-sm-4 aps-form-input pr0 pos-relative">
+                                <input id="txtDoDaiBienLai_BL" class="form-control" placeholder="--/--/----">
+                                <a class="btn btn-outline-primary border-0 btn-calendar" href="#" title="Calender"
+                                    style="padding-right: 5px !important;">
+                                    <i class="fa-light fa-calendar-lines-pen fz18"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Row 6 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Mô tả</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-textarea pr0">
+                                <textarea id="txtMoTa" class="form-control" style="min-height: 200px"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Row 7 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Tình trạng</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-select pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Tình trạng</option>
+                                        <option value="" selected="">Tình trạng 1</option>
+                                        <option value="">Tình trạng 2</option>
+                                        <option value="">Tình trạng 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right d-flex">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fa fa-trash"></i><span>Xóa</span>
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fal fa-save"></i><span>Lưu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Thêm mới danh mục nghề  -->
+    <div class="modal fade modal_them_moi_nhomNghe" id="them_moi_nhomNghe">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-860">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title">
+                            <i class="fa-light fa-plus"></i> Thêm mới danh mục nghề
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body aps-add-new">
+                    <div class="aps-form mt-10">
+                        <!-- Row 1 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Thuộc nhóm nghề</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Thuộc nhóm nghề</option>
+                                        <option value="" selected="">Thuộc nhóm nghề 1</option>
+                                        <option value="">Thuộc nhóm nghề 2</option>
+                                        <option value="">Thuộc nhóm nghề 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Row 2 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Mã</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                        <!-- Row 3 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Tên</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+
+                        <!-- Row 4 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Ngày hiệu lực</div>
+                            </div>
+                            <div class="col-12 col-sm-4 aps-form-input pr0 pos-relative">
+                                <input id="txtDoDaiBienLai_BL" class="form-control" placeholder="--/--/----">
+                                <a class="btn btn-outline-primary border-0 btn-calendar" href="#" title="Calender"
+                                    style="padding-right: 5px !important;">
+                                    <i class="fa-light fa-calendar-lines-pen fz16"></i></a>
+                            </div>
+                            <div class="col-12 col-sm-2 aps-lable-name pl0 text-right pr5">
+                                <div class="title-name">Ngày hết hiệu lực</div>
+                            </div>
+                            <div class="col-12 col-sm-4 aps-form-input pr0 pos-relative">
+                                <input id="txtDoDaiBienLai_BL" class="form-control" placeholder="--/--/----">
+                                <a class="btn btn-outline-primary border-0 btn-calendar" href="#" title="Calender"
+                                    style="padding-right: 5px !important;">
+                                    <i class="fa-light fa-calendar-lines-pen fz18"></i></a>
+                            </div>
+                        </div>
+
+                        <!-- Row 5 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Mô tả</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-textarea pr0">
+                                <textarea id="txtMoTa" class="form-control" style="min-height: 200px"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Row 7 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Tình trạng</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-select pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select name="" id="" class="form-select">
+                                        <option value="">Tình trạng</option>
+                                        <option value="" selected="">Tình trạng 1</option>
+                                        <option value="">Tình trạng 2</option>
+                                        <option value="">Tình trạng 3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Row 8 -->
+                        <div class="row aps-form-item pd0">
+                            <div class="col-12 col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Thứ tự</div>
+                            </div>
+                            <div class="col-12 col-sm-10 aps-form-input pr0">
+                                <input id="txt_ma" class="form-control" placeholder="">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right d-flex">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                        <button class="btn btn-danger d-none">
+                            <i class="fa fa-trash"></i><span>Xóa</span>
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fal fa-save"></i><span>Lưu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- -------------------------- -->
+    <!-- -------------------------- -->
+    <!-- JS -->
+    <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
+    <script src="../assets/swiper-slide/swiper-bundle.min.js"></script>
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+        integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="../assets/js/customs.js"></script>
+    <script>
+        $(window).on("load", function () {
+            //$("#dulieu_canhan").modal("show");
+        });
+    </script>
+</body>
+
+</html>
