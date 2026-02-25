@@ -209,6 +209,8 @@
 
 .tab-list .swiper-wrapper {
     align-items: center;
+    padding-left: 20px !important;
+    padding-top: 10px !important;
 }
 
 .one-door .dashboad {

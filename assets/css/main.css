@@ -719,7 +719,7 @@ input:focus-visible {
   padding-right: 0;
   padding-left: 0 !important;
   margin-right: 20px;
-  border-radius: 10px 10px 0 0;
+  border-radius: 6px 6px 0 0;
 }
 
 .tab-list .tab-item a {
@@ -728,15 +728,15 @@ input:focus-visible {
   align-items: center;
   text-decoration: none;
   color: #fff;
-  padding: 7px 20px;
-  border-radius: 10px 10px 0 0;
+  padding: 12px 20px 8px 20px;
+  border-radius: 6px 6px 0 0;
   border: 1px solid transparent;
-  height: 90px;
-  font-size: 18px;
+  height: 48px;
+  font-size: 16px;
 }
 
 .tab-list .tab-item a i {
-  font-size: 40px;
+  font-size: 36px;
   margin-bottom: 5px;
   color: #fff;
   font-weight: 200;
@@ -754,17 +754,17 @@ input:focus-visible {
 
 .tab-list .tab-item.swiper-slide-thumb-active a {
   background: #f5f6f8;
-  color: var(--color-orange);
+  color: var(--color-blue);
   font-weight: 700;
 }
 
 .tab-list .tab-item.swiper-slide-thumb-active a i {
-  color: var(--color-orange);
+  color: var(--color-blue);
   font-weight: 700;
 }
 
 .tab-list .tab-item.swiper-slide-thumb-active a .icon {
-  background-color: var(--color-orange);
+  background-color: var(--color-blue);
 }
 
 .function {

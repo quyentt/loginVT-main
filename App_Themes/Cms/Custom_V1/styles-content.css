@@ -1347,7 +1347,7 @@
 
 .aps-form-item {
     display: flex;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .aps-form-input {
@@ -6451,7 +6451,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-form-body .aps-form-item {
-    margin-bottom: 10px !important;
+    margin-bottom: 15px !important;
 }
 
 .btnSearch_DiaDiem.btn-find {
@@ -7092,7 +7092,7 @@ input#tblInput_DTSV_SinhVien_input {
 /*---------------*/
 .aps-add-form .aps-form-item {
     display: flow-root !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 15px !important;
 }
 
 .aps-add-form .aps-form-lable,

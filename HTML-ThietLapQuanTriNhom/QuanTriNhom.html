@@ -1,0 +1,2007 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thiết lập quản trị nhóm</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+    <div class="header fixed-top">
+        <div class="top-nav">
+            <div class="sidebar-bars">
+                <i class="fa-light fa-bars-sort"> </i>
+            </div>
+            <div class="head-logo">
+                <a href="../index.html">
+                    <img class="logo-icon" src="../assets/images/logo/logo-icon.png" />
+                    <img class="logo-text" src="../assets/images/logo/logo-text.png" />
+                </a>
+            </div>
+            <div class="head-search-form">
+                <div class="head-search-toggle">
+                    <i class="fal fa-search"></i>
+                </div>
+                <div class="head-search-box">
+                    <div class="form">
+                        <input type="text" class="search-imput" placeholder="Tìm kiếm thông tin" />
+                        <button class="search-btn">
+                            <i class="fal fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="main-menu">
+                <ul class="list-unstyled">
+                    <li class="item">
+                        <a class="menu-link" href="../index.html">
+                            <i class="fal fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../dashboard.html">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../modul.html">
+                            <span>Modul</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../chucnang-cuaban.html">
+                            <span>Chức năng của bạn</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../tintuc.html">
+                            <span>Tin tức</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fal fa-bars"></i>
+                </div>
+            </div>
+            <div class="account-group">
+                <div class="dropdown">
+                    <div class="item" data-bs-toggle="dropdown">
+                        <i class="fal fa-circle-check"></i>
+                        <span>3</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item message" data-bs-toggle="dropdown">
+                        <i class="fal fa-messages"></i>
+                        <span>3</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item noti" data-bs-toggle="dropdown">
+                        <i class="fal fa-bell"></i>
+                        <span>9+</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item" data-bs-toggle="dropdown">
+                        <img src="../assets/images/avatar.jpg" class="avatar" />
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another
+                                action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else
+                                here</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-wrap">
+        <div class="left-sidebar">
+            <div class="sidebar-menu">
+                <div class="accordion" id="sidebar-menu">
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="../index.html">
+                            <i class="fa-light fa-house-window item-icon"></i>
+                            <span>Dashboads</span>
+                        </a>
+                    </div>
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse1"
+                            href="javascrip:void(0)" aria-expanded="true">
+                            <i class="fa-light fa-chalkboard-user item-icon"></i>
+                            <span>Giảng viên</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse1" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class href="#">Thông tin chung</a>
+                                <a href="#">Nhập điểm theo lớp học phần</a>
+                                <a href="#">Điểm danh theo lớp học phần</a>
+                                <a href="#">Tra cứu hồ sơ sinh viên</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse2"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-building-user item-icon">
+                            </i>
+                            <span>Trưởng khoa</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse2" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="#">Profile demo 1</a>
+                                <a href="#">Profile demo 2</a>
+                                <a href="#">Profile demo 3</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse3"
+                            href="javascrip:void(0)">
+                            <i class="fa-solid fa-users item-icon"></i>
+                            <span>Nhân sự</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse3" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class="" href="nhansu/nhansu-chitiet.html" data-position="0">Kế hoạch tuyển dụng</a>
+                                <a href="nhansu/nhansu-chitiet.html" data-position="1">Đề xuất tuyển dụng</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item active">
+                        <a class="sidebar-menu-header" data-bs-toggle="collapse" data-bs-target="#collapse4"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-users-gear item-icon"></i>
+                            <span>Thiết lập quản trị nhóm</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse show" id="collapse4" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class="active" href="nhansu/nhansu-chitiet.html" data-position="0">Danh sách thiết
+                                    lập quản trị nhóm</a>
+                                <a href="nhansu/nhansu-chitiet.html" data-position="1">Quản trị nhóm</a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <!-- content -->
+            <div class="content one-door mt-0" style="background: none">
+                <div class="overlay"></div>
+                <div class="content-tab no-tab">
+                    <div class="d-flex justify-content-between">
+                        <div class="nav-content-left">
+                            <p class="link">
+                                <a href="#">Bảng điều khiển</a>
+                                <i class="fal fa-angle-right"></i>
+                                <a href="#">Thiết lập quản trị nhóm</a>
+                                <i class="fal fa-angle-right"></i>
+                                <a href="#">Quản trị nhóm</a>
+                            </p>
+                        </div>
+
+                        <div class="nav-content-right">
+                            <a class="d-block text-right" href>
+                                <i class="fas fa-question-circle"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-content pt-0 pl20 pr20">
+                    <!-- Thiết lập quản trị nhóm -->
+                    <div class="row row-align aps-thietlapQT-nhom-tab mt-20 mb-20">
+                        <div class="box box-solid box-shadow pd0">
+                            <div class="box-body pd0">
+                                <div class="nav-tabs-custom aps-tabs aps-tabs-blue pt-5">
+                                    <ul class="nav nav-tabs pl20 mt-15">
+                                        <li class="active">
+                                            <a href="#tab_1" data-bs-toggle="tab" aria-expanded="true" class="active">
+                                                <span class="lang" key="">
+                                                    <i class="fa-regular fa-users-gear"></i> Thiết lập quản trị nhóm
+                                                    <span class="pull-right badge bg-light-blue d-none">
+                                                        <span id="tblTinChi_Tong"></span>
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li class="">
+                                            <a href="#tab_2" data-bs-toggle="tab" aria-expanded="true">
+                                                <span class="lang" key="">
+                                                    <i class="fa-solid fa-users-between-lines"></i> Quản trị nhóm
+                                                    <span class="pull-right badge bg-light-blue d-none">
+                                                        <span id="tblNienChe_Tong"></span>
+                                                    </span>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content pd-20">
+                                        <!-- Tab_1: Thiết lập quản trị nhóm -->
+                                        <div class="tab-pane active show" id="tab_1">
+                                            <div class="row row-align box-table-select box-qtNhom"
+                                                style="margin-left: -10px !important;margin-right: -10px !important;">
+                                                <div class="col-12 col-sm-4 col-lg-4 item-admin">
+                                                    <table
+                                                        class="table transcrip-table tabs-scores h-auto mb-0 table-noborder">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="td-left color-blue fz16"
+                                                                    style="font-weight: 700 !important;" colspan="2">Tên
+                                                                    nhóm
+                                                                    1</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <th class="text-left" scope="row"><span>Số lượng thành
+                                                                        viên: <b>20</b></span></th>
+                                                                <td class="text-right">
+                                                                    <span><a id="btnedit"
+                                                                            class="btn btn-outline-primary border-0"
+                                                                            href="#soLuong-thanhVien"
+                                                                            data-bs-toggle="modal"><span class="lang"
+                                                                                key="">Xem</span></a></span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-left" scope="row"><span>Vai trò của
+                                                                        nhóm</span></th>
+                                                                <td class="text-right">
+                                                                    <span><a id="btnedit"
+                                                                            class="btn btn-outline-primary border-0"
+                                                                            href="#vaitro_nhom"
+                                                                            data-bs-toggle="modal"><span class="lang"
+                                                                                key="">Xem</span></a></span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-left" scope="row"><span>Dữ liệu của
+                                                                        nhóm</span></th>
+                                                                <td class="text-right">
+                                                                    <span><a id="btnedit"
+                                                                            class="btn btn-outline-primary border-0"
+                                                                            href="#dulieu_nhom"
+                                                                            data-bs-toggle="modal"><span class="lang"
+                                                                                key="">Xem</span></a></span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <th class="text-left" scope="row"><span>Người quản lý
+                                                                        nhóm</span></th>
+                                                                <td class="text-right">
+                                                                    <span><a id="btnedit"
+                                                                            class="btn btn-outline-primary border-0"
+                                                                            href="#nguoiquanly_nhom"
+                                                                            data-bs-toggle="modal"><span class="lang"
+                                                                                key="">Xem</span></a></span>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                        <tfoot></tfoot>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Tab_2: Quản trị nhóm -->
+                                        <div class="tab-pane" id="tab_2">
+                                            <div class="pull-right">
+                                                <a id="btnRefreshNienChe" class="btn btn-default pull-right"
+                                                    style="margin-right: 5px"><i class="fa fa-refresh"></i> <span
+                                                        class="lang" key="">Tải lại</span></a>
+                                            </div>
+                                            <div class="row row-align">
+                                                <table id="tblNienChe" class="table table-hover table-bordered mb-0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th rowspan="2" class="td-fixed td-center">Stt</th>
+                                                            <th rowspan="2" class="td-center">Mã số</th>
+                                                            <th rowspan="2" class="td-center">Họ tên</th>
+                                                            <th rowspan="2" class="td-center">Ngày sinh</th>
+                                                            <th rowspan="2" class="td-center">Tình trạng</th>
+                                                            <th rowspan="2" class="td-center">Lớp</th>
+                                                            <th rowspan="2" class="td-center">Chương trình</th>
+                                                            <th rowspan="2" class="td-center">Khóa</th>
+                                                            <th colspan="4" class="td-center">Học phí/ Kinh phí</th>
+                                                        </tr>
+                                                        <tr>
+                                                            <th class="td-center">Số tiền</th>
+                                                            <th class="td-center">Phần trăm miễn</th>
+                                                            <th class="td-center">Số tiền miễn</th>
+                                                            <th class="td-center">Số phải nộp</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- load from js -->
+                                                    </tbody>
+                                                    <tfoot></tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Số lượng thành viên là-->
+    <div class="modal fade modal_soLuong_thanhVien" id="soLuong-thanhVien">
+        <div class="modal-dialog modal-dialog-centered modal-90">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-users"></i> Số lượng thành viên là
+                            <b>20</b>
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-end mb-10 aps-gap-10">
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa" class="btn btn-danger">
+                            <i class="fa-regular fa-trash"></i>
+                            <span>Gửi đề xuất xóa</span>
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them" class="btn btn-primary">
+                            <i class="fa-light fa-plus"></i>
+                            <span>Gửi đề xuất thêm</span>
+                        </button>
+                    </div>
+                    <div class="table-responsive fs-14 no-swiper">
+                        <table
+                            class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th class="text-left">Tài khoản</th>
+                                    <th class="text-left">Tên đầy đủ</th>
+                                    <th class="text-center">Vai trò cá nhân được phân</th>
+                                    <th class="text-center">Dữ liệu cá nhân được sử dụng</th>
+                                    <th class="text-left">Thuộc các đơn vị</th>
+                                    <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                            type="checkbox" value="" id="1"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Vai trò cá nhân được phân:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#vaitro_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Dữ liệu cá nhân được sử dụng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#dulieu_canhan">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Thuộc các đơn vị:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Đề xuất thêm thành viên vào nhóm-->
+    <div class="modal fade modal_gui_dexuat_them" id="gui_dexuat_them">
+        <div class="modal-dialog modal-dialog-centered modal-1140">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-user-plus"></i> Đề xuất thêm thành viên vào nhóm
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body pd0">
+                    <div class="form-top box-search border-radius-0"
+                        style="border-top-left-radius: 0 !important;border-top-right-radius: 0 !important;">
+                        <div class="row">
+                            <div class="col-12 col-lg-4 col-md-4 mb-15 item-search mr-0">
+                                <div class="form-item d-flex form-add-info flex-grow-1">
+                                    <div class="input-group no-icon">
+                                        <i class="fal fa-angle-down"></i>
+                                        <select class="form-select" aria-label="Default select example">
+                                            <option selected="">Đơn vị</option>
+                                            <option value="1">Đơn vị</option>
+                                            <option value="2">Kế toán</option>
+                                            <option value="3">Điện tử</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-4 col-md-4 mb-15 item-search mr-0">
+                                <input id="txtSearch_DT" class="form-control" placeholder="Thông tin">
+                            </div>
+                            <div class="col-12 col-lg-4 col-md-4 mb-15">
+                                <div class="d-flex align-items-center">
+                                    <div class="btn btn-default">
+                                        <i class="fa fa-search"></i> Tìm
+                                        kiếm
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive fs-14 no-swiper table_gui_dexuat_them pd-20 pb15">
+                        <table
+                            class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th class="text-left">Tài khoản</th>
+                                    <th class="text-left">Tên đầy đủ</th>
+                                    <th class="text-left">Mô tả</th>
+                                    <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                            type="checkbox" value="" id="1"></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>TaiKhoanAdmin-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class> <em class="show-in-mobi">Mô tả:</em>
+                                        <span>Thuộc đơn vị ĐH Hà Nội</span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-end mb-20 aps-gap-10 pr20">
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them" class="btn btn-primary">
+                            <i class="fa-light fa-plus"></i>
+                            <span>Thêm</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Xem vai trò cá nhân được phân + Tên đầy đủ-->
+    <div class="modal fade modal_vaitro_canhan" id="vaitro_canhan">
+        <div class="modal-dialog modal-dialog-centered modal-90">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-user-tag"></i> Xem vai trò cá nhân được phân + Tên
+                            đầy
+                            đủ
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-end mb-10 aps-gap-10">
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa" class="btn btn-danger">
+                            <i class="fa-regular fa-trash"></i>
+                            <span>Xóa vai trò</span>
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them" class="btn btn-primary">
+                            <i class="fa-light fa-plus"></i>
+                            <span>Thêm vai trò</span>
+                        </button>
+                    </div>
+                    <div class="table-responsive fs-14 no-swiper">
+                        <table
+                            class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th class="text-left">Mã vai trò</th>
+                                    <th class="text-left">Tên vai trò</th>
+                                    <th class="text-center">Mô tả</th>
+                                    <th class="text-center">Ứng dụng/chức năng</th>
+                                    <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                            type="checkbox" value="" id="1"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Mã vai trò:</em>
+                                        <span>MaVaitro-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên vai trò:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Mô tả:</em>
+                                        <span>Mô tả</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Ứng dụng/chức năng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#ungDung_chucNang">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                    <td class="text-right">
+                                        <em class="show-in-mobi">Chọn:</em>
+                                        <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                id="1"></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Xem - ứng dụng/chức năng-->
+    <div class="modal fade ungDung_chucNang" id="ungDung_chucNang">
+        <div class="modal-dialog modal-dialog-centered modal-1140">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-user-tag"></i> Xem - ứng dụng/chức năng</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body pd0">
+                    <div class="table-responsive fs-14 no-swiper table_ungDung_chucNang pd-20 pb15">
+                        <table
+                            class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-bordered table-border">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th class="text-left">Ứng dụng</th>
+                                    <th class="text-left">Chức năng</th>
+                                    <th class="text-left">Quyền</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT:</em><span>1</span>
+                                    </th>
+                                    <td class="text-left" rowspan="2">
+                                        <em class="show-in-mobi">Ứng dụng:</em>
+                                        <span>A</span>
+                                    </td>
+                                    <td class="text-left">
+                                        <em class="show-in-mobi">Chức năng:</em>
+                                        <span>A1</span>
+                                    </td>
+                                    <td class="text-left"><em class="show-in-mobi">Quyền:</em>
+                                        <span>Thêm, sửa, xóa,... </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT:</em><span>2</span>
+                                    </th>
+                                    <td class="text-left">
+                                        <em class="show-in-mobi">Chức năng:</em>
+                                        <span>A2</span>
+                                    </td>
+                                    <td class="text-left"> <em class="show-in-mobi">Quyền:</em>
+                                        <span>Thêm, sửa, xóa,... </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT:</em><span>1</span>
+                                    </th>
+                                    <td class="text-left" rowspan="2">
+                                        <em class="show-in-mobi">Ứng dụng:</em>
+                                        <span>B</span>
+                                    </td>
+                                    <td class="text-left">
+                                        <em class="show-in-mobi">Chức năng:</em>
+                                        <span>B1</span>
+                                    </td>
+                                    <td class="text-left"><em class="show-in-mobi">Quyền:</em>
+                                        <span>Thêm, sửa, xóa,... </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT:</em><span>2</span>
+                                    </th>
+                                    <td class="text-left">
+                                        <em class="show-in-mobi">Chức năng:</em>
+                                        <span>B2</span>
+                                    </td>
+                                    <td class="text-left"> <em class="show-in-mobi">Quyền:</em>
+                                        <span>Thêm, sửa, xóa,... </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Dữ liệu cá nhân được sử dụng + Tên đầy đủ -->
+    <div class="modal fade modal_dulieu_nhom" id="dulieu_canhan">
+        <div class="modal-dialog modal-dialog-centered modal-90">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-user"></i>
+                            Dữ liệu cá nhân được sử dụng + Tên đầy đủ</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-align box-table-select box-dulieu_nhom"
+                        style="margin-left: -10px !important;margin-right: -10px !important;">
+                        <!-- Hệ đào tạo -->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Hệ đào tạo</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa quyền hệ</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền hệ</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Mã hệ đào tạo </th>
+                                            <th class="text-left">Tên hệ đào tạo</th>
+                                            <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                                    type="checkbox" value="" id="1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0002</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ Vừa học vừa làm</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0003</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ đào tạo chính quy</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Khoa quản lý -->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Khoa quản lý</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa quyền khoa</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền khoa</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Mã khoa quản lý</th>
+                                            <th class="text-left">Tên khoa quản lý</th>
+                                            <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                                    type="checkbox" value="" id="1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã khoa quản lý:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên khoa quản lý:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0002</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ Vừa học vừa làm</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0003</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ đào tạo chính quy</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Khóa đào tạo-->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Khóa đào tạo</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Gán quyền khóa</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền khóa</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Mã khóa</th>
+                                            <th class="text-left">Tên khóa</th>
+                                            <th class="text-left">Thuộc hệ đào tạo</th>
+                                            <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                                    type="checkbox" value="" id="1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã khóa:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên khóa:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã khóa:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên khóa:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Chương trình học-->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Chương trình học</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa quyền chương trình</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền chương trình</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Tên chương trình</th>
+                                            <th class="text-left">Mã chương trình</th>
+                                            <th class="text-left">Thuộc khóa đào tạo</th>
+                                            <th class="text-left">Thuộc hệ đào tạo</th>
+                                            <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                                    type="checkbox" value="" id="1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên chương trình:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc khóa đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên chương trình:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc khóa đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Lớp quản lý-->
+                        <div class="col-12 col-sm-12 col-lg-12 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Lớp quản lý</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa vai trò cá nhân</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán thêm vai trò cá nhân</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Tên lớp quản lý</th>
+                                            <th class="text-left">Mã lớp quản lý</th>
+                                            <th class="text-left">Tên chương trình</th>
+                                            <th class="text-left">Mã chương trình</th>
+                                            <th class="text-left">Thuộc khóa đào tạo</th>
+                                            <th class="text-left">Thuộc hệ đào tạo</th>
+                                            <th class="text-right">Chọn <input class="form-check-input ms-2 me-3"
+                                                    type="checkbox" value="" id="1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên lớp quản lý:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã lớp quản lý:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc khóa đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class="text-right">
+                                                <em class="show-in-mobi">Chọn:</em>
+                                                <span><input class="form-check-input me-3" type="checkbox" value=""
+                                                        id="1"></span>
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Vai trò của nhóm-->
+    <div class="modal fade modal_vaitro_nhom" id="vaitro_nhom">
+        <div class="modal-dialog modal-dialog-centered modal-90">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-users"></i> Vai trò của nhóm </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-end mb-10 aps-gap-10 d-none">
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa" class="btn btn-danger">
+                            <i class="fa-regular fa-trash"></i>
+                            <span>Xóa vai trò</span>
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them" class="btn btn-primary">
+                            <i class="fa-light fa-plus"></i>
+                            <span>Thêm vai trò</span>
+                        </button>
+                    </div>
+                    <div class="table-responsive fs-14 no-swiper">
+                        <table
+                            class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th class="text-left">Mã vai trò</th>
+                                    <th class="text-left">Tên vai trò</th>
+                                    <th class="text-center">Mô tả</th>
+                                    <th class="text-center">Ứng dụng/chức năng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Mã vai trò:</em>
+                                        <span>MaVaitro-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên vai trò:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Mô tả:</em>
+                                        <span>Mô tả</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Ứng dụng/chức năng:</em>
+                                        <span><a id="btnUpdate" class="btn btn-outline-primary border-0"
+                                                data-bs-toggle="modal" href="#ungDung_chucNang">
+                                                <span class="lang" key>Xem</span></a></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- modal Dữ liệu của nhóm -->
+    <div class="modal fade modal_dulieu_nhom" id="dulieu_nhom">
+        <div class="modal-dialog modal-dialog-centered modal-90">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-users"></i>Dữ liệu của nhóm</div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="row row-align box-table-select box-dulieu_nhom"
+                        style="margin-left: -10px !important;margin-right: -10px !important;">
+                        <!-- Hệ đào tạo -->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Hệ đào tạo</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right d-none">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa quyền hệ</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền hệ</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Mã hệ đào tạo </th>
+                                            <th class="text-left">Tên hệ đào tạo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0002</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ Vừa học vừa làm</span>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0003</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ đào tạo chính quy</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Khoa quản lý -->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Khoa quản lý</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right d-none">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa quyền khoa</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền khoa</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Mã khoa quản lý</th>
+                                            <th class="text-left">Tên khoa quản lý</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã khoa quản lý:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên khoa quản lý:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0002</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ Vừa học vừa làm</span>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã hệ đào tạo:</em>
+                                                <span>MaheDT-0003</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên hệ đào tạo:</em>
+                                                <span>Hệ đào tạo chính quy</span>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Khóa đào tạo-->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Khóa đào tạo</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right d-none">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Gán quyền khóa</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền khóa</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Mã khóa</th>
+                                            <th class="text-left">Tên khóa</th>
+                                            <th class="text-left">Thuộc hệ đào tạo</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã khóa:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên khóa:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã khóa:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên khóa:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Chương trình học-->
+                        <div class="col-12 col-sm-6 col-lg-6 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Chương trình học</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right d-none">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa quyền chương trình</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán quyền chương trình</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Tên chương trình</th>
+                                            <th class="text-left">Mã chương trình</th>
+                                            <th class="text-left">Thuộc khóa đào tạo</th>
+                                            <th class="text-left">Thuộc hệ đào tạo</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên chương trình:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc khóa đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên chương trình:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc khóa đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Lớp quản lý-->
+                        <div class="col-12 col-sm-12 col-lg-12 item-dulieu_nhom">
+                            <div class="d-flex justify-content-between mb-10 box-header pd-0">
+                                <div class="pull-left">
+                                    <p class="group-group-title-name pd-0 mb-0 mt-10">
+                                        <span class="badge color-222 fz18 pd-0">Lớp quản lý</span>
+                                    </p>
+                                </div>
+                                <div class="pull-right d-none">
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_xoa"
+                                        class="btn btn-outline-danger">
+                                        <i class="fa-regular fa-trash"></i>
+                                        <span>Xóa vai trò cá nhân</span>
+                                    </button>
+                                    <button data-bs-toggle="modal" data-bs-target="#gui_dexuat_them"
+                                        class="btn btn-outline-primary">
+                                        <i class="fa-solid fa-user-tag"></i><span>Gán thêm vai trò cá nhân</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="table-responsive fs-14 no-swiper">
+                                <table
+                                    class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center w-50px" scope="col">STT</th>
+                                            <th class="text-left">Tên lớp quản lý</th>
+                                            <th class="text-left">Mã lớp quản lý</th>
+                                            <th class="text-left">Tên chương trình</th>
+                                            <th class="text-left">Mã chương trình</th>
+                                            <th class="text-left">Thuộc khóa đào tạo</th>
+                                            <th class="text-left">Thuộc hệ đào tạo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <th class="text-center" scope="row">
+                                                <em class="show-in-mobi">STT</em><span>1</span>
+                                            </th>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên lớp quản lý:</em>
+                                                <span>MaheDT-0001</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã lớp quản lý:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Tên chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Mã chương trình:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc khóa đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                            <td class>
+                                                <em class="show-in-mobi">Thuộc hệ đào tạo:</em>
+                                                <span>Trần Hoàng Việt</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal Người quản lý nhóm			-->
+    <div class="modal fade modal_nguoiquanly_nhom" id="nguoiquanly_nhom">
+        <div class="modal-dialog modal-dialog-centered modal-860">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-header-wrap">
+                        <div class="title"><i class="fa-solid fa-users"></i>Người quản lý nhóm </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive fs-14 no-swiper table_nguoiquanly_nhom">
+                        <table
+                            class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th class="text-left">Tài khoản</th>
+                                    <th class="text-left">Tên đầy đủ</th>
+                                    <th class="text-center">Là quản lý nhóm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th class="text-center" scope="row">
+                                        <em class="show-in-mobi">STT</em><span>1</span>
+                                    </th>
+                                    <td class>
+                                        <em class="show-in-mobi">Tài khoản:</em>
+                                        <span>MaVaitro-0001</span>
+                                    </td>
+                                    <td class>
+                                        <em class="show-in-mobi">Tên đầy đủ:</em>
+                                        <span>Trần Hoàng Việt</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <em class="show-in-mobi">Là quản lý nhóm:</em>
+                                        <span>Là quản lý nhóm</span>
+                                    </td>
+
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="pull-right">
+                        <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                            <i class="fal fa-times"></i><span>Đóng</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- -------------------------- -->
+    <!-- -------------------------- -->
+    <!-- JS -->
+    <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
+    <script src="../assets/swiper-slide/swiper-bundle.min.js"></script>
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+        integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="../assets/js/customs.js"></script>
+    <script>
+        $(window).on("load", function () {
+            // $("#dulieu_nhom").modal("show");
+        });
+    </script>
+</body>
+
+</html>
