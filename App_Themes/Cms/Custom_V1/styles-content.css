@@ -289,7 +289,7 @@
     margin-right: 8px;
     float: left;
     color: var(--color-blue);
-    margin-top: 3px;
+    /* margin-top: 3px; */
     font-weight: 700 !important;
 }
 
@@ -325,7 +325,9 @@
     border-bottom: 1px solid #e1e1e1 !important;
     margin-top: 0 !important;
 }
-
+.box-search {
+  width: 100%;
+}
 .box-search .group-title {
     padding-bottom: 12px;
     padding-top: 0px;
@@ -345,6 +347,11 @@
 
 .box-search .bss-item {
     padding: 0 !important;
+    display: flex;
+    flex-wrap: wrap;
+}
+.box-search .item-search {
+    margin-right: 0 !important;
 }
 
 .zone-bus .bss-item .item-search,
