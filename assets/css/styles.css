@@ -15,13 +15,14 @@
 /* css cổng cũ */
 @import "all.css";
 @import "1cuaSV.css";
+@import "1cuasv.css";
 @import "gochoctap.css";
 @import "awesome-5.min.css";
 @import "slick.css";
 @import "select-2-custom.css";
 @import "all.css";
 @import "login.css";
-@import "1cuaSV.css";
+/* @import "1cuaSV.css"; */
 @import "register-school.css";
 @import "gochoctap.css";
 @import "tai-chinh.css";
