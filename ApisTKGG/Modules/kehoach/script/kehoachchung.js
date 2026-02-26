@@ -236,20 +236,22 @@ KeHoachChung.prototype = {
             var strId = this.id;
             var data = me.dtDotTach.find(e => e.ID == strId);
             me["strDotTach_Id"] = data.ID;
-            $("#myModal_AddDotTach").modal("show");
+            $("#myModalAddDotTach").modal("show");
             me["strDotTach_Id"] = data.ID;
             edu.util.viewValById("txtTuNgay_DT", data.TUNGAY);
             edu.util.viewValById("txtDenNgay_DT", data.DENNGAY);
+            edu.util.viewValById("dropHieuLuc_DT", data.HIEULUC);
             edu.util.viewValById("txtTen_DT", data.TEN);
             edu.util.viewValById("txtMoTa_DT", data.MOTA);
         });
         $("#btnAdd_DotTach").click(function () {
             var data = {};
             me["strDotTach_Id"] = data.ID;
-            $("#myModal_AddDotTach").modal("show");
+            $("#myModalAddDotTach").modal("show");
             me["strDotTach_Id"] = data.ID;
             edu.util.viewValById("txtTuNgay_DT", data.TUNGAY);
             edu.util.viewValById("txtDenNgay_DT", data.DENNGAY);
+            edu.util.viewValById("dropHieuLuc_DT", data.HIEULUC);
             edu.util.viewValById("txtTen_DT", data.TEN);
             edu.util.viewValById("txtMoTa_DT", data.MOTA);
         });
@@ -1772,7 +1774,7 @@ KeHoachChung.prototype = {
             'strDenNgay': edu.system.getValById('txtDenNgay_DT'),
             'strTen': edu.system.getValById('txtTen_DT'),
             'strMoTa': edu.system.getValById('txtMoTa_DT'),
-            'dHieuLuc': 1,
+            'dHieuLuc': edu.system.getValById('dropHieuLuc_DT'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId) {
