@@ -1,4 +1,6 @@
+@import "../../App_Themes/Plugins/font-awesome/css/font-awesome.min.css";
 @import "../bootstrap-5.3.2/css/bootstrap.min.css";
+
 @import "../swiper-slide/swiper-bundle.min.css";
 @import "../select2/css/select2.min.css";
 @import "fontawesome-6.css";
@@ -10,18 +12,17 @@
 @import "tai-chinh.css";
 @import "news.css";
 
-
-
 /* css cổng cũ */
 @import "all.css";
 @import "1cuaSV.css";
+@import "1cuasv.css";
 @import "gochoctap.css";
 @import "awesome-5.min.css";
 @import "slick.css";
 @import "select-2-custom.css";
 @import "all.css";
 @import "login.css";
-@import "1cuaSV.css";
+/* @import "1cuaSV.css"; */
 @import "register-school.css";
 @import "gochoctap.css";
 @import "tai-chinh.css";
@@ -38,6 +39,8 @@
 
 
 /* css App_themes */
+@import "../../App_Themes/Plugins/jstree/dist/themes/default/style.min.css";
+
 @import "../../App_Themes/Cms/Custom_V1/styles.css";
 @import "../../App_Themes/Cms/Custom_V1/styles-content.css";
 @import "../../App_Themes/Cms/Custom_V1/styles-V1.css";

@@ -5,7 +5,8 @@
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="#tab_1" data-toggle="tab" aria-expanded="true">
-                            <span class="lang" key="">Hoạt động xã hội và giảng dạy</span>
+                            <span class="lang" key="">
+                                <i class="fa-solid fa-chalkboard-user mr-5 fw-bold"></i> Hoạt động xã hội và giảng dạy</span>
                         </a>
                     </li>
                 </ul>
@@ -20,11 +21,10 @@
                                         <h3 class="box-title">
                                             <a data-toggle="collapse" data-parent="#key_hoatdongxahoi"
                                                 href="#qt_hoatdongxahoi" aria-expanded="false" class="collapsed">
-                                                <span class="lang" key=""> Tóm tắt quá trình hoạt động xã hội và giảng
-                                                    dạy </span>
+                                                <span class="lang" key=""> Tóm tắt quá trình hoạt động xã hội và giảng dạy</span>
                                             </a>
                                         </h3>
-                                        <div class="pull-right">
+                                        <div class="pull-right d-flex">
                                             <a id="key_hoatdongxahoi" class="btn btn-success btnAdd">
                                                 <i class="fa fa-plus"></i>Thêm mới
                                             </a>
@@ -40,9 +40,9 @@
                                                     <thead>
                                                         <tr>
                                                             <th class="td-fixed td-center w-50px">Stt</th>
-                                                            <th class="td-center">Tham gia hiệp hội, tổ chức khoa học</th>
-                                                            <th class="td-center" style="width: 120px">Năm bắt đầu</th>
-                                                            <th class="td-center" style="width: 350px">Vai trò</th>
+                                                            <th class="td-left">Tham gia hiệp hội, tổ chức khoa học</th>
+                                                            <th class="td-left" style="width: 120px">Năm bắt đầu</th>
+                                                            <th class="td-left" style="width: 350px">Vai trò</th>
                                                             <th class="td-fixed td-center">Sửa</th>
                                                             <th class="td-fixed td-center">Xóa</th>
                                                         </tr>
@@ -59,10 +59,10 @@
                 </div>
             </div>
         </div>
-        <!-- Tab_1 Modal Tieu su ban than -->
 
+        <!-- Tab_1 Modal Tieu su ban than -->
         <div class="box box-solid form-container zone-bus zoneHDXH_input" id="zoneHDXH_input" style="display: none">
-            <div class="box-header with-border">
+            <div class="box-header with-border" style="padding-right: 10px !important;">
                 <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Hoạt động xã hội
                 </h3>
                 <div class="pull-right title-note">
@@ -71,54 +71,55 @@
             </div>
             <div class="box-body">
                 <div class="aps-add-new pd20">
-                <div class="row aps-form">
-                    <!-- Row 1 -->
-                    <div class="row aps-form-item">
-                        <div class="col-sm-3 aps-form-lable">
-                            <div class="title-name">
-                                Hiệp hội, tổ chức khoa học <span class="color-red pl5">(*)</span><span
-                                    class="title-colon">:</span>
+                    <div class="row aps-form">
+                        <!-- Row 1 -->
+                        <div class="row aps-form-item">
+                            <div class="col-sm-3 aps-form-lable">
+                                <div class="title-name">
+                                    Hiệp hội, tổ chức khoa học <span class="color-red pl5">(*)</span><span
+                                        class="title-colon">:</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-9 aps-form-input">
+                                <input type="text" id="txtHDXH" class="form-control" />
                             </div>
                         </div>
-                        <div class="col-sm-9 aps-form-input">
-                            <input type="text" id="txtHDXH" class="form-control" />
-                        </div>
-                    </div>
-                    <!-- Row 1 -->
-                    <div class="row aps-form-item">
-                        <div class="col-sm-3 aps-form-lable">
-                            <div class="title-name">
-                                Vai trò <span class="color-red pl5">(*)</span><span class="title-colon">:</span>
+                        <!-- Row 1 -->
+                        <div class="row aps-form-item">
+                            <div class="col-sm-3 aps-form-lable">
+                                <div class="title-name">
+                                    Vai trò <span class="color-red pl5">(*)</span><span class="title-colon">:</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-9 aps-form-input">
+                                <input type="text" id="txtVaiTro" class="form-control" />
                             </div>
                         </div>
-                        <div class="col-sm-9 aps-form-input">
-                            <input type="text" id="txtVaiTro" class="form-control" />
-                        </div>
-                    </div>
-                    <!-- Row 1 -->
-                    <div class="row aps-form-item">
-                        <div class="col-sm-3 aps-form-lable">
-                            <div class="title-name">
-                                Năm bắt đầu <span class="color-red pl5">(*)</span><span class="title-colon">:</span>
+                        <!-- Row 1 -->
+                        <div class="row aps-form-item">
+                            <div class="col-sm-3 aps-form-lable">
+                                <div class="title-name">
+                                    Năm bắt đầu <span class="color-red pl5">(*)</span><span class="title-colon">:</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-9 aps-form-input">
+                                <input type="text" id="txtNamBatDau" class="form-control" />
                             </div>
                         </div>
-                        <div class="col-sm-9 aps-form-input">
-                            <input type="text" id="txtNamBatDau" class="form-control" />
-                        </div>
-                    </div>
 
-                </div></div>
+                    </div>
+                </div>
             </div>
             <div class="box-footer">
-                <div class="pull-right">
-                    <a class="btn btn-default btnCloseToggle" id=""><i class="fa fa-times"></i> <span class="lang"
+                <div class="pull-right d-flex">
+                    <a class="btn btn-outline-secondary btnCloseToggle" id=""><i class="fa fa-times"></i> <span class="lang"
                             key="">Đóng</span></a>
                     <a class="submit btn btn-outline-primary" id="btnSaveRe_HDXH">
                         <i class="fa-solid fa-floppy-disk-circle-arrow-right"></i>
                         <span class="lang" key=""> Lưu và nhập tiếp</span></a>
                     <a class="submit btn btn-primary" id="btnSave_HDXH">
-                        <i class="fa fa-save"></i><span class="lang"  key=""> Lưu</span></a>
-                    
+                        <i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
+
                 </div>
             </div>
         </div>
