@@ -2,6 +2,43 @@
 @import "responsive.css";
 @import "styles.css";
 @import "../../../assets/css/root.css";
+/* --------------- */
+ .color-222 {
+     color: #222 !important;
+ }
+
+ .color-666 {
+     color: #666 !important;
+ }
+
+ .color-888 {
+     color: #888 !important;
+ }
+
+ .color-orange {
+     color: var(--color-orange) !important;
+ }
+.color-blue{
+     color: var(--color-blue) !important;
+}
+.color-green{
+     color: var(--color-green) !important;
+}
+ .color-yellow {
+     color: var(--color-yellow) !important;
+ }
+
+ .color-white {
+     color: #fff !important;
+ }
+
+ .color-red {
+     color: var(--color-red) !important;
+ }
+
+ .color-success {
+     color: var(--color-green) !important;
+ }
 
 /*-----------------------*/
 .box-header>.box-tools {
@@ -550,8 +587,8 @@
     background-color: #fff !important;
     margin-bottom: 5px !important;
     padding: 0 !important;
-    font-size: 16px !important;
-    color: #222 !important;
+    font-size: 16px ;
+    color: #222 ;
 }
 
 .aps-add-new .zone-box .box-view {}
@@ -10197,4 +10234,36 @@ table#clone {
 
 .tblPhongThi tr th .fa-caret-up {
     height: 9px !important;
+}
+/* --------------------- */
+.treeitem-btn .btn,.treeitem-btn .btn:hover,
+.treeitem-btn-con .btn,.treeitem-btn-con .btn:hover{
+    height: 24px;
+    line-height: 24px !important;
+    padding: 0px 10px !important;
+    border-radius: 3px !important;
+    font-size: 13px !important;
+}
+.tree-list-title{
+    display: inline-flex;
+}
+.aps-coCau-toChuc-l {
+    border-right: 1px solid #e1e1e1;
+    /* height: 100%; */
+}
+.aps-coCau-toChuc-l .form-top {
+    border-radius: 0 !important;
+    height: 100%;
+}
+.trees-coCau-toChuc .treeitem,.trees-coCau-toChuc .treeitem .treeitem-2{
+    padding-bottom: 10px;
+}
+.trees-coCau-toChuc .treeitem .treeitem-btn,
+.trees-coCau-toChuc .treeitem .treeitem-btn-con{
+margin-left: 20px;
+display: none !important;
+}
+.trees-coCau-toChuc .treeitem:hover .treeitem-btn,
+.trees-coCau-toChuc .treeitem .treeitem-2:hover .treeitem-btn-con{
+display: inline-flex !important;
 }
