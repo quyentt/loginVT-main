@@ -10270,3 +10270,17 @@ display: none !important;
 .trees-coCau-toChuc .treeitem .treeitem-2:hover .treeitem-btn-con{
 display: inline-flex !important;
 }
+.upload-img {
+    height: 70px !important;
+    /* width: 100% !important; */
+    overflow: hidden;
+    object-fit: cover;
+}
+.mailbox-attachments .btn-default {
+    top: -15px !important;
+    right: -17px !important;
+}
+.table .mailbox-attachments .btn-default {
+    top: -10px !important;
+    right: -15px !important;
+}

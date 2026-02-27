@@ -5,7 +5,8 @@
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="#tab_4" data-toggle="tab" aria-expanded="true">
-                            <span class="lang" key="">Khen thưởng - Kỷ luật</span>
+                            <span class="lang" key=""><i class="fa-solid fa-file-certificate fw-bold mr-5"></i> Khen
+                                thưởng - Kỷ luật</span>
                         </a>
                     </li>
                 </ul>
@@ -18,22 +19,21 @@
                                         <h3 class="box-title">
                                             <a data-toggle="collapse" data-parent="#key_khenthuong"
                                                 href="#qt_khenthuong" aria-expanded="false" class="collapsed">
-                                                <span class="lang" key="">Quá trình khen thưởng</span>
+                                                <span class="lang" key=""><i class="fa-solid fa-award"></i> Quá trình
+                                                    khen thưởng</span>
                                             </a>
                                         </h3>
-                                        <div class="pull-right">
+                                        <div class="pull-right d-flex">
+                                             <a id="key_khenthuong" class="btn btn-warning btnRefresh">
+                                                <i class="fa fa-refresh pr5"></i> Tải lại
+                                            </a>
                                             <a id="key_khenthuong" class="btn btn-success btnAdd">
                                                 <i class="fa fa-plus"></i>Thêm mới
                                             </a>
-                                            <a id="key_khenthuong" class="btn btn-warning btnRefresh">
-                                                <i class="fa fa-refresh pr0"></i>
-                                            </a>
+                                           
                                         </div>
                                     </div>
-                                    <div class="row aps-form-item">
-                                        <span class="text-note color-888" key="">Chú ý: Cán bộ cần nhập đầu đủ tất cả
-                                            thông tin</span>
-                                    </div>
+
                                     <div id="qt_khenthuong" class="panel-collapse collapse" aria-expanded="false">
                                         <div class="box-body pd0">
                                             <div class="aps-table-select bg-none">
@@ -57,6 +57,11 @@
                                                     <tbody></tbody>
                                                 </table>
                                             </div>
+                                            <div class="row aps-form-item">
+                                                <span class="text-note color-888" key="">Chú ý: Cán bộ cần nhập đầu đủ
+                                                    tất cả
+                                                    thông tin</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -65,15 +70,15 @@
                                         <h3 class="box-title">
                                             <a data-toggle="collapse" data-parent="#key_kyluat" href="#qt_kyluat"
                                                 aria-expanded="false" class="collapsed">
-                                                <span class="lang" key="">Quá trình kỷ luật</span>
+                                                <span class="lang" key=""><i class="fa-solid fa-file-lines"></i> Quá trình kỷ luật</span>
                                             </a>
                                         </h3>
-                                        <div class="pull-right">
-                                            <a id="key_kyluat" class="btn btn-success btnAdd">
-                                                <i class="fa fa-plus"></i>Thêm mới
-                                            </a>
+                                        <div class="pull-right d-flex">                                           
                                             <a id="key_kyluat" class="btn btn-warning btnRefresh">
-                                                <i class="fa fa-refresh pr0"></i>
+                                                <i class="fa fa-refresh pr5"></i>Tải lại
+                                            </a>
+                                             <a id="key_kyluat" class="btn btn-success btnAdd">
+                                                <i class="fa fa-plus"></i>Thêm mới
                                             </a>
                                         </div>
                                     </div>
@@ -83,9 +88,9 @@
                                                 <table id="tbl_KyLuat" class="table table-hover table-bordered">
                                                     <thead>
                                                         <tr>
-                                                            <th class="td-fixed td-center">TT</th>
-                                                            <th class="td-center">Cơ quan kỷ luật</th>
-                                                            <th class="td-center" style="width: 300px">Hình thức kỷ luật
+                                                            <th class="td-fixed td-center w-50px">STT</th>
+                                                            <th class="td-left">Cơ quan kỷ luật</th>
+                                                            <th class="td-left" style="width: 300px">Hình thức kỷ luật
                                                             </th>
                                                             <th class="td-center" style="width: 200px">Số quyết định
                                                             </th>
@@ -251,7 +256,7 @@
                                     File đính kèm<span class="title-colon">:</span>
                                 </div>
                             </div>
-                            <div class="col-sm-10 aps-form-input">
+                            <div class="col-sm-10 aps-form-input mt-5">
                                 <div id="txtThongTinDinhKem"></div>
                             </div>
                         </div>
@@ -262,7 +267,7 @@
                 <div class="pull-right">
                     <a class="btn btn-default btnCloseToggle" id=""><i class="fa fa-times"></i> <span class="lang"
                             key="">Đóng</span></a>
-                    <a class="submit btn btn-success" id="btnSaveRe_KhenThuong">
+                    <a class="submit btn btn-outline-primary" id="btnSaveRe_KhenThuong">
                         <i class="fa-solid fa-floppy-disk-circle-arrow-right"></i>
                         <span class="lang" key=""> Lưu và nhập tiếp</span></a>
                     <a class="btn btn-primary" id="btnSave_KhenThuong"><i class="fa fa-save"></i>
@@ -274,7 +279,7 @@
         <!-- 2. Add/Edit Ky luat -->
         <div class="box box-solid form-container zone-bus zonecontent" id="zoneKyLuat_input" style="display: none">
             <div class="box-header with-border">
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Kỷ luật</h3>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span>Kỷ luật</h3>
                 <div class="pull-right title-note">
                     <a class="btn btn-default btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
@@ -410,7 +415,7 @@
                                     File đính kèm<span class="title-colon">:</span>
                                 </div>
                             </div>
-                            <div class="col-sm-10 aps-form-input">
+                            <div class="col-sm-10 aps-form-input mt-5">
                                 <div id="txtKL_ThongTinDinhKem"></div>
                             </div>
                         </div>
@@ -421,13 +426,13 @@
                 <div class="pull-right">
                     <a class="btn btn-default btnCloseToggle" id=""><i class="fa fa-times"></i> <span class="lang"
                             key="">Đóng</span></a>
-                    <a class="submit btn btn-success" id="btnSaveRe_KyLuat">
+                    <a class="submit btn btn-outline-primary"btnSaveRe_KyLuat">
                         <i class="fa-solid fa-floppy-disk-circle-arrow-right"></i>
                         <span class="lang" key=""> Lưu và nhập tiếp</span></a>
                     <a class="btn btn-primary" id="btnSave_KyLuat">
                         <i class="fa fa-save"></i>
                         <span class="lang" key="">Lưu</span></a>
-                    
+
                 </div>
             </div>
         </div>
