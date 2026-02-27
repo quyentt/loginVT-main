@@ -4300,3 +4300,90 @@
      padding: 3px 5px;
      border-radius: 4px !important;
  }
+ /* ----------------- */
+ .box-notify.dropdown-menu{
+    width: 400px !important;
+    padding: 0 !important;
+ }
+ .lable-notify{
+    background: #f1f1f1;
+    padding: 15px 15px 10px 15px !important;
+    border-bottom: 1px solid #e1e1e1;
+ }
+  .lable-notify h3{
+    font-size: 18px !important;
+    font-weight: 500;
+    color: #222;    
+    margin-bottom: 0 !important;
+ }
+  .lable-notify h3 i{
+    /* font-weight: bold; */
+    margin-right: 3px;
+ }
+ .list-notify, .list-notify li {
+    list-style: none;
+    padding-left: 0px;
+ }
+ .list-notify, .list-notify li {
+    list-style: none;
+    padding-left: 0px;
+ }
+  .list-notify ul{
+    padding-left: 0 !important;
+  }
+   .list-notify ul li a{
+    color: #222;
+   }
+ .list-notify .item-notify{
+    display: flex;
+    align-items: center;
+ }
+ .list-notify li{
+    padding: 15px;
+    border-bottom: 1px solid #e1e1e1;
+ }
+  .list-notify li:hover{
+   background: #f6f6f6;
+ }
+  .list-notify li:hover .content-notify {
+   color: var(--color-blue);
+ }
+ .list-notify .item-notify .icon-notify{
+    width: 46px;
+    flex-shrink: 0;
+    /* text-align: center; */
+    /* list-style: m; */
+ }
+ .list-notify .item-notify .icon-notify i{
+   font-size: 26px;
+   
+ }
+ .content-notify{
+    font-size: 15px;
+    line-height: 20px;
+    flex: 1;
+ }
+ .content-notify .date-notify{
+    color: #888;
+    font-size: 13px;
+    margin-top: 3px;
+    margin-bottom: 0px;
+ }
+  .content-notify p{
+    margin-bottom: 0px;
+ }
+ .content-notify .date-notify .fa-calendar-clock{
+    margin-right: 5px;
+ }
+  .content-notify .date-notify .fa-circle{
+    font-size: 5px;
+    margin-right: 5px;
+    margin-left: 5px;
+ }
+ .img-notify{
+    width: 30px;
+    height: auto;
+ }
+ .dadoc .content-notify{
+    color: #666;
+ }
