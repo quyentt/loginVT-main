@@ -4312,14 +4312,16 @@
  }
   .lable-notify h3{
     font-size: 18px !important;
+    line-height: 28px;
     font-weight: 500;
-    color: #222;    
+    color:var(--color-red);    
     margin-bottom: 0 !important;
  }
   .lable-notify h3 i{
     /* font-weight: bold; */
     margin-right: 3px;
  }
+ 
  .list-notify, .list-notify li {
     list-style: none;
     padding-left: 0px;
