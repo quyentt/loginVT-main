@@ -2162,7 +2162,7 @@ QuaTrinhDaoTao.prototype = {
             row += '<td><input type="text" id="txtGiaHan_SoQD' + strGiaHan_Id + '" value="' + edu.util.returnEmpty(data[i].SOQUYETDINH) + '" class="form-control"/></td>';
             row += '<td><input type="text" id="txtGiaHan_Ngay' + strGiaHan_Id + '" value="' + edu.util.returnEmpty(data[i].NGAYKY) + '" class="form-control input-datepicker_GiaHan"/></td>';
             row += '<td><input type="text" id="txtGiaHanDen_Ngay' + strGiaHan_Id + '" value="' + edu.util.returnEmpty(data[i].GIAHANDENNGAY) + '" class="form-control input-datepicker_GiaHan"/></td>';
-            row += '<td><div id="txtGiaHan_FileDinhKem' + strGiaHan_Id + '"></div></td>';
+            row += '<td><div class="txtGiaHan_FileDinhKem" id="txtGiaHan_FileDinhKem' + strGiaHan_Id + '"></div></td>';
             row += '<td style="text-align: center"><a title="Xóa" class="deleteTienDo" id="' + strGiaHan_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             row += '</tr>';
             $("#tblDaoTao_GiaHan tbody").append(row);
@@ -2186,7 +2186,7 @@ QuaTrinhDaoTao.prototype = {
         row += '<td><input type="text" id="txtGiaHan_SoQD' + strGiaHan_Id + '"  class="form-control"/></td>';
         row += '<td><input type="text" id="txtGiaHan_Ngay' + strGiaHan_Id + '"  class="form-control input-datepicker_GiaHan"/></td>';
         row += '<td><input type="text" id="txtGiaHanDen_Ngay' + strGiaHan_Id + '"  class="form-control input-datepicker_GiaHan"/></td>';
-        row += '<td><div id="txtGiaHan_FileDinhKem' + strGiaHan_Id + '"></div></td>';
+        row += '<td><div class="txtGiaHan_FileDinhKem" id="txtGiaHan_FileDinhKem' + strGiaHan_Id + '"></div></td>';
         row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strGiaHan_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
         row += '</tr>';
         $("#tblDaoTao_GiaHan tbody").append(row);

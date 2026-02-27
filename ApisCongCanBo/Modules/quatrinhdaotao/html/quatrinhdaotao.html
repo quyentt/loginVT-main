@@ -7,27 +7,27 @@
                     <ul class="nav nav-tabs">
                         <li class="active">
                             <a href="#tab_1" data-toggle="tab" aria-expanded="true">
-                                <span class="lang" key="">1) Quá trình đào tạo</span>
+                                <span class="lang" key=""><i class="fa-solid fa-book-open-reader mr-5"></i> Quá trình đào tạo</span>
                             </a>
                         </li>
                         <li class="">
                             <a href="#tab_2" data-toggle="tab" aria-expanded="true">
-                                <span class="lang" key="">2) Học vị</span>
+                                <span class="lang" key=""><i class="fa-solid fa-user-graduate mr-5"></i> Học vị</span>
                             </a>
                         </li>
                         <li class="">
                             <a href="#tab_3" data-toggle="tab" aria-expanded="true">
-                                <span class="lang" key="">3) Trình độ chính trị</span>
+                                <span class="lang" key=""><i class="fa-solid fa-chalkboard-user mr-5"></i> Trình độ chính trị</span>
                             </a>
                         </li>
                         <li class="">
                             <a href="#tab_4" data-toggle="tab" aria-expanded="true">
-                                <span class="lang" key="">4) Trình độ tin học</span>
+                                <span class="lang" key=""><i class="fa-solid fa-laptop-file mr-5"></i> Trình độ tin học</span>
                             </a>
                         </li>
                         <li class="">
                             <a href="#tab_5" data-toggle="tab" aria-expanded="true">
-                                <span class="lang" key="">5) Trình độ ngoại ngữ</span>
+                                <span class="lang" key=""><i class="fa-solid fa-laptop-file mr-5"></i> Trình độ ngoại ngữ</span>
                             </a>
                         </li>
                     </ul>
@@ -43,30 +43,29 @@
                                             <h3 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#key_daotao" href="#qt_daotao"
                                                     aria-expanded="false" class="collapsed">
-                                                    <span class="lang" key="">Quá trình đào tạo</span>
+                                                    <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i> Quá trình đào tạo</span>
                                                 </a>
                                             </h3>
-                                            <div class="pull-right">
-                                                <a id="key_daotao" class="btn btn-success btnAdd">
-                                                    <i class="fa fa-plus"></i>
-                                                    Thêm mới
-                                                </a>
+                                            <div class="pull-right d-flex">                                                
                                                 <a id="key_daotao" class="btn btn-warning btnRefresh">
-                                                    <i class="fa fa-refresh pr0"></i>
+                                                    <i class="fa fa-refresh pr0"></i> Tải lại
+                                                </a>
+                                                <a id="key_daotao" class="btn btn-success btnAdd">
+                                                    <i class="fa fa-plus"></i>Thêm mới
                                                 </a>
                                             </div>
                                         </div>
                                         <div id="qt_daotao" class="panel-collapse collapse mt-10" aria-expanded="false">
                                             <div class="box-body pd0">
                                                 <div class="aps-table-select bg-none">
-                                                    <table id="tbl_DaoTao" class="table table-hover table-bordered">
+                                                    <table id="tbl_DaoTao" class="table table-hover table-bordered table-noborder tbl_DaoTao">
                                                         <thead>
                                                             <tr>
-                                                                <th class="td-fixed td-center">TT</th>
-                                                                <th class="td-center">Tên cơ sở đào tạo</th>
-                                                                <th class="td-center">Chuyên Ngành đào tạo</th>
+                                                                <th class="td-fixed td-center w-50px">TT</th>
+                                                                <th class="td-left">Tên cơ sở đào tạo</th>
+                                                                <th class="td-left">Chuyên Ngành đào tạo</th>
                                                                 <th class="td-center">Thời gian</th>
-                                                                <th class="td-center">Văn bằng</th>
+                                                                <th class="td-left">Văn bằng</th>
                                                                 <th class="td-fixed td-center">Sửa</th>
                                                                 <th class="td-fixed td-center">Xóa</th>
                                                             </tr>
@@ -83,15 +82,15 @@
                                             <h3 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#key_boiduong"
                                                     href="#qt_boiduong" aria-expanded="false" class="collapsed">
-                                                    <span class="lang" key="">Quá trình bồi dưỡng</span>
+                                                    <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i> Quá trình bồi dưỡng</span>
                                                 </a>
                                             </h3>
-                                            <div class="pull-right">
-                                                <a id="key_boiduong" class="btn btn-success btnAdd">
-                                                    <i class="fa fa-plus"></i>Thêm mới
-                                                </a>
+                                            <div class="pull-right d-flex">                                              
                                                 <a id="key_boiduong" class="btn btn-warning btnRefresh">
-                                                    <i class="fa fa-refresh pr0"></i>
+                                                    <i class="fa fa-refresh pr0"></i> Tải lại
+                                                </a>
+                                                  <a id="key_boiduong" class="btn btn-success btnAdd">
+                                                    <i class="fa fa-plus"></i>Thêm mới
                                                 </a>
                                             </div>
                                         </div>
@@ -99,14 +98,14 @@
                                             aria-expanded="false">
                                             <div class="box-body pd0">
                                                 <div class="aps-table-select bg-none">
-                                                    <table id="tbl_BoiDuong" class="table table-hover table-bordered">
+                                                    <table id="tbl_BoiDuong" class="table table-hover table-bordered table-noborder tbl_BoiDuong">
                                                         <thead>
                                                             <tr>
-                                                                <th class="td-fixed td-center">TT</th>
-                                                                <th class="td-center">Tên cơ sở bồi dưỡng</th>
-                                                                <th class="td-center">Chuyên ngành bồi dưỡng</th>
+                                                                <th class="td-fixed td-center w-50px">TT</th>
+                                                                <th class="td-left">Tên cơ sở bồi dưỡng</th>
+                                                                <th class="td-left">Chuyên ngành bồi dưỡng</th>
                                                                 <th class="td-center">Thời gian</th>
-                                                                <th class="td-center">Chứng chỉ</th>
+                                                                <th class="td-left">Chứng chỉ</th>
                                                                 <th class="td-fixed td-center">Sửa</th>
                                                                 <th class="td-fixed td-center">Xóa</th>
                                                             </tr>
@@ -131,25 +130,25 @@
                                             <h3 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#key_hocvi" href="#qt_hocvi"
                                                     aria-expanded="false" class="collapsed">
-                                                    <span class="lang" key="">Học vị</span>
+                                                    <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i>Học vị</span>
                                                 </a>
                                             </h3>
-                                            <div class="pull-right">
-                                                <a id="key_hocvi" class="btn btn-success btnAdd">
-                                                    <i class="fa fa-plus"></i>Thêm mới
-                                                </a>
+                                            <div class="pull-right d-flex">                                              
                                                 <a id="key_hocvi" class="btn btn-warning btnRefresh">
-                                                    <i class="fa fa-refresh pr0"></i>
+                                                    <i class="fa fa-refresh pr5"></i> Tải lại
+                                                </a>
+                                                  <a id="key_hocvi" class="btn btn-success btnAdd">
+                                                    <i class="fa fa-plus"></i>Thêm mới
                                                 </a>
                                             </div>
                                         </div>
                                         <div id="qt_hocvi" class="panel-collapse collapse mt-10" aria-expanded="false">
                                             <div class="box-body pd0">
                                                 <div class="aps-table-select bg-none">
-                                                    <table id="tbl_HocVi" class="table table-hover table-bordered">
+                                                    <table id="tbl_HocVi" class="table table-hover table-bordered tbl_HocVi table-noborder">
                                                         <thead>
                                                             <tr>
-                                                                <th class="td-fixed td-center">Stt</th>
+                                                                <th class="td-fixed td-center w-50px">Stt</th>
                                                                 <th class="td-center" style="width: 400px">Học vị</th>
                                                                 <th class="td-center" style="width: 600px">Chuyên ngành
                                                                 </th>
@@ -181,15 +180,15 @@
                                             <h3 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#key_trinhdochinhtri"
                                                     href="#qt_trinhdochinhtri" aria-expanded="false" class="collapsed">
-                                                    <span class="lang" key="">Trình độ chính trị</span>
+                                                    <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i> Trình độ chính trị</span>
                                                 </a>
                                             </h3>
-                                            <div class="pull-right">
-                                                <a id="key_trinhdochinhtri" class="btn btn-success btnAdd">
-                                                    <i class="fa fa-plus"></i>Thêm mới
-                                                </a>
+                                            <div class="pull-right d-flex">                                               
                                                 <a id="key_trinhdochinhtri" class="btn btn-warning btnRefresh">
-                                                    <i class="fa fa-refresh pr0"></i>
+                                                    <i class="fa fa-refresh pr5"></i> Tải lại
+                                                </a>
+                                                 <a id="key_trinhdochinhtri" class="btn btn-success btnAdd">
+                                                    <i class="fa fa-plus"></i>Thêm mới
                                                 </a>
                                             </div>
                                         </div>
@@ -198,10 +197,10 @@
                                             <div class="box-body pd0">
                                                 <div class="aps-table-select bg-none">
                                                     <table id="tbl_TrinhDoChinhTri"
-                                                        class="table table-hover table-bordered">
+                                                        class="table table-hover table-bordered table-noborder tbl_TrinhDoChinhTri">
                                                         <thead>
                                                             <tr>
-                                                                <th class="td-fixed td-center">Stt</th>
+                                                                <th class="td-fixed td-center w-50px">Stt</th>
                                                                 <th class="td-center" style="width: 500px">Trình độ</th>
                                                                 <th class="td-center" style="width: 200px">Năm công nhận
                                                                 </th>
@@ -232,15 +231,15 @@
                                             <h3 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#key_trinhdotinhoc"
                                                     href="#qt_trinhdotinhoc" aria-expanded="false" class="collapsed">
-                                                    <span class="lang" key="">Trình độ tin học</span>
+                                                    <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i> Trình độ tin học</span>
                                                 </a>
                                             </h3>
-                                            <div class="pull-right">
-                                                <a id="key_trinhdotinhoc" class="btn btn-success btnAdd">
-                                                    <i class="fa fa-plus"></i>Thêm mới
-                                                </a>
+                                            <div class="pull-right d-flex">                                               
                                                 <a id="key_trinhdotinhoc" class="btn btn-warning btnRefresh">
-                                                    <i class="fa fa-refresh pr0"></i>
+                                                    <i class="fa fa-refresh pr5"></i> Tải lại
+                                                </a>
+                                                 <a id="key_trinhdotinhoc" class="btn btn-success btnAdd">
+                                                    <i class="fa fa-plus"></i>Thêm mới
                                                 </a>
                                             </div>
                                         </div>
@@ -248,11 +247,11 @@
                                             aria-expanded="false">
                                             <div class="box-body pd0">
                                                 <div class="aps-table-select bg-none">
-                                                    <table id="tblTDTH" class="table table-hover table-bordered">
+                                                    <table id="tblTDTH" class="table table-hover table-bordered table-noborder tblTDTH">
                                                         <thead>
                                                             <tr>
-                                                                <th class="td-fixed td-center">Stt</th>
-                                                                <th class="td-center">Trình độ</th>
+                                                                <th class="td-fixed td-center w-50px">Stt</th>
+                                                                <th class="td-left">Trình độ</th>
                                                                 <th class="td-center" style="width: 400px">Thời hạn</th>
                                                                 <th class="td-fixed td-center">Sửa</th>
                                                                 <th class="td-fixed td-center">Xóa</th>
@@ -278,15 +277,15 @@
                                             <h3 class="box-title">
                                                 <a data-toggle="collapse" data-parent="#key_trinhdongoaingu"
                                                     href="#qt_trinhdongoaingu" aria-expanded="false" class="collapsed">
-                                                    <span class="lang" key="">Trình độ ngoại ngữ</span>
+                                                    <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i> Trình độ ngoại ngữ</span>
                                                 </a>
                                             </h3>
-                                            <div class="pull-right">
-                                                <a id="key_trinhdongoaingu" class="btn btn-success btnAdd">
-                                                    <i class="fa fa-plus"></i>Thêm mới
-                                                </a>
+                                            <div class="pull-right d-flex">                                               
                                                 <a id="key_trinhdongoaingu" class="btn btn-warning btnRefresh">
-                                                    <i class="fa fa-refresh pr0"></i>
+                                                    <i class="fa fa-refresh pr5"></i> Tải lại
+                                                </a>
+                                                 <a id="key_trinhdongoaingu" class="btn btn-success btnAdd">
+                                                    <i class="fa fa-plus"></i>Thêm mới
                                                 </a>
                                             </div>
                                         </div>
@@ -295,10 +294,10 @@
                                             <div class="box-body pd0">
                                                 <div class="aps-table-select bg-none">
                                                     <table id="tbl_TrinhDoNgoaiNgu"
-                                                        class="table table-hover table-bordered">
+                                                        class="table table-hover table-bordered table-noborder tbl_TrinhDoNgoaiNgu">
                                                         <thead>
                                                             <tr>
-                                                                <th class="td-fixed td-center">Stt</th>
+                                                                <th class="td-fixed td-center w-50px">Stt</th>
                                                                 <th class="td-center">Ngôn ngữ</th>
                                                                 <th class="td-center">Trình độ</th>
                                                                 <th class="td-center">Điểm số</th>
@@ -538,16 +537,16 @@
                                 <!-- Row 2 -->
                                 <div class="row aps-form-item">
                                     <table id="tblDaoTao_GiaHan"
-                                        class="table table-hover table-bordered tblDaoTao_GiaHan mr-0 mb-0">
+                                        class="table table-hover table-bordered table-noborder tblDaoTao_GiaHan mr-0 mb-0">
                                         <thead>
                                             <tr>
                                                 <th style="width:40px;">STT</th>
-                                                <th style="text-align:center; width: 400px">Loại quyết định gia hạn</th>
+                                                <th style="text-align:left; width: 400px">Loại quyết định gia hạn</th>
                                                 <th style="text-align:center; width: 350px">Số QĐ</th>
                                                 <th style="text-align:center; width: 250px">Ngày ký QĐ</th>
                                                 <th style="text-align:center; width: 250px">Gia hạn đến ngày</th>
-                                                <th style="text-align:center;">File đính kèm</th>
-                                                <th style="text-align:center;width: 90px">Xóa dòng</th>
+                                                <th style="text-align:center;width:135px">File đính kèm</th>
+                                                <th style="text-align:center;width: 110px">Xóa dòng</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
@@ -576,15 +575,15 @@
                                 <!-- Row 2 -->
                                 <div class="row aps-form-table">
                                     <table id="tblDaoTao_TienDo"
-                                        class="table table-hover table-bordered mr-0 mb-10 tblDaoTao_TienDo">
+                                        class="table table-hover table-bordered table-noborder mr-0 mb-10 tblDaoTao_TienDo">
                                         <thead>
                                             <tr>
                                                 <th style="width:40px;">STT</th>
                                                 <th style="text-align:center; width: 200px">Ngày</th>
                                                 <th style="text-align:center; width: 500px">Tình trạng</th>
-                                                <th style="text-align:center; width: 350px">Mô tả</th>
-                                                <th style="text-align:center;">File đính kèm</th>
-                                                <th style="text-align:center;width: 90px">Xóa dòng</th>
+                                                <th style="text-align:left; width: 350px">Mô tả</th>
+                                                <th style="text-align:center;width:135px">File đính kèm</th>
+                                                <th style="text-align:center;width: 110px">Xóa dòng</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>
