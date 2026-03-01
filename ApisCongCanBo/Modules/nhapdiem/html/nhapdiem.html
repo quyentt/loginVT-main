@@ -66,23 +66,22 @@
         </div>
         <div class="container-fluid px-20">
             <div class="title-is-paging">
-                <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-file-lines"></i> Danh sách bảng điểm</p>
+                <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
                 <div class="ms-auto">
                     <div class="btn btn-success" id="btnThongKe">
                         <i class="fa-solid fa-square-poll-horizontal"></i> Thống kê</div>
                 </div>
             </div>
             <div class="aps-table-select">
-                <table class="table transcrip-table tabs-scores" id="tblDSDiem">
+                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem" id="tblDSDiem">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Loại danh sách</th>
                             <th scope="col">Mã danh sách</th>
                             <th scope="col">Tên danh sách</th>
-                            <th scope="col">Mã học phần</th>
+                            <th scope="col">Mã học phần</th>                            
                             <th scope="col">Tên học phần</th>
-
                             <th class="text-center" scope="col">Số lượng</th>
                             <th scope="col">Thời gian</th>
                             <th scope="col">Khóa mở lớp</th>
@@ -106,11 +105,9 @@
             <p id="lblHocPhan"></p>
         </div>
         <div class="container-fluid px-20">
-
             <div class="gv-button-group row">
                 <div class="form-item d-flex  form-add-info col-12 col-lg-2">
                     <div class="input-group no-icon">
-
                         <select class="form-select select-opt" id="dropSearch_LoaiSapXep"
                             aria-label="Default select example">
                             <option value="ABC">Xếp theo ABC</option>
@@ -118,7 +115,6 @@
                             <option value="MASO">Xếp theo Mã sinh viên</option>
                         </select>
                     </div>
-
                 </div>
                 <div class="col-12 col-lg-10 d-flex justify-content-end flex-wrap aps-gap-10">
                     <div class="dropdown" id="zonebtnBaoCao_Diem"> </div>
@@ -159,7 +155,6 @@
             </a>
         </div>
         <div class="container-fluid px-20">
-
             <div class="tabs-scores">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
@@ -177,7 +172,6 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#tab_3"
                             type="button" role="tab" aria-controls="contact" aria-selected="false">
-
                             <span>Thống kê kết quả theo thang điểm 10</span>
                         </button>
                     </li>
@@ -193,7 +187,7 @@
                     <!-- danh sách đối tượng tham gia khảo sát -->
                     <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="home-tab">
                         <div>
-                            <table class="table table-bordered" id="tblTKDiemChu">
+                            <table class="table table-bordered table-noborder tblTKDiemChu" id="tblTKDiemChu">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -206,7 +200,7 @@
                     <!-- danh sách đối tượng được khảo sát -->
                     <div class="tab-pane fade" id="tab_2" role="tabpanel" aria-labelledby="profile-tab">
                         <div>
-                            <table class="table table-bordered" id="tblTKDanhGia">
+                            <table class="table table-bordered table-noborder tblTKDanhGia" id="tblTKDanhGia">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -218,7 +212,7 @@
                     <!-- danh sách đối tượng thực hiện khảo sát -->
                     <div class="tab-pane fade" id="tab_3" role="tabpanel" aria-labelledby="profile-tab">
                         <div>
-                            <table class="table table-bordered" id="tblTKDiem10">
+                            <table class="table table-bordered tblTKDiem10 table-noborder" id="tblTKDiem10">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -230,7 +224,7 @@
                     <!-- Kết quả chi tiết-->
                     <div class="tab-pane fade" id="tab_4" role="tabpanel" aria-labelledby="profile-tab">
                         <div>
-                            <table class="table table-bordered" id="tblTKDiem4">
+                            <table class="table table-bordered table-noborder tblTKDiem4" id="tblTKDiem4">
                                 <thead>
                                     <tr></tr>
                                 </thead>
@@ -244,87 +238,83 @@
         </div>
     </div>
 </div>
-
-<!-- modal xác nhận-->
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
+        Hoàn thành nhập điểm</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_XacNhanDiem">
+         Vi phạm điều kiện thi</button>   
+</div>
+<!-- ---------- -->
+<!-- modal Hoàn thành nhập điểm-->
 <div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-700 ">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-860 ">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b><span class="loaiXacNhan"></span> hoàn thành nhập điểm</b></p>
-
+                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field fw-bold mr-10"></i>Hoàn thành nhập điểm</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-
-                <div class="action-group mb-20">
+                <div class="action-group mb-20 pd0">
                     <div class="select-group">
-                        <div class="label">Trạng thái <span class="loaiXacNhan"></span></div>
+                        <div class="label mt-5">Trạng thái <span class="loaiXacNhan"></span></div>
                         <div class="form-item d-flex  form-add-info">
                             <div class="input-group no-icon">
-
                                 <select class="form-select select-opt" aria-label="Default select example"
                                     id="dropLoaiXacNhan"></select>
                             </div>
-
                         </div>
                     </div>
-                    <a class="btn btn-success" id="btnDongYXacNhan"><i class="fal fa-check me-2"></i> <span>Đồng
-                            ý</span></a>
+                    <a class="btn btn-success" id="btnDongYXacNhan">
+                        <i class="fal fa-check me-2"></i><span>Đồng ý</span></a>
                 </div>
 
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>
-                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhan">
+                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder" id="tblModal_XacNhan">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Người xác nhận</th>
                             <th class="text-center" scope="col">Thời gian</th>
-
-
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>
 
 <!-- modal xác nhận-->
-<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhanDiem" tabindex="-1"
+<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhanDiem" id="modal_XacNhanDiem" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-700 ">
+    <div class="modal-dialog modal-dialog-centered modal-860">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b><span class="loaiXacNhan"></span> Vi phạm điều kiện thi</b></p>
-
+                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field mr-10"></i>Vi phạm điều kiện thi</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="action-group mb-20">
-                    <div class="select-group">
-                        <div class="label">Loại điểm </div>
-                        <div class="form-item d-flex  form-add-info">
+                <div class="action-group mb-20 pd0">
+                    <div class="select-group pd0">
+                        <div class="label mr-10">Loại điểm</div>
+                        <div class="form-item d-flex form-add-info">
                             <div class="input-group no-icon">
-
                                 <select class="form-select select-opt" aria-label="Default select example"
                                     id="dropLoaiDiemXN"></select>
                             </div>
-
                         </div>
                     </div>
                     <div class="select-group">
-                        <div class="label">Trạng thái </div>
+                        <div class="label text-right mr-5 ml-20">Trạng thái</div>
                         <div class="form-item d-flex  form-add-info">
                             <div class="input-group no-icon">
-
                                 <select class="form-select select-opt" aria-label="Default select example"
                                     id="dropLoaiXacNhanXN"></select>
                             </div>
@@ -335,21 +325,18 @@
                             ý</span></a>
                 </div>
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>
-                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhanXN">
+                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanXN table-bordered table-noborder" id="tblModal_XacNhanXN">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Người xác nhận</th>
                             <th class="text-center" scope="col">Thời gian</th>
-
-
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </div>
