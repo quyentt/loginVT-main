@@ -978,8 +978,8 @@
  }
 
  .select2-container--default .select2-selection--single .select2-selection__arrow {
-     top: 6px !important;
-     right: 8px !important;
+     top: 2px !important;
+     right: 6px !important;
  }
 
  .select2-container--default .select2-search--dropdown .select2-search__field {
@@ -4414,3 +4414,34 @@
  .dadoc .content-notify {
      color: #666;
  }
+ /* -------------------------- */
+ .aps-dk-Dulieu-list .row{
+    margin-left: -15px !important;
+ }
+ .aps-dk-Dulieu-list .row .col-12 {
+   padding-right: 0 !important;
+ }
+ .table-list-sv .title-is-paging {
+    margin-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+.tblSinhVien tr td:nth-last-child(1),
+.tblSinhVien tr td:nth-last-child(2),
+.tblSinhVien tr td:nth-last-child(3),
+.tblSinhVien tr td:nth-last-child(4),
+.tblSinhVien tr td:nth-last-child(5),
+.tblSinhVien tr td:nth-last-child(6),
+.tblSinhVien tr td:nth-last-child(7),
+.tblSinhVien tr td:nth-last-child(8),
+.tblSinhVien tr td:nth-last-child(9),
+.tblSinhVien tr td:nth-last-child(10),
+.tblSinhVien tr td:nth-of-type(8) {
+    text-align: center !important;
+}
+
+.modal_ketquadkcalop .kqht-modal .left {
+  width: 260px;
+  background: #f1f1f1 !important;
+  padding: 0 !important;
+  border-bottom-left-radius: 9px;
+}

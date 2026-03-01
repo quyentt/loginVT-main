@@ -81,15 +81,15 @@
                     </div>
                 </div>
             </div>
-            <div class="collapse-short">
+            <div class="collapse-short aps-dk-Dulieu">
                 <a class="position-relative d-flex align-items-center" href="#collapseExample" role="button"
                     aria-expanded="true" aria-controls="collapseExample">
                     <b>Điều kiện lọc dữ liệu mở rộng</b>
                     <i class="fal fa-chevron-circle-down ms-auto"></i>
                     <i class="fas fa-chevron-circle-up ms-auto"></i>
                 </a>
-                <div class="collapse show" id="collapseExample">
-                    <div class="row pt-3">
+                <div class="collapse show aps-dk-Dulieu-list" id="collapseExample">
+                    <div class="row pt-10">
                         <div class="col-12 col-lg-3 col-md-6 mb-10">
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group no-icon">
@@ -99,7 +99,6 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 col-md-6 mb-10">
-
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group no-icon">
                                     <select class="form-select select-opt" id="dropSearch_HeDaoTao_QD"
@@ -109,10 +108,8 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 col-md-6 mb-10">
-
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group no-icon">
-
                                     <select class="form-select select-opt" id="dropSearch_KhoaDaoTao_QD"
                                         aria-label="Default select example"></select>
                                 </div>
@@ -120,7 +117,6 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 col-md-6 mb-10">
-
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group no-icon">
 
@@ -131,7 +127,6 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-3 col-md-6 mb-10">
-
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group no-icon">
 
@@ -164,13 +159,14 @@
                             </div>
                         </div>
                         <div style="clear: both"></div>
-                        <div class="col-12 col-lg-3 col-md-6 mb-10">
+                        <div class="col-12 col-lg-3 col-md-6 mb-20">
 
                             <div class="box-body">
-                                <table id="tblTaskBar_TongHopKetQua">
-                                    <thead>
+                                <table id="tblTaskBar_TongHopKetQua" class="bg-default">
+                                    <thead class="bg-default" style="background: transparent !important;">
                                         <tr>
-                                            <td class="">- Phạm vi tổng hợp</td>
+                                            <td class="color-dask-blue fw-bold mr-10" style="min-width: 140px">Phạm vi
+                                                tổng hợp</td>
                                             <td class="td-right" style="min-width: 220px">
                                                 <div class="input-group no-icon">
                                                     <select id="dropPhanViTongHop" class="form-select select-opt ">
@@ -242,8 +238,9 @@
 
             <div class="title-is-paging mt-20">
                 <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-users"></i> Danh sách sinh viên</p>
-                <span class="bg-dask-blue text-white px-2 rounded-20px ms-2 fs-13 fw-bold aps-tong" id="lblSinhVien_Tong" style="margin-top: 12px !important;"></span>
-                <div class="ms-auto aps-list-btn">
+                <span class="bg-dask-blue text-white px-2 rounded-20px ms-2 fs-13 fw-bold aps-tong"
+                    id="lblSinhVien_Tong" style="margin-top: 12px !important;"></span>
+                <div class="ms-auto aps-gap-10">
                     <div class="btn btn-success" id="btnTongHopDuLieu">
                         <i class="fa-solid fa-book-open-reader"></i> Tổng hợp dữ liệu học tập
                     </div>
@@ -253,51 +250,48 @@
                 </div>
             </div>
             <div id="zoneprocessXXXXA"></div>
-            <div>
-                <div class="aps-table-select scroll-table-x">
-                    <table class="table table-hover table-bordered tblSinhVien" id="tblSinhVien">
-                        <thead>
-                            <tr>
-                                <th class="text-center" scope="col">STT</th>
-                                <th scope="col">Lịch học</th>
-                                <th scope="col">Mã số</th>
-                                <th scope="col">Họ đệm</th>
-                                <th scope="col">Tên</th>
-                                <th scope="col">Ngày sinh</th>
-                                <th scope="col">Trạng thái</th>
-                                <th scope="col">Tài chính</th>
-                                <th scope="col">Lớp</th>
-                                <th scope="col">Chương trình</th>
-                                <th scope="col">Khóa</th>
-                                <th scope="col">Hệ</th>
-                                <th scope="col">ĐTBTL Hệ 4</th>
-                                <th scope="col">ĐTBTL Hệ 10</th>
-                                <th scope="col">Số TCTL</th>
-
-                                <th class="text-center" scope="col">Học phần nợ</th>
-                                <th class="text-center" scope="col">Xử lý học vụ</th>
-                                <th class="text-center" scope="col">Quyết định</th>
-                                <th class="text-center" scope="col">Điểm toàn bộ</th>
-                                <th class="text-center" scope="col">Điểm TB</th>
-                                <th class="text-center" scope="col">Tích lũy theo khối</th>
-                                <th class="text-center" scope="col">Kết quả đăng ký</th>
-                                <th class="text-center" scope="col">Kết quả đăng ký cả lớp</th>
-                                <th class="text-center" scope="col">Khung chương trình</th>
-                                <th scope="col"><input type="checkbox" name="" id="chkSelectAll_QuyetDinh"></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot></tfoot>
-                    </table>
-                </div>
+            <div class="aps-table-select scroll-table-x table-list-sv">
+                <table class="table table-hover table-bordered tblSinhVien table-noborder table-responsive"
+                    id="tblSinhVien">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th scope="col" class="text-center">Lịch học</th>
+                            <th scope="col">Mã số</th>
+                            <th scope="col">Họ đệm</th>
+                            <th scope="col">Tên</th>
+                            <th scope="col">Ngày sinh</th>
+                            <th scope="col">Trạng thái</th>
+                            <th scope="col">Tài chính</th>
+                            <th scope="col">Lớp</th>
+                            <th scope="col">Chương trình</th>
+                            <th scope="col">Khóa</th>
+                            <th scope="col">Hệ</th>
+                            <th scope="col">ĐTBTL Hệ 4</th>
+                            <th scope="col">ĐTBTL Hệ 10</th>
+                            <th scope="col">Số TCTL</th>
+                            <th class="text-center" scope="col">Học phần nợ</th>
+                            <th class="text-center" scope="col">Xử lý học vụ</th>
+                            <th class="text-center" scope="col">Quyết định</th>
+                            <th class="text-center" scope="col">Điểm toàn bộ</th>
+                            <th class="text-center" scope="col">Điểm TB</th>
+                            <th class="text-center" scope="col">Tích lũy theo khối</th>
+                            <th class="text-center" scope="col">Kết quả đăng ký</th>
+                            <th class="text-center" scope="col">Kết quả đăng ký cả lớp</th>
+                            <th class="text-center" scope="col">Khung chương trình</th>
+                            <th scope="col"><input type="checkbox" name="" id="chkSelectAll_QuyetDinh"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
             </div>
 
             <div style="display:none">
-                <table class="table table-hover table-bordered" id="tblSinhVienNoMon">
+                <table class="table table-hover table-bordered table-border" id="tblSinhVienNoMon">
                     <thead>
                         <tr>
                             <th class="text-center" scope="col" rowspan="2">STT</th>
-
                             <th class="text-center" scope="col" colspan="7">Thông tin sinh viên</th>
                             <th class="text-center" scope="col" colspan="10">Thông tin học tập</th>
                             <th scope="col" rowspan="2"><input type="checkbox" name="" class="chkSystemSelectAll"></th>
@@ -331,38 +325,64 @@
     </div>
     <!-- end đăng ký nguyện vọng -->
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal_TichLuyTheoKhoi">
+        Hoàn thành nhập điểm</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#toanbo">
+        Điểm toàn bộ</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
+        Chi tiết thành phần</button>
 
-<!-- Modal theo khoi-->
-<div class="modal fade block-knowledge" id="myModal_TichLuyTheoKhoi" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1800">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal_Diem">
+        Chi tiết điểm trung bình</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal_KetQuaDangKy">
+        Kết quả đăng ký học</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
+        Chi tiết thành phần</button>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_ketquadkcalop">
+        Thông tin lớp quản lý</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal_KetQuaDangKy">
+        Kết quả đăng ký học</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
+        Chi tiết thành phần</button>
+</div>
+<!-- ---------- -->
+<!-- Modal Chi tiết điểm theo khối-->
+<div class="modal fade block-knowledge myModal_TichLuyTheoKhoi" id="myModal_TichLuyTheoKhoi" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1800 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Chi tiết điểm theo khối <span id="lblSinhVienDiem2"></span>
+                    <i class="fa-solid fa-file-lines fw-bold mr-5"></i>Chi tiết điểm theo khối <span
+                        id="lblSinhVienDiem2"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p class="mb-1"><b>Tổng điểm theo khối</b></p>
-                <table class="table table-classroom tabs-scores table-bordered" id="tblTongHopDiem">
+                <table class="table table-classroom tabs-scores table-bordered table-noborder tblTongHopDiem"
+                    id="tblTongHopDiem">
                     <thead>
                         <tr>
-                            <th style="background: #223771; color: white;" class=" text-center">STT</th>
-                            <th style="background: #223771; color: white;" class=" ">Mã khối</th>
-                            <th style="background: #223771; color: white;" class=" ">Tên khối</th>
-                            <th style="background: #223771; color: white;" class=" text-center">Tổng số tín chỉ</th>
-                            <th style="background: #223771; color: white;" class=" text-center">Tổng số tín bắt buộc
+                            <th style="background: #1a71e8; color: white;" class=" text-center w-50px">STT</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Mã khối</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Tên khối</th>
+                            <th style="background: #1a71e8; color: white;" class=" text-center">Tổng số tín chỉ</th>
+                            <th style="background: #1a71e8; color: white;" class=" text-center">Tổng số tín bắt buộc
                             </th>
-                            <th style="background: #223771; color: white;" class=" text-center">Tổng số tín đã tích lũy
+                            <th style="background: #1a71e8; color: white;" class=" text-center">Tổng số tín đã tích lũy
                             </th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                     <tfoot style="background: #f1f1f1; text-align: center"></tfoot>
                 </table>
-                <p class="mb-1"><b>Tổng hợp chi tiết theo khối và học phần</b></p>
-                <table class="table table-classroom tabs-scores table-bordered" id="tblTongHopDiemHP">
+                <p class="mb-1 mt-20" style="color: #f26522;"><b>Tổng hợp chi tiết theo khối và học phần</b></p>
+                <table class="table table-classroom tabs-scores table-bordered  table-noborder tblTongHopDiemHP"
+                    id="tblTongHopDiemHP">
                     <thead>
                         <tr>
                             <th style="background: #f26522; color: white;" class="text-center">Mã khối</th>
@@ -370,7 +390,6 @@
                             <th style="background: #f26522; color: white;" class="text-center">STT</th>
                             <th style="background: #f26522; color: white;" class="">Mã học phần</th>
                             <th style="background: #f26522; color: white;" class="">Tên học phần</th>
-
                             <th style="background: #f26522; color: white;" class="text-center">Số tín chỉ</th>
                             <th style="background: #f26522; color: white;" class="text-center">Điểm</th>
                             <th style="background: #f26522; color: white;" class="text-center">Đánh giá</th>
@@ -387,21 +406,23 @@
         </div>
     </div>
 </div>
-<!-- Modal toan bo-->
-<div class="modal fade block-knowledge" id="toanbo" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1440">
+<!-- Modal Điểm toàn bộ-->
+<div class="modal fade block-knowledge modal-toanbo" id="toanbo" tabindex="-1" aria-labelledby="zoomfileLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1440 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Điểm toàn bộ - <span id="lblSinhVien"></span>
+                    <i class="fa-solid fa-file-lines"></i> Điểm toàn bộ - <span id="lblSinhVien"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table tabs-scores " id="tblDiemSinhVien">
+                <table class="table transcrip-table tabs-scores tblDiemSinhVien table-bordered table-noborder"
+                    id="tblDiemSinhVien">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-cente w-50px" scope="col">STT</th>
                             <th scope="col">Mã học phần</th>
                             <th scope="col">Tên học phần</th>
                             <th class="text-center" scope="col">Điểm</th>
@@ -420,18 +441,20 @@
         </div>
     </div>
 </div>
-<!-- Modal toan bo chi tiet-->
-<div class="modal fade block-knowledge" id="myModal" tabindex="-1" aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<!-- Modal Chi tiết thành phần-->
+<div class="modal fade block-knowledge modal-chitiet-toanphan" id="myModal" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Chi tiết thành phần
+                    <i class="fa-solid fa-file-lines"></i>Chi tiết thành phần
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table tabs-scores " id="tblThanhPhan">
+                <table class="table transcrip-table tabs-scores tblThanhPhan table-bordered table-noborder"
+                    id="tblThanhPhan">
                     <thead>
                         <tr>
                             <th class="text-center" scope="col">STT</th>
@@ -448,77 +471,75 @@
         </div>
     </div>
 </div>
-<!-- Modal toan bo-->
-<div class="modal fade block-knowledge" id="myModal_Diem" tabindex="-1" aria-labelledby="zoomfileLabel"
+<!-- Modal Chi tiết điểm trung bình-->
+<div class="modal fade block-knowledge myModal_Diem" id="myModal_Diem" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Chi tiết điểm trung bình - <span id="lblSinhVienDiem"></span>
+                    <i class="fa-solid fa-file-lines"></i> Chi tiết điểm trung bình - <span id="lblSinhVienDiem"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="zone_bangdiem">
-
-            </div>
+            <div class="modal-body" id="zone_bangdiem"></div>
         </div>
     </div>
 </div>
 
-<!-- Modal theo khoi-->
-<div class="modal fade block-knowledge" id="myModal_KetQuaDangKy" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1800">
+<!-- Modal Kết quả đăng ký học-->
+<div class="modal fade block-knowledge myModal_KetQuaDangKy" id="myModal_KetQuaDangKy" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1800 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Kết quả đăng ký học <span id="lblSinhVienDiem3"></span>
+                    <i class="fa-solid fa-file-lines fw-bold"></i> Kết quả đăng ký học <span
+                        id="lblSinhVienDiem3"></span>
                 </h5>
                 <div class="form-item d-flex  form-add-info col-12 col-lg-2" style="margin-left: 10px">
                     <div class="input-group no-icon">
-
                         <select class="form-select select-opt" id="dropSearch_ThoiGianDangKy"
                             aria-label="Default select example"></select>
                     </div>
-
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p class="mb-1"><b>Kết quả đăng ký học</b></p>
-                <table class="table table-classroom tabs-scores" id="tblKetQuaDangKy">
+                <table class="table table-classroom tabs-scores tblKetQuaDangKy table-bordered table-noborder"
+                    id="tblKetQuaDangKy">
                     <thead>
                         <tr>
-                            <th style="background: #223771; color: white;" class=" text-center">STT</th>
-                            <th style="background: #223771; color: white;" class=" ">Mã lớp học phần</th>
-                            <th style="background: #223771; color: white;" class=" ">Tên lớp học phần</th>
-                            <th style="background: #223771; color: white;" class="text-center">Số tín</th>
-                            <th style="background: #223771; color: white;" class="">Người học</th>
-                            <th style="background: #223771; color: white;" class=" ">Kiểu học</th>
-                            <th style="background: #223771; color: white;" class=" ">Thời gian thực hiện</th>
-                            <th style="background: #223771; color: white;" class=" ">Người thực hiện</th>
-                            <th style="background: #223771; color: white;" class=" ">Học kỳ, đợt</th>
-                            <th style="background: #223771; color: white;" class="">Chương trình</th>
+                            <th style="background: #1a71e8; color: white;" class=" text-center w-50px">STT</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Mã lớp học phần</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Tên lớp học phần</th>
+                            <th style="background: #1a71e8; color: white;" class="text-center">Số tín</th>
+                            <th style="background: #1a71e8; color: white;" class="">Người học</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Kiểu học</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Thời gian thực hiện</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Người thực hiện</th>
+                            <th style="background: #1a71e8; color: white;" class=" ">Học kỳ, đợt</th>
+                            <th style="background: #1a71e8; color: white;" class="">Chương trình</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
                     <tfoot style="background: #f1f1f1; text-align: center"></tfoot>
                 </table>
-                <p class="mb-1"><b>Lịch sử đăng ký học</b></p>
-                <table class="table table-classroom tabs-scores" id="tblLichSu">
+                <p class="mb-1 mt-20" style="color: #f26522;"><b>Lịch sử đăng ký học</b></p>
+                <table class="table table-classroom tabs-scores table-bordered table-noborder tblLichSu" id="tblLichSu">
                     <thead>
                         <tr>
-                            <th class="td-fixed td-center">Stt</th>
-                            <th class="">Người thực hiện</th>
-                            <th class="">Hành động</th>
-                            <th class="">Kết quả</th>
-                            <th class="">Thời gian thực hiện</th>
-                            <th class="">Mã học phần</th>
-                            <th class="">Tên học phần</th>
-                            <th class="">Lớp học phần</th>
-                            <th class="">Mã chương trình</th>
-                            <th class="">Tên chương trình</th>
+                            <th style="background: #f26522; color: white;" class="td-fixed td-center w-50px">STT</th>
+                            <th style="background: #f26522; color: white;" class="">Người thực hiện</th>
+                            <th style="background: #f26522; color: white;" class="">Hành động</th>
+                            <th style="background: #f26522; color: white;" class="">Kết quả</th>
+                            <th style="background: #f26522; color: white;" class="">Thời gian thực hiện</th>
+                            <th style="background: #f26522; color: white;" class="">Mã học phần</th>
+                            <th style="background: #f26522; color: white;" class="">Tên học phần</th>
+                            <th style="background: #f26522; color: white;" class="">Lớp học phần</th>
+                            <th style="background: #f26522; color: white;" class="">Mã chương trình</th>
+                            <th style="background: #f26522; color: white;" class="">Tên chương trình</th>
                         </tr>
                         <tr></tr>
                     </thead>
@@ -529,37 +550,36 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade block-knowledge" id="modal_ketquadkcalop" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: unset">
+<!-- Thông tin lớp quản lý -->
+<div class="modal fade block-knowledge modal_ketquadkcalop" id="modal_ketquadkcalop" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Thông tin lớp quản lý <span id="lblLopKetQua"></span> - <span id="lblHocKyKetQua"></span>
+                    <i class="fa-solid fa-screen-users fw-bold"></i> Thông tin lớp quản lý <span id="lblLopKetQua"></span> - <span id="lblHocKyKetQua"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">
-
                 <div id="zoneprocessDiem"></div>
                 <div class="kqht-modal">
                     <div class="left fs-14">
-                        <table class="table" id="tblHocKy_KetQua">
+                        <table class="table table-bordered table-noborder tblHocKy_KetQua" id="tblHocKy_KetQua">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">STT</th>
-                                    <th class="text-center align-middle">Kỳ, đợt</th>
+                                    <th class="text-center align-middle w-50px" style="color: #fff !important;background-color: var(--color-blue) !important;">STT</th>
+                                    <th class="text-center align-middle" style="color: #fff !important;background-color: var(--color-blue) !important;">Kỳ, đợt</th>
                                 </tr>
                             </thead>
                             <tbody class="pointer"></tbody>
                         </table>
                     </div>
-                    <div class="right p-3">
-                        <table class="table transcrip-table tabs-scores border" id="tblLop_KetQua">
+                    <div class="right pl20 pb10">
+                        <table class="table transcrip-table tabs-scores tblLop_KetQua table-bordered table-noborder " id="tblLop_KetQua">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" class="text-center align-middle" scope="col">STT</th>
+                                    <th rowspan="2" class="text-center align-middle w-50px" scope="col">STT</th>
                                     <th rowspan="2" class=" align-middle" scope="col">Họ tên</th>
                                     <th rowspan="2" class=" align-middle" scope="col">Mã số</th>
                                     <th rowspan="2" class=" align-middle" scope="col">Ngày sinh</th>
@@ -567,9 +587,9 @@
                                     <th rowspan="2" class="text-center align-middle" scope="col">Trạng thái tài chính
                                     </th>
                                     <th rowspan="2" class="text-center align-middle" scope="col">Chuyên cần</th>
-                                    <th colspan="3" class="text-center bg-white align-middle border-bottom border-left"
+                                    <th colspan="3" class="text-center align-middle border-bottom border-left"
                                         scope="col">Tổng số tín</th>
-                                    <th colspan="3" class="text-center bg-white align-middle border-bottom border-left"
+                                    <th colspan="3" class="text-center align-middle border-bottom border-left"
                                         scope="col" id="lblHocPhanDangKy_KetQua">Học phần đăng ký</th>
 
 
@@ -587,7 +607,7 @@
     </div>
 </div>
 
-<div class="modal fade block-knowledge" id="myModal_No" tabindex="-1" aria-labelledby="zoomfileLabel"
+<div class="modal fade block-knowledge myModal_No" id="myModal_No" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -618,7 +638,7 @@
 </div>
 
 
-<div class="modal fade block-knowledge" id="modal_cthoc" tabindex="-1" aria-labelledby="zoomfileLabel"
+<div class="modal fade block-knowledge modal_cthoc" id="modal_cthoc" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: unset">
         <div class="modal-content">
@@ -831,8 +851,8 @@
     </div>
 </div>
 <!-- modal khối kiến thức chuyên ngành-->
-<div class="modal fade finance-modal study-program-modal" id="khoikienthucchuyennganh" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade finance-modal study-program-modal khoikienthucchuyennganh" id="khoikienthucchuyennganh"
+    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -873,10 +893,9 @@
     </div>
 </div>
 
-
 <!-- Modal theo khoi-->
-<div class="modal fade block-knowledge" id="myModalXemThongTinAll" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
+<div class="modal fade block-knowledge myModalXemThongTinAll" id="myModalXemThongTinAll" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
@@ -1059,7 +1078,7 @@
 </div>
 
 
-<div class="modal fade block-knowledge" id="myModalLichHoc" tabindex="-1" aria-labelledby="zoomfileLabel"
+<div class="modal fade block-knowledge myModalLichHoc" id="myModalLichHoc" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
@@ -1075,8 +1094,8 @@
     </div>
 </div>
 
-
-<div class="modal fade block-knowledge" id="myModalHPNo" tabindex="-1" aria-labelledby="zoomfileLabel"
+<!-- Học phần chưa qua  -->
+<div class="modal fade block-knowledge myModalHPNo" id="myModalHPNo" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
@@ -1108,8 +1127,10 @@
         </div>
     </div>
 </div>
-<div class="modal fade block-knowledge" id="myModalXuLyHocVu" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
+
+<!-- Xử lý học vụ -->
+<div class="modal fade block-knowledge myModalXuLyHocVu\" id="myModalXuLyHocVu" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
@@ -1137,8 +1158,9 @@
     </div>
 </div>
 
-<div class="modal fade block-knowledge" id="myModalQuyetDinh" tabindex="-1" aria-labelledby="zoomfileLabel"
-    aria-hidden="true">
+<!-- Quyết định -->
+<div class="modal fade block-knowledge myModalQuyetDinh" id="myModalQuyetDinh" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">
             <div class="modal-header">
@@ -1166,8 +1188,8 @@
     </div>
 </div>
 
-
-<div class="modal fade block-knowledge" id="myModalBuoiHoc" tabindex="-1" aria-labelledby="zoomfileLabel"
+<!-- Danh sách các buổi học -->
+<div class="modal fade block-knowledge myModalBuoiHoc" id="myModalBuoiHoc" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1440">
         <div class="modal-content">

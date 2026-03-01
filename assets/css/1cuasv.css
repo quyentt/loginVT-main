@@ -1453,7 +1453,8 @@ input:active,
 
 .modal .modal-header .modal-title {
   color: #fff !important;
-  font-size: 20px !important;
+  font-size: 18px !important;
+  margin-top: 4px;
 }
 
 .modal-header .btn-close {
