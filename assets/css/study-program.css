@@ -38,10 +38,10 @@
 .label-bottom-line span::before {
     content: "";
     width: 100%;
-    height: 3px;
+    height: 1px;
     background-color: var(--dask-blue);
     position: absolute;
-    bottom: -5px;
+    bottom: -2px;
 }
 
 .study-program-modal .table {

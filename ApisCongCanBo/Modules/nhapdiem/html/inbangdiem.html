@@ -326,14 +326,14 @@
     <!-- end đăng ký nguyện vọng -->
 </div>
 <!-- ---------- -->
-<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal_TichLuyTheoKhoi">
         Hoàn thành nhập điểm</button>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#toanbo">
         Điểm toàn bộ</button>
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
         Chi tiết thành phần</button>
-
+    <br>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal_Diem">
         Chi tiết điểm trung bình</button>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal_KetQuaDangKy">
@@ -347,6 +347,15 @@
         Kết quả đăng ký học</button>
     <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal">
         Chi tiết thành phần</button>
+    <br>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_ketquadkcalop">
+        Thông tin lớp quản lý</button>
+    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal_No">
+        Chi tiết</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal_cthoc">
+        Thông tin người học</button>
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#study_program">
+        Chương trình</button>
 </div>
 <!-- ---------- -->
 <!-- Modal Chi tiết điểm theo khối-->
@@ -378,7 +387,7 @@
                         </tr>
                     </thead>
                     <tbody></tbody>
-                    <tfoot style="background: #f1f1f1; text-align: center"></tfoot>
+                    <tfoot style="background: #f1f1f1; text-align: center" class="table-bordered table-noborder table-sum"></tfoot>
                 </table>
                 <p class="mb-1 mt-20" style="color: #f26522;"><b>Tổng hợp chi tiết theo khối và học phần</b></p>
                 <table class="table table-classroom tabs-scores table-bordered  table-noborder tblTongHopDiemHP"
@@ -557,7 +566,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    <i class="fa-solid fa-screen-users fw-bold"></i> Thông tin lớp quản lý <span id="lblLopKetQua"></span> - <span id="lblHocKyKetQua"></span>
+                    <i class="fa-solid fa-screen-users fw-bold"></i> Thông tin lớp quản lý <span
+                        id="lblLopKetQua"></span> - <span id="lblHocKyKetQua"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -568,15 +578,20 @@
                         <table class="table table-bordered table-noborder tblHocKy_KetQua" id="tblHocKy_KetQua">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle w-50px" style="color: #fff !important;background-color: var(--color-blue) !important;">STT</th>
-                                    <th class="text-center align-middle" style="color: #fff !important;background-color: var(--color-blue) !important;">Kỳ, đợt</th>
+                                    <th class="text-center align-middle w-50px"
+                                        style="color: #fff !important;background-color: var(--color-blue) !important;">
+                                        STT</th>
+                                    <th class="text-center align-middle"
+                                        style="color: #fff !important;background-color: var(--color-blue) !important;">
+                                        Kỳ, đợt</th>
                                 </tr>
                             </thead>
                             <tbody class="pointer"></tbody>
                         </table>
                     </div>
                     <div class="right pl20 pb10">
-                        <table class="table transcrip-table tabs-scores tblLop_KetQua table-bordered table-noborder " id="tblLop_KetQua">
+                        <table class="table transcrip-table tabs-scores tblLop_KetQua table-bordered table-border"
+                            id="tblLop_KetQua">
                             <thead>
                                 <tr>
                                     <th rowspan="2" class="text-center align-middle w-50px" scope="col">STT</th>
@@ -606,27 +621,26 @@
         </div>
     </div>
 </div>
-
+<!-- Chi tiết -->
 <div class="modal fade block-knowledge myModal_No" id="myModal_No" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-680 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="">
-                    Chi tiết
+                    <i class="fa-solid fa-file-circle-info fw-bold"></i>Chi tiết
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table tabs-scores " id="tblNo">
+                <table class="table transcrip-table tabs-scores tblNo table-bordered table-noborder" id="tblNo">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th class="text-center">Loại khoản</th>
                             <th class="text-center" scope="col">Số tiền nợ</th>
-                            <th class="text-center" scope="col">Nội dung</th>
+                            <th class="text-left" scope="col">Nội dung</th>
                             <th class="text-center" scope="col">Thời gian</th>
-
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -637,73 +651,59 @@
     </div>
 </div>
 
-
+<!--Thông tin người học: <span class="lblSinhVien"></span>-->
 <div class="modal fade block-knowledge modal_cthoc" id="modal_cthoc" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: unset">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable">
+        <div class="modal-content"><alog-s></alog-s>
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    <!--Thông tin người học: <span class="lblSinhVien"></span>-->
+                    <i class="fa-solid fa-user fw-bold mr-5"></i>Thông tin người học: <span class="lblSinhVien"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-0">
-
+            <div class="modal-body pd-0">
                 <div id="zoneprocessDiem"></div>
-                <div class="row register-school study-program">
-
-                    <div class="col-12 col-md-9 register-school-right">
-                        <div class="box-shadow p-3 ">
-                            <div class="table-title mb-3">
-                                Nội dung học phần theo chương trình:
-                                <div class="col-12 col-md-7" style="float: right">
-                                    <div class="form-item  form-add-info">
-                                        <div class="input-group" id="lblChuongTrinh">
-                                            <select class="form-select" aria-label="Default select example"
-                                                id="dropSearch_ChuongTrinh"></select>
-                                        </div>
+                <div class="row register-school study-program pd-0 mb-20">
+                    <div class="col-12 col-md-9 register-school-right pl-0">
+                        <div class="table-title line-38 d-flex justify-content-between pb10">
+                            Nội dung học phần theo chương trình:
+                            <div class="col-12 col-md-7" style="float: right">
+                                <div class="form-item  form-add-info">
+                                    <div class="input-group" id="lblChuongTrinh">
+                                        <select class="form-select" aria-label="Default select example"
+                                            id="dropSearch_ChuongTrinh"></select>
                                     </div>
                                 </div>
                             </div>
-                            <div>
-
-                                <table class="table transcrip-table border-e1 border tabs-scores has-scoll"
-                                    id="tblHocPhan">
-
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center" scope="col">STT</th>
-                                            <th scope="col">Mã học phần</th>
-                                            <th scope="col">Tên học phần</th>
-                                            <th class="text-center" scope="col">Số tín học phần</th>
-                                            <th class="text-center" scope="col">Số tín học phí</th>
-                                            <th class="text-center" scope="col">Điều kiện ràng buộc</th>
-                                            <th class="text-center" scope="col">Học kỳ dự kiến</th>
-                                            <th class="text-center" scope="col">Học kỳ thực tế</th>
-
-                                        </tr>
-                                    </thead>
-
-
-                                    <tbody></tbody>
-
-
-                                </table>
-                            </div>
-                            <div class="line"></div>
-                            <div class="d-flex justify-content-between flex-wrap fs-14 ">
-                                <b class="mt-4">Tổng số tín chỉ: <span id="iTongSoTinChi"></span></b>
-                            </div>
+                        </div>
+                        <table
+                            class="table transcrip-table border-e1 border tabs-scores has-scoll table-bordered table-noborder tblHocPhan"
+                            id="tblHocPhan">
+                            <thead>
+                                <tr>
+                                    <th class="text-center" scope="col">STT</th>
+                                    <th scope="col">Mã học phần</th>
+                                    <th scope="col">Tên học phần</th>
+                                    <th class="text-center" scope="col">Số tín học phần</th>
+                                    <th class="text-center" scope="col">Số tín học phí</th>
+                                    <th class="text-center" scope="col">Điều kiện ràng buộc</th>
+                                    <th class="text-center" scope="col">Học kỳ dự kiến</th>
+                                    <th class="text-center" scope="col">Học kỳ thực tế</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div class="line"></div>
+                        <div class="d-flex justify-content-between flex-wrap fs-14 ">
+                            <b class="mt-4">Tổng số tín chỉ: <span id="iTongSoTinChi"></span></b>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3 register-school-left">
-
+                    <div class="col-12 col-md-3 register-school-left pr0">
                         <!--   Box -->
-                        <div class=" box-shadow box-scores p-0 study-program-block">
+                        <div class="box-scores p-0 study-program-block border" style="border-radius: 12px !important;">
                             <div class="block-label top-radius bg-dask-blue">
-                                <i class="fal fa-chevron-down fs-13"></i>
-
+                                <i class="fa-solid fa-check-to-slot mr-5 fw-bold"></i>
                                 <span>Các khối lựa chọn bắt buộc</span>
                             </div>
                             <ul class="list-unstyled mb-0" id="khoibatbuoc">
@@ -718,13 +718,12 @@
                             </ul>
                         </div>
                         <!--   Box -->
-                        <div class="mt-4 box-shadow box-scores p-0 study-program-block">
+                        <div class="mt-4 box-scores p-0 study-program-block border mt-15"  style="border-radius: 12px !important;">
                             <div class="block-label top-radius">
-                                <i class="fal fa-chevron-down fs-13"></i>
+                                <i class="fa-solid fa-check-to-slot mr-5 fw-bold"></i>
                                 <span>Các khối lựa chọn đơn</span>
                             </div>
                             <ul class="list-unstyled mb-0" id="khoiluachondon">
-
                                 <!--<li class="justify-content-start" data-bs-toggle="modal" data-bs-target="#khoikienthucchuyennganh">
                                     <i class="fal fa-book"></i>
                                     <div class="meta ms-2">
@@ -732,8 +731,6 @@
                                         <p class="text-primary fs-13 mb-0">(Tổng số HP: 1; Tổng số TC: 3)</p>
                                     </div>
                                 </li>-->
-
-
                             </ul>
                         </div>
                     </div>
@@ -743,44 +740,44 @@
     </div>
 </div>
 
-
+<!-- Chương trình -->
 <div class="modal fade finance-modal study-program-modal" id="study_program" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal">
-                    <p><b>Chương trình "<span id="lblEditHocPhan"></span>"</b></p>
+                    <p><i class="fa-solid fa-book-open fw-bold mr-5"></i>Chương trình "<span
+                            id="lblEditHocPhan"></span>"</p>
 
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-                <div class="label-bottom-line"><span>Thông tin học phần</span></div>
-                <div class="row">
-                    <div class="col-12 col-md-6">
-                        <p><span>Mã học phần:</span> <b id="lblHocPhan_MaHocPhan"></b></p>
-                        <p><span>Tên học phần học phần:</span> <b id="lblHocPhan_TenHocPhan"></b></p>
-                        <p><span>Số tín học phần:</span> <span id="lblHocPhan_SoTinHocPhan"></span></p>
-                        <p><span>Số tín học phí:</span> <span id="lblHocPhan_SoTinHocPhi"></span></p>
-                        <p><span>Là môn tính điểm:</span> <span id="lblLaMonTinhDiem"></span></p>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <p><span>Học kỳ dự kiến:</span> <span id="lblHocKyDuKien"></span></p>
-                        <p><span>Học kỳ thực tế:</span> <b id="lblHocKyThucTe"></b></p>
-                        <p><span>Thuộc tính học phần:</span> <b id="lblThuocTinh"></b></p>
-                        <p><span>Phạm vi đảm nhiệm:</span> <span id="lblPhamViDamNhiem"></span></p>
-                        <p><span>Thứ tự:</span> <span id="lblThuTu"></span></p>
-                        <!--<p><span>Là môn tính điểm:</span> Tính điểm</p>
+                <div class="study-program-detail">
+                    <div class="label-bottom-line"><span>Thông tin học phần</span></div>
+                    <div class="row aps-tt-hocPhan">
+                        <div class="col-12 col-md-6 pl-0">
+                            <p><span>Mã học phần:</span> <b id="lblHocPhan_MaHocPhan"></b></p>
+                            <p><span>Tên học phần học phần:</span> <b id="lblHocPhan_TenHocPhan"></b></p>
+                            <p><span>Số tín học phần:</span> <span id="lblHocPhan_SoTinHocPhan"></span></p>
+                            <p><span>Số tín học phí:</span> <span id="lblHocPhan_SoTinHocPhi"></span></p>
+                            <p><span>Là môn tính điểm:</span> <span id="lblLaMonTinhDiem"></span></p>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <p><span>Học kỳ dự kiến:</span> <span id="lblHocKyDuKien"></span></p>
+                            <p><span>Học kỳ thực tế:</span> <b id="lblHocKyThucTe"></b></p>
+                            <p><span>Thuộc tính học phần:</span> <b id="lblThuocTinh"></b></p>
+                            <p><span>Phạm vi đảm nhiệm:</span> <span id="lblPhamViDamNhiem"></span></p>
+                            <p><span>Thứ tự:</span> <span id="lblThuTu"></span></p>
+                            <!--<p><span>Là môn tính điểm:</span> Tính điểm</p>
                         <p><span>Học kỳ dự kiến:</span> Tính điểm</p>-->
+                        </div>
                     </div>
 
-                </div>
-
-                <div class="label-bottom-line mt-4"><span>Quan hệ học phần</span></div>
-                <div class="row" id="tblInput_HocPhan_QuanHe">
-                    <!--<div class="col-12 col-md-6">
+                    <div class="label-bottom-line mt-10"><span>Quan hệ học phần</span></div>
+                    <div class="row" id="tblInput_HocPhan_QuanHe">
+                        <!--<div class="col-12 col-md-6">
                         <p><span>Loại quan hệ:</span> <b id="lblLoaiQuanHe"></b></p>
                         <p><span>Học phần:</span> <b id="lblHocPhan"></b></p>
                         <p><span>Mức:</span> <b id="lblMuc"></b></p>
@@ -790,11 +787,11 @@
                         <p><span>Toán tử:</span> <b id="lblToanTu"></b></p>
                         <p><span>Giá trị:</span> <b id="lblGiaTriDieuKien"></b></p>
                     </div>-->
-                </div>
+                    </div>
 
-                <div class="label-bottom-line mt-4"><span>Quan hệ tương đương</span></div>
-                <div class="row" id="tblInput_HocPhan_QuanHeTT">
-                    <!--<div class="col-12 col-md-6">
+                    <div class="label-bottom-line mt-10"><span>Quan hệ tương đương</span></div>
+                    <div class="row" id="tblInput_HocPhan_QuanHeTT">
+                        <!--<div class="col-12 col-md-6">
                         <p><span>Loại quan hệ:</span> <b id="lblLoaiQuanHe"></b></p>
                         <p><span>Học phần:</span> <b id="lblHocPhan"></b></p>
                         <p><span>Mức:</span> <b id="lblMuc"></b></p>
@@ -804,44 +801,38 @@
                         <p><span>Toán tử:</span> <b id="lblToanTu"></b></p>
                         <p><span>Giá trị:</span> <b id="lblGiaTriDieuKien"></b></p>
                     </div>-->
-                </div>
+                    </div>
 
-                <div class="label-bottom-line mt-4"><span>Bài học</span></div>
-                <div class="row" id="tblInput_HocPhan_BaiHoc">
-                    <!--<div class="col-12 col-md-6">
+                    <div class="label-bottom-line mt-10"><span>Bài học</span></div>
+                    <div class="row" id="tblInput_HocPhan_BaiHoc">
+                        <!--<div class="col-12 col-md-6">
                         <p><span>Tên bài:</span> <b id="lblTenBai"></b></p>
                         <p><span>Ký hiệu:</span> <b id="lblKyHieu">Ký hiệu</b></p>
-
                     </div>
                     <div class="col-12 col-md-6">
                         <p><span>Số tiết:</span> <b id="lblSoTiet"></b></p>
                         <p><span>Nội dung:</span> <b id="lblNoiDung"></b></p>
-
                     </div>-->
-                </div>
-
-
-                <div class="label-bottom-line mt-4"><span>Phân bổ học phần</span></div>
-                <table class="table tabs-scores " id="tblHocPhan_PhanBo">
-                    <thead class="table-light border-0">
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Loại phân bổ</th>
-                            <th scope="col">Số tiết</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!--<tr>
+                    </div>
+                    <div class="label-bottom-line mt-10 lable-pb-hocphan"><span class="border-0">Phân bổ học phần</span>
+                    </div>
+                    <table class="table tabs-scores table-bordered table-noborder" id="tblHocPhan_PhanBo">
+                        <thead class="table-light border-0">
+                            <tr>
+                                <th scope="col" class="w-50px">STT</th>
+                                <th scope="col">Loại phân bổ</th>
+                                <th scope="col">Số tiết</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--<tr>
                             <th scope="row"><em class="show-in-mobi">STT:</em><span>1</span></th>
                             <td><em class="show-in-mobi">Loại phân bổ:</em><span>Lý thuyết</span></td>
-
                             <td><em class="show-in-mobi">Số tín chỉ:</em><span>30</span></td>
-
                         </tr>-->
-
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><i
@@ -850,6 +841,16 @@
         </div>
     </div>
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#khoikienthucchuyennganh">
+        khối kiến thức chuyên ngành</button>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal"
+        data-bs-target="#myModalXemThongTinAll">
+        Chi tiết tài chính</button>
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#myModalLichHoc">
+        Lịch học</button>
+</div>
 <!-- modal khối kiến thức chuyên ngành-->
 <div class="modal fade finance-modal study-program-modal khoikienthucchuyennganh" id="khoikienthucchuyennganh"
     tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -857,18 +858,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal">
-                    <p><b id="khoikienthuc"></b></p>
-
+                    <p><i class="fa-solid fa-books fw-bold mr-10"></i>Khối kiến thức chuyên ngành<b
+                            id="khoikienthuc"></b></p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-
-                <table class="table tabs-scores" id="tblkhoikienthuc">
+                <table class="table tabs-scores tblkhoikienthuc table-bordered table-noborder" id="tblkhoikienthuc">
                     <thead class="table-light border-0">
                         <tr>
-                            <th scope="col">STT</th>
+                            <th scope="col" class="w-50px">STT</th>
                             <th scope="col">Mã học phần</th>
                             <th scope="col">Tên học phần</th>
                             <th scope="col">Số tín chỉ</th>
@@ -893,28 +892,29 @@
     </div>
 </div>
 
-<!-- Modal theo khoi-->
+<!-- Modal Chi tiết tài chính-->
 <div class="modal fade block-knowledge myModalXemThongTinAll" id="myModalXemThongTinAll" tabindex="-1"
     aria-labelledby="zoomfileLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Chi tiết tài chính <span id="lblSinhVienDiem5"></span>
+                    <i class="fa-solid fa-money-check-dollar-pen mr-5 fw-bold"></i>Chi tiết tài chính <span
+                        id="lblSinhVienDiem5"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-
-                <div class="row">
-                    <div class="form-container-body col-sm-6">
-
+                <div class="row aps-chiTiet-taiChinh">
+                    <div class="form-container-body col-sm-6 pl-0"
+                        style="padding-left: 0 !important; padding-top: 0 !important;padding-right: 10px !important;">
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHidetblChiTietKhoanPhaiNop_XemThongTinAll" style="padding:5px">Phải nộp</h4>
+                            id="btnShowHidetblChiTietKhoanPhaiNop_XemThongTinAll" style="padding:5px"><i
+                                class="fa-thin fa-sack-dollar"></i>Phải nộp</h4>
                         <div class="table-responsive" id="zoneChiTietKhoanPhaiNop_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanPhaiNop_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -929,12 +929,13 @@
                         </div>
                         <div class="clear"></div>
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideChiTietKhoanPhaiNopChung_XemThongTinAll" style="padding:5px">Phải nộp chung
+                            id="btnShowHideChiTietKhoanPhaiNopChung_XemThongTinAll" style="padding:5px"><i
+                                class="fa-solid fa-money-check-dollar-pen"></i>Phải nộp chung
                         </h4>
                         <div class="table-responsive" id="zoneChiTietKhoanPhaiNopChung_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanPhaiNopChung_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -950,12 +951,13 @@
                         <div class="clear"></div>
 
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideChiTietKhoanPhaiNopRieng_XemThongTinAll" style="padding:5px">Phải nộp riêng
+                            id="btnShowHideChiTietKhoanPhaiNopRieng_XemThongTinAll" style="padding:5px"><i
+                                class="fa-solid fa-file-invoice-dollar"></i>Phải nộp riêng
                         </h4>
                         <div class="table-responsive" id="zoneChiTietKhoanPhaiNopRieng_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanPhaiNopRieng_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -970,13 +972,15 @@
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="form-container-body col-sm-6">
+                    <div class="form-container-body col-sm-6 pr0"
+                        style="padding-right: 0 !important; padding-top: 0 !important;padding-left: 10px !important;">
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideChiTietKhoanDaNop_XemThongTinAll" style="padding:5px">Đã nộp</h4>
+                            id="btnShowHideChiTietKhoanDaNop_XemThongTinAll" style="padding:5px"><i
+                                class="fa-thin fa-circle-dollar"></i>Đã nộp</h4>
                         <div class="table-responsive" id="zoneChiTietKhoanDaNop_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanDaNop_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -992,11 +996,12 @@
                         <div class="clear"></div>
 
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideChiTietKhoanDuocMien_XemThongTinAll" style="padding:5px">Được miễn</h4>
+                            id="btnShowHideChiTietKhoanDuocMien_XemThongTinAll" style="padding:5px"><i
+                                class="fa-thin fa-badge-dollar"></i>Được miễn</h4>
                         <div class="table-responsive" id="zoneChiTietKhoanDuocMien_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanDuocMien_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -1012,11 +1017,12 @@
                         <div class="clear"></div>
 
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideChiTietKhoanDaRut_XemThongTinAll" style="padding:5px">Đã rút</h4>
+                            id="btnShowHideChiTietKhoanDaRut_XemThongTinAll" style="padding:5px"><i
+                                class="fa-thin fa-money-from-bracket"></i>Đã rút</h4>
                         <div class="table-responsive" id="zoneChiTietKhoanDaRut_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanDaRut_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -1031,11 +1037,12 @@
                         </div>
                         <div class="clear"></div>
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideKhoanThuaChung_XemThongTinAll" style="padding:5px">Thừa chung</h4>
+                            id="btnShowHideKhoanThuaChung_XemThongTinAll" style="padding:5px"><i
+                                class="fa-thin fa-circle-dollar-to-slot"></i>Thừa chung</h4>
                         <div class="table-responsive" id="zoneChiTietKhoanThuaChung_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanThuaChung_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -1050,11 +1057,12 @@
                         </div>
                         <div class="clear"></div>
                         <h4 class="mb-1 color-active btn btn-default pointer"
-                            id="btnShowHideKhoanThuaRieng_XemThongTinAll" style="padding:5px">Thừa riêng</h4>
+                            id="btnShowHideKhoanThuaRieng_XemThongTinAll" style="padding:5px"><i
+                                class="fa-thin fa-square-dollar"></i>Thừa riêng</h4>
                         <div class="table-responsive" id="zoneChiTietKhoanThuaRieng_XemThongTinAll">
                             <div>
                                 <table id="tblChiTietKhoanThuaRieng_XemThongTinAll"
-                                    class="table table-classroom tabs-scores">
+                                    class="table table-classroom tabs-scores table-bordered table-noborder">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -1068,8 +1076,6 @@
                             </div>
                         </div>
                         <div class="clear"></div>
-
-
                     </div>
                 </div>
             </div>
@@ -1077,39 +1083,51 @@
     </div>
 </div>
 
-
+<!-- Lịch học -->
 <div class="modal fade block-knowledge myModalLichHoc" id="myModalLichHoc" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Lịch học <span id="lblSinhVienDiem6"></span>
+                    <i class="fa-solid fa-calendar-clock"></i>Lịch học <span id="lblSinhVienDiem6"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" id="zoneLichHoc">
+            <div class="modal-body zoneLichHoc" id="zoneLichHoc">
             </div>
         </div>
     </div>
 </div>
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#myModalHPNo">
+        Học phần chưa qua</button>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#myModalXuLyHocVu">
+        Xử lý học vụ</button>
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#myModalQuyetDinh">
+        Quyết định</button>
+    <button type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#myModalBuoiHoc">
+        Danh sách các buổi học</button>
+</div>
 <!-- Học phần chưa qua  -->
 <div class="modal fade block-knowledge myModalHPNo" id="myModalHPNo" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1440">
+    <div class="modal-dialog modal-dialog-centered modal-1440  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Học phần chưa qua - <span class="lblSinhVien"></span>
+                    <i class="fa-solid fa-chalkboard-user fw-bold"></i> Học phần chưa qua - <span
+                        class="lblSinhVien"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table" id="tblHocPhanChuaQua">
+                <table class="table transcrip-table tblHocPhanChuaQua table-bordered table-noborder"
+                    id="tblHocPhanChuaQua">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Mã học phần</th>
                             <th scope="col">Tên học phần</th>
                             <th class="text-center" scope="col">Học trình</th>
@@ -1118,7 +1136,7 @@
                             <th class="text-center" scope="col">Lần học</th>
                             <th class="text-center" scope="col">Lần thi</th>
                             <th class="text-center" scope="col">Thời gian</th>
-                            <th class="text-center" scope="col">Lớp học phần</th>
+                            <th class="text-left" scope="col">Lớp học phần</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -1129,21 +1147,22 @@
 </div>
 
 <!-- Xử lý học vụ -->
-<div class="modal fade block-knowledge myModalXuLyHocVu\" id="myModalXuLyHocVu" tabindex="-1"
+<div class="modal fade block-knowledge myModalXuLyHocVu" id="myModalXuLyHocVu" tabindex="-1"
     aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1440">
+    <div class="modal-dialog modal-dialog-centered modal-1440 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Xử lý học vụ - <span class="lblSinhVien"></span>
+                    <i class="fa-solid fa-laptop-file fw-bolds"></i>Xử lý học vụ - <span class="lblSinhVien"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table block-table fs-14" id="tblCanhBaoHocVu">
+                <table class="table block-table fs-14 tblCanhBaoHocVu table-bordered table-noborder"
+                    id="tblCanhBaoHocVu">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Thời gian</th>
                             <th scope="col">Mức xử lý</th>
                             <th scope="col">Chương trình học </th>
@@ -1161,19 +1180,19 @@
 <!-- Quyết định -->
 <div class="modal fade block-knowledge myModalQuyetDinh" id="myModalQuyetDinh" tabindex="-1"
     aria-labelledby="zoomfileLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-1440">
+    <div class="modal-dialog modal-dialog-centered modal-1440  modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Quyết định - <span class="lblSinhVien"></span>
+                    <i class="fa-solid fa-file-circle-check "></i>Quyết định - <span class="lblSinhVien"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table block-table fs-14" id="tblQuyetDinh">
+                <table class="table block-table fs-14 tblQuyetDinh table-bordered table-noborder id=" tblQuyetDinh">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col" style="min-width: 150px;">Số quyết định</th>
                             <th scope="col" class="text-center" style="min-width: 150px;">Ngày quyết định</th>
                             <th scope="col" class="text-center" style="min-width: 150px;">Ngày hiệu lực</th>
@@ -1195,15 +1214,15 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Danh sách các buổi học
+                    <i class="fa-solid fa-chalkboard-user mr-5"></i>Danh sách các buổi học
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table block-table fs-14" id="tblBuoiHoc">
+                <table class="table block-table fs-14 tblBuoiHoc table-bordered table-noborder" id="tblBuoiHoc">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col" class="text-center">Ngày học</th>
                             <th scope="col" class="text-center">Tiết bắt đầu --> kết thúc</th>
                             <th scope="col" class="text-center">Lớp học phần</th>

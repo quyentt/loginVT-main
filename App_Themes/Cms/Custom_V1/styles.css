@@ -4298,7 +4298,7 @@
 
  .tblDaoTao_GiaHan tbody tr:hover td:nth-last-child(2) input,
  .tblDaoTao_TienDo tbody tr:hover td:nth-last-child(2) input,
- .tblHocHam_QDGiaoNhhiemVu tbody tr:hover td:nth-last-child(2) input{
+ .tblHocHam_QDGiaoNhhiemVu tbody tr:hover td:nth-last-child(2) input {
      background: #fff !important;
      padding: 3px 5px;
      border-radius: 4px !important;
@@ -4414,34 +4414,76 @@
  .dadoc .content-notify {
      color: #666;
  }
+
  /* -------------------------- */
- .aps-dk-Dulieu-list .row{
-    margin-left: -15px !important;
+ .aps-dk-Dulieu-list .row {
+     margin-left: -15px !important;
  }
+
  .aps-dk-Dulieu-list .row .col-12 {
-   padding-right: 0 !important;
+     padding-right: 0 !important;
  }
+
  .table-list-sv .title-is-paging {
-    margin-top: 0 !important;
-    padding-bottom: 0 !important;
+     margin-top: 0 !important;
+     padding-bottom: 0 !important;
+ }
+
+ .tblSinhVien tr td:nth-last-child(1),
+ .tblSinhVien tr td:nth-last-child(2),
+ .tblSinhVien tr td:nth-last-child(3),
+ .tblSinhVien tr td:nth-last-child(4),
+ .tblSinhVien tr td:nth-last-child(5),
+ .tblSinhVien tr td:nth-last-child(6),
+ .tblSinhVien tr td:nth-last-child(7),
+ .tblSinhVien tr td:nth-last-child(8),
+ .tblSinhVien tr td:nth-last-child(9),
+ .tblSinhVien tr td:nth-last-child(10),
+ .tblSinhVien tr td:nth-of-type(8) {
+     text-align: center !important;
+ }
+
+ .modal_ketquadkcalop .kqht-modal .left {
+     width: 260px;
+     background: #f1f1f1 !important;
+     padding: 0 !important;
+     border-bottom-left-radius: 9px;
+ }
+
+ .btn-show .btn {
+     margin-bottom: 10px;
+ }
+
+ .line-38 {
+     line-height: 38px !important;
+ }
+
+ .study-program-detail .aps-tt-hocPhan p {
+     margin-bottom: 5px !important;
+ }
+ .study-program-detail .label-bottom-line span {
+    margin-bottom: 12px !important;
 }
-.tblSinhVien tr td:nth-last-child(1),
-.tblSinhVien tr td:nth-last-child(2),
-.tblSinhVien tr td:nth-last-child(3),
-.tblSinhVien tr td:nth-last-child(4),
-.tblSinhVien tr td:nth-last-child(5),
-.tblSinhVien tr td:nth-last-child(6),
-.tblSinhVien tr td:nth-last-child(7),
-.tblSinhVien tr td:nth-last-child(8),
-.tblSinhVien tr td:nth-last-child(9),
-.tblSinhVien tr td:nth-last-child(10),
-.tblSinhVien tr td:nth-of-type(8) {
-    text-align: center !important;
+.lable-pb-hocphan.label-bottom-line span::before {
+    height: 0 !important;
+    bottom: 0 !important;
+}
+.study-program-detail .lable-pb-hocphan.label-bottom-line span {
+    margin-bottom: 5px !important;
+}
+.tblKetQuaDangKy.table>tfoot>tr>td:first-child,
+.tblKetQuaDangKy.table>tfoot>tr>th:first-child {
+    border-left: 0 solid #d1d1d1 !important;
 }
 
-.modal_ketquadkcalop .kqht-modal .left {
-  width: 260px;
-  background: #f1f1f1 !important;
-  padding: 0 !important;
-  border-bottom-left-radius: 9px;
+.tblKetQuaDangKy.table tr td,
+.table-sum tr td,.table-sum tr td:first-child,
+.table-sum tr td:last-child {
+    border-left: 0 solid #d1d1d1 !important;
+    border-right: 0 solid #d1d1d1 !important;
+    border-color: #fff !important;
+    border: 0 !important;
 }
+/* .list-nhap-diem{
+    display: none !important;
+} */
