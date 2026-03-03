@@ -2,19 +2,23 @@
     .btn-white {
         background-color: #fff;
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
-        -moz-box-shadow: 1px 1px 1px 1px #ccc; /* Firefox 3.5 - 3.6 */
+        -moz-box-shadow: 1px 1px 1px 1px #ccc;
+        /* Firefox 3.5 - 3.6 */
         box-shadow: 1px 1px 1px 1px #ccc;
-        height: 26px;        
+        height: 26px;
     }
+
     .lbTinhTrang {
         float: right;
         font-weight: bold;
         border: 4px solid;
         opacity: 0.5;
         color: red;
-        -ms-transform: rotate(10deg); /* IE 9 */
-        -webkit-transform: rotate(10deg); /* Safari 3-8 */
-        transform: rotate(10deg);        
+        -ms-transform: rotate(10deg);
+        /* IE 9 */
+        -webkit-transform: rotate(10deg);
+        /* Safari 3-8 */
+        transform: rotate(10deg);
     }
 </style>
 <section class="content aps-congcanbo">
@@ -31,7 +35,7 @@
                     </div>
                     <div class="bs-item input-group mt-10">
                         <input type="text" id="txtSearch_TuKhoa" class="form-control"
-                               placeholder="Nhập từ khóa tìm kiếm">
+                            placeholder="Nhập từ khóa tìm kiếm">
                         <span class="input-group-addon poiter btnExtend_Search" title="Search">
                             <i class="fa fa-search"></i>
                         </span>
@@ -50,7 +54,7 @@
                 <div class="box-body pd0 mt-5">
                     <table id="tblDeTai" class="table table-hover">
                         <tbody>
-                        <!--Load from js -->
+                            <!--Load from js -->
                         </tbody>
                     </table>
                 </div>
@@ -62,13 +66,15 @@
             <div class="box box-solid zone-bus pd0" id="zone_notify_detai">
                 <div class="box-header with-border bg-blue">
                     <h3 class="box-title color-white" style="color: #fff !important;">
-                        <i class="fa fa-info-circle"></i>Thông tin chung</h3>
+                        <i class="fa fa-info-circle"></i>Thông tin chung
+                    </h3>
                 </div>
                 <div class="box-body pd20">
                     <div class="col-sm-12">
                         <p>Hôm nay bạn có sản phẩm mới không?
                             <a class="btn btnAdd btn-outline-primary ml-10" href="#">
-                                <i class="fa fa-plus"></i> Thêm mới</a></p>
+                                <i class="fa fa-plus"></i> Thêm mới</a>
+                        </p>
                     </div>
                 </div>
             </div>
@@ -77,7 +83,7 @@
             <div class="box box-solid form-container zone-bus zone_input_detai" id="zone_input_detai">
                 <div class="box-header with-border">
                     <h3 class="box-title"><span class="myModalLabel">
-                        <i class="fa fa-plus"></i> Thêm mới - </span> Đề tài</h3>
+                            <i class="fa fa-plus"></i> Thêm mới - </span> Đề tài</h3>
                     <div class="pull-right">
                         <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                     </div>
@@ -96,7 +102,7 @@
                             <div class="row aps-form-item">
                                 <div class="col-sm-2 aps-form-lable">Mã đề tài</div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_Ma" class="form-control"/>
+                                    <input id="txtDeTai_Ma" class="form-control" />
                                 </div>
                                 <div class="col-sm-2 aps-form-lable text-right pr15">Danh mục đề tài</div>
                                 <div class="col-sm-4 aps-form-input">
@@ -107,19 +113,21 @@
                             </div>
                             <!--row 3-->
                             <div class="row aps-form-item">
-                                <div class="col-sm-2 aps-form-lable">Tên đề tài tiếng việt <span class="color-red">(*)</span></div>
+                                <div class="col-sm-2 aps-form-lable">Tên đề tài tiếng việt <span
+                                        class="color-red">(*)</span></div>
                                 <div class="col-sm-8 aps-form-input">
-                                    <input id="txtDeTai_TenTiengViet" class="form-control"/>
+                                    <input id="txtDeTai_TenTiengViet" class="form-control" />
                                 </div>
                                 <div class="col-sm-2 aps-form-search pl15">
                                     <a class="btn btn-outline-primary btnSearchDeTai_BaiBao" id="">
-                                        <i class="fa fa-search"></i> Tìm đề tài</a></div>
+                                        <i class="fa fa-search"></i> Tìm đề tài</a>
+                                </div>
                             </div>
                             <!--row 4-->
                             <div class="row aps-form-item">
                                 <div class="col-sm-2 aps-form-lable">Tên đề tài tiếng anh</div>
                                 <div class="col-sm-10 aps-form-input">
-                                    <input id="txtDeTai_TenTiengAnh" class="form-control"/>
+                                    <input id="txtDeTai_TenTiengAnh" class="form-control" />
                                 </div>
                             </div>
                             <!--row 5-->
@@ -131,13 +139,14 @@
                             </div>
                             <!--row 6-->
                             <div class="row aps-form-item">
-                                <div class="col-sm-2 aps-form-lable">Đơn vị chủ trì đề tài <span class="color-red">(*)</span></div>
+                                <div class="col-sm-2 aps-form-lable">Đơn vị chủ trì đề tài <span
+                                        class="color-red">(*)</span></div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_ToChucCoDeTai" class="form-control"/>
+                                    <input id="txtDeTai_ToChucCoDeTai" class="form-control" />
                                 </div>
                                 <div class="col-sm-2 aps-form-lable text-right pr15">Đơn vị thực hiện đề tài</div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_DonViThucHien" class="form-control"/>
+                                    <input id="txtDeTai_DonViThucHien" class="form-control" />
                                 </div>
                             </div>
                             <!--row 7 -->
@@ -148,14 +157,16 @@
                                         <option value="">--- Chọn lĩnh vực --</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-2 aps-form-lable text-right pr15">Tổng số tác giả <span class="color-red ml-5 pl5">(*)</span></div>
+                                <div class="col-sm-2 aps-form-lable text-right pr15">Tổng số tác giả <span
+                                        class="color-red ml-5 pl5">(*)</span></div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_TongSoTacGia" class="form-control"/>
+                                    <input id="txtDeTai_TongSoTacGia" class="form-control" />
                                 </div>
                             </div>
                             <!--row 8-->
                             <div class="row aps-form-item">
-                                <div class="col-sm-2 aps-form-lable">Loại đề tài <span class="color-red">(*)</span> </div>
+                                <div class="col-sm-2 aps-form-lable">Loại đề tài <span class="color-red">(*)</span>
+                                </div>
                                 <div class="col-sm-4 aps-form-input">
                                     <select id="dropDeTai_PhanLoai" class="select-opt">
                                         <!-- Load from js -->
@@ -163,14 +174,15 @@
                                 </div>
                                 <div class="col-sm-2 aps-form-lable text-right pr15">Loại đề tài khác</div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_PhanLoai_Khac" class="form-control"/>
+                                    <input id="txtDeTai_PhanLoai_Khac" class="form-control" />
                                 </div>
                             </div>
                             <!--row 9-->
                             <div class="row aps-form-item">
-                                <div class="col-sm-2 aps-form-lable" style="justify-content: left !important;">Số tác giả trong <span class="cosoxet ml-5">trường</span></div>
+                                <div class="col-sm-2 aps-form-lable" style="justify-content: left !important;">Số tác
+                                    giả trong <span class="cosoxet ml-5">trường</span></div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_SoTacGiaTrongTruong" class="form-control"/>
+                                    <input id="txtDeTai_SoTacGiaTrongTruong" class="form-control" />
                                 </div>
                             </div>
                             <!--row 10-->
@@ -182,18 +194,18 @@
 
                                 <div class="col-sm-2 aps-form-lable text-right pr15">Cấp quản lý khác</div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_CapQuanLy_Khac" class="form-control"/>
+                                    <input id="txtDeTai_CapQuanLy_Khac" class="form-control" />
                                 </div>
                             </div>
                             <!--row 11-->
                             <div class="row aps-form-item">
                                 <div class="col-sm-2 aps-form-lable">Thời gian từ</div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_TuThang" class="form-control"/>
+                                    <input id="txtDeTai_TuThang" class="form-control" />
                                 </div>
                                 <div class="col-sm-2 aps-form-lable text-right pr15">Đến</div>
                                 <div class="col-sm-4 aps-form-input">
-                                    <input id="txtDeTai_DenThang" class="form-control"/>
+                                    <input id="txtDeTai_DenThang" class="form-control" />
                                 </div>
                             </div>
                         </div>
@@ -202,27 +214,29 @@
                             <!--row aps-lable-name-->
                             <div class="row">
                                 <p class="group-group-title-name border-0 mb-0">
-                                    <span class="badge bg-blue"
-                                          style="color:#198754 !important">Sản phẩm khoa học</span>
+                                    <span class="badge bg-blue" style="color:#198754 !important">Sản phẩm khoa
+                                        học</span>
                                 </p>
                             </div>
                             <!--row 2-->
                             <div class="row aps-form-table">
-                                <table id="tblInput_DeTai_SPKH" class="table mr-0 mb-0">
+                                <table id="tblInput_DeTai_SPKH" class="table mr-0 mb-0 tblInput_DeTai_SPKH fz14">
                                     <tbody></tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td class="group-title-name" style="width: 80px">
-                                            Tên<span class="title-colon">:</span>
-                                        </td>
-                                        <td>
-                                            <select id="dropDeTai_SPKH" class="select-opt">
-                                                <option>Chọn sản phẩm</option>
-                                            </select>
-                                        </td>
-                                        <td class="td-fixed td-center"><a class="btn poiter" id="btnAdd_SPKH"><i
-                                                class="fa fa-plus"></i> Thêm</a></td>
-                                    </tr>
+                                        <tr>
+                                            <td class="group-title-name fz14"
+                                                style="width: 80px; font-size: 14px !important; font-weight: 400 !important;">
+                                                Tên<span class="title-colon">:</span>
+                                            </td>
+                                            <td>
+                                                <select id="dropDeTai_SPKH" class="select-opt">
+                                                    <option>Chọn sản phẩm</option>
+                                                </select>
+                                            </td>
+                                            <td class="td-fixed td-center w-80px"><a class="btn poiter btn-add-row"
+                                                    id="btnAdd_SPKH">
+                                                    <i class="fa fa-plus"></i> Thêm</a></td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -240,16 +254,17 @@
                                 <table id="tblInput_DeTai_SPDT" class="table mr-0 mb-0">
                                     <tbody></tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td class="group-title-name" style="width: 80px">
-                                            Tên<span class="title-colon">:</span>
-                                        </td>
-                                        <td>
-                                            <textarea id="txtDeTai_SPDT" class="form-control"></textarea>
-                                        </td>
-                                        <td class="td-fixed td-center"><a class="btn poiter" id="btnAdd_SPDT"><i
-                                                class="fa fa-plus"></i> Thêm</a></td>
-                                    </tr>
+                                        <tr>
+                                            <td class="group-title-name fz14"
+                                                style="width: 80px; font-size: 14px !important; font-weight: 400 !important;">
+                                                Tên<span class="title-colon">:</span>
+                                            </td>
+                                            <td>
+                                                <textarea id="txtDeTai_SPDT" class="form-control"></textarea>
+                                            </td>
+                                            <td class="td-fixed td-center w-80px"><a class="btn poiter btn-add-row"
+                                                    id="btnAdd_SPDT"><i class="fa fa-plus"></i> Thêm</a></td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -259,7 +274,8 @@
                             <!--row aps-lable-name-->
                             <div class="row">
                                 <p class="group-group-title-name border-0 mb-0">
-                                    <span class="badge bg-blue" style="color:#FF0000 !important">Sản phẩm ứng dụng</span>
+                                    <span class="badge bg-blue" style="color:#FF0000 !important">Sản phẩm ứng
+                                        dụng</span>
                                 </p>
                             </div>
                             <!--row 2-->
@@ -267,24 +283,26 @@
                                 <table id="tblInput_DeTai_SanPhamUngDung" class="table mr-0 mb-0">
                                     <tbody></tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td class="col-sm-1 aps-form-lable">Loại</td>
-                                        <td  class="col-sm-2 aps-form-input">
-                                            <select id="dropDeTai_SP_Loai" class="select-opt">
-                                                <option>Chọn loại sản phẩm</option>
-                                            </select>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-lable text-right pr10">Tên</td>
-                                        <td class="col-sm-2 aps-form-input">
-                                            <input id="txtDeTai_SP_Ten" class="form-control"/>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-lable text-right pr10">Mô tả</td>
-                                        <td class="col-sm-4 aps-form-input">
-                                            <input id="txtDeTai_SP_MoTa" class="form-control"/>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-btn">
-                                            <a class="btn poiter" id="btnAdd_SanPhamUngDung"><i class="fa fa-plus"></i> Thêm</a></td>
-                                    </tr>
+                                        <tr>
+                                            <td class="col-sm-1 aps-form-lable">Loại</td>
+                                            <td class="col-sm-2 aps-form-input">
+                                                <select id="dropDeTai_SP_Loai" class="select-opt">
+                                                    <option>Chọn loại sản phẩm</option>
+                                                </select>
+                                            </td>
+                                            <td class="col-sm-1 aps-form-lable text-right pr10">Tên</td>
+                                            <td class="col-sm-2 aps-form-input">
+                                                <input id="txtDeTai_SP_Ten" class="form-control" />
+                                            </td>
+                                            <td class="col-sm-1 aps-form-lable text-right pr10">Mô tả</td>
+                                            <td class="col-sm-4 aps-form-input">
+                                                <input id="txtDeTai_SP_MoTa" class="form-control" />
+                                            </td>
+                                            <td class="col-sm-1 aps-form-btn w-80px">
+                                                <a class="btn poiter btn-add-row" id="btnAdd_SanPhamUngDung"><i
+                                                        class="fa fa-plus"></i> Thêm</a>
+                                            </td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -299,7 +317,8 @@
                             </div>
                             <!--row 2-->
                             <div class="row aps-form-item">
-                                <div class="col-sm-2 aps-form-lable fz16 bold" style="color:#d54b07 !important">Sản phẩm khác</div>
+                                <div class="col-sm-2 aps-form-lable fz16 bold" style="color:#d54b07 !important">Sản phẩm
+                                    khác</div>
                                 <div class="col-sm-10">
                                     <textarea id="txtDeTai_SanPhamKhac" class="form-control min-h-68"></textarea>
                                 </div>
@@ -319,26 +338,28 @@
                                 <table id="tblInput_DeTai_KinhPhi" class="table mr-0 mb-0">
                                     <tbody></tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td class="col-sm-1 aps-form-lable">Tên nguồn</td>
-                                        <td class="col-sm-3 aps-form-input">
-                                            <select id="dropDeTai_KinhPhi_Nguon" class="select-opt">
-                                                <option>Chọn nguồn kinh phí</option>
-                                            </select>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-lable text-right pr15">Số tiền</td>
-                                        <td class="col-sm-2 aps-form-input">
-                                            <input id="txtDeTai_KinhPhi_SoTien" class="form-control inputsotien"/>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-lable text-right pr15">Đơn vị</td>
-                                        <td class="col-sm-3 aps-form-input">
-                                            <select id="dropDeTai_KinhPhi_DonViTienTe" class="select-opt">
-                                                <!-- Load from js -->
-                                            </select>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-btn">
-                                            <a class="btn poiter" id="btnAdd_DeTai_KinhPhi"><i class="fa fa-plus"></i> Thêm</a></td>
-                                    </tr>
+                                        <tr>
+                                            <td class="aps-form-lable">Tên nguồn</td>
+                                            <td class="aps-form-input">
+                                                <select id="dropDeTai_KinhPhi_Nguon" class="select-opt">
+                                                    <option>Chọn nguồn kinh phí</option>
+                                                </select>
+                                            </td>
+                                            <td class="aps-form-lable text-right pr15">Số tiền</td>
+                                            <td class="aps-form-input">
+                                                <input id="txtDeTai_KinhPhi_SoTien" class="form-control inputsotien" />
+                                            </td>
+                                            <td class="aps-form-lable text-right pr15">Đơn vị</td>
+                                            <td class="aps-form-input">
+                                                <select id="dropDeTai_KinhPhi_DonViTienTe" class="select-opt">
+                                                    <!-- Load from js -->
+                                                </select>
+                                            </td>
+                                            <td class="aps-fortn w-80px">
+                                                <a class="btn poiter btn-add-row" id="btnAdd_DeTai_KinhPhi"><i
+                                                        class="fa fa-plus"></i> Thêm</a>
+                                            </td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -357,27 +378,29 @@
                                 <table id="tblInput_DeTai_DVHT" class="table mr-0 mb-0">
                                     <tbody></tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td class="col-sm-1 aps-form-lable">Tên đơn vị</td>
-                                        <td class="col-sm-4 aps-form-input">
-                                            <input id="txtDeTai_DVHT_Ten" class="form-control"/>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-lable text-right pr15">Quốc gia</td>
-                                        <td class="col-sm-4 aps-form-input">
-                                            <select id="dropDeTai_DVHT_QuocGia" class="select-opt">
-                                                <!-- Load from js -->
-                                            </select>
-                                        </td>
-                                        <td class="col-sm-1 aps-form-btn">
-                                            <a class="btn poiter" id="btnAdd_DeTai_DVHT"><i class="fa fa-plus"></i> Thêm</a>
-                                        </td>
-                                    </tr>
-                                     </tfoot>
-                                 </table>
-                             </div>
-                         </div>
+                                        <tr>
+                                            <td class="aps-form-lable">Tên đơn vị</td>
+                                            <td class="aps-form-input">
+                                                <input id="txtDeTai_DVHT_Ten" class="form-control" />
+                                            </td>
+                                            <td class="aps-form-lable text-right pr15">Quốc gia</td>
+                                            <td class="aps-form-input">
+                                                <select id="dropDeTai_DVHT_QuocGia" class="select-opt">
+                                                    <!-- Load from js -->
+                                                </select>
+                                            </td>
+                                            <td class="aps-form-btn w-80px"
+                                                style="max-width: 80px !important;width: 100px !important;">
+                                                <a class="btn poiter btn-add-row" id="btnAdd_DeTai_DVHT"><i
+                                                        class="fa fa-plus"></i> Thêm</a>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
 
-                         <!--8. Tiến độ đề tài-->
+                        <!--8. Tiến độ đề tài-->
                         <div class="row aps-form mt-25">
                             <!--row aps-lable-name-->
                             <div class="row">
@@ -390,22 +413,23 @@
                                 <table id="tblInput_DeTai_TDDT" class="table mr-0 mb-0">
                                     <tbody></tbody>
                                     <tfoot>
-                                    <tr>
-                                        <td class="col-sm-2 aps-form-lable">Thời gian</td>
-                                        <td class="col-sm-2 aps-form-input">
-                                            <input id="txtDeTai_TDDT_ThoiGian" class="form-control"/>
-                                        </td>
-                                        <td class="col-sm-2 aps-form-lable text-right pr15">Tiền thanh toán</td>
-                                        <td class="col-sm-2 aps-form-input">
-                                            <input id="txtDeTai_TDDT_TienThanhToan" class="form-control inputsotien"/>
-                                        </td>
-                                        <td class="col-sm-2 aps-form-lable text-right pr15">Tiền còn lại</td>
-                                        <td class="col-sm-2 aps-form-input">
-                                            <input id="txtDeTai_TDDT_TienConLai" class="form-control inputsotien"/>
-                                        </td>
-                                        <td class="td-fixed td-center"><a class="btn poiter" id="btnAdd_DeTai_TDDT"><i
-                                                class="fa fa-plus"></i> Thêm</a></td>
-                                    </tr>
+                                        <tr>
+                                            <td class="col-sm-2 aps-form-lable">Thời gian</td>
+                                            <td class="col-sm-2 aps-form-input">
+                                                <input id="txtDeTai_TDDT_ThoiGian" class="form-control" />
+                                            </td>
+                                            <td class="col-sm-2 aps-form-lable text-right pr15">Tiền thanh toán</td>
+                                            <td class="col-sm-2 aps-form-input">
+                                                <input id="txtDeTai_TDDT_TienThanhToan"
+                                                    class="form-control inputsotien" />
+                                            </td>
+                                            <td class="col-sm-2 aps-form-lable text-right pr15">Tiền còn lại</td>
+                                            <td class="col-sm-2 aps-form-input">
+                                                <input id="txtDeTai_TDDT_TienConLai" class="form-control inputsotien" />
+                                            </td>
+                                            <td class="td-fixed td-center w-80px"><a class="btn poiter btn-add-row"
+                                                    id="btnAdd_DeTai_TDDT"><i class="fa fa-plus"></i> Thêm</a></td>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -416,34 +440,37 @@
                                 <!--row aps-lable-name-->
                                 <div class="row">
                                     <p class="group-group-title-name border-0 mb-0">
-                                        <span class="badge bg-blue" style="color:#198754 !important">Quyết định phê duyệt - nghiệm thu</span>
+                                        <span class="badge bg-blue" style="color:#198754 !important">Quyết định phê
+                                            duyệt - nghiệm thu</span>
                                     </p>
                                 </div>
                                 <!--row 1-->
                                 <div class="row aps-form-table">
-                                    <table id="tblQDNT_DT" class="table table-hover table-bordered mr-0 mb-0">
+                                    <table id="tblQDNT_DT"
+                                        class="table table-hover table-bordered  table-border mr-0 mb-0 tblQDNT_DT">
                                         <thead>
-                                        <tr>
-                                            <th style="width:40px;">STT</th>
-                                            <th style="text-align:center; width: 150px">Số quyết định</th>
-                                            <th style="text-align:center; width: 40px">Ngày</th>
-                                            <th style="text-align:center; width: 60px">Tháng</th>
-                                            <th style="text-align:center; width: 65px">Năm</th>
-                                            <th style="text-align:center; width: 150px">Tình Trạng</th>
-                                            <th style="text-align:center; width: 150px">Xếp loại</th>
-                                            <th style="text-align:center;">Tổng thời gian quy định</th>
-                                            <th style="text-align:center;">Tổng thời gian đã thực hiện</th>
-                                            <th style="text-align:center;">Mô tả</th>
-                                            <th style="text-align:center;">File đính kèm</th>
-                                            <th style="text-align:center;width: 90px">Xóa dòng</th>
-                                        </tr>
+                                            <tr>
+                                                <th style="width:40px;">STT</th>
+                                                <th style="text-align:center; width: 150px">Số quyết định</th>
+                                                <th style="text-align:center; width: 40px">Ngày</th>
+                                                <th style="text-align:center; width: 60px">Tháng</th>
+                                                <th style="text-align:center; width: 65px">Năm</th>
+                                                <th style="text-align:center; width: 150px">Tình Trạng</th>
+                                                <th style="text-align:center; width: 150px">Xếp loại</th>
+                                                <th style="text-align:center;">Tổng thời gian quy định</th>
+                                                <th style="text-align:center;">Tổng thời gian đã thực hiện</th>
+                                                <th style="text-align:center;">Mô tả</th>
+                                                <th style="text-align:center;">File đính kèm</th>
+                                                <th style="text-align:center;width: 90px">Xóa dòng</th>
+                                            </tr>
                                         </thead>
                                         <tbody></tbody>
                                     </table>
                                 </div>
                                 <!--row 1-->
                                 <div class="row mt-10">
-                                    <div  class="pull-left aps-form-note mt-10" style="font-style: italic; font-size: 13px">
+                                    <div class="pull-left aps-form-note mt-10"
+                                        style="font-style: italic; font-size: 13px">
                                         <b>Chú ý: </b>Phải nhập đầy đủ số quyết định, năm và tình trạng đề tài
                                     </div>
                                     <div class="pull-right">
@@ -459,14 +486,15 @@
                             <!--row aps-lable-name-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name border-0 mb-5">
-                                    <span class="badge bg-blue" style="color:#FF0000 !important">Nội dung minh chứng</span>
+                                    <span class="badge bg-blue" style="color:#FF0000 !important">Nội dung minh
+                                        chứng</span>
                                 </p>
                             </div>
                             <!--row 1-->
                             <div class="row aps-form-item">
                                 <div class="col-sm-2 aps-form-lable">Nội dung</div>
                                 <div class="col-sm-10 aps-form-input">
-                                    <input id="txtDeTai_NoiDungMinhChung" class="form-control"/>
+                                    <input id="txtDeTai_NoiDungMinhChung" class="form-control" />
                                 </div>
                             </div>
                             <!--row 1-->
@@ -482,35 +510,38 @@
                             <!--row aps-lable-name-->
                             <div class="row">
                                 <p class="group-group-title-name border-0 mb-0">
-                                    <span class="badge bg-blue" style="color:#d54b07 !important">Thành viên tham gia</span>
+                                    <span class="badge bg-blue" style="color:#d54b07 !important">Thành viên tham
+                                        gia</span>
                                 </p>
                             </div>
                             <!--row 1-->
                             <div class="row aps-form-table">
-                                <table id="tblInput_DeTai_ThanhVien" class="table table-hover mr-0 mb-0 tblInput_DeTai_ThanhVien">
+                                <table id="tblInput_DeTai_ThanhVien"
+                                    class="table table-hover table-border mr-0 mb-0 tblInput_DeTai_ThanhVien">
                                     <thead>
-                                    <tr>
-                                        <td class="td-fixed td-center">#</td>
-                                        <td class="td-center">Hình ảnh</td>
-                                        <td>Họ tên</td>
-                                        <td style="width: 250px">Vai trò</td>
-                                        <td class="td-center td-fixed">Xóa</td>
-                                    </tr>
+                                        <tr>
+                                            <td class="td-fixed td-center">#</td>
+                                            <td class="td-center">Hình ảnh</td>
+                                            <td>Họ tên</td>
+                                            <td style="width: 250px">Vai trò</td>
+                                            <td class="td-center td-fixed">Xóa</td>
+                                        </tr>
                                     </thead>
                                     <tbody>
-                                    <!-- load from js -->
+                                        <!-- load from js -->
                                     </tbody>
                                 </table>
                             </div>
                             <!--row 1-->
-                            <div class="row aps-form-btn mt-10 mb-10">
+                            <div class="row mt-10 mb-10">
                                 <div class="pull-right">
-                                        <a class="btn btn-outline-primary" id="btnSearchDeTai_NhanSu">
-                                            <i class="fa fa-plus color-active"></i> Thêm thành viên</a></div>
+                                    <a class="btn btn-outline-primary" id="btnSearchDeTai_NhanSu">
+                                        <i class="fa fa-plus color-active"></i>Thêm thành viên</a>
+                                </div>
                             </div>
                             <div class="col-sm-2 aps-form-lable">Thành viên khác</div>
                             <div class="col-sm-10 aps-form-input">
-                                <input id="txtDeTai_NgoaiTruongKhac" class="form-control"/>
+                                <input id="txtDeTai_NgoaiTruongKhac" class="form-control" />
                             </div>
                         </div>
                     </div>
@@ -526,11 +557,19 @@
         </div>
     </div>
 </section>
-<div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modal_TimBaiBao">
+        Xác nhận</button>
+</div>
+<!-- ---------- -->
+<div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
     <!-- load from js -->
 </div>
-<div class="modal fade aps-modal-nhansu" id="modal_TimBaiBao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width:80%">
+<div class="modal fade aps-modal-nhansu" id="modal_TimBaiBao" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" style="width:80%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -550,17 +589,17 @@
                                     </div>
                                     <div class="item-modal">
                                         <input id="txtSearchModal_DeTai_TuKhoa" class="form-control"
-                                               placeholder="Nhập từ khóa tìm kiếm"/>
+                                            placeholder="Nhập từ khóa tìm kiếm" />
                                     </div>
                                     <div class="item-modal">
                                         <select id="dropSearchModal_DeTai_DonVi" class="select-opt"
-                                                style="width:100% !important">
+                                            style="width:100% !important">
                                             <option value=""> -- Chọn đơn vị --</option>
                                         </select>
                                     </div>
                                     <div class="item-modal">
                                         <select id="dropSearchModal_DeTai_LinhVuc" class="select-opt"
-                                                style="width:100% !important">
+                                            style="width:100% !important">
                                             <option value=""> -- Chọn lĩnh vực--</option>
                                         </select>
                                     </div>
@@ -582,14 +621,14 @@
                                 <div class="scroll-table-x">
                                     <table id="tblModal_DeTai" class="table">
                                         <thead>
-                                        <tr>
-                                            <th class="td-fixed td-center">Stt</th>
-                                            <th class="td-left">Tên đề tài</th>
-                                            <th class="td-left">Tổ chức có đề tài</th>
-                                            <th class="td-left">Lĩnh vực</th>
-                                            <th class="td-left">Thành viên</th>
-                                            <th class="td-fixed td-center">#</th>
-                                        </tr>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-left">Tên đề tài</th>
+                                                <th class="td-left">Tổ chức có đề tài</th>
+                                                <th class="td-left">Lĩnh vực</th>
+                                                <th class="td-left">Thành viên</th>
+                                                <th class="td-fixed td-center">#</th>
+                                            </tr>
                                         </thead>
                                         <tbody></tbody>
                                     </table>
@@ -618,5 +657,3 @@
         main_doc.DeTai.init();
     });
 </script>
-
-

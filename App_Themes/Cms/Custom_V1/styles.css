@@ -180,6 +180,15 @@
      width: 50px !important;
  }
 
+ .w-80px {
+     width: 80px !important;
+ }
+
+ .w-100px {
+     width: 100px !important;
+ }
+
+
  .line-38 {
      line-height: 38px !important;
  }
@@ -363,7 +372,7 @@
      border-radius: 5px !important;
      line-height: 28px !important;
      height: 28px !important;
-     display: inline-flex !important;
+     /* display: inline-flex !important; */
  }
 
  .table .btn:hover {
@@ -974,12 +983,12 @@
 
  .select2-container--default .select2-selection--single .select2-selection__arrow b {
      border-color: #d2d6de transparent transparent transparent !important;
-     border-width: 6px 5px 0 5px !important;
+     border-width: 5px 4px 0 5px !important;
  }
 
  .select2-container--default .select2-selection--single .select2-selection__arrow {
-     top: 2px !important;
-     right: 6px !important;
+     top: 6px !important;
+     right: 7px !important;
  }
 
  .select2-container--default .select2-search--dropdown .select2-search__field {
@@ -2107,7 +2116,7 @@
      padding: 2px 10px 0 10px !important;
      height: 34px !important;
      max-height: 34px !important;
-     line-height: 26px !important;
+     line-height: 31px !important;
  }
 
  .simple-pagination li span {
@@ -2344,7 +2353,7 @@
  .modal-title i,
  .modal-header .box-title i {
      color: #fff !important;
-     padding-right: 5px !important;
+     padding-right: 8px !important;
  }
 
  .modal-header {
@@ -4461,29 +4470,103 @@
  .study-program-detail .aps-tt-hocPhan p {
      margin-bottom: 5px !important;
  }
- .study-program-detail .label-bottom-line span {
-    margin-bottom: 12px !important;
-}
-.lable-pb-hocphan.label-bottom-line span::before {
-    height: 0 !important;
-    bottom: 0 !important;
-}
-.study-program-detail .lable-pb-hocphan.label-bottom-line span {
-    margin-bottom: 5px !important;
-}
-.tblKetQuaDangKy.table>tfoot>tr>td:first-child,
-.tblKetQuaDangKy.table>tfoot>tr>th:first-child {
-    border-left: 0 solid #d1d1d1 !important;
-}
 
-.tblKetQuaDangKy.table tr td,
-.table-sum tr td,.table-sum tr td:first-child,
-.table-sum tr td:last-child {
-    border-left: 0 solid #d1d1d1 !important;
-    border-right: 0 solid #d1d1d1 !important;
-    border-color: #fff !important;
-    border: 0 !important;
+ .study-program-detail .label-bottom-line span {
+     margin-bottom: 12px !important;
+ }
+
+ .lable-pb-hocphan.label-bottom-line span::before {
+     height: 0 !important;
+     bottom: 0 !important;
+ }
+
+ .study-program-detail .lable-pb-hocphan.label-bottom-line span {
+     margin-bottom: 5px !important;
+ }
+
+ .tblKetQuaDangKy.table>tfoot>tr>td:first-child,
+ .tblKetQuaDangKy.table>tfoot>tr>th:first-child {
+     border-left: 0 solid #d1d1d1 !important;
+ }
+
+ .tblKetQuaDangKy.table tr td,
+ .table-sum tr td,
+ .table-sum tr td:first-child,
+ .table-sum tr td:last-child {
+     border-left: 0 solid #d1d1d1 !important;
+     border-right: 0 solid #d1d1d1 !important;
+     border-color: #fff !important;
+     border: 0 !important;
+ }
+
+ .list-nhap-diem {
+     /* display: block !important; */
+ }
+
+ .table .btn.btn-add-row {
+     display: flex !important;
+     height: 38px !important;
+     line-height: 34px !important;
+     background-color: #fff;
+ }
+
+ .btn-add-row i {
+     margin-top: 10px;
+     margin-right: 6px;
+ }
+
+ .table .btn.btn-add-row:hover {
+     background-color: var(--color-blue) !important;
+     height: 38px !important;
+     line-height: 34px !important;
+     color: #fff;
+ }
+
+ .btnDeletePoiter,
+ .deleteRowButton {
+     color: var(--color-red) !important;
+ }
+
+ .tblQDNT_DT tr td:nth-last-child(2) {
+     text-align: center !important;
+ }
+
+ .aps-modal-nhansu #tblModal_NhanSu tr .btn.btn-default.btnEdit:hover,
+ .aps-modal-nhansu #tblModal_NhanSu tr .btn.btn-default.btnEdit:hover i {
+     color: var(--color-green) !important;
+ }
+
+ .aps-modal-nhansu #tblModal_NhanSu tbody>tr>td:nth-last-child(2) {
+     padding: 4px 5px 4px 8px !important;
+ }
+
+ #divuploadtxtVBSC_ThongTinDinhKemQD:hover,
+ #btnDeleteFileUptxtVBSC_ThongTinDinhKemQD:hover,
+ #divuploadtxtVBSC_FileDinhKem:hover,#divuploadtxtDTSV_FileDinhKem:hover,
+ #divuploadtxtTTS_FileDinhKem:hover,#divuploadtxtHDGD_FileDinhKem:hover,
+ #divuploadtxtGT_FileDinhKem:hover {
+     border: 0 solid #3c8dee !important;
+ }
+ .aps-modal-nhansu .modal-body .col-sm-3 .area-search {
+    overflow-y: scroll;
+    max-height: 240px;
 }
-/* .list-nhap-diem{
-    display: none !important;
-} */
+.aps-modal-nhansu .col-sm-9 .table .badge.bg-green.notify {
+    height: 20px !important;
+    line-height: 20px !important;
+}
+.finance-user-info .button-gr .btn.btn-border-w{
+    border: 1px solid #fff !important;
+}
+.tblNhapChuyenCan tr td:nth-last-child(1) .chkSelectAll,
+.tblNhapChuyenCan tr th:nth-last-child(1) .chkSelectAll{
+    margin-left: 0 !important;
+}
+.tblNhapChuyenCan tr td:nth-last-child(2) .chkSelectAll,
+.tblNhapChuyenCan tr th:nth-last-child(2) .chkSelectAll{
+    margin-left: 0 !important;
+}
+.tblNhapChuyenCan tr td:nth-last-child(3) .chkSelectAll,
+.tblNhapChuyenCan tr th:nth-last-child(3) .chkSelectAll{
+    margin-left: 0 !important;
+}

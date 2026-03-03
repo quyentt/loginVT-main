@@ -334,6 +334,18 @@
     font-weight: 700 !important;
 }
 
+.aps-detai-duan .box-header .box-title i,
+.zone_input_detai .box-header .box-title i,
+.aps-spkh-tapchiquocgia-l .box-header .box-title i,
+.aps-box-l .box-header .box-title i {
+    margin-top: 3px !important;
+}
+
+.zone_input_tcqg .box-header .box-title i,
+.aps-box-r .box-header .box-title i {
+    margin-top: 2px !important;
+}
+
 .box-header .box-title .lang i {
     margin-top: 3px;
 }
@@ -2828,8 +2840,12 @@
     padding-right: 0 !important;
 }
 
+.aps-modal-nhansu .modal-title {
+    margin-top: 4px !important;
+}
+
 .aps-modal-nhansu .modal-body .col-sm-3 {
-    /*height: 100vh;*/
+    height: 100vh;
     background: #f1f1f1;
     padding: 10px;
 }
@@ -2854,8 +2870,8 @@
 }
 
 .aps-modal-nhansu .modal-body .col-sm-3 .search .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 6px !important;
-    right: 14px !important;
+    top: 7px !important;
+    right: 8px !important;
 }
 
 .aps-modal-nhansu .modal-body .col-sm-3 .search span.select2.select2-container.select2-container--default {
@@ -2905,6 +2921,12 @@
     color: #fff !important;
 }
 
+.aps-modal-nhansu .modal-body .col-sm-3 .aps-form-item .select2-container--default .select2-selection--single,
+.aps-form-input .select2-container--default .select2-selection--single {
+    padding: 7px 30px 3px 2px !important;
+}
+
+/* ---- */
 .aps-modal-nhansu .group-title {
     font-size: 18px;
     padding-left: 0px;
@@ -2916,6 +2938,7 @@
 
 .aps-modal-nhansu .col-sm-9 .box-body .item-modal {
     padding-right: 0 !important;
+    margin-top: 10px !important;
 }
 
 .aps-modal-nhansu .col-sm-9 .box-body {
@@ -2961,6 +2984,48 @@
     margin-bottom: 5px;
 }
 
+.aps-modal-nhansu .col-sm-9 .simple-pagination {
+    padding: 0 0 5px 0 !important;
+}
+
+.aps-modal-nhansu .table.tblModal_NhanSu .bg-yellow.notify {
+    display: flex !important;
+    line-height: 38px;
+}
+
+.aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default,
+.aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default.btnClose {
+    padding: 0 !important;
+    margin-top: -4px !important;
+    width: 24px !important;
+    color: var(--color-green) !important;
+}
+
+.aps-modal-nhansu .table .bg-yellow .btn-circle.btnClose,
+.aps-modal-nhansu .table .badge.bg-green .btn-circle.btnClose {
+    margin-top: -4px !important;
+    width: 24px !important;
+    color: #222 !important;
+    padding: 0 !important;
+    ss
+}
+
+.aps-modal-nhansu .table .bg-yellow.notify:hover .btn-circle.btnClose,
+.aps-modal-nhansu .table .bg-yellow.notify .btn-circle.btnClose:hover,
+.aps-modal-nhansu .table .badge.bg-green:hover .btn-circle.btnClose {
+    color: var(--color-red) !important;
+    padding: 0 !important;
+}
+
+.aps-modal-nhansu .table .table-img {
+    width: 44px !important;
+    height: 44px !important;
+}
+
+.aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default:hover i {
+    color: var(--color-red) !important;
+}
+
 #tblModal_NhanSu>tbody>tr>td:nth-child(2),
 #tblModal_NhanSu>tbody>tr>th:nth-child(2) {
     width: 86px;
@@ -2968,6 +3033,11 @@
 
 .inputSearch .col-sm-3 {
     padding-right: 10px;
+}
+
+.tblQDNT_DT tr td .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 6px !important;
+    right: 6px !important;
 }
 
 /*----*/
