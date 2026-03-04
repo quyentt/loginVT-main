@@ -98,7 +98,7 @@
  input:focus,
  .select2-container--default .select2-selection--single:focus {
      border: 1px solid #3c8dee !important;
-     box-shadow: none !important;
+     /* box-shadow: none !important; */
  }
 
  .btn.active.focus,

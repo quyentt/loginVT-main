@@ -3,12 +3,10 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
-                <p class="link"><a href="#">Lịch giảng</a><i class="fal fa-angle-right"></i><a href="#">Lịch giảng
-                        khoa</a></p>
-
+                <p class="link"><a href="#">Lịch giảng</a><i class="fal fa-angle-right"></i>
+                    <a href="#">Lịch giảng khoa</a>
+                </p>
             </div>
-
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
@@ -16,11 +14,11 @@
     </div>
 
     <!-- đăng ký nguyện vọng -->
-    <div class="box-shadow register-wish  pt-0">
-        <div class="form-top calendar-top">
+    <div class="box-shadow register-wish pt-0">
+        <div class="form-top calendar-top pb10">
             <div class="left">
                 <div class="w-25p">
-                    <div class="form-item d-flex  form-add-info">
+                    <div class="form-item d-flex form-add-info">
                         <div class="input-group no-icon">
                             <select class="form-select select-opt" id="dropSearch_HocKy"
                                 aria-label="Default select example">
@@ -31,7 +29,6 @@
                     </div>
                 </div>
                 <div class="w-50p">
-
                     <div class="form-group-cover">
                         <div class="main-label">
                             Thời gian gửi yêu cầu
@@ -63,7 +60,6 @@
                 <div class="w-25p">
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
-
                             <select class="form-select select-opt" id="dropSearch_HocPhan"
                                 aria-label="Default select example">
                                 <option selected>Chọn học phần</option>
@@ -75,7 +71,6 @@
                 <div class="w-25p">
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
-
                             <select class="form-select select-opt" id="dropSearch_NguoiGui"
                                 aria-label="Default select example">
                                 <option selected>Chọn người gửi</option>
@@ -110,25 +105,35 @@
                 </div>
             </div>
             <div class="right">
-                <div class="btn btn-dask-blue" id="btnSearch"><i class="fal fa-tasks-alt me-3"></i>Xem</div>
+                <div class="btn btn-default btn-search" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i>Xem
+                </div>
             </div>
 
         </div>
 
         <div class="container-fluid px-20 ">
-            <div class="d-flex justify-content-end pt-3 pb-2">
-                <div class="min-w-auto btn btn-success" id="btnDuyet"><i class="fas fa-external-link me-2"></i>Duyệt
+            <div class="box-header pr0 pl0">
+                <h3 class="box-title pl0">
+                    <i class="fa-solid fa-list-timeline"></i> Danh sách
+                    <span class="badge bg-light-blue">
+                        <span id="lblLopHocPhan_Tong"></span>
+                    </span>
+                </h3>
+                <div class="pull-right">
+                    <div class="min-w-auto btn btn-success" id="btnDuyet">
+                        <i class="fa-solid fa-circle-check"></i>Duyệt
+                    </div>
                 </div>
-
             </div>
-            <table class="table transcrip-table tabs-scores " id="tblLichGiang_XacNhan">
+
+            <table class="table transcrip-table tabs-scores tblLichGiang_XacNhan table-bordered table-noborder"
+                id="tblLichGiang_XacNhan">
                 <thead>
                     <tr>
-                        <th class="text-center" scope="col">STT</th>
+                        <th class="text-center w-50px" scope="col">STT</th>
                         <th scope="col">Học phần</th>
                         <th scope="col">Lớp học phần</th>
                         <th scope="col">Người gửi yêu cầu</th>
-
                         <th class="text-center" scope="col">Thời gian gửi yêu cầu</th>
                         <th class="" scope="col">Người duyệt yêu cầu</th>
                         <th class="text-center" scope="col">Thời gian - trạng thái duyệt yêu cầu</th>
@@ -136,39 +141,42 @@
                         <th class="text-center" scope="col">Thời gian kết quả xử lý</th>
                         <th class="text-center" scope="col">Xem chi tiết yêu cầu</th>
                         <th class="text-center" scope="col"><input type="checkbox" name="" id="chkSelectAll"></th>
-
                     </tr>
                 </thead>
                 <tbody></tbody>
                 <tfoot></tfoot>
             </table>
-
         </div>
-
     </div>
     <!-- end đăng ký nguyện vọng -->
 </div>
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalXemLich">
+        Yêu cầu đổi lịch</button>
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalPheDuyet">
+        Phê duyệt</button>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalPheDuyet2">
+        Phê duyệt 2</button>
+</div>
+<!-- ---------- -->
 <!-- modal khối kiến thức chuyên ngành-->
-<div class="modal fade finance-modal my-calendar modalXemLich" id="modalXemLich" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade finance-modal my-calendar modalXemLich" id="modalXemLich" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-860">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Yêu cầu đổi lịch</b> </p>
-
+                    <p><i class="fa-solid fa-calendar-lines-pen mr-5"></i>Yêu cầu đổi lịch</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body change-calendar">
+            <div class="modal-body change-calendar pd0">
                 <form class="" action="">
                     <div class="caledar-input">
                         <div class="form-item">
                             <label for="">Nội dung xin đổi lịch</label>
                             <div class="input-group">
-
-
                                 <textarea class="form-control" id="txtNoiDungDoiLich_View" disabled rows="2"></textarea>
                                 <i class="fal fa-edit"></i>
                             </div>
@@ -278,14 +286,13 @@
 
                     </div>
                     <div class="line-1 bg-e1"></div>
-                    <div class="gv-button-group">
-                        <button class="btn btn-success" id="btnPheDuyet">
-                            <i class="fas fa-check me-2"></i>
-                            <span>Phê duyệt</span>
-                        </button>
-                        <button class="btn btn-secondary" id="btnDeleteDoiLich" style="display: none">
-                            <i class="fas fa-trash-restore me-2"></i>
+                    <div class="gv-button-group pull-right d-flex">
+                        <button class="btn btn-danger" id="btnDeleteDoiLich" style="display: block">
+                            <i class="fas fa-trash me-2"></i>
                             <span>Xóa</span>
+                        </button>
+                        <button class="btn btn-success" id="btnPheDuyet">
+                            <i class="fa-solid fa-circle-check"></i><span>Phê duyệt</span>
                         </button>
                     </div>
                 </form>
@@ -295,57 +302,50 @@
     </div>
 </div>
 
-<!-- modal khối kiến thức chuyên ngành-->
+<!-- modal Phê duyệt-->
 <div class="modal fade finance-modal my-calendar modalPheDuyet" id="modalPheDuyet" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Phê duyệt</b> </p>
-
+                    <p><i class="fa-solid fa-circle-check mr-10"></i>Phê duyệt</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body change-calendar">
                 <form class="aps-add-new " action="">
-
                     <div class="row aps-form">
-                        <!-- 1. Nội dung xác nhận -->
-                        <div class="khoa-sldl">
-                            <div class="wrp">
-                                <label for="">Trạng thái</label>
+                        <!-- 1. Trạng thái -->
+                        <div class="khoa-sldl pd0" style="height: 40px !important;min-height:40px !important;">
+                            <div class="wrp pd0 mt-0">
+                                <label for="" class="mt-10">Trạng thái</label>
                                 <div class="form-item d-flex  form-add-info">
                                     <div class="input-group no-icon">
                                         <select class="select-opt" id="dropPhetDuyet_TrangThai"
                                             aria-label="Default select example"></select>
                                     </div>
                                 </div>
-
+                                <button class="btn btn-success ms-auto mt-3 ml-5" id="btnLuuPheDuyet"
+                                    data-bs-dismiss="modal">
+                                    <i class="fas fa-check-circle"></i><span>Xác nhận</span>
+                                </button>
                             </div>
                         </div>
-                        <div class="line-1 bg-e1"></div>
-                        <div class="gv-button-group">
-                            <button class="btn btn-success ms-auto" id="btnLuuPheDuyet" data-bs-dismiss="modal">
-                                <i class="fas fa-check me-2"></i>
-                                <span>Xác nhận</span>
-                            </button>
-                        </div>
-
                         <!-- 2. Lịch sử xác nhận -->
                         <div class="row aps-form mt-20">
                             <div class="row aps-lable text-left mb-0">
-                                <p class="group-group-title-name border-0 mb-0">
-                                    <span class="badge bg-blue">Lịch sử <span class="loaiXacNhan"></span>/span>
+                                <p class="group-group-title-name border-0 mb-0 pb-0">
+                                    <span class="badge bg-blue mb-0">Lịch sử <span class="loaiXacNhan"></span></span>
                                 </p>
                             </div>
                             <div class="row aps-form-table">
-                                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan"
+                                <table
+                                    class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
                                     id="tblModal_XacNhan">
                                     <thead>
                                         <tr>
-                                            <th class="text-center" scope="col">STT</th>
+                                            <th class="text-center w-50px" scope="col">STT</th>
                                             <th scope="col">Trạng thái</th>
                                             <th scope="col">Người xác nhận</th>
                                             <th class="text-center" scope="col">Thời gian</th>
@@ -356,7 +356,6 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
             </div>
 
@@ -364,39 +363,33 @@
     </div>
 </div>
 
-<!-- modal khối kiến thức chuyên ngành-->
+<!-- modal Phê duyệt-->
 <div class="modal fade finance-modal my-calendar modalPheDuyet2" id="modalPheDuyet2" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Phê duyệt</b> </p>
-
+                    <p><i class="fa-solid fa-circle-check mr-10"></i>Phê duyệt</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
             <div class="modal-body change-calendar">
                 <form class="" action="">
-                    <div class="khoa-sldl">
-                        <div class="wrp">
-                            <label for="">Trạng thái</label>
-                            <div class="form-item d-flex  form-add-info">
+                    <div class="khoa-sldl pd0" style="height: 40px !important;min-height:40px !important;">
+                        <div class="wrp pd0 mt-0">
+                            <label for="" class="mt-10">Trạng thái</label>
+                            <div class="form-item d-flex form-add-info">
                                 <div class="input-group no-icon">
                                     <select class="select-opt" id="dropPhetDuyet_TrangThai2"
                                         aria-label="Default select example"></select>
                                 </div>
                             </div>
-
+                            <button class="btn btn-success ms-auto mt-3 ml-5" id="btnLuuPheDuyet2"
+                                data-bs-dismiss="modal">
+                                <i class="fas fa-check-circle"></i><span>Xác nhận</span>
+                            </button>
                         </div>
-                    </div>
-                    <div class="line-1 bg-e1"></div>
-                    <div class="gv-button-group">
-                        <button class="btn btn-success ms-auto" id="btnLuuPheDuyet2" data-bs-dismiss="modal">
-                            <i class="fas fa-check me-2"></i>
-                            <span>Xác nhận</span>
-                        </button>
                     </div>
                 </form>
             </div>

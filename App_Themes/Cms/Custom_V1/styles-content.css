@@ -206,7 +206,7 @@
 }
 
 .btn .caret {
-    margin-top: 5px !important;
+    margin-top: -1px !important;
     margin-left: 8px !important;
 }
 
@@ -1945,7 +1945,8 @@
     border: 1px solid #d2d6de !important;
 }
 
-.form-control:focus {
+.form-control:focus,
+.select2-container--default .select2-selection--single:focus {
     background-color: #fff;
     border-color: #86b7fe !important;
     outline: 0;
@@ -10507,4 +10508,12 @@ table#clone {
 .table-sum tr td {
     border-left: 0 solid #d1d1d1 !important;
     border-color: #fff !important;
+}
+
+.hover-yellow:hover {
+    background-color: transparent !important;
+    color: var(--color-yellow) !important;
+}
+.form-group.date-input .form-control {
+    border: 1px solid #d2d6de;
 }

@@ -1,17 +1,17 @@
-
 .position-absolute {
   position: absolute !important;
 }
+
 .register-wish .text-lable {
   width: auto;
-  color: #222222;
+  color: #888 !important;
   text-align: left;
   padding-top: 0;
   line-height: 19px;
   font-size: 14px;
   flex-shrink: 0;
   padding-top: 3px !important;
-  padding-right: 15px !important;
+  padding-right: 10px !important;
 }
 
 .btn-dask-blue {
@@ -187,7 +187,7 @@
   color: white;
   height: calc(100% + 1px);
   border-bottom: solid 1px var(--color-blue);
-  background:var(--color-blue);
+  background: var(--color-blue);
 }
 
 .dk-phuckhao .table-w .table th .is-fixed {
@@ -228,15 +228,17 @@
 
 /* ----------------- */
 .cmc-suvery-head .tern-name {
-    margin-top: 15px;
+  margin-top: 15px;
 }
+
 .zonePhieu .cmc-suvery .btn-outline-warning.btnAdd_CauHoi.btnAdd {
-    transform: translateX(-50%);
-    margin-left: 50%;
+  transform: translateX(-50%);
+  margin-left: 50%;
 }
-.tblPhieu .btn-default.btnEdit{
-    background-color: transparent !important;
-    border-color: transparent !important;
-    border-width: 0 !important;
-    color: var(--color-blue) !important;
+
+.tblPhieu .btn-default.btnEdit {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  border-width: 0 !important;
+  color: var(--color-blue) !important;
 }

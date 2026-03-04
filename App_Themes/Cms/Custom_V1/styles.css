@@ -990,7 +990,10 @@
      top: 6px !important;
      right: 7px !important;
  }
-
+ .register-school.my-calendar .news-search-form .select2-container--default .select2-selection--single .select2-selection__arrow {
+     top: 1px !important;
+     right: 7px !important;
+ }
  .select2-container--default .select2-search--dropdown .select2-search__field {
      border: 1px solid #d2d6de !important;
      border-radius: 4px !important;
@@ -4569,4 +4572,7 @@
 .tblNhapChuyenCan tr td:nth-last-child(3) .chkSelectAll,
 .tblNhapChuyenCan tr th:nth-last-child(3) .chkSelectAll{
     margin-left: 0 !important;
+}
+.main-label,.aps-lable{
+    color: #888 !important;
 }

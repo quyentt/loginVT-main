@@ -22,7 +22,7 @@
                 <div class="col-12 col-lg-12">
                     <div class="group-2">
                         <div class="form-item d-flex align-items-center form-add-info">
-                            <div class="text-lable color-666">Thời gian</div>
+                            <div class="text-lable color-888">Thời gian</div>
                             <div class="input-group no-icon">
                                 <select class="form-select select-opt" id="dropSearch_ThoiGian"
                                     aria-label="Default select example">
@@ -58,12 +58,12 @@
         </div>
         <div class="container-fluid pl20 pr20">
             <div class="row box-ds-nguoihoc">
-                <h3 class="title-txt">
+                <div class="title-txt pl-0 pr-0">
                     <div class="gv-paging-group color-blue">
                         <i class="fa-solid fa-users-between-lines"></i>Danh sách người học theo lớp
                     </div>
-                </h3>
-                <div class="aps-table-select pl10 pr10 mt-10">
+                </div>
+                <div class="aps-table-select pl-0 pr-0 mt-10">
                     <table class="table transcrip-table tabs-scores tblNguoiHoc table-bordered table-noborder"
                         id="tblNguoiHoc">
                         <thead>
@@ -89,7 +89,7 @@
 <!-- ---------- -->
 <div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
     <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#myModal_hocvien">
-        Xác nhận</button>
+        Học viên</button>
     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
         Xác nhận</button>
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#mymodal_NhapChuyenCan">
@@ -99,11 +99,11 @@
 
 <div class="modal fade finance-modal my-calendar myModal_hocvien" id="myModal_hocvien" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p id="lblTenHoc"></p>
+                    <p id="lblTenHoc"><i class="fa-solid fa-screen-users mr-5"></i></p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -118,10 +118,10 @@
                                 <th scope="col">Họ đệm</th>
                                 <th scope="col">Tên</th>
                                 <th class="text-center" scope="col">Ngày sinh</th>
-                                <th class="text-center" scope="col">Lớp quản lý</th>
-                                <th class="text-center" scope="col">Chương trình</th>
-                                <th class="text-center" scope="col">Khóa học</th>
-                                <th class="text-center" scope="col">Hệ đào tạo</th>
+                                <th class="text-left" scope="col">Lớp quản lý</th>
+                                <th class="text-left" scope="col">Chương trình</th>
+                                <th class="text-left" scope="col">Khóa học</th>
+                                <th class="text-left" scope="col">Hệ đào tạo</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -169,8 +169,7 @@
                                 </p>
                             </div>
                             <div class="row aps-form-table">
-                                <table
-                                    class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
+                                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
                                     id="tblModal_XacNhan">
                                     <thead>
                                         <tr>
@@ -196,11 +195,12 @@
 <!-- modal Các buổi học theo thời khóa biểu-->
 <div class="modal fade finance-modal my-calendar modal-spec mymodal_NhapChuyenCan" id="mymodal_NhapChuyenCan" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-full" style="max-width: unset">
+    <div class="modal-dialog modal-dialog-centered modal-full modal-dialog-scrollable" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal is-btn-gr">
-                    <p><i class="fa-solid fa-calendar-circle-user fw-bold mr-5"></i>Các buổi học theo thời khóa biểu <span class="color-fff">&ensp; - &ensp; - <span
+                    <p><i class="fa-solid fa-calendar-circle-user fw-bold mr-5"></i>Các buổi học theo thời khóa biểu 
+                        <span class="color-fff">&ensp; - &ensp; - <span
                                 class="lblTenHoc"></span></span></p>
                     <div class="form-item d-flex  form-add-info col-12 col-lg-2">
                         <div class="input-group no-icon">
