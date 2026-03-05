@@ -75,7 +75,8 @@
                                 <div class="dropdown w-100" id="zonebtnCT_Import" style="float: left">
                                     <button class="btn btn-success dropdown-toggle w-100" type="button"
                                         data-toggle="dropdown">
-                                        <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                                        <i class="fa-solid fa-file-import"></i>Import <span class="caret"
+                                            style="margin-top: -1px !important;"></span>
                                     </button>
                                     <ul class="dropdown-menu form-container">
                                         <li><a class="btnImportWithProce" name="IMPORTWITHPROC_CHAMTHI" title="Thi"
@@ -85,7 +86,7 @@
                             </div>
                             <div class="col-6 col-sm-6 pl5">
                                 <a class="btn btn-default btn-search btnExtend_Search w-100"><i
-                                        class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                        class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                             </div>
                         </div>
                     </div>
@@ -112,9 +113,10 @@
                         <div class="box box-solid">
                             <div class="col-sm-12">
                                 <div class="box box-solid">
-                                    <div class="box-header with-border" style="text-align: center">
-                                        <a style="font-size: 30px">Lịch học học phần: <span
-                                                class="color-active lblLichHoc_HP font-bold"></span></a>
+                                    <div class="box-header with-border bg-blue" style="text-align: center">
+                                        <a class="fz20 mt-5"><i
+                                                class="fa-solid fa-calendar-circle-user fw-bold mr-5"></i>Lịch học học
+                                            phần: <span class="color-active lblLichHoc_HP font-bold"></span></a>
                                     </div>
                                 </div>
                             </div>
@@ -122,22 +124,19 @@
                             <div class="box-body pd20">
                                 <div class="box-header pd0">
                                     <h3 class="box-title mt-10">
-                                        <i class="fa-solid fa-users-between-lines pr5"></i>Danh sách cán bộ
+                                        <i class="fa-solid fa-users-between-lines"></i>Danh sách cán bộ
                                         <span class="pull-right badge bg-light-blue">
                                             <span id="lblCanBo_Tong"></span>
                                         </span>
                                     </h3>
-                                    <div class="pull-right">
-                                        <a id="btnSave_DuLieuChamThi" class="btn btn-primary"><i class="fa fa-save"></i>
-                                            Lưu</a>
-                                    </div>
+                                    <div class="pull-right"></div>
                                 </div>
                                 <div class="aps-table-selectv mt-10">
                                     <table id="tblInputDanhSachNhanSu"
-                                        class="table table-hover table-bordered tblInputDanhSachNhanSu mb-10">
+                                        class="table table-hover table-bordered tblInputDanhSachNhanSu mb-10 table-bordered table-noborder">
                                         <thead>
                                             <tr>
-                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-fixed td-center w-50px">Stt</th>
                                                 <th class="td-center">Đơn vị</th>
                                                 <th class="td-center">Mã cán bộ</th>
                                                 <th class="td-center">Họ tên</th>
@@ -155,9 +154,12 @@
                                 </div>
                                 <div class="row">
                                     <div class="pull-right">
-                                        <div class="group-title-name">
+                                        <div class="group-title-name d-flex">
                                             <a class="btn btn-outline-primary" id="btnSearch_NhanSu"><i
-                                                    class="fa fa-plus color-active"></i> Thêm dòng mới</a>
+                                                    class="fa fa-plus color-active"></i>Thêm dòng mới</a>
+                                            <a id="btnSave_DuLieuChamThi" class="btn btn-primary"><i
+                                                    class="fa fa-save"></i>
+                                                Lưu</a>
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +171,8 @@
         </div>
     </div>
 </section>
-<div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
     <!-- load from js -->
 </div>
 <!-- page script -->

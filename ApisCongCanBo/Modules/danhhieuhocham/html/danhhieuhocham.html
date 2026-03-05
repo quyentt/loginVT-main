@@ -5,7 +5,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active">
                         <a href="#tab_5" data-toggle="tab" aria-expanded="true">
-                            <span class="lang" key="">Danh hiệu - Học hàm</span>
+                            <span class="lang" key=""><i class="fa-solid fa-user-graduate fw-bold mr-5"></i>Danh hiệu - Học hàm</span>
                         </a>
                     </li>
                 </ul>
@@ -20,29 +20,30 @@
                                         <h3 class="box-title">
                                             <a data-toggle="collapse" data-parent="#key_hocham" href="#qt_hocham"
                                                 aria-expanded="false" class="collapsed">
-                                                <span class="lang" key="">Học hàm</span>
+                                                <span class="lang" key=""><i class="fa-solid fa-user-graduate"></i> Học hàm</span>
                                             </a>
                                         </h3>
-                                        <div class="pull-right">
+                                        <div class="pull-right d-flex">
+                                             <a id="key_hocham" class="btn btn-warning btnRefresh">
+                                                <i class="fa fa-refresh pr5"></i>Tải lại
+                                            </a>
                                             <a id="key_hocham" class="btn btn-success btnAdd">
                                                 <i class="fa fa-plus"></i> Thêm mới
                                             </a>
-                                            <a id="key_hocham" class="btn btn-warning btnRefresh">
-                                                <i class="fa fa-refresh pr0"></i>
-                                            </a>
+                                           
                                         </div>
                                     </div>
                                     <div id="qt_hocham" class="panel-collapse collapse" aria-expanded="false">
                                         <div class="box-body pd0">
                                             <div class="aps-table-select bg-none">
-                                                <table id="tbl_HocHam" class="table table-hover table-bordered">
+                                                <table id="tbl_HocHam" class="tbl_HocHam table table-hover table-bordered table-noborder">
                                                     <thead>
                                                         <tr>
-                                                            <th class="td-fixed td-center">Stt</th>
-                                                            <th class="td-center" style="width: 650px">Chuyên ngành</th>
-                                                            <th class="td-center" style="width: 450px">Chức danh</th>
+                                                            <th class="td-fixed td-center w-50px">Stt</th>
+                                                            <th class="td-left" style="width: 650px">Chuyên ngành</th>
+                                                            <th class="td-left" style="width: 450px">Chức danh</th>
                                                             <th class="td-center" style="width: 250px">Ngày phong</th>
-                                                            <th class="td-center" style="width: 650px">Nơi phong</th>
+                                                            <th class="td-left" style="width: 650px">Nơi phong</th>
                                                             <th class="td-fixed td-center">Sửa</th>
                                                             <th class="td-fixed td-center">Xóa</th>
                                                         </tr>
@@ -59,28 +60,28 @@
                                         <h3 class="box-title">
                                             <a data-toggle="collapse" data-parent="#key_danhhieu" href="#qt_danhhieu"
                                                 aria-expanded="false" class="collapsed">
-                                                <span class="lang" key="">Danh hiệu được phong tặng cao nhất</span>
+                                                <span class="lang" key=""><i class="fa-solid fa-trophy-star"></i> Danh hiệu được phong tặng cao nhất</span>
                                             </a>
                                         </h3>
-                                        <div class="pull-right">
-                                            <a id="key_danhhieu" class="btn btn-success btnAdd">
-                                                <i class="fa fa-plus"></i>Thêm mới
-                                            </a>
+                                        <div class="pull-right d-flex">                                           
                                             <a id="key_danhhieu" class="btn btn-warning btnRefresh">
-                                                <i class="fa fa-refresh pr0"></i>
+                                                <i class="fa fa-refresh pr5"></i>Tải lại
+                                            </a>
+                                             <a id="key_danhhieu" class="btn btn-success btnAdd">
+                                                <i class="fa fa-plus"></i>Thêm mới
                                             </a>
                                         </div>
                                     </div>
                                     <div id="qt_danhhieu" class="panel-collapse collapse" aria-expanded="false">
                                         <div class="box-body pd0">
                                             <div class="aps-table-select bg-none">
-                                                <table id="tbl_DanhHieu" class="table table-hover table-bordered">
+                                                <table id="tbl_DanhHieu" class="table table-hover table-bordered table-noborder tbl_DanhHieu">
                                                     <thead>
                                                         <tr>
-                                                            <th class="td-fixed td-center">Stt</th>
-                                                            <th class="td-center">Danh hiệu</th>
+                                                            <th class="td-fixed td-center w-50px">Stt</th>
+                                                            <th class="td-left">Danh hiệu</th>
                                                             <th class="td-center" style="width: 250px">Ngày phong</th>
-                                                            <th class="td-center" style="width: 650px">Nơi phong</th>
+                                                            <th class="td-left" style="width: 650px">Nơi phong</th>
                                                             <th class="td-fixed td-center">Sửa</th>
                                                             <th class="td-fixed td-center">Xóa</th>
                                                         </tr>
@@ -183,18 +184,18 @@
                         </div>
                         <div class="row aps-form-item">
                             <table id="tblHocHam_QDGiaoNhhiemVu"
-                                class="table table-hover table-bordered tblHocHam_QDGiaoNhhiemVu mr-0 mb-0">
+                                class="table table-hover table-bordered tblHocHam_QDGiaoNhhiemVu mr-0 mb-0 table-noborder">
                                 <thead>
                                     <tr>
                                         <th style="width:40px;">STT</th>
-                                        <th style="text-align:center; width: 300px">Loại quyết định</th>
-                                        <th style="text-align:center; width: 150px">Số quyết định</th>
+                                        <th style="text-align:left; width: 300px">Loại quyết định</th>
+                                        <th style="text-align:left; width: 150px">Số quyết định</th>
                                         <th style="text-align:center; width: 200px">Ngày ký quyết định</th>
                                         <th style="text-align:center; width: 150px">Ngày bắt đầu</th>
                                         <th style="text-align:center; width: 150px">Ngày kết thúc</th>
-                                        <th style="text-align:center; ">Mô tả</th>
+                                        <th style="text-align:left; ">Mô tả</th>
                                         <th style="text-align:center; width: 150px">File đính kèm</th>
-                                        <th style="text-align:center;width: 50px">Xóa dòng</th>
+                                        <th style="text-align:center;width: 100px">Xóa dòng</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -220,7 +221,7 @@
 
             </div>
         </div>
-        <!-- Tab_1: Add/Edit Danh hiệu -->
+        <!-- Tab_1: Add/Edit Danh hiệu được phong tặng cao nhất -->
         <div class="box box-solid form-container zone-bus" id="zoneDanhHieu_input" style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Danh hiệu</h3>
@@ -289,7 +290,7 @@
                                     File đính kèm<span class="title-colon">:</span>
                                 </div>
                             </div>
-                            <div class="col-sm-10 aps-form-input">
+                            <div class="col-sm-10 aps-form-input mt-5">
                                 <div id="txtDanhHieu_ThongTinDinhKem"></div>
                             </div>
                         </div>
@@ -309,7 +310,7 @@
             <div class="modal-footer">
                 <a class="btn btn-default btnCloseToggle" id=""><i class="fa fa-times"></i> 
                     <span class="lang" key="">Đóng</span></a>
-                <a class="submit btn btn-default" id="btnSaveRe_DanhHieu">
+                <a class="submit btn btn-outline-primary" id="btnSaveRe_DanhHieu">
                     <i class="fa-solid fa-floppy-disk-circle-arrow-right"></i>
                     <span class="lang" key=""> Lưu và nhập tiếp</span></a>
                 <a class="submit btn btn-primary" id="btnSave_DanhHieu">
@@ -318,7 +319,6 @@
             </div>
         </div>
     </div>
-
 </section>
 <!-- page script -->
 <script src="modules/danhhieuhocham/script/danhhieuhocham.js?v=1.0.0.0"></script>

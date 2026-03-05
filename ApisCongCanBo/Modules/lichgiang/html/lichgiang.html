@@ -48,17 +48,17 @@
     <div class="overlay"></div>
     <div class="content-tab no-tab">
         <p class="link">
-            <a href="#" class="title-txt fz24">Lịch giảng</a><i class="fal fa-angle-right"></i>
+            <a href="#" class="title-txt fz24">Lịch giảng</a><i class="fal fa-angle-right fw-bold"></i>
             <a href="#">Thời khóa biểu</a>
         </p>
     </div>
 
     <div class="row register-school my-calendar">
-        <div class="col-12 col-md-9 register-school-right">
+        <div class="col-12 col-md-9 register-school-right pl-0">
             <div class="box-shadow ">
                 <div class="news-search-form">
-                    <p class="me-auto color-dask-blue fz24 pl15"><i
-                            class="fa-solid fa-calendar-circle-user pr10"></i>Lịch cá nhân</p>
+                    <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
+                        <i class="fa-solid fa-calendar-circle-user pr5 fw-bold"></i>Lịch cá nhân</p>
                     <div class="form-group-cover" style="display: none">
                         <label for="start_date_input" class="form-label main-label mb-3 me-2">Mã cán bộ</label>
                         <div class="form-group date-input search">
@@ -113,12 +113,10 @@
             </div>
         </div>
         <div class="col-12 col-md-3 register-school-left">
-
             <!--   Box -->
             <div class="box-shadow  p-0 block-calendar mt-md-0 mb-20">
                 <div class="block-label top-radius bg-dask-blue">
-
-
+                    <i class="fa-solid fa-calendar-range mr-5" style="margin-top: -3px !important;"></i>
                     <span id="thang"></span> - <span id="nam"></span>
                     <div class="next-prev-month month">
                         <a class="prev" style="color: white"><i class="fal fa-chevron-left me-4"></i></a>
@@ -136,7 +134,6 @@
                         <li>T7</li>
                         <li>Cn</li>
                     </ul>
-
                     <ul class="days"></ul>
                 </div>
             </div>
@@ -152,8 +149,8 @@
                 </p>
             </div>
             <div class=" box-shadow  p-0 block-calendar mt-4 mt-md-0">
-                <div class="block-label light-blue top-radius">
-                    <span>Danh sách lớp đổi lịch</span>
+                <div class="block-label bg-orange top-radius">
+                    <span><i class="fa-solid fa-calendar-users mr-10"></i>Danh sách lớp đổi lịch</span>
                 </div>
                 <div class="class-change-calendar" id="tblDoiLich">
                     <!--<a href="" class="class-change-calendar-item fs-14">
@@ -392,7 +389,6 @@
         </div>
     </div>
 </div>
-<!-- page script -->
 <!-- modal khối kiến thức chuyên ngành-->
 <div class="modal fade finance-modal my-calendar" id="modalXemLich" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -538,8 +534,6 @@
         </div>
     </div>
 </div>
-<!-- page script -->
-
 <!-- modal xác nhận-->
 <div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -600,7 +594,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="modal fade finance-modal my-calendar" id="modalHTSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">

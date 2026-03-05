@@ -2,9 +2,7 @@
  body {
      color: #333;
  }
-.fw-bold{
-    font-weight: 700 !important;
-}
+
  /* ------------------- */
  .fa,
  .fa-brands,
@@ -56,8 +54,8 @@
  }
 
  .select2-container--default .select2-selection--single .select2-selection__arrow {
-     top: 6px !important;
-     right: 8px !important;
+     top: 2x !important;
+     right: 6px !important;
  }
 
  .form-top .select2-container--default .select2-selection--single .select2-selection__arrow,
@@ -100,7 +98,7 @@
  input:focus,
  .select2-container--default .select2-selection--single:focus {
      border: 1px solid #3c8dee !important;
-     box-shadow: none !important;
+     /* box-shadow: none !important; */
  }
 
  .btn.active.focus,
@@ -135,7 +133,7 @@
  .table-hover>tbody>tr:hover,
  .table-hover>tbody>tr:hover a {
      color: #fff !important;
-     background-color: #3c8dee !important;
+     background-color: var(--color-blue) !important;
  }
 
  .table>tbody>tr>td,
@@ -1052,7 +1050,7 @@
      background: #fff !important;
      color: var(--color-blue) !important;
      border-color: #fff !important;
-     border-width:0 !important;
+     border-width: 0 !important;
  }
 
  .tab-diemThi-tracNghiem.accep-point .tab-list .tab-item {
@@ -1063,28 +1061,46 @@
  .tab-diemThi-tracNghiem.accep-point .tab-item.swiper-slide-thumb-active a i {
      color: var(--color-blue) !important;
  }
- .tab-diemThi-tracNghiem .tab-list .swiper-wrapper{
-    background: var(--color-blue);
-    border-top-left-radius: 12px !important;
-    border-top-right-radius: 12px !important;
-    padding-left: 20px;
-    padding-top: 10px;
+
+ .tab-diemThi-tracNghiem .tab-list .swiper-wrapper {
+     background: var(--color-blue);
+     border-top-left-radius: 12px !important;
+     border-top-right-radius: 12px !important;
+     padding-left: 20px;
+     padding-top: 10px;
  }
- .tab-diemThi-tracNghiem .service-content-slider{
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+
+ .tab-diemThi-tracNghiem .service-content-slider {
+     border-bottom-left-radius: 0 !important;
+     border-bottom-right-radius: 0 !important;
  }
- .tab-diemThi-tracNghiem.accep-point .register-wish{
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
+
+ .tab-diemThi-tracNghiem.accep-point .register-wish {
+     border-top-left-radius: 0 !important;
+     border-top-right-radius: 0 !important;
  }
+
  .tab-diemThi-tracNghiem.accep-point .tab-list .tab-item a {
-    display: flex;
-    flex-direction: row !important;
-}
-.tab-diemThi-tracNghiem.accep-point .tab-list .tab-item a i {
-    font-size: 16px !important;
-    margin-bottom: 0px !important;
-    margin-right: 8px !important;
-    /* font-weight: 300 !important; */
-}
+     display: flex;
+     flex-direction: row !important;
+ }
+
+ .tab-diemThi-tracNghiem.accep-point .tab-list .tab-item a i {
+     font-size: 16px !important;
+     margin-bottom: 0px !important;
+     margin-right: 8px !important;
+     /* font-weight: 300 !important; */
+ }
+
+ .tblSinhVien {
+     min-width: 3000px !important;
+ }
+
+ .table.tblSinhVien tr:hover .btn.btn-default {
+     color: #fff !important;
+ }
+
+ .table.tblSinhVien tr:hover .btn.btn-default:hover {
+     color: #fdde15 !important;
+     background-color: #0b5ed7 !important;
+ }

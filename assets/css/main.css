@@ -2014,7 +2014,7 @@ a.other-action_item:hover {
 
 .block-label {
   background-color: var(--color-orange);
-  padding: 8px 15px;
+  padding: 10px 15px 6px 15px;
   color: white;
   text-transform: uppercase;
   font-weight: bold;

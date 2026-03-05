@@ -6,7 +6,6 @@
             <a href="#">Nhập điểm phúc khảo</a>
         </p>
     </div>
-
     <div class="box-shadow register-wish pt-0">
         <div class="form-top">
             <div class="row">
@@ -28,7 +27,8 @@
                     </div>
                 </div>
                 <div class="col-md-2 col-12 mb-15">
-                    <button class="btn btn-default btn-search" id="btnSearch"><i class="fal fa-search"></i> Tìm kiếm</button>
+                    <button class="btn btn-default btn-search" id="btnSearch"><i class="fal fa-search"></i>Tìm
+                        kiếm</button>
                 </div>
 
                 <div class="col-12 col-lg-4  mb-15">
@@ -40,142 +40,137 @@
             </div>
         </div>
         <div class="container-fluid px-20">
-            <div class="row">
-                <div class="col-12 col-lg-7">
-                    <div>
-                        <div style="display: flex">
-                            <div class="title-is-paging">
-                                <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
-                            </div>
-                            <div class="d-flex justify-content-end" style="margin-left: auto">
-                                <button class="btn btn-dask-blue min-w-auto mt-4 mb-3" id="btnDuyet"><i
-                                        class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
-                            </div>
+            <div class="row list-nhap-diem" style="display:none !important;">
+                <div class="col-12 col-lg-7 pl-0">
+                    <div style="display: flex">
+                        <div class="title-is-paging">
+                            <p class="color-dask-blue fw-bold mt-3"><i class="fa-solid fa-list-timeline"></i>Danh sách</p>
                         </div>
-                        <table class="table transcrip-table tabs-scores has-form" id="tblNhapDiem">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" scope="col">STT</th>
-                                    <th scope="col">Mã số</th>
-                                    <th scope="col">Họ đệm</th>
-                                    <th scope="col">Tên</th>
-                                    <th scope="col">Học phần</th>
-                                    <th scope="col">Lớp tín chỉ</th>
-                                    <th scope="col">Kết quả phúc khảo</th>
-                                    <th scope="col">Tình trạng xác nhận</th>
-                                    <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="title-is-paging no-title d-flex  justify-content-end">
-                            <button class="btn btn-success min-w-auto ms-auto btn-sm mt-3 btnSave_NhapDiem"><i
-                                    class="fas fa-check-circle me-2"></i><span>Lưu</span></button>
+                        <div class="d-flex justify-content-end" style="margin-left: auto">
+                            
                         </div>
+                    </div>
+                    <table class="table transcrip-table tabs-scores has-form tblNhapDiem table-bordered table-noborder mt-5" id="tblNhapDiem">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Mã số</th>
+                                <th scope="col">Họ đệm</th>
+                                <th scope="col">Tên</th>
+                                <th scope="col">Học phần</th>
+                                <th scope="col">Lớp tín chỉ</th>
+                                <th scope="col">Kết quả phúc khảo</th>
+                                <th scope="col">Tình trạng xác nhận</th>
+                                <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                        </tbody>
+                    </table>
+                    <div class="title-is-paging no-title d-flex aps-gap-10 justify-content-end">
+                        <button class="btn btn-outline-success" id="btnDuyet">
+                            <i class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
+                        <button class="btn btn-primary min-w-auto btn-sm btnSave_NhapDiem">
+                            <i class="fa-solid fa-floppy-disk"></i><span>Lưu</span></button>
                     </div>
                 </div>
                 <div class="col-12 col-lg-5 pb-3">
                 </div>
 
             </div>
-            <div class="row">
-                <div class="col-12 col-lg-12">
-                    <div>
-                        <div style="display: flex">
-                            <div class="title-is-paging">
-                                <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
-                            </div>
-                            <div class="d-flex justify-content-end" style="margin-left: auto">
-                                <button class="btn btn-dask-blue min-w-auto mt-4 mb-3" id="btnDuyet_DST"><i
-                                        class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
-                            </div>
+            <div class="row list-nhap-diem"  style="display:none !important;">
+                <div class="col-12 col-lg-12 pl-0">
+                    <div style="display: flex">
+                        <div class="title-is-paging">
+                            <p class="color-dask-blue fw-bold mt-3"><i class="fa-solid fa-list-timeline"></i>Danh sách</p>
                         </div>
-                        <table class="table transcrip-table tabs-scores has-form" id="tblNhapDiem_DST">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" scope="col">STT</th>
-                                    <th scope="col">Mã số</th>
-                                    <th scope="col">Họ đệm</th>
-                                    <th scope="col">Tên</th>
-                                    <th scope="col">Học phần</th>
-                                    <th scope="col">Ngày thi</th>
-                                    <th scope="col">Ca thi</th>
-                                    <th scope="col">Phòng thi</th>
-                                    <th scope="col">Số báo danh</th>
-                                    <th scope="col">Điểm thi công bố</th>
-                                    <th scope="col">Điểm thi chấm phúc khảo</th>
-                                    <th scope="col">Tình trạng xác nhận</th>
-                                    <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll_DST">
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="title-is-paging no-title d-flex">
+                        <div class="d-flex justify-content-end" style="margin-left: auto"></div>
+                    </div>
+                    <table class="table transcrip-table tabs-scores has-form table-bordered table-noborder mt-5 tblNhapDiem_DST" id="tblNhapDiem_DST">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Mã số</th>
+                                <th scope="col">Họ đệm</th>
+                                <th scope="col">Tên</th>
+                                <th scope="col">Học phần</th>
+                                <th scope="col">Ngày thi</th>
+                                <th scope="col">Ca thi</th>
+                                <th scope="col">Phòng thi</th>
+                                <th scope="col">Số báo danh</th>
+                                <th scope="col">Điểm thi công bố</th>
+                                <th scope="col">Điểm thi chấm phúc khảo</th>
+                                <th scope="col">Tình trạng xác nhận</th>
+                                <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll_DST">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="title-is-paging no-title d-flex aps-gap-10 justify-content-end">
+                        <button class="btn btn-outline-success" id="btnDuyet_DST">
+                                <i class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
+                        <button class="btn btn-primary min-w-auto btn-sm mt-3 btnSave_NhapDiem">
+                            <i class="fa-solid fa-floppy-disk"></i><span>Lưu</span></button>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-5 pb-3"></div>
 
-                            <button class="btn btn-success min-w-auto ms-auto btn-sm mt-3 btnSave_NhapDiem"><i
-                                    class="fas fa-check-circle me-2"></i><span>Lưu</span></button>
+            </div>
+            <div class="row list-nhap-diem"  style="display:none !important;">
+                <div class="col-12 col-lg-12 pl-0">
+                    <div style="display: flex">
+                        <div class="title-is-paging">
+                            <p class="color-dask-blue fw-bold mt-3"><i class="fa-solid fa-list-timeline"></i>Danh sách</p>
                         </div>
+                        <div class="d-flex justify-content-end" style="margin-left: auto"></div>
+                    </div>
+                    <table class="table transcrip-table tabs-scores has-form mt-5 table-bordered table-noborder" id="tblNhapDiem_Tui">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Học phần</th>
+                                <th scope="col">Ngày thi</th>
+                                <th scope="col">Túi</th>
+                                <th scope="col">Số phách</th>
+                                <th scope="col">Điểm thi công bố</th>
+                                <th scope="col">Điểm thi chấm phúc khảo</th>
+                                <th scope="col">Tình trạng xác nhận</th>
+                                <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll_Tui">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="title-is-paging no-title aps-gap-10 justify-content-end">
+                        <button class="btn btn-outline-success" id="btnDuyet_Tui"><i
+                                    class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
+                        <button class="btn btn-primary min-w-auto btn-sm  btnSave_NhapDiem">
+                            <i class="fa-solid fa-floppy-disk"></i><span>Lưu</span></button>
                     </div>
                 </div>
                 <div class="col-12 col-lg-5 pb-3">
                 </div>
-
             </div>
-            <div class="row">
-                <div class="col-12 col-lg-12">
-                    <div>
-                        <div style="display: flex">
-                            <div class="title-is-paging">
-                                <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
-                            </div>
-                            <div class="d-flex justify-content-end" style="margin-left: auto">
-                                <button class="btn btn-dask-blue min-w-auto mt-4 mb-3" id="btnDuyet_Tui"><i
-                                        class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
-                            </div>
-                        </div>
-                        <table class="table transcrip-table tabs-scores has-form" id="tblNhapDiem_Tui">
-                            <thead>
-                                <tr>
-                                    <th class="text-center" scope="col">STT</th>
-                                    <th scope="col">Học phần</th>
-                                    <th scope="col">Ngày thi</th>
-                                    <th scope="col">Túi</th>
-                                    <th scope="col">Số phách</th>
-                                    <th scope="col">Điểm thi công bố</th>
-                                    <th scope="col">Điểm thi chấm phúc khảo</th>
-                                    <th scope="col">Tình trạng xác nhận</th>
-                                    <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll_Tui">
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div class="title-is-paging no-title d-flex">
-                            <button class="btn btn-success min-w-auto ms-auto btn-sm mt-3 btnSave_NhapDiem"><i
-                                    class="fas fa-check-circle me-2"></i><span>Lưu</span></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-lg-5 pb-3">
-                </div>
-
-            </div>
-
-
         </div>
     </div>
 </div>
 
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
+        Xác nhận</button>
+</div>
 
 <!-- modal khối kiến thức chuyên ngành-->
 <div class="modal fade finance-modal my-calendar" id="modal_XacNhan" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Xác nhận</b> </p>
+                    <p><i class="fa-solid fa-check-to-slot fw-bold mr-5"></i>Xác nhận</p>
 
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -191,29 +186,23 @@
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Người xác nhận</th>
                             <th class="text-center" scope="col">Thời gian</th>
-
-
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>-->
             <div class="modal-body change-calendar">
-                <form class="" action="">
-                    <div class="khoa-sldl" style="min-height: unset">
-                        <div class="wrp">
-                            <label for="">Trạng thái</label>
-                            <div class="form-item d-flex  form-add-info">
-                                <div class="input-group no-icon">
-                                    <select class="select-opt" id="dropLoaiXacNhan"
-                                        aria-label="Default select example"></select>
-                                </div>
+                <form class="d-flex justify-content-between row" action="" style="margin-left: -5px !important;">
+                    <div class="khoa-sldl-left d-flex col-md-10 col-lg-10 pd-0" style="min-height: unset">
+                        <div style="width: 100px !important;    margin-top: 3px;" class="color-666 line-38">Trạng thái</div>
+                        <div class="form-item form-add-info" style="width:90% !important;">
+                            <div class="input-group no-icon">
+                                <select class="select-opt" id="dropLoaiXacNhan"
+                                    aria-label="Default select example"></select>
                             </div>
-
                         </div>
                     </div>
-                    <div class="line-1 bg-e1"></div>
-                    <div class="gv-button-group">
+                    <div class="gv-button-group col-md-2 col-lg-2 pd-0">
                         <button class="btn btn-success ms-auto" id="btnDongYXacNhan" data-bs-dismiss="modal">
                             <i class="fas fa-check me-2"></i>
                             <span>Xác nhận</span>
@@ -221,25 +210,25 @@
                     </div>
 
                 </form>
-            </div>
-            <div class="modal-footer" style="justify-content: unset">
-                <div class="finance-user-info in-modal ">
-                    <p><b>Lịch sử</b> </p>
+                <div class="finance-user-info in-modal">
+                    <p><b>Lịch sử</b></p>
                 </div>
-                <table class="table transcrip-table tabs-scores fs-14" id="tblModal_XacNhan">
+                <table
+                    class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder mt-5"
+                    id="tblModal_XacNhan">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Trạng thái</th>
                             <th scope="col">Người xác nhận</th>
                             <th class="text-center" scope="col">Thời gian</th>
-
 
                         </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
+            <div class="modal-footer" style="justify-content: unset; display: none;"></div>
         </div>
     </div>
 </div>

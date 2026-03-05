@@ -3,12 +3,9 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-
-                <p class="link"><a href="#">Báo cáo thống kê</a><i class="fal fa-angle-right"></i><a href="#">Khối lượng
-                        cá nhân</a></p>
-
+                <p class="link"><a href="#">Báo cáo thống kê</a><i class="fal fa-angle-right"></i>
+                    <a href="#">Khối lượng cá nhân</a></p>
             </div>
-
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
@@ -17,7 +14,7 @@
 
     <!-- đăng ký nguyện vọng -->
     <div class="box-shadow register-wish pt-0">
-        <div class="form-top">
+        <div class="form-top mb-15">
             <div class="row">
                 <div class="col-12 col-lg-6 col-md-8 mb-15">
                     <div class="d-flex align-items-center aps-gap-10">
@@ -28,20 +25,16 @@
                                     <option selected value="">Bảng tính khối lượng</option>
                                 </select>
                             </div>
-
                         </div>
-                        <div class="btn btn-primary ms-3" id="btnSearch"><i class="fal fa-table me-2"></i> Xem</div>
-                        <div class="btn btn-outline-primary ms-3" id="btnSearchToanBo"><i class="fal fa-table me-2"></i> Xem
-                            toàn bộ</div>
+                        <div class="btn btn-search btn-default" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i>Xem</div>
+                        <div class="btn btn-outline-primary" id="btnSearchToanBo">
+                            <i class="fal fa-table me-2"></i>Xem toàn bộ</div>
                         <div class="dropdown ms-4" id="zonebtnBaoCao_KLCN"></div>
                     </div>
-
                 </div>
-
-
             </div>
             <div class="row">
-                <div class="klcn-info fs-14">
+                <div class="klcn-info fs-14 pl-0">
                     <div class="item mb-10">
                         <span class="color-66">Họ và tên: </span>
                         <span class="fw-bold" id="lblHoTen"></span>
@@ -58,22 +51,22 @@
             </div>
         </div>
         <div class="container-fluid px-20">
-            <div class="box-header justify-content-between pb-2 d-flex">
-                <div class="pull-left box-lable-left">
+            <div class="box-header justify-content-between pb-2 d-flex pl-0 pr-0">
+                <div class="pull-left box-lable-left mt-10">
                     <h3 class="box-title">
                         <i class="fa fa-poll-people mr-10"></i> Danh sách Khối lượng cá nhân
                     </h3>
                 </div>
                 <div class="pull-right box-btn">
-                    <!-- <div class="btn btn-success min-w-auto px-4 ms-auto ms-lg-0 btnSave_DuyetBuoiHoc" id=""><i
-                            class="fal fa-save me-2"></i> Lưu</div> -->
+                    <div class="btn btn-save min-w-auto px-4 ms-auto ms-lg-0 btnSave_DuyetBuoiHoc" id=""><i
+                            class="fal fa-save me-2"></i>Lưu</div>
                 </div>
             </div>
-           <div class="aps-table-select scroll-table-x">
-                <table class="table" id="tblKhoiLuongCaNhan">
+            <div class="aps-table-select scroll-table-x">
+                <table class="table table-bordered  transcrip-table tabs-scores table-noborder tblKhoiLuongCaNhan" id="tblKhoiLuongCaNhan">
                     <thead>
                         <tr>
-                            <th class="text-center" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th class="text-center" scope="col">Chi tiết</th>
                             <th class="text-center" scope="col">Duyệt buổi học</th>
                             <th class="" scope="col">Thông tin bậc hệ</th>
@@ -100,23 +93,28 @@
     <!-- end đăng ký nguyện vọng -->
 </div>
 
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modal_lichgiang">
+        Dữ liệu</button>   
+</div>
+<!-- ---------- -->
 <!-- Modal dữ liệu lịch giảng-->
 <div class="modal fade block-knowledge" id="modal_lichgiang" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: unset">
+    <div class="modal-dialog modal-dialog-centered modal-90" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Dữ liệu <span id="lblModalLable"></span>
+                    <i class="fa-solid fa-database"></i>Dữ liệu <span id="lblModalLable"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table tabs-scores" id="tblModalLichGiang">
+                <table class="table transcrip-table tabs-scores tblModalLichGiang table-bordered table-noborder" id="tblModalLichGiang">
                     <thead>
                         <tr>
-                            <th class="text-center  w-50px" scope="col">STT</th>
+                            <th class="text-center w-50px" scope="col">STT</th>
                             <th class="text-center" scope="col">Ngày học</th>
                             <th class="text-center" scope="col">Tiết bắt đầu</th>
                             <th class="text-center" scope="col">Tiết kết thúc</th>
@@ -124,7 +122,7 @@
                             <th class="text-center" scope="col">Số sinh viên</th>
                             <th class="text-center" scope="col">Học phần</th>
                             <th class="text-center" scope="col">Lớp học phần</th>
-                            <th class="text-center" scope="col"> Giờ chuẩn</th>
+                            <th class="text-center" scope="col">Giờ chuẩn</th>
                             <th class="text-center" scope="col">Ghi chú</th>
                         </tr>
                     </thead>

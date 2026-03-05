@@ -2,43 +2,47 @@
 @import "responsive.css";
 @import "styles.css";
 @import "../../../assets/css/root.css";
+
 /* --------------- */
- .color-222 {
-     color: #222 !important;
- }
-
- .color-666 {
-     color: #666 !important;
- }
-
- .color-888 {
-     color: #888 !important;
- }
-
- .color-orange {
-     color: var(--color-orange) !important;
- }
-.color-blue{
-     color: var(--color-blue) !important;
+.color-222 {
+    color: #222 !important;
 }
-.color-green{
-     color: var(--color-green) !important;
+
+.color-666 {
+    color: #666 !important;
 }
- .color-yellow {
-     color: var(--color-yellow) !important;
- }
 
- .color-white {
-     color: #fff !important;
- }
+.color-888 {
+    color: #888 !important;
+}
 
- .color-red {
-     color: var(--color-red) !important;
- }
+.color-orange {
+    color: var(--color-orange) !important;
+}
 
- .color-success {
-     color: var(--color-green) !important;
- }
+.color-blue {
+    color: var(--color-blue) !important;
+}
+
+.color-green {
+    color: var(--color-green) !important;
+}
+
+.color-yellow {
+    color: var(--color-yellow) !important;
+}
+
+.color-white {
+    color: #fff !important;
+}
+
+.color-red {
+    color: var(--color-red) !important;
+}
+
+.color-success {
+    color: var(--color-green) !important;
+}
 
 /*-----------------------*/
 .box-header>.box-tools {
@@ -134,7 +138,7 @@
 
 .group-title .lang {
     display: inline-block;
-    font-size: 20px;
+    font-size: 18px;
     margin: 0;
     line-height: 1;
     font-weight: 500;
@@ -202,7 +206,7 @@
 }
 
 .btn .caret {
-    margin-top: 5px !important;
+    margin-top: -1px !important;
     margin-left: 8px !important;
 }
 
@@ -330,6 +334,22 @@
     font-weight: 700 !important;
 }
 
+.aps-detai-duan .box-header .box-title i,
+.zone_input_detai .box-header .box-title i,
+.aps-spkh-tapchiquocgia-l .box-header .box-title i,
+.aps-box-l .box-header .box-title i {
+    margin-top: 3px !important;
+}
+
+.zone_input_tcqg .box-header .box-title i,
+.aps-box-r .box-header .box-title i {
+    margin-top: 2px !important;
+}
+
+.box-header .box-title .lang i {
+    margin-top: 3px;
+}
+
 .box-header .pull-right .btn {
     margin-left: 10px !important;
 }
@@ -362,9 +382,11 @@
     border-bottom: 1px solid #e1e1e1 !important;
     margin-top: 0 !important;
 }
+
 .box-search {
-  width: 100%;
+    width: 100%;
 }
+
 .box-search .group-title {
     padding-bottom: 12px;
     padding-top: 0px;
@@ -387,6 +409,7 @@
     display: flex;
     flex-wrap: wrap;
 }
+
 .box-search .item-search {
     margin-right: 0 !important;
 }
@@ -587,8 +610,8 @@
     background-color: #fff !important;
     margin-bottom: 5px !important;
     padding: 0 !important;
-    font-size: 16px ;
-    color: #222 ;
+    font-size: 16px;
+    color: #222 !important;
 }
 
 .aps-add-new .zone-box .box-view {}
@@ -1922,7 +1945,8 @@
     border: 1px solid #d2d6de !important;
 }
 
-.form-control:focus {
+.form-control:focus,
+.select2-container--default .select2-selection--single:focus {
     background-color: #fff;
     border-color: #86b7fe !important;
     outline: 0;
@@ -2457,7 +2481,7 @@
 }
 
 .fa-user {
-    font-size: 18px !important;
+    font-size: 18px;
 }
 
 .aps-user-role-r .lightcoral,
@@ -2817,8 +2841,12 @@
     padding-right: 0 !important;
 }
 
+.aps-modal-nhansu .modal-title {
+    margin-top: 4px !important;
+}
+
 .aps-modal-nhansu .modal-body .col-sm-3 {
-    /*height: 100vh;*/
+    height: 100vh;
     background: #f1f1f1;
     padding: 10px;
 }
@@ -2843,8 +2871,8 @@
 }
 
 .aps-modal-nhansu .modal-body .col-sm-3 .search .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 6px !important;
-    right: 14px !important;
+    top: 7px !important;
+    right: 8px !important;
 }
 
 .aps-modal-nhansu .modal-body .col-sm-3 .search span.select2.select2-container.select2-container--default {
@@ -2894,6 +2922,12 @@
     color: #fff !important;
 }
 
+.aps-modal-nhansu .modal-body .col-sm-3 .aps-form-item .select2-container--default .select2-selection--single,
+.aps-form-input .select2-container--default .select2-selection--single {
+    padding: 7px 30px 3px 2px !important;
+}
+
+/* ---- */
 .aps-modal-nhansu .group-title {
     font-size: 18px;
     padding-left: 0px;
@@ -2905,6 +2939,7 @@
 
 .aps-modal-nhansu .col-sm-9 .box-body .item-modal {
     padding-right: 0 !important;
+    margin-top: 10px !important;
 }
 
 .aps-modal-nhansu .col-sm-9 .box-body {
@@ -2950,6 +2985,48 @@
     margin-bottom: 5px;
 }
 
+.aps-modal-nhansu .col-sm-9 .simple-pagination {
+    padding: 0 0 5px 0 !important;
+}
+
+.aps-modal-nhansu .table.tblModal_NhanSu .bg-yellow.notify {
+    display: flex !important;
+    line-height: 38px;
+}
+
+.aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default,
+.aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default.btnClose {
+    padding: 0 !important;
+    margin-top: -4px !important;
+    width: 24px !important;
+    color: var(--color-green) !important;
+}
+
+.aps-modal-nhansu .table .bg-yellow .btn-circle.btnClose,
+.aps-modal-nhansu .table .badge.bg-green .btn-circle.btnClose {
+    margin-top: -4px !important;
+    width: 24px !important;
+    color: #222 !important;
+    padding: 0 !important;
+    ss
+}
+
+.aps-modal-nhansu .table .bg-yellow.notify:hover .btn-circle.btnClose,
+.aps-modal-nhansu .table .bg-yellow.notify .btn-circle.btnClose:hover,
+.aps-modal-nhansu .table .badge.bg-green:hover .btn-circle.btnClose {
+    color: var(--color-red) !important;
+    padding: 0 !important;
+}
+
+.aps-modal-nhansu .table .table-img {
+    width: 44px !important;
+    height: 44px !important;
+}
+
+.aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default:hover i {
+    color: var(--color-red) !important;
+}
+
 #tblModal_NhanSu>tbody>tr>td:nth-child(2),
 #tblModal_NhanSu>tbody>tr>th:nth-child(2) {
     width: 86px;
@@ -2957,6 +3034,11 @@
 
 .inputSearch .col-sm-3 {
     padding-right: 10px;
+}
+
+.tblQDNT_DT tr td .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 6px !important;
+    right: 6px !important;
 }
 
 /*----*/
@@ -10235,35 +10317,203 @@ table#clone {
 .tblPhongThi tr th .fa-caret-up {
     height: 9px !important;
 }
+
 /* --------------------- */
-.treeitem-btn .btn,.treeitem-btn .btn:hover,
-.treeitem-btn-con .btn,.treeitem-btn-con .btn:hover{
+.treeitem-btn .btn,
+.treeitem-btn .btn:hover,
+.treeitem-btn-con .btn,
+.treeitem-btn-con .btn:hover {
     height: 24px;
     line-height: 24px !important;
     padding: 0px 10px !important;
     border-radius: 3px !important;
     font-size: 13px !important;
 }
-.tree-list-title{
+
+.tree-list-title {
     display: inline-flex;
 }
+
 .aps-coCau-toChuc-l {
     border-right: 1px solid #e1e1e1;
     /* height: 100%; */
 }
+
 .aps-coCau-toChuc-l .form-top {
     border-radius: 0 !important;
     height: 100%;
 }
-.trees-coCau-toChuc .treeitem,.trees-coCau-toChuc .treeitem .treeitem-2{
+
+.trees-coCau-toChuc .treeitem,
+.trees-coCau-toChuc .treeitem .treeitem-2 {
     padding-bottom: 10px;
 }
+
 .trees-coCau-toChuc .treeitem .treeitem-btn,
-.trees-coCau-toChuc .treeitem .treeitem-btn-con{
-margin-left: 20px;
-display: none !important;
+.trees-coCau-toChuc .treeitem .treeitem-btn-con {
+    margin-left: 20px;
+    display: none !important;
 }
+
 .trees-coCau-toChuc .treeitem:hover .treeitem-btn,
-.trees-coCau-toChuc .treeitem .treeitem-2:hover .treeitem-btn-con{
-display: inline-flex !important;
+.trees-coCau-toChuc .treeitem .treeitem-2:hover .treeitem-btn-con {
+    display: inline-flex !important;
+}
+
+.upload-img {
+    height: 70px !important;
+    /* width: 100% !important; */
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.mailbox-attachments .btn-default {
+    top: -15px !important;
+    right: -17px !important;
+}
+
+.table .mailbox-attachments .btn-default {
+    top: -10px !important;
+    right: -15px !important;
+}
+
+.modal_XacNhan .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow,
+.modal_XacNhanTinhTrang .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 1px !important;
+    right: 6px !important;
+}
+
+.modal_XacNhanTinhTrang .aps-form .aps-form-item .select2,
+.modal-nhapdiem-phach .aps-form .aps-form-item .select2,
+.modal_XacNhan .modal-content .aps-form-input .select2-container {
+    margin-top: 0 !important;
+}
+
+.modal-nhapdiem-phach .modal-content .select2-container {
+    padding: 0 !important;
+}
+
+.modal_XacNhan.my-calendar .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px !important;
+}
+
+.tblModal_DanhSachXacNhan tr td:first-child,
+.tblModal_DanhSachXacNhan tr th:first-child,
+.modal_XacNhanTungSinhVien tr td:first-child,
+.modal_XacNhanTungSinhVien tr th:first-child {
+    width: 50px !important;
+}
+
+.modal-alert .file-upload .btn-delete-file {
+    top: -11px !important;
+    right: -13px !important;
+    background: #fff !important;
+    border: 0 !important;
+    padding: 0 !important;
+}
+
+.file-data:hover .fa {
+    color: var(--orange) !important;
+}
+
+#zoneImportAllInput .col-sm-8 {
+    padding-top: 4px;
+}
+
+#DSTrangThaiSV_QD {
+    margin-left: -10px;
+}
+
+.titleSearchContent {
+    padding-bottom: 0px !important;
+}
+
+.study-program-block .justify-content-start .meta {
+    margin-left: 10px !important;
+}
+
+.study-program-block .justify-content-start .meta i {
+    margin-top: 6px !important;
+}
+
+.aps-chiTiet-taiChinh .form-container-body .btn {
+    padding: 9px 0 5px 0 !important;
+    font-size: 15px !important;
+    border-radius: 5px !important;
+    font-weight: 700;
+    background: #fff !important;
+    border: 0 !important;
+}
+
+.aps-chiTiet-taiChinh .form-container-body .btn i {
+    font-weight: 700;
+}
+
+.aps-chiTiet-taiChinh .table tr th:first-child,
+.aps-chiTiet-taiChinh .table tr td:first-child {
+    width: 50px !important;
+}
+
+/* ------------------------- */
+.zoneLichHoc .study-space .register-school {
+    padding: 0 !important;
+}
+
+.zoneLichHoc .register-school-right {
+    padding-left: 0 !important;
+}
+
+.zoneLichHoc .my-calendar .news-search-form {
+    padding: 0 !important;
+}
+
+.zoneLichHoc .my-calendar .news-search-form p {
+    margin-bottom: 10px !important;
+}
+
+.zoneLichHoc .box-shadow {
+    border-radius: 12px !important;
+    /* overflow: hidden !important; */
+    -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+    /* display: inline-block; */
+}
+
+.zoneLichHoc .register-school-left .mt-4.box-shadow {
+    margin-top: 0 !important;
+    border: 1px solid #e1e1e1 !important;
+}
+
+.tblHocPhanChuaQua tr td:last-child {
+    text-align: left !important;
+}
+
+/* ---------------------- */
+.study-program-block .justify-content-start i {
+    margin-top: 6px !important;
+    color: #666;
+}
+
+.tblKetQuaDangKy tfoot tr td {
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+
+.tblKetQuaDangKy.table>tfoot>tr>td:first-child,
+.tblKetQuaDangKy.table>tfoot>tr>th:first-child {
+    border-left: 0 solid #d1d1d1 !important;
+}
+
+.tblKetQuaDangKy.table tr td,
+.table-sum tr td {
+    border-left: 0 solid #d1d1d1 !important;
+    border-color: #fff !important;
+}
+
+.hover-yellow:hover {
+    background-color: transparent !important;
+    color: var(--color-yellow) !important;
+}
+.form-group.date-input .form-control {
+    border: 1px solid #d2d6de;
 }

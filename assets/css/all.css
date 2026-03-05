@@ -2806,9 +2806,9 @@ input:checked~label {
 .collapse-short a i {
   background: #ffffff;
   z-index: 1;
-  padding-right: 5px;
+  /* padding-right: 10px; */
   color: #222222;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 500;
 }
 

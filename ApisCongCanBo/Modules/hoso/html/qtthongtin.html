@@ -29,28 +29,34 @@
                 <ul class="nav nav-tabs" id="zoneTab">
                     <li class="active tabhoatdong" id="">
                         <a href="#tab_1" data-toggle="tab" aria-expanded="true">
-                            <span class="lang" key=""><i class="fa-solid fa-album-collection mr-5 fw-bold"></i>Tất cả hoạt động</span>
+                            <span class="lang" key=""><i class="fa-solid fa-album-collection mr-5 fw-bold"></i>Tất cả
+                                hoạt động</span>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content">
                     <!-- Tab_1: Thong tin ly lich -->
                     <div class="tab-pane active" id="tab_1">
-                        <div class="box-header with-border">
-                            <!--<div class="pull-right">
-                            <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
-                            <a id="btnXoaThongTin" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
-                        </div>-->
-                        </div>
-                        <div class="box-body pd0">
+                        <div class="box-body pd0 mt-20">
                             <div class="row row-align">
-                                <div class="pull-right">
-                                    <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
-                                    <!--<a id="btnXoaThongTin" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>-->
+                                <div class="box-header with-border btnGetData">
+                                    <h3 class="box-title">
+                                        <a data-toggle="collapse" data-parent="#key_nghithaisan" href="#qt_nghithaisan"
+                                            aria-expanded="false" class="collapsed">
+                                            <span class="lang" key=""><i class="fa-solid fa-list-timeline"></i>
+                                                Tất cả hoạt động</span>
+                                        </a>
+                                    </h3>
+                                    <div class="pull-right">
+                                        <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm
+                                            mới</a>
+                                        <!--<a id="btnXoaThongTin" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>-->
+                                    </div>
                                 </div>
                                 <div class="col-sm-12 mt-10">
                                     <div class="aps-table-select scroll-table-x">
-                                        <table id="tblThongTin" class="table table-hover table-border table-bordered tblThongTin">
+                                        <table id="tblThongTin"
+                                            class="table table-hover table-border table-bordered tblThongTin">
                                             <thead>
                                                 <tr>
                                                     <th class="td-fixed td-center" rowspan="2">Stt</th>
@@ -164,12 +170,12 @@
                         </div>
                         <!-- Row 2 -->
                         <div class="row aps-form-item">
-                            <table id="tblTuNhapHoSo" class="table table-hover table-bordered mr-0">
+                            <table id="tblTuNhapHoSo" class="table table-hover table-bordered table-noborder mr-0 tblTuNhapHoSo">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed td-center">Stt</th>
-                                        <th class="td-center">Tên thông tin</th>
-                                        <th class="td-center">Dữ liệu cần nhập</th>
+                                        <th class="td-left">Tên thông tin</th>
+                                        <th class="td-left">Dữ liệu cần nhập</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -186,19 +192,19 @@
                             </p>
                         </div>
                         <!-- Row 1 -->
-                        <div class="row aps-form-item">
-                            <table id="tblQuyetDinh" class="table table-hover table-bordered tblQuyetDinh mb-0 mr-0">
+                        <div class="row aps-form-item mb-10">
+                            <table id="tblQuyetDinh" class="table table-hover table-bordered table-noborder tblQuyetDinh mb-0 mr-0">
                                 <thead>
-                                    <tr>
-                                        <td class="td-fixed td-center">Stt</td>
-                                        <td class="td-center">Loại quyết định</td>
-                                        <td class="td-center">Số quyết định</td>
+                                    <tr style="background-color: #F4FBFD !important;">
+                                        <td class="td-fixed td-center w-50px" style="border: 0 !important;">Stt</td>
+                                        <td class="td-left">Loại quyết định</td>
+                                        <td class="td-left">Số quyết định</td>
                                         <td class="td-center">Ngày quyết định</td>
                                         <td class="td-center">Ngày hiệu lực</td>
                                         <td class="td-center">Ngày áp dụng</td>
                                         <td class="td-center">Ngày hết hiệu lực</td>
-                                        <td class="td-center">Thông tin đính kèm</td>
-                                        <td class="td-center td-fixed">Xóa</td>
+                                        <td class="td-center">File đính kèm</td>
+                                        <td class="td-center td-fixed w-50px">Xóa</td>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -511,7 +517,7 @@
 
                     <div class="row aps-form aps-biendong-tdth mt-20 mb-10">
                         <!-- Row 1 -->
-                       <div class="row aps-lable-name">
+                        <div class="row aps-lable-name">
                             <p class="group-group-title-name border-0 mb-0">
                                 <span class="badge bg-blue"> Biến động trình độ tin học</span>
                             </p>
