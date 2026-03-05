@@ -265,7 +265,7 @@ LopHocPhan.prototype = {
             var strId = this.id;
             me.strLopHocPhan_Id = strId;
             $("#myModalApDat").modal("show");
-            me.getList_ApDat();
+            me.getList_ApDat(strId);
         });
         $("#tblLopHocPhan").delegate(".btnKhoiLuongCaNhan", "click", function () {
             var strId = this.id;

@@ -235,7 +235,6 @@ KeHoachChung.prototype = {
         $("#tblDotTach").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtDotTach.find(e => e.ID == strId);
-            me["strDotTach_Id"] = data.ID;
             $("#myModalAddDotTach").modal("show");
             me["strDotTach_Id"] = data.ID;
             edu.util.viewValById("txtTuNgay_DT", data.TUNGAY);
@@ -246,7 +245,6 @@ KeHoachChung.prototype = {
         });
         $("#btnAdd_DotTach").click(function () {
             var data = {};
-            me["strDotTach_Id"] = data.ID;
             $("#myModalAddDotTach").modal("show");
             me["strDotTach_Id"] = data.ID;
             edu.util.viewValById("txtTuNgay_DT", data.TUNGAY);
@@ -272,6 +270,16 @@ KeHoachChung.prototype = {
                     me.delete_DotTach(arrChecked_Id[i]);
                 }
             });
+        });
+        $("#tblDotTach").delegate(".btnKetQua", "click", function () {
+            var strId = this.id;
+            //var data = me.dtDotTach.find(e => e.ID == strId);
+            me["strKetQuaDotTach_Id"] = strId;
+            $("#myModalKetQuaDotTach").modal("show");
+            me.getList_KetQuaDotTach(strId)
+        });
+        $("#btnTaoDuLieuDotTach").click(function () {
+            me.save_TaoDuLieuDotTach();
         });
     },
 
@@ -1760,6 +1768,41 @@ KeHoachChung.prototype = {
     --Discription: [3] AccessDB HOC
     --ULR:  Modules
     -------------------------------------------*/
+
+    save_TaoDuLieuDotTach: function (strId) {
+        var me = this;
+        var obj_notify = {};
+        //--Edit
+        var obj_save = {
+            'action': 'NS_KLGD_KeHoach_MH/FSAuBTQNKCQ0HgoNBgUeFS4vJgkuMQoNHgUuNQPP',
+            'func': 'PKG_KLGV_V2_KEHOACH.TaoDuLieu_KLGD_TongHopKL_Dot',
+            'iM': edu.system.iM,
+            'strId': me["strDotTach_Id"],
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công!");
+                    //me.getList_DotTach();
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
     save_DotTach: function () {
         var me = this;
         var obj_notify = {};
@@ -1883,6 +1926,7 @@ KeHoachChung.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    me["dtDotTach"] = dtReRult;
                     me.genTable_DotTach(dtReRult, data.Pager);
                 }
                 else {
@@ -1929,13 +1973,112 @@ KeHoachChung.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '';
+                        return '<span><a class="btn btn-default btnKetQua" id="' + aData.ID + '">Xem</a></span>';
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
                     }
+                }
+
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+    
+    getList_KetQuaDotTach: function (strDanhSach_Id) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'NS_KLGD_KeHoach_MH/DSA4BRIKDQYFHgU0DSgkNB4NBh4VBgPP',
+            'func': 'PKG_KLGV_V2_KEHOACH.LayDSKLGD_DuLieu_LG_TG',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.system.getValById('txtAAAA'),
+            'strKLGD_TongHoKL_Dot_Id': me.strKetQuaDotTach_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    me.genTable_KetQuaDotTach(dtReRult, data.Pager);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_KetQuaDotTach: function (data, iPager) {
+        var jsonForm = {
+            strTable_Id: "tblKetQuaDotTach",
+            aaData: data,
+            bPaginate: {
+                strFuntionName: "main_doc.KeHoachChung.getList_KetQuaDotTach()",
+                iDataRow: iPager
+            },
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+
+                {
+                    "mDataProp": "NGUOIDUNG_MASO"
+                },
+                {
+                    "mDataProp": "NGUOIDUNG_HODEM"
+                },
+                {
+                    "mDataProp": "NGUOIDUNG_TEN"
+                },
+                {
+                    "mDataProp": "DULIEUXACNHAN_TEN"
+                },
+                {
+                    "mDataProp": "SOSV"
+                },
+                {
+                    "mDataProp": "NGAY"
+                },
+                {
+                    "mDataProp": "SOTIETTHEOTKB"
+                },
+                {
+                    "mDataProp": "SOTIETCODIEMDANH"
+                },
+                {
+                    "mDataProp": "GIOCHUAN"
+                },
+                {
+                    "mDataProp": "DAOTAO_THOIGIANDAOTAO"
+                },
+                {
+                    "mDataProp": "MOTA"
                 }
 
                 , {
