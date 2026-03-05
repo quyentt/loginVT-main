@@ -2119,11 +2119,11 @@ PhanLichGiang.prototype = {
     loadBtnXacNhan: function (data) {
         main_doc.PhanLichGiang.dtXacNhan = data;
         var row = "";
-        row += '<div style="margin-left: auto; margin-right: auto; width: ' + ((data.length) * 90) + 'px">';
+        row += '<div style="width: 100%" class="btn-xacnhan">';
         for (var i = 0; i < data.length; i++) {
             row += '<div id="' + data[i].ID + '" class="btn-large btnxacnhan">';
-            row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a>';
-            row += '<a class="color-active bold">' + data[i].TEN + '</a>';
+            row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + data[i].THONGTIN1 + ' fa-2x"></i></a>';
+            row += '<a class="color-222">' + data[i].TEN + '</a>';
             row += '</div>';
         }
         row += '</div>';

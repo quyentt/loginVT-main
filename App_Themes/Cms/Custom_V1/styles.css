@@ -433,31 +433,36 @@
 
  /* width */
  .table-responsive::-webkit-scrollbar,
- .table::-webkit-scrollbar {
+ .table::-webkit-scrollbar,
+ .scroll-table-x::-webkit-scrollbar {
      width: 1px !important;
  }
 
  /* Track */
  .table-responsive::-webkit-scrollbar-track,
- .table::-webkit-scrollbar-track {
-     background: transparent;
+ .table::-webkit-scrollbar-track,
+ .scroll-table-x::-webkit-scrollbar-track {
+     background: rgba(0, 0, 0, 0.1) !important;
  }
 
  /* Handle */
  .table-responsive::-webkit-scrollbar-thumb,
- .table::-webkit-scrollbar-thumb {
-     background: transparent;
+ .table::-webkit-scrollbar-thumb,
+ .scroll-table-x::-webkit-scrollbar-thumb {
+     background: rgba(0, 0, 0, 0.1) !important;
  }
 
  .table-responsive::-webkit-scrollbar-thumb,
- .table::-webkit-scrollbar-thumb {
+ .table::-webkit-scrollbar-thumb,
+ .scroll-table-x::-webkit-scrollbar-thumb {
      background: rgba(0, 0, 0, 0.1) !important;
      border-radius: 20px !important;
  }
 
  /* Handle on hover */
  .table-responsive::-webkit-scrollbar-thumb:hover,
- .table::-webkit-scrollbar-thumb:hover {
+ .table::-webkit-scrollbar-thumb:hover,
+ .scroll-table-x::-webkit-scrollbar-thumb:hover {
      background: rgba(0, 0, 0, 0.2) !important;
      border-radius: 20px !important;
  }
@@ -990,10 +995,12 @@
      top: 6px !important;
      right: 7px !important;
  }
+
  .register-school.my-calendar .news-search-form .select2-container--default .select2-selection--single .select2-selection__arrow {
      top: 1px !important;
      right: 7px !important;
  }
+
  .select2-container--default .select2-search--dropdown .select2-search__field {
      border: 1px solid #d2d6de !important;
      border-radius: 4px !important;
@@ -2360,14 +2367,15 @@
  }
 
  .modal-header {
-     padding: 15px 20px 14px 20px !important;
-     height: 60px !important;
+     padding: 16px 20px 14px 20px !important;
+     height: 52px !important;
      box-shadow: 1px 0 2px rgba(0, 0, 0, 0) !important;
      border-bottom: 1px solid #e9e9e9 !important;
      background: var(--color-blue);
      color: #fff;
      border-top-left-radius: 12px;
      border-top-right-radius: 12px;
+     font-size: 18px !important;
  }
 
  .modal-footer {
@@ -2378,15 +2386,19 @@
  }
 
  .modal-header .close {
-     margin-top: 2px !important;
+     margin-top: 1px !important;
      color: #fff !important;
-     padding-right: 10px;
+     padding-right: 3px;
+     font-weight: 200 !important;
  }
 
  .modal-header .title i {
      margin-right: 6px;
  }
-
+.modal-alert .modal-title i{
+    font-size: 18px !important;
+    font-weight: 400 !important;
+}
  .modal-header .close:hover {
      color: var(--color-yellow) !important;
      opacity: 1 !important;
@@ -4545,34 +4557,97 @@
 
  #divuploadtxtVBSC_ThongTinDinhKemQD:hover,
  #btnDeleteFileUptxtVBSC_ThongTinDinhKemQD:hover,
- #divuploadtxtVBSC_FileDinhKem:hover,#divuploadtxtDTSV_FileDinhKem:hover,
- #divuploadtxtTTS_FileDinhKem:hover,#divuploadtxtHDGD_FileDinhKem:hover,
+ #divuploadtxtVBSC_FileDinhKem:hover,
+ #divuploadtxtDTSV_FileDinhKem:hover,
+ #divuploadtxtTTS_FileDinhKem:hover,
+ #divuploadtxtHDGD_FileDinhKem:hover,
  #divuploadtxtGT_FileDinhKem:hover {
      border: 0 solid #3c8dee !important;
  }
+
  .aps-modal-nhansu .modal-body .col-sm-3 .area-search {
-    overflow-y: scroll;
-    max-height: 240px;
-}
-.aps-modal-nhansu .col-sm-9 .table .badge.bg-green.notify {
-    height: 20px !important;
-    line-height: 20px !important;
-}
-.finance-user-info .button-gr .btn.btn-border-w{
-    border: 1px solid #fff !important;
-}
-.tblNhapChuyenCan tr td:nth-last-child(1) .chkSelectAll,
-.tblNhapChuyenCan tr th:nth-last-child(1) .chkSelectAll{
-    margin-left: 0 !important;
-}
-.tblNhapChuyenCan tr td:nth-last-child(2) .chkSelectAll,
-.tblNhapChuyenCan tr th:nth-last-child(2) .chkSelectAll{
-    margin-left: 0 !important;
-}
-.tblNhapChuyenCan tr td:nth-last-child(3) .chkSelectAll,
-.tblNhapChuyenCan tr th:nth-last-child(3) .chkSelectAll{
-    margin-left: 0 !important;
-}
-.main-label,.aps-lable{
-    color: #888 !important;
-}
+     overflow-y: scroll;
+     max-height: 240px;
+ }
+
+ .aps-modal-nhansu .col-sm-9 .table .badge.bg-green.notify {
+     height: 20px !important;
+     line-height: 20px !important;
+ }
+
+ .finance-user-info .button-gr .btn.btn-border-w {
+     border: 1px solid #fff !important;
+ }
+
+ .tblNhapChuyenCan tr td:nth-last-child(1) .chkSelectAll,
+ .tblNhapChuyenCan tr th:nth-last-child(1) .chkSelectAll {
+     margin-left: 0 !important;
+ }
+
+ .tblNhapChuyenCan tr td:nth-last-child(2) .chkSelectAll,
+ .tblNhapChuyenCan tr th:nth-last-child(2) .chkSelectAll {
+     margin-left: 0 !important;
+ }
+
+ .tblNhapChuyenCan tr td:nth-last-child(3) .chkSelectAll,
+ .tblNhapChuyenCan tr th:nth-last-child(3) .chkSelectAll {
+     margin-left: 0 !important;
+ }
+
+ .main-label,
+ .aps-lable {
+     color: #888 !important;
+ }
+
+ .btnClose_none {
+     background: transparent !important;
+     border: 0 !important;
+ }
+
+ .btnClose_none:hover {
+     background: transparent !important;
+     border: 0 !important;
+     color: var(--color-yellow) !important;
+ }
+
+ .btn-xacnhan .btn {
+     padding-right: 5px !important;
+     padding-left: 0 !important;
+ }
+
+ .btn-xacnhan i {
+     font-size: 20px;
+ }
+
+ .aps-BtnXacNhan .btn-xacnhan .btn-large {
+     width: 33% !important;
+     border: 0 !important;
+ }
+
+ .table td .btn.btn-kekhai,
+ .table td .btn.btn-kekhai:hover,
+ .table .btn.btn-kekhai {
+     padding: 2px 10px 2px 10px !important;
+     line-height: 36px !important;
+     height: 38px !important;
+ }
+
+ .table td .btn.btn-kekhai:hover {
+     color: var(--color-yellow) !important;
+ }
+
+ /*
+ .table td .btn.btn-kekhai:hover .fa {
+     background: var(--color-yellow) !important;
+     color: var(--color-blue) !important;
+ } */
+
+ #divuploadtxtVBSC_ThongTinDinhKemQD:focus,
+ #divuploadtxtVBSC_ThongTinDinhKemQD:active {
+     border: 0 solid #3c8dee;
+ }
+
+ #divuploadtxtVBSC_FileDinhKem:focus,
+ #divuploadtxtVBSC_FileDinhKem:active {
+     border: 0 solid #3c8dee;
+ }
