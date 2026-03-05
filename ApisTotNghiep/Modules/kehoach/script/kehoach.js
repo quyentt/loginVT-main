@@ -3157,7 +3157,7 @@ KeHoachXuLy.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<textarea id="txtXauDieuKien' + aData.ID + '" class="form-control xaudieukien" value="' + edu.util.returnEmpty(aData.XAUDIEUKIEN) + '" name="' + edu.util.returnEmpty(aData.XAUDIEUKIEN) + '" style="height: 200px">' + edu.util.returnEmpty(aData.XAUDIEUKIEN) + '</textarea>';
+                        return '<textarea id="txtXauDieuKien' + aData.ID + '" class="form-control xaudieukien" value="' + edu.util.returnEmpty(aData.XAUDIEUKIEN) + '" name="' + edu.util.returnEmpty(aData.XAUDIEUKIEN) + '" style="height: 300px !important">' + edu.util.returnEmpty(aData.XAUDIEUKIEN) + '</textarea>';
                     }
                 },
                 {
