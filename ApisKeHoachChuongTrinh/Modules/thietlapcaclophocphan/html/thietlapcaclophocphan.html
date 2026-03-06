@@ -36,30 +36,30 @@
         box-shadow: 1px 1px 1px 1px #ccc;
     }
 </style>
-<section class="content aps-KeHoachChuongTrinh">
-    <div class="row aps-thietlapcaclophocphan">
-        <div class="row box box-solid pd0 zone_TimKiem" id="zone_TimKiem">
+<section class="content aps-KeHoachChuongTrinh" style="overflow: hidden;">
+    <div class="row box box-solid aps-thietlapcaclophocphan pt-0" style="background: transparent !important;">
+        <div class="box box-solid pd0 zone_TimKiem bg-white" id="zone_TimKiem">
             <!--Tìm kiếm-->
             <div class="box box-solid box-search pd0">
                 <div class="box-header with-border bg-blue d-none">
                     <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
                 </div>
-                <div class="box-body pd10 pr10 pl20 pt20">
+                <div class="box-body pd10 pr10 pl20 pt20 row">
                     <!-- Bộ tìm kiếm -->
-                    <div class="col-sm-4 item-search">
+                    <div class="col-sm-4 item-search pl-0">
                         <select id="dropSearch_ThoiGianDaoTao" class="select-opt">
                             <option value="">--Chọn thời gian đào tạo--</option>
                         </select>
                     </div>
-                    <div class="col-sm-3 item-search">
-                        <a class="btn btn-default btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                    <div class="col-sm-3 item-search pl-0">
+                        <a class="btn btn-default btnSearch"><i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                     </div>
                 </div>
             </div>
             <!--Danh sách chương trình-->
             <div class="col-lg-12 box-list zonebatdau pd20" id="zonebatdau">
-                <div class="box-header" >
-                    <h3 class="box-title">
+                <div class="box-header d-flex pb0" style="padding-bottom: 0 !important;">
+                    <h3 class="box-title pd0">
                             <i class="fa-solid fa-list-timeline"></i> Danh sách chương trình
                             <span class="pull-right badge bg-light-blue ml-15">
                                 <span id="lblChuongTrinh_Tong"></span>
@@ -67,14 +67,14 @@
                         </h3>
                 </div>
                 <div class="box-body pd0">
-                    <div class="aps-table-select">
-                        <table id="tblChuongTrinh" class="table table-hover table-bordered">
+                    <div class="aps-table-select" style="height: auto !important; overflow-y: hidden !important;">
+                        <table id="tblChuongTrinh" class="table table-hover table-bordered table-noborder tblChuongTrinh">
                                 <thead>
                                     <tr>
-                                        <th class="td-fixed td-center">Stt</th>
-                                        <th class="td-center" style="width: 350px">Hệ đào tạo</th>
-                                        <th class="td-center" style="width: 350px">Khóa học</th>
-                                        <th class="td-center">Chương trình</th>
+                                        <th class="td-fixed td-center w-50px">Stt</th>
+                                        <th class="td-left" style="width: 350px">Hệ đào tạo</th>
+                                        <th class="td-left" style="width: 350px">Khóa học</th>
+                                        <th class="td-left">Chương trình</th>
                                     </tr>
                                 </thead>
                                 <tbody>

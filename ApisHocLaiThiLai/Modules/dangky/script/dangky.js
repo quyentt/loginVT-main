@@ -1039,11 +1039,11 @@ DangKy.prototype = {
     },
     loadBtnXacNhan: function (data) {
         var row = "";
-        row += '<div style="margin-left: auto; margin-right: auto; width: ' + data.length * 90 + 'px">';
+        row += '<div style="width: 100%">';
         for (var i = 0; i < data.length; i++) {
             row += '<div id="' + data[i].ID + '" class="btn-large btnxacnhan">';
-            row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a>';
-            row += '<a class="color-active bold">' + data[i].TEN + '</a>';
+            row += '<a class="btn color-active" style="padding: 7px 3px 7px 0 !important;"><i class="fa-solid fa-circle-check"></i></a>';
+            row += '<a class="color-active">' + data[i].TEN + '</a>';
             row += '</div>';
         }
         row += '</div>';

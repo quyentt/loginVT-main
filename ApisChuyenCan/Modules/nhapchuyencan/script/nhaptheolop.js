@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------
+﻿f/*----------------------------------------------
 --Author: Văn Hiệp
 --Phone: 
 --Date of created: 
@@ -1032,7 +1032,7 @@ NhapTheoLop.prototype = {
             var strClass = data[i].THONGTIN1;
             if (!edu.util.checkValue(strClass)) strClass = "fa-solid fa-circle-check";
             row += '<div id="' + data[i].ID + '" class="btn-large btnxacnhan">';
-            row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + strClass + ' fa-4x"></i></a>';
+            row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + strClass + ' fa-2x"></i></a>';
             row += '<a class="color-active bold">' + data[i].TEN + '</a>';
             row += '</div>';
         }

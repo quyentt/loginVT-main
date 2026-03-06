@@ -18,7 +18,7 @@ ThietLapCacLopHocPhan.prototype = {
         var me = this;
         me.page_load();
         var ilength = window.innerHeight - $("#tblChuongTrinh").offset().top;
-        $("#tblChuongTrinh").parent().attr("style", "height: " + ilength + "px; overflow-y: scroll;");
+        $("#tblChuongTrinh").parent().attr("style", "height: 100%; overflow-y: hidden;");
 
         me.getList_ThoiGianDaoTao();
         //edu.system.loadToCombo_DanhMucDuLieu("KLGD.PHANLOAITINHKHOILUONG", "", "", me.loadToCombo_PhanLoaiLop);

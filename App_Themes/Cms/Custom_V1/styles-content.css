@@ -150,9 +150,9 @@
 }
 
 .group-title i {
-    margin-right: 9px;
+    margin-right: 8px;
     float: left;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--color-blue);
     font-weight: 700 !important;
 }
@@ -5247,9 +5247,16 @@
 
 .btnXuat_HDDT .btn i,
 #btnSaveHDBL .btn i,
-#btnClose_HDBL .btn i,
 #btnThuTien .btn i {
     font-size: 24px;
+}
+
+#btnClose_HDBL .btn {
+    padding-right: 5px !important;
+}
+
+#btnClose_HDBL .btn i {
+    font-size: 18px !important;
 }
 
 .lbsymbolHD {
@@ -6370,6 +6377,11 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-right: 30px;
     text-align: left;
     margin-left: 0 !important;
+    cursor: pointer;
+}
+
+.aps-BtnXacNhan .btnxacnhan a {
+    cursor: pointer;
 }
 
 .aps-BtnXacNhan .btn-large .lbsymbolHD {
@@ -7567,23 +7579,27 @@ input#tblInput_DTSV_SinhVien_input {
     color: #222;
     text-align: left;
 }
-.zoneBtnBaoCao .btn-large .text-BaoCao{
+
+.zoneBtnBaoCao .btn-large .text-BaoCao {
     color: #222;
 }
+
 .zoneBtnBaoCao .btn-large:hover {
     border: 1px dotted var(--color-blue);
     color: #fff !important;
     background-color: var(--color-blue);
 }
+
 .zoneBtnBaoCao .btn-large:hover .text-BaoCao,
-.zoneBtnBaoCao .btn-large:hover .btn i{
-    color:#fff !important;
+.zoneBtnBaoCao .btn-large:hover .btn i {
+    color: #fff !important;
     /* font-weight: bold; */
 }
+
 .zoneBtnBaoCao .btn i {
     padding-right: 0 !important;
-        font-size: 36px !important;
-        margin-right: 10px;
+    font-size: 36px !important;
+    margin-right: 10px;
 
 }
 
@@ -10457,6 +10473,10 @@ table#clone {
     padding-bottom: 0px !important;
 }
 
+.aps-tongtheongay .titleSearchContent {
+    padding-bottom: 15px !important;
+}
+
 .study-program-block .justify-content-start .meta {
     margin-left: 10px !important;
 }
@@ -10597,4 +10617,9 @@ table#clone {
 
 .table-bordered.table.tblDuocNhanKhac {
     border-bottom: 0px solid #d1d1d1;
+}
+.aps-danhmucdulieu-l .jstree-container-ul li {
+    overflow: hidden;
+    width: 96%;
+    display: flex;
 }
