@@ -6901,7 +6901,7 @@ input#tblInput_DTSV_SinhVien_input {
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 38px !important;
     padding-left: 2px !important;
-    padding-top: 0px !important;
+    padding-top: 5px !important;
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -7234,6 +7234,10 @@ input#tblInput_DTSV_SinhVien_input {
 .aps-add-form .aps-form-input {
     width: 100% !important;
     text-align: left !important;
+}
+
+.aps-add-form .aps-form-input.col-sm-9 {
+    width: 75% !important;
 }
 
 .aps-add-form .aps-form-lable label {
@@ -8612,8 +8616,9 @@ input#tblInput_DTSV_SinhVien_input {
     margin-bottom: 10px !important;
 }
 
-.aps-table-select label {
-    color: #666;
+.aps-table-select label,.info-tblHeDaoTao span,
+.info-tblKhoaDaoTao span {
+    color: #888;
 }
 
 .box-header {
@@ -10618,8 +10623,12 @@ table#clone {
 .table-bordered.table.tblDuocNhanKhac {
     border-bottom: 0px solid #d1d1d1;
 }
+
 .aps-danhmucdulieu-l .jstree-container-ul li {
     overflow: hidden;
     width: 96%;
     display: flex;
+}
+.tblChuongTrinh tr td:nth-last-child(4){
+    text-align: center !important;
 }

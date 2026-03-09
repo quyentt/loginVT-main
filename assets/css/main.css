@@ -5953,3 +5953,9 @@ a.other-action_item:hover {
 .tblNguoiHuongDan tr .txtFileDinhKem input:hover {
   border: 0px solid #3c8dee !important;
 }
+.fw-normal{
+  font-weight: normal !important;
+}
+.fw-400{
+  font-weight:400 !important;
+}

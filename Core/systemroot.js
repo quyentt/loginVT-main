@@ -524,10 +524,9 @@ systemroot.prototype = {
         me.strChucNang_Id = strChucNang_Id;
         var objChucNang = me.dtChucNang.find(e => e.ID === strChucNang_Id);
         if (objChucNang) {
-            me.appCode = objChucNang.MAUNGDUNG;
-            me.rootPathReport = objChucNang.TENFILEDINHKEM;
+            me.appCode = objChucNang.MAUNGDUNG
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
-            if ((objChucNang.DUONGDANFILE && objChucNang.TENANH && objChucNang.TENANH.indexOf('fa ') == 0)) {
+            if (objChucNang.MAUNGDUNG != "ApisCongCanBo" || (objChucNang.DUONGDANFILE && objChucNang.TENANH && objChucNang.TENANH.indexOf('fa ') == 0)) {
                 location.href="./indexi.aspx"
             }
             $("#sidebar-menu .active").removeClass('active');
@@ -4582,30 +4581,29 @@ systemroot.prototype = {
                 success: function (data) {
                     if (data.Success) {
                         data = data.Data;
+                        me["dtUngDung"] = data;
+                        var html = '';
+                        var arrMau = ["#26465e", "#7aacf3", "#d36f51", "#0232b9", "#a12529", "#71b636", "#f94341", "#f6c531"];
+                        data.forEach((e, index) => {
+                            let strIconAnh = e.TENANH ? e.TENANH : 'fa-light fa-users-gear';
+                            //html += '<div class="dashboad-item ungdung" id="' + e.ID + '">';
+                            //html += '<a href="#" class="dashboad-item-box " style="border-color:' + arrMau[index % 8] + '">';
+                            //html += '<div class="icon"><i class="' + strIconAnh +'"></i></div>';
+                            //html += '<div class="dashboad-title ">';
+                            //html += e.TENVAITRO;
+                            //html += '</div>';
+                            //html += '</a>';
+                            //html += '</div>';
+                            html += '<div class="item pointer ungdung" id="' + e.ID + '" style="cursor: pointer"><a class="action-box feature-box pointer" data-position="0" data-bg="7">';
+                            html += '<div class="icon">';
+                            html += '<i class="fa-light fa-chalkboard-user"></i>';
+                            html += '</div>';
+                            html += '<div class="feature-name">' + e.TENVAITRO + '</div>';
+                            html += '</a></div>';
+                        });
+                        if (html) $("#zonedashbroad").html(html);
                         if (data.length === 1) {
                             me.setUngDung(data[0]);
-                        } else {
-                            me["dtUngDung"] = data;
-                            var html = '';
-                            var arrMau = ["#26465e", "#7aacf3", "#d36f51", "#0232b9", "#a12529", "#71b636", "#f94341", "#f6c531"];
-                            data.forEach((e, index) => {
-                                let strIconAnh = e.TENANH ? e.TENANH : 'fa-light fa-users-gear';
-                                //html += '<div class="dashboad-item ungdung" id="' + e.ID + '">';
-                                //html += '<a href="#" class="dashboad-item-box " style="border-color:' + arrMau[index % 8] + '">';
-                                //html += '<div class="icon"><i class="' + strIconAnh +'"></i></div>';
-                                //html += '<div class="dashboad-title ">';
-                                //html += e.TENVAITRO;
-                                //html += '</div>';
-                                //html += '</a>';
-                                //html += '</div>';
-                                html += '<div class="item pointer ungdung" id="' + e.ID + '" style="cursor: pointer"><a class="action-box feature-box pointer" data-position="0" data-bg="7">';
-                                html += '<div class="icon">';
-                                html += '<i class="fa-light fa-chalkboard-user"></i>';
-                                html += '</div>';
-                                html += '<div class="feature-name">' + e.TENVAITRO +'</div>';
-                                html += '</a></div>';
-                            });
-                            if (html) $("#zonedashbroad").html(html);
                         }
                     }
                     else {
