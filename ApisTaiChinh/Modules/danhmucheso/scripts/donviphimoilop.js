@@ -222,7 +222,7 @@ DonViPhiLop.prototype = {
     },
     resetPopup: function () {
         var me = this;
-        edu.util.viewValById("dropNew_LopQuanLy1", "");
+        edu.util.viewValById("dropLQL456", "");
         edu.util.viewValById("dropNew_LoaiKhoan", $("#dropKhoanThu_DVP").val());
         edu.util.viewValById("dropNew_ThoiGian", $("#dropThoiGianDaoTao_DVP").val());
         edu.util.viewValById("dropNew_DonViTinh", "");
@@ -252,7 +252,8 @@ DonViPhiLop.prototype = {
 	-------------------------------------------*/
     save_DonViPhiSoTien_One: function () {
         me = this;
-        
+        console.log(edu.util.getValById('dropLQL456'));
+        console.log($("#dropLQL456").val())
         //reset
         var me = this;
         var obj_save = {
@@ -263,7 +264,7 @@ DonViPhiLop.prototype = {
             'strId': me.strDonViPhi_Id,
             'strNghiepVuApDung_Id': edu.util.getValById('dropNew_NghiepVu'),
             'strDonViTinh_Id': edu.util.getValById('dropNew_DonViTinh'),
-            'strPhamViApDung_Id': edu.util.getValById('dropNew_LopQuanLy1'),
+            'strPhamViApDung_Id': edu.util.getValById('dropLQL456'), 
             'strPhanCapApDung_Id': "",
             'strNgayApDung': edu.util.getValById('txtNew_NgayApDung'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropNew_ThoiGian'),
@@ -426,6 +427,19 @@ DonViPhiLop.prototype = {
             'strNghiepVuApDung_Id': edu.util.getValById('dropNghiepVu_DVP'),
             'strNguoiThucHien_Id': "",
         }
+        var obj_save = {
+            'action': 'TC_ThuChi3_MH/DSA4BRIVKS4oBiggLx4FFxEeDS4xEA0eEi4VKCQv',
+            'func': 'PKG_TAICHINH_THUCHI3.LayDSThoiGian_DVP_LopQL_SoTien',
+            'iM': edu.system.iM,
+            'strHeDaoTao_Id': edu.system.getValById('dropHeDaoTao_DVP'),
+            'strKhoaDaoTao_Id': edu.system.getValById('dropKhoaDaoTao_DVP'),
+            'strChuongTrinh_Id': edu.system.getValById('dropChuongTrinh_DVP'),
+            'strDaoTao_CoCauToChuc_Id': edu.system.getValById('dropKhoaQuanLy_DVP'),
+            'strDaoTao_ThoiGianDaoTao_Id': edu.system.getValById('dropThoiGianDaoTao_DVP'),
+            'strDiem_KieuHoc_Id': edu.system.getValById('dropKieuHoc_DVP'),
+            'strTaiChinh_CacKhoanThu_Id': edu.system.getValById('dropKhoanThu_DVP'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
         
         edu.system.makeRequest({
             success: function (data) {
@@ -439,17 +453,17 @@ DonViPhiLop.prototype = {
             },
             error: function (er) {
             },
-            type: "GET",
+            type: "POST",
             versionAPI: "v1.0",
             contentType: true,
-            action: obj_list.action,
-            data: obj_list,
+            action: obj_save.action,
+            data: obj_save,
             fakedb: [
 
             ]
         }, false, false, false, null);
     },
-    getList_DonViPhiSoTien: function () {
+    getList_DonViPhiSoTien: function (strPhamViApDung_Id) {
         var me = this;
 
         var obj_list = {
@@ -459,7 +473,7 @@ DonViPhiLop.prototype = {
             'strDiem_KieuHoc_Id': edu.util.getValById('dropKieuHoc_DVP'),
 
             'strTuKhoa': "",
-            'strPhamViApDung_Id': "",
+            'strPhamViApDung_Id': strPhamViApDung_Id,
             'strPhanCapApDung_Id': "",
             'strNgayApDung': "",
             'strDonViTinh_Id': edu.util.getValById('dropDonViTinh_DVP'),
@@ -570,6 +584,7 @@ DonViPhiLop.prototype = {
     -------------------------------------------*/
     genTable_DonViPhiSoTien: function (data) {
         var me = this;
+        me.dtDonViPhi = data;
         for (var i = 0; i < data.length; i++) {
             var point = $("#input" + data[i].PHAMVIAPDUNG_ID + "_" + data[i].DAOTAO_THOIGIANDAOTAO_ID);
             point.val(edu.util.formatCurrency(data[i].TONGSOTIEN));
@@ -588,7 +603,7 @@ DonViPhiLop.prototype = {
         //call popup --Edit
         me.popup();
         //view data --Edit
-        edu.util.viewValById("dropNew_LopQuanLy1", data.PHAMVIAPDUNG_ID);
+        edu.util.viewValById("dropLQL456", data.PHAMVIAPDUNG_ID);
         edu.util.viewValById("dropNew_LoaiKhoan", data.TAICHINH_CACKHOANTHU_ID);
         edu.util.viewValById("dropNew_ThoiGian", data.DAOTAO_THOIGIANDAOTAO_ID);
         edu.util.viewValById("dropNew_DonViTinh", data.DONVITINH_ID);
@@ -1019,7 +1034,7 @@ DonViPhiLop.prototype = {
                 "mRender": function (nRow, aData) {
                     var html = '';
                     html += '<div>';
-                    html += '<input type="text"  id="input' + aData.PHAMVIAPDUNG_ID + '_' + edu.system.arrId[edu.system.icolumn++] + '" class="form-control" />';
+                    html += '<input type="text"  id="input' + aData.ID + '_' + edu.system.arrId[edu.system.icolumn++] + '" class="form-control" />';
                     html += '</div>';
                     return html;
                 }
@@ -1030,19 +1045,21 @@ DonViPhiLop.prototype = {
         //    var point = $("#div" + me.dtHeSoLuong[i].NGACH_ID + "_" + me.dtHeSoLuong[i].BAC).html('<input id="input' + me.dtHeSoLuong[i].NGACH_ID + "_" + me.dtHeSoLuong[i].NGACH_ID + '" value="' + me.dtHeSoLuong[i].HESOLUONG + '" title="' + me.dtHeSoLuong[i].HESOLUONG + '" name="' + me.dtHeSoLuong[i].ID + '" style="width: 100%"/>');
         //}
         //me.move_ThroughInTable("tblQuyDinhHeSoLuong");
+        //data.forEach(e => me.getList_DonViPhiSoTien(e.ID));
         me.getList_DonViPhiSoTien();
+        
         edu.system.move_ThroughInTable("tblDonViPhi");
         var obj = {
             data: data,
             renderInfor: {
-                id: "DAOTAO_HOCPHAN_ID",
+                id: "ID",
                 parentId: "",
                 name: "TEN",
                 code: "",
                 avatar: "",
                 
             },
-            renderPlace: ["dropNew_LopQuanLy1"],
+            renderPlace: ["dropLQL456"],
             type: "",
             title: "Chọn lớp quản lý",
         }
@@ -1393,6 +1410,19 @@ DonViPhiLop.prototype = {
             'strNghiepVuApDung_Id': edu.util.getValById('dropNghiepVu_DVP'),
             'strNguoiThucHien_Id': "",
         }
+        var obj_save = {
+            'action': 'TC_ThuChi3_MH/DSA4BRIVKS4oBiggLx4FFxEeDS4xEA0eEi4VKCQv',
+            'func': 'PKG_TAICHINH_THUCHI3.LayDSThoiGian_DVP_LopQL_SoTien',
+            'iM': edu.system.iM,
+            'strHeDaoTao_Id': edu.system.getValById('dropHeDaoTao_DVP'),
+            'strKhoaDaoTao_Id': edu.system.getValById('dropKhoaDaoTao_DVP'),
+            'strChuongTrinh_Id': edu.system.getValById('dropChuongTrinh_DVP'),
+            'strDaoTao_CoCauToChuc_Id': edu.system.getValById('dropKhoaQuanLy_DVP'),
+            'strDaoTao_ThoiGianDaoTao_Id': edu.system.getValById('dropThoiGianDaoTao_DVP'),
+            'strDiem_KieuHoc_Id': edu.system.getValById('dropKieuHoc_DVP'),
+            'strTaiChinh_CacKhoanThu_Id': edu.system.getValById('dropKhoanThu_DVP'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
 
         edu.system.makeRequest({
             success: function (data) {
@@ -1406,11 +1436,11 @@ DonViPhiLop.prototype = {
             },
             error: function (er) {
             },
-            type: "GET",
+            type: "POST",
             versionAPI: "v1.0",
             contentType: true,
-            action: obj_list.action,
-            data: obj_list,
+            action: obj_save.action,
+            data: obj_save,
             fakedb: [
 
             ]

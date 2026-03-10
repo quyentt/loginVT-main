@@ -889,6 +889,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("txtHocPhan_KBB_KyHieu", "");
         edu.util.viewValById("dropPhanLoaiKhoi_KBB", "");
         edu.util.viewValById("txtHocPhan_KBB_ThuTu", "");
+        edu.util.viewValById("txtThuTu_KBB", "");
         //$("#zoneHocPhan_Selected_KBB").html("");
     },
 
@@ -905,6 +906,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("dropPhanLoaiKhoi_KTCD", "");
         edu.util.viewValById("dropCoTinhDiem_KTCD", "");
         edu.util.viewValById("txtHocPhan_KTCD_NhomTuChon", "");
+        edu.util.viewValById("txtThuTu_KTCD", "");
         //edu.util.viewValById("txtHocPhan_KTCD_Ten", "");
         //edu.util.viewValById("txtHocPhan_KTCD_SoHocPhan", "");
         //$("#zoneHocPhan_Selected_KTCD").html("");
@@ -2455,7 +2457,7 @@ ChuongTrinhHocPhan.prototype = {
             'strPhanLoai_Id': edu.util.getValById("dropPhanLoaiKhoi_KBB"),
             'strDaoTao_KhoiBatBuoc_Cha_Id': edu.util.getValById("dropHocPhan_KBB_KhoiCha"),
             'strDaoTao_ToChucCT_Id': me.strChuongTrinh_Id,
-            'dThuTu': edu.util.getValById("txtHocPhan_KBB_ThuTu"),
+            'dThuTu': edu.util.getValById("txtThuTu_KBB"),
             'strNguoiThucHien_Id': edu.system.userId
         };
         if (me.strKhoiBatBuoc_Id != "") {
@@ -2625,7 +2627,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("dropHocPhan_KBB_KhoiCha", data[0].DAOTAO_KHOIBATBUOC_CHA_ID);
         edu.util.viewValById("txtHocPhan_KBB_KyHieu", data[0].KYHIEU);
         edu.util.viewValById("dropPhanLoaiKhoi_KBB", data[0].PHANLOAI_ID);
-        edu.util.viewValById("txtHocPhan_KBB_ThuTu", data[0].THUTU);
+        edu.util.viewValById("txtThuTu_KBB", data[0].THUTU);
         me.strKhoiBatBuoc_Id = data[0].ID;
         me.getList_HocPhan_ChuongTrinh_KBB();
     },
@@ -2812,7 +2814,10 @@ ChuongTrinhHocPhan.prototype = {
                 id: "ID",
                 parentId: "DAOTAO_KHOITUCHON_DON_CHA_ID",
                 name: "TEN",
-                code: ""
+                code: "",
+                mRender: function (nRow, aData) {
+                    return edu.util.returnEmpty(aData.THUTU) + ". " + edu.util.returnEmpty(aData.TEN)
+                }
             },
             renderPlaces: ["zone_khoituchondon"],
             style: "fa fa-cube color-active"
@@ -2868,7 +2873,10 @@ ChuongTrinhHocPhan.prototype = {
                 id: "ID",
                 parentId: "DAOTAO_KHOIBATBUOC_CHA_ID",
                 name: "TEN",
-                code: ""
+                code: "",
+                mRender: function (nRow, aData) {
+                    return edu.util.returnEmpty(aData.THUTU) + ". " + edu.util.returnEmpty(aData.TEN)
+                }
             },
             renderPlaces: ["zone_khoibatbuoc"],
             style: "fa fa-cube color-active"
@@ -2994,7 +3002,7 @@ ChuongTrinhHocPhan.prototype = {
             'strDaoTao_ToChucCT_Id': me.strChuongTrinh_Id,
             'strLoaiLuaChon_Id': edu.util.getValById("dropHocPhan_KTCD_LoaiDonVi"),
             'dDonViLuaChon': edu.util.getValById("txtHocPhan_KTCD_DonVi"),
-            'dThuTu': 1,
+            'dThuTu': edu.system.getValById('txtThuTu_KTCD'),
             'strNguoiThucHien_Id': edu.system.userId,
             'dSoHocPhanQuyDinh': edu.system.getValById('txtHocPhan_KTCD_SoHocPhan'),
             'dSoTinChiQuyDinh': edu.system.getValById('txtHocPhan_KTCD_SoTin'),
@@ -3175,6 +3183,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("dropPhanLoaiKhoi_KTCD", data[0].PHANLOAI_ID);
         edu.util.viewValById("dropCoTinhDiem_KTCD", data[0].KHONGTINHDIEM);
         edu.util.viewValById("txtHocPhan_KTCD_NhomTuChon", data[0].NHOM);
+        edu.util.viewValById("txtThuTu_KTCD", data[0].THUTU);
         me.getList_HocPhan_ChuongTrinh_KTCD();
     },
     /*------------------------------------------

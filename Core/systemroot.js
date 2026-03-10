@@ -2390,7 +2390,6 @@ systemroot.prototype = {
                     $(place).jstree();//default user
                 }
                 $(place).jstree(true).refresh();
-                $(place).one("refresh.jstree").jstree(true).refresh();
             }
         }
     },

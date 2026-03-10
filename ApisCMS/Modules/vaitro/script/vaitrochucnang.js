@@ -26,12 +26,16 @@ VaiTroChucNang.prototype = {
         $(".btnClose").click(function () {
             me.toggle_list();
         });
+        edu.system.loadToCombo_DanhMucDuLieu("CHUNG.HANHDONG", "dropQuyen_VTCN");
         /*------------------------------------------
         --Discription: [1] Action ChucNang
         -------------------------------------------*/
         $(".btnAddnew").click(function () {
             if (edu.util.checkValue(me.strVaiTro_Id)) {
                 me.toggle_input();
+                if (me.strUngDung_Id) {
+                    $("#dropUngDung_VTCN").val(me.strUngDung_Id).trigger("change").trigger({ type: 'select2:select' });
+                }
             }
             else {
                 edu.system.alert("Vui lòng chọn Vai trò cần phân Chức năng!");
@@ -48,7 +52,7 @@ VaiTroChucNang.prototype = {
                 edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
             }
         });
-        $("#treesjs_ungdungchucnang_vtcn").delegate(".btnSuaQuyen", "click", function (e) {
+        $("#tableVTCN").delegate(".btnSuaQuyen", "click", function (e) {
             var strChucNang_Id = this.id;
             me.strChucNang_Id = strChucNang_Id;
             me.getList_SuaQuyen();
@@ -225,16 +229,70 @@ VaiTroChucNang.prototype = {
                 }
             });
         });
+
+        $("#chkSelectAll").on("click", function () {
+            var checked_status = $("#chkSelectAll").is(':checked');
+            $("#treesjs_ungdungchucnang_vtcn .jstree-anchor").each(function () {
+                if (checked_status) {
+                    this.classList.add("jstree-clicked");
+                } else {
+                    this.classList.remove("jstree-clicked");
+                }
+            });
+        });
+        $("#btnDelete_VTCN").click(function () {
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                me.delete_VaiTroChucNang(me.strChucNang_Id);
+            });
+        });
+        $("#btnSave_VaiTro_ChucNang").click(function () {
+            if (!me.strUngDung_Id) me.strUngDung_Id = $("#dropUngDung_VTCN").val();
+            
+            var arrThem = [];
+            var arrDelete = [];
+            var x = $("#treesjs_ungdungchucnang_vtcn .jstree-anchor");
+            for (var i = 0; i < x.length; i++) {
+                if (x[i].name == 1) {
+                    if (!x[i].classList.contains("jstree-clicked")) arrDelete.push(x[i].id.replace(/_anchor/g, ''));
+                } else {
+                    if (x[i].classList.contains("jstree-clicked")) arrThem.push(x[i].id.replace(/_anchor/g, ''));
+                }
+            }
+
+
+            //var arrChecked_Id = edu.util.getArrCheckedIds("tblChucNang_NDCN", "checkX");
+            //if (arrChecked_Id.length == 0) {
+            //    edu.system.alert("Vui lòng chọn đối tượng cần lưu?");
+            //    return;
+            //}
+            if (!edu.util.getValById("dropQuyen_VTCN") && arrThem.length) {
+                edu.system.alert("Bạn cần chọn quyền");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn thêm " + arrThem.length + " và xóa " + arrDelete.length + " dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                //edu.system.alert('<div id="zoneprocessDanhMucTuKhoa"></div>');
+                //edu.system.genHTML_Progress("zoneprocessDanhMucTuKhoa", arrThem.length + arrDelete.length);
+                for (var i = 0; i < arrThem.length; i++) {
+                    me.save_VaiTroChucNang(arrThem[i], 1);
+                }
+                for (var i = 0; i < arrDelete.length; i++) {
+                    me.delete_VaiTroChucNang(arrDelete[i]);
+                }
+            });
+        });
     },
     popup_ChucNang: function () {
         $("#btnNotifyModal").remove();
         $("#myModalChucNang_VTCN").modal("show");
     },
     toggle_list: function () {
-        edu.util.toggle_overide("zone-bus-vtcn", "zone_list_vtcn");
+        edu.util.toggle_overide("zone-bus-vtcn1", "zone_list_vtcnv4");
+        this.getList_VaiTroChucNang();
     },
     toggle_input: function () {
-        edu.util.toggle_overide("zone-bus-vtcn", "zone_input_vtcn");
+        edu.util.toggle_overide("zone-bus-vtcn1", "zone_input_vtcn");
     },
     /*----------------------------------------------
     --Discription: [1] Access DB VaiTro
@@ -336,72 +394,49 @@ VaiTroChucNang.prototype = {
     ----------------------------------------------*/
     save_VaiTroChucNang: function (strChucNang_Id, iTinhTrangDongBo) {
         var me = this;
-        var obj_notify = {};
-        //--------------------------------------
-        //Case iTinhTrangDongBo: 0 - Chua dong bo
-        //Case iTinhTrangDongBo: 1 - Da dong bo
-        //Chi dong bo khi chuc nang them moi, cac chuc nang cu thi he thong tu dong bo cho vai tro
-        //--------------------------------------
-        
+
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHhA0OCQv',
+            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Quyen',
+            'iM': edu.system.iM,
+            'strChucNang_Id': strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    if (!edu.util.checkValue(iTinhTrangDongBo)) {
-                        //edu.system.alert("Thêm thành công!");
-                    }
-                    else {
-                        obj_notify = {
-                            renderPlace: "add_chucnang" + strChucNang_Id,
-                            type: "i",
-                            title: "Đồng bộ quyền thành công!"
-                        };
-                        edu.system.notifyLocal(obj_notify);
-                    }
-                    me.getList_VaiTroChucNang();
+                    var dtReRult = data.Data;
+                    var arrQuyenKhiChon = $("#dropQuyen_VTCN").val();
+                    dtReRult.forEach(e => {
+                        if (arrQuyenKhiChon.indexOf(e.HANHDONG_ID) != -1) {
+                            me.save_QuyenCN(e.ID);
+                        }
+                    })
                 }
                 else {
-                    obj_notify = {
-                        renderPlace: "add_chucnang" + strChucNang_Id,
-                        type: "w",
-                        title: "CMS_VaiTroChucNang.ThemMoi: " |+ data.Message
-                    };
-                    edu.system.notifyLocal(obj_notify);
+                    edu.system.alert(" : " + data.Message, "s");
                 }
-                
+
             },
             error: function (er) {
-                
-                obj_notify = {
-                    renderPlace: "add_chucnang" + strChucNang_Id,
-                    type: "w",
-                    title: "CMS_VaiTroChucNang.ThemMoi (er): " + JSON.stringify(er)
-                };
-                edu.system.notifyLocal(obj_notify);
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
             type: 'POST',
-            action: 'CMS_VaiTroChucNang/ThemMoi',
-            
+            action: obj_save.action,
+
             contentType: true,
-            
-            data: {
-                'strVaiTro_Id': me.strVaiTro_Id,
-                'strCHUCNANG_ID': strChucNang_Id,
-                'dCoDongBoGanQuyen': iTinhTrangDongBo,
-                'dHOATDONG_BAOCAO': 1,
-                'dHOATDONG_KHAC': 1,
-                'dHOATDONG_SUA': 1,
-                'dHOATDONG_THEM': 1,
-                'dHOATDONG_XEM': 1,
-                'dHOATDONG_XOA': 1,
-                'strNguoiThucHien_Id': edu.system.userId,
-                'strId': "",
-            },
+            data: obj_save,
             fakedb: [
+
             ]
         }, false, false, false, null);
     },
     getList_VaiTroChucNang: function () {
         var me = this;
+        console.log(me.strUngDung_Id);
         var obj_save = {
             'action': 'CMS_QuanTri01_MH/DSA4BRICKTQiDyAvJhUpJC4UBRcgKBUzLgPP',
             'func': 'PKG_CORE_QUANTRI_01.LayDSChucNangTheoUDVaiTro',
@@ -422,8 +457,10 @@ VaiTroChucNang.prototype = {
                         iPager = data.Pager;
                     }
                     me.dtVaiTroChucNang = dtResult;
-
-                    me.getList_ChucNang();
+                    //me.checkExist_VaiTroChucNang(dtResult);
+                    me.loadToTree_VaiTroUngDung(dtResult, iPager);
+                    //me.findChucNang();
+                    //me.getList_ChucNang();
                 }
                 else {
                     edu.system.alert( data.Message);
@@ -448,6 +485,14 @@ VaiTroChucNang.prototype = {
     delete_VaiTroChucNang: function (strChucNang_Id) {
         var me = this;
         var obj = {};
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeFyAoFTMuHhA0OCQvcwPP',
+            'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_VaiTro_Quyen2',
+            'iM': edu.system.iM,
+            'strVaiTro_Id': me.strVaiTro_Id,
+            'strChucNang_Id': strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
         
         edu.system.makeRequest({
             success: function (data) {
@@ -457,6 +502,7 @@ VaiTroChucNang.prototype = {
                         code: ""
                     };
                     edu.system.afterComfirm(obj);
+                    $("#modalSuaQuyen").modal("hide");
                     me.getList_VaiTroChucNang();
                 }
                 else {
@@ -477,15 +523,11 @@ VaiTroChucNang.prototype = {
                 
             },
             type: 'POST',
-            action: 'CMS_ChucNang/XoaChucNangCuaVaiTro',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: {
-                'strVaiTro_Id': me.strVaiTro_Id,
-                'strChucNang_Id': strChucNang_Id,
-                'strNguoiThucHien_Id': edu.system.userId,
-            },
+            data: obj_save,
             fakedb: [
 
             ]
@@ -628,6 +670,7 @@ VaiTroChucNang.prototype = {
                         iPager = data.Pager;
                     }
                     me["dtUngDung2"] = dtResult;
+                    $("#tableVTCN tbody").html("");
                     me.genTreeJs_VaiTroUngDung(dtResult);
                 }
                 else {
@@ -657,7 +700,7 @@ VaiTroChucNang.prototype = {
             'action'            : 'CMS_ChucNang/LayDanhSach',
             'versionAPI'        : 'v1.0',
             'strTuKhoa': "",
-            'strChung_UngDung_Id': me.strUngDung_Id,
+            'strChung_UngDung_Id': $("#dropUngDung_VTCN").val(),
             'strCha_Id'         : "",
             'pageIndex'         : 1,
             'pageSize'          : 1000,
@@ -683,10 +726,7 @@ VaiTroChucNang.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_ChucNang(dtResult, iPager);
-                    me.checkExist_VaiTroChucNang(dtResult);
-                    me.loadToTree_VaiTroUngDung(dtResult, iPager);
-                    me.findChucNang();
+                    me.loadToTree_VaiTroUngDung2(dtResult, iPager);
                 }
                 else {
                     objNotify = {
@@ -794,6 +834,9 @@ VaiTroChucNang.prototype = {
     genTreeJs_VaiTroUngDung: function (dtResult) {
         var me = this;
         edu.util.viewHTMLById("lblVaiTroUngDung_Tong_VTCN", dtResult.length);
+        if ($("#zone_input_vtcn").is(':visible')) {
+            me.toggle_list();
+        }
         //if (dtResult.length > 0) {
         //    $("#dropUngDung_VTCN").val(dtResult[0].ID).trigger("change");
         //    me.getList_ChucNang();
@@ -815,7 +858,6 @@ VaiTroChucNang.prototype = {
             var strUngDung_Id = data.node.id;
             me.strUngDung_Id = strUngDung_Id;
             me.getList_VaiTroChucNang();
-            me.getList_QuyenCN();
             //me.process_UngDung_ChucNang(strUngDung_Id);
             //----------------------------------------------------------------------------------------------
             //1. acess data.node obj
@@ -843,7 +885,7 @@ VaiTroChucNang.prototype = {
             var strUngDung_Id = dtResult[0].ID;
             me.strUngDung_Id = strUngDung_Id;
             me.getList_VaiTroChucNang();
-            me.getList_QuyenCN();
+            
         }
     },
     /*----------------------------------------------
@@ -857,6 +899,9 @@ VaiTroChucNang.prototype = {
     
     loadToTree_VaiTroUngDung: function (dtResult, iPager) {
         var me = this;
+        me.insertHeaderTable("tableVTCN", dtResult, null);
+        me.getList_QuyenCN();
+        return;
         var obj = {
             data: dtResult,
             renderInfor: {
@@ -888,8 +933,8 @@ VaiTroChucNang.prototype = {
 
             } else {
                 $("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID + "_anchor").append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px"><i class="fa fa-eye color-active poiter btnSuaQuyen" id="' + dtResult[i].ID + '"></i></span>');
-
             }
+            //$($("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID)[0]).append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px"><i class="fa fa-eye color-active poiter btnSuaQuyen" id="' + dtResult[i].ID + '"></i></span>');
         }
     },
     
@@ -1062,6 +1107,12 @@ VaiTroChucNang.prototype = {
                     var dtReRult = data.Data;
                     me["dtQuyenCN"] = dtReRult;
                     me.genTable_QuyenCN(dtReRult, data.Pager);
+                    me.dtVaiTroChucNang.forEach(e => {
+                        var arrQuyen = [];
+                        var dtQuyen = dtReRult.filter(ele => e.ID == ele.CHUCNANG_ID);
+                        dtQuyen.forEach(ele => arrQuyen.push(ele.HANHDONG_TEN));
+                        $("#tableVTCN #" + e.ID).html(e.TENCHUCNANG + "<br/> <span style='font-size: 8px'>(" + arrQuyen.toString(", ") + ")");
+                    })
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1199,6 +1250,7 @@ VaiTroChucNang.prototype = {
                     var dtReRult = data.Data;
                     me["dtSuaQuyen"] = dtReRult;
                     me.genTable_SuaQuyen(dtReRult, data.Pager);
+                    
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1258,5 +1310,246 @@ VaiTroChucNang.prototype = {
             }
         })
         /*III. Callback*/
+    },
+
+    insertHeaderTable: function (strTable_Id, objTotal, strQuanHeCha) {
+        var me = this;
+        //Khởi tạo table
+        $("#" + strTable_Id + " tbody").html('');
+        var imaxlength = 0;
+        var arrHeaderId = [];
+        //Lấy toàn bộ phần tử gốc đầu tiền xong gọi đệ quy load header table theo công thức điểm
+        //for (var k = 0; k < me.dtNguoiDungUngDung.length; k++) {
+        //    var obj = edu.util.objGetDataInData(me.dtNguoiDungUngDung[k].ID, objTotal, "CHUNG_UNGDUNG_ID");
+        //    if (obj.length > 0) {
+        //        $("#" + strTable_Id + " tbody").append('<tr><td rowspan="' + (obj.length + 1) + '">' + me.dtNguoiDungUngDung[k].TENUNGDUNG + '</td></tr>');
+        //    }
+        //}
+        for (var k = 0; k < me.dtUngDung2.length; k++) {
+            var obj = objTotal.filter(e => e.CHUNG_UNGDUNG_ID == me.dtUngDung2[k].ID);
+            console.log(objTotal)
+            console.log(obj);
+            //var obj = edu.util.objGetDataInData(me.dtUngDung2[k].ID, objTotal, "CHUNG_UNGDUNG_ID");
+            var iDemCha = 0;
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i].CHUCNANGCHA_ID == strQuanHeCha) {
+                    var tempCheck = recuseHeader(obj, obj[i], 0);
+                    if (tempCheck == 0) {
+                        iDemCha += 1;
+                    } else {
+                        iDemCha += tempCheck;
+                    }
+                }
+            }
+            if (obj.length > 0) {
+                $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - iDemCha]).prepend('<td rowspan="' + iDemCha + '" name="1">' + me.dtUngDung2[k].TENUNGDUNG + '</td>');
+            }
+        }
+        //Chỉnh sửa colspan cho phần tử đầu tiên
+        me.iMaxLength = imaxlength;
+        //document.getElementById("lblThongTinBang").colSpan = imaxlength + 1;
+        //Add rowspan cho các thành phần không có phần từ con
+        var x = document.getElementById(strTable_Id).getElementsByTagName("tbody")[0].rows;
+        for (var i = 0; i < x.length; i++) {
+            for (var j = 0; j < x[i].cells.length; j++) {
+                var z = x[i].cells[j].rowSpan;
+                if (z == 1 && $(x[i].cells[j]).attr("name") != 1) {
+                    x[i].cells[j].colSpan = (imaxlength + 2 - x[i].cells[j].colSpan);
+                }
+            }
+        }
+        //Hàm đề quy insert các phần tử con ra thead (datatable của công thức, phần từ cha cần đệ quy, số thứ tự dòng của phần tử cha trong thead)
+        //Nguyên tắc: rowspan phần tử cha = sum(rowspan phần tử con) -1;
+        function recuseHeader(objAll, objRecuse, iBac) {
+            var x = spliceData(objAll, objRecuse.ID);
+            var iTong = x.length;
+            for (var j = 0; j < x.length; j++) {
+                var iSoLuong = spliceData(objAll, x[j].ID);
+                if (iSoLuong.length > 0) {
+                    var iDem = recuseHeader(objAll, x[j], iBac + 1);
+                    iTong += iDem - 1;
+                }
+                else {
+                    insertHeader(strTable_Id, x[j], iBac + 1, iSoLuong.length);
+                }
+            }
+            insertHeader(strTable_Id, objRecuse, iBac, iTong);
+            return iTong;
+        }
+        function insertHeader(strTable_Id, objHead, iThuTu, colspan) {
+            var strTenChucNang = objHead.TENCHUCNANG;
+            //Kiểm tra số dòng nếu nhỏ hơn số thứ tự dòng iThuTu thì thêm 1 dòng
+            if (colspan == 0) {
+                arrHeaderId.push(objHead.ID);
+                $("#" + strTable_Id + " tbody").append('<tr><td id="' + objHead.ID +'" class="pointer btnSuaQuyen" colspan="' + (iThuTu + 1) + '">' + strTenChucNang + '</td></tr>');
+                if (iThuTu > imaxlength) imaxlength = iThuTu;
+            }
+            else {
+                if (colspan == 1) {
+                    $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - colspan]).prepend('<td  id="' + objHead.ID +'" class="pointer btnSuaQuyen" rowspan="' + colspan + '" name="1">' + strTenChucNang + '</td>');
+                } else
+                    $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - colspan]).prepend('<td  id="' + objHead.ID +'" class="pointer btnSuaQuyen" rowspan="' + colspan + '" >' + strTenChucNang + '</td>');
+            }
+        }
+        //Lấy số con của thằng cha trong datatable công thức
+        function spliceData(objData, strQuanHeCha_Id) {
+            var arr = [];
+            var iLength = objData.length;
+            for (var i = 0; i < iLength; i++) {
+                if (objData[i].CHUCNANGCHA_ID == strQuanHeCha_Id) {
+                    arr.push(objData[i]);
+                }
+            }
+            return arr;
+        }
+        return arrHeaderId;
+    },
+
+    loadToTree_VaiTroUngDung2: function (dtResult, iPager) {
+        var me = this;
+        var obj = {
+            data: dtResult,
+            renderInfor: {
+                id: "ID",
+                parentId: "CHUCNANGCHA_ID",
+                name: "TENCHUCNANG",
+                code: "",
+                //check: true
+                //mRender: function (nRow, aData) {
+                //    return '<span>' + aData.TENCHUCNANG +'</span> <span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_701380FF6CB4407A80E754DF7905A415"><i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span></span>';
+                //}
+            },
+            renderPlaces: ["treesjs_ungdungchucnang_vtcn"],
+            style: "fa fa-opera color-active",
+            splitString: 10000
+        };
+        me.loadToTreejs_data2(obj);
+        for (var i = 0; i < dtResult.length; i++) {
+            //if (edu.util.objGetOneDataInData(dtResult[i].ID, dtResult, "CHUCNANGCHA_ID").length == 0) {
+            //    var dtCheck = edu.util.objGetOneDataInData(dtResult[i].ID, me.dtNguoiDungChucNang, "ID");
+            //    if (dtCheck.length == 0) strThemMoi = '<i class="fa fa-plus color-active poiter btnAdd_ChucNang" id="add_chucnang' + dtResult[i].ID + '"></i>';
+            //    else {
+            //        strDelete = '<i class="fa fa-trash color-active poiter btnDelete_VaiTroChucNang" id="delete_nguoidungchucnang' + dtResult[i].ID + '" ></i>';
+            //        if (dtCheck.TINHTRANGDONGBO == 0) strSync = '<i class="fa fa-recycle color-active poiter btnSync" id="sync_' + dtResult[i].ID + '"></i>';
+            //    }
+            //    $($("#treesjs_ungdungchucnang_ndcn #" + dtResult[i].ID)[0]).append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px">' + strThemMoi + '</span><span style="padding-right: 20px;">' + strSync + '</span><span>' + strDelete + '</span></span>');
+
+            //}
+            var dtCheck = edu.util.objGetOneDataInData(dtResult[i].ID, me.dtVaiTroChucNang, "ID");
+            if (dtCheck.length != 0) {
+                var xpoint = document.getElementById(dtResult[i].ID + "_anchor");
+                if (xpoint != null && xpoint != undefined) {
+                    document.getElementById(dtResult[i].ID + "_anchor").classList.add("jstree-clicked");
+                    document.getElementById(dtResult[i].ID + "_anchor").name = 1;
+                }
+            }
+            //$($("#treesjs_ungdungchucnang_ndcn #" + dtResult[i].ID)[0]).append('<span class="pull-right"><input type="checkbox" ' + strCheck +' id="checkX' + dtResult[i].ID + '" class="' + dtResult[i].CHUCNANGCHA_ID +'"></span>');
+        }
+    },
+
+    loadToTreejs_data2: function (obj) {
+        var me = this;
+        var data = obj.data;
+        var render = obj.renderInfor;
+        var render_places = obj.renderPlaces;
+        var iStringSplit = obj.splitString;
+
+        if (iStringSplit == undefined) iStringSplit = 30;
+        if (render == undefined) render = {
+            id: "ID",
+            parentId: "CHUCNANGCHA_ID",
+            name: "TENCHUCNANG",
+            code: ""
+        };
+
+        var id = render.id;
+        var parent_id = render.parentId;
+        var name = render.name;
+
+        var place = "";
+        for (var p = 0; p < render_places.length; p++) {
+            var node = "";
+            node += '<ul>';
+            if (edu.util.checkId(render_places[p])) {//determine where to generate.. [how many places to gen?]
+                place = "#" + render_places[p];
+                $(place).html("");
+                $(place).jstree('destroy');
+            }
+            if (data.length > 0) {
+                node += userRender(data, null);
+            }
+            else {
+                node += '<li>Không tìm thấy dữ liệu!</li>';
+            }
+            node += '</ul>';
+            $(place).append(node);
+            configTreejs();
+        }
+        //processing functions
+        function userRender(obj, parentId) {
+            var row = "";
+            for (var i = 0; i < obj.length; i++) {
+                if (obj[i][parent_id] == parentId) {
+                    if (render.Render == undefined) {
+                        var strName = "";
+                        if (render != undefined && render.mRender != undefined) {
+                            strName = render.mRender(i, obj[i]);
+                        } else {
+                            strName = obj[i][name];
+                        }
+                        row += '<li class="btnEvent jstree-open" id="' + obj[i][id] + '" title="' + obj[i][name] + '">' + edu.util.splitString(strName, iStringSplit);
+                    } else {
+                        if (render.Render != undefined) {
+                            row += render.Render(i, obj[i]);
+                        }
+                    }
+                    row += '<ul>';
+                    row += userRender(obj, obj[i][id]);
+                    row += '</ul>';
+                    row += '</li>';
+                }
+            }
+            return row;
+        }
+
+        function configTreejs() {
+            //1. check
+            if (edu.util.checkValue(obj.check)) {
+                var arr_checked = obj.arrChecked;
+                //1. config to allow check in treejs
+                $(place).jstree({
+                    "checkbox": {
+                        "keep_selected_style": false
+                    },
+                    "plugins": ["checkbox"]
+                });
+                //2.the way to refresh treejs --> when update something new
+                $(place).one("refresh.jstree", function (e, data) {
+                    if (edu.util.checkValue(arr_checked)) {
+                        for (var i = 0; i < arr_checked.length; i++) {
+                            data.instance.select_node(arr_checked[i]);
+                        }
+                    }
+                }).jstree(true).refresh();
+            }
+            //2. style user
+            else {
+                if (edu.util.checkValue(obj.style)) {//user style-user
+                    $(place).jstree({
+                        "types": {
+                            "default": {
+                                "icon": obj.style
+                            }
+                        },
+                        "plugins": ["checkbox"],
+                    });
+                }
+                else {
+                    $(place).jstree();//default user
+                }
+                $(place).jstree(true).refresh();
+                $(place).one("refresh.jstree").jstree(true).refresh();
+            }
+        }
     },
 };
