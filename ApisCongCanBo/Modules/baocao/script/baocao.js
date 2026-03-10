@@ -26,12 +26,12 @@ BaoCao.prototype = {
     loadBtnBaoCao: function (data) {
         console.log(data);
         var row = "";
-        row += '<div style="margin-left: auto; margin-right: auto; width: ' + (data.length * 113) + 'px">';
+        row += '<div style=" width: 100%" class="zoneBtnBaoCao-list">';
         for (var i = 0; i < data.length; i++) {
             row += '<div id="' + data[i].MA + '" name="' + data[i].THONGTIN3 + '" class="btn-large btnbaocao">';
             row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a>';
             row += '<div class="clear"></div>';
-            row += '<a class="color-active bold">' + data[i].TEN + '</a>';
+            row += '<a class="text-BaoCao">' + data[i].TEN + '</a>';
             row += '</div>';
         }
         row += '</div>';

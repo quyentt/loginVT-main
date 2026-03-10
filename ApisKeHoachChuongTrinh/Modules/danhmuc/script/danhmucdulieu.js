@@ -798,78 +798,78 @@ DanhMucDuLieu.prototype = {
             }
             switch (me.dtDanhMucThuocTinh[i].TENTRUONGDULIEU) {
                 case "Ten":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + " (*)</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtTen' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "<span class='color-red pl10'>(*)</span></label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtTen' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "Ma":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + " (*)</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtMa' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "<span class='color-red pl10'>(*)</span></label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtMa' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "HeSo1":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtHeSo1' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtHeSo1' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "HeSo2":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtHeSo2' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtHeSo2' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "HeSo3":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtHeSo3' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtHeSo3' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin1":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin1' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin1' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin2":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin2' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin2' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin3":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin3' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin3' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin4":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin4' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin4' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin5":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin5' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin5' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin6":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin6' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin6' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin7":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin7' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin7' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin8":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin8' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin8' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 default:
             }
         }
-        modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>Mô tả</label></div>";
-        modalBody += "<div style='width:80%; float:left'><input type='text' id='txtMoTa' class='form-control'/></div></div>";
+        modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>Mô tả</label></div>";
+        modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtMoTa' class='form-control'/></div></div>";
         modalBody += "<div class='clear'></div>";
-        modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>Dữ liệu cha</label></div>";
-        modalBody += "<div style='width:80%; float:left'><select id='DropDuLieuCha' class='select-opt'></select></div>";
+        modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>Dữ liệu cha</label></div>";
+        modalBody += "<div class='col-sm-9 aps-form-input'><select id='DropDuLieuCha' class='select-opt'></select></div>";
         modalBody += "<div class='clear'></div>";
         $("#modal_body").append(modalBody);
         $("#DropDuLieuCha").select2();

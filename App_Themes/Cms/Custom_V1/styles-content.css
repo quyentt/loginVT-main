@@ -150,9 +150,9 @@
 }
 
 .group-title i {
-    margin-right: 9px;
+    margin-right: 8px;
     float: left;
-    font-size: 20px;
+    font-size: 18px;
     color: var(--color-blue);
     font-weight: 700 !important;
 }
@@ -779,8 +779,6 @@
 
 .box-header.with-border {
     border-bottom: 1px solid #e1e1e1 !important;
-    /*height: 68px !important;*/
-    /*line-height: 68px !important;*/
     padding: 20px 20px 15px 20px;
     display: flex;
 }
@@ -793,9 +791,9 @@
 }
 
 .form-container .box-header.with-border {
-    height: 60px !important;
-    line-height: 60px !important;
-    padding: 20px !important;
+    height: 52px !important;
+    line-height: 52px !important;
+    padding: 16px 20px 14px 20px !important;
     font-size: 18px !important;
 }
 
@@ -905,8 +903,8 @@
 
 .zone-bus .box-header .btn-default.btnClose {
     position: absolute;
-    top: 12px;
-    right: 15px;
+    top: 8px;
+    right: 5px;
     background: #fff !important;
 }
 
@@ -925,9 +923,8 @@
 }
 
 .zone-bus.form-container .box-header.with-border {
-    padding: 26px 20px;
-    height: 68px;
-    line-height: 68px;
+    height: 52px;
+    line-height: 28px;
     font-size: 20px;
     font-weight: 600 !important;
     background: var(--color-blue);
@@ -2675,7 +2672,7 @@
 }
 
 .aps-taichinh-r .zone-bus.form-container .box-header.with-border {
-    padding: 20px;
+    padding: 15px 20px;
 }
 
 .aps-taichinh-r .title-colon {
@@ -5250,9 +5247,16 @@
 
 .btnXuat_HDDT .btn i,
 #btnSaveHDBL .btn i,
-#btnClose_HDBL .btn i,
 #btnThuTien .btn i {
     font-size: 24px;
+}
+
+#btnClose_HDBL .btn {
+    padding-right: 5px !important;
+}
+
+#btnClose_HDBL .btn i {
+    font-size: 18px !important;
 }
 
 .lbsymbolHD {
@@ -6373,6 +6377,11 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-right: 30px;
     text-align: left;
     margin-left: 0 !important;
+    cursor: pointer;
+}
+
+.aps-BtnXacNhan .btnxacnhan a {
+    cursor: pointer;
 }
 
 .aps-BtnXacNhan .btn-large .lbsymbolHD {
@@ -6892,7 +6901,7 @@ input#tblInput_DTSV_SinhVien_input {
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 38px !important;
     padding-left: 2px !important;
-    padding-top: 0px !important;
+    padding-top: 5px !important;
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -7227,6 +7236,10 @@ input#tblInput_DTSV_SinhVien_input {
     text-align: left !important;
 }
 
+.aps-add-form .aps-form-input.col-sm-9 {
+    width: 75% !important;
+}
+
 .aps-add-form .aps-form-lable label {
     line-height: 28px !important;
 }
@@ -7554,13 +7567,44 @@ input#tblInput_DTSV_SinhVien_input {
 
 /*-------*/
 .zoneBtnBaoCao .btn {
-    height: 86px;
+    height: 36px;
+    padding: 0px !important;
 }
 
 .zoneBtnBaoCao .btn-large {
-    border-bottom: 0 solid #f1f1f1 !important;
-    margin-left: 15px;
+    width: 15% !important;
+    margin-right: 20px;
     margin-bottom: 20px;
+    border: 1px dotted #d1d1d1;
+    padding: 15px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    color: #222;
+    text-align: left;
+}
+
+.zoneBtnBaoCao .btn-large .text-BaoCao {
+    color: #222;
+}
+
+.zoneBtnBaoCao .btn-large:hover {
+    border: 1px dotted var(--color-blue);
+    color: #fff !important;
+    background-color: var(--color-blue);
+}
+
+.zoneBtnBaoCao .btn-large:hover .text-BaoCao,
+.zoneBtnBaoCao .btn-large:hover .btn i {
+    color: #fff !important;
+    /* font-weight: bold; */
+}
+
+.zoneBtnBaoCao .btn i {
+    padding-right: 0 !important;
+    font-size: 36px !important;
+    margin-right: 10px;
+
 }
 
 .info-tblHoSoLL_NhanSu {
@@ -7580,7 +7624,7 @@ input#tblInput_DTSV_SinhVien_input {
     overflow: hidden !important;
     border-top-left-radius: 12px;
     border-top-right-radius: 12px;
-    min-height: 60px;
+    min-height: 52px;
 }
 
 .box-header.with-border .box-title {
@@ -7633,8 +7677,8 @@ input#tblInput_DTSV_SinhVien_input {
 
 .title-note .btn.btnClose {
     position: absolute;
-    top: 16px;
-    right: 12px;
+    top: 7px;
+    right: 0px;
 }
 
 .btnEdit_CCTC {
@@ -7680,6 +7724,7 @@ input#tblInput_DTSV_SinhVien_input {
     display: flex;
     justify-content: space-between;
     padding-right: 5px;
+    color: #888;
 }
 
 /*--------------*/
@@ -8571,8 +8616,9 @@ input#tblInput_DTSV_SinhVien_input {
     margin-bottom: 10px !important;
 }
 
-.aps-table-select label {
-    color: #666;
+.aps-table-select label,.info-tblHeDaoTao span,
+.info-tblKhoaDaoTao span {
+    color: #888;
 }
 
 .box-header {
@@ -10372,6 +10418,10 @@ table#clone {
     right: -17px !important;
 }
 
+.mailbox-attachments .btn-default:hover i {
+    color: red;
+}
+
 .table .mailbox-attachments .btn-default {
     top: -10px !important;
     right: -15px !important;
@@ -10426,6 +10476,10 @@ table#clone {
 
 .titleSearchContent {
     padding-bottom: 0px !important;
+}
+
+.aps-tongtheongay .titleSearchContent {
+    padding-bottom: 15px !important;
 }
 
 .study-program-block .justify-content-start .meta {
@@ -10514,6 +10568,67 @@ table#clone {
     background-color: transparent !important;
     color: var(--color-yellow) !important;
 }
+
 .form-group.date-input .form-control {
     border: 1px solid #d2d6de;
+}
+
+#tblKhoiTao_NhanSu td:last-child,
+.tblKhoiTao_NhanSu_CaNam td:last-child {
+    text-align: left !important;
+}
+
+#tblKhoiTao_NhanSu td:first-child,
+.tblKhoiTao_NhanSu_CaNam td:first-child {
+    width: 100px !important;
+}
+
+.tblKhoiTao_NhanSu td,
+.tblKhoiTao_NhanSu_CaNam td {
+    text-align: center;
+}
+
+.line-20 {
+    line-height: 20px !important;
+}
+
+.table.tblLuongThuNhap tfoot {
+    border: 0 !important;
+}
+
+.table.tblLuongThuNhap tfoot td:first-child {
+    border-left: 0px solid #d1d1d1 !important;
+}
+
+.table.tblLuongThuNhap tfoot td:first-child {
+    border-left: 0px solid #d1d1d1 !important;
+}
+
+.table-bordered.table.tblLuongThuNhap {
+    border-bottom: 0px solid #d1d1d1;
+}
+
+.table.tblDuocNhanKhac tfoot {
+    border: 0 !important;
+}
+
+.table.tblDuocNhanKhac tfoot td:first-child {
+    border-left: 0px solid #d1d1d1 !important;
+}
+
+.table.tblDuocNhanKhac tfoot td:first-child {
+    border-left: 0px solid #d1d1d1 !important;
+}
+
+.table-bordered.table.tblDuocNhanKhac {
+    border-bottom: 0px solid #d1d1d1;
+}
+
+.aps-danhmucdulieu-l .jstree-container-ul li {
+    overflow: hidden;
+    width: 96%;
+    display: flex;
+}
+.tblChuongTrinh tr td:nth-last-child(4){
+    text-align: center !important;
 }

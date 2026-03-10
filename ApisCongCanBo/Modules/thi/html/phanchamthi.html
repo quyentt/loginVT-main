@@ -84,7 +84,8 @@
                 </div>
 
                 <div class="col-lg-3 col-md-4 col-12 d-flex mb-15 aps-gap-10">
-                    <div id="btnSearch" class="btn btn-primary"><i class="fa-regular fa-list"></i> Danh sách thi</div>
+                    <div id="btnSearch" class="btn btn-search btn-default"><i class="fa-solid fa-magnifying-glass"></i>
+                        Tìm kiếm</div>
                     <div class="dropdown ms-4" id="zonebtnBaoCao_ChamThi"></div>
                 </div>
 
@@ -92,35 +93,40 @@
             </div>
         </div>
         <div class="container-fluid px-20">
-            <div class="aps-table-select"></div>
-            <table class="table transcrip-table tabs-scores h-auto" id="tblPhanChamThi">
-                <thead>
-                    <tr>
-                        <th class="text-center" rowspan="2" scope="col">STT</th>
-                        <th class="text-center border-left border-bottom py-2" colspan="7" scope="col">THÔNG TIN DANH
-                            SÁCH THI</th>
-                        <th class="text-center border-left" rowspan="2" scope="col" style="width: 150px">Ngày nhận bài
-                        </th>
-                        <th class="text-center border-left" rowspan="2" scope="col">THÔNG TIN CÁN BỘ CHẤM THI ĐÃ PHÂN
-                            CÔNG</th>
-                        <th class="border-left text-center" rowspan="2" scope="col"><input class="chkSystemSelectAll"
-                                type="checkbox" name="" id=""></th>
-                    </tr>
-                    <tr>
-                        <th class="text-center border-left py-2" scope="col">Mã danh sách thi</th>
-                        <th class=" py-2" scope="col">Học phần</th>
-                        <th class=" py-2" scope="col">Lớp</th>
-                        <th class="text-center py-2" scope="col">Ngày thi</th>
-                        <th class="text-center py-2" scope="col">Ca thi</th>
-                        <th class="text-center py-2" scope="col">Phòng thi</th>
-                        <th class="text-center py-2" scope="col">Số SV</th>
-                    </tr>
+            <div class="aps-table-select mt-20">
+                <table class="table transcrip-table tabs-scores h-auto table-bordered table-border tblPhanChamThi"
+                    id="tblPhanChamThi">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" rowspan="2" scope="col">STT</th>
+                            <th class="text-center border-left border-bottom py-2" colspan="7" scope="col">THÔNG TIN
+                                DANH
+                                SÁCH THI</th>
+                            <th class="text-center border-left" rowspan="2" scope="col" style="width: 150px">Ngày nhận
+                                bài
+                            </th>
+                            <th class="text-center border-left" rowspan="2" scope="col">THÔNG TIN CÁN BỘ CHẤM THI ĐÃ
+                                PHÂN
+                                CÔNG</th>
+                            <th class="border-left text-center" rowspan="2" scope="col"><input
+                                    class="chkSystemSelectAll" type="checkbox" name="" id=""></th>
+                        </tr>
+                        <tr>
+                            <th class="text-center border-left py-2" scope="col">Mã danh sách thi</th>
+                            <th class=" py-2" scope="col">Học phần</th>
+                            <th class=" py-2" scope="col">Lớp</th>
+                            <th class="text-center py-2" scope="col">Ngày thi</th>
+                            <th class="text-center py-2" scope="col">Ca thi</th>
+                            <th class="text-center py-2" scope="col">Phòng thi</th>
+                            <th class="text-center py-2" scope="col">Số SV</th>
+                        </tr>
 
 
-                </thead>
-                <tbody></tbody>
-                <tfoot></tfoot>
-            </table>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
         </div>
         <div class="d-flex align-items-center mt-3 flex-wrap mb-3 pr20 mt-10">
             <div class="btn btn-primary px-4 ms-auto " id="btnPhanChamThi">
@@ -131,23 +137,30 @@
 </div>
 <!-- end đăng ký nguyện vọng -->
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modal_PhanChamThi">
+        Cán bộ coi thi</button>
+</div>
+<!-- ---------- -->
 <!-- modal chitiet -->
-<div class="modal fade register-wish xlts" id="modal_PhanChamThi" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade register-wish xlts modal_PhanChamThi" id="modal_PhanChamThi" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b><i class="fal fa-chalkboard-teacher me-2"></i> Cán bộ chấm thi</b></p>
+                    <p><i class="fal fa-chalkboard-teacher mr-10 fw-bold"></i>Cán bộ chấm thi</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
                 <div class="col-12 aps-table-select">
-                    <table class="table transcrip-table tabs-scores " id="tblPhanCong">
+                    <table class="table transcrip-table tabs-scores table-bordered table-noborder tblPhanCong"
+                        id="tblPhanCong">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col">Họ đệm</th>
                                 <th scope="col">Tên</th>
                                 <th class="text-center" scope="col">Mã số</th>
@@ -159,22 +172,23 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-15 aps-gap-10 pull-right" style="float: right;">
+
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex pull-right">
                     <button type="button" class="btn btn-default min-w-auto px-4" data-bs-dismiss="modal"> <i
-                            class="fal fa-times-circle me-2"></i> Đóng</button>
+                            class="fal fa-times-circle me-2"></i>Đóng</button>
                     <button type="button" id="btnDelete_GiangVien" class="btn btn-danger min-w-auto px-4"><i
-                            class="fal fa-trash me-2"></i> Xóa</button>
-                    <button class="btn btn-add mb-5" id="btnAddGiangVien">
-                        <i class="fal fa-plus"></i>
-                        <span>Thêm mới</span>
+                            class="fal fa-trash me-2"></i>Xóa</button>
+                    <button class="btn btn-success mb-5" id="btnAddGiangVien">
+                        <i class="fal fa-plus"></i><span>Thêm mới</span>
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-<div class="modal fade register-wish " id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade register-wish aps-modal-nhansu" id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
     </div>

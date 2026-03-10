@@ -4,7 +4,8 @@
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
                 <p class="link"><a href="#">Báo cáo thống kê</a><i class="fal fa-angle-right"></i>
-                    <a href="#">Khối lượng cá nhân</a></p>
+                    <a href="#">Khối lượng cá nhân</a>
+                </p>
             </div>
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
@@ -26,9 +27,11 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="btn btn-search btn-default" id="btnSearch"><i class="fa-solid fa-magnifying-glass"></i>Xem</div>
+                        <div class="btn btn-search btn-default" id="btnSearch"><i
+                                class="fa-solid fa-magnifying-glass"></i>Xem</div>
                         <div class="btn btn-outline-primary" id="btnSearchToanBo">
-                            <i class="fal fa-table me-2"></i>Xem toàn bộ</div>
+                            <i class="fal fa-table me-2"></i>Xem toàn bộ
+                        </div>
                         <div class="dropdown ms-4" id="zonebtnBaoCao_KLCN"></div>
                     </div>
                 </div>
@@ -58,12 +61,13 @@
                     </h3>
                 </div>
                 <div class="pull-right box-btn">
-                    <div class="btn btn-save min-w-auto px-4 ms-auto ms-lg-0 btnSave_DuyetBuoiHoc" id=""><i
+                    <div class="btn btn-primary btn-save min-w-auto px-4 ms-auto ms-lg-0 btnSave_DuyetBuoiHoc" id=""><i
                             class="fal fa-save me-2"></i>Lưu</div>
                 </div>
             </div>
             <div class="aps-table-select scroll-table-x">
-                <table class="table table-bordered  transcrip-table tabs-scores table-noborder tblKhoiLuongCaNhan" id="tblKhoiLuongCaNhan">
+                <table class="table table-bordered  transcrip-table tabs-scores table-noborder tblKhoiLuongCaNhan"
+                    id="tblKhoiLuongCaNhan">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
@@ -96,13 +100,15 @@
 <!-- ---------- -->
 <div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modal_lichgiang">
-        Dữ liệu</button>   
+        Dữ liệu</button>
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal_duyetbuoihoc">
+        Dữ liệu</button>
 </div>
 <!-- ---------- -->
 <!-- Modal dữ liệu lịch giảng-->
 <div class="modal fade block-knowledge" id="modal_lichgiang" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-90" style="max-width: unset">
+    <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
@@ -111,7 +117,8 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table tabs-scores tblModalLichGiang table-bordered table-noborder" id="tblModalLichGiang">
+                <table class="table transcrip-table tabs-scores tblModalLichGiang table-bordered table-noborder"
+                    id="tblModalLichGiang">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
@@ -139,25 +146,25 @@
 <!-- Modal dữ liệu lịch giảng-->
 <div class="modal fade block-knowledge" id="modal_duyetbuoihoc" tabindex="-1" aria-labelledby="zoomfileLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" style="max-width: unset">
+    <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="zoomfileLabel">
-                    Dữ liệu <span id="lblModalLable"></span>
+                    <i class="fa-solid fa-database"></i>Dữ liệu <span id="lblModalLable"></span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <table class="table transcrip-table tabs-scores" id="tblDuyetBuoiHoc">
+                <table class="table transcrip-table tabs-scores tblDuyetBuoiHoc table-bordered table-noborder" id="tblDuyetBuoiHoc">
                     <thead>
                         <tr>
-                            <th rowspan="2" class="text-center" scope="col">STT</th>
+                            <th rowspan="2" class="text-center w-50px" scope="col">STT</th>
                             <th rowspan="2" scope="col">Mã lớp</th>
                             <th rowspan="2" scope="col">Tên lớp</th>
                             <th rowspan="2" scope="col">Ngày học</th>
                             <th rowspan="2" scope="col">Thứ học</th>
-                            <th class="text-center" rowspan="2" scope="col">Số tiết <br> <span
-                                    class="fw-normal lh-1">(Bắt đầu > kết thúc)</span></th>
+                            <th class="text-center" rowspan="2" scope="col">Số tiết 
+                                <span class="fw-normal lh-1 color-888">(Bắt đầu > kết thúc)</span></th>
                         </tr>
                         <tr></tr>
                     </thead>

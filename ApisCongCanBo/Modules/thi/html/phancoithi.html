@@ -78,19 +78,20 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-lg-3 col-md-4 col-12  d-flex mb-15 aps-gap-10">
-                    <div id="btnSearch" class="btn btn-primary"><i class="fa-regular fa-list"></i> Danh sách thi</div>
+                    <div id="btnSearch" class="btn btn-default btn-search"><i
+                            class="fa-solid fa-magnifying-glass"></i>Tìm kiếm</div>
                     <div class="dropdown ms-4" id="zonebtnBaoCao_ChamThi"></div>
                 </div>
             </div>
         </div>
         <div class="container-fluid px-20">
-            <div class="aps-table-select">
-                <table class="table transcrip-table tabs-scores h-auto tblPhanCoiThi" id="tblPhanCoiThi">
+            <div class="aps-table-select mt-20">
+                <table class="table transcrip-table tabs-scores h-auto tblPhanCoiThi table-bordered table-border"
+                    id="tblPhanCoiThi">
                     <thead>
                         <tr>
-                            <th class="text-center" rowspan="2" scope="col">STT</th>
+                            <th class="text-center w-50px" rowspan="2" scope="col">STT</th>
                             <th class="text-center border-left border-bottom py-2" colspan="6" scope="col">THÔNG TIN
                                 DANH SÁCH THI</th>
                             <th class="text-center border-left" rowspan="2" scope="col">THÔNG TIN CÁN BỘ COI THI ĐÃ PHÂN
@@ -124,23 +125,30 @@
     </div>
     <!-- end đăng ký nguyện vọng -->
 </div>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modal_PhanCoiThi">
+        Cán bộ coi thi</button>
+</div>
+<!-- ---------- -->
 <!-- modal chitiet -->
-<div class="modal fade register-wish xlts" id="modal_PhanCoiThi" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade register-wish xlts modal_PhanCoiThi" id="modal_PhanCoiThi" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b><i class="fal fa-chalkboard-teacher me-2"></i> Cán bộ coi thi</b></p>
+                    <p><i class="fal fa-chalkboard-teacher  fw-bold mr-10"></i>Cán bộ coi thi</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
                 <div class="col-12 aps-table-select">
-                    <table class="table transcrip-table tabs-scores tblPhanCong" id="tblPhanCong">
+                    <table class="table transcrip-table tabs-scores tblPhanCong table-bordered table-noborder"
+                        id="tblPhanCong">
                         <thead>
                             <tr>
-                                <th class="text-center" scope="col">STT</th>
+                                <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col">Họ đệm</th>
                                 <th scope="col">Tên</th>
                                 <th class="text-center" scope="col">Mã số</th>
@@ -152,21 +160,21 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-15 aps-gap-10 pull-right" style="float: right;">
-                    <button type="button" class="btn btn-default min-w-auto px-4" data-bs-dismiss="modal"> 
-                        <i class="fal fa-times-circle me-2"></i> Đóng</button>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default min-w-auto px-4" data-bs-dismiss="modal">
+                        <i class="fal fa-times-circle me-2"></i>Đóng</button>
                     <button type="button" id="btnDelete_GiangVien" class="btn btn-danger min-w-auto px-4"><i
-                            class="fal fa-trash me-2"></i> Xóa</button>
-                    <button class="btn btn-add" id="btnAddGiangVien"> <i class="fal fa-plus"></i>
-                        <span>Thêm mới</span>
+                            class="fal fa-trash me-2"></i>Xóa</button>
+                    <button class="btn btn-success" id="btnAddGiangVien"> <i class="fal fa-plus"></i><span>Thêm mới</span>
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
-<div class="modal fade register-wish " id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade register-wish aps-modal-nhansu" id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-1800">
     </div>

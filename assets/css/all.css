@@ -7232,8 +7232,8 @@ tr:last-child .d-flex.gap-3 {
   overflow: hidden !important;
   border-top-left-radius: 12px !important;
   border-top-right-radius: 12px !important;
-  min-height: 60px !important;
-  padding: 20px 20px 15px 20px !important;
+  min-height: 52px !important;
+  padding: 10px 20px 10px 20px !important;
   border-bottom: 1px solid #e1e1e1 !important;
 }
 

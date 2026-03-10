@@ -11,7 +11,7 @@
                     </div>
                 </div>
             </div>
-            <div class="box box-solid aps-list-danhmuc pd15 mt-10">
+            <div class="box box-solid aps-list-danhmuc pd15 mt-5">
                 <div class="box-header pd0 mb-10">
                     <h3 class="box-title mt-0">
                         <i class="fal fa-folder-tree"></i> Danh sách danh mục
@@ -41,7 +41,7 @@
                             <a id="btnDelete_DMDL" class="btn btn-danger"><i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span></a>
                         </div>
                         <div style="float:left">
-                            <a id="btnAddnew_DMDL" class="btn btn-primary btnAdd"><i class="fa fa-plus-circle"></i> <span class="lang" key="">Tạo mới</span></a>
+                            <a id="btnAddnew_DMDL" class="btn btn-primary btnAdd"><i class="fa fa-plus"></i><span class="lang" key="">Tạo mới</span></a>
                         </div>
                     </div>
                 </div>
@@ -67,23 +67,28 @@
         </div>
     </div>
 </section>
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-20" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+        Danh mục dữ liệu</button>
+</div>
+<!-- ---------- -->
 <!--Danh mục dữ liệu-->
 <div class="modal fade aps-modal-dm-dulieu" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-680">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel" key=""></span> Danh mục dữ liệu</h4>
+                <h4 class="modal-title"><span class="myModalLabel" key=""></span>Danh mục dữ liệu</h4>
                 <input type="hidden" value="" id="txtId" />
             </div>
             <div class="modal-body modal-body-table aps-add-new aps-form" id="modal_body">
                 <!--Load from DanhMucDuLieu.js-->
             </div>
             <div id="notify"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_DMDL"><i class="fal fa-save"></i><span class="lang" key=""> Lưu</span></a>
+            <div class="modal-footer d-flex justify-content-end">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                <a class="submit btn btn-primary" id="btnSave_DMDL"><i class="fal fa-save"></i><span class="lang" key="">Lưu</span></a>
             </div>
         </div>
     </div>
