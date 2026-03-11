@@ -102,7 +102,7 @@
                                                             <div class="input-group no-icon">
                                                                 <input type="email" id-="txtSearch_TuKhoa"
                                                                        class="form-control"
-                                                                       placeholder="Xem cấu trúc tại ngày">
+                                                                       placeholder="Từ khóa tìm kiếm">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -135,11 +135,8 @@
                                                     </button>
                                                 </div>
                                                 <div class="box-body trees-coCau-toChuc">
-                                                    <div id="treesjs_cocautochuc"
-                                                         class="jstree jstree-8 jstree-default" role="tree"
-                                                         aria-multiselectable="true" tabindex="0"
-                                                         aria-activedescendant="ECCCC7B1C4EC4DFBA0DD77337211E683"
-                                                         aria-busy="false">
+                                                    <div id="treesjs_cocautochuc">
+                                                         
                                                     </div>
                                                 </div>
                                             </div>
@@ -247,17 +244,15 @@
                             <div class="title-name">Tình trạng</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-select pr0">
-                            <div class="custom-select">
-                                <select id="dropTrangThai" class="select-opt form-select"
-                                        aria-label="Default select example">
-                                    <option value="1">
-                                        Hiệu lực
-                                    </option>
-                                    <option value="0">
-                                        Hết hiệu lực
-                                    </option>
-                                </select>
-                            </div>
+                            <select id="dropTrangThai" class="select-opt form-select"
+                                    aria-label="Default select example">
+                                <option value="1">
+                                    Hiệu lực
+                                </option>
+                                <option value="0">
+                                    Hết hiệu lực
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <!-- Row 7 -->
@@ -327,17 +322,15 @@
                             <div class="title-name">Tình trạng</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-select pr0">
-                            <div class="custom-select">
-                                <select id="dropTrangThai_Cha" class="select-opt form-select"
-                                        aria-label="Default select example">
-                                    <option value="1">
-                                        Hiệu lực
-                                    </option>
-                                    <option value="0">
-                                        Hết hiệu lực
-                                    </option>
-                                </select>
-                            </div>
+                            <select id="dropTrangThai_Cha" class="select-opt form-select"
+                                    aria-label="Default select example">
+                                <option value="1">
+                                    Hiệu lực
+                                </option>
+                                <option value="0">
+                                    Hết hiệu lực
+                                </option>
+                            </select>
                         </div>
                     </div>
 
@@ -393,11 +386,16 @@
 
 
             <div class="modal-footer">
+                <div class="pull-left d-flex btnOpenDelete">
+                    <button class="btn btn-outline-danger" id="btnDelete_CoCauToChuc">
+                        <i class="fal fa-trash"></i><span>Xóa cơ cấu tổ chức</span>
+                    </button>
+                </div>
                 <div class="pull-right d-flex">
-                    <button class="btn btn-default" data-bs-toggle="modal">
+                    <button class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
-                    <button class="btn btn-primary" id="btnSave_DonVi">
+                    <button class="btn btn-primary" id="btnSave_CoCauToChuc">
                         <i class="fal fa-save"></i><span>Lưu thông tin</span>
                     </button>
                 </div>
@@ -486,7 +484,7 @@
 
             <div class="modal-footer">
                 <div class="pull-right d-flex">
-                    <button class="btn btn-default" data-bs-toggle="modal">
+                    <button  class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                     <button class="btn btn-primary" id="btnSave_QuanHe">

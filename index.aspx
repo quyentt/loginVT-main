@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css/styles.css?v=<%= Guid.NewGuid().ToString() %>">
     <link href="assets/select2/css/select2.min.css" rel="stylesheet" />
     <link href="assets/pagination/simplePagination.min.css" rel="stylesheet" />
+        <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/logo.ico" />
 </head>
 
@@ -422,6 +423,7 @@
 <script src="assets/js/custom.js"></script>
 <!-- <script src="assets/js/customs.js"></script> -->
 <script src="assets/js/cleave.min.js"></script>
+        <script type="text/javascript" src="App_Themes/Plugins/jstree/dist/jstree.min.js"></script><!--Plugin jstree-->
     
     <script type="text/javascript" src="Core/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script>    <!--CORE JS-->
     <script type="text/javascript" src="Core/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script>  <!--CORE JS-->
