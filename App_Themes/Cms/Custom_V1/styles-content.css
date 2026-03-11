@@ -8187,6 +8187,15 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 /*---------------*/
+.aps-chuongtrinhhocphan .aps-list-chuongtrinh {
+    background: #f1f1f1 !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+    margin-top: -5px !important;
+}
+
 .zoneBox_ChuongTrinh {
     display: flex;
     flex-wrap: wrap;
@@ -8208,42 +8217,43 @@ input#tblInput_DTSV_SinhVien_input {
     height: 100%;
     display: flex;
     flex-direction: column;
+    background: #fff;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+1) .small-box {
-    border-top: 3px solid #3c8dee !important;
+    border-left: 3px solid #3c8dee !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+2) .small-box {
-    border-top: 3px solid #198754 !important;
+    border-left: 3px solid #198754 !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+3) .small-box {
-    border-top: 3px solid #0a6139 !important;
+    border-left: 3px solid #0a6139 !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+4) .small-box {
-    border-top: 3px solid #FF0000 !important;
+    border-left: 3px solid #FF0000 !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+5) .small-box {
-    border-top: 3px solid #d54b07 !important;
+    border-left: 3px solid #d54b07 !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+6) .small-box {
-    border-top: 3px solid #ff0081 !important;
+    border-left: 3px solid #ff0081 !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+7) .small-box {
-    border-top: 3px solid #e300ff !important;
+    border-left: 3px solid #e300ff !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+8) .small-box {
-    border-top: 3px solid #ffe600 !important;
+    border-left: 3px solid #ffe600 !important;
 }
 
 .zoneBox_ChuongTrinh .btnView:nth-child(9n+9) .small-box {
-    border-top: 3px solid #31d2f2 !important;
+    border-left: 3px solid #31d2f2 !important;
 }
 
 .zoneBox_ChuongTrinh .small-box>.inner {
@@ -8388,7 +8398,7 @@ input#tblInput_DTSV_SinhVien_input {
 
 .aps-list-hocphan.sidebar-menu li a,
 .zoneHocPhan_Selected_KBB.sidebar-menu li a {
-    padding: 16px 12px 13px 0 !important;
+    padding: 13px 12px 11px 15px !important;
 }
 
 .aps-list-hocphan.sidebar-menu .item-li a i {
@@ -8396,6 +8406,13 @@ input#tblInput_DTSV_SinhVien_input {
     font-size: 13px !important;
     color: var(--color-green);
     padding-right: 0;
+}
+.aps-list-hocphan.sidebar-menu .item-li a .btnSelectHocPhan i {
+    font-size: 12px !important;
+    width: 12px !important;
+}
+.aps-list-hocphan.sidebar-menu .item-li a .btn i {
+    color: #fff;
 }
 
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li a i {
@@ -8429,15 +8446,29 @@ input#tblInput_DTSV_SinhVien_input {
 .aps-list-hocphan.sidebar-menu .item-li:hover .submit.btn,
 .aps-list-hocphan.sidebar-menu .item-li:hover .submit.btn i.fa-circle-check {
     background: var(--color-green) !important;
-    border: 1px solid var(--color-green) !important;
+    border: 0 solid var(--color-green) !important;
     color: #fff !important;
 }
 
+.aps-list-hocphan.sidebar-menu>li>a>i,
+.zoneHocPhan_Selected_KBB.sidebar-menu>li>a>i {
+    margin-top: 5px !important;
+    width: 13px !important;
+}
+.table-khoituchon .sidebar-menu {
+    padding: 0 !important;
+}
 .table.table-khoibatbuoc tr:last-child,
 .table.table-khoituchon tr:last-child {
     border-right: 0 solid #d1d1d1 !important;
 }
-
+ .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a, 
+ .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.active:hover>a, 
+ .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open:hover>a {
+    background: #f1f1f1 !important;
+    color: var(--color-red) !important;
+    border-radius: 0px !important;
+}
 /*----------------*/
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li:hover>a {
     background: #fff !important;
@@ -8447,32 +8478,41 @@ input#tblInput_DTSV_SinhVien_input {
 
 .aps-list-hocphan.sidebar-menu .item-li .submit.btn {
     position: absolute;
-    top: 11px;
+    top: 10px;
     right: 10px;
     height: 30px;
-    padding-top: 2px !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding-top: 0px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
     width: auto !important;
+}
+
+.aps-list-hocphan.sidebar-menu .item-li a i.fa-circle-check,
+.zoneHocPhan_Selected_KBB.sidebar-menu .item-li a i.fa-circle-check {
+    margin-right: 8px !important;
 }
 
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
     position: absolute;
-    top: 11px;
+    top: 10px;
     right: 10px;
     height: 30px;
-    padding-top: 2px !important;
-    padding-left: 12px !important;
-    padding-right: 12px !important;
+    padding-top: 0px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
     background: #fff;
     border: 1px solid var(--color-red);
     color: var(--color-red);
     width: auto !important;
 }
-
+.zoneHocPhan_Selected_KBB.sidebar-menu .item-li a i.fa-xmark{
+    font-size: 12px !important;
+    width: 13px !important;
+    margin-left: 3px;
+}
 .zone_chuongtrinhhocphan .box-header.bg-green {
-    height: 60px;
-    line-height: 60px;
+    height: 52px;
+    line-height: 52px;
 }
 
 .zone_chuongtrinhhocphan .box-header.bg-greenr .pull-right .btn {
@@ -8616,7 +8656,8 @@ input#tblInput_DTSV_SinhVien_input {
     margin-bottom: 10px !important;
 }
 
-.aps-table-select label,.info-tblHeDaoTao span,
+.aps-table-select label,
+.info-tblHeDaoTao span,
 .info-tblKhoaDaoTao span {
     color: #888;
 }
@@ -10629,6 +10670,7 @@ table#clone {
     width: 96%;
     display: flex;
 }
-.tblChuongTrinh tr td:nth-last-child(4){
+
+.tblChuongTrinh tr td:nth-last-child(4) {
     text-align: center !important;
 }

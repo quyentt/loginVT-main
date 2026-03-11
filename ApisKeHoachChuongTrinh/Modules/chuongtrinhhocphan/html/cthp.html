@@ -28,8 +28,7 @@
                     </div>
                     <div class="col-sm-3 item-search">
                         <a id="btnSearchChuongTrinh" class="btn btn-default btn-search">
-                            <i class="fa fa-search"></i>
-                            <span class="lang" key="">Tìm kiếm</span>
+                            <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span>
                         </a>
                     </div>
                 </div>
@@ -37,7 +36,7 @@
             <!-- /.Danh sách  -->
             <div class="box box-solid aps-list-chuongtrinh pd20 pr5">
                 <div class="box-header pd0 pb5">
-                    <h3 class="box-title mt-0"><i class="fa-solid fa-books"></i> Danh sách chương trình</h3>
+                    <h3 class="box-title mt-0 line-20"><i class="fa-solid fa-books"></i> Danh sách chương trình</h3>
                 </div>
                 <div class="box-body pd0 mt-10">
                     <div id="zoneBox_ChuongTrinh" class="zoneBox_ChuongTrinh"></div>
@@ -47,90 +46,87 @@
 
         <!--Nội dung học phần theo chương trình: zone_chuongtrinhhocphan-->
         <div class="zone-content box box-solid zone_chuongtrinhhocphan pd0 color-white add-absolue"
-             id="zone_chuongtrinhhocphan" style="display: none;">
+            id="zone_chuongtrinhhocphan" style="display: none;">
             <div class="row pd0">
                 <div class="box box-solid pd0">
                     <div class="box-header pt15 pl20 pr20 pb0 bg-green color-white pb10"
-                         style="text-align: center; border-top-right-radius: 12px; border-top-left-radius: 12px">
-                        <a style="font-weight: bold; font-size: 24px; color:white;">
+                        style="text-align: left; border-top-right-radius: 12px; border-top-left-radius: 12px">
+                        <a style="font-weight: bold; font-size: 20px; color:white;" class="mt-5">
                             Nội dung học phần theo chương trình:
                             <span class="color-yellow" id="lblNoiDungChuongTrinh"></span>
                         </a>
                         <div class="pull-right pull-right-absolute mt-10 mr-5">
                             <a class="btn btnCloseToggle btn-none-white" href="#" title="Close">
-                                <i class="fa fa-times-circle"></i> Đóng
+                                <i class="fa-solid fa-xmark"></i>
                             </a>
                         </div>
                     </div>
                 </div>
                 <div class="row pd0 zone_chuongtrinhhocphan-detail bg-f8">
-                    <div class="col-sm-8 bg-white pr20 zone_chuongtrinhhocphan-left">
+                    <div class="col-sm-8 bg-white pr0 zone_chuongtrinhhocphan-left">
                         <div class="box box-solid pd20">
                             <div class="box-header pl0 pr0">
                                 <h3 class="box-title color-blue" title="Danh sách học phần">
                                     <i class="fa-solid fa-book-open-reader"></i> Danh sách học phần
                                 </h3>
-                                <span class="pull-right">
-                                    <div class="dropdown" id="zonebtnHPCT_Import"
-                                         style="float: left; margin-right: 5px">
+                                <span class="pull-right d-flex">
+                                    <div class="dropdown" id="zonebtnHPCT_Import" style="float: left;">
                                         <a class="btn btn-outline-success dropdown-toggle" type="button"
-                                           data-toggle="dropdown">
-                                            <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                                            data-toggle="dropdown">
+                                            <i class="fa fa-cloud-upload"></i>Import <span class="caret"></span>
                                         </a>
                                         <ul class="dropdown-menu form-container">
                                             <li>
                                                 <a class="btnImportWithProce" name="IMPORTWITHPROC_HPCT"
-                                                   title="Học phần"
-                                                   href="#">1. Import Học phần</a>
+                                                    title="Học phần" href="#">1. Import Học phần</a>
                                             </li>
                                             <li>
                                                 <a class="btnImportWithProce" name="IMPORTWITHPROC_KCT" title="Khung"
-                                                   href="#">2. Import Khung chương trình</a>
+                                                    href="#">2. Import Khung chương trình</a>
                                             </li>
                                             <li>
                                                 <a class="btnImportWithProce" name="IMPORTWITHPROC_KKTDH" title="khối"
-                                                   href="#">3. Import khối kiến thức và định hướng</a>
+                                                    href="#">3. Import khối kiến thức và định hướng</a>
                                             </li>
                                             <li>
                                                 <a class="btnImportWithProce" name="IMPORTWITHPROC_HPTD" title="HP"
-                                                   href="#">4. Import Học phần tương đương</a>
+                                                    href="#">4. Import Học phần tương đương</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <a class="btn btn-outline-primary" id="btnAdd_KeThua">
-                                        <i class="fa-regular fa-files"></i>
-                                        <span class="lang" key="lb_luu"> Kế thừa học phần</span>
+                                        <i class="fa-regular fa-files"></i><span class="lang" key="lb_luu">Kế thừa học
+                                            phần</span>
                                     </a>
                                     <a class="btn btn-success" id="btnAdd_HocPhan">
-                                        <i class="fa fa-plus"></i>
-                                        <span class="lang" key="lb_luu"> Thêm học phần</span>
+                                        <i class="fa fa-plus"></i><span class="lang" key="lb_luu">Thêm học phần</span>
                                     </a>
                                     <a class="btn btn-primary btnEdit" id="btnEditThuTu">
-                                        <i class="fa fa-edit"></i>
-                                        <span class="lang" key="lb_luu"> Chỉnh sửa thứ tự</span>
+                                        <i class="fa fa-edit"></i><span class="lang" key="lb_luu">Chỉnh sửa thứ
+                                            tự</span>
                                     </a>
                                     <a class="btn btn-warning" id="btnTaiLai">
-                                        <i class="fa fa-refresh"></i>
-                                        <span class="lang" key="lb_luu"> Tải lại</span>
+                                        <i class="fa fa-refresh"></i><span class="lang" key="lb_luu">Tải lại</span>
                                     </a>
                                 </span>
                             </div>
                             <div class="box-body pd0">
                                 <div class="aps-table-select mt-5">
-                                    <table id="tblHocPhan" class="table table-bordered">
+                                    <table id="tblHocPhan" class="table table-bordered table-noborder tblHocPhan">
                                         <thead>
                                             <tr>
-                                                <th class="td-fixed">Stt</th>
-                                                <th style="width: 120px"><span class="lang" key="">Mã học phần</span></th>
+                                                <th class="td-fixed w-50px">Stt</th>
+                                                <th style="width: 120px"><span class="lang" key="">Mã học phần</span>
+                                                </th>
                                                 <th><span class="lang" key="">Tên học phần</span></th>
                                                 <th><span class="lang" key="">Khối KT</span></th>
-                                                <th style="width: 100px">
+                                                <th style="width: 120px">
                                                     <span class="lang" key="">Số tín học phần</span>
                                                 </th>
-                                                <th style="width: 100px">
+                                                <th style="width: 120px">
                                                     <span class="lang" key="">Số tín tính phí</span>
                                                 </th>
-                                                <th style="width: 170px">
+                                                <th style="width: 180px">
                                                     <span class="lang" key="">Học kỳ dự kiến</span>
                                                 </th>
                                                 <th><span class="lang" key="">Học kỳ thực tế</span></th>
@@ -145,16 +141,16 @@
                                 <table class="table border-0 table-sum">
                                     <tbody>
                                         <tr class="border-0">
-                                            <td class="color-red border-0 pl0" style="padding-left: 0 !important;">
-                                                Tổng số
-                                                học phần: <span id="iTongSoHocPhan" class="bold"></span>
+                                            <td class="color-red border-0 pl0"
+                                                style="padding-left: 0 !important;border-left: 0 !important;">
+                                                Tổng số học phần: <span id="iTongSoHocPhan" class="bold"></span>
                                             </td>
-                                            <td class="color-blue border-0">
-                                                Tổng số tín chỉ: <span id="iTongSoTinChi"
-                                                                       class="bold"></span>
+                                            <td class="color-blue border-0" style="border-right: 0 !important;">
+                                                Tổng số tín chỉ: <span id="iTongSoTinChi" class="bold"></span>
                                             </td>
-                                            <td class="color-green border-0">
-                                                Tổng số tín chỉ theo khối: <span id="iTongSoTinChiKhoi" class="bold"></span>
+                                            <td class="color-green border-0" style="border-right: 0 !important;">
+                                                Tổng số tín chỉ theo khối: <span id="iTongSoTinChiKhoi"
+                                                    class="bold"></span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -165,13 +161,13 @@
                     <div class="col-sm-4 bg-f8 zone_chuongtrinhhocphan-right" id="">
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
-                                <h3 class="box-title color-blue">
-                                    <i class="fa-solid fa-books"></i> Các khối lựa chọn bắt buộc <span id="lblKhoiBatBuoc"></span>
+                                <h3 class="box-title color-blue  line-20">
+                                    <i class="fa-solid fa-books"></i>Các khối lựa chọn bắt buộc <span
+                                        id="lblKhoiBatBuoc"></span>
                                 </h3>
                                 <span class="pull-right">
                                     <a class="submit btn btn-outline-primary pull-right" id="btnAdd_KhoiBatBuoc">
-                                        <i class="fa fa-plus"></i> <span class="lang"
-                                                                         key="lb_luu">Thêm khối</span>
+                                        <i class="fa fa-plus"></i><span class="lang" key="lb_luu">Thêm khối</span>
                                     </a>
                                 </span>
                             </div>
@@ -184,13 +180,13 @@
                         <div class="line-height-1 mt-10"></div>
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
-                                <h3 class="box-title color-green">
-                                    <i class="fa-solid fa-books-medical color-green"></i> Các khối lựa chọn đơn <span id="lblKhoiTuChonDon"></span>
+                                <h3 class="box-title color-green line-20">
+                                    <i class="fa-solid fa-books-medical color-green"></i>Các khối lựa chọn đơn <span
+                                        id="lblKhoiTuChonDon"></span>
                                 </h3>
                                 <span class="pull-right">
                                     <a class="submit btn btn-outline-success pull-right" id="btnAdd_KhoiDon">
-                                        <i class="fa fa-plus"></i> <span class="lang"
-                                                                         key="lb_luu">Thêm khối</span>
+                                        <i class="fa fa-plus"></i><span class="lang" key="lb_luu">Thêm khối</span>
                                     </a>
                                 </span>
                             </div>
@@ -203,13 +199,12 @@
                         <div class="line-height-1 mt-10"></div>
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
-                                <h3 class="box-title color-red">
-                                    <i class="fa-solid fa-book color-red"></i> Các định
-                                    hướng
+                                <h3 class="box-title color-red line-20">
+                                    <i class="fa-solid fa-book color-red"></i>Các định hướng
                                 </h3>
                                 <span class="pull-right">
                                     <a class="btnAdd btn btn-outline-danger pull-right" id="btnAdd_DinhHuong">
-                                        <i class="fa fa-plus"></i> <span class="lang" key="lb_luu"> Thêm mới</span>
+                                        <i class="fa fa-plus"></i><span class="lang" key="lb_luu">Thêm mới</span>
                                     </a>
                                 </span>
                             </div>
@@ -226,10 +221,11 @@
 
         <!--Chọn học phần cho chương trình-->
         <div class="box box-solid form-container zone-content add-absolue pd0 zone_inputhocphan" id="zone_inputhocphan"
-             style="display: none;">
+            style="display: block;">
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
-                    <i class="fa fa-pencil"></i> Chọn học phần cho chương trình: <span id="lblInputHocPhan" class="color-active"></span>
+                    <i class="fa-sharp-duotone fa-solid fa-book-open-reader fw-bold"></i> Chọn học phần cho chương trình: 
+                    <span id="lblInputHocPhan" class="color-active"></span>
                 </h3>
                 <div class="pull-right pull-right-absolute">
                     <a class="btn btn-outline-white btnClose_SelectHocPhan border-0" href="#" title="Close">
@@ -243,26 +239,26 @@
                     <table class="table border-0 table-khoibatbuoc mb-0" style="border: 0 !important;">
                         <tbody>
                             <tr style="border: 0 !important;">
-                                <td style="width: 48%;padding: 0 !important;" class="border-0">
+                                <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;" class="border-0">
                                     <div class="box box-solid pd0" style="background-color: #fff !important">
                                         <div class="box-header pd0">
-                                            <h3 class="box-title pl0" title="Xác định học phần cho chương trình"
+                                            <h3 class="box-title pl0 line-20" title="Xác định học phần cho chương trình"
                                                 style="color:#3380db !important;">
-                                                <i class="fa fa-book color-blue" style="color:#3380db !important;"></i> Xác
-                                                định học phần cho chương trình
+                                                <i class="fa fa-book color-blue" style="color:#3380db !important;"></i>
+                                                Xác định học phần cho chương trình
                                             </h3>
                                         </div>
-                                        <div class="box-body pd0 mt-15">
+                                        <div class="box-body pd0 mt-10">
                                             <div class="input-group pb15">
-                                                <input type="text" id="txtSearch_TuKhoa_SelectHocPhan" class="form-control"
-                                                       placeholder="Nhập từ khóa tìm kiếm">
+                                                <input type="text" id="txtSearch_TuKhoa_SelectHocPhan"
+                                                    class="form-control" placeholder="Nhập từ khóa tìm kiếm">
                                                 <span class="input-group-addon poiter btnExtend_Search"
-                                                      title="Tìm kiếm nâng cao">
+                                                    title="Tìm kiếm nâng cao">
                                                     <i class="fa fa-angle-double-down"></i> Nâng cao
                                                 </span>
                                             </div>
                                             <div class="box-sub-search pd0 bg-white pb15" style="display: none">
-                                                <div class="bss-item color-666 pd0">
+                                                <div class="bss-item color-888 pd0">
                                                     <i>Chọn điều kiện tìm kiếm:</i>
                                                 </div>
                                                 <div class="col-sm-6 item-search mb-10">
@@ -274,7 +270,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-sm-6 item-search mb-10"
-                                                     style="padding-right: 0 !important;">
+                                                    style="padding-right: 0 !important;">
                                                     <div class="bss-item pd0">
                                                         <select id="dropSearchHocPhan_ChuongTrinh" class="select-opt">
                                                             <option value="">-- Chọn chương trình--</option>
@@ -283,14 +279,14 @@
                                                     </div>
                                                 </div>
                                                 <div class="bss-item mt-10">
-                                                    <a class="btn btn-outline-primary pull-right ml-10"
-                                                       id="btnSeachHocPhan_DanhMuc"
-                                                       href="#" title="Tìm các học phần từ danh mục sẵn có">
+                                                    <a class="btn btn-outline-primary pull-right ml-10 btn-table-none"
+                                                        id="btnSeachHocPhan_DanhMuc" href="#"
+                                                        title="Tìm các học phần từ danh mục sẵn có">
                                                         <i class="fa fa-search"></i> Tìm từ danh mục
                                                     </a>
-                                                    <a class="btn btn-outline-primary pull-right ml-5"
-                                                       id="btnSeachHocPhan_KhoaDaoTao" href="#"
-                                                       title="Tìm học phần từ chương trình trước">
+                                                    <a class="btn btn-outline-success pull-right ml-5  btn-table-none"
+                                                        id="btnSeachHocPhan_KhoaDaoTao" href="#"
+                                                        title="Tìm học phần từ chương trình trước">
                                                         <i class="fa fa-search"></i> Tìm theo chương trình
                                                     </a>
                                                 </div>
@@ -298,46 +294,45 @@
                                             </div>
 
                                             <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
-                                                id="zoneTongHocPhan"
-                                                style="height: 480px; overflow-y: scroll"></ul>
+                                                id="zoneTongHocPhan" style="height: 480px; overflow-y: scroll"></ul>
                                         </div>
-                                        <div class="box-footer">
-                                            <div class="pull-right mt-10">
+                                        <div class="box-footer border-0">
+                                            <div class="pull-right mt-0">
                                                 <!--<a class="btn btn-default" id="btnAdd_DMHocPhan" href="#" title="Close"><i class="fa fa-plus"></i> Thêm danh mục học phần</a>-->
-                                                <a class="btn btn-success" id="btnAddAll_HocPhan" href="#" title="Close">
+                                                <a class="btn btn-success btn-table-none" id="btnAddAll_HocPhan" href="#" title="Close">
                                                     <i class="fa-light fa-plus"></i> Thêm tất cả
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                <td style="min-width: 50px;text-align: center" class="border-0">
-                                    <i class="fa fa-forward" style="font-size:48px;color:red"></i>
+                                <td style="min-width: 50px;text-align: center;border-left: 0 !important;border-right: 0 !important;" class="border-0">
+                                    <i class="fa fa-forward" style="font-size:44px;color:red"></i>
                                 </td>
-                                <td style="width: 48%;padding: 0 0 !important; border: 0 !important;" class="border-0">
-                                    <div class="box box-solid pd0" style="background-color: #fff !important">
+                                <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;position:relative;" class="border-0">
+                                    <div class="box box-solid pd0" style="background-color: #fff !important;position: absolute; top: 0">
                                         <div class="box-header pd0">
                                             <h3 class="box-title" title="Danh sách kết quả học phần chương trình"
                                                 style="color:#FF0000 !important;">
-                                                <i class="fa-light fa-list-timeline" style="color:#FF0000 !important;"></i>
+                                                <i class="fa-light fa-list-timeline"
+                                                    style="color:#FF0000 !important;"></i>
                                                 Danh sách kết quả học phần chương trình
                                             </h3>
                                         </div>
-                                        <div class="box-body  pd0 mt-15">
+                                        <div class="box-body  pd0 mt-5">
                                             <div class="mb-10 mr-10 row inputSearch">
                                                 <input type="text" id="txtSearch_TuKhoa_SelectedHocPhan"
-                                                       class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm"
-                                                       style="width: 99%">
+                                                    class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm"
+                                                    style="width: 99%">
                                             </div>
                                             <ul class="sidebar-menu zoneHocPhan_Selected_KBB" data-widget="tree"
-                                                id="zoneHocPhan_Selected"
-                                                style="height: 480px; overflow-y: scroll"
+                                                id="zoneHocPhan_Selected" style="height: 480px; overflow-y: scroll"
                                                 ondrop="main_doc.ChuongTrinhHocPhan.drop_handler(event);"
                                                 ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                         </div>
-                                        <div class="box-footer">
-                                            <div class="pull-right mt-10">
-                                                <a class="btn btn-default" id="btnAdd_DMHocPhan" href="#" title="Close">
+                                        <div class="box-footer border-0">
+                                            <div class="pull-right mt-0">
+                                                <a class="btn btn-warning btn-table-none" id="btnAdd_DMHocPhan" href="#" title="Close">
                                                     <i class="fa fa-refresh"></i> Tải lại
                                                 </a>
                                             </div>
@@ -350,7 +345,7 @@
                 </div>
             </div>
             <div class="box-footer">
-                <div class="pull-right">
+                <div class="pull-right d-flex">
                     <a class="btn btn-default btnClose_SelectHocPhan" id="">
                         <i class="fa fa-times"></i> <span class="lang" key="">Đóng</span>
                     </a>
@@ -363,7 +358,7 @@
 
         <!--Chỉnh sửa học phần:-->
         <div class="box box-solid form-container zone-content add-absolue pd0 zone_edithocphan" id="zone_edithocphan"
-             style="display: none;">
+            style="display: none;">
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
                     <i class="fa fa-pencil"></i> Chỉnh sửa học phần:
@@ -382,8 +377,8 @@
                         <!--row 1-->
                         <div class="row aps-lable-name">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#3380db !important;">Thông tin học phần</span>
+                                <span class="badge bg-blue color-blue" style="color:#3380db !important;">Thông tin học
+                                    phần</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -448,8 +443,8 @@
                         <!--row 1-->
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#198754 !important;">Quan hệ học phần</span>
+                                <span class="badge bg-blue color-blue" style="color:#198754 !important;">Quan hệ học
+                                    phần</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -501,8 +496,8 @@
                         <!--row 1-->
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#FF0000 !important;">Quan hệ tương đương</span>
+                                <span class="badge bg-blue color-blue" style="color:#FF0000 !important;">Quan hệ tương
+                                    đương</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -542,8 +537,7 @@
                                             <input id="txtNhom_HPTD" class="form-control" />
                                         </td>
                                         <td class="td-fixed td-center">
-                                            <a class="btn poiter"
-                                               id="btnAdd_HocPhan_QuanHeTuongDuong">
+                                            <a class="btn poiter" id="btnAdd_HocPhan_QuanHeTuongDuong">
                                                 <i class="fa fa-plus"></i> Thêm
                                             </a>
                                         </td>
@@ -607,8 +601,8 @@
                         <!--row 1-->
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#e300ff !important;">Phân bổ học phần</span>
+                                <span class="badge bg-blue color-blue" style="color:#e300ff !important;">Phân bổ học
+                                    phần</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -667,14 +661,13 @@
             <div class="box-footer">
                 <div class="pull-right">
                     <a class="btn btn-default btnClose_SelectHocPhan" id="">
-                        <i class="fa fa-times"></i> <span class="lang" key="">Đóng</span>
+                        <i class="fa fa-times"></i><span class="lang" key="">Đóng</span>
                     </a>
                     <a class="btn btn-danger" id="delete_EditHocPhan">
-                        <i class="fa fa-trash"></i> <span class="lang"
-                                                          key="">Xóa học phần</span>
+                        <i class="fa fa-trash"></i> <span class="lang" key="">Xóa học phần</span>
                     </a>
                     <a class="btn btn-primary" id="btnSave_EditHocPhan">
-                        <i class="fa fa-save"></i> <span class="lang" key="">Lưu</span>
+                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
                     </a>
                 </div>
             </div>
@@ -683,13 +676,14 @@
 
     <!--Thông tin khối bắt buộc-->
     <div class="box box-solid form-container zone-content zone_inputhocphan_khoibatbuoc add-absolue pd0"
-         id="zone_inputhocphan_khoibatbuoc" style="display: none">
+        id="zone_inputhocphan_khoibatbuoc" style="display: none">
         <div class="box-header with-border bg-blue">
             <h3 class="box-title">
-                <i class="fa fa-pencil"> </i> <span id="mylbl_KhoiBatBuoc">Khối bắt buộc</span>
+                <i class="fa-solid fa-screen-users fw-bold"></i> <span id="mylbl_KhoiBatBuoc">Khối bắt buộc</span>
             </h3>
             <div class="pull-right title-note pull-right-absolute">
-                <a class="btn btn-none-white btnClose_SelectHocPhan" href="#" title="Close"><i class="fa fa-times"></i></a>
+                <a class="btn btn-none-white btnClose_SelectHocPhan" href="#" title="Close"><i
+                        class="fa fa-times"></i></a>
             </div>
         </div>
         <div class="box-body pd20">
@@ -698,101 +692,104 @@
                 <div class="row aps-form">
                     <!--row 1-->
                     <div class="row aps-lable-name">
-                        <p class="group-group-title-name border-0 mb-10">
-                            <span class="badge bg-blue color-blue" style="color:#3380db !important;">Thông tin khối bắt buộc</span>
+                        <p class="group-group-title-name border-0 mb-0">
+                            <span class="badge bg-blue color-blue" style="color:#3380db !important;">Thông tin khối bắt
+                                buộc</span>
                         </p>
                     </div>
                     <!--row 2-->
-                    <div class="row aps-form-item mb-0">
-                        <div class="col-sm-1 aps-form-lable">Tên khối</div>
+                    <div class="row aps-form-item mb-0 gap10" style="margin-left: -10px;">
+                        <div class="col-sm-1 aps-form-lable d-none">Tên khối</div>
                         <div class="col-sm-3 aps-form-input">
-                            <input id="txtHocPhan_KBB_Ten" class="form-control" />
+                            <input id="txtHocPhan_KBB_Ten" class="form-control" placeholder="Tên khối" />
                         </div>
-                        <div class="col-sm-2 aps-form-lable justify-content-end pr15">Khối bắt buộc cha</div>
+                        <div class="col-sm-2 aps-form-lable justify-content-end pr15 d-none">Khối bắt buộc cha</div>
                         <div class="col-sm-2 aps-form-input">
                             <select id="dropHocPhan_KBB_KhoiCha" class="select-opt">
                                 <!-- Load from js -->
+                                 <option value="1">Chọn khối bắt buộc cha</object>
                             </select>
                         </div>
 
-                        <div class="col-sm-2 aps-form-lable justify-content-end pr15">Ký hiệu</div>
+                        <div class="col-sm-2 aps-form-lable justify-content-end pr15 d-none">Ký hiệu</div>
                         <div class="col-sm-2 aps-form-input">
-                            <input id="txtHocPhan_KBB_KyHieu" class="form-control" />
+                            <input id="txtHocPhan_KBB_KyHieu" class="form-control" placeholder="Ký hiệu"/>
                         </div>
-                        <div class="clear"></div>
-                        <div class="col-sm-2 aps-form-lable  justify-content-end pr15">Phân loại</div>
+                        <div class="col-sm-2 aps-form-lable  justify-content-end pr15 d-none">Phân loại</div>
                         <div class="col-sm-2 aps-form-input">
                             <select id="dropPhanLoaiKhoi_KBB" class="select-opt">
                                 <!-- Load from js -->
                             </select>
                         </div>
+                        <div class="col-sm-2 aps-form-lable justify-content-end pr15 d-none">Thứ tự</div>
+                        <div class="col-sm-2 aps-form-input">
+                            <input id="txtThuTu_KBB" class="form-control" placeholder="Thứ tự"/>
+                        </div>
                     </div>
                 </div>
                 <!-- Row Thong tin co ban -->
-                <table class="table border-0 table-khoibatbuoc mt-20">
+                <table class="table border-0 table-khoibatbuoc mt-25">
                     <tbody>
                         <tr class="border-0 pd0" style="padding: 0 !important;">
-                            <td style="width: 48%;padding: 0 !important;" class="border-0">
+                            <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;" class="border-0">
                                 <div class="box box-solid pd0" style="background-color: #fff !important">
                                     <div class="box-header pd0">
-                                        <h3 class="box-title" title="Xác định học phần cho khối bắt buộc"
+                                        <h3 class="box-title line-20" title="Xác định học phần cho khối bắt buộc"
                                             style="color:#198754 !important;">
                                             <i class="fa-solid fa-books" style="color:#198754 !important;"></i>
                                             Xác định học phần cho khối bắt buộc
                                         </h3>
                                     </div>
-                                    <div class="box-body pd0 mt-15">
-                                        <div class="mb-10 mr-10 row inputSearch">
+                                    <div class="box-body pd0 mt-10">
+                                        <div class="mb-0 mr-10 row inputSearch">
                                             <div class="col-sm-5 item-search">
                                                 <input type="text" id="txtSearch_TuKhoa_SelectHocPhan_KBB"
-                                                       class="form-control form-search" placeholder="Nhập từ khóa tìm kiếm">
+                                                    class="form-control form-search"
+                                                    placeholder="Nhập từ khóa tìm kiếm">
                                             </div>
                                             <div class="col-sm-7 item-search d-flex gap10">
-                                                <a class="btn btnTrongChuongTrinh btn-outline-primary"
-                                                   name="txtSearch_TuKhoa_SelectHocPhan_KBB" title="Tìm kiếm nâng cao">
+                                                <a class="btn btnTrongChuongTrinh btn-outline-primary btn-table-none"
+                                                    name="txtSearch_TuKhoa_SelectHocPhan_KBB" title="Tìm kiếm nâng cao">
                                                     <i class="fa fa-search"></i> Tìm trong chương trình
                                                 </a>
-                                                <a class="btn btnTrongDanhMuc btn-outline-success"
-                                                   name="txtSearch_TuKhoa_SelectHocPhan_KBB" title="Tìm kiếm nâng cao">
+                                                <a class="btn btnTrongDanhMuc btn-outline-success btn-table-none"
+                                                    name="txtSearch_TuKhoa_SelectHocPhan_KBB" title="Tìm kiếm nâng cao">
                                                     <i class="fa fa-search"></i> Tìm trong Danh mục
                                                 </a>
                                             </div>
                                         </div>
                                         <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
-                                            id="zoneTongHocPhan_KBB"
-                                            style="height: 480px; overflow-y: scroll"></ul>
+                                            id="zoneTongHocPhan_KBB" style="height: 490px; overflow-y: scroll"></ul>
                                     </div>
                                     <div class="box-footer" style="display:none !important;"></div>
                                 </div>
                                 <div class="pull-right mt-15">
                                     <!--<a class="btn btn-default" id="btnAdd_DMHocPhan" href="#" title="Close"><i class="fa fa-plus"></i> Thêm danh mục học phần</a>-->
-                                    <a class="btn btn-success" id="btnAddAll_KBB" href="#" title="Close">
+                                    <a class="btn btn-success btn-table-none" id="btnAddAll_KBB" href="#" title="Close">
                                         <i class="fa-solid fa-plus"></i> Thêm tất cả
                                     </a>
                                 </div>
                             </td>
-                            <td style="min-width: 50px;text-align: center" class="border-0">
-                                <i class="fa fa-forward" style="font-size:48px;color:red"></i>
+                            <td style="min-width: 50px;text-align: center;border-left: 0 !important;border-right: 0 !important;" class="border-0">
+                                <i class="fa fa-forward" style="font-size:44px;color:red"></i>
                             </td>
-                            <td style="width: 48%;padding: 0 !important;" class="border-0 pd0">
-                                <div class="box box-solid pd0"
-                                     style="background-color: #fff !important;">
+                            <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;" class="border-0 pd0">
+                                <div class="box box-solid pd0" style="background-color: #fff !important;margin-top: -56px;">
                                     <div class="box-header pd0">
-                                        <h3 class="box-title mt-15" title="Danh sách kết quả học phần khối bắt buộc"
+                                        <h3 class="box-title mt-15 line-20" title="Danh sách kết quả học phần khối bắt buộc"
                                             style="color:#FF0000 !important;">
-                                            <i class="fa-light fa-list-timeline" style="color:#FF0000 !important;"></i> Danh
-                                            sách kết quả học phần khối bắt buộc
+                                            <i class="fa-light fa-list-timeline" style="color:#FF0000 !important;"></i>
+                                            Danh sách kết quả học phần khối bắt buộc
                                         </h3>
                                     </div>
-                                    <div class="box-body pd0 mt-15">
+                                    <div class="box-body pd0 mt-10">
                                         <div class="mb-10 mr-10 row inputSearch">
                                             <input type="text" id="txtSearch_TuKhoa_SelectedHocPhan_KBB"
-                                                   class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm"
-                                                   style="width: 99%">
+                                                class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm"
+                                                style="width: 99%">
                                         </div>
                                         <ul class="sidebar-menu zoneHocPhan_Selected_KBB" data-widget="tree"
-                                            id="zoneHocPhan_Selected_KBB"
-                                            style="height: 480px; overflow-y: scroll"
+                                            id="zoneHocPhan_Selected_KBB" style="height: 480px; overflow-y: scroll"
                                             ondrop="main_doc.ChuongTrinhHocPhan.drop_KBB_handler(event);"
                                             ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                     </div>
@@ -821,91 +818,91 @@
 
     <!--Thêm mới khối tự chọn đơn-->
     <div class="box box-solid form-container zone-content add-absolue zone_inputhocphan_khoituchondon pd0 "
-         id="zone_inputhocphan_khoituchondon" style="display: none;">
+        id="zone_inputhocphan_khoituchondon" style="display: none;">
         <div class="box-header with-border bg-blue">
             <h3 class="box-title">
-                <i class="fa fa-pencil"> </i> <span id="mylbl_KhoiTuChonDon">Khối tự chọn đơn</span>
+                <i class="fa-solid fa-screen-users"></i><span id="mylbl_KhoiTuChonDon">Khối tự chọn đơn</span>
             </h3>
             <div class="pull-right title-note pull-right-absolute">
-                <a class="btn btn-none-white btnClose_SelectHocPhan" href="#" title="Close"><i class="fa fa-times"></i></a>
+                <a class="btn btn-none-white btnClose_SelectHocPhan" href="#" title="Close"><i
+                        class="fa fa-times"></i></a>
             </div>
         </div>
         <div class="box-body pd20">
             <div class="col-sm-12 box-view aps-add-new mb-10 pb10">
                 <!-- Row Thong tin co ban -->
                 <div class="row aps-form">
+                    <!--row 1-->
                     <div class="row aps-lable-name">
                         <p class="group-group-title-name border-0 mb-10">
-                            <span class="badge bg-blue color-blue" style="color:#198754 !important;">Thông tin khối tự chọn đơn</span>
+                            <span class="badge bg-blue color-blue" style="color:#198754 !important;">
+                                Thông tin khối tự chọn đơn</span>
                         </p>
                     </div>
                     <!--row 2-->
-                    <div class="row aps-form-item">
-                        <div class="col-sm-1 aps-form-lable">Tên khối</div>
+                    <div class="row aps-form-item gap10" style="margin-left: -10px !important;">
+                        <div class="col-sm-1 aps-form-lable d-none">Tên khối</div>
                         <div class="col-sm-4 aps-form-input">
-                            <input id="txtHocPhan_KTCD_Ten" class="form-control" />
+                            <input id="txtHocPhan_KTCD_Ten" class="form-control" placeholder="Tên khối" />
                         </div>
-                        <div class="col-sm-2 aps-form-lable justify-content-end pr15">Khối tự chọn cha</div>
+                        <div class="col-sm-2 aps-form-lable justify-content-end pr15 d-none">Khối tự chọn cha</div>
                         <div class="col-sm-2 aps-form-input">
                             <select id="dropHocPhan_KTCD_KhoiCha" class="select-opt">
                                 <!-- Load from js -->
+                                <option value="1">Chọn Khối tự chọn cha</option>
                             </select>
                         </div>
-                        <div class="col-sm-1 aps-form-lable justify-content-end pr15">Ký hiệu</div>
+                        <div class="col-sm-1 aps-form-lable justify-content-end pr15 d-none">Ký hiệu</div>
                         <div class="col-sm-2 aps-form-input">
-                            <input id="txtHocPhan_KTCD_KyHieu" class="form-control" />
+                            <input id="txtHocPhan_KTCD_KyHieu" class="form-control" placeholder="Ký hiệu" />
                         </div>
                     </div>
-
-                    <!--row 2-->
-                    <div class="row aps-form-item">
+                    <!--row 3-->
+                    <div class="row aps-form-item gap10" style="margin-left: -10px !important;">
                         <!--<div class="col-sm-2">
-                             <div class="group-title-name">
-                                 Loại đơn vị <span class="title-colon">:</span>
-                             </div>
-                         </div>
-                        <div class="col-sm-2 aps-form-lable">
-                             <select id="dropHocPhan_KTCD_LoaiDonVi" class="select-opt">
-                             </select>
-                         </div>-->
+                                <div class="group-title-name">
+                                    Loại đơn vị <span class="title-colon">:</span>
+                                </div>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable">
+                                <select id="dropHocPhan_KTCD_LoaiDonVi" class="select-opt">
+                                </select>
+                            </div>-->
 
-                        <div class="col-sm-2 aps-form-lable">Số học phần/số môn quy định</div>
+                        <div class="col-sm-2 aps-form-lable d-none">Số học phần/số môn quy định</div>
                         <div class="col-sm-3 aps-form-input">
-                            <input id="txtHocPhan_KTCD_SoHocPhan" class="form-control" />
+                            <input id="txtHocPhan_KTCD_SoHocPhan" class="form-control"
+                                placeholder="Số học phần/số môn quy định" />
                         </div>
 
-                        <div class="col-sm-2 aps-form-lable  justify-content-end pr15">Số tín chỉ quy định</div>
+                        <div class="col-sm-2 aps-form-lable  justify-content-end pr15 d-none">Số tín chỉ quy định</div>
                         <div class="col-sm-2 aps-form-input">
-                            <input id="txtHocPhan_KTCD_SoTin" class="form-control" />
+                            <input id="txtHocPhan_KTCD_SoTin" class="form-control" placeholder="Số tín chỉ quy định" />
                         </div>
-                        <div class="col-sm-1 aps-form-lable  justify-content-end pr15">Phân loại</div>
+                        <div class="col-sm-1 aps-form-lable justify-content-end pr15 d-none">Phân loại</div>
                         <div class="col-sm-2 aps-form-input">
                             <select id="dropPhanLoaiKhoi_KTCD" class="select-opt">
                                 <!-- Load from js -->
                             </select>
                         </div>
-                        <div class="clear"></div>
-                        <div class="col-sm-2 aps-form-lable">
-                            <div class="group-title-name">
-                                Tính điểm, không tính điểm <span class="title-colon">:</span>
-                            </div>
-                        </div>
+                        <div class="col-sm-2 aps-form-lable d-none">Tính điểm, không tính điểm</div>
                         <div class="col-sm-2 aps-form-input">
                             <select id="dropCoTinhDiem_KTCD" class="select-opt">
                                 <option value="1">Không tính điểm</option>
                                 <option value="0">Tính điểm</option>
                             </select>
                         </div>
-                        <div class="col-sm-2 aps-form-lable">
-                            <div class="group-title-name">
-                                Xác định nhóm tự chọn <span class="title-colon">:</span>
-                            </div>
-                        </div>
+                        <div class="col-sm-2 aps-form-lable d-none">Xác định nhóm tự chọn </div>
                         <div class="col-sm-2 aps-form-input">
-                            <input id="txtHocPhan_KTCD_NhomTuChon" class="form-control" />
+                            <input id="txtHocPhan_KTCD_NhomTuChon" class="form-control"
+                                placeholder="Xác định nhóm tự chọn" />
+                        </div>
+                        <div class="col-sm-2 aps-form-lable justify-content-end pr15 d-none">Thứ tự</div>
+                        <div class="col-sm-2 aps-form-input">
+                            <input id="txtThuTu_KTCD" class="form-control" placeholder="Thứ tự" />
                         </div>
                     </div>
-                    <div style="font-style: italic; font-size: 14px" class="row color-666">
+                    <div style="font-style: italic; font-size: 14px" class="row color-888">
                         Chú ý: Chỉ nhập 1 trong 2
                         mục: số học
                         phần quy định hoặc số tín chỉ quy định
@@ -916,69 +913,67 @@
             <table class="table border-0 table-khoituchon pt20" style="padding: 0 !important;">
                 <tbody>
                     <tr class="border-0" style="padding: 0 !important;">
-                        <td style="width: 48%;padding:0 !important;" class="border-0 mt-20">
+                        <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;" class="border-0 mt-20" style="border-left: 1px solid !important;">
                             <div class="box box-solid pd0" style="background-color: #fff !important">
                                 <div class="box-header pd0">
-                                    <h3 class="box-title" title="Xác định học phần cho khối tự chọn đơn"
-                                        style="color:#198754 !important;">
-                                        <i class="fa-solid fa-books" style="color:#198754 !important;"></i> Xác định học
-                                        phần cho khối tự chọn đơn
+                                    <h3 class="box-title" title="Xác định học phần cho khối tự chọn đơn" style="color:#198754 !important;">
+                                        <i class="fa-solid fa-books" style="color:#198754 !important;"></i> Xác định học phần cho khối tự chọn đơn
                                     </h3>
                                 </div>
-                                <div class="box-body pd0 mt-5">
+                                <div class="box-body pd0 mt-0">
                                     <!--<input type="text" id="txtSearch_TuKhoa_SelectHocPhan_KTCD" class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm" style="width: 99%">-->
-                                    <div class="mb-10 mr-10 row inputSearch input-group mt-10">
+                                    <div class="mb-0 mr-10 row inputSearch input-group mt-10">
                                         <div class="col-sm-7 item-search">
                                             <input type="text" id="txtSearch_TuKhoa_SelectHocPhan_KTCD"
-                                                   class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                                class="form-control" placeholder="Nhập từ khóa tìm kiếm">
                                         </div>
                                         <div class="col-sm-5 item-search" style="display: flex !important; flex:1">
-                                            <span class="input-group-addon poiter btnTrongChuongTrinh btn-outline-success"
-                                                  name="txtSearch_TuKhoa_SelectHocPhan_KTCD" title="Tìm trong chương trình"
-                                                  style="width: auto !important;border: 1px solid var(--color-green) !important;">
+                                            <span
+                                                class="input-group-addon poiter btnTrongChuongTrinh btn-outline-success"
+                                                name="txtSearch_TuKhoa_SelectHocPhan_KTCD"
+                                                title="Tìm trong chương trình"
+                                                style="width: auto !important;border: 1px solid var(--color-green) !important;">
                                                 <i class="fa fa-search"></i> Tìm trong chương trình
                                             </span>
-                                            <!--                                        <span class="input-group-addon poiter color-white ml10" style="width: 10px !important;padding: 5px;">.</span>-->
-                                            <span class="input-group-addon poiter btnTrongDanhMuc btn-outline-success ml-10"
-                                                  name="txtSearch_TuKhoa_SelectHocPhan_KTCD" title="Tìm trong Danh mục"
-                                                  style="border: 1px solid var(--color-green) !important;width: auto !important;">
+                                            <!--<span class="input-group-addon poiter color-white ml10" style="width: 10px !important;padding: 5px;">.</span>-->
+                                            <span
+                                                class="input-group-addon poiter btnTrongDanhMuc btn-outline-primary ml-10"
+                                                name="txtSearch_TuKhoa_SelectHocPhan_KTCD" title="Tìm trong Danh mục"
+                                                style="border: 1px solid var(--color-blue) !important;width: auto !important;">
                                                 <i class="fa fa-search"></i> Tìm trong Danh mục
                                             </span>
                                         </div>
                                     </div>
-                                    <ul class="sidebar-menu aps-list-hocphan" data-widget="tree" id="zoneTongHocPhan_KTCD"
-                                        style="height: 480px; overflow-y: scroll"></ul>
+                                    <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
+                                        id="zoneTongHocPhan_KTCD" style="height: 490px; overflow-y: scroll"></ul>
                                 </div>
-
                             </div>
                             <div class="pull-right mt-15">
                                 <!--<a class="btn btn-default" id="btnAdd_DMHocPhan" href="#" title="Close"><i class="fa fa-plus"></i> Thêm danh mục học phần</a>-->
-                                <a class="btn btn-success" id="btnAddAll_KTCD" href="#" title="Close">
+                                <a class="btn btn-success btn-table-none" id="btnAddAll_KTCD" href="#" title="Close">
                                     <i class="fa-light fa-plus"></i> Thêm tất cả
                                 </a>
                             </div>
                         </td>
-                        <td style="min-width: 50px;text-align: center" class="border-0">
-                            <i class="fa fa-forward" style="font-size:48px;color:red"></i>
+                        <td style="min-width: 50px;text-align: center;border-left: 0 !important;border-right: 0 !important;" class="border-0">
+                            <i class="fa fa-forward" style="font-size:44px;color:red"></i>
                         </td>
-                        <td style="width: 48%;padding: 0 !important;" class="border-0">
-                            <div class="box box-solid pd0" style="background-color: #fff !important;margin-top: -54px;">
+                        <td style="width: 48%;padding: 0 !important;border-left: 0 !important;border-right: 0 !important;" class="border-0">
+                            <div class="box box-solid pd0" style="background-color: #fff !important;margin-top: -57px;">
                                 <div class="box-header pd0">
                                     <h3 class="box-title" title="Danh sách kết quả học phần khối tự chọn đơn"
                                         style="color:#FF0000 !important;">
-                                        <i class="fa-light fa-list-timeline" style="color:#FF0000 !important;"></i> Danh
-                                        sách kết quả học phần khối tự chọn đơn
+                                        <i class="fa-light fa-list-timeline" style="color:#FF0000 !important;"></i>Danh sách kết quả học phần khối tự chọn đơn
                                     </h3>
                                 </div>
-                                <div class="box-body pd0 mt-15">
+                                <div class="box-body pd0 mt-10">
                                     <div class="mb-10 mr-10 row inputSearch">
                                         <input type="text" id="txtSearch_TuKhoa_SelectedHocPhan_KTCD"
-                                               class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm"
-                                               style="width: 99%">
+                                            class="form-control item-li" placeholder="Nhập từ khóa tìm kiếm"
+                                            style="width: 99%">
                                     </div>
                                     <ul class="sidebar-menu zoneHocPhan_Selected_KBB" data-widget="tree"
-                                        id="zoneHocPhan_Selected_KTCD"
-                                        style="height: 480px; overflow-y: scroll"
+                                        id="zoneHocPhan_Selected_KTCD" style="height: 490px; overflow-y: scroll"
                                         ondrop="main_doc.ChuongTrinhHocPhan.drop_KTCD_handler(event);"
                                         ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                 </div>
@@ -990,16 +985,16 @@
             </table>
         </div>
         <div class="box-footer">
-            <div class="pull-right">
+            <div class="pull-right d-flex">
                 <a class="btn btn-default btnClose_SelectHocPhan" id="">
-                    <i class="fa fa-times"></i> <span class="lang" key="">Đóng</span>
+                    <i class="fa fa-times"></i><span class="lang" key="">Đóng</span>
                 </a>
                 <a class="btn btn-danger" id="delete_ChuongTrinh_HocPhan_KTCD">
-                    <i class="fa fa-trash"></i> <span class="lang" key="">Xóa khối</span>
+                    <i class="fa fa-trash"></i><span class="lang" key="">Xóa khối</span>
                 </a>
 
                 <a class="btn btn-primary" id="btnSave_ChuongTrinh_HocPhan_KTCD">
-                    <i class="fa fa-save"></i> <span class="lang" key="">Lưu</span>
+                    <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
                 </a>
             </div>
         </div>
@@ -1007,13 +1002,14 @@
 
     <!--Tình trạng học-->
     <div class="box box-solid form-container zone-content add-absolue pd0 zone_ketquahocphan" id="zone_ketquahocphan"
-         style="display: none;">
+        style="display: none;">
         <div class="box-header with-border bg-blue">
             <h3 class="box-title">
                 <i class="fa fa-pencil"></i> Tình trạng học: <span class="color-active lblEditHocPhan"></span>
             </h3>
             <div class="pull-right title-note pull-right-absolute">
-                <a class="btn btn-none-white btnClose_SelectHocPhan" href="#" title="Close"><i class="fa fa-times"></i></a>
+                <a class="btn btn-none-white btnClose_SelectHocPhan" href="#" title="Close"><i
+                        class="fa fa-times"></i></a>
             </div>
         </div>
         <div class="box-body pd0">
@@ -1023,8 +1019,8 @@
                     <!--row 1-->
                     <div class="row">
                         <p class="group-group-title-name mb-0 border-0">
-                            <span class="badge bg-blue"
-                                  style="color:#3380db !important;">Danh sách chưa có điểm, chưa đăng ký học lần nào</span>
+                            <span class="badge bg-blue" style="color:#3380db !important;">Danh sách chưa có điểm, chưa
+                                đăng ký học lần nào</span>
                         </p>
                     </div>
                     <!--row 2-->
@@ -1048,8 +1044,8 @@
                     <!--row 1-->
                     <div class="row">
                         <p class="group-group-title-name mb-0 border-0">
-                            <span class="badge bg-blue"
-                                  style="color:#198754 !important;">Danh sách đã học nhưng chưa hoàn thành(chưa ĐẠT)</span>
+                            <span class="badge bg-blue" style="color:#198754 !important;">Danh sách đã học nhưng chưa
+                                hoàn thành(chưa ĐẠT)</span>
                         </p>
                     </div>
                     <!--row 2-->
@@ -1073,8 +1069,7 @@
                     <!--row 1-->
                     <div class="row">
                         <p class="group-group-title-name mb-0 border-0">
-                            <span class="badge bg-blue"
-                                  style="color:#FF0000 !important;">Danh sách đã hoàn thành</span>
+                            <span class="badge bg-blue" style="color:#FF0000 !important;">Danh sách đã hoàn thành</span>
                         </p>
                     </div>
                     <!--row 2-->
@@ -1107,7 +1102,7 @@
 
     <!--Thêm mới - định hướng cho chương trình-->
     <div class="box box-solid form-container zone-content add-absolue zone_input_dinhhuong pd0"
-         id="zone_input_dinhhuong" style="display: none;">
+        id="zone_input_dinhhuong" style="display: none;">
         <div class="box-header with-border bg-red">
             <h3 class="box-title">
                 <span class="myModalLabel">
@@ -1116,7 +1111,8 @@
                 định hướng cho chương trình: <span class="color-yellow lblChuongTrinh"></span>
             </h3>
             <div class="pull-right pull-right-absolute">
-                <a class="btn btnClose_SelectHocPhan btn-none-white" href="#" title="Close"><i class="fa fa-times"></i></a>
+                <a class="btn btnClose_SelectHocPhan btn-none-white" href="#" title="Close"><i
+                        class="fa fa-times"></i></a>
             </div>
         </div>
         <div class="box-body pd20">
@@ -1126,8 +1122,8 @@
                     <div class="row aps-form">
                         <div class="row aps-lable-name">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#FF0000 !important;">Thông tin</span>
+                                <span class="badge bg-blue color-blue" style="color:#FF0000 !important;">Thông
+                                    tin</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -1166,13 +1162,13 @@
                             <div class="col-sm-2 aps-form-lable">Ngày bắt đầu</div>
                             <div class="col-sm-2 aps-form-input">
                                 <input id="txtNgayBatDau" class="form-control form-border input-datepicker"
-                                       placeholder="dd/mm/yyyy" />
+                                    placeholder="dd/mm/yyyy" />
                             </div>
 
                             <div class="col-sm-4 aps-form-lable  justify-content-end pr15">Ngày kết thúc</div>
                             <div class="col-sm-2 aps-form-input">
                                 <input id="txtNgayKetThuc" class="form-control form-border input-datepicker"
-                                       placeholder="dd/mm/yyyy" />
+                                    placeholder="dd/mm/yyyy" />
                             </div>
                         </div>
                     </div>
@@ -1182,8 +1178,8 @@
                         <!--row 1-->
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#3380db !important;">Gắn theo khối kiến thức</span>
+                                <span class="badge bg-blue color-blue" style="color:#3380db !important;">Gắn theo khối
+                                    kiến thức</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -1216,8 +1212,8 @@
                         <!--row 1-->
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#198754 !important;">Gắn theo học phần</span>
+                                <span class="badge bg-blue color-blue" style="color:#198754 !important;">Gắn theo học
+                                    phần</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -1251,8 +1247,8 @@
                         <!--row 1-->
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-0">
-                                <span class="badge bg-blue color-blue"
-                                      style="color:#31d2f2 !important;">Danh sách người học đăng ký định hướng</span>
+                                <span class="badge bg-blue color-blue" style="color:#31d2f2 !important;">Danh sách người
+                                    học đăng ký định hướng</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -1296,8 +1292,7 @@
                                 <i class="fa fa-times"></i> <span class="lang" key="">Đóng</span>
                             </a>
                             <a class="btn btn-primary" id="btnSave_DinhHuong">
-                                <i class="fa fa-save"></i> <span class="lang"
-                                                                 key="">Lưu</span>
+                                <i class="fa fa-save"></i> <span class="lang" key="">Lưu</span>
                             </a>
                         </div>
                     </div>
@@ -1314,8 +1309,8 @@
     </div>
 
     <!-- Chương trình học phần-->
-    <div class="box box-solid zone-content form-container zoneViewHocPhan add-absolue pd0"
-         id="zoneViewHocPhan" style="display: none;">
+    <div class="box box-solid zone-content form-container zoneViewHocPhan add-absolue pd0" id="zoneViewHocPhan"
+        style="display: none;">
         <div class="box-header pl20 pr20 mb-10 bg-blue ">
             <h3 class="box-title pt15 pb15">Chương trình học phần</h3>
             <div class="pull-right pull-right-absolute mt-10 mr-10">
@@ -1328,10 +1323,10 @@
                 <div class="col-sm-6 pr15">
                     <div class="row aps-form">
                         <!--row 1-->
-                        <!--row 2-->
                         <div class="row aps-form-item">
                             <p class="group-group-title-name mb-0 border-0">
-                                <span class="badge bg-blue" style="color:#3380db !important;"> Thông tin chung về chương trình</span>
+                                <span class="badge bg-blue" style="color:#3380db !important;"> Thông tin chung về chương
+                                    trình</span>
                             </p>
                         </div>
                         <div class="row" id="lblThongTinChuongTrinh"></div>
@@ -1342,8 +1337,8 @@
                         <!--row 1-->
                         <div class="row aps-form-item">
                             <p class="group-group-title-name mb-0 border-0">
-                                <span class="badge bg-blue"
-                                      style="color:#198754 !important;">Thông tin chia định hướng</span>
+                                <span class="badge bg-blue" style="color:#198754 !important;">Thông tin chia định
+                                    hướng</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -1461,6 +1456,13 @@
         </div>
     </div>
 
+    <!-- ---------- -->
+    <div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+        <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+            Danh mục dữ liệu</button>
+    </div>
+    <!-- ---------- -->
+
     <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -1520,8 +1522,7 @@
                     <div style="width: 100%">
                         <div class="col-sm-2 aps-form-lable">
                             <label style="font-weight: normal">
-                                <span class="lang"
-                                      key="">Thuộc tính học phần</span>
+                                <span class="lang" key="">Thuộc tính học phần</span>
                             </label>
                         </div>
                         <div class="col-sm-4 aps-form-input">
@@ -1569,22 +1570,24 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span>
                     </button>
-                    <a class="submit btn btn-primary" id="btnSave"><i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
+                    <a class="submit btn btn-primary" id="btnSave"><i class="fa fa-save"></i><span class="lang" key="">
+                            Lưu</span></a>
                 </div>
             </div>
         </div>
     </div>
 
-    <!--    Kế thừa-->
+    <!--Kế thừa-->
     <div class="modal fade myModalKeThua" id="myModalKeThua" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
+        aria-hidden="true">
         <div class="modal-dialog" style="width: 95%">
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">
                         <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Kế thừa</span></h4>
+                    <h4 class="modal-title" id="myModalLabel"><span class="lang" key=""><i
+                                class="fa-light fa-copy fw-bold"></i>Kế thừa</span></h4>
                 </div>
                 <div class="modal-body pd0" style="">
                     <div class="row box-view aps-add-new pd0">
@@ -1619,10 +1622,12 @@
                         </div>
                         <div style="width: 100%">
                             <div style="width: 40%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Khối kiến thức</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Khối kiến
+                                        thức</span></label>
                             </div>
                             <div style="width: 60%; float: left">
-                                <select id="dropKhoiKienThuc_KT" class="select-opt" style="width:100% !important"></select>
+                                <select id="dropKhoiKienThuc_KT" class="select-opt"
+                                    style="width:100% !important"></select>
                             </div>
                             <div class="clear"></div>
                         </div>
@@ -1638,10 +1643,12 @@
                         </div>
                         <div style="width: 100%">
                             <div style="width: 40%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Từ khóa tìm kiếm</span></label>
+                                <label style="font-weight: normal"><span class="lang" key="">Từ khóa tìm
+                                        kiếm</span></label>
                             </div>
                             <div style="width: 60%; float: left">
-                                <input id="txtSearch_TuKhoa_KT" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                                <input id="txtSearch_TuKhoa_KT" class="form-control"
+                                    placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="clear"></div>
                         </div>
@@ -1650,7 +1657,8 @@
                                 <!--<label style="font-weight: normal"><span class="lang" key="">Từ khóa tìm kiếm</span></label>-->
                             </div>
                             <div style="width: 60%; float: left">
-                                <a class="btn btn-default" id="btnSearchKT"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a class="btn btn-default" id="btnSearchKT">
+                                    <i class="fa fa-search pr0"></i><span class="lang" key="">Tìm kiếm</span></a>
                             </div>
                             <div class="clear"></div>
                         </div>
@@ -1672,7 +1680,8 @@
                         </div>
                         <div class="row">
                             <span class="pull-right">
-                                <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i> <span class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
+                                <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i> <span
+                                        class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
                             </span>
                         </div>
                         <div style="width: 100%;margin-left: 20px" id="DSHocPhan">
@@ -1725,7 +1734,8 @@
                 <div class="modal-body" id="modal_body">
                     <div class="row">
                         <span class="pull-right">
-                            <a class="btn btn-primary" id="btnUpdateThuTuHocPhan"><i class="fa fa-refresh"></i> <span class="lang" key="lb_luu"> Cập nhật thứ tự theo kỳ dự kiến</span></a>
+                            <a class="btn btn-primary" id="btnUpdateThuTuHocPhan"><i class="fa fa-refresh"></i> <span
+                                    class="lang" key="lb_luu"> Cập nhật thứ tự theo kỳ dự kiến</span></a>
                         </span>
                     </div>
                     <table id="tblThuTuHocPhan" class="table table-hover table-bordered">
@@ -1748,8 +1758,7 @@
                 <div id="notify"></div>
                 <div class="modal-footer">
                     <a class="btn btn-primary" id="btnSave_HocPhan_ThuTu">
-                        <i class="fa fa-save"></i><span class="lang"
-                                                        key="">Lưu</span>
+                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
                     </a>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span>
@@ -1787,8 +1796,7 @@
                 <div id="notify"></div>
                 <div class="modal-footer">
                     <a class="btn btn-primary" id="btnSave_HocPhan_ThuTu">
-                        <i class="fa fa-save"></i><span class="lang"
-                                                        key="">Lưu</span>
+                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
                     </a>
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span>
@@ -1797,11 +1805,13 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="myModalEditHocKy" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Sửa thời gian</span></h4>
                 </div>
                 <div class="modal-body" style="">
@@ -1817,8 +1827,10 @@
                 </div>
                 <div id="notify"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span></button>
-                    <a class="submit btn btn-primary" id="btnSave_EditHocKy"><i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_EditHocKy"><i class="fa fa-save"></i><span
+                            class="lang" key=""> Lưu</span></a>
                 </div>
             </div>
         </div>
@@ -1828,7 +1840,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                     <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Sửa thời gian</span></h4>
                 </div>
                 <div class="modal-body" style="">
@@ -1844,20 +1857,23 @@
                 </div>
                 <div id="notify"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span></button>
-                    <a class="submit btn btn-primary" id="btnSave_EditHocKyAll"><i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_EditHocKyAll"><i class="fa fa-save"></i><span
+                            class="lang" key=""> Lưu</span></a>
                 </div>
             </div>
         </div>
     </div>
 
-
     <div class="modal fade" id="myModalKeThuaQH" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                    <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Kế thừa Quan hệ học phần</span></h4>
+                    <button type="button" class="close" data-dismiss="modal"><span
+                            aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Kế thừa Quan hệ học phần</span>
+                    </h4>
                 </div>
                 <div class="modal-body" style="">
                     <div style="width: 100%">
@@ -1890,14 +1906,17 @@
                 </div>
                 <div id="notify"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span></button>
-                    <a class="submit btn btn-primary" id="btnSave_KeThua_QH"><i class="fa fa-save"></i><span class="lang" key=""> Kế thừa</span></a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle"></i><span class="lang" key=""> Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_KeThua_QH"><i class="fa fa-save"></i><span
+                            class="lang" key=""> Kế thừa</span></a>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal fade aps-modal-nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel"
-         aria-hidden="true">
+        aria-hidden="true">
         <!-- load from js -->
     </div>
 </section>

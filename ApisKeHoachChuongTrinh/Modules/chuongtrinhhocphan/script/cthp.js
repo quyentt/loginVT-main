@@ -267,11 +267,11 @@ ChuongTrinhHocPhan.prototype = {
         $("#zoneTongHocPhan").delegate(".btnSelectHocPhan", "click", function (event) {
             var strId = this.id;
             if (edu.util.checkValue(strId)) {
-                var row = '<li class="treeview item-li" id="drag_16BA7C0F5E264CEE8CEB7EEDEFA9C123" name="" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);"><a><i class="fa fa-arrows"></i> <span>NES321 - An ninh mạng</span><span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_16BA7C0F5E264CEE8CEB7EEDEFA9C123"><i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span></span></a></li>';
+                var row = '<li class="treeview item-li" id="drag_16BA7C0F5E264CEE8CEB7EEDEFA9C123" name="" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);"><a><i class="fa-solid fa-circle-check"></i> <span>NES321 - An ninh mạng</span><span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_16BA7C0F5E264CEE8CEB7EEDEFA9C123"><span class="lang" key="lb_luu">Chọn</span><i class=""fa-solid fa-angle-right"></i></span></a></li>';
                 //var x = new DOMParser().parseFromString(row, "text/xml");
                 //console.log(x);
                 $(document.getElementById('zoneHocPhan_Selected')).prepend(this.parentNode.parentNode);
-                $(this).html('<i class="fa fa-backward"></i> <span class="lang" key="lb_luu">Bỏ Chọn</span>');
+                $(this).html('<span class="lang" key="lb_luu">Bỏ Chọn</span><i class="fa-solid fa-xmark"></i> ');
                 this.classList.remove("btn-primary");
                 this.classList.add("btn-danger");
                 this.focus();
@@ -294,7 +294,7 @@ ChuongTrinhHocPhan.prototype = {
             var strId = this.id;
             if (edu.util.checkValue(strId)) {
                 document.getElementById('zoneTongHocPhan').appendChild(this.parentNode.parentNode);
-                $(this).html('<i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span>');
+                $(this).html('<span class="lang" key="lb_luu">Chọn</span><i class=""fa-solid fa-angle-right"></i> ');
                 this.classList.remove("btn-danger");
                 this.classList.add("btn-primary");
                 var strHocPhan_ChuongTrinh_Id = $(this).attr('name');//Dùng để xác định đối tượng này đã lưu chưa
@@ -336,7 +336,7 @@ ChuongTrinhHocPhan.prototype = {
             var strId = this.id;
             if (edu.util.checkValue(strId)) {
                 document.getElementById('zoneHocPhan_Selected_KBB').appendChild(this.parentNode.parentNode);
-                $(this).html('<i class="fa fa-backward"></i> <span class="lang" key="lb_luu">Bỏ Chọn</span>');
+                $(this).html('<span class="lang" key="lb_luu">Bỏ Chọn</span><i class="fa-solid fa-xmark"></i>');
                 this.classList.remove("btn-primary");
                 this.classList.add("btn-danger");
             }
@@ -366,7 +366,7 @@ ChuongTrinhHocPhan.prototype = {
             var strId = this.id;
             if (edu.util.checkValue(strId)) {
                 document.getElementById('zoneTongHocPhan_KBB').appendChild(this.parentNode.parentNode);
-                $(this).html('<i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span>');
+                $(this).html('<span class="lang" key="lb_luu">Chọn</span><i class="fa-solid fa-angle-right"></i>');
                 this.classList.remove("btn-danger");
                 this.classList.add("btn-primary");
                 var strHocPhan_ChuongTrinh_Id = $(this).attr('name');//Dùng để xác định đối tượng này đã lưu chưa
@@ -403,7 +403,7 @@ ChuongTrinhHocPhan.prototype = {
             var strId = this.id;
             if (edu.util.checkValue(strId)) {
                 document.getElementById('zoneHocPhan_Selected_KTCD').appendChild(this.parentNode.parentNode);
-                $(this).html('<i class="fa fa-backward"></i> <span class="lang" key="lb_luu">Bỏ Chọn</span>');
+                $(this).html('<span class="lang" key="lb_luu">Bỏ Chọn</span><i class="fa-solid fa-xmark"></i>');
                 this.classList.remove("btn-primary");
                 this.classList.add("btn-danger");
             }
@@ -430,7 +430,7 @@ ChuongTrinhHocPhan.prototype = {
             var strId = this.id;
             if (edu.util.checkValue(strId)) {
                 document.getElementById('zoneTongHocPhan_KTCD').appendChild(this.parentNode.parentNode);
-                $(this).html('<i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span>');
+                $(this).html('<span class="lang" key="lb_luu">Chọn</span><i class="fa-solid fa-xmark"></i>');
                 this.classList.remove("btn-danger");
                 this.classList.add("btn-primary");
                 var strHocPhan_ChuongTrinh_Id = $(this).attr('name');//Dùng để xác định đối tượng này đã lưu chưa
@@ -889,6 +889,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("txtHocPhan_KBB_KyHieu", "");
         edu.util.viewValById("dropPhanLoaiKhoi_KBB", "");
         edu.util.viewValById("txtHocPhan_KBB_ThuTu", "");
+        edu.util.viewValById("txtThuTu_KBB", "");
         //$("#zoneHocPhan_Selected_KBB").html("");
     },
 
@@ -905,6 +906,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("dropPhanLoaiKhoi_KTCD", "");
         edu.util.viewValById("dropCoTinhDiem_KTCD", "");
         edu.util.viewValById("txtHocPhan_KTCD_NhomTuChon", "");
+        edu.util.viewValById("txtThuTu_KTCD", "");
         //edu.util.viewValById("txtHocPhan_KTCD_Ten", "");
         //edu.util.viewValById("txtHocPhan_KTCD_SoHocPhan", "");
         //$("#zoneHocPhan_Selected_KTCD").html("");
@@ -950,7 +952,7 @@ ChuongTrinhHocPhan.prototype = {
         ev.target.style.background = "";
         var point = document.getElementById('btnSelect_' + data.replace('drag_', ''));
         if ($(point).hasClass("btn-primary")) {
-            $(point).html('<i class="fa fa-backward"></i> <span class="lang" key="lb_luu">Bỏ Chọn</span>');
+            $(point).html('<span class="lang" key="lb_luu">Bỏ Chọn</span><i class="fa-solid fa-xmark"></i>');
             point.classList.remove("btn-primary");
             point.classList.add("btn-danger");
         }
@@ -973,7 +975,7 @@ ChuongTrinhHocPhan.prototype = {
         ev.target.style.background = "";
         var point = document.getElementById('btnSelect_KBB_' + data.replace('drag_KBB_', ''));
         if ($(point).hasClass("btn-primary")) {
-            $(point).html('<i class="fa fa-backward"></i> <span class="lang" key="lb_luu">Bỏ Chọn</span>');
+            $(point).html('<span class="lang" key="lb_luu">Bỏ Chọn</span><i class="fa-solid fa-xmark"></i>');
             point.classList.remove("btn-primary");
             point.classList.add("btn-danger");
         }
@@ -996,7 +998,7 @@ ChuongTrinhHocPhan.prototype = {
         ev.target.style.background = "";
         var point = document.getElementById('btnSelect_KTCD_' + data.replace('drag_KTCD_', ''));
         if ($(point).hasClass("btn-primary")) {
-            $(point).html('<i class="fa fa-backward"></i> <span class="lang" key="lb_luu">Bỏ Chọn</span>');
+            $(point).html('<span class="lang" key="lb_luu">Bỏ Chọn</span><i class="fa-solid fa-xmark"></i>');
             point.classList.remove("btn-primary");
             point.classList.add("btn-danger");
         }
@@ -1086,8 +1088,8 @@ ChuongTrinhHocPhan.prototype = {
             html += '<i class="fa fa-building cl-rosybrown"></i>';
             html += '</div>';
             html += '<div class="small-box-footer">';
-            html += '<a id="edit_' + data[i].ID + '" class="btn btn-default poiter btnEdit"><i class="fa fa-pencil"></i> Cập nhật CTDT</a>';
-            html += '<a id="viewCT_' + data[i].ID + '" class="btn btn-default poiter btnViewCT" style="margin-left: 5px"><i class="fa fa-pencil"></i> Xem CTDT</a>';
+            html += '<a id="edit_' + data[i].ID + '" class="btn btn-default poiter btnEdit"><i class="fa-solid fa-pen-field"></i>Cập nhật CTDT</a>';
+            html += '<a id="viewCT_' + data[i].ID + '" class="btn btn-default poiter btnViewCT" style="margin-left: 5px"><i class="fa-solid fa-eye"></i>Xem CTDT</a>';
             html += '</div>';
             html += '</div>';
             html += '</div >';
@@ -1171,8 +1173,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_' + data[i].ID + '" name="" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].TEN)  + '</span>';
-            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_' + data[i].ID + '"><i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].TEN)  + '</span>';
+            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_' + data[i].ID + '"><span class="lang" key="lb_luu">Chọn</span><i class="fa-solid fa-angle-right"></i></span>';
             row += '</a>';
             row += '</li>';
         }
@@ -2233,8 +2235,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_' + data[i].DAOTAO_HOCPHAN_ID + '" name="' + edu.util.returnEmpty(data[i].ID) + '" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN) + '</span>';
-            row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_' + data[i].DAOTAO_HOCPHAN_ID + '"><i class="fa fa-backward"></i> <span class="lang" key="lb_luu"> Bỏ Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN) + '</span>';
+            row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu"> Bỏ Chọn</span><i class="fa-solid fa-xmark"></i></span>';
             row += '</a>';
             row += '</li>';
         }
@@ -2385,8 +2387,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '" name="" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN) +'</span>';
-            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '"><i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN) +'</span>';
+            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu">Chọn</span><i class="fa-solid fa-angle-right"></i></span>';
             row += '</a>';
             row += '</li>';
         }
@@ -2399,8 +2401,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_KTCD_' + data[i].DAOTAO_HOCPHAN_ID + '" name="" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
-            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_KTCD_' + data[i].DAOTAO_HOCPHAN_ID + '"><i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
+            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_KTCD_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu">Chọn</span> <i class="fa-solid fa-angle-right"></i></span>';
             row += '</a>';
             row += '</li>';
         }
@@ -2429,8 +2431,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_' + data[i].DAOTAO_HOCPHAN_ID + '" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
-            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_' + data[i].DAOTAO_HOCPHAN_ID + '"><i class="fa fa-forward"></i> <span class="lang" key="lb_luu">Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
+            row += '<span class="submit btn btn-primary pull-right btnSelectHocPhan" id="btnSelect_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu">Chọn</span> <i class="fa-solid fa-angle-right"></i></span>';
             row += '</a>';
             row += '</li>';
         }
@@ -2455,7 +2457,7 @@ ChuongTrinhHocPhan.prototype = {
             'strPhanLoai_Id': edu.util.getValById("dropPhanLoaiKhoi_KBB"),
             'strDaoTao_KhoiBatBuoc_Cha_Id': edu.util.getValById("dropHocPhan_KBB_KhoiCha"),
             'strDaoTao_ToChucCT_Id': me.strChuongTrinh_Id,
-            'dThuTu': edu.util.getValById("txtHocPhan_KBB_ThuTu"),
+            'dThuTu': edu.util.getValById("txtThuTu_KBB"),
             'strNguoiThucHien_Id': edu.system.userId
         };
         if (me.strKhoiBatBuoc_Id != "") {
@@ -2625,7 +2627,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("dropHocPhan_KBB_KhoiCha", data[0].DAOTAO_KHOIBATBUOC_CHA_ID);
         edu.util.viewValById("txtHocPhan_KBB_KyHieu", data[0].KYHIEU);
         edu.util.viewValById("dropPhanLoaiKhoi_KBB", data[0].PHANLOAI_ID);
-        edu.util.viewValById("txtHocPhan_KBB_ThuTu", data[0].THUTU);
+        edu.util.viewValById("txtThuTu_KBB", data[0].THUTU);
         me.strKhoiBatBuoc_Id = data[0].ID;
         me.getList_HocPhan_ChuongTrinh_KBB();
     },
@@ -2790,8 +2792,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '" name="' + edu.util.returnEmpty(data[i].ID) + '" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
-            row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '"><i class="fa fa-backward"></i> <span class="lang" key="lb_luu"> Bỏ Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
+            row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_KBB_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu"> Bỏ Chọn</span> <i class="fa-solid fa-xmark"></i></span>';
             row += '</a>';
             row += '</li>';
         }
@@ -2812,7 +2814,10 @@ ChuongTrinhHocPhan.prototype = {
                 id: "ID",
                 parentId: "DAOTAO_KHOITUCHON_DON_CHA_ID",
                 name: "TEN",
-                code: ""
+                code: "",
+                mRender: function (nRow, aData) {
+                    return edu.util.returnEmpty(aData.THUTU) + ". " + edu.util.returnEmpty(aData.TEN)
+                }
             },
             renderPlaces: ["zone_khoituchondon"],
             style: "fa fa-cube color-active"
@@ -2868,7 +2873,10 @@ ChuongTrinhHocPhan.prototype = {
                 id: "ID",
                 parentId: "DAOTAO_KHOIBATBUOC_CHA_ID",
                 name: "TEN",
-                code: ""
+                code: "",
+                mRender: function (nRow, aData) {
+                    return edu.util.returnEmpty(aData.THUTU) + ". " + edu.util.returnEmpty(aData.TEN)
+                }
             },
             renderPlaces: ["zone_khoibatbuoc"],
             style: "fa fa-cube color-active"
@@ -2994,7 +3002,7 @@ ChuongTrinhHocPhan.prototype = {
             'strDaoTao_ToChucCT_Id': me.strChuongTrinh_Id,
             'strLoaiLuaChon_Id': edu.util.getValById("dropHocPhan_KTCD_LoaiDonVi"),
             'dDonViLuaChon': edu.util.getValById("txtHocPhan_KTCD_DonVi"),
-            'dThuTu': 1,
+            'dThuTu': edu.system.getValById('txtThuTu_KTCD'),
             'strNguoiThucHien_Id': edu.system.userId,
             'dSoHocPhanQuyDinh': edu.system.getValById('txtHocPhan_KTCD_SoHocPhan'),
             'dSoTinChiQuyDinh': edu.system.getValById('txtHocPhan_KTCD_SoTin'),
@@ -3175,6 +3183,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.util.viewValById("dropPhanLoaiKhoi_KTCD", data[0].PHANLOAI_ID);
         edu.util.viewValById("dropCoTinhDiem_KTCD", data[0].KHONGTINHDIEM);
         edu.util.viewValById("txtHocPhan_KTCD_NhomTuChon", data[0].NHOM);
+        edu.util.viewValById("txtThuTu_KTCD", data[0].THUTU);
         me.getList_HocPhan_ChuongTrinh_KTCD();
     },
     /*------------------------------------------
@@ -3338,8 +3347,8 @@ ChuongTrinhHocPhan.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<li class="treeview item-li" id="drag_KTCD_' + data[i].DAOTAO_HOCPHAN_ID + '" name="' + edu.util.returnEmpty(data[i].ID) + '" draggable="true" ondragstart="main_doc.ChuongTrinhHocPhan.khoibatbuoc_dragstart_handler(event);">';
             row += '<a>';
-            row += '<i class="fa fa-arrows"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
-            row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_KTCD_' + data[i].DAOTAO_HOCPHAN_ID + '"><i class="fa fa-backward"></i> <span class="lang" key="lb_luu"> Bỏ Chọn</span></span>';
+            row += '<i class="fa-solid fa-circle-check"></i> <span>' + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(data[i].HOCTRINHAPDUNGHOCTAP) + "(" + edu.util.returnEmpty(data[i].TONGSOTIETPHANBO) + ") - " + edu.util.returnEmpty(data[i].DAOTAO_HOCPHAN_TEN)  +'</span>';
+            row += '<span class="submit btn btn-danger pull-right btnSelectHocPhan" name="' + edu.util.returnEmpty(data[i].ID) + '" id="btnSelect_KTCD_' + data[i].DAOTAO_HOCPHAN_ID + '"><span class="lang" key="lb_luu"> Bỏ Chọn</span> <i class="fa-solid fa-xmark"></i></span>';
             row += '</a>';
             row += '</li>';
         }

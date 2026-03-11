@@ -5959,3 +5959,6 @@ a.other-action_item:hover {
 .fw-400{
   font-weight:400 !important;
 }
+.info-tblHocPhan span{
+  color: #888;
+}
