@@ -129,8 +129,22 @@ TongHopDiem.prototype = {
         var me = this;
         var strDaoTao_ThoiGianDaoTao_Id = edu.util.checkValue(edu.util.getValById("dropSearch_ThoiGianDaoTao")) ? edu.util.getValById('dropSearch_ThoiGianDaoTao') : edu.util.getValById('dropSearch_NamHoc');
         //--Edit
-        var obj_list = {
-            'action': 'RL_ThongTinChung/LayDSTongHopDRLTheoLop',
+        //var obj_list = {
+        //    'action': 'RL_ThongTinChung/LayDSTongHopDRLTheoLop',
+        //    'strChucNang_Id': edu.system.strChucNang_Id,
+        //    'strDaoTao_ThoiGianDaoTao_Id': strDaoTao_ThoiGianDaoTao_Id,
+        //    'strQLSV_TrangThaiNguoiHoc_Id': edu.util.getValById('dropSearch_TrangThai'),
+        //    'strDoiTuongApDung_Id': edu.util.getValById('dropSearch_DoiTuong'),
+        //    'strDaoTao_LopQuanLy_Id': edu.util.getValCombo('dropSearch_LopQuanLy'),
+        //    'strNguoiThucHien_Id': edu.system.userId,
+        //};
+        var obj_save = {
+            'action': 'XLHV_RL_ThongTin_MH/DSA4BRIVLi8mCS4xBRMNFSkkLg0uMQPP',
+            'func': 'pkg_diemrenluyen_thongtin.LayDSTongHopDRLTheoLop',
+            'iM': edu.system.iM,
+            'strDaoTao_HeDaoTao_Id': edu.system.getValById('dropSearch_HeDaoTao'),
+            'strDaoTao_KhoaDaoTao_Id': edu.system.getValById('dropSearch_KhoaDaoTao'),
+            'strDaoTao_ChuongTrinh_Id': edu.system.getValById('dropSearch_ChuongTrinhDaoTao'),
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strDaoTao_ThoiGianDaoTao_Id': strDaoTao_ThoiGianDaoTao_Id,
             'strQLSV_TrangThaiNguoiHoc_Id': edu.util.getValById('dropSearch_TrangThai'),
@@ -149,19 +163,19 @@ TongHopDiem.prototype = {
                     me.genTable_ThongKe(dtReRult.rsThongKe, data.Pager);
                 }
                 else {
-                    edu.system.alert(obj_list + " : " + data.Message, "s");
+                    edu.system.alert(data.Message, "s");
                 }
 
             },
             error: function (er) {
 
-                edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert(JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
 
             contentType: true,
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

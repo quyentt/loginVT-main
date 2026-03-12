@@ -557,7 +557,8 @@ systemroot.prototype = {
             me.appCode = objChucNang.MAUNGDUNG;
             me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
-            if (objChucNang.DUONGDANFILE && (!objChucNang.TENANH || objChucNang.TENANH.indexOf('fa ') != 0)) {
+            let strTenAnh = objChucNang.TENANH.trim();
+            if (objChucNang.DUONGDANFILE && (!strTenAnh || strTenAnh.indexOf('fa ') != 0)) {
                 location.href = "./index.aspx"
             }
             //$("#sidebar-menu .active").removeClass('active');
