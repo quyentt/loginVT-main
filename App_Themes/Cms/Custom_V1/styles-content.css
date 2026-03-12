@@ -2938,7 +2938,11 @@
     padding-right: 0 !important;
     margin-top: 10px !important;
 }
-
+.aps-modal-nhansu .col-sm-9 .box-body .item-modal .pull-right{
+    position: absolute;
+    right: 0;
+    top: -6px;
+}
 .aps-modal-nhansu .col-sm-9 .box-body {
     padding: 0px 20px !important;
 }
@@ -3005,7 +3009,6 @@
     width: 24px !important;
     color: #222 !important;
     padding: 0 !important;
-    ss
 }
 
 .aps-modal-nhansu .table .bg-yellow.notify:hover .btn-circle.btnClose,
@@ -3022,6 +3025,52 @@
 
 .aps-modal-nhansu #tblModal_NhanSu a .bg-green .btn-default:hover i {
     color: var(--color-red) !important;
+}
+
+#tblModal_SinhVien tr td {
+    min-height: 44px !important;
+    height: 44px !important;
+    border-bottom: 1px solid #f1f1f1;
+    border-right: 0 !important;
+    border-left: 0 !important;
+}
+
+#tblModal_SinhVien tr:nth-child(2n+2) {
+    background-color: #f9f9f9;
+}
+
+#tblModal_SinhVien tr th {
+    border-right: 0 !important;
+    border-left: 0 !important;
+    min-height: 44px !important;
+    height: 44px !important;
+}
+
+#tblModal_SinhVien>thead>tr:first-child>th:last-child {
+    border-right: 0 !important;
+}
+
+#tblModal_SinhVien tr td .badge.bg-green.notify {
+    margin-top: -11px !important;
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    background: transparent;
+}
+
+#tblModal_SinhVien tr td .badge.bg-green.notify i {
+    font-size: 14px !important;
+    width: 20px !important;
+    color: #888 !important;
+}
+#tblModal_SinhVien tr td .badge.bg-green.notify:hover a i{
+    color: var(--color-red) !important;
+}
+#tblModal_SinhVien tr td:nth-last-child(2) {
+    text-align: center !important;
+}
+
+#tblModal_SinhVien tr:last-child {
+    border-right: 0 solid #f1f1f1 !important;
 }
 
 #tblModal_NhanSu>tbody>tr>td:nth-child(2),
@@ -8407,10 +8456,12 @@ input#tblInput_DTSV_SinhVien_input {
     color: var(--color-green);
     padding-right: 0;
 }
+
 .aps-list-hocphan.sidebar-menu .item-li a .btnSelectHocPhan i {
     font-size: 12px !important;
     width: 12px !important;
 }
+
 .aps-list-hocphan.sidebar-menu .item-li a .btn i {
     color: #fff;
 }
@@ -8455,20 +8506,24 @@ input#tblInput_DTSV_SinhVien_input {
     margin-top: 5px !important;
     width: 13px !important;
 }
+
 .table-khoituchon .sidebar-menu {
     padding: 0 !important;
 }
+
 .table.table-khoibatbuoc tr:last-child,
 .table.table-khoituchon tr:last-child {
     border-right: 0 solid #d1d1d1 !important;
 }
- .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a, 
- .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.active:hover>a, 
- .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open:hover>a {
+
+.skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a,
+.skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.active:hover>a,
+.skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open:hover>a {
     background: #f1f1f1 !important;
     color: var(--color-red) !important;
     border-radius: 0px !important;
 }
+
 /*----------------*/
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li:hover>a {
     background: #fff !important;
@@ -8485,6 +8540,16 @@ input#tblInput_DTSV_SinhVien_input {
     padding-left: 10px !important;
     padding-right: 10px !important;
     width: auto !important;
+}
+
+.aps-list-hocphan.sidebar-menu .item-li .btnSelectHocPhan .lang,
+.zoneHocPhan_Selected_KBB.sidebar-menu .item-li .btnSelectHocPhan:hover .lang,
+.zoneHocPhan_Selected_KBB.sidebar-menu .item-li:hover .btnSelectHocPhan .lang {
+    color: #fff !important;
+}
+
+.zoneHocPhan_Selected_KBB.sidebar-menu .item-li .btnSelectHocPhan .lang {
+    color: var(--color-red) !important;
 }
 
 .aps-list-hocphan.sidebar-menu .item-li a i.fa-circle-check,
@@ -8505,11 +8570,13 @@ input#tblInput_DTSV_SinhVien_input {
     color: var(--color-red);
     width: auto !important;
 }
-.zoneHocPhan_Selected_KBB.sidebar-menu .item-li a i.fa-xmark{
+
+.zoneHocPhan_Selected_KBB.sidebar-menu .item-li a i.fa-xmark {
     font-size: 12px !important;
     width: 13px !important;
     margin-left: 3px;
 }
+
 .zone_chuongtrinhhocphan .box-header.bg-green {
     height: 52px;
     line-height: 52px;

@@ -2901,16 +2901,17 @@
      border: 1px solid #0dcaf0;
      color: #0dcaf0;
  }
-
+.btn-outline-info i {
+      color: #0dcaf0 !important;
+ }
  .btn-outline-info:hover {
      border: 1px solid #0dcaf0 !important;
-     ;
      color: #fff !important;
-     ;
      background-color: #0dcaf0 !important;
-     ;
  }
-
+.btn-outline-info:hover i {
+     color: #fff !important;
+ }
  .btn.btnRefresh_CNTT {
      padding: 10px 15px 7.6px 15px !important;
  }
