@@ -13,7 +13,7 @@
                     <div class="col-sm-3 item-search">
                         <div class="bss-item pd0 mb-0">
                             <input type="text" id="txtSearch_TuKhoa" class="form-control"
-                                   placeholder="Nhập từ khóa tìm kiếm">
+                                placeholder="Nhập từ khóa tìm kiếm">
                         </div>
                     </div>
                     <div class="col-sm-3 item-search">
@@ -25,32 +25,32 @@
             <!-- /.Danh sách năm học -->
             <div class="box box-solid aps-list-monhoc mt-15">
                 <div class="box-header pt20 pl20 pr20 pb0">
-                    <h3 class="box-title mt-0" title="Danh sách môn học">
+                    <h3 class="box-title mt-0 line-20 mt-10" title="Danh sách môn học">
                         <i class="fa-solid fa-list-timeline"></i> Danh sách môn học
                     </h3>
-                    <span class="badge bg-light-blue">
-                            <span id="lblMonHoc_Tong"></span>
+                    <span class="badge bg-light-blue mt-10">
+                        <span id="lblMonHoc_Tong"></span>
                     </span>
-                    <div class="box-tools pull-right mr-10">
-                        <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
-                        <a id="btnDelete" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                    <div class="box-tools pull-right mr-10 d-flex">
+                        <a id="btnDelete" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
+                        <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
                 <div class="box-body pl20 pr20 mt-10">
                     <div class="aps-table-select pb20">
-                        <table id="tblMonHoc" class="table table-hover table-bordered">
+                        <table id="tblMonHoc" class="table table-hover table-bordered table-noborder tblMonHoc">
                             <thead>
-                            <tr>
-                                <th class="td-center" style="width: 10px">STT</th>
-                                <th class="td-center" style="width: 400px">Mã môn học</th>
-                                <th class="td-center" style="width: 600px">Tên môn học</th>
-                                <th class="td-center" style="width: 600px">Bộ môn</th>
-                                <th class="td-center" style="width: 200px">Số tín chỉ</th>
-                                <th class="td-center" style="width: 10px">Sửa</th>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll">
-                                </th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center" style="width: 50px">STT</th>
+                                    <th class="td-left" style="width: 400px">Mã môn học</th>
+                                    <th class="td-left" style="width: 600px">Tên môn học</th>
+                                    <th class="td-left" style="width: 600px">Bộ môn</th>
+                                    <th class="td-center" style="width: 200px">Số tín chỉ</th>
+                                    <th class="td-center" style="width: 50px">Sửa</th>
+                                    <th class="td-center td-fixed w-50px">
+                                        <input type="checkbox" id="chkSelectAll">
+                                    </th>
+                                </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -59,9 +59,10 @@
             </div>
         </div>
     </div>
+
     <!-- Thêm mới - Chương trình -->
     <div class="box box-solid form-container zone-bus col-lg-12 add-absolue zone_input_MonHoc" id="zone_input_MonHoc"
-         style="display: none">
+        style="display: none">
         <div class="box-header with-border">
             <h3 class="box-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> Môn học </h3>
             <div class="pull-right">
@@ -84,7 +85,7 @@
                         <div class="row aps-form-item">
                             <div class="col-sm-3 aps-form-lable">Mã môn học</div>
                             <div class="col-sm-9 aps-form-input">
-                                <input id="txtMa" class="form-control"/>
+                                <input id="txtMa" class="form-control" />
                             </div>
                         </div>
 
@@ -92,7 +93,7 @@
                         <div class="row aps-form-item">
                             <div class="col-sm-3 aps-form-lable">Tên môn học</div>
                             <div class="col-sm-9 aps-form-input">
-                                <input id="txtTen" class="form-control"/>
+                                <input id="txtTen" class="form-control" />
                             </div>
                         </div>
 
@@ -111,7 +112,7 @@
                         <div class="row aps-form-item">
                             <div class="col-sm-3 aps-form-lable">Số tín chỉ</div>
                             <div class="col-sm-9 aps-form-input">
-                                <input id="txtCT_SoTinChi" class="form-control"/>
+                                <input id="txtCT_SoTinChi" class="form-control" />
                             </div>
                         </div>
 
@@ -119,20 +120,22 @@
                         <div class="row aps-form-item">
                             <div class="col-sm-3 aps-form-lable">Ký hiệu</div>
                             <div class="col-sm-9 aps-form-input">
-                                <input id="txtCT_KyHieu" class="form-control"/>
+                                <input id="txtCT_KyHieu" class="form-control" />
                             </div>
                         </div>
                     </div>
-                    <div class="pull-right">
+                    <div class="pull-right d-flex">
+                        <a class="btn btn-default btnClose" href="#" title="Close">
+                            <i class="fa fa-times-circle"></i>Đóng</a>
                         <a class="btn btn-outline-primary btnReWrite" href="#" title="Xóa trắng toàn bộ thông tin nhập">
                             <i class="fa fa-save-circle-arrow-right"></i>Lưu và Nhập tiếp</a>
-                        <a id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
-                        <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i>
-                            Đóng</a>
+                        <a id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
+
                     </div>
                 </div>
                 <div class="col-lg-5 pl20">
-                    <div class="aps-img pt10 pb15 text-center"><img src="Upload/images/img-kehoach_2.svg"  style="max-width: 500px"></div>
+                    <div class="aps-img pt10 pb15 text-center"><img src="Upload/images/img-kehoach_2.svg"
+                            style="max-width: 500px"></div>
                 </div>
             </div>
             <div class="box-footer" style="display:none !important;">

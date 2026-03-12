@@ -368,7 +368,7 @@
  .table td .btn,
  .table td .btn:hover,
  .table .btn {
-     padding: 2px 8px 2px 8px !important;
+     padding: 0px 8px 2px 8px !important;
      border-radius: 5px !important;
      line-height: 28px !important;
      height: 28px !important;
@@ -1832,7 +1832,11 @@
      margin-left: 280px;
  }
 
- .content-wrapper {
+ .skin-blue .content-wrapper {
+     overflow: hidden;
+ }
+
+ .skin-bl .content-wrapper {
      background-color: #e3e4e5 !important;
      padding: 15px 10px;
  }
@@ -2395,10 +2399,12 @@
  .modal-header .title i {
      margin-right: 6px;
  }
-.modal-alert .modal-title i{
-    font-size: 18px !important;
-    font-weight: 400 !important;
-}
+
+ .modal-alert .modal-title i {
+     font-size: 18px !important;
+     font-weight: 400 !important;
+ }
+
  .modal-header .close:hover {
      color: var(--color-yellow) !important;
      opacity: 1 !important;
@@ -4650,4 +4656,73 @@
  #divuploadtxtVBSC_FileDinhKem:focus,
  #divuploadtxtVBSC_FileDinhKem:active {
      border: 0 solid #3c8dee;
+ }
+
+ .info-tblHocPhan span,
+ .info-tblHocPhanTuongDuong span,
+ .info-tblQuanHeHocPhan span,
+ .info-tblCoVanLop span {
+     color: #888 !important;
+     line-height: 38px !important;
+ }
+
+ .upload-file {
+     margin-bottom: 15px !important;
+ }
+
+ .upload-file .mailbox-attachments .btn-default {
+     right: -100px !important;
+ }
+
+ /* #notify_import {
+    padding: 20px;
+    background: #f1f1f1;
+} */
+
+ .tblHocPhan .btn-default.btnEdit:hover,
+ .table tr .btn-default.btnEditHocKy:hover,
+ .table tr .btn-default.btnKetQua:hover {
+     background: var(--color-blue) !important;
+     color: #fff !important;
+ }
+
+ .tblHocPhan .table tr input[type=checkbox] {
+     margin: 4px 0 0;
+ }
+
+ .aps-form-lable-small {
+     position: absolute;
+ }
+
+.aps-list-hocphan, .zoneHocPhan_Selected_KBB {
+     border-left: 1px solid #e1e1e1;
+     border-right: 1px solid #e1e1e1;
+     border-bottom: 1px solid #e1e1e1;
+     padding: 0px;
+ }
+
+ .table .btn-table-none.btn {
+     padding: 9px 15px 7.6px 15px !important;
+     height: 38px !important;
+     line-height: 19px !important;
+ }
+
+ .table .btn-table-none.btn:hover {
+     padding: 9px 15px 7.6px 15px !important;
+     height: 38px !important;
+     line-height: 19px !important;
+ }
+
+.aps-list-hocphan.sidebar-menu>li,
+.zoneHocPhan_Selected_KBB.sidebar-menu>li {
+     border-bottom: 1px solid #e9e9e9;
+ }
+
+ .aps-list-hocphan.sidebar-menu>li a,
+.zoneHocPhan_Selected_KBB.sidebar-menu>li a {
+     padding-left: 15px !important;
+ }
+
+.zoneHocPhan_Selected_KBB.sidebar-menu>li:hover .btnSelectHocPhan i {
+     color: #fff !important;
  }
