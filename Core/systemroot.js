@@ -525,9 +525,11 @@ systemroot.prototype = {
         var objChucNang = me.dtChucNang.find(e => e.ID === strChucNang_Id);
         if (objChucNang) {
             me.appCode = objChucNang.MAUNGDUNG
+            me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
-            if (objChucNang.MAUNGDUNG != "ApisCongCanBo" || (objChucNang.DUONGDANFILE && objChucNang.TENANH && objChucNang.TENANH.indexOf('fa ') == 0)) {
-                location.href="./indexi.aspx"
+            let strTenAnh = objChucNang.TENANH.trim();
+            if ((objChucNang.DUONGDANFILE && strTenAnh && strTenAnh.indexOf('fa ') == 0)) {
+                location.href = "./indexi.aspx"
             }
             $("#sidebar-menu .active").removeClass('active');
             if (objChucNang.CHUCNANGCHA_ID) {
