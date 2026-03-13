@@ -1367,7 +1367,7 @@
                 </div>
             </div>
             <div class="box-body pd20">
-                <div class="col-sm-12 box-view aps-add-new">
+                <div class="col-sm-12 box-view aps-add-new" style="overflow-y: auto !important;">
                     <!-- 1. Noi dung bai bao -->
                     <div class="col-sm-6 pr15">
                         <div class="row aps-form mb-0">
@@ -1392,7 +1392,7 @@
                             </div>
                             <!--row 2-->
                             <div class="row aps-form-item">
-                                <table id="tblVDinhHuong" class="table table-hover table-bordered tblVDinhHuong mr-0">
+                                <table id="tblVDinhHuong" class="table table-hover table-bordered table-border tblVDinhHuong mr-0">
                                     <thead>
                                         <tr>
                                             <td class="td-fixed td-center w-50px">Stt</td>
@@ -1519,6 +1519,10 @@
                 Khối kiến thức</button>
             <button type="button" class="btn btn-outline-primary" data-toggle="modal"
                 data-target="#myModalEditHocKy">Sửa thời gian</button>
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                data-target="#myModalEditHocKyAll">Sửa thời gian -1</button>
+            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalKeThuaQH">Kế
+                thừa Quan hệ học phần</button>
         </div>
         <!-- ---------- -->
         <!-- Học phần -->
@@ -1533,7 +1537,7 @@
                                     class="fa-solid fa-chalkboard-user"></i>Học phần</span></h4>
                     </div>
                     <div class="modal-body" style="">
-                        <div class="row aps-add-new">
+                        <div class="aps-add-new">
                             <div class="row aps-form">
                                 <!--row 1-->
                                 <div class="row aps-form-item">
@@ -1650,11 +1654,10 @@
                 </div>
             </div>
         </div>
-
         <!--Kế thừa-->
         <div class="modal fade myModalKeThua" id="myModalKeThua" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" style="width: 95%">
+            <div class="modal-dialog modal-dialog-scrollable" style="width: 95%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -1763,7 +1766,7 @@
         <!-- Thêm mới - Thứ tự học phần -->
         <div class="modal fade myModalThuTu" id="myModalThuTu" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog" style="width: 95%">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 95%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -1778,8 +1781,8 @@
                         <div class="row" style="padding-right: 0 !important;padding-left: 0 !important;">
                             <span class="pull-right">
                                 <a class="btn btn-primary" id="btnUpdateThuTuHocPhan">
-                                    <i class="fa-solid fa-calendar-lines-pen"></i><span class="lang" key="lb_luu">Cập
-                                        nhật thứ tự theo kỳ dự kiến</span></a>
+                                    <i class="fa-solid fa-calendar-lines-pen"></i><span class="lang" key="lb_luu">
+                                        Cập nhật thứ tự theo kỳ dự kiến</span></a>
                             </span>
                         </div>
                         <table id="tblThuTuHocPhan"
@@ -1899,7 +1902,8 @@
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span
                                 aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel"><span class="lang" key=""><i class="fa-solid fa-pen-to-square"></i>Sửa thời gian</span></h4>
+                        <h4 class="modal-title" id="myModalLabel"><span class="lang" key=""><i
+                                    class="fa-solid fa-pen-to-square"></i>Sửa thời gian</span></h4>
                     </div>
                     <div class="modal-body" style="">
                         <div class="row aps-form-item">
@@ -1922,44 +1926,54 @@
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="myModalKeThuaQH" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <!-- Kế thừa Quan hệ học phần -->
+        <div class="modal fade myModalKeThuaQH" id="myModalKeThuaQH" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span
                                 aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Kế thừa Quan hệ học
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="lang" key=""><i class="fa-solid fa-screen-users"></i>Kế thừa quan hệ học
                                 phần</span>
                         </h4>
                     </div>
                     <div class="modal-body" style="">
-                        <div class="row aps-form-item">
-                            <div style="width: 40%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Hệ đào tạo</span></label>
+                        <div class="aps-add-new">
+                            <div class="aps-form">
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-3 aps-lable-name">
+                                        <label style="font-weight: normal">
+                                            <span class="lang color-888" key="">Hệ đào tạo</span></label>
+                                    </div>
+                                    <div class="col-sm-9 aps-form-input">
+                                        <select id="dropHeDaoTao_QHKT" class="select-opt"></select>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-3 aps-lable-name">
+                                        <label style="font-weight: normal">
+                                            <span class="lang color-888" key="">Khóa đào tạo</span></label>
+                                    </div>
+                                    <div class="col-sm-9 aps-form-input">
+                                        <select id="dropKhoaDaoTao_QHKT" class="select-opt"></select>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
+                                <div class="row aps-form-item">
+                                    <div class="col-sm-3 aps-lable-name">
+                                        <label style="font-weight: normal">
+                                            <span class="lang color-888" key="">Chương trình</span></label>
+                                    </div>
+                                    <div class="col-sm-9 aps-form-input">
+                                        <select id="dropChuongTrinh_QHKT" class="select-opt"
+                                            multiple="multiple"></select>
+                                    </div>
+                                    <div class="clear"></div>
+                                </div>
                             </div>
-                            <div style="width: 60%; float: left">
-                                <select id="dropHeDaoTao_QHKT" class="select-opt"></select>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="row aps-form-item">
-                            <div style="width: 40%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Khóa đào tạo</span></label>
-                            </div>
-                            <div style="width: 60%; float: left">
-                                <select id="dropKhoaDaoTao_QHKT" class="select-opt"></select>
-                            </div>
-                            <div class="clear"></div>
-                        </div>
-                        <div class="row aps-form-item">
-                            <div style="width: 40%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Chương trình</span></label>
-                            </div>
-                            <div style="width: 60%; float: left">
-                                <select id="dropChuongTrinh_QHKT" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="clear"></div>
                         </div>
                     </div>
                     <div id="notify"></div>

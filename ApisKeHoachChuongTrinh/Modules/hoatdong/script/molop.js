@@ -574,10 +574,10 @@ MoLop.prototype = {
         row += '<div style="margin-left: auto; margin-right: auto; width: ' + ((data.length) * 90) + 'px">';
         for (var i = 0; i < data.length; i++) {
             var strClass = data[i].THONGTIN1;
-            if (!edu.util.checkValue(strClass)) strClass = "fa fa-paper-plane";
+            if (!edu.util.checkValue(strClass)) strClass = "fal fa-check-circle";
             row += '<div id="' + data[i].ID + '" class="btn-large btnxacnhan">';
             row += '<a class="btn"><i style="' + data[i].THONGTIN2 + '" class="' + strClass + ' fa-4x"></i></a>';
-            row += '<a class="color-active bold">' + data[i].TEN + '</a>';
+            row += '<a class="color-active">' + data[i].TEN + '</a>';
             row += '</div>';
         }
         row += '</div>';
