@@ -122,7 +122,7 @@ input:focus-visible {
 
 .account-group .item {
   cursor: pointer;
-  margin-left: 36px;
+  margin-left: 15px;
   position: relative;
 }
 
@@ -139,19 +139,22 @@ input:focus-visible {
 }
 
 .account-group .item span {
-  width: 17px;
-  height: 17px;
-  font-size: 12px;
-  position: absolute;
-  background: var(--color-puple);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: -8px;
-  right: -6px;
-  border-radius: 100%;
-  color: #fff;
-  font-weight: 600;
+    width: 130px;
+    height: 24px;
+    font-size: 13px;
+    position: absolute;
+    /* background: var(--color-puple); */
+    display: block;
+    align-items: center;
+    justify-content: center;
+    top: 6px;
+    left: 40px;
+    border-radius: 0 !important;
+    color: #fff;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .account-group .item:hover i {
@@ -164,6 +167,10 @@ input:focus-visible {
 
 .account-group .item.noti span {
   background: var(--color-red);
+}
+
+.account-group .dropdown {
+  width: 168px !important;
 }
 
 .quick-action {
@@ -4093,10 +4100,12 @@ a.other-action_item:hover {
 .left-sidebar a:hover {
   color: var(--color-link);
 }
-.left-sidebar a:hover .item-icon{
+
+.left-sidebar a:hover .item-icon {
   color: var(--color-link);
   font-weight: 700 !important;
 }
+
 .sidebar-bars {
   font-size: 24px;
   margin-right: 22px;
@@ -4131,9 +4140,11 @@ a.other-action_item:hover {
 .sidebar-menu-header:not(.collapsed):hover {
   color: #fff !important;
 }
-.sidebar-menu-header:not(.collapsed):hover i{
+
+.sidebar-menu-header:not(.collapsed):hover i {
   color: #fff !important;
 }
+
 .item-icon {
   font-size: 18px;
   /* width: 35px; */
@@ -4166,10 +4177,12 @@ a.other-action_item:hover {
   color: var(--color-white);
   background: var(--color-link);
 }
+
 .sidebar-menu-item.active .sidebar-menu-header .item-icon {
   font-weight: 700;
   color: var(--color-white);
 }
+
 .sidebar-menu-sub a:first-child {
   margin-top: 8px;
 }
@@ -4307,7 +4320,8 @@ a.other-action_item:hover {
   background: var(--color-link);
   color: #fff;
 }
-.sidebar-menu-header:not(.collapsed) .item-icon{
+
+.sidebar-menu-header:not(.collapsed) .item-icon {
   color: #fff !important;
   font-weight: 700;
 }
@@ -5953,12 +5967,11 @@ a.other-action_item:hover {
 .tblNguoiHuongDan tr .txtFileDinhKem input:hover {
   border: 0px solid #3c8dee !important;
 }
-.fw-normal{
+
+.fw-normal {
   font-weight: normal !important;
 }
-.fw-400{
-  font-weight:400 !important;
-}
-.info-tblHocPhan span{
-  color: #888;
+
+.fw-400 {
+  font-weight: 400 !important;
 }
