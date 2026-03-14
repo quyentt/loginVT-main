@@ -16,7 +16,6 @@ PhanCongLaoDong.prototype = {
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
-        $("#txtSearch_NgayXem").val(edu.util.dateToday());
         me.getList_PhanCongLaoDong();
         me.getList_DonVi();
         edu.system.loadToCombo_DanhMucDuLieu("CORE.QUANHELAODONG.LOAI", "dropSearch_QuanHe,dropPhanLoai");

@@ -36,7 +36,7 @@ QuanHeLaoDong.prototype = {
             me.getList_CoCauToChuc();
         });
 
-        $("#tblChuaQH,#tblCoQH,##tblNghiViec").delegate(".btnEdit", "click", function () {
+        $("#tblChuaQH,#tblCoQH,#tblNghiViec").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtQuanHeLaoDong.find(e => e.ID == strId);
             me["strNhanSu_Id"] = data.ID;

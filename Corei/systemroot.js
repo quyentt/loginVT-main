@@ -557,7 +557,7 @@ systemroot.prototype = {
             me.appCode = objChucNang.MAUNGDUNG;
             me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
-            let strTenAnh = objChucNang.TENANH.trim();
+            let strTenAnh = objChucNang.TENANH ? objChucNang.TENANH.trim() : "";
             if (objChucNang.DUONGDANFILE && (!strTenAnh || strTenAnh.indexOf('fa ') != 0)) {
                 location.href = "./index.aspx"
             }

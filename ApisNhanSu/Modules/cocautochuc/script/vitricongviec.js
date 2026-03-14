@@ -68,7 +68,7 @@ ViTriCongViec.prototype = {
             edu.util.viewValById("txtMoTa", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa", data.DESCRIPTION);
             edu.util.viewValById("dropTrangThai", data.IS_ACTIVE);
-            $("#modalCongViec").modal("show");
+            $("#modalAddCongViec").modal("show");
         });
         $("#btnSave_CongViec").click(function () {
             me.save_CongViec();

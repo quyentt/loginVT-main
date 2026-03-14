@@ -974,7 +974,7 @@ NguoiDung.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_NguoiDung/ResetPassword',
+            'action': 'CMS_Custom/ResetPassword',
             
             'strId': strUser_Id,
             'strLoaiThongTin': edu.util.getValById("dropLoaiThongTin"),

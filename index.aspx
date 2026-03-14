@@ -118,6 +118,7 @@
           <div class="dropdown">
             <div class="item" data-bs-toggle="dropdown">
               <img src="assets/images/avata-user.png" class="avatar" />
+                <span class="hidden-xs"><%=fullname %></span>
             </div>
             <ul class="dropdown-menu user-action">
               <li>

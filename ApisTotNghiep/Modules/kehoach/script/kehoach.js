@@ -29,7 +29,7 @@ KeHoachXuLy.prototype = {
         me.getList_DMHocPhan();
         me.getList_PhanLoai();
         edu.extend.genBoLoc_HeKhoa("_KT");
-        //edu.system.loadToCombo_DanhMucDuLieu("TN.PHANLOAI", "dropSearch_PhanLoai,dropPhanLoai");
+        edu.system.loadToCombo_DanhMucDuLieu("DIEM.THANGDIEM", "dropSearch_ThangDiem_ChuanBi");
         edu.system.loadToCombo_DanhMucDuLieu("TN.KHOA.MO.DULIEU", "", "", data => {
             var row = "";
             row += '<div style="margin-left: auto; margin-right: auto; width: ' + ((data.length) * 90) + 'px">';
@@ -120,6 +120,13 @@ KeHoachXuLy.prototype = {
             else {
                 edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
             }
+        });
+        $("#tblKeHoachXuLy").delegate('.btnChuanBi', 'click', function (e) {
+            var strId = this.id;
+            me.strKeHoachXuLy_Id = strId;
+            edu.util.toggle_overide("zone-bus", "zoneChuanBiDuLieu");
+            me.getList_HocPhanKeHoach();
+            me.getList_ChuanBi();
         });
 
         $("#tblKeHoachXuLy").delegate('.btnXacNhan', 'click', function (e) {
@@ -482,6 +489,23 @@ KeHoachXuLy.prototype = {
             var strId = this.id;
             $('#myModalDieuKienHaBac').modal('show');
             me.getList_DieuKienHaBac(strId);
+        });
+
+
+        $("#btnSearch_ChuanBi").click(function (e) {
+            me.getList_ChuanBi();
+        });
+        $("#txtSearch_ChuanBi").keypress(function (e) {
+            if (e.which === 13) {
+                me.getList_ChuanBi();
+            }
+        });
+        $("#btnSave_KeThua").click(function () {
+            $('#myModalKeThua').modal('hide');
+            edu.system.confirm("Bạn có muốn Thực hiện tạo dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                me.save_ChuanBi();
+            });
         });
     },
 
@@ -995,7 +1019,13 @@ KeHoachXuLy.prototype = {
                         let temp = aData.TINHTRANG_KHOA_TEN ? aData.TINHTRANG_KHOA_TEN : 'Chi tiết';
                         return '<span><a class="btn btn-default btnXacNhan" id="' + aData.ID + '" title="Chi tiết">' + temp + '</a></span>';
                     }
-                }, 
+                },
+                {
+                    "mData": "SOLUONG",
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnChuanBi" id="' + aData.ID + '" title="Chi tiết">Xem</a></span>';
+                    }
+                },
 
                 {
                     "mDataProp": "NGAYTAO_DD_MM_YYYY_HHMMSS"
@@ -3570,6 +3600,206 @@ KeHoachXuLy.prototype = {
                 },
                 {
                     "mDataProp": "XEPLOAI_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+    
+    getList_HocPhanKeHoach: function (strTN_KeHoach_Id) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'TN_ThongTin_MH/DSA4BRIVDx4KJAkuICIpHgkuIhEpIC8P',
+            'func': 'pkg_totnghiep_thongtin.LayDSTN_KeHoach_HocPhan',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.system.getValById('txtAAAA'),
+            'strTN_KeHoach_Id': me.strKeHoachXuLy_Id,
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    me.genTable_HocPhanKeHoach(dtReRult, data.Pager, strTN_KeHoach_Id);
+                }
+                else {
+                    edu.system.alert(data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_HocPhanKeHoach: function (data, iPager, strTN_KeHoach_Id) {
+        var me = this;
+        var jsonForm = {
+            strTable_Id: "tblHocPhanKeHoach",
+
+            bPaginate: {
+                strFuntionName: "main_doc.KeHoach.getList_HocPhanKeHoach()",
+                iDataRow: iPager
+            },
+            aaData: data,
+            colPos: {
+                center: [0],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "DAOTAO_HOCPHAN_MA"
+                },
+                {
+                    "mDataProp": "DAOTAO_HOCPHAN_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+
+
+    save_ChuanBi: function (strId) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'TN_TinhToan_MH/FSgvKQUVAx4VDx4KJAkuICIpHgkuIhEpIC8P',
+            'func': 'pkg_totnghiep_tinhtoan.TinhDTB_TN_KeHoach_HocPhan',
+            'iM': edu.system.iM,
+            'strTN_KeHoach_Id': me.strKeHoachXuLy_Id,
+            'strThangDiem_Id': edu.system.getValById('dropSearch_ThangDiem_ChuanBi'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công");
+                }
+                else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: obj_save.type,
+            action: obj_save.action,
+            complete: function () {
+                //edu.system.start_Progress("zoneprocessXXXX", function () {
+                //    me.getList_DieuKien();
+                //});
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    getList_ChuanBi: function (strTN_KeHoach_Id) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'TN_ThongTin_MH/DSA4BRIVDx4KCR4FFQMeCS4iESkgLx4VICwP',
+            'func': 'pkg_totnghiep_thongtin.LayDSTN_KH_DTB_HocPhan_Tam',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.system.getValById('txtSearch_ChuanBi'),
+            'strTN_KeHoach_Id': me.strKeHoachXuLy_Id,
+            'strThangDiem_Id': edu.system.getValById('dropSearch_ThangDiem_ChuanBi'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    me.genTable_ChuanBi(dtReRult, data.Pager, strTN_KeHoach_Id);
+                }
+                else {
+                    edu.system.alert(data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    genTable_ChuanBi: function (data, iPager, strTN_KeHoach_Id) {
+        var me = this;
+        var jsonForm = {
+            strTable_Id: "tblChuanBi",
+
+            //bPaginate: {
+            //    strFuntionName: "main_doc.KeHoach.getList_ChuanBi()",
+            //    iDataRow: iPager
+            //},
+            aaData: data,
+            colPos: {
+                center: [0],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                },
+                {
+                    "mDataProp": "QLSV_NGUOIHOC_HOTEN"
+                },
+                {
+                    //"mDataProp": "DAOTAO_TOCHUCCHUONGTRINH_TEN(DAOTAO_TOCHUCCHUONGTRINH_MA)",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN) + "(" + edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA) + ")";
+                    }
+                },
+                {
+                    "mDataProp": "DAOTAO_KHOADAOTAO_TEN"
+                },
+                {
+                    "mDataProp": "DTB"
+                },
+                {
+                    "mDataProp": "CHITIETKETQUAHOCPHAN"
+                },
+                {
+                    "mDataProp": "THANGDIEM_TEN"
                 },
                 {
                     "mRender": function (nRow, aData) {

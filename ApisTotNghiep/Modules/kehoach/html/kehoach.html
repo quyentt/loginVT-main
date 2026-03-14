@@ -28,8 +28,9 @@
                                 <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 item-search">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
-                                        class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search">
+                                    <i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -66,6 +67,7 @@
                                     <th class="td-center">Đối tượng xét</th>
                                     <th class="td-center">Điều kiện xét</th>
                                     <th class="td-center">Xác nhận khóa - mở dữ liệu</th>
+                                    <th class="td-center">Chuẩn bị dữ liệu</th>
                                     <th class="td-center">Ngày tạo</th>
                                     <th class="td-center">Người tạo</th>
                                     <th class="td-fixed td-center">Sửa</th>
@@ -85,7 +87,8 @@
         <!-- Thêm mới Kế hoạch -->
         <div class="box box-solid zone-bus form-container aps-zoneEdit add-absolue" id="zoneEdit" style="display: none">
             <div class="box-header with-border">
-                <h3 class="box-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> Kế hoạch
+                <h3 class="box-title">
+                    <span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> Kế hoạch
                 </h3>
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
@@ -179,11 +182,13 @@
                         <div class="row">
                             <div class="pull-left">
                                 <a class="btn btn-outline-secondary btnDeleteHocPhan" id="">
-                                    <i class="fa fa-trash"></i> Xóa</a>
+                                    <i class="fa fa-trash"></i> Xóa
+                                </a>
                             </div>
                             <div class="pull-right">
                                 <a class="btn btn-outline-primary btnSearchHocPhan" id="">
-                                    <i class="fa fa-plus"></i>Thêm</a>
+                                    <i class="fa fa-plus"></i>Thêm
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -211,7 +216,8 @@
                         <div class="row">
                             <div class="pull-right">
                                 <a class="btn btn-outline-primary btnSearchDTSV_GiangVien" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm cán bộ</a>
+                                    <i class="fa fa-plus color-active"></i> Thêm cán bộ
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -220,8 +226,10 @@
                     <div class="row aps-form mt-15">
                         <div class="row">
                             <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue" style="color:#d54b07 !important">Danh sách học sinh - sinh
-                                    viên xét duyệt</span>
+                                <span class="badge bg-blue" style="color:#d54b07 !important">
+                                    Danh sách học sinh - sinh
+                                    viên xét duyệt
+                                </span>
                             </p>
                         </div>
                         <div class="row">
@@ -236,8 +244,9 @@
                                             <td class="td-left">Lớp</td>
                                             <td class="td-left">Chương trình</td>
                                             <td class="td-left">Khóa</td>
-                                            <td class="td-center"><input type="checkbox"
-                                                    id="chkSelectAll_DTSV_SinhVien" />
+                                            <td class="td-center">
+                                                <input type="checkbox"
+                                                       id="chkSelectAll_DTSV_SinhVien" />
                                             </td>
                                         </tr>
                                     </thead>
@@ -251,15 +260,19 @@
                                 <div id="ApDungChoChuongTrinh"></div>
                                 <div id="ApDungChoLop"></div>
                                 <a class="btn btn-outline-secondary btnDeleteDTSV_SinhVien" id="">
-                                    <i class="fa fa-trash"></i>Xóa</a>
+                                    <i class="fa fa-trash"></i>Xóa
+                                </a>
                             </div>
                             <div class="pull-right">
-                                <a class="btn btn-outline-danger btnSearch_SinhVienKeHoach" id=""><i
-                                        class="fa fa-plus color-active"></i> Thêm từ kế hoạch tốt nghiệp khác</a>
-                                <a class="btn btn-outline-success btnSearch_SinhVienDKH" id=""><i
-                                        class="fa fa-plus color-active"></i> Thêm từ đăng ký học</a>
-                                <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id=""><i
-                                        class="fa fa-plus color-active"></i> Thêm thành viên</a>
+                                <a class="btn btn-outline-danger btnSearch_SinhVienKeHoach" id="">
+                                    <i class="fa fa-plus color-active"></i> Thêm từ kế hoạch tốt nghiệp khác
+                                </a>
+                                <a class="btn btn-outline-success btnSearch_SinhVienDKH" id="">
+                                    <i class="fa fa-plus color-active"></i> Thêm từ đăng ký học
+                                </a>
+                                <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id="">
+                                    <i class="fa fa-plus color-active"></i> Thêm thành viên
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -269,7 +282,8 @@
             <div class="box-footer">
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>Đóng</a>
+                        <i class="fa fa-times-circle"></i>Đóng
+                    </a>
                     <a id="btnSave_KeHoachXuLy" class="btn btn-primary"><i class="fal fa-save"></i> Lưu</a>
                 </div>
             </div>
@@ -277,7 +291,7 @@
 
         <!-- Điều kiện xét -->
         <div class="box box-solid zone-bus form-container aps-zoneKeThua add-absolue" id="zoneKeThua"
-            style="display: none">
+             style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title">Điều kiện xét</h3>
                 <div class="pull-right">
@@ -287,7 +301,8 @@
             <div class="box-body pd0">
                 <div class="col-sm-12 box-view aps-add-new pd20">
                     <a class="btn btn-success" id="btnAdd_KeThuaTheoNhom">
-                        <i class="fa-light fa-copy"></i> Kế thừa theo nhóm</a>
+                        <i class="fa-light fa-copy"></i> Kế thừa theo nhóm
+                    </a>
                     <div class="nav-tabs-custom mt-10">
                         <ul class="nav nav-tabs">
                             <li class="active">
@@ -310,13 +325,15 @@
                             <div class="tab-pane active pt15" id="tab_1">
                                 <div class="row row-align">
                                     <textarea id="txtXauDieuKien" class="form-control"
-                                        style="height: 600px; background-color: #e1e1e1"></textarea>
+                                              style="height: 600px; background-color: #e1e1e1"></textarea>
                                 </div>
                                 <div class="pull-right mt-10">
                                     <a class="btn btn-success" id="btnAdd_KeThua">
-                                        <i class="fa-light fa-copy"></i> Kế thừa</a>
+                                        <i class="fa-light fa-copy"></i> Kế thừa
+                                    </a>
                                     <a class="btn btn-primary" id="btnSave_DieuKien">
-                                        <i class="fa-solid fa-floppy-disk"></i>Lưu</a>
+                                        <i class="fa-solid fa-floppy-disk"></i>Lưu
+                                    </a>
                                 </div>
                             </div>
 
@@ -330,8 +347,9 @@
                                                 <th class="td-center">Xếp loại</th>
                                                 <th class="td-center">Thời gian</th>
                                                 <th class="td-center">Điều kiện</th>
-                                                <td class="td-center"><input type="checkbox"
-                                                        class="chkSystemSelectAll" />
+                                                <td class="td-center">
+                                                    <input type="checkbox"
+                                                           class="chkSystemSelectAll" />
                                                 </td>
                                             </tr>
                                         </thead>
@@ -342,12 +360,17 @@
                                     </table>
                                 </div>
                                 <div class="pull-right">
-                                    <a id="btnDelete_DieuKien" class="btn btn-danger"><i class="fa fa-trash"></i>
-                                        Xóa</a>
-                                    <a class="btn btn-success" id="btnAdd_KeThua2"><i class="fa-light fa-copy"></i> Kế
-                                        thừa</a>
-                                    <a class="btn btn-primary" id="btnSave_DieuKien2"><i
-                                            class="fa-solid fa-floppy-disk"></i>Lưu</a>
+                                    <a id="btnDelete_DieuKien" class="btn btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                        Xóa
+                                    </a>
+                                    <a class="btn btn-success" id="btnAdd_KeThua2">
+                                        <i class="fa-light fa-copy"></i> Kế
+                                        thừa
+                                    </a>
+                                    <a class="btn btn-primary" id="btnSave_DieuKien2">
+                                        <i class="fa-solid fa-floppy-disk"></i>Lưu
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -357,7 +380,132 @@
                 <div class="box-footer">
                     <div class="pull-right">
                         <a class="btn btn-default btnClose" href="#" title="Close">
-                            <i class="fa fa-times-circle"></i>Đóng</a>
+                            <i class="fa fa-times-circle"></i>Đóng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Điều kiện xét -->
+        <div class="box box-solid zone-bus form-container aps-zoneKeThua add-absolue" id="zoneChuanBiDuLieu"
+             style="display: none">
+            <div class="box-header with-border">
+                <h3 class="box-title">Chuẩn bị dữ liệu</h3>
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body pd0">
+                <div class="col-sm-12 box-view aps-add-new pd20">
+                    
+                    <div class="nav-tabs-custom mt-10">
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab_1" data-toggle="tab" aria-expanded="true">
+                                    <span class="lang" key="">
+                                        1) Danh sách các học phần khai theo kế hoạch
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="">
+                                <a href="#tab_2" data-toggle="tab" aria-expanded="false">
+                                    <span class="lang" key="">
+                                        2) Danh sách người học
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <!-- Tab_1: Điều kiện xét áp dụng cho kế hoạch xét -->
+                            <div class="tab-pane active pt15" id="tab_1">
+
+                                <div class="row row-align aps-table-select">
+                                    <table id="tblHocPhanKeHoach" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã học phần</th>
+                                                <th class="td-center">Tên học phần</th>
+                                                <td class="td-center">
+                                                    <input type="checkbox"
+                                                           class="chkSystemSelectAll" />
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- load from js -->
+                                        </tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab_2: Điều kiện xếp loại áp dụng cho kế hoạch xét -->
+                            <div class="tab-pane pt15" id="tab_2">
+                                <div id="search" class="inputSearch">
+                                    <div class="col-sm-3 item-search">
+                                        <select id="dropSearch_ThangDiem_ChuanBi" class="select-opt"></select>
+                                    </div>
+                                    <div class="col-sm-3 item-search">
+                                        <input id="txtSearch_ChuanBi" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
+                                    </div>
+                                    <div class="col-sm-3 item-search">
+                                        <a id="btnSearch_ChuanBi" class="btn btn-default btn-search">
+                                            <i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span>
+                                        </a>
+                                        <a class="btn btn-primary" id="btnSave_ChuanBi">
+                                            <i class="fa-solid fa-floppy-disk"></i> Thực hiện tạo dữ liệu
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="row row-align aps-table-select">
+                                    <table id="tblChuanBi" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã số</th>
+                                                <th class="td-center">Họ tên</th>
+                                                <th class="td-center">Chương trình</th>
+                                                <th class="td-center">Khóa học</th>
+                                                <th class="td-center">Điểm trung bình nhóm học phần</th>
+                                                <th class="td-center">Chi tiết kết quả từng học phần</th>
+                                                <th class="td-center">Thang điểm</th>
+                                                <td class="td-center">
+                                                    <input type="checkbox"
+                                                           class="chkSystemSelectAll" />
+                                                </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <!-- load from js -->
+                                        </tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                                <!--<div class="pull-right">
+                                    <a id="btnDelete_DieuKien" class="btn btn-danger">
+                                        <i class="fa fa-trash"></i>
+                                        Xóa
+                                    </a>
+                                    <a class="btn btn-success" id="btnAdd_KeThua2">
+                                        <i class="fa-light fa-copy"></i> Kế
+                                        thừa
+                                    </a>
+                                    <a class="btn btn-primary" id="btnSave_DieuKien2">
+                                        <i class="fa-solid fa-floppy-disk"></i>Lưu
+                                    </a>
+                                </div>-->
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="pull-right">
+                        <a class="btn btn-default btnClose" href="#" title="Close">
+                            <i class="fa fa-times-circle"></i>Đóng
+                        </a>
                     </div>
                 </div>
             </div>

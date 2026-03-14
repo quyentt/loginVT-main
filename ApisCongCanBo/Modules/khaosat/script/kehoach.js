@@ -484,6 +484,17 @@ KeHoach.prototype = {
                 me.save_TabPan(arrChecked_Id[i]);
             }
         });
+        $("#btnTaoPhieuTabPanTT").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblTabPan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            edu.system.genHTML_Progress("zoneprocessXXXXPTD", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                me.save_TabPan(arrChecked_Id[i]);
+            }
+        });
         $("#btnThoiGianTabPan").click(function () {
             me.getList_TabPan();
         });
@@ -933,8 +944,8 @@ KeHoach.prototype = {
             'strKS_PhieuKhaoSat_Mau_Id': edu.util.getValById('dropPhieuMau'),
             'strKS_KeHoachKhaoSat_Id': me.strKeHoach_Id,
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': 1,
-            'pageSize': 100000,
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
         };
         //
         edu.system.makeRequest({
@@ -946,7 +957,7 @@ KeHoach.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_SinhVien(dtResult);
+                    me.genTable_SinhVien(dtResult, iPager);
                 }
                 else {
                     edu.system.alert(obj_list.action + ": " + data.Message, "w");
@@ -1068,27 +1079,59 @@ KeHoach.prototype = {
     --Discription: [2] GenHTML NhanSu
     --ULR:  Modules
     -------------------------------------------*/
-    genTable_SinhVien: function (data) {
+    genTable_SinhVien: function (data, iPager) {
         var me = this;
         //3. create html
         me.arrSinhVien_Id = [];
         $("#tblPhamVi tbody").html("");
         var html = "";
         for (var i = 0; i < data.length; i++) {
-            html += "<tr id='rm_row" + data[i].ID + "'>";
-            html += "<td class='td-center'>" + (i + 1) + "</td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].KYHIEU) + "</span></td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].TEN) + "</span></td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].GHICHU) + "</span></td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].LOAIDOITUONGDUOCKS_TEN) + "</span></td>";
-            html += '<td class="td-center"><input type="checkbox" id="checkX' + data[i].ID + '"/></td>';
-            html += "</tr>";
+            //html += "<tr id='rm_row" + data[i].ID + "'>";
+            //html += "<td class='td-center'>" + (i + 1) + "</td>";
+            //html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].KYHIEU) + "</span></td>";
+            //html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].TEN) + "</span></td>";
+            //html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].GHICHU) + "</span></td>";
+            //html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].LOAIDOITUONGDUOCKS_TEN) + "</span></td>";
+            //html += '<td class="td-center"><input type="checkbox" id="checkX' + data[i].ID + '"/></td>';
+            //html += "</tr>";
             //4. fill into tblNhanSu
             //5. create data danhmucvaitro
             me.arrSinhVien_Id.push(data[i].ID);
             me.arrSinhVien.push(data[i]);
         }
-        $("#tblPhamVi tbody").append(html);
+        //$("#tblPhamVi tbody").append(html);
+        var jsonForm = {
+            strTable_Id: "tblPhamVi",
+            aaData: data,
+            bPaginate: {
+                strFuntionName: "main_doc.KeHoach.getList_SinhVien()",
+                iDataRow: iPager
+            },
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "KYHIEU"
+                },
+                {
+                    "mDataProp": "TEN"
+                },
+                {
+                    "mDataProp": "GHICHU"
+                },
+                {
+                    "mDataProp": "LOAIDOITUONGDUOCKS_TEN"
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
     },
 
     genHTML_DoiTuongKhac_SinhVien: function (strKetQua_Id, aData) {
@@ -1130,8 +1173,8 @@ KeHoach.prototype = {
             'strKS_PhieuKhaoSat_Mau_Id': edu.util.getValById('dropPhieuMau'),
             'strKS_KeHoachKhaoSat_Id': me.strKeHoach_Id,
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': 1,
-            'pageSize': 100000,
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
         }; 
         //
         edu.system.makeRequest({
@@ -1143,7 +1186,7 @@ KeHoach.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_DoiTuong(dtResult);
+                    me.genTable_DoiTuong(dtResult, iPager);
                 }
                 else {
                     edu.system.alert(obj_list.action + ": " + data.Message, "w");
@@ -1265,27 +1308,59 @@ KeHoach.prototype = {
     --Discription: [2] GenHTML NhanSu
     --ULR:  Modules
     -------------------------------------------*/
-    genTable_DoiTuong: function (data) {
+    genTable_DoiTuong: function (data, iPager) {
         var me = this;
         //3. create html
         //me.arrSinhVien_Id = [];
         $("#tblDoiTuong tbody").html("");
-        var html = "";
-        for (var i = 0; i < data.length; i++) {
-            html += "<tr id='rm_row" + data[i].ID + "'>";
-            html += "<td class='td-center'>" + (i + 1) + "</td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].MASO) + "</span></td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].TEN) + "</span></td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].GHICHU) + "</span></td>";
-            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].LOAIDOITUONGTHAMGIAKS_TEN) + "</span></td>";
-            html += '<td class="td-center"><input type="checkbox" id="checkX' + data[i].ID + '"/></td>';
-            html += "</tr>";
-            //4. fill into tblNhanSu
-            //5. create data danhmucvaitro
-            //me.arrSinhVien_Id.push(data[i].ID);
-            //me.arrSinhVien.push(data[i]);
-        }
-        $("#tblDoiTuong tbody").append(html);
+        //var html = "";
+        //for (var i = 0; i < data.length; i++) {
+        //    html += "<tr id='rm_row" + data[i].ID + "'>";
+        //    html += "<td class='td-center'>" + (i + 1) + "</td>";
+        //    html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].MASO) + "</span></td>";
+        //    html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].TEN) + "</span></td>";
+        //    html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].GHICHU) + "</span></td>";
+        //    html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].LOAIDOITUONGTHAMGIAKS_TEN) + "</span></td>";
+        //    html += '<td class="td-center"><input type="checkbox" id="checkX' + data[i].ID + '"/></td>';
+        //    html += "</tr>";
+        //    //4. fill into tblNhanSu
+        //    //5. create data danhmucvaitro
+        //    //me.arrSinhVien_Id.push(data[i].ID);
+        //    //me.arrSinhVien.push(data[i]);
+        //}
+        //$("#tblDoiTuong tbody").append(html);
+        var jsonForm = {
+            strTable_Id: "tblDoiTuong",
+            aaData: data,
+            bPaginate: {
+                strFuntionName: "main_doc.KeHoach.getList_DoiTuong()",
+                iDataRow: iPager
+            },
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "MASO"
+                },
+                {
+                    "mDataProp": "TEN"
+                },
+                {
+                    "mDataProp": "GHICHU"
+                },
+                {
+                    "mDataProp": "LOAIDOITUONGTHAMGIAKS_TEN"
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
     },
 
     genHTML_DoiTuongKhac_DoiTuong: function (strKetQua_Id, aData) {
@@ -2112,7 +2187,10 @@ KeHoach.prototype = {
 
             },
             type: 'POST',
-
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                });
+            },
             contentType: true,
 
             action: obj_save.action,
@@ -2238,7 +2316,11 @@ KeHoach.prototype = {
 
             },
             type: 'POST',
-
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_HocPhanCT();
+                });
+            },
             contentType: true,
 
             action: obj_save.action,
@@ -2363,7 +2445,12 @@ KeHoach.prototype = {
 
             },
             type: 'POST',
-
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                });
+                edu.system.start_Progress("zoneprocessXXXXPTD", function () {
+                });
+            },
             contentType: true,
 
             action: obj_save.action,
@@ -2437,6 +2524,9 @@ KeHoach.prototype = {
                 },
                 {
                     "mDataProp": "TENLOP"
+                },
+                {
+                    "mDataProp": "THOIGIAN"
                 }
                 , {
                     "mRender": function (nRow, aData) {
