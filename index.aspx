@@ -1,8 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="index.aspx.cs" Inherits="Apis.LoginVT.Index" %>
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
 
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,15 +10,15 @@
     <link rel="stylesheet" href="assets/css/styles.css?v=<%= Guid.NewGuid().ToString() %>">
     <link href="assets/select2/css/select2.min.css" rel="stylesheet" />
     <link href="assets/pagination/simplePagination.min.css" rel="stylesheet" />
-        <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
+    <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/logo.ico" />
-</head>
+  </head>
 
-<body>
-    
-    
+  <body>
+
+
     <div id="overlay" style="position:fixed; margin-top:150px; z-index:2051; margin-left:50%; display:none">
-        <i style="font-size: 40px" class="fad fa-sync-alt fa-spin"></i>
+      <i style="font-size: 40px" class="fad fa-sync-alt fa-spin"></i>
     </div>
     <div class="header fixed-top">
       <div class="top-nav">
@@ -28,7 +28,7 @@
         <div class="head-logo refeshlogo">
           <a href="#">
             <img class="logo-icon" src="logo.png" title="QTDH" />
-            <img class="logo-text" src="assets/images/logo/logo-text.png" title="QTDH"  />
+            <img class="logo-text" src="assets/images/logo/logo-text.png" title="QTDH" />
           </a>
         </div>
         <div class="head-search-form">
@@ -37,11 +37,7 @@
           </div>
           <div class="head-search-box">
             <div class="form">
-              <input
-                type="text"
-                class="search-imput"
-                placeholder="Tìm kiếm thông tin"
-              />
+              <input type="text" class="search-imput" placeholder="Tìm kiếm thông tin" />
               <button class="search-btn">
                 <i class="fal fa-search"></i>
               </button>
@@ -55,27 +51,27 @@
                 <i class="fal fa-home"></i>
                 <span>Trang chủ</span>
               </a>
-            </li>
-            <li class="item">
-              <a class="menu-link" href="dashboard.html">
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li class="item">
-              <a class="menu-link" href="modul.html">
-                <span>Modul</span>
-              </a>
-            </li>
-            <li class="item">
-              <a class="menu-link" href="chucnang-cuaban.html">
-                <span>Chức năng của bạn</span>
-              </a>
-            </li>
-            <li class="item">
-              <a class="menu-link" href="tintuc.html">
-                <span>Tin tức</span>
-              </a>
-            </li>--%>
+              </li>
+              <li class="item">
+                <a class="menu-link" href="dashboard.html">
+                  <span>Dashboard</span>
+                </a>
+              </li>
+              <li class="item">
+                <a class="menu-link" href="modul.html">
+                  <span>Modul</span>
+                </a>
+              </li>
+              <li class="item">
+                <a class="menu-link" href="chucnang-cuaban.html">
+                  <span>Chức năng của bạn</span>
+                </a>
+              </li>
+              <li class="item">
+                <a class="menu-link" href="tintuc.html">
+                  <span>Tin tức</span>
+                </a>
+              </li>--%>
           </ul>
           <div class="menu-toggle">
             <i class="fal fa-bars"></i>
@@ -92,67 +88,68 @@
               <li><a class="dropdown-item" href="#">Another action</a></li>
               <li><a class="dropdown-item" href="#">Something else here</a></li>
             </ul>
+        </div>
+        <div class="dropdown">
+          <div class="item message" data-bs-toggle="dropdown">
+            <i class="fal fa-messages"></i>
+            <span>3</span>
           </div>
-          <div class="dropdown">
-            <div class="item message" data-bs-toggle="dropdown">
-              <i class="fal fa-messages"></i>
-              <span>3</span>
-            </div>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <div class="item noti" data-bs-toggle="dropdown">
+            <i class="fal fa-bell"></i>
+            <span>9+</span>
           </div>
-          <div class="dropdown">
-            <div class="item noti" data-bs-toggle="dropdown">
-              <i class="fal fa-bell"></i>
-              <span>9+</span>
-            </div>
-            <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
-            </ul>
-          </div>--%>
-          <div class="dropdown">
-            <div class="item" data-bs-toggle="dropdown">
-              <img src="assets/images/avata-user.png" class="avatar" />
-<<<<<<< HEAD
-                <span class="hidden-xs"><%=fullname %></span>
-=======
-<span class="hidden-xs"><%=fullname %></span>
->>>>>>> a52809db6da39e03a446b519b01673d108c2a6fa
-            </div>
-            <ul class="dropdown-menu user-action">
-              <li>
-                <a class="dropdown-item" href="#">
-                  <i class="fa-light fa-user"></i>
-                  <span>Thông tin cá nhân</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  <i class="fa-light fa-gear text-green"></i>
-                  <span>Cài đặt</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">
-                  <i class="fa-light fa-browser text-red"></i>
-                  <span>Theme Option</span>
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="Logout.aspx">
-                  <i class="fa-light fa-right-from-bracket"></i>
-                  <span>Đăng xuất</span>
-                </a>
-              </li>
-            </ul>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </div>--%>
+        <div class="dropdown">
+          <div class="item" data-bs-toggle="dropdown">
+            <img src="assets/images/avata-user.png" class="avatar" />
+            <span class="hidden-xs">
+              <%=fullname %>
+            </span>
+            <span class="hidden-xs">
+              <%=fullname %>
+            </span>
           </div>
+          <ul class="dropdown-menu user-action">
+            <li>
+              <a class="dropdown-item" href="#">
+                <i class="fa-light fa-user"></i>
+                <span>Thông tin cá nhân</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">
+                <i class="fa-light fa-gear text-green"></i>
+                <span>Cài đặt</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#">
+                <i class="fa-light fa-browser text-red"></i>
+                <span>Theme Option</span>
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="Logout.aspx">
+                <i class="fa-light fa-right-from-bracket"></i>
+                <span>Đăng xuất</span>
+              </a>
+            </li>
+          </ul>
         </div>
       </div>
+    </div>
     </div>
 
     <div class="main-wrap">
@@ -166,7 +163,7 @@
               </a>
             </div>
             <!-- siderbar menu  item -->
-            
+
             <!-- end siderbar menu  item -->
           </div>
         </div>
@@ -203,9 +200,7 @@
                           <a class="dropdown-item" href="#">Another action</a>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="#"
-                            >Something else here</a
-                          >
+                          <a class="dropdown-item" href="#">Something else here</a>
                         </li>
                       </ul>
                     </div>
@@ -225,9 +220,7 @@
                         </a>
                       </div>
                       <div class="item">
-                        <a href="#" class="label label-tingiangvien"
-                          >Tin giảng viên</a
-                        >
+                        <a href="#" class="label label-tingiangvien">Tin giảng viên</a>
                         <a href="#" class="title">
                           PGS,TS nguyễn Văn B nhận giải thưởng KHCN cấp bộ
                         </a>
@@ -259,9 +252,7 @@
                           <a class="dropdown-item" href="#">Another action</a>
                         </li>
                         <li>
-                          <a class="dropdown-item" href="#"
-                            >Something else here</a
-                          >
+                          <a class="dropdown-item" href="#">Something else here</a>
                         </li>
                       </ul>
                     </div>
@@ -274,18 +265,11 @@
                             <img src="assets/images/avatar.jpg" />
                           </div>
                           <div class="meta">
-                            <a href="#" class="name" title="Nguyễn Thị Bích"
-                              >Nguyễn Thị Bích</a
-                            >
-                            <a href="#" class="link" title="b,nguyen@uviv.edu"
-                              ><i class="fa-light fa-envelope-open"></i>
+                            <a href="#" class="name" title="Nguyễn Thị Bích">Nguyễn Thị Bích</a>
+                            <a href="#" class="link" title="b,nguyen@uviv.edu"><i class="fa-light fa-envelope-open"></i>
                               <span>b.nguyen@univ.edu</span>
                             </a>
-                            <a
-                              href="tel:0123456789"
-                              class="link"
-                              title="0123456789"
-                              ><i class="fa-light fa-phone"></i>
+                            <a href="tel:0123456789" class="link" title="0123456789"><i class="fa-light fa-phone"></i>
                               <span>0123456789</span>
                             </a>
                           </div>
@@ -316,18 +300,11 @@
                             <img src="assets/images/avatar.jpg" />
                           </div>
                           <div class="meta">
-                            <a href="#" class="name" title="Nguyễn Thị Bích"
-                              >Nguyễn Thị Bích</a
-                            >
-                            <a href="#" class="link" title="b,nguyen@uviv.edu"
-                              ><i class="fa-light fa-envelope-open"></i>
+                            <a href="#" class="name" title="Nguyễn Thị Bích">Nguyễn Thị Bích</a>
+                            <a href="#" class="link" title="b,nguyen@uviv.edu"><i class="fa-light fa-envelope-open"></i>
                               <span>b.nguyen@univ.edu</span>
                             </a>
-                            <a
-                              href="tel:0123456789"
-                              class="link"
-                              title="0123456789"
-                              ><i class="fa-light fa-phone"></i>
+                            <a href="tel:0123456789" class="link" title="0123456789"><i class="fa-light fa-phone"></i>
                               <span>0123456789</span>
                             </a>
                           </div>
@@ -358,18 +335,11 @@
                             <img src="assets/images/avatar.jpg" />
                           </div>
                           <div class="meta">
-                            <a href="#" class="name" title="Nguyễn Thị Bích"
-                              >Nguyễn Thị Bích</a
-                            >
-                            <a href="#" class="link" title="b,nguyen@uviv.edu"
-                              ><i class="fa-light fa-envelope-open"></i>
+                            <a href="#" class="name" title="Nguyễn Thị Bích">Nguyễn Thị Bích</a>
+                            <a href="#" class="link" title="b,nguyen@uviv.edu"><i class="fa-light fa-envelope-open"></i>
                               <span>b.nguyen@univ.edu</span>
                             </a>
-                            <a
-                              href="tel:0123456789"
-                              class="link"
-                              title="0123456789"
-                              ><i class="fa-light fa-phone"></i>
+                            <a href="tel:0123456789" class="link" title="0123456789"><i class="fa-light fa-phone"></i>
                               <span>0123456789</span>
                             </a>
                           </div>
@@ -407,51 +377,54 @@
           </div>
         </div>
       </div>
-        
-        <script type="text/javascript">AXYZCLRVN = () => "<%= lblXYZCLRVN %>"</script>
-        
-        <div id="alert"></div>
-    </div>
-</body>
-    
 
-<script src="assets/js/bootstrap.bundle.min.js "></script>
-<script src="assets/js/jquery-2.2.0.min.js" type="text/javascript"></script>
-<script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
-<script src="assets/js/select2.min.js"></script>
-<script src="assets/js/swiper-bundle.min.js"></script>
-<script src="assets/js/slick.js"></script>
-<script src="assets/js/tab.js"></script>
-<script src="assets/js/crypto-js.js?v=32"></script>
-<script src="assets/pagination/jquery.simplePagination.min.js?v=<%= Guid.NewGuid().ToString() %>"></script>
-<script src="assets/js/masonry.pkgd.min.js"></script>
-<script src="assets/js/custom.js"></script>
-<!-- <script src="assets/js/customs.js"></script> -->
-<script src="assets/js/cleave.min.js"></script>
-        <script type="text/javascript" src="App_Themes/Plugins/jstree/dist/jstree.min.js"></script><!--Plugin jstree-->
-    
-    <script type="text/javascript" src="Core/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script>    <!--CORE JS-->
-    <script type="text/javascript" src="Core/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script>  <!--CORE JS-->
-    <script type="text/javascript" src="Core/util.js?v=<%= Guid.NewGuid().ToString() %>"></script>        <!--CORE JS-->
-    <script type="text/javascript" src="Core/systemextend.js?v=<%= Guid.NewGuid().ToString() %>"></script><!--CORE JS-->
-    <script type="text/javascript" src="Config.js?v=<%= Guid.NewGuid().ToString() %>"></script>
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload") %>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload") %>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
-    <%--<script async type="text/javascript" src="https://api-apis.com/socket.io/socket.io.js"></script><!--CORE JS-->--%>
+      <script type="text/javascript">AXYZCLRVN = () => "<%= lblXYZCLRVN %>"</script>
+
+      <div id="alert"></div>
+    </div>
+  </body>
+
+
+  <script src="assets/js/bootstrap.bundle.min.js "></script>
+  <script src="assets/js/jquery-2.2.0.min.js" type="text/javascript"></script>
+  <script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
+  <script src="assets/js/select2.min.js"></script>
+  <script src="assets/js/swiper-bundle.min.js"></script>
+  <script src="assets/js/slick.js"></script>
+  <script src="assets/js/tab.js"></script>
+  <script src="assets/js/crypto-js.js?v=32"></script>
+  <script src="assets/pagination/jquery.simplePagination.min.js?v=<%= Guid.NewGuid().ToString() %>"></script>
+  <script src="assets/js/masonry.pkgd.min.js"></script>
+  <script src="assets/js/custom.js"></script>
+  <!-- <script src="assets/js/customs.js"></script> -->
+  <script src="assets/js/cleave.min.js"></script>
+  <script type="text/javascript" src="App_Themes/Plugins/jstree/dist/jstree.min.js"></script><!--Plugin jstree-->
+
+  <script type="text/javascript" src="Core/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
+  <script type="text/javascript" src="Core/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
+  <script type="text/javascript" src="Core/util.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
+  <script type="text/javascript" src="Core/systemextend.js?v=<%= Guid.NewGuid().ToString() %>"></script><!--CORE JS-->
+  <script type="text/javascript" src="Config.js?v=<%= Guid.NewGuid().ToString() %>"></script>
+  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
+    %>/ Core / uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
+  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
+    %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+  <%--<script async type="text/javascript" src="https://api-apis.com/socket.io/socket.io.js"></script><!--CORE JS-->--%>
     <%--<script src="Scripts/MathJax/es5/tex-mml-chtml.js"></script>--%>
 
-    <script type="text/javascript">
-            
+      <script type="text/javascript">
+
         var edu = {};
-        edu['system']   = new systemroot();
-        edu['extend']   = new systemextend();
+        edu['system'] = new systemroot();
+        edu['extend'] = new systemextend();
         edu['constant'] = new constant();
-        edu['util']     = new util();
+        edu['util'] = new util();
         $(document).ready(function () {
-            edu.system.startApp();
-            edu.extend.init();
-            edu.constant.init();
-            console.log(111);
+          edu.system.startApp();
+          edu.extend.init();
+          edu.constant.init();
+          console.log(111);
         });
-    </script>
-</html>
+      </script>
+
+  </html>

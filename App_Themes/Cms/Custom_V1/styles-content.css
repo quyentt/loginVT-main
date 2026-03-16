@@ -119,7 +119,7 @@
     /*margin-top: 2px;*/
     FLOAT: RIGHT;
     margin-left: 8px;
-    background-color: #3c8dee !important;
+    background-color:var(--color-blue) !important;
     font-size: 14px;
 }
 
