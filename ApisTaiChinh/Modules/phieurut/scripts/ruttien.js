@@ -630,8 +630,8 @@ RutTien.prototype = {
         var obj_list = {
             'action': 'TC_NguoiHoc_DuTien/LayDanhSach',
             'versionAPI': 'v1.0',
-            'pageIndex': 1,
-            'pageSize': 100000,
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
             'strTrangThaiNguoiHoc_Id': strTrangThaiNguoiHoc_Id,
             'strTAICHINH_CacKhoanThu_Ids': strLoaiKhoanThu,
             'strHeDaoTao_Id': edu.util.getValById("dropSearch_HeDaoTao_RT"),
@@ -774,6 +774,10 @@ RutTien.prototype = {
                 center: [0, 4, 8],
                 right: [7]
             },
+            bPaginate: {
+                strFuntionName: "main_doc.RutTien.getList_KhoanThu_ChuaXuat()",
+                iDataRow: iPager
+            },
             "aoColumns": [{
                     "mDataProp": "MASONGUOIHOC"
                 },
@@ -803,24 +807,24 @@ RutTien.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
-        if (data !== undefined && data.length > 0) {
-            edu.system.insertSumAfterTable(strTable_Id, [7]);
-            $("#" + strTable_Id + " tfoot tr td:eq(7)").attr("style", "text-align: right;");
-            var x = document.getElementById(strTable_Id).getElementsByTagName('tbody')[0].rows;
-            for (var i = 0; i < x.length; i++) {
-                x[i].id = '';
-            }
-            edu.system.collageInTable({
-                strTable_Id: strTable_Id,
-                iBatDau: 1,
-                iKetThuc: 1,
-                arrStr: [2, 3, 4, 5, 6],
-                arrFloat: [],
-                iInputCheck: [8],
-            });
-        } else {
-            $("#" + strTable_Id + " tfoot").html('');
-        }
+        //if (data !== undefined && data.length > 0) {
+        //    edu.system.insertSumAfterTable(strTable_Id, [7]);
+        //    $("#" + strTable_Id + " tfoot tr td:eq(7)").attr("style", "text-align: right;");
+        //    var x = document.getElementById(strTable_Id).getElementsByTagName('tbody')[0].rows;
+        //    for (var i = 0; i < x.length; i++) {
+        //        x[i].id = '';
+        //    }
+        //    edu.system.collageInTable({
+        //        strTable_Id: strTable_Id,
+        //        iBatDau: 1,
+        //        iKetThuc: 1,
+        //        arrStr: [2, 3, 4, 5, 6],
+        //        arrFloat: [],
+        //        iInputCheck: [8],
+        //    });
+        //} else {
+        //    $("#" + strTable_Id + " tfoot").html('');
+        //}
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu

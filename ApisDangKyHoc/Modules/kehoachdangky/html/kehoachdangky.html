@@ -1109,21 +1109,19 @@
     </div>
 </section>
 <!-- ---------- -->
-<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: block !important;">
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
         Danh sách đăng ký</button>
     <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal_khongdangky">
         Danh sách không đăng ký</button>
     <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModalPCNhomKiemSoat">
-        Phân công theo nhóm kiểm soát</button>
-    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModalVKhoiKienThuc">
-        Khối kiến thức</button>
-    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalEditHocKy">Sửa thời
-        gian</button>
-    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalEditHocKyAll">Sửa
-        thời gian -1</button>
-    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalKeThuaQH">Kế
-        thừa Quan hệ học phần</button>
+        Phân công theo nhóm kiểm soát</button><br>
+
+    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModalPCChuongTrinh">
+        Phân công theo nhóm kiểm soát(mức chương trình)</button>
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalPCKhoaHoc">
+        Phân công theo nhóm kiểm soát(mức khóa học)
+    </button>    
 </div>
 <!-- ---------- -->
 <!-- Danh sách đăng ký -->
@@ -1270,87 +1268,111 @@
 <!-- Phân công theo nhóm kiểm soát(mức chương trình) -->
 <div class="modal fade myModalPCChuongTrinh" id="myModalPCChuongTrinh" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" style="width: 990px">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel2"><i class="fal fa-poll-people"></i></span> <span
-                        class="lang" key="">Phân công theo nhóm kiểm soát(mức chương trình)</span> </h4>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fal fa-poll-people"></i></span>
+                    <span class="lang" key="">Phân công theo nhóm kiểm soát(mức chương trình)</span>
+                </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_HeDaoTao_PCChuongTrinh" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
-                    </select>
+                <div class="aps-add-new">
+                    <div class="aps-form">
+                        <div class="col-sm-6 item-search aps-form-input pr-0" style="padding-right: 5px !important;">
+                            <select id="dropSearch_HeDaoTao_PCChuongTrinh" class="select-opt"
+                                style="width:100% !important">
+                                <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 item-search aps-form-input pr-0 pl5" style="padding-right: 0 !important;">
+                            <select id="dropSearch_KhoaDaoTao_PCChuongTrinh" class="select-opt"
+                                style="width:100% !important">
+                                <option id="" value=""> --Chọn khóa đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="aps-table-select mt-15">
+                            <table id="tblPCChuongTrinh"
+                                class="table table-hover table-bordered tblPCChuongTrinh table-noborder mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed w-50px">Stt</th>
+                                        <th class="td-left">Mã chương trình</th>
+                                        <th class="td-left">Tên chương trình</th>
+                                        <th class="td-center td-fixed w-50px">
+                                            <input type="checkbox" class="chkSystemSelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_KhoaDaoTao_PCChuongTrinh" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn khóa đào tạo-- </option>
-                    </select>
-                </div>
-                <div class="clear"></div>
-                <table id="tblPCChuongTrinh" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã chương trình</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên chương trình</span></th>
-                            <th class="td-center td-fixed">
-                                <input type="checkbox" class="chkSystemSelectAll">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_PCChuongTrinh"><i class="fa fa-check-circle"></i><span
-                        class="lang" key=""> Lưu</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_PCChuongTrinh"><i class="fa fa-save"></i><span
+                            class="lang" key="">Lưu</span></a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModalPCKhoaHoc" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Phân công theo nhóm kiểm soát(mức khóa học) -->
+<div class="modal fade myModalPCKhoaHoc" id="myModalPCKhoaHoc" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang"
-                        key="">Phân công theo nhóm kiểm soát(mức khóa học)</span> </h4>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fal fa-user-chart"></i></span>
+                    <span class="lang" key="">Phân công theo nhóm kiểm soát(mức khóa học)</span>
+                </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_HeDaoTao_PCKhoaHoc" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
-                    </select>
+                <div class="aps-add-new">
+                    <div class="aps-form">
+                        <div class="col-sm-12 item-search aps-form-input pr-0" style="padding-right: 0 !important;">
+                            <select id="dropSearch_HeDaoTao_PCKhoaHoc" class="select-opt" style="width:100% !important">
+                                <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="aps-table-select mt-15">
+                            <table id="tblPCKhoaHoc"
+                                class="table table-hover table-bordered table-noborder tblPCKhoaHoc">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed w-50px">Stt</th>
+                                        <th class="td-left">Mã khóa</th>
+                                        <th class="td-left">Tên khóa</th>
+                                        <th class="td-center td-fixed  w-50px">
+                                            <input type="checkbox" class="chkSystemSelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="clear"></div>
-                <table id="tblPCKhoaHoc" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã khóa</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên khóa</span></th>
-                            <th class="td-center td-fixed">
-                                <input type="checkbox" class="chkSystemSelectAll">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_PCKhoaHoc"><i class="fa fa-check-circle"></i><span
-                        class="lang" key=""> Lưu</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_PCKhoaHoc">
+                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span></a>
+                </div>
             </div>
         </div>
     </div>
