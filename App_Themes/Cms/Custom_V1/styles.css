@@ -86,7 +86,6 @@
 
  .bg-f1 {
      background: #f1f1f1 !important;
-     display: block;
  }
 
  .bg-success {
@@ -392,7 +391,7 @@
      /*border:1px solid #fff !important;*/
  }
 
- .table-bordered tbody tr:nth-of-type(odd) {
+ .table-bordered tbody tr:nth-child(2n+2) {
      background-color: #f8f8f8;
  }
 
@@ -2418,7 +2417,7 @@
 
  .aps-form .lang {
      line-height: 38px;
-     color: #666;
+     color: #888;
  }
 
  .aps-form label {
@@ -2709,15 +2708,13 @@
      --bs-btn-disabled-bg: transparent;
      --bs-btn-disabled-border-color: #0d6efd;
      --bs-gradient: none;
-     border: 1px solid var(--color-blue);
+     border: 1px solid var(--color-blue) !important;
      color: var(--color-blue);
  }
 
  .btn-outline-primary:hover {
      border: 1px solid var(--color-blue) !important;
-     ;
      color: #fff !important;
-     ;
      background-color: var(--color-blue) !important;
  }
 
@@ -2738,7 +2735,8 @@
      --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
      --bs-btn-disabled-color: #6c757d;
      --bs-btn-disabled-bg: transparent;
-     --bs-btn-disabled-border-color: #6c757d;
+     --bs-btn-disabled-border-color: #6c757d !important;
+     border: 1px solid #6c757d !important;
      --bs-gradient: none;
  }
 
@@ -2763,7 +2761,7 @@
      --bs-btn-disabled-bg: transparent;
      --bs-btn-disabled-border-color: #198754;
      --bs-gradient: none;
-     border: 1px solid var(--color-green);
+     border: 1px solid var(--color-green) !important;
      color: var(--color-green);
  }
 
@@ -2819,7 +2817,7 @@
      --bs-btn-disabled-bg: transparent;
      --bs-btn-disabled-border-color: #dc3545;
      --bs-gradient: none;
-     border: 1px solid #dc3545;
+     border: 1px solid #dc3545 !important;
      color: #dc3545;
  }
 
@@ -3023,6 +3021,10 @@
 
  .w-100 {
      width: 100% !important;
+ }
+
+ .modal-1024 {
+     width: 1024px !important;
  }
 
  .modal-860 {
@@ -4774,10 +4776,12 @@
      border: 1px solid var(--color-blue);
      color: #fff !important;
  }
-.modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large:hover a,
-.modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large:hover a i{
+
+ .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large:hover a,
+ .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large:hover a i {
      color: #fff !important;
  }
+
  .modal_XacNhan .aps-form .zoneBtnXacNhan .btn {
      padding: 8px 6px 0px 0px !important;
      font-size: 14px !important;
@@ -4786,30 +4790,94 @@
  .modal_XacNhan .aps-form .zoneBtnXacNhan .btn i {
      font-size: 14px !important;
  }
+
  .tblKeHoachXuLy tr td:nth-last-child(1),
  .tblKeHoachXuLy tr td:nth-last-child(2),
  .tblKeHoachXuLy tr td:nth-last-child(3),
  .tblKeHoachXuLy tr td:nth-last-child(4),
-  .tblKeHoachXuLy tr td:nth-last-child(5),
+ .tblKeHoachXuLy tr td:nth-last-child(5),
  .tblKeHoachXuLy tr td:nth-last-child(6),
- .tblKeHoachXuLy tr td:nth-last-child(7){
-    text-align: center !important;
+ .tblKeHoachXuLy tr td:nth-last-child(7) {
+     text-align: center !important;
  }
- .table.tblKeHoachXuLy  tr:hover .btnKeHoachChiTiet,
- .table.tblKeHoachXuLy  tr:hover .btnHocPhanDuKien,
- .table  tr:hover .btn,
- .table.tblKeHoachXuLy  tr:hover .btnHocPhanDeXuat,
- .table.tblKeHoachXuLy  tr:hover .btnDSNhanSu{
-    color: #fff !important;
+
+ .table.tblKeHoachXuLy tr:hover .btnKeHoachChiTiet,
+ .table.tblKeHoachXuLy tr:hover .btnHocPhanDuKien,
+ .table tr:hover .btn,
+ .table.tblKeHoachXuLy tr:hover .btnHocPhanDeXuat,
+ .table.tblKeHoachXuLy tr:hover .btnDSNhanSu {
+     color: #fff !important;
  }
-  .table.tblKeHoachXuLy  tr:hover .btnKeHoachChiTiet:hover,  
- .table  tr:hover .btn:hover,
- .table.tblKeHoachXuLy  tr:hover .btnDSNhanSu:hover{
-    color: var(--color-yellow) !important;
+
+ .table.tblKeHoachXuLy tr:hover .btnKeHoachChiTiet:hover,
+ .table tr:hover .btn:hover,
+ .table.tblKeHoachXuLy tr:hover .btnDSNhanSu:hover {
+     color: var(--color-yellow) !important;
  }
- .info-tblPhanCong span,.info-tblInput_SinhVien span,
+
+ .info-tblPhanCong span,
+ .info-tblLopHocPhanChiTiet span,
+ .info-tblInput_SinhVien span,
+ .info-tblLopHocPhanChiTiet2 span,
  .info-tblAddHocPhanChuongTrinh span,
- .info-tblKhongDangKy span{
-    color: #888 !important;
-    line-height: 38px !important;
+ .info-tblKHDK span,
+ .info-tblKhongDangKy span,
+ .info-tblModal_HocPhan span {
+     color: #888 !important;
+     line-height: 38px !important;
+ }
+
+ .tblLopHocPhanChiTiet tr td:nth-last-child(7),
+ .tblLopHocPhanChiTiet2 tr td:nth-last-child(6) {
+     text-align: center !important;
+ }
+
+ .tblLopHocPhanChiTiet tr td:nth-last-child(3),
+ .tblLopHocPhanChiTiet tr td:nth-last-child(5),
+ .tblHidden.aps-table-select .tblLopHocPhanChiTiet2 tr td:nth-child(4) {
+     text-align: right !important;
+     padding-right: 8px !important;
+ }
+
+ .aps-table-select .tblKHDK.table tr td:nth-child(2),
+ .aps-table-select .tblKHDK.table tr td:nth-child(3),
+ .tblHocPhan tr td:nth-child(2),
+ .tblHocPhan tr td:nth-child(3) {
+     text-align: left !important;
+ }
+
+ #tblModal_HocPhan {
+     margin-top: 10px !important;
+ }
+
+ #tblModal_HocPhan tr td {
+     height: 44px;
+     border-bottom: 1px solid #f1f1f1;
+     border-left: 0 !important;
+     border-right: 0 !important;
+ }
+
+ #tblModal_HocPhan tr th {
+     border-left: 0 !important;
+     border-right: 0 !important;
+ }
+
+ #tblModal_HocPhan tr:last-child {
+     border-bottom: 0 solid #d1d1d1 !important;
+     border-right: 0 solid #d1d1d1 !important;
+ }
+
+ #tblModal_HocPhan tr:nth-child(2n+2) {
+     background-color: #f5f6f8;
+ }
+
+ .table.table-noborder thead tr:last-child,
+ .table.table-noborder thead tr {
+     border-bottom: 1px solid #d1d1d1 !important;
+     border-left: 0px solid #d1d1d1 !important;
+     /* background: rgba(60, 141, 238, .1) !important; */
+ }
+
+ .table.table-noborder thead tr td:first-child {
+     border-left: 0 solid #d1d1d1 !important;
  }

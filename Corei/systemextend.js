@@ -598,7 +598,7 @@ systemextend.prototype = {
         html += '</div>';
 
         html += '<div class="pull-right">';
-        html += '<a class="btn btn-primary" id="btnChonHocPhan" href="#"><i class="fa fa-plus"></i> Chọn</a>';
+        html += '<a class="btn btn-primary" id="btnChonHocPhan" href="#"><i class="fa fa-plus"></i>Chọn</a>';
         html += '</div>';
         html += '<div class="clear"></div>';
         html += '<div id="zoneprocessProGes"></div>'
