@@ -119,7 +119,7 @@
     /*margin-top: 2px;*/
     FLOAT: RIGHT;
     margin-left: 8px;
-    background-color: #3c8dee !important;
+    background-color: var(--color-blue) !important;
     font-size: 14px;
 }
 
@@ -540,8 +540,8 @@
 
 .box-reg-sv .box-body .table>thead>tr>th,
 .box-reg-sv .box-body .table>thead>tr>td {
-    padding: 10px 5px !important;
-    font-weight: 600 !important;
+    padding: 3px 5px !important;
+    font-weight: 400 !important;
 }
 
 .box-reg-sv .table-bordered .btn-default {
@@ -964,7 +964,7 @@
 
 .aps-add-new .group-title-name {
     font-size: 16px !important;
-    color: #666 !important;
+    color: #888 !important;
     line-height: 40px !important;
     padding-bottom: 0 !important;
     cursor: pointer;
@@ -2536,13 +2536,13 @@
 .info-tbldata_DMLKT .italic,
 .info-zonePhieuThu_PhieuThu .italic,
 .info-tblSinhVien {
-    color: #666;
+    color: #888;
     line-height: 34px;
 }
 
 .change-zonePhieuThu_PhieuThu label,
 .change-zonePhieuThu_PhieuThu {
-    color: #666;
+    color: #888;
 }
 
 .aps-add-khoanthu .modal-header .fa-pencil:before {
@@ -10753,7 +10753,9 @@ table#clone {
 }
 
 .tblThuTuHocPhan tr td:nth-last-child(3),
-.tblVDinhHuong tr td:last-child,.doituongcheck,.doituongcheck,
+.tblVDinhHuong tr td:last-child,
+.doituongcheck,
+.doituongcheck,
 .aps-molop .tblHocPhan tr td:nth-child(11) {
     text-align: center !important;
 }
@@ -10761,6 +10763,20 @@ table#clone {
 .myModalKeThua .aps-add-new .aps-form-input .select2-container {
     margin-top: 0 !important;
 }
-.box-title.mt-2{
+
+.box-title.mt-2 {
     margin-top: 2px !important;
+}
+
+.box-reg-sv .tblSinhVien tr td:nth-child(2),
+.box-reg-sv .tblSinhVien tr td:nth-child(3),
+.box-reg-sv .tblSinhVien tr td:nth-child(4),
+.box-reg-sv .tblSinhVien tr td:nth-child(5),
+.box-reg-sv .tblSinhVien tr td:nth-child(6),
+.box-reg-sv .tblSinhVien tr td:nth-child(7) {
+    text-align: left !important;
+}
+
+.box-reg-sv .tblSinhVien tr td .btnViewDK {
+    padding-left: 0 !important;
 }

@@ -1,5 +1,4 @@
-﻿
-<section class="content aps-dangkyhoc">
+﻿<section class="content aps-dangkyhoc">
     <div class="row aps-ruthocphan">
         <div class="col-lg-12">
             <!-- box Notify_VBSC -->
@@ -21,7 +20,9 @@
                                 <input id="txtSearch_TuKhoa" class="form-control" placeholder="Thông tin người học" />
                             </div>
                             <div class="col-sm-3 item-search">
-                                <a class="btn btn-default btn-search" id="btnSearch" style="border-radius: 5px !important;"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a class="btn btn-default btn-search" id="btnSearch"
+                                    style="border-radius: 5px !important;"><i class="fa fa-search"></i> <span
+                                        class="lang" key="">Tìm kiếm</span></a>
                             </div>
                         </div>
                     </div>
@@ -29,49 +30,50 @@
                 <!-- Học phần đã rút -->
                 <div class="box box-solid pd20 aps-hocphan-darut">
                     <div class="box-header">
-                        <h3 class="box-title color-blue">
+                        <h3 class="box-title color-blue line-20 mt-15">
                             <i class="fal fa-book-reader"></i> Học phần đã rút
                             <span class="badge bg-light-blue">
                                 <span id="lblRutHocPhan_Tong"></span>
                             </span>
                         </h3>
 
-                        <div class="pull-right">
-                            <a id="btnDelete_RutHocPhan" class="btn btn-outline-primary"><i class="far fa-redo"></i> Khôi phục</a>
-                            <a class="btn btn-primary btnSave" id="btnSave_RutHocPhan" href="#"><i class="fal fa-save"></i> Lưu</a>
+                        <div class="pull-right d-flex">
+                            <a id="btnDelete_RutHocPhan" class="btn btn-outline-primary">
+                                <i class="far fa-redo"></i>Khôi phục</a>
+                            <a class="btn btn-primary btnSave" id="btnSave_RutHocPhan" href="#">
+                                <i class="fal fa-save"></i>Lưu</a>
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="col-sm-12 scroll-table-x">
-                                    <table id="tblRutHocPhan" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-fixed td-center">Stt</th>
-                                                <th class="td-center">Mã số</th>
-                                                <th class="td-center">Họ tên</th>
-                                                <th class="td-center">Lớp</th>
-                                                <th class="td-center">Chương trình</th>
-                                                <th class="td-center">Khóa</th>
-                                                <th class="td-center">Trạng thái</th>
-                                                <th class="td-center">Thời gian</th>
-                                                <th class="td-center">Học phần rút</th>
-                                                <th class="td-center">Lớp học phần rút</th>
-                                                <th class="td-center">% Mức phí</th>
-                                                <th class="td-center">Số tiền phải nộp sau khi rút</th>
-                                                <th class="td-center">Ngày rút</th>
-                                                <th class="td-center">Kiểu học</th>
-                                                <th class="td-center">Số tín chỉ học tập</th>
-                                                <th class="td-center">Số tín chỉ tính phí</th>
-                                                <th class="td-center">Cán bộ thực hiện</th>
-                                                <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="col-sm-12 scroll-table-x aps-table-select mt-5">
+                            <table id="tblRutHocPhan"
+                                class="table table-hover table-bordered table-noborder tblRutHocPhan"
+                                style="min-width: 2000px;">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed td-center w-50px">Stt</th>
+                                        <th class="td-left">Mã số</th>
+                                        <th class="td-left">Họ tên</th>
+                                        <th class="td-left">Lớp</th>
+                                        <th class="td-left">Chương trình</th>
+                                        <th class="td-left">Khóa</th>
+                                        <th class="td-left">Trạng thái</th>
+                                        <th class="td-left">Thời gian</th>
+                                        <th class="td-left">Học phần rút</th>
+                                        <th class="td-left">Lớp học phần rút</th>
+                                        <th class="td-center">% Mức phí</th>
+                                        <th class="td-left">Số tiền phải nộp sau khi rút</th>
+                                        <th class="td-center">Ngày rút</th>
+                                        <th class="td-left">Kiểu học</th>
+                                        <th class="td-center">Số tín chỉ học tập</th>
+                                        <th class="td-center">Số tín chỉ tính phí</th>
+                                        <th class="td-left">Cán bộ thực hiện</th>
+                                        <th class="td-center td-fixed w-50px"><input type="checkbox" id="chkSelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -79,7 +81,7 @@
                 <!-- Kết quả đã đăng ký -->
                 <div class="box box-solid pd20 aps-ketqua-dangky pt0">
                     <div class="box-header">
-                        <h3 class="box-title color-green">
+                        <h3 class="box-title color-green line-20 mt-15">
                             <i class="far fa-address-book color-green"></i> Kết quả đã đăng ký
                             <!--<span class="badge bg-light-blue">
                                 <span id="lblRutHocPhan_Tong"></span>
@@ -87,60 +89,69 @@
                         </h3>
 
                         <div class="pull-right">
-                            <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thực hiện rút</a>
+                            <a class="btn btn-primary btnAdd" href="#"><i
+                                    class="fa-solid fa-money-simple-from-bracket"></i>Thực hiện rút</a>
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="row">
-                            <div class="col-sm-12">
-                                <div class="col-sm-12 scroll-table-x">
-                                    <table id="tblHocPhan" class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-fixed td-center">Stt</th>
-                                                <th class="td-center">Mã số</th>
-                                                <th class="td-center">Họ tên</th>
-                                                <th class="td-center">Lớp</th>
-                                                <th class="td-center">Chương trình</th>
-                                                <th class="td-center">Khóa</th>
-                                                <th class="td-center">Trạng thái</th>
-                                                <th class="td-center">Thời gian</th>
-                                                <th class="td-center">Học phần</th>
-                                                <th class="td-center">Lớp học phần</th>
-                                                <th class="td-center">Đã nhập điểm</th>
-                                                <th class="td-center">Đã điểm danh</th>
-                                                <th class="td-center">Kiểu học</th>
-                                                <th class="td-center">Số tín chỉ học tập</th>
-                                                <th class="td-center">Số tín chỉ tính phí</th>
-                                                <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll_HocPhan"></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody></tbody>
-                                    </table>
-                                </div>
-                            </div>
+                        <div class="col-sm-12 scroll-table-x aps-table-select mt-5">
+                            <table id="tblHocPhan" class="table table-hover table-bordered table-noborder tblHocPhan"
+                                style="min-width: 2000px;">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed td-center w-50px">Stt</th>
+                                        <th class="td-left">Mã số</th>
+                                        <th class="td-left">Họ tên</th>
+                                        <th class="td-left">Lớp</th>
+                                        <th class="td-left">Chương trình</th>
+                                        <th class="td-left">Khóa</th>
+                                        <th class="td-left">Trạng thái</th>
+                                        <th class="td-left">Thời gian</th>
+                                        <th class="td-left">Học phần</th>
+                                        <th class="td-left">Lớp học phần</th>
+                                        <th class="td-center">Đã nhập điểm</th>
+                                        <th class="td-center">Đã điểm danh</th>
+                                        <th class="td-left">Kiểu học</th>
+                                        <th class="td-center">Số tín chỉ học tập</th>
+                                        <th class="td-center">Số tín chỉ tính phí</th>
+                                        <th class="td-center td-fixed w-50px"><input type="checkbox"
+                                                id="chkSelectAll_HocPhan">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+        Rút học phần</button>
+</div>
+<!-- ---------- -->
+<div class="modal fade myModal" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Rút học phần</h3>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="box-title mt-2"><span class="myModalLabel">
+                    <i class="fa-solid fa-money-simple-from-bracket"></i></span>Rút học phần</h3>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblXacNhan" class="table table-hover table-bordered">
+                <table id="tblXacNhan" class="table table-hover table-bordered table-noborder tblXacNhan">
                     <thead>
                         <tr>
                             <th class="td-fixed td-center">Stt</th>
-                            <th class="td-center">Học phần</th>
-                            <th class="td-center">Phần trăm phải đóng</th>
-                            <th class="td-center">Ghi chú</th>
+                            <th class="td-left">Học phần</th>
+                            <th class="td-left">Phần trăm phải đóng</th>
+                            <th class="td-left">Ghi chú</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -149,8 +160,12 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_XacNhan" data-dismiss="modal"><i class="fa fa-check-circle"></i><span class="lang" key=""> Xác nhận</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_XacNhan" data-dismiss="modal">
+                        <i class="fa fa-check-circle"></i><span class="lang" key="">Xác nhận</span></a>
+                </div>
             </div>
         </div>
     </div>

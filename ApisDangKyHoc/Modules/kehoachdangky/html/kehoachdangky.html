@@ -12,14 +12,16 @@
     .btn-white {
         background-color: #fff;
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
-        -moz-box-shadow: 1px 1px 1px 1px #ccc; /* Firefox 3.5 - 3.6 */
+        -moz-box-shadow: 1px 1px 1px 1px #ccc;
+        /* Firefox 3.5 - 3.6 */
         box-shadow: 1px 1px 1px 1px #ccc;
     }
 
     .aps-form .btn-primary {
         background-color: #fff;
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
-        -moz-box-shadow: 1px 1px 1px 1px #ccc; /* Firefox 3.5 - 3.6 */
+        -moz-box-shadow: 1px 1px 1px 1px #ccc;
+        /* Firefox 3.5 - 3.6 */
         box-shadow: 1px 1px 1px 1px #ccc;
     }
 
@@ -37,14 +39,14 @@
         user-select: none;
     }
 
-        /* Hide the browser's default radio button */
-        .container input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-        }
+    /* Hide the browser's default radio button */
+    .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
 
     /* Create a custom radio button */
     .checkmark {
@@ -58,12 +60,12 @@
     }
 
     /* On mouse-over, add a grey background color */
-    .container:hover input ~ .checkmark {
+    .container:hover input~.checkmark {
         background-color: #ccc;
     }
 
     /* When the radio button is checked, add a blue background */
-    .container input:checked ~ .checkmark {
+    .container input:checked~.checkmark {
         background-color: #2196F3;
     }
 
@@ -75,7 +77,7 @@
     }
 
     /* Show the indicator (dot/circle) when checked */
-    .container input:checked ~ .checkmark:after {
+    .container input:checked~.checkmark:after {
         display: block;
     }
 
@@ -92,7 +94,10 @@
         transform: rotate(45deg);
     }
 
-    .checkbox input[type="checkbox"], .checkbox-inline input[type="checkbox"], .radio input[type="radio"], .radio-inline input[type="radio"] {
+    .checkbox input[type="checkbox"],
+    .checkbox-inline input[type="checkbox"],
+    .radio input[type="radio"],
+    .radio-inline input[type="radio"] {
         margin-left: 0px;
     }
 </style>
@@ -122,22 +127,22 @@
             </div>
             <div class="box box-solid pd20 pt10 aps-ds-kehoach-dangky">
                 <div class="box-header pd0">
-                    <h3 class="box-title color-blue">
+                    <h3 class="box-title color-blue line-20 mt-15">
                         <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký
                         <span class="pull-right badge bg-light-blue ml-10">
                             <span id="lblKHDK"></span>
                         </span>
                     </h3>
                     <div class="box-tools pull-right">
-                        <a id="btnAddnew" class="btn btn-success"><i class="fa fa-plus"></i> Thêm mới</a>
+                        <a id="btnAddnew" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
                 <div class="box-body pd0">
-                    <div class="aps-table-select">
-                        <table id="tblKHDK" class="table table-hover table-bordered mb-0">
+                    <div class="aps-table-select mt-15">
+                        <table id="tblKHDK" class="table table-hover table-bordered mb-0 table-border tblKHDK">
                             <thead>
                                 <tr>
-                                    <th rowspan="2" class="td-fixed td-center">Stt</th>
+                                    <th rowspan="2" class="td-fixed td-center w-50px">Stt</th>
                                     <th rowspan="2" class="td-fixed td-center">Xem</th>
                                     <th rowspan="2" class="td-center">Mã kế hoạch</th>
                                     <th rowspan="2" class="td-center">Tên kế hoạch</th>
@@ -175,7 +180,7 @@
     <div class="zone-content aps-add-new" id="zoneEdit" style="display: none">
         <div class="box box-solid form-container">
             <div class="box-header with-border aps-box-header ">
-                <h3 class="box-title">
+                <h3 class="box-title line-20">
                     <span class="myModalLabel"><i class="fa-light fa-plus"></i> Thêm mới - </span> Kế hoạch đăng ký
                 </h3>
                 <div class="pull-right title-note pull-right-absolute mr-20">
@@ -192,7 +197,8 @@
                                     <!--row 1-->
                                     <div class="row aps-lable-name">
                                         <p class="group-group-title-name mb-0 border-0">
-                                            <span class="badge bg-blue" style="color:#3380db !important;">Thông tin cơ bản</span>
+                                            <span class="badge bg-blue" style="color:#3380db !important;">Thông tin cơ
+                                                bản</span>
                                         </p>
                                     </div>
                                     <!--row 2-->
@@ -200,14 +206,14 @@
                                         <div class="col-sm-2 aps-form-lable">Tên kế hoạch</div>
                                         <div class="col-sm-4 aps-form-input">
                                             <input id="txtTenKeHoach" class="form-control"
-                                                   placeholder="Nhập tên kế hoạch" />
+                                                placeholder="Nhập tên kế hoạch" />
                                         </div>
                                         <div class="col-sm-2 aps-form-lable justify-content-end pr15">
                                             Mã kế hoạch<span class="title-colon"></span>
                                         </div>
                                         <div class="col-sm-4 aps-form-input">
                                             <input id="txtMaKeHoach" class="form-control"
-                                                   placeholder="Nhập mã kế hoạch" />
+                                                placeholder="Nhập mã kế hoạch" />
                                         </div>
                                     </div>
                                     <!--row 3-->
@@ -228,7 +234,8 @@
                                     <!--row 1-->
                                     <div class="row aps-lable-name">
                                         <p class="group-group-title-name mb-0 border-0">
-                                            <span class="badge bg-blue" style="color:#198754 !important;">Cho phép hiện thông báo khi chưa đến hạn</span>
+                                            <span class="badge bg-blue" style="color:#198754 !important;">Cho phép hiện
+                                                thông báo khi chưa đến hạn</span>
                                         </p>
                                     </div>
                                     <div class="radio" id="divDenHan">
@@ -249,8 +256,8 @@
                                 <!--row 1-->
                                 <div class="row aps-lable-name">
                                     <p class="group-group-title-name mb-0 border-0">
-                                        <span class="badge bg-blue"
-                                              style="color:#FF0000 !important;">Thời gian đăng ký</span>
+                                        <span class="badge bg-blue" style="color:#FF0000 !important;">Thời gian đăng
+                                            ký</span>
                                     </p>
                                 </div>
                                 <div class="clear"></div>
@@ -306,7 +313,7 @@
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
                                         <input type="text" id="txtBD_Ngay" placeholder="dd/mm/yyyy"
-                                               class="form-control input-datepicker" />
+                                            class="form-control input-datepicker" />
                                     </div>
                                     <div class="col-sm-3 ml-10 aps-form-input d-flex gap10">
                                         <input type="text" id="txtBD_Gio" placeholder="Giờ" class="form-control" />
@@ -317,7 +324,7 @@
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
                                         <input type="text" id="txtKT_Ngay" placeholder="dd/mm/yyyy"
-                                               class="form-control input-datepicker" />
+                                            class="form-control input-datepicker" />
                                     </div>
                                     <div class="col-sm-3 aps-form-input  d-flex gap10 ml-10">
                                         <input type="text" id="txtKT_Gio" placeholder="Giờ" class="form-control" />
@@ -333,7 +340,8 @@
                                     <input type="text" id="txtSoGiayCho" class="form-control" />
                                 </div>
                                 <div class="col-sm-8 aps-form-lable pl15">
-                                    <span style="font-style: italic;color:#666">Ghi chú: Để áp dụng cho phương án xử lý tắc nghẽn khi cần</span>
+                                    <span style="font-style: italic;color:#666">Ghi chú: Để áp dụng cho phương án xử lý
+                                        tắc nghẽn khi cần</span>
                                 </div>
                             </div>
                         </div>
@@ -366,8 +374,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue"
-                                          style="color:#e300ff !important;">Trạng thái sinh viên</span>
+                                    <span class="badge bg-blue" style="color:#e300ff !important;">Trạng thái sinh
+                                        viên</span>
                                 </p>
                             </div>
                             <div class="checkbox_TTSV check-list" id="DSTrangThaiSV">
@@ -402,7 +410,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <input id="KieuDangky_3" type="checkbox" name="check_KieuDangKy"
-                                           value="HocNangDiem">
+                                        value="HocNangDiem">
                                     <label for="KieuDangky_3">Dành cho học nâng điểm</label>
                                 </div>
                             </div>
@@ -435,8 +443,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue"
-                                          style="color:#198754 !important;">Quy định về giảng viên</span>
+                                    <span class="badge bg-blue" style="color:#198754 !important;">Quy định về giảng
+                                        viên</span>
                                 </p>
                             </div>
                             <div class="row td-left">
@@ -462,7 +470,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#FF0000 !important;">Kiểm tra tình trạng tài chính</span>
+                                    <span class="badge bg-blue" style="color:#FF0000 !important;">Kiểm tra tình trạng
+                                        tài chính</span>
                                 </p>
                             </div>
                             <div class="row td-left">
@@ -540,9 +549,7 @@
                             <div class="row td-left">
                                 <div class="col-sm-12 line-38 d-flex">
                                     Số nợ tối đa cho phép : <span class="title-colon"></span> <input type="text"
-                                                                                                     id="txtNoToiDa"
-                                                                                                     class="form-control ml-10"
-                                                                                                     style="width: 150px" />
+                                        id="txtNoToiDa" class="form-control ml-10" style="width: 150px" />
                                 </div>
                             </div>
                         </div>
@@ -553,7 +560,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#d54b07 !important;">Quy định về hủy/rút học phần</span>
+                                    <span class="badge bg-blue" style="color:#d54b07 !important;">Quy định về hủy/rút
+                                        học phần</span>
                                 </p>
                             </div>
                             <div class="row td-left">
@@ -597,8 +605,7 @@
                                 <div class="col-sm-12 line-38 d-flex gap15">
                                     Ngày bắt đầu tính mốc rút học phần: <span class="title-colon"></span>
                                     <input type="text" id="txtNgayBDRutHP" style="width: 168px"
-                                           class="form-control input-datepicker"
-                                           placeholder="dd/mm/yyyy" />
+                                        class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                                 </div>
                             </div>
                             <div class="col-sm-8"></div>
@@ -610,7 +617,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#ff0081 !important;">Quy định về số tín chỉ tối đa/ tối thiểu</span>
+                                    <span class="badge bg-blue" style="color:#ff0081 !important;">Quy định về số tín chỉ
+                                        tối đa/ tối thiểu</span>
                                 </p>
                             </div>
                             <div class="col-sm-12">
@@ -717,8 +725,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue"
-                                          style="color:#3380db !important;">Kiểm tra về trùng lịch</span>
+                                    <span class="badge bg-blue" style="color:#3380db !important;">Kiểm tra về trùng
+                                        lịch</span>
                                 </p>
                             </div>
                             <div class="row" id="divKiemTraTrungLich">
@@ -780,8 +788,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue"
-                                          style="color:#198754 !important;">Quy định về tổ hợp đăng ký</span>
+                                    <span class="badge bg-blue" style="color:#198754 !important;">Quy định về tổ hợp
+                                        đăng ký</span>
                                 </p>
                             </div>
                             <div class="radio checkradio" id="divDKTheoToHopQuyDinh">
@@ -809,7 +817,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#FF0000 !important;">Quy định về đăng ký mở rộng</span>
+                                    <span class="badge bg-blue" style="color:#FF0000 !important;">Quy định về đăng ký mở
+                                        rộng</span>
                                 </p>
                             </div>
                             <div class="row td-left">
@@ -942,7 +951,7 @@
                                 <div class="col-sm-2">
                                     <input type="text" id="txtNgayBatDauXN" class="form-control" />
                                 </div>
-                                <div class="col-sm-4 line-38">
+                                <div class="col-sm-4 line-38 text-right pr15">
                                     Ngày kết thúc cho phép sv xác nhận đăng ký
                                 </div>
                                 <div class="col-sm-2">
@@ -958,7 +967,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#0a6139 !important;">Tùy chọn ưu tiên kết quả ký nguyên vọng</span>
+                                    <span class="badge bg-blue" style="color:#0a6139 !important;">Tùy chọn ưu tiên kết
+                                        quả ký nguyên vọng</span>
                                 </p>
                             </div>
                             <div class="col-sm-12">
@@ -983,7 +993,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#3380db !important;">Quy định về điều kiện đăng ký nâng điểm</span>
+                                    <span class="badge bg-blue" style="color:#3380db !important;">Quy định về điều kiện
+                                        đăng ký nâng điểm</span>
                                 </p>
                             </div>
                             <div class="col-sm-12">
@@ -1001,7 +1012,8 @@
                             <!--row 1-->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name mb-0 border-0">
-                                    <span class="badge bg-blue" style="color:#e300ff !important;">Tùy chọn có kiểm tra vượt số tín quy định của khối tự chọn không:</span>
+                                    <span class="badge bg-blue" style="color:#e300ff !important;">Tùy chọn có kiểm tra
+                                        vượt số tín quy định của khối tự chọn không:</span>
                                 </p>
                             </div>
                             <div class="col-sm-12">
@@ -1012,7 +1024,7 @@
                 </div>
             </div>
             <div class="box-footer">
-                <div class="pull-right">
+                <div class="pull-right d-flex">
                     <a class="submit btn btn-danger btnOpenDelete" id="btnDelete_KeHoach" style="display: none">
                         <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
                     </a>
@@ -1020,22 +1032,18 @@
                         <i class="fa fa-times-circle"></i> Đóng
                     </a>
                     <a id="btnPhanCongCT" class="btn btn-warning">
-                        <i class="fal fa-poll-people"></i> Phân công theo
-                        nhóm kiểm soát(mức chương trình)
+                        <i class="fal fa-poll-people"></i>Phân công theo nhóm kiểm soát(mức chương trình)
                     </a>
                     <a id="btnPhanCongKH" class="btn btn-danger">
-                        <i class="fal fa-user-chart"></i> Phân công theo
-                        nhóm kiểm soát(mức khóa học)
+                        <i class="fal fa-user-chart"></i>Phân công theo nhóm kiểm soát(mức khóa học)
                     </a>
                     <a id="btnPhanCong" class="btn btn-success">
-                        <i class="fal fa-users-class"></i> Phân công theo
-                        nhóm kiểm soát
+                        <i class="fal fa-users-class"></i>Phân công theo nhóm kiểm soát
                     </a>
                     <a id="btnChuyenDuLieu" class="btn btn-secondary">
-                        <i class="fa-light fa-database"></i> Chuyển dữ
-                        liệu từ TKB sang ĐKH
+                        <i class="fa-light fa-database"></i>Chuyển dữ liệu từ TKB sang ĐKH
                     </a>
-                    <a id="btnSave" class="btn btn-primary btnSave"><i class="fal fa-save"></i> Lưu</a>
+                    <a id="btnSave" class="btn btn-primary btnSave"><i class="fal fa-save"></i>Lưu</a>
                 </div>
             </div>
         </div>
@@ -1100,32 +1108,49 @@
         </div>
     </div>
 </section>
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+        Danh sách đăng ký</button>
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal_khongdangky">
+        Danh sách không đăng ký</button>
+    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModalPCNhomKiemSoat">
+        Phân công theo nhóm kiểm soát</button><br>
 
-<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModalPCChuongTrinh">
+        Phân công theo nhóm kiểm soát(mức chương trình)</button>
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalPCKhoaHoc">
+        Phân công theo nhóm kiểm soát(mức khóa học)
+    </button>    
+</div>
+<!-- ---------- -->
+<!-- Danh sách đăng ký -->
+<div class="modal fade myModal modal-ds-dangky" id="myModal" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">
-                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span>
-                    <span class="lang" key="">Danh sách đăng ký</span>
+                <h4 class="modal-title line-20">
+                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span><span class="lang"
+                        key="">Danh sách đăng ký</span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblQuanSoLop" class="table table-hover table-bordered">
+                <table id="tblQuanSoLop" class="table table-hover table-bordered table-noborder tblQuanSoLop mb-0">
                     <thead>
                         <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã số sinh viên</span></th>
-                            <th class="td-center"><span class="lang" key="">Họ đệm</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên</span></th>
-                            <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
-                            <th class="td-center"><span class="lang" key="">Mã lớp</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên lớp</span></th>
-                            <th class="td-center"><span class="lang" key="">Lớp quản lý</span></th>
-                            <th class="td-center"><span class="lang" key="">Kiểu học</span></th>
+                            <th class="td-fixed w-50px">Stt</th>
+                            <th class="td-left"><span class="lang" key="">Mã số sinh viên</span></th>
+                            <th class="td-left"><span class="lang" key="">Họ đệm</span></th>
+                            <th class="td-left"><span class="lang" key="">Tên</span></th>
+                            <th class="td-left"><span class="lang" key="">Ngày sinh</span></th>
+                            <th class="td-left"><span class="lang" key="">Mã lớp</span></th>
+                            <th class="td-cenleftter"><span class="lang" key="">Tên lớp</span></th>
+                            <th class="td-left"><span class="lang" key="">Lớp quản lý</span></th>
+                            <th class="td-left"><span class="lang" key="">Kiểu học</span></th>
                             <th class="td-center"><span class="lang" key="">Số tín chỉ</span></th>
                         </tr>
                     </thead>
@@ -1143,35 +1168,39 @@
     </div>
 </div>
 
-
-<div class="modal fade" id="myModal_khongdangky" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Danh sách không đăng ký -->
+<div class="modal fade myModal_khongdangky" id="myModal_khongdangky" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">
-                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span>
-                    <span class="lang" key="">Danh sách không đăng ký</span>
+                <h4 class="modal-title line-20">
+                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span><span class="lang"
+                        key="">Danh sách không đăng ký</span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblKhongDangKy" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã số sinh viên</span></th>
-                            <th class="td-center"><span class="lang" key="">Họ đệm</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên</span></th>
-                            <th class="td-center"><span class="lang" key="">Trạng thái</span></th>
-                            <th class="td-center"><span class="lang" key="">Nợ phí</span></th>
-                            <th class="td-center"><span class="lang" key="">Chương trình</span></th>
-                            <th class="td-center"><span class="lang" key="">Khóa học</span></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select">
+                    <table id="tblKhongDangKy"
+                        class="table table-hover table-bordered table-noborder tblKhongDangKy mb-0">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed w-50px">Stt</th>
+                                <th class="td-left"><span class="lang" key="">Mã số sinh viên</span></th>
+                                <th class="td-left"><span class="lang" key="">Họ đệm</span></th>
+                                <th class="td-left"><span class="lang" key="">Tên</span></th>
+                                <th class="td-left"><span class="lang" key="">Trạng thái</span></th>
+                                <th class="td-left"><span class="lang" key="">Nợ phí</span></th>
+                                <th class="td-left"><span class="lang" key="">Chương trình</span></th>
+                                <th class="td-left"><span class="lang" key="">Khóa học</span></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
@@ -1184,124 +1213,173 @@
     </div>
 </div>
 
-<div class="modal fade" id="myModalPCNhomKiemSoat" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Phân công theo nhóm kiểm soát -->
+<div class="modal fade myModalPCNhomKiemSoat" id="myModalPCNhomKiemSoat" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang" key="">Phân công theo nhóm kiểm soát</span> </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fal fa-users-class"></i></span><span
+                        class="lang" key="">Phân công theo nhóm kiểm soát</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_HeDaoTao_PCNKS" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
-                    </select>
+                <div class="aps-add-new">
+                    <div class="aps-form">
+                        <div class="col-sm-12 item-search aps-form-input pr-0" style="padding-right: 0 !important;">
+                            <select id="dropSearch_HeDaoTao_PCNKS" class="select-opt" style="width:100% !important">
+                                <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="aps-table-select mt-15">
+                            <table id="tblPCNhomKiemSoat"
+                                class="table table-hover table-bordered table-noborder tblPCNhomKiemSoat">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed w-50px">Stt</th>
+                                        <th class="td-left">Mã khóa</th>
+                                        <th class="td-left">Tên khóa</th>
+                                        <th class="td-center td-fixed w-50px">
+                                            <input type="checkbox" class="chkSystemSelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="clear"></div>
-                <table id="tblPCNhomKiemSoat" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã khóa</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên khóa</span></th>
-                            <th class="td-center td-fixed">
-                                <input type="checkbox" class="chkSystemSelectAll">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_PCNhomKiemSoat"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_PCNhomKiemSoat">
+                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span></a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModalPCChuongTrinh" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 990px">
+<!-- Phân công theo nhóm kiểm soát(mức chương trình) -->
+<div class="modal fade myModalPCChuongTrinh" id="myModalPCChuongTrinh" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang" key="">Phân công theo nhóm kiểm soát(mức chương trình)</span> </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fal fa-poll-people"></i></span>
+                    <span class="lang" key="">Phân công theo nhóm kiểm soát(mức chương trình)</span>
+                </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_HeDaoTao_PCChuongTrinh" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
-                    </select>
+                <div class="aps-add-new">
+                    <div class="aps-form">
+                        <div class="col-sm-6 item-search aps-form-input pr-0" style="padding-right: 5px !important;">
+                            <select id="dropSearch_HeDaoTao_PCChuongTrinh" class="select-opt"
+                                style="width:100% !important">
+                                <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="col-sm-6 item-search aps-form-input pr-0 pl5" style="padding-right: 0 !important;">
+                            <select id="dropSearch_KhoaDaoTao_PCChuongTrinh" class="select-opt"
+                                style="width:100% !important">
+                                <option id="" value=""> --Chọn khóa đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="aps-table-select mt-15">
+                            <table id="tblPCChuongTrinh"
+                                class="table table-hover table-bordered tblPCChuongTrinh table-noborder mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed w-50px">Stt</th>
+                                        <th class="td-left">Mã chương trình</th>
+                                        <th class="td-left">Tên chương trình</th>
+                                        <th class="td-center td-fixed w-50px">
+                                            <input type="checkbox" class="chkSystemSelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_KhoaDaoTao_PCChuongTrinh" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn khóa đào tạo-- </option>
-                    </select>
-                </div>
-                <div class="clear"></div>
-                <table id="tblPCChuongTrinh" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã chương trình</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên chương trình</span></th>
-                            <th class="td-center td-fixed">
-                                <input type="checkbox" class="chkSystemSelectAll">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_PCChuongTrinh"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_PCChuongTrinh"><i class="fa fa-save"></i><span
+                            class="lang" key="">Lưu</span></a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModalPCKhoaHoc" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Phân công theo nhóm kiểm soát(mức khóa học) -->
+<div class="modal fade myModalPCKhoaHoc" id="myModalPCKhoaHoc" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel2"><i class="fa fa-eye"></i></span> <span class="lang" key="">Phân công theo nhóm kiểm soát(mức khóa học)</span> </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel2"><i class="fal fa-user-chart"></i></span>
+                    <span class="lang" key="">Phân công theo nhóm kiểm soát(mức khóa học)</span>
+                </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-6 item-search">
-                    <select id="dropSearch_HeDaoTao_PCKhoaHoc" class="select-opt" style="width:100% !important">
-                        <option id="" value=""> --Chọn hệ đào tạo-- </option>
-                    </select>
+                <div class="aps-add-new">
+                    <div class="aps-form">
+                        <div class="col-sm-12 item-search aps-form-input pr-0" style="padding-right: 0 !important;">
+                            <select id="dropSearch_HeDaoTao_PCKhoaHoc" class="select-opt" style="width:100% !important">
+                                <option id="" value=""> --Chọn hệ đào tạo-- </option>
+                            </select>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="aps-table-select mt-15">
+                            <table id="tblPCKhoaHoc"
+                                class="table table-hover table-bordered table-noborder tblPCKhoaHoc">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed w-50px">Stt</th>
+                                        <th class="td-left">Mã khóa</th>
+                                        <th class="td-left">Tên khóa</th>
+                                        <th class="td-center td-fixed  w-50px">
+                                            <input type="checkbox" class="chkSystemSelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="clear"></div>
-                <table id="tblPCKhoaHoc" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã khóa</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên khóa</span></th>
-                            <th class="td-center td-fixed">
-                                <input type="checkbox" class="chkSystemSelectAll">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_PCKhoaHoc"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_PCKhoaHoc">
+                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span></a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <!-- load from js -->
 </div>
 <!-- page script -->

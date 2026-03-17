@@ -4807,8 +4807,9 @@
  .table.tblKeHoachXuLy  tr:hover .btnDSNhanSu:hover{
     color: var(--color-yellow) !important;
  }
- .info-tblPhanCong span,
- .info-tblAddHocPhanChuongTrinh span{
+ .info-tblPhanCong span,.info-tblInput_SinhVien span,
+ .info-tblAddHocPhanChuongTrinh span,
+ .info-tblKhongDangKy span{
     color: #888 !important;
     line-height: 38px !important;
  }

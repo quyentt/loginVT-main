@@ -1,5 +1,6 @@
 ﻿<style>
-    .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
+    .checkbox-inline+.checkbox-inline,
+    .radio-inline+.radio-inline {
         margin-left: 0px;
     }
 </style>
@@ -16,12 +17,12 @@
                     </div>
                     <div class="area-search">
                         <div id="search" class="inputSearch">
-                            <div class="col-sm-5 item-search">
+                            <div class="col-sm-4 item-search">
                                 <select id="dropSearch_KeHoach" class="select-opt"></select>
                             </div>
                             <div class="col-sm-3 item-search">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
-                                        class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search">
+                                    <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                             </div>
 
                         </div>
@@ -29,109 +30,110 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="box box-solid aps-phanconglop-ds pl20 pr10 pb20 pt10">
+            <div class="box box-solid aps-phanconglop-ds pl20 pr20 pb20 pt10">
                 <div class="box-header pd0">
-                    <h3 class="box-title color-blue">
-                        <i class="far fa-clipboard-list-check"></i> Danh sách phân công
+                    <h3 class="box-title color-blue line-20 mt-10">
+                        <i class="far fa-clipboard-list-check"></i> Danh sách phân công 
                         <span class="pull-right badge bg-light-blue ml-15">
                             <span id="lblPhanCongLop_Tong"></span>
                         </span>
                     </h3>
-                    <div class="box-tools pull-right">
-                        <a id="btnAddnew" class="btn btn-primary btnAdd"><i class="fa fa-plus"></i> Thêm mới</a>
-                        <a id="btnXoaPhanCongLop" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                    <div class="box-tools pull-right d-flex">
+                        <a id="btnXoaPhanCongLop" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
+                        <a id="btnAddnew" class="btn btn-primary btnAdd"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
                 <div class="box-body pd0 mt-20">
                     <div class="col-sm-12 scroll-table-x" id="zonePhanCong">
-                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                               style="width: 300px; float: left">
+                        <table id="tblPhanCongSinhVien"
+                            class="table table-hover table-bordered table-noborder tblPhanCongSinhVien"
+                            style="width: 300px; float: left">
                             <thead>
-                            <tr>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll_SinhVien">
-                                </th>
-                                <th class="td-center">Sinh viên</th>
-                                <th class="td-center" style="width: 93px">Phân công</th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_SinhVien">
+                                    </th>
+                                    <th class="td-left">Sinh viên</th>
+                                    <th class="td-left" style="width: 93px">Phân công</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- load from js -->
+                                <!-- load from js -->
                             </tbody>
                         </table>
                         <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                               style="width: 300px; float: left">
+                            style="width: 300px; float: left">
                             <thead>
-                            <tr>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll_SinhVien">
-                                </th>
-                                <th class="td-center">Lớp</th>
-                                <th class="td-center" style="width: 93px">Phân công</th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_SinhVien">
+                                    </th>
+                                    <th class="td-left">Lớp</th>
+                                    <th class="td-left" style="width: 93px">Phân công</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- load from js -->
+                                <!-- load from js -->
                             </tbody>
                         </table>
                         <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                               style="width: 300px; float: left">
+                            style="width: 300px; float: left">
                             <thead>
-                            <tr>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll_SinhVien">
-                                </th>
-                                <th class="td-center">Chương trình</th>
-                                <th class="td-center" style="width: 93px">Phân công</th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_SinhVien">
+                                    </th>
+                                    <th class="td-left">Chương trình</th>
+                                    <th class="td-left" style="width: 93px">Phân công</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- load from js -->
+                                <!-- load from js -->
                             </tbody>
                         </table>
                         <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                               style="width: 300px; float: left">
+                            style="width: 300px; float: left">
                             <thead>
-                            <tr>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll_SinhVien">
-                                </th>
-                                <th class="td-center">Khóa</th>
-                                <th class="td-center" style="width: 93px">Phân công</th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_SinhVien">
+                                    </th>
+                                    <th class="td-left">Khóa</th>
+                                    <th class="td-left" style="width: 93px">Phân công</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- load from js -->
+                                <!-- load from js -->
                             </tbody>
                         </table>
                         <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                               style="width: 300px; float: left">
+                            style="width: 300px; float: left">
                             <thead>
-                            <tr>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll_SinhVien">
-                                </th>
-                                <th class="td-center">Hệ</th>
-                                <th class="td-center" style="width: 93px">Phân công</th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_SinhVien">
+                                    </th>
+                                    <th class="td-left">Hệ</th>
+                                    <th class="td-left" style="width: 93px">Phân công</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- load from js -->
+                                <!-- load from js -->
                             </tbody>
                         </table>
                         <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                               style="width: 300px; float: left">
+                            style="width: 300px; float: left">
                             <thead>
-                            <tr>
-                                <th class="td-center td-fixed">
-                                    <input type="checkbox" id="chkSelectAll_SinhVien">
-                                </th>
-                                <th class="td-center">Khoa quản lý</th>
-                                <th class="td-center" style="width: 93px">Phân công</th>
-                            </tr>
+                                <tr>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_SinhVien">
+                                    </th>
+                                    <th class="td-left">Khoa quản lý</th>
+                                    <th class="td-left" style="width: 93px">Phân công</th>
+                                </tr>
                             </thead>
                             <tbody>
-                            <!-- load from js -->
+                                <!-- load from js -->
                             </tbody>
                         </table>
                     </div>
@@ -142,8 +144,8 @@
         <div class="box box-solid zone-bus form-container aps-add-new " id="zoneEdit" style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title"><span class="myModalLabel">
-                    <i class="fa fa-plus" style="color: #fff !important;"></i> 
-                    Thêm mới - </span> Phân công</h3>
+                        <i class="fa fa-plus" style="color: #fff !important;"></i>
+                        Thêm mới - </span> Phân công</h3>
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
@@ -159,142 +161,142 @@
                                 </p>
                             </div>
 
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Khoa quản lý <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-9 d-flex">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropKhoaQuanLy" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                     <div class="box-tools pull-right">
                                         <a id="addKhoaQuanLy" class="btn btn-primary addPhamVi"
-                                           title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Hệ <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-9 d-flex">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropHeDaoTao" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn hệ đào tạo--</option>
                                     </select>
                                     <div class="box-tools pull-right">
                                         <a id="addHeDaoTao" class="btn btn-primary addPhamVi"
-                                           title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
-                                    <div class="group-title-name">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
+                                    <div class="group-title-name color-888">
                                         Khóa <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-9 d-flex">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropKhoaDaoTao" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn khóa đào tạo--</option>
                                     </select>
                                     <div class="box-tools pull-right">
                                         <a id="addKhoaDaoTao" class="btn btn-primary addPhamVi"
-                                           title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Chương trình <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-9 d-flex">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropChuongTrinh" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn chương trình--</option>
                                     </select>
                                     <div class="box-tools pull-right">
                                         <a id="addChuongTrinh" class="btn btn-primary addPhamVi"
-                                           title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Định hướng <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropDinhHuong" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn định hướng-- </option>
                                     </select>
-                                </div>
-                                <div class="col-sm-2">
+
                                     <div class="box-tools pull-right">
-                                        <a id="addDinhHuong" class="btn btn-primary addPhamVi" title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i> Thêm</a>
+                                        <a id="addDinhHuong" class="btn btn-primary addPhamVi"
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i> Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Nhóm định hướng <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropNhomDinhHuong" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn nhóm định hướng-- </option>
                                     </select>
-                                </div>
-                                <div class="col-sm-2">
+
                                     <div class="box-tools pull-right">
-                                        <a id="addNhomDinhHuong" class="btn btn-primary addPhamVi" title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i> Thêm</a>
+                                        <a id="addNhomDinhHuong" class="btn btn-primary addPhamVi"
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i> Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Lớp <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-9 d-flex">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropLop" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn lớp--</option>
                                     </select>
                                     <div class="box-tools pull-right">
                                         <a id="addLop" class="btn btn-primary addPhamVi"
-                                           title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-10">
-                                <div class="col-sm-3">
+                            <div class="row  aps-form-item mb-10">
+                                <div class="col-sm-3 aps-lable-name">
                                     <div class="group-title-name">
                                         Người học <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-9 d-flex">
+                                <div class="col-sm-9 aps-form-input d-flex">
                                     <select id="dropHocVien" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Chọn học viên--</option>
                                     </select>
                                     <div class="box-tools pull-right">
                                         <a id="addHocVien" class="btn btn-primary addPhamVi"
-                                           title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
+                                            title="Thêm phạm vi và phân công"><i class="fa fa-plus"></i>Thêm</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-10 text-right">
                                 <a id="addKhoaQuanKyKhoaHoc" class="btn btn-primary"
-                                   title="Thêm Khoa quản lý - khóa học">
+                                    title="Thêm Khoa quản lý - khóa học">
                                     <i class="fa fa-plus"></i> Thêm Khoa quản lý - khóa học
                                 </a>
                             </div>
-                            <div class="row mb-10">
+                            <div class="row aps-form-item mb-10">
                                 <p class="group-title-name">
                                     <span class="pv-chon color-blue">
                                         <b>Phạm vi đã chọn:</b> <span id="lblPhamVi"></span>
@@ -310,72 +312,75 @@
                             </div>
                             <div class="row">
                                 <!--<div class="col-sm-2">
-        <div class="group-title-name">
-            Thời gan <span class="title-colon">:</span>
-        </div>
-    </div>-->
+                                    <div class="group-title-name">
+                                        Thời gan <span class="title-colon">:</span>
+                                    </div>
+                                </div>-->
 
                                 <div class="col-sm-3 mr-4">
                                     <select id="dropCoSoDaoTao" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 aps-lable-name">
                                     <select id="dropThoiGianDaoTao" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
-                                <div class="col-sm-3">
-                                    <select id="dropHeDaoTao_MK" class="select-opt" style="width:100% !important"></select>
+                                <div class="col-sm-3 aps-lable-name">
+                                    <select id="dropHeDaoTao_MK" class="select-opt"
+                                        style="width:100% !important"></select>
                                 </div>
-                                <div class="col-sm-3">
-                                    <select id="dropKhoaDaoTao_MK" class="select-opt" style="width:100% !important"></select>
+                                <div class="col-sm-3 aps-lable-name">
+                                    <select id="dropKhoaDaoTao_MK" class="select-opt"
+                                        style="width:100% !important"></select>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 aps-lable-name">
                                     <select id="dropKhoaToChuc" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
                                 <div class="col-sm-3 pr0">
                                     <select id="dropNganhDaoTao" class="select-opt"
-                                            style="width:100% !important"></select>
+                                        style="width:100% !important"></select>
                                 </div>
                                 <!--<div class="col-sm-2">
-        <div class="group-title-name">
-            Học phần <span class="title-colon">:</span>
-        </div>
-    </div>-->
+                                    <div class="group-title-name">
+                                        Học phần <span class="title-colon">:</span>
+                                    </div>
+                                </div>-->
                             </div>
                             <div class="row">
-                                <div class="col-sm-3">
+                                <div class="col-sm-3 aps-lable-name">
                                     <select id="dropHocPhan" class="select-opt" style="width:100% !important"></select>
                                 </div>
-                                <div class="col-sm-3  checkbox-inline user-check-print pt10" style="padding-left: 20px">
-                                    <input style="float: left" type="checkbox" id="dChuaPhanCong"/>
+                                <div class="col-sm-3  checkbox-inline user-check-print pl20" style="padding-top: 13px;">
+                                    <input style="float: left" type="checkbox" id="dChuaPhanCong" />
                                     <span>Chỉ hiện các lớp chưa phân công</span>
                                 </div>
-                                <div class="col-sm-4 checkbox-inline user-check-print pt10" style="padding-left: 20px;">
-                                    <input style="float: left" type="checkbox" id="dLocCTDT"/>
+                                <div class="col-sm-4 checkbox-inline user-check-print pl20" style="padding-top: 13px;">
+                                    <input style="float: left" type="checkbox" id="dLocCTDT" />
                                     <span>Lọc theo học phần mở theo chương trình</span>
                                 </div>
                                 <div class="col-sm-2">
-                                    <a id="btnSearchPhanCong" class="btn btn-default btn-search"><i
-                                            class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                    <a id="btnSearchPhanCong" class="btn btn-default btn-search">
+                                        <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                                 </div>
                             </div>
                             <div class="row mt-10">
                                 <div class="aps-table-select">
-                                    <table id="tblLopHocPhan" class="table table-hover table-bordered">
+                                    <table id="tblLopHocPhan"
+                                        class="table table-hover table-bordered table-noborder tblLopHocPhan mb-0">
                                         <thead>
-                                        <tr>
-                                            <th class="td-center">Stt</th>
-                                            <th class="td-center">Mã lớp</th>
-                                            <th class="td-center">Tên lớp</th>
-                                            <th class="td-center">Đã phân công</th>
-                                            <th class="td-center td-fixed">
-                                                <input type="checkbox" id="chkSelectAll_LopHocPhan">
-                                            </th>
-                                        </tr>
+                                            <tr>
+                                                <th class="td-center w-50px">Stt</th>
+                                                <th class="td-left">Mã lớp</th>
+                                                <th class="td-left">Tên lớp</th>
+                                                <th class="td-center">Đã phân công</th>
+                                                <th class="td-center td-fixed">
+                                                    <input type="checkbox" id="chkSelectAll_LopHocPhan">
+                                                </th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <!-- load from js -->
+                                            <!-- load from js -->
                                         </tbody>
                                     </table>
                                 </div>
@@ -396,76 +401,95 @@
     </div>
 </section>
 
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+        Danh sách học phần</button>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModalPhamVi">
+        Danh sách phạm vi</button>
+</div>
+<!-- ---------- -->
 <div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <!-- load from js -->
 </div>
-<div class="modal fade aps-modal-nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+<div class="modal fade aps-modal-nhansu aps-modal-sinhvien" id="modal_sinhvien" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- load from js -->
 </div>
 
-<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%">
+<!-- Danh sách học phần -->
+<div class="modal fade myModaldsHocPhan" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1">Danh sách học phần</span></h4>
+                <h4 class="modal-title line-20"><span class="myModalLabel1"><i
+                            class="fa-solid fa-book-open-reader"></i>Danh sách học phần</span></h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblQuanSoLop" class="table table-hover table-bordered">
+                <table id="tblQuanSoLop" class="table table-hover table-bordered table-noborder tblQuanSoLop">
                     <thead>
-                    <tr>
-                        <th class="td-fixed">Stt</th>
-                        <th class="td-center"><span class="lang" key="">Mã lớp học phần</span></th>
-                        <th class="td-center"><span class="lang" key="">Tên lớp học phần</span></th>
-                        <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll_QuanSo"></th>
-                    </tr>
+                        <tr>
+                            <th class="td-fixed w-50px">Stt</th>
+                            <th class="td-left"><span class="lang" key="">Mã lớp học phần</span></th>
+                            <th class="td-left"><span class="lang" key="">Tên lớp học phần</span></th>
+                            <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll_QuanSo"></th>
+                        </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
-                <a id="btnDelete_LopHocPhan" class="btn btn-warning"><i class="fa fa eraser"></i> Xóa</a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span></button>
+                    <a id="btnDelete_LopHocPhan" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="myModalPhamVi" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%">
+<!-- Danh sách phạm vi -->
+<div class="modal fade myModalPhamVi" id="myModalPhamVi" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1">Danh sách phạm vi</span></h4>
+                <h4 class="modal-title line-20"><span class="myModalLabel1"><i
+                            class="fa-light fa-users-viewfinder"></i>Danh sách phạm vi</span></h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblPhamVi" class="table table-hover table-bordered">
+                <table id="tblPhamVi" class="table table-hover table-bordered table-noborder tblPhamVi">
                     <thead>
-                    <tr>
-                        <th class="td-fixed">Stt</th>
-                        <th class="td-center"><span class="lang" key="">Phạm vi</span></th>
-                        <th class="td-center"><span class="lang" key="">Phân cấp</span></th>
-                        <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll_PhamVi"></th>
-                    </tr>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-left"><span class="lang" key="">Phạm vi</span></th>
+                            <th class="td-left"><span class="lang" key="">Phân cấp</span></th>
+                            <th class="td-center td-fixed"><input type="checkbox" id="chkSelectAll_PhamVi"></th>
+                        </tr>
                     </thead>
                     <tbody></tbody>
                 </table>
             </div>
             <div id="notify"></div>
-            <div class="modal-footer pull-right">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a id="btnDelete_PhamVi" class="btn btn-warning"><i class="fa fa eraser"></i> Xóa</a>
+            <div class="modal-footer">
+                <div class="d-flex pull-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                    <a id="btnDelete_PhamVi" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<!-- ------------------------- -->
 <script src="modules/kehoachdangky/script/phanconglop.js?v=1.0.0.0"></script>
 <script type="text/javascript">
     var main_doc = {};
