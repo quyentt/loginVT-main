@@ -639,10 +639,10 @@ DanhMucNghe.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "KLGD_DANHMUCAPDanhMucNghe_TEN"
+                    "mDataProp": "JOB_CODE"
                 },
                 {
-                    "mDataProp": "DanhMucNghe"
+                    "mDataProp": "JOB_NAME"
                 },
                 {
                     "mDataProp": "DONVITINH_TEN"
@@ -1344,13 +1344,13 @@ DanhMucNghe.prototype = {
             'iM': edu.system.iM,
             'strId': me.strLoaiNghe_Id,
 
-            'strCode': edu.system.getValById('txtMa_BN'),
-            'strName': edu.system.getValById('txtTen_BN'),
-            'dSort_Order': edu.system.getValById('txtThuTu_BN'),
-            'strStart_Date': edu.system.getValById('txtNgayHieuLuc_BN'),
-            'strEnd_Date': edu.system.getValById('txtNgayHetHieuLuc_BN'),
-            'dIs_Active': edu.system.getValById('dropTinhTrang_BN'),
-            'strDescription': edu.system.getValById('txtMoTa_BN'),
+            'strCode': edu.system.getValById('txtMa_LN'),
+            'strName': edu.system.getValById('txtTen_LN'),
+            'dSort_Order': edu.system.getValById('txtThuTu_LN'),
+            'strStart_Date': edu.system.getValById('txtNgayHieuLuc_LN'),
+            'strEnd_Date': edu.system.getValById('txtNgayHetHieuLuc_LN'),
+            'dIs_Active': edu.system.getValById('dropTinhTrang_LN'),
+            'strDescription': edu.system.getValById('txtMoTa_LN'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId) {
@@ -1713,10 +1713,10 @@ DanhMucNghe.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "CODE"
+                    "mDataProp": "JOB_CODE"
                 },
                 {
-                    "mDataProp": "NAME"
+                    "mDataProp": "JOB_NAME"
                 },
                 {
                     "mDataProp": "CORE_JOB_GROUP_NAME"

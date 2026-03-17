@@ -500,8 +500,7 @@ KeHoachXuLy.prototype = {
                 me.getList_ChuanBi();
             }
         });
-        $("#btnSave_KeThua").click(function () {
-            $('#myModalKeThua').modal('hide');
+        $("#btnSave_ChuanBi").click(function () {
             edu.system.confirm("Bạn có muốn Thực hiện tạo dữ liệu không?");
             $("#btnYes").click(function (e) {
                 me.save_ChuanBi();

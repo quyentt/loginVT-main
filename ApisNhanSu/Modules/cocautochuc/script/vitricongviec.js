@@ -39,19 +39,21 @@ ViTriCongViec.prototype = {
             var strId = this.id;
             var data = me.dtCongViec.find(e => e.ID == strId);
             me["strCongViec_Id"] = data.ID;
+            var strChucDanh = [data.JOB_ID];
+            if (data.JOB_ID && data.JOB_ID.indexOf(",") != -1) strChucDanh = data.JOB_ID.split(',');
             edu.util.viewValById("txtMa", data.POSITION_CODE);
             edu.util.viewValById("txtTen", data.POSITION_NAME);
             edu.util.viewValById("txtTenVietTat", data.POSITION_SHORT_NAME);
             edu.util.viewValById("dropPhanLoai", data.RELATION_TYPE_CODE_ID);
             edu.util.viewValById("dropChuChot", data.IS_KEY_POSITION);
-            edu.util.viewValById("dropChucDanh", data.JOB_ID);
+            edu.util.viewValById("dropChucDanh", strChucDanh);
             edu.util.viewValById("txtHeadCount", data.MAX_HEADCOUNT);
             edu.util.viewValById("txtNgayHieuLuc", data.START_DATE);
             edu.util.viewValById("txtNgayHetHieuLuc", data.END_DATE);
             edu.util.viewValById("txtMoTa", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa", data.DESCRIPTION);
             edu.util.viewValById("dropTrangThai", data.IS_ACTIVE);
-            $("#modalCongViec").modal("show");
+            $("#modalAddCongViec").modal("show");
         });
         $("#btnAdd_CongViec").click(function () {
             var data = {};
@@ -407,7 +409,7 @@ ViTriCongViec.prototype = {
                         renderInfor: {
                             id: "ID",
                             parentId: "",
-                            name: "NAME",
+                            name: "JOB_NAME",
                             code: "",
                             avatar: ""
                         },
