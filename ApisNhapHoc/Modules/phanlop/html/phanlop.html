@@ -1,6 +1,4 @@
 ﻿<style>
-   
-
     .nav-tabs>.pull-right>.btn-default {
         background: #f1f1f1 !important;
         padding-top: 3px !important;
@@ -33,9 +31,9 @@
                             <!-- load from phanlop.js -->
                         </select>
                         <div class="radio-box mt-10 border-0 mb-5">
-                            <div class="item-radio"><span class="color-666">Điều kiện: </span></div>
-                            <div class="item-radio"><input type="radio" class="rdPhanLop" name="rdPhanHop" value="0"
-                                    checked="checked"> Chưa nhập</div>
+                            <div class="item-radio"><span class="color-888">Điều kiện: </span></div>
+                            <div class="item-radio"><input type="radio" class="rdPhanLop mt-2" name="rdPhanHop"
+                                    value="0" checked="checked"> Chưa nhập</div>
                             <div class="item-radio"><input type="radio" class="rdPhanLop" name="rdPhanHop" value="1"> Đã
                                 nhập</div>
                             <div class="item-radio"><input type="radio" class="rdPhanLop" name="rdPhanHop" value="-1">
@@ -79,8 +77,8 @@
             <!-- Hồ sơ -->
             <div class="box box-solid box-shadow pd0 mb-20">
                 <div class="box-header with-border bg-header">
-                    <h3 class="box-title"><i class="fa-solid fa-id-card"></i> Hồ sơ</h3>
-                    <div class="pull-right">
+                    <h3 class="box-title line-20 pt10"><i class="fa-solid fa-id-card"></i> Hồ sơ</h3>
+                    <div class="pull-right mt-2">
                         <span class="italic label label-warning sum-phanlop">Tổng số đã phân lớp: <span class="bold"
                                 id="lblTongDaNhapHoc_PhanLop"></span></span>
                     </div>
@@ -181,7 +179,8 @@
             <!-- Tìm kiếm lớp quản lý -->
             <div class="box box-solid box-shadow pd0 mb-20 box-lopQL">
                 <div class="box-header with-border bg-header">
-                    <h3 class="box-title color-green"><i class="fa-solid fa-chalkboard-user"></i> Tìm kiếm lớp quản lý
+                    <h3 class="box-title color-green line-20 pt5">
+                        <i class="fa-solid fa-chalkboard-user"></i>Tìm kiếm lớp quản lý
                     </h3>
                 </div>
                 <!-- /.box-header -->
@@ -213,17 +212,17 @@
                                     <td></td>
                                     <td class="td-right">
                                         <div class="dropdown" id="zoneBaoCao_PL" style="float: left">
-                                            <button class="btn btn-success dropdown-toggle" type="button"
+                                            <button class="btn btn-success btn-xuatBC dropdown-toggle" type="button"
                                                 data-toggle="dropdown">
-                                                <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span
-                                                    class="caret"></span>
+                                                <i class="fa fa fa-file-excel-o mr-5"></i> Xuất báo cáo
+                                                <span class="caret"></span>
                                             </button>
                                             <ul class="dropdown-menu form-container" id="zonebtnBaoCao_DT">
                                                 <li><a class="btnBaoCao_LHD" name="PHIEUPHANLOP" href="#"> 1. Phiếu phân
                                                         lớp</a></li>
                                             </ul>
                                         </div>
-                                        <a class="btn btn-default btn-search"><i class="fa fa-search"></i> Tìm kiếm</a>
+                                        <a class="btn btn-default btn-search"><i class="fa fa-search"></i>Tìm kiếm</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -242,22 +241,24 @@
             <!-- Danh sách sinh viên đã rút của kế hoạch -->
             <div class="box box-solid box-shadow pd0 mb-20">
                 <div class="box-header with-border">
-                    <h3 class="box-title color-red"><i class="fa-solid fa-rectangle-history-circle-user"></i> Danh sách
-                        sinh viên đã rút của kế hoạch </h3>
+                    <h3 class="box-title color-red line-20 pt10">
+                        <i class="fa-solid fa-rectangle-history-circle-user"></i> Danh sách sinh viên đã rút của kế
+                        hoạch
+                    </h3>
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body pd20">
                     <div class="col-sm-12 scroll-table-x">
-                        <table id="tblRutHoSo" class="table table-hover table-bordered">
+                        <table id="tblRutHoSo" class="table table-hover table-bordered table-noborder tblRutHoSo">
                             <thead>
                                 <tr>
-                                    <th class="td-fixed td-center">Stt</th>
-                                    <th class="td-center">Mã số</th>
-                                    <th class="td-center">Họ tên</th>
-                                    <th class="td-center">Lớp</th>
-                                    <th class="td-center">Chương trình</th>
-                                    <th class="td-center">Ngày rút</th>
-                                    <th class="td-center">Người rút</th>
+                                    <th class="td-fixed td-center w-50px">Stt</th>
+                                    <th class="td-left">Mã số</th>
+                                    <th class="td-left">Họ tên</th>
+                                    <th class="td-left">Lớp</th>
+                                    <th class="td-left">Chương trình</th>
+                                    <th class="td-left">Ngày rút</th>
+                                    <th class="td-left">Người rút</th>
                                     <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll">
                                     </th>
                                 </tr>
@@ -274,21 +275,28 @@
         <div class="pull-right">
             <div class="btn-sms btn-sms-fixed" id="btnSave_PhanLop">
                 <a class="poiter" style="color:white">
-                    <i class="fa fa-tags"></i> <span>Phân lớp</span>
+                    <i class="fa-solid fa-screen-users fw-bold"></i> <span>Phân lớp</span>
                 </a>
             </div>
         </div>
     </div>
 </section>
 
+<!-- ---------- -->
+<div class="aps-all-button pl20 aps-gap-10 btn-show mt-10" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal_ChiTietLop">
+        Thông tin chi tiết</button>
+</div>
+<!-- ---------- -->
 <!-- Thông tin chi tiết -->
-<div class="modal fade" id="myModal_ChiTietLop" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div class="modal fade myModal_ChiTietLop" id="myModal_ChiTietLop" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title modal-name">Thông tin chi tiết</h4>
+                <h4 class="modal-title modal-name"><i class="fa-solid fa-user-pen"></i>Thông tin chi tiết</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -296,21 +304,20 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-12">
-                        <div class="scroll-table-x">
-                            <table id="tbldata_SinhVien_PhanLop" class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th class="td-fixed">Stt</th>
-                                        <th class="td-center"><span class="lang" key="">Mã số</span></th>
-                                        <th class="td-left"><span class="lang" key="">Họ tên</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- load from phanlop.js -->
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="aps-table-select">
+                        <table id="tbldata_SinhVien_PhanLop"
+                            class="table table-hover table-noborder table-bordered tbldata_SinhVien_PhanLop mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed">Stt</th>
+                                    <th class="td-left"><span class="lang" key="">Mã số</span></th>
+                                    <th class="td-left"><span class="lang" key="">Họ tên</span></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- load from phanlop.js -->
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

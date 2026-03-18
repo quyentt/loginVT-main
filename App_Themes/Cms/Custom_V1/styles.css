@@ -2187,7 +2187,20 @@
  }
 
  .box-body .table {}
-
+ .aps-form-lable-search{
+    color: #888 !important;
+ }
+.table-form-add .btn-default.btn-search i{
+    color:#222 !important ;
+}
+.table .btn.btn-search:hover{
+    height: 38px !important;
+    padding: 0px 15px 7.6px 15px !important;
+    line-height: 38px !important;
+}
+.table .btn.btn-search:hover i{
+   color:#fff !important ;
+}
  /*--------------------------*/
  .main-footer {
      background: #e3e4e5 !important;
@@ -2924,14 +2937,13 @@
  .aps-pay-add .form-container-header,
  .form-container-header {
      padding: 15px 20px 12px 20px !important;
-     height: 60px !important;
+     height: 52px !important;
      border-bottom: 1px solid #e9e9e9 !important;
      background: var(--color-blue);
      color: #fff;
      border-top-left-radius: 12px;
      border-top-right-radius: 12px;
  }
-
  .aps-pay-add .form-container-footer,
  .form-container-footer {
      height: 68px !important;
@@ -2942,6 +2954,8 @@
  .form-container-header .fc-title {
      padding: 0 !important;
      color: #fff !important;
+     font-size: 18px !important;
+     margin-top: 3px !important;
  }
 
  .aps-pay-add .form-container-header .fc-title i,
@@ -4819,9 +4833,9 @@
  .info-tblLopHocPhanChiTiet span,
  .info-tblInput_SinhVien span,
  .info-tblLopHocPhanChiTiet2 span,
- .info-tblAddHocPhanChuongTrinh span,
- .info-tblKHDK span,
- .info-tblKhongDangKy span,
+ .info-tblAddHocPhanChuongTrinh span,.info-tbldata_QTSM span,
+ .info-tblKHDK span,.info-tbldata_KHNH span,
+ .info-tblKhongDangKy span,.info-tbldata_KHNS span,
  .info-tblModal_HocPhan span {
      color: #888 !important;
      line-height: 38px !important;
@@ -4880,4 +4894,11 @@
 
  .table.table-noborder thead tr td:first-child {
      border-left: 0 solid #d1d1d1 !important;
+ }
+ .aps-total-receipts tr:hover td,
+ .aps-total-receipts tr:hover td i{
+    color: #fff !important;
+ }
+ .aps-total-receipts tr:hover td i{
+    font-weight: bold !important;
  }
