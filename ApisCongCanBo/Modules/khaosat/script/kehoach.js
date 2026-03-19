@@ -837,6 +837,10 @@ KeHoach.prototype = {
     -------------------------------------------*/
     genTable_KeHoach: function (data, iPager) {
         var me = this;
+        function tinhPhanTram(thucHien, tongSo, soLe = 2) {
+            if (!tongSo || tongSo === 0) return '0%';
+            return ((thucHien / tongSo) * 100).toFixed(soLe) + '%';
+        }
         $("#lblKeHoach_Tong").html(iPager);
         var jsonForm = {
             strTable_Id: "tblKeHoach",
@@ -883,6 +887,17 @@ KeHoach.prototype = {
                     "mData": "SOLUONG",
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnKetQua" id="' + aData.ID + '" title="Chi tiết">Chi tiết</a></span>';
+                    }
+                },
+                {
+                    "mDataProp": "TONGSOPHIEUGUI"
+                },
+                {
+                    "mDataProp": "TONGSOPHIEUDATHUCHIEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return tinhPhanTram(aData.TONGSOPHIEUDATHUCHIEN, aData.TONGSOPHIEUGUI, 2);
                     }
                 },
                 {
