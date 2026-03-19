@@ -28,11 +28,30 @@ KeHoach.prototype = {
             $("#modalQuyen").modal("show")
             me.getList_Quyen();
         });
+        $("#tblPhamVi").delegate(".btnEdit", "click", function () {
+            var strId = this.id;
+            var data = me.dtPhamVi.find(e => e.ID == strId);
+            me["strPhamVi_Id"] = data.ID;
+            $("#lblPhamViApDung").html(data.PHAMVIAPDUNG_TEN);
+            edu.util.viewValById("txtMa", data.MA);
+            edu.util.viewValById("txtTen", data.TEN);
+            edu.util.viewValById("txtMoTa", data.MOTA);
+            edu.util.viewValById("txtNgayBatDauPV", data.NGAYBATDAU);
+            edu.util.viewValById("txtGioBatDauPV", data.GIOBATDAU);
+            edu.util.viewValById("txtPhutBatDauPV", data.PHUTBATDAU);
+            edu.util.viewValById("txtNgayKetThucPV", data.NGAYKETTHUC);
+            edu.util.viewValById("txtGioKetThucPV", data.GIOKETTHUC);
+            edu.util.viewValById("txtPhutKetThucPV", data.PHUTKETTHUC);
+            $("#modalSuaPhamVi").modal("show");
+        });
         $("#tblPhamVi").delegate('.btnNhanSuQuyen', 'click', function (e) {
             var strId = this.id;
             me.strPhamVi_Id = strId;
             $("#modalNhanSuQuyen").modal("show")
             me.getList_NhanSuQuyen();
+        });
+        $("#btnSave_PhamVi").click(function () {
+            me.update_PhamVi();
         });
         //me.getList_ThoiGian();
         //me.getList_KeHoach();
@@ -257,17 +276,17 @@ KeHoach.prototype = {
             'func': 'PKG_CORE_HOSONHANSU_01.Them_Core_NhanSu_KeHoach',
             'iM': edu.system.iM,
             'strId': me.strKeHoach_Id,
-            'strTen': edu.system.getValById('txtAAAA'),
-            'strMa': edu.system.getValById('txtAAAA'),
-            'strMoTa': edu.system.getValById('txtAAAA'),
-            'dHieuLuc': edu.system.getValById('txtAAAA'),
-            'strNgayBatDau': edu.system.getValById('txtAAAA'),
-            'dGioBatDau': edu.system.getValById('txtAAAA'),
-            'dPhutBatDau': edu.system.getValById('txtAAAA'),
-            'strNgayKetThuc': edu.system.getValById('txtAAAA'),
-            'dGioKetThuc': edu.system.getValById('txtAAAA'),
-            'dPhutKetThuc': edu.system.getValById('txtAAAA'),
-            'strMoHinhCapNhatDuLieu_Id': edu.system.getValById('dropAAAA'),
+            'strTen': edu.system.getValById('txtTen'),
+            'strMa': edu.system.getValById('txtMa'),
+            'strMoTa': edu.system.getValById('txtMoTa'),
+            'dHieuLuc': edu.system.getValById('dropHieuLuc'),
+            'strNgayBatDau': edu.system.getValById('txtNgayBatDau'),
+            'dGioBatDau': edu.system.getValById('txtGioBatDau'),
+            'dPhutBatDau': edu.system.getValById('txtPhutBatDau'),
+            'strNgayKetThuc': edu.system.getValById('txtNgayKetThuc'),
+            'dGioKetThuc': edu.system.getValById('txtGioKetThuc'),
+            'dPhutKetThuc': edu.system.getValById('txtPhutKetThuc'),
+            'strMoHinhCapNhatDuLieu_Id': edu.system.getValById('dropMoHinh'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId) {
@@ -497,6 +516,63 @@ KeHoach.prototype = {
             'strNgayKetThuc': edu.system.getValById('txtAAAA'),
             'dGioKetThuc': edu.system.getValById('txtAAAA'),
             'dPhutKetThuc': edu.system.getValById('txtAAAA'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        if (obj_save.strId) {
+            obj_save.action = 'NS_HoSoNhanSu1_MH/EjQgHgIuMyQeDxIeCgkeESkgLBco';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_01.Sua_Core_NS_KH_PhamVi'
+        }
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    if (!obj_save.strId) {
+                        edu.system.alert("Thêm mới thành công!");
+                    }
+                    else {
+                        edu.system.alert("Cập nhật thành công!");
+                    }
+                    //me.getList_PhamVi();
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_PhamVi();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    update_PhamVi: function (strPhamViApDung_Id) {
+        var me = this;
+        var obj_notify = {};
+        var aData = me.dtPhamVi.find(e => e.ID == me.strPhamVi_Id);
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu1_MH/EjQgHgIuMyQeDxIeCgkeESkgLBco',
+            'func': 'PKG_CORE_HOSONHANSU_01.Sua_Core_NS_KH_PhamVi',
+            'iM': edu.system.iM,
+            'strId': me.strPhamVi_Id,
+            'strCore_NS_KH_Id': me.strKeHoach_Id,
+            'strPhamViApDung_Id': aData.PHAMVIAPDUNG_ID,
+            'strNgayBatDau': edu.system.getValById('txtNgayBatDauPV'),
+            'dGioBatDau': edu.system.getValById('txtGioBatDauPV'),
+            'dPhutBatDau': edu.system.getValById('txtPhutBatDauPV'),
+            'strNgayKetThuc': edu.system.getValById('txtNgayKetThucPV'),
+            'dGioKetThuc': edu.system.getValById('txtGioKetThucPV'),
+            'dPhutKetThuc': edu.system.getValById('txtPhutKetThucPV'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId) {
@@ -1023,7 +1099,7 @@ KeHoach.prototype = {
             'func': 'PKG_CORE_HOSONHANSU_01.LayDSCore_NS_KH_PhamVi_NS',
             'iM': edu.system.iM,
             'strTuKhoa': edu.system.getValById('txtAAAA'),
-            'strCore_NS_KH_PhamVi_Id': edu.system.getValById('dropAAAA'),
+            'strCore_NS_KH_PhamVi_Id': me.strPhamVi_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
