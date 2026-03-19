@@ -26,8 +26,8 @@
                                     placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 item-search mb-0">
-                                <a id="btnSearch_DSTrungTuyen" class="btn btn-default btn-search"><i
-                                        class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch_DSTrungTuyen" class="btn btn-default btn-search">
+                                    <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                             </div>
                             <!-- Kết thúc bộ tìm kiếm -->
                         </div>
@@ -37,45 +37,39 @@
         </div>
         <div class="col-lg-12 aps-dsTrungTuyen-list">
             <!-- Danh sách -->
-            <div class="box box-solid pd20">
+            <div class="box box-solid pd20 pt15">
                 <div class="box-body pd0">
                     <div id="zone_list_trungtuyen" class="">
                         <div class="pull-left pl0">
                             <div class="group-title pl0 mt-5">
-                                <p class="titleSearchContent">
+                                <p class="titleSearchContent line-20">
                                     <i class="fa-solid fa-address-card"></i>
                                     <span class="lang" key="">Danh sách</span>
                                 </p>
                             </div>
                         </div>
-                        <div class="pull-right">
-                            <div style="float:left; margin-left:5px;">
-                                <a id="btnAddnew_TT" class="btn btn-success">
-                                    <i class="fa fa-plus"></i> <span class="lang" key="CHUNG_TAILAI">Thêm mới</span>
-                                </a>
-                            </div>
-                            <div style="float:left; margin-left:5px;">
-                                <a id="btnDelete_TT" class="btn btn-danger">
-                                    <i class="fa fa-trash"></i> <span class="lang" key="CHUNG_TAILAI">Xóa</span>
-                                </a>
-                            </div>
-                            <div style="float:left; margin-left:5px;">
-                                <a id="btnRefresh_TT" class="btn btn-warning">
-                                    <i class="fa fa-refresh"></i> <span class="lang" key="CHUNG_TAILAI">Tải lại</span>
-                                </a>
-                            </div>
-                            <div class="clear"></div>
+                        <div class="pull-right d-flex">
+                            <a id="btnRefresh_TT" class="btn btn-warning">
+                                <i class="fa fa-refresh"></i><span class="lang" key="CHUNG_TAILAI">Tải lại</span>
+                            </a>
+                            <a id="btnDelete_TT" class="btn btn-danger">
+                                <i class="fa fa-trash"></i><span class="lang" key="CHUNG_TAILAI">Xóa</span>
+                            </a>
+                            <a id="btnAddnew_TT" class="btn btn-success">
+                                <i class="fa fa-plus"></i><span class="lang" key="CHUNG_TAILAI">Thêm mới</span>
+                            </a>
                         </div>
 
                         <div class="clear"></div>
                         <div class="aps-table-select mt-10">
-                            <table id="tblDSTrungTuyen" class="table table-bordered table-hover">
+                            <table id="tblDSTrungTuyen"
+                                class="table table-bordered table-hover table-noborder tblDSTrungTuyen">
                                 <thead>
                                     <tr>
                                         <th class="td-center td-fixed">Stt</th>
                                         <th class="td-left"><span class="lang" key="">Họ tên</span></th>
-                                        <th class="td-center"><span class="lang" key="">Giới tính</span></th>
-                                        <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
+                                        <th class="td-left"><span class="lang" key="">Giới tính</span></th>
+                                        <th class="td-left"><span class="lang" key="">Ngày sinh</span></th>
                                         <th class="td-center"><span class="lang" key="">Môn 1</span></th>
                                         <th class="td-center"><span class="lang" key="">Môn 2</span></th>
                                         <th class="td-center"><span class="lang" key="">Môn 3</span></th>
@@ -84,7 +78,8 @@
                                         <th class="td-center"><span class="lang" key="">Tổ hợp</span></th>
                                         <th class="td-left"><span class="lang" key="">Đối tượng dự thi</span></th>
                                         <th class="td-center"><span class="lang" key="">Miễn giảm (%)</span></th>
-                                        <th class="td-center td-fixed"><span class="lang" key="">Chi tiết</span></th>
+                                        <th class="td-center td-fixed" style="width: 86px !important;"><span
+                                                class="lang" key="">Chi tiết</span></th>
                                         <th class="td-center td-fixed"><span class="lang" key="">Sửa</span></th>
                                         <th class="td-fixed td-center">
                                             <input type="checkbox" id="chkSelectAll_TT" name="chkSelectAll_TT" />
@@ -97,7 +92,6 @@
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
             <!-- Thêm mới người học trúng tuyển -->
@@ -105,8 +99,8 @@
                 <div class="form-container pd0">
                     <div class="form-container-header bg-success">
                         <div class="pull-left">
-                            <h3 class="fc-title color-active"><i class="fa fa-pencil"></i> Thêm mới người học trúng
-                                tuyển</h3>
+                            <h3 class="fc-title color-active line-20">
+                                <i class="fa-solid fa-user-plus fw-bold"></i> Thêm mới người học trúng tuyển</h3>
                         </div>
                         <div class="pull-right">
                             <a class="btn btn-default btnClose_CSTT" href="#"><i class="fa fa-times"></i></a>
@@ -235,7 +229,7 @@
                         <div class="clear"></div>
 
                         <!-- #2 Thông tin vùng miền -->
-                        <div class="col-sm-6 pr20 user-vung-info">
+                        <div class="col-sm-6 pr20 user-vung-info mt-20">
                             <a href="#" class="fz18 color-green bold lable-text">#2 Thông tin vùng miền</a>
                             <table class="table table-noborder table-form-add">
                                 <tbody>
@@ -272,7 +266,7 @@
                             </table>
                         </div>
                         <!-- #4 - Kết quả phổ thông -->
-                        <div class="col-sm-6 pl20 user-kqpt">
+                        <div class="col-sm-6 pl20 user-kqpt mt-20">
                             <a href="#" class="fz18 color-blueViolet bold lable-text">#4 - Kết quả phổ thông</a>
                             <table class="table table-noborder table-form-add">
                                 <tbody>
@@ -285,10 +279,10 @@
                                         <td class="aps-form-lable">XL_10</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90"
                                                 id="txtXepLoai10_TT" placeholder="Xếp loại lớp 10" /></td>
-                                        <td class="aps-form-lable">XL_11</td>
+                                        <td class="aps-form-lable text-right">XL_11</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90"
                                                 id="txtXepLoai11_TT" placeholder="Xếp loại lớp 11" /></td>
-                                        <td class="aps-form-lable">XL_12</td>
+                                        <td class="aps-form-lable text-right">XL_12</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90 float-r"
                                                 id="txtXepLoai12_TT" placeholder="Xếp loại lớp 12" /></td>
                                     </tr>
@@ -296,10 +290,10 @@
                                         <td class="aps-form-lable">HL_10</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90"
                                                 id="txtHocLuc10_TT" placeholder="Học lực lớp 10" /></td>
-                                        <td class="aps-form-lable">HL_11</td>
+                                        <td class="aps-form-lable text-right">HL_11</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90"
                                                 id="txtHocLuc11_TT" placeholder="Học lực lớp 11" /></td>
-                                        <td class="aps-form-lable">HL_12</td>
+                                        <td class="aps-form-lable text-right">HL_12</td>
                                         <td class="aps-form-input text-right">
                                             <input type="text" class="form-control  w90 float-r" id="txtHocLuc12_TT"
                                                 placeholder="Học lực lớp 12" />
@@ -309,10 +303,10 @@
                                         <td class="aps-form-lable">HK_10</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90"
                                                 id="txtHanhKiem10_TT" placeholder="Hạnh kiểm lớp 10" /></td>
-                                        <td class="aps-form-lable">HK_11</td>
+                                        <td class="aps-form-lable text-right">HK_11</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90"
                                                 id="txtHanhKiem11_TT" placeholder="Hạnh kiểm lớp 11" /></td>
-                                        <td class="aps-form-lable">HK_12</td>
+                                        <td class="aps-form-lable text-right">HK_12</td>
                                         <td class="aps-form-input"><input type="text" class="form-control w90 float-r"
                                                 id="txtHanhKiem12_TT" placeholder="Hạnh kiểm lớp 12" /></td>
                                     </tr>
@@ -323,11 +317,11 @@
                     </div>
 
                     <div class="form-container-footer">
-                        <div class="pull-right">
+                        <div class="pull-right d-flex">
                             <a class="btn btn-default btnClose_CSTT" href="#">
                                 <i class="fa fa-times-circle"></i>Đóng</a>
                             <a class="btn btn-success" href="#" id="btnRewrite_TT">
-                                <i class="fa-duotone fa-regular fa-pen-to-square"></i> Viết lại</a>
+                                <i class="fa-duotone fa-regular fa-pen-to-square"></i>Viết lại</a>
                             <a class="btn btn-primary" href="#" id="btnSave_TT">
                                 <i class="fa-solid fa-floppy-disk"></i>Lưu</a>
                         </div>
@@ -540,7 +534,8 @@
             </div>
 
             <!-- Cập nhật thông tin: -->
-            <div id="zone_input_edit_trungtuyen" class="popup-absolute zone-bus zone_input_edit_trungtuyen">
+            <div id="zone_input_edit_trungtuyen" class="popup-absolute zone-bus zone_input_edit_trungtuyen" 
+            style="display: block !important;">
                 <div class="form-container pd0">
                     <div class="form-container-header">
                         <div class="pull-left">
@@ -592,11 +587,15 @@
                             <div class="clear"></div>
                         </div>
                         <div class="clear"></div>
-                        <div class="form-container-footer pb0 pr0" style="padding-bottom: 0 !important;padding-right: 0 !important;">
+                        <div class="form-container-footer pb0 pr0"
+                            style="padding-bottom: 0 !important;padding-right: 0 !important;">
                             <div class="pull-right">
-                                <a class="btn btn-default btnClose_CSTT" href="#"><i class="fa fa-times-circle"></i> Đóng</a>
-                                <a class="btn btn-success" href="#" id="btnRewrite_CSTT"><i class="fa-duotone fa-regular fa-pen-to-square"></i> Viết lại</a>
-                                <a class="btn btn-primary" href="#" id="btnUpdate_CSTT"><i class="fa-duotone fa-regular fa-pen-to-square"></i> Cập nhật</a>
+                                <a class="btn btn-default btnClose_CSTT" href="#"><i class="fa fa-times-circle"></i>
+                                    Đóng</a>
+                                <a class="btn btn-success" href="#" id="btnRewrite_CSTT"><i
+                                        class="fa-duotone fa-regular fa-pen-to-square"></i> Viết lại</a>
+                                <a class="btn btn-primary" href="#" id="btnUpdate_CSTT"><i
+                                        class="fa-duotone fa-regular fa-pen-to-square"></i> Cập nhật</a>
                             </div>
                         </div>
                     </div>

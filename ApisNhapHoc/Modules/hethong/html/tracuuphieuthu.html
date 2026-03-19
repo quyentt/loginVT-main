@@ -1,5 +1,4 @@
-﻿
-<!-- Main content -->
+﻿<!-- Main content -->
 <section class="content aps-nhaphoc">
     <div class="aps-tracuuphieuthu box-shadow row">
         <!-- Tìm kiếm -->
@@ -15,7 +14,8 @@
                                         <tr>
                                             <td style="width: 168px" class="aps-form-lable-search">Chọn kế hoạch</td>
                                             <td class="aps-form-input-search">
-                                                <select class="select-opt" id="dropKeHoachNhapHoc_TCPT" multiple="multiple">
+                                                <select class="select-opt" id="dropKeHoachNhapHoc_TCPT"
+                                                    multiple="multiple">
                                                     <!-- gen genCombo_DoiTuongDaoTao() in dinhmucchung.js -->
                                                 </select>
                                             </td>
@@ -32,20 +32,30 @@
                                             <td class="aps-form-lable-search">Loại phiếu</td>
                                             <td class="aps-form-radio-search">
                                                 <div class="radio-box">
-                                                   <div class="item-radio"><input type="radio" class="rdLoaiPhieu" name="rdLoaiPhieu" value="-1" checked="checked" /> Toàn bộ</div> 
-                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu" name="rdLoaiPhieu" value="1" /> Phiếu thu</div> 
-                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu" name="rdLoaiPhieu" value="0" /> Phiếu hủy</div> 
-                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu" name="rdLoaiPhieu" value="2" /> Phiếu đã sửa</div> 
+                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu"
+                                                            name="rdLoaiPhieu" value="-1" checked="checked" /> Toàn bộ
+                                                    </div>
+                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu"
+                                                            name="rdLoaiPhieu" value="1" /> Phiếu thu</div>
+                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu"
+                                                            name="rdLoaiPhieu" value="0" /> Phiếu hủy</div>
+                                                    <div class="item-radio"><input type="radio" class="rdLoaiPhieu"
+                                                            name="rdLoaiPhieu" value="2" /> Phiếu đã sửa</div>
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="aps-form-lable-search">Nhập từ khoá</td>
-                                            <td class="aps-form-input-search"><input id="txtKeyword_Search_TCPT" class="form-control" placeholder="Nhập từ khóa tìm kiếm: số phiếu, mã người thu..." /></td>
+                                            <td class="aps-form-input-search"><input id="txtKeyword_Search_TCPT"
+                                                    class="form-control"
+                                                    placeholder="Nhập từ khóa tìm kiếm: số phiếu, mã người thu..." />
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td class="aps-form-lable-search"></td>
-                                            <td><a id="btnSearch_DMC" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a></td>
+                                            <td><a id="btnSearch_DMC" class="btn btn-default btn-search">
+                                                    <i class="fa fa-search"></i><span class="lang" key="">Tìm
+                                                        kiếm</span></a></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -57,24 +67,32 @@
                                         <table class="table table-noborder table-hover">
                                             <tbody>
                                                 <tr class="item-total-receipts">
-                                                    <td class="td-right bold color-active"><i class="fa-solid fa-file-invoice-dollar"></i><br> 
-                                                        <span>Tổng số phiếu thu</span></td>
+                                                    <td class="td-right bold color-active"><i
+                                                            class="fa-solid fa-file-invoice-dollar"></i><br>
+                                                        <span>Tổng số phiếu thu</span>
+                                                    </td>
                                                     <td class="td-right color-active italic" id="lblTongPhieuThu">0</td>
                                                 </tr>
                                                 <tr class="item-total-receipts">
-                                                    <td class="td-right bold color-green"><i class="fa-solid fa-receipt"></i><br><span>Tổng số phiếu thu đã hủy</span></td>
-                                                    <td class="td-right color-green number-receipt" id="lblTongPhieuThu_Huy">0</td>
+                                                    <td class="td-right bold color-green"><i
+                                                            class="fa-solid fa-receipt"></i><br><span>Tổng số phiếu thu
+                                                            đã hủy</span></td>
+                                                    <td class="td-right color-green number-receipt"
+                                                        id="lblTongPhieuThu_Huy">0</td>
                                                 </tr>
                                                 <tr class="item-total-receipts">
-                                                    <td class="td-right bold color-red"><i class="fa-solid fa-file-pen"></i><br><span>Tổng số phiếu thu đã sửa</span></td>
-                                                    <td class="td-right color-red number-receipt" id="lblTongPhieuThu_Sua">0</td>
+                                                    <td class="td-right bold color-red"><i
+                                                            class="fa-solid fa-file-pen"></i><br><span>Tổng số phiếu thu
+                                                            đã sửa</span></td>
+                                                    <td class="td-right color-red number-receipt"
+                                                        id="lblTongPhieuThu_Sua">0</td>
                                                 </tr>
                                             </tbody>
                                         </table>
                                     </div>
                                     <div class="col-sm-1"></div>
                                     <div class="col-sm-3">
-                                            <div class="aps-img pt10 pb15"> <img src="Upload/images/bien-lai.png"></div>
+                                        <div class="aps-img pt10 pb15"> <img src="Upload/images/bien-lai.png"></div>
                                     </div>
                                 </div>
                             </div>
@@ -89,7 +107,7 @@
                 <div class="box-body pd0">
                     <div class="pull-left">
                         <div class="group-title pl0">
-                            <p class="titleSearchContent">
+                            <p class="titleSearchContent line-20">
                                 <i class="fa-solid fa-file-invoice"></i>
                                 <span class="lang" key="">Danh sách số phiếu thu</span>
                             </p>
@@ -98,7 +116,7 @@
                     <div class="pull-right">
                         <div style="float:left; margin-left:5px;">
                             <a id="btnRefresh_DMC" class="btn btn-warning">
-                                <i class="fa fa-refresh"></i> <span class="lang" key="CHUNG_TAILAI">Tải lại</span>
+                                <i class="fa fa-refresh"></i><span class="lang" key="CHUNG_TAILAI">Tải lại</span>
                             </a>
                         </div>
                     </div>
@@ -110,7 +128,7 @@
                                 <p>Người thu: <span class="pull-right">phanh</span></p>
                                 <p>Ngày thu: <span class="pull-right">10/12/2018</span></p>
                             </div>
-                        </div>                         
+                        </div>
 
                     </div>
                 </div>

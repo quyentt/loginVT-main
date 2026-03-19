@@ -89,6 +89,7 @@
     -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2) !important;
     box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2) !important;
     /*display: inline-block;*/
+    position: relative;
 }
 
 .content {
@@ -803,7 +804,7 @@
 .form-container-header {
     border-bottom: 1px solid #e1e1e1 !important;
     padding: 2px 10px;
-    min-height: 60px;
+    min-height: 52px;
     position: relative;
 }
 
@@ -927,9 +928,9 @@
 
 .zone-bus.form-container .box-header.with-border {
     height: 52px;
-    line-height: 28px;
+    line-height: 24px;
     font-size: 20px;
-    font-weight: 600 !important;
+    font-weight: 400 !important;
     background: var(--color-blue);
     color: #fff !important;
 }
@@ -937,15 +938,15 @@
 .aps-phanconglop .aps-add-new.form-container .box-header .box-title,
 .aps-add-new.form-container .box-header .box-title {
     color: #fff !important;
-    font-weight: 600 !important;
+    font-weight: 400 !important;
     font-size: 20px;
 }
 
 .aps-phanconglop .aps-add-new.form-container .box-header .btn-default.btnClose,
 .aps-add-new.form-container .box-header .btn-default.btnClose,
 .aps-add-new.form-container .pull-right .btn-default.btnClose {
-    top: 28px !important;
-    right: 20px !important;
+    top: 21px !important;
+    right: 15px !important;
     background: transparent !important;
 }
 
@@ -2903,8 +2904,16 @@
     color: #222;
 }
 
+.aps-modal-nhansu #zoneChonNhieuSV .item-modal .btn-default {
+    text-align: left !important;
+}
+
 .aps-modal-nhansu .modal-body .col-sm-3 .item-modal .btn-default i {
     color: #222 !important;
+}
+
+.aps-modal-nhansu .modal-body .col-sm-3 .item-modal .btn-default.btn i {
+    padding-right: 3px !important;
 }
 
 /*.aps-modal-nhansu .modal-body .col-sm-3 .item-modal .btn-default{*/
@@ -2935,6 +2944,7 @@
     color: var(--color-blue);
     text-transform: uppercase;
     font-weight: bold;
+    line-height: 20px;
 }
 
 .aps-modal-nhansu .col-sm-9 .box-body .item-modal {
@@ -9319,7 +9329,7 @@ input#tblInput_DTSV_SinhVien_input {
 .aps-file-import .box-header.pd20,
 .aps-quytrinh .box-header.pd20,
 .aps-lichsu .box-header.pd20 {
-    padding: 20px 20px 15px 20px !important;
+    padding: 16px 20px 11px 20px !important;
 }
 
 #divuploaduploadFile_DN,
@@ -9492,7 +9502,7 @@ input#tblInput_DTSV_SinhVien_input {
 .zone-bus-khns .form-container-header .btn-default.btnClose,
 .popup-absolute .form-container-header .btn-default.btnClose {
     position: absolute;
-    top: 13px;
+    top: 9px;
     right: 5px;
     background-color: transparent !important;
     border-color: #e9e9e9 !important;
@@ -9534,6 +9544,7 @@ input#tblInput_DTSV_SinhVien_input {
 .radio-box .item-radio input {
     float: left;
     margin-right: 4px;
+    margin-top: 3px;
 }
 
 .text-name {
@@ -9641,16 +9652,16 @@ input#tblInput_DTSV_SinhVien_input {
 
 .btn-sms {
     background: var(--color-green);
-    border-radius: 10px;
+    border-radius: 30px;
     text-align: center;
     padding: 10px 20px;
     color: white !important;
     cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-    min-width: 130px;
-    height: 40px;
-    line-height: 23px;
+    font-size: 18px;
+    font-weight: 400;
+    min-width: 160px;
+    height: 44px;
+    line-height: 24px;
 }
 
 .btn-sms:hover {
@@ -10339,8 +10350,8 @@ table#clone {
 }
 
 .aps-lable-name {
-    line-height: 40px;
-    color: #666;
+    line-height: 38spx;
+    color: #888;
 }
 
 .aps-table-tinhhocphi.table tr td {
@@ -10773,10 +10784,98 @@ table#clone {
 .box-reg-sv .tblSinhVien tr td:nth-child(4),
 .box-reg-sv .tblSinhVien tr td:nth-child(5),
 .box-reg-sv .tblSinhVien tr td:nth-child(6),
-.box-reg-sv .tblSinhVien tr td:nth-child(7) {
+.box-reg-sv .tblSinhVien tr td:nth-child(7),
+.tblLopHocPhan tr td:nth-child(4) {
     text-align: left !important;
 }
 
 .box-reg-sv .tblSinhVien tr td .btnViewDK {
     padding-left: 0 !important;
+}
+
+.tblQuyetDinh.table>tfoot>tr>td:first-child {
+    border-left: 0 solid #d1d1d1 !important;
+    /* font-weight: 400; */
+}
+
+.btn-close-header {
+    position: absolute !important;
+    top: 0 !important;
+}
+
+.zoneCanBoDangKy .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 0;
+}
+
+.aps-chuyendulieu .table-noborder.table tbody tr td {
+    border-bottom: 0 solid #e9e9e9 !important;
+    padding: 0 !important;
+}
+
+.table-form-add .aps-form-lable {
+    color: #888 !important;
+}
+
+.user-basic-info .table-form-add tr td,
+.user-admissions-info .table-form-add tr td,
+.user-vung-info .table-form-add tr td,
+.user-kqpt .table-form-add tr td,
+.xoa-DL .table-form-add tr td {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+.file-import .btnDeleteFileUptxtThongTinDinhKem_TT {
+    left: auto !important;
+    top: 0px;
+    width: 20px;
+    right: -3px !important;
+    top: -12px !important;
+}
+
+.table .mailbox-attachments .btn-default.btnDeleteFileUptxtThongTinDinhKem_TT {
+    top: -14px !important;
+    right: -5px !important;
+    background: #fff !important;
+}
+
+.table .mailbox-attachments .btn-default.btnDeleteFileUptxtThongTinDinhKem_TT:hover i,
+.table .mailbox-attachments:hover .btn-default.btnDeleteFileUptxtThongTinDinhKem_TT i {
+    color: red !important;
+}
+
+.tbldata_NhanSu_KHNS tr td,
+.tbldata_NhanSu_KHNS tr th,
+.tbldata_KeKhoach_DMC tr td,
+.tbldata_KeKhoach_DMC tr th {
+    height: 44px !important;
+}
+
+.tbldata_KeKhoach_KHNS tr td,
+.tbldata_KeKhoach_KHNS tr th {
+    height: 44px !important;
+}
+
+.table-form-add tr td .btn-default.btn-search i {
+    color: #222 !important;
+}
+
+.table-form-add tr td .btn-default.btn-search {
+    color: #222 !important;
+    padding: 1px 15px 7.6px 15px !important;
+}
+
+.table-form-add tr td .btn-default.btn-search:hover i,
+.table-form-add tr td .btn-default.btn-search:hover {
+    color: #fff !important;
+}
+
+.table-form-add .btn-xuatBC.btn-success {
+    height: 38px !important;
+    line-height: 38px !important;
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+}
+.table-form-add .btn-xuatBC.btn-success.btn .caret {
+    margin-left: 4px !important;
 }

@@ -73,8 +73,8 @@
                                 <input id="txtSearch_QD" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 item-search aps-gap-10">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
-                                        class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search">
+                                    <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                                 <div class="dropdown" id="zonebtnSVQD_Import">
                                 </div>
                                 <div class="dropdown" id="zonebtnSVQD">
@@ -84,12 +84,12 @@
                             <!--Chọn trạng thái sinh viên-->
                             <div class="col-sm-12 item-search mt-20 aps-choose-sv">
                                 <div class="group-title pb-5" style="padding-bottom: 5px !important;">
-                                    <p class="titleSearchContent">
+                                    <p class="titleSearchContent line-20">
                                         <i class="fa-light fa-user-graduate"></i>
                                         <span class="lang" key="">Chọn trạng thái sinh viên</span>
                                     </p>
                                 </div>
-                                <div class="area-search">
+                                <div class="area-search pl10 pt5">
                                     <div id="DSTrangThaiSV_QD" style="padding-left: 20px" class="inputSearch">
                                     </div>
                                 </div>
@@ -102,21 +102,21 @@
             <!--Box Danh sách quyết định sinh viên-->
             <div class="box box-solid aps-quyetdinh-list pd20">
                 <div class="box-header pd0">
-                    <h3 class="box-title mt-10">
+                    <h3 class="box-title mt-10 line-20">
                         <i class="fa-solid fa-screen-users"></i> Danh sách quyết định sinh viên
                         <span class="pull-right badge bg-light-blue">
                             <span id="lblQuyetDinh_Tong"></span>
                         </span>
                     </h3>
-                    <div class="box-tools pull-right">
-                        <a id="btnXoaQuyetDinh" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
+                    <div class="box-tools pull-right d-flex">
+                        <a id="btnXoaQuyetDinh" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                         <a class="btn btnAdd btn-primary" id="btnAddQuyetDinh" href="#">
-                            <i class="fa fa-plus"></i> Thêm mới</a>
+                            <i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
                 <div class="box-body pd0">
                     <div class="aps-table-select mt-15">
-                        <table id="tblQuyetDinh" class="table table-hover table-bordered tblQuyetDinh">
+                        <table id="tblQuyetDinh" class="table table-hover table-bordered tblQuyetDinh table-noborder">
                             <thead>
                                 <tr>
                                     <th class="td-fixed td-center">Stt</th>
@@ -256,15 +256,13 @@
                             </p>
                         </div>
                         <div class="row aps-form-table">
-                            <table id="tblCauHinhThongTin" class="table table-hover table-bordered tblCauHinhThongTin mb-10">
+                            <table id="tblCauHinhThongTin" class="table table-hover table-bordered tblCauHinhThongTin mb-10 table-noborder">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed td-center">Stt</th>
-                                        <th class="td-center">Thời gian</th>
-                                        <th class="td-center">Học phần</th>
-                                        <th class="td-center td-fixed">
-                                            Xóa
-                                        </th>
+                                        <th class="td-left">Thời gian</th>
+                                        <th class="td-left">Học phần</th>
+                                        <th class="td-center td-fixed">Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -273,7 +271,7 @@
                         <div class="row aps-form-btn">
                             <div class="pull-right">
                                 <a class="btn btn-outline-primary" id="btnThemDongMoi">
-                                    <i class="fa fa-plus"></i> Thêm dòng mới</a>
+                                    <i class="fa fa-plus mr-0"></i>Thêm mới</a>
                             </div>
                         </div>
                     </div>
@@ -305,8 +303,7 @@
                     <div class="row aps-sinhvien-bosung">
                         <div class="pull-left">
                             <div class="title-name d-flex color-666 line-38">
-                                Bổ sung sinh viên
-                                <a class="btn btn-default btnSearchDTSV_SinhVien ml-15" id="">
+                                Bổ sung sinh viên <a class="btn btn-default btnSearchDTSV_SinhVien ml-15" id="">
                                     <i class="fa fa-search color-active"></i></a>
                             </div>
                         </div>
@@ -316,11 +313,11 @@
                         </div>
                     </div>
                     <div class="row aps-form-table mt-10">
-                        <table id="tblInput_DTSV_SinhVien" class="table tblInput_DTSV_SinhVien">
+                        <table id="tblInput_DTSV_SinhVien" class="table tblInput_DTSV_SinhVien table-hover table-bordered table-noborder">
                             <thead>
                                 <tr>
                                     <td class="td-fixed td-center">#</td>
-                                    <td class="td-center">Hình ảnh</td>
+                                    <td class="td-center" style="width: 76px !important;">Hình ảnh</td>
                                     <td class="td-left">Mã số</td>
                                     <td class="td-left">Họ tên</td>
                                     <td class="td-left">Lớp</td>
@@ -341,7 +338,7 @@
                 <div class="bs-item pull-left">
                     <div class="col-sm-3 item-search"></div>
                 </div>
-                <div class="pull-right">
+                <div class="pull-right d-flex">
                     <div class="dropdown" id="zonebtnSVQD_Import">
                         <!--<button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
                                 <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
@@ -352,8 +349,8 @@
                     </div>
                     <a class="btn btn-default btnClose" href="#" title="Close">
                         <i class="fa fa-times-circle"></i> Đóng</a>                    
-                    <a id="btnXoa_QuyetDinh" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa sinh viên</a>
-                    <a id="btnSave_QuyetDinh" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                    <a id="btnXoa_QuyetDinh" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa sinh viên</a>
+                    <a id="btnSave_QuyetDinh" class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
                 </div>
             </div>
         </div>
