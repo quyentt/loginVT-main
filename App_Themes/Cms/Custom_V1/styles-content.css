@@ -7224,8 +7224,9 @@ input#tblInput_DTSV_SinhVien_input {
     font-size: 14px !important;
 }
 
-.aps-mauBaoCao-list .todo-list a:hover .label-primary {
-    background: #198754 !important;
+.aps-mauBaoCao-list .todo-list a:hover .label-primary,
+.aps-mauBaoCao-list .todo-list a .label-primary:hover {
+    background: #157347 !important;
 }
 
 /*----------------------*/
@@ -10540,7 +10541,10 @@ table#clone {
 
 .mailbox-attachments .btn-default {
     top: -15px !important;
-    right: -17px !important;
+    right: -13px !important;
+    width: 26px !important;
+    height: 26px !important;
+    left: auto !important;
 }
 
 .mailbox-attachments .btn-default:hover i {
@@ -10876,6 +10880,67 @@ table#clone {
     padding-left: 15px !important;
     padding-right: 15px !important;
 }
+
 .table-form-add .btn-xuatBC.btn-success.btn .caret {
     margin-left: 4px !important;
+}
+
+.tblHoSoTuyenSinh tr td:nth-last-child(3),
+.tblHoSoTuyenSinh tr td:nth-last-child(4),
+.tblHoSoTuyenSinh tr td:nth-last-child(5),
+.tblHoSoTuyenSinh tr td:nth-last-child(6),
+.tblHoSoTuyenSinh tr td:nth-last-child(7) {
+    text-align: left !important;
+}
+
+.tblKhoanNhapHoc_ThuTien tr th {
+    border: 0 !important;
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+
+.tblKhoanNhapHoc_ThuTien.table tr th:first-child {
+    border-left: 0 solid #d1d1d1 !important;
+}
+
+.box-taichinh .box-taichinh-tructhu .box-title i {
+    margin-top: 9px !important;
+}
+
+/* .aps-box-l .box-search .input-group .input-group-addon {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 0px !important;
+} */
+
+.profile-sv .table-form-add tr td,.aps-xuatbaocao tr td,
+.aps-table-nguoithu tr td,.aps-table-nguoithu tr td {
+    padding-left: 0 !important;
+}
+.aps-table-nguoithu tr td,
+.aps-xuatbaocao .table-form-add tr td{
+    padding-left: 0 !important;
+}
+.aps-lichsuthutien-list .box-header {
+    font-size: 16px !important;
+    /* min-height: 44px !important; */
+    /* height: 44px !important; */
+    min-height: 40px !important;
+}
+.aps-lichsuthutien-list .box-header a{
+    font-size: 16px !important;
+}
+.aps-lichsuthutien-list .box-header.with-border .box-title {
+    padding-left: 2px !important;
+}
+.aps-lichsuthutien-list .panel-collapse p span{
+    padding-right: 5px;
+}
+.box-header.bg-green .box-title,.box-header.bg-green .box-title i{
+    color: #fff !important;
+}
+.btnExport:hover{
+    /* background-color: #157347 !important; */
+}
+.aps-mauBaoCao .todo-list .handle {
+    margin: 0 0 0 5px !important;
 }

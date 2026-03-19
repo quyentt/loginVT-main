@@ -420,7 +420,7 @@
             </div>
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                    <button class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                 </div>
@@ -448,7 +448,7 @@
                             <div class="title-name">Phạm vi áp dụng</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-input pr0">
-                            <input id="txtPhamViApDung" class="form-control" disabled placeholder="Phạm vi áp dụng" />
+                            <span id="lblPhamViApDung" class="form-control" disabled placeholder="Phạm vi áp dụng" ></span>
                         </div>
                     </div>
 
@@ -523,7 +523,7 @@
 
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button class="btn btn-default" data-bs-toggle="modal" >
+                    <button class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                     <button class="btn btn-primary" id="btnSave_PhamVi">
@@ -557,39 +557,16 @@
                         <thead>
                             <tr>
                                 <th class="text-center w-85px" scope="col">STT</th>
-                                <th class scope="col">Bảng thông tin</th>
+                                <th scope="col">Bảng thông tin</th>
                                 <th class="text-center" scope="col">Trường thông tin</th>
                                 <th class="text-center" scope="col">Quyền</th>
                                 <th class="text-center" scope="col">
-                                    Chọn
                                     <input class="form-check-input ms-2 me-3 chkSystemSelectAll" type="checkbox" />
                                 </th>
                             </tr>
                         </thead>
 
                         <tbody>
-                            <tr>
-                                <th class="text-center" scope="col"><span></span></th>
-                                <th class="text-center" scope="col"><span></span></th>
-                                <th class="text-center" scope="col"><span></span></th>
-                                <td>
-                                    <div class="custom-select custom-select-sm  max-w-200p">
-                                        <select name="" id="" class="form-select">
-                                            <option value="">LIST-121254</option>
-                                            <option value="">Cao</option>
-                                            <option value="">Chọn thời gian</option>
-                                            <option value="">Chọn thời gian</option>
-                                        </select>
-                                        <i class="fa-light fa-chevron-down"></i>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <span>
-                                        <input class="form-check-input me-3" type="checkbox" value
-                                               id="1" />
-                                    </span>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -597,7 +574,7 @@
 
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button class="btn btn-default" data-bs-toggle="modal" >
+                    <button class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                     <button class="btn btn-danger" id="btnDelete_Quyen">
@@ -672,7 +649,7 @@
 
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                    <button class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                     <button class="btn btn-success" id="btnSave_AddQuyen">
@@ -685,7 +662,7 @@
 </div>
 
 <!-- modal Các nhân sự có quyền -->
-<div class="modal fade" id="nhanSu_quyen">
+<div class="modal fade" id="modalNhanSuQuyen">
     <div class="modal-dialog modal-dialog-centered modal-1140">
         <div class="modal-content">
             <div class="modal-header">
@@ -698,11 +675,11 @@
             <div class="modal-body aps-add-new">
                 <div class="aps-form mt-20">
                     <!-- Row 1 -->
-                    <div class="row aps-form-item pd0">
+                    <div class="row aps-form-item pd0"  style="display: none">
                         <div class="col-12 col-sm-2 aps-lable-name pl0">
                             <div class="title-name">Bảng thông tin</div>
                         </div>
-                        <div class="col-12 col-sm-7 aps-form-select pr0">
+                        <div class="col-12 col-sm-7 aps-form-select pr0" >
                             <div class="custom-select">
                                 <i class="fa-light fa-chevron-down"></i>
                                 <select name id class="form-select">
@@ -717,7 +694,7 @@
                         </div>
                     </div>
                     <!-- Row 2 -->
-                    <div class="row aps-form-item pd0">
+                    <div class="row aps-form-item pd0" style="display: none">
                         <div class="col-12 col-sm-2 aps-lable-name pl0">
                             <div class="title-name">Quyền</div>
                         </div>
@@ -743,7 +720,7 @@
                             <span class="badge color-blue fz18">Danh sách nhân sự có quyền</span>
                         </p>
                     </div>
-                    <div class="row aps-form-tablw table-responsive fs-14 no-swiper">
+                    <div class="row aps-form-tablw table-responsive fs-14 no-swiper" id="tblNhanSuQuyen">
                         <table class="table mb-0">
                             <thead>
                                 <tr>
@@ -752,28 +729,11 @@
                                     <th class="min-w-185p border-top-1" scope="col">Họ đệm</th>
                                     <th class="min-w-85p border-top-1" scope="col">Tên</th>
                                     <th class="min-w-185p border-top-1" scope="col">Đơn vị</th>
-                                    <th class="text-center border-top-1  py-11" scope="col">Chọn check</th>
+                                    <th class="text-center border-top-1  py-11" scope="col"><input class="form-check-input ms-2 me-3 chkSystemSelectAll" type="checkbox" /></th>
                                 </tr>
 
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="text-center">
-                                        <span class="d-flex align-items-center min-h-28p justify-content-center">1</span>
-                                    </td>
-                                    <td>MSS-V01</td>
-                                    <td>Trần Thế</td>
-                                    <td>Quyền</td>
-                                    <td>Đơn vị</td>
-                                    <td class="text-center">
-                                        <label class="checkbox checkbox-green ms-5">
-                                            <input type="checkbox">
-                                            <span class="checkmark">
-                                                <i class="fa-solid fa-check"></i>
-                                            </span>
-                                        </label>
-                                    </td>
-                                </tr>
 
                             </tbody>
                         </table>
@@ -783,7 +743,7 @@
 
             <div class="modal-footer">
                 <div class="pull-right">
-                    <button class="btn btn-default" data-bs-toggle="modal" data-bs-target="#giaoDeTai_chitiet">
+                    <button class="btn btn-default" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                     <button class="btn btn-danger">

@@ -42,36 +42,37 @@
             <div class="clear"></div>
             <!-- Danh sách kế hoạch -->
             <div class="box box-solid aps-list-kehoach">
-                <div class="box-header pl20 mt-10">
-                    <h3 class="box-title mt-15">
+                <div class="box-header pl20 mt-10 pr20">
+                    <h3 class="box-title mt-15 line-20">
                         <i class="fa-light fa-clipboard-list-check"></i> Danh sách kế hoạch
                         <span class="pull-right badge bg-light-blue ml-10">
                             <span id="lblKeHoachXuLy_Tong"></span>
                         </span>
                     </h3>
-                    <div class="box-tools pull-right pr10">
+                    <div class="box-tools pull-right d-flex">
                         <a id="btnXoaKeHoachXuLy" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
-                        <a class="btn btnAdd btn-primary" href="#"><i class="fa fa-plus"></i> Thêm mới</a>                        
+                        <a class="btn btnAdd btn-primary" href="#"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
                 <div class="box-body pd20" style="padding-top: 15px !important;">
                     <div class="table-select2 aps-table-select">
-                        <table id="tblKeHoachXuLy" class="table table-hover table-bordered">
+                        <table id="tblKeHoachXuLy"
+                            class="table table-hover table-bordered table-noborder tblKeHoachXuLy">
                             <thead>
                                 <tr>
-                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-fixed td-center w-50px">Stt</th>
                                     <!--<th class="td-center">Mã</th>-->
-                                    <th class="td-center">Tên</th>
-                                    <th class="td-center">Học kỳ</th>
-                                    <th class="td-center">Từ ngày</th>
-                                    <th class="td-center">Đến ngày</th>
-                                    <th class="td-center">Phân loại</th>
-                                    <th class="td-center">Nhân sự phân công xét</th>
-                                    <th class="td-center">Đối tượng xét</th>
-                                    <th class="td-center">Điều kiện áp dụng</th>
-                                    <th class="td-center">Xem kết quả</th>
+                                    <th class="td-left">Tên</th>
+                                    <th class="td-left">Học kỳ</th>
+                                    <th class="td-left">Từ ngày</th>
+                                    <th class="td-left">Đến ngày</th>
+                                    <th class="td-left">Phân loại</th>
+                                    <th class="td-left">Nhân sự phân công xét</th>
+                                    <th class="td-left">Đối tượng xét</th>
+                                    <th class="td-left">Điều kiện áp dụng</th>
+                                    <th class="td-left">Xem kết quả</th>
                                     <th class="td-fixed td-center">Sửa</th>
-                                    <th class="td-center td-fixed">
+                                    <th class="td-center td-fixed w-50px">
                                         <input type="checkbox" id="chkSelectAll_KeHoachXuLy">
                                     </th>
                                 </tr>
@@ -167,13 +168,14 @@
                         </div>
                         <!--row 2-->
                         <div class="row aps-form-item mb-0">
-                            <table id="tblInputDanhSachNhanSu" class="table mb-10 mr-0">
+                            <table id="tblInputDanhSachNhanSu"
+                                class="table table-bordered table-noborder mb-10 mr-0 tblInputDanhSachNhanSu">
                                 <thead>
                                     <tr>
-                                        <td class="td-fixed td-center">Stt</td>
+                                        <td class="td-fixed td-center w-50px">Stt</td>
                                         <td class="td-left">Mã số</td>
                                         <td class="td-left">Họ tên</td>
-                                        <td class="td-center td-fixed">Xóa</td>
+                                        <td class="td-center td-fixed w-50px">Xóa</td>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -182,8 +184,8 @@
                         <!--row 3-->
                         <div class="row">
                             <div class="pull-right ">
-                                <a class="btn btn-outline-primary btnSearchDTSV_GiangVien" id=""><i
-                                        class="fa fa-plus color-active"></i> Thêm cán bộ</a>
+                                <a class="btn btn-outline-primary btnSearchDTSV_GiangVien" id="">
+                                    <i class="fa fa-plus color-active"></i>Thêm cán bộ</a>
                             </div>
                         </div>
                     </div>
@@ -198,17 +200,19 @@
                         </div>
                         <!--row 2-->
                         <div class="row aps-form-item mb-0">
-                            <table id="tblInput_DTSV_SinhVien" class="table mb-10 mr-0">
+                            <table id="tblInput_DTSV_SinhVien"
+                                class="table mb-10 mr-0 table-bordered table-noborder tblInput_DTSV_SinhVien">
                                 <thead>
                                     <tr>
-                                        <td class="td-fixed td-center">Stt</td>
-                                        <td class="td-center">Hình ảnh</td>
+                                        <td class="td-fixed td-center w-50px">Stt</td>
+                                        <td class="td-center w-100px">Hình ảnh</td>
                                         <td class="td-left">Mã số</td>
                                         <td class="td-left">Họ tên</td>
                                         <td class="td-left">Lớp</td>
                                         <td class="td-left">Chương trình</td>
                                         <td class="td-left">Khóa</td>
-                                        <td class="td-center"><input type="checkbox" id="chkSelectAll_DTSV_SinhVien" />
+                                        <td class="td-center w-50px"><input type="checkbox"
+                                                id="chkSelectAll_DTSV_SinhVien" />
                                         </td>
                                     </tr>
                                 </thead>
@@ -223,13 +227,13 @@
                                 <div id="ApDungChoChuongTrinh"></div>
                                 <div id="ApDungChoLop"></div>
                                 <div class="group-group-title-name border-0 mb-0">
-                                    <a class="btn btn-default btnDeleteDTSV_SinhVien" id=""><i class="fa fa-trash"></i>
-                                        Xóa</a>
+                                    <a class="btn btnDeleteDTSV_SinhVien btn-outline-danger" id="">
+                                        <i class="fa fa-trash"></i>Xóa</a>
                                 </div>
 
                                 <div class="group-group-title-name border-0 mb-0">
-                                    <a class="btn btn-outline-primary btnSearchDTSV_SinhVien ml-0" id=""><i
-                                            class="fa fa-plus color-active"></i> Thêm thành viên</a>
+                                    <a class="btn btn-outline-primary btnSearchDTSV_SinhVien ml-0" id="">
+                                        <i class="fa fa-plus color-active"></i>Thêm thành viên</a>
                                 </div>
                             </div>
                         </div>
@@ -237,10 +241,10 @@
                 </div>
             </div>
             <div class="box-footer mt-20">
-                <div class="pull-right">
-                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i>
-                        Đóng</a>
-                    <a id="btnSave_KeHoachXuLy" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                <div class="pull-right d-flex">
+                    <a class="btn btn-default btnClose" href="#" title="Close">
+                        <i class="fa fa-times-circle"></i>Đóng</a>
+                    <a id="btnSave_KeHoachXuLy" class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
                 </div>
             </div>
         </div>
@@ -264,13 +268,13 @@
                             </p>
                         </div>-->
                         <div class="row">
-                            <table id="tblDieuKien" class="table table-hover table-bordered">
+                            <table id="tblDieuKien" class="table table-hover table-bordered table-noborder tblDieuKien">
                                 <thead>
                                     <tr>
-                                        <td class="td-fixed td-center">Stt</td>
-                                        <td class="td-center" style="width: 100px">Xếp loại</td>
-                                        <td class="td-center">Xâu điều kiện</td>
-                                        <td class="td-center td-fixed"><input type="checkbox"
+                                        <td class="td-fixed td-center w-50px">Stt</td>
+                                        <td class="td-left">Xếp loại</td>
+                                        <td class="td-left">Xâu điều kiện</td>
+                                        <td class="td-center td-fixed w-50px"><input type="checkbox"
                                                 id="chkSelectAll_DieuKien"></td>
                                     </tr>
                                 </thead>
@@ -282,18 +286,16 @@
                 </div>
             </div>
             <div class="box-footer">
-                <div class="pull-left">
-                    <a class="btn btn-default" id="btnAdd_KeThuaTheoNhom"><i class="fa fa-unlink"></i> Kế thừa theo nhóm</a>
-                </div>
-                <div class="pull-right">
+                <div class="pull-left"></div>
+                <div class="pull-right d-flex">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>
-                        Đóng
+                        <i class="fa fa-times-circle"></i>Đóng
                     </a>
-                    <a id="btnDelete_DieuKien" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
-                    <a id="btnSave_KeThuaDieuKien" class="btn btn-danger">
-                        <i class="fa-light fa-sitemap"></i> Kế thừa
-                        mặc định từ điều kiện chuẩn
+                    <a id="btnDelete_DieuKien" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
+                    <a class="btn btn-info" id="btnAdd_KeThuaTheoNhom">
+                        <i class="fa-light fa-copy"></i>Kế thừa theo nhóm</a>
+                    <a id="btnSave_KeThuaDieuKien" class="btn btn-success">
+                        <i class="fa-light fa-copy"></i>Kế thừa mặc định từ điều kiện chuẩn
                     </a>
                     <a id="btnSave_DieuKien" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
                 </div>
@@ -307,10 +309,20 @@
     <!-- load from js -->
 </div>
 <!-- modal_sinhvien -->
-<div class="modal fade aps-modal-nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel"
-    aria-hidden="true">
+<div class="modal fade aps-modal-nhansu aps-modal-sinhvien" id="modal_sinhvien" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- load from js -->
 </div>
+<!-- ---------- -->
+<div class="aps-all-button pl20 aps-gap-10 btn-show mt-10" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+        Danh sách sinh viên xét học bổng</button>
+    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#myModalKetQua">
+        Danh sách sinh viên</button>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModalKeThuaNhom">
+        Danh sách</button>
+</div>
+<!-- ---------- -->
 <!-- Danh sách sinh viên xét học bổng -->
 <div class="modal fade modal-ds-dv" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
@@ -318,22 +330,23 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1">Danh sách sinh viên xét học bổng</span> </h4>
+                <h4 class="modal-title"><span class="myModalLabel1">
+                        <i class="fa-solid fa-user-graduate fw-bold"></i>Danh sách sinh viên xét học bổng</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblQuanSoLop" class="table table-hover table-bordered">
+                <table id="tblQuanSoLop" class="table table-hover table-bordered table-noborder tblQuanSoLop">
                     <thead>
                         <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã số</span></th>
-                            <th class="td-center"><span class="lang" key="">Họ tên</span></th>
-                            <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
-                            <th class="td-center"><span class="lang" key="">Tình trạng</span></th>
-                            <th class="td-center"><span class="lang" key="">Lớp học</span></th>
-                            <th class="td-center"><span class="lang" key="">Chương trình học</span></th>
-                            <th class="td-center"><span class="lang" key="">Khóa học</span></th>
-                            <th class="td-center"><span class="lang" key="">Khoa quản lý</span></th>
-                            <th class="td-center"><span class="lang" key="">Hệ đào tạo</span></th>
+                            <th class="td-fixed w-50px">Stt</th>
+                            <th class="td-left"><span class="lang" key="">Mã số</span></th>
+                            <th class="td-left"><span class="lang" key="">Họ tên</span></th>
+                            <th class="td-left"><span class="lang" key="">Ngày sinh</span></th>
+                            <th class="td-left"><span class="lang" key="">Tình trạng</span></th>
+                            <th class="td-left"><span class="lang" key="">Lớp học</span></th>
+                            <th class="td-left"><span class="lang" key="">Chương trình học</span></th>
+                            <th class="td-left"><span class="lang" key="">Khóa học</span></th>
+                            <th class="td-left"><span class="lang" key="">Khoa quản lý</span></th>
+                            <th class="td-left"><span class="lang" key="">Hệ đào tạo</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -341,38 +354,39 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
             </div>
         </div>
     </div>
 </div>
-<!-- load from js -->
+<!-- Danh sách sinh viên -->
 <div class="modal fade myModalKetQua" id="myModalKetQua" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1">Danh sách sinh viên</span> </h4>
+                <h4 class="modal-title"><span class="myModalLabel1">
+                        <i class="fa-solid fa-user-graduate fw-bold"></i>Danh sách sinh viên</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblNhanHocBong" class="table table-hover table-bordered">
+                <table id="tblNhanHocBong" class="table table-hover table-bordered table-noborder tblNhanHocBong">
                     <thead>
                         <tr>
                             <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Mã số</span></th>
-                            <th class="td-center"><span class="lang" key="">Họ tên</span></th>
-                            <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
-                            <th class="td-center"><span class="lang" key="">Tình trạng</span></th>
-                            <th class="td-center"><span class="lang" key="">Lớp học</span></th>
-                            <th class="td-center"><span class="lang" key="">Chương trình học</span></th>
-                            <th class="td-center"><span class="lang" key="">Khóa học</span></th>
-                            <th class="td-center"><span class="lang" key="">Khoa quản lý</span></th>
-                            <th class="td-center"><span class="lang" key="">Hệ đào tạo</span></th>
-                            <th class="td-center"><span class="lang" key="">Xếp loại tên</span></th>
-                            <th class="td-center"><span class="lang" key="">Xếp loại - hạ bậc</span></th>
+                            <th class="td-left"><span class="lang" key="">Mã số</span></th>
+                            <th class="td-left"><span class="lang" key="">Họ tên</span></th>
+                            <th class="td-left"><span class="lang" key="">Ngày sinh</span></th>
+                            <th class="td-left"><span class="lang" key="">Tình trạng</span></th>
+                            <th class="td-left"><span class="lang" key="">Lớp học</span></th>
+                            <th class="td-left"><span class="lang" key="">Chương trình học</span></th>
+                            <th class="td-left"><span class="lang" key="">Khóa học</span></th>
+                            <th class="td-left"><span class="lang" key="">Khoa quản lý</span></th>
+                            <th class="td-left"><span class="lang" key="">Hệ đào tạo</span></th>
+                            <th class="td-left"><span class="lang" key="">Xếp loại tên</span></th>
+                            <th class="td-left"><span class="lang" key="">Xếp loại - hạ bậc</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -380,18 +394,22 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
             </div>
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModalKeThuaNhom" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Danh sách -->
+<div class="modal fade myModalKeThuaNhom" id="myModalKeThuaNhom" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1">Danh sách</span> </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel1"><i
+                            class="fa-solid fa-user-graduate fw-bold"></i>Danh sách</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
                 <!--<div class="pull-left">
@@ -400,13 +418,14 @@
                 <div class="pull-right">
                     <a id="btnSave_HocPhan" style="float: right; padding-left: 5px" class="btn btn-primary btnSave_HocPhan"><i class="fa fa-check"></i> Lưu</a>
                 </div>-->
-                <table id="tblKeThuaTheoNhom" class="table table-hover table-bordered">
+                <table id="tblKeThuaTheoNhom" class="table table-hover table-bordered table-noborder tblKeThuaTheoNhom">
                     <thead>
                         <tr>
-                            <td class="td-fixed td-center">Stt</td>
+                            <td class="td-fixed td-center w-50px">Stt</td>
                             <td class="td-left">Tên</td>
                             <td class="td-left">Mô tả</td>
-                            <td class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll" /></td>
+                            <td class="td-center td-fixed w-50px"><input type="checkbox" class="chkSystemSelectAll" />
+                            </td>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -414,8 +433,12 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
-                <a class="submit btn btn-primary" id="btnSave_KeThuaTheoNhom"><i class="fa fa-save"></i><span class="lang" key=""> Kế thừa theo nhóm</span></a>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a class="submit btn btn-primary" id="btnSave_KeThuaTheoNhom">
+                        <i class="fa-light fa-copy"></i><span class="lang" key="">Kế thừa theo nhóm</span></a>
+                </div>
             </div>
         </div>
     </div>

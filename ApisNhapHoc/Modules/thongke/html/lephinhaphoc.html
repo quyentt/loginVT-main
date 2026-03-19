@@ -38,17 +38,21 @@
                                     <!-- gen genCombo_CoSoDaoTao() in lephinhaphoc.js -->
                                 </select>
                             </div>
-                            <div class="col-sm-3 item-search">
-                                <input id="txtTuNgay_Search_LPNH" class="form-control input-datepicker" placeholder="Từ ngày dd/mm/yyyy" />
+                            <div class="col-sm-2 item-search">
+                                <input id="txtTuNgay_Search_LPNH" class="form-control input-datepicker"
+                                    placeholder="Từ ngày dd/mm/yyyy" />
+                            </div>
+                            <div class="col-sm-2 item-search">
+                                <input id="txtDenNgay_Search_LPNH" class="form-control input-datepicker"
+                                    placeholder="Đến ngày dd/mm/yyyy" />
                             </div>
                             <div class="col-sm-3 item-search">
-                                <input id="txtDenNgay_Search_LPNH" class="form-control input-datepicker" placeholder="Đến ngày dd/mm/yyyy" />
+                                <input id="txtKeyword_Search_LPNH" class="form-control"
+                                    placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
-                            <div class="col-sm-3 item-search">
-                                <input id="txtKeyword_Search_LPNH" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <a id="btnSearch_LPNH" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                            <div class="col-sm-2 item-search">
+                                <a id="btnSearch_LPNH" class="btn btn-default btn-search"><i
+                                        class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                             </div>
                             <!-- Kết thúc bộ tìm kiếm -->
                         </div>
@@ -56,47 +60,42 @@
                 </div>
             </div>
             <!--Box Danh sách-->
-            <div class="box box-solid aps-list-lephi pt5">
+            <div class="box box-solid aps-list-lephi pt10">
                 <div class="box-body">
                     <div class="pull-left pl0">
                         <div class="group-title pl0">
-                            <p class="titleSearchContent">
+                            <p class="titleSearchContent line-20">
                                 <i class="fa-light fa-list-timeline"></i>
                                 <span class="lang" key="">Danh sách</span>
                             </p>
                         </div>
                     </div>
-                    <div class="pull-right mt-10">
-                        <div style="float:left; padding-left:5px">
-                            <div class="dropdown">
-                                <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
-                                    <i class="fa fa fa-file-excel-o"></i> Truy/xuất <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a id="btnExportM1_LPNH" href="#">Mẫu 1: Bảng tổng hợp các khoản</a></li>
-                                    <li><a id="btnExportM2_LPNH" href="#">Mẫu 2: Bảng tổng hợp theo sinh viên</a></li>
-                                    <li><a id="btnExportM3_LPNH" href="#">Mẫu 3: Bảng tổng hợp chi tiết từng khoản</a></li>
-                                </ul>
-                            </div>
+                    <div class="pull-right d-flex">
+                        <div class="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                <i class="fa fa fa-file-excel-o"></i> Truy/xuất <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a id="btnExportM1_LPNH" href="#">Mẫu 1: Bảng tổng hợp các khoản</a></li>
+                                <li><a id="btnExportM2_LPNH" href="#">Mẫu 2: Bảng tổng hợp theo sinh viên</a></li>
+                                <li><a id="btnExportM3_LPNH" href="#">Mẫu 3: Bảng tổng hợp chi tiết từng khoản</a></li>
+                            </ul>
                         </div>
-                        <div style="float:left; margin-left:5px;">
-                            <a id="btnRefresh_LPNH" class="btn btn-warning">
-                                <i class="fa fa-refresh"></i> <span class="lang" key="CHUNG_TAILAI">Tải lại</span>
-                            </a>
-                        </div>
-                        <div class="clear"></div>
+                        <a id="btnRefresh_LPNH" class="btn btn-warning">
+                            <i class="fa fa-refresh"></i><span class="lang" key="CHUNG_TAILAI">Tải lại</span>
+                        </a>
                     </div>
                     <div class="clear"></div>
                     <div class="aps-table-select">
-                        <table id="tbldata_LPNH" class="table table-condensed table-hover">
+                        <table id="tbldata_LPNH" class="table table-condensed table-hover table-bordered table-noborder tbldata_LPNH">
                             <thead>
-                            <!--Load from lephinhaphoc.js-->
+                                <!--Load from lephinhaphoc.js-->
                             </thead>
                             <tbody>
-                            <!--Load from lephinhaphoc.js-->
+                                <!--Load from lephinhaphoc.js-->
                             </tbody>
                             <tfoot>
-                            <!--Load from lephinhaphoc.js-->
+                                <!--Load from lephinhaphoc.js-->
                             </tfoot>
                         </table>
                     </div>
