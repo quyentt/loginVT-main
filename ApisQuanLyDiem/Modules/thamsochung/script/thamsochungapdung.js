@@ -236,8 +236,8 @@ ThamSoChungApDung.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         var html = '';
-                        html += '<span>' + 'Chương trình: ' + edu.util.returnEmpty(aData.TENCHUONGTRINH) + "</span><br />";
-                        html += '<span>' + 'Khóa: ' + edu.util.returnEmpty(aData.DAOTAO_KHOADAOTAO_TEN) + "</span><br />";
+                        html += '<span class="ten-chuongtrinh"><span class="color-name">' + 'Chương trình: ' + "</span>"+ edu.util.returnEmpty(aData.TENCHUONGTRINH) + "</span><br />";
+                        html += '<span class="ten-khoa"><span class="color-name">' + 'Khóa: '+ "</span>" + edu.util.returnEmpty(aData.DAOTAO_KHOADAOTAO_TEN) + "</span><br />";
                         return html;
                     }
                 }

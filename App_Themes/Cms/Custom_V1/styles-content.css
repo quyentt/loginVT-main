@@ -6306,11 +6306,23 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg,
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg:hover,
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg:focus,
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg:active {
     background: var(--color-blue) !important;
+    color: #fff !important;
 }
-
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr .color-name{
+    color: #888;
+}
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:hover .color-name,
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:focus .color-name,
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:active .color-name{
+    color: #fff !important;
+}
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg span {
+    color: #fff !important;
+}
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg .name-ct,
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg .name-khoa {
     color: #fff;
@@ -10943,4 +10955,7 @@ table#clone {
 }
 .aps-mauBaoCao .todo-list .handle {
     margin: 0 0 0 5px !important;
+}
+.aps-add-dulieuDiem .aps-add-new .aps-lable-name{
+    color: #888 !important;
 }
