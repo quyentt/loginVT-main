@@ -766,10 +766,10 @@ PhanQuyenDiemLQL.prototype = {
         html += '<th>Họ tên</th>';
         html += '<th>Phạm vi áp dụng</th>';
         html += '<th>Hệ đào tạo</th>';
-        html += '<th>Áp dụng quyền cho cả lớp học phần <br/> <input type="checkbox" class="chkSelectAll" id="chkSelectAll_ApDungCaLop"></th></th>';
+        html += '<th>Áp dụng quyền cho cả lớp học phần <input type="checkbox" class="chkSelectAll" id="chkSelectAll_ApDungCaLop"></th></th>';
         
         for (var i = 0; i < data.length; i++) {
-            html += '<th class="td-center">' + data[i].TEN + ' <br/> <input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + data[i].ID + '"></th>';
+            html += '<th class="td-center">' + data[i].TEN + ' <input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + data[i].ID + '"></th>';
         }
         html += '<th class="td-center">Tất cả <input type="checkbox" id="chkSelectAllTable"></th>';
         html += '</tr>';

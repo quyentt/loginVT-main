@@ -6312,17 +6312,21 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     background: var(--color-blue) !important;
     color: #fff !important;
 }
-.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr .color-name{
+
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr .color-name {
     color: #888;
 }
+
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:hover .color-name,
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:focus .color-name,
-.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:active .color-name{
+.aps-khaibaothamsoapdung-table .aps-tblChuongTrinh tr:active .color-name {
     color: #fff !important;
 }
+
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg span {
     color: #fff !important;
 }
+
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg .name-ct,
 .aps-khaibaothamsoapdung-table .aps-tblChuongTrinh .tr-bg .name-khoa {
     color: #fff;
@@ -7295,7 +7299,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .zoneBtnXacNhan .btn {
-    padding: 7px 10px 7.6px 0px !important;
+    padding: 8px 6px 7.6px 0px !important;
 }
 
 .zoneBtnXacNhan .btn i {
@@ -10568,6 +10572,11 @@ table#clone {
     right: -15px !important;
 }
 
+.table.aps-tblDSDiem .mailbox-attachments .btn-default {
+    top: -14px !important;
+    right: -11px !important;
+}
+
 .modal_XacNhan .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow,
 .modal_XacNhanTinhTrang .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 1px !important;
@@ -10924,38 +10933,94 @@ table#clone {
     border-bottom-right-radius: 0px !important;
 } */
 
-.profile-sv .table-form-add tr td,.aps-xuatbaocao tr td,
-.aps-table-nguoithu tr td,.aps-table-nguoithu tr td {
-    padding-left: 0 !important;
-}
+.profile-sv .table-form-add tr td,
+.aps-xuatbaocao tr td,
 .aps-table-nguoithu tr td,
-.aps-xuatbaocao .table-form-add tr td{
+.aps-table-nguoithu tr td {
     padding-left: 0 !important;
 }
+
+.aps-table-nguoithu tr td,
+.aps-xuatbaocao .table-form-add tr td {
+    padding-left: 0 !important;
+}
+
 .aps-lichsuthutien-list .box-header {
     font-size: 16px !important;
     /* min-height: 44px !important; */
     /* height: 44px !important; */
     min-height: 40px !important;
 }
-.aps-lichsuthutien-list .box-header a{
+
+.aps-lichsuthutien-list .box-header a {
     font-size: 16px !important;
 }
+
 .aps-lichsuthutien-list .box-header.with-border .box-title {
     padding-left: 2px !important;
 }
-.aps-lichsuthutien-list .panel-collapse p span{
+
+.aps-lichsuthutien-list .panel-collapse p span {
     padding-right: 5px;
 }
-.box-header.bg-green .box-title,.box-header.bg-green .box-title i{
+
+.box-header.bg-green .box-title,
+.box-header.bg-green .box-title i {
     color: #fff !important;
 }
-.btnExport:hover{
+
+.btnExport:hover {
     /* background-color: #157347 !important; */
 }
+
 .aps-mauBaoCao .todo-list .handle {
     margin: 0 0 0 5px !important;
 }
-.aps-add-dulieuDiem .aps-add-new .aps-lable-name{
+
+.aps-add-dulieuDiem .aps-add-new .aps-lable-name {
     color: #888 !important;
+}
+
+.chkSelectAll {
+    margin-left: 5px !important;
+    margin-top: 3px !important;
+    border: 1px solid var(--color-blue) !important;
+}
+
+.aps-phanquyen-diemthi-search.inputSearch .item-search {
+    padding-right: 0 !important;
+}
+
+.line-18 {
+    list-style: 18px !important;
+}
+
+.aps-modal-nhansu .box-search-GV .btn-outline-success.btn i {
+    padding-right: 0 !important;
+}
+
+.aps-modal-nhansu .box-list-gv .title-is-paging p {
+    margin-bottom: 0 !important;
+}
+
+.aps-modal-nhansu .box-list-gv .title-is-paging p i {
+    font-weight: bold;
+    padding-right: 10px !important;
+}
+
+.aps-modal-nhansu .box-list-gv .bus-wrp.box-table-gv {
+    border-top: solid 0 #e1e1e1 !important;
+    margin-top: 10px !important;
+}
+
+.box-search-GV .addNhieuNguoiDung .mt-8 {
+    margin-top: 6px !important;
+}
+
+.box-list-gv .title-is-paging #btnChonNhanSu {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    height: 38px !important;
+    border: 1px solid var(--color-blue) !important;
 }
