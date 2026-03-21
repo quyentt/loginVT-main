@@ -95,13 +95,17 @@
 
 .day-of-week .task {
   width: 100%;
-  padding: 2px;
+  padding: 0;
   position: absolute;
   z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 0px 6px 1px rgba(0, 0, 0, 0.2);
+  border: 2px solid #fff;
+  border-radius: 12px;
+  /* background: #f1f1f1 !important; */
 }
 
 .date .hour-row {
@@ -123,15 +127,17 @@
   min-height: 40px;
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 100% !important;
   justify-content: center;
-  padding: 5px 5px 10px;
+  padding: 8px;
 }
 
 .task-header .title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: bold;
-  line-height: 20px;
+  line-height: 18px;
+  text-align: left;
+  /* color: var(--dask-blue) !important; */
   /* display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -141,27 +147,32 @@
 }
 
 .task-header .task-date {
-  font-size: 13px;
+  font-size: 12px;
   line-height: 15px;
+  text-align: left;
+  margin-top: 3px;
+  opacity: 0.8;
 }
 
 .task-header .student-num {
   width: 25px;
   height: 25px;
-  background: white;
+  background: transparent;
   border-radius: 100%;
   margin-left: auto;
-  font-size: 14px;
+  font-size: 16px64px;
   align-items: center;
   justify-content: center;
   display: flex;
   flex-shrink: 0;
+  color: #fff !important;
+  margin-right: -5px;
 }
 
 .day-of-week .task .task-description {
   background-color: white;
   font-size: 14px;
-  line-height: 17px;
+  line-height: 18px;
   margin-top: auto;
   height: calc(100% - 40px);
   padding: 5px;
@@ -174,6 +185,7 @@
   display: flex;
   align-items: center;
   width: 100%;
+  text-align: left;
 }
 
 .date-header {
@@ -218,12 +230,16 @@
 }
 
 .block-calendar ul li {
-  width: 14.285%;
+  width: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 9px 0;
   cursor: pointer;
+}
+
+.actionclde span {
+  width: 36px !important;
 }
 
 .block-calendar ul.weekdays,
@@ -412,7 +428,7 @@
   border: #ced4da;
 }
 
-.change-calendar .form-item .input-group .form-control:disabled ~ i {
+.change-calendar .form-item .input-group .form-control:disabled~i {
   color: #222222;
 }
 
@@ -739,11 +755,112 @@
 
 
 .top-gray-wrapper .form-group label {
-    width: auto;
+  width: auto;
 }
 
 .top-gray-wrapper {
-    border-radius: 10px 10px 0 0;
-    background: #f4f4f4;
-    border: solid 2px #fff;
+  border-radius: 10px 10px 0 0;
+  background: #f4f4f4;
+  border: solid 2px #fff;
+}
+
+@media (max-width: 1920px) {
+
+  /* .day-of-week {
+    min-width: 220px;
+    overflow-x: none;
+  }
+
+  .hour-row {
+    min-width: 68px;
+  } */
+  .calendar-week-table {
+    min-width: 1680px;
+  }
+
+  .lich-canhan {
+    overflow-x: scroll;
+    /* overflow: scroll; */
+    overflow-y: hidden;
+  }
+
+  .register-school-right {
+    margin-bottom: 20px;
+  }
+
+  .task-header .text {
+    display: block !important;
+  }
+}
+
+@media (max-width: 680px) {
+  .form-group-cover {
+    display: block !important;
+  }
+
+  .news-search-form .pl10 {
+    padding-left: 4px !important;
+  }
+
+  .news-search-form .form-group.date-input.search {
+    max-width: 100%;
+  }
+
+  .task-header {
+    padding: 15px 10px !important;
+  }
+
+  .news-search-form .form-group-cover {
+    width: 99% !important;
+  }
+
+  .finance-modal.my-calendar .modal-header {
+    height: auto !important;
+  }
+
+  .modal-90 {
+    max-width: 96% !important;
+  }
+
+  .finance-modal.my-calendar .summary-atten .label {
+    display: none;
+  }
+
+  .finance-modal.my-calendar .summary-atten .form-control {
+    width: 40% !important;
+  }
+
+  .bg-orange.summary-atten .btn-outline-orange {
+    margin-left: 0 !important;
+  }
+
+  .finance-modal.my-calendar .summary-atten b,
+  .summary-atten .label,
+  .finance-modal.my-calendar .summary-atten.atten-mid .form-control,
+  .finance-modal.my-calendar .summary-atten .btn-success {
+    margin-left: 0 !important;
+  }
+}
+
+.phong-doi.input-group .select2-selection__rendered {
+  padding-left: 26px !important;
+}
+
+.change-calendar .input-group i {
+  color: #888 !important;
+}
+.tblNhapChuyenCan tr td input {
+    border: 1px solid #d1d1d1;
+    border-radius: 3px;
+}
+.tblNhapChuyenCan tr td input[type=checkbox],.tblNhapChuyenCan tr td input[type=radio] {
+    margin: 3px 0 0 0 !important;
+}
+.tblNhapChuyenCan tr:hover td,.tblNhapChuyenCan tr:hover td:first-child,
+.table-bordered.tblNhapChuyenCan tbody tr:nth-child(2n+2):hover td:first-child{
+  background: var(--color-blue) !important;
+  color: #fff !important;
+}
+.modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(3) {
+    width: 130px !important;
 }

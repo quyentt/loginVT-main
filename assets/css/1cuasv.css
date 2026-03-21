@@ -1467,6 +1467,7 @@ input:active,
 
 .modal-header .btn-close {
   color: #fff !important;
+  fill: #fff !important;
 }
 
 .modal .modal-header .modal-title i,

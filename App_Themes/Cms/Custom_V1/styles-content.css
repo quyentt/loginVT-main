@@ -11024,3 +11024,58 @@ table#clone {
     height: 38px !important;
     border: 1px solid var(--color-blue) !important;
 }
+
+.box-list-gv .title-is-paging #btnChonNhanSu:hover {
+    background: var(--color-blue) !important;
+    color: #fff !important;
+    border: 1px solid var(--color-blue) !important;
+}
+
+.table .btn.btn-table-38,
+.table .dropdown.btn-table-38 .btn.btn-success.dropdown-toggle {
+    padding: 9px 15px 7.6px 15px !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
+    height: 38px !important;
+    line-height: 21px !important;
+}
+
+.table .btn.btn-table-38:hover {
+    padding: 9px 15px 7.6px 15px !important;
+    height: 38px !important;
+    line-height: 22px !important;
+}
+
+.table .btn.btn-table-38 i {
+    padding-right: 8px !important;
+}
+
+.table .btn.btn-table-38:hover i {
+    color: var(--color-yellow) !important;
+}
+
+.tblTaskBar_TongHopKetQua tr,
+.tblTaskBar_TongHopKetQua tr td {
+    border-bottom: 0 !important;
+}
+
+.table.table-noborder.tblTaskBar_TongHopKetQua thead tr {
+    border-bottom: 0 solid #d1d1d1 !important;
+}
+
+.table.table-noborder.tblTaskBar_TongHopKetQua thead tr td:last-child {
+    padding-right: 0 !important;
+}
+
+#tblTaskBar_TongHopKetQua td:nth-child(2) {
+    padding-left: 0px !important;
+}
+
+.aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(5),
+.aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(6),
+.aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(7) {
+    text-align: left !important;
+}
+.tblDiemSinhVien tr td:last-child{
+    text-align: center !important;
+}
