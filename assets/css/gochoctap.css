@@ -486,3 +486,21 @@
     top: 6px !important;
     right: 8px !important;
 }
+.btnOpenDelete .aps-form-item.aps-table-select{
+  display: block !important;
+}
+.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien .select2-container--default .select2-selection--single{
+    height: 28px !important;
+    line-height: 28px !important;
+    padding: 1px 10px 3px 10px !important;
+}
+.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 39px !important;
+    padding-left: 0px !important;
+    padding-right: 6px !important;
+}
+.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 1px !important;
+    right: 10px !important;
+}
