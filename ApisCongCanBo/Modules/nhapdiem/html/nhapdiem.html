@@ -59,7 +59,7 @@
 
                 <div class="col-lg-2 col-md-4 col-12  d-flex mb-15">
                     <a class="btn btn-default btn-search" id="btnSearch">
-                        <i class="fal fa-search me-2"></i> Tìm kiếm</a>
+                        <i class="fal fa-search me-2"></i>Tìm kiếm</a>
                 </div>
 
             </div>
@@ -74,8 +74,8 @@
                 </div>
             </div>
             <div class="aps-table-select scroll-table-x">
-                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem mr-0" id="tblDSDiem"
-                    style="min-width: 2000px;">
+                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem mr-0"
+                    id="tblDSDiem">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
@@ -98,7 +98,7 @@
         </div>
     </div>
     <!-- Nhập điểm -->
-    <div class="box-shadow register-wish pt-0 zone-bus" id="zone_input_nhapdiem" style="display: none">
+    <div class="box-shadow register-wish pt-0 zone-bus zone_input_nhapdiem" id="zone_input_nhapdiem" style="display: none">
         <div class="title-is-back">
             <a href="#" class="btnClose">
                 <i class="fal fa-arrow-left"></i>
@@ -138,12 +138,14 @@
                             class="fas fa-save me-2"></i><span>Lưu</span></button>
                 </div>
             </div>
-
-            <table class="table transcrip-table tabs-scores table-bordered small-table table-border" id="tblNhapDiem" colreport="1">
-                <thead>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="aps-table-select scroll-table-x">
+                <table class="table transcrip-table tabs-scores table-bordered small-table table-border tblNhapDiem"
+                    id="tblNhapDiem" colreport="1">
+                    <thead>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -254,8 +256,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field fw-bold mr-10"></i>Hoàn thành
-                        nhập điểm</p>
+                    <p><span class="loaiXacNhan"></span> Hoàn thành nhập điểm</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -281,8 +282,8 @@
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Trạng thái</th>
-                            <th scope="col">Người xác nhận</th>
-                            <th class="text-center" scope="col">Thời gian</th>
+                            <th scope="col" class="w-200px">Người xác nhận</th>
+                            <th class="text-center w-100px" scope="col">Thời gian</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -335,8 +336,8 @@
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Trạng thái</th>
-                            <th scope="col">Người xác nhận</th>
-                            <th class="text-center" scope="col">Thời gian</th>
+                            <th scope="col" class="w-200px">Người xác nhận</th>
+                            <th class="text-center w-100px" scope="col">Thời gian</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
