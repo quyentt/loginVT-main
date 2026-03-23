@@ -651,10 +651,10 @@ LichGiang.prototype = {
             html += '</div>';
         }
         $("#datebody").html(html);
-        var arrMau = ["#223771", "#f26522", "#ec4c00", "#5a7adb", "#3c5398", "#f8fafc", "#f5f5f5", "#f3f4f6", "#e5e7eb", "#1f2937", "#111827", "#0f172a", "#faf7f2", "#fff7ed"];
+        var arrMau = ["#223771", "#d49f3a", "#ec4c00", "#5a7adb", "#3c5398"];
         var arrLopHocPhanMau = [];
         data.forEach(e => {
-            if (!arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) {
+            if (arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN) == undefined) {
                 arrLopHocPhanMau.push({
                     ID: e.IDLOPHOCPHAN,
                     MAU: arrMau[arrLopHocPhanMau.length % arrMau.length]
@@ -671,7 +671,7 @@ LichGiang.prototype = {
             var html = '';
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU*60 - e.PHUTBATDAU;
 
-            html += '<div class="task task-1 btnLichHoc" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
+            html += '<div class="task task-1 btnLichHoc" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer" title="' + JSON.stringify(arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) +'">';
             html += '<div class="task-header">';
             html += '<div class="text">';
             html += '<div class="title">' + e.TENHOCPHAN + '</div>';

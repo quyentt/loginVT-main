@@ -547,7 +547,7 @@ LichGiang.prototype = {
         }
         $("#datebody").html(html);
 
-        var arrMau = ["#223771", "#f26522", "#ec4c00", "#5a7adb", "#3c5398", "#f8fafc", "#f5f5f5", "#f3f4f6", "#e5e7eb", "#1f2937", "#111827", "#0f172a", "#faf7f2", "#fff7ed"];
+        var arrMau = ["#223771", "#d49f3a", "#ec4c00", "#5a7adb", "#3c5398"];
         var arrLopHocPhanMau = [];
         data.forEach(e => {
             if (!arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) {
