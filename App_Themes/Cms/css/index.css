@@ -1,7 +1,7 @@
 ﻿@import url(./../fonts/FontAwesome.Pro.6.4.2/css/all.css);
-@import url(./../Custom_V1/styles.css);
-@import url(./../Custom_V1/styles-content.css);
-@import url(./../Custom_V1/styles-responsive.css);
+@import url(./../Custom_V1/styles.css?v1);
+@import url(./../Custom_V1/styles-content.css?v1);
+@import url(./../Custom_V1/styles-responsive.css?v1);
 /* --------------------- */
 body {
     font-family:Arial, Helvetica, sans-serif;
