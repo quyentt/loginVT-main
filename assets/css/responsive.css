@@ -328,8 +328,16 @@
 }
 
 @media (max-width: 1080px) {
+  .main-wrap .content-tab {
+    padding-left: 15px !important;
+  }
+
+  .study-space .register-school {
+    padding: 0 15px 15px 15px !important;
+  }
+
   .top-nav {
-    padding: 10px 20px !important;
+    padding: 10px 15px !important;
   }
 
   .user-ns {
@@ -642,7 +650,17 @@
 }
 
 @media (max-width: 680px) {
-  .sidebar-menu {
+  .finance-modal.my-calendar .modal .modal-header {
+    text-align: left !important;
+    display: block !important;
+    padding: 16px 15px 14px 15px !important;
+  }
+
+  .register-wish .btn {
+    width: auto !important;
+  }
+
+  .left-sidebar .sidebar-menu {
     margin: 0px !important;
   }
 

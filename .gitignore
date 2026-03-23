@@ -5,11 +5,12 @@
 /.vs
 /bin
 /Handler
-/Log
+/Logs
 /pages
 /Scripts
 /ServicesConfig
 /Upload
+/css-old
 Global.asax
 Config.js
 Web.config
