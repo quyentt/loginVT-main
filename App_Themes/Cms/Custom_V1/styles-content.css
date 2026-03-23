@@ -5817,8 +5817,9 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .table-bordered .btn.btnChonDanhSach {
-    padding: 1.5px 10px !important;
-    height: 30px !important;
+    padding: 0px 10px !important;
+    height: 28px !important;
+    line-height: 27px !important;
     margin-bottom: 4px;
 }
 
@@ -11076,6 +11077,7 @@ table#clone {
 .aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(7) {
     text-align: left !important;
 }
-.tblDiemSinhVien tr td:last-child{
+
+.tblDiemSinhVien tr td:last-child {
     text-align: center !important;
 }

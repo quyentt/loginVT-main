@@ -174,6 +174,30 @@
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {}
 
+/* Large devices (laptops/desktops, 992px and up) */
+@media screen and (min-width:768px) and (max-width: 992px) {
+
+    .form-top .col-12:nth-child(4),
+    .form-top .col-12:nth-child(8),
+    .form-top .col-12:nth-child(12) {
+        padding-right: 10px !important;
+    }
+
+    .form-top .col-12:nth-child(2),
+    .form-top .col-12:nth-child(4),
+    .form-top .col-12:nth-child(6) {
+        padding-right: 0 !important;
+    }
+
+    #zone_notify_nhapdiem .form-top .col-12:nth-child(4) {
+        padding-right: 10px !important;
+    }
+
+    .tblDSDiem {
+        min-width: 1860px !important;
+    }
+}
+
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1200px) {
 
@@ -187,70 +211,71 @@
     .zoneThongTinBoSung .col-lg-3:nth-child(4n) {
         padding-right: 0 !important;
     }
+}
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1900px) and (min-width: 1380px) {
-        .viewchungtu {
-            width: 25% !important;
-        }
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1900px) and (min-width: 1380px) {
+    .viewchungtu {
+        width: 25% !important;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1500px) and (min-width: 1200px) {
+    .aps-table-fileimport tr td {
+        display: flex;
+        height: 38px !important;
     }
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1500px) and (min-width: 1200px) {
-        .aps-table-fileimport tr td {
-            display: flex;
-            height: 38px !important;
-        }
-
-        .aps-table-fileimport tr .aps-form-input,
-        .aps-table-fileimport tr .aps-form-btn {
-            height: 48px !important;
-        }
-
-        .aps-table-fileimport tr:first-child td:nth-child(3) {
-            display: none;
-        }
-
-        .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
-            height: 73px !important;
-        }
+    .aps-table-fileimport tr .aps-form-input,
+    .aps-table-fileimport tr .aps-form-btn {
+        height: 48px !important;
     }
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1380px) and (min-width: 1140px) {
-        .viewchungtu {
-            width: 33.3333% !important;
-        }
+    .aps-table-fileimport tr:first-child td:nth-child(3) {
+        display: none;
     }
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1140px) and (min-width: 600px) {
-        .viewchungtu {
-            width: 50% !important;
-        }
+    .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
+        height: 73px !important;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1380px) and (min-width: 1140px) {
+    .viewchungtu {
+        width: 33.3333% !important;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1140px) and (min-width: 600px) {
+    .viewchungtu {
+        width: 50% !important;
+    }
+}
+
+
+@media only screen and (max-width: 1920px) {
+    .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
+        max-width: 135px;
+        text-align: center;
+        height: 68px;
     }
 
-
-    @media only screen and (max-width: 1920px) {
-        .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
-            max-width: 135px;
-            text-align: center;
-            height: 68px;
-        }
-
-        .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
-            height: 66px;
-        }
+    .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
+        height: 66px;
     }
+}
 
-    @media (min-width: 1200px) {
-        .modal-xl {
-            width: 1140px;
-        }
+@media (min-width: 1200px) {
+    .modal-xl {
+        width: 1140px;
     }
+}
 
-    @media (min-width: 576px) {
-        .modal-sm {
-            --bs-modal-width: 300px;
-        }
+@media (min-width: 576px) {
+    .modal-sm {
+        --bs-modal-width: 300px;
     }
+}

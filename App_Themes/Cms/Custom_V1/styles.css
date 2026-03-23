@@ -4931,6 +4931,7 @@
  .tblDSDiem tr td:nth-last-child(2) {
      text-align: center !important;
  }
+
  .tblDSDiem tr td:nth-last-child(4),
  .tblDSDiem tr td:nth-last-child(5) {
      text-align: left !important;
@@ -4939,3 +4940,13 @@
  .table-bordered.tblDSDiem .btn.btnChonDanhSach {
      padding: 0px 10px !important;
  }
+
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(7) {
+     text-align: center !important;
+ }
+ .tblDSDiem{
+    min-width: 2000px;
+ }
+.zone_input_nhapdiem .form-add-info {
+    margin-bottom: 15px;
+}
