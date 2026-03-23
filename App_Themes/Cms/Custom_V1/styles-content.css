@@ -11081,3 +11081,7 @@ table#clone {
 .tblDiemSinhVien tr td:last-child {
     text-align: center !important;
 }
+.aps-add-kehoach {
+    overflow-y: scroll !important;
+    height: calc(100vh - 106px) !important;
+}

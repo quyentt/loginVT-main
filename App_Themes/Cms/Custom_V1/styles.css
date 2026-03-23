@@ -1,6 +1,6 @@
  /* -- Code 5/1/2026 -- */
  @import "responsive.css";
- @import "styles-content.css";
+ @import "styles-content.css?v1";
  @import "../../../assets/css/root.css";
  /* @import "../../../assets/css/gochoctap.css"; */
  /* @import "../../../assets/css/all.css"; */
