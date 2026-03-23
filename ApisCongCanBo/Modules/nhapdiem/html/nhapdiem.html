@@ -69,18 +69,20 @@
                 <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
                 <div class="ms-auto">
                     <div class="btn btn-success" id="btnThongKe">
-                        <i class="fa-solid fa-square-poll-horizontal"></i> Thống kê</div>
+                        <i class="fa-solid fa-square-poll-horizontal"></i>Thống kê
+                    </div>
                 </div>
             </div>
-            <div class="aps-table-select">
-                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem" id="tblDSDiem">
+            <div class="aps-table-select scroll-table-x">
+                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem mr-0" id="tblDSDiem"
+                    style="min-width: 2000px;">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Loại danh sách</th>
                             <th scope="col">Mã danh sách</th>
                             <th scope="col">Tên danh sách</th>
-                            <th scope="col">Mã học phần</th>                            
+                            <th scope="col">Mã học phần</th>
                             <th scope="col">Tên học phần</th>
                             <th class="text-center" scope="col">Số lượng</th>
                             <th scope="col">Thời gian</th>
@@ -95,7 +97,7 @@
             </div>
         </div>
     </div>
-    <!-- end đăng ký nguyện vọng -->
+    <!-- Nhập điểm -->
     <div class="box-shadow register-wish pt-0 zone-bus" id="zone_input_nhapdiem" style="display: none">
         <div class="title-is-back">
             <a href="#" class="btnClose">
@@ -137,16 +139,15 @@
                 </div>
             </div>
 
-            <table class="table transcrip-table tabs-scores table-bordered small-table" id="tblNhapDiem" colreport="1">
+            <table class="table transcrip-table tabs-scores table-bordered small-table table-border" id="tblNhapDiem" colreport="1">
                 <thead>
                 </thead>
                 <tbody></tbody>
             </table>
-
-
         </div>
     </div>
 
+    <!-- Thống kê kết quả -->
     <div class="box-shadow register-wish pt-0 zone-bus" id="zone_thongke" style="display: none">
         <div class="title-is-back">
             <a href="#" class="btnClose">
@@ -243,7 +244,7 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
         Hoàn thành nhập điểm</button>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_XacNhanDiem">
-         Vi phạm điều kiện thi</button>   
+        Vi phạm điều kiện thi</button>
 </div>
 <!-- ---------- -->
 <!-- modal Hoàn thành nhập điểm-->
@@ -253,7 +254,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field fw-bold mr-10"></i>Hoàn thành nhập điểm</p>
+                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field fw-bold mr-10"></i>Hoàn thành
+                        nhập điểm</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -273,7 +275,8 @@
                 </div>
 
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>
-                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder" id="tblModal_XacNhan">
+                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
+                    id="tblModal_XacNhan">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
@@ -296,7 +299,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field mr-10"></i>Vi phạm điều kiện thi</p>
+                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field mr-10"></i>Vi phạm điều kiện thi
+                    </p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -325,7 +329,8 @@
                             ý</span></a>
                 </div>
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>
-                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanXN table-bordered table-noborder" id="tblModal_XacNhanXN">
+                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanXN table-bordered table-noborder"
+                    id="tblModal_XacNhanXN">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
