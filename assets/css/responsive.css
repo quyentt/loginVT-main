@@ -650,10 +650,29 @@
 }
 
 @media (max-width: 680px) {
+  .calendar-week-table .date {
+    width: 100px !important;
+  }
+
   .finance-modal.my-calendar .modal .modal-header {
     text-align: left !important;
     display: block !important;
     padding: 16px 15px 14px 15px !important;
+  }
+
+  .finance-modal.my-calendar .modal-header .btn-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+  }
+
+  .finance-modal.my-calendar .modal-body {
+    padding: 15px !important;
+  }
+
+  .bg-dask-blue.summary-atten,
+  .bg-orange.summary-atten {
+    padding: 15px 10px;
   }
 
   .register-wish .btn {

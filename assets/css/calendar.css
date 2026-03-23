@@ -816,6 +816,9 @@
 
   .finance-modal.my-calendar .modal-header {
     height: auto !important;
+    text-align: left !important;
+    display: block !important;
+    padding: 16px 15px 14px 15px !important;
   }
 
   .modal-90 {
@@ -849,18 +852,24 @@
 .change-calendar .input-group i {
   color: #888 !important;
 }
+
 .tblNhapChuyenCan tr td input {
-    border: 1px solid #d1d1d1;
-    border-radius: 3px;
+  border: 1px solid #d1d1d1;
+  border-radius: 3px;
 }
-.tblNhapChuyenCan tr td input[type=checkbox],.tblNhapChuyenCan tr td input[type=radio] {
-    margin: 3px 0 0 0 !important;
+
+.tblNhapChuyenCan tr td input[type=checkbox],
+.tblNhapChuyenCan tr td input[type=radio] {
+  margin: 3px 0 0 0 !important;
 }
-.tblNhapChuyenCan tr:hover td,.tblNhapChuyenCan tr:hover td:first-child,
-.table-bordered.tblNhapChuyenCan tbody tr:nth-child(2n+2):hover td:first-child{
+
+.tblNhapChuyenCan tr:hover td,
+.tblNhapChuyenCan tr:hover td:first-child,
+.table-bordered.tblNhapChuyenCan tbody tr:nth-child(2n+2):hover td:first-child {
   background: var(--color-blue) !important;
   color: #fff !important;
 }
+
 .modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(3) {
-    width: 130px !important;
+  width: 130px !important;
 }

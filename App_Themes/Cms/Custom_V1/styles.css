@@ -4944,9 +4944,50 @@
  .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(7) {
      text-align: center !important;
  }
- .tblDSDiem{
-    min-width: 2000px;
+
+ .tblDSDiem {
+     min-width: 2000px;
  }
-.zone_input_nhapdiem .form-add-info {
-    margin-bottom: 15px;
+
+ .zone_input_nhapdiem .form-add-info {
+     margin-bottom: 15px;
+ }
+
+ .inputChuyenCan {
+     border: 1px solid #d1d1d1;
+     height: 38px;
+     border-radius: 4px;
+ }
+
+ .myModalKetQua .modal-footer {
+     margin-top: 20px;
+ }
+
+ .myModalKetQua .filter-tblNhanHocBong {
+     margin-bottom: 10px;
+ }
+ .btnOpenDelete .aps-form-item {
+    display: block !important;
+}
+.light-paginationtblInput_DTSV_SinhVien{
+    padding-right: 0 !important;
+}
+.zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group {
+    float: right !important;
+    display: flex !important;
+    justify-content: end !important;
+}
+.zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group #tblInput_DTSV_SinhVien_search_btn {
+    margin-left: 1px !important;
+    margin-top: 1px !important;
+    color: #fff;
+}
+.zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group .input-group-btn {
+    width: 44px;
+    height: 38px !important;
+    overflow: hidden;
+    display: inline-flex;
+}
+.zone-pag-footertblInput_DTSV_SinhVien .simple-pagination {
+    padding: 0 0px 10px 0 !important;
 }

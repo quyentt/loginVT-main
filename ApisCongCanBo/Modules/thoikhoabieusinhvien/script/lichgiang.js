@@ -547,13 +547,28 @@ LichGiang.prototype = {
         }
         $("#datebody").html(html);
 
-        var arrMau = ["#223771", "#f26522", "#ec4c00", "#5a7adb", "#3c5398"];
+        var arrMau = ["#223771", "#f26522", "#ec4c00", "#5a7adb", "#3c5398", "#f8fafc", "#f5f5f5", "#f3f4f6", "#e5e7eb", "#1f2937", "#111827", "#0f172a", "#faf7f2", "#fff7ed"];
+        var arrLopHocPhanMau = [];
+        data.forEach(e => {
+            if (!arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) {
+                arrLopHocPhanMau.push({
+                    ID: e.IDLOPHOCPHAN,
+                    MAU: arrMau[arrLopHocPhanMau.length % arrMau.length]
+                })
+            }
+        });
         data.forEach((e, nRow) => {
+            var strMauNen = "";
+            try {
+                strMauNen = arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN).MAU;
+            } catch{
+
+            }
             var html = '';
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU * 60 - e.PHUTBATDAU;
             var temp = e.PHANLOAI == "LICHTHI" ? "btnLichThi" : "btnLichHoc";
 
-            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + arrMau[nRow % 5] + '; cursor: pointer">';
+            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
             //html += '<div class="client">';
             html += '<div class="task-header">';
             html += '<div class="text">';
