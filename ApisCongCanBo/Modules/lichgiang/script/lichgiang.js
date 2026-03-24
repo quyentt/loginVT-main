@@ -1119,7 +1119,7 @@ LichGiang.prototype = {
                     me.getList_DoiLich();
                 }
                 else {
-                    edu.system.alert(obj_save.action + ": " + data.Message);
+                    edu.system.alert(data.Message);
                 }
 
             },
