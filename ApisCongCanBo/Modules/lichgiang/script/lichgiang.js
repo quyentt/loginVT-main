@@ -369,6 +369,10 @@ LichGiang.prototype = {
     -------------------------------------------*/
     getList_TuanHienTai: function (strNgayBatDau, strNgayKetThuc, strNgayDangChon) {
         var me = this;
+        console.log(edu.util.getValById('txtTuKhoa_CanBo') == "")
+        console.log(edu.util.getValById('dropSearch_CanBo') == null)
+        
+        if ($("#dropSearch_CanBo").length > 0 && edu.util.getValById('txtTuKhoa_CanBo') == "" && edu.util.getValById('dropSearch_CanBo') == null) return;
         //--Edit
         var obj_list = {
             'action': 'NS_ThongTinCanBo/LayDSLichGiang',
@@ -1904,6 +1908,7 @@ LichGiang.prototype = {
 
     getList_HS: function () {
         var me = this;
+        //console.log(122222222);
         var strCoCauToChuc = edu.util.getValById("dropSearch_CapNhat_BoMon");
         var strTinhTrangNhanSu_Id = edu.util.getValById("dropSearch_CapNhat_TinhTrangLamViec");
         if (!edu.util.checkValue(strCoCauToChuc)) {
