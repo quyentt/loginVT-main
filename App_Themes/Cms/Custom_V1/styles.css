@@ -4941,8 +4941,57 @@
      padding: 0px 10px !important;
  }
 
- .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(7) {
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(7),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(8),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(9),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(10),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(11),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(12),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-last-child(2) {
      text-align: center !important;
+ }
+
+
+ .tblNhapDiem {
+     min-width: 1200px !important;
+ }
+
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(7),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(8),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(9),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(10),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(11),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(12) {
+     text-align: center !important;
+ }
+
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(2),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(3),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(4),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(5),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(6),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(7) {
+     text-align: center !important;
+ }
+
+ @media (max-width: 600px) {
+     .table-noborder.table thead tr th {
+         border-left: 1px solid #e9e9e9 !important;
+     }
+
+     .table-noborder.table tbody tr td,
+     .table-noborder.table tbody tr th {
+         border-bottom: 1px solid #e9e9e9 !important;
+     }
+
+     .table-noborder.table>tbody>tr>td,
+     .table-noborder.table>tbody>tr>th {
+         border-right: 1px solid #e9e9e9 !important;
+     }
+ }
+
+ .tblDSDiem tr th:nth-child(6) {
+     min-width: 110px;
  }
 
  .tblDSDiem {
@@ -4966,28 +5015,34 @@
  .myModalKetQua .filter-tblNhanHocBong {
      margin-bottom: 10px;
  }
+
  .btnOpenDelete .aps-form-item {
-    display: block !important;
-}
-.light-paginationtblInput_DTSV_SinhVien{
-    padding-right: 0 !important;
-}
-.zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group {
-    float: right !important;
-    display: flex !important;
-    justify-content: end !important;
-}
-.zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group #tblInput_DTSV_SinhVien_search_btn {
-    margin-left: 1px !important;
-    margin-top: 1px !important;
-    color: #fff;
-}
-.zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group .input-group-btn {
-    width: 44px;
-    height: 38px !important;
-    overflow: hidden;
-    display: inline-flex;
-}
-.zone-pag-footertblInput_DTSV_SinhVien .simple-pagination {
-    padding: 0 0px 10px 0 !important;
-}
+     display: block !important;
+ }
+
+ .light-paginationtblInput_DTSV_SinhVien {
+     padding-right: 0 !important;
+ }
+
+ .zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group {
+     float: right !important;
+     display: flex !important;
+     justify-content: end !important;
+ }
+
+ .zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group #tblInput_DTSV_SinhVien_search_btn {
+     margin-left: 1px !important;
+     margin-top: 1px !important;
+     color: #fff;
+ }
+
+ .zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group .input-group-btn {
+     width: 44px;
+     height: 38px !important;
+     overflow: hidden;
+     display: inline-flex;
+ }
+
+ .zone-pag-footertblInput_DTSV_SinhVien .simple-pagination {
+     padding: 0 0px 10px 0 !important;
+ }
