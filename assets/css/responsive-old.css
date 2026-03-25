@@ -718,7 +718,7 @@
 
   .modal-dialog.modal-xl,
   .modal-dialog.modal-lg {
-    max-width: calc(100% - 25px) !important;
+    max-width: calc(100% - 15px) !important;
   }
 
   .teach-calendar {

@@ -58,9 +58,9 @@
                     <div class="form-group-cover">
                         <label for="start_date_input" class="form-label main-label mr-10">Cán bộ</label>
                         <div class="input-group no-icon"
-                             style="min-width: 340px; margin-right: 10px; margin-bottom: 12px">
+                            style="min-width: 340px; margin-right: 10px; margin-bottom: 12px">
                             <select class="form-select select-opt" id="dropSearch_CanBo"
-                                    aria-label="Default select example"></select>
+                                aria-label="Default select example"></select>
                         </div>
                         <label for="start_date_input" class="form-label main-label mr-10">Mã cán bộ</label>
                         <div class="form-group date-input search">
@@ -68,7 +68,7 @@
                                 <i class="fas fa-search"></i>
                             </label>
                             <input type="text" id="txtTuKhoa_CanBo" class="form-control"
-                                   placeholder="Tìm kiếm thông tin">
+                                placeholder="Tìm kiếm thông tin">
                         </div>
                     </div>
                     <p class="color-dask-blue fw-bold fs-18" id="lblCanBoTimKiem"></p>
@@ -147,8 +147,8 @@
 
             <div class="mt-4">
                 <p class="search">
-                    <div class="dropdown" id="zonebtnBaoCao_LichGiang">
-                    </div>
+                <div class="dropdown" id="zonebtnBaoCao_LichGiang">
+                </div>
                 </p>
             </div>
             <div class=" box-shadow  p-0 block-calendar mt-4 mt-md-0">
@@ -184,7 +184,7 @@
 <!-- ---------- -->
 <!-- modal khối kiến thức chuyên ngành-->
 <div class="modal fade finance-modal my-calendar" id="my_calendar" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -214,7 +214,7 @@
                     <div class="form-item d-flex form-add-info">
                         <div class="input-group no-icon">
                             <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
-                                   style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
+                                style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
                         </div>
 
                     </div>
@@ -230,27 +230,30 @@
                     <div id="zoneSiSoSV"> </div>
 
                     <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
-                            id="btnDiemDanh">
+                        id="btnDiemDanh">
                         <i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span>
                     </button>
                 </div>
-                <table class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder tblNhapChuyenCan"
-                       id="tblNhapChuyenCan">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-50px" scope="col">STT</th>
-                            <th scope="col">Số buổi vắng tích lũy</th>
-                            <th scope="col">Mã số</th>
-                            <th scope="col">Họ đệm</th>
-                            <th scope="col">Tên</th>
-                            <th class="text-center" scope="col">Địa chỉ IP</th>
-                            <th class="text-center" scope="col">Tự điểm danh</th>
-                            <!--<th class="text-center" scope="col">Có mặt(44)</th>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder tblNhapChuyenCan"
+                        id="tblNhapChuyenCan">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Số buổi vắng tích lũy</th>
+                                <th scope="col">Mã số</th>
+                                <th scope="col">Họ đệm</th>
+                                <th scope="col">Tên</th>
+                                <th class="text-center" scope="col">Địa chỉ IP</th>
+                                <th class="text-center" scope="col">Tự điểm danh</th>
+                                <!--<th class="text-center" scope="col">Có mặt(44)</th>
                                 <th class="text-center" scope="col">Vắng mặt(2)</th>-->
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -258,7 +261,7 @@
 
 <!-- modal Yêu cầu đổi lịch-->
 <div class="modal fade finance-modal my-calendar modalDoiLich" id="modalDoiLich" tabindex="-1"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -274,7 +277,7 @@
                             <label for="">Nội dung xin đổi lịch</label>
                             <div class="input-group" style="height: auto !important;">
                                 <textarea class="form-control min-h-68" id="txtNoiDungDoiLich" rows="2"
-                                          style="height: 86px !important;"></textarea>
+                                    style="height: 86px !important;"></textarea>
                                 <i class="fal fa-edit"></i>
                             </div>
                         </div>
@@ -299,7 +302,7 @@
                                 <label for="">Ngày học</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="txtNgayHoc_DoiSang"
-                                           placeholder="dd/mm/yyyy">
+                                        placeholder="dd/mm/yyyy">
                                     <i class="fal fa-calendar-alt"></i>
                                 </div>
                             </div>
@@ -374,7 +377,7 @@
 
 <!-- modal Yêu cầu đổi lịch-->
 <div class="modal fade finance-modal my-calendar modalXemLich" id="modalXemLich" tabindex="-1"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -423,7 +426,7 @@
 
 
                                     <input type="text" class="form-control" id="txtNgayHoc_DoiSang_View" disabled
-                                           placeholder="dd/mm/yyyy">
+                                        placeholder="dd/mm/yyyy">
                                     <i class="fal fa-calendar-alt"></i>
                                 </div>
 
@@ -516,7 +519,7 @@
 
 <!-- modal Phê duyệt-->
 <div class="modal fade finance-modal my-calendar modalPheDuyet" id="modalPheDuyet" tabindex="-1"
-     aria-labelledby="exampleModalLabel" aria-hidden="true">
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -530,7 +533,7 @@
                     <div class="text-lable text-left">Trạng thái</div>
                     <div class="input-group no-icon">
                         <select class="select-opt" id="dropPhetDuyet_TrangThai"
-                                aria-label="Default select example"></select>
+                            aria-label="Default select example"></select>
                     </div>
                 </div>
             </div>
@@ -550,7 +553,7 @@
 </div>
 
 <div class="modal fade finance-modal my-calendar" id="modalHTSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">

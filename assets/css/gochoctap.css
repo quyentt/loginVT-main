@@ -340,7 +340,7 @@
 .title-detai #lblTenHoc span,
 .modal .modal-header .finance-user-info span.color-66 {
   color: var(--color-yellow) !important;
-  font-size: 20px !important;
+  font-size: 18px !important;
   font-weight: bold;
 }
 

@@ -3211,7 +3211,14 @@
 }
 
 #lblHocPhan {
-    margin-left: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    color: #fff;
+    text-align: left;
+}
+
+#lblHocPhan br {
+    /* display: none; */
 }
 
 .dropdown-menu {
@@ -10642,7 +10649,7 @@ table#clone {
 }
 
 .aps-chiTiet-taiChinh .form-container-body .btn {
-    padding: 9px 0 5px 0 !important;
+    padding: 9px 0 0 0 !important;
     font-size: 15px !important;
     border-radius: 5px !important;
     font-weight: 700;
@@ -11089,4 +11096,7 @@ table#clone {
 
 .tblNguoiHoc tr:hover .btn.btnChuyenCan {
     background: var(--color-blue) !important;
+}
+.tblHocKy_KetQua tr td:last-child{
+    text-align: left !important;
 }

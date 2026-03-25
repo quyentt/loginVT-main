@@ -125,7 +125,7 @@
 .task-header {
   color: white;
   min-height: 40px;
-  display: flex;
+  display: inline-table;
   align-items: center;
   width: 100% !important;
   justify-content: center;
@@ -147,11 +147,11 @@
 }
 
 .task-header .task-date {
-  font-size: 12px;
-  line-height: 15px;
-  text-align: left;
-  margin-top: 3px;
-  opacity: 0.8;
+ font-size: 12px;
+    line-height: 15px;
+    text-align: left;
+    margin-top: 4px;
+    opacity: 0.6;
 }
 
 .task-header .student-num {

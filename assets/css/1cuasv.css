@@ -582,7 +582,7 @@
 .gv-paging-group .form-add-info .fa-angle-down {
   font-size: 12px !important;
   margin-right: 8px !important;
-  margin-top: -2px !important;
+  margin-top: -4px !important;
 }
 
 .form-in-row-wrap .form-add-info .fa-angle-down {
@@ -1447,7 +1447,7 @@ input:active,
 
 .modal .modal-header {
   text-align: center;
-  height: 60px;
+  min-height: 52px;
   /* line-height: 62px; */
   width: 100%;
   border-top-left-radius: 12px;
