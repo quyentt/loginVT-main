@@ -1111,7 +1111,7 @@ a:hover {
   background: #ffffff;
   box-shadow: none;
   opacity: 1 !important;
-  z-index: 9999999;
+  z-index: 19;
 }
 
 .in-mobi-group {
