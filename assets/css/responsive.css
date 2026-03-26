@@ -328,12 +328,29 @@
 }
 
 @media (max-width: 1080px) {
+  /* .aps-diemdanh-tudong . */
+  .modal-calender-detail .modal-header {
+    display: block !important;
+  }
+
+  .modal-calender-detail .modal-header #lblHocPhan {
+    margin-bottom: 10px !important;
+    padding-right: 20px !important;
+  }
+
   .modal.study-program-modal .modal-dialog {
     width: 100% !important;
     max-width: 100%;
     padding: 0 !important;
   }
 
+  .modal-calender-detail .modal-header .btn-close {
+    position: absolute;
+    top: 20px !important;
+    right: 20px !important;
+  }
+
+  /* ------------ */
   .register-school-right .table-title {
     display: block !important;
     font-size: 16px !important;
@@ -759,8 +776,9 @@
 }
 
 @media (max-width: 680px) {
+
   .register-wish {
-    margin: 10px !important;
+    margin: 0 !important;
   }
 
   .gv-button-group {
@@ -855,6 +873,21 @@
 
 
 @media (max-width: 600px) {
+
+  .modal_XacNhan_hoanthanh .scroll-table-x .tblModal_XacNhan,
+  . {
+    min-width: 860px;
+  }
+
+  .scroll-table-x .tblHocPhanCongNhan_BangDiem {
+    min-width: 1000px;
+  }
+
+  .modal_XacNhan_hoanthanh .select-group:first-child {
+    padding-left: 0px;
+    margin-bottom: 10px;
+  }
+
   .aps-table-select .table {
     border-left: 1px solid #e1e1e1 !important;
   }
@@ -1208,6 +1241,10 @@
 }
 
 @media (max-width: 430px) {
+  .dkcn_diem .btn-default.btn-search {
+    width: 100% !important;
+  }
+
   .scroll-table-x .tblNhapChuyenCan {
     min-width: 400px !important;
   }

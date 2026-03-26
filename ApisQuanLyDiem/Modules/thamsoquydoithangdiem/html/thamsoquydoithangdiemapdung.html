@@ -62,41 +62,60 @@
                         </li>
                         <li class="" id="btn_tab2">
                             <a href="#tab_2" data-toggle="tab" aria-expanded="false">
-                                <span class="lang" key="">2) Tham số quy đổi điểm áp dụng đến từng học phần của chương
+                                <span class="lang" key="">
+                                    2) Tham số quy đổi điểm áp dụng đến từng học phần của chương
                                     trình
                                 </span>
                             </a>
                         </li>
+
+                        <li class="" id="btn_tab3">
+                            <a href="#tab_3" data-toggle="tab" aria-expanded="false">
+                                <span class="lang" key="">3) Tham số quy đổi điểm áp dụng đến từng người học của chương trình </span>
+                            </a>
+                        </li>
                     </ul>
                     <div class="tab-content pd0" id="tab-content"
-                        style="padding-right: 0 !important;padding-left: 0 !important;">
+                         style="padding-right: 0 !important;padding-left: 0 !important;">
                         <!-- Tab_1: Kế thừa cho tất cả chương trình trong khóa-->
                         <div class="tab-pane active" id="tab_1">
                             <div class="row row-align pl20 pr20">
                                 <div class="box-group">
                                     <div id="qt_apdungchuongtrinh" class="panel-collapse collapse in"
-                                        aria-expanded="false">
+                                         aria-expanded="false">
                                         <div class="box-body pd0 pb20">
                                             <div class="mt-20 scroll-table-x bg-none">
                                                 <table id="tblThamSoQuyDoiDiemApDungChungChoChuongTrinh"
-                                                    class="table table-input-slelect table-hover table-bordered tblThamSoQuyDoiDiemApDungChungChoChuongTrinh mb-10">
+                                                       class="table table-input-slelect table-hover table-bordered tblThamSoQuyDoiDiemApDungChungChoChuongTrinh mb-10">
                                                     <thead>
                                                         <tr>
                                                             <th rowspan="2" class="td-fixed td-center">Stt</th>
-                                                            <th rowspan="2" class="td-center" style="width: 100px">Tham
-                                                                số quy đổi điểm</th>
-                                                            <th colspan="2" class="td-center" style="width: 150px">Thời
-                                                                gian bắt đầu áp dụng</th>
-                                                            <th rowspan="2" class="td-center" style="width: 100px">Mức
-                                                                điểm bắt đầu</th>
-                                                            <th rowspan="2" class="td-center" style="width: 100px">Mức
-                                                                điểm kết thúc</th>
-                                                            <th rowspan="2" class="td-center" style="width: 100px">Điểm
-                                                                số</th>
-                                                            <th rowspan="2" class="td-center" style="width: 100px">Điểm
-                                                                chữ</th>
+                                                            <th rowspan="2" class="td-center" style="width: 100px">
+                                                                Tham
+                                                                số quy đổi điểm
+                                                            </th>
+                                                            <th colspan="2" class="td-center" style="width: 150px">
+                                                                Thời
+                                                                gian bắt đầu áp dụng
+                                                            </th>
+                                                            <th rowspan="2" class="td-center" style="width: 100px">
+                                                                Mức
+                                                                điểm bắt đầu
+                                                            </th>
+                                                            <th rowspan="2" class="td-center" style="width: 100px">
+                                                                Mức
+                                                                điểm kết thúc
+                                                            </th>
+                                                            <th rowspan="2" class="td-center" style="width: 100px">
+                                                                Điểm
+                                                                số
+                                                            </th>
+                                                            <th rowspan="2" class="td-center" style="width: 100px">
+                                                                Điểm
+                                                                chữ
+                                                            </th>
                                                             <!--<th rowspan="2" class="td-center" style="width: 50px">Ngày tạo</th>
-                                                                    <th rowspan="2" class="td-center" style="width: 50px">Người tạo</th>-->
+                                                <th rowspan="2" class="td-center" style="width: 50px">Người tạo</th>-->
                                                             <th rowspan="2" class="td-fixed td-center">Xóa</th>
 
                                                         </tr>
@@ -110,14 +129,17 @@
 
                                                 <div class="box-tools pull-right ">
                                                     <a id="btnKeThua_ThamSoQuyDoiDiemApDungChungCTTrongKhoa"
-                                                        class="btn btn-success">
+                                                       class="btn btn-success">
                                                         <i class="fa-light fa-chalkboard-user"></i> Kế thừa cho tất
-                                                        cả chương trình trong khóa</a>
+                                                        cả chương trình trong khóa
+                                                    </a>
                                                     <a id="btnAdd_ThamSoQuyDoiDiemApDungChungCT"
-                                                        class="btn btn-outline-primary"><i class="fa fa-plus"></i>
-                                                        Thêm dòng</a>
+                                                       class="btn btn-outline-primary">
+                                                        <i class="fa fa-plus"></i>
+                                                        Thêm dòng
+                                                    </a>
                                                     <a id="btnSave_ThamSoQuyDoiDiemApDungChungCT"
-                                                        class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
+                                                       class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -127,8 +149,88 @@
                         </div>
 
                         <!-- Tab_2: 2) Tham số quy đổi điểm áp dụng đến từng học phần của chương trình
-                                -->
+            -->
                         <div id="tab_2"></div>
+
+                        <!-- Tab_5: Hoc hàm, danh hieu-->
+                        <div class="tab-pane" id="tab_3">
+                            <div class="row row-align">
+                                <div class="box-group">
+                                    <div class="col-sm-3" style="padding-top: 3px;">
+                                        <div class="box box-solid">
+                                            <div class="box-body">
+                                                <div class="bss-item">
+                                                    <input type="text" id="txtSearch_NguoiHoc_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box box-solid">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title"><i class="fa fa-map"></i> Chọn người học - chương trình <span id="lblNguoiHocChuongTrinh"></span></h3>
+                                            </div>
+                                            <!-- /.box-header -->
+                                            <div class="box-body">
+                                                <div id="zone_nguoihocchuongtrinh">
+                                                </div>
+                                            </div>
+                                            <!-- /.box-body -->
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-9" id="tab_ngoainguoihoc" style="display: none">
+                                        <div class="row row-align">
+                                            <div class="box-group">
+                                                <!-- Trinh do tin hoc -->
+                                                <div class="panel">
+                                                    <div id="qt_apdungnguoihoc" class="panel-collapse collapse in" aria-expanded="false">
+                                                        <div class="box-body">
+                                                            <div class="scroll-table-x bg-none">
+                                                                <div>
+                                                                    <div class="">
+
+                                                                        <a id="btnSave_ThamSoDanhGiaApDung_NguoiHoc" class="btn btn-primary" style="float: right"><i class="fa fa-save"></i> Lưu</a>
+
+                                                                        <div class="" style="width: 220px; float: right; padding-left: 5px">
+                                                                            <select id="dropSearch_HocPhan" class="select-opt" style="float: right; margin-left: 10px"></select>
+                                                                        </div>
+                                                                        <div class="" style="width: 220px;float: right; padding-left: 5px">
+                                                                            <select id="dropSearch_ThoiGianDangKy" class="select-opt" style="float: right; margin-left: 10px"></select>
+                                                                        </div>
+                                                                        <div class="clear"></div>
+                                                                    </div>
+                                                                    <table id="tblThamSoDanhGiaApDung_NguoiHoc" class="table table-hover table-bordered">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th rowspan="2" class="td-fixed td-center">Stt</th>
+                                                                                <th rowspan="2" class="td-center" style="width: 200px">Tham số quy đổi điểm</th>
+                                                                                <th colspan="2" class="td-center" style="width: 150px">Thời gian bắt đầu áp dụng</th>
+                                                                                <th rowspan="2" class="td-center" style="width: 100px">Mức điểm bắt đầu</th>
+                                                                                <th rowspan="2" class="td-center" style="width: 100px">Mức điểm kết thúc</th>
+                                                                                <th rowspan="2" class="td-center" style="width: 100px">Điểm số</th>
+                                                                                <th rowspan="2" class="td-center" style="width: 100px">Điểm chữ</th>
+                                                                                <th rowspan="2" class="td-fixed td-center">Xóa</th>
+
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th class="td-center" style="width: 100px">Học kỳ</th>
+                                                                                <th class="td-center" style="width: 100px">Ngày</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody></tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="box-tools pull-right ">
+                                                                    <a id="btnAdd_ThamSoDanhGiaApDung_NguoiHoc" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm dòng</a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="row row-align aps-tab-ngoai">
                         <div class="col-sm-4 tab_ngoai1" style="padding-top: 0; display: none" id="tab_ngoai1">

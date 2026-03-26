@@ -77,7 +77,7 @@
 
     .my-calendar .modal-dialog {
         width: 96% !important;
-        min-width: 100%;
+        min-width: 96% !important;
     }
 
     .modal-nhapdiem .scroll-table-x table {
@@ -188,6 +188,10 @@
 
 
 @media only screen and (max-width: 600px) {
+    .dkcn_diem .nav-item {
+        width: 49% !important;
+    }
+
     .study-program-detail .scroll-table-x .tblHocPhan_PhanBo {
         min-width: 100%;
     }
@@ -468,6 +472,31 @@
 }
 
 @media (min-width: 768px) and (max-width:1024px) {
+    .modal_XacNhan_hoanthanh .action-group .select-group {
+        display: block !important;
+    }
+
+    .modal_XacNhan_hoanthanh .action-group .select-group .label {
+        margin-bottom: 5px;
+        text-align: left !important;
+    }
+
+    .modal_XacNhan_hoanthanh .select-group:first-child {
+        padding-right: 10px !important;
+    }
+
+    .modal_XacNhan_hoanthanh .action-group .btnDongYXacNhan {
+        margin-top: 24px !important;
+    }
+
+    .box-nhapdiemchamkiemtra .aps-form-button {
+        padding-left: 10px !important;
+    }
+
+    .my-calendar.modal_XacNhan .change-calendar .gv-button-group {
+        align-items: flex-start !important;
+    }
+
     .box-nhapdiemchamkiemtra .col-lg-7 {
         padding-right: 0 !important;
     }
@@ -551,6 +580,39 @@
     .zoneLichHoc .register-school-left {
         padding-left: 0 !important;
         padding-right: 0 !important;
+    }
+}
+
+@media (min-width: 600px) and (max-width:1024px) {
+
+    .dkcn_diem .tblBangDiem,
+    .dkcn_diem .tblChungChi {
+        min-width: 1000px !important;
+    }
+}
+
+@media (min-width: 600px) and (max-width:767px) {
+    .modal-1360 {
+        max-width: 97% !important;
+        min-width: 96% !important;
+        margin-left: 0 !important;
+    }
+
+    .modal_XacNhan_hoanthanh .action-group .select-group .label {
+        text-align: left !important;
+    }
+
+    .modal_XacNhan_hoanthanh .action-group .min-w-100p {
+        width: 120px !important;
+        margin-right: 0 !important;
+    }
+
+    .modal_XacNhan_hoanthanh .select-group {
+        padding-left: 0px;
+    }
+
+    .modal_XacNhan_hoanthanh .select-group:first-child {
+        margin-bottom: 10px;
     }
 }
 
