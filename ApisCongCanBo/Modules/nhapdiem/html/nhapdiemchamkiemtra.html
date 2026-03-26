@@ -37,21 +37,24 @@
             <div class="row">
                 <div class="col-12 col-lg-7 pl-0">
                     <div class="d-flex justify-content-end"></div>
-                    <table class="table transcrip-table has-form mt-10 table-bordered table-noborder" id="tblChamKiemTra">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-50px" scope="col">STT</th>
-                                <th scope="col">Mã số</th>
-                                <th scope="col">Họ đệm</th>
-                                <th scope="col">Tên</th>
-                                <th scope="col">Học phần</th>
-                                <th scope="col">Kết quả</th>
-                                <th scope="col">Tình trạng xác nhận</th>
-                                <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <div class="aps-table-select scroll-table-x">
+                        <table class="table transcrip-table has-form mt-10 table-bordered table-noborder tblChamKiemTra"
+                            id="tblChamKiemTra">
+                            <thead>
+                                <tr>
+                                    <th class="text-center w-50px" scope="col">STT</th>
+                                    <th scope="col">Mã số</th>
+                                    <th scope="col">Họ đệm</th>
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Học phần</th>
+                                    <th scope="col">Kết quả</th>
+                                    <th scope="col">Tình trạng xác nhận</th>
+                                    <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                     <div class="title-is-paging no-title d-flex pull-right aps-gap-10">
                         <button class="btn btn-outline-success" id="btnDuyet">
                             <i class="fas fa-check-circle"></i><span>Xác nhận</span></button>
@@ -102,8 +105,8 @@
                 <form class="row" action="">
                     <div class="khoa-sldl-xn col-12 col-lg-10 col-sm-10 pl0 pr5" style="min-height: unset">
                         <div class="d-flex">
-                            <label for="" style="width: 100px;" class="mr-0 mt-10">Trạng thái</label>
-                            <div class="form-item d-flex form-add-info" style="width: 90% !important ;">
+                            <label for="" style="width: 100px; margin-top: -2px !important;" class="mr-0 aps-form-lable">Trạng thái</label>
+                            <div class="form-item d-flex form-add-info">
                                 <div class="input-group no-icon">
                                     <select class="select-opt" id="dropLoaiXacNhan"
                                         aria-label="Default select example"></select>
@@ -111,8 +114,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="gv-button-group col-12 col-lg-2 col-sm-2 pd-0" style="margin-top: -2px;">
-                        <button class="btn btn-success" id="btnDongYXacNhan" data-bs-dismiss="modal">
+                    <div class="gv-button-group col-12 col-lg-2 col-sm-2 pd-0">
+                        <button class="btn btn-success w-100" id="btnDongYXacNhan" data-bs-dismiss="modal">
                             <i class="fas fa-check-circle"></i><span>Xác nhận</span>
                         </button>
                     </div>
@@ -121,18 +124,21 @@
                 <div class="finance-user-info in-modal mb-5">
                     <p><b>Lịch sử</b> </p>
                 </div>
-                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
-                    id="tblModal_XacNhan">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-50px" scope="col">STT</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Người xác nhận</th>
-                            <th class="text-center" scope="col">Thời gian</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
+                        id="tblModal_XacNhan">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Người xác nhận</th>
+                                <th class="text-center" scope="col">Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer" style="justify-content: unset"> </div>
         </div>

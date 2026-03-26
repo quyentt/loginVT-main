@@ -490,7 +490,7 @@ ThamSoQuyDoiDiemApDung.prototype = {
         row += '<td><select id="dropChuongTrinh_DiemChu' + strThamSoQuyDoiDiem_AD_Id + '" class="select-opt"><option value=""> --- Chọn điểm chữ--</option ></select ></td>';
         //row += '<td></td>';
         //row += '<td></td>';
-        row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+        row += '<td style="text-align: center; color: green !important"><a title="Xóa dòng" style="color: green  !important" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
         row += '</tr>';
         $("#tblThamSoQuyDoiDiemApDungChungChoChuongTrinh tbody").append(row);
         me.genCombo_ThamSoQuyDoiDiem("dropChuongTrinh_ThamSoQuyDoiThangDiem" + strThamSoQuyDoiDiem_AD_Id, "");
@@ -702,7 +702,7 @@ ThamSoQuyDoiDiemApDung.prototype = {
         row += '<td><select id="dropHP_DiemChu' + strThamSoQuyDoiDiem_AP_Id + '" class="select-opt"><option value=""> --- Chọn điểm chữ--</option ></select ></td>';
         //row += '<td></td>';
         //row += '<td></td>';
-        row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AP_Id + '" href="javascript:void(0)">Xóa</a></td>';
+        row += '<td style="text-align: center; color: green !important"><a title="Xóa dòng" style="color: green !important" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AP_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
         row += '</tr>';
         $("#tblThamSoQuyDoiDiemApDung_HocPhan tbody").append(row);
         me.genCombo_ThamSoQuyDoiDiem("dropHP_ThamSoQuyDoiThangDiem" + strThamSoQuyDoiDiem_AP_Id, "");

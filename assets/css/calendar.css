@@ -147,11 +147,11 @@
 }
 
 .task-header .task-date {
- font-size: 12px;
-    line-height: 15px;
-    text-align: left;
-    margin-top: 4px;
-    opacity: 0.6;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: left;
+  margin-top: 4px;
+  opacity: 0.6;
 }
 
 .task-header .student-num {
@@ -874,6 +874,7 @@
 .modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(3) {
   width: 130px !important;
 }
-.form-list-input .form-item{
+
+.form-list-input .form-item {
   min-width: 300px;
 }

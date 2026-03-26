@@ -625,7 +625,7 @@
 
 .modal {
   background: rgba(0, 0, 0, 0.6);
-  padding: 15px;
+  /* padding: 15px; */
 }
 
 /*-modal-choose-2*/

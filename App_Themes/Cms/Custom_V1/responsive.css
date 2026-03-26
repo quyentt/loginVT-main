@@ -77,6 +77,7 @@
 
     .my-calendar .modal-dialog {
         width: 96% !important;
+        min-width: 100%;
     }
 
     .modal-nhapdiem .scroll-table-x table {
@@ -88,6 +89,17 @@
 
 /* Extra small devices (phones, 768px and down) */
 @media only screen and (max-width: 768px) {
+    .box-nhapdiemchamkiemtra .col-lg-7 {
+        padding-right: 0 !important;
+    }
+
+    .my-calendar.modal_XacNhan .aps-form-lable {
+        display: none !important;
+    }
+
+    .khoa-sldl-xn {
+        padding-right: 0 !important;
+    }
 
     /*----------------start----------------------*/
     .box-header>.box-tools {
@@ -176,18 +188,65 @@
 
 
 @media only screen and (max-width: 600px) {
-    .register-school-right, .register-school-left {
-    
+    .study-program-detail .scroll-table-x .tblHocPhan_PhanBo {
+        min-width: 100%;
+    }
+
+    .myModal_KetQuaDangKy.modal .modal-header {
+        min-height: auto !important;
+    }
+
+    .myModal_KetQuaDangKy .form-item.form-add-info {
+        margin-left: 0px;
+    }
+
+    .myModal_KetQuaDangKy .scroll-table-x table {
+        min-width: 860px !important;
+    }
+
+    .my-calendar.modal_XacNhan .modal-860 {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+
+    .my-calendar.modal_XacNhan .change-calendar .form-item.form-add-info {
+        width: 100% !important;
+    }
+
+    .khoa-sldl-left {
+        display: block !important;
+        width: 62% !important;
+    }
+
+    .my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 {
+        width: 38% !important;
+    }
+
+    .my-calendar.modal_XacNhan .aps-form-table {
+        display: none;
+    }
+
+    .aps-nhapdiemphuckhao .form-top .btn-default.btn-search {
+        width: 100% !important;
+    }
+
+    .register-school-right,
+    .register-school-left {}
+
     .tblSinhVien tr td:nth-child(8),
     .tblSinhVien tr td:nth-child(13),
     .tblSinhVien tr td:nth-child(14),
     .tblSinhVien tr td:nth-child(15),
-    .tblSinhVien tr td:nth-child(n+15){
+    .tblSinhVien tr td:nth-child(n+15) {
         text-align: center !important;
     }
-    .scroll-table-x .tblHocPhanChuaQua {
+
+    .scroll-table-x .tblHocPhanChuaQua,
+    .tblLop_KetQua {
         min-width: 860px !important;
     }
+
     .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6,
     .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
         padding: 0 !important;
@@ -204,7 +263,7 @@
 
     .aps-chiTiet-taiChinh .form-container-body .btn {
         padding: 9px 0 0px 0 !important;
-        margin-bottom:5px !important;
+        margin-bottom: 5px !important;
         height: 30px !important;
     }
 
@@ -271,6 +330,23 @@
 }
 
 @media (max-width: 400px) {
+    .finance-modal.my-calendar .modal-body .justify-content-between {
+        margin-bottom: 10px;
+    }
+
+    .khoa-sldl-left {
+        width: 100% !important;
+    }
+
+    .my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 {
+        width: 100% !important;
+        text-align: right;
+        padding-left: 0 !important;
+    }
+
+    .my-calendar.modal_XacNhan .change-calendar .form-item {
+        margin-bottom: 10px;
+    }
 
     .tblTaskBar_TongHopKetQua,
     .tblTaskBar_TongHopKetQua tr td {
@@ -392,6 +468,35 @@
 }
 
 @media (min-width: 768px) and (max-width:1024px) {
+    .box-nhapdiemchamkiemtra .col-lg-7 {
+        padding-right: 0 !important;
+    }
+
+    .kqht-modal .right {
+        padding-left: 0 !important;
+        margin-top: 10px !important;
+    }
+
+    .kqht-modal {
+        display: block !important;
+    }
+
+    .my-calendar.modal_XacNhan .change-calendar .scroll-table-x table {
+        min-width: 680px !important;
+    }
+
+    .modal-dialog-scrollable .modal-body .col-md-10 {
+        width: 80% !important;
+    }
+
+    .modal-dialog-scrollable .modal-body .col-md-2 {
+        width: 20% !important;
+    }
+
+    .aps-nhapdiemphuckhao .form-top .aps-all-button {
+        padding-left: 10px !important;
+    }
+
     .aps-chiTiet-taiChinh .table>tfoot>tr>td:first-child,
     .aps-chiTiet-taiChinh .table>tfoot>tr>td {
         border-left: 0px solid #d1d1d1 !important;
@@ -427,10 +532,15 @@
         padding: 20px;
     }
 
+    .modal-860 {
+        width: 100% !important;
+    }
+
     .modal-96,
     .modal-90,
+    .finance-modal.study-program-modal .modal-xl,
     .khoikienthucchuyennganh .modal-xl {
-        max-width: 100% !important;
+        max-width: 98% !important;
         padding: 0 !important;
     }
 
