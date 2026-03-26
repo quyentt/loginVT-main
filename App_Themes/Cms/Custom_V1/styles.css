@@ -1,6 +1,6 @@
  /* -- Code 5/1/2026 -- */
  @import "responsive.css";
- @import "styles-content.css";
+ @import "styles-content.css?v2";
  @import "../../../assets/css/root.css";
  /* @import "../../../assets/css/gochoctap.css"; */
  /* @import "../../../assets/css/all.css"; */
@@ -2401,8 +2401,8 @@
  }
 
  .modal-header {
-     padding: 16px 20px 14px 20px !important;
-     height: 52px !important;
+     padding: 12px 20px 10px 20px !important;
+     min-height: 52px !important;
      box-shadow: 1px 0 2px rgba(0, 0, 0, 0) !important;
      border-bottom: 1px solid #e9e9e9 !important;
      background: var(--color-blue);
@@ -4928,4 +4928,218 @@
 
  .aps-total-receipts tr:hover td i {
      font-weight: bold !important;
+ }
+
+ .tenlophptkb {}
+
+ .tblDSDiem tr td:nth-last-child(2) {
+     text-align: center !important;
+ }
+
+ .tblDSDiem tr td:nth-last-child(4),
+ .tblDSDiem tr td:nth-last-child(5) {
+     text-align: left !important;
+ }
+
+ .table-bordered.tblDSDiem .btn.btnChonDanhSach {
+     padding: 0px 10px !important;
+ }
+
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(7),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(8),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(9),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(10),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(11),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-child(12),
+ .zone_input_nhapdiem .tblNhapDiem tr th:nth-last-child(2) {
+     text-align: center !important;
+ }
+
+
+ .tblNhapDiem {
+     min-width: 1200px !important;
+ }
+
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(7),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(8),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(9),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(10),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(11),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-child(12) {
+     text-align: center !important;
+ }
+
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(2),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(3),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(4),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(5),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(6),
+ .zone_input_nhapdiem .tblNhapDiem tr td:nth-last-child(7) {
+     text-align: center !important;
+ }
+
+ @media (max-width: 600px) {
+     .table-noborder.table thead tr th {
+         border-left: 1px solid #e9e9e9 !important;
+     }
+
+     .table-noborder.table tbody tr td,
+     .table-noborder.table tbody tr th {
+         border-bottom: 1px solid #e9e9e9 !important;
+     }
+
+     .table-noborder.table>tbody>tr>td,
+     .table-noborder.table>tbody>tr>th {
+         border-right: 1px solid #e9e9e9 !important;
+     }
+ }
+
+ .tblDSDiem tr th:nth-child(6) {
+     min-width: 110px;
+ }
+
+ .tblDSDiem {
+     min-width: 2000px;
+ }
+
+ .zone_input_nhapdiem .form-add-info {
+     margin-bottom: 15px;
+ }
+
+ .inputChuyenCan {
+     border: 1px solid #d1d1d1;
+     height: 38px;
+     border-radius: 4px;
+ }
+
+ .myModalKetQua .modal-footer {
+     margin-top: 20px;
+ }
+
+ .myModalKetQua .filter-tblNhanHocBong {
+     margin-bottom: 10px;
+ }
+
+ .btnOpenDelete .aps-form-item {
+     display: block !important;
+ }
+
+ .light-paginationtblInput_DTSV_SinhVien {
+     padding-right: 0 !important;
+ }
+
+ .zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group {
+     float: right !important;
+     display: flex !important;
+     justify-content: end !important;
+ }
+
+ .zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group #tblInput_DTSV_SinhVien_search_btn {
+     margin-left: 1px !important;
+     margin-top: 1px !important;
+     color: #fff;
+ }
+
+ .zone-pag-headertblInput_DTSV_SinhVien .pull-right.input-group .input-group-btn {
+     width: 44px;
+     height: 38px !important;
+     overflow: hidden;
+     display: inline-flex;
+ }
+
+ .zone-pag-footertblInput_DTSV_SinhVien .simple-pagination {
+     padding: 0 0px 10px 0 !important;
+ }
+
+ .tblTaskBar_TongHopKetQua .select2-container--default .select2-selection--single .select2-selection__arrow {
+     top: 1px !important;
+     right: 5px !important;
+ }
+
+ .bg-f8 {
+     background: #f8f8f8;
+ }
+
+ .td-left {
+     text-align: left !important;
+ }
+
+ .td-right {
+     text-align: right !important;
+ }
+
+ .td-center {
+     text-align: center !important;
+ }
+
+ #tblChiTietKhoanPhaiNop_XemThongTinAll tr th:first-child,
+ #tblChiTietKhoanDaNop_XemThongTinAll tr th:first-child,
+ .myModal_Diem .table tr th:first-child,
+ .myModal_TichLuyTheoKhoi .tblTongHopDiem tr th:first-child {
+     width: 50px !important;
+ }
+
+ #tblChiTietKhoanPhaiNop_XemThongTinAll tr th:nth-child(2),
+ #tblChiTietKhoanPhaiNop_XemThongTinAll tr th:nth-child(3),
+ #tblChiTietKhoanDaNop_XemThongTinAll tr th:nth-child(2),
+ #tblChiTietKhoanDaNop_XemThongTinAll tr th:nth-child(7),
+ #tblChiTietKhoanDaNop_XemThongTinAll tr th:nth-child(8),
+ #tblChiTietKhoanPhaiNopChung_XemThongTinAll tr th:nth-child(2),
+ #tblChiTietKhoanPhaiNopChung_XemThongTinAll tr th:nth-child(5),
+ #zoneChiTietKhoanPhaiNopRieng_XemThongTinAll tr th:nth-child(2),
+ #zoneChiTietKhoanPhaiNopRieng_XemThongTinAll tr th:nth-child(5),
+ #tblChiTietKhoanDuocMien_XemThongTinAll tr th:nth-child(2),
+ #tblChiTietKhoanDaRut_XemThongTinAll tr th:nth-child(2),
+ #tblChiTietKhoanThuaRieng_XemThongTinAll tr th:nth-child(2),
+ #pkg_dangkyhoc_tructiep.KhongDangKyViNgayHocCuoiCung tr th:nth-child(2),
+ #tblChiTietKhoanThuaChung_XemThongTinAll tr th:nth-child(2) {
+     text-align: left !important;
+ }
+
+ #tblChiTietKhoanPhaiNop_XemThongTinAll tr td:last-child,
+ #tblChiTietKhoanPhaiNop_XemThongTinAll tr td:nth-child(3),
+  #tblChiTietKhoanPhaiNop_XemThongTinAll tr th:nth-child(3),
+ #tblChiTietKhoanDaNop_XemThongTinAll tr td:nth-child(3),
+ #tblChiTietKhoanPhaiNopChung_XemThongTinAll tr td:nth-child(3),
+ #tblChiTietKhoanPhaiNopRieng_XemThongTinAll tr td:nth-child(3),
+ #tblChiTietKhoanDuocMien_XemThongTinAll tr td:nth-child(3),
+ #tblChiTietKhoanDaRut_XemThongTinAll tr td:nth-child(3),
+ #tblChiTietKhoanThuaRieng_XemThongTinAll tr td:nth-child(3),
+ #pkg_dangkyhoc_tructiep.KhongDangKyViNgayHocCuoiCung tr td:nth-child(3),
+ #tblChiTietKhoanThuaChung_XemThongTinAll tr td:nth-child(3),
+ .tblkhoikienthuc tr td:first-child {
+     text-align: center !important;
+ }
+
+ #tblChiTietKhoanDaRut_XemThongTinAll tr td:last-child,
+ #tblChiTietKhoanThuaRieng_XemThongTinAll tr td:last-child,
+ #LayGiaTriCauHinh tr td:last-child,
+ #tblChiTietKhoanThuaChung_XemThongTinAll tr td:last-child {
+     text-align: right !important;
+ }
+
+ .myModal_Diem .accordion-body .table>tbody>tr>td:first-child,
+ .myModal_Diem .accordion-body .table>tbody>tr>td:first-child,
+ .myModal_Diem .table tr th:first-child,
+ .myModal_Diem .table>thead>tr:first-child>th:last-child,
+ .myModal_Diem .table tr th:last-child {
+     border-left: 0 !important;
+     border-right: 0 !important;
+ }
+
+ .myModal_Diem .accordion-body .table>tbody>tr>td,
+ .myModal_Diem .accordion-body .table>tbody>tr>th,
+ .myModal_Diem .accordion-body .table>thead>tr:first-child,
+ .myModal_Diem .accordion-body .table tr:last-child {
+     border-right: 0 solid #d1d1d1 !important;
+     border-left: 0 solid #d1d1d1 !important;
+ }
+
+ .myModal_TichLuyTheoKhoi .tblTongHopDiem.table>tfoot>tr>td:first-child {
+     border-left: 0 solid #d1d1d1 !important;
+ }
+
+ .myModal_TichLuyTheoKhoi .tblTongHopDiem.table>tfoot>tr>td:last-child,
+ .myModal_KetQuaDangKy .tblKetQuaDangKy.table>tfoot>tr>td:last-child  {
+     border-right: 0 solid #d1d1d1 !important;
  }

@@ -3211,7 +3211,14 @@
 }
 
 #lblHocPhan {
-    margin-left: 8px;
+    margin-left: 0px;
+    margin-right: 0px;
+    color: #fff;
+    text-align: left;
+}
+
+#lblHocPhan br {
+    /* display: none; */
 }
 
 .dropdown-menu {
@@ -5817,8 +5824,9 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .table-bordered .btn.btnChonDanhSach {
-    padding: 1.5px 10px !important;
-    height: 30px !important;
+    padding: 0px 10px !important;
+    height: 28px !important;
+    line-height: 27px !important;
     margin-bottom: 4px;
 }
 
@@ -6271,7 +6279,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-table-select .table {
-    margin-right: 20px;
+    /* margin-right: 20px; */
     margin-bottom: 10px;
 }
 
@@ -6981,7 +6989,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 38px !important;
+    line-height: 22px !important;
     padding-left: 2px !important;
     padding-top: 5px !important;
 }
@@ -10221,7 +10229,7 @@ table#clone {
 }
 
 #modalBaoCao .modal-dialog {
-    width: 880px !important
+    width: 90% !important
 }
 
 #modalBaoCao .group-title {
@@ -10594,7 +10602,7 @@ table#clone {
 }
 
 .modal_XacNhan.my-calendar .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 24px !important;
+    line-height: 15px !important;
 }
 
 .tblModal_DanhSachXacNhan tr td:first-child,
@@ -10641,7 +10649,7 @@ table#clone {
 }
 
 .aps-chiTiet-taiChinh .form-container-body .btn {
-    padding: 9px 0 5px 0 !important;
+    padding: 9px 0 0 0 !important;
     font-size: 15px !important;
     border-radius: 5px !important;
     font-weight: 700;
@@ -11023,4 +11031,72 @@ table#clone {
     right: 20px;
     height: 38px !important;
     border: 1px solid var(--color-blue) !important;
+}
+
+.box-list-gv .title-is-paging #btnChonNhanSu:hover {
+    background: var(--color-blue) !important;
+    color: #fff !important;
+    border: 1px solid var(--color-blue) !important;
+}
+
+.table .btn.btn-table-38,
+.table .dropdown.btn-table-38 .btn.btn-success.dropdown-toggle {
+    padding: 9px 15px 7.6px 15px !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
+    height: 38px !important;
+    line-height: 21px !important;
+}
+
+.table .btn.btn-table-38:hover {
+    padding: 9px 15px 7.6px 15px !important;
+    height: 38px !important;
+    line-height: 22px !important;
+}
+
+.table .btn.btn-table-38 i {
+    padding-right: 8px !important;
+}
+
+.table .btn.btn-table-38:hover i {
+    color: var(--color-yellow) !important;
+}
+
+.tblTaskBar_TongHopKetQua tr,
+.tblTaskBar_TongHopKetQua tr td {
+    border-bottom: 0 !important;
+}
+
+.table.table-noborder.tblTaskBar_TongHopKetQua thead tr {
+    border-bottom: 0 solid #d1d1d1 !important;
+}
+
+.table.table-noborder.tblTaskBar_TongHopKetQua thead tr td:last-child {
+    padding-right: 0 !important;
+}
+
+#tblTaskBar_TongHopKetQua td:nth-child(2) {
+    padding-left: 0px !important;
+}
+
+.aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(5),
+.aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(6),
+.aps-inbangdiem-table .tblSinhVien tr td:nth-last-child(7) {
+    text-align: left !important;
+}
+
+.tblDiemSinhVien tr td:last-child {
+    text-align: center !important;
+}
+
+.aps-add-kehoach {
+    overflow-y: scroll !important;
+    height: calc(100vh - 106px) !important;
+}
+
+.tblNguoiHoc tr:hover .btn.btnChuyenCan {
+    background: var(--color-blue) !important;
+}
+.tblHocKy_KetQua tr td:last-child{
+    text-align: left !important;
 }

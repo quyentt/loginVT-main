@@ -369,6 +369,10 @@ LichGiang.prototype = {
     -------------------------------------------*/
     getList_TuanHienTai: function (strNgayBatDau, strNgayKetThuc, strNgayDangChon) {
         var me = this;
+        console.log(edu.util.getValById('txtTuKhoa_CanBo') == "")
+        console.log(edu.util.getValById('dropSearch_CanBo') == null)
+        
+        if ($("#dropSearch_CanBo").length > 0 && edu.util.getValById('txtTuKhoa_CanBo') == "" && edu.util.getValById('dropSearch_CanBo') == null) return;
         //--Edit
         var obj_list = {
             'action': 'NS_ThongTinCanBo/LayDSLichGiang',
@@ -651,13 +655,27 @@ LichGiang.prototype = {
             html += '</div>';
         }
         $("#datebody").html(html);
-
-        var arrMau = ["#223771", "#f26522", "#ec4c00", "#5a7adb", "#3c5398"];
+        var arrMau = ["#223771", "#d49f3a", "#ec4c00", "#5a7adb", "#3c5398"];
+        var arrLopHocPhanMau = [];
+        data.forEach(e => {
+            if (arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN) == undefined) {
+                arrLopHocPhanMau.push({
+                    ID: e.IDLOPHOCPHAN,
+                    MAU: arrMau[arrLopHocPhanMau.length % arrMau.length]
+                })
+            }
+        });
         data.forEach((e, nRow) => {
+            var strMauNen = "";
+            try {
+                strMauNen = arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN).MAU;
+            } catch{
+
+            }
             var html = '';
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU*60 - e.PHUTBATDAU;
 
-            html += '<div class="task task-1 btnLichHoc" id="' + e.ID +'" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + arrMau[nRow%5] + '; cursor: pointer">';
+            html += '<div class="task task-1 btnLichHoc" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer" title="' + JSON.stringify(arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) +'">';
             html += '<div class="task-header">';
             html += '<div class="text">';
             html += '<div class="title">' + e.TENHOCPHAN + '</div>';
@@ -1101,7 +1119,7 @@ LichGiang.prototype = {
                     me.getList_DoiLich();
                 }
                 else {
-                    edu.system.alert(obj_save.action + ": " + data.Message);
+                    edu.system.alert(data.Message);
                 }
 
             },
@@ -1890,6 +1908,7 @@ LichGiang.prototype = {
 
     getList_HS: function () {
         var me = this;
+        //console.log(122222222);
         var strCoCauToChuc = edu.util.getValById("dropSearch_CapNhat_BoMon");
         var strTinhTrangNhanSu_Id = edu.util.getValById("dropSearch_CapNhat_TinhTrangLamViec");
         if (!edu.util.checkValue(strCoCauToChuc)) {

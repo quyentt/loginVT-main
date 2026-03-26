@@ -16,41 +16,46 @@
         </p>
     </div>
 
-    <div class="box-shadow register-wish pt-0">
+    <div class="box-shadow register-wish pt-0 aps-nguoihoc">
         <div class="form-top">
             <div class="row">
                 <div class="col-12 col-lg-12">
                     <div class="group-2">
-                        <div class="form-item d-flex align-items-center form-add-info">
-                            <div class="text-lable color-888">Thời gian</div>
-                            <div class="input-group no-icon">
-                                <select class="form-select select-opt" id="dropSearch_ThoiGian"
-                                    aria-label="Default select example">
-                                </select>
+                        <div class="form-list-input d-flex">
+                            <div class="form-item d-flex align-items-center form-add-info mr-10">
+                                <div class="text-lable color-888 d-none">Thời gian</div>
+                                <div class="input-group no-icon">
+                                    <select class="form-select select-opt" id="dropSearch_ThoiGian"
+                                        aria-label="Default select example">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-item d-flex align-items-center form-add-info mr-10">
+                                <div class="text-lable color-666 d-none">Học phần</div>
+                                <div class="input-group no-icon">
+                                    <select class="form-select select-opt" id="dropSearch_HocPhan"
+                                        aria-label="Default select example">
+                                    </select>
+                                </div>
                             </div>
                         </div>
-                        <div class="form-item d-flex align-items-center form-add-info mr-10">
-                            <div class="text-lable color-666">Học phần</div>
-                            <div class="input-group no-icon">
-                                <select class="form-select select-opt" id="dropSearch_HocPhan"
-                                    aria-label="Default select example">
-                                </select>
+                        <div class="aps-all-button d-flex">
+                            <div class="btn btn-primary" id="btnSearch"><i class="fal fa-poll-people me-2"></i> Danh
+                                sách
                             </div>
-                        </div>
-                        <div class="btn btn-primary" id="btnSearch"><i class="fal fa-poll-people me-2"></i> Danh sách
-                        </div>
-                        <div class="btn btn-success ml-10 mr-5" id="btnCongBo" style="margin-left: 10px">
-                            <i class="fa-solid fa-file-check pr5"></i><span>Xác nhận hoàn thành điểm danh tất cả các
-                                buổi học</span>
-                        </div>
-                        <div class="dropdown ms-4" id="zonebtnBaoCao_NguoiHoc">
-                            <button class="btn btn-outline-success min-w-auto mb-15 dropdown-toggle"
+                            <div class="btn btn-success ml-10 mr-5" id="btnCongBo" style="margin-left: 10px">
+                                <i class="fa-solid fa-file-check pr5"></i><span>Xác nhận hoàn thành điểm danh tất cả các
+                                    buổi học</span>
+                            </div>
+                            <div class="dropdown ms-4" id="zonebtnBaoCao_NguoiHoc">
+                                <!--<button class="btn btn-outline-success min-w-auto mb-15 dropdown-toggle"
                                 id="zonebtnBaoCao_NH" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-file-chart-line me-2"></i> Báo cáo
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="zonebtnBaoCao_NH">
                                 <li><a class="dropdown-item btnBaoCao_LHD" href="#">1. Báo cáo</a></li>
-                            </ul>
+                            </ul>-->
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -63,7 +68,7 @@
                         <i class="fa-solid fa-users-between-lines"></i>Danh sách người học theo lớp
                     </div>
                 </div>
-                <div class="aps-table-select pl-0 pr-0 mt-10">
+                <div class="aps-table-select scroll-table-x pl-0 pr-0 mt-10">
                     <table class="table transcrip-table tabs-scores tblNguoiHoc table-bordered table-noborder"
                         id="tblNguoiHoc">
                         <thead>
@@ -92,7 +97,8 @@
         Học viên</button>
     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
         Xác nhận</button>
-    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#mymodal_NhapChuyenCan">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+        data-bs-target="#mymodal_NhapChuyenCan">
         Các buổi học theo thời khóa biểu</button>
 </div>
 
@@ -169,7 +175,8 @@
                                 </p>
                             </div>
                             <div class="row aps-form-table">
-                                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
+                                <table
+                                    class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
                                     id="tblModal_XacNhan">
                                     <thead>
                                         <tr>
@@ -193,15 +200,15 @@
 
 
 <!-- modal Các buổi học theo thời khóa biểu-->
-<div class="modal fade finance-modal my-calendar modal-spec mymodal_NhapChuyenCan" id="mymodal_NhapChuyenCan" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade finance-modal my-calendar modal-spec mymodal_NhapChuyenCan" id="mymodal_NhapChuyenCan"
+    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-full modal-dialog-scrollable" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal is-btn-gr">
-                    <p><i class="fa-solid fa-calendar-circle-user fw-bold mr-5"></i>Các buổi học theo thời khóa biểu 
-                        <span class="color-fff">&ensp; - &ensp; - <span
-                                class="lblTenHoc"></span></span></p>
+                    <p><i class="fa-solid fa-calendar-circle-user fw-bold mr-5"></i>Các buổi học theo thời khóa biểu
+                        <span class="color-fff">&ensp; - &ensp; - <span class="lblTenHoc"></span></span>
+                    </p>
                     <div class="form-item d-flex  form-add-info col-12 col-lg-2">
                         <div class="input-group no-icon">
                             <select class="form-select select-opt" id="dropSearch_LoaiSapXep"
@@ -234,8 +241,9 @@
             <div class="modal-body register-wish">
                 <div class="body-content">
                     <div class="table-content pl-0 pt-0">
-                        <div class="scroll-y scroll-x">
-                            <table class="table transcrip-table tabs-scores table-bordered small-table fs-14 table-border tblNhapChuyenCan"
+                        <div class="scroll-y scroll-x ">
+                            <table
+                                class="table transcrip-table tabs-scores table-bordered small-table fs-14 table-border tblNhapChuyenCan"
                                 id="tblNhapChuyenCan">
                                 <thead>
                                     <tr>
@@ -272,7 +280,7 @@
                     <div class="date-list">
                         <div class="scroll-y">
                             <table class="table fs-14" id="tblLichGiang">
-                                <thead>                                    
+                                <thead>
                                     <tr>
                                         <th class="text-center w-50px" scope="col">STT</th>
                                         <th class="text-center" scope="col">Ngày</th>

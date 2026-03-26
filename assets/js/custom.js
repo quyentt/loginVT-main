@@ -289,6 +289,11 @@ $(document).ready(function () {
   $(".sidebar-bars").click(function () {
     $(".main-wrap").toggleClass("sidebar-toggle");
   });
+  $(".main-wrap").click(function(e) {
+    if ($(e.target).closest('.left-sidebar').length) return;
+
+    $(".main-wrap").removeClass("sidebar-toggle")
+});
 
   $(document).on("click", function (event) {
     if (

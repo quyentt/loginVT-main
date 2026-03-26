@@ -1,4 +1,16 @@
 /* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 1920px) {
+    .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
+        max-width: 135px;
+        text-align: center;
+        height: 68px;
+    }
+
+    .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
+        height: 66px;
+    }
+}
+
 @media only screen and (max-width: 1400px) {
 
     .aps-thanhtoan-naptien .col-sm-3,
@@ -58,26 +70,21 @@
     }
 }
 
-@media only screen and (max-width: 600px) {
-
-    .viewchungtu {
-        width: 100% !important;
+@media (max-width: 990px) {
+    .modal-body {
+        padding: 20px 15px !important;
     }
 
-    .zone-bus .bss-item .item-search {
-        width: 100%;
+    .my-calendar .modal-dialog {
+        width: 96% !important;
     }
 
-    .zone-bus .bss-item .item-search:last-child {
-        width: 100%;
+    .modal-nhapdiem .scroll-table-x table {
+        min-width: 1000px;
     }
 }
 
-
-/* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
-    ...
-}
+@media (max-width: 820px) {}
 
 /* Extra small devices (phones, 768px and down) */
 @media only screen and (max-width: 768px) {
@@ -115,9 +122,7 @@
         overflow-x: auto;
     }
 
-    .scroll-table-x table {
-        min-width: 1200px;
-    }
+
 
     .aps-box-table .nav-tabs-custom>.nav-tabs {
         margin-left: 0 !important;
@@ -168,17 +173,172 @@
     }
 }
 
+
+
+@media only screen and (max-width: 600px) {
+    .register-school-right, .register-school-left {
+    
+    .tblSinhVien tr td:nth-child(8),
+    .tblSinhVien tr td:nth-child(13),
+    .tblSinhVien tr td:nth-child(14),
+    .tblSinhVien tr td:nth-child(15),
+    .tblSinhVien tr td:nth-child(n+15){
+        text-align: center !important;
+    }
+    .scroll-table-x .tblHocPhanChuaQua {
+        min-width: 860px !important;
+    }
+    .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6,
+    .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
+        padding: 0 !important;
+    }
+
+    /* 
+    .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
+        padding-right: 0 !important;
+        padding-left: 0 !important;
+    } */
+    .aps-chiTiet-taiChinh .aps-table-select.scroll-table-x {
+        margin-bottom: 15px !important;
+    }
+
+    .aps-chiTiet-taiChinh .form-container-body .btn {
+        padding: 9px 0 0px 0 !important;
+        margin-bottom:5px !important;
+        height: 30px !important;
+    }
+
+    .register-school.study-program .table-title {
+        display: block !important;
+    }
+
+    .study-program-detail .label-bottom-line span {
+        width: 100% !important;
+    }
+
+    .aps-tt-hocPhan .col-12.col-md-6:last-child {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .study-program-detail .scroll-table-x table {
+        min-width: 600px;
+    }
+
+    .register-school.study-program .line {
+        display: none !important;
+    }
+
+    .modal-860,
+    .modal_XacNhan .modal-860 {
+        max-width: 96% !important;
+    }
+
+    .kqht-modal {
+        display: block !important;
+    }
+
+    .kqht-modal .left {
+        width: 100% !important;
+    }
+
+    .kqht-modal .right {
+        width: 100% !important;
+        padding-left: 0 !important;
+    }
+
+    .aps-inbangdiem-detail .aps-btn-list {
+        /* display: block !important; */
+        margin-top: 10px;
+    }
+
+    .aps-inbangdiem-detail .aps-btn-list .btn {
+        /* width: 100% !important; */
+        height: auto !important;
+    }
+
+    .viewchungtu {
+        width: 100% !important;
+    }
+
+    .zone-bus .bss-item .item-search {
+        width: 100%;
+    }
+
+    .zone-bus .bss-item .item-search:last-child {
+        width: 100%;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .tblTaskBar_TongHopKetQua,
+    .tblTaskBar_TongHopKetQua tr td {
+        width: 100% !important;
+    }
+
+    .tblTaskBar_TongHopKetQua tr td:first-child {
+        display: none !important;
+    }
+
+    .tblTaskBar_TongHopKetQua tr {
+        display: grid !important;
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {}
+
+
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {}
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {}
 
+/* Large devices (laptops/desktops, 992px and up) */
+@media screen and (min-width:768px) and (max-width: 992px) {
+
+    .form-top .col-12:nth-child(4),
+    .form-top .col-12:nth-child(8),
+    .form-top .col-12:nth-child(12) {
+        padding-right: 10px !important;
+    }
+
+    .form-top .col-12:nth-child(2),
+    .form-top .col-12:nth-child(4),
+    .form-top .col-12:nth-child(6) {
+        padding-right: 0 !important;
+    }
+
+    #zone_notify_nhapdiem .form-top .col-12:nth-child(4) {
+        padding-right: 10px !important;
+    }
+
+    .tblDSDiem {
+        min-width: 1860px !important;
+    }
+}
+
 /* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1024px) {
+
+    .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
+        padding: 0px 15px 0 0 !important;
+    }
+
+    .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6 {
+        padding: 0 0 0 15px !important;
+    }
 
     .zoneThongTinBoSung .col-lg-3 {
         /*padding-right: 15px;*/
+    }
+
+    .aps-chiTiet-taiChinh .aps-table-select .table tfoot tr td {
+        border-left: 0 solid #d1d1d1 !important;
+        border-right: 0 !important;
+        padding: 10px 8px 4px 8px !important;
     }
 }
 
@@ -187,70 +347,117 @@
     .zoneThongTinBoSung .col-lg-3:nth-child(4n) {
         padding-right: 0 !important;
     }
+}
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1900px) and (min-width: 1380px) {
-        .viewchungtu {
-            width: 25% !important;
-        }
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1900px) and (min-width: 1380px) {
+    .viewchungtu {
+        width: 25% !important;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1500px) and (min-width: 1200px) {
+    .aps-table-fileimport tr td {
+        display: flex;
+        height: 38px !important;
     }
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1500px) and (min-width: 1200px) {
-        .aps-table-fileimport tr td {
-            display: flex;
-            height: 38px !important;
-        }
-
-        .aps-table-fileimport tr .aps-form-input,
-        .aps-table-fileimport tr .aps-form-btn {
-            height: 48px !important;
-        }
-
-        .aps-table-fileimport tr:first-child td:nth-child(3) {
-            display: none;
-        }
-
-        .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
-            height: 73px !important;
-        }
+    .aps-table-fileimport tr .aps-form-input,
+    .aps-table-fileimport tr .aps-form-btn {
+        height: 48px !important;
     }
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1380px) and (min-width: 1140px) {
-        .viewchungtu {
-            width: 33.3333% !important;
-        }
+    .aps-table-fileimport tr:first-child td:nth-child(3) {
+        display: none;
     }
 
-    /* Extra large devices (large laptops and desktops, 1200px and up) */
-    @media only screen and (max-width: 1140px) and (min-width: 600px) {
-        .viewchungtu {
-            width: 50% !important;
-        }
+    .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
+        height: 73px !important;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1380px) and (min-width: 1140px) {
+    .viewchungtu {
+        width: 33.3333% !important;
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (max-width: 1140px) and (min-width: 600px) {
+    .viewchungtu {
+        width: 50% !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width:1024px) {
+    .aps-chiTiet-taiChinh .table>tfoot>tr>td:first-child,
+    .aps-chiTiet-taiChinh .table>tfoot>tr>td {
+        border-left: 0px solid #d1d1d1 !important;
+        border-right: 0 !important;
     }
 
-
-    @media only screen and (max-width: 1920px) {
-        .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
-            max-width: 135px;
-            text-align: center;
-            height: 68px;
-        }
-
-        .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
-            height: 66px;
-        }
+    .form-container-body {
+        padding: 0px !important;
+        width: 100% !important;
     }
 
-    @media (min-width: 1200px) {
-        .modal-xl {
-            width: 1140px;
-        }
+    .DSTrangThaiSV_QD .col-lg-2 {
+        width: 25% !important;
     }
 
-    @media (min-width: 576px) {
-        .modal-sm {
-            --bs-modal-width: 300px;
-        }
+    .aps-chiTiet-taiChinh .scroll-table-x table {
+        min-width: 680px !important;
     }
+
+    .calendar-week-table .date {
+        width: 68px !important;
+    }
+
+    .hour-row::before {
+        width: 105% !important;
+    }
+
+    .modal-body {
+        padding: 15px !important;
+    }
+
+    .modal .modal-dialog {
+        padding: 20px;
+    }
+
+    .modal-96,
+    .modal-90,
+    .khoikienthucchuyennganh .modal-xl {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .khoikienthucchuyennganh .modal-xl {
+        width: 100% !important;
+    }
+
+    .zoneLichHoc .register-school-left {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+}
+
+@media (min-width: 380px) and (max-width:680px) {
+    .DSTrangThaiSV_QD .col-12 {
+        width: 50%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-xl {
+        width: 1140px;
+    }
+}
+
+@media (min-width: 576px) {
+    .modal-sm {
+        --bs-modal-width: 300px;
+    }
+}

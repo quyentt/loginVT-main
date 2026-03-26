@@ -1092,7 +1092,7 @@ DanhMucNghe.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.IS_ACTIVE ? "" : "Hết hiệu lực";
+                        return aData.IS_ACTIVE ? "Hiệu lực" : "Hết hiệu lực";
                     }
                 },
                 {
@@ -1311,7 +1311,7 @@ DanhMucNghe.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.IS_ACTIVE ? "" : "Hết hiệu lực";
+                        return aData.IS_ACTIVE ? "Hiệu lực" : "Hết hiệu lực";
                     }
                 },
                 {
@@ -1524,7 +1524,7 @@ DanhMucNghe.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.IS_ACTIVE ? "" : "Hết hiệu lực";
+                        return aData.IS_ACTIVE ? "Hiệu lực" : "Hết hiệu lực";
                     }
                 },
                 {
@@ -1735,7 +1735,7 @@ DanhMucNghe.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.IS_ACTIVE ? "" : "Hết hiệu lực";
+                        return aData.IS_ACTIVE ? "Hiệu lực" : "Hết hiệu lực";
                     }
                 },
                 {

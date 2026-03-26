@@ -64,53 +64,56 @@
                         </div>
                         <label for="start_date_input" class="form-label main-label mr-10">Mã cán bộ</label>
                         <div class="form-group date-input search">
-                            <label for="txtTuKhoa_CanBo" id="btnSearch_CanBo" class="form-label"><i
-                                    class="fas fa-search"></i></label>
+                            <label for="txtTuKhoa_CanBo" id="btnSearch_CanBo" class="form-label">
+                                <i class="fas fa-search"></i>
+                            </label>
                             <input type="text" id="txtTuKhoa_CanBo" class="form-control"
                                 placeholder="Tìm kiếm thông tin">
                         </div>
                     </div>
                     <p class="color-dask-blue fw-bold fs-18" id="lblCanBoTimKiem"></p>
                 </div>
-                <div class="calendar-week-table">
-                    <div class="date-header" id="date-header">
-                        <div class="date">
-                            <i class="fal fa-clock day color-66"></i>
-                            <p class="m-0 text">GMT+7</p>
+                <div class="lich-canhan">
+                    <div class="calendar-week-table">
+                        <div class="date-header" id="date-header">
+                            <div class="date">
+                                <i class="fal fa-clock day color-66"></i>
+                                <p class="m-0 text">GMT+7</p>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">9</div>
+                                <div class="text">Mon</div>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">10</div>
+                                <div class="text">Tue</div>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">11</div>
+                                <div class="text">Wed</div>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">12</div>
+                                <div class="text">Thu</div>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">13</div>
+                                <div class="text">Fri</div>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">14</div>
+                                <div class="text">Sat</div>
+                            </div>
+                            <div class="day-of-week">
+                                <div class="day">15</div>
+                                <div class="text">Sun</div>
+                            </div>
                         </div>
-                        <div class="day-of-week">
-                            <div class="day">9</div>
-                            <div class="text">Mon</div>
+                        <div class="date-body" id="datebody">
+
                         </div>
-                        <div class="day-of-week">
-                            <div class="day">10</div>
-                            <div class="text">Tue</div>
-                        </div>
-                        <div class="day-of-week">
-                            <div class="day">11</div>
-                            <div class="text">Wed</div>
-                        </div>
-                        <div class="day-of-week">
-                            <div class="day">12</div>
-                            <div class="text">Thu</div>
-                        </div>
-                        <div class="day-of-week">
-                            <div class="day">13</div>
-                            <div class="text">Fri</div>
-                        </div>
-                        <div class="day-of-week">
-                            <div class="day">14</div>
-                            <div class="text">Sat</div>
-                        </div>
-                        <div class="day-of-week">
-                            <div class="day">15</div>
-                            <div class="text">Sun</div>
-                        </div>
-                    </div>
-                    <div class="date-body" id="datebody">
 
                     </div>
-
                 </div>
             </div>
         </div>
@@ -122,8 +125,9 @@
                     <span id="thang"></span> - <span id="nam"></span>
                     <div class="next-prev-month month">
                         <a class="prev" style="color: white"><i class="fal fa-chevron-left me-4"></i></a>
-                        <a class="next" style="color: white; padding-left: 20px"><i
-                                class="fal fa-chevron-right"></i></a>
+                        <a class="next" style="color: white; padding-left: 20px">
+                            <i class="fal fa-chevron-right"></i>
+                        </a>
                     </div>
                 </div>
                 <div class="calendar-block-cover">
@@ -165,25 +169,29 @@
 <!-- ---------- -->
 <div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#my_calendar">
-        khối kiến thức chuyên ngành</button>
+        khối kiến thức chuyên ngành
+    </button>
     <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalDoiLich">
-        Yêu cầu đổi lịch</button>
+        Yêu cầu đổi lịch
+    </button>
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalXemLich">
-        Yêu cầu đổi lịch</button>
+        Yêu cầu đổi lịch
+    </button>
     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalPheDuyet">
-        khối kiến thức chuyên ngành</button>
+        khối kiến thức chuyên ngành
+    </button>
 </div>
 <!-- ---------- -->
 <!-- modal khối kiến thức chuyên ngành-->
 <div class="modal fade finance-modal my-calendar" id="my_calendar" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-90 modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
                     <p id="lblHocPhan"><i class="fa-solid fa-books fw-bold mr-10"></i>Khối kiến thức chuyên ngành</p>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close color-fff" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
                 <div class="calendar-form-top mb-3">
@@ -210,35 +218,42 @@
                         </div>
 
                     </div>
-                    <button id="btnSaveTuKhoa" class="btn btn-sm btn-outline-success min-w-auto fs-14 atten-mid-btn"><i
-                            class="fal fa-save me-2"></i><span>Lưu từ khóa</span></button>
-                    <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3"><i
-                            class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span></button>
+                    <button id="btnSaveTuKhoa" class="btn btn-sm btn-outline-primary min-w-auto fs-14 atten-mid-btn">
+                        <i class="fal fa-save me-2"></i><span>Lưu từ khóa</span>
+                    </button>
+                    <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3">
+                        <i class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span>
+                    </button>
                 </div>
                 <div class="d-flex align-items-center bg-orange summary-atten mt-15">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh thủ công</b>
                     <div id="zoneSiSoSV"> </div>
 
                     <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
-                        id="btnDiemDanh"><i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span></button>
+                        id="btnDiemDanh">
+                        <i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span>
+                    </button>
                 </div>
-                <table class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder tblNhapChuyenCan"
-                    id="tblNhapChuyenCan">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-50px" scope="col">STT</th>
-                            <th scope="col">Số buổi vắng tích lũy</th>
-                            <th scope="col">Mã số</th>
-                            <th scope="col">Họ đệm</th>
-                            <th scope="col">Tên</th>
-                            <th class="text-center" scope="col">Địa chỉ IP</th>
-                            <th class="text-center" scope="col">Tự điểm danh</th>
-                            <!--<th class="text-center" scope="col">Có mặt(44)</th>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder tblNhapChuyenCan"
+                        id="tblNhapChuyenCan">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Số buổi vắng tích lũy</th>
+                                <th scope="col">Mã số</th>
+                                <th scope="col">Họ đệm</th>
+                                <th scope="col">Tên</th>
+                                <th class="text-center" scope="col">Địa chỉ IP</th>
+                                <th class="text-center" scope="col">Tự điểm danh</th>
+                                <!--<th class="text-center" scope="col">Có mặt(44)</th>
                                 <th class="text-center" scope="col">Vắng mặt(2)</th>-->
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -334,7 +349,7 @@
                                     <span>Đổi sang</span>
                                 </div>
                                 <label for="">Phòng học</label>
-                                <div class="input-group">
+                                <div class="input-group phong-doi">
                                     <select class="form-select select-opt" id="dropPhongHoc_DoiSang"></select>
                                     <i class="fal fa-users-class"></i>
                                 </div>
@@ -524,8 +539,9 @@
             </div>
             <div class="modal-footer">
                 <div class="gv-button-group pull-right pt-0 d-flex">
-                    <button type="button" class="btn btn-default mb-0" data-dismiss="modal" id="btnCancel"><i
-                            class="fa fa-times-circle"></i> Đóng</button>
+                    <button type="button" class="btn btn-default mb-0" data-dismiss="modal" id="btnCancel">
+                        <i class="fa fa-times-circle"></i> Đóng
+                    </button>
                     <a class="btn btn-primary mb-0" id="btnLuuPheDuyet" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-save me-2"></i>
                         <span>Lưu</span>
@@ -536,6 +552,23 @@
     </div>
 </div>
 
+<div class="modal fade finance-modal my-calendar" id="modalHTSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: unset">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p id="lblHTSinhVien"></p>
+
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3" id="zoneHTSinhVien">
+            </div>
+
+        </div>
+    </div>
+</div>
 <!-- page script -->
 <script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.2"></script>
 <script src="modules/lichgiang/script/jquery-searchbox.js"></script>

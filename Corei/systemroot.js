@@ -1436,7 +1436,7 @@ systemroot.prototype = {
             $("#" + strTable_Id).before(class_pull_right);
 
             var row_change = "";
-            row_change += '<div style="padding-left:0 !important; margin-top:6px; float:left; font-style:italic">';
+            row_change += '<div class="aps-hienthi"  style="padding-left:0 !important; margin-top:10px; float:left; font-style:italic">';
             row_change += '<label>Hiển thị</label>';
             row_change += '</div>';
             row_change += '<div style="width: 70px; padding-left:3px !important; float:left">';
@@ -1448,7 +1448,7 @@ systemroot.prototype = {
             row_change += '<option value="100000"> Tất cả </option>';
             row_change += '</select>';
             row_change += '</div>';
-            row_change += '<div style="padding-left:3px !important; margin-top:6px; float:left; font-style:italic">';
+            row_change += '<div class="aps-dulieu" style="padding-left:3px !important; margin-top:10px; float:left; font-style:italic">';
             row_change += '<label>dữ liệu</label>';
             row_change += '</div>';
             $("#" + strPageSize_Id).html(row_change);
@@ -1482,7 +1482,7 @@ systemroot.prototype = {
         zonePagHeader += '<div class="clear"></div>';
         //html change top left
         zonePagHeader += '<div class="pull-left col-lg-6 change-' + strTable_Id + '" id="change' + strTable_Id + '" style="padding-left:0px; font-style:itali">';
-        zonePagHeader += '<div style="padding-left:0 !important; margin-top:6px; float:left; font-style:italic">';
+        zonePagHeader += '<div class="aps-hienthi" style="padding-left:0 !important; margin-top:10px; float:left; font-style:italic">';
         zonePagHeader += '<label>Hiển thị</label>';
         zonePagHeader += '</div>';
         zonePagHeader += '<div style="width: 70px; padding-left:3px !important; float:left">';
@@ -1494,7 +1494,7 @@ systemroot.prototype = {
         zonePagHeader += '<option value="100000"> Tất cả </option>';
         zonePagHeader += '</select>';
         zonePagHeader += '</div>';
-        zonePagHeader += '<div style="padding-left:3px !important; margin-top:6px; float:left; font-style:italic">';
+        zonePagHeader += '<div class="aps-dulieu" style="padding-left:3px !important; margin-top:10px; float:left; font-style:italic">';
         zonePagHeader += '<label>dữ liệu</label>';
         zonePagHeader += '</div>';
         zonePagHeader += '</div>';
@@ -1554,7 +1554,7 @@ systemroot.prototype = {
 
         var zonePagFooter = '';
         zonePagFooter += '<div class="zone-pag-footer' + strTable_Id + '" style="width:100%; float:right; margin-top: 10px">';
-        zonePagFooter += '<div class="info-' + strTable_Id + '" style="width: 40%; float:left"></div>';
+        zonePagFooter += '<div class="color-888 line-38 info-' + strTable_Id + '" style="width: 40%; float:left"></div>';
         zonePagFooter += '<div id="light-pagination' + strTable_Id + '" class="light-pagination' + strTable_Id + '" style="float:right; width: 60%"></div>';
         zonePagFooter += '</div>';
         $("#" + strTable_Id).after(zonePagFooter);

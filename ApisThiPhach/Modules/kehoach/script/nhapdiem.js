@@ -152,6 +152,7 @@ NhapDiem.prototype = {
             me.getList_TuiBai();
         });
         edu.system.getList_MauImport("zonebtnBaoCao_Nhap", function (addKeyValue) {
+            addKeyValue("strDaoTao_ThoiGianDaoTao_Id", edu.util.getValCombo("dropSearch_ThoiGian"));
             addKeyValue("strThi_DotThi_Id", edu.util.getValCombo("dropSearch_DotThi"));
             addKeyValue("strDaoTao_HocPhan_Id", edu.util.getValCombo("dropSearch_MonThi"));
             addKeyValue("strDanhSachThi_Id", main_doc.NhapDiem.strTuiBai_Id);

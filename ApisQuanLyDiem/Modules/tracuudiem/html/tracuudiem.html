@@ -10,7 +10,8 @@
     }
 
     #tblTaskBar_TongHopKetQua td {
-        padding-left: 10px !important;
+        padding-left: 3px !important;
+        border: 0 !important;
     }
 </style>
 <link href="Modules/TraCuuDiem/css/bootstrap-colorselector.min.css" rel="stylesheet" /><!-- editor -->
@@ -21,54 +22,57 @@
             <!-- box Notify_VBSC -->
             <div class="box box-solid zone-bus pd0" id="zone_notify_TraCuuDiem">
                 <!--Box search-->
-                <div class="box box-solid  box-search pl10 pt15 pb15 pr20">
+                <div class="box box-solid  box-search pl20 pt10 pb20 pr20">
                     <div class="box-header with-border d-none">
                         <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
                     </div>
                     <div class="box-body pd0">
-                        <table class="table table-noborder table-form-add mb-0" id="tblTaskBar_TongHopKetQua">
+                        <table class="table table-noborder table-form-add mb-0 tblTaskBar_TongHopKetQua"
+                            id="tblTaskBar_TongHopKetQua">
                             <thead>
-                                <tr>
-                                    <td class="aps-form-lable" style="width:11% !important;">Hệ đào tạo</td>
+                                <tr class="aps-table-form-item">
+                                    <td class="aps-form-lable d-none" style="width:11% !important;">Hệ đào tạo</td>
                                     <td class="aps-form-input" style="width:25%  !important;">
                                         <select id="dropHeDaoTao" class="select-opt" multiple="multiple">
                                             <option value="">-- Chọn hệ đào tạo --</option>
                                         </select>
                                     </td>
-
-                                    <td class="aps-form-lable text-right" style="width:10%  !important;">Khóa đào tạo
+                                    <td class="aps-form-lable text-right d-none" style="width:10%  !important;">Khóa đào
+                                        tạo
                                     </td>
                                     <td class="aps-form-input" style="width:22%  !important;">
                                         <select id="dropKhoaDaoTao" class="select-opt" multiple="multiple">
                                             <option value="">-- Chọn khóa đào tạo --</option>
                                         </select>
                                     </td>
-
-                                    <td class="aps-form-lable text-right" style="width:10%  !important;">Khoa quản lý
+                                    <td class="aps-form-lable text-right d-none" style="width:10%  !important;">Khoa
+                                        quản lý
                                     </td>
                                     <td class="aps-form-input" style="width:22%  !important;">
                                         <select id="dropKhoaQuanLy" class="select-opt" multiple="multiple">
                                             <option value="">-- Chọn khoa quản lý--</option>
                                         </select>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="aps-form-lable" style="width:11%  !important;">Chương trình đào tạo</td>
-                                    <td class="aps-form-input" style="width:25%  !important;">
+                                    <td class="aps-form-lable d-none" style="width:11%  !important;">Chương trình đào
+                                        tạo</td>
+                                    <td class="aps-form-input pl0" style="width:25%  !important;">
                                         <select id="dropChuongTrinhDaoTao" class="select-opt" multiple="multiple">
-                                            <option value="">-- Chọn chương trình đào tạo--</option>
+                                            <option value="1">-- Chọn chương trình đào tạo--</option>
                                         </select>
                                     </td>
-
-                                    <td class="aps-form-lable text-right" style="width:10%  !important;">Lớp quản lý
+                                </tr>
+                                <tr class="aps-table-form-item">
+                                    <td class="aps-form-lable text-right d-none" style="width:10%  !important;">Lớp quản
+                                        lý
                                     </td>
                                     <td class="aps-form-input" style="width:22%  !important;">
                                         <select id="dropLopQuanLy" class="select-opt" multiple="multiple">
-                                            <option value="">-- Chọn lớp quản lý--</option>
+                                            <option value="1">-- Chọn lớp quản lý--</option>
                                         </select>
                                     </td>
 
-                                    <td class="aps-form-lable text-right" style="width:10% !important;">Tình trạng sinh
+                                    <td class="aps-form-lable text-right d-none" style="width:10% !important;">Tình
+                                        trạng sinh
                                         viên
                                     </td>
                                     <td class="aps-form-input" style="width:22% !important;">
@@ -76,76 +80,40 @@
                                             <option value="">-- Chọn tình trạng sinh viên--</option>
                                         </select>
                                     </td>
-                                </tr>
-                                <tr>
-                                    <td class="aps-form-lable" style="width:11% !important;">Thang điểm</td>
+                                    <td class="aps-form-lable d-none" style="width:11% !important;">Thang điểm</td>
                                     <td class="aps-form-input" style="width:25% !important;">
                                         <select id="dropThangDiem" class="select-opt" multiple="multiple">
                                             <option value="">-- Chọn thang điểm--</option>
                                         </select>
                                     </td>
-                                    <td class="aps-form-lable text-right" style="width:10% !important;">Lọc theo</td>
-                                    <td class="aps-form-input" style="width:22% !important;">
+                                    <td class="aps-form-lable text-right d-none" style="width:10% !important;">Lọc theo
+                                    </td>
+                                    <td class="aps-form-input" style="width:25% !important;">
                                         <select id="dropLocTheo" class="select-opt" multiple="multiple">
                                             <option value="HOCPHAN_CHUONGTRINH">Học phần - chương trình</option>
                                             <option value="HOCPHAN_LOP">Học phần - lớp</option>
                                             <option value="DULIEUDIEM">Kết quả điểm</option>
                                         </select>
                                     </td>
-                                    <td class="aps-form-lable text-right" style="width:10% !important;">Phạm vi tổng hợp
+                                </tr>
+                                <tr class="aps-table-form-item">
+                                    <td class="aps-form-lable text-right d-none" style="width:10% !important;">Phạm vi
+                                        tổng hợp
                                     </td>
                                     <td class="aps-form-input" style="width:22% !important;">
                                         <select id="dropPhanViTongHop" class="select-opt">
                                             <option value="">-- Chọn phạm vi tổng hợp--</option>
                                         </select>
                                     </td>
-                                </tr>
-
-                                <tr class="zonePhamVi" id="zone_TOANKHOA" style="display: none">
-                                    <td class="aps-form-lable">Toàn khóa</td>
-                                </tr>
-                                <tr class="zonePhamVi" id="zone_NHIEUKY" style="display: none">
-                                    <td class="aps-form-lable">Nhiều kỳ</td>
-                                    <td class="aps-form-input">
-                                        <select id="dropPhanViTongHop_NHIEUKY" class="select-opt">
-                                            <option value="">-- Chọn kỳ--</option>
-                                        </select>
+                                    <td class="aps-form-lable d-none" style="width:11% !important;">Thông tin tìm kiếm
                                     </td>
-                                </tr>
-                                <tr class="zonePhamVi" id="zone_NAMHOC" style="display: none">
-                                    <td class="aps-form-lable">Năm học</td>
-                                    <td class="aps-form-input">
-                                        <select id="dropPhanViTongHop_NAMHOC" class="select-opt" multiple="multiple">
-                                            <option value="">-- Chọn năm học--</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="zonePhamVi" id="zone_HOCKY" style="display: none">
-                                    <td class="aps-form-lable">Học kỳ</td>
-                                    <td class="aps-form-input">
-                                        <select id="dropPhanViTongHop_HOCKY" class="select-opt" multiple="multiple">
-                                            <option value="">-- Chọn học kỳ--</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr class="zonePhamVi" id="zone_DOTHOC" style="display: none" multiple="multiple">
-                                    <td class="aps-form-lable">Đợt học</td>
-                                    <td class="aps-form-input">
-                                        <select id="dropPhanViTongHop_DOTHOC" class="select-opt">
-                                            <option value="">-- Chọn đợt học --</option>
-                                        </select>
-                                    </td>
-                                </tr>
-
-                                <tr>
-                                    <td class="aps-form-lable" style="width:11% !important;">Thông tin tìm kiếm</td>
                                     <td class="aps-form-input" style="width:35% !important;" colspan="2">
                                         <input id="txtSearch_TuKhoa" class="form-control"
                                             placeholder="Nhập mã số hoặc tên" />
                                     </td>
                                     <td style="width:54%" colspan="3">
-                                        <div class="d-flex aps-table-list-btn">
-                                            <div class="dropdown" id="zonebtnBaoCao_TCD">
+                                        <div class="d-flex">
+                                            <div class="dropdown btn-table-38" id="zonebtnBaoCao_TCD">
                                                 <!--<button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span class="caret"></span>
                                             </button>
@@ -153,11 +121,48 @@
                                                 <li><a class="btnBaoCao_LHD" name="DeTai" href="#"> 1. Đề tài</a></li>
                                             </ul>-->
                                             </div>
-                                            <a class="btn btn-primary ml-10" id="btnSearch"><i
-                                                    class="fa-light fa-book-open-cover"></i> Xem học phần của lớp</a>
-                                            <a class="btn btn-danger ml-10" id="btnXemBangDiem"><i
-                                                    class="fa-light fa-book-open-reader"></i> Xem bảng điểm</a>
+                                            <a class="btn btn-primary ml-10 btn-table-38" id="btnSearch">
+                                                <i class="fa-light fa-book-open-cover"></i>Xem học phần của lớp</a>
+                                            <a class="btn btn-danger ml-10 btn-table-38" id="btnXemBangDiem">
+                                                <i class="fa-light fa-book-open-reader"></i>Xem bảng điểm</a>
                                         </div>
+                                    </td>
+                                </tr>
+
+                                <tr class="zonePhamVi aps-table-form-item" id="zone_TOANKHOA" style="display: none">
+                                    <td class="aps-form-lable fw-bold">Toàn khóa</td>
+                                </tr>
+                                <tr class="zonePhamVi aps-table-form-item" id="zone_NHIEUKY" style="display: none">
+                                    <td class="aps-form-lable">Nhiều kỳ</td>
+                                    <td class="aps-form-input">
+                                        <select id="dropPhanViTongHop_NHIEUKY" class="select-opt">
+                                            <option value="">-- Chọn kỳ--</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="zonePhamVi aps-table-form-item" id="zone_NAMHOC" style="display: none">
+                                    <td class="aps-form-lable">Năm học</td>
+                                    <td class="aps-form-input">
+                                        <select id="dropPhanViTongHop_NAMHOC" class="select-opt" multiple="multiple">
+                                            <option value="">-- Chọn năm học--</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="zonePhamVi aps-table-form-item" id="zone_HOCKY" style="display: none">
+                                    <td class="aps-form-lable">Học kỳ</td>
+                                    <td class="aps-form-input">
+                                        <select id="dropPhanViTongHop_HOCKY" class="select-opt" multiple="multiple">
+                                            <option value="">-- Chọn học kỳ--</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr class="zonePhamVi aps-table-form-item" id="zone_DOTHOC" style="display: none"
+                                    multiple="multiple">
+                                    <td class="aps-form-lable">Đợt học</td>
+                                    <td class="aps-form-input">
+                                        <select id="dropPhanViTongHop_DOTHOC" class="select-opt">
+                                            <option value="">-- Chọn đợt học --</option>
+                                        </select>
                                     </td>
                                 </tr>
                             </thead>
@@ -169,8 +174,8 @@
                 </div>
                 <!--Box Danh sach-->
                 <div class="box box-solid aps-tracuudiem-list pd20 pt20">
-                    <div class="box-header pb20">
-                        <h3 class="box-title color-blue mt-0" title="Danh sách bảng điểm">
+                    <div class="box-header pb20 pl0 pr0">
+                        <h3 class="box-title color-blue mt-0 line-20" title="Danh sách bảng điểm">
                             <i class="fa-solid fa-list-timeline"></i> Danh sách bảng điểm
                         </h3>
                         <span class="badge bg-light-blue">
@@ -178,12 +183,12 @@
                         </span>
                     </div>
                     <div class="box-body pd0">
-                        <table id="tblDSDiem" class="table table-hover table-bordered">
+                        <table id="tblDSDiem" class="table table-hover table-bordered table-noborder tblDSDiem mt-10">
                             <thead>
                                 <tr>
-                                    <th class="td-fixed td-center">Stt</th>
-                                    <th class="td-center">Mã</th>
-                                    <th class="td-center">Tên</th>
+                                    <th class="td-fixed td-center w-50px">Stt</th>
+                                    <th class="td-left">Mã</th>
+                                    <th class="td-left">Tên</th>
                                     <th class="td-center td-fixed">
                                         <input type="checkbox" id="chkSelectAll_Diem">
                                     </th>
@@ -205,8 +210,7 @@
                                 <i class="fa-light fa-book-open-reader"></i> Bảng điểm</span>
                             <span>
                                 <a class="btn btn-success btnReportAll ml-10 pull-left" name="tblTraCuuDiem" href="#"
-                                    title="Export">
-                                    <i class="fa fa-file-excel-o"></i> Export</a>
+                                    title="Export"> <i class="fa fa-file-excel-o"></i>Export</a>
                             </span>
                         </h3>
 

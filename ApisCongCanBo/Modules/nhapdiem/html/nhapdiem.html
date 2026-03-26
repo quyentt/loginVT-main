@@ -59,7 +59,7 @@
 
                 <div class="col-lg-2 col-md-4 col-12  d-flex mb-15">
                     <a class="btn btn-default btn-search" id="btnSearch">
-                        <i class="fal fa-search me-2"></i> Tìm kiếm</a>
+                        <i class="fal fa-search me-2"></i>Tìm kiếm</a>
                 </div>
 
             </div>
@@ -69,18 +69,20 @@
                 <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
                 <div class="ms-auto">
                     <div class="btn btn-success" id="btnThongKe">
-                        <i class="fa-solid fa-square-poll-horizontal"></i> Thống kê</div>
+                        <i class="fa-solid fa-square-poll-horizontal"></i>Thống kê
+                    </div>
                 </div>
             </div>
-            <div class="aps-table-select">
-                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem" id="tblDSDiem">
+            <div class="aps-table-select scroll-table-x">
+                <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDSDiem mr-0"
+                    id="tblDSDiem">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Loại danh sách</th>
                             <th scope="col">Mã danh sách</th>
                             <th scope="col">Tên danh sách</th>
-                            <th scope="col">Mã học phần</th>                            
+                            <th scope="col">Mã học phần</th>
                             <th scope="col">Tên học phần</th>
                             <th class="text-center" scope="col">Số lượng</th>
                             <th scope="col">Thời gian</th>
@@ -95,10 +97,11 @@
             </div>
         </div>
     </div>
-    <!-- end đăng ký nguyện vọng -->
-    <div class="box-shadow register-wish pt-0 zone-bus" id="zone_input_nhapdiem" style="display: none">
+    <!-- Nhập điểm -->
+    <div class="box-shadow register-wish pt-0 zone-bus zone_input_nhapdiem" id="zone_input_nhapdiem"
+        style="display: none">
         <div class="title-is-back">
-            <a href="#" class="btnClose">
+            <a href="#" class="btnClose mt-2">
                 <i class="fal fa-arrow-left"></i>
                 <span>Nhập điểm</span>
             </a>
@@ -106,7 +109,7 @@
         </div>
         <div class="container-fluid px-20">
             <div class="gv-button-group row">
-                <div class="form-item d-flex  form-add-info col-12 col-lg-2">
+                <div class="form-item d-flex  form-add-info col-12 col-lg-2 pl-0 pr0">
                     <div class="input-group no-icon">
                         <select class="form-select select-opt" id="dropSearch_LoaiSapXep"
                             aria-label="Default select example">
@@ -116,7 +119,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-12 col-lg-10 d-flex justify-content-end flex-wrap aps-gap-10">
+                <div class="col-12 col-lg-10 d-flex justify-content-end flex-wrap gv-button-list aps-gap-10 pr0 pl-0">
                     <div class="dropdown" id="zonebtnBaoCao_Diem"> </div>
                     <button class="btn btn-sm btn-outline-success min-w-auto ms-3 btnXacNhanDiemXN"><i
                             class="fas fa-check-circle me-2"></i><span>Vi phạm điều kiện thi</span></button>
@@ -134,20 +137,23 @@
                             class="fas fa-calculator me-2"></i><span>Tính lại</span></button>
                     <button class="btn btn-sm btn-dask-blue min-w-auto ms-3 btnSaveDSDiem"><i
                             class="fas fa-save me-2"></i><span>Lưu</span></button>
+                    <button type="button" class="btn btn-default btnClose" data-bs-dismiss="modal">
+                        <i class="fa fa-times" aria-hidden="true"></i>Đóng</button>
                 </div>
             </div>
-
-            <table class="table transcrip-table tabs-scores table-bordered small-table" id="tblNhapDiem" colreport="1">
-                <thead>
-                </thead>
-                <tbody></tbody>
-            </table>
-
-
+            <div class="aps-table-select scroll-table-x">
+                <table class="table transcrip-table tabs-scores table-bordered small-table table-border tblNhapDiem"
+                    id="tblNhapDiem" colreport="1">
+                    <thead>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="box-shadow register-wish pt-0 zone-bus" id="zone_thongke" style="display: none">
+    <!-- Thống kê kết quả -->
+    <div class="box-shadow register-wish pt-0 zone-bus zone_thongke" id="zone_thongke" style="display: none;">
         <div class="title-is-back">
             <a href="#" class="btnClose">
                 <i class="fal fa-arrow-left"></i>
@@ -155,7 +161,7 @@
             </a>
         </div>
         <div class="container-fluid px-20">
-            <div class="tabs-scores">
+            <div class="tabs-scores tabs-thongke-kq mt-10">
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                         <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#tab_1"
@@ -186,10 +192,24 @@
                 <div class="tab-content" id="myTabContent">
                     <!-- danh sách đối tượng tham gia khảo sát -->
                     <div class="tab-pane fade show active" id="tab_1" role="tabpanel" aria-labelledby="home-tab">
-                        <div>
+                        <div class="aps-table-select scroll-table-x">
                             <table class="table table-bordered table-noborder tblTKDiemChu" id="tblTKDiemChu">
                                 <thead>
-                                    <tr></tr>
+                                    <tr>
+                                        <!-- <th class="text-center w-50px" scope="col">STT</th>
+                                    <th scope="col">Loại danh sách</th>
+                                    <th scope="col">Mã danh sách</th>
+                                    <th scope="col">Tên danh sách</th>
+                                    <th scope="col">Mã học phần</th>
+                                    <th scope="col">Tên học phần</th>
+                                    <th class="text-center" scope="col">Số lượng</th>
+                                    <th scope="col">Thời gian</th>
+                                    <th scope="col">Khóa mở lớp</th>
+                                    <th class="text-center" scope="col">File</th>
+                                    <th class="text-center" scope="col">Hiển thị</th>
+                                    <th class="text-center" scope="col"><input type="checkbox"
+                                            class="chkSystemSelectAll"></th> -->
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                                 <tfoot></tfoot>
@@ -243,7 +263,7 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_XacNhan">
         Hoàn thành nhập điểm</button>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal_XacNhanDiem">
-         Vi phạm điều kiện thi</button>   
+        Vi phạm điều kiện thi</button>
 </div>
 <!-- ---------- -->
 <!-- modal Hoàn thành nhập điểm-->
@@ -253,7 +273,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field fw-bold mr-10"></i>Hoàn thành nhập điểm</p>
+                    <p><span class="loaiXacNhan"></span> Hoàn thành nhập điểm</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -273,17 +293,21 @@
                 </div>
 
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>
-                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder" id="tblModal_XacNhan">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-50px" scope="col">STT</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Người xác nhận</th>
-                            <th class="text-center" scope="col">Thời gian</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
+                        id="tblModal_XacNhan">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col" class="w-200px">Người xác nhận</th>
+                                <th class="text-center w-100px" scope="col">Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -296,7 +320,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field mr-10"></i>Vi phạm điều kiện thi</p>
+                    <p><span class="loaiXacNhan"></span><i class="fa-solid fa-pen-field mr-10"></i>Vi phạm điều kiện thi
+                    </p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -325,17 +350,21 @@
                             ý</span></a>
                 </div>
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>
-                <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanXN table-bordered table-noborder" id="tblModal_XacNhanXN">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-50px" scope="col">STT</th>
-                            <th scope="col">Trạng thái</th>
-                            <th scope="col">Người xác nhận</th>
-                            <th class="text-center" scope="col">Thời gian</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanXN table-bordered table-noborder"
+                        id="tblModal_XacNhanXN">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col" class="w-200px">Người xác nhận</th>
+                                <th class="text-center w-100px" scope="col">Thời gian</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
