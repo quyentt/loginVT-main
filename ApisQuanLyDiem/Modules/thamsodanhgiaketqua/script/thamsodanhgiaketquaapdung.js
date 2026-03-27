@@ -190,6 +190,13 @@ ThamSoDanhGiaKetQuaApDung.prototype = {
         $("#dropNam_KT").on("select2:select", function () {
             me.getList_ThoiGianDaoTao2();
         });
+        $("#btnDienTuDong").click(function () {
+            var strThoiGian_Id = edu.util.getValById("dropThoiGian_KT")
+            me["dtKeThua"].forEach(e => {
+                if (!$("#dropThoiGian_" + e.ID).val())
+                $("#dropThoiGian_" + e.ID).val(strThoiGian_Id).trigger("change");
+            })
+        });
     },
     page_load: function () {
         var me = this;
@@ -878,6 +885,17 @@ ThamSoDanhGiaKetQuaApDung.prototype = {
                     var iPager = 0;
                     me["dtThoiGianDaoTao2"] = data.Data;
                     me.genComThoiGian();
+                    var obj = {
+                        data: data.Data,
+                        renderInfor: {
+                            id: "ID",
+                            parentId: "",
+                            name: "DAOTAO_THOIGIANDAOTAO"
+                        },
+                        renderPlace: ["dropThoiGian_KT"],
+                        title: "Chọn thời gian"
+                    };
+                    edu.system.loadToCombo_data(obj);
                 }
                 else {
                     edu.system.alert("KHCT_ThoiGianDaoTao/LayDanhSach: " + data.Message, "w");
