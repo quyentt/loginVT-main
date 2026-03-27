@@ -38,17 +38,60 @@
     
     /* Search Bar Section - New */
     .search-bar-section {
-        padding: 15px;
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .search-bar-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
     
     .search-bar-header {
-        margin-bottom: 15px;
+        margin-bottom: 0;
     }
     
     .search-bar-header .title-text {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 600;
         color: #223771;
+        margin-bottom: 8px;
+    }
+    
+    .search-bar-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+        font-style: italic;
+    }
+    
+    .search-bar-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        border-left: 4px solid #223771;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #495057;
+    }
+    
+    .info-item i {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
     }
     
     .search-bar-controls {
@@ -56,40 +99,44 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px solid #e9ecef;
     }
     
     .search-bar-controls .form-select {
-        flex: 1;
-        min-width: 250px;
-        max-width: 400px;
+        flex: 1 1 100%;
+        min-width: 100%;
         font-size: 14px;
-        min-height: 38px;
+        min-height: 40px;
+        margin-bottom: 10px;
     }
     
     .search-bar-controls .btn {
         white-space: nowrap;
-        min-height: 38px;
-        padding: 8px 20px;
+        min-height: 40px;
+        padding: 10px 18px;
         font-size: 14px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        flex: 1;
+        font-weight: 500;
     }
     
     .search-bar-controls .btn i {
         margin-right: 8px;
     }
     
-    .search-bar-controls #btnSearch {
-        min-width: 150px;
+    /* Make search bar same height as calendar */
+    .row.mb-2 > [class*="col-"] {
+        display: flex;
     }
     
-    .search-bar-controls #btnViewAll {
-        min-width: 200px;
-    }
-    
-    .search-bar-controls #btnExportExcel {
-        min-width: 140px;
+    .row.mb-2 > [class*="col-"] > .box-shadow {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
     
     /* Header section spacing */
@@ -146,10 +193,117 @@
         min-width: 100px;
     }
 
+    /* Calendar Compact - Full Width */
+    .calendar-compact {
+        background: white;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 15px;
+        background: linear-gradient(135deg, #223771 0%, #3c5398 100%);
+        color: white;
+    }
+    
+    .calendar-title {
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+    
+    .calendar-header .btn {
+        color: white;
+        border-color: rgba(255,255,255,0.3);
+        padding: 4px 10px;
+    }
+    
+    .calendar-header .btn:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: white;
+        color: white;
+    }
+    
+    .calendar-body {
+        padding: 10px 12px 12px;
+        flex: 1;
+    }
+    
+    .weekdays-compact {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0 0 6px 0;
+        gap: 3px;
+    }
+    
+    .weekdays-compact li {
+        text-align: center;
+        font-weight: 600;
+        font-size: 11px;
+        padding: 6px 2px;
+        color: #666;
+        background: #f8f9fa;
+        border-radius: 3px;
+    }
+    
+    .calendar-body .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 3px;
+    }
+    
+    .calendar-body .days li {
+        text-align: center;
+        padding: 6px 2px;
+        font-size: 11px;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.2s;
+        background: #f8f9fa;
+        border: 2px solid transparent;
+    }
+    
+    .calendar-body .days li.poiter {
+        background: white;
+        border-color: #e0e0e0;
+    }
+    
+    .calendar-body .days li.poiter:hover {
+        background: #e3f2fd;
+        border-color: #2196f3;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3);
+    }
+    
+    .calendar-body .days li.active {
+        background: var(--orange, #ff6b35) !important;
+        color: white !important;
+        font-weight: bold;
+        border-color: var(--orange, #ff6b35) !important;
+        box-shadow: 0 3px 8px rgba(255, 107, 53, 0.4);
+    }
+    
+    .calendar-body .days li.day-of-other-month {
+        color: #ccc;
+        cursor: default;
+        background: transparent;
+    }
+    
+    /* Schedule Grid - Full Width Optimized */
     .schedule-grid-container {
         overflow-x: auto;
         overflow-y: auto;
-        max-height: calc(100vh - 100px);
+        max-height: calc(100vh - 280px);
         position: relative;
         -webkit-overflow-scrolling: touch;
         width: 100%;
@@ -157,10 +311,10 @@
 
     .schedule-grid {
         display: grid;
-        grid-template-columns: minmax(120px, 180px) repeat(7, minmax(400px, 1fr));
+        grid-template-columns: minmax(140px, 180px) repeat(7, 1fr);
         border: 1px solid #ddd;
         background: white;
-        min-width: 3000px;
+        min-width: 100%;
         gap: 0;
     }
 
@@ -463,7 +617,7 @@
     /* Responsive styles - scale down proportionally */
     @media (max-width: 1400px) {
         .schedule-grid {
-            grid-template-columns: minmax(100px, 140px) repeat(7, 1fr);
+            grid-template-columns: minmax(120px, 160px) repeat(7, 1fr);
         }
         
         .schedule-header {
@@ -491,6 +645,75 @@
         
         .event-teacher {
             font-size: 11px;
+        }
+        
+        .calendar-body .days li {
+            font-size: 12px;
+            padding: 6px 3px;
+        }
+        
+        .weekdays-compact li {
+            font-size: 12px;
+            padding: 6px 3px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .schedule-grid {
+            grid-template-columns: minmax(100px, 140px) repeat(7, 1fr);
+        }
+        
+        .schedule-header {
+            font-size: 12px;
+            padding: 6px 4px;
+        }
+        
+        .schedule-cell {
+            min-height: 80px;
+        }
+        
+        .schedule-cell.room-name {
+            font-size: 11px;
+            padding: 5px;
+        }
+        
+        .schedule-event {
+            font-size: 11px;
+            padding: 5px 6px;
+        }
+        
+        .event-time {
+            font-size: 10px;
+        }
+        
+        .event-subject {
+            font-size: 11px;
+        }
+        
+        .event-teacher {
+            font-size: 10px;
+        }
+        
+        .calendar-header {
+            padding: 10px 15px;
+        }
+        
+        .calendar-title {
+            font-size: 14px;
+        }
+        
+        .calendar-body {
+            padding: 8px 12px 12px;
+        }
+        
+        .calendar-body .days li {
+            font-size: 11px;
+            padding: 6px 3px;
+        }
+        
+        .weekdays-compact li {
+            font-size: 11px;
+            padding: 6px 2px;
         }
     }
 
@@ -533,11 +756,11 @@
 
     @media (max-width: 992px) {
         .schedule-grid {
-            grid-template-columns: minmax(70px, 100px) repeat(7, 1fr);
+            grid-template-columns: minmax(80px, 120px) repeat(7, 1fr);
         }
         
         .schedule-grid-container {
-            max-height: calc(100vh - 250px);
+            max-height: calc(100vh - 450px);
         }
         
         .schedule-header {
@@ -590,27 +813,66 @@
             font-size: 16px;
         }
         
-        .news-search-form .header-row {
+        .search-bar-controls {
             flex-direction: column;
-            align-items: stretch !important;
+            align-items: stretch;
         }
         
-        .filter-controls {
+        .search-bar-controls .form-select,
+        .search-bar-controls .btn {
             width: 100%;
-            flex-direction: column;
+            max-width: 100%;
+            min-width: 100%;
         }
         
-        .filter-controls .form-select {
-            width: 100%;
+        .search-bar-section {
+            padding: 12px;
         }
         
-        .filter-controls .btn {
-            width: 100%;
-        }
-        
-        .news-search-form .title-text {
+        .search-bar-header .title-text {
+            font-size: 18px;
             text-align: center;
-            width: 100%;
+        }
+        
+        .search-bar-subtitle {
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .search-bar-info {
+            padding: 12px;
+            gap: 10px;
+        }
+        
+        .info-item {
+            font-size: 12px;
+            gap: 10px;
+        }
+        
+        .info-item i {
+            font-size: 14px;
+        }
+        
+        .calendar-header {
+            padding: 10px 12px;
+        }
+        
+        .calendar-title {
+            font-size: 14px;
+        }
+        
+        .calendar-body {
+            padding: 8px 10px 10px;
+        }
+        
+        .calendar-body .days li {
+            font-size: 11px;
+            padding: 5px 2px;
+        }
+        
+        .weekdays-compact li {
+            font-size: 10px;
+            padding: 5px 2px;
         }
     }
 
@@ -1038,15 +1300,35 @@
         </p>
     </div>
 
-    <!-- Search Bar - Full Width -->
-    <div class="row mb-3">
-        <div class="col-12">
+    <!-- Top Section: Search Bar + Calendar -->
+    <div class="row mb-2">
+        <!-- Search Bar - Left Side -->
+        <div class="col-12 col-lg-7 mb-2 mb-lg-0">
             <div class="box-shadow">
                 <div class="search-bar-section">
-                    <div class="search-bar-header">
-                        <p class="color-dask-blue fz20 title-text" style="margin: 0;">
-                            <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch giảng đường
-                        </p>
+                    <div class="search-bar-content">
+                        <div class="search-bar-header">
+                            <p class="color-dask-blue fz20 title-text" style="margin: 0;">
+                                <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch giảng đường
+                            </p>
+                            <p class="search-bar-subtitle">
+                                Tra cứu và quản lý lịch giảng theo phòng học
+                            </p>
+                        </div>
+                        <div class="search-bar-info">
+                            <div class="info-item">
+                                <i class="fa-solid fa-building text-primary"></i>
+                                <span>Chọn phòng học để xem lịch chi tiết</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fa-solid fa-calendar-week text-success"></i>
+                                <span>Hiển thị lịch theo tuần (T2 - CN)</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fa-solid fa-file-export text-info"></i>
+                                <span>Xuất báo cáo Excel theo nhu cầu</span>
+                            </div>
+                        </div>
                     </div>
                     <div class="search-bar-controls">
                         <select class="form-select" id="dropSearch_ToaNha"></select>
@@ -1063,11 +1345,43 @@
                 </div>
             </div>
         </div>
+
+        <!-- Calendar - Right Side -->
+        <div class="col-12 col-lg-5">
+            <div class="box-shadow p-0">
+                <div class="calendar-compact">
+                    <div class="calendar-header">
+                        <button class="btn btn-sm btn-outline-light" id="btnPrevMonth">
+                            <i class="fal fa-chevron-left"></i>
+                        </button>
+                        <div class="calendar-title">
+                            <i class="fa-solid fa-calendar-range me-2"></i>
+                            <span id="thang"></span> - <span id="nam"></span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light" id="btnNextMonth">
+                            <i class="fal fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-body">
+                        <ul class="weekdays-compact">
+                            <li>T2</li>
+                            <li>T3</li>
+                            <li>T4</li>
+                            <li>T5</li>
+                            <li>T6</li>
+                            <li>T7</li>
+                            <li>CN</li>
+                        </ul>
+                        <ul class="days"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Calendar and Schedule Section -->
-    <div class="row register-school my-calendar">
-        <div class="col-12 col-md-9 register-school-right">
+    <!-- Schedule Section - Full Width -->
+    <div class="row">
+        <div class="col-12">
             <div class="box-shadow">
                 <div class="week-navigation">
                     <button class="btn btn-outline-primary" id="btnPrevWeek">
@@ -1083,31 +1397,6 @@
                     <div class="schedule-grid" id="scheduleGrid">
                         <!-- Grid will be generated here -->
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-md-3 register-school-left">
-            <div class="box-shadow p-0 block-calendar mt-md-0">
-                <div class="block-label top-radius bg-dask-blue">
-                    <i class="fa-solid fa-calendar-range mr-5" style="margin-top: -3px !important;"></i>
-                    <span id="thang"></span> - <span id="nam"></span>
-                    <div class="next-prev-month month">
-                        <a class="prev" style="color: white"><i class="fal fa-chevron-left me-4"></i></a>
-                        <a class="next" style="color: white; padding-left: 20px"><i class="fal fa-chevron-right"></i></a>
-                    </div>
-                </div>
-                <div class="calendar-block-cover">
-                    <ul class="weekdays">
-                        <li>T2</li>
-                        <li>T3</li>
-                        <li>T4</li>
-                        <li>T5</li>
-                        <li>T6</li>
-                        <li>T7</li>
-                        <li>Cn</li>
-                    </ul>
-                    <ul class="days"></ul>
                 </div>
             </div>
         </div>
