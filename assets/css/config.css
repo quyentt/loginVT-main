@@ -763,7 +763,9 @@ textarea.form-control {
 .modal-800 {
   max-width: 800px !important;
 }
-
+.modal-860 {
+  max-width: 860px !important;
+}
 .modal-1140 {
   max-width: 1140px !important;
 }
@@ -781,6 +783,9 @@ textarea.form-control {
 }
 .modal-90 {
   max-width: 90% !important;
+}
+.modal-96 {
+    max-width: 96% !important;
 }
 .link-base {
   color: var(--color-link);

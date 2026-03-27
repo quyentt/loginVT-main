@@ -57,7 +57,7 @@
             <div class="box-shadow ">
                 <div class="news-search-form">
                     <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
-                        <i class="fa-solid fa-calendar-circle-user pr5 fw-bold"></i>Lịch cá nhân 
+                        <i class="fa-solid fa-calendar-circle-user pr5 fw-bold"></i>Lịch cá nhân
                     </p>
                     <div class="form-group-cover" style="display: none">
                         <label for="start_date_input" class="form-label main-label mb-3 me-2">Mã cán bộ</label>
@@ -168,8 +168,8 @@
 </div>
 
 <!-- modal khối kiến thức chuyên ngành-->
-<div class="modal fade finance-modal my-calendar" id="my_calendar" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade finance-modal my-calendar modal-calender-detail" id="my_calendar" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -196,50 +196,54 @@
                     <p class="m-0" id="lblLopHocPhan"></p>
                 </div>
 
-                <div class="d-flex align-items-center bg-dask-blue summary-atten atten-mid">
+                <div class="aps-diemdanh-tudong d-flex align-items-center bg-dask-blue summary-atten atten-mid">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh tự động</b>
                     <span class="fs-14 ms-auto me-4 label">Từ khóa điểm danh</span>
-                    <div class="form-item d-flex form-add-info">
-                        <div class="input-group no-icon">
-
-                            <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
-                                style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
-
+                    <div class="aps-all-button">
+                        <div class="form-item d-flex form-add-info">
+                            <div class="input-group no-icon">
+                                <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
+                                    style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
+                            </div>
                         </div>
-
+                        <button id="btnSaveTuKhoa"
+                            class="btn btn-sm btn-outline-success min-w-auto fs-14 atten-mid-btn"><i
+                                class="fal fa-save me-2"></i><span>Lưu từ khóa</span></button>
+                        <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3"><i
+                                class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span></button>
                     </div>
-                    <button id="btnSaveTuKhoa" class="btn btn-sm btn-outline-success min-w-auto fs-14 atten-mid-btn"><i
-                            class="fal fa-save me-2"></i><span>Lưu từ khóa</span></button>
-                    <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3"><i
-                            class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span></button>
                 </div>
-                <div class="d-flex align-items-center bg-orange summary-atten mt-15">
+                <div class="aps-diemdanh-thucong d-flex align-items-center bg-orange summary-atten mt-15">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh thủ công</b>
                     <div id="zoneSiSoSV">
                     </div>
-
-                    <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
-                        id="btnDiemDanh"><i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span></button>
+                    <div class="aps-all-button">
+                        <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
+                            id="btnDiemDanh"><i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ
+                                công</span></button>
+                    </div>
                 </div>
-                <table class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder"
-                    id="tblNhapChuyenCan">
-                    <thead>
-                        <tr>
-                            <th class="text-center w-50px" scope="col">STT</th>
-                            <th scope="col">Vắng mặt(Số buổi/Số tiết/Tỷ lệ)</th>
-                            <th scope="col">Mã số</th>
-                            <th scope="col">Họ đệm</th>
-                            <th scope="col">Tên</th>
-                            <th class="text-center" scope="col">Địa chỉ IP</th>
-                            <th class="text-center" scope="col">Tự điểm danh</th>
-                            <!--<th class="text-center" scope="col">Có mặt(44)</th>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 table-bordered tblNhapChuyenCan table-noborder"
+                        id="tblNhapChuyenCan">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col">Vắng mặt(Số buổi/Số tiết/Tỷ lệ)</th>
+                                <th scope="col">Mã số</th>
+                                <th scope="col">Họ đệm</th>
+                                <th scope="col">Tên</th>
+                                <th class="text-center" scope="col">Địa chỉ IP</th>
+                                <th class="text-center" scope="col">Tự điểm danh</th>
+                                <!--<th class="text-center" scope="col">Có mặt(44)</th>
                             <th class="text-center" scope="col">Vắng mặt(2)</th>-->
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -597,8 +601,8 @@
     </div>
 </div>
 
-<div class="modal fade finance-modal my-calendar modalHTSinhVien" id="modalHTSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade finance-modal my-calendar modalHTSinhVien" id="modalHTSinhVien" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">

@@ -121,6 +121,7 @@
 
 .tabs-scores .nav {
   border-bottom: none;
+  border-bottom: 1px solid #e1e1e1;
 }
 
 .tabs-scores .box-shadow {
@@ -130,7 +131,8 @@
 
 .tabs-scores .nav-link {
   color: #222222;
-  padding: 11px 25px;
+  padding:11px 15px 8px 15px;
+  border-bottom: 1ps solid #e1e1e1;
 }
 
 .tabs-scores .nav-link:hover {
@@ -142,8 +144,9 @@
 .tabs-scores .nav-link.active {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  border-color: white;
-  color: var(--orange);
+  border-color:  var(--orange);
+  color: #fff;
+  background: var(--orange);
   font-weight: bold;
 }
 
@@ -267,6 +270,7 @@
 
 .tabs-scores .tab-content {
   min-height: calc(100% - 40px);
+  padding: 20px 0;
 }
 
 .table-not-content {
@@ -336,7 +340,7 @@
 .title-detai #lblTenHoc span,
 .modal .modal-header .finance-user-info span.color-66 {
   color: var(--color-yellow) !important;
-  font-size: 20px !important;
+  font-size: 18px !important;
   font-weight: bold;
 }
 

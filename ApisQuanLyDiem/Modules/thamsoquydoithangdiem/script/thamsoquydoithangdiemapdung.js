@@ -189,6 +189,7 @@ ThamSoQuyDoiDiemApDung.prototype = {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             }).css("color", "red");
         });
+<<<<<<< HEAD
         $("#dropNam_KT").on("select2:select", function () {
             me.getList_ThoiGianDaoTao2();
         });
@@ -199,6 +200,8 @@ ThamSoQuyDoiDiemApDung.prototype = {
                     $("#dropThoiGian_" + e.ID).val(strThoiGian_Id).trigger("change");
             })
         });
+=======
+>>>>>>> d4dce66b9925f382ac7429b0e15fa5a58b965a24
     },
     page_load: function () {
         var me = this;

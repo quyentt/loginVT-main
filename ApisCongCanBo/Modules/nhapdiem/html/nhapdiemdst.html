@@ -20,7 +20,7 @@
     </div>
 
     <!-- đăng ký nguyện vọng -->
-    <div class="box-shadow register-wish pt-0">
+    <div class="box-shadow register-wish pt-0 aps-nhapdiemdst">
         <div class="form-top">
             <div class="row">
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
@@ -72,7 +72,8 @@
                 </div>
 
                 <div class="col-lg-2 col-md-6 col-12 col-lg-6 aps-form-btn">
-                    <div class="btn btn-default btn-search" id="btnSearch"><i class="fal fa-search me-2"></i> Tìm kiếm
+                    <div class="btn btn-default btn-search" id="btnSearch">
+                        <i class="fal fa-search me-2"></i>Tìm kiếm
                     </div>
                     <div class="btn btn-success" id="btnCongBo">
                         <i class="fa-solid fa-circle-check"></i><span>Xác nhận hoàn thành</span>
@@ -86,23 +87,26 @@
             <div class="title-is-paging">
                 <p class="color-dask-blue fw-bold"> <i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
             </div>
-            <table class="table transcrip-table tabs-scores tblNhapDiem table-bordered table-noborder" id="tblNhapDiem">
-                <thead>
-                    <tr>
-                        <th class="text-center w-50px" scope="col">STT</th>
-                        <th scope="col">Mã danh sách</th>
-                        <th scope="col">Lớp học phần</th>
-                        <th scope="col">Ngày thi</th>
-                        <th scope="col">Ca thi</th>
-                        <th scope="col">Phòng thi</th>
-                        <th scope="col">Xác nhận hoàn thành</th>
-                        <th scope="col" class="text-center w-50px"><input type="checkbox" id="chkSelectAll_NhapDiem">
-                        </th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-
+            <div class="aps-table-select scroll-table-x">
+                <table class="table transcrip-table tabs-scores tblNhapDiem table-bordered table-noborder"
+                    id="tblNhapDiem">
+                    <thead>
+                        <tr>
+                            <th class="text-center w-50px" scope="col">STT</th>
+                            <th scope="col">Mã danh sách</th>
+                            <th scope="col">Lớp học phần</th>
+                            <th scope="col">Ngày thi</th>
+                            <th scope="col">Ca thi</th>
+                            <th scope="col">Phòng thi</th>
+                            <th scope="col">Xác nhận hoàn thành</th>
+                            <th scope="col" class="text-center w-50px"><input type="checkbox"
+                                    id="chkSelectAll_NhapDiem">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
     <!-- end đăng ký nguyện vọng -->
@@ -120,7 +124,7 @@
 <!-- Thông tin danh sách thi -->
 <div class="modal fade modal-nhapdiem" id="nhapdiem" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-1360 modal-dialog-scrollable" style="width: 100%">
+    <div class="modal-dialog modal-90 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
@@ -141,7 +145,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 mt-10">
-                    <div class="aps-table-select">
+                    <div class="aps-table-select scroll-table-x">
                         <table class="table tblTuiThi tabs-scores fs-14 content-middle table-bordered table-noborder"
                             id="tblTuiThi" colreport="1">
                             <thead>
@@ -181,7 +185,7 @@
 <!-- modal xác nhận-->
 <div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-700 ">
+    <div class="modal-dialog modal-dialog-centered modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
@@ -212,7 +216,7 @@
                                 <span class="badge bg-blue">Lịch sử xác nhận</span>
                             </p>
                         </div>
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table
                                 class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
                                 id="tblModal_XacNhan">
@@ -235,9 +239,9 @@
 </div>
 
 <!-- modal Xác nhận vi phạm quy chế-->
-<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhanTinhTrang" id="modal_XacNhanTinhTrang" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-700 ">
+<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhanTinhTrang" id="modal_XacNhanTinhTrang"
+    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-860 modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
@@ -256,7 +260,8 @@
                                     <select class="form-select select-opt" aria-label="Default select example"
                                         id="dropLoaiXacNhanTinhTrang"></select>
                                 </div>
-                                <a class="btn btn-success d-flex w-100" id="btnDongYXacNhanTinhTrang" style="max-width: 100px;">
+                                <a class="btn btn-success d-flex w-100" id="btnDongYXacNhanTinhTrang"
+                                    style="max-width: 100px;">
                                     <i class="fal fa-check me-2"></i><span>Đồng ý</span></a>
                             </div>
                         </div>
@@ -269,7 +274,7 @@
                                 <span class="badge bg-blue">Lịch sử xác nhận</span>
                             </p>
                         </div>
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table
                                 class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanTinhTrang table-bordered table-noborder"
                                 id="tblModal_XacNhanTinhTrang">

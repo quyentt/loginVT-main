@@ -10,7 +10,8 @@
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
                 <p class="link"><a href="#">Quản lý điểm</a><i class="fal fa-angle-right"></i>
-                    <a href="#">Nhập điểm theo phách</a></p>
+                    <a href="#">Nhập điểm theo phách</a>
+                </p>
             </div>
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
@@ -71,7 +72,7 @@
                     </div>
                 </div>
                 <div class="col-lg-2 col-md-6 col-12 col-lg-6 aps-form-btn">
-                    <div class="btn btn-default btn-search" id="btnSearch"><i class="fal fa-search me-2"></i> Tìm kiếm
+                    <div class="btn btn-default btn-search" id="btnSearch"><i class="fal fa-search me-2"></i>Tìm kiếm
                     </div>
                     <div class="btn btn-success" id="btnCongBo">
                         <i class="fa-solid fa-circle-check"></i><span>Xác nhận</span>
@@ -85,13 +86,15 @@
             <div class="title-is-paging">
                 <p class="color-dask-blue fw-bold"><i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
             </div>
-            <div class="aps-table-select">
-                <table class="table transcrip-table tabs-scores tuibai-tblNhapDiem table-bordered table-noborder" id="tblNhapDiem">
+            <div class="aps-table-select scroll-table-x">
+                <table class="table transcrip-table tabs-scores tuibai-tblNhapDiem table-bordered table-noborder"
+                    id="tblNhapDiem">
                     <thead>
                         <tr>
                             <th class="text-center w-50px" scope="col">STT</th>
                             <th scope="col">Đợt phách</th>
-                            <th scope="col" class="text-center w-50px"><input type="checkbox" id="chkSelectAll_NhapDiem"></th>
+                            <th scope="col" class="text-center w-50px"><input type="checkbox"
+                                    id="chkSelectAll_NhapDiem"></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -120,7 +123,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><i class="fa-sharp-duotone fa-light fa-album-collection mr-10 fw-bold"></i>Đánh túi bài thi của đợt phách - <span id="lblTenDot"></span></p>
+                    <p><i class="fa-sharp-duotone fa-light fa-album-collection mr-10 fw-bold"></i>Đánh túi bài thi của
+                        đợt phách - <span id="lblTenDot"></span></p>
                 </div>
                 <button type="button" class="btn-close color-fff" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -147,19 +151,21 @@
                                 class="fas fa-file-upload me-2"></i><span>Nhập điểm qua file</span></a>
                     </div>
                 </div>
-
-                <table class="table transcrip-table tabs-scores fs-14 content-middle mt-0 modal-tblTuiThi table-bordered table-noborder"
-                    id="tblTuiThi" colreport="1">
-                    <thead>
-                        <tr>
-                            <th class="text-center td-stt w-50px" scope="col">STT</th>
-                            <th class="text-left td-sophach" scope="col">Số phách</th>
-                            <th class="text-center td-diem" scope="col">Điểm</th>
-                            <th scope="col td-mucvipham text-left ">Mức vi phạm</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores fs-14 content-middle mt-0 modal-tblTuiThi table-bordered table-noborder"
+                        id="tblTuiThi" colreport="1">
+                        <thead>
+                            <tr>
+                                <th class="text-center td-stt w-50px" scope="col">STT</th>
+                                <th class="text-left td-sophach" scope="col">Số phách</th>
+                                <th class="text-center td-diem" scope="col">Điểm</th>
+                                <th scope="col td-mucvipham text-left ">Mức vi phạm</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end my-3">
@@ -206,8 +212,9 @@
                                 <span class="badge bg-blue">Lịch sử</span>
                             </p>
                         </div>
-                        <div class="row aps-form-table">
-                            <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan mr-0 table-bordered table-noborder"
+                        <div class="row aps-form-table scroll-table-x">
+                            <table
+                                class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan mr-0 table-bordered table-noborder"
                                 id="tblModal_XacNhan">
                                 <thead>
                                     <tr>
@@ -228,8 +235,8 @@
 </div>
 
 <!-- modal Xác nhận hoàn thành-->
-<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhanTungSinhVien modal_XacNhan" id="modal_XacNhanTungSinhVien" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhanTungSinhVien modal_XacNhan"
+    id="modal_XacNhanTungSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-860">
         <div class="modal-content">
             <div class="modal-header">
@@ -262,8 +269,9 @@
                                 <span class="badge bg-blue">Danh sách xác nhận</span>
                             </p>
                         </div>
-                        <div class="row aps-form-table">
-                            <table class="table transcrip-table tabs-scores fs-14 tblModal_DanhSachXacNhan table-bordered table-noborder"
+                        <div class="row aps-form-table scroll-table-x">
+                            <table
+                                class="table transcrip-table tabs-scores fs-14 tblModal_DanhSachXacNhan table-bordered table-noborder"
                                 id="tblModal_DanhSachXacNhan">
                                 <thead>
 
@@ -279,9 +287,10 @@
                                 <span class="badge bg-blue">Lịch sử</span>
                             </p>
                         </div>
-                        <div class="row aps-form-table">
-                            <table class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanDSTungSinhVien table-bordered table-noborder" 
-                            id="tblModal_XacNhanDSTungSinhVien">
+                        <div class="row aps-form-table scroll-table-x">
+                            <table
+                                class="table transcrip-table tabs-scores fs-14 tblModal_XacNhanDSTungSinhVien table-bordered table-noborder"
+                                id="tblModal_XacNhanDSTungSinhVien">
                                 <thead>
                                     <tr>
                                         <th class="text-center w-50px" scope="col">STT</th>
