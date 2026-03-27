@@ -62,6 +62,14 @@ LichGiangNhieuPhong.prototype = {
         });
 
         // Month navigation
+        $("#btnPrevMonth").click(function () {
+            me.genHtml_Month(-1);
+        });
+        $("#btnNextMonth").click(function () {
+            me.genHtml_Month(1);
+        });
+        
+        // Legacy support for old calendar
         $(".month").delegate(".prev", "click", function () {
             me.genHtml_Month(-1);
         });

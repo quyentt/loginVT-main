@@ -188,6 +188,10 @@
 
 
 @media only screen and (max-width: 600px) {
+    .calendar-modal-meta .item {
+        padding-left: 0 !important;
+    }
+
     .finance-user-info .form-item.form-add-info {
         margin-bottom: 10px;
         margin-top: 10px;
@@ -380,10 +384,29 @@
 
 
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {}
+@media only screen and (min-width: 768px) {
 
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {}
+    /* Large devices (laptops/desktops, 992px and up) */
+
+    #viewThanhPhan .table>thead>tr>th:first-child {
+        border-left: 0 solid #e1e1e1 !important;
+        /* font-weight: 400; */
+    }
+
+    #viewThanhPhan thead tr th {
+        font-weight: 400;
+    }
+
+    #viewThanhPhan tbody tr td,
+    #viewThanhPhan thead tr th {
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+
+    #viewThanhPhan .table tr:last-child {
+        border-right: 0px solid #d1d1d1 !important;
+    }
+}
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media screen and (min-width:768px) and (max-width: 992px) {
@@ -481,6 +504,12 @@
 }
 
 @media (min-width: 768px) and (max-width:1024px) {
+
+    .aps-diemdanh-tudong,
+    .aps-diemdanh-thucong {
+        display: block !important;
+    }
+
     .aps-nguoihoc .group-2 {
         display: block !important;
     }
@@ -622,6 +651,15 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+    .aps-diemdanh-tudong .aps-all-button {
+        display: block !important;
+        width: 100%;
+    }
+
+    .aps-diemdanh-tudong .aps-all-button .form-add-info {
+        margin-bottom: 10px;
+    }
+
     .modal-1360 {
         max-width: 97% !important;
         min-width: 96% !important;

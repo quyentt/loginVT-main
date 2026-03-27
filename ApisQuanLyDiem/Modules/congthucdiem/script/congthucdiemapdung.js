@@ -181,7 +181,7 @@ CongThucDiemApDung.prototype = {
             var strRowId = this.id;
             $("#tblThamSoDanhGiaApDung_NguoiHoc tr[id='" + strRowId + "']").remove();
         });
-        $("#tblThamSoDanhGiaApDung_NguoiHoc").delegate(".deleteThamSo_NH", "click", function () {
+        $("#tblThamSoDanhGiaApDung_NguoiHoc").delegate(".deleteCongThucDiem_ChuongTrinh", "click", function () {
             var strId = this.id;
             edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
             $("#btnYes").click(function (e) {
@@ -517,7 +517,7 @@ CongThucDiemApDung.prototype = {
         row += '<td></td>';
         row += '<td><select id="dropMoHinhThongHop' + strCongThucDiem_AD_Id + '" class="select-opt"><option id="1" value="1">Chỉ tổng hợp khi đủ điểm thành phần quy định</option><option id="0" value="0">Tổng hợp khi có điểm bất kỳ</option></select ></td>';
         row += '<td><input type="text" id="txtSoThanhPhanToiThieu' + strCongThucDiem_AD_Id + '" class="form-control"/></td>';
-        row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strCongThucDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+        row += '<td style="text-align: center; color: green !important"><a title="Xóa dòng" class="deleteRowButton" id="' + strCongThucDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
         row += '</tr>';
         $("#tblCongThucDiemApDungChungChoChuongTrinh tbody").append(row);
         me.genCombo_CongThucDiem("dropChuongTrinh_XauCongThuc" + strCongThucDiem_AD_Id, "");
@@ -733,7 +733,7 @@ CongThucDiemApDung.prototype = {
         //row += '<td></td>'; 
         row += '<td><select id="dropMoHinhThongHop' + strCongThucDiem_AD_Id + '" class="select-opt"><option id="1" value="1">Chỉ tổng hợp khi đủ điểm thành phần quy định</option><option id="0" value="0">Tổng hợp khi có điểm bất kỳ</option></select ></td>';
         row += '<td><input type="text" id="txtSoThanhPhanToiThieu' + strCongThucDiem_AD_Id + '" class="form-control"/></td>';
-        row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strCongThucDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+        row += '<td style="text-align: center; color: green !important"><a title="Xóa dòng" class="deleteRowButton" id="' + strCongThucDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
         row += '</tr>';
         $("#tblCongThucDiemApDung_HocPhan tbody").append(row);
         me.genCombo_CongThucDiem("dropHP_XauCongThuc" + strCongThucDiem_AD_Id, "");
@@ -1513,7 +1513,7 @@ CongThucDiemApDung.prototype = {
         }
         edu.system.pickerdate();
     },
-    genHTML_ThamSoDanhGia_NguoiHoc_New: function (strThamSoQuyDoiDiem_AD_Id) {
+    genHTML_ThamSoDanhGia_NguoiHoc_New: function (strCongThucDiem_AD_Id) {
         var me = this;
         var iViTri = document.getElementById("tblThamSoDanhGiaApDung_NguoiHoc").getElementsByTagName('tbody')[0].rows.length + 1;
         var row = '';
@@ -1526,7 +1526,7 @@ CongThucDiemApDung.prototype = {
         row += '<td></td>';
         row += '<td><select id="dropMoHinhThongHop' + strCongThucDiem_AD_Id + '" class="select-opt"><option id="1" value="1">Chỉ tổng hợp khi đủ điểm thành phần quy định</option><option id="0" value="0">Tổng hợp khi có điểm bất kỳ</option></select ></td>';
         row += '<td><input type="text" id="txtSoThanhPhanToiThieu' + strCongThucDiem_AD_Id + '" class="form-control"/></td>';
-        row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strCongThucDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+        row += '<td style="text-align: center; color: green !important"><a title="Xóa dòng" class="deleteRowButton" id="' + strCongThucDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
         row += '</tr>';
         $("#tblThamSoDanhGiaApDung_NguoiHoc tbody").append(row);
         me.genCombo_CongThucDiem("dropChuongTrinh_XauCongThuc" + strCongThucDiem_AD_Id, "");

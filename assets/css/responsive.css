@@ -848,6 +848,9 @@
 }
 
 @media (max-width: 680px) {
+  .modalHTSinhVien  .register-school .accordion-body {
+    overflow-x: scroll;
+  }
 
   .tblNhapChuyenCan tr th:nth-last-child(1),
   .tblNhapChuyenCan tr th:nth-last-child(2),
@@ -1460,6 +1463,18 @@
 }
 
 @media (max-width: 360px) {
+  .news-search-form .form-group-cover .input-group {
+    min-width: 100% !important;
+  }
+
+  .aps-diemdanh-tudong .aps-all-button {
+    display: block !important;
+  }
+
+  .aps-diemdanh-tudong .aps-all-button .form-add-info .input-group {
+    width: 100% !important;
+    margin-top: 5px !important;
+  }
 
   #btnKhoiPhucDiemDanh i,
   #btnDiemDanh i {
