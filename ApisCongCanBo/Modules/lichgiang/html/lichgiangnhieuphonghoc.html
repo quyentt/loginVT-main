@@ -38,6 +38,7 @@
     
     /* Search Bar Section - New */
     .search-bar-section {
+<<<<<<< HEAD
         padding: 20px;
         height: 100%;
         display: flex;
@@ -92,6 +93,19 @@
         font-size: 16px;
         width: 20px;
         text-align: center;
+=======
+        padding: 15px;
+    }
+    
+    .search-bar-header {
+        margin-bottom: 15px;
+    }
+    
+    .search-bar-header .title-text {
+        font-size: 20px;
+        font-weight: 600;
+        color: #223771;
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
     }
     
     .search-bar-controls {
@@ -99,6 +113,7 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
+<<<<<<< HEAD
         margin-top: 15px;
         padding-top: 15px;
         border-top: 2px solid #e9ecef;
@@ -110,24 +125,43 @@
         font-size: 14px;
         min-height: 40px;
         margin-bottom: 10px;
+=======
+    }
+    
+    .search-bar-controls .form-select {
+        flex: 1;
+        min-width: 250px;
+        max-width: 400px;
+        font-size: 14px;
+        min-height: 38px;
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
     }
     
     .search-bar-controls .btn {
         white-space: nowrap;
+<<<<<<< HEAD
         min-height: 40px;
         padding: 10px 18px;
+=======
+        min-height: 38px;
+        padding: 8px 20px;
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
         font-size: 14px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+<<<<<<< HEAD
         flex: 1;
         font-weight: 500;
+=======
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
     }
     
     .search-bar-controls .btn i {
         margin-right: 8px;
     }
     
+<<<<<<< HEAD
     /* Make search bar same height as calendar */
     .row.mb-2 > [class*="col-"] {
         display: flex;
@@ -137,6 +171,18 @@
         width: 100%;
         display: flex;
         flex-direction: column;
+=======
+    .search-bar-controls #btnSearch {
+        min-width: 150px;
+    }
+    
+    .search-bar-controls #btnViewAll {
+        min-width: 200px;
+    }
+    
+    .search-bar-controls #btnExportExcel {
+        min-width: 140px;
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
     }
     
     /* Header section spacing */
@@ -617,7 +663,11 @@
     /* Responsive styles - scale down proportionally */
     @media (max-width: 1400px) {
         .schedule-grid {
+<<<<<<< HEAD
             grid-template-columns: minmax(120px, 160px) repeat(7, 1fr);
+=======
+            grid-template-columns: minmax(100px, 140px) repeat(7, 1fr);
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
         }
         
         .schedule-header {
@@ -645,6 +695,7 @@
         
         .event-teacher {
             font-size: 11px;
+<<<<<<< HEAD
         }
         
         .calendar-body .days li {
@@ -684,6 +735,8 @@
         
         .event-time {
             font-size: 10px;
+=======
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
         }
         
         .event-subject {
@@ -813,6 +866,7 @@
             font-size: 16px;
         }
         
+<<<<<<< HEAD
         .search-bar-controls {
             flex-direction: column;
             align-items: stretch;
@@ -823,6 +877,16 @@
             width: 100%;
             max-width: 100%;
             min-width: 100%;
+=======
+        .news-search-form .header-row {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+        
+        .filter-controls {
+            width: 100%;
+            flex-direction: column;
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
         }
         
         .search-bar-section {
@@ -873,6 +937,15 @@
         .weekdays-compact li {
             font-size: 10px;
             padding: 5px 2px;
+        }
+        
+        .filter-controls .btn {
+            width: 100%;
+        }
+        
+        .news-search-form .title-text {
+            text-align: center;
+            width: 100%;
         }
     }
 
@@ -1300,6 +1373,7 @@
         </p>
     </div>
 
+<<<<<<< HEAD
     <!-- Top Section: Search Bar + Calendar -->
     <div class="row mb-2">
         <!-- Search Bar - Left Side -->
@@ -1329,6 +1403,29 @@
                                 <span>Xuất báo cáo Excel theo nhu cầu</span>
                             </div>
                         </div>
+=======
+    <!-- Search Bar - Full Width -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="box-shadow">
+                <div class="search-bar-section">
+                    <div class="search-bar-header">
+                        <p class="color-dask-blue fz20 title-text" style="margin: 0;">
+                            <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch giảng đường
+                        </p>
+                    </div>
+                    <div class="search-bar-controls">
+                        <select class="form-select" id="dropSearch_ToaNha"></select>
+                        <button class="btn btn-primary" id="btnSearch">
+                            <i class="fa-solid fa-search"></i> Xem lịch phòng
+                        </button>
+                        <button class="btn btn-outline-secondary" id="btnViewAll">
+                            <i class="fa-solid fa-th-list"></i> Xem tất cả lịch phòng
+                        </button>
+                        <button class="btn btn-success" id="btnExportExcel">
+                            <i class="fa-solid fa-file-excel"></i> Xuất Excel
+                        </button>
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
                     </div>
                     <div class="search-bar-controls">
                         <select class="form-select" id="dropSearch_ToaNha"></select>
@@ -1345,6 +1442,7 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
 
         <!-- Calendar - Right Side -->
         <div class="col-12 col-lg-5">
@@ -1382,6 +1480,13 @@
     <!-- Schedule Section - Full Width -->
     <div class="row">
         <div class="col-12">
+=======
+    </div>
+
+    <!-- Calendar and Schedule Section -->
+    <div class="row register-school my-calendar">
+        <div class="col-12 col-md-9 register-school-right">
+>>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
             <div class="box-shadow">
                 <div class="week-navigation">
                     <button class="btn btn-outline-primary" id="btnPrevWeek">

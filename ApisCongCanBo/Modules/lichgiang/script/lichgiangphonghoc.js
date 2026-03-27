@@ -1897,6 +1897,7 @@ LichGiang.prototype = {
             title: "Chọn phòng học"
         };
         edu.system.loadToCombo_data(obj);
+        $("#tbllichphonghoc tbody").html
         //$("#dropSearch_HocPhan").select2();
     },
 
