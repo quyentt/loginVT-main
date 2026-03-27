@@ -120,6 +120,9 @@
     margin-bottom: 0;
 }
 
+.modal-header .finance-user-info.in-modal p {
+   color: #fff;
+}
 .finance-modal .modal-content {
     min-height: 440px;
 }

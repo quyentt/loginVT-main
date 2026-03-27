@@ -143,11 +143,11 @@
   color: var(--orange) !important;
 }
 
-.tabs-scores .nav-link.active {
+.tabs-scores .nav-link.active,.tabs-scores .nav-link.active:hover {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-color: var(--orange);
-  color: #fff;
+  color: #fff !important;
   background: var(--orange);
   font-weight: bold;
 }

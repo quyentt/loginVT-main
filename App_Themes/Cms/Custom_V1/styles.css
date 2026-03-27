@@ -5211,3 +5211,13 @@
  .zoneHTSinhVien .register-school-right .accordion.transcrip-accordion {
     border-bottom: 1px solid #e1e1e1;
 }
+#viewThanhPhan thead tr th{
+    font-weight: 400;
+}
+#viewThanhPhan tbody tr td{
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+#viewThanhPhan  .table tr:last-child {
+    border-right:0px solid #d1d1d1 !important;
+}
