@@ -38,7 +38,18 @@
     
     /* Search Bar Section - New */
     .search-bar-section {
-        padding: 15px;
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .search-bar-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
     }
     
     .search-bar-header {
@@ -49,6 +60,38 @@
         font-size: 22px;
         font-weight: 600;
         color: #223771;
+        margin-bottom: 8px;
+    }
+    
+    .search-bar-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+        font-style: italic;
+    }
+    
+    .search-bar-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        border-left: 4px solid #223771;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #495057;
+    }
+    
+    .info-item i {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
     }
     
     .search-bar-controls {
@@ -56,39 +99,44 @@
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px solid #e9ecef;
     }
     
     .search-bar-controls .form-select {
         flex: 1 1 100%;
         min-width: 100%;
         font-size: 14px;
-        min-height: 38px;
+        min-height: 40px;
+        margin-bottom: 10px;
     }
     
     .search-bar-controls .btn {
         white-space: nowrap;
-        min-height: 38px;
-        padding: 8px 20px;
+        min-height: 40px;
+        padding: 10px 18px;
         font-size: 14px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        flex: 1;
+        font-weight: 500;
     }
     
     .search-bar-controls .btn i {
         margin-right: 8px;
     }
     
-    .search-bar-controls #btnSearch {
-        min-width: 150px;
+    /* Make search bar same height as calendar */
+    .row.mb-2 > [class*="col-"] {
+        display: flex;
     }
     
-    .search-bar-controls #btnViewAll {
-        min-width: 200px;
-    }
-    
-    .search-bar-controls #btnExportExcel {
-        min-width: 140px;
+    .row.mb-2 > [class*="col-"] > .box-shadow {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
     }
     
     /* Header section spacing */
@@ -597,7 +645,6 @@
         
         .event-teacher {
             font-size: 11px;
-<<<<<<< HEAD
         }
         
         .calendar-body .days li {
@@ -637,8 +684,6 @@
         
         .event-time {
             font-size: 10px;
-=======
->>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
         }
         
         .event-subject {
@@ -1323,9 +1368,10 @@
         </p>
     </div>
 
-    <!-- Search Bar - Full Width -->
-    <div class="row mb-3">
-        <div class="col-12">
+    <!-- Top Section: Search Bar + Calendar -->
+    <div class="row mb-2">
+        <!-- Search Bar - Left Side -->
+        <div class="col-12 col-lg-7 mb-2 mb-lg-0">
             <div class="box-shadow">
                 <div class="search-bar-section">
                     <div class="search-bar-content">
@@ -1363,16 +1409,47 @@
                         <button class="btn btn-success" id="btnExportExcel">
                             <i class="fa-solid fa-file-excel"></i> Xuất Excel
                         </button>
->>>>>>> cbd5b817fdfdde966f2e4d38c087828faa87fc8d
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar - Right Side -->
+        <div class="col-12 col-lg-5">
+            <div class="box-shadow p-0">
+                <div class="calendar-compact">
+                    <div class="calendar-header">
+                        <button class="btn btn-sm btn-outline-light" id="btnPrevMonth">
+                            <i class="fal fa-chevron-left"></i>
+                        </button>
+                        <div class="calendar-title">
+                            <i class="fa-solid fa-calendar-range me-2"></i>
+                            <span id="thang"></span> - <span id="nam"></span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light" id="btnNextMonth">
+                            <i class="fal fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-body">
+                        <ul class="weekdays-compact">
+                            <li>T2</li>
+                            <li>T3</li>
+                            <li>T4</li>
+                            <li>T5</li>
+                            <li>T6</li>
+                            <li>T7</li>
+                            <li>CN</li>
+                        </ul>
+                        <ul class="days"></ul>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Calendar and Schedule Section -->
-    <div class="row register-school my-calendar">
-        <div class="col-12 col-md-9 register-school-right">
+    <!-- Schedule Section - Full Width -->
+    <div class="row">
+        <div class="col-12">
             <div class="box-shadow">
                 <div class="week-navigation">
                     <button class="btn btn-outline-primary" id="btnPrevWeek">
