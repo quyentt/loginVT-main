@@ -18,6 +18,7 @@ ThamSoQuyDoiDiemApDung.prototype = {
     init: function () {
         var me = this;
         me.page_load();
+        me.getList_NamKT();
         /*------------------------------------------
         --Discription: [tab_1] Hoc ham
         -------------------------------------------*/
@@ -187,6 +188,16 @@ ThamSoQuyDoiDiemApDung.prototype = {
             $("#zone_nguoihocchuongtrinh li").filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
             }).css("color", "red");
+        });
+        $("#dropNam_KT").on("select2:select", function () {
+            me.getList_ThoiGianDaoTao2();
+        });
+        $("#btnDienTuDong").click(function () {
+            var strThoiGian_Id = edu.util.getValById("dropThoiGian_KT")
+            me["dtKeThua"].forEach(e => {
+                if (!$("#dropThoiGian_" + e.ID).val())
+                    $("#dropThoiGian_" + e.ID).val(strThoiGian_Id).trigger("change");
+            })
         });
     },
     page_load: function () {
@@ -865,6 +876,102 @@ ThamSoQuyDoiDiemApDung.prototype = {
         edu.system.loadToCombo_data(obj);
         $("#" + strDrop_Id).select2();
     },
+
+    getList_NamKT: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'KHCT_ThongTin_MH/DSA4BRIFIC4VIC4eDyAsCS4i',
+            'func': 'pkg_kehoach_thongtin.LayDSDaoTao_NamHoc',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.system.getValById('txtAAAA'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'pageIndex': 1,
+            'pageSize': 100000,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.loadToCombo_data({
+                        data: data.Data,
+                        renderInfor: {
+                            id: "ID",
+                            parentId: "",
+                            name: "NAMHOC",
+                            code: "",
+                            avatar: ""
+                        },
+                        renderPlace: ["dropNam_KT"],
+                        type: "",
+                        title: "Chọn năm kế thừa",
+                    })
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    getList_ThoiGianDaoTao2: function () {
+        var me = this;
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = [];
+                    var iPager = 0;
+                    me["dtThoiGianDaoTao2"] = data.Data;
+                    me.genComThoiGian();
+                    var obj = {
+                        data: data.Data,
+                        renderInfor: {
+                            id: "ID",
+                            parentId: "",
+                            name: "DAOTAO_THOIGIANDAOTAO"
+                        },
+                        renderPlace: ["dropThoiGian_KT"],
+                        title: "Chọn thời gian"
+                    };
+                    edu.system.loadToCombo_data(obj);
+                }
+                else {
+                    edu.system.alert("KHCT_ThoiGianDaoTao/LayDanhSach: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("KHCT_ThoiGianDaoTao/LayDanhSach (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: 'KHCT_ThoiGianDaoTao/LayDanhSach',
+
+            contentType: true,
+
+            data: {
+                'strTuKhoa': "",
+                'strDAOTAO_NAM_Id': edu.util.getValById("dropNam_KT"),
+                'strNguoiThucHien_Id': "",
+                'pageIndex': 1,
+                'pageSize': 1000000
+            },
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
     /*------------------------------------------
 	--Discription: [4]  ACESS DB ==> tham so hoc tap chung
     --Author: duyentt
@@ -1223,23 +1330,51 @@ ThamSoQuyDoiDiemApDung.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        var arrThoiGian_Id = [];
         data.forEach(e => {
+            arrThoiGian_Id.push("dropThoiGian_" + e.ID)
+        });
+        me["arrThoiGian_Id"] = arrThoiGian_Id;
+        me.genComThoiGian();
+        //data.forEach(e => {
+        //    var obj = {
+        //        data: me.dtThoiGianDaoTao,
+        //        renderInfor: {
+        //            id: "ID",
+        //            parentId: "",
+        //            name: "DAOTAO_THOIGIANDAOTAO",
+        //            code: "",
+        //            avatar: "",
+        //            default_val: e.DAOTAO_THOIGIANDAOTAO_ID 
+        //        },
+        //        renderPlace: ["dropThoiGian_" + e.ID],
+        //        type: "",
+        //        title: "Chọn thời gian",
+        //    }
+        //    edu.system.loadToCombo_data(obj);
+        //})
+    },
+
+    genComThoiGian: function () {
+        var me = this;
+        if (me["dtThoiGianDaoTao2"] && me["arrThoiGian_Id"]) {
             var obj = {
-                data: me.dtThoiGianDaoTao,
+                data: me["dtThoiGianDaoTao2"],
                 renderInfor: {
                     id: "ID",
                     parentId: "",
                     name: "DAOTAO_THOIGIANDAOTAO",
                     code: "",
                     avatar: "",
-                    default_val: e.DAOTAO_THOIGIANDAOTAO_ID 
+                    //default_val: e.DAOTAO_THOIGIANDAOTAO_ID
                 },
-                renderPlace: ["dropThoiGian_" + e.ID],
+                renderPlace: me["arrThoiGian_Id"],
                 type: "",
                 title: "Chọn thời gian",
             }
             edu.system.loadToCombo_data(obj);
-        })
+        }
+
     },
 
     save_KeThua: function (strId) {

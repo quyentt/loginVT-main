@@ -189,7 +189,8 @@
 
                                                                         <a id="btnSave_ThamSoDanhGiaApDung_NguoiHoc" class="btn btn-primary" style="float: right"><i class="fa fa-save"></i> Lưu</a>
 
-                                                                        <div class="" style="width: 220px; float: right; padding-left: 5px">
+                                                                        <div class="" style="width: 220px; float: right; padding-left: 5px; padding-right: 5px">
+
                                                                             <select id="dropSearch_HocPhan" class="select-opt" style="float: right; margin-left: 10px"></select>
                                                                         </div>
                                                                         <div class="" style="width: 220px;float: right; padding-left: 5px">
@@ -260,10 +261,16 @@
                                     <!-- Trinh do tin hoc -->
                                     <div class="panel">
                                         <div id="qt_apdunghocphan" class="panel-collapse collapse in qt_apdunghocphan" aria-expanded="false">
+
                                             <div class="box-body pd15">
+
+                                                <div class="pull-left ">
+                                                    <a class="btn btn-default" id="btnAdd_KeThua" href="#"><i class="fa fa-paper-plane"></i> Kế thừa cho các chương trình cùng học HP này</a>
+                                                </div>
+                                                <div class="clear"></div>
                                                 <div class="scroll-table-x bg-none">
                                                     <table id="tblThamSoQuyDoiDiemApDung_HocPhan"
-                                                        class="table table-hover table-bordered table-input-slelect tblThamSoQuyDoiDiemApDung_HocPhan mb-0">
+                                                           class="table table-hover table-bordered table-input-slelect tblThamSoQuyDoiDiemApDung_HocPhan mb-0">
                                                         <thead>
                                                             <tr>
                                                                 <th rowspan="2" class="td-fixed td-center">Stt</th>
@@ -286,7 +293,7 @@
                                                                     Điểm chữ
                                                                 </th>
                                                                 <!--<th rowspan="2" class="td-center" style="width: 200px">Ngày tạo</th>
-                                                                    <th rowspan="2" class="td-center" style="width: 200px">Người tạo</th>-->
+                    <th rowspan="2" class="td-center" style="width: 200px">Người tạo</th>-->
                                                                 <th rowspan="2" class="td-fixed td-center">Xóa</th>
                                                             </tr>
                                                             <tr>
@@ -299,9 +306,10 @@
                                                 </div>
                                                 <div class="box-tools pull-right mt-10">
                                                     <a id="btnAdd_ThamSoQuyDoiDiemApDung_HocPhan" class="btn btn-outline-primary">
-                                                        <i class="fa fa-plus"></i> Thêm dòng</a>
+                                                        <i class="fa fa-plus"></i> Thêm dòng
+                                                    </a>
                                                     <a id="btnSave_ThamSoQuyDoiDiemApDung_HocPhan"
-                                                        class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                                                       class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -517,8 +525,23 @@
                         <select id="dropKhoaDaoTao_KT" class="select-opt"></select>
                     </div>
                     <div class="col-sm-3 item-search">
-                        <a id="btnSearchKT" class="btn btn-default"><i class="fa fa-search"></i> <span class="lang"
-                                key="">Tìm kiếm</span></a>
+                        <a id="btnSearchKT" class="btn btn-default">
+                            <i class="fa fa-search"></i> <span class="lang"
+                                                               key="">Tìm kiếm</span>
+                        </a>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropNam_KT" class="select-opt"></select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropThoiGian_KT" class="select-opt"></select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <a id="btnDienTuDong" class="btn btn-default">
+                            <i class="fa fa-search"></i> <span class="lang"
+                                                               key="">Điền tự động</span>
+                        </a>
                     </div>
                 </div>
                 <div class="row">

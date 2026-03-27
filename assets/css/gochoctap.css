@@ -131,20 +131,22 @@
 
 .tabs-scores .nav-link {
   color: #222222;
-  padding:11px 15px 8px 15px;
+  padding: 11px 15px 8px 15px;
   border-bottom: 1ps solid #e1e1e1;
 }
 
 .tabs-scores .nav-link:hover {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  border-color: white;
+  border-color: #fff;
+  border-bottom: 1px solid #e1e1e1 !important;
+  color: var(--orange) !important;
 }
 
 .tabs-scores .nav-link.active {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  border-color:  var(--orange);
+  border-color: var(--orange);
   color: #fff;
   background: var(--orange);
   font-weight: bold;
@@ -452,9 +454,11 @@
 .modalHTSinhVien .zone-cat-3.col-sm-3 .widget-user-2 .box-footer li a {
   color: #222;
 }
+
 .modalHTSinhVien .zone-cat-3.col-sm-3 .widget-user-2 .box-footer li a:hover {
   color: var(--color-link);
 }
+
 .modalHTSinhVien .zone-cat-3.col-sm-3 .widget-user-2 .box-footer li:last-child {
   border-bottom: 0 solid #f1f1f1;
 }
@@ -483,32 +487,39 @@
 #zoneTimKiem .bss-item .item-search {
   float: left !important;
 }
-#zoneTimKiem .bss-item .item-search:first-child .select2-container{
+
+#zoneTimKiem .bss-item .item-search:first-child .select2-container {
   padding: 0 !important;
 }
+
 .modalHTSinhVien .modal-content .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 6px !important;
-    right: 8px !important;
+  top: 6px !important;
+  right: 8px !important;
 }
-.btnOpenDelete .aps-form-item.aps-table-select{
+
+.btnOpenDelete .aps-form-item.aps-table-select {
   display: block !important;
 }
-.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien .select2-container--default .select2-selection--single{
-    height: 28px !important;
-    line-height: 28px !important;
-    padding: 1px 10px 3px 10px !important;
+
+.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien .select2-container--default .select2-selection--single {
+  height: 28px !important;
+  line-height: 28px !important;
+  padding: 1px 10px 3px 10px !important;
 }
-.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien  .select2-container--default .select2-selection--single .select2-selection__rendered {
-    color: #444;
-    line-height: 39px !important;
-    padding-left: 0px !important;
-    padding-right: 6px !important;
+
+.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien .select2-container--default .select2-selection--single .select2-selection__rendered {
+  color: #444;
+  line-height: 39px !important;
+  padding-left: 0px !important;
+  padding-right: 6px !important;
 }
-.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien  .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 1px !important;
-    right: 10px !important;
+
+.btnOpenDelete .aps-form-item.aps-table-select .change-tblInput_DTSV_SinhVien .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 1px !important;
+  right: 10px !important;
 }
+
 .aps-add-kehoach {
-    overflow-y: scroll !important;
-    height: calc(100vh - 106px) !important;
+  overflow-y: scroll !important;
+  height: calc(100vh - 106px) !important;
 }

@@ -165,34 +165,47 @@
                                                     <div id="qt_apdunghocphan" class="panel-collapse collapse in"
                                                         aria-expanded="false">
                                                         <div class="box-body">
+                                                            <div class="pull-left ">
+                                                                <a class="btn btn-default" id="btnAdd_KeThua" href="#"><i class="fa fa-paper-plane"></i> Kế thừa cho các chương trình cùng học HP này</a>
+                                                            </div>
+                                                            <div class="clear"></div>
                                                             <div class="scroll-table-x bg-none">
                                                                 <table id="tblThamSoDanhGiaApDung_HocPhan"
-                                                                    class="table table-hover table-bordered  aps-tblThamSoDanhGiaApDung_HocPhan mt-10 table-input-slelect">
+                                                                       class="table table-hover table-bordered  aps-tblThamSoDanhGiaApDung_HocPhan mt-10 table-input-slelect">
                                                                     <thead>
                                                                         <tr>
                                                                             <th rowspan="2" class="td-fixed td-center">
-                                                                                Stt</th>
+                                                                                Stt
+                                                                            </th>
                                                                             <th rowspan="2" class="td-center"
-                                                                                style="width: 100px">Tham số đánh giá
+                                                                                style="width: 100px">
+                                                                                Tham số đánh giá
                                                                             </th>
                                                                             <th colspan="2" class="td-center"
-                                                                                style="width: 150px">Thời gian bắt đầu
-                                                                                áp dụng </th>
-                                                                            <th rowspan="2" class="td-center">Xâu điều
-                                                                                kiện </th>
+                                                                                style="width: 150px">
+                                                                                Thời gian bắt đầu
+                                                                                áp dụng
+                                                                            </th>
+                                                                            <th rowspan="2" class="td-center">
+                                                                                Xâu điều
+                                                                                kiện
+                                                                            </th>
                                                                             <th rowspan="2" class="td-center"
                                                                                 style="width: 200px">Mô tả</th>
                                                                             <!--<th rowspan="2" class="td-center" style="width: 50px">Ngày tạo</th>
-                                                    <th rowspan="2" class="td-center" style="width: 50px">Người tạo</th>-->
+                    <th rowspan="2" class="td-center" style="width: 50px">Người tạo</th>-->
                                                                             <th rowspan="2" class="td-fixed td-center">
-                                                                                Xóa</th>
+                                                                                Xóa
+                                                                            </th>
 
                                                                         </tr>
                                                                         <tr>
                                                                             <th class="td-center" style="width: 100px">
-                                                                                Học kỳ</th>
+                                                                                Học kỳ
+                                                                            </th>
                                                                             <th class="td-center" style="width: 100px">
-                                                                                Ngày </th>
+                                                                                Ngày
+                                                                            </th>
                                                                         </tr>
                                                                     </thead>
                                                                     <tbody></tbody>
@@ -200,11 +213,13 @@
 
                                                                 <div class="box-tools pull-right">
                                                                     <a id="btnAdd_ThamSoDanhGiaApDung_HocPhan"
-                                                                        class="btn btn-outline-primary">
-                                                                        <i class="fa fa-plus"></i> Thêm dòng</a>
+                                                                       class="btn btn-outline-primary">
+                                                                        <i class="fa fa-plus"></i> Thêm dòng
+                                                                    </a>
                                                                     <a id="btnSave_ThamSoDanhGiaApDung_HocPhan"
-                                                                        class="btn btn-primary">
-                                                                        <i class="fa fa-save"></i> Lưu</a>
+                                                                       class="btn btn-primary">
+                                                                        <i class="fa fa-save"></i> Lưu
+                                                                    </a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -506,8 +521,18 @@
                                                                key="">Tìm kiếm</span>
                         </a>
                     </div>
+                    <div class="clear"></div>
                     <div class="col-sm-3 item-search">
                         <select id="dropNam_KT" class="select-opt"></select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropThoiGian_KT" class="select-opt"></select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <a id="btnDienTuDong" class="btn btn-default">
+                            <i class="fa fa-search"></i> <span class="lang"
+                                                               key="">Điền tự động</span>
+                        </a>
                     </div>
                 </div>
                 <div class="row">

@@ -62,8 +62,16 @@
                             </li>
                             <li class="" id="btn_tab2">
                                 <a href="#tab_2" data-toggle="tab" aria-expanded="false">
-                                    <span class="lang" key="">2) Tham số công thức áp dụng đến từng học phần của chương
-                                        trình </span>
+                                    <span class="lang" key="">
+                                        2) Tham số công thức áp dụng đến từng học phần của chương
+                                        trình
+                                    </span>
+                                </a>
+                            </li>
+
+                            <li class="" id="btn_tab3">
+                                <a href="#tab_3" data-toggle="tab" aria-expanded="false">
+                                    <span class="lang" key="">3) Tham số công thức áp dụng đến từng người học của chương trình </span>
                                 </a>
                             </li>
                         </ul>
@@ -73,21 +81,27 @@
                                 <div class="row row-align">
                                     <div class="box-group">
                                         <div id="qt_apdungchuongtrinh" class="panel-collapse collapse in"
-                                            aria-expanded="false">
+                                             aria-expanded="false">
                                             <div class="box-body pd20 pt0">
                                                 <div class="mt-20 scroll-table-x bg-none">
                                                     <table id="tblCongThucDiemApDungChungChoChuongTrinh"
-                                                        class="table table-hover table-bordered table-input-slelect tblCongThucDiemApDungChungChoChuongTrinh">
+                                                           class="table table-hover table-bordered table-input-slelect tblCongThucDiemApDungChungChoChuongTrinh">
                                                         <thead>
                                                             <tr>
                                                                 <th class="td-fixed td-center">Stt</th>
-                                                                <th class="td-center" style="width: 200px">Xâu công thức
+                                                                <th class="td-center" style="width: 200px">
+                                                                    Xâu công thức
                                                                 </th>
-                                                                <th class="td-center" style="width: 200px">Thời gian bắt
-                                                                    đầu áp dụng</th>
-                                                                <th class="td-center" style="width: 100px">Thành phần
-                                                                    điểm</th>
-                                                                <th class="td-center" style="width: 200px">Mô hình xử lý
+                                                                <th class="td-center" style="width: 200px">
+                                                                    Thời gian bắt
+                                                                    đầu áp dụng
+                                                                </th>
+                                                                <th class="td-center" style="width: 100px">
+                                                                    Thành phần
+                                                                    điểm
+                                                                </th>
+                                                                <th class="td-center" style="width: 200px">
+                                                                    Mô hình xử lý
                                                                 </th>
                                                                 <th class="td-center">Mô hình tổng hợp</th>
                                                                 <th class="td-center">Số thành phần tối thiểu</th>
@@ -95,22 +109,26 @@
 
                                                             </tr>
                                                             <!--<tr>
-                                                                <th class="td-center" style="width: 100px">Học kỳ</th>
-                                                                <th class="td-center" style="width: 100px">Ngày</th>
-                                                            </tr>-->
+                                        <th class="td-center" style="width: 100px">Học kỳ</th>
+                                        <th class="td-center" style="width: 100px">Ngày</th>
+                                    </tr>-->
                                                         </thead>
                                                         <tbody></tbody>
                                                     </table>
 
                                                     <div class="box-tools pull-right ">
                                                         <a id="btnKeThua_CongThucDiemApDungChungCTTrongKhoa"
-                                                            class="btn btn-success"><i class="fa fa-arrows"></i> Kế thừa
-                                                            cho tất cả chương trình trong khóa</a>
+                                                           class="btn btn-success">
+                                                            <i class="fa fa-arrows"></i> Kế thừa
+                                                            cho tất cả chương trình trong khóa
+                                                        </a>
                                                         <a id="btnAdd_CongThucDiemApDungChungCT"
-                                                            class="btn btn-outline-primary"><i class="fa fa-plus"></i>
-                                                            Thêm dòng</a>
+                                                           class="btn btn-outline-primary">
+                                                            <i class="fa fa-plus"></i>
+                                                            Thêm dòng
+                                                        </a>
                                                         <a id="btnSave_CongThucDiemApDungChungCT"
-                                                            class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                                                           class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -121,6 +139,93 @@
 
                             <!-- Tab_2) Thành phần điểm áp dụng đến từng học phần của chương trình -->
                             <div id="tab_2"></div>
+
+                            <!-- Tab_5: Hoc hàm, danh hieu-->
+                            <div class="tab-pane" id="tab_3">
+                                <div class="row row-align">
+                                    <div class="box-group">
+                                        <div class="col-sm-3" style="padding-top: 3px;">
+                                            <div class="box box-solid">
+                                                <div class="box-body">
+                                                    <div class="bss-item">
+                                                        <input type="text" id="txtSearch_NguoiHoc_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="box box-solid">
+                                                <div class="box-header with-border">
+                                                    <h3 class="box-title"><i class="fa fa-map"></i> Chọn người học - chương trình <span id="lblNguoiHocChuongTrinh"></span></h3>
+                                                </div>
+                                                <!-- /.box-header -->
+                                                <div class="box-body">
+                                                    <div id="zone_nguoihocchuongtrinh">
+                                                    </div>
+                                                </div>
+                                                <!-- /.box-body -->
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-9" id="tab_ngoainguoihoc" style="display: none">
+                                            <div class="row row-align">
+                                                <div class="box-group">
+                                                    <!-- Trinh do tin hoc -->
+                                                    <div class="panel">
+                                                        <div id="qt_apdungnguoihoc" class="panel-collapse collapse in" aria-expanded="false">
+                                                            <div class="box-body">
+                                                                <div class="scroll-table-x bg-none">
+                                                                    <div>
+                                                                        <div class="">
+
+                                                                            <a id="btnSave_ThamSoDanhGiaApDung_NguoiHoc" class="btn btn-primary" style="float: right"><i class="fa fa-save"></i> Lưu</a>
+
+                                                                            <div class="" style="width: 220px; float: right; padding-left: 5px; padding-right: 5px">
+
+                                                                                <select id="dropSearch_HocPhan" class="select-opt" style="float: right; margin-left: 10px"></select>
+                                                                            </div>
+                                                                            <div class="" style="width: 220px;float: right; padding-left: 5px">
+                                                                                <select id="dropSearch_ThoiGianDangKy" class="select-opt" style="float: right; margin-left: 10px"></select>
+                                                                            </div>
+                                                                            <div class="clear"></div>
+                                                                        </div>
+                                                                        <table id="tblThamSoDanhGiaApDung_NguoiHoc" class="table table-hover table-bordered">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="td-fixed td-center">Stt</th>
+                                                                                    <th class="td-center" style="width: 200px">
+                                                                                        Xâu công thức
+                                                                                    </th>
+                                                                                    <th class="td-center" style="width: 200px">
+                                                                                        Thời gian bắt
+                                                                                        đầu áp dụng
+                                                                                    </th>
+                                                                                    <th class="td-center" style="width: 100px">
+                                                                                        Thành phần
+                                                                                        điểm
+                                                                                    </th>
+                                                                                    <th class="td-center" style="width: 200px">
+                                                                                        Mô hình xử lý
+                                                                                    </th>
+                                                                                    <th class="td-center">Mô hình tổng hợp</th>
+                                                                                    <th class="td-center">Số thành phần tối thiểu</th>
+                                                                                    <th class="td-fixed td-center">Xóa</th>
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody></tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                    <div class="box-tools pull-right ">
+                                                                        <a id="btnAdd_ThamSoDanhGiaApDung_NguoiHoc" class="btn btn-primary"><i class="fa fa-plus"></i> Thêm dòng</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="row row-align aps-tab-ngoai-2">
                             <div class="col-sm-4 tab_ngoai1" style="padding-top: 0px; display: none" id="tab_ngoai1">
@@ -149,6 +254,7 @@
                             <div class="col-sm-8 tab_ngoai2" id="tab_ngoai2" style="display: none">
                                 <div class="row row-align">
                                     <div class="box-group">
+                                        <div class="clear" style="text-align: center;font-size: 16px;"><span id="lblTenHocPhan"></span></div>
                                         <!-- Trinh do tin hoc -->
                                         <div class="panel">
                                             <div id="qt_apdunghocphan" class="panel-collapse collapse in"
