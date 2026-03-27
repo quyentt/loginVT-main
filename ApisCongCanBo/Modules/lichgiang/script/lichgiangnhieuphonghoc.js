@@ -280,9 +280,36 @@ LichGiangNhieuPhong.prototype = {
         $(".scroll-notice").remove();
         
         // Tính row hiện tại
-        var currentRow = $("#scheduleGrid > div").length / (arrDays.length + 1) + 2;
+        var currentRow = $("#scheduleGrid > div").length / (arrDays.length + 2) + 2;
         
         newRooms.forEach(function (room) {
+            // Tính hiệu suất sử dụng phòng
+            var roomSchedules = me.dtLichHoc.filter(function(item) {
+                return item.IDPHONGHOC === room.ID;
+            });
+            
+            var totalUsedPeriods = 0;
+            roomSchedules.forEach(function(schedule) {
+                if (schedule.TIETBATDAU && schedule.TIETKETTHUC) {
+                    totalUsedPeriods += (schedule.TIETKETTHUC - schedule.TIETBATDAU + 1);
+                }
+            });
+            
+            // Tổng tiết trong tuần: 7 ngày × 15 tiết/ngày = 105 tiết
+            var totalPeriods = arrDays.length * 15;
+            var efficiency = Math.round((totalUsedPeriods / totalPeriods) * 100);
+            
+            // Xác định màu sắc
+            var efficiencyClass = 'low';
+            var efficiencyLabel = 'Thấp';
+            if (efficiency > 60) {
+                efficiencyClass = 'high';
+                efficiencyLabel = 'Cao';
+            } else if (efficiency > 30) {
+                efficiencyClass = 'medium';
+                efficiencyLabel = 'Trung bình';
+            }
+            
             var roomInfo = '<div style="font-weight: 600; margin-bottom: 3px;">' + room.TEN + '</div>';
             
             // Thêm kiểu phòng nếu có
@@ -303,8 +330,18 @@ LichGiangNhieuPhong.prototype = {
             
             html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';">' + roomInfo + '</div>';
             
+            // Cột hiệu suất
+            html += '<div class="schedule-cell efficiency ' + efficiencyClass + '" style="grid-column: 2; grid-row: ' + currentRow + ';">';
+            html += '<div class="efficiency-percent">' + efficiency + '%</div>';
+            html += '<div class="efficiency-label">' + efficiencyLabel + '</div>';
+            html += '<div class="efficiency-bar">';
+            html += '<div class="efficiency-bar-fill" style="width: ' + efficiency + '%"></div>';
+            html += '</div>';
+            html += '<div style="font-size: 9px; margin-top: 4px; opacity: 0.7;">' + totalUsedPeriods + '/' + totalPeriods + ' tiết</div>';
+            html += '</div>';
+            
             arrDays.forEach(function (day, dayIndex) {
-                var colStart = dayIndex + 2;
+                var colStart = dayIndex + 3;
                 
                 var events = me.dtLichHoc.filter(function (item) {
                     return item.IDPHONGHOC === room.ID && item.NGAYHOC === day.date;
@@ -530,11 +567,12 @@ LichGiangNhieuPhong.prototype = {
         // Thay đổi grid template để có 3 hàng cho mỗi phòng (Sáng/Chiều/Tối)
         var html = '';
         
-        // Header chính - Phòng và các ngày
+        // Header chính - Phòng, Hiệu suất và các ngày
         html += '<div class="schedule-header" style="grid-column: 1; grid-row: 1 / 3;">Phòng</div>';
+        html += '<div class="schedule-header" style="grid-column: 2; grid-row: 1 / 3;">Hiệu suất<br/>sử dụng</div>';
         
         arrDays.forEach(function (day, index) {
-            var colStart = index + 2;
+            var colStart = index + 3;
             html += '<div class="schedule-header" style="grid-column: ' + colStart + '; grid-row: 1;">';
             html += '<div>' + day.dayName + '</div>';
             html += '<div style="font-size: 12px; font-weight: normal;">' + day.dateStr + '</div>';
@@ -543,7 +581,7 @@ LichGiangNhieuPhong.prototype = {
         
         // Sub-header - Sáng/Chiều/Tối cho mỗi ngày
         arrDays.forEach(function (day, index) {
-            var colStart = index + 2;
+            var colStart = index + 3;
             html += '<div class="schedule-subheader" style="grid-column: ' + colStart + '; grid-row: 2;">';
             html += '<div>';
             html += '<div class="session-label" style="border-right: 1px solid #ddd; background: #FFF9E6;">';
@@ -565,6 +603,34 @@ LichGiangNhieuPhong.prototype = {
         // Dữ liệu từng phòng
         var currentRow = 3;
         me.dtPhongHoc.forEach(function (room) {
+            // Tính hiệu suất sử dụng phòng
+            var roomSchedules = data.filter(function(item) {
+                return item.IDPHONGHOC === room.ID;
+            });
+            
+            var totalUsedPeriods = 0;
+            roomSchedules.forEach(function(schedule) {
+                if (schedule.TIETBATDAU && schedule.TIETKETTHUC) {
+                    totalUsedPeriods += (schedule.TIETKETTHUC - schedule.TIETBATDAU + 1);
+                }
+            });
+            
+            // Tổng tiết trong tuần: 7 ngày × 15 tiết/ngày = 105 tiết
+            var totalPeriods = arrDays.length * 15;
+            var efficiency = Math.round((totalUsedPeriods / totalPeriods) * 100);
+            
+            // Xác định màu sắc
+            var efficiencyClass = 'low';
+            var efficiencyLabel = 'Thấp';
+            if (efficiency > 60) {
+                efficiencyClass = 'high';
+                efficiencyLabel = 'Cao';
+            } else if (efficiency > 30) {
+                efficiencyClass = 'medium';
+                efficiencyLabel = 'Trung bình';
+            }
+            
+            // Tên phòng
             var roomInfo = '<div style="font-weight: 600; margin-bottom: 3px;">' + room.TEN + '</div>';
             
             // Thêm kiểu phòng nếu có
@@ -585,8 +651,18 @@ LichGiangNhieuPhong.prototype = {
             
             html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';">' + roomInfo + '</div>';
             
+            // Cột hiệu suất
+            html += '<div class="schedule-cell efficiency ' + efficiencyClass + '" style="grid-column: 2; grid-row: ' + currentRow + ';">';
+            html += '<div class="efficiency-percent">' + efficiency + '%</div>';
+            html += '<div class="efficiency-label">' + efficiencyLabel + '</div>';
+            html += '<div class="efficiency-bar">';
+            html += '<div class="efficiency-bar-fill" style="width: ' + efficiency + '%"></div>';
+            html += '</div>';
+            html += '<div style="font-size: 9px; margin-top: 4px; opacity: 0.7;">' + totalUsedPeriods + '/' + totalPeriods + ' tiết</div>';
+            html += '</div>';
+            
             arrDays.forEach(function (day, dayIndex) {
-                var colStart = dayIndex + 2;
+                var colStart = dayIndex + 3;
                 
                 // Lấy tất cả events của ngày này
                 var events = data.filter(function (item) {
@@ -681,7 +757,7 @@ LichGiangNhieuPhong.prototype = {
             $("#scheduleGrid").append('<div class="scroll-notice" style="grid-column: 1/-1; padding: 20px; text-align: center; background: #f8f9fa; color: #666;"><i class="fas fa-arrow-down"></i> Cuộn xuống để xem thêm ' + remaining + ' phòng</div>');
         }
         
-        console.log("Grid đã được tạo với format Sáng/Chiều/Tối");
+        console.log("Grid đã được tạo với format Sáng/Chiều/Tối và cột Hiệu suất");
     },
 
     showScheduleDetail: function (strId, roomId, date, lopHocPhan) {
