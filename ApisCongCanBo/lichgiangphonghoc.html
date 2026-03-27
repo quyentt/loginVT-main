@@ -48,28 +48,26 @@
             <a href="#">Thời khóa biểu admin</a>
         </p>
     </div>
+
     <div class="row register-school my-calendar">
-        <div class="col-12 col-md-9 register-school-right pl0">
+        <div class="col-12 col-md-9 register-school-right">
             <div class="box-shadow ">
                 <div class="news-search-form">
-                    <p class="me-auto color-dask-blue fz20 pl10 mt-5">
-                        <i class="fa-solid fa-calendar-circle-user pr5 fw-bold"></i>Lịch cá nhân
+                    <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
+                        <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch phòng
                     </p>
                     <div class="form-group-cover">
-                        <label for="start_date_input" class="form-label main-label mr-10">Cán bộ</label>
+
+                        <label for="start_date_input" class="form-label main-label pr10">Phòng học</label>
                         <div class="input-group no-icon"
                             style="min-width: 340px; margin-right: 10px; margin-bottom: 12px">
-                            <select class="form-select select-opt" id="dropSearch_CanBo"
+
+                            <select class="form-select select-opt" id="dropSearch_PhongHoc"
                                 aria-label="Default select example"></select>
                         </div>
-                        <label for="start_date_input" class="form-label main-label mr-10">Mã cán bộ</label>
-                        <div class="form-group date-input search">
-                            <label for="txtTuKhoa_CanBo" id="btnSearch_CanBo" class="form-label">
-                                <i class="fas fa-search"></i>
-                            </label>
-                            <input type="text" id="txtTuKhoa_CanBo" class="form-control"
-                                placeholder="Tìm kiếm thông tin">
-                        </div>
+                        <button class="btn btn-primary" id="btnSearch_PhongHoc" style="width: 200px;"><i
+                                class="fa-solid fa-list-timeline mr-10 fw-bold"></i>Danh sách</button>
+                        <!--<label for="txtTuKhoa_CanBo" id="btnSearch_PhongHoc" class="form-label"><i class="fas fa-search"></i></label>-->
                     </div>
                     <p class="color-dask-blue fw-bold fs-18" id="lblCanBoTimKiem"></p>
                 </div>
@@ -125,9 +123,8 @@
                     <span id="thang"></span> - <span id="nam"></span>
                     <div class="next-prev-month month">
                         <a class="prev" style="color: white"><i class="fal fa-chevron-left me-4"></i></a>
-                        <a class="next" style="color: white; padding-left: 20px">
-                            <i class="fal fa-chevron-right"></i>
-                        </a>
+                        <a class="next" style="color: white; padding-left: 20px"><i
+                                class="fal fa-chevron-right"></i></a>
                     </div>
                 </div>
                 <div class="calendar-block-cover">
@@ -145,181 +142,171 @@
                 </div>
             </div>
 
-            <div class="mt-4">
-                <p class="search">
-                <div class="dropdown" id="zonebtnBaoCao_LichGiang">
-                </div>
-                </p>
-            </div>
-            <div class=" box-shadow  p-0 block-calendar mt-4 mt-md-0">
-                <div class="block-label light-blue top-radius">
-                    <span><i class="fa-solid fa-calendar-users mr-10"></i>Danh sách lớp đổi lịch</span>
-                </div>
-                <div class="class-change-calendar" id="tblDoiLich">
-                    <!--<a href="" class="class-change-calendar-item fs-14">
-                        <p><b>Lớp: Nhiệt động học 1-1-22(N03)</b></p>
-                        <p>Trạng thái: đã duyệt</p>
-                    </a>-->
-                </div>
-            </div>
 
         </div>
     </div>
+    <div class="row register-school my-calendar">
+        t
+        <table class="table transcrip-table tabs-scores fs-14" id="tbllichphonghoc">
+                    <thead>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+    </div>
 </div>
-<!-- ---------- -->
-<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
-    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#my_calendar">
-        khối kiến thức chuyên ngành
-    </button>
-    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalDoiLich">
-        Yêu cầu đổi lịch
-    </button>
-    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalXemLich">
-        Yêu cầu đổi lịch
-    </button>
-    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalPheDuyet">
-        khối kiến thức chuyên ngành
-    </button>
-</div>
-<!-- ---------- -->
+
 <!-- modal khối kiến thức chuyên ngành-->
 <div class="modal fade finance-modal my-calendar" id="my_calendar" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p id="lblHocPhan"><i class="fa-solid fa-books fw-bold mr-10"></i>Khối kiến thức chuyên ngành</p>
+                    <p id="lblHocPhan"></p>
+
                 </div>
-                <button type="button" class="btn-close color-fff" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
                 <div class="calendar-form-top mb-3">
                     <p class="m-0" id="lblLopHocPhan"></p>
-                    <!-- <span class="fs-14 ms-auto me-4">Từ khóa điểm danh</span>
+
+                    <!--<span class="fs-14 ms-auto me-4">Từ khóa điểm danh</span>
                     <div class="form-item d-flex form-add-info">
                         <div class="input-group no-icon" style="width:160px;">
-                            <input class="form-control fs-14" style=" height: 32px" id="txtTuKhoaDiemDanh"
-                                placeholder="Từ khóa điểm danh">
+                            <input class="form-control fs-14" style=" height: 32px" id="txtTuKhoaDiemDanh" placeholder="Từ khóa điểm danh">
                         </div>
                     </div>
-                    <button class="btn btn-sm btn-outline-dask-blue min-w-auto fs-14" id="btnSaveTuKhoa"><i
-                            class="fal fa-save me-2"></i><span>Lưu</span></button>
-                    <button class="btn btn-sm btn-outline-orange min-w-auto fs-14" id="btnDiemDanhTuDong"><i
-                            class="fas fa-user-edit me-2"></i><span>Lưu điểm danh tự động</span></button> -->
+                    <button class="btn btn-sm btn-outline-dask-blue min-w-auto fs-14" id="btnSaveTuKhoa"><i class="fal fa-save me-2"></i><span>Lưu</span></button>
+                    <button class="btn btn-sm btn-outline-orange min-w-auto fs-14" id="btnDiemDanhTuDong"><i class="fas fa-user-edit me-2"></i><span>Lưu điểm danh tự động</span></button>-->
                 </div>
-                <div class="d-flex align-items-center bg-dask-blue summary-atten atten-mid mt-10">
+                <div class="d-flex align-items-center bg-dask-blue summary-atten atten-mid">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh tự động</b>
                     <span class="fs-14 ms-auto me-4 label">Từ khóa điểm danh</span>
                     <div class="form-item d-flex form-add-info">
                         <div class="input-group no-icon">
+
                             <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
                                 style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
+
                         </div>
 
                     </div>
-                    <button id="btnSaveTuKhoa" class="btn btn-sm btn-outline-primary min-w-auto fs-14 atten-mid-btn">
-                        <i class="fal fa-save me-2"></i><span>Lưu từ khóa</span>
-                    </button>
-                    <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3">
-                        <i class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span>
-                    </button>
+                    <button id="btnSaveTuKhoa" class="btn btn-sm btn-outline-success min-w-auto fs-14 atten-mid-btn"><i
+                            class="fal fa-save me-2"></i><span>Lưu từ khóa</span></button>
+                    <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3"><i
+                            class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span></button>
                 </div>
-                <div class="d-flex align-items-center bg-orange summary-atten mt-15">
+                <div class="d-flex align-items-center bg-orange summary-atten">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh thủ công</b>
-                    <div id="zoneSiSoSV"> </div>
+                    <div id="zoneSiSoSV">
+                    </div>
 
                     <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
-                        id="btnDiemDanh">
-                        <i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span>
-                    </button>
+                        id="btnDiemDanh"><i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span></button>
                 </div>
-                <div class="aps-table-select scroll-table-x">
-                    <table
-                        class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder tblNhapChuyenCan"
-                        id="tblNhapChuyenCan">
-                        <thead>
-                            <tr>
-                                <th class="text-center w-50px" scope="col">STT</th>
-                                <th scope="col">Số buổi vắng tích lũy</th>
-                                <th scope="col">Mã số</th>
-                                <th scope="col">Họ đệm</th>
-                                <th scope="col">Tên</th>
-                                <th class="text-center" scope="col">Địa chỉ IP</th>
-                                <th class="text-center" scope="col">Tự điểm danh</th>
-                                <!--<th class="text-center" scope="col">Có mặt(44)</th>
-                                <th class="text-center" scope="col">Vắng mặt(2)</th>-->
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
+                <table class="table transcrip-table tabs-scores fs-14" id="tblNhapChuyenCan">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">STT</th>
+                            <th scope="col">Số buổi vắng tích lũy</th>
+                            <th scope="col">Mã số</th>
+                            <th scope="col">Họ đệm</th>
+                            <th scope="col">Tên</th>
+                            <th class="text-center" scope="col">Địa chỉ IP</th>
+                            <th class="text-center" scope="col">Tự điểm danh</th>
+                            <!--<th class="text-center" scope="col">Có mặt(44)</th>
+    <th class="text-center" scope="col">Vắng mặt(2)</th>-->
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
+
         </div>
     </div>
 </div>
 
-<!-- modal Yêu cầu đổi lịch-->
-<div class="modal fade finance-modal my-calendar modalDoiLich" id="modalDoiLich" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
+
+<!-- modal khối kiến thức chuyên ngành-->
+<div class="modal fade finance-modal my-calendar" id="modalDoiLich" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><i class="fa-solid fa-calendar-lines-pen mr-5"></i>Yêu cầu đổi lịch</p>
+                    <p><b>Yêu cầu đổi lịch</b> </p>
+
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body change-calendar pd0">
+            <div class="modal-body change-calendar">
                 <form class="" action="">
                     <div class="caledar-input">
                         <div class="form-item">
                             <label for="">Nội dung xin đổi lịch</label>
-                            <div class="input-group" style="height: auto !important;">
-                                <textarea class="form-control min-h-68" id="txtNoiDungDoiLich" rows="2"
-                                    style="height: 86px !important;"></textarea>
+                            <div class="input-group">
+
+
+                                <textarea class="form-control" id="txtNoiDungDoiLich" rows="2"></textarea>
                                 <i class="fal fa-edit"></i>
                             </div>
+
                         </div>
                         <div class="form-item ">
                             <label for="">Lớp học phần</label>
                             <div class="input-group">
+
+
                                 <input type="text" class="form-control" id="txtTenLopHocPhan" disabled>
                                 <i class="fal fa-book-reader"></i>
                             </div>
+
                         </div>
                         <p class="title-center-line"><span>Thời gian</span></p>
                         <div class="form-item on-row">
                             <label for="">Ngày học</label>
                             <div class="input-group">
+
+
                                 <input type="text" class="form-control" id="txtNgayHoc" disabled>
                                 <i class="fal fa-calendar-alt"></i>
                             </div>
+
                             <div class="right">
                                 <div class="arrow">
                                     <span>Đổi sang</span>
                                 </div>
                                 <label for="">Ngày học</label>
                                 <div class="input-group">
+
+
                                     <input type="text" class="form-control" id="txtNgayHoc_DoiSang"
                                         placeholder="dd/mm/yyyy">
                                     <i class="fal fa-calendar-alt"></i>
                                 </div>
+
                             </div>
                         </div>
                         <div class="form-item on-row">
                             <label for="">Tiết bắt đầu</label>
                             <div class="input-group">
+
+
                                 <input type="text" class="form-control" id="txtTietBatDau" disabled>
                                 <i class="fal fa-chalkboard-teacher"></i>
                             </div>
+
                             <div class="right">
-                                <div class="arrow none-title"></div>
+                                <div class="arrow none-title">
+
+                                </div>
                                 <label for="">Tiết bắt đầu</label>
                                 <div class="input-group">
                                     <input type="text" class="form-control" id="txtTietBatDau_DoiSang">
                                     <i class="fal fa-chalkboard-teacher"></i>
                                 </div>
+
                             </div>
                         </div>
                         <div class="form-item on-row">
@@ -328,31 +315,41 @@
                                 <input type="text" class="form-control" id="txtTietKetThuc" disabled>
                                 <i class="fal fa-chalkboard-teacher"></i>
                             </div>
+
                             <div class="right">
-                                <div class="arrow none-title"></div>
+                                <div class="arrow none-title">
+
+                                </div>
                                 <label for="">Tiết kết thúc</label>
                                 <div class="input-group">
+
+
                                     <input type="text" class="form-control" id="txtTietKetThuc_DoiSang">
                                     <i class="fal fa-chalkboard-teacher"></i>
                                 </div>
+
                             </div>
                         </div>
                         <p class="title-center-line"><span>Phòng học</span></p>
                         <div class="form-item on-row form-add-info">
                             <label for="">Phòng học</label>
+
                             <div class="input-group">
                                 <input type="text" class="form-control" id="txtPhongHoc" disabled>
                                 <i class="fal fa-users-class"></i>
                             </div>
+
+
                             <div class="right">
                                 <div class="arrow">
                                     <span>Đổi sang</span>
                                 </div>
                                 <label for="">Phòng học</label>
-                                <div class="input-group phong-doi">
+                                <div class="input-group">
                                     <select class="form-select select-opt" id="dropPhongHoc_DoiSang"></select>
                                     <i class="fal fa-users-class"></i>
                                 </div>
+
                             </div>
                         </div>
                         <p class="title-center-line"><span>Giảng viên</span></p>
@@ -366,32 +363,37 @@
                             <span>Kiểm tra lịch trùng</span>
                         </a>
                         <a class="btn btn-dask-blue" id="btnGuiYeuCau">
-                            <i class="fas fa-share me-2"></i><span>Gửi yêu cầu</span>
+                            <i class="fas fa-share me-2"></i>
+                            <span>Gửi yêu cầu</span>
                         </a>
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 </div>
-
-<!-- modal Yêu cầu đổi lịch-->
-<div class="modal fade finance-modal my-calendar modalXemLich" id="modalXemLich" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
+<!-- page script -->
+<!-- modal khối kiến thức chuyên ngành-->
+<div class="modal fade finance-modal my-calendar" id="modalXemLich" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><i class="fa-solid fa-calendar-lines-pen mr-5"></i>Yêu cầu đổi lịch</p>
+                    <p><b>Yêu cầu đổi lịch</b> </p>
+
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body change-calendar pd0">
+            <div class="modal-body change-calendar">
                 <form class="" action="">
                     <div class="caledar-input">
                         <div class="form-item">
                             <label for="">Nội dung xin đổi lịch</label>
                             <div class="input-group">
+
+
                                 <textarea class="form-control" id="txtNoiDungDoiLich_View" disabled rows="2"></textarea>
                                 <i class="fal fa-edit"></i>
                             </div>
@@ -513,37 +515,39 @@
                     </div>
                 </form>
             </div>
+
         </div>
     </div>
 </div>
 
-<!-- modal Phê duyệt-->
-<div class="modal fade finance-modal my-calendar modalPheDuyet" id="modalPheDuyet" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+<!-- modal khối kiến thức chuyên ngành-->
+<div class="modal fade finance-modal my-calendar" id="modalPheDuyet" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><i class="fa-solid fa-circle-check mr-10"></i>Phê duyệt</p>
+                    <p><b>Phê duyệt</b> </p>
+
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body change-calendar">
                 <div class="form-item d-flex align-items-center  form-add-info mb-15">
-                    <div class="text-lable text-left">Trạng thái</div>
+                    <div class="text-lable">Trạng thái</div>
                     <div class="input-group no-icon">
+
                         <select class="select-opt" id="dropPhetDuyet_TrangThai"
                             aria-label="Default select example"></select>
                     </div>
+
                 </div>
+
             </div>
-            <div class="modal-footer">
-                <div class="gv-button-group pull-right pt-0 d-flex">
-                    <button type="button" class="btn btn-default mb-0" data-dismiss="modal" id="btnCancel">
-                        <i class="fa fa-times-circle"></i> Đóng
-                    </button>
-                    <a class="btn btn-primary mb-0" id="btnLuuPheDuyet" data-bs-dismiss="modal" aria-label="Close">
-                        <i class="fal fa-save me-2"></i>
+            <div class="modal-body change-calendar">
+                <div class="gv-button-group">
+                    <a class="btn btn-outline-orange" id="btnLuuPheDuyet" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fal fa-tasks me-2"></i>
                         <span>Lưu</span>
                     </a>
                 </div>
@@ -551,25 +555,9 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade finance-modal my-calendar" id="modalHTSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: unset">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="finance-user-info in-modal ">
-                    <p id="lblHTSinhVien"></p>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-3 zoneHTSinhVien" id="zoneHTSinhVien">
-            </div>
-
-        </div>
-    </div>
-</div>
 <!-- page script -->
-<script src="modules/lichgiang/script/lichgiang.js?v=1.0.0.2"></script>
+
+<script src="modules/lichgiang/script/lichgiangphonghoc.js?v=1.0.0.2"></script>
 <script src="modules/lichgiang/script/jquery-searchbox.js"></script>
 <script type="text/javascript">
     var main_doc = {};

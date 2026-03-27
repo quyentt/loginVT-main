@@ -2276,8 +2276,8 @@ input::placeholder {
 
 .form-top .col-12 {
   padding-right: 10px;
-  margin-bottom: 10px !important;
-  padding-left: 0 !important;
+  margin-bottom: 10px;
+  padding-left: 0;
 }
 
 .form-top .col-12:nth-child(4),
@@ -2624,7 +2624,7 @@ input::placeholder {
 }
 
 .date-list .table thead th {
-  background: #1c2d5d !important;
+  background: var(--color-blue) !important;
   border: none !important;
   color: #fff;
   border-right: 1px solid #fff !important;
@@ -2920,8 +2920,7 @@ input:checked~label {
 
 
 .accep-point .tab-item:hover a,
-.accep-point .tab-item:hover a i
- {
+.accep-point .tab-item:hover a i {
   color: var(--color-yellow) !important;
 }
 
@@ -6112,8 +6111,8 @@ img.st-1-img {
   display: none;
 }
 
-.day-of-week .task .task-description br { 
-  display: none;
+.day-of-week .task .task-description br {
+  /* display: none; */
 }
 
 .day-of-week .task .task-description .eval {
@@ -6123,15 +6122,16 @@ img.st-1-img {
   display: flex;
   align-items: center;
   justify-content: center;
- bottom: -3px;
-    right: -3px;
+  bottom: 0px;
+  right: 0px;
   background: #fff;
   border: solid 1px #e8e8e8;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 12px;
   gap: 6px;
   z-index: 100;
   color: #999999;
+  padding: 4px 8px;
 }
 
 .day-of-week .task .task-description .eval .eval-total-list {
@@ -6163,7 +6163,7 @@ img.st-1-img {
 }
 
 .day-of-week .task .task-description .eval img {
-  height: 18px;
+  height: 16px;
 }
 
 .day-of-week .task .task-description .eval .eval-icon {

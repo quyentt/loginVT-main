@@ -11097,6 +11097,20 @@ table#clone {
 .tblNguoiHoc tr:hover .btn.btnChuyenCan {
     background: var(--color-blue) !important;
 }
-.tblHocKy_KetQua tr td:last-child{
+
+.tblHocKy_KetQua tr td:last-child {
     text-align: left !important;
+}
+
+.my-calendar.modal_XacNhan .modal-content .select2 {
+    margin-top: 0 !important;
+    padding: 0 !important;
+}
+
+.my-calendar.modal_XacNhan .change-calendar .form-item.form-add-info {
+    width: 90% !important;
+}
+
+.my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 .btn.btn-success{
+    width: 100%;
 }

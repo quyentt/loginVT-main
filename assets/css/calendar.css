@@ -94,8 +94,7 @@
 }
 
 .day-of-week .task {
-<<<<<<< HEAD
-  .day-of-week .task {
+  <<<<<<< HEAD .day-of-week .task {
     width: 100%;
     padding: 0;
     position: absolute;
@@ -106,11 +105,11 @@
     justify-content: center;
     box-shadow: 0 0px 6px 1px rgba(0, 0, 0, 0.2);
     border: 2px solid #fff;
-    border-radius:12px;
+    border-radius: 12px;
     margin: 2px !important;
-}
-=======
-  width: 100%;
+  }
+
+  =======width: 100%;
   padding: 0;
   position: absolute;
   z-index: 1;
@@ -122,7 +121,7 @@
   border: 2px solid #fff;
   border-radius: 12px;
   /* background: #f1f1f1 !important; */
->>>>>>> 3570c77f236c5c2c033bc2146e51cc0f88b9a6f5
+  >>>>>>>3570c77f236c5c2c033bc2146e51cc0f88b9a6f5
 }
 
 .date .hour-row {
@@ -164,14 +163,17 @@
 }
 
 .task-header .task-date {
- font-size: 12px;
-    line-height: 15px;
-    text-align: left;
-    margin-top: 4px;
-    opacity: 0.6;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: left;
+  margin-top: 4px;
+  opacity: 0.6;
 }
 
 .task-header .student-num {
+  position: absolute;
+  top: 5px;
+  right: 8px;
   width: 25px;
   height: 25px;
   background: transparent;
@@ -825,7 +827,7 @@
   }
 
   .task-header {
-    padding: 15px 10px !important;
+    padding: 10px !important;
   }
 
   .news-search-form .form-group-cover {
@@ -876,9 +878,19 @@
   border-radius: 3px;
 }
 
+.table tr td:first-child {
+  color: #888 !important;
+}
+
+.tblNhapChuyenCan tr td .inputChuyenCan {
+  height: 28px !important;
+  min-width: 40px !important;
+  margin-left: 5px;
+}
+
 .tblNhapChuyenCan tr td input[type=checkbox],
 .tblNhapChuyenCan tr td input[type=radio] {
-  margin: 3px 0 0 0 !important;
+  margin: 6px 0 0 0 !important;
 }
 
 .tblNhapChuyenCan tr:hover td,
@@ -891,6 +903,7 @@
 .modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(3) {
   width: 130px !important;
 }
-.form-list-input .form-item{
+
+.form-list-input .form-item {
   min-width: 300px;
 }
