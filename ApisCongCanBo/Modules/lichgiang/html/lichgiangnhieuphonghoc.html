@@ -19,8 +19,8 @@
     }
 
     .box-shadow {
-        padding: 5px 3px;
-        margin-bottom: 3px;
+        padding: 3px 2px;
+        margin-bottom: 2px;
     }
 
     .news-search-form {
@@ -36,9 +36,9 @@
         font-size: 15px;
     }
     
-    /* Search Bar Section - New */
+    /* Search Bar Section - Compact */
     .search-bar-section {
-        padding: 20px;
+        padding: 12px 15px;
         height: 100%;
         display: flex;
         flex-direction: column;
@@ -49,7 +49,7 @@
         flex: 1;
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 8px;
     }
     
     .search-bar-header {
@@ -57,14 +57,14 @@
     }
     
     .search-bar-header .title-text {
-        font-size: 22px;
+        font-size: 18px;
         font-weight: 600;
         color: #223771;
-        margin-bottom: 8px;
+        margin-bottom: 4px;
     }
     
     .search-bar-subtitle {
-        font-size: 14px;
+        font-size: 12px;
         color: #666;
         margin: 0;
         font-style: italic;
@@ -73,50 +73,51 @@
     .search-bar-info {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        padding: 15px;
+        gap: 6px;
+        padding: 10px;
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 8px;
-        border-left: 4px solid #223771;
+        border-radius: 6px;
+        border-left: 3px solid #223771;
     }
     
     .info-item {
         display: flex;
         align-items: center;
-        gap: 12px;
-        font-size: 13px;
+        gap: 8px;
+        font-size: 12px;
         color: #495057;
     }
     
     .info-item i {
-        font-size: 16px;
-        width: 20px;
+        font-size: 14px;
+        width: 18px;
         text-align: center;
     }
     
     .search-bar-controls {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         flex-wrap: wrap;
-        margin-top: 15px;
-        padding-top: 15px;
+        margin-top: 8px;
+        padding-top: 8px;
         border-top: 2px solid #e9ecef;
     }
     
     .search-bar-controls .form-select {
         flex: 1 1 100%;
         min-width: 100%;
-        font-size: 14px;
-        min-height: 40px;
-        margin-bottom: 10px;
+        font-size: 13px;
+        min-height: 36px;
+        padding: 6px 10px;
+        margin-bottom: 6px;
     }
     
     .search-bar-controls .btn {
         white-space: nowrap;
-        min-height: 40px;
-        padding: 10px 18px;
-        font-size: 14px;
+        min-height: 36px;
+        padding: 8px 14px;
+        font-size: 13px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -125,18 +126,25 @@
     }
     
     .search-bar-controls .btn i {
-        margin-right: 8px;
+        margin-right: 6px;
     }
     
     /* Make search bar same height as calendar */
-    .row.mb-2 > [class*="col-"] {
+    .row.mb-1 > [class*="col-"] {
         display: flex;
     }
     
-    .row.mb-2 > [class*="col-"] > .box-shadow {
+    .row.mb-1 > [class*="col-"] > .box-shadow {
         width: 100%;
         display: flex;
         flex-direction: column;
+        height: 100%;
+    }
+    
+    .search-bar-section,
+    .calendar-compact {
+        height: 100%;
+        min-height: 380px;
     }
     
     /* Header section spacing */
@@ -205,13 +213,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 12px 15px;
+        padding: 8px 12px;
         background: linear-gradient(135deg, #223771 0%, #3c5398 100%);
         color: white;
     }
     
     .calendar-title {
-        font-size: 15px;
+        font-size: 14px;
         font-weight: 600;
         display: flex;
         align-items: center;
@@ -220,7 +228,8 @@
     .calendar-header .btn {
         color: white;
         border-color: rgba(255,255,255,0.3);
-        padding: 4px 10px;
+        padding: 3px 8px;
+        font-size: 12px;
     }
     
     .calendar-header .btn:hover {
@@ -230,7 +239,7 @@
     }
     
     .calendar-body {
-        padding: 10px 12px 12px;
+        padding: 8px 10px 10px;
         flex: 1;
     }
     
@@ -246,8 +255,8 @@
     .weekdays-compact li {
         text-align: center;
         font-weight: 600;
-        font-size: 11px;
-        padding: 6px 2px;
+        font-size: 10px;
+        padding: 4px 2px;
         color: #666;
         background: #f8f9fa;
         border-radius: 3px;
@@ -259,12 +268,12 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        gap: 3px;
+        gap: 2px;
     }
     
     .calendar-body .days li {
         text-align: center;
-        padding: 6px 2px;
+        padding: 5px 2px;
         font-size: 11px;
         cursor: pointer;
         border-radius: 3px;
@@ -1414,9 +1423,9 @@
     </div>
 
     <!-- Top Section: Search Bar + Calendar -->
-    <div class="row mb-2">
+    <div class="row mb-1">
         <!-- Search Bar - Left Side -->
-        <div class="col-12 col-lg-7 mb-2 mb-lg-0">
+        <div class="col-12 col-lg-7 mb-1 mb-lg-0">
             <div class="box-shadow">
                 <div class="search-bar-section">
                     <div class="search-bar-content">
@@ -1445,6 +1454,21 @@
                     </div>
                     <div class="search-bar-controls">
                         <select class="form-select" id="dropSearch_ToaNha"></select>
+                        <select class="form-select" id="dropRoomType" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                            <option value="all">Tất cả loại phòng</option>
+                            <option value="LT">Phòng lý thuyết (LT)</option>
+                            <option value="TH">Phòng thực hành (TH)</option>
+                        </select>
+                        <select class="form-select" id="dropEfficiencyMode" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                            <option value="days">Tính theo ngày sử dụng (mặc định)</option>
+                            <option value="periods">Tính theo tiết học</option>
+                            <option value="morning">Tính theo buổi sáng (T1-6)</option>
+                            <option value="afternoon">Tính theo buổi chiều (T7-10)</option>
+                            <option value="evening">Tính theo buổi tối (T11-15)</option>
+                            <option value="morning-afternoon">Tính theo sáng + chiều (T1-10)</option>
+                            <option value="afternoon-evening">Tính theo chiều + tối (T7-15)</option>
+                            <option value="all-sessions">Tính theo cả 3 buổi (T1-15)</option>
+                        </select>
                         <button class="btn btn-primary" id="btnSearch">
                             <i class="fa-solid fa-search"></i> Xem lịch phòng
                         </button>
@@ -1675,9 +1699,8 @@
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=2.0.0.0"></script>
+<!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.1.0.3"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded

@@ -13,6 +13,7 @@ LichGiangNhieuPhong.prototype = {
     dtLichHoc: [],
     dtPhongHoc: [],
     dtPhongHocFull: [],
+    dtPhongHocOriginal: [], // Lưu bản gốc không bị filter
     dtToaNha: [],
     arrMauNen: ["#223771", "#d49f3a", "#ec4c00", "#5a7adb", "#3c5398"],
     arrLopHocPhanMau: [],
@@ -20,6 +21,8 @@ LichGiangNhieuPhong.prototype = {
     iCurrentPage: 1,
     isLoading: false,
     strSelectedBuilding: '',
+    strSelectedRoomType: 'all', // Mặc định hiển thị tất cả loại phòng
+    strEfficiencyMode: 'days', // Mặc định tính theo ngày sử dụng
 
     // Helper function to clean HTML tags from text
     cleanHtmlTags: function(text) {
@@ -29,6 +32,88 @@ LichGiangNhieuPhong.prototype = {
             .replace(/,\s*,/g, ',')          // Remove double commas
             .replace(/^,\s*/, '')            // Remove leading comma
             .replace(/,\s*$/, '');           // Remove trailing comma
+    },
+
+    // Calculate efficiency based on selected mode
+    calculateEfficiency: function(roomSchedules, totalDays) {
+        var me = this;
+        var mode = me.strEfficiencyMode;
+        
+        if (mode === 'days') {
+            // Tính theo ngày: đếm số ngày có lịch
+            var uniqueDays = {};
+            roomSchedules.forEach(function(schedule) {
+                if (schedule.NGAYHOC) {
+                    uniqueDays[schedule.NGAYHOC] = true;
+                }
+            });
+            var usedDays = Object.keys(uniqueDays).length;
+            return Math.round((usedDays / totalDays) * 100);
+        }
+        
+        // Tính theo tiết học
+        var totalUsedPeriods = 0;
+        var totalPeriods = 0;
+        
+        // Xác định range tiết theo mode
+        var periodRange = { min: 1, max: 15 };
+        switch(mode) {
+            case 'morning':
+                periodRange = { min: 1, max: 6 };
+                totalPeriods = totalDays * 6;
+                break;
+            case 'afternoon':
+                periodRange = { min: 7, max: 10 };
+                totalPeriods = totalDays * 4;
+                break;
+            case 'evening':
+                periodRange = { min: 11, max: 15 };
+                totalPeriods = totalDays * 5;
+                break;
+            case 'morning-afternoon':
+                periodRange = { min: 1, max: 10 };
+                totalPeriods = totalDays * 10;
+                break;
+            case 'afternoon-evening':
+                periodRange = { min: 7, max: 15 };
+                totalPeriods = totalDays * 9;
+                break;
+            case 'all-sessions':
+            case 'periods':
+            default:
+                periodRange = { min: 1, max: 15 };
+                totalPeriods = totalDays * 15;
+                break;
+        }
+        
+        // Đếm số tiết đã sử dụng trong range
+        roomSchedules.forEach(function(schedule) {
+            if (schedule.TIETBATDAU && schedule.TIETKETTHUC) {
+                var start = Math.max(schedule.TIETBATDAU, periodRange.min);
+                var end = Math.min(schedule.TIETKETTHUC, periodRange.max);
+                if (start <= end) {
+                    totalUsedPeriods += (end - start + 1);
+                }
+            }
+        });
+        
+        return Math.round((totalUsedPeriods / totalPeriods) * 100);
+    },
+    
+    // Get efficiency label text based on mode
+    getEfficiencyModeLabel: function() {
+        var me = this;
+        switch(me.strEfficiencyMode) {
+            case 'days': return 'Theo ngày';
+            case 'morning': return 'Buổi sáng';
+            case 'afternoon': return 'Buổi chiều';
+            case 'evening': return 'Buổi tối';
+            case 'morning-afternoon': return 'Sáng + Chiều';
+            case 'afternoon-evening': return 'Chiều + Tối';
+            case 'all-sessions': return 'Cả 3 buổi';
+            case 'periods':
+            default: return 'Theo tiết';
+        }
     },
 
     init: function () {
@@ -101,6 +186,24 @@ LichGiangNhieuPhong.prototype = {
             me.strSelectedBuilding = '';
             $("#dropSearch_ToaNha").val('').trigger('change');
             $(".days .active").trigger("click");
+        });
+
+        // Room type filter change
+        $("#dropRoomType").change(function () {
+            me.strSelectedRoomType = $(this).val();
+            console.log("Room type filter changed to:", me.strSelectedRoomType);
+            // Refresh display if data is loaded
+            $(".days .active").trigger("click");
+        });
+
+        // Efficiency mode change
+        $("#dropEfficiencyMode").change(function () {
+            me.strEfficiencyMode = $(this).val();
+            console.log("Efficiency mode changed to:", me.strEfficiencyMode);
+            // Refresh display if data is loaded
+            if (me.dtPhongHoc.length > 0) {
+                $(".days .active").trigger("click");
+            }
         });
 
         // Export Excel button
@@ -288,16 +391,7 @@ LichGiangNhieuPhong.prototype = {
                 return item.IDPHONGHOC === room.ID;
             });
             
-            var totalUsedPeriods = 0;
-            roomSchedules.forEach(function(schedule) {
-                if (schedule.TIETBATDAU && schedule.TIETKETTHUC) {
-                    totalUsedPeriods += (schedule.TIETKETTHUC - schedule.TIETBATDAU + 1);
-                }
-            });
-            
-            // Tổng tiết trong tuần: 7 ngày × 15 tiết/ngày = 105 tiết
-            var totalPeriods = arrDays.length * 15;
-            var efficiency = Math.round((totalUsedPeriods / totalPeriods) * 100);
+            var efficiency = me.calculateEfficiency(roomSchedules, arrDays.length);
             
             // Xác định màu sắc
             var efficiencyClass = 'low';
@@ -331,13 +425,14 @@ LichGiangNhieuPhong.prototype = {
             html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';">' + roomInfo + '</div>';
             
             // Cột hiệu suất
+            var modeLabel = me.getEfficiencyModeLabel();
             html += '<div class="schedule-cell efficiency ' + efficiencyClass + '" style="grid-column: 2; grid-row: ' + currentRow + ';">';
             html += '<div class="efficiency-percent">' + efficiency + '%</div>';
             html += '<div class="efficiency-label">' + efficiencyLabel + '</div>';
             html += '<div class="efficiency-bar">';
             html += '<div class="efficiency-bar-fill" style="width: ' + efficiency + '%"></div>';
             html += '</div>';
-            html += '<div style="font-size: 9px; margin-top: 4px; opacity: 0.7;">' + totalUsedPeriods + '/' + totalPeriods + ' tiết</div>';
+            html += '<div style="font-size: 9px; margin-top: 4px; opacity: 0.7;">' + modeLabel + '</div>';
             html += '</div>';
             
             arrDays.forEach(function (day, dayIndex) {
@@ -442,7 +537,11 @@ LichGiangNhieuPhong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtPhongHocFull = data.Data || [];
+                    // Lưu bản gốc
+                    me.dtPhongHocOriginal = data.Data || [];
+                    
+                    // Bắt đầu từ bản gốc để filter
+                    me.dtPhongHocFull = me.dtPhongHocOriginal.slice();
                     
                     // Apply room filter if selected
                     if (me.strSelectedBuilding) {
@@ -450,7 +549,23 @@ LichGiangNhieuPhong.prototype = {
                         me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
                             return room.ID === me.strSelectedBuilding;
                         });
-                        console.log("Sau khi lọc:", me.dtPhongHocFull.length, "phòng");
+                        console.log("Sau khi lọc phòng:", me.dtPhongHocFull.length, "phòng");
+                    }
+                    
+                    // Apply room type filter
+                    if (me.strSelectedRoomType && me.strSelectedRoomType !== 'all') {
+                        console.log("Lọc theo loại phòng:", me.strSelectedRoomType);
+                        var beforeFilter = me.dtPhongHocFull.length;
+                        
+                        me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
+                            // Lọc theo trường KIEUPHONG trong database
+                            var kieuPhong = (room.KIEUPHONG || '').toUpperCase();
+                            var filterType = me.strSelectedRoomType.toUpperCase();
+                            
+                            return kieuPhong === filterType;
+                        });
+                        
+                        console.log("Lọc loại phòng:", beforeFilter, "→", me.dtPhongHocFull.length, "phòng");
                     }
                     
                     if (typeof callback === 'function') callback();
@@ -608,16 +723,7 @@ LichGiangNhieuPhong.prototype = {
                 return item.IDPHONGHOC === room.ID;
             });
             
-            var totalUsedPeriods = 0;
-            roomSchedules.forEach(function(schedule) {
-                if (schedule.TIETBATDAU && schedule.TIETKETTHUC) {
-                    totalUsedPeriods += (schedule.TIETKETTHUC - schedule.TIETBATDAU + 1);
-                }
-            });
-            
-            // Tổng tiết trong tuần: 7 ngày × 15 tiết/ngày = 105 tiết
-            var totalPeriods = arrDays.length * 15;
-            var efficiency = Math.round((totalUsedPeriods / totalPeriods) * 100);
+            var efficiency = me.calculateEfficiency(roomSchedules, arrDays.length);
             
             // Xác định màu sắc
             var efficiencyClass = 'low';
@@ -652,13 +758,14 @@ LichGiangNhieuPhong.prototype = {
             html += '<div class="schedule-cell room-name" style="grid-column: 1; grid-row: ' + currentRow + ';">' + roomInfo + '</div>';
             
             // Cột hiệu suất
+            var modeLabel = me.getEfficiencyModeLabel();
             html += '<div class="schedule-cell efficiency ' + efficiencyClass + '" style="grid-column: 2; grid-row: ' + currentRow + ';">';
             html += '<div class="efficiency-percent">' + efficiency + '%</div>';
             html += '<div class="efficiency-label">' + efficiencyLabel + '</div>';
             html += '<div class="efficiency-bar">';
             html += '<div class="efficiency-bar-fill" style="width: ' + efficiency + '%"></div>';
             html += '</div>';
-            html += '<div style="font-size: 9px; margin-top: 4px; opacity: 0.7;">' + totalUsedPeriods + '/' + totalPeriods + ' tiết</div>';
+            html += '<div style="font-size: 9px; margin-top: 4px; opacity: 0.7;">' + modeLabel + '</div>';
             html += '</div>';
             
             arrDays.forEach(function (day, dayIndex) {
@@ -1124,9 +1231,6 @@ LichGiangNhieuPhong.prototype = {
         // Đóng modal
         $("#modal_export_excel").modal("hide");
         
-        // Hiển thị loading
-        edu.system.alert("Đang xử lý dữ liệu...");
-        
         // Gọi API lấy dữ liệu theo khoảng thời gian mới
         me.exportWithCustomData(startDate, endDate, roomsToExport, fileFormat);
     },
@@ -1184,391 +1288,280 @@ LichGiangNhieuPhong.prototype = {
     exportToExcelAdvanced: function (startDate, endDate, rooms, scheduleData) {
         var me = this;
         
-        console.log("=== Export Excel ===");
-        console.log("ExcelJS available:", typeof ExcelJS !== 'undefined');
-        console.log("XLSX available:", typeof XLSX !== 'undefined');
+        console.log("=== EXPORT EXCEL VERSION 3.0.0.4 - DIRECT XLSX FORMAT ===");
         
-        // Check if ExcelJS library is available
-        if (typeof ExcelJS === 'undefined') {
-            console.warn('ExcelJS library not available, trying XLSX with better format');
-            me.exportToExcelWithXLSX(startDate, endDate, rooms, scheduleData);
-            return;
-        }
-        
-        console.log("Using ExcelJS for export...");
-        
-        // Tạo workbook với ExcelJS
-        var workbook = new ExcelJS.Workbook();
-        workbook.creator = 'Hệ thống quản lý';
-        workbook.created = new Date();
-        
-        var worksheet = workbook.addWorksheet('Lịch giảng', {
-            pageSetup: { 
-                paperSize: 9, 
-                orientation: 'landscape',
-                fitToPage: true,
-                fitToWidth: 1
-            }
-        });
-        
-        var arrDays = me.getDaysInWeek(startDate, endDate);
-        var numCols = arrDays.length + 2; // STT + Phòng + các ngày
-        
-        // ===== TIÊU ĐỀ CHÍNH =====
-        worksheet.mergeCells(1, 1, 1, numCols);
-        var titleCell = worksheet.getCell(1, 1);
-        titleCell.value = 'LỊCH GIẢNG NHIỀU PHÒNG HỌC';
-        titleCell.font = { name: 'Arial', size: 16, bold: true, color: { argb: 'FFFFFFFF' } };
-        titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0070C0' } };
-        titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
-        worksheet.getRow(1).height = 30;
-        
-        // ===== THÔNG TIN THỜI GIAN =====
-        worksheet.mergeCells(2, 1, 2, numCols);
-        var timeCell = worksheet.getCell(2, 1);
-        timeCell.value = 'Thời gian: ' + startDate + ' - ' + endDate;
-        timeCell.font = { name: 'Arial', size: 12, bold: true };
-        timeCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE7E6E6' } };
-        timeCell.alignment = { vertical: 'middle', horizontal: 'center' };
-        worksheet.getRow(2).height = 25;
-        
-        // ===== THÔNG TIN THỐNG KÊ =====
-        worksheet.mergeCells(3, 1, 3, Math.floor(numCols/2));
-        var statsCell1 = worksheet.getCell(3, 1);
-        statsCell1.value = 'Số phòng: ' + rooms.length;
-        statsCell1.font = { name: 'Arial', size: 11, bold: true };
-        statsCell1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } };
-        statsCell1.alignment = { vertical: 'middle', horizontal: 'center' };
-        
-        worksheet.mergeCells(3, Math.floor(numCols/2) + 1, 3, numCols);
-        var statsCell2 = worksheet.getCell(3, Math.floor(numCols/2) + 1);
-        statsCell2.value = 'Ngày xuất: ' + new Date().toLocaleString('vi-VN');
-        statsCell2.font = { name: 'Arial', size: 11, bold: true };
-        statsCell2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF2F2F2' } };
-        statsCell2.alignment = { vertical: 'middle', horizontal: 'center' };
-        worksheet.getRow(3).height = 22;
-        
-        // ===== HEADER =====
-        var headerRow = worksheet.getRow(5);
-        headerRow.height = 35;
-        
-        // STT
-        var sttCell = headerRow.getCell(1);
-        sttCell.value = 'STT';
-        sttCell.font = { name: 'Arial', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
-        sttCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
-        sttCell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-        sttCell.border = {
-            top: { style: 'thin', color: { argb: 'FF000000' } },
-            left: { style: 'thin', color: { argb: 'FF000000' } },
-            bottom: { style: 'thin', color: { argb: 'FF000000' } },
-            right: { style: 'thin', color: { argb: 'FF000000' } }
-        };
-        
-        // Phòng học
-        var roomCell = headerRow.getCell(2);
-        roomCell.value = 'Phòng học';
-        roomCell.font = { name: 'Arial', size: 12, bold: true, color: { argb: 'FFFFFFFF' } };
-        roomCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
-        roomCell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-        roomCell.border = {
-            top: { style: 'thin', color: { argb: 'FF000000' } },
-            left: { style: 'thin', color: { argb: 'FF000000' } },
-            bottom: { style: 'thin', color: { argb: 'FF000000' } },
-            right: { style: 'thin', color: { argb: 'FF000000' } }
-        };
-        
-        // Các ngày trong tuần
-        arrDays.forEach(function (day, index) {
-            var dayCell = headerRow.getCell(index + 3);
-            dayCell.value = day.dayName + '\n' + day.dateStr;
-            dayCell.font = { name: 'Arial', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
-            dayCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4472C4' } };
-            dayCell.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-            dayCell.border = {
-                top: { style: 'thin', color: { argb: 'FF000000' } },
-                left: { style: 'thin', color: { argb: 'FF000000' } },
-                bottom: { style: 'thin', color: { argb: 'FF000000' } },
-                right: { style: 'thin', color: { argb: 'FF000000' } }
-            };
-        });
-        
-        // ===== DỮ LIỆU TỪNG PHÒNG =====
-        var currentRow = 6;
-        rooms.forEach(function (room, roomIndex) {
-            var dataRow = worksheet.getRow(currentRow);
-            dataRow.height = 60; // Chiều cao tự động theo nội dung
-            
-            // STT
-            var sttDataCell = dataRow.getCell(1);
-            sttDataCell.value = roomIndex + 1;
-            sttDataCell.font = { name: 'Arial', size: 11 };
-            sttDataCell.alignment = { vertical: 'middle', horizontal: 'center' };
-            sttDataCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8F9FA' } };
-            sttDataCell.border = {
-                top: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                left: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                bottom: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                right: { style: 'thin', color: { argb: 'FFD0D0D0' } }
-            };
-            
-            // Tên phòng
-            var roomDataCell = dataRow.getCell(2);
-            roomDataCell.value = room.TEN;
-            roomDataCell.font = { name: 'Arial', size: 11, bold: true };
-            roomDataCell.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
-            roomDataCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8F9FA' } };
-            roomDataCell.border = {
-                top: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                left: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                bottom: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                right: { style: 'thin', color: { argb: 'FFD0D0D0' } }
-            };
-            
-            // Lịch học từng ngày
-            arrDays.forEach(function (day, dayIndex) {
-                var events = scheduleData.filter(function (item) {
-                    return item.IDPHONGHOC === room.ID && item.NGAYHOC === day.date;
-                });
-                
-                // Sort theo giờ
-                events.sort(function (a, b) {
-                    return (a.GIOBATDAU * 60 + a.PHUTBATDAU) - (b.GIOBATDAU * 60 + b.PHUTBATDAU);
-                });
-                
-                var dayDataCell = dataRow.getCell(dayIndex + 3);
-                
-                if (events.length > 0) {
-                    // Tạo rich text với format đẹp
-                    var richText = [];
-                    
-                    events.forEach(function (event, eventIndex) {
-                        if (eventIndex > 0) {
-                            richText.push({ text: '\n━━━━━━━━━━\n', font: { color: { argb: 'FF999999' }, size: 9 } });
-                        }
-                        
-                        // Thời gian
-                        richText.push({
-                            text: '⏰ ' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + 
-                                  ' - ' + me.returnTwo(event.GIOKETTHUC) + ':' + me.returnTwo(event.PHUTKETTHUC),
-                            font: { bold: true, color: { argb: 'FF0066CC' }, size: 10 }
-                        });
-                        
-                        if (event.TIETBATDAU) {
-                            richText.push({
-                                text: ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')',
-                                font: { color: { argb: 'FF666666' }, size: 9 }
-                            });
-                        }
-                        
-                        // Học phần
-                        richText.push({
-                            text: '\n📚 ' + event.TENHOCPHAN,
-                            font: { bold: true, color: { argb: 'FF000000' }, size: 10 }
-                        });
-                        
-                        // Lớp
-                        if (event.TENLOPHOCPHAN) {
-                            richText.push({
-                                text: '\n👥 ' + event.TENLOPHOCPHAN,
-                                font: { color: { argb: 'FF333333' }, size: 9 }
-                            });
-                        }
-                        
-                        // Giảng viên
-                        if (event.THONGTINGIANGVIEN) {
-                            richText.push({
-                                text: '\n👨‍🏫 ' + event.THONGTINGIANGVIEN,
-                                font: { color: { argb: 'FF006600' }, size: 9, italic: true }
-                            });
-                        }
-                    });
-                    
-                    dayDataCell.value = { richText: richText };
-                    dayDataCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFACD' } };
-                } else {
-                    dayDataCell.value = '';
-                    dayDataCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
-                }
-                
-                dayDataCell.alignment = { vertical: 'top', horizontal: 'left', wrapText: true };
-                dayDataCell.border = {
-                    top: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                    left: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                    bottom: { style: 'thin', color: { argb: 'FFD0D0D0' } },
-                    right: { style: 'thin', color: { argb: 'FFD0D0D0' } }
-                };
-            });
-            
-            currentRow++;
-        });
-        
-        // ===== THỐNG KÊ CUỐI =====
-        currentRow += 1;
-        worksheet.mergeCells(currentRow, 1, currentRow, numCols);
-        var summaryCell = worksheet.getCell(currentRow, 1);
-        summaryCell.value = 'THỐNG KÊ: Tổng ' + rooms.length + ' phòng | ' + scheduleData.length + ' lịch học';
-        summaryCell.font = { name: 'Arial', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
-        summaryCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF70AD47' } };
-        summaryCell.alignment = { vertical: 'middle', horizontal: 'center' };
-        worksheet.getRow(currentRow).height = 25;
-        
-        // ===== SET COLUMN WIDTH =====
-        worksheet.getColumn(1).width = 6;  // STT
-        worksheet.getColumn(2).width = 25; // Phòng
-        for (var i = 3; i <= numCols; i++) {
-            worksheet.getColumn(i).width = 35; // Các ngày
-        }
-        
-        // ===== XUẤT FILE =====
-        var fileName = 'LichGiang_' + startDate.replace(/\//g, '') + '_' + 
-                       endDate.replace(/\//g, '') + '_' + rooms.length + 'phong.xlsx';
-        
-        workbook.xlsx.writeBuffer().then(function(buffer) {
-            var blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-            var link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = fileName;
-            link.click();
-            
-            edu.system.alert("✅ Xuất Excel thành công!\n📁 File: " + fileName);
-        }).catch(function(error) {
-            console.error("Lỗi xuất Excel:", error);
-            edu.system.alert("❌ Có lỗi khi xuất Excel: " + error.message);
-        });
+        // Bỏ qua ExcelJS vì CDN không load được, dùng thẳng XLSX format mới
+        me.exportToExcelWithXLSX(startDate, endDate, rooms, scheduleData);
     },
     
     exportToExcelWithXLSX: function (startDate, endDate, rooms, scheduleData) {
         var me = this;
         
-        console.log("Using XLSX (SheetJS) for export - limited formatting");
+        console.log("=== EXPORT WITH SIMPLE HTML TABLE METHOD ===");
         
-        if (typeof XLSX === 'undefined') {
-            me.exportToCSVAdvanced(startDate, endDate, rooms, scheduleData);
-            return;
-        }
+        // Hiển thị loading đẹp
+        me.showExportLoading();
         
-        var wb = XLSX.utils.book_new();
-        var wsData = [];
-        var arrDays = me.getDaysInWeek(startDate, endDate);
-        
-        // Tiêu đề
-        wsData.push(['═══════════════════════════════════════════════════════════════']);
-        wsData.push(['LỊCH GIẢNG NHIỀU PHÒNG HỌC']);
-        wsData.push(['═══════════════════════════════════════════════════════════════']);
-        wsData.push(['Thời gian: ' + startDate + ' → ' + endDate]);
-        wsData.push(['Số phòng: ' + rooms.length + ' | Tổng lịch: ' + scheduleData.length]);
-        wsData.push(['Ngày xuất: ' + new Date().toLocaleString('vi-VN')]);
-        wsData.push([]);
-        
-        // Header
-        var headerRow = ['STT', 'PHÒNG HỌC'];
-        arrDays.forEach(function (day) {
-            headerRow.push(day.dayName.toUpperCase() + ' - ' + day.dateStr);
-        });
-        wsData.push(headerRow);
-        wsData.push([]); // Dòng phân cách
-        
-        // Dữ liệu
-        rooms.forEach(function (room, index) {
-            var row = [index + 1, '📍 ' + room.TEN];
+        // Delay nhỏ để loading hiển thị
+        setTimeout(function() {
+            // Tạo HTML table và xuất thành Excel
+            var arrDays = me.getDaysInWeek(startDate, endDate);
             
-            arrDays.forEach(function (day) {
-                var events = scheduleData.filter(function (item) {
-                    return item.IDPHONGHOC === room.ID && item.NGAYHOC === day.date;
+            // Tạo HTML table
+            var html = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">';
+            html += '<head><meta charset="utf-8"><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>';
+            html += '<x:Name>Lịch giảng</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet>';
+            html += '</x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>';
+            
+            html += '<table border="1" cellpadding="5" cellspacing="0" style="border-collapse:collapse;font-family:Arial;">';
+            
+            // Tiêu đề
+            var numCols = arrDays.length + 3;
+            html += '<tr><td colspan="' + numCols + '" align="center" style="font-size:16px;font-weight:bold;height:30px;">LỊCH GIẢNG NHIỀU PHÒNG HỌC</td></tr>';
+            html += '<tr><td colspan="' + numCols + '" style="height:25px;">Thời gian: ' + startDate + ' - ' + endDate + '</td></tr>';
+            html += '<tr><td colspan="' + numCols + '" style="height:25px;">Số phòng: ' + rooms.length + '</td></tr>';
+            html += '<tr><td colspan="' + numCols + '" style="height:25px;">Ngày xuất: ' + new Date().toLocaleString('vi-VN') + '</td></tr>';
+            html += '<tr><td colspan="' + numCols + '" style="height:10px;"></td></tr>';
+            
+            // Header
+            html += '<tr style="background-color:#D9D9D9;font-weight:bold;height:35px;">';
+            html += '<td align="center" style="width:50px;">STT</td>';
+            html += '<td align="center" style="width:150px;">Phòng học</td>';
+            html += '<td align="center" style="width:80px;">Ca học</td>';
+            arrDays.forEach(function(day) {
+                html += '<td align="center" style="width:350px;">' + day.dayName + '<br>(' + day.dateStr + ')</td>';
+            });
+            html += '</tr>';
+            
+            // Dữ liệu
+            var sttCounter = 1;
+            
+            rooms.forEach(function(room) {
+                var roomSchedules = scheduleData.filter(function(item) {
+                    return item.IDPHONGHOC === room.ID;
                 });
                 
-                events.sort(function (a, b) {
-                    return (a.GIOBATDAU * 60 + a.PHUTBATDAU) - (b.GIOBATDAU * 60 + b.PHUTBATDAU);
+                var sessions = [
+                    { name: 'Sáng', min: 1, max: 6 },
+                    { name: 'Chiều', min: 7, max: 10 },
+                    { name: 'Tối', min: 11, max: 15 }
+                ];
+                
+                sessions.forEach(function(session, sessionIndex) {
+                    html += '<tr style="height:100px;">';
+                    
+                    // STT (rowspan 3)
+                    if (sessionIndex === 0) {
+                        html += '<td align="center" rowspan="3" valign="middle">' + sttCounter + '</td>';
+                    }
+                    
+                    // Phòng học (rowspan 3)
+                    if (sessionIndex === 0) {
+                        html += '<td rowspan="3" valign="middle">' + room.TEN + '</td>';
+                    }
+                    
+                    // Ca học
+                    html += '<td align="center" valign="middle" style="font-weight:bold;">' + session.name + '</td>';
+                    
+                    // Các ngày
+                    arrDays.forEach(function(day) {
+                        var events = roomSchedules.filter(function(item) {
+                            return item.NGAYHOC === day.date && 
+                                   item.TIETBATDAU >= session.min && 
+                                   item.TIETBATDAU <= session.max;
+                        });
+                        
+                        events.sort(function(a, b) {
+                            return (a.GIOBATDAU * 60 + a.PHUTBATDAU) - (b.GIOBATDAU * 60 + b.PHUTBATDAU);
+                        });
+                        
+                        html += '<td valign="top" style="white-space:pre-wrap;">';
+                        
+                        if (events.length > 0) {
+                            events.forEach(function(event, idx) {
+                                if (idx > 0) html += '<br>---<br>';
+                                
+                                // Thời gian
+                                html += me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + 
+                                       '-' + me.returnTwo(event.GIOKETTHUC) + ':' + me.returnTwo(event.PHUTKETTHUC);
+                                
+                                if (event.TIETBATDAU) {
+                                    html += ' (T' + event.TIETBATDAU;
+                                    if (event.TIETKETTHUC && event.TIETKETTHUC !== event.TIETBATDAU) {
+                                        html += '-' + event.TIETKETTHUC;
+                                    }
+                                    html += ')';
+                                }
+                                
+                                html += '<br>' + event.TENHOCPHAN;
+                                
+                                if (event.TENLOPHOCPHAN) {
+                                    html += '<br>Lớp: ' + event.TENLOPHOCPHAN;
+                                }
+                                
+                                if (event.THONGTINGIANGVIEN) {
+                                    var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
+                                    html += '<br>GV: ' + giangVien;
+                                }
+                            });
+                        }
+                        
+                        html += '</td>';
+                    });
+                    
+                    html += '</tr>';
                 });
                 
-                var cellContent = '';
-                events.forEach(function (event, idx) {
-                    if (idx > 0) cellContent += '\n' + '─'.repeat(30) + '\n';
-                    
-                    cellContent += '⏰ ' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + 
-                                  ' → ' + me.returnTwo(event.GIOKETTHUC) + ':' + me.returnTwo(event.PHUTKETTHUC);
-                    
-                    if (event.TIETBATDAU) {
-                        cellContent += ' (Tiết ' + event.TIETBATDAU + '→' + event.TIETKETTHUC + ')';
-                    }
-                    
-                    cellContent += '\n📚 ' + event.TENHOCPHAN.toUpperCase();
-                    
-                    if (event.TENLOPHOCPHAN) {
-                        cellContent += '\n👥 Lớp: ' + event.TENLOPHOCPHAN;
-                    }
-                    
-                    if (event.THONGTINGIANGVIEN) {
-                        cellContent += '\n👨‍🏫 GV: ' + event.THONGTINGIANGVIEN;
-                    }
-                });
-                
-                row.push(cellContent || '(Trống)');
+                sttCounter++;
             });
             
-            wsData.push(row);
-        });
-        
-        // Thống kê
-        wsData.push([]);
-        wsData.push(['═══════════════════════════════════════════════════════════════']);
-        wsData.push(['📊 THỐNG KÊ: ' + rooms.length + ' phòng | ' + scheduleData.length + ' lịch học']);
-        wsData.push(['═══════════════════════════════════════════════════════════════']);
-        
-        var ws = XLSX.utils.aoa_to_sheet(wsData);
-        
-        // Set column width
-        var colWidths = [
-            { wch: 5 },   // STT
-            { wch: 28 }   // Phòng
-        ];
-        for (var i = 0; i < arrDays.length; i++) {
-            colWidths.push({ wch: 45 });
-        }
-        ws['!cols'] = colWidths;
-        
-        // Set row heights
-        var rowHeights = [];
-        for (var i = 0; i < wsData.length; i++) {
-            if (i === 1) {
-                rowHeights.push({ hpt: 30 }); // Tiêu đề
-            } else if (i === 7) {
-                rowHeights.push({ hpt: 25 }); // Header
-            } else if (i >= 9 && i < wsData.length - 3) {
-                rowHeights.push({ hpt: 80 }); // Data rows
+            html += '</table></body></html>';
+            
+            // Tạo Blob và download
+            var blob = new Blob(['\ufeff', html], {
+                type: 'application/vnd.ms-excel;charset=utf-8'
+            });
+            
+            // Tạo tên file thông minh dựa trên khoảng thời gian
+            var fileName = me.generateSmartFileName(startDate, endDate);
+            
+            if (navigator.msSaveBlob) {
+                // IE 10+
+                navigator.msSaveBlob(blob, fileName);
             } else {
-                rowHeights.push({ hpt: 20 });
+                var link = document.createElement('a');
+                if (link.download !== undefined) {
+                    var url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', fileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+                }
             }
+            
+            // Ẩn loading và hiển thị thông báo thành công
+            me.hideExportLoading();
+            me.showExportSuccess(fileName, rooms.length, scheduleData.length);
+            
+            console.log("Excel file exported successfully!");
+        }, 300);
+    },
+    
+    // Hiển thị loading khi xuất file
+    showExportLoading: function() {
+        var loadingHtml = '<div id="exportLoadingOverlay" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;">';
+        loadingHtml += '<div style="background:white;padding:40px;border-radius:15px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);min-width:300px;">';
+        loadingHtml += '<div class="spinner-border text-primary" role="status" style="width:60px;height:60px;border-width:6px;margin-bottom:20px;">';
+        loadingHtml += '<span class="sr-only">Loading...</span>';
+        loadingHtml += '</div>';
+        loadingHtml += '<h4 style="color:#223771;margin:0 0 10px 0;font-weight:600;">Đang xuất file Excel...</h4>';
+        loadingHtml += '<p style="color:#666;margin:0;font-size:14px;">Vui lòng đợi trong giây lát</p>';
+        loadingHtml += '</div>';
+        loadingHtml += '</div>';
+        
+        $('body').append(loadingHtml);
+    },
+    
+    // Ẩn loading
+    hideExportLoading: function() {
+        $('#exportLoadingOverlay').fadeOut(300, function() {
+            $(this).remove();
+        });
+    },
+    
+    // Hiển thị thông báo thành công
+    showExportSuccess: function(fileName, roomCount, scheduleCount) {
+        var successHtml = '<div id="exportSuccessModal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">';
+        successHtml += '<div style="background:white;padding:30px;border-radius:15px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);max-width:500px;animation:slideIn 0.3s ease-out;">';
+        successHtml += '<div style="width:80px;height:80px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:50%;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;">';
+        successHtml += '<i class="fa fa-check" style="color:white;font-size:40px;"></i>';
+        successHtml += '</div>';
+        successHtml += '<h3 style="color:#223771;margin:0 0 15px 0;font-weight:600;">Xuất file thành công!</h3>';
+        successHtml += '<div style="background:#f8f9fa;padding:20px;border-radius:10px;margin-bottom:20px;text-align:left;">';
+        successHtml += '<p style="margin:0 0 10px 0;color:#495057;"><i class="fa fa-file-excel-o" style="color:#28a745;margin-right:10px;"></i><strong>File:</strong> ' + fileName + '</p>';
+        successHtml += '<p style="margin:0 0 10px 0;color:#495057;"><i class="fa fa-building-o" style="color:#007bff;margin-right:10px;"></i><strong>Số phòng:</strong> ' + roomCount + '</p>';
+        successHtml += '<p style="margin:0;color:#495057;"><i class="fa fa-calendar-check-o" style="color:#17a2b8;margin-right:10px;"></i><strong>Số lịch:</strong> ' + scheduleCount + '</p>';
+        successHtml += '</div>';
+        successHtml += '<button onclick="$(\'#exportSuccessModal\').fadeOut(300, function(){ $(this).remove(); });" class="btn btn-primary" style="padding:10px 30px;font-size:16px;border-radius:25px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border:none;">';
+        successHtml += '<i class="fa fa-check-circle" style="margin-right:8px;"></i>Đóng';
+        successHtml += '</button>';
+        successHtml += '</div>';
+        successHtml += '</div>';
+        
+        // Add animation CSS
+        if (!$('#exportAnimationStyle').length) {
+            $('head').append('<style id="exportAnimationStyle">@keyframes slideIn{from{transform:translateY(-50px);opacity:0;}to{transform:translateY(0);opacity:1;}}</style>');
         }
-        ws['!rows'] = rowHeights;
         
-        // Merge cells cho tiêu đề
-        var numCols = arrDays.length + 1;
-        ws['!merges'] = [
-            { s: { r: 0, c: 0 }, e: { r: 0, c: numCols } },
-            { s: { r: 1, c: 0 }, e: { r: 1, c: numCols } },
-            { s: { r: 2, c: 0 }, e: { r: 2, c: numCols } },
-            { s: { r: 3, c: 0 }, e: { r: 3, c: numCols } },
-            { s: { r: 4, c: 0 }, e: { r: 4, c: numCols } },
-            { s: { r: 5, c: 0 }, e: { r: 5, c: numCols } },
-            { s: { r: wsData.length - 3, c: 0 }, e: { r: wsData.length - 3, c: numCols } },
-            { s: { r: wsData.length - 2, c: 0 }, e: { r: wsData.length - 2, c: numCols } },
-            { s: { r: wsData.length - 1, c: 0 }, e: { r: wsData.length - 1, c: numCols } }
-        ];
+        $('body').append(successHtml);
         
-        XLSX.utils.book_append_sheet(wb, ws, 'Lịch giảng');
+        // Auto close after 5 seconds
+        setTimeout(function() {
+            $('#exportSuccessModal').fadeOut(300, function() {
+                $(this).remove();
+            });
+        }, 5000);
+    },
+    
+    // Hàm tạo tên file thông minh
+    generateSmartFileName: function(startDate, endDate) {
+        var me = this;
         
-        var fileName = 'LichGiang_' + startDate.replace(/\//g, '') + '_' + 
-                       endDate.replace(/\//g, '') + '_' + rooms.length + 'phong.xlsx';
+        // Parse dates (format: dd/MM/yyyy)
+        var parseDate = function(dateStr) {
+            var parts = dateStr.split('/');
+            return new Date(parts[2], parts[1] - 1, parts[0]);
+        };
         
-        try {
-            XLSX.writeFile(wb, fileName);
-            edu.system.alert("✅ Xuất Excel thành công!\n📁 File: " + fileName + "\n\n⚠️ Lưu ý: File dùng định dạng cơ bản (XLSX không hỗ trợ màu sắc đầy đủ)");
-        } catch (e) {
-            console.error("Lỗi xuất Excel:", e);
-            edu.system.alert("❌ Có lỗi khi xuất Excel: " + e.message);
+        var start = parseDate(startDate);
+        var end = parseDate(endDate);
+        
+        // Tính số ngày chênh lệch
+        var diffTime = Math.abs(end - start);
+        var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // Format ngày đẹp: 30.3 thay vì 30/03
+        var formatDateShort = function(date) {
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            return day + '.' + month;
+        };
+        
+        // Format ngày đầy đủ: 30.3.2026
+        var formatDateFull = function(date) {
+            var day = date.getDate();
+            var month = date.getMonth() + 1;
+            var year = date.getFullYear();
+            return day + '.' + month + '.' + year;
+        };
+        
+        // Tính số tuần
+        var getWeekNumber = function(date) {
+            var d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+            var dayNum = d.getUTCDay() || 7;
+            d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+            var yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+            return Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+        };
+        
+        var fileName = '';
+        
+        if (diffDays === 0) {
+            // Cùng ngày - Theo ngày
+            fileName = 'Lich hoc ngay ' + formatDateFull(start) + '.xls';
+        } else if (diffDays === 6) {
+            // 7 ngày - Theo tuần
+            var weekNum = getWeekNumber(start);
+            fileName = 'Lich hoc tuan ' + weekNum + ' tu ngay ' + formatDateShort(start) + ' den ' + formatDateFull(end) + '.xls';
+        } else {
+            // Khoảng thời gian tùy chọn
+            fileName = 'Lich hoc tu ' + formatDateShort(start) + ' den ' + formatDateFull(end) + '.xls';
         }
+        
+        return fileName;
     },
     
     exportToCSVAdvanced: function (startDate, endDate, rooms, scheduleData) {
@@ -1645,8 +1638,8 @@ LichGiangNhieuPhong.prototype = {
         var link = document.createElement("a");
         var url = URL.createObjectURL(blob);
         
-        var fileName = 'LichGiang_' + startDate.replace(/\//g, '') + '_' + 
-                       endDate.replace(/\//g, '') + '_' + rooms.length + 'phong.csv';
+        // Tạo tên file thông minh, thay .xls thành .csv
+        var fileName = me.generateSmartFileName(startDate, endDate).replace('.xls', '.csv');
         
         link.setAttribute("href", url);
         link.setAttribute("download", fileName);
@@ -1655,6 +1648,7 @@ LichGiangNhieuPhong.prototype = {
         link.click();
         document.body.removeChild(link);
         
-        edu.system.alert("✅ Xuất file CSV thành công!\n📁 File: " + fileName);
+        // Hiển thị thông báo thành công đẹp
+        me.showExportSuccess(fileName, rooms.length, scheduleData.length);
     },
 }
