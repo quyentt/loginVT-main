@@ -5211,13 +5211,17 @@
  .zoneHTSinhVien .register-school-right .accordion.transcrip-accordion {
     border-bottom: 1px solid #e1e1e1;
 }
-#viewThanhPhan thead tr th{
-    font-weight: 400;
+
+.aps-lichgiangkhoa .aps-table-select .title-is-paging {
+    margin-top: 0px;
+    padding-bottom: 0;
 }
-#viewThanhPhan tbody tr td{
-    border-left: 0 !important;
-    border-right: 0 !important;
+#btnLuuPheDuyet,#btnLuuPheDuyet2{
+    min-width: 115px;
 }
-#viewThanhPhan  .table tr:last-child {
-    border-right:0px solid #d1d1d1 !important;
+#btnSearchToanBo {
+    min-width: 135px !important;
+}
+#btnSearch{
+    min-width: 88px !important;
 }

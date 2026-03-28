@@ -763,7 +763,8 @@
     margin-left: 0;
   }
 
-  .modalDoiLich .change-calendar .form-item .right label {
+  .modalDoiLich .change-calendar .form-item .right label,
+  .modalXemLich .change-calendar .form-item .right label {
     display: none !important;
   }
 
@@ -848,7 +849,15 @@
 }
 
 @media (max-width: 680px) {
-  .modalHTSinhVien  .register-school .accordion-body {
+  .modal-khoikienthuc .aps-diemdanh-tudong .aps-all-button.d-flex {
+    display: block !important;
+  }
+
+  .summary-atten .btn#btnSaveTuKhoa {
+    margin-top: 10px !important;
+  }
+
+  .modalHTSinhVien .register-school .accordion-body {
     overflow-x: scroll;
   }
 
@@ -1463,6 +1472,9 @@
 }
 
 @media (max-width: 360px) {
+  .modalDoiLich .modal-footer .btn i{
+    display: none !important;
+  }
   .news-search-form .form-group-cover .input-group {
     min-width: 100% !important;
   }
