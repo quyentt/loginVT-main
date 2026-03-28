@@ -208,31 +208,35 @@
                     <button class="btn btn-sm btn-outline-orange min-w-auto fs-14" id="btnDiemDanhTuDong"><i
                             class="fas fa-user-edit me-2"></i><span>Lưu điểm danh tự động</span></button> -->
                 </div>
-                <div class="d-flex align-items-center bg-dask-blue summary-atten atten-mid mt-10">
+                <div class="aps-diemdanh-tudong d-flex align-items-center bg-dask-blue summary-atten atten-mid mt-10">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh tự động</b>
                     <span class="fs-14 ms-auto me-4 label">Từ khóa điểm danh</span>
-                    <div class="form-item d-flex form-add-info">
-                        <div class="input-group no-icon">
-                            <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
-                                style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
-                        </div>
+                    <div class="aps-all-button d-flex">
+                        <div class="form-item d-flex form-add-info">
+                            <div class="input-group no-icon">
+                                <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
+                                    style=" height: 32px; width:160px;" placeholder="Nhập từ khóa">
+                            </div>
 
+                        </div>
+                        <button id="btnSaveTuKhoa"
+                            class="btn btn-sm btn-outline-primary min-w-auto fs-14 atten-mid-btn">
+                            <i class="fal fa-save me-2"></i><span>Lưu từ khóa</span>
+                        </button>
+                        <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3">
+                            <i class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span>
+                        </button>
                     </div>
-                    <button id="btnSaveTuKhoa" class="btn btn-sm btn-outline-primary min-w-auto fs-14 atten-mid-btn">
-                        <i class="fal fa-save me-2"></i><span>Lưu từ khóa</span>
-                    </button>
-                    <button id="btnDiemDanhTuDong" class="btn btn-sm btn-success min-w-auto fs-14 ms-3">
-                        <i class="fas fa-save me-2"></i><span>Lưu điểm danh tự động</span>
-                    </button>
                 </div>
-                <div class="d-flex align-items-center bg-orange summary-atten mt-15">
+                <div class="aps-diemdanh-thucong d-flex align-items-center bg-orange summary-atten mt-15">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh thủ công</b>
                     <div id="zoneSiSoSV"> </div>
-
-                    <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
-                        id="btnDiemDanh">
-                        <i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span>
-                    </button>
+                    <div class="aps-all-button">
+                        <button class="btn btn-sm btn-outline-orange min-w-auto fs-14 text-uppercase fw-bold"
+                            id="btnDiemDanh">
+                            <i class="fas fa-save me-2 "></i><span>Lưu điểm danh thủ công</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="aps-table-select scroll-table-x">
                     <table
@@ -357,19 +361,20 @@
                         </div>
                         <p class="title-center-line"><span>Giảng viên</span></p>
                         <div id="tblDoiGiangVien"></div>
+                    </div>
 
-                    </div>
-                    <div class="line-1 bg-e1"></div>
-                    <div class="gv-button-group">
-                        <a class="btn btn-outline-orange" id="btnKiemTraTrungLich">
-                            <i class="fal fa-tasks me-2"></i>
-                            <span>Kiểm tra lịch trùng</span>
-                        </a>
-                        <a class="btn btn-dask-blue" id="btnGuiYeuCau">
-                            <i class="fas fa-share me-2"></i><span>Gửi yêu cầu</span>
-                        </a>
-                    </div>
                 </form>
+            </div>
+            <div class="modal-footer mt-10">
+                <div class="gv-button-group mt-0 pt-0">
+                    <a class="btn btn-outline-orange mb-0" id="btnKiemTraTrungLich">
+                        <i class="fal fa-tasks me-2"></i>
+                        <span>Kiểm tra lịch trùng</span>
+                    </a>
+                    <a class="btn btn-dask-blue mb-0" id="btnGuiYeuCau">
+                        <i class="fas fa-share me-2"></i><span>Gửi yêu cầu</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -400,8 +405,6 @@
                         <div class="form-item ">
                             <label for="">Lớp học phần</label>
                             <div class="input-group">
-
-
                                 <input type="text" class="form-control" id="txtTenLopHocPhan_View" disabled>
                                 <i class="fal fa-book-reader"></i>
                             </div>
@@ -423,8 +426,6 @@
                                 </div>
                                 <label for="">Ngày học</label>
                                 <div class="input-group">
-
-
                                     <input type="text" class="form-control" id="txtNgayHoc_DoiSang_View" disabled
                                         placeholder="dd/mm/yyyy">
                                     <i class="fal fa-calendar-alt"></i>
@@ -500,18 +501,20 @@
                         <div id="tblDoiGiangVien_View"></div>
 
                     </div>
-                    <div class="line-1 bg-e1"></div>
-                    <div class="gv-button-group">
-                        <button class="btn btn-success" id="btnPheDuyet">
-                            <i class="fas fa-check me-2"></i>
-                            <span>Phê duyệt</span>
-                        </button>
-                        <button class="btn btn-secondary" id="btnDeleteDoiLich" style="display: none">
-                            <i class="fas fa-trash-restore me-2"></i>
-                            <span>Xóa</span>
-                        </button>
-                    </div>
+
                 </form>
+            </div>
+            <div class="modal-footer">
+                <div class="gv-button-group pt-0">
+                    <button class="btn btn-success mb-0" id="btnPheDuyet">
+                        <i class="fas fa-check me-2"></i>
+                        <span>Phê duyệt</span>
+                    </button>
+                    <button class="btn btn-secondary  mb-0" id="btnDeleteDoiLich" style="display: none">
+                        <i class="fas fa-trash-restore me-2"></i>
+                        <span>Xóa</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -551,19 +554,18 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade finance-modal my-calendar" id="modalHTSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<!-- Sinh viên -->
+<div class="modal fade finance-modal my-calendar modalHTSinhVien" id="modalHTSinhVien" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: unset">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
                     <p id="lblHTSinhVien"></p>
-
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-3" id="zoneHTSinhVien">
+            <div class="modal-body p-3 zoneHTSinhVien" id="zoneHTSinhVien">
             </div>
 
         </div>

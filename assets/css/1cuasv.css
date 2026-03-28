@@ -539,13 +539,15 @@
   padding-top: 10px !important;
   line-height: 20px !important;
 }
-
+.change-calendar .form-item .form-control {
+    border: 1px solid #e1e1e1;
+}
 .form-add-info .form-select {
   border-radius: 5px !important;
   height: 38px;
   line-height: 27px;
   font-size: 14px;
-  padding-left: 40px;
+  padding-left: 12px;
   border: 1px solid #d2d6de !important;
   background: #fff;
   position: relative;

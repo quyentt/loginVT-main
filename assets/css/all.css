@@ -2624,7 +2624,7 @@ input::placeholder {
 }
 
 .date-list .table thead th {
-  background: #1c2d5d !important;
+  background: var(--color-blue) !important;
   border: none !important;
   color: #fff;
   border-right: 1px solid #fff !important;

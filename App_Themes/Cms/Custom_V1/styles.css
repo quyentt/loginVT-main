@@ -79,9 +79,11 @@
  .bg-f8 {
      background: #f8f8f8 !important;
  }
-.bg-f2 {
+
+ .bg-f2 {
      background: #f2f2f2 !important;
  }
+
  .bg-danger {
      background-color: #f2dede;
  }
@@ -218,7 +220,7 @@
 
  .table>thead>tr>th {
      /* height: 48px !important; */
-     color: #666;
+     color: #888;
  }
 
  .table>tbody>tr>td,
@@ -959,9 +961,11 @@
      line-height: 38px !important;
      border-radius: 5px;
  }
-.form-dangky-sd-phong .form-control {
-    border: 1px solid #d2d6de;
-}
+
+ .form-dangky-sd-phong .form-control {
+     border: 1px solid #d2d6de;
+ }
+
  .form-control.form-control-textarea {
      height: auto !important;
  }
@@ -2053,7 +2057,7 @@
  .modal-content .select2,
  .zone-pag-headertblModal_SinhVien .select2 {
      margin-top: 0;
-      /* margin-top: 3px; */
+     /* margin-top: 3px; */
  }
 
  .info-tblThamSoQuyDoiThangDiem,
@@ -5100,7 +5104,7 @@
 
  #tblChiTietKhoanPhaiNop_XemThongTinAll tr td:last-child,
  #tblChiTietKhoanPhaiNop_XemThongTinAll tr td:nth-child(3),
-  #tblChiTietKhoanPhaiNop_XemThongTinAll tr th:nth-child(3),
+ #tblChiTietKhoanPhaiNop_XemThongTinAll tr th:nth-child(3),
  #tblChiTietKhoanDaNop_XemThongTinAll tr td:nth-child(3),
  #tblChiTietKhoanPhaiNopChung_XemThongTinAll tr td:nth-child(3),
  #tblChiTietKhoanPhaiNopRieng_XemThongTinAll tr td:nth-child(3),
@@ -5109,7 +5113,12 @@
  #tblChiTietKhoanThuaRieng_XemThongTinAll tr td:nth-child(3),
  #pkg_dangkyhoc_tructiep.KhongDangKyViNgayHocCuoiCung tr td:nth-child(3),
  #tblChiTietKhoanThuaChung_XemThongTinAll tr td:nth-child(3),
- .tblkhoikienthuc tr td:first-child {
+ .tblkhoikienthuc tr td:first-child,
+ .tblNguoiHoc tr td:nth-last-child(4),
+ .tblNhapChuyenCan.table>tbody>tr>td:nth-child(6),
+ .tblNhapChuyenCan.table>tbody>tr>td:nth-child(7),
+ .tblNhapChuyenCan.table>tbody>tr>td:nth-child(8),
+ .tblNhapChuyenCan.table>tbody>tr>td:nth-child(9) {
      text-align: center !important;
  }
 
@@ -5142,6 +5151,73 @@
  }
 
  .myModal_TichLuyTheoKhoi .tblTongHopDiem.table>tfoot>tr>td:last-child,
- .myModal_KetQuaDangKy .tblKetQuaDangKy.table>tfoot>tr>td:last-child  {
+ .myModal_KetQuaDangKy .tblKetQuaDangKy.table>tfoot>tr>td:last-child {
      border-right: 0 solid #d1d1d1 !important;
  }
+
+ .zoneHTSinhVien .study-space .register-school {
+     padding: 0 !important;
+ }
+
+ .zoneHTSinhVien .study-space .register-school .register-school-left {
+     padding-left: 0 !important;
+ }
+
+ .zoneHTSinhVien .study-space .register-school .register-school-right {
+     padding-right: 0 !important;
+ }
+
+ .zoneHTSinhVien .study-space .register-school .register-school-right .box-shadow {
+     -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+     box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+ }
+
+ .zoneHTSinhVien .register-school-right .transcrip-accordion .accordion-item .accordion-body {
+     border-left: solid 0 #e1e1e1 !important;
+     border-right: solid 0 #e1e1e1 !important;
+     border-top: solid 0 #e1e1e1 !important;
+ }
+
+ .zoneHTSinhVien .register-school-right .tab-content .table>tbody>tr>td,
+ .zoneHTSinhVien .register-school-right .tab-content .table>tbody>tr>th,
+ .zoneHTSinhVien .register-school-right .tab-content .table tr:last-child,
+ .zoneHTSinhVien .register-school-right .table>tbody>tr>td:last-child {
+     border-right: 0 solid #e1e1e1 !important;
+ }
+
+ .zoneHTSinhVien .register-school-right .tab-content .table>tbody>tr>td:first-child,
+ .zoneHTSinhVien .register-school-right .tab-content .table>thead>tr>th:first-child,
+ .zoneHTSinhVien .register-school-right .tab-content .table>tbody>tr>th:first-child {
+     border-left: 0 solid #d1d1d1 !important;
+ }
+
+ .zoneHTSinhVien .register-school-right .tab-content .table>thead>tr:first-child,
+ .zoneHTSinhVien .register-school-right .tab-content .table>thead>tr:first-child>th:last-child {
+     border-right: 0 solid #e1e1e1 !important;
+ }
+ .zoneHTSinhVien .register-school-right .tab-content .table>tfoot>tr td ,
+ .zoneHTSinhVien .register-school-right .tab-content .table>tfoot>tr {
+     border: 0 solid #e1e1e1 !important;
+ }
+ .zoneHTSinhVien .register-school-right .tab-content .table thead th {
+     font-weight: 400;
+ }
+
+ .zoneHTSinhVien .register-school-left .box-shadow {
+     border: 1px solid #e1e1e1;
+     -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+     box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+ }
+ .zoneHTSinhVien .register-school-right .accordion.transcrip-accordion {
+    border-bottom: 1px solid #e1e1e1;
+}
+#viewThanhPhan thead tr th{
+    font-weight: 400;
+}
+#viewThanhPhan tbody tr td{
+    border-left: 0 !important;
+    border-right: 0 !important;
+}
+#viewThanhPhan  .table tr:last-child {
+    border-right:0px solid #d1d1d1 !important;
+}

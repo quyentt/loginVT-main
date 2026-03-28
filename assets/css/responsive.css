@@ -328,6 +328,10 @@
 }
 
 @media (max-width: 1080px) {
+  .modal-footer {
+    padding: 15px !important;
+  }
+
   /* .aps-diemdanh-tudong . */
   .modal-calender-detail .modal-header {
     display: block !important;
@@ -686,14 +690,14 @@
   .head-search-form .head-search-box {
     position: fixed;
     width: 100%;
-    top: 60px;
+    top: 56px;
     background: #fff;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.08);
     left: 0;
     padding: 12px 15px;
     border: solid 1px #f1f1f1;
     z-index: 9999;
-    border-radius: 4px;
+    border-radius: 0 0 6px 6px;
     display: none;
   }
 
@@ -726,6 +730,43 @@
 }
 
 @media (min-width: 680px) and (max-width:1024px) {
+  .scroll-table-x .tblLopHoc {
+    min-width: 1000px !important;
+  }
+
+  .modal.mymodal_NhapChuyenCan .modal-header .finance-user-info .form-item.form-add-info {
+    width: 45% !important;
+  }
+
+  .modal.mymodal_NhapChuyenCan .modal-header .finance-user-info.in-modal p {
+    margin-top: 0;
+    margin-bottom: 6px;
+    text-align: left;
+  }
+
+  .aps-diemdanh-thucong,
+  .aps-diemdanh-tudong {
+    display: block !important;
+    padding: 10px 15px;
+  }
+
+  .aps-diemdanh-tudong .aps-all-button {
+    display: flex;
+    gap: 10px;
+  }
+
+  #txtTuKhoaDiemDanh {
+    width: 220px !important;
+  }
+
+  .aps-diemdanh-thucong .aps-all-button .btn-outline-orange {
+    margin-left: 0;
+  }
+
+  .modalDoiLich .change-calendar .form-item .right label {
+    display: none !important;
+  }
+
   .modal_ketquadkcalop .kqht-modal .left {
     width: 100% !important;
   }
@@ -743,7 +784,37 @@
   }
 }
 
-@media (min-width: 680px) and (max-width:768px) {
+@media (min-width: 600px) and (max-width:768px) {
+  .modal .modal-dialog {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .table.table-search,
+  .table.table-noborder {
+    border-right: 1px solid #e1e1e1 !important;
+  }
+
+  .scroll-table-x .tblLopHoc {
+    min-width: 1000px !important;
+  }
+
+  .tblNhapChuyenCan tr th:nth-last-child(1),
+  .tblNhapChuyenCan tr th:nth-last-child(2),
+  .tblNhapChuyenCan tr th:nth-last-child(3) {
+    min-width: 86px !important;
+  }
+
+  .modal.mymodal_NhapChuyenCan .modal-header .finance-user-info .form-item.form-add-info {
+    width: 41% !important;
+  }
+
+  .modal.mymodal_NhapChuyenCan .modal-header .finance-user-info.in-modal p {
+    margin-top: 0;
+    margin-bottom: 6px;
+    text-align: left;
+  }
+
   .form-list-input {
     margin-bottom: 10px !important;
   }
@@ -752,8 +823,9 @@
     display: inline-block !important;
   }
 
-  .aps-nguoihoc .form-item {
+  .aps-nguoihoc .form-list-input .form-item {
     width: 50% !important;
+    min-width: 48% !important;
   }
 
   .aps-nguoihoc .aps-all-button {
@@ -776,6 +848,60 @@
 }
 
 @media (max-width: 680px) {
+  .modalHTSinhVien  .register-school .accordion-body {
+    overflow-x: scroll;
+  }
+
+  .tblNhapChuyenCan tr th:nth-last-child(1),
+  .tblNhapChuyenCan tr th:nth-last-child(2),
+  .tblNhapChuyenCan tr th:nth-last-child(3) {
+    text-align: center !important;
+  }
+
+  .checkChuyenCan {
+    display: block !important;
+  }
+
+  .modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(3),
+  .modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(2),
+  .modal.my-calendar .tblNhapChuyenCan.table thead th:nth-last-child(1) {
+    min-width: 86px !important;
+    text-align: center !important;
+  }
+
+  .modal.my-calendar .tblNhapChuyenCan.table tr td:nth-last-child(3),
+  .modal.my-calendar .tblNhapChuyenCan.table tr td:nth-last-child(2),
+  .modal.my-calendar .tblNhapChuyenCan.table tr td:nth-last-child(1) {
+    /* display: flex !important; */
+  }
+
+  .modal-spec .table-content {
+    padding: 0;
+  }
+
+  .finance-modal.my-calendar.modal-calender-detail .tblNhapChuyenCan {
+    min-width: 860px !important;
+  }
+
+  .mymodal_NhapChuyenCan .button-gr .btn-primary.btn-dong-modal.btn.btn-border-w {
+    position: absolute !important;
+    top: 10px;
+    right: 4px;
+    border: 1px solid #1a71e8 !important;
+  }
+
+  .finance-modal.my-calendar.modal-calender-detail .tblNhapChuyenCan .inputChuyenCan {
+    height: 28px !important;
+    margin-top: -4px !important;
+  }
+
+  .finance-modal.my-calendar.modal-calender-detail .tblNhapChuyenCan tr th {
+    text-align: center !important;
+  }
+
+  .finance-modal.my-calendar .modal-body {
+    padding: 15px 10px !important;
+  }
 
   .register-wish {
     margin: 0 !important;
@@ -871,11 +997,26 @@
   }
 }
 
-
 @media (max-width: 600px) {
 
-  .modal_XacNhan_hoanthanh .scroll-table-x .tblModal_XacNhan,
-  . {
+  .table.table-search,
+  .table.table-noborder {
+    border-right: 1px solid #e1e1e1 !important;
+  }
+
+  .modal .modal-header {
+    padding: 12px 15px 10px 15px !important;
+  }
+
+  .change-calendar .form-item {
+    /* margin-bottom: 8px; */
+  }
+
+  .change-calendar label {
+    margin-bottom: 5px;
+  }
+
+  .modal_XacNhan_hoanthanh .scroll-table-x .tblModal_XacNhan {
     min-width: 860px;
   }
 
@@ -1241,12 +1382,33 @@
 }
 
 @media (max-width: 430px) {
+  .aps-diemdanh-tudong .aps-all-button .form-add-info {
+    margin-bottom: 10px;
+  }
+
+  .modalDoiLich .modal-footer {
+    display: flex !important;
+    padding: 15px !important;
+  }
+
+  #btnKiemTraTrungLich {
+    margin-left: 0 !important;
+  }
+
+  .modalDoiLich .modal-footer .gv-button-group {
+    display: flex !important;
+  }
+
+  .change-calendar label .btnKiemTraTrungLich {
+    margin-left: 0 !important;
+  }
+
   .dkcn_diem .btn-default.btn-search {
     width: 100% !important;
   }
 
   .scroll-table-x .tblNhapChuyenCan {
-    min-width: 400px !important;
+    min-width: 860px !important;
   }
 
   .my-calendar .calendar-form-top span.ms-auto {
@@ -1297,5 +1459,25 @@
     width: 100%;
     margin-left: 0;
     margin-top: 6px;
+  }
+}
+
+@media (max-width: 360px) {
+  .news-search-form .form-group-cover .input-group {
+    min-width: 100% !important;
+  }
+
+  .aps-diemdanh-tudong .aps-all-button {
+    display: block !important;
+  }
+
+  .aps-diemdanh-tudong .aps-all-button .form-add-info .input-group {
+    width: 100% !important;
+    margin-top: 5px !important;
+  }
+
+  #btnKhoiPhucDiemDanh i,
+  #btnDiemDanh i {
+    display: none !important;
   }
 }

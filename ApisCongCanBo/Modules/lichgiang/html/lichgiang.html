@@ -195,11 +195,10 @@
                 <div class="calendar-form-top mb-3">
                     <p class="m-0" id="lblLopHocPhan"></p>
                 </div>
-
                 <div class="aps-diemdanh-tudong d-flex align-items-center bg-dask-blue summary-atten atten-mid">
                     <b class="me-auto flex-shrink-0 text-uppercase">Điểm danh tự động</b>
                     <span class="fs-14 ms-auto me-4 label">Từ khóa điểm danh</span>
-                    <div class="aps-all-button">
+                    <div class="aps-all-button d-flex">
                         <div class="form-item d-flex form-add-info">
                             <div class="input-group no-icon">
                                 <input type="text" id="txtTuKhoaDiemDanh" class="form-control fs-14"
@@ -250,8 +249,8 @@
 
 
 <!-- modal khối kiến thức chuyên ngành-->
-<div class="modal fade finance-modal my-calendar" id="modalDoiLich" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade finance-modal my-calendar modalDoiLich" id="modalDoiLich" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -264,13 +263,11 @@
             <div class="modal-body change-calendar">
                 <form class="" action="">
                     <div class="caledar-input">
-                        <div class="form-item">
+                        <div class=".form-item">
                             <label for="">Nội dung xin đổi lịch</label>
-                            <div class="input-group">
-
-
-                                <textarea class="form-control" id="txtNoiDungDoiLich" rows="2"></textarea>
-                                <i class="fal fa-edit"></i>
+                            <div class="input-group-textarea w-100">
+                                <textarea class="form-control min-h-68" id="txtNoiDungDoiLich" rows="2"></textarea>
+                                <!-- <i class="fal fa-edit"></i> -->
                             </div>
 
                         </div>
@@ -378,20 +375,19 @@
                         <div id="tblDoiGiangVien"></div>
 
                     </div>
-                    <div class="line-1 bg-e1"></div>
-                    <div class="gv-button-group">
-                        <a class="btn btn-outline-orange" id="btnKiemTraTrungLich">
-                            <i class="fal fa-tasks me-2"></i>
-                            <span>Kiểm tra lịch trùng</span>
-                        </a>
-                        <a class="btn btn-dask-blue" id="btnGuiYeuCau">
-                            <i class="fas fa-share me-2"></i>
-                            <span>Gửi yêu cầu</span>
-                        </a>
-                    </div>
+
                 </form>
             </div>
-
+            <div class="modal-footer">
+                <div class="gv-button-group pt-0">
+                    <a class="btn btn-outline-orange" id="btnKiemTraTrungLich">
+                        <i class="fal fa-tasks me-2"></i><span>Kiểm tra lịch trùng</span>
+                    </a>
+                    <a class="btn btn-dask-blue" id="btnGuiYeuCau">
+                        <i class="fas fa-share me-2"></i><span>Gửi yêu cầu</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -611,7 +607,7 @@
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-3" id="zoneHTSinhVien">
+            <div class="modal-body p-3 zoneHTSinhVien" id="zoneHTSinhVien">
             </div>
 
         </div>

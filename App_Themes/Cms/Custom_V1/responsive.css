@@ -188,6 +188,19 @@
 
 
 @media only screen and (max-width: 600px) {
+    .calendar-modal-meta .item {
+        padding-left: 0 !important;
+    }
+
+    .finance-user-info .form-item.form-add-info {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    .scroll-table-x .tblNguoiHoc {
+        min-width: 680px;
+    }
+
     .dkcn_diem .nav-item {
         width: 49% !important;
     }
@@ -294,7 +307,7 @@
 
     .modal-860,
     .modal_XacNhan .modal-860 {
-        max-width: 96% !important;
+        max-width: 100% !important;
     }
 
     .kqht-modal {
@@ -371,10 +384,29 @@
 
 
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width: 768px) {}
+@media only screen and (min-width: 768px) {
 
-/* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {}
+    /* Large devices (laptops/desktops, 992px and up) */
+
+    #viewThanhPhan .table>thead>tr>th:first-child {
+        border-left: 0 solid #e1e1e1 !important;
+        /* font-weight: 400; */
+    }
+
+    #viewThanhPhan thead tr th {
+        font-weight: 400;
+    }
+
+    #viewThanhPhan tbody tr td,
+    #viewThanhPhan thead tr th {
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
+
+    #viewThanhPhan .table tr:last-child {
+        border-right: 0px solid #d1d1d1 !important;
+    }
+}
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media screen and (min-width:768px) and (max-width: 992px) {
@@ -472,6 +504,28 @@
 }
 
 @media (min-width: 768px) and (max-width:1024px) {
+
+    .aps-diemdanh-tudong,
+    .aps-diemdanh-thucong {
+        display: block !important;
+    }
+
+    .aps-nguoihoc .group-2 {
+        display: block !important;
+    }
+
+    .aps-nguoihoc .group-2 .form-list-input {
+        margin-bottom: 10px;
+    }
+
+    .aps-nguoihoc .form-top .col-12 {
+        padding-right: 0 !important;
+    }
+
+    .aps-nguoihoc .group-2 .form-item:last-child {
+        margin-right: 0 !important;
+    }
+
     .modal_XacNhan_hoanthanh .action-group .select-group {
         display: block !important;
     }
@@ -585,6 +639,11 @@
 
 @media (min-width: 600px) and (max-width:1024px) {
 
+    .modal-860,
+    .modal_XacNhan .modal-860 {
+        max-width: stretch !important;
+    }
+
     .dkcn_diem .tblBangDiem,
     .dkcn_diem .tblChungChi {
         min-width: 1000px !important;
@@ -592,6 +651,15 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+    .aps-diemdanh-tudong .aps-all-button {
+        display: block !important;
+        width: 100%;
+    }
+
+    .aps-diemdanh-tudong .aps-all-button .form-add-info {
+        margin-bottom: 10px;
+    }
+
     .modal-1360 {
         max-width: 97% !important;
         min-width: 96% !important;
@@ -616,9 +684,34 @@
     }
 }
 
+@media (min-width: 440px) and (max-width:680px) {}
+
+@media (min-width: 320px) and (max-width:440px) {
+    .aps-nguoihoc .form-list-input {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .aps-nguoihoc .form-list-input .form-item {
+        margin-bottom: 10px !important;
+    }
+
+    .aps-nguoihoc .form-list-input .form-item:last-child {
+        margin-bottom: 0 !important;
+    }
+}
+
 @media (min-width: 380px) and (max-width:680px) {
     .DSTrangThaiSV_QD .col-12 {
         width: 50%;
+    }
+}
+
+@media (max-width: 380px) {
+
+    #btnKhoiPhucDiemDanh i,
+    #btnDiemDanh i {
+        /* display: none !important; */
     }
 }
 

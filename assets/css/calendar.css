@@ -612,9 +612,9 @@
 }
 
 .calendar-modal-title {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
   line-height: 26px;
 }
 
@@ -827,7 +827,7 @@
   }
 
   .task-header {
-    padding: 15px 10px !important;
+    padding: 10px !important;
   }
 
   .news-search-form .form-group-cover {
@@ -878,9 +878,19 @@
   border-radius: 3px;
 }
 
+.table tr td:first-child {
+  color: #888 !important;
+}
+
+.tblNhapChuyenCan tr td .inputChuyenCan {
+  height: 28px !important;
+  min-width: 40px !important;
+  margin-left: 5px;
+}
+
 .tblNhapChuyenCan tr td input[type=checkbox],
 .tblNhapChuyenCan tr td input[type=radio] {
-  margin: 3px 0 0 0 !important;
+  margin: 6px 0 0 0 !important;
 }
 
 .tblNhapChuyenCan tr:hover td,

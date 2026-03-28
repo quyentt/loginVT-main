@@ -1,77 +1,504 @@
 ﻿<style>
+    /* Reduce padding/margin for more space */
+    .one-door.study-space {
+        padding: 0;
+        margin: 0;
+    }
+
+    .content-tab.no-tab {
+        display: none;
+    }
+
+    .register-school.my-calendar {
+        margin: 0 -10px;
+    }
+
+    .register-school.my-calendar > [class*="col-"] {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .box-shadow {
+        padding: 5px 3px;
+        margin-bottom: 3px;
+    }
+
+    .news-search-form {
+        margin-bottom: 5px;
+    }
+
+    .news-search-form .header-row {
+        margin-bottom: 5px;
+        gap: 8px;
+    }
+
+    .news-search-form .title-text {
+        font-size: 15px;
+    }
+    
+    /* Search Bar Section - New */
+    .search-bar-section {
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .search-bar-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .search-bar-header {
+        margin-bottom: 0;
+    }
+    
+    .search-bar-header .title-text {
+        font-size: 22px;
+        font-weight: 600;
+        color: #223771;
+        margin-bottom: 8px;
+    }
+    
+    .search-bar-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin: 0;
+        font-style: italic;
+    }
+    
+    .search-bar-info {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        padding: 15px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 8px;
+        border-left: 4px solid #223771;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 13px;
+        color: #495057;
+    }
+    
+    .info-item i {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+    }
+    
+    .search-bar-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 2px solid #e9ecef;
+    }
+    
+    .search-bar-controls .form-select {
+        flex: 1 1 100%;
+        min-width: 100%;
+        font-size: 14px;
+        min-height: 40px;
+        margin-bottom: 10px;
+    }
+    
+    .search-bar-controls .btn {
+        white-space: nowrap;
+        min-height: 40px;
+        padding: 10px 18px;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        font-weight: 500;
+    }
+    
+    .search-bar-controls .btn i {
+        margin-right: 8px;
+    }
+    
+    /* Make search bar same height as calendar */
+    .row.mb-2 > [class*="col-"] {
+        display: flex;
+    }
+    
+    .row.mb-2 > [class*="col-"] > .box-shadow {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    /* Header section spacing */
+    .row.mb-3 {
+        margin-bottom: 1rem !important;
+    }
+    
+    .row.mb-3 .box-shadow {
+        margin-bottom: 0;
+    }
+
+    .week-navigation {
+        margin-bottom: 5px;
+        gap: 6px;
+    }
+
+    .week-navigation button {
+        padding: 4px 8px;
+        font-size: 11px;
+    }
+
+    .week-info {
+        font-size: 15px;
+        font-weight: 600;
+        color: #223771;
+        text-align: center;
+    }
+
+    .filter-controls {
+        gap: 5px;
+    }
+
+    .filter-controls .btn {
+        padding: 4px 8px;
+        font-size: 11px;
+        min-height: 28px;
+    }
+
+    .filter-controls .form-select {
+        width: 220px;
+        font-size: 11px;
+        min-height: 28px;
+    }
+
+    .filter-controls #btnSearch {
+        min-width: 110px;
+    }
+    
+    .filter-controls #btnViewAll {
+        min-width: 150px;
+    }
+    
+    .filter-controls #btnExportExcel {
+        min-width: 100px;
+    }
+
+    /* Calendar Compact - Full Width */
+    .calendar-compact {
+        background: white;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .calendar-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 15px;
+        background: linear-gradient(135deg, #223771 0%, #3c5398 100%);
+        color: white;
+    }
+    
+    .calendar-title {
+        font-size: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+    }
+    
+    .calendar-header .btn {
+        color: white;
+        border-color: rgba(255,255,255,0.3);
+        padding: 4px 10px;
+    }
+    
+    .calendar-header .btn:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: white;
+        color: white;
+    }
+    
+    .calendar-body {
+        padding: 10px 12px 12px;
+        flex: 1;
+    }
+    
+    .weekdays-compact {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0 0 6px 0;
+        gap: 3px;
+    }
+    
+    .weekdays-compact li {
+        text-align: center;
+        font-weight: 600;
+        font-size: 11px;
+        padding: 6px 2px;
+        color: #666;
+        background: #f8f9fa;
+        border-radius: 3px;
+    }
+    
+    .calendar-body .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 3px;
+    }
+    
+    .calendar-body .days li {
+        text-align: center;
+        padding: 6px 2px;
+        font-size: 11px;
+        cursor: pointer;
+        border-radius: 3px;
+        transition: all 0.2s;
+        background: #f8f9fa;
+        border: 2px solid transparent;
+    }
+    
+    .calendar-body .days li.poiter {
+        background: white;
+        border-color: #e0e0e0;
+    }
+    
+    .calendar-body .days li.poiter:hover {
+        background: #e3f2fd;
+        border-color: #2196f3;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 6px rgba(33, 150, 243, 0.3);
+    }
+    
+    .calendar-body .days li.active {
+        background: var(--orange, #ff6b35) !important;
+        color: white !important;
+        font-weight: bold;
+        border-color: var(--orange, #ff6b35) !important;
+        box-shadow: 0 3px 8px rgba(255, 107, 53, 0.4);
+    }
+    
+    .calendar-body .days li.day-of-other-month {
+        color: #ccc;
+        cursor: default;
+        background: transparent;
+    }
+    
+    /* Schedule Grid - Full Width Optimized */
     .schedule-grid-container {
         overflow-x: auto;
         overflow-y: auto;
-        max-height: calc(100vh - 200px);
+        max-height: calc(100vh - 280px);
         position: relative;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
     }
 
     .schedule-grid {
         display: grid;
-        grid-template-columns: 120px repeat(auto-fill, minmax(140px, 1fr));
+        grid-template-columns: minmax(140px, 180px) minmax(100px, 120px) repeat(7, 1fr);
         border: 1px solid #ddd;
         background: white;
         min-width: 100%;
+        gap: 0;
     }
 
     .schedule-header {
         background-color: #f8f9fa;
         border: 1px solid #ddd;
-        padding: 8px;
+        padding: 12px 8px;
         font-weight: bold;
         text-align: center;
         position: sticky;
         top: 0;
-        z-index: 10;
+        z-index: 20;
+        white-space: normal;
+        word-wrap: break-word;
+        font-size: 14px;
+        min-height: 60px;
     }
-
-    .schedule-room-header {
-        background-color: #f8f9fa;
-        border: 1px solid #ddd;
-        padding: 8px;
-        font-weight: bold;
-        position: sticky;
+    
+    .schedule-header[style*="grid-column: 1"] {
         left: 0;
-        z-index: 5;
-        background: white;
+        z-index: 25;
+        border-right: 2px solid #999;
+    }
+    
+    .schedule-subheader {
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        padding: 0;
+        font-weight: 700;
+        text-align: center;
+        position: sticky;
+        top: 60px;
+        z-index: 19;
+        font-size: 13px;
+        min-height: 55px;
+    }
+    
+    .schedule-subheader > div {
+        display: flex;
+        height: 100%;
+    }
+    
+    .schedule-subheader .session-label {
+        flex: 1;
+        padding: 8px 4px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 3px;
+    }
+    
+    .schedule-subheader .session-name {
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+    
+    .schedule-subheader .session-time {
+        font-size: 11px;
+        color: #555;
+        font-weight: 600;
     }
 
     .schedule-cell {
         border: 1px solid #e0e0e0;
-        min-height: 60px;
+        min-height: 120px;
         position: relative;
         background: white;
+        padding: 4px;
+        overflow: hidden;
     }
 
     .schedule-cell.room-name {
         position: sticky;
         left: 0;
         background: #f8f9fa;
-        z-index: 5;
+        z-index: 15;
         font-weight: 500;
         display: flex;
         align-items: center;
         padding: 8px;
+        white-space: normal;
+        word-wrap: break-word;
+        font-size: 13px;
+        border-right: 2px solid #999;
+    }
+    
+    .schedule-cell.efficiency {
+        position: sticky;
+        left: 140px;
+        background: white;
+        z-index: 15;
+        font-weight: 600;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        font-size: 14px;
+        border-right: 2px solid #999;
+        text-align: center;
+    }
+    
+    .efficiency-percent {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 4px;
+    }
+    
+    .efficiency-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.8;
+    }
+    
+    .efficiency-bar {
+        width: 100%;
+        height: 6px;
+        background: #e0e0e0;
+        border-radius: 3px;
+        overflow: hidden;
+        margin-top: 6px;
+    }
+    
+    .efficiency-bar-fill {
+        height: 100%;
+        transition: width 0.3s ease;
+        border-radius: 3px;
+    }
+    
+    /* Efficiency colors */
+    .efficiency.low {
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        color: #c62828;
+    }
+    
+    .efficiency.low .efficiency-bar-fill {
+        background: linear-gradient(90deg, #ef5350 0%, #e53935 100%);
+    }
+    
+    .efficiency.medium {
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        color: #f57c00;
+    }
+    
+    .efficiency.medium .efficiency-bar-fill {
+        background: linear-gradient(90deg, #ffa726 0%, #fb8c00 100%);
+    }
+    
+    .efficiency.high {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        color: #2e7d32;
+    }
+    
+    .efficiency.high .efficiency-bar-fill {
+        background: linear-gradient(90deg, #66bb6a 0%, #43a047 100%);
     }
 
     .schedule-event {
-        padding: 4px 6px;
-        margin: 2px;
+        padding: 8px 10px;
+        margin: 2px 0;
         border-radius: 4px;
-        font-size: 11px;
+        font-size: 13px;
         cursor: pointer;
         transition: all 0.2s;
         position: relative;
         overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        word-wrap: break-word;
+        white-space: normal;
+        line-height: 1.4;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
 
     .schedule-event:hover {
-        transform: scale(1.02);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        transform: scale(1.03);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
         z-index: 100;
-        white-space: normal;
+        filter: brightness(1.1);
+    }
+    
+    .schedule-event:active {
+        transform: scale(0.98);
     }
 
     .schedule-event.color-1 {
@@ -100,18 +527,24 @@
     }
 
     .event-time {
-        font-size: 10px;
-        opacity: 0.9;
+        font-size: 12px;
+        opacity: 0.95;
+        font-weight: 600;
+        margin-bottom: 3px;
     }
 
     .event-subject {
         font-weight: 600;
-        margin-bottom: 2px;
+        margin: 3px 0;
+        font-size: 13px;
+        line-height: 1.4;
     }
 
     .event-teacher {
-        font-size: 10px;
+        font-size: 12px;
         opacity: 0.85;
+        margin-top: 3px;
+        line-height: 1.3;
     }
 
     .block-calendar ul li.active span {
@@ -122,26 +555,851 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 20px;
+        gap: 15px;
         margin-bottom: 20px;
+        flex-wrap: wrap;
     }
 
     .week-navigation button {
         padding: 8px 16px;
+        white-space: nowrap;
+        font-size: 14px;
     }
 
     .week-info {
-        font-size: 18px;
+        font-size: 16px;
         font-weight: 600;
         color: #223771;
-        min-width: 300px;
         text-align: center;
+    }
+
+    .news-search-form {
+        margin-bottom: 20px;
+    }
+    
+    .box-shadow .news-search-form {
+        margin-left: -15px;
+        margin-right: -15px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .news-search-form p {
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .filter-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: nowrap;
+    }
+
+    .filter-controls .form-select {
+        min-height: 38px;
+        flex-shrink: 0;
+        width: 350px;
+    }
+
+    .filter-controls .btn {
+        white-space: nowrap;
+        min-height: 38px;
+        padding: 8px 20px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: fit-content;
+        overflow: visible;
+    }
+
+    .filter-controls .btn i {
+        margin-right: 8px;
+        flex-shrink: 0;
+        display: inline-block;
+    }
+    
+    .filter-controls #btnSearch {
+        min-width: 150px;
+    }
+    
+    .filter-controls #btnViewAll {
+        min-width: 200px;
+    }
+    
+    .filter-controls #btnExportExcel {
+        min-width: 140px;
+    }
+    
+    .news-search-form .header-row {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 20px;
+        flex-wrap: nowrap;
+    }
+    
+    .news-search-form .title-text {
+        font-size: 20px;
+        font-weight: 600;
+        order: 1;
+        margin-right: auto;
+    }
+    
+    .news-search-form .filter-controls {
+        order: 2;
+    }
+
+    /* Fix Select2 height */
+    .select2-container .select2-selection--single {
+        height: 28px !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 28px !important;
+        text-align: center !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        font-size: 11px !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 28px !important;
+    }
+    
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        text-align: center !important;
+        line-height: 28px !important;
+        font-size: 11px !important;
+    }
+
+    .scroll-notice {
+        grid-column: 1/-1;
+        padding: 20px;
+        text-align: center;
+        background: #f8f9fa;
+        color: #666;
+        font-size: 14px;
+    }
+
+    /* Responsive styles - scale down proportionally */
+    @media (max-width: 1400px) {
+        .schedule-grid {
+            grid-template-columns: minmax(100px, 140px) minmax(90px, 110px) repeat(7, 1fr);
+        }
+        
+        .schedule-header {
+            font-size: 13px;
+            padding: 8px 6px;
+        }
+        
+        .schedule-cell.room-name {
+            font-size: 12px;
+            padding: 6px;
+        }
+        
+        .schedule-cell.efficiency {
+            left: 100px;
+            font-size: 13px;
+        }
+        
+        .efficiency-percent {
+            font-size: 18px;
+        }
+        
+        .schedule-event {
+            font-size: 12px;
+            padding: 6px 8px;
+        }
+        
+        .event-subject {
+            font-size: 12px;
+        }
+        
+        .event-time {
+            font-size: 11px;
+        }
+        
+        .event-teacher {
+            font-size: 11px;
+        }
+        
+        .calendar-body .days li {
+            font-size: 12px;
+            padding: 6px 3px;
+        }
+        
+        .weekdays-compact li {
+            font-size: 12px;
+            padding: 6px 3px;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .schedule-grid {
+            grid-template-columns: minmax(90px, 120px) minmax(80px, 100px) repeat(7, 1fr);
+        }
+        
+        .schedule-header {
+            font-size: 12px;
+            padding: 6px 4px;
+        }
+        
+        .schedule-cell {
+            min-height: 80px;
+        }
+        
+        .schedule-cell.room-name {
+            font-size: 11px;
+            padding: 5px;
+        }
+        
+        .schedule-cell.efficiency {
+            left: 90px;
+            font-size: 12px;
+            padding: 6px;
+        }
+        
+        .efficiency-percent {
+            font-size: 16px;
+        }
+        
+        .efficiency-label {
+            font-size: 9px;
+        }
+        
+        .schedule-event {
+            font-size: 11px;
+            padding: 5px 6px;
+        }
+        
+        .event-time {
+            font-size: 10px;
+        }
+        
+        .event-subject {
+            font-size: 11px;
+        }
+        
+        .event-teacher {
+            font-size: 10px;
+        }
+        
+        .calendar-header {
+            padding: 10px 15px;
+        }
+        
+        .calendar-title {
+            font-size: 14px;
+        }
+        
+        .calendar-body {
+            padding: 8px 12px 12px;
+        }
+        
+        .calendar-body .days li {
+            font-size: 11px;
+            padding: 6px 3px;
+        }
+        
+        .weekdays-compact li {
+            font-size: 11px;
+            padding: 6px 2px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .schedule-grid {
+            grid-template-columns: minmax(70px, 100px) minmax(70px, 90px) repeat(7, 1fr);
+        }
+        
+        .schedule-grid-container {
+            max-height: calc(100vh - 450px);
+        }
+        
+        .schedule-header {
+            font-size: 11px;
+            padding: 5px 3px;
+        }
+        
+        .schedule-cell {
+            min-height: 70px;
+            padding: 2px;
+        }
+        
+        .schedule-cell.room-name {
+            font-size: 10px;
+            padding: 4px;
+        }
+        
+        .schedule-cell.efficiency {
+            left: 70px;
+            font-size: 11px;
+            padding: 5px;
+        }
+        
+        .efficiency-percent {
+            font-size: 14px;
+        }
+        
+        .efficiency-label {
+            font-size: 8px;
+        }
+        
+        .efficiency-bar {
+            height: 5px;
+        }
+        
+        .schedule-event {
+            font-size: 10px;
+            padding: 4px 5px;
+            margin: 1px 0;
+        }
+        
+        .event-time {
+            font-size: 10px;
+        }
+        
+        .event-subject {
+            font-size: 10px;
+        }
+        
+        .event-teacher {
+            font-size: 9px;
+        }
+        
+        .week-navigation {
+            gap: 10px;
+        }
+        
+        .week-navigation button {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+        
+        .week-info {
+            font-size: 14px;
+        }
+        
+        .news-search-form p {
+            font-size: 16px;
+        }
+        
+        .news-search-form .header-row {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .search-bar-controls .form-select,
+        .search-bar-controls .btn {
+            width: 100%;
+            flex-direction: column;
+        }
+        
+        .filter-controls .form-select {
+            width: 100%;
+        }
+        
+        .search-bar-header .title-text {
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .search-bar-subtitle {
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .search-bar-info {
+            padding: 12px;
+            gap: 10px;
+        }
+        
+        .info-item {
+            font-size: 12px;
+            gap: 10px;
+        }
+        
+        .info-item i {
+            font-size: 14px;
+        }
+        
+        .calendar-header {
+            padding: 10px 12px;
+        }
+        
+        .calendar-title {
+            font-size: 14px;
+        }
+        
+        .calendar-body {
+            padding: 8px 10px 10px;
+        }
+        
+        .calendar-body .days li {
+            font-size: 11px;
+            padding: 5px 2px;
+        }
+        
+        .weekdays-compact li {
+            font-size: 10px;
+            padding: 5px 2px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .schedule-grid {
+            grid-template-columns: minmax(60px, 80px) minmax(60px, 75px) repeat(7, 1fr);
+        }
+        
+        .schedule-header {
+            font-size: 10px;
+            padding: 4px 2px;
+        }
+        
+        .schedule-cell {
+            min-height: 60px;
+            padding: 2px;
+        }
+        
+        .schedule-cell.room-name {
+            font-size: 9px;
+            padding: 3px;
+        }
+        
+        .schedule-cell.efficiency {
+            left: 60px;
+            font-size: 10px;
+            padding: 4px;
+        }
+        
+        .efficiency-percent {
+            font-size: 12px;
+        }
+        
+        .efficiency-label {
+            font-size: 7px;
+        }
+        
+        .efficiency-bar {
+            height: 4px;
+            margin-top: 4px;
+        }
+        
+        .schedule-event {
+            font-size: 9px;
+            padding: 3px 4px;
+            margin: 1px 0;
+        }
+        
+        .event-time {
+            font-size: 9px;
+        }
+        
+        .event-subject {
+            font-size: 9px;
+            line-height: 1.2;
+        }
+        
+        .event-teacher {
+            font-size: 8px;
+        }
+        
+        .week-info {
+            font-size: 13px;
+        }
+        
+        .search-bar-controls {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .search-bar-controls .form-select,
+        .search-bar-controls .btn {
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .search-bar-header .title-text {
+            font-size: 16px;
+            text-align: center;
+        }
+        
+        .search-bar-section {
+            padding: 10px;
+        }
+        
+        .news-search-form .header-row {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+        
+        .filter-controls {
+            width: 100%;
+            flex-direction: column;
+        }
+        
+        .filter-controls .form-select {
+            width: 100%;
+        }
+        
+        .filter-controls .btn {
+            width: 100%;
+        }
+        
+        .news-search-form .title-text {
+            text-align: center;
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .schedule-grid {
+            grid-template-columns: minmax(50px, 70px) minmax(50px, 65px) repeat(7, 1fr);
+        }
+        
+        .schedule-grid-container {
+            max-height: calc(100vh - 300px);
+        }
+        
+        .schedule-header {
+            font-size: 9px;
+            padding: 3px 1px;
+        }
+        
+        .schedule-cell {
+            min-height: 50px;
+        }
+        
+        .schedule-cell.room-name {
+            font-size: 8px;
+            padding: 2px;
+        }
+        
+        .schedule-cell.efficiency {
+            left: 50px;
+            font-size: 9px;
+            padding: 3px;
+        }
+        
+        .efficiency-percent {
+            font-size: 11px;
+        }
+        
+        .efficiency-label {
+            font-size: 6px;
+        }
+        
+        .efficiency-bar {
+            height: 3px;
+            margin-top: 3px;
+        }
+        
+        .schedule-event {
+            font-size: 8px;
+            padding: 2px;
+        }
+        
+        .event-time,
+        .event-subject,
+        .event-teacher {
+            font-size: 8px;
+        }
+        
+        .week-navigation {
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .week-navigation button {
+            width: 100%;
+            max-width: 200px;
+        }
+        
+        .week-info {
+            font-size: 11px;
+            width: 100%;
+        }
+        
+        .news-search-form p {
+            font-size: 13px;
+        }
     }
 
     @media (min-width: 992px) {
         #modal_detail .modal-lg,
         #modal_detail .modal-xl {
             max-width: 1140px;
+        }
+    }
+
+    /* Calendar responsive styles */
+    .block-calendar {
+        width: 100%;
+    }
+
+    .calendar-block-cover {
+        padding: 10px;
+    }
+
+    .block-calendar .weekdays {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0 0 5px 0;
+        gap: 2px;
+    }
+
+    .block-calendar .weekdays li {
+        text-align: center;
+        font-weight: 600;
+        font-size: 13px;
+        padding: 8px 2px;
+        color: #666;
+    }
+
+    .block-calendar .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 3px;
+    }
+
+    .block-calendar .days li {
+        text-align: center;
+        padding: 10px 5px;
+        font-size: 14px;
+        cursor: pointer;
+        border-radius: 4px;
+        transition: all 0.2s;
+        position: relative;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .block-calendar .days li.poiter {
+        background: #f0f0f0;
+    }
+
+    .block-calendar .days li.poiter:hover {
+        background: #e0e0e0;
+        transform: scale(1.05);
+    }
+
+    .block-calendar .days li.active {
+        background: var(--orange, #ff6b35) !important;
+        color: white !important;
+        font-weight: bold;
+    }
+
+    .block-calendar .days li.day-of-other-month {
+        color: #ccc;
+        cursor: default;
+    }
+
+    .block-label {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .next-prev-month {
+        display: flex;
+        gap: 10px;
+    }
+
+    .next-prev-month a {
+        cursor: pointer;
+        padding: 5px 10px;
+        transition: all 0.2s;
+    }
+
+    .next-prev-month a:hover {
+        opacity: 0.8;
+    }
+
+    @media (max-width: 1200px) {
+        .block-calendar .weekdays li {
+            font-size: 12px;
+            padding: 6px 2px;
+        }
+
+        .block-calendar .days li {
+            font-size: 13px;
+            padding: 8px 4px;
+        }
+
+        .block-label {
+            font-size: 15px;
+            padding: 12px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .block-calendar .weekdays li {
+            font-size: 11px;
+            padding: 5px 1px;
+        }
+
+        .block-calendar .days li {
+            font-size: 12px;
+            padding: 6px 3px;
+        }
+
+        .block-label {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .calendar-block-cover {
+            padding: 8px;
+        }
+        
+        .news-search-form .header-row {
+            flex-direction: column;
+            align-items: stretch !important;
+        }
+        
+        .news-search-form .title-text {
+            text-align: center;
+            width: 100%;
+            margin-bottom: 10px !important;
+        }
+        
+        .filter-controls {
+            width: 100%;
+            flex-direction: column;
+        }
+        
+        .filter-controls .form-select,
+        .filter-controls .btn {
+            width: 100%;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .block-calendar .weekdays li {
+            font-size: 10px;
+            padding: 4px 1px;
+        }
+
+        .block-calendar .days li {
+            font-size: 11px;
+            padding: 5px 2px;
+        }
+
+        .block-label {
+            font-size: 13px;
+            padding: 8px;
+            flex-wrap: wrap;
+        }
+
+        .next-prev-month {
+            gap: 5px;
+        }
+
+        .calendar-block-cover {
+            padding: 5px;
+        }
+
+        .block-calendar .days {
+            gap: 2px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .block-calendar .weekdays li {
+            font-size: 9px;
+            padding: 3px 0;
+        }
+
+        .block-calendar .days li {
+            font-size: 10px;
+            padding: 4px 1px;
+        }
+
+        .block-label {
+            font-size: 12px;
+            padding: 6px;
+        }
+
+        .block-label i {
+            font-size: 12px;
+        }
+
+        .next-prev-month a {
+            padding: 3px 6px;
+        }
+
+        .calendar-block-cover {
+            padding: 3px;
+        }
+
+        .block-calendar .days {
+            gap: 1px;
+        }
+    }
+
+    /* Ensure calendar stays in viewport on mobile */
+    @media (max-width: 767px) {
+        .register-school.my-calendar {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .register-school.my-calendar > [class*="col-"] {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .box-shadow {
+            margin-left: 0;
+            margin-right: 0;
+            padding: 10px;
+        }
+    }
+
+    /* Fix modal on mobile */
+    @media (max-width: 576px) {
+        #modal_detail .modal-dialog {
+            margin: 10px;
+        }
+
+        #modal_detail .modal-body {
+            padding: 15px;
+        }
+
+        #modal_detail .form-item {
+            padding: 10px !important;
+        }
+
+        #modal_detail label {
+            font-size: 13px;
+        }
+
+        #modal_detail input,
+        #modal_detail textarea {
+            font-size: 13px !important;
+        }
+
+        #modal_export_excel .modal-dialog {
+            margin: 10px;
+        }
+
+        #modal_export_excel .modal-body {
+            padding: 15px;
         }
     }
 </style>
@@ -151,31 +1409,93 @@
     <div class="content-tab no-tab">
         <p class="link">
             <a href="#">Lịch giảng</a><i class="fal fa-angle-right"></i>
-            <a href="#">Lịch giảng nhiều phòng học</a>
+            <a href="#">Lịch giảng đường</a>
         </p>
     </div>
 
-    <div class="row register-school my-calendar">
-        <div class="col-12 col-md-9 register-school-right">
+    <!-- Top Section: Search Bar + Calendar -->
+    <div class="row mb-2">
+        <!-- Search Bar - Left Side -->
+        <div class="col-12 col-lg-7 mb-2 mb-lg-0">
             <div class="box-shadow">
-                <div class="news-search-form">
-                    <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
-                        <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch giảng nhiều phòng học
-                    </p>
-                    <div class="form-group-cover">
-                        <label for="dropSearch_ToaNha" class="form-label main-label pr10">Tòa nhà</label>
-                        <div class="input-group no-icon" style="min-width: 300px; margin-right: 10px; margin-bottom: 12px">
-                            <select class="form-select select-opt" id="dropSearch_ToaNha" aria-label="Chọn tòa nhà"></select>
+                <div class="search-bar-section">
+                    <div class="search-bar-content">
+                        <div class="search-bar-header">
+                            <p class="color-dask-blue fz20 title-text" style="margin: 0;">
+                                <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch giảng đường
+                            </p>
+                            <p class="search-bar-subtitle">
+                                Tra cứu và quản lý lịch giảng theo phòng học
+                            </p>
                         </div>
-                        <button class="btn btn-primary" id="btnSearch" style="min-width: 150px; margin-right: 10px;">
-                            <i class="fa-solid fa-search mr-10 fw-bold"></i>Tìm kiếm
+                        <div class="search-bar-info">
+                            <div class="info-item">
+                                <i class="fa-solid fa-building text-primary"></i>
+                                <span>Chọn phòng học để xem lịch chi tiết</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fa-solid fa-calendar-week text-success"></i>
+                                <span>Hiển thị lịch theo tuần (T2 - CN)</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fa-solid fa-file-export text-info"></i>
+                                <span>Xuất báo cáo Excel theo nhu cầu</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-bar-controls">
+                        <select class="form-select" id="dropSearch_ToaNha"></select>
+                        <button class="btn btn-primary" id="btnSearch">
+                            <i class="fa-solid fa-search"></i> Xem lịch phòng
                         </button>
-                        <button class="btn btn-outline-secondary" id="btnViewAll" style="min-width: 120px;">
-                            <i class="fa-solid fa-list mr-10 fw-bold"></i>Tất cả
+                        <button class="btn btn-outline-secondary" id="btnViewAll">
+                            <i class="fa-solid fa-th-list"></i> Xem tất cả lịch phòng
+                        </button>
+                        <button class="btn btn-success" id="btnExportExcel">
+                            <i class="fa-solid fa-file-excel"></i> Xuất Excel
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <!-- Calendar - Right Side -->
+        <div class="col-12 col-lg-5">
+            <div class="box-shadow p-0">
+                <div class="calendar-compact">
+                    <div class="calendar-header">
+                        <button class="btn btn-sm btn-outline-light" id="btnPrevMonth">
+                            <i class="fal fa-chevron-left"></i>
+                        </button>
+                        <div class="calendar-title">
+                            <i class="fa-solid fa-calendar-range me-2"></i>
+                            <span id="thang"></span> - <span id="nam"></span>
+                        </div>
+                        <button class="btn btn-sm btn-outline-light" id="btnNextMonth">
+                            <i class="fal fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="calendar-body">
+                        <ul class="weekdays-compact">
+                            <li>T2</li>
+                            <li>T3</li>
+                            <li>T4</li>
+                            <li>T5</li>
+                            <li>T6</li>
+                            <li>T7</li>
+                            <li>CN</li>
+                        </ul>
+                        <ul class="days"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Schedule Section - Full Width -->
+    <div class="row">
+        <div class="col-12">
+            <div class="box-shadow">
                 <div class="week-navigation">
                     <button class="btn btn-outline-primary" id="btnPrevWeek">
                         <i class="fal fa-chevron-left"></i> Tuần trước
@@ -193,29 +1513,91 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="col-12 col-md-3 register-school-left">
-            <div class="box-shadow p-0 block-calendar mt-md-0">
-                <div class="block-label top-radius bg-dask-blue">
-                    <i class="fa-solid fa-calendar-range mr-5" style="margin-top: -3px !important;"></i>
-                    <span id="thang"></span> - <span id="nam"></span>
-                    <div class="next-prev-month month">
-                        <a class="prev" style="color: white"><i class="fal fa-chevron-left me-4"></i></a>
-                        <a class="next" style="color: white; padding-left: 20px"><i class="fal fa-chevron-right"></i></a>
+<!-- Modal xuất Excel -->
+<div class="modal fade" id="modal_export_excel" tabindex="-1" aria-labelledby="exportExcelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title" id="exportExcelLabel">
+                    <i class="fa-solid fa-file-excel me-2"></i>Xuất Excel - Lịch giảng nhiều phòng học
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">
+                        <i class="fa-solid fa-calendar-check me-2"></i>Chọn khoảng thời gian xuất
+                    </label>
+                    <select class="form-select" id="exportTimeRange">
+                        <option value="current_week">Tuần hiện tại đang xem</option>
+                        <option value="custom_date">Chọn ngày cụ thể</option>
+                        <option value="custom_range">Chọn khoảng thời gian</option>
+                    </select>
+                </div>
+
+                <div id="customDateSection" style="display: none;">
+                    <div class="mb-3">
+                        <label class="form-label">Chọn ngày</label>
+                        <input type="date" class="form-control" id="exportSingleDate">
                     </div>
                 </div>
-                <div class="calendar-block-cover">
-                    <ul class="weekdays">
-                        <li>T2</li>
-                        <li>T3</li>
-                        <li>T4</li>
-                        <li>T5</li>
-                        <li>T6</li>
-                        <li>T7</li>
-                        <li>Cn</li>
-                    </ul>
-                    <ul class="days"></ul>
+
+                <div id="customRangeSection" style="display: none;">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Từ ngày</label>
+                            <input type="date" class="form-control" id="exportStartDate">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Đến ngày</label>
+                            <input type="date" class="form-control" id="exportEndDate">
+                        </div>
+                    </div>
                 </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">
+                        <i class="fa-solid fa-door-open me-2"></i>Chọn phòng học
+                    </label>
+                    <select class="form-select" id="exportRoomFilter">
+                        <option value="all">Tất cả phòng học</option>
+                        <option value="current">Phòng đang lọc hiện tại</option>
+                        <option value="custom">Chọn phòng cụ thể</option>
+                    </select>
+                </div>
+
+                <div id="customRoomSection" style="display: none;">
+                    <div class="mb-3">
+                        <label class="form-label">Chọn phòng</label>
+                        <select class="form-select" id="exportCustomRoom"></select>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">
+                        <i class="fa-solid fa-file-alt me-2"></i>Định dạng file
+                    </label>
+                    <select class="form-select" id="exportFileFormat">
+                        <option value="xlsx">Excel (.xlsx) - Định dạng đầy đủ</option>
+                        <option value="csv">CSV (.csv) - Tương thích cao</option>
+                    </select>
+                </div>
+
+                <div class="alert alert-info mb-0">
+                    <i class="fa-solid fa-info-circle me-2"></i>
+                    <small>File Excel sẽ bao gồm đầy đủ thông tin: Phòng học, Thời gian, Học phần, Lớp, Giảng viên</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-2"></i>Hủy
+                </button>
+                <button type="button" class="btn btn-success" id="btnConfirmExport">
+                    <i class="fa-solid fa-download me-2"></i>Xuất file
+                </button>
             </div>
         </div>
     </div>
@@ -225,73 +1607,100 @@
 <div class="modal fade finance-modal my-calendar" id="modal_detail" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <div class="finance-user-info in-modal">
-                    <p id="lblHocPhan"></p>
+            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div class="finance-user-info in-modal" style="width: 100%;">
+                    <h5 style="margin: 0; color: white; font-weight: 600;">
+                        <i class="fa-solid fa-calendar-check me-2"></i>
+                        <span id="lblHocPhan"></span>
+                    </h5>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body p-3">
-                <div class="calendar-form-top mb-3">
-                    <p class="m-0" id="lblLopHocPhan"></p>
+            <div class="modal-body p-4" style="background: #f8f9fa;">
+                <div class="calendar-form-top mb-4 p-3" style="background: white; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <h6 class="m-0" style="color: #667eea; font-weight: 600;">
+                        <i class="fa-solid fa-users me-2"></i>
+                        <span id="lblLopHocPhan"></span>
+                    </h6>
                 </div>
-                <div class="row">
+                <div class="row g-3">
                     <div class="col-md-6">
-                        <div class="form-item">
-                            <label>Phòng học</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="txtPhongHoc_Detail" disabled>
-                                <i class="fal fa-door-open"></i>
-                            </div>
+                        <div class="form-item" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-weight: 600; color: #555; margin-bottom: 8px; display: block;">
+                                <i class="fa-solid fa-door-open me-2" style="color: #667eea;"></i>Phòng học
+                            </label>
+                            <input type="text" class="form-control" id="txtPhongHoc_Detail" disabled style="background: #f8f9fa; border: none; font-size: 15px; font-weight: 500;">
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-item">
-                            <label>Ngày học</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="txtNgayHoc_Detail" disabled>
-                                <i class="fal fa-calendar-alt"></i>
-                            </div>
+                        <div class="form-item" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-weight: 600; color: #555; margin-bottom: 8px; display: block;">
+                                <i class="fa-solid fa-calendar-alt me-2" style="color: #667eea;"></i>Ngày học
+                            </label>
+                            <input type="text" class="form-control" id="txtNgayHoc_Detail" disabled style="background: #f8f9fa; border: none; font-size: 15px; font-weight: 500;">
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-item">
-                            <label>Thời gian</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="txtThoiGian_Detail" disabled>
-                                <i class="fal fa-clock"></i>
-                            </div>
+                        <div class="form-item" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-weight: 600; color: #555; margin-bottom: 8px; display: block;">
+                                <i class="fa-solid fa-clock me-2" style="color: #667eea;"></i>Thời gian
+                            </label>
+                            <input type="text" class="form-control" id="txtThoiGian_Detail" disabled style="background: #f8f9fa; border: none; font-size: 15px; font-weight: 500;">
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="form-item">
-                            <label>Tiết học</label>
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="txtTietHoc_Detail" disabled>
-                                <i class="fal fa-chalkboard-teacher"></i>
-                            </div>
+                        <div class="form-item" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-weight: 600; color: #555; margin-bottom: 8px; display: block;">
+                                <i class="fa-solid fa-chalkboard-teacher me-2" style="color: #667eea;"></i>Tiết học
+                            </label>
+                            <input type="text" class="form-control" id="txtTietHoc_Detail" disabled style="background: #f8f9fa; border: none; font-size: 15px; font-weight: 500;">
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <div class="form-item">
-                            <label>Giảng viên</label>
-                            <div class="input-group">
-                                <textarea class="form-control" id="txtGiangVien_Detail" rows="2" disabled></textarea>
-                                <i class="fal fa-user-tie"></i>
-                            </div>
+                        <div class="form-item" style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+                            <label style="font-weight: 600; color: #555; margin-bottom: 8px; display: block;">
+                                <i class="fa-solid fa-user-tie me-2" style="color: #667eea;"></i>Giảng viên
+                            </label>
+                            <textarea class="form-control" id="txtGiangVien_Detail" rows="2" disabled style="background: #f8f9fa; border: none; font-size: 15px; font-weight: 500; resize: none;"></textarea>
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="modal-footer" style="background: white; border-top: 2px solid #f0f0f0;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-solid fa-times me-2"></i>Đóng
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=1.0.0.1"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/4.3.0/exceljs.min.js"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=2.0.0.0"></script>
 <script type="text/javascript">
-    var main_doc = {};
-    main_doc['LichGiangNhieuPhong'] = new LichGiangNhieuPhong();
     $(document).ready(function () {
+        // Check if XLSX library is loaded
+        if (typeof XLSX === 'undefined') {
+            console.error('XLSX library is not loaded!');
+        } else {
+            console.log('XLSX library loaded');
+        }
+        
+        // Check if ExcelJS library is loaded
+        if (typeof ExcelJS === 'undefined') {
+            console.error('ExcelJS library is not loaded!');
+        } else {
+            console.log('ExcelJS library loaded, version:', ExcelJS.version || 'unknown');
+        }
+        
+        if (typeof LichGiangNhieuPhong === 'undefined') {
+            console.error('LichGiangNhieuPhong is not defined!');
+            return;
+        }
+        var main_doc = window.main_doc || {};
+        main_doc['LichGiangNhieuPhong'] = new LichGiangNhieuPhong();
         main_doc.LichGiangNhieuPhong.init();
+        window.main_doc = main_doc;
     });
 </script>

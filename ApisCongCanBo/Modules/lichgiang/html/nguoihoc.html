@@ -79,7 +79,7 @@
                                 <th class="text-center" scope="col">Ngày bắt đầu</th>
                                 <th class="text-center" scope="col">Ngày kết thúc</th>
                                 <th class="text-center" scope="col">Số lượng</th>
-                                <th class="text-center" scope="col">Điểm danh</th>
+                                <th class="text-center" scope="col" style="min-width: 100px;">Điểm danh</th>
                                 <th class="text-center" scope="col">Chi tiết</th>
                                 <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
                             </tr>
@@ -102,19 +102,19 @@
         Các buổi học theo thời khóa biểu</button>
 </div>
 
-
-<div class="modal fade finance-modal my-calendar myModal_hocvien" id="myModal_hocvien" tabindex="-1"
+<!-- Học viên -->
+<div class="modal fade finance-modal myModal_hocvien" id="myModal_hocvien" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-1360 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p id="lblTenHoc"><i class="fa-solid fa-screen-users mr-5"></i></p>
+                    <p id="lblTenHoc"><i class="fa-solid fa-screen-users mr-5"></i>Học viên</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-3">
-                <div class="scroll-y aps-table-select">
+                <div class="scroll-table-x aps-table-select">
                     <table class="table transcrip-table tabs-scores fs-14 tblLopHoc table-bordered table-noborder"
                         id="tblLopHoc">
                         <thead>
@@ -140,7 +140,7 @@
 </div>
 
 <!-- modal xác nhận-->
-<div class="modal fade finance-modal my-calendar confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
+<div class="modal fade finance-modal confirm_scores modal_XacNhan" id="modal_XacNhan" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-860 modal-dialog-scrollable">
         <div class="modal-content">
@@ -174,7 +174,7 @@
                                     <span class="badge bg-blue mb-0">Lịch sử xác nhận</span>
                                 </p>
                             </div>
-                            <div class="row aps-form-table">
+                            <div class="row aps-form-table scroll-table-x">
                                 <table
                                     class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
                                     id="tblModal_XacNhan">
@@ -198,9 +198,8 @@
     </div>
 </div>
 
-
 <!-- modal Các buổi học theo thời khóa biểu-->
-<div class="modal fade finance-modal my-calendar modal-spec mymodal_NhapChuyenCan" id="mymodal_NhapChuyenCan"
+<div class="modal fade finance-modal modal-spec mymodal_NhapChuyenCan" id="mymodal_NhapChuyenCan"
     tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-full modal-dialog-scrollable" style="max-width: unset">
         <div class="modal-content">
@@ -229,10 +228,9 @@
                             <i class="fal fa-edit"></i>
                             <span>Cập nhật</span>
                         </button>
-                        <button type="button" class="btn btn-primary btn-border-w ml-10 " data-bs-dismiss="modal"
+                        <button type="button" class="btn btn-primary btn-border-w ml-10 btn-dong-modal" data-bs-dismiss="modal"
                             aria-label="Close">
-                            <i class="fal fa-times"></i>
-                            <span>Đóng</span>
+                            <i class="fal fa-times pr-0"></i>
                         </button>
                     </div>
                 </div>
@@ -241,35 +239,34 @@
             <div class="modal-body register-wish">
                 <div class="body-content">
                     <div class="table-content pl-0 pt-0">
-                        <div class="scroll-y scroll-x ">
-                            <table
-                                class="table transcrip-table tabs-scores table-bordered small-table fs-14 table-border tblNhapChuyenCan"
+                        <div class="aps-table-select scroll-table-x">
+                            <table class="table transcrip-table tabs-scores table-bordered small-table fs-14 table-border tblNhapChuyenCan"
                                 id="tblNhapChuyenCan">
                                 <thead>
                                     <tr>
-                                        <th class="text-center bg-e1 w-50px" scope="col" rowspan="2">STT</th>
-                                        <th class="bg-e1" scope="col" rowspan="2">Mã số</th>
-                                        <th class="bg-e1" scope="col" rowspan="2">Họ đệm</th>
-                                        <th class="bg-e1" scope="col" rowspan="2">Tên</th>
-                                        <th class="bg-e1 border-r-cc" scope="col" rowspan="2">Lớp quản lý</th>
-                                        <th class="text-center bg-e1 border-cc" scope="col" colspan="4">
-                                            Kết quả đánh giá
+                                        <th class="text-cente w-50px" scope="col" rowspan="2">STT</th>
+                                        <th class="text-left" scope="col" rowspan="2">Mã số</th>
+                                        <th class="text-left" scope="col" rowspan="2">Họ đệm</th>
+                                        <th class="text-left" scope="col" rowspan="2">Tên</th>
+                                        <th class="text-left " scope="col" rowspan="2">Lớp quản lý</th>
+                                        <th class="text-center" scope="col" colspan="4">
+                                            <b>Kết quả đánh giá</b>
                                         </th>
-                                        <th class="text-center border-r-cc" scope="col" id="lblTongHopChuyenCan">
-                                            Tổng hợp
+                                        <th class="text-center" scope="col" id="lblTongHopChuyenCan">
+                                            <b>Tổng hợp</b>
                                         </th>
                                         <th class="text-center" scope="col" id="lblThoiGianHoc">
-                                            <!--01-11-2022 ( 8h30 -> 9h30)-->
+                                            <b><!--01-11-2022 ( 8h30 -> 9h30)--></b>
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th class="text-center bg-e1  border-cc" scope="col" rowspan="2"
+                                        <th class="text-center" scope="col" rowspan="2"
                                             style="width: 60px">Tổng số tiết học</th>
-                                        <th class="text-center bg-e1  border-cc" scope="col" rowspan="2"
+                                        <th class="text-center" scope="col" rowspan="2"
                                             style="width: 60px">Tổng số tiết có mặt</th>
-                                        <th class="text-center bg-e1  border-cc" scope="col" rowspan="2"
+                                        <th class="text-center" scope="col" rowspan="2"
                                             style="width: 60px">Điều kiện</th>
-                                        <th class="text-center bg-e1  border-cc" scope="col" rowspan="2"
+                                        <th class="text-center" scope="col" rowspan="2"
                                             style="width: 60px">Đã thực hiện</th>
                                     </tr>
                                 </thead>
@@ -283,8 +280,8 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center w-50px" scope="col">STT</th>
-                                        <th class="text-center" scope="col">Ngày</th>
-                                        <th class="text-center" scope="col">Thời gian</th>
+                                        <th class="text-left" scope="col">Ngày</th>
+                                        <th class="text-left" scope="col">Thời gian</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
