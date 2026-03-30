@@ -116,6 +116,34 @@ LichGiangNhieuPhong.prototype = {
         }
     },
 
+    // Update statistics display
+    updateStats: function(totalRooms, totalSchedules) {
+        $("#totalRoomsDisplay").text(totalRooms + " phòng");
+        $("#totalSchedulesDisplay").text(totalSchedules + " lịch");
+    },
+
+    // Update statistics with TOTAL count (not paginated count)
+    updateStatsTotal: function() {
+        var me = this;
+        
+        // Load tất cả lịch để tính tổng
+        var loadedCount = 0;
+        var allSchedules = [];
+        
+        me.dtPhongHocFull.forEach(function(room) {
+            me.getList_LichPhongHoc(room.ID, function(schedules) {
+                allSchedules = allSchedules.concat(schedules);
+                loadedCount++;
+                
+                // Khi đã load xong tất cả
+                if (loadedCount === me.dtPhongHocFull.length) {
+                    $("#totalRoomsDisplay").text(me.dtPhongHocFull.length + " phòng");
+                    $("#totalSchedulesDisplay").text(allSchedules.length + " lịch");
+                }
+            });
+        });
+    },
+
     init: function () {
         var me = this;
         
@@ -251,6 +279,7 @@ LichGiangNhieuPhong.prototype = {
         });
 
         // Scroll event for lazy loading
+        // Scroll event for pagination
         $(".schedule-grid-container").scroll(function () {
             if (me.isLoading) return;
             
@@ -318,15 +347,19 @@ LichGiangNhieuPhong.prototype = {
         me.getList_PhongHoc(function() {
             if (me.dtPhongHocFull.length === 0) {
                 $("#scheduleGrid").html('<div style="padding: 40px; text-align: center; grid-column: 1/-1;">Không có dữ liệu phòng học</div>');
+                me.updateStats(0, 0);
                 return;
             }
             
+            // Hiển thị trang đầu tiên (có phân trang)
             me.dtPhongHoc = me.dtPhongHocFull.slice(0, me.iPageSize);
             
             console.log("Trang 1: Hiển thị", me.dtPhongHoc.length, "/", me.dtPhongHocFull.length, "phòng");
             
             me.loadSchedulesForPage(me.dtPhongHoc, function() {
                 me.genTable_ThongTin(me.dtLichHoc, null);
+                // Cập nhật stat với TỔNG SỐ (không phải số hiển thị)
+                me.updateStatsTotal();
             });
         });
     },
@@ -516,6 +549,11 @@ LichGiangNhieuPhong.prototype = {
         });
 
         $("#scheduleGrid").append(html);
+        
+        // Update stats display
+        var totalSchedules = me.dtLichHoc.length;
+        $('#totalRoomsDisplay').text(me.dtPhongHoc.length + ' phòng');
+        $('#totalSchedulesDisplay').text(totalSchedules + ' lịch');
         
         // Add scroll notice if more rooms available
         if (me.dtPhongHoc.length < me.dtPhongHocFull.length) {
@@ -858,6 +896,11 @@ LichGiangNhieuPhong.prototype = {
         });
 
         $("#scheduleGrid").html(html);
+        
+        // Update stats display
+        var totalSchedules = data.length;
+        $('#totalRoomsDisplay').text(me.dtPhongHoc.length + ' phòng');
+        $('#totalSchedulesDisplay').text(totalSchedules + ' lịch');
         
         if (me.dtPhongHocFull.length > me.dtPhongHoc.length) {
             var remaining = me.dtPhongHocFull.length - me.dtPhongHoc.length;

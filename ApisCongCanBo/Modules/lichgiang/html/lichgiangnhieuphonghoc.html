@@ -1,4 +1,5 @@
-﻿<style>
+﻿<!-- Version 3.3.0.0 - Ultra Compact Horizontal Layout: All controls in one row -->
+<style>
     /* Reduce padding/margin for more space */
     .one-door.study-space {
         padding: 0;
@@ -36,100 +37,281 @@
         font-size: 15px;
     }
     
-    /* Search Bar Section - Compact */
-    .search-bar-section {
-        padding: 12px 15px;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    /* Search Bar Section - Horizontal Layout - Compact */
+    .search-bar-section-horizontal {
+        padding: 6px 10px;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        grid-template-rows: auto auto;
+        gap: 6px;
+        align-items: start;
     }
     
-    .search-bar-content {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+    .search-bar-left {
+        grid-column: 1;
+        grid-row: 1 / 3;
+        min-width: 200px;
     }
     
-    .search-bar-header {
-        margin-bottom: 0;
+    .search-bar-info-items {
+        display: flex;
+        gap: 6px;
+        margin-top: 6px;
+        flex-wrap: wrap;
+    }
+    
+    .info-item-compact {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 10px;
+        color: #666;
+        padding: 3px 6px;
+        background: #f8f9fa;
+        border-radius: 3px;
+        border: 1px solid #e0e0e0;
+    }
+    
+    .info-item-compact i {
+        font-size: 11px;
+        color: #223771;
+    }
+    
+    .search-bar-controls-horizontal {
+        grid-column: 2;
+        grid-row: 1 / 3;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 0 10px;
+    }
+    
+    .controls-row-dropdowns {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+    }
+    
+    .controls-row-buttons {
+        display: flex;
+        gap: 5px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+    
+    .info-stats {
+        display: flex;
+        gap: 10px;
+        margin-left: auto;
+        padding-left: 15px;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        color: #223771;
+        font-weight: 600;
+        padding: 4px 10px;
+        background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        border-radius: 4px;
+        border: 1px solid #90caf9;
+    }
+    
+    .stat-item i {
+        font-size: 12px;
+        color: #1976d2;
+    }
+    
+    .search-bar-controls-horizontal .form-select {
+        flex: 1 1 auto;
+        min-width: 140px;
+        font-size: 11px;
+        height: 28px;
+        padding: 3px 6px;
+    }
+    
+    .search-bar-controls-horizontal .btn {
+        white-space: nowrap;
+        height: 28px;
+        padding: 4px 10px;
+        font-size: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 500;
+    }
+    
+    .search-bar-controls-horizontal .btn i {
+        margin-right: 4px;
+        font-size: 10px;
+    }
+    
+    .search-bar-right {
+        grid-column: 3;
+        grid-row: 1 / 3;
     }
     
     .search-bar-header .title-text {
-        font-size: 18px;
+        font-size: 14px;
         font-weight: 600;
         color: #223771;
-        margin-bottom: 4px;
+        margin-bottom: 2px;
     }
     
     .search-bar-subtitle {
-        font-size: 12px;
+        font-size: 10px;
         color: #666;
         margin: 0;
         font-style: italic;
     }
     
-    .search-bar-info {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-        padding: 10px;
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border-radius: 6px;
-        border-left: 3px solid #223771;
+    /* Calendar Inline - Ultra Compact */
+    .calendar-inline {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 5px;
+        overflow: hidden;
+        width: 240px;
     }
     
-    .info-item {
+    .calendar-header-inline {
         display: flex;
         align-items: center;
-        gap: 8px;
-        font-size: 12px;
-        color: #495057;
+        justify-content: space-between;
+        padding: 4px 8px;
+        background: linear-gradient(135deg, #223771 0%, #3c5398 100%);
+        color: white;
     }
     
-    .info-item i {
-        font-size: 14px;
-        width: 18px;
+    .calendar-title-inline {
+        font-size: 11px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        color: white;
+    }
+    
+    .calendar-header-inline .btn {
+        padding: 2px 5px;
+        font-size: 10px;
+    }
+    
+    .calendar-body-inline {
+        padding: 6px;
+    }
+    
+    .weekdays-inline {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0 0 4px 0;
+        gap: 2px;
+    }
+    
+    .weekdays-inline li {
         text-align: center;
+        font-weight: 600;
+        font-size: 9px;
+        padding: 3px 1px;
+        color: #666;
+        background: #f8f9fa;
+        border-radius: 2px;
     }
     
-    .search-bar-controls {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin-top: 8px;
-        padding-top: 8px;
-        border-top: 2px solid #e9ecef;
+    .calendar-body-inline .days {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 2px;
     }
     
-    .search-bar-controls .form-select {
-        flex: 1 1 100%;
-        min-width: 100%;
-        font-size: 13px;
-        min-height: 36px;
-        padding: 6px 10px;
-        margin-bottom: 6px;
+    .calendar-body-inline .days li {
+        text-align: center;
+        padding: 4px 2px;
+        font-size: 10px;
+        cursor: pointer;
+        border-radius: 2px;
+        transition: all 0.2s;
+        background: #f8f9fa;
+        border: 1px solid transparent;
     }
     
-    .search-bar-controls .btn {
-        white-space: nowrap;
-        min-height: 36px;
-        padding: 8px 14px;
-        font-size: 13px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        flex: 1;
-        font-weight: 500;
+    .calendar-body-inline .days li.poiter {
+        background: white;
+        border-color: #e0e0e0;
     }
     
-    .search-bar-controls .btn i {
-        margin-right: 6px;
+    .calendar-body-inline .days li.poiter:hover {
+        background: #e3f2fd;
+        border-color: #2196f3;
+        transform: scale(1.05);
     }
     
-    /* Make search bar same height as calendar */
+    .calendar-body-inline .days li.active {
+        background: var(--orange, #ff6b35) !important;
+        color: white !important;
+        border-color: var(--orange, #ff6b35) !important;
+        font-weight: 600;
+    }
+    
+    .calendar-body-inline .days li.day-of-other-month {
+        color: #ccc;
+        cursor: default;
+    }
+    
+    /* Responsive for horizontal layout */
+    @media (max-width: 1200px) {
+        .search-bar-section-horizontal {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+        }
+        
+        .search-bar-left {
+            grid-column: 1;
+            grid-row: 1;
+            min-width: auto;
+        }
+        
+        .search-bar-controls-horizontal {
+            grid-column: 1;
+            grid-row: 2;
+            padding: 0;
+        }
+        
+        .search-bar-right {
+            grid-column: 1;
+            grid-row: 3;
+            justify-self: center;
+        }
+        
+        .calendar-inline {
+            width: 100%;
+            max-width: 400px;
+        }
+    }
+    
+    @media (max-width: 768px) {
+        .search-bar-info-items {
+            display: none;
+        }
+        
+        .controls-row-dropdowns,
+        .controls-row-buttons {
+            flex-direction: column;
+        }
+        
+        .search-bar-controls-horizontal .form-select,
+        .search-bar-controls-horizontal .btn {
+            width: 100%;
+        }
+    }
+    
+    /* Make search bar responsive */
     .row.mb-1 > [class*="col-"] {
         display: flex;
     }
@@ -138,13 +320,6 @@
         width: 100%;
         display: flex;
         flex-direction: column;
-        height: 100%;
-    }
-    
-    .search-bar-section,
-    .calendar-compact {
-        height: 100%;
-        min-height: 380px;
     }
     
     /* Header section spacing */
@@ -213,13 +388,13 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 12px;
+        padding: 6px 10px;
         background: linear-gradient(135deg, #223771 0%, #3c5398 100%);
         color: white;
     }
     
     .calendar-title {
-        font-size: 14px;
+        font-size: 13px;
         font-weight: 600;
         display: flex;
         align-items: center;
@@ -228,8 +403,8 @@
     .calendar-header .btn {
         color: white;
         border-color: rgba(255,255,255,0.3);
-        padding: 3px 8px;
-        font-size: 12px;
+        padding: 2px 6px;
+        font-size: 11px;
     }
     
     .calendar-header .btn:hover {
@@ -239,7 +414,7 @@
     }
     
     .calendar-body {
-        padding: 8px 10px 10px;
+        padding: 6px 8px 8px;
         flex: 1;
     }
     
@@ -255,11 +430,11 @@
     .weekdays-compact li {
         text-align: center;
         font-weight: 600;
-        font-size: 10px;
-        padding: 4px 2px;
+        font-size: 9px;
+        padding: 3px 1px;
         color: #666;
         background: #f8f9fa;
-        border-radius: 3px;
+        border-radius: 2px;
     }
     
     .calendar-body .days {
@@ -273,13 +448,13 @@
     
     .calendar-body .days li {
         text-align: center;
-        padding: 5px 2px;
-        font-size: 11px;
+        padding: 4px 1px;
+        font-size: 10px;
         cursor: pointer;
-        border-radius: 3px;
+        border-radius: 2px;
         transition: all 0.2s;
         background: #f8f9fa;
-        border: 2px solid transparent;
+        border: 1px solid transparent;
     }
     
     .calendar-body .days li.poiter {
@@ -1422,94 +1597,103 @@
         </p>
     </div>
 
-    <!-- Top Section: Search Bar + Calendar -->
+    <!-- Top Section: Search Bar Full Width -->
     <div class="row mb-1">
-        <!-- Search Bar - Left Side -->
-        <div class="col-12 col-lg-7 mb-1 mb-lg-0">
+        <div class="col-12">
             <div class="box-shadow">
-                <div class="search-bar-section">
-                    <div class="search-bar-content">
+                <div class="search-bar-section-horizontal">
+                    <div class="search-bar-left">
                         <div class="search-bar-header">
-                            <p class="color-dask-blue fz20 title-text" style="margin: 0;">
+                            <p class="color-dask-blue title-text" style="margin: 0;">
                                 <i class="fa-solid fa-calendar-users pr5 fw-bold"></i>Lịch giảng đường
                             </p>
                             <p class="search-bar-subtitle">
                                 Tra cứu và quản lý lịch giảng theo phòng học
                             </p>
                         </div>
-                        <div class="search-bar-info">
-                            <div class="info-item">
-                                <i class="fa-solid fa-building text-primary"></i>
+                        <div class="search-bar-info-items">
+                            <div class="info-item-compact">
+                                <i class="fa-solid fa-check-circle"></i>
                                 <span>Chọn phòng học để xem lịch chi tiết</span>
                             </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-calendar-week text-success"></i>
+                            <div class="info-item-compact">
+                                <i class="fa-solid fa-calendar-week"></i>
                                 <span>Hiển thị lịch theo tuần (T2 - CN)</span>
                             </div>
-                            <div class="info-item">
-                                <i class="fa-solid fa-file-export text-info"></i>
+                            <div class="info-item-compact">
+                                <i class="fa-solid fa-file-export"></i>
                                 <span>Xuất báo cáo Excel theo nhu cầu</span>
                             </div>
                         </div>
                     </div>
-                    <div class="search-bar-controls">
-                        <select class="form-select" id="dropSearch_ToaNha"></select>
-                        <select class="form-select" id="dropRoomType" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
-                            <option value="all">Tất cả loại phòng</option>
-                            <option value="LT">Phòng lý thuyết (LT)</option>
-                            <option value="TH">Phòng thực hành (TH)</option>
-                        </select>
-                        <select class="form-select" id="dropEfficiencyMode" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
-                            <option value="days">Tính theo ngày sử dụng (mặc định)</option>
-                            <option value="periods">Tính theo tiết học</option>
-                            <option value="morning">Tính theo buổi sáng (T1-6)</option>
-                            <option value="afternoon">Tính theo buổi chiều (T7-10)</option>
-                            <option value="evening">Tính theo buổi tối (T11-15)</option>
-                            <option value="morning-afternoon">Tính theo sáng + chiều (T1-10)</option>
-                            <option value="afternoon-evening">Tính theo chiều + tối (T7-15)</option>
-                            <option value="all-sessions">Tính theo cả 3 buổi (T1-15)</option>
-                        </select>
-                        <button class="btn btn-primary" id="btnSearch">
-                            <i class="fa-solid fa-search"></i> Xem lịch phòng
-                        </button>
-                        <button class="btn btn-outline-secondary" id="btnViewAll">
-                            <i class="fa-solid fa-th-list"></i> Xem tất cả lịch phòng
-                        </button>
-                        <button class="btn btn-success" id="btnExportExcel">
-                            <i class="fa-solid fa-file-excel"></i> Xuất Excel
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Calendar - Right Side -->
-        <div class="col-12 col-lg-5">
-            <div class="box-shadow p-0">
-                <div class="calendar-compact">
-                    <div class="calendar-header">
-                        <button class="btn btn-sm btn-outline-light" id="btnPrevMonth">
-                            <i class="fal fa-chevron-left"></i>
-                        </button>
-                        <div class="calendar-title">
-                            <i class="fa-solid fa-calendar-range me-2"></i>
-                            <span id="thang"></span> - <span id="nam"></span>
+                    <div class="search-bar-controls-horizontal">
+                        <div class="controls-row-dropdowns">
+                            <select class="form-select" id="dropSearch_ToaNha"></select>
+                            <select class="form-select" id="dropRoomType">
+                                <option value="all">Tất cả loại phòng</option>
+                                <option value="LT">Phòng lý thuyết (LT)</option>
+                                <option value="TH">Phòng thực hành (TH)</option>
+                            </select>
+                            <select class="form-select" id="dropEfficiencyMode">
+                                <option value="days">Tính theo ngày sử dụng (mặc định)</option>
+                                <option value="periods">Tính theo tiết học</option>
+                                <option value="morning">Tính theo buổi sáng (T1-6)</option>
+                                <option value="afternoon">Tính theo buổi chiều (T7-10)</option>
+                                <option value="evening">Tính theo buổi tối (T11-15)</option>
+                                <option value="morning-afternoon">Tính theo sáng + chiều (T1-10)</option>
+                                <option value="afternoon-evening">Tính theo chiều + tối (T7-15)</option>
+                                <option value="all-sessions">Tính theo cả 3 buổi (T1-15)</option>
+                            </select>
                         </div>
-                        <button class="btn btn-sm btn-outline-light" id="btnNextMonth">
-                            <i class="fal fa-chevron-right"></i>
-                        </button>
+                        <div class="controls-row-buttons">
+                            <button class="btn btn-primary" id="btnSearch">
+                                <i class="fa-solid fa-search"></i> Xem lịch
+                            </button>
+                            <button class="btn btn-outline-secondary" id="btnViewAll">
+                                <i class="fa-solid fa-th-list"></i> Xem tất cả
+                            </button>
+                            <button class="btn btn-success" id="btnExportExcel">
+                                <i class="fa-solid fa-file-excel"></i> Xuất Excel
+                            </button>
+                            <div class="info-stats">
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-door-open"></i>
+                                    <span id="totalRoomsDisplay">0 phòng</span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                    <span id="totalSchedulesDisplay">0 lịch</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="calendar-body">
-                        <ul class="weekdays-compact">
-                            <li>T2</li>
-                            <li>T3</li>
-                            <li>T4</li>
-                            <li>T5</li>
-                            <li>T6</li>
-                            <li>T7</li>
-                            <li>CN</li>
-                        </ul>
-                        <ul class="days"></ul>
+                    <div class="search-bar-right">
+                        <div class="calendar-inline">
+                            <div class="calendar-header-inline">
+                                <button class="btn btn-sm btn-outline-primary" id="btnPrevMonth">
+                                    <i class="fal fa-chevron-left"></i>
+                                </button>
+                                <div class="calendar-title-inline">
+                                    <i class="fa-solid fa-calendar-range me-1"></i>
+                                    <span id="thang"></span> - <span id="nam"></span>
+                                </div>
+                                <button class="btn btn-sm btn-outline-primary" id="btnNextMonth">
+                                    <i class="fal fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendar-body-inline">
+                                <ul class="weekdays-inline">
+                                    <li>T2</li>
+                                    <li>T3</li>
+                                    <li>T4</li>
+                                    <li>T5</li>
+                                    <li>T6</li>
+                                    <li>T7</li>
+                                    <li>CN</li>
+                                </ul>
+                                <ul class="days"></ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1700,7 +1884,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.1.0.3"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.2.0.0"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded

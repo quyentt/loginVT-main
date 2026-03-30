@@ -96,7 +96,37 @@ TinTuc.prototype = {
             strId = edu.util.cutPrefixId(/edit/g, strId);
             if (edu.util.checkValue(strId)) {
                 var data = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0];
-                me.viewEdit_PhamVi(data);
+                me.strTinTuc_Id = data.ID;
+                me.tinTucData = data; // Lưu data tin tức
+                // Load bộ lọc
+                me.getList_HeDaoTao_PV();
+                me.getList_KhoaDaoTao_PV();
+                me.getList_ChuongTrinhDaoTao_PV();
+                me.getList_LopQuanLy_PV();
+                // Tự động load danh sách sinh viên
+                me.getList_SinhVien_PhamVi(1);
+            }
+            else {
+                edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
+            }
+        });
+        
+        // Nút Gửi Email
+        $("#tblTinTuc").delegate('.btnSendEmail', 'click', function (e) {
+            var strId = this.id;
+            strId = edu.util.cutPrefixId(/edit/g, strId);
+            if (edu.util.checkValue(strId)) {
+                var data = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0];
+                me.strTinTuc_Id = data.ID;
+                me.tinTucData = data; // Lưu data tin tức
+                me.toggle_sendemail();
+                // Load bộ lọc
+                me.getList_HeDaoTao_SendEmail();
+                me.getList_KhoaDaoTao_SendEmail();
+                me.getList_ChuongTrinhDaoTao_SendEmail();
+                me.getList_LopQuanLy_SendEmail();
+                // Tự động load danh sách sinh viên và đếm số lượng
+                me.countSinhVien_SendEmail();
             }
             else {
                 edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
@@ -128,6 +158,11 @@ TinTuc.prototype = {
                     me.delete_SinhVien(strNhanSu_Id);
                 });
             }
+        });
+        $("#tblInput_DTSV_SinhVien").delegate('.btnPageSinhVien', 'click', function () {
+            var page = $(this).data('page');
+            edu.system.pageIndex_default = page;
+            me.getList_SinhVien(page);
         });
         $("#modal_sinhvien").delegate('#btnAdd_He', 'click', function () {
             me.arrHe = $("#dropSearchModal_He_SV").val();
@@ -190,6 +225,231 @@ TinTuc.prototype = {
                 me.arrSinhVien_Id.forEach(e => me.save_PhamVi(e));
             });
         });
+        $("#btnSendEmail_PhamVi").click(function (e) {
+            if (!me.strTinTuc_Id) {
+                edu.system.alert("Vui lòng chọn tin tức trước khi gửi email!");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn gửi email thông báo tin tức này đến sinh viên trong phạm vi không?");
+            $("#btnYes").click(function (e) {
+                $('#myModalAlert').modal('hide');
+                me.sendEmail_ToSinhVien();
+            });
+        });
+        
+        // Tìm kiếm sinh viên
+        $("#btnSearch_SinhVien_PV").click(function (e) {
+            me.getList_SinhVien_PhamVi(1);
+        });
+        $("#txtSearch_SinhVien_PV").keypress(function (e) {
+            if (e.which === 13) {
+                me.getList_SinhVien_PhamVi(1);
+            }
+        });
+        
+        // Select all checkbox
+        $("#chkSelectAll_SinhVien").on("click", function () {
+            var checked_status = this.checked;
+            $(".chkSinhVien_Item").each(function () {
+                this.checked = checked_status;
+            });
+        });
+        
+        // Gửi email cho sinh viên đã chọn
+        $("#btnSendEmail_Selected").click(function (e) {
+            var arrChecked = [];
+            $(".chkSinhVien_Item:checked").each(function () {
+                arrChecked.push($(this).data('id'));
+            });
+            
+            if (arrChecked.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 sinh viên để gửi email!");
+                return;
+            }
+            
+            edu.system.confirm("Bạn có chắc chắn gửi email đến " + arrChecked.length + " sinh viên đã chọn không?");
+            $("#btnYes").click(function (e) {
+                $('#myModalAlert').modal('hide');
+                me.sendEmail_ToSelectedSinhVien(arrChecked);
+            });
+        });
+        
+        // Xác nhận gửi email từ modal Send Email
+        $("#btnConfirmSendEmail").click(function (e) {
+            var arrChecked = [];
+            $(".chkSendEmail_Item:checked").each(function () {
+                arrChecked.push($(this).data('id'));
+            });
+            
+            if (arrChecked.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 sinh viên để gửi email!");
+                return;
+            }
+            
+            edu.system.confirm("Bạn có chắc chắn gửi email đến " + arrChecked.length + " sinh viên đã chọn không?");
+            $("#btnYes").click(function (e) {
+                $('#myModalAlert').modal('hide');
+                me.processSendEmail_ToSelected(arrChecked);
+            });
+        });
+        
+        // Tìm kiếm sinh viên trong modal Send Email
+        $("#btnSendEmail_Search").click(function (e) {
+            me.getList_SinhVien_SendEmail(1);
+        });
+        $("#txtSendEmail_Search").keypress(function (e) {
+            if (e.which === 13) {
+                me.getList_SinhVien_SendEmail(1);
+            }
+        });
+        
+        // Select all checkbox trong modal Send Email
+        $("#chkSendEmail_SelectAll").on("click", function () {
+            var checked_status = this.checked;
+            $(".chkSendEmail_Item").each(function () {
+                this.checked = checked_status;
+            });
+            me.updateSoLuongDaChon_SendEmail();
+        });
+        
+        // Chọn tất cả
+        $("#btnSendEmail_SelectAll").click(function (e) {
+            $(".chkSendEmail_Item").prop("checked", true);
+            me.updateSoLuongDaChon_SendEmail();
+        });
+        
+        // Bỏ chọn tất cả
+        $("#btnSendEmail_UnselectAll").click(function (e) {
+            $(".chkSendEmail_Item").prop("checked", false);
+            me.updateSoLuongDaChon_SendEmail();
+        });
+        
+        // Import Excel trong modal Send Email
+        $("#btnSendEmail_ImportExcel").click(function (e) {
+            me.openImportModal_SendEmail();
+        });
+        
+        // Phân trang trong modal Send Email
+        $("#tblSendEmail_SinhVien").delegate('.btnPageSendEmail', 'click', function () {
+            var page = $(this).data('page');
+            me.getList_SinhVien_SendEmail(page);
+        });
+        
+        // Click vào row để toggle checkbox trong modal Send Email
+        $("#tblSendEmail_SinhVien tbody").delegate('tr', 'click', function (e) {
+            if ($(e.target).hasClass('chkSendEmail_Item') || 
+                $(e.target).hasClass('btnPageSendEmail') ||
+                $(e.target).closest('.pagination-wrapper').length > 0) {
+                return;
+            }
+            
+            var checkbox = $(this).find('.chkSendEmail_Item');
+            if (checkbox.length > 0) {
+                checkbox.prop('checked', !checkbox.prop('checked'));
+                if (checkbox.prop('checked')) {
+                    $(this).css('background-color', '#e6f7ff');
+                } else {
+                    $(this).css('background-color', '');
+                }
+                me.updateSoLuongDaChon_SendEmail();
+            }
+        });
+        
+        // Highlight row khi checkbox thay đổi trong modal Send Email
+        $("#tblSendEmail_SinhVien tbody").delegate('.chkSendEmail_Item', 'change', function () {
+            var row = $(this).closest('tr');
+            if ($(this).prop('checked')) {
+                row.css('background-color', '#e6f7ff');
+            } else {
+                row.css('background-color', '');
+            }
+            me.updateSoLuongDaChon_SendEmail();
+        });
+        
+        // Thay đổi bộ lọc trong modal Send Email
+        $('#dropSendEmail_HeDaoTao').on('select2:select select2:unselect', function (e) {
+            me.getList_KhoaDaoTao_SendEmail();
+            me.getList_LopQuanLy_SendEmail();
+            me.countSinhVien_SendEmail();
+        });
+        $('#dropSendEmail_KhoaDaoTao').on('select2:select select2:unselect', function (e) {
+            me.getList_ChuongTrinhDaoTao_SendEmail();
+            me.getList_LopQuanLy_SendEmail();
+            me.countSinhVien_SendEmail();
+        });
+        $('#dropSendEmail_ChuongTrinh').on('select2:select select2:unselect', function (e) {
+            me.getList_LopQuanLy_SendEmail();
+            me.countSinhVien_SendEmail();
+        });
+        $('#dropSendEmail_Lop').on('select2:select select2:unselect', function (e) {
+            me.countSinhVien_SendEmail();
+        });
+        
+        // Import Excel để chọn sinh viên
+        $("#btnImportExcel_SinhVien").click(function (e) {
+            me.openImportModal();
+        });
+        
+        $("#btnDownloadTemplate_SinhVien").click(function (e) {
+            me.downloadTemplate();
+        });
+        
+        $("#btnProcessImport_SinhVien").click(function (e) {
+            me.processImportExcel();
+        });
+        
+        // Phân trang
+        $("#tblSinhVien_PhamVi").delegate('.btnPageSinhVien_PV', 'click', function () {
+            var page = $(this).data('page');
+            me.getList_SinhVien_PhamVi(page);
+        });
+        
+        // Click vào row để toggle checkbox
+        $("#tblSinhVien_PhamVi tbody").delegate('tr', 'click', function (e) {
+            // Bỏ qua nếu click vào checkbox hoặc pagination
+            if ($(e.target).hasClass('chkSinhVien_Item') || 
+                $(e.target).hasClass('btnPageSinhVien_PV') ||
+                $(e.target).closest('.pagination-wrapper').length > 0) {
+                return;
+            }
+            
+            // Tìm checkbox trong row này
+            var checkbox = $(this).find('.chkSinhVien_Item');
+            if (checkbox.length > 0) {
+                // Toggle checkbox
+                checkbox.prop('checked', !checkbox.prop('checked'));
+                
+                // Thêm/xóa highlight cho row
+                if (checkbox.prop('checked')) {
+                    $(this).css('background-color', '#e6f7ff');
+                } else {
+                    $(this).css('background-color', '');
+                }
+            }
+        });
+        
+        // Highlight row khi checkbox thay đổi
+        $("#tblSinhVien_PhamVi tbody").delegate('.chkSinhVien_Item', 'change', function () {
+            var row = $(this).closest('tr');
+            if ($(this).prop('checked')) {
+                row.css('background-color', '#e6f7ff');
+            } else {
+                row.css('background-color', '');
+            }
+        });
+        
+        // Thay đổi bộ lọc
+        $('#dropSearch_HeDaoTao_PV').on('select2:select select2:unselect', function (e) {
+            me.getList_KhoaDaoTao_PV();
+            me.getList_LopQuanLy_PV();
+        });
+        $('#dropSearch_KhoaDaoTao_PV').on('select2:select select2:unselect', function (e) {
+            me.getList_ChuongTrinhDaoTao_PV();
+            me.getList_LopQuanLy_PV();
+        });
+        $('#dropSearch_ChuongTrinh_PV').on('select2:select select2:unselect', function (e) {
+            me.getList_LopQuanLy_PV();
+        });
         me.arrValid= [
             //EM-empty, FL-float, IN-int, DA-date, seperated by '#' character...
             { "MA": "txtTinTuc_So", "THONGTIN1": "EM" },
@@ -235,11 +495,8 @@ TinTuc.prototype = {
         me.arrLop = [];
         me.arrKhoa = [];
         me.arrChuongTrinh = [];
-        $("#ApDungChoHe").html("");
-        $("#ApDungChoLop").html("");
-        $("#ApDungChoKhoa").html("");
-        $("#ApDungChoChuongTrinh").html("");
-        $("#tblInput_DTSV_SinhVien tbody").html("");
+        $("#tblSinhVien_PhamVi tbody").html('<tr><td colspan="9" class="text-center">Vui lòng chọn bộ lọc và click "Tìm kiếm"</td></tr>');
+        $("#lblSinhVien_Tong").html("0");
         edu.util.toggle_overide("zone-bus", "zonePhamVi");
     },
     /*------------------------------------------
@@ -508,7 +765,13 @@ TinTuc.prototype = {
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnPhamVi" id="' + aData.ID + '" title="Chi tiết">Phạm vi</a></span>';
                     }
-                }, {
+                }, 
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-success btnSendEmail" id="' + aData.ID + '" title="Gửi email"><i class="fa fa-envelope"></i> Gửi Email</a></span>';
+                    }
+                },
+                {
                     "mDataProp": "NGAYKETTHU"
                 },
                 {
@@ -565,8 +828,11 @@ TinTuc.prototype = {
    --Discription: [1] AcessDB ThanhVien
    --ULR:  Modules
    -------------------------------------------*/
-    getList_SinhVien: function () {
+    getList_SinhVien: function (pageIndex) {
         var me = this;
+        
+        // Mặc định page 1 nếu không truyền
+        if (!pageIndex) pageIndex = 1;
 
         //--Edit
         var obj_list = {
@@ -576,8 +842,8 @@ TinTuc.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
             'strPhamViApDung_Id': edu.util.getValById('dropAAAA'),
             'strTinTuc_BangTin_Id': me.strTinTuc_Id,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': pageIndex,
+            'pageSize': 20, // Phân trang 20 bản ghi/trang
         };
 
         //
@@ -590,7 +856,7 @@ TinTuc.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_SinhVien(dtResult);
+                    me.genTable_SinhVien(dtResult, iPager);
                 }
                 else {
                     edu.system.alert(obj_list.action + ": " + data.Message, "w");
@@ -665,10 +931,12 @@ TinTuc.prototype = {
     --Discription: [2] GenHTML NhanSu
     --ULR:  Modules
     -------------------------------------------*/
-    genTable_SinhVien: function (data) {
+    genTable_SinhVien: function (data, iPager) {
         var me = this;
         //3. create html
         me.arrSinhVien_Id = [];
+        me.dtSinhVien = data; // Lưu data để dùng cho gửi email
+        
         $("#tblInput_DTSV_SinhVien tbody").html("");
         for (var i = 0; i < data.length; i++) {
             var html = "";
@@ -685,6 +953,21 @@ TinTuc.prototype = {
             //5. create data danhmucvaitro
             me.arrSinhVien_Id.push(data[i].QLSV_NGUOIHOC_ID);
             me.arrSinhVien.push(data[i]);
+        }
+        
+        // Thêm phân trang
+        if (iPager > 20) {
+            var paginationHtml = '<tr><td colspan="6" class="text-center">';
+            paginationHtml += '<div class="pagination-wrapper">';
+            var totalPages = Math.ceil(iPager / 20);
+            var currentPage = edu.system.pageIndex_default || 1;
+            
+            for (var p = 1; p <= totalPages; p++) {
+                var activeClass = (p == currentPage) ? 'active' : '';
+                paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien ' + activeClass + '" data-page="' + p + '">' + p + '</a> ';
+            }
+            paginationHtml += '</div></td></tr>';
+            $("#tblInput_DTSV_SinhVien tbody").append(paginationHtml);
         }
     },
     addHTMLinto_SinhVien: function (strNhanSu_Id) {
@@ -1134,5 +1417,1207 @@ TinTuc.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
-    },   
+    },
+    
+    /*------------------------------------------
+    --Discription: [3] Gửi Email cho Sinh Viên
+    --ULR:  Modules
+    -------------------------------------------*/
+    sendEmail_ToSinhVien: function () {
+        var me = this;
+        
+        // Lấy thông tin tin tức
+        var tinTucData = edu.util.objGetDataInData(me.strTinTuc_Id, me.dtTinTuc, "ID")[0];
+        if (!tinTucData) {
+            edu.system.alert("Không tìm thấy thông tin tin tức!");
+            return;
+        }
+        
+        // Hiển thị progress
+        edu.system.alert('<div id="zoneEmailProgress"><p>Đang gửi email...</p><div id="progressBarEmail"></div></div>');
+        
+        // Gọi API lấy danh sách sinh viên theo phạm vi (không phân trang)
+        me.getList_SinhVienForEmail(tinTucData);
+    },
+    
+    getList_SinhVienForEmail: function (tinTucData) {
+        var me = this;
+        
+        var obj_list = {
+            'action': 'TT_PhamVi/LayDanhSachSinhVien_TheoTinTuc',
+            'type': 'GET',
+            'strTinTuc_BangTin_Id': me.strTinTuc_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'pageIndex': 1,
+            'pageSize': 999999, // Lấy tất cả
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success && data.Data && data.Data.length > 0) {
+                    var dsSinhVien = data.Data;
+                    edu.system.genHTML_Progress("progressBarEmail", dsSinhVien.length);
+                    
+                    // Gửi email từng sinh viên
+                    me.sendEmail_Batch(dsSinhVien, tinTucData, 0);
+                }
+                else {
+                    edu.system.alert("Không có sinh viên nào trong phạm vi này!");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi khi lấy danh sách sinh viên: " + JSON.stringify(er), "w");
+            },
+            type: "GET",
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    sendEmail_Batch: function (dsSinhVien, tinTucData, index) {
+        var me = this;
+        
+        if (index >= dsSinhVien.length) {
+            edu.system.alert("Đã gửi email thành công đến " + dsSinhVien.length + " sinh viên!");
+            return;
+        }
+        
+        var sinhVien = dsSinhVien[index];
+        
+        // Kiểm tra email
+        if (!sinhVien.TTLL_EMAILCANHAN) {
+            // Bỏ qua sinh viên không có email
+            edu.system.start_Progress("progressBarEmail", function () {
+                me.sendEmail_Batch(dsSinhVien, tinTucData, index + 1);
+            });
+            return;
+        }
+        
+        // Tạo nội dung email
+        var mailSubject = "[THÔNG BÁO] " + tinTucData.TIEUDE;
+        var strBody = me.createEmailTemplate(sinhVien, tinTucData);
+        
+        var obj_send = {
+            'action': 'CMS_NguoiDung/SendEmail',
+            'type': 'POST',
+            'mailTo': sinhVien.TTLL_EMAILCANHAN,
+            'mailSubject': mailSubject,
+            'strBody': strBody,
+            'arrFileDinhKem': [], // Có thể thêm file đính kèm nếu cần
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    console.log("Đã gửi email đến: " + sinhVien.TTLL_EMAILCANHAN);
+                } else {
+                    console.log("Lỗi gửi email đến " + sinhVien.TTLL_EMAILCANHAN + ": " + data.Message);
+                }
+            },
+            error: function (er) {
+                console.log("Lỗi gửi email đến " + sinhVien.TTLL_EMAILCANHAN + ": " + JSON.stringify(er));
+            },
+            complete: function () {
+                // Cập nhật progress và gửi tiếp
+                edu.system.start_Progress("progressBarEmail", function () {
+                    me.sendEmail_Batch(dsSinhVien, tinTucData, index + 1);
+                });
+            },
+            type: 'POST',
+            action: obj_send.action,
+            contentType: true,
+            data: obj_send,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    createEmailTemplate: function (sinhVien, tinTucData) {
+        var me = this;
+        var strIp = edu.system.rootPath;
+        
+        // Tạo template email
+        var template = '<html><head><style>';
+        template += 'body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }';
+        template += '.email-container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }';
+        template += '.email-header { background-color: #0066cc; color: white; padding: 15px; text-align: center; }';
+        template += '.email-body { padding: 20px; background-color: #f9f9f9; }';
+        template += '.email-footer { padding: 15px; text-align: center; font-size: 12px; color: #666; }';
+        template += '.btn-view { display: inline-block; padding: 10px 20px; background-color: #0066cc; color: white; text-decoration: none; border-radius: 5px; margin-top: 15px; }';
+        template += '</style></head><body>';
+        
+        template += '<div class="email-container">';
+        template += '<div class="email-header">';
+        template += '<h2>THÔNG BÁO TIN TỨC</h2>';
+        template += '</div>';
+        
+        template += '<div class="email-body">';
+        template += '<p>Kính gửi: <strong>' + sinhVien.QLSV_NGUOIHOC_HODEM + ' ' + sinhVien.QLSV_NGUOIHOC_TEN + '</strong></p>';
+        template += '<p>Mã sinh viên: <strong>' + sinhVien.QLSV_NGUOIHOC_MASO + '</strong></p>';
+        template += '<p>Lớp: <strong>' + (sinhVien.DAOTAO_LOPQUANLY_TEN || '') + '</strong></p>';
+        template += '<hr>';
+        
+        template += '<h3>' + tinTucData.TIEUDE + '</h3>';
+        
+        // Thêm ảnh nếu có
+        if (tinTucData.DUONGDANANHHIENTHI) {
+            template += '<p><img src="' + strIp + tinTucData.DUONGDANANHHIENTHI + '" style="max-width: 100%; height: auto;" /></p>';
+        }
+        
+        // Nội dung tin tức
+        template += '<div>' + tinTucData.NOIDUNG + '</div>';
+        
+        // Thông tin thêm
+        if (tinTucData.NGAYBATDAU) {
+            template += '<p><strong>Ngày bắt đầu:</strong> ' + tinTucData.NGAYBATDAU + '</p>';
+        }
+        if (tinTucData.NGAYKETTHUC) {
+            template += '<p><strong>Ngày hết hạn:</strong> ' + tinTucData.NGAYKETTHUC + '</p>';
+        }
+        
+        template += '<p><a href="' + strIp + '" class="btn-view">Xem chi tiết trên hệ thống</a></p>';
+        template += '</div>';
+        
+        template += '<div class="email-footer">';
+        template += '<p>Email này được gửi tự động từ hệ thống quản lý đào tạo.</p>';
+        template += '<p>Vui lòng không trả lời email này.</p>';
+        template += '<p>&copy; ' + new Date().getFullYear() + ' - Trường Đại học Công nghệ Đông Á</p>';
+        template += '</div>';
+        
+        template += '</div>';
+        template += '</body></html>';
+        
+        return template;
+    },
+    
+    /*----------------------------------------------
+    --Discription: [4] Functions cho modal Gửi Email với bộ lọc
+    --ULR:  Modules
+    ----------------------------------------------*/
+    getList_HeDaoTao_PV: function () {
+        var me = this;
+        var objList = {
+            strHinhThucDaoTao_Id: "",
+            strBacDaoTao_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_HeDaoTao(objList, "", "", me.cbGenCombo_HeDaoTao_PV);
+    },
+    
+    getList_KhoaDaoTao_PV: function () {
+        var me = this;
+        var objList = {
+            strHeDaoTao_Id: edu.util.getValCombo("dropSearch_HeDaoTao_PV"),
+            strCoSoDaoTao_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_KhoaDaoTao(objList, "", "", me.cbGenCombo_KhoaDaoTao_PV);
+    },
+    
+    getList_ChuongTrinhDaoTao_PV: function () {
+        var me = this;
+        var objList = {
+            strKhoaDaoTao_Id: edu.util.getValCombo("dropSearch_KhoaDaoTao_PV"),
+            strN_CN_LOP_Id: "",
+            strKhoaQuanLy_Id: "",
+            strToChucCT_Cha_Id: "",
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_ChuongTrinhDaoTao(objList, "", "", me.cbGenCombo_ChuongTrinhDaoTao_PV);
+    },
+    
+    getList_LopQuanLy_PV: function () {
+        var me = this;
+        var objList = {
+            strCoSoDaoTao_Id: "",
+            strDaoTao_HeDaoTao_Id: edu.util.getValCombo("dropSearch_HeDaoTao_PV"),
+            strKhoaDaoTao_Id: edu.util.getValCombo("dropSearch_KhoaDaoTao_PV"),
+            strNganh_Id: "",
+            strLoaiLop_Id: "",
+            strToChucCT_Id: edu.util.getValCombo("dropSearch_ChuongTrinh_PV"),
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_LopQuanLy(objList, "", "", me.cbGenCombo_LopQuanLy_PV);
+    },
+    
+    cbGenCombo_HeDaoTao_PV: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENHEDAOTAO",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_HeDaoTao_PV"],
+            type: "",
+            title: "Tất cả hệ đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSearch_HeDaoTao_PV").val("").trigger("change");
+    },
+    
+    cbGenCombo_KhoaDaoTao_PV: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENKHOA",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_KhoaDaoTao_PV"],
+            type: "",
+            title: "Tất cả khóa đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSearch_KhoaDaoTao_PV").val("").trigger("change");
+    },
+    
+    cbGenCombo_ChuongTrinhDaoTao_PV: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENCHUONGTRINH",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_ChuongTrinh_PV"],
+            type: "",
+            title: "Tất cả chương trình đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSearch_ChuongTrinh_PV").val("").trigger("change");
+    },
+    
+    cbGenCombo_LopQuanLy_PV: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_Lop_PV"],
+            type: "",
+            title: "Tất cả lớp",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSearch_Lop_PV").val("").trigger("change");
+    },
+    
+    getList_SinhVien_PhamVi: function (pageIndex) {
+        var me = this;
+        
+        if (!pageIndex) pageIndex = 1;
+        
+        var obj_list = {
+            'action': 'SV_HoSo/LayDanhSach',
+            'versionAPI': 'v1.0',
+            'type': 'GET',
+            'strTuKhoa': edu.util.getValById('txtSearch_SinhVien_PV'),
+            'strHeDaoTao_Id': edu.util.getValCombo('dropSearch_HeDaoTao_PV'),
+            'strKhoaDaoTao_Id': edu.util.getValCombo('dropSearch_KhoaDaoTao_PV'),
+            'strChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinh_PV'),
+            'strLopQuanLy_Id': edu.util.getValCombo('dropSearch_Lop_PV'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strChucNang_Id': edu.system.strChucNang_Id || '',
+            'pageIndex': pageIndex,
+            'pageSize': 20,
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = data.Data || [];
+                    var iPager = data.Pager || 0;
+                    me.genTable_SinhVien_PhamVi(dtResult, iPager, pageIndex);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    genTable_SinhVien_PhamVi: function (data, iPager, currentPage) {
+        var me = this;
+        
+        $("#lblSinhVien_Tong").html(iPager);
+        $("#tblSinhVien_PhamVi tbody").html("");
+        
+        if (data.length == 0) {
+            $("#tblSinhVien_PhamVi tbody").html('<tr><td colspan="9" class="text-center">Không tìm thấy sinh viên nào</td></tr>');
+            return;
+        }
+        
+        for (var i = 0; i < data.length; i++) {
+            var stt = (currentPage - 1) * 20 + i + 1;
+            var html = "";
+            html += "<tr class='row-sinhvien' style='cursor: pointer;'>";
+            html += "<td class='td-center'>" + stt + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].MASO) + "</td>";
+            html += "<td class='td-left'>" + edu.util.returnEmpty(data[i].HODEM) + " " + edu.util.returnEmpty(data[i].TEN) + "</td>";
+            html += "<td class='td-left'>" + edu.util.returnEmpty(data[i].TTLL_EMAILCANHAN) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].LOP) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].KHOADAOTAO) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].HEDAOTAO) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].QLSV_NGUOIHOC_TRANGTHAI) + "</td>";
+            html += "<td class='td-center'><input type='checkbox' class='chkSinhVien_Item' data-id='" + data[i].ID + "' data-email='" + (data[i].TTLL_EMAILCANHAN || '') + "' /></td>";
+            html += "</tr>";
+            $("#tblSinhVien_PhamVi tbody").append(html);
+        }
+        
+        // Thêm phân trang với ellipsis
+        if (iPager > 20) {
+            var paginationHtml = '<tr><td colspan="9" class="text-center">';
+            paginationHtml += '<div class="pagination-wrapper" style="margin: 10px 0;">';
+            var totalPages = Math.ceil(iPager / 20);
+            
+            // Nút Previous
+            if (currentPage > 1) {
+                paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien_PV" data-page="' + (currentPage - 1) + '" title="Trang trước"><i class="fa fa-chevron-left"></i></a> ';
+            }
+            
+            // Logic hiển thị trang với ellipsis
+            var startPage = 1;
+            var endPage = totalPages;
+            var maxPagesToShow = 7; // Số trang tối đa hiển thị
+            
+            if (totalPages > maxPagesToShow) {
+                if (currentPage <= 4) {
+                    // Đầu danh sách: 1 2 3 4 5 ... 100
+                    endPage = 5;
+                    for (var p = startPage; p <= endPage; p++) {
+                        var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                        paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSinhVien_PV" data-page="' + p + '">' + p + '</a> ';
+                    }
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien_PV" data-page="' + totalPages + '">' + totalPages + '</a> ';
+                }
+                else if (currentPage >= totalPages - 3) {
+                    // Cuối danh sách: 1 ... 96 97 98 99 100
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien_PV" data-page="1">1</a> ';
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    startPage = totalPages - 4;
+                    for (var p = startPage; p <= totalPages; p++) {
+                        var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                        paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSinhVien_PV" data-page="' + p + '">' + p + '</a> ';
+                    }
+                }
+                else {
+                    // Giữa danh sách: 1 ... 48 49 50 51 52 ... 100
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien_PV" data-page="1">1</a> ';
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    
+                    startPage = currentPage - 2;
+                    endPage = currentPage + 2;
+                    for (var p = startPage; p <= endPage; p++) {
+                        var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                        paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSinhVien_PV" data-page="' + p + '">' + p + '</a> ';
+                    }
+                    
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien_PV" data-page="' + totalPages + '">' + totalPages + '</a> ';
+                }
+            }
+            else {
+                // Ít trang: Hiển thị tất cả
+                for (var p = 1; p <= totalPages; p++) {
+                    var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSinhVien_PV" data-page="' + p + '">' + p + '</a> ';
+                }
+            }
+            
+            // Nút Next
+            if (currentPage < totalPages) {
+                paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSinhVien_PV" data-page="' + (currentPage + 1) + '" title="Trang sau"><i class="fa fa-chevron-right"></i></a> ';
+            }
+            
+            paginationHtml += '</div></td></tr>';
+            $("#tblSinhVien_PhamVi tbody").append(paginationHtml);
+        }
+    },
+    
+    sendEmail_ToSelectedSinhVien: function (arrSinhVienIds) {
+        var me = this;
+        
+        // Lấy thông tin sinh viên đã chọn
+        var dsSinhVien = [];
+        $(".chkSinhVien_Item:checked").each(function () {
+            var email = $(this).data('email');
+            if (email) {
+                dsSinhVien.push({
+                    ID: $(this).data('id'),
+                    TTLL_EMAILCANHAN: email
+                });
+            }
+        });
+        
+        if (dsSinhVien.length == 0) {
+            edu.system.alert("Không có sinh viên nào có email để gửi!");
+            return;
+        }
+        
+        // Hiển thị progress
+        edu.system.alert('<div id="zoneEmailProgress"><p>Đang gửi email đến ' + dsSinhVien.length + ' sinh viên...</p><div id="progressBarEmail"></div></div>');
+        edu.system.genHTML_Progress("progressBarEmail", dsSinhVien.length);
+        
+        // Gửi email batch
+        me.sendEmail_Batch_Selected(dsSinhVien, 0);
+    },
+    
+    sendEmail_Batch_Selected: function (dsSinhVien, index) {
+        var me = this;
+        
+        if (index >= dsSinhVien.length) {
+            edu.system.alert("Đã gửi email thành công đến " + dsSinhVien.length + " sinh viên!");
+            return;
+        }
+        
+        var sinhVien = dsSinhVien[index];
+        
+        // Lấy thông tin tin tức
+        var tinTucData = me.tinTucData;
+        if (!tinTucData) {
+            edu.system.alert("Không tìm thấy thông tin tin tức!");
+            return;
+        }
+        
+        // Tạo nội dung email đơn giản
+        var mailSubject = "[THÔNG BÁO] " + tinTucData.TIEUDE;
+        var strBody = '<html><body>';
+        strBody += '<h2>THÔNG BÁO TIN TỨC</h2>';
+        strBody += '<h3>' + tinTucData.TIEUDE + '</h3>';
+        strBody += '<div>' + tinTucData.NOIDUNG + '</div>';
+        strBody += '<p>Trân trọng!</p>';
+        strBody += '</body></html>';
+        
+        var obj_send = {
+            'action': 'CMS_NguoiDung/SendEmail',
+            'type': 'POST',
+            'mailTo': sinhVien.TTLL_EMAILCANHAN,
+            'mailSubject': mailSubject,
+            'strBody': strBody,
+            'arrFileDinhKem': [],
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    console.log("Đã gửi email đến: " + sinhVien.TTLL_EMAILCANHAN);
+                } else {
+                    console.log("Lỗi gửi email đến " + sinhVien.TTLL_EMAILCANHAN + ": " + data.Message);
+                }
+            },
+            error: function (er) {
+                console.log("Lỗi gửi email đến " + sinhVien.TTLL_EMAILCANHAN + ": " + JSON.stringify(er));
+            },
+            complete: function () {
+                // Cập nhật progress và gửi tiếp
+                edu.system.start_Progress("progressBarEmail", function () {
+                    me.sendEmail_Batch_Selected(dsSinhVien, index + 1);
+                });
+            },
+            type: 'POST',
+            action: obj_send.action,
+            contentType: true,
+            data: obj_send,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    /*----------------------------------------------
+    --Discription: [5] Import Excel để chọn sinh viên
+    --ULR:  Modules
+    ----------------------------------------------*/
+    importExcelData: null, // Lưu data từ Excel
+    dragDropInitialized: false, // Flag để chỉ setup drag & drop một lần
+    importMode: 'phamvi', // 'phamvi' hoặc 'sendEmail' - để biết đang import cho modal nào
+    
+    openImportModal: function () {
+        var me = this;
+        $("#modalImportExcel_SinhVien").modal("show");
+        $("#fileImportExcel_SinhVien").val("");
+        $("#selectedFileName").html("");
+        $("#importResult").hide();
+        
+        // Reset drop zone style
+        $("#dropZone_ImportExcel").css({
+            'border-color': '#ccc',
+            'background-color': '#f9f9f9'
+        });
+        
+        // Setup drag & drop chỉ một lần
+        if (!me.dragDropInitialized) {
+            me.setupDragDrop();
+            me.dragDropInitialized = true;
+        }
+    },
+    
+    setupDragDrop: function() {
+        var me = this;
+        var dropZone = document.getElementById('dropZone_ImportExcel');
+        var fileInput = document.getElementById('fileImportExcel_SinhVien');
+        
+        if (!dropZone || !fileInput) {
+            console.log("Drop zone or file input not found");
+            return;
+        }
+        
+        // Click vào drop zone để mở file dialog
+        dropZone.addEventListener('click', function() {
+            fileInput.click();
+        });
+        
+        // Khi chọn file từ dialog
+        fileInput.addEventListener('change', function(e) {
+            if (this.files && this.files.length > 0) {
+                $("#selectedFileName").html('<i class="fa fa-file-excel-o"></i> ' + this.files[0].name);
+            }
+        });
+        
+        // Prevent default drag behaviors
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function(eventName) {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        // Highlight drop zone khi drag over
+        ['dragenter', 'dragover'].forEach(function(eventName) {
+            dropZone.addEventListener(eventName, function() {
+                $(dropZone).css({
+                    'border-color': '#0066cc',
+                    'background-color': '#e6f2ff'
+                });
+            }, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(function(eventName) {
+            dropZone.addEventListener(eventName, function() {
+                $(dropZone).css({
+                    'border-color': '#ccc',
+                    'background-color': '#f9f9f9'
+                });
+            }, false);
+        });
+        
+        // Handle dropped files - CHỈ hiển thị tên file, KHÔNG tự động xử lý
+        dropZone.addEventListener('drop', function(e) {
+            var dt = e.dataTransfer;
+            var files = dt.files;
+            
+            if (files && files.length > 0) {
+                // Gán file vào input
+                fileInput.files = files;
+                $("#selectedFileName").html('<i class="fa fa-file-excel-o"></i> ' + files[0].name);
+                
+                // Hiển thị thông báo
+                $("#importResult").removeClass("alert-danger alert-success").addClass("alert-info")
+                    .html("Đã chọn file: <strong>" + files[0].name + "</strong>. Click nút 'Xử lý Import' để tiếp tục.").show();
+            }
+        }, false);
+    },
+    
+    downloadTemplate: function () {
+        // Kiểm tra thư viện XLSX đã load chưa
+        if (typeof XLSX === 'undefined') {
+            alert("Lỗi: Thư viện XLSX chưa được load. Vui lòng tải lại trang!");
+            return;
+        }
+        
+        // Tạo file Excel mẫu (.xlsx) thay vì CSV
+        var wb = XLSX.utils.book_new();
+        
+        // Tạo data mẫu
+        var ws_data = [
+            ["MaSV", "Email", "HoTen"],
+            ["20233195", "20233195@eaut.edu.vn", "Nguyen Van A"],
+            ["20233196", "20233196@eaut.edu.vn", "Tran Thi B"],
+            ["20233197", "20233197@eaut.edu.vn", "Le Van C"]
+        ];
+        
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        
+        // Thêm sheet vào workbook
+        XLSX.utils.book_append_sheet(wb, ws, "DanhSachSinhVien");
+        
+        // Tải file
+        XLSX.writeFile(wb, "MauImportSinhVien.xlsx");
+    },
+    
+    processImportExcel: function () {
+        var me = this;
+        
+        // Kiểm tra thư viện XLSX đã load chưa
+        if (typeof XLSX === 'undefined') {
+            $("#importResult").removeClass("alert-success alert-warning").addClass("alert-danger")
+                .html("Lỗi: Thư viện XLSX chưa được load. Vui lòng tải lại trang!").show();
+            return;
+        }
+        
+        var fileInput = document.getElementById('fileImportExcel_SinhVien');
+        
+        if (!fileInput.files || fileInput.files.length === 0) {
+            $("#importResult").removeClass("alert-success alert-danger").addClass("alert-warning").html("Vui lòng chọn file Excel hoặc CSV!").show();
+            return;
+        }
+        
+        var file = fileInput.files[0];
+        var fileName = file.name.toLowerCase();
+        
+        // Kiểm tra định dạng file
+        if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls') && !fileName.endsWith('.csv')) {
+            $("#importResult").removeClass("alert-success alert-warning").addClass("alert-danger").html("Chỉ hỗ trợ file .xlsx, .xls hoặc .csv!").show();
+            return;
+        }
+        
+        var reader = new FileReader();
+        
+        reader.onload = function(e) {
+            try {
+                var data, workbook, jsonData;
+                
+                if (fileName.endsWith('.csv')) {
+                    // Xử lý file CSV
+                    var csvText = e.target.result;
+                    workbook = XLSX.read(csvText, {type: 'string'});
+                    var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                } else {
+                    // Xử lý file Excel
+                    data = new Uint8Array(e.target.result);
+                    workbook = XLSX.read(data, {type: 'array'});
+                    var firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    jsonData = XLSX.utils.sheet_to_json(firstSheet);
+                }
+                
+                if (jsonData.length === 0) {
+                    $("#importResult").removeClass("alert-success alert-warning").addClass("alert-danger").html("File không có dữ liệu!").show();
+                    return;
+                }
+                
+                // Lưu data
+                me.importExcelData = jsonData;
+                
+                // Xử lý check sinh viên
+                me.autoCheckSinhVienFromExcel(jsonData);
+                
+            } catch (error) {
+                $("#importResult").removeClass("alert-success alert-warning").addClass("alert-danger").html("Lỗi đọc file: " + error.message).show();
+            }
+        };
+        
+        // Đọc file theo định dạng
+        if (fileName.endsWith('.csv')) {
+            reader.readAsText(file, 'UTF-8');
+        } else {
+            reader.readAsArrayBuffer(file);
+        }
+    },
+    
+    autoCheckSinhVienFromExcel: function (excelData) {
+        var me = this;
+        
+        // Xác định đang ở modal nào
+        var checkboxClass = me.importMode === 'sendEmail' ? '.chkSendEmail_Item' : '.chkSinhVien_Item';
+        
+        // Uncheck tất cả trước
+        $(checkboxClass).prop("checked", false);
+        
+        var countChecked = 0;
+        var countNotFound = 0;
+        var notFoundList = [];
+        
+        // Duyệt qua từng dòng trong Excel
+        for (var i = 0; i < excelData.length; i++) {
+            var row = excelData[i];
+            var email = row.Email || row.email || row.EMAIL || "";
+            var maSV = row.MaSV || row.masv || row.MASV || row.MaSv || "";
+            
+            var found = false;
+            
+            // Tìm và check sinh viên trong bảng
+            $(checkboxClass).each(function() {
+                var checkbox = $(this);
+                var checkboxEmail = checkbox.data("email") || "";
+                var checkboxMaSV = checkbox.closest("tr").find("td:eq(1)").text().trim(); // Cột Mã SV
+                
+                // So sánh Email hoặc Mã SV
+                if ((email && checkboxEmail.toLowerCase() === email.toLowerCase()) ||
+                    (maSV && checkboxMaSV === maSV)) {
+                    checkbox.prop("checked", true);
+                    found = true;
+                    countChecked++;
+                    return false; // break
+                }
+            });
+            
+            if (!found) {
+                countNotFound++;
+                notFoundList.push(email || maSV);
+            }
+        }
+        
+        // Hiển thị kết quả
+        var resultHtml = "<strong>Kết quả Import:</strong><br>";
+        resultHtml += "- Đã check: <strong class='text-success'>" + countChecked + "</strong> sinh viên<br>";
+        
+        if (countNotFound > 0) {
+            resultHtml += "- Không tìm thấy: <strong class='text-danger'>" + countNotFound + "</strong> sinh viên<br>";
+            resultHtml += "<small>Danh sách không tìm thấy: " + notFoundList.slice(0, 5).join(", ");
+            if (notFoundList.length > 5) {
+                resultHtml += " và " + (notFoundList.length - 5) + " sinh viên khác...";
+            }
+            resultHtml += "</small>";
+        }
+        
+        $("#importResult").removeClass("alert-warning alert-danger alert-info").addClass("alert-success").html(resultHtml).show();
+        
+        // Cập nhật số lượng đã chọn nếu đang ở modal Send Email
+        if (me.importMode === 'sendEmail') {
+            me.updateSoLuongDaChon_SendEmail();
+        }
+        
+        // Tự động đóng modal sau 2 giây nếu xử lý thành công
+        setTimeout(function() {
+            $("#modalImportExcel_SinhVien").modal("hide");
+        }, 2000);
+    },
+    
+    /*----------------------------------------------
+    --Discription: [6] Modal Gửi Email
+    --ULR:  Modules
+    ----------------------------------------------*/
+    toggle_sendemail: function () {
+        var me = this;
+        // Hiển thị thông tin tin tức
+        if (me.tinTucData) {
+            $("#lblEmailTieuDe").html(me.tinTucData.TIEUDE || '');
+            $("#lblEmailChuyenMuc").html(me.tinTucData.CHUYENMUC_TEN || '');
+            $("#lblEmailNgayDang").html(me.tinTucData.NGAYBATDAU || '');
+        }
+        $("#lblSoLuongSinhVien").html("0");
+        $("#tblSendEmail_SinhVien tbody").html('<tr><td colspan="9" class="text-center">Vui lòng chọn bộ lọc và click "Tìm kiếm"</td></tr>');
+        edu.util.toggle_overide("zone-bus", "zoneSendEmail");
+        // Tự động load danh sách sinh viên
+        me.getList_SinhVien_SendEmail(1);
+    },
+    
+    getList_HeDaoTao_SendEmail: function () {
+        var me = this;
+        var objList = {
+            strHinhThucDaoTao_Id: "",
+            strBacDaoTao_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_HeDaoTao(objList, "", "", me.cbGenCombo_HeDaoTao_SendEmail);
+    },
+    
+    getList_KhoaDaoTao_SendEmail: function () {
+        var me = this;
+        var objList = {
+            strHeDaoTao_Id: edu.util.getValCombo("dropSendEmail_HeDaoTao"),
+            strCoSoDaoTao_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_KhoaDaoTao(objList, "", "", me.cbGenCombo_KhoaDaoTao_SendEmail);
+    },
+    
+    getList_ChuongTrinhDaoTao_SendEmail: function () {
+        var me = this;
+        var objList = {
+            strKhoaDaoTao_Id: edu.util.getValCombo("dropSendEmail_KhoaDaoTao"),
+            strN_CN_LOP_Id: "",
+            strKhoaQuanLy_Id: "",
+            strToChucCT_Cha_Id: "",
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_ChuongTrinhDaoTao(objList, "", "", me.cbGenCombo_ChuongTrinhDaoTao_SendEmail);
+    },
+    
+    getList_LopQuanLy_SendEmail: function () {
+        var me = this;
+        var objList = {
+            strCoSoDaoTao_Id: "",
+            strDaoTao_HeDaoTao_Id: edu.util.getValCombo("dropSendEmail_HeDaoTao"),
+            strKhoaDaoTao_Id: edu.util.getValCombo("dropSendEmail_KhoaDaoTao"),
+            strNganh_Id: "",
+            strLoaiLop_Id: "",
+            strToChucCT_Id: edu.util.getValCombo("dropSendEmail_ChuongTrinh"),
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        }
+        edu.system.getList_LopQuanLy(objList, "", "", me.cbGenCombo_LopQuanLy_SendEmail);
+    },
+    
+    cbGenCombo_HeDaoTao_SendEmail: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENHEDAOTAO",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSendEmail_HeDaoTao"],
+            type: "",
+            title: "Tất cả hệ đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSendEmail_HeDaoTao").val("").trigger("change");
+    },
+    
+    cbGenCombo_KhoaDaoTao_SendEmail: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENKHOA",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSendEmail_KhoaDaoTao"],
+            type: "",
+            title: "Tất cả khóa đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSendEmail_KhoaDaoTao").val("").trigger("change");
+    },
+    
+    cbGenCombo_ChuongTrinhDaoTao_SendEmail: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENCHUONGTRINH",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSendEmail_ChuongTrinh"],
+            type: "",
+            title: "Tất cả chương trình đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSendEmail_ChuongTrinh").val("").trigger("change");
+    },
+    
+    cbGenCombo_LopQuanLy_SendEmail: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSendEmail_Lop"],
+            type: "",
+            title: "Tất cả lớp",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSendEmail_Lop").val("").trigger("change");
+    },
+    
+    getList_SinhVien_SendEmail: function (pageIndex) {
+        var me = this;
+        
+        if (!pageIndex) pageIndex = 1;
+        
+        var obj_list = {
+            'action': 'SV_HoSo/LayDanhSach',
+            'versionAPI': 'v1.0',
+            'type': 'GET',
+            'strTuKhoa': edu.util.getValById('txtSendEmail_Search'),
+            'strHeDaoTao_Id': edu.util.getValCombo('dropSendEmail_HeDaoTao'),
+            'strKhoaDaoTao_Id': edu.util.getValCombo('dropSendEmail_KhoaDaoTao'),
+            'strChuongTrinh_Id': edu.util.getValCombo('dropSendEmail_ChuongTrinh'),
+            'strLopQuanLy_Id': edu.util.getValCombo('dropSendEmail_Lop'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strChucNang_Id': edu.system.strChucNang_Id || '',
+            'pageIndex': pageIndex,
+            'pageSize': 20,
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = data.Data || [];
+                    var iPager = data.Pager || 0;
+                    me.genTable_SinhVien_SendEmail(dtResult, iPager, pageIndex);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    genTable_SinhVien_SendEmail: function (data, iPager, currentPage) {
+        var me = this;
+        
+        $("#tblSendEmail_SinhVien tbody").html("");
+        
+        if (data.length == 0) {
+            $("#tblSendEmail_SinhVien tbody").html('<tr><td colspan="9" class="text-center">Không tìm thấy sinh viên nào</td></tr>');
+            $("#lblSoLuongSinhVien").html("0");
+            return;
+        }
+        
+        for (var i = 0; i < data.length; i++) {
+            var stt = (currentPage - 1) * 20 + i + 1;
+            var html = "";
+            html += "<tr class='row-sinhvien' style='cursor: pointer;'>";
+            html += "<td class='td-center'>" + stt + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].MASO) + "</td>";
+            html += "<td class='td-left'>" + edu.util.returnEmpty(data[i].HODEM) + " " + edu.util.returnEmpty(data[i].TEN) + "</td>";
+            html += "<td class='td-left'>" + edu.util.returnEmpty(data[i].TTLL_EMAILCANHAN) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].LOP) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].KHOADAOTAO) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].HEDAOTAO) + "</td>";
+            html += "<td class='td-center'>" + edu.util.returnEmpty(data[i].QLSV_NGUOIHOC_TRANGTHAI) + "</td>";
+            html += "<td class='td-center'><input type='checkbox' class='chkSendEmail_Item' data-id='" + data[i].ID + "' data-email='" + (data[i].TTLL_EMAILCANHAN || '') + "' data-maso='" + (data[i].MASO || '') + "' /></td>";
+            html += "</tr>";
+            $("#tblSendEmail_SinhVien tbody").append(html);
+        }
+        
+        // Thêm phân trang
+        if (iPager > 20) {
+            var paginationHtml = '<tr><td colspan="9" class="text-center">';
+            paginationHtml += '<div class="pagination-wrapper" style="margin: 10px 0;">';
+            var totalPages = Math.ceil(iPager / 20);
+            
+            if (currentPage > 1) {
+                paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSendEmail" data-page="' + (currentPage - 1) + '" title="Trang trước"><i class="fa fa-chevron-left"></i></a> ';
+            }
+            
+            var startPage = 1;
+            var endPage = totalPages;
+            var maxPagesToShow = 7;
+            
+            if (totalPages > maxPagesToShow) {
+                if (currentPage <= 4) {
+                    endPage = 5;
+                    for (var p = startPage; p <= endPage; p++) {
+                        var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                        paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSendEmail" data-page="' + p + '">' + p + '</a> ';
+                    }
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSendEmail" data-page="' + totalPages + '">' + totalPages + '</a> ';
+                }
+                else if (currentPage >= totalPages - 3) {
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSendEmail" data-page="1">1</a> ';
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    startPage = totalPages - 4;
+                    for (var p = startPage; p <= totalPages; p++) {
+                        var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                        paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSendEmail" data-page="' + p + '">' + p + '</a> ';
+                    }
+                }
+                else {
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSendEmail" data-page="1">1</a> ';
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    
+                    startPage = currentPage - 2;
+                    endPage = currentPage + 2;
+                    for (var p = startPage; p <= endPage; p++) {
+                        var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                        paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSendEmail" data-page="' + p + '">' + p + '</a> ';
+                    }
+                    
+                    paginationHtml += '<span class="btn btn-sm btn-default disabled">...</span> ';
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSendEmail" data-page="' + totalPages + '">' + totalPages + '</a> ';
+                }
+            }
+            else {
+                for (var p = 1; p <= totalPages; p++) {
+                    var activeClass = (p == currentPage) ? 'btn-primary' : 'btn-default';
+                    paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm ' + activeClass + ' btnPageSendEmail" data-page="' + p + '">' + p + '</a> ';
+                }
+            }
+            
+            if (currentPage < totalPages) {
+                paginationHtml += '<a href="javascript:void(0)" class="btn btn-sm btn-default btnPageSendEmail" data-page="' + (currentPage + 1) + '" title="Trang sau"><i class="fa fa-chevron-right"></i></a> ';
+            }
+            
+            paginationHtml += '</div></td></tr>';
+            $("#tblSendEmail_SinhVien tbody").append(paginationHtml);
+        }
+        
+        // Cập nhật số lượng đã chọn
+        me.updateSoLuongDaChon_SendEmail();
+    },
+    
+    updateSoLuongDaChon_SendEmail: function () {
+        var count = $(".chkSendEmail_Item:checked").length;
+        $("#lblSoLuongSinhVien").html(count);
+    },
+    
+    openImportModal_SendEmail: function () {
+        // Sử dụng lại modal import Excel hiện tại
+        // Nhưng cần phân biệt là import cho modal nào
+        this.importMode = 'sendEmail'; // Flag để biết đang import cho modal nào
+        this.openImportModal();
+    },
+    
+    processSendEmail_ToSelected: function (arrSinhVienIds) {
+        var me = this;
+        
+        // Lấy thông tin sinh viên đã chọn
+        var dsSinhVien = [];
+        $(".chkSendEmail_Item:checked").each(function () {
+            var email = $(this).data('email');
+            if (email) {
+                dsSinhVien.push({
+                    ID: $(this).data('id'),
+                    TTLL_EMAILCANHAN: email,
+                    MASO: $(this).data('maso')
+                });
+            }
+        });
+        
+        if (dsSinhVien.length == 0) {
+            edu.system.alert("Không có sinh viên nào có email để gửi!");
+            return;
+        }
+        
+        // Hiển thị progress
+        edu.system.alert('<div id="zoneEmailProgress"><p>Đang gửi email đến ' + dsSinhVien.length + ' sinh viên...</p><div id="progressBarEmail"></div></div>');
+        edu.system.genHTML_Progress("progressBarEmail", dsSinhVien.length);
+        
+        // Gửi email batch
+        me.sendEmail_Batch_Selected(dsSinhVien, 0);
+    },
+    
+    countSinhVien_SendEmail: function () {
+        // Hàm này không cần nữa vì đã có danh sách sinh viên
+        // Giữ lại để tương thích với code cũ
+    },
+    
+    processSendEmail_ToFiltered: function () {
+        // Hàm này không cần nữa vì đã có danh sách sinh viên
+        // Giữ lại để tương thích với code cũ
+    },
+    
+    sendEmail_Batch_Filtered: function (dsSinhVien, index) {
+        var me = this;
+        
+        if (index >= dsSinhVien.length) {
+            edu.system.alert("Đã gửi email thành công đến " + dsSinhVien.length + " sinh viên!");
+            // Đóng modal Send Email
+            me.toggle_form();
+            return;
+        }
+        
+        var sinhVien = dsSinhVien[index];
+        
+        // Kiểm tra email
+        if (!sinhVien.TTLL_EMAILCANHAN) {
+            // Bỏ qua sinh viên không có email
+            edu.system.start_Progress("progressBarEmail", function () {
+                me.sendEmail_Batch_Filtered(dsSinhVien, index + 1);
+            });
+            return;
+        }
+        
+        // Lấy thông tin tin tức
+        var tinTucData = me.tinTucData;
+        if (!tinTucData) {
+            edu.system.alert("Không tìm thấy thông tin tin tức!");
+            return;
+        }
+        
+        // Tạo nội dung email
+        var mailSubject = "[THÔNG BÁO] " + tinTucData.TIEUDE;
+        var strBody = me.createEmailTemplate(sinhVien, tinTucData);
+        
+        var obj_send = {
+            'action': 'CMS_NguoiDung/SendEmail',
+            'type': 'POST',
+            'mailTo': sinhVien.TTLL_EMAILCANHAN,
+            'mailSubject': mailSubject,
+            'strBody': strBody,
+            'arrFileDinhKem': [],
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    console.log("Đã gửi email đến: " + sinhVien.TTLL_EMAILCANHAN);
+                } else {
+                    console.log("Lỗi gửi email đến " + sinhVien.TTLL_EMAILCANHAN + ": " + data.Message);
+                }
+            },
+            error: function (er) {
+                console.log("Lỗi gửi email đến " + sinhVien.TTLL_EMAILCANHAN + ": " + JSON.stringify(er));
+            },
+            complete: function () {
+                // Cập nhật progress và gửi tiếp
+                edu.system.start_Progress("progressBarEmail", function () {
+                    me.sendEmail_Batch_Filtered(dsSinhVien, index + 1);
+                });
+            },
+            type: 'POST',
+            action: obj_send.action,
+            contentType: true,
+            data: obj_send,
+            fakedb: []
+        }, false, false, false, null);
+    },
 }
