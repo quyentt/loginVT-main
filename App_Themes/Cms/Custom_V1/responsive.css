@@ -188,6 +188,44 @@
 
 
 @media only screen and (max-width: 600px) {
+    .aps-khoiluongcanhan .klcn-info {
+        padding-right: 0 !important;
+    }
+
+    .aps-khoiluongcanhan  .klcn-info .item {
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
+
+    .aps-form-search {
+        display: block !important;
+    }
+
+    .aps-form-search .form-add-info {
+        margin-bottom: 10px;
+    }
+
+    .modalPheDuyet .aps-form label,
+    .modalPheDuyet2 .aps-form label {
+        display: none;
+    }
+
+    .aps-lichgiangkhoa .calendar-time .date-input,
+    .apslichgiangdaotao .calendar-time .date-input {
+        padding-left: 0 !important;
+    }
+
+    .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(1),
+    .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(2),
+    .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(3) {
+        min-width: 90px !important;
+    }
+
+    .tblNhapChuyenCan tr td .inputChuyenCan {
+        float: left !important;
+        margin-left: 20px !important;
+    }
+
     .calendar-modal-meta .item {
         padding-left: 0 !important;
     }
@@ -641,7 +679,7 @@
 
     .modal-860,
     .modal_XacNhan .modal-860 {
-        max-width: stretch !important;
+        max-width: max-content !important;
     }
 
     .dkcn_diem .tblBangDiem,

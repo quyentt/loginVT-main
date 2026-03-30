@@ -48,7 +48,7 @@
             <a href="#">Thời khóa biểu admin</a>
         </p>
     </div>
-    <div class="row register-school my-calendar">
+    <div class="row register-school my-calendar aps-lichgiangadmin">
         <div class="col-12 col-md-9 register-school-right pl0">
             <div class="box-shadow ">
                 <div class="news-search-form">
@@ -180,10 +180,13 @@
     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalPheDuyet">
         khối kiến thức chuyên ngành
     </button>
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalHTSinhVien">
+        Sinh viên
+    </button>
 </div>
 <!-- ---------- -->
 <!-- modal khối kiến thức chuyên ngành-->
-<div class="modal fade finance-modal my-calendar" id="my_calendar" tabindex="-1" aria-labelledby="exampleModalLabel"
+<div class="modal fade finance-modal my-calendar modal-khoikienthuc" id="my_calendar" tabindex="-1" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-90 modal-dialog-scrollable">
         <div class="modal-content">
@@ -266,7 +269,7 @@
 <!-- modal Yêu cầu đổi lịch-->
 <div class="modal fade finance-modal my-calendar modalDoiLich" id="modalDoiLich" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
@@ -383,7 +386,7 @@
 <!-- modal Yêu cầu đổi lịch-->
 <div class="modal fade finance-modal my-calendar modalXemLich" id="modalXemLich" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg modal-860 modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-centered modal-860 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
@@ -396,11 +399,10 @@
                     <div class="caledar-input">
                         <div class="form-item">
                             <label for="">Nội dung xin đổi lịch</label>
-                            <div class="input-group">
-                                <textarea class="form-control" id="txtNoiDungDoiLich_View" disabled rows="2"></textarea>
+                             <div class="input-group" style="height: auto !important;">
+                                <textarea class="form-control min-h-68" id="txtNoiDungDoiLich_View" disabled rows="2"></textarea>
                                 <i class="fal fa-edit"></i>
                             </div>
-
                         </div>
                         <div class="form-item ">
                             <label for="">Lớp học phần</label>
@@ -408,18 +410,14 @@
                                 <input type="text" class="form-control" id="txtTenLopHocPhan_View" disabled>
                                 <i class="fal fa-book-reader"></i>
                             </div>
-
                         </div>
                         <p class="title-center-line"><span>Thời gian</span></p>
                         <div class="form-item on-row">
                             <label for="">Ngày học</label>
                             <div class="input-group">
-
-
                                 <input type="text" class="form-control" id="txtNgayHoc_View" disabled>
                                 <i class="fal fa-calendar-alt"></i>
                             </div>
-
                             <div class="right">
                                 <div class="arrow">
                                     <span>Đổi sang</span>
@@ -542,7 +540,7 @@
             </div>
             <div class="modal-footer">
                 <div class="gv-button-group pull-right pt-0 d-flex">
-                    <button type="button" class="btn btn-default mb-0" data-dismiss="modal" id="btnCancel">
+                    <button type="button" class="btn btn-default mb-0 d-none" data-dismiss="modal" id="btnCancel">
                         <i class="fa fa-times-circle"></i> Đóng
                     </button>
                     <a class="btn btn-primary mb-0" id="btnLuuPheDuyet" data-bs-dismiss="modal" aria-label="Close">
