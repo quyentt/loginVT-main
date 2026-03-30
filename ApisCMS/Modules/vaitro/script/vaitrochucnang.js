@@ -1425,26 +1425,25 @@ VaiTroChucNang.prototype = {
         };
         me.loadToTreejs_data2(obj);
         for (var i = 0; i < dtResult.length; i++) {
-            //if (edu.util.objGetOneDataInData(dtResult[i].ID, dtResult, "CHUCNANGCHA_ID").length == 0) {
-            //    var dtCheck = edu.util.objGetOneDataInData(dtResult[i].ID, me.dtNguoiDungChucNang, "ID");
-            //    if (dtCheck.length == 0) strThemMoi = '<i class="fa fa-plus color-active poiter btnAdd_ChucNang" id="add_chucnang' + dtResult[i].ID + '"></i>';
-            //    else {
-            //        strDelete = '<i class="fa fa-trash color-active poiter btnDelete_VaiTroChucNang" id="delete_nguoidungchucnang' + dtResult[i].ID + '" ></i>';
-            //        if (dtCheck.TINHTRANGDONGBO == 0) strSync = '<i class="fa fa-recycle color-active poiter btnSync" id="sync_' + dtResult[i].ID + '"></i>';
-            //    }
-            //    $($("#treesjs_ungdungchucnang_ndcn #" + dtResult[i].ID)[0]).append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px">' + strThemMoi + '</span><span style="padding-right: 20px;">' + strSync + '</span><span>' + strDelete + '</span></span>');
-
-            //}
-            var dtCheck = edu.util.objGetOneDataInData(dtResult[i].ID, me.dtVaiTroChucNang, "ID");
+            var dtCheck = me.dtVaiTroChucNang.filter(e => e.ID == dtResult[i].ID);// edu.util.objGetOneDataInData(dtResult[i].ID, , "ID");
             if (dtCheck.length != 0) {
+                //
+                //if (me.dtVaiTroChucNang.filter(e => e.CHUCNANGCHA_ID == dtResult[i].ID).length > 0) continue;
                 var xpoint = document.getElementById(dtResult[i].ID + "_anchor");
                 if (xpoint != null && xpoint != undefined) {
+                    //tree.activate_node(dtResult[i].ID);
                     document.getElementById(dtResult[i].ID + "_anchor").classList.add("jstree-clicked");
                     document.getElementById(dtResult[i].ID + "_anchor").name = 1;
+                    //$('#treesjs_ungdungchucnang_vtcn #' + dtResult[i].ID).trigger("click");
                 }
             }
-            //$($("#treesjs_ungdungchucnang_ndcn #" + dtResult[i].ID)[0]).append('<span class="pull-right"><input type="checkbox" ' + strCheck +' id="checkX' + dtResult[i].ID + '" class="' + dtResult[i].CHUCNANGCHA_ID +'"></span>');
         }
+        //setTimeout(function () {
+        //    var tree = $('#treesjs_ungdungchucnang_vtcn').jstree(true);
+            
+            
+        //}, 200)
+        
     },
 
     loadToTreejs_data2: function (obj) {
