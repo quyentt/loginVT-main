@@ -1,0 +1,314 @@
+﻿<style>
+    /*.finance-modal .input-row{
+        display: flex
+    }*/
+    .finance-modal .form-add-info .form-label {
+        font-size: unset;
+        color: unset;
+    }
+
+    .zone-bus .select2-container--open {
+        max-width: unset;
+    }
+</style>
+<div class="one-door aps-phieu">
+    <div class="overlay"></div>
+    <div class="content-tab no-tab">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+                <p class="link">
+                    <a href="#">quản lý chung</a><i class="fal fa-angle-right"></i><a href="#">
+                        Quản lý phiếu 12
+                    </a>
+                </p>
+            </div>
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- đăng ký nguyện vọng -->
+    <div class="box-shadow register-wish pt-0 zone-bus" id="zonebatdau">
+        <!-- Bộ tìm kiếm -->
+        <div class="form-top">
+            <div class="row">
+                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                            <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa tìm kiếm">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-4 col-md-3 mb-15">
+                    <div class="d-flex align-items-center">
+                        <div class="btn btn-search btn-default min-w-auto px-4 ms-auto ms-lg-0" id="btnSearch">
+                            <i class="fal fa-search me-2"></i> Tìm kiếm
+                        </div>
+                        <div class="dropdown" id="zonebtnBaoCao_DeXuatHoSo"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- Danh sách phiếu -->
+        <div class="container-fluid px-20">
+            <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                <div class="group-title pl0">
+                    <p class="mb-0 pt-10">
+                        <i class="fa-solid fa-list-timeline"></i>
+                        <span class="lang" key="">Danh sách phiếu</span>
+                    </p>
+                </div>
+                <!-- <p class="mb-0 color-dask-blue fw-bold pt10 "></p> -->
+                <div class="ms-auto aps-gap-10">
+                    <div class="btn btn-danger" id="btnDelete_DeXuatHoSo" style="min-width: unset">
+                        <i class="fal fa-trash"></i> Xóa
+                    </div>
+                    <div class="btn btn-success btnAdd" id="btnAdd_DeXuatHoSo">
+                        <i class="fal fa-plus"></i> Nhập hồ sơ đề xuất
+                    </div>
+                    <div class="btn btn-success" id="btnAdd_KiemTraDinhDanh">
+                        <i class="fal fa-paper-plane"></i> Kiểm tra định danh
+                    </div>
+                </div>
+
+            </div>
+            <table class="table transcrip-table tabs-scores h-auto tblDeXuatHoSo table-bordered table-noborder"
+                   id="tblDeXuatHoSo">
+                <thead>
+                    <tr>
+                        <th class="text-center w-50px" scope="col">STT</th>
+                        <th class="" scope="col">Họ và tên</th>
+                        <th class="text-center" scope="col">Ngày sinh</th>
+                        <th class="text-center" scope="col">Giới tính</th>
+                        <th class="text-center" scope="col">Tình trạng hồ sơ</th>
+                        <th class="text-center" scope="col">Hiệu lực</th>
+                        <th class="text-center" scope="col">Ngày tạo</th>
+                        <th class="text-center" scope="col">Người tạo</th>
+                        <th class="text-center w-50px" scope="col">Sửa</th>
+                        <th class="text-center" scope="col"><input type="checkbox" class="chkSystemSelectAll"></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="fake-modal zone-bus" id="zoneEdit" style="display: none">
+        <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
+            <div class="d-flex justify-content-between pt-3 px-20 box-header">
+                <div class="nav-content-left">
+                    <p class="link">
+                        <a>
+                            <span class="myModalLabel">
+                                <i class="fa-regular fa-file-circle-question fw-bold"></i>
+                            </span> Hồ sơ đề xuất
+                        </a>
+                    </p>
+                </div>
+                <div class="nav-content-right mt">
+                    <a class="d-block text-right fs-16 mt-5 color-fff btnClose"><i class="fal fa-times"></i></a>
+                </div>
+            </div>
+
+            <div class="form-top rounded-0 border-top mb-15">
+                <div class="row">
+                    <div class="col-12 col-md-8 col-lg-8">
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Họ</label>
+                            <div class="input-group">
+                                <input class="form-control" id="txtHo" />
+                            </div>
+                        </div>
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Tên đệm</label>
+                            <div class="input-group">
+                                <input class="form-control" id="txtTenDem" />
+                            </div>
+                        </div>
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Tên</label>
+                            <div class="input-group">
+                                <input class="form-control" id="txtTen" />
+                            </div>
+                        </div>
+                        <div class="form-item d-flex mb-0 form-add-info no-icon">
+                            <label class="form-label" style="width:150px">Chọn mức độ ngày sinh</label>
+                            <div class="input-group">
+                                <select id="dropMucDoNgaySinh" class="select-opt">
+                                    <option value="EXACT">Chính xác</option>
+                                    <option value="MONTH_ONLY">Chỉ biết tháng/năm</option>
+                                    <option value="YEAR_ONLY">Chỉ biết năm</option>
+                                    <option value="UNKNOWN">Không biết</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Ngày sinh</label>
+                            <div class="input-group">
+                                <input class="form-control" id="txtNgaySinh" />
+                            </div>
+                        </div>
+
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Tháng sinh</label>
+                            <div class="input-group">
+                                <input class="form-control" id="txtThangSinh" />
+                            </div>
+                        </div>
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Năm sinh</label>
+                            <div class="input-group">
+                                <input class="form-control" id="txtNamSinh" />
+                            </div>
+                        </div>
+                        <div class="form-item d-flex mb-0 form-add-info">
+                            <label class="form-label" style="width:150px">Tên</label>
+                            <div class="input-group">
+                                <div class="form-item d-flex mb-0 form-add-info ">
+                                    <label class="form-label" style="width:150px">Giới tính</label>
+                                    <div class="input-group">
+                                        <select id="dropGioiTinh" class="select-opt"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4 col-lg-4">
+                        <div class="sv-add-info-content sv-info-profile">
+                            <div class="row sv-info-base">
+                                <div class="col-12 sv-info-base-avata">
+                                    <div class="avata-img">
+                                        <img src="assets/images/avata-form.jpg" id="uploadPicture_SV">
+                                        <a href="#" class="upload-avata">
+                                            <i class="fal fa-camera color-dask-blue"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid px-20">
+                <div class="row">
+                    <div class="col-12 col-lg-6 mt-6 pl0">
+                        <div class="d-flex align-items-center w-100 justify-content-between">
+                            <span class="fw-bold text-success pull-left">Thông tin định danh</span>
+                        </div>
+                        <div class="mt-10 aps-table-select">
+                            <table class="table transcrip-table tabs-scores tblDapAn_Mau mt-10 table-bordered table-noborder"
+                                   id="tblThongTinDinhDanh">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50px" scope="col">STT</th>
+                                        <th scope="col">Tên </th>
+                                        <th scope="col">Mã </th>
+                                        <th scope="col">Thứ tự</th>
+                                        <th scope="col">Trọng số </th>
+                                        <th class="text-center" scope="col">
+                                            <input class="form-check-input" type="checkbox" id="chkSelectAll_DapAn_Mau">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-6">
+                        <div class="mt-8 aps-table-select">
+                            <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDapAn"
+                                   id="tblDapAn">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50px" scope="col">STT</th>
+                                        <th scope="col">Tên </th>
+                                        <th scope="col">Mã </th>
+                                        <th scope="col">Thứ tự</th>
+                                        <th scope="col">Trọng số </th>
+                                        <th class="text-center" scope="col">
+                                            <!--<input class="form-check-input" type="checkbox" id="chkSelectAll_DapAn">-->
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid px-20">
+                <hr />
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                    <div class="ms-auto aps-gap-10">
+                        <div class="btn btn-outline-secondary btnClose">
+                            <i class="fal fa-times"></i> Đóng
+                        </div>
+                        <div class="btn btn-primary" id="btnSave_DeXuatHoSo"><i class="fal fa-save"></i> Lưu</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- modal khối kiến thức chuyên ngành-->
+<div class="modal fade finance-modal" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p><span class="myModalLabel"><i class="fa-solid fa-file-lines"></i></span> Phiếu mẫu</a></p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-item d-flex mb-15 form-add-info no-icon">
+                    <label class="form-label">Tên phiếu</label>
+                    <div class="input-group  no-icon">
+                        <input class="form-control" id="txtTen" />
+                    </div>
+                </div>
+                <div class="form-item d-flex mb-15 form-add-info no-icon">
+                    <label class="form-label">Mã</label>
+                    <div class="input-group  no-icon">
+                        <input class="form-control" id="txtMa" />
+                    </div>
+                </div>
+                <div class="form-item d-flex mb-15 form-add-info no-icon">
+                    <label class="form-label">Phân loại</label>
+                    <div class="input-group input-group-select no-icon">
+                        <select id="dropPhanLoai" class="select-opt"></select>
+                    </div>
+                </div>
+                <div class="form-item d-flex mb-15 form-add-info">
+                    <label class="form-label">Mô tả</label>
+                    <div class="input-group input-group-tẽ no-icon">
+                        <textarea id="txtMoTa" class="form-control form-control-textarea" style="min-height: 200px" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--<div class="btn btn-outline-secondary" id="btnDelete_DeXuatHoSo"><i class="fal fa-trash me-2"></i> Xóa</div>-->
+                <div class="btn btn-primary" id="btnSave_DeXuatHoSo">
+                    <i class="fal fa-save me-2"></i>Lưu
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="modules/cocautochuc/script/dexuathoso.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['DeXuatHoSo'] = new DeXuatHoSo();
+    $(document).ready(function () {
+        main_doc.DeXuatHoSo.init();
+    });
+</script>

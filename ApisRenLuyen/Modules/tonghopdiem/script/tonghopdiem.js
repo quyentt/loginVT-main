@@ -22,7 +22,7 @@ TongHopDiem.prototype = {
         me.getList_KhoaDaoTao();
         me.getList_NamNhapHoc();
         me.getList_ThoiGianDaoTao();
-        me.getList_TongHopDiem();
+        //me.getList_TongHopDiem();
         me.getList_TrangThaiSV();
         edu.util.viewValById("dropSearch_ChuongTrinhDaoTao", "");
         edu.util.viewValById("dropSearch_LopQuanLy", "");
