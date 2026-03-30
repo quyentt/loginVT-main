@@ -2,6 +2,15 @@
     .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
         margin-left: 0px;
     }
+    
+    /* Style cho row sinh viên có thể click */
+    #tblSinhVien_PhamVi tbody tr.row-sinhvien:hover {
+        background-color: #f5f5f5 !important;
+    }
+    
+    #tblSinhVien_PhamVi tbody tr.row-sinhvien {
+        transition: background-color 0.2s;
+    }
 </style>
 <section class="content aps-tintuc">
     <div class="row aps-tintuc-detail">
@@ -74,6 +83,7 @@
                                     <th class="td-center">Ngày tạo</th>
                                     <th class="td-center">Người tạo</th>
                                     <th class="td-center">Phạm vi áp dụng</th>
+                                    <th class="td-center">Gửi Email</th>
                                     <th class="td-center">Duyệt</th>
                                     <th class="td-fixed td-center">Sửa</th>
                                     <!--<th class="td-center td-fixed">
@@ -189,51 +199,87 @@
             </div>
         </div>
 
-        <!-- Phạm vi áp dụng-->
+        <!-- Phạm vi áp dụng - Chọn sinh viên gửi email-->
         <div class="box box-solid zone-bus form-container add-absolue aps-phamvi" id="zonePhamVi" style="display: none">
             <div class="box-header with-border">
-                <h3 class="box-title"><span class="myModalLabel1"><i class="fa fa-plus"></i> </span> Phạm vi áp dụng</h3>
+                <h3 class="box-title"><span class="myModalLabel1"><i class="fa fa-envelope"></i> </span> Gửi email thông báo tin tức</h3>
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
             </div>
             <div class="box-body">
                 <div class="col-sm-12 box-view aps-add-new pd20">
+                    <!-- Bộ lọc tìm kiếm sinh viên -->
                     <div class="row aps-form">
                         <div class="row aps-lable">
                             <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue">Danh sách phạm vi áp dụng</span>
+                                <span class="badge bg-blue">Bộ lọc tìm kiếm sinh viên</span>
                             </p>
                         </div>
                         <div class="row">
-                            <table id="tblInput_DTSV_SinhVien" class="table mr-0 mb-10">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_HeDaoTao_PV" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KhoaDaoTao_PV" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_ChuongTrinh_PV" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_Lop_PV" class="select-opt" multiple="multiple"></select>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-sm-3 item-search">
+                                <input type="text" id="txtSearch_SinhVien_PV" class="form-control" placeholder="Nhập mã SV, họ tên...">
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a id="btnSearch_SinhVien_PV" class="btn btn-primary"><i class="fa fa-search"></i> Tìm kiếm</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Danh sách sinh viên -->
+                    <div class="row aps-form mt-20">
+                        <div class="row aps-lable">
+                            <p class="group-group-title-name border-0 mb-5">
+                                <span class="badge bg-green">Danh sách sinh viên</span>
+                                <span class="pull-right badge bg-light-blue ml-15">
+                                    <span id="lblSinhVien_Tong">0</span> sinh viên
+                                </span>
+                            </p>
+                        </div>
+                        <!-- Các nút thao tác -->
+                        <div class="row mb-10">
+                            <div class="col-sm-12">
+                                <a id="btnImportExcel_SinhVien" class="btn btn-info"><i class="fa fa-file-excel-o"></i> Import Excel để chọn sinh viên</a>
+                                <a id="btnSendEmail_Selected" class="btn btn-success pull-right"><i class="fa fa-envelope"></i> Gửi Email cho sinh viên đã chọn</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table id="tblSinhVien_PhamVi" class="table table-hover table-bordered mr-0 mb-10">
                                 <thead>
                                     <tr>
-                                        <td class="td-fixed td-center">Stt</td>
-                                        <td class="td-center">Phân cấp áp dụng</td>
-                                        <td class="td-center">Tên phạm vi</td>
-                                        <td class="td-center">Trạng thái sinh viên áp dụng</td>
-                                        <td class="td-center">Ngày tạo</td>
+                                        <th class="td-fixed td-center">Stt</th>
+                                        <th class="td-center">Mã SV</th>
+                                        <th class="td-center">Họ tên</th>
+                                        <th class="td-center">Email</th>
+                                        <th class="td-center">Lớp</th>
+                                        <th class="td-center">Khóa</th>
+                                        <th class="td-center">Hệ</th>
+                                        <th class="td-center">Trạng thái</th>
                                         <th class="td-center td-fixed">
                                             <input type="checkbox" id="chkSelectAll_SinhVien">
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="9" class="text-center">Vui lòng chọn bộ lọc và click "Tìm kiếm" để tải danh sách sinh viên</td>
+                                    </tr>
+                                </tbody>
                             </table>
-                        </div>
-                        <div class="row">
-                            <div class="pull-left">
-                                <div id="ApDungChoHe"></div>
-                                <div id="ApDungChoKhoa"></div>
-                                <div id="ApDungChoChuongTrinh"></div>
-                                <div id="ApDungChoLop"></div>
-                            </div>
-                            <div class="pull-right">
-                                <div class="group-title-name">
-                                    <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id=""><i class="fa fa-plus color-active"></i> Thêm thành viên</a>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -241,17 +287,217 @@
             <div class="box-footer">
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
-                    <a id="btnSave_PhamVi" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal Gửi Email -->
+        <div class="box box-solid zone-bus form-container add-absolue" id="zoneSendEmail" style="display: none">
+            <div class="box-header with-border">
+                <h3 class="box-title"><i class="fa fa-envelope"></i> Gửi Email Thông Báo Tin Tức</h3>
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body">
+                <div class="col-sm-12 box-view aps-add-new pd20">
+                    <!-- Thông tin tin tức -->
+                    <div class="row aps-form">
+                        <div class="row aps-lable">
+                            <p class="group-group-title-name border-0 mb-5">
+                                <span class="badge bg-blue">Thông tin tin tức</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="alert alert-info">
+                                    <strong>Tiêu đề:</strong> <span id="lblEmailTieuDe"></span><br>
+                                    <strong>Chuyên mục:</strong> <span id="lblEmailChuyenMuc"></span><br>
+                                    <strong>Ngày đăng:</strong> <span id="lblEmailNgayDang"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bộ lọc sinh viên -->
+                    <div class="row aps-form mt-20">
+                        <div class="row aps-lable">
+                            <p class="group-group-title-name border-0 mb-5">
+                                <span class="badge bg-green">Chọn đối tượng nhận email</span>
+                            </p>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSendEmail_HeDaoTao" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSendEmail_KhoaDaoTao" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSendEmail_ChuongTrinh" class="select-opt" multiple="multiple"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSendEmail_Lop" class="select-opt" multiple="multiple"></select>
+                            </div>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-sm-3 item-search">
+                                <input type="text" id="txtSendEmail_Search" class="form-control" placeholder="Nhập mã SV, họ tên...">
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <a id="btnSendEmail_Search" class="btn btn-primary"><i class="fa fa-search"></i> Tìm kiếm</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Danh sách sinh viên -->
+                    <div class="row aps-form mt-20">
+                        <div class="row aps-lable">
+                            <p class="group-group-title-name border-0 mb-5">
+                                <span class="badge bg-orange">Danh sách sinh viên</span>
+                                <span class="pull-right badge bg-light-blue ml-15">
+                                    Đã chọn: <span id="lblSoLuongSinhVien">0</span> sinh viên
+                                </span>
+                            </p>
+                        </div>
+                        <!-- Các nút thao tác -->
+                        <div class="row mb-10">
+                            <div class="col-sm-12">
+                                <a id="btnSendEmail_ImportExcel" class="btn btn-info"><i class="fa fa-file-excel-o"></i> Import Excel</a>
+                                <a id="btnSendEmail_SelectAll" class="btn btn-default"><i class="fa fa-check-square-o"></i> Chọn tất cả</a>
+                                <a id="btnSendEmail_UnselectAll" class="btn btn-default"><i class="fa fa-square-o"></i> Bỏ chọn tất cả</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table id="tblSendEmail_SinhVien" class="table table-hover table-bordered mr-0 mb-10">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed td-center">Stt</th>
+                                        <th class="td-center">Mã SV</th>
+                                        <th class="td-center">Họ tên</th>
+                                        <th class="td-center">Email</th>
+                                        <th class="td-center">Lớp</th>
+                                        <th class="td-center">Khóa</th>
+                                        <th class="td-center">Hệ</th>
+                                        <th class="td-center">Trạng thái</th>
+                                        <th class="td-center td-fixed">
+                                            <input type="checkbox" id="chkSendEmail_SelectAll">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="9" class="text-center">Vui lòng chọn bộ lọc và click "Tìm kiếm"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
+                    <a id="btnConfirmSendEmail" class="btn btn-success"><i class="fa fa-envelope"></i> Gửi Email</a>
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+<!-- Modal Import Excel -->
+<div class="modal fade" id="modalImportExcel_SinhVien" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-file-excel-o"></i> Import Excel để chọn sinh viên</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="alert alert-info">
+                            <strong>Hướng dẫn:</strong>
+                            <ul>
+                                <li>File Excel cần có cột <strong>Email</strong> hoặc <strong>MaSV</strong></li>
+                                <li>Hệ thống sẽ tự động check sinh viên có trong danh sách</li>
+                                <li>Định dạng: .xlsx, .xls, .csv</li>
+                                <li>Có thể kéo thả file vào vùng bên dưới</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>Chọn file Excel hoặc CSV:</label>
+                        <div id="dropZone_ImportExcel" style="border: 2px dashed #ccc; border-radius: 5px; padding: 30px; text-align: center; background-color: #f9f9f9; cursor: pointer; transition: all 0.3s;">
+                            <i class="fa fa-cloud-upload" style="font-size: 48px; color: #999; margin-bottom: 10px;"></i>
+                            <p style="margin: 10px 0; color: #666;">Kéo thả file vào đây hoặc click để chọn file</p>
+                            <p style="margin: 5px 0; font-size: 12px; color: #999;">Hỗ trợ: .xlsx, .xls, .csv</p>
+                            <input type="file" id="fileImportExcel_SinhVien" class="form-control" accept=".xlsx,.xls,.csv" style="display: none;" />
+                        </div>
+                        <div id="selectedFileName" style="margin-top: 10px; color: #0066cc; font-weight: bold;"></div>
+                    </div>
+                </div>
+                <div class="row mt-10">
+                    <div class="col-sm-12">
+                        <div id="importResult" style="display:none;" class="alert"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a id="btnDownloadTemplate_SinhVien" class="btn btn-default pull-left"><i class="fa fa-download"></i> Tải file mẫu</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+                <a id="btnProcessImport_SinhVien" class="btn btn-primary"><i class="fa fa-check"></i> Xử lý Import</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- aps-modal_nhansu -->
 <div class="modal fade aps-modal_nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- load from js -->
 </div>
-<script src="modules/kehoach/script/tintuc.js?v=1.0.0.0"></script>
+<!-- Thư viện XLSX để đọc file Excel - Thử nhiều CDN -->
+<script>
+    // Hàm load XLSX từ nhiều nguồn
+    (function loadXLSX() {
+        var cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        ];
+        
+        var currentIndex = 0;
+        
+        function tryLoadScript() {
+            if (currentIndex >= cdnList.length) {
+                console.error('Failed to load XLSX from all CDN sources');
+                alert('Không thể tải thư viện XLSX. Vui lòng kiểm tra kết nối mạng!');
+                return;
+            }
+            
+            var script = document.createElement('script');
+            script.src = cdnList[currentIndex];
+            script.crossOrigin = 'anonymous';
+            
+            script.onload = function() {
+                console.log('XLSX loaded successfully from: ' + cdnList[currentIndex]);
+            };
+            
+            script.onerror = function() {
+                console.warn('Failed to load XLSX from: ' + cdnList[currentIndex]);
+                currentIndex++;
+                tryLoadScript();
+            };
+            
+            document.head.appendChild(script);
+        }
+        
+        tryLoadScript();
+    })();
+</script>
+<script src="modules/kehoach/script/tintuc.js?v=1.0.0.1"></script>
 <script>
 
     CKEDITOR.replace('ckeditor', {

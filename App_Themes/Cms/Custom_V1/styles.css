@@ -5195,10 +5195,12 @@
  .zoneHTSinhVien .register-school-right .tab-content .table>thead>tr:first-child>th:last-child {
      border-right: 0 solid #e1e1e1 !important;
  }
- .zoneHTSinhVien .register-school-right .tab-content .table>tfoot>tr td ,
+
+ .zoneHTSinhVien .register-school-right .tab-content .table>tfoot>tr td,
  .zoneHTSinhVien .register-school-right .tab-content .table>tfoot>tr {
      border: 0 solid #e1e1e1 !important;
  }
+
  .zoneHTSinhVien .register-school-right .tab-content .table thead th {
      font-weight: 400;
  }
@@ -5208,16 +5210,33 @@
      -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
      box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
  }
+
  .zoneHTSinhVien .register-school-right .accordion.transcrip-accordion {
-    border-bottom: 1px solid #e1e1e1;
-}
-#viewThanhPhan thead tr th{
-    font-weight: 400;
-}
-#viewThanhPhan tbody tr td{
-    border-left: 0 !important;
-    border-right: 0 !important;
-}
-#viewThanhPhan  .table tr:last-child {
-    border-right:0px solid #d1d1d1 !important;
-}
+     border-bottom: 1px solid #e1e1e1;
+ }
+
+ .aps-lichgiangkhoa .aps-table-select .title-is-paging {
+     margin-top: 0px;
+     padding-bottom: 0;
+ }
+
+ #btnLuuPheDuyet,
+ #btnLuuPheDuyet2 {
+     min-width: 115px;
+ }
+
+ #btnSearchToanBo {
+     min-width: 135px !important;
+ }
+
+ #btnSearch {
+     min-width: 88px !important;
+ }
+
+ .aps-lichhoc .register-school-right,
+ .aps-lichgiangphonghoc .register-school-right {
+     padding-left: 0 !important;
+ }
+ .search-bar-info .info-item{
+    font-size: 14px !important;
+ }
