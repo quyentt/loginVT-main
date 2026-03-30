@@ -5240,3 +5240,6 @@
  .search-bar-info .info-item{
     font-size: 14px !important;
  }
+ .box-search #btnSearch {
+    min-width: 110px !important;
+}

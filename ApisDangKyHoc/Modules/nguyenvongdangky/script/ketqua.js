@@ -539,9 +539,13 @@ KetQua.prototype = {
                     if (edu.util.checkValue(data.Data)) {
                         dtResult = data.Data;
                     }
+<<<<<<< HEAD
                     // Lưu toàn bộ data để phân trang client-side
                     me.dtThongKeHocPhan_Full = dtResult;
                     me.genTable_ThongKeHocPhan(dtResult, dtResult.length);
+=======
+                    me.genTable_ThongKeHocPhan(dtResult);
+>>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
                 }
                 else {
                     edu.system.alert(obj_list.action + ": " + data.Message, "w");
@@ -560,10 +564,17 @@ KetQua.prototype = {
         }, false, false, false, null);
     },
 
+<<<<<<< HEAD
     genTable_ThongKeHocPhan: function (data, iPager) {
         var me = this;
         
         // Tính tổng số sinh viên từ toàn bộ data
+=======
+    genTable_ThongKeHocPhan: function (data) {
+        var me = this;
+        
+        // Tính tổng số sinh viên
+>>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
         var tongSoSV = 0;
         if (data && data.length > 0) {
             data.forEach(function(item) {
@@ -574,6 +585,7 @@ KetQua.prototype = {
         // Hiển thị tổng số SV
         $("#lblTongSoSV").html(tongSoSV);
         
+<<<<<<< HEAD
         // Tạo bảng với framework có sẵn
         var jsonForm = {
             strTable_Id: "tblThongKeHocPhan",
@@ -581,6 +593,12 @@ KetQua.prototype = {
             bPaginate: {
                 iDataRow: data.length,
             },
+=======
+        // Tạo bảng
+        var jsonForm = {
+            strTable_Id: "tblThongKeHocPhan",
+            aaData: data,
+>>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
             colPos: {
                 center: [0, 3, 4],
             },
