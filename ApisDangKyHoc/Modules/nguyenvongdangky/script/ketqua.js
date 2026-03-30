@@ -47,6 +47,15 @@ KetQua.prototype = {
             me.getList_HocPhan();
             me.cbGetList_KieuHoc();
         });
+        $("#btnThongKeHocPhan").click(function () {
+            var strKeHoach_Id = edu.util.getValById('dropSearch_KeHoach');
+            if (!strKeHoach_Id) {
+                edu.system.alert("Vui lòng chọn kế hoạch đăng ký!");
+                return;
+            }
+            $("#modalThongKeHocPhan").modal("show");
+            me.getList_ThongKeHocPhan();
+        });
         edu.system.getList_MauImport("zonebtnBaoCao_NguyenVong", function (addKeyValue) {
             var obj_list = {
                 'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
@@ -506,5 +515,88 @@ KetQua.prototype = {
             title: "Chọn kế hoạch",
         }
         edu.system.loadToCombo_data(obj);
+    },
+
+    /*------------------------------------------
+    --Discription: Thống kê theo học phần
+    --Author: Custom
+    -------------------------------------------*/
+    getList_ThongKeHocPhan: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'DKH_NguyenVong_MH/DSA4BRIJLiIRKSAvFSkkLgokCS4gIikP',
+            'func': 'PKG_DANGKY_NGUYENVONG.LayDSHocPhanTheoKeHoach',
+            'iM': edu.system.iM,
+            'strKeHoachNguyenVong_Id': edu.util.getValById('dropSearch_KeHoach'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = [];
+                    if (edu.util.checkValue(data.Data)) {
+                        dtResult = data.Data;
+                    }
+                    me.genTable_ThongKeHocPhan(dtResult);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+                edu.system.endLoading();
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+                edu.system.endLoading();
+            },
+            type: "POST",
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genTable_ThongKeHocPhan: function (data) {
+        var me = this;
+        
+        // Tính tổng số sinh viên
+        var tongSoSV = 0;
+        if (data && data.length > 0) {
+            data.forEach(function(item) {
+                tongSoSV += parseInt(item.SOSV || 0);
+            });
+        }
+        
+        // Hiển thị tổng số SV
+        $("#lblTongSoSV").html(tongSoSV);
+        
+        // Tạo bảng
+        var jsonForm = {
+            strTable_Id: "tblThongKeHocPhan",
+            aaData: data,
+            colPos: {
+                center: [0, 3, 4],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "TEN"
+                },
+                {
+                    "mDataProp": "MA"
+                },
+                {
+                    "mDataProp": "HOCTRINH"
+                },
+                {
+                    "mDataProp": "SOSV",
+                    "mRender": function (nRow, aData) {
+                        return '<span class="badge bg-blue">' + edu.util.returnEmpty(aData.SOSV) + '</span>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
     },
 }
