@@ -43,8 +43,8 @@
 
     /* Filter Section */
     .filter-section {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        display: flex;
+        flex-wrap: wrap;
         gap: 15px;
         margin-bottom: 20px;
     }
@@ -53,6 +53,8 @@
         display: flex;
         flex-direction: column;
         gap: 5px;
+        flex: 1;
+        min-width: 250px;
     }
 
     .filter-group label {
@@ -67,6 +69,7 @@
         border: 1px solid #ddd;
         border-radius: 4px;
         font-size: 13px;
+        width: 100%;
     }
 
     /* Action Buttons */
@@ -90,7 +93,8 @@
     .table-container {
         overflow-x: auto;
         overflow-y: auto;
-        max-height: calc(100vh - 450px);
+        max-height: calc(100vh - 180px);
+        min-height: 650px;
         position: relative;
         border: 1px solid #ddd;
         border-radius: 8px;
@@ -393,18 +397,25 @@
     /* Responsive */
     @media (max-width: 768px) {
         .filter-section {
-            grid-template-columns: 1fr;
+            flex-direction: column;
         }
 
-        .grid-header-cell,
-        .grid-cell {
-            min-width: 100px;
+        .filter-group {
+            min-width: 100%;
+        }
+
+        #tblPhanQuyenDuLieu {
             font-size: 11px;
-            padding: 8px 4px;
         }
 
-        .grid-header-cell:first-child,
-        .grid-cell:first-child {
+        #tblPhanQuyenDuLieu thead th,
+        #tblPhanQuyenDuLieu tbody td {
+            padding: 8px 6px;
+            min-width: 100px;
+        }
+
+        #tblPhanQuyenDuLieu thead th:first-child,
+        #tblPhanQuyenDuLieu tbody td:first-child {
             min-width: 150px;
         }
 
@@ -412,6 +423,28 @@
             width: 30px;
             height: 30px;
             font-size: 12px;
+        }
+        
+        .table-container {
+            max-height: calc(100vh - 350px);
+            min-height: 400px;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .filter-group label {
+            font-size: 12px;
+        }
+        
+        .filter-group select,
+        .filter-group input {
+            font-size: 12px;
+            padding: 6px 10px;
+        }
+        
+        .btn {
+            font-size: 11px;
+            padding: 6px 10px;
         }
     }
 </style>
@@ -426,8 +459,8 @@
         </p>
     </div>
 
-    <!-- Header -->
-    <div class="permission-header">
+    <!-- Header - HIDDEN -->
+    <div class="permission-header" style="display: none;">
         <h3>
             <i class="fa-solid fa-shield-halved"></i>
             Quản trị quyền dữ liệu theo Cán bộ
@@ -435,13 +468,13 @@
         <p>Phân quyền truy cập dữ liệu cụ thể cho từng cán bộ - Giao diện dạng lưới trực quan</p>
     </div>
 
-    <!-- Stats Bar -->
-    <div class="stats-bar">
+    <!-- Stats Bar - HIDDEN -->
+    <div class="stats-bar" style="display: none;">
         <div class="stat-item">
             <i class="fa-solid fa-user-tie"></i>
             <div>
-                <div class="stat-value" id="totalUsers">0</div>
-                <div class="stat-label">Tổng Cán bộ</div>
+                <div class="stat-value" id="lblSoLuongNhanSu">0</div>
+                <div class="stat-label">Tổng Nhân sự</div>
             </div>
         </div>
         <div class="stat-item">
@@ -460,11 +493,23 @@
         </div>
     </div>
 
-    <!-- Legend -->
-    <div class="legend">
+    <!-- Legend - HIDDEN -->
+    <div class="legend" style="display: none;">
         <div class="legend-item">
             <i class="fa-solid fa-info-circle" style="color: #ffc107;"></i>
-            <span><strong>Lưu ý:</strong> Chỉ hiển thị cán bộ (không bao gồm sinh viên). Tick checkbox để gán quyền dữ liệu. Chọn function cụ thể hoặc để trống (áp dụng cho tất cả function)</span>
+            <span><strong>Lưu ý:</strong> Chỉ hiển thị nhân sự/cán bộ (không bao gồm sinh viên). Click "Xem chi tiết" để gán quyền dữ liệu cho từng chiều.</span>
+        </div>
+    </div>
+    
+    <!-- Calendar - HIDDEN -->
+    <div style="display: none;">
+        <div class="calendar-header">
+            <button id="btnPrevMonth" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-angle-left"></i></button>
+            <span id="thang">Tháng</span> <span id="nam">Năm</span>
+            <button id="btnNextMonth" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-angle-right"></i></button>
+        </div>
+        <div class="calendar-body">
+            <ul class="days"></ul>
         </div>
     </div>
 
@@ -472,8 +517,11 @@
     <div class="box-shadow">
         <div class="filter-section">
             <div class="filter-group">
-                <label><i class="fa-solid fa-search"></i> Tìm kiếm Cán bộ</label>
-                <input type="text" id="txtSearchUser" class="form-control" placeholder="Nhập tên, mã cán bộ...">
+                <label><i class="fa-solid fa-search"></i> Tìm kiếm Nhân sự</label>
+                <div style="position: relative;">
+                    <input type="text" id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập tên, mã nhân sự... (tự động tìm kiếm)" style="padding-right: 35px;">
+                    <i class="fa-solid fa-search" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #999; pointer-events: none;"></i>
+                </div>
             </div>
             <div class="filter-group">
                 <label><i class="fa-solid fa-building"></i> Khoa/Đơn vị</label>
@@ -481,38 +529,12 @@
                     <option value="">-- Tất cả --</option>
                 </select>
             </div>
-            <div class="filter-group">
-                <label><i class="fa-solid fa-user-tag"></i> Chức vụ</label>
-                <select id="ddlChucVu" class="form-select">
-                    <option value="">-- Tất cả --</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label><i class="fa-solid fa-toggle-on"></i> Trạng thái</label>
-                <select id="ddlTrangThai" class="form-select">
-                    <option value="">-- Tất cả --</option>
-                    <option value="1">Đang làm việc</option>
-                    <option value="0">Nghỉ việc</option>
-                </select>
-            </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="action-buttons">
+        <!-- Action Buttons - HIDDEN -->
+        <div class="action-buttons" style="display: none;">
             <button class="btn btn-primary" id="btnSearch">
                 <i class="fa-solid fa-search"></i> Tìm kiếm
-            </button>
-            <button class="btn btn-success" id="btnSavePermissions">
-                <i class="fa-solid fa-save"></i> Lưu phân quyền
-            </button>
-            <button class="btn btn-warning" id="btnSelectAll">
-                <i class="fa-solid fa-check-double"></i> Chọn tất cả
-            </button>
-            <button class="btn btn-secondary" id="btnDeselectAll">
-                <i class="fa-solid fa-times"></i> Bỏ chọn tất cả
-            </button>
-            <button class="btn btn-info" id="btnExport">
-                <i class="fa-solid fa-file-excel"></i> Xuất Excel
             </button>
         </div>
     </div>
@@ -527,28 +549,7 @@
         </div>
 
         <!-- Pagination -->
-        <div class="pagination-container">
-            <div class="pagination-info">
-                Hiển thị <strong id="recordFrom">0</strong> - <strong id="recordTo">0</strong> / <strong id="totalRecords">0</strong> bản ghi
-            </div>
-            
-            <div class="pagination-controls">
-                <div class="page-size-selector">
-                    <label>Hiển thị:</label>
-                    <select id="ddlPageSize" class="form-select">
-                        <option value="10">10</option>
-                        <option value="20" selected>20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                    </select>
-                </div>
-                
-                <div class="pagination-buttons" id="paginationButtons">
-                    <!-- Buttons sẽ được render bởi JS -->
-                </div>
-            </div>
-        </div>
+        <div id="paginationContainer"></div>
     </div>
 
     <!-- Loading Overlay -->
@@ -560,11 +561,11 @@
     </div>
 </div>
 
-<script src="modules/phanquyen/script/quantriquyendulieu.js?v=1.0.0.0"></script>
+<script src="modules/phanquyen/script/quantriquyendulieu.js?v=1.0.0.1"></script>
 <script type="text/javascript">
     var main_doc = {};
-    main_doc['QuanTriQuyenDuLieu'] = new QuanTriQuyenDuLieu();
+    main_doc['PhanQuyenDuLieuNhanSu'] = new PhanQuyenDuLieuNhanSu();
     $(document).ready(function () {
-        main_doc.QuanTriQuyenDuLieu.init();
+        main_doc.PhanQuyenDuLieuNhanSu.init();
     });
 </script>
