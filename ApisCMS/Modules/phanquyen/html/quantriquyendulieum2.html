@@ -211,7 +211,8 @@
     .table-container {
         overflow-x: auto;
         overflow-y: auto;
-        max-height: calc(100vh - 300px);
+        max-height: calc(100vh - 250px);
+        min-height: 600px;
         position: relative;
     }
 
@@ -318,7 +319,7 @@
     <!-- Top Section: Search Bar + Calendar -->
     <div class="row mb-3">
         <!-- Search Bar - Left Side -->
-        <div class="col-12 col-lg-7 mb-3 mb-lg-0">
+        <div class="col-12 col-lg-12 mb-3 mb-lg-0">
             <div class="box-shadow">
                 <div class="search-bar-section">
                     <div class="search-bar-header">
@@ -332,7 +333,7 @@
                     <div class="search-bar-info">
                         <div class="info-item">
                             <i class="fa-solid fa-users-cog text-primary"></i>
-                            <span>Quản lý quyền truy cập theo 31 vai trò hệ thống</span>
+                            <span>Quản lý quyền truy cập theo <strong id="lblSoLuongVaiTro">0</strong> vai trò hệ thống</span>
                         </div>
                         <div class="info-item">
                             <i class="fa-solid fa-database text-success"></i>
@@ -359,8 +360,8 @@
             </div>
         </div>
 
-        <!-- Calendar - Right Side -->
-        <div class="col-12 col-lg-5">
+        <!-- Calendar - Right Side - HIDDEN -->
+        <div class="col-12 col-lg-5" style="display: none;">
             <div class="box-shadow p-0">
                 <div class="calendar-compact">
                     <div class="calendar-header">
@@ -396,7 +397,8 @@
     <div class="row">
         <div class="col-12">
             <div class="box-shadow">
-                <div style="margin-bottom: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3; border-radius: 4px;">
+                <!-- Info box - HIDDEN -->
+                <div style="display: none; margin-bottom: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3; border-radius: 4px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <i class="fa-solid fa-info-circle" style="color: #2196f3; font-size: 18px;"></i>
                         <div>

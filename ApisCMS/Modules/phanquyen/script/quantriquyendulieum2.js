@@ -475,7 +475,7 @@ PhanQuyenDuLieuM2.prototype = {
         
         // Tạo HTML cho modal
         var modalHtml = '';
-        modalHtml += '<div id="modalChiTiet" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">';
+        modalHtml += '<div id="modalChiTiet" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">';
         modalHtml += '<div style="background: white; border-radius: 8px; width: 90%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">';
         
         // Header
@@ -595,7 +595,7 @@ PhanQuyenDuLieuM2.prototype = {
         
         // Tạo popup với loading
         var popupHtml = '';
-        popupHtml += '<div id="popupScopeMode" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 10000; display: flex; align-items: center; justify-content: center;">';
+        popupHtml += '<div id="popupScopeMode" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1050; display: flex; align-items: center; justify-content: center;">';
         popupHtml += '<div style="background: white; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">';
         
         // Header
