@@ -118,12 +118,26 @@ LichGiangNhieuPhong.prototype = {
 
     // Update statistics display
     updateStats: function(totalRooms, totalSchedules) {
+<<<<<<< HEAD
+        // Removed - no longer displaying stats
+=======
+<<<<<<< HEAD
+        // Removed - no longer displaying stats
+=======
         $("#totalRoomsDisplay").text(totalRooms + " phòng");
         $("#totalSchedulesDisplay").text(totalSchedules + " lịch");
+>>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
+>>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
     },
 
     // Update statistics with TOTAL count (not paginated count)
     updateStatsTotal: function() {
+<<<<<<< HEAD
+        // Removed - no longer displaying stats
+=======
+<<<<<<< HEAD
+        // Removed - no longer displaying stats
+=======
         var me = this;
         
         // Load tất cả lịch để tính tổng
@@ -142,6 +156,8 @@ LichGiangNhieuPhong.prototype = {
                 }
             });
         });
+>>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
+>>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
     },
 
     init: function () {
@@ -201,19 +217,49 @@ LichGiangNhieuPhong.prototype = {
 
         // Search button
         $("#btnSearch").click(function () {
-            me.strSelectedBuilding = edu.util.getValById("dropSearch_ToaNha");
-            if (me.strSelectedBuilding) {
+            var hasFilter = $("#dropSearch_ToaNha").val() || $("#dropSearch_PhongHoc").val();
+            if (hasFilter) {
                 $(".days .active").trigger("click");
             } else {
-                edu.system.alert("Vui lòng chọn phòng học");
+                edu.system.alert("Vui lòng chọn tòa nhà hoặc phòng học");
             }
         });
 
         // View all button
         $("#btnViewAll").click(function () {
-            me.strSelectedBuilding = '';
             $("#dropSearch_ToaNha").val('').trigger('change');
+            $("#dropSearch_PhongHoc").val('').trigger('change');
             $(".days .active").trigger("click");
+        });
+
+        // Building filter change
+        $("#dropSearch_ToaNha").change(function () {
+            var toaNhaId = $(this).val();
+            console.log("Tòa nhà filter changed to:", toaNhaId);
+            
+            // Đóng dropdown Select2
+            $(this).select2('close');
+            
+            // Reload phòng học dropdown theo tòa nhà được chọn
+            me.loadPhongHocByToaNha(toaNhaId);
+            
+            // Auto load data if week is selected
+            if (me.strNgayBatDau && me.strNgayKetThuc) {
+                me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+            }
+        });
+
+        // Room filter change
+        $("#dropSearch_PhongHoc").change(function () {
+            console.log("Phòng học filter changed to:", $(this).val());
+            
+            // Đóng dropdown Select2
+            $(this).select2('close');
+            
+            // Auto load data if week is selected
+            if (me.strNgayBatDau && me.strNgayKetThuc) {
+                me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+            }
         });
 
         // Room type filter change
@@ -347,7 +393,6 @@ LichGiangNhieuPhong.prototype = {
         me.getList_PhongHoc(function() {
             if (me.dtPhongHocFull.length === 0) {
                 $("#scheduleGrid").html('<div style="padding: 40px; text-align: center; grid-column: 1/-1;">Không có dữ liệu phòng học</div>');
-                me.updateStats(0, 0);
                 return;
             }
             
@@ -358,8 +403,6 @@ LichGiangNhieuPhong.prototype = {
             
             me.loadSchedulesForPage(me.dtPhongHoc, function() {
                 me.genTable_ThongTin(me.dtLichHoc, null);
-                // Cập nhật stat với TỔNG SỐ (không phải số hiển thị)
-                me.updateStatsTotal();
             });
         });
     },
@@ -550,11 +593,6 @@ LichGiangNhieuPhong.prototype = {
 
         $("#scheduleGrid").append(html);
         
-        // Update stats display
-        var totalSchedules = me.dtLichHoc.length;
-        $('#totalRoomsDisplay').text(me.dtPhongHoc.length + ' phòng');
-        $('#totalSchedulesDisplay').text(totalSchedules + ' lịch');
-        
         // Add scroll notice if more rooms available
         if (me.dtPhongHoc.length < me.dtPhongHocFull.length) {
             var remaining = me.dtPhongHocFull.length - me.dtPhongHoc.length;
@@ -565,27 +603,40 @@ LichGiangNhieuPhong.prototype = {
     getList_PhongHoc: function (callback) {
         var me = this;
         
+        var strToaNha_Id = $("#dropSearch_ToaNha").val() || '';
+        
+        console.log("=== Calling getList_PhongHoc ===");
+        console.log("Tòa nhà ID:", strToaNha_Id);
+        
         var obj_save = {
             'action': 'NS_ThongTinCanBo_MH/DSA4BRIRKS4vJgkuIgPP',
             'func': 'pkg_congthongtincanbo.LayDSPhongHoc',
             'iM': edu.system.iM,
             'strNguoiThucHien_Id': edu.system.userId,
+            'strTKB_ToaNha_Id': strToaNha_Id, // Tham số lọc theo tòa nhà
         };
+
+        console.log("Request:", obj_save);
 
         edu.system.makeRequest({
             success: function (data) {
+                console.log("Response getList_PhongHoc:", data);
+                
                 if (data.Success) {
                     // Lưu bản gốc
                     me.dtPhongHocOriginal = data.Data || [];
                     
+                    console.log("Số phòng từ API:", me.dtPhongHocOriginal.length);
+                    
                     // Bắt đầu từ bản gốc để filter
                     me.dtPhongHocFull = me.dtPhongHocOriginal.slice();
                     
-                    // Apply room filter if selected
-                    if (me.strSelectedBuilding) {
-                        console.log("Lọc theo phòng ID:", me.strSelectedBuilding);
+                    // Apply room filter if selected (lọc theo phòng cụ thể)
+                    var strPhongHoc_Id = $("#dropSearch_PhongHoc").val() || '';
+                    if (strPhongHoc_Id) {
+                        console.log("Lọc theo phòng ID:", strPhongHoc_Id);
                         me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
-                            return room.ID === me.strSelectedBuilding;
+                            return room.ID === strPhongHoc_Id;
                         });
                         console.log("Sau khi lọc phòng:", me.dtPhongHocFull.length, "phòng");
                     }
@@ -607,7 +658,14 @@ LichGiangNhieuPhong.prototype = {
                     }
                     
                     if (typeof callback === 'function') callback();
+                } else {
+                    console.error("API failed:", data.Message);
+                    if (typeof callback === 'function') callback();
                 }
+            },
+            error: function(err) {
+                console.error("API error:", err);
+                if (typeof callback === 'function') callback();
             },
             type: 'POST',
             action: obj_save.action,
@@ -647,36 +705,36 @@ LichGiangNhieuPhong.prototype = {
     getList_ToaNha: function () {
         var me = this;
         
+        console.log("=== Calling getList_ToaNha ===");
+        
         var obj_save = {
-            'action': 'NS_ThongTinCanBo_MH/DSA4BRIRKS4vJgkuIgPP',
-            'func': 'pkg_congthongtincanbo.LayDSPhongHoc',
+            'action': 'NS_ThongTinCanBo_MH/DSA4BRIVLiAPKSAP',
+            'func': 'PKG_CONGTHONGTINCANBO.LayDSToaNha',
             'iM': edu.system.iM,
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
+        console.log("Request:", obj_save);
+
         edu.system.makeRequest({
             success: function (data) {
+                console.log("Response getList_ToaNha:", data);
+                
                 if (data.Success) {
-                    var rooms = data.Data || [];
+                    var buildings = data.Data || [];
                     
-                    console.log("Tổng số phòng học:", rooms.length);
+                    console.log("Tổng số tòa nhà:", buildings.length);
+                    console.log("Danh sách tòa nhà:", buildings);
                     
-                    // Convert rooms to dropdown format
-                    var roomList = rooms.map(function(room) {
-                        return {
-                            ID: room.ID,
-                            TEN: room.TEN || room.TENPHONGHOC || room.MA || 'Phòng ' + room.ID
-                        };
-                    });
-                    
-                    // Sort by name
-                    roomList.sort(function(a, b) {
-                        return a.TEN.localeCompare(b.TEN);
-                    });
-                    
-                    me.dtToaNha = roomList;
-                    me.genCombo_ToaNha(roomList);
+                    me.dtToaNha = buildings;
+                    me.genCombo_ToaNha(buildings);
+                    me.genCombo_PhongHoc(); // Load danh sách phòng sau khi có tòa nhà
+                } else {
+                    console.error("API failed:", data.Message);
                 }
+            },
+            error: function(err) {
+                console.error("API error:", err);
             },
             type: 'POST',
             action: obj_save.action,
@@ -691,16 +749,151 @@ LichGiangNhieuPhong.prototype = {
             renderInfor: {
                 id: "ID",
                 parentId: "",
-                name: "TEN",
+                name: "TENTOANHA",
             },
             renderPlace: ["dropSearch_ToaNha"],
-            title: "Chọn phòng học"
+            title: "Tất cả tòa nhà"
         };
         edu.system.loadToCombo_data(obj);
         $("#dropSearch_ToaNha").select2({
-            placeholder: "Tìm kiếm phòng học...",
+            placeholder: "Chọn tòa nhà...",
             allowClear: true
         });
+    },
+
+    genCombo_PhongHoc: function () {
+        var me = this;
+        
+        console.log("=== Calling genCombo_PhongHoc ===");
+        
+        // Load tất cả phòng để hiển thị trong dropdown
+        var obj_save = {
+            'action': 'NS_ThongTinCanBo_MH/DSA4BRIRKS4vJgkuIgPP',
+            'func': 'pkg_congthongtincanbo.LayDSPhongHoc',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        console.log("Request:", obj_save);
+
+        edu.system.makeRequest({
+            success: function (data) {
+                console.log("Response genCombo_PhongHoc:", data);
+                
+                if (data.Success) {
+                    var rooms = data.Data || [];
+                    
+                    console.log("Tổng số phòng học:", rooms.length);
+                    console.log("Sample room:", rooms[0]);
+                    
+                    // Convert rooms to dropdown format
+                    var roomList = rooms.map(function(room) {
+                        return {
+                            ID: room.ID,
+                            TEN: room.TEN || room.TENPHONGHOC || room.MA || 'Phòng ' + room.ID,
+                            TOANHA_ID: room.TOANHA_ID || room.TKB_TOANHA_ID
+                        };
+                    });
+                    
+                    // Sort by name
+                    roomList.sort(function(a, b) {
+                        return a.TEN.localeCompare(b.TEN);
+                    });
+                    
+                    me.dtPhongHocList = roomList;
+                    
+                    var obj = {
+                        data: roomList,
+                        renderInfor: {
+                            id: "ID",
+                            parentId: "",
+                            name: "TEN",
+                        },
+                        renderPlace: ["dropSearch_PhongHoc"],
+                        title: "Tìm kiếm phòng học..."
+                    };
+                    edu.system.loadToCombo_data(obj);
+                    $("#dropSearch_PhongHoc").select2({
+                        placeholder: "Tìm kiếm phòng học...",
+                        allowClear: true
+                    });
+                } else {
+                    console.error("API failed:", data.Message);
+                }
+            },
+            error: function(err) {
+                console.error("API error:", err);
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+        }, false, false, false, null);
+    },
+
+    loadPhongHocByToaNha: function (toaNhaId) {
+        var me = this;
+        
+        console.log("=== Loading phòng học by tòa nhà:", toaNhaId);
+        
+        // Gọi API với tham số tòa nhà
+        var obj_save = {
+            'action': 'NS_ThongTinCanBo_MH/DSA4BRIRKS4vJgkuIgPP',
+            'func': 'pkg_congthongtincanbo.LayDSPhongHoc',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strTKB_ToaNha_Id': toaNhaId || '', // Truyền tòa nhà ID
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var rooms = data.Data || [];
+                    
+                    console.log("Số phòng theo tòa nhà:", rooms.length);
+                    
+                    // Convert rooms to dropdown format
+                    var roomList = rooms.map(function(room) {
+                        return {
+                            ID: room.ID,
+                            TEN: room.TEN || room.TENPHONGHOC || room.MA || 'Phòng ' + room.ID,
+                        };
+                    });
+                    
+                    // Sort by name
+                    roomList.sort(function(a, b) {
+                        return a.TEN.localeCompare(b.TEN);
+                    });
+                    
+                    // Update dropdown
+                    var obj = {
+                        data: roomList,
+                        renderInfor: {
+                            id: "ID",
+                            parentId: "",
+                            name: "TEN",
+                        },
+                        renderPlace: ["dropSearch_PhongHoc"],
+                        title: "Tìm kiếm phòng học..."
+                    };
+                    edu.system.loadToCombo_data(obj);
+                    $("#dropSearch_PhongHoc").val('').trigger('change'); // Reset selection
+                    $("#dropSearch_PhongHoc").select2({
+                        placeholder: "Tìm kiếm phòng học...",
+                        allowClear: true
+                    });
+                } else {
+                    console.error("API failed:", data.Message);
+                }
+            },
+            error: function(err) {
+                console.error("API error:", err);
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+        }, false, false, false, null);
     },
 
     genTable_ThongTin: function (data, iPager) {
@@ -896,11 +1089,6 @@ LichGiangNhieuPhong.prototype = {
         });
 
         $("#scheduleGrid").html(html);
-        
-        // Update stats display
-        var totalSchedules = data.length;
-        $('#totalRoomsDisplay').text(me.dtPhongHoc.length + ' phòng');
-        $('#totalSchedulesDisplay').text(totalSchedules + ' lịch');
         
         if (me.dtPhongHocFull.length > me.dtPhongHoc.length) {
             var remaining = me.dtPhongHocFull.length - me.dtPhongHoc.length;

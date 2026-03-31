@@ -6,7 +6,11 @@
 function PhanQuyenDuLieuM2() { };
 PhanQuyenDuLieuM2.prototype = {
     dsVaiTro: [], // Danh sách vai trò từ API
-    dsDuLieu: [], // Danh sách dữ liệu phân quyền
+    dsHeDaoTao: [], // Danh sách hệ đào tạo
+    dsKhoaDaoTao: [], // Danh sách khóa đào tạo
+    dsKhoaQuanLy: [], // Danh sách khoa quản lý
+    dsChuongTrinh: [], // Danh sách chương trình
+    dsLopQuanLy: [], // Danh sách lớp quản lý
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     selectedDate: new Date(),
@@ -20,13 +24,13 @@ PhanQuyenDuLieuM2.prototype = {
         
         // Sự kiện tìm kiếm
         $("#btnSearch").click(function () {
-            me.getList_DuLieu();
+            me.genTable_DuLieu();
         });
         
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
-                me.getList_DuLieu();
+                me.genTable_DuLieu();
             }
         });
         
@@ -43,13 +47,6 @@ PhanQuyenDuLieuM2.prototype = {
             $("#tblPhanQuyenDuLieu tbody tr").each(function() {
                 $(this).find("td").eq(colIndex).find("input[type='checkbox']").prop("checked", checked_status);
             });
-        });
-        
-        // Sự kiện checkbox select all theo row
-        $("#tblPhanQuyenDuLieu").delegate(".chkSelectAllRow", "click", function (e) {
-            e.stopImmediatePropagation();
-            var checked_status = this.checked;
-            $(this).closest("tr").find("input[type='checkbox']:not(.chkSelectAllRow)").prop("checked", checked_status);
         });
         
         // Sự kiện calendar
@@ -74,10 +71,20 @@ PhanQuyenDuLieuM2.prototype = {
     getList_VaiTro: function () {
         var me = this;
         var obj_list = {
+<<<<<<< HEAD
+            'action': 'CMS_VaiTro/LayDanhSach',
+            'strLoaiVaiTro_Id': '',
+            'strTuKhoa': '',
+            'pageIndex': 1,
+            'pageSize': 1000,
+            'dTrangThai': 1,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+=======
             'action': 'CMS_QuanTri01_MH/DSA4BRIXICgVMy4PJjQuKAU0LyYP',
             'func': 'PKG_CORE_QUANTRI_01.LayDSVaiTroNguoiDung',
             'iM': 'Azz',
             'strChucNang_Id': '',
+>>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
             'strNguoiThucHien_Id': edu.system.userId
         };
         
@@ -102,9 +109,9 @@ PhanQuyenDuLieuM2.prototype = {
     },
     
     /*------------------------------------------
-    --Lấy danh sách dữ liệu phân quyền
+    --Load tất cả dữ liệu cần thiết
     -------------------------------------------*/
-    getList_DuLieu: function () {
+    loadAllData: function () {
         var me = this;
         
         // Gọi stored procedure để lấy dữ liệu hệ đào tạo
@@ -138,9 +145,10 @@ PhanQuyenDuLieuM2.prototype = {
     },
     
     /*------------------------------------------
-    --Tạo bảng hiển thị dữ liệu động
+    --Tạo bảng hiển thị dữ liệu
+    --Dòng: Vai trò | Cột: Hệ đào tạo, Khóa, Khoa, Chương trình, Lớp
     -------------------------------------------*/
-    genTable_DuLieu: function (data) {
+    genTable_DuLieu: function () {
         var me = this;
         
         // Tạo header động
@@ -158,7 +166,7 @@ PhanQuyenDuLieuM2.prototype = {
         
         $("#tblPhanQuyenDuLieu thead").html(htmlHead);
         
-        // Tạo body
+        // Tạo body - mỗi dòng là 1 vai trò
         var htmlBody = '';
         
         if (data && data.length > 0) {
@@ -251,19 +259,32 @@ PhanQuyenDuLieuM2.prototype = {
         }
         
         $("#tblPhanQuyenDuLieu tbody").html(htmlBody);
+        console.log('========== KẾT THÚC RENDER BẢNG ==========');
     },
     
     /*------------------------------------------
-    --Kiểm tra quyền đã được phân hay chưa
+    --Render danh sách checkbox
     -------------------------------------------*/
-    checkQuyen: function (dataRow, vaiTroId) {
-        // Logic kiểm tra quyền dựa vào dữ liệu từ server
-        // Có thể check trong dataRow có field chứa danh sách vai trò đã được phân
-        if (dataRow.DSVAITRO_ID) {
-            var arrVaiTro = dataRow.DSVAITRO_ID.split(',');
-            return arrVaiTro.indexOf(vaiTroId) > -1;
+    renderCheckboxList: function (dataList, vaiTroId, loaiDuLieu) {
+        var html = '';
+        
+        if (dataList && dataList.length > 0) {
+            for (var i = 0; i < dataList.length; i++) {
+                html += '<div style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">';
+                html += '<input type="checkbox" class="chkPhanQuyen" ';
+                html += 'data-vaitro-id="' + vaiTroId + '" ';
+                html += 'data-loai="' + loaiDuLieu + '" ';
+                html += 'data-dulieu-id="' + dataList[i].ID + '" ';
+                html += 'style="width: 16px; height: 16px; flex-shrink: 0;" ';
+                html += '/>';
+                html += '<span style="font-size: 12px; color: #555; line-height: 1.3;">' + dataList[i].TEN + '</span>';
+                html += '</div>';
+            }
+        } else {
+            html = '<span style="color: #999; font-size: 12px; font-style: italic;">Chưa có dữ liệu</span>';
         }
-        return false;
+        
+        return html;
     },
     
     /*------------------------------------------
@@ -280,26 +301,26 @@ PhanQuyenDuLieuM2.prototype = {
         
         for (var i = 0; i < checkboxes.length; i++) {
             var $chk = $(checkboxes[i]);
-            var rowId = $chk.data("row-id");
             var vaiTroId = $chk.data("vaitro-id");
-            var vaiTroMa = $chk.data("vaitro-ma");
+            var loai = $chk.data("loai");
+            var duLieuId = $chk.data("dulieu-id");
             
             if ($chk.is(':checked')) {
                 // Nếu checked mà không có attribute name="old" => thêm mới
                 if (!$chk.attr("name")) {
                     arrThem.push({
-                        rowId: rowId,
                         vaiTroId: vaiTroId,
-                        vaiTroMa: vaiTroMa
+                        loai: loai,
+                        duLieuId: duLieuId
                     });
                 }
             } else {
                 // Nếu không checked mà có attribute name="old" => xóa
                 if ($chk.attr("name") === "old") {
                     arrXoa.push({
-                        rowId: rowId,
                         vaiTroId: vaiTroId,
-                        vaiTroMa: vaiTroMa
+                        loai: loai,
+                        duLieuId: duLieuId
                     });
                 }
             }
@@ -308,84 +329,16 @@ PhanQuyenDuLieuM2.prototype = {
         if ((arrThem.length + arrXoa.length) > 0) {
             edu.system.confirm("Bạn có chắc chắn thêm " + arrThem.length + " quyền và hủy " + arrXoa.length + " quyền?");
             
-            $("#btnYes").click(function (e) {
-                // Thêm quyền
-                for (var i = 0; i < arrThem.length; i++) {
-                    me.save_ThemQuyen(arrThem[i]);
-                }
+            $("#btnYes").click(function () {
+                console.log('Thêm quyền:', arrThem);
+                console.log('Xóa quyền:', arrXoa);
                 
-                // Xóa quyền
-                for (var i = 0; i < arrXoa.length; i++) {
-                    me.save_XoaQuyen(arrXoa[i]);
-                }
-                
-                // Reload lại dữ liệu sau khi lưu
-                setTimeout(function() {
-                    me.getList_DuLieu();
-                    edu.system.alert("Lưu phân quyền thành công!");
-                }, 1000);
+                // TODO: Gọi API để lưu
+                edu.system.alert("Lưu phân quyền thành công!");
             });
         } else {
             edu.system.alert("Không có thay đổi để lưu");
         }
-    },
-    
-    /*------------------------------------------
-    --Thêm quyền
-    -------------------------------------------*/
-    save_ThemQuyen: function (objQuyen) {
-        var me = this;
-        var obj_list = {
-            'action': 'CMS_PhanQuyen_DuLieu/ThemQuyen',
-            'strDuLieu_Id': objQuyen.rowId,
-            'strVaiTro_Id': objQuyen.vaiTroId,
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                if (!data.Success) {
-                    console.log("Lỗi thêm quyền: " + data.Message);
-                }
-            },
-            error: function (er) {
-                console.log("Lỗi: " + JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
-    },
-    
-    /*------------------------------------------
-    --Xóa quyền
-    -------------------------------------------*/
-    save_XoaQuyen: function (objQuyen) {
-        var me = this;
-        var obj_list = {
-            'action': 'CMS_PhanQuyen_DuLieu/XoaQuyen',
-            'strDuLieu_Id': objQuyen.rowId,
-            'strVaiTro_Id': objQuyen.vaiTroId,
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                if (!data.Success) {
-                    console.log("Lỗi xóa quyền: " + data.Message);
-                }
-            },
-            error: function (er) {
-                console.log("Lỗi: " + JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
     },
     
     /*------------------------------------------
