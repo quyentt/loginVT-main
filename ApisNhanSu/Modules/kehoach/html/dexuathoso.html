@@ -95,7 +95,7 @@
         </div>
     </div>
 
-    <div class="fake-modal zone-bus" id="zoneEdit" style="display: none">
+    <div class="fake-modal zone-bus" id="zoneEdit" style="display: none; padding-top: 15px">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
@@ -111,69 +111,94 @@
                     <a class="d-block text-right fs-16 mt-5 color-fff btnClose"><i class="fal fa-times"></i></a>
                 </div>
             </div>
-
             <div class="form-top rounded-0 border-top mb-15">
                 <div class="row">
                     <div class="col-12 col-md-8 col-lg-8">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Họ</label>
-                            <div class="input-group">
-                                <input class="form-control" id="txtHo" />
-                            </div>
-                        </div>
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Tên đệm</label>
-                            <div class="input-group">
-                                <input class="form-control" id="txtTenDem" />
-                            </div>
-                        </div>
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Tên</label>
-                            <div class="input-group">
-                                <input class="form-control" id="txtTen" />
-                            </div>
-                        </div>
-                        <div class="form-item d-flex mb-0 form-add-info no-icon">
-                            <label class="form-label" style="width:150px">Chọn mức độ ngày sinh</label>
-                            <div class="input-group">
-                                <select id="dropMucDoNgaySinh" class="select-opt">
-                                    <option value="EXACT">Chính xác</option>
-                                    <option value="MONTH_ONLY">Chỉ biết tháng/năm</option>
-                                    <option value="YEAR_ONLY">Chỉ biết năm</option>
-                                    <option value="UNKNOWN">Không biết</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Ngày sinh</label>
-                            <div class="input-group">
-                                <input class="form-control" id="txtNgaySinh" />
-                            </div>
-                        </div>
-
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Tháng sinh</label>
-                            <div class="input-group">
-                                <input class="form-control" id="txtThangSinh" />
-                            </div>
-                        </div>
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Năm sinh</label>
-                            <div class="input-group">
-                                <input class="form-control" id="txtNamSinh" />
-                            </div>
-                        </div>
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:150px">Giới tính</label>
-                            <div class="input-group">
-                                <div class="form-item d-flex mb-0 form-add-info ">
-                                    <label class="form-label" style="width:150px">Giới tính</label>
-                                    <div class="input-group">
-                                        <select id="dropGioiTinh" class="select-opt"></select>
-                                    </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Họ</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtHo" />
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Tên đệm</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtTenDem" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Tên</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtTen" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important;">Tên đầy đủ</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtHoVaTen" readonly="readonly" style=" background-color: #f5f6f8 !important"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info no-icon">
+                                <label class="form-label" style="width:200px !important">Chọn mức độ ngày sinh</label>
+                                <div class="input-group">
+                                    <select id="dropMucDoNgaySinh" class="select-opt">
+                                        <!--<option value="EXACT">Chính xác</option>
+                    <option value="MONTH_ONLY">Chỉ biết tháng/năm</option>
+                    <option value="YEAR_ONLY">Chỉ biết năm</option>
+                    <option value="UNKNOWN">Không biết</option>-->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Ngày sinh</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtNgaySinh" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Tháng sinh</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtThangSinh" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Năm sinh</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtNamSinh" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Giới tính</label>
+                                <div class="input-group">
+                                    <select id="dropGioiTinh" class="select-opt"></select>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="col-12 col-md-4 col-lg-4">
@@ -218,6 +243,9 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-6 mt-6">
+                        <div class="d-flex align-items-center w-100 justify-content-between">
+                            <span class="fw-bold text-success pull-left">Thông tin liên hệ</span>
+                        </div>
                         <div class="mt-8 aps-table-select">
                             <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDapAn"
                                    id="tblLienHe">
@@ -251,7 +279,7 @@
 
         </div>
     </div>
-    <div class="fake-modal zone-bus" id="zoneKiemTraDinhDanh" style="display: none">
+    <div class="fake-modal zone-bus" id="zoneKiemTraDinhDanh" style="display: none;padding-top: 15px">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
