@@ -28,7 +28,6 @@
         <div class="head-logo refeshlogo">
           <a href="#">
             <img class="logo-icon" src="logo.png" title="QTDH" />
-            <img class="logo-text" src="assets/images/logo/logo-text.png" title="QTDH" />
           </a>
         </div>
         <div class="head-search-form">
@@ -405,10 +404,8 @@
   <script type="text/javascript" src="Core/util.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
   <script type="text/javascript" src="Core/systemextend.js?v=<%= Guid.NewGuid().ToString() %>"></script><!--CORE JS-->
   <script type="text/javascript" src="Config.js?v=<%= Guid.NewGuid().ToString() %>"></script>
-  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-    %>/ Core / uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
-  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-    %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
+  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
   <%--<script async type="text/javascript" src="https://api-apis.com/socket.io/socket.io.js"></script><!--CORE JS-->--%>
     <%--<script src="Scripts/MathJax/es5/tex-mml-chtml.js"></script>--%>
 
@@ -423,7 +420,6 @@
           edu.system.startApp();
           edu.extend.init();
           edu.constant.init();
-          console.log(111);
         });
       </script>
 
