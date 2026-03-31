@@ -118,26 +118,17 @@ LichGiangNhieuPhong.prototype = {
 
     // Update statistics display
     updateStats: function(totalRooms, totalSchedules) {
-<<<<<<< HEAD
         // Removed - no longer displaying stats
-=======
-<<<<<<< HEAD
         // Removed - no longer displaying stats
-=======
         $("#totalRoomsDisplay").text(totalRooms + " phòng");
         $("#totalSchedulesDisplay").text(totalSchedules + " lịch");
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
->>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
     },
 
     // Update statistics with TOTAL count (not paginated count)
     updateStatsTotal: function() {
-<<<<<<< HEAD
         // Removed - no longer displaying stats
-=======
-<<<<<<< HEAD
         // Removed - no longer displaying stats
-=======
+
         var me = this;
         
         // Load tất cả lịch để tính tổng
@@ -156,8 +147,6 @@ LichGiangNhieuPhong.prototype = {
                 }
             });
         });
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
->>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
     },
 
     init: function () {

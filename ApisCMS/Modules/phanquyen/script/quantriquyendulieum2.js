@@ -845,7 +845,12 @@ PhanQuyenDuLieuM2.prototype = {
         tableHtml += '<th style="width: 150px; padding: 10px;">Mã<br/><span style="font-weight: normal; font-size: 11px;">VALUE_CODE</span></th>';
         tableHtml += '<th style="padding: 10px;">Tên<br/><span style="font-weight: normal; font-size: 11px;">VALUE_NAME</span></th>';
         tableHtml += '<th style="width: 120px; text-align: center; padding: 10px;">Ghi chú<br/><span style="font-weight: normal; font-size: 11px;">GhiChu</span></th>';
-        tableHtml += '<th style="width: 80px; text-align: center; background: #fff3cd; padding: 10px;">Chọn</th>';
+        tableHtml += '<th style="width: 80px; text-align: center; background: #fff3cd; padding: 10px;">';
+        tableHtml += '<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">';
+        tableHtml += '<input type="checkbox" id="chkSelectAll" style="width: 18px; height: 18px; cursor: pointer;"/>';
+        tableHtml += '<span style="font-size: 10px;">Chọn tất cả</span>';
+        tableHtml += '</div>';
+        tableHtml += '</th>';
         tableHtml += '</tr>';
         tableHtml += '</thead>';
         tableHtml += '<tbody>';
@@ -894,6 +899,19 @@ PhanQuyenDuLieuM2.prototype = {
         tableHtml += '</div>';
         
         $("#modalTableContainer").html(tableHtml);
+        
+        // Bind event cho checkbox "Chọn tất cả"
+        $("#chkSelectAll").change(function() {
+            var isChecked = $(this).is(':checked');
+            $(".chkDetailItem").prop('checked', isChecked);
+        });
+        
+        // Bind event cho từng checkbox để cập nhật "Chọn tất cả"
+        $(document).on('change', '.chkDetailItem', function() {
+            var totalCheckboxes = $(".chkDetailItem").length;
+            var checkedCheckboxes = $(".chkDetailItem:checked").length;
+            $("#chkSelectAll").prop('checked', totalCheckboxes === checkedCheckboxes);
+        });
         
         // Render phân trang
         me.renderModalPagination(vaiTroId, dimensionId);
