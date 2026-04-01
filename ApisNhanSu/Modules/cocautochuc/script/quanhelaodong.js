@@ -87,6 +87,36 @@ QuanHeLaoDong.prototype = {
                 }
             });
         });
+
+        $("#btnSearch_ChuaQH").click(function () {
+            me.getList_ChuaQH();
+        });
+        $("#txtSearch_ChuaQH").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_ChuaQH();
+            }
+        });
+
+        $("#btnSearch_CoQH").click(function () {
+            me.getList_CoQH();
+        });
+        $("#txtSearch_CoQH").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_CoQH();
+            }
+        });
+
+        $("#btnSearch_NghiViec").click(function () {
+            me.getList_NghiViec();
+        });
+        $("#txtSearch_NghiViec").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me.getList_NghiViec();
+            }
+        });
     },
     /*------------------------------------------
     --Discription: [3] AccessDB HOC
