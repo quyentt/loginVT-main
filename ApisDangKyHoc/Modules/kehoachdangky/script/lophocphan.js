@@ -26,6 +26,7 @@ LopHocPhan.prototype = {
         me.getList_KhoaQuanLy();
         me.getList_ThoiGianDaoTao();
         me.getList_HinhThucHoc();
+        console.log(123342342342342342);
 
         $(".btnClose").click(function () {
             me.toggle_form();
@@ -293,11 +294,15 @@ LopHocPhan.prototype = {
         });
 
         $("#btnThucHienDonNhom").click(function (e) {
+            e.preventDefault();
+            console.log(11111);
             var arrChecked_Id = edu.util.getArrCheckedIds("tblSinhVienNhom", "checkX");
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng?");
                 return;
             }
+
+            console.log(arrChecked_Id);
             edu.system.alert('<div id="zoneprocessXXXX"></div>');
             edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
             var strNguonDuLieu_Id = edu.util.uuid();
@@ -1643,7 +1648,7 @@ LopHocPhan.prototype = {
             //},
             aaData: data,
             colPos: {
-                center: [0, 8],
+                center: [0],
             },
             aoColumns: [
                 {
