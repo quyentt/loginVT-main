@@ -22,7 +22,10 @@ DeXuatHoSo.prototype = {
         
         //edu.system.loadToCombo_DanhMucDuLieu("PERSON_IDENTIFIER.IDENTIFIER_TYPE_CODE", "dropSearch_LoaiDinhDanh", "", data => me["dtLoaiDinhDanh"] = data);
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_IDENTIFIER.IDENTIFIER_TYPE_CODE", "dropSearch_LoaiDinhDanh");
-        edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.DOB_PRECISION_LEVEL", "dropMucDoNgaySinh");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.DOB_PRECISION_LEVEL", "dropMucDoNgaySinh", "", data => {
+            me["dtMucDoNgaySinh"] = data;
+            
+        });
         edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.GENDER_ID", "dropGioiTinh");
         //edu.system.loadToCombo_DanhMucDuLieu("QLSV.VE.LOAI", "", "", data => me.dtTuyenXe = data);
         //me.getList_DMLKT();
@@ -42,39 +45,47 @@ DeXuatHoSo.prototype = {
         $("#tblDeXuatHoSo").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtDeXuatHoSo.find(e => e.ID == strId);
+
             me["strDeXuatHoSo_Id"] = data.ID;
-            edu.util.viewValById("txtHo", data.KLGD_DANHMUCAPDeXuatHoSo_ID);
-            edu.util.viewValById("txtTenDem", data.DONVITINH_ID);
-            edu.util.viewValById("txtTen", data.DeXuatHoSo);
-            edu.util.viewValById("dropMucDoNgaySinh", data.MOTA);
-            edu.util.viewValById("txtNgaySinh", data.MOTA);
-            edu.util.viewValById("txtThangSinh", data.MOTA);
-            edu.util.viewValById("txtNamSinh", data.MOTA);
-            edu.util.viewValById("dropGioiTinh", data.MOTA);
-            var strAnh = edu.system.getRootPathImg(data.ANHCANHANTUUP);
-            edu.util.viewValById("uploadPicture_SV", data.ANHCANHANTUUP);////
+            edu.util.viewValById("txtHo", data.LAST_NAME);
+            edu.util.viewValById("txtTenDem", data.MIDDLE_NAME);
+            edu.util.viewValById("txtTen", data.FIRST_NAME);
+            $("#txtTen").trigger("input");
+            edu.util.viewValById("dropMucDoNgaySinh", data.DOB_PRECISION_LEVEL);
+            edu.util.viewValById("txtNgaySinh", data.BIRTH_DAY);
+            edu.util.viewValById("txtThangSinh", data.BIRTH_MONTH);
+            edu.util.viewValById("txtNamSinh", data.BIRTH_YEAR);
+            edu.util.viewValById("dropGioiTinh", data.GENDER_ID);
+            var strAnh = edu.system.getRootPathImg(data.PORTRAIT_FILE_ID);
+            edu.util.viewValById("uploadPicture_SV", data.PORTRAIT_FILE_ID);////
             $("#srcuploadPicture_SV").attr("src", strAnh);////
             me.toggle_edit();
             me.getList_DinhDanh();
             me.getList_LienHe();
+            $('#dropMucDoNgaySinh').val(strChinhXac_Id).trigger("change").trigger({ type: 'select2:select' });
         });
         $("#btnAdd_DeXuatHoSo").click(function () {
             var data = {};
             me["strDeXuatHoSo_Id"] = data.ID;
-            edu.util.viewValById("txtHo", data.KLGD_DANHMUCAPDeXuatHoSo_ID);
-            edu.util.viewValById("txtTenDem", data.DONVITINH_ID);
-            edu.util.viewValById("txtTen", data.DeXuatHoSo);
-            edu.util.viewValById("dropMucDoNgaySinh", data.MOTA);
-            edu.util.viewValById("txtNgaySinh", data.MOTA);
-            edu.util.viewValById("txtThangSinh", data.MOTA);
-            edu.util.viewValById("txtNamSinh", data.MOTA);
-            edu.util.viewValById("dropGioiTinh", data.MOTA);
-            var strAnh = edu.system.getRootPathImg(data.ANHCANHANTUUP);
-            edu.util.viewValById("uploadPicture_SV", data.ANHCANHANTUUP);////
+            edu.util.viewValById("txtHo", data.LAST_NAME);
+            edu.util.viewValById("txtTenDem", data.MIDDLE_NAME);
+            edu.util.viewValById("txtTen", data.FIRST_NAME);
+            $("#txtTen").trigger("input");
+            edu.util.viewValById("dropMucDoNgaySinh", data.DOB_PRECISION_LEVEL);
+            edu.util.viewValById("txtNgaySinh", data.BIRTH_DAY);
+            edu.util.viewValById("txtThangSinh", data.BIRTH_MONTH);
+            edu.util.viewValById("txtNamSinh", data.BIRTH_YEAR);
+            edu.util.viewValById("dropGioiTinh", data.GENDER_ID);
+            var strAnh = edu.system.getRootPathImg(data.PORTRAIT_FILE_ID);
+            edu.util.viewValById("uploadPicture_SV", data.PORTRAIT_FILE_ID);////
             $("#srcuploadPicture_SV").attr("src", strAnh);////
             me.toggle_edit();
+            var strChinhXac_Id = me["dtMucDoNgaySinh"].find(e => e.MA == "EXACT").ID;
+
+            $('#dropMucDoNgaySinh').val(strChinhXac_Id).trigger("change").trigger({ type: 'select2:select' });
         });
         $("#btnSave_DeXuatHoSo").click(function () {
+            me.icheck = true;
             let iSLCheck = me.dtLoaiDinhDanh.length + me.dtLoaiLienHe.length;
             if (iSLCheck > 0) {
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
@@ -127,11 +138,45 @@ DeXuatHoSo.prototype = {
             );
         });
         $("#btnSearch_KiemTra").click(function (e) {
+            if (!edu.util.getValById("dropSearch_LoaiDinhDanh") && !edu.util.getValById("txtSoDinhDanh")) {
+                edu.system.alert("Bạn cần điển đủ thông tin")
+                return;
+            }
             me.getList_KiemTraDinhDanh();
         });
         $("#txtSoDinhDanh").keypress(function (e) {
             if (e.which === 13) {
                 me.getList_KiemTraDinhDanh();
+            }
+        });
+
+        $('#dropMucDoNgaySinh').on('select2:select', function () {
+            var strMa = $('#dropMucDoNgaySinh option:selected').attr("name").trim();
+            switch (strMa) {
+                case "EXACT": {
+                    $("#txtNgaySinh").parent().parent().parent().show();
+                    $("#txtThangSinh").parent().parent().parent().show();
+                    $("#txtNamSinh").parent().parent().parent().show();
+                    break;
+                };
+                case "MONTH_ONLY": {
+                    $("#txtNgaySinh").parent().parent().parent().hide();
+                    $("#txtThangSinh").parent().parent().parent().show();
+                    $("#txtNamSinh").parent().parent().parent().show();
+                    break;
+                };
+                case "YEAR_ONLY": {
+                    $("#txtNgaySinh").parent().parent().parent().hide();
+                    $("#txtThangSinh").parent().parent().parent().hide();
+                    $("#txtNamSinh").parent().parent().parent().show();
+                    break;
+                };
+                case "UNKNOWN": {
+                    $("#txtNgaySinh").parent().parent().parent().hide();
+                    $("#txtThangSinh").parent().parent().parent().hide();
+                    $("#txtNamSinh").parent().parent().parent().hide();
+                    break;
+                };
             }
         });
     },
@@ -146,8 +191,8 @@ DeXuatHoSo.prototype = {
     },
     toggle_edit: function () {
         edu.util.toggle_overide("zone-bus", "zoneEdit");
-        this.getList_LoaiLienHe();
-        this.getList_LoaiDinhDanh();
+        this.genTable_LoaiDinhDanh();
+        this.genTable_LoaiLienHe();
     },
     toggle_DeXuatHoSo: function () {
         edu.util.toggle_overide("zone-bus", "zoneDeXuatHoSo");
@@ -209,7 +254,7 @@ DeXuatHoSo.prototype = {
             'strLastName': edu.system.getValById('txtHo'),
             'strMiddleName': edu.system.getValById('txtTenDem'),
             'strFirstName': edu.system.getValById('txtTen'),
-            'strDateOfBirth': edu.system.getValById('txtNgaySinh'),
+            'strDateOfBirth': edu.system.getValById('txtNgaySinh') + "/" + edu.system.getValById('txtThangSinh') + "/" + edu.system.getValById('txtNamSinh'),
             'strDobPrecisionLevel': edu.system.getValById('dropMucDoNgaySinh'),
             'dBirthDay': edu.system.getValById('txtNgaySinh'),
             'dBirthMonth': edu.system.getValById('txtThangSinh'),
@@ -220,7 +265,7 @@ DeXuatHoSo.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId) {
-            obj_save.action = 'NS_HoSoNhanSu5_MH/CC8yJDM1Ai4zJBEkMzIuLwPP';
+            obj_save.action = 'NS_HoSoNhanSu5_MH/FDElIDUkAi4zJBEkMzIuLwPP';
             obj_save.func = 'PKG_CORE_HOSONHANSU_05.UpdateCorePerson';
         }
         //default
@@ -230,17 +275,17 @@ DeXuatHoSo.prototype = {
                 if (data.Success) {
                     var strDeXuatHoSo_Id = "";
 
-                    if (obj_save.strId == "") {
-                        edu.system.alert("Thêm mới thành công!");
+                    if (!obj_save.strId) {
+                        //edu.system.alert("Thêm mới thành công!");
                         strDeXuatHoSo_Id = data.Id;
                     }
                     else {
-                        edu.system.alert("Cập nhật thành công!");
+                        //edu.system.alert("Cập nhật thành công!");
                         strDeXuatHoSo_Id = obj_save.strId
                     }
+                    me.strDeXuatHoSo_Id = strDeXuatHoSo_Id;
                     let iSLCheck = me.dtLoaiDinhDanh.length + me.dtLoaiLienHe.length;
                     if (iSLCheck > 0) {
-                        edu.system.alert('<div id="zoneprocessXXXX"></div>');
                         edu.system.genHTML_Progress("zoneprocessXXXX", iSLCheck);
                         me.dtLoaiDinhDanh.forEach(e => me.save_DinhDanh(e.ID));
                         me.dtLoaiLienHe.forEach(e => me.save_LienHe(e.ID));
@@ -274,6 +319,7 @@ DeXuatHoSo.prototype = {
             'action': 'NS_HoSoNhanSu5_MH/BSQtJDUkAi4zJBEkMzIuLwPP',
             'func': 'PKG_CORE_HOSONHANSU_05.DeleteCorePerson',
             'iM': edu.system.iM,
+            'strId': strId,
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
@@ -287,7 +333,6 @@ DeXuatHoSo.prototype = {
                         code: ""
                     };
                     edu.system.afterComfirm(obj);
-                    me.getList_DeXuatHoSo();
                 }
                 else {
                     obj = {
@@ -308,7 +353,11 @@ DeXuatHoSo.prototype = {
             },
             type: 'POST',
             action: obj_delete.action,
-
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_DeXuatHoSo();
+                });
+            },
             contentType: true,
 
             data: obj_delete,
@@ -327,10 +376,10 @@ DeXuatHoSo.prototype = {
         var jsonForm = {
             strTable_Id: "tblDeXuatHoSo",
 
-            bPaginate: {
-                strFuntionName: "main_doc.DeXuatHoSo.getList_DeXuatHoSo()",
-                iDataRow: iPager,
-            },
+            //bPaginate: {
+            //    strFuntionName: "main_doc.DeXuatHoSo.getList_DeXuatHoSo()",
+            //    iDataRow: iPager,
+            //},
             aaData: data,
             colPos: {
                 center: [0, 2, 3, 4, 5, 6, 7, 8, 9],
@@ -374,13 +423,20 @@ DeXuatHoSo.prototype = {
 
     save_KiemTraDinhDanh: function (strId) {
         var me = this;
+        let check = $("#txtSoDinhDinh" + strId).attr("name");
+        if (check && check.length == 32) {
+            edu.system.start_Progress("zoneprocessXXXX", function () {
+                me.save_DeXuatHoSo();
+            });
+            return;
+        }
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CigkLBUzIBUpLi8mFSgvBSgvKQUgLykP',
             'func': 'PKG_CORE_HOSONHANSU_05.KiemTraThongTinDinhDanh',
             'iM': edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strIdentifier_Type_Code': edu.system.getHTMLById('lblMa' + strId),
+            'strIdentifier_Type_Code': strId,
             'strIdentifier_No': edu.system.getValById('txtSoDinhDinh' + strId),
             'strNguoiThucHien_Id': edu.system.userId,
         };
@@ -391,7 +447,7 @@ DeXuatHoSo.prototype = {
                     var strDeXuatHoSo_Id = "";
                     if (data.Data.length > 0) {
                         me["icheck"] = false;
-                        edu.system.alert("Dữ liệu tồn tại: " + obj_save.strIdentifier_Type_Code);
+                        edu.system.alert("Dữ liệu tồn tại: " + me.dtLoaiDinhDanh.find(e => e.ID == obj_save.strIdentifier_Type_Code).TEN);
                     }
                 }
                 else {
@@ -422,20 +478,20 @@ DeXuatHoSo.prototype = {
     },
     save_DinhDanh: function (strId) {
         var me = this;
-        var strDinhDanh_Id = strId.length == 32 ? strId : "";
+        var strDinhDanh_Id = $("#txtSoDinhDinh" + strId).attr("name");
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CC8yJDM1ESQzMi4vCCUkLzUoJygkMwPP',
             'func': 'PKG_CORE_HOSONHANSU_05.InsertPersonIdentifier',
             'iM': edu.system.iM,
-            //'strId': strDinhDanh_Id,
-            'strIdentifierTypeCode': edu.system.getHTMLById('lblMa' + strId),
+            'strId': strDinhDanh_Id,
+            'strIdentifierTypeCode': strId,
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPersonId': me.strDeXuatHoSo_Id,
-            'strIdentifierNo': edu.system.getValById('txtLienHe' + strId),
+            'strIdentifierNo': edu.system.getValById('txtSoDinhDinh' + strId),
             'strIssueDate': edu.system.getValById('txtNgayCap' + strId),
             'strIssuePlace': edu.system.getValById('txtNoiCap' + strId),
-            'dIsPrimary': $("#checkX" + strId).is(':checked'),
+            'dIsPrimary': $("#checkX" + strId).is(':checked')? 1: 0,
             'strEffectiveFrom': edu.system.getValById('txtAAAA'),
             'strEffectiveTo': edu.system.getValById('txtAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -528,64 +584,39 @@ DeXuatHoSo.prototype = {
     },
     genTable_DinhDanh: function (data, iPager) {
         var me = this;
-        $("#lblDinhDanh_Tong").html(iPager);
-        var jsonForm = {
-            strTable_Id: "tblDinhDanh",
-            aaData: data,
-            //bPaginate: {
-            //    strFuntionName: "main_doc.DinhDanh.getList_DinhDanh()",
-            //    iDataRow: iPager
-            //},
-            colPos: {
-                center: [0],
-                //right: [5]
-            },
-            aoColumns: [
-                {
-                    "mDataProp": "LOAIDINH_DANHTEN"
-                },
-                {
-                    "mDataProp": "DinhDanh"
-                },
-                {
-                    "mDataProp": "DONVITINH_TEN"
-                },
-                {
-                    "mDataProp": "MOTA"
-                },
-                {
-                    "mDataProp": "PHAMVIAPDUNG_TEN"
-                },
-                {
-                    "mDataProp": "HIEULUC"
-                },
-                {
-                    "mDataProp": "NGAYTAO_DD_MM_YYYY_HHMMSS"
-                },
-                {
-                    "mDataProp": "NGUOITAO_TAIKHOAN"
+
+        data.forEach(aData => {
+            let strId = aData.IDENTIFIER_TYPE_CODE;
+            if (strId.length == 32) {
+                $("#txtSoDinhDinh" + strId).attr("name", aData.ID);
+                $("#txtSoDinhDinh" + strId).val(edu.util.returnEmpty(aData.IDENTIFIER_NO))
+                $("#txtNgayCap" + strId).val(edu.util.returnEmpty(aData.ISSUE_DATE))
+                $("#txtNoiCap" + strId).val(edu.util.returnEmpty(aData.ISSUE_PLACE))
+                if (aData.IS_PRIMARY) {
+                    $("#checkX" + strId).attr('checked', true);
+                    $("#checkX" + strId).prop('checked', true);
                 }
-                , {
-                    "mRender": function (nRow, aData) {
-                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
-                    }
-                }
-            ]
-        };
-        edu.system.loadToTable_data(jsonForm);
-        /*III. Callback*/
+            }
+        })
     },
 
     save_KiemTraLienHe: function (strId) {
         var me = this;
+        let check = $("#txtLienHe" + strId).attr("name");
+        if (check && check.length == 32) {
+            edu.system.start_Progress("zoneprocessXXXX", function () {
+                me.save_DeXuatHoSo();
+            });
+            return;
+        }
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CigkLBUzIBUpLi8mFSgvDSgkLwkk',
             'func': 'PKG_CORE_HOSONHANSU_05.KiemTraThongTinLienHe',
             'iM': edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strContactTypeCode': edu.system.getHTMLById('lblMa' + strId),
-            'strContactValue': edu.system.getValById('txtSoDinhDinh' + strId),
+            'strContactTypeCode': strId,
+            'strContactValue': edu.system.getValById('txtLienHe' + strId),
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
@@ -595,7 +626,7 @@ DeXuatHoSo.prototype = {
                     var strDeXuatHoSo_Id = "";
                     if (data.Data.length > 0) {
                         me["icheck"] = false;
-                        edu.system.alert("Dữ liệu tồn tại: " + obj_save.strContactTypeCode);
+                        edu.system.alert("Dữ liệu tồn tại: " + me.dtLoaiLienHe.find(e => e.ID == obj_save.strContactTypeCode).TEN);
                     }
                 }
                 else {
@@ -626,18 +657,18 @@ DeXuatHoSo.prototype = {
     },
     save_LienHe: function (strId) {
         var me = this;
-        var strLienHe_Id = strId.length == 32 ? strId : "";
+        var strLienHe_Id = $("#txtLienHe" + strId).attr("name");
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CC8yJDM1ESQzMi4vAi4vNSAiNQPP',
             'func': 'PKG_CORE_HOSONHANSU_05.InsertPersonContact',
             'iM': edu.system.iM,
-            //'strId': strLienHe_Id,
+            'strId': strLienHe_Id,
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPersonId': me.strDeXuatHoSo_Id,
-            'strContactTypeCode': edu.system.getHTMLById('lblMa' + strId),
+            'strContactTypeCode': strId,
             'strContactValue': edu.system.getValById('txtLienHe' + strId),
-            'dIsPrimary': $("#checkX" + strId).is(':checked'),
+            'dIsPrimary': $("#checkX" + strId).is(':checked') ? 1 : 0,
             'strEffectiveFrom': edu.system.getValById('txtAAAA'),
             'strEffectiveTo': edu.system.getValById('txtAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -730,52 +761,18 @@ DeXuatHoSo.prototype = {
     },
     genTable_LienHe: function (data, iPager) {
         var me = this;
-        $("#lblDinhDanh_Tong").html(iPager);
-        var jsonForm = {
-            strTable_Id: "tblLienHe",
-            aaData: data,
-            //bPaginate: {
-            //    strFuntionName: "main_doc.DinhDanh.getList_DinhDanh()",
-            //    iDataRow: iPager
-            //},
-            colPos: {
-                center: [0],
-                //right: [5]
-            },
-            aoColumns: [
-                {
-                    "mDataProp": "LOAIDINH_DANHTEN"
-                },
-                {
-                    "mDataProp": "DinhDanh"
-                },
-                {
-                    "mDataProp": "DONVITINH_TEN"
-                },
-                {
-                    "mDataProp": "MOTA"
-                },
-                {
-                    "mDataProp": "PHAMVIAPDUNG_TEN"
-                },
-                {
-                    "mDataProp": "HIEULUC"
-                },
-                {
-                    "mDataProp": "NGAYTAO_DD_MM_YYYY_HHMMSS"
-                },
-                {
-                    "mDataProp": "NGUOITAO_TAIKHOAN"
-                }
-                , {
-                    "mRender": function (nRow, aData) {
-                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
-                    }
-                }
-            ]
-        };
-        edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
+        data.forEach(aData => {
+            let strId = aData.CONTACT_TYPE_CODE_ID;
+            if (strId.length == 32) {
+                $("#txtLienHe" + strId).attr("name", aData.ID);
+                $("#txtLienHe" + strId).val(edu.util.returnEmpty(aData.CONTACT_VALUE))
+                if (aData.IS_PRIMARY) {
+                    $("#checkX" + strId).attr('checked', true);
+                    $("#checkX" + strId).prop('checked', true);
+                }
+            }
+        })
     },
 
     getList_LoaiDinhDanh: function (strDanhSach_Id) {
@@ -1012,10 +1009,16 @@ DeXuatHoSo.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        if (data.length > 0) {
+            $("#lblKetQuaKiemTra").html('"Tồn tại nhân sự có thông tin định danh ' + $("#dropSearch_LoaiDinhDanh option:selected").text() + ' dữ liệu ' + $("#txtSoDinhDanh").val())
+        } else {
+            $("#lblKetQuaKiemTra").html('"Định danh ' + $("#dropSearch_LoaiDinhDanh option:selected").text() + ' dữ liệu ' + $("#txtSoDinhDanh").val() +'" --> Không tồn tại trong hệ thống và chưa được sử dụng')
+        }
         /*III. Callback*/
     },
 
     save_ThanhCong: function () {
+        var me = this;
         if (me["icheck"]) {
             edu.system.alert("Lưu thành công");
         }
