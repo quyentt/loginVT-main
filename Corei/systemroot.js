@@ -2197,7 +2197,7 @@ systemroot.prototype = {
             }
 
             if (default_val != "") {
-                $(dropGen).val(default_val).trigger("change");
+                $(dropGen).val(default_val).trigger("change").trigger({ type: 'select2:select' });
             }
         }
         function onCache(strId, dropToGen) {
