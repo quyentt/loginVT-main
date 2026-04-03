@@ -636,7 +636,6 @@ PhanQuyenDuLieuM2.prototype = {
         // Footer
         modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
         modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
-        modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa</button>';
         modalHtml += '<button type="button" class="btn btn-success" id="btnThemChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-plus"></i> Thêm</button>';
         modalHtml += '</div>';
         
@@ -722,26 +721,6 @@ PhanQuyenDuLieuM2.prototype = {
             
             // Hiển thị popup chọn chế độ và kiểu
             me.showScopeModePopup(vaiTroId, dimensionId, selectedValues);
-            return false;
-        });
-        
-        // Bind event cho nút Xóa
-        $("#btnXoaChiTiet").click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            var selectedScopes = [];
-            $(".chkDetailItem[data-scope-id]:checked").each(function() {
-                // Chỉ lấy các checkbox đã có quyền (có data-scope-id)
-                selectedScopes.push($(this).data("scope-id"));
-            });
-            
-            if (selectedScopes.length === 0) {
-                edu.system.alert("Vui lòng chọn ít nhất 1 giá trị đã có quyền để xóa");
-                return false;
-            }
-            
-            me.deletePermissions(selectedScopes);
             return false;
         });
     },
@@ -859,6 +838,7 @@ PhanQuyenDuLieuM2.prototype = {
         // Footer
         modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
         modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
+        modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa quyền đã chọn</button>';
         modalHtml += '</div>';
         
         modalHtml += '</div>';
@@ -882,6 +862,25 @@ PhanQuyenDuLieuM2.prototype = {
             if (e.target.id === "modalXemKetQua" || e.target.id === "btnCloseResultModal" || e.target.id === "btnDongResultModal") {
                 $("#modalXemKetQua").remove();
             }
+        });
+        
+        // Bind event cho nút Xóa
+        $("#btnXoaResultModal").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var selectedScopes = [];
+            $(".chkResultItem:checked").each(function() {
+                selectedScopes.push($(this).data("scope-id"));
+            });
+            
+            if (selectedScopes.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 quyền để xóa");
+                return false;
+            }
+            
+            me.deletePermissions(selectedScopes);
+            return false;
         });
         
         // Ngăn click vào content đóng modal
@@ -918,6 +917,9 @@ PhanQuyenDuLieuM2.prototype = {
             tableHtml += '<table class="table table-bordered table-hover" style="margin: 0; width: 100%;">';
             tableHtml += '<thead style="background: #f8f9fa;">';
             tableHtml += '<tr>';
+            tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">';
+            tableHtml += '<input type="checkbox" id="chkSelectAllResult" style="width: 18px; height: 18px; cursor: pointer;"/>';
+            tableHtml += '</th>';
             tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">STT</th>';
             tableHtml += '<th style="width: 150px; padding: 10px;">Mã</th>';
             tableHtml += '<th style="padding: 10px;">Tên</th>';
@@ -931,6 +933,9 @@ PhanQuyenDuLieuM2.prototype = {
                 var item = assigned.item;
                 
                 tableHtml += '<tr style="background: #d4edda;">';
+                tableHtml += '<td style="text-align: center; padding: 8px;">';
+                tableHtml += '<input type="checkbox" class="chkResultItem" data-scope-id="' + assigned.scopeId + '" style="width: 18px; height: 18px; cursor: pointer;"/>';
+                tableHtml += '</td>';
                 tableHtml += '<td style="text-align: center; padding: 8px;">' + (j + 1) + '</td>';
                 tableHtml += '<td style="padding: 8px;">' + (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + '</td>';
                 tableHtml += '<td style="padding: 8px;">' + (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || 'N/A') + '</td>';
@@ -942,6 +947,21 @@ PhanQuyenDuLieuM2.prototype = {
             
             tableHtml += '</tbody>';
             tableHtml += '</table>';
+            
+            // Bind event cho checkbox "Chọn tất cả"
+            setTimeout(function() {
+                $("#chkSelectAllResult").change(function() {
+                    var isChecked = $(this).is(':checked');
+                    $(".chkResultItem").prop('checked', isChecked);
+                });
+                
+                // Bind event cho từng checkbox để cập nhật "Chọn tất cả"
+                $(document).on('change', '.chkResultItem', function() {
+                    var totalCheckboxes = $(".chkResultItem").length;
+                    var checkedCheckboxes = $(".chkResultItem:checked").length;
+                    $("#chkSelectAllResult").prop('checked', totalCheckboxes === checkedCheckboxes);
+                });
+            }, 100);
         } else {
             tableHtml += '<div style="text-align: center; padding: 40px;">';
             tableHtml += '<i class="fa-solid fa-inbox fa-3x" style="color: #ccc;"></i>';
