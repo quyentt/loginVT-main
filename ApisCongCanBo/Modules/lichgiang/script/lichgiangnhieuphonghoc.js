@@ -273,6 +273,13 @@ LichGiangNhieuPhong.prototype = {
         $("#btnExportExcel").click(function () {
             me.showExportModal();
         });
+        
+        // Event: Khi đóng modal xuất Excel, destroy Select2
+        $("#modal_export_excel").on('hidden.bs.modal', function () {
+            if ($("#exportCustomRoom").hasClass("select2-hidden-accessible")) {
+                $("#exportCustomRoom").select2('destroy');
+            }
+        });
 
         // Export modal events
         $("#exportTimeRange").change(function () {
@@ -1320,14 +1327,27 @@ LichGiangNhieuPhong.prototype = {
         
         console.log("Opening export modal...");
         
-        // Load danh sách phòng vào dropdown
+        // Load danh sách PHÒNG HỌC vào dropdown (không phải tòa nhà)
         var roomOptions = '<option value="">-- Chọn phòng --</option>';
-        if (me.dtToaNha && me.dtToaNha.length > 0) {
-            me.dtToaNha.forEach(function(room) {
+        if (me.dtPhongHocOriginal && me.dtPhongHocOriginal.length > 0) {
+            // Sort phòng theo tên để dễ tìm
+            var sortedRooms = me.dtPhongHocOriginal.slice().sort(function(a, b) {
+                return (a.TEN || '').localeCompare(b.TEN || '');
+            });
+            
+            sortedRooms.forEach(function(room) {
                 roomOptions += '<option value="' + room.ID + '">' + room.TEN + '</option>';
             });
         }
         $("#exportCustomRoom").html(roomOptions);
+        
+        // Khởi tạo Select2 cho dropdown chọn phòng với tìm kiếm
+        $("#exportCustomRoom").select2({
+            placeholder: "Tìm kiếm phòng học...",
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#modal_export_excel') // Hiển thị dropdown trong modal
+        });
         
         // Set default dates
         var startParts = me.strNgayBatDau.split('/');
@@ -1407,16 +1427,19 @@ LichGiangNhieuPhong.prototype = {
         // Xác định phòng cần xuất
         var roomsToExport = [];
         if (roomFilter === "all") {
-            // Lấy TẤT CẢ phòng từ API, không phải từ dtPhongHocFull
-            if (me.dtToaNha && me.dtToaNha.length > 0) {
-                roomsToExport = me.dtToaNha;
+            // Lấy TẤT CẢ phòng học từ dtPhongHocOriginal
+            if (me.dtPhongHocOriginal && me.dtPhongHocOriginal.length > 0) {
+                roomsToExport = me.dtPhongHocOriginal;
             } else {
                 edu.system.alert("Đang tải danh sách phòng...");
                 // Gọi lại API để lấy đầy đủ
-                me.getList_ToaNha();
-                setTimeout(function() {
-                    me.processExport();
-                }, 1000);
+                me.getList_PhongHoc(function() {
+                    if (me.dtPhongHocOriginal && me.dtPhongHocOriginal.length > 0) {
+                        me.processExport();
+                    } else {
+                        edu.system.alert("Không có dữ liệu phòng học");
+                    }
+                });
                 return;
             }
         } else if (roomFilter === "current") {
@@ -1433,7 +1456,7 @@ LichGiangNhieuPhong.prototype = {
                 edu.system.alert("Vui lòng chọn phòng");
                 return;
             }
-            roomsToExport = me.dtToaNha.filter(function(r) {
+            roomsToExport = me.dtPhongHocOriginal.filter(function(r) {
                 return r.ID === selectedRoomId;
             });
         }

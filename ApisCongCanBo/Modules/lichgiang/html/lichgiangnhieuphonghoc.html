@@ -706,6 +706,60 @@
     .select2-dropdown {
         z-index: 9999 !important;
     }
+    
+    /* Select2 trong modal xuất Excel */
+    #modal_export_excel .select2-container {
+        width: 100% !important;
+    }
+    
+    #modal_export_excel .select2-container .select2-selection--single {
+        height: 38px !important;
+        display: flex !important;
+        align-items: center !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+    }
+    
+    #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 38px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        font-size: 14px !important;
+        color: #495057 !important;
+    }
+    
+    #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px !important;
+        right: 8px !important;
+    }
+    
+    #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #6c757d !important;
+        font-size: 14px !important;
+    }
+    
+    /* Select2 dropdown trong modal */
+    .select2-container--default .select2-results__option {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+    
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #667eea !important;
+    }
+    
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+    
+    .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+        border-color: #667eea !important;
+        outline: none !important;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+    }
 
     .scroll-notice {
         grid-column: 1/-1;
