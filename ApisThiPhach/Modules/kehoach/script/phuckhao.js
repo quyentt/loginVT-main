@@ -20,6 +20,7 @@ PhucKhao.prototype = {
         
         me.getList_ThoiGian();
         me.getList_HocPhan();
+        me.getList_ThoiGianPK();
         //me.getList_PhucKhao();
         edu.system.loadToCombo_DanhMucDuLieu("THI.PHUCKHAO.TINHTRANG", "dropSearch_KetQuaDuyet", "", main_doc.PhucKhao.loadBtnXacNhan);
         $("#btnSearch").click(function (e) {
@@ -67,8 +68,81 @@ PhucKhao.prototype = {
             arrChecked_Id.forEach(e => addKeyValue("strPhucKhao_Id", e));
         });
         edu.extend.genBoLoc_HeKhoa("_PK")
+
+        $("#btnAdd_PhucKhao").click(function () {
+            edu.util.toggle_overide("zone-bus", "zoneEdit");
+        });
+        $(".btnClose").click(function () {
+            me.toggle_form();
+        });
+
+        $('#dropSearch_ThoiGianPhucKhao').on('select2:select', function (e) {
+            me.getList_ThoiGianPhucKhao();
+            me.getList_DotThi();
+        });
+        $("#btnSearch").click(function (e) {
+            me.getList_PhucKhao();
+        });
+        $("#btnSearchThoiGianPhucKhao").click(function (e) {
+            me.getList_ThoiGianPhucKhao();
+        });
+        $("#tblThoiGianPhucKhao").delegate(".btnEdit", "click", function () {
+            var strId = this.id;
+            var data = me.dtThoiGianPhucKhao.find(e => e.ID == strId);
+            me["strThoiGianPhucKhao_Id"] = data.ID;
+            edu.util.viewValById("txtNgayBatDau", data.NGAYBATDAU);
+            edu.util.viewValById("txtNgayKetThuc", data.NGAYKETTHUC);
+            edu.util.viewValById("txtNgayHetHan", data.NGAYHETHANTHUPHI);
+            $("#myModalThoiGianPhucKhao").modal("show");
+        });
+        $("#btnAdd_ThoiGianPhucKhao").click(function () {
+            var data = {};
+            me["strThoiGianPhucKhao_Id"] = data.ID;
+            edu.util.viewValById("txtNgayBatDau", data.NGAYBATDAU);
+            edu.util.viewValById("txtNgayKetThuc", data.NGAYKETTHUC);
+            edu.util.viewValById("txtNgayHetHan", data.NGAYHETHANTHUPHI);
+            $("#myModalThoiGianPhucKhao").modal("show");
+        });
+        $("#btnSave_ThoiGianPhucKhao").click(function () {
+            if (me.strThoiGianPhucKhao_Id) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", 1);
+                me.save_ThoiGianPhucKhao(me.dtThoiGianPhucKhao.find(e => e.ID == me.strThoiGianPhucKhao_Id).PHAMVIAPDUNG_ID);
+                //setTimeout(function () {
+                //    me.getList_ThoiGianPhucKhao();
+                //}, 5000)
+            } else {
+                var arrChecked_Id = edu.util.getArrCheckedIds("tblModalPhamViPhucKhao", "checkX");
+                if (arrChecked_Id.length == 0) {
+                    edu.system.alert("Vui lòng chọn đối tượng?");
+                    return;
+                }
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_ThoiGianPhucKhao(arrChecked_Id[i]);
+                }
+            }
+        });
+        $("#btnDelete_ThoiGianPhucKhao").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblThoiGianPhucKhao", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.delete_ThoiGianPhucKhao(arrChecked_Id[i]);
+                }
+            });
+        });
     },
-    
+    toggle_form: function () {
+        edu.util.toggle_overide("zone-bus", "zonebatdau");
+    },
     loadBtnXacNhan: function (data) {
         main_doc.PhucKhao.dtXacNhan = data;
         var row = "";
@@ -492,5 +566,314 @@ PhucKhao.prototype = {
         };
         edu.system.loadToCombo_data(obj);
         //$("#dropSearch_HocPhan").select2();
+    },
+
+    getList_ThoiGianPK: function () {
+        var me = this;
+        //--Edit
+        var obj_list = {
+            'action': 'TP_Chung/LayThoiGian',
+            'type': 'GET',
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var json = data.Data;
+                    me.cbGenCombo_ThoiGianPK(json);
+                } else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi: " + JSON.stringify(er));
+            },
+            type: obj_list.type,
+            action: obj_list.action,
+
+            contentType: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    cbGenCombo_ThoiGianPK: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "THOIGIAN",
+                code: "",
+                avatar: "",
+                selectFirst: true
+            },
+            renderPlace: ["dropSearch_ThoiGianPhucKhao"],
+            type: "",
+            title: "Chọn thời gian",
+        };
+        edu.system.loadToCombo_data(obj);
+    },
+    /*------------------------------------------
+    --Discription: [3] AccessDB HOC
+    --ULR:  Modules
+    -------------------------------------------*/
+    save_ThoiGianPhucKhao: function (strPhamViApDung_Id) {
+        var me = this;
+        var obj_notify = {};
+        //--Edit
+        var obj_save = {
+            'action': 'XLHV_TP_PhucKhao_MH/FSkkLB4VKSgeESk0IgopIC4eFQYeACUP',
+            'func': 'PKG_THI_PHACH_PHUCKHAO.Them_Thi_PhucKhao_TG_Ad',
+            'iM': edu.system.iM,
+            'strId': me.strThoiGianPhucKhao_Id,
+            'strNgayBatDau': edu.system.getValById('txtNgayBatDau'),
+            'strNgayKetThuc': edu.system.getValById('txtNgayKetThuc'),
+            'strNgayHetHanThuPhi': edu.system.getValById('txtNgayHetHan'),
+            'strPhamViApDung_Id': strPhamViApDung_Id,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    if (!obj_save.strId) {
+                        edu.system.alert("Thêm mới thành công!");
+                    }
+                    else {
+                        edu.system.alert("Cập nhật thành công!");
+                    }
+                    //me.getList_ThoiGianPhucKhao();
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_ThoiGianPhucKhao();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    getList_ThoiGianPhucKhao: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'XLHV_TP_PhucKhao_MH/DSA4BRIVKSgeESk0IgopIC4eFQYeACUP',
+            'func': 'PKG_THI_PHACH_PHUCKHAO.LayDSThi_PhucKhao_TG_Ad',
+            'iM': edu.system.iM,
+            'strDaoTao_ThoiGianDaoTao_Id': edu.system.getValById('dropSearch_ThoiGianPhucKhao'),
+            'strPhamViApDung_Id': edu.system.getValById('dropAAAA'),
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me["dtThoiGianPhucKhao"] = data.Data;
+                    me.genTable_ThoiGianPhucKhao(data.Data);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    delete_ThoiGianPhucKhao: function (Ids) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'NS_KLGD_TinhTien_MH/GS4gHgoNBgUeBSAvKQw0IgAxBS4vBigg',
+            'func': 'PKG_KLGV_V2_TINHTIEN.Xoa_KLGD_DanhMucApDonGia',
+            'iM': edu.system.iM,
+            'strId': Ids,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    obj = {
+                        title: "",
+                        content: "Xóa dữ liệu thành công!",
+                        code: ""
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+                else {
+                    obj = {
+                        title: "",
+                        content: data.Message,
+                        code: "w"
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+
+            },
+            error: function (er) {
+
+                obj = {
+                    title: "",
+                    content: JSON.stringify(er),
+                    code: "w"
+                };
+                edu.system.afterComfirm(obj);
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_ThoiGianPhucKhao();
+                });
+            },
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    /*------------------------------------------
+    --Discription: [4] GenHTML Tiến độ đề tài
+    --ULR:  Modules
+    -------------------------------------------*/
+    genTable_ThoiGianPhucKhao: function (data, iPager) {
+        $("#lblThoiGianPhucKhao_Tong").html(iPager);
+        var jsonForm = {
+            strTable_Id: "tblThoiGianPhucKhao",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.DonGia.getList_ThoiGianPhucKhao()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "MA"
+                },
+                {
+                    "mDataProp": "TEN"
+                },
+                {
+                    "mDataProp": "NGAYBATDAU"
+                },
+                {
+                    "mDataProp": "NGAYKETTHUC"
+                },
+                {
+                    "mDataProp": "NGAYHETHANTHUPHI"
+                },
+                {
+                    "mDataProp": "NGAYTAO_DD_MM_YYYY"
+                },
+                {
+                    "mDataProp": "NGUOITAO_TAIKHOAN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
+                    }
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+    getList_DotThi: function () {
+        var me = this;
+        //--Edit
+        var obj_list = {
+            'action': 'TP_Chung/LayDotThi',
+            'type': 'GET',
+            'strHinhThucThi_Id': edu.util.getValById('dropSearch_HinhThuc1'),
+            'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem1'),
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianPhucKhao'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var json = data.Data;
+                    me.cbGenCombo_DotThi(json);
+                } else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi: " + JSON.stringify(er));
+            },
+            type: obj_list.type,
+            action: obj_list.action,
+
+            contentType: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    cbGenCombo_DotThi: function (data) {
+        var me = this;
+        var jsonForm = {
+            strTable_Id: "tblModalPhamViPhucKhao",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.DonGia.getList_ThoiGianPhucKhao()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "TEN"
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
     },
 }
