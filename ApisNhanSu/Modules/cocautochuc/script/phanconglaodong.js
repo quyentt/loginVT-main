@@ -17,51 +17,47 @@ PhanCongLaoDong.prototype = {
         --Discription: Initial system
         -------------------------------------------*/
         me.getList_PhanCongLaoDong();
-        me.getList_DonVi();
+        me.getList_DonVi_Search();
         edu.system.loadToCombo_DanhMucDuLieu("CORE.QUANHELAODONG.LOAI", "dropSearch_QuanHe,dropPhanLoai");
-        edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIVITRI", "dropPhanLoai");
 
         $("#btnSearch").click(function () {
-            me.getList_CoCauToChuc();
+            me.getList_PhanCongLaoDong();
         });
-        $("#txtSearch_TuKhoa").keypress(function (e) {
+        $("#txtTuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
-                me.getList_CoCauToChuc();
+                me.getList_PhanCongLaoDong();
             }
         });
-        $('#dropSearch_LoaiDonVi').on('select2:select', function () {
-            me.getList_CoCauToChuc();
+        $('#dropSearch_QuanHe').on('select2:select', function () {
+            me.getList_PhanCongLaoDong();
+        });
+        $('#dropSearch_DonVi').on('select2:select', function () {
+            me.getList_PhanCongLaoDong();
         });
 
         $("#tblPhanCong").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtPhanCongLaoDong.find(e => e.ID == strId);
             me["strNhanSu_Id"] = data.ID;
-            $("#lblNguoiQH").html(data.TENDAYDU + " - " + data.MASO)
+            // Hiển thị thông tin nhân viên trong tiêu đề modal
+            var strTitle = data.TENDAYDU + " - " + data.MASO + " - " + data.EMPLOYMENT_STATUS_CODE_NAME;
+            $("#modalNhiemVu .modal-header .title").html('<i class="fa-solid fa-user"></i> ' + strTitle);
             me.getList_NhiemVu();
             me.getList_ViTri(data.ORG_UNIT_ID);
             $("#modalNhiemVu").modal("show");
         });
         $("#tblNhiemVu").delegate(".btnEdit", "click", function () {
             var strId = this.id;
-            var data = me.dtNhiemVu.find(e => e.ID == strId);
-            me["strNhiemVu_Id"] = data.ID;
-            edu.util.viewValById("dropViTri", data.POSITION_ID);
-            //edu.util.viewValById("dropDonVi", data.EMPLOYMENT_STATUS_CODE_NAME);
-            edu.util.viewValById("dropPhanLoai", data.ASSIGNMENT_TYPE_CODE_ID);
-            edu.util.viewValById("txtNgayHieuLuc", data.EFFECTIVE_FROM);
-            edu.util.viewValById("txtNgayHetHieuLuc", data.EFFECTIVE_TO);
-            $("#modalAddNhiemVu").modal("show");
+            me["strNhiemVu_Id"] = strId;
+            me.getDetail_Assignment(strId);
         });
         $("#btnAdd_NhiemVu").click(function () {
-            var data = {};
-            me["strNhiemVu_Id"] = data.ID;
-            edu.util.viewValById("dropViTri", data.POSITION_ID);
-            //edu.util.viewValById("dropDonVi", data.EMPLOYMENT_STATUS_CODE_NAME);
-            edu.util.viewValById("dropPhanLoai", data.ASSIGNMENT_TYPE_CODE_ID);
-            edu.util.viewValById("txtNgayHieuLuc", data.EFFECTIVE_FROM);
-            edu.util.viewValById("txtNgayHetHieuLuc", data.EFFECTIVE_TO);
+            me["strNhiemVu_Id"] = "";
+            edu.util.viewValById("dropViTri", "");
+            edu.util.viewValById("dropPhanLoai", "");
+            edu.util.viewValById("txtNgayHieuLuc", "");
+            edu.util.viewValById("txtNgayHetHieuLuc", "");
             $("#modalAddNhiemVu").modal("show");
         });
         $("#btnSave_NhiemVu").click(function () {
@@ -93,9 +89,9 @@ PhanCongLaoDong.prototype = {
             'action': 'NS_HoSoNhanSu4_MH/DSA4BRIPKSAvEjQCLhAJDQUP',
             'func': 'PKG_CORE_HOSONHANSU_04.LayDSNhanSuCoQHLD',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.system.getValById('txtSearch_CoQH'),
-            'strEmployment_Type_Code': edu.system.getValById('txtAAAA'),
-            'strOrg_Unit_Id': edu.system.getValById('dropAAAA'),
+            'strTuKhoa': edu.system.getValById('txtTuKhoa'),
+            'strEmployment_Type_Code': edu.system.getValById('dropSearch_QuanHe'),
+            'strOrg_Unit_Id': edu.system.getValById('dropSearch_DonVi'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -194,6 +190,9 @@ PhanCongLaoDong.prototype = {
     save_NhiemVu: function () {
         var me = this;
         var obj_notify = {};
+        // Lấy thông tin nhân viên đã chọn
+        var aData = me.dtPhanCongLaoDong.find(e => e.ID == me.strNhanSu_Id);
+        
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu4_MH/FSkkLB4CLjMkHgAyMigmLywkLzUP',
@@ -201,15 +200,15 @@ PhanCongLaoDong.prototype = {
             'iM': edu.system.iM,
             'strId': me.strNhiemVu_Id,
 
-            'strPerson_Id': edu.system.getValById('dropAAAA'),
-            'strPosition_Id': edu.system.getValById('dropAAAA'),
-            'strEmployment_Id': edu.system.getValById('dropAAAA'),
-            'strAssignment_Type_Code': edu.system.getValById('txtAAAA'),
-            'strAssignment_Status_Code': edu.system.getValById('txtAAAA'),
-            'strEffective_From': edu.system.getValById('txtAAAA'),
-            'strEffective_To': edu.system.getValById('txtAAAA'),
-            'strFte_radio': edu.system.getValById('txtAAAA'),
-            'strDecision_Id': edu.system.getValById('dropAAAA'),
+            'strPerson_Id': aData.PERSON_ID,
+            'strPosition_Id': edu.system.getValById('dropViTri'),
+            'strEmployment_Id': aData.EMPLOYMENT_ID,
+            'strAssignment_Type_Code': edu.system.getValById('dropPhanLoai'),
+            'strAssignment_Status_Code': '',
+            'strEffective_From': edu.system.getValById('txtNgayHieuLuc'),
+            'strEffective_To': edu.system.getValById('txtNgayHetHieuLuc'),
+            'strFte_radio': '',
+            'strDecision_Id': '',
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId) {
@@ -226,6 +225,7 @@ PhanCongLaoDong.prototype = {
                     else {
                         edu.system.alert("Cập nhật thành công!");
                     }
+                    $("#modalAddNhiemVu").modal("hide");
                     me.getList_NhiemVu();
                 }
                 else {
@@ -337,6 +337,40 @@ PhanCongLaoDong.prototype = {
             ]
         }, false, false, false, null);
     },
+    getDetail_Assignment: function (strId) {
+        var me = this;
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu4_MH/DSA4BRICLjMkHgAyMigmLywkLzUTT',
+            'func': 'PKG_CORE_HOSONHANSU_04.LayTTCore_Assignment',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var detail = data.Data[0];
+                    edu.util.viewValById("dropViTri", detail.POSITION_ID);
+                    edu.util.viewValById("dropPhanLoai", detail.ASSIGNMENT_TYPE_CODE);
+                    edu.util.viewValById("txtNgayHieuLuc", detail.EFFECTIVE_FROM);
+                    edu.util.viewValById("txtNgayHetHieuLuc", detail.EFFECTIVE_TO);
+                    $("#modalAddNhiemVu").modal("show");
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
     /*------------------------------------------
     --Discription: [4] GenHTML Tiến độ đề tài
     --ULR:  Modules
@@ -384,18 +418,23 @@ PhanCongLaoDong.prototype = {
         /*III. Callback*/
     },
 
-    getList_DonVi: function () {
+    getList_DonVi_Search: function () {
         var me = this;
+        // Lấy ngày hiện tại theo định dạng dd/mm/yyyy
+        var today = new Date();
+        var strNgayXem = ("0" + today.getDate()).slice(-2) + "/" + 
+                         ("0" + (today.getMonth() + 1)).slice(-2) + "/" + 
+                         today.getFullYear();
 
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHg4zJh4ULyg1',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Org_Unit',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.system.getValById('txtSearch_TuKho1a'),
-            'strOrg_Type_Code': edu.system.getValById('dropSearch_LoaiDonVi1'),
-            'dIs_Offcial': edu.system.getValById('txtAAAA'),
-            'dIs_Active': edu.system.getValById('dropSearch_TrangThai1'),
-            'strNgayXem': edu.system.getValById('txtSearch_NgayXem1'),
+            'strTuKhoa': '',
+            'strOrg_Type_Code': '',
+            'dIs_Offcial': 1,
+            'dIs_Active': 1,
+            'strNgayXem': strNgayXem,
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -412,7 +451,7 @@ PhanCongLaoDong.prototype = {
                             code: "",
                             avatar: ""
                         },
-                        renderPlace: ["dropDonVi"],
+                        renderPlace: ["dropSearch_DonVi"],
                         type: "",
                         title: "Chọn đơn vị",
                     })

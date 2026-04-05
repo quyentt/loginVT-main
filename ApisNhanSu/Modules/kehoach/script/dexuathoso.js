@@ -35,17 +35,34 @@ DeXuatHoSo.prototype = {
             
         });
         edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.GENDER_ID", "dropGioiTinh");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.GENDER_ID", "dropSearch_GioiTinh");
         //edu.system.loadToCombo_DanhMucDuLieu("QLSV.VE.LOAI", "", "", data => me.dtTuyenXe = data);
         //me.getList_DMLKT();
         //$("#modal_sinhvien").modal("show");
         $("#btnSearch").click(function (e) {
-            me.getList_DeXuatHoSo();
+            me.genTable_DeXuatHoSo(me.dtDeXuatHoSo, me.dtDeXuatHoSo.length);
         });
         $("#txtSearch").keypress(function (e) {
             if (e.which === 13) {
-                me.getList_DeXuatHoSo();
+                me.genTable_DeXuatHoSo(me.dtDeXuatHoSo, me.dtDeXuatHoSo.length);
             }
         });
+        
+        // Tìm kiếm realtime
+        $("#txtSearch").on('input', function () {
+            me.genTable_DeXuatHoSo(me.dtDeXuatHoSo, me.dtDeXuatHoSo.length);
+        });
+        
+        $("#dropSearch_GioiTinh").on('change', function () {
+            me.genTable_DeXuatHoSo(me.dtDeXuatHoSo, me.dtDeXuatHoSo.length);
+        });
+        
+        // Checkbox chọn tất cả - dùng event delegation
+        $(document).on("change", "#checkAll_DeXuatHoSo", function () {
+            var isChecked = $(this).prop("checked");
+            $("#tblDeXuatHoSo .checkX").prop("checked", isChecked);
+        });
+        
         $(".btnClose").click(function () {
             me.toggle_form();
         });
@@ -128,6 +145,81 @@ DeXuatHoSo.prototype = {
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.delete_DeXuatHoSo(arrChecked_Id[i]);
                 }
+            });
+        });
+        
+        // Xóa từng dòng
+        $("#tblDeXuatHoSo").delegate(".btnDelete_Row", "click", function () {
+            var strId = this.id;
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                me.delete_DeXuatHoSo(strId);
+            });
+        });
+        
+        // Thùng rác
+        $("#btnThungRac").click(function () {
+            edu.util.toggle_overide("zone-bus", "zoneThungRac");
+            me.getList_ThungRac();
+        });
+        
+        $(".btnCloseThungRac").click(function () {
+            $("#zoneThungRac").hide();
+            $("#zonebatdau").show();
+        });
+        
+        // Checkbox chọn tất cả trong thùng rác
+        $(document).on("change", "#checkAll_ThungRac", function () {
+            var isChecked = $(this).prop("checked");
+            $("#tblThungRac .checkXThungRac").prop("checked", isChecked);
+        });
+        
+        // Khôi phục
+        $("#btnKhoiPhuc").click(function () {
+            var arrChecked_Id = [];
+            $("#tblThungRac .checkXThungRac:checked").each(function () {
+                arrChecked_Id.push(this.id.replace("checkXThungRac", ""));
+            });
+            
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần khôi phục!");
+                return;
+            }
+            
+            edu.system.confirm("Bạn có chắc chắn khôi phục dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.restore_DeXuatHoSo(arrChecked_Id[i]);
+                }
+            });
+        });
+        
+        // Xóa vĩnh viễn
+        $("#btnXoaVinhVien").click(function () {
+            var arrChecked_Id = [];
+            $("#tblThungRac .checkXThungRac:checked").each(function () {
+                arrChecked_Id.push(this.id.replace("checkXThungRac", ""));
+            });
+            
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa!");
+                return;
+            }
+            
+            edu.system.confirm("Bạn có chắc chắn xóa vĩnh viễn? Dữ liệu sẽ không thể khôi phục!");
+            $("#btnYes").click(function (e) {
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.permanentDelete_DeXuatHoSo(arrChecked_Id[i]);
+                }
+            });
+        });
+        
+        // Xóa vĩnh viễn từng dòng
+        $("#tblThungRac").delegate(".btnDeletePermanent", "click", function () {
+            var strId = this.id;
+            edu.system.confirm("Bạn có chắc chắn xóa vĩnh viễn? Dữ liệu sẽ không thể khôi phục!");
+            $("#btnYes").click(function (e) {
+                me.permanentDelete_DeXuatHoSo(strId);
             });
         });
         
@@ -256,12 +348,6 @@ DeXuatHoSo.prototype = {
             me.clearForm_GiaDinh();
         });
         
-        $("#tblGiaDinh").delegate(".btnChiTiet_GiaDinh", "click", function () {
-            var strId = this.id;
-            var data = me.dtGiaDinh.find(e => e.ID == strId);
-            me.show_ChiTietGiaDinh(data);
-        });
-        
         $("#tblGiaDinh").delegate(".btnEdit_GiaDinh", "click", function () {
             var strId = this.id;
             var data = me.dtGiaDinh.find(e => e.ID == strId);
@@ -327,12 +413,6 @@ DeXuatHoSo.prototype = {
             me.clearForm_TaiKhoanNH();
         });
         
-        $("#tblTaiKhoanNH").delegate(".btnChiTiet_TaiKhoanNH", "click", function () {
-            var strId = this.id;
-            var data = me.dtTaiKhoanNH.find(e => e.ID == strId);
-            me.show_ChiTietTaiKhoanNH(data);
-        });
-        
         $("#tblTaiKhoanNH").delegate(".btnEdit_TaiKhoanNH", "click", function () {
             var strId = this.id;
             var data = me.dtTaiKhoanNH.find(e => e.ID == strId);
@@ -372,11 +452,6 @@ DeXuatHoSo.prototype = {
             me.toggle_FormHocVan();
             $("#lblTitleHocVan").text("Thêm học vấn");
             me.clearForm_HocVan();
-        });
-        
-        $("#tblHocVan").delegate(".btnChiTiet_HocVan", "click", function () {
-            var strId = this.id;
-            me.show_ChiTietHocVan(strId);
         });
         
         $("#tblHocVan").delegate(".btnEdit_HocVan", "click", function () {
@@ -425,11 +500,6 @@ DeXuatHoSo.prototype = {
             me.toggle_FormChungChi();
             $("#lblTitleChungChi").text("Thêm chứng chỉ");
             me.clearForm_ChungChi();
-        });
-        
-        $("#tblChungChi").delegate(".btnChiTiet_ChungChi", "click", function () {
-            var strId = this.id;
-            me.show_ChiTietChungChi(strId);
         });
         
         $("#tblChungChi").delegate(".btnEdit_ChungChi", "click", function () {
@@ -494,11 +564,6 @@ DeXuatHoSo.prototype = {
             $("#lblTitleTaiLieu").text("Thêm tài liệu");
         });
         
-        $("#tblTaiLieu").delegate(".btnChiTiet_TaiLieu", "click", function () {
-            var strId = this.id;
-            me.show_ChiTietTaiLieu(strId);
-        });
-        
         $("#tblTaiLieu").delegate(".btnEdit_TaiLieu", "click", function () {
             var strId = this.id;
             me.strTaiLieu_Id = strId;
@@ -559,11 +624,6 @@ DeXuatHoSo.prototype = {
             me.strHocHam_Id = "";
             me.toggle_FormHocHam();
             $("#lblTitleHocHam").text("Thêm học hàm");
-        });
-        
-        $("#tblHocHam").delegate(".btnChiTiet_HocHam", "click", function () {
-            var strId = this.id;
-            me.show_ChiTietHocHam(strId);
         });
         
         $("#tblHocHam").delegate(".btnEdit_HocHam", "click", function () {
@@ -636,6 +696,13 @@ DeXuatHoSo.prototype = {
     },
     toggle_ChiTietHoSo: function () {
         edu.util.toggle_overide("zone-bus", "zoneChiTietHoSo");
+        
+        // Hiển thị tên người được chọn
+        var selectedPerson = this.dtDeXuatHoSo.find(e => e.ID == this.strDeXuatHoSo_Id);
+        if (selectedPerson) {
+            $("#lblTenNguoiDuocChon").text(selectedPerson.FULL_NAME || "");
+        }
+        
         // Load dữ liệu địa chỉ cho Tab 1
         this.getList_DiaChi();
         // Load dữ liệu gia đình cho Tab 2
@@ -672,9 +739,30 @@ DeXuatHoSo.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
+                    var dtReRult = data.Data || [];
+                    
+                    // Đếm số người đã xóa để hiển thị badge
+                    var countDeleted = 0;
+                    if (dtReRult && dtReRult.length > 0) {
+                        countDeleted = dtReRult.filter(function(item) {
+                            return item.IS_ACTIVE == 0;
+                        }).length;
+                        
+                        // Lọc chỉ lấy người chưa bị xóa (IS_ACTIVE = 1)
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.IS_ACTIVE == 1;
+                        });
+                    }
+                    
+                    // Cập nhật badge thùng rác
+                    if (countDeleted > 0) {
+                        $("#badgeThungRac").text(countDeleted).show();
+                    } else {
+                        $("#badgeThungRac").hide();
+                    }
+                    
                     me.dtDeXuatHoSo = dtReRult;
-                    me.genTable_DeXuatHoSo(dtReRult, data.Pager);
+                    me.genTable_DeXuatHoSo(dtReRult, dtReRult.length);
                 }
                 else {
                     edu.system.alert(data.Message, "s");
@@ -830,57 +918,79 @@ DeXuatHoSo.prototype = {
     genTable_DeXuatHoSo: function (data, iPager) {
         var me = this;
         $("#lblDeXuatHoSo_Tong").html(iPager);
-        var jsonForm = {
-            strTable_Id: "tblDeXuatHoSo",
-
-            //bPaginate: {
-            //    strFuntionName: "main_doc.DeXuatHoSo.getList_DeXuatHoSo()",
-            //    iDataRow: iPager,
-            //},
-            aaData: data,
-            colPos: {
-                center: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-            },
-            aoColumns: [
-                {
-                    "mRender": function (nRow, aData, iDisplayIndex) {
-                        return iDisplayIndex + 1;
-                    }
-                },
-                {
-                    "mDataProp": "FULL_NAME",
-                },
-                {
-                    "mDataProp": "DATE_OF_BIRTH"
-                },
-                {
-                    "mDataProp": "GENDER_NAME"
-                },
-                {
-                    "mDataProp": "PROFILE_STATUS_NAME"
-                },
-                {
-                    "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-primary btn-sm btnXemChiTiet" id="' + aData.ID + '" title="Xem chi tiết"><i class="fa fa-eye me-1"></i>Xem chi tiết</a></span>';
-                    }
-                },
-                {
-                    "mDataProp": "IS_ACTIVE"
-                },
-                {
-                    "mDataProp": "CREATED_AT_DD_MM_YYYY_HHMMSS"
-                },
-                {
-                    "mDataProp": "CREATED_BY_TAIKHOAN"
-                },
-                {
-                    "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
-                    }
+        me.dtDeXuatHoSo = data || [];
+        
+        // Lọc theo từ khóa tìm kiếm
+        var strSearch = $("#txtSearch").val().toLowerCase().trim();
+        var strGioiTinh = $("#dropSearch_GioiTinh").val();
+        
+        var filteredData = me.dtDeXuatHoSo;
+        
+        if (strSearch) {
+            filteredData = filteredData.filter(function(item) {
+                var fullName = (item.FULL_NAME || '').toLowerCase();
+                var dateOfBirth = (item.DATE_OF_BIRTH || '').toLowerCase();
+                var employeeCode = (item.CURRENT_EMPLOYEE_CODE || '').toLowerCase();
+                return fullName.indexOf(strSearch) >= 0 || 
+                       dateOfBirth.indexOf(strSearch) >= 0 || 
+                       employeeCode.indexOf(strSearch) >= 0;
+            });
+        }
+        
+        if (strGioiTinh) {
+            filteredData = filteredData.filter(function(item) {
+                return item.GENDER_ID == strGioiTinh;
+            });
+        }
+        
+        var htmlBody = '';
+        
+        if (filteredData.length > 0) {
+            for (var i = 0; i < filteredData.length; i++) {
+                var item = filteredData[i];
+                var stt = i + 1;
+                
+                htmlBody += '<tr>';
+                htmlBody += '<td class="text-center">' + stt + '</td>';
+                htmlBody += '<td class="text-center">' + (item.CURRENT_EMPLOYEE_CODE || '') + '</td>';
+                htmlBody += '<td>' + (item.FULL_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.DATE_OF_BIRTH || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.GENDER_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.PROFILE_STATUS_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">';
+                htmlBody += '<a class="btn btn-primary btn-sm btnXemChiTiet" id="' + item.ID + '" title="Xem chi tiết">';
+                htmlBody += '<i class="fa fa-eye me-1"></i>Xem chi tiết</a>';
+                htmlBody += '</td>';
+                htmlBody += '<td class="text-center">';
+                if (item.IS_ACTIVE == 1) {
+                    htmlBody += '<span class="badge bg-success">Có hiệu lực</span>';
+                } else {
+                    htmlBody += '<span class="badge bg-secondary">Không hiệu lực</span>';
                 }
-            ]
-        };
-        edu.system.loadToTable_data(jsonForm);
+                htmlBody += '</td>';
+                htmlBody += '<td class="text-center">' + (item.CREATED_AT_DD_MM_YYYY_HHMMSS || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.CREATED_BY_TAIKHOAN || '') + '</td>';
+                htmlBody += '<td class="text-center">';
+                htmlBody += '<a class="btn btn-default btn-sm btnEdit" id="' + item.ID + '" title="Sửa">';
+                htmlBody += '<i class="fa fa-edit color-active"></i></a>';
+                htmlBody += '</td>';
+                htmlBody += '<td class="text-center">';
+                htmlBody += '<a class="btn btn-danger btn-sm btnDelete_Row" id="' + item.ID + '" title="Xóa">';
+                htmlBody += '<i class="fa fa-trash"></i></a>';
+                htmlBody += '</td>';
+                htmlBody += '<td class="text-center">';
+                htmlBody += '<input type="checkbox" class="checkX" id="checkX' + item.ID + '" />';
+                htmlBody += '</td>';
+                htmlBody += '</tr>';
+            }
+        } else {
+            htmlBody += '<tr><td colspan="13" class="text-center" style="padding: 40px;">';
+            htmlBody += '<i class="fa-solid fa-inbox fa-3x"></i>';
+            htmlBody += '<div>Không tìm thấy dữ liệu</div>';
+            htmlBody += '</td></tr>';
+        }
+        
+        $("#tblDeXuatHoSo tbody").html(htmlBody);
     },
 
     save_KiemTraDinhDanh: function (strId) {
@@ -1502,6 +1612,12 @@ DeXuatHoSo.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
                     me["dtDiaChi"] = dtReRult;
                     me.genTable_DiaChi(dtReRult, data.Pager);
                 }
@@ -1757,6 +1873,12 @@ DeXuatHoSo.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
                     me["dtGiaDinh"] = dtReRult;
                     me.genTable_GiaDinh(dtReRult, data.Pager);
                 }
@@ -1811,69 +1933,15 @@ DeXuatHoSo.prototype = {
                 }
                 htmlBody += '</td>';
                 htmlBody += '<td>' + (item.NOTE || '') + '</td>';
-                htmlBody += '<td class="text-center"><a class="btn btn-primary btn-sm btnChiTiet_GiaDinh" id="' + item.ID + '" title="Chi tiết"><i class="fa fa-eye me-1"></i>Chi tiết</a></td>';
                 htmlBody += '<td class="text-center"><a class="btn btn-default btn-sm btnEdit_GiaDinh" id="' + item.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></td>';
                 htmlBody += '<td class="text-center"><a class="btn btn-danger btn-sm btnDelete_GiaDinh" id="' + item.ID + '" title="Xóa"><i class="fa fa-trash"></i></a></td>';
                 htmlBody += '</tr>';
             }
         } else {
-            htmlBody += '<tr><td colspan="21" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
+            htmlBody += '<tr><td colspan="20" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
         }
         
         $("#tblGiaDinh tbody").html(htmlBody);
-    },
-
-    show_ChiTietGiaDinh: function (data) {
-        var strHTML = '<div class="container-fluid" style="max-height: 70vh; overflow-y: auto;">';
-        strHTML += '<div class="row">';
-        strHTML += '<div class="col-12"><h5 class="text-primary mb-3"><i class="fa fa-users me-2"></i>Thông tin chi tiết thành viên gia đình</h5></div>';
-        
-        // Thông tin quan hệ
-        strHTML += '<div class="col-12"><h6 class="text-success mt-2"><i class="fa fa-link me-2"></i>Thông tin quan hệ</h6></div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Loại quan hệ:</strong> ' + edu.util.returnEmpty(data.RELATION_TYPE_CODE_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Mã trạng thái quan hệ:</strong> ' + edu.util.returnEmpty(data.RELATION_STATUS_CODE_NAME) + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin cá nhân
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-user me-2"></i>Thông tin cá nhân</h6></div>';
-        strHTML += '<div class="col-md-12 mb-2"><strong>Họ tên đầy đủ của thân nhân:</strong> ' + edu.util.returnEmpty(data.FULL_NAME) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Họ:</strong> ' + edu.util.returnEmpty(data.LAST_NAME) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Tên đệm:</strong> ' + edu.util.returnEmpty(data.MIDDLE_NAME) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Tên:</strong> ' + edu.util.returnEmpty(data.FIRST_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Giới tính:</strong> ' + edu.util.returnEmpty(data.GENDER_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Mức độ chính xác của ngày sinh:</strong> ' + edu.util.returnEmpty(data.DOB_PRECISION_LEVEL_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Ngày sinh đầy đủ:</strong> ' + edu.util.returnEmpty(data.DATE_OF_BIRTH) + '</div>';
-        strHTML += '<div class="col-md-2 mb-2"><strong>Ngày sinh:</strong> ' + edu.util.returnEmpty(data.BIRTH_DAY) + '</div>';
-        strHTML += '<div class="col-md-2 mb-2"><strong>Tháng sinh:</strong> ' + edu.util.returnEmpty(data.BIRTH_MONTH) + '</div>';
-        strHTML += '<div class="col-md-2 mb-2"><strong>Năm sinh:</strong> ' + edu.util.returnEmpty(data.BIRTH_YEAR) + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin công việc và liên hệ
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-briefcase me-2"></i>Thông tin công việc & liên hệ</h6></div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Nghề nghiệp:</strong> ' + edu.util.returnEmpty(data.OCCUPATION) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Nơi làm việc:</strong> ' + edu.util.returnEmpty(data.WORKPLACE) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Số điện thoại:</strong> ' + edu.util.returnEmpty(data.PHONE_NUMBER) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Email:</strong> ' + edu.util.returnEmpty(data.EMAIL) + '</div>';
-        strHTML += '<div class="col-md-12 mb-2"><strong>Địa chỉ của thân nhân:</strong> ' + edu.util.returnEmpty(data.ADDRESS_TEXT) + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin bổ sung
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-info-circle me-2"></i>Thông tin bổ sung</h6></div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Người phụ thuộc:</strong> ' + (data.IS_DEPENDENT == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Người liên hệ khẩn cấp:</strong> ' + (data.IS_EMERGENCY_CONTACT == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Quan hệ chính:</strong> ' + (data.IS_PRIMARY_CONTACT == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin hiệu lực
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-calendar me-2"></i>Thông tin hiệu lực</h6></div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Ngày hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_FROM) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Ngày hết hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_TO) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Hiệu lực:</strong> ' + (data.IS_ACTIVE == 1 ? '<span class="badge bg-success">Có hiệu lực</span>' : '<span class="badge bg-secondary">Hết hiệu lực</span>') + '</div>';
-        strHTML += '<div class="col-md-12 mb-2"><strong>Ghi chú:</strong> ' + edu.util.returnEmpty(data.NOTE) + '</div>';
-        
-        strHTML += '</div></div>';
-        
-        edu.system.alert(strHTML);
     },
 
     toggle_FormGiaDinh: function () {
@@ -2074,6 +2142,12 @@ DeXuatHoSo.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
                     me["dtTaiKhoanNH"] = dtReRult;
                     me.genTable_TaiKhoanNH(dtReRult, data.Pager);
                 }
@@ -2127,57 +2201,15 @@ DeXuatHoSo.prototype = {
                 }
                 htmlBody += '</td>';
                 htmlBody += '<td>' + (item.NOTE || '') + '</td>';
-                htmlBody += '<td class="text-center"><a class="btn btn-primary btn-sm btnChiTiet_TaiKhoanNH" id="' + item.ID + '" title="Chi tiết"><i class="fa fa-eye me-1"></i>Chi tiết</a></td>';
                 htmlBody += '<td class="text-center"><a class="btn btn-default btn-sm btnEdit_TaiKhoanNH" id="' + item.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></td>';
                 htmlBody += '<td class="text-center"><a class="btn btn-danger btn-sm btnDelete_TaiKhoanNH" id="' + item.ID + '" title="Xóa"><i class="fa fa-trash"></i></a></td>';
                 htmlBody += '</tr>';
             }
         } else {
-            htmlBody += '<tr><td colspan="20" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
+            htmlBody += '<tr><td colspan="19" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
         }
         
         $("#tblTaiKhoanNH tbody").html(htmlBody);
-    },
-
-    show_ChiTietTaiKhoanNH: function (data) {
-        var strHTML = '<div class="container-fluid" style="max-height: 70vh; overflow-y: auto;">';
-        strHTML += '<div class="row">';
-        strHTML += '<div class="col-12"><h5 class="text-primary mb-3"><i class="fa fa-university me-2"></i>Thông tin chi tiết tài khoản ngân hàng</h5></div>';
-        
-        // Thông tin tài khoản
-        strHTML += '<div class="col-12"><h6 class="text-success mt-2"><i class="fa fa-credit-card me-2"></i>Thông tin tài khoản</h6></div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Loại tài khoản:</strong> ' + edu.util.returnEmpty(data.ACCOUNT_TYPE_CODE_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Trạng thái tài khoản:</strong> ' + edu.util.returnEmpty(data.ACCOUNT_STATUS_CODE_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Số tài khoản:</strong> <strong class="text-primary">' + edu.util.returnEmpty(data.ACCOUNT_NUMBER) + '</strong></div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Tên chủ tài khoản:</strong> ' + edu.util.returnEmpty(data.ACCOUNT_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Loại tiền tệ:</strong> ' + edu.util.returnEmpty(data.ACCOUNT_CURRENCY_CODE_NAME) + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin ngân hàng
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-building me-2"></i>Thông tin ngân hàng</h6></div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Tên ngân hàng:</strong> ' + edu.util.returnEmpty(data.BANK_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Mã ngân hàng:</strong> ' + edu.util.returnEmpty(data.BANK_CODE) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Tên chi nhánh:</strong> ' + edu.util.returnEmpty(data.BRANCH_NAME) + '</div>';
-        strHTML += '<div class="col-md-6 mb-2"><strong>Mã chi nhánh:</strong> ' + edu.util.returnEmpty(data.BRANCH_CODE) + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin bổ sung
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-info-circle me-2"></i>Thông tin bổ sung</h6></div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Tài khoản chính:</strong> ' + (data.IS_PRIMARY == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>TK mặc định chi trả:</strong> ' + (data.IS_PAYROLL_DEFAULT == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Đã xác thực:</strong> ' + (data.IS_VERIFIED == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-        strHTML += '<div class="col-md-12"><hr></div>';
-        
-        // Thông tin hiệu lực
-        strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-calendar me-2"></i>Thông tin hiệu lực</h6></div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Ngày hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_FROM) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Ngày hết hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_TO) + '</div>';
-        strHTML += '<div class="col-md-4 mb-2"><strong>Hiệu lực:</strong> ' + (data.IS_ACTIVE == 1 ? '<span class="badge bg-success">Có hiệu lực</span>' : '<span class="badge bg-secondary">Hết hiệu lực</span>') + '</div>';
-        strHTML += '<div class="col-md-12 mb-2"><strong>Ghi chú:</strong> ' + edu.util.returnEmpty(data.NOTE) + '</div>';
-        
-        strHTML += '</div></div>';
-        
-        edu.system.alert(strHTML);
     },
 
     toggle_FormTaiKhoanNH: function () {
@@ -2366,7 +2398,14 @@ DeXuatHoSo.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtHocVan = data.Data || [];
+                    var dtReRult = data.Data || [];
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
+                    me.dtHocVan = dtReRult;
                     me.genTable_HocVan(me.dtHocVan);
                 }
                 else {
@@ -2768,7 +2807,14 @@ DeXuatHoSo.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtChungChi = data.Data || [];
+                    var dtReRult = data.Data || [];
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
+                    me.dtChungChi = dtReRult;
                     me.genTable_ChungChi(me.dtChungChi);
                 }
                 else {
@@ -3138,7 +3184,14 @@ DeXuatHoSo.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtTaiLieu = data.Data || [];
+                    var dtReRult = data.Data || [];
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
+                    me.dtTaiLieu = dtReRult;
                     me.genTable_TaiLieu(me.dtTaiLieu);
                 }
                 else {
@@ -3455,7 +3508,14 @@ DeXuatHoSo.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtHocHam = data.Data || [];
+                    var dtReRult = data.Data || [];
+                    // Lọc chỉ lấy dữ liệu của người được chọn
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        });
+                    }
+                    me.dtHocHam = dtReRult;
                     me.genTable_HocHam(me.dtHocHam);
                 }
                 else {
@@ -3699,6 +3759,156 @@ DeXuatHoSo.prototype = {
                 if (data.Success) {
                     edu.system.alert("Xóa thành công!");
                     me.getList_HocHam();
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi: " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_delete.action,
+            data: obj_delete,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    /*-------------------------------------------
+    --Thùng rác
+    -------------------------------------------*/
+    toggle_ThungRac: function () {
+        edu.util.toggle_overide("zone-bus", "zoneThungRac");
+    },
+    
+    getList_ThungRac: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu5_MH/BiQ1Ai4zJBEkMzIuLwM4DyY0LigVIC4IJQPP',
+            'func': 'PKG_CORE_HOSONHANSU_05.GetCorePersonByNguoiTaoId',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data || [];
+                    // Lọc chỉ lấy người đã xóa (IS_ACTIVE = 0)
+                    if (dtReRult && dtReRult.length > 0) {
+                        dtReRult = dtReRult.filter(function(item) {
+                            return item.IS_ACTIVE == 0;
+                        });
+                    }
+                    me.genTable_ThungRac(dtReRult);
+                }
+                else {
+                    edu.system.alert(data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    genTable_ThungRac: function (data) {
+        var me = this;
+        var htmlBody = '';
+        
+        // Cập nhật tổng số
+        $("#lblTongThungRac").text(data ? data.length : 0);
+        
+        if (data && data.length > 0) {
+            for (var i = 0; i < data.length; i++) {
+                var item = data[i];
+                var stt = i + 1;
+                
+                htmlBody += '<tr>';
+                htmlBody += '<td class="text-center">' + stt + '</td>';
+                htmlBody += '<td>' + (item.FULL_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.DATE_OF_BIRTH || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.GENDER_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.UPDATED_AT_DD_MM_YYYY_HHMMSS || item.CREATED_AT_DD_MM_YYYY_HHMMSS || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (item.UPDATED_BY_TAIKHOAN || item.CREATED_BY_TAIKHOAN || '') + '</td>';
+                htmlBody += '<td class="text-center">';
+                htmlBody += '<a class="btn btn-danger btn-sm btnDeletePermanent" id="' + item.ID + '" title="Xóa vĩnh viễn">';
+                htmlBody += '<i class="fa fa-trash-alt"></i></a>';
+                htmlBody += '</td>';
+                htmlBody += '<td class="text-center">';
+                htmlBody += '<input type="checkbox" class="checkXThungRac" id="checkXThungRac' + item.ID + '" />';
+                htmlBody += '</td>';
+                htmlBody += '</tr>';
+            }
+        } else {
+            htmlBody += '<tr><td colspan="8" class="text-center" style="padding: 40px;">';
+            htmlBody += '<i class="fa-solid fa-inbox fa-3x"></i>';
+            htmlBody += '<div>Thùng rác trống</div>';
+            htmlBody += '</td></tr>';
+        }
+        
+        $("#tblThungRac tbody").html(htmlBody);
+    },
+    
+    restore_DeXuatHoSo: function (strId) {
+        var me = this;
+        var obj_restore = {
+            'action': 'NS_HoSoNhanSu5_MH/FDElIDUkAi4zJBEkMzIuLwPP',
+            'func': 'PKG_CORE_HOSONHANSU_05.UpdateCorePerson',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'dIs_Active': 1,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Khôi phục thành công!");
+                    me.getList_ThungRac();
+                    me.getList_DeXuatHoSo();
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi: " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_restore.action,
+            data: obj_restore,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    
+    permanentDelete_DeXuatHoSo: function (strId) {
+        var me = this;
+        // Gọi API xóa vĩnh viễn - có thể cần API khác hoặc thêm tham số
+        var obj_delete = {
+            'action': 'NS_HoSoNhanSu5_MH/BSQtJDUkAi4zJBEkMzIuLwPP',
+            'func': 'PKG_CORE_HOSONHANSU_05.DeleteCorePerson',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'bPermanent': true, // Thêm flag để backend biết xóa vĩnh viễn
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Xóa vĩnh viễn thành công!");
+                    me.getList_ThungRac();
+                    me.getList_DeXuatHoSo();
                 }
                 else {
                     edu.system.alert(data.Message);

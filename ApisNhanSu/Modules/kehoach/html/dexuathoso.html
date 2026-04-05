@@ -29,6 +29,31 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
+    
+    /* Fix cho bảng chính bên ngoài */
+    #tblDeXuatHoSo {
+        table-layout: auto !important;
+        width: 100% !important;
+    }
+    
+    #tblDeXuatHoSo th,
+    #tblDeXuatHoSo td {
+        padding: 8px 12px !important;
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+    
+    #tblDeXuatHoSo thead th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        border-bottom: 2px solid #dee2e6;
+    }
+    
+    /* Đảm bảo bảng chính cũng responsive */
+    .container-fluid .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
 </style>
 <div class="one-door aps-phieu">
     <div class="overlay"></div>
@@ -51,11 +76,20 @@
     <div class="box-shadow register-wish pt-0 zone-bus" id="zonebatdau">
         <!-- Bộ tìm kiếm -->
         <div class="form-top">
-            <!--<div class="row">
+            <div class="row">
                 <div class="col-12 col-lg-3 col-md-6 mb-15">
-                    <div class="form-item d-flex  form-add-info flex-grow-1">
+                    <div class="form-item d-flex form-add-info flex-grow-1">
                         <div class="input-group no-icon">
-                            <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa tìm kiếm">
+                            <input type="text" class="form-control" id="txtSearch" placeholder="Nhập từ khóa tìm kiếm (mã, họ tên, ngày sinh...)">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-3 col-md-6 mb-15">
+                    <div class="form-item d-flex form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                            <select id="dropSearch_GioiTinh" class="select-opt">
+                                <option value="">-- Tất cả giới tính --</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -67,8 +101,7 @@
                         <div class="dropdown" id="zonebtnBaoCao_DeXuatHoSo"></div>
                     </div>
                 </div>
-            </div>-->
-
+            </div>
         </div>
         <!-- Danh sách phiếu -->
         <div class="container-fluid px-20">
@@ -84,6 +117,10 @@
                     <div class="btn btn-danger" id="btnDelete_DeXuatHoSo" style="min-width: unset">
                         <i class="fal fa-trash"></i> Xóa
                     </div>
+                    <div class="btn btn-secondary" id="btnThungRac">
+                        <i class="fal fa-trash-restore"></i> Thùng rác 
+                        <span class="badge bg-danger" id="badgeThungRac" style="display: none;">0</span>
+                    </div>
                     <div class="btn btn-success btnAdd" id="btnAdd_DeXuatHoSo">
                         <i class="fal fa-plus"></i> Nhập hồ sơ đề xuất
                     </div>
@@ -93,24 +130,30 @@
                 </div>
 
             </div>
-            <table class="table transcrip-table tabs-scores h-auto tblDeXuatHoSo table-bordered table-noborder"
-                   id="tblDeXuatHoSo">
-                <thead>
-                    <tr>
-                        <th class="text-center w-50px" scope="col">STT</th>
-                        <th class="" scope="col">Họ và tên</th>
-                        <th class="text-center" scope="col">Ngày sinh</th>
-                        <th class="text-center" scope="col">Giới tính</th>
-                        <th class="text-center" scope="col">Tình trạng hồ sơ</th>
-                        <th class="text-center w-100px" scope="col">Hoàn thiện hồ sơ</th>
-                        <th class="text-center" scope="col">Hiệu lực</th>
-                        <th class="text-center" scope="col">Ngày tạo</th>
-                        <th class="text-center" scope="col">Người tạo</th>
-                        <th class="text-center w-50px" scope="col">Sửa</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="tblDeXuatHoSo">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-center" style="width: 50px;">STT</th>
+                            <th class="text-center" style="min-width: 120px;">Mã chính thức</th>
+                            <th style="min-width: 200px;">Họ và tên</th>
+                            <th class="text-center" style="min-width: 120px;">Ngày sinh</th>
+                            <th class="text-center" style="min-width: 100px;">Giới tính</th>
+                            <th class="text-center" style="min-width: 150px;">Tình trạng hồ sơ</th>
+                            <th class="text-center" style="min-width: 150px;">Hoàn thiện hồ sơ</th>
+                            <th class="text-center" style="min-width: 120px;">Hiệu lực</th>
+                            <th class="text-center" style="min-width: 150px;">Ngày tạo</th>
+                            <th class="text-center" style="min-width: 100px;">Người tạo</th>
+                            <th class="text-center" style="width: 60px;">Sửa</th>
+                            <th class="text-center" style="width: 60px;">Xóa</th>
+                            <th class="text-center" style="width: 60px;">
+                                <input type="checkbox" id="checkAll_DeXuatHoSo" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -393,7 +436,7 @@
                         <a>
                             <span class="myModalLabel">
                                 <i class="fa-regular fa-file-circle-info fw-bold"></i>
-                            </span> Chi tiết hồ sơ
+                            </span> Chi tiết hồ sơ: <span id="lblTenNguoiDuocChon" class="text-warning fw-bold"></span>
                         </a>
                     </p>
                 </div>
@@ -417,7 +460,7 @@
                     </li>
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="tab3-tab" data-bs-toggle="tab" data-bs-target="#tab3" type="button" role="tab">
-                            <i class="fa fa-university me-1"></i> Tài khoản NH
+                            <i class="fa fa-university me-1"></i> Tài khoản ngân hàng
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -525,7 +568,6 @@
                                         <th class="text-center" style="min-width: 120px;">Ngày hết hiệu lực</th>
                                         <th class="text-center" style="min-width: 100px;">Hiệu lực</th>
                                         <th style="min-width: 150px;">Ghi chú</th>
-                                        <th class="text-center" style="width: 80px;">Chi tiết</th>
                                         <th class="text-center" style="width: 60px;">Sửa</th>
                                         <th class="text-center" style="width: 60px;">Xóa</th>
                                     </tr>
@@ -571,7 +613,6 @@
                                         <th class="text-center" style="min-width: 120px;">Ngày hết hiệu lực</th>
                                         <th class="text-center" style="min-width: 100px;">Hiệu lực</th>
                                         <th style="min-width: 150px;">Ghi chú</th>
-                                        <th class="text-center" style="width: 80px;">Chi tiết</th>
                                         <th class="text-center" style="width: 60px;">Sửa</th>
                                         <th class="text-center" style="width: 60px;">Xóa</th>
                                     </tr>
@@ -627,7 +668,6 @@
                                         <th class="text-center" style="min-width: 120px;">Ngày hết hiệu lực</th>
                                         <th class="text-center" style="min-width: 100px;">Hiệu lực</th>
                                         <th style="min-width: 150px;">Ghi chú</th>
-                                        <th class="text-center" style="width: 80px;">Chi tiết</th>
                                         <th class="text-center" style="width: 60px;">Sửa</th>
                                         <th class="text-center" style="width: 60px;">Xóa</th>
                                     </tr>
@@ -677,7 +717,6 @@
                                         <th class="text-center" style="min-width: 120px;">Ngày hết hiệu lực</th>
                                         <th class="text-center" style="min-width: 100px;">Hiệu lực</th>
                                         <th style="min-width: 150px;">Ghi chú</th>
-                                        <th class="text-center" style="width: 80px;">Chi tiết</th>
                                         <th class="text-center" style="width: 60px;">Sửa</th>
                                         <th class="text-center" style="width: 60px;">Xóa</th>
                                     </tr>
@@ -724,7 +763,6 @@
                                         <th class="text-center" style="min-width: 120px;">Ngày hết hiệu lực</th>
                                         <th class="text-center" style="min-width: 100px;">Hiệu lực</th>
                                         <th style="min-width: 150px;">Ghi chú</th>
-                                        <th class="text-center" style="width: 80px;">Chi tiết</th>
                                         <th class="text-center" style="width: 60px;">Sửa</th>
                                         <th class="text-center" style="width: 60px;">Xóa</th>
                                     </tr>
@@ -766,7 +804,6 @@
                                         <th class="text-center" style="min-width: 120px;">Ngày hết hiệu lực</th>
                                         <th class="text-center" style="min-width: 100px;">Hiệu lực</th>
                                         <th style="min-width: 150px;">Ghi chú</th>
-                                        <th class="text-center" style="width: 80px;">Chi tiết</th>
                                         <th class="text-center" style="width: 60px;">Sửa</th>
                                         <th class="text-center" style="width: 60px;">Xóa</th>
                                     </tr>
@@ -783,6 +820,75 @@
                 <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
                     <div class="ms-auto aps-gap-10">
                         <div class="btn btn-outline-secondary btnClose">
+                            <i class="fal fa-times"></i> Đóng
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Thùng rác -->
+    <div class="fake-modal zone-bus" id="zoneThungRac" style="display: none; padding-top: 15px">
+        <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
+            <div class="d-flex justify-content-between pt-3 px-20 box-header">
+                <div class="nav-content-left">
+                    <p class="link">
+                        <a>
+                            <span class="myModalLabel">
+                                <i class="fa-solid fa-trash-restore fw-bold"></i>
+                            </span> Thùng rác
+                        </a>
+                    </p>
+                </div>
+                <div class="nav-content-right mt">
+                    <a class="d-block text-right fs-16 mt-5 color-fff btnCloseThungRac"><i class="fal fa-times"></i></a>
+                </div>
+            </div>
+            
+            <div class="container-fluid px-20">
+                <div class="d-flex align-items-center mt-3 flex-wrap mb-3">
+                    <div class="group-title pl0">
+                        <p class="mb-0">
+                            <i class="fa-solid fa-trash"></i>
+                            <span>Danh sách hồ sơ đã xóa (<span id="lblTongThungRac">0</span>)</span>
+                        </p>
+                    </div>
+                    <div class="ms-auto aps-gap-10">
+                        <div class="btn btn-danger btn-sm" id="btnXoaVinhVien">
+                            <i class="fal fa-trash-alt"></i> Xóa vĩnh viễn
+                        </div>
+                        <div class="btn btn-success btn-sm" id="btnKhoiPhuc">
+                            <i class="fal fa-undo"></i> Khôi phục
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" id="tblThungRac">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-center" style="width: 50px;">STT</th>
+                                <th style="min-width: 200px;">Họ và tên</th>
+                                <th class="text-center" style="min-width: 120px;">Ngày sinh</th>
+                                <th class="text-center" style="min-width: 100px;">Giới tính</th>
+                                <th class="text-center" style="min-width: 150px;">Ngày xóa</th>
+                                <th class="text-center" style="min-width: 100px;">Người xóa</th>
+                                <th class="text-center" style="width: 60px;">Xóa</th>
+                                <th class="text-center" style="width: 60px;">
+                                    <input type="checkbox" id="checkAll_ThungRac" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="container-fluid px-20">
+                <hr />
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                    <div class="ms-auto aps-gap-10">
+                        <div class="btn btn-outline-secondary btnCloseThungRac">
                             <i class="fal fa-times"></i> Đóng
                         </div>
                     </div>
@@ -879,7 +985,7 @@
                         <div class="form-item d-flex mb-0 form-add-info">
                             <label class="form-label" style="width:200px !important">Địa chỉ đầy đủ</label>
                             <div class="input-group">
-                                <textarea class="form-control" id="txtDiaChiDayDu" rows="2" readonly style="background-color: #f5f6f8 !important"></textarea>
+                                <textarea class="form-control" id="txtDiaChiDayDu" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
