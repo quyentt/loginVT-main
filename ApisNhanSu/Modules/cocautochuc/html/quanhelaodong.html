@@ -294,12 +294,12 @@
 
 <!-- modal Thêm vị trí  -->
 <div class="modal fade modal_them_qh_ld" id="modalAddQuanHe">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-860">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-90">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
                     <div class="title">
-                        <span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Quan hệ lao động
+                        <span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Thêm mới quan hệ lao động
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -325,7 +325,6 @@
                         </div>
                         <div class="col-12 col-sm-9 aps-form-input pr0">
                             <div class="custom-select">
-
                                 <select id="dropTrangThaiQuanHe" class="select-opt form-select"
                                         aria-label="Default select example"></select>
                             </div>
@@ -335,13 +334,11 @@
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
                             <div class="title-name" style="line-height: 18px !important;">
-                                Đơn vị sử dụng lao
-                                động<br>(ký hợp đồng)
+                                Đơn vị sử dụng lao động<br>(ký hợp đồng)
                             </div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-input pr0">
                             <div class="custom-select">
-
                                 <select id="dropDonViSuDung" class="select-opt form-select"
                                         aria-label="Default select example"></select>
                             </div>
@@ -350,50 +347,169 @@
                     <!-- Row 4 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
-                            <div class="title-name">Quan hệ chính</div>
+                            <div class="title-name">Đơn vị quản lý</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-input pr0">
                             <div class="custom-select">
-
-                                <select id="dropQuanHeChinh" class="select-opt form-select"
-                                        aria-label="Default select example">
-                                    <option value="1">
-                                        Quan hệ chính
-                                    </option>
-                                    <option value="0">
-                                        Không phải quan hệ chính
-                                    </option>
-                                </select>
+                                <select id="dropDonViQuanLy" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
                             </div>
                         </div>
                     </div>
                     <!-- Row 5 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Mã pháp nhân chịu trách nhiệm pháp lý</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropPhapNhan" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 6 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Loại hợp đồng</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropLoaiHopDong" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 7 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Trạng thái nguồn của mã số</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropTrangThaiNguonMaSo" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 8 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Mã số</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <input id="txtMaSo" class="form-control" placeholder="Nhập mã số">
+                        </div>
+                    </div>
+                    <!-- Row 9 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Ngày cấp mã nhân sự</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <input id="txtNgayCapMaNhanSu" class="form-control" placeholder="dd/mm/yyyy">
+                        </div>
+                    </div>
+                    <!-- Row 10 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Lý do bắt đầu</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <input id="txtLyDoBatDau" class="form-control" placeholder="Nhập lý do bắt đầu">
+                        </div>
+                    </div>
+                    <!-- Row 11 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Lý do kết thúc</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <input id="txtLyDoKetThuc" class="form-control" placeholder="Nhập lý do kết thúc">
+                        </div>
+                    </div>
+                    <!-- Row 12 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Chế độ thời gian làm việc</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropCheDoThoiGian" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 13 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Hình thức bố trí làm việc</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropHinhThucBoTri" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 14 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Số quan hệ lao động</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <input id="txtSoQuanHe" class="form-control" placeholder="Nhập số quan hệ lao động">
+                        </div>
+                    </div>
+                    <!-- Row 15 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Quan hệ chính</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropQuanHeChinh" class="select-opt form-select"
+                                        aria-label="Default select example">
+                                    <option value="1">Quan hệ chính</option>
+                                    <option value="0">Không phải quan hệ chính</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Row 16 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
                             <div class="title-name">Ngày bắt đầu</div>
                         </div>
                         <div class="col-12 col-sm-3 aps-form-input pr0 pos-relative">
-                            <input id="txtNgayHieuLuc" class="form-control" placeholder="dd/mm/yyyy">
+                            <input id="txtNgayBatDau" class="form-control" placeholder="dd/mm/yyyy">
                         </div>
                         <div class="col-12 col-sm-3 aps-lable-name pl0 text-right pr5">
                             <div class="title-name">Ngày kết thúc</div>
                         </div>
                         <div class="col-12 col-sm-3 aps-form-input pr0 pos-relative">
-                            <input id="txtNgayHetHieuLuc" class="form-control" placeholder="dd/mm/yyyy">
+                            <input id="txtNgayKetThuc" class="form-control" placeholder="dd/mm/yyyy">
                         </div>
                     </div>
-
-                    <!-- Row 6 -->
+                    <!-- Row 17 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
                             <div class="title-name">Quyết định</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-select pr0">
                             <div class="custom-select">
-
                                 <select id="dropQuyetDinh" class="select-opt form-select"
                                         aria-label="Default select example"></select>
                             </div>
+                        </div>
+                    </div>
+                    <!-- Row 18 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Ghi chú</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <textarea id="txtGhiChu" class="form-control" rows="3" placeholder="Nhập ghi chú"></textarea>
                         </div>
                     </div>
                 </div>
