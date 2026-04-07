@@ -50,6 +50,7 @@ LichGiang.prototype = {
             var strNgayDangChon = $(this).attr('title');
             me.strNgayBatDau = strNgayBatDau;
             me.strNgayKetThuc = strNgayKetThuc;
+            me.getList_LopKhongCoLichChiTiet(strNgayDangChon);
             me.getList_TuanHienTai(strNgayBatDau, strNgayKetThuc, strNgayDangChon);
             var strClass = $(this).attr('name');
             strClass = $("." + strClass);
@@ -362,6 +363,87 @@ LichGiang.prototype = {
             var aData = me.dtCanBoTimKiem.find(e => e.ID === strId);
             me.action_NguoiDung(aData);
         });
+    },
+
+    getList_LopKhongCoLichChiTiet: function (strNgay) {
+        var me = this;
+        if (!strNgay) {
+            $("#zoneLopKhongCoLichChiTiet").hide();
+            $("#tblLopKhongCoLichChiTiet tbody").html("");
+            return;
+        }
+
+        $("#zoneLopKhongCoLichChiTiet").show();
+        $("#tblLopKhongCoLichChiTiet tbody").html('<tr><td colspan="6" class="text-center">Đang tải dữ liệu...</td></tr>');
+
+        var obj_save = {
+            'action': 'NS_ThongTinCanBo_MH/DSA4FQoDDS4xCikuLyYCLg0oIikCKSgVKCQ1',
+            'func': 'PKG_CONGTHONGTINCANBO.LayTKBLopKhongCoLichChiTiet',
+            'iM': edu.system.iM,
+            'strNhanSu_HoSoCanBo_Id': me.strGiangVien_Id,
+            'strNgay': strNgay,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.genTable_LopKhongCoLichChiTiet(data.Data);
+                }
+                else {
+                    $("#tblLopKhongCoLichChiTiet tbody").html('<tr><td colspan="6" class="text-center">' + edu.util.returnEmpty(data.Message) + '</td></tr>');
+                }
+            },
+            error: function (er) {
+                $("#tblLopKhongCoLichChiTiet tbody").html('<tr><td colspan="6" class="text-center">Lỗi tải dữ liệu</td></tr>');
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genTable_LopKhongCoLichChiTiet: function (data) {
+        var me = this;
+
+        var rows = Array.isArray(data) ? data : (data && Array.isArray(data.rs) ? data.rs : []);
+        if (!rows || rows.length === 0) {
+            $("#tblLopKhongCoLichChiTiet tbody").html('<tr><td colspan="6" class="text-center">Không có dữ liệu</td></tr>');
+            return;
+        }
+
+        function pick(aData, keys) {
+            for (var i = 0; i < keys.length; i++) {
+                if (aData && aData[keys[i]] !== undefined && aData[keys[i]] !== null && ("" + aData[keys[i]]).trim() !== "") {
+                    return aData[keys[i]];
+                }
+            }
+            return "";
+        }
+
+        var html = "";
+        rows.forEach(function (e) {
+            var maLop = pick(e, ["MALOP", "MA_LOP", "MA", "LOP_MA", "LOPHOC_MA", "LOPHOCPHAN_MA"]);
+            var tenLop = pick(e, ["TENLOP", "TEN_LOP", "TEN", "LOP_TEN", "LOPHOC_TEN", "TENLOPHOCPHAN", "LOPHOCPHAN_TEN"]);
+            var hinhThucHoc = pick(e, ["HINHTHUCHOC", "HINH_THUC_HOC", "HINHTHUC", "HINHTHUC_TEN", "TENHINHTHUC", "HINHTHUCXEP_TEN", "TENHINHTHUCXEP"]);
+            var ngayBatDau = pick(e, ["NGAYBATDAU", "TU_NGAY", "TUNGAY", "NGAYBATDAU_DD_MM_YYYY", "NGAYBATDAU_TEXT"]);
+            var ngayKetThuc = pick(e, ["NGAYKETTHUC", "DEN_NGAY", "DENNGAY", "NGAYKETTHUC_DD_MM_YYYY", "NGAYKETTHUC_TEXT"]);
+            var ghiChu = pick(e, ["GHICHU", "GHI_CHU", "NOTE", "MOTA", "MO_TA"]);
+
+            html += "<tr>";
+            html += "<td>" + edu.util.returnEmpty(maLop) + "</td>";
+            html += "<td>" + edu.util.returnEmpty(tenLop) + "</td>";
+            html += "<td>" + edu.util.returnEmpty(hinhThucHoc) + "</td>";
+            html += "<td>" + edu.util.returnEmpty(ngayBatDau) + "</td>";
+            html += "<td>" + edu.util.returnEmpty(ngayKetThuc) + "</td>";
+            html += "<td>" + edu.util.returnEmpty(ghiChu) + "</td>";
+            html += "</tr>";
+        });
+
+        $("#tblLopKhongCoLichChiTiet tbody").html(html);
     },
     /*------------------------------------------
     --Discription: [3] AccessDB HOC
