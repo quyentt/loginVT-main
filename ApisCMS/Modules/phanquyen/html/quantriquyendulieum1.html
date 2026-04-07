@@ -625,6 +625,43 @@
                     <option value="">-- Chọn đơn vị --</option>
                 </select>
             </div>
+            <div class="filter-group">
+                <label><i class="fa-solid fa-user-tag"></i> Chọn Vai trò</label>
+                <select id="ddlVaiTro" class="form-select">
+                    <option value="">-- Tất cả vai trò --</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Filter Row 2: Chức năng - Quyền - Vai trò LIST -->
+        <div class="filter-section" style="margin-top: 15px;">
+            <div class="filter-group">
+                <label><i class="fa-solid fa-cog"></i> Chức năng</label>
+                <select id="ddlChucNang" class="form-select" multiple size="5" style="height: auto;">
+                    <option value="">-- Tất cả chức năng --</option>
+                </select>
+                <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">
+                    <i class="fa-solid fa-info-circle"></i> Giữ Ctrl để chọn nhiều
+                </small>
+            </div>
+            <div class="filter-group">
+                <label><i class="fa-solid fa-key"></i> Quyền</label>
+                <select id="ddlQuyen" class="form-select" multiple size="5" style="height: auto;">
+                    <option value="">-- Tất cả quyền --</option>
+                </select>
+                <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">
+                    <i class="fa-solid fa-info-circle"></i> Giữ Ctrl để chọn nhiều
+                </small>
+            </div>
+            <div class="filter-group">
+                <label><i class="fa-solid fa-users"></i> Vai trò (LIST)</label>
+                <select id="ddlVaiTroList" class="form-select" multiple size="5" style="height: auto;">
+                    <option value="">-- Tất cả vai trò --</option>
+                </select>
+                <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">
+                    <i class="fa-solid fa-info-circle"></i> Giữ Ctrl để chọn nhiều
+                </small>
+            </div>
         </div>
 
         <!-- Action Buttons - HIDDEN -->

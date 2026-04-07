@@ -5,23 +5,14 @@
 ----------------------------------------------*/
 function PhanQuyenDuLieuNhanSu() { };
 PhanQuyenDuLieuNhanSu.prototype = {
-    dsNhanSu: [], // Danh sách nhân sú/cán bộ
+    dsNhanSu: [], // Danh sách nhân sự/cán bộ
     dsDimensions: [], // Danh sách các chiều dữ liệu
     dsDataDimension: [], // Danh sách giá trị của các chiều
     dimensionGroups: {}, // Nhóm dữ liệu theo chiều
     dsPermissions: {}, // Quyền hiện tại
     currentDimensionName: '',
-    dsDonViChuQuan: [], // Danh sách Đơn vị chủ quản
+    dsDonVi: [], // Danh sách đơn vị chủ quản
     selectedDonViId: '', // Đơn vị đang chọn
-    dsVaiTro: [], // Danh sách Vai trò
-    selectedVaiTroId: '', // Vai trò đang chọn
-    
-    // Multi-select filters
-    dsChucNang: [], // Danh sách Chức năng
-    dsQuyen: [], // Danh sách Quyền
-    selectedChucNangIds: [], // Các chức năng đã chọn
-    selectedQuyenIds: [], // Các quyền đã chọn
-    selectedVaiTroListIds: [], // Các vai trò đã chọn (multi-select)
     
     // Phân trang modal
     modalCurrentPage: 1,
@@ -41,6 +32,9 @@ PhanQuyenDuLieuNhanSu.prototype = {
     totalPages: 0,
     filteredNhanSu: [],
     
+    // Filter
+    selectedDimensionId: '',
+    
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     selectedDate: new Date(),
@@ -52,284 +46,46 @@ PhanQuyenDuLieuNhanSu.prototype = {
         // Khởi tạo calendar
         me.initCalendar();
         
-        // Sự kiện chọn Đơn vị chủ quản
-        $("#ddlDonViChuQuan").change(function () {
+        // Sự kiện chọn Đơn vị
+        $("#ddlDonVi").change(function () {
             me.selectedDonViId = $(this).val();
-            console.log("=== Đơn vị changed ===");
-            console.log("Selected value:", me.selectedDonViId);
-            console.log("Dropdown value:", $("#ddlDonViChuQuan").val());
-            
             me.currentPage = 1;
             
             if (me.selectedDonViId) {
-                // Khi đã chọn đơn vị, load vai trò và nhân sự
-                console.log("Loading vai trò for đơn vị:", me.selectedDonViId);
-                me.loadDanhSachVaiTro();
+                // Khi đã chọn đơn vị, load nhân sự và dữ liệu
+                me.getList_NhanSu();
             } else {
-                // Chưa chọn đơn vị, xóa bảng và reset vai trò
-                console.log("No đơn vị selected, clearing table");
-                $("#ddlVaiTro").html('<option value="">-- Tất cả vai trò --</option>');
-                $("#ddlVaiTroList").html('<option value="">-- Tất cả vai trò --</option>');
-                me.selectedVaiTroId = '';
+                // Chưa chọn đơn vị, xóa bảng
                 $("#tblPhanQuyenDuLieu thead").html('');
-                $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px;"><i class="fa-solid fa-info-circle fa-3x" style="color: #ffc107;"></i><div style="margin-top: 15px;">Vui lòng chọn Đơn vị để bắt đầu</div></td></tr>');
+                $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px;"><i class="fa-solid fa-info-circle fa-3x" style="color: #ffc107;"></i><div style="margin-top: 15px;">Vui lòng chọn đơn vị chủ quản để bắt đầu</div></td></tr>');
                 $("#paginationContainer").html('');
             }
         });
         
-        // Sự kiện chọn Vai trò
-        $("#ddlVaiTro").change(function () {
-            me.selectedVaiTroId = $(this).val();
-            me.currentPage = 1;
-            
-            // Load lại nhân sự theo vai trò
-            me.getList_NhanSu();
+        // Sự kiện calendar
+        $("#btnPrevMonth").click(function () {
+            me.changeMonth(-1);
         });
         
-        // Sự kiện chọn Chức năng (multi-select)
-        $("#ddlChucNang").change(function () {
-            me.selectedChucNangIds = $(this).val() || [];
-            me.currentPage = 1;
-            console.log("Selected Chức năng:", me.selectedChucNangIds);
-            
-            // Load lại nhân sự theo filter
-            me.getList_NhanSu();
-        });
-        
-        // Sự kiện chọn Quyền (multi-select)
-        $("#ddlQuyen").change(function () {
-            me.selectedQuyenIds = $(this).val() || [];
-            me.currentPage = 1;
-            console.log("Selected Quyền:", me.selectedQuyenIds);
-            
-            // Load lại nhân sự theo filter
-            me.getList_NhanSu();
-        });
-        
-        // Sự kiện chọn Vai trò LIST (multi-select)
-        $("#ddlVaiTroList").change(function () {
-            me.selectedVaiTroListIds = $(this).val() || [];
-            me.currentPage = 1;
-            console.log("Selected Vai trò LIST:", me.selectedVaiTroListIds);
-            
-            // Load lại nhân sự theo filter
-            me.getList_NhanSu();
+        $("#btnNextMonth").click(function () {
+            me.changeMonth(1);
         });
     },
     
     page_load: function () {
         var me = this;
-        // Load danh sách Đơn vị chủ quản trước
-        me.loadDanhSachDonViChuQuan();
-        
-        // Load danh sách Chức năng
-        me.loadDanhSachChucNang();
-        
-        // Load danh sách Quyền
-        me.loadDanhSachQuyen();
+        // Load danh sách đơn vị chủ quản trước
+        me.getList_DonVi();
     },
     
     /*------------------------------------------
-    --Lấy danh sách Vai trò
+    --Lấy danh sách đơn vị chủ quản theo Core Employment
     -------------------------------------------*/
-    loadDanhSachVaiTro: function () {
+    getList_DonVi: function () {
         var me = this;
         
-        console.log("=== loadDanhSachVaiTro START ===");
-        
         var obj_list = {
-            'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMk',
-            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Role',
-            'iM': 'Azz',
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                console.log("=== loadDanhSachVaiTro RESPONSE ===", data);
-                
-                if (data.Success) {
-                    me.dsVaiTro = data.Data || [];
-                    console.log("Số lượng vai trò:", me.dsVaiTro.length);
-                    
-                    // Sắp xếp theo tên
-                    me.dsVaiTro.sort(function(a, b) {
-                        var tenA = (a.ROLE_NAME || a.TEN || '').toLowerCase();
-                        var tenB = (b.ROLE_NAME || b.TEN || '').toLowerCase();
-                        return tenA.localeCompare(tenB, 'vi');
-                    });
-                    
-                    // Render dropdown
-                    var html = '<option value="">-- Tất cả vai trò --</option>';
-                    for (var i = 0; i < me.dsVaiTro.length; i++) {
-                        var vaiTro = me.dsVaiTro[i];
-                        var id = vaiTro.ID || vaiTro.CORE_ROLE_ID || vaiTro.ROLE_ID;
-                        var ten = vaiTro.ROLE_NAME || vaiTro.TEN;
-                        html += '<option value="' + id + '">' + ten + '</option>';
-                    }
-                    $("#ddlVaiTro").html(html);
-                    
-                    // Populate Vai trò LIST với cùng dữ liệu
-                    var htmlList = '<option value="">-- Tất cả vai trò --</option>';
-                    for (var i = 0; i < me.dsVaiTro.length; i++) {
-                        var vaiTro = me.dsVaiTro[i];
-                        var id = vaiTro.ID || vaiTro.CORE_ROLE_ID || vaiTro.ROLE_ID;
-                        var ten = vaiTro.ROLE_NAME || vaiTro.TEN;
-                        htmlList += '<option value="' + id + '">' + ten + '</option>';
-                    }
-                    $("#ddlVaiTroList").html(htmlList);
-                    
-                    // Load nhân sự sau khi có vai trò
-                    me.getList_NhanSu();
-                } else {
-                    console.error("API Error:", data.Message);
-                    edu.system.alert("Lỗi khi tải danh sách vai trò: " + data.Message);
-                    $("#ddlVaiTro").html('<option value="">-- Tất cả vai trò --</option>');
-                    $("#ddlVaiTroList").html('<option value="">-- Tất cả vai trò --</option>');
-                    // Vẫn load nhân sự dù không có vai trò
-                    me.getList_NhanSu();
-                }
-            },
-            error: function (er) {
-                console.error("Request Error:", er);
-                edu.system.alert("Lỗi khi tải danh sách vai trò: " + JSON.stringify(er));
-                $("#ddlVaiTro").html('<option value="">-- Tất cả vai trò --</option>');
-                $("#ddlVaiTroList").html('<option value="">-- Tất cả vai trò --</option>');
-                // Vẫn load nhân sự dù có lỗi
-                me.getList_NhanSu();
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
-    },
-    
-    /*------------------------------------------
-    --Lấy danh sách Chức năng
-    -------------------------------------------*/
-    loadDanhSachChucNang: function () {
-        var me = this;
-        
-        console.log("=== loadDanhSachChucNang START ===");
-        
-        var obj_list = {
-            'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMk',
-            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Function',
-            'iM': 'Azz',
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                console.log("=== loadDanhSachChucNang RESPONSE ===", data);
-                
-                if (data.Success) {
-                    me.dsChucNang = data.Data || [];
-                    console.log("Số lượng chức năng:", me.dsChucNang.length);
-                    
-                    // Sắp xếp theo tên
-                    me.dsChucNang.sort(function(a, b) {
-                        var tenA = (a.FUNCTION_NAME || a.TEN || '').toLowerCase();
-                        var tenB = (b.FUNCTION_NAME || b.TEN || '').toLowerCase();
-                        return tenA.localeCompare(tenB, 'vi');
-                    });
-                    
-                    // Render dropdown
-                    var html = '<option value="">-- Tất cả chức năng --</option>';
-                    for (var i = 0; i < me.dsChucNang.length; i++) {
-                        var chucNang = me.dsChucNang[i];
-                        var id = chucNang.ID || chucNang.CORE_FUNCTION_ID || chucNang.FUNCTION_ID;
-                        var ten = chucNang.FUNCTION_NAME || chucNang.TEN;
-                        html += '<option value="' + id + '">' + ten + '</option>';
-                    }
-                    $("#ddlChucNang").html(html);
-                    console.log("Dropdown Chức năng rendered successfully");
-                } else {
-                    console.error("API Error:", data.Message);
-                    $("#ddlChucNang").html('<option value="">-- Tất cả chức năng --</option>');
-                }
-            },
-            error: function (er) {
-                console.error("Request Error:", er);
-                $("#ddlChucNang").html('<option value="">-- Tất cả chức năng --</option>');
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
-    },
-    
-    /*------------------------------------------
-    --Lấy danh sách Quyền
-    -------------------------------------------*/
-    loadDanhSachQuyen: function () {
-        var me = this;
-        
-        console.log("=== loadDanhSachQuyen START ===");
-        
-        var obj_list = {
-            'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMk',
-            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Permission',
-            'iM': 'Azz',
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                console.log("=== loadDanhSachQuyen RESPONSE ===", data);
-                
-                if (data.Success) {
-                    me.dsQuyen = data.Data || [];
-                    console.log("Số lượng quyền:", me.dsQuyen.length);
-                    
-                    // Sắp xếp theo tên
-                    me.dsQuyen.sort(function(a, b) {
-                        var tenA = (a.PERMISSION_NAME || a.TEN || '').toLowerCase();
-                        var tenB = (b.PERMISSION_NAME || b.TEN || '').toLowerCase();
-                        return tenA.localeCompare(tenB, 'vi');
-                    });
-                    
-                    // Render dropdown
-                    var html = '<option value="">-- Tất cả quyền --</option>';
-                    for (var i = 0; i < me.dsQuyen.length; i++) {
-                        var quyen = me.dsQuyen[i];
-                        var id = quyen.ID || quyen.CORE_PERMISSION_ID || quyen.PERMISSION_ID;
-                        var ten = quyen.PERMISSION_NAME || quyen.TEN;
-                        html += '<option value="' + id + '">' + ten + '</option>';
-                    }
-                    $("#ddlQuyen").html(html);
-                    console.log("Dropdown Quyền rendered successfully");
-                } else {
-                    console.error("API Error:", data.Message);
-                    $("#ddlQuyen").html('<option value="">-- Tất cả quyền --</option>');
-                }
-            },
-            error: function (er) {
-                console.error("Request Error:", er);
-                $("#ddlQuyen").html('<option value="">-- Tất cả quyền --</option>');
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
-    },
-    
-    /*------------------------------------------
-    --Lấy danh sách Đơn vị theo Core Employment
-    -------------------------------------------*/
-    loadDanhSachDonViChuQuan: function () {
-        var me = this;
-        
-        console.log("=== loadDanhSachDonViChuQuan START ===");
-        
-        var obj_list = {
-            'action': 'NS_HoSoNhanSu3_MH/DSA4BRIPKSAvEjQVKSQuAi4zJB4ELDEtLjgsJC81HhcgLTQkHgQvLjMk',
+            'action': 'NS_HoSoNhanSu3_MH/DSA4BRIPKSAvEjQVKSQuAi4zJB4ELDEtLjgsJC81',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSDonViTheoCore_Employment',
             'iM': 'Azz',
             'strNguoiThucHien_Id': edu.system.userId
@@ -337,39 +93,22 @@ PhanQuyenDuLieuNhanSu.prototype = {
         
         edu.system.makeRequest({
             success: function (data) {
-                console.log("=== loadDanhSachDonViChuQuan RESPONSE ===", data);
-                
                 if (data.Success) {
-                    me.dsDonViChuQuan = data.Data || [];
-                    console.log("Số lượng đơn vị:", me.dsDonViChuQuan.length);
+                    me.dsDonVi = data.Data || [];
                     
-                    // Sắp xếp theo tên
-                    me.dsDonViChuQuan.sort(function(a, b) {
-                        var tenA = a.TEN || a.DONVI_TEN || a.COCAUTOCHUC_TEN || a.ORG_UNIT_NAME || '';
-                        var tenB = b.TEN || b.DONVI_TEN || b.COCAUTOCHUC_TEN || b.ORG_UNIT_NAME || '';
-                        return tenA.localeCompare(tenB, 'vi');
-                    });
-                    
-                    // Render dropdown
-                    var html = '<option value="">-- Chọn đơn vị --</option>';
-                    for (var i = 0; i < me.dsDonViChuQuan.length; i++) {
-                        var donVi = me.dsDonViChuQuan[i];
-                        var id = donVi.ID || donVi.DONVI_ID || donVi.COCAUTOCHUC_ID || donVi.ORG_UNIT_ID;
-                        var ten = donVi.TEN || donVi.DONVI_TEN || donVi.COCAUTOCHUC_TEN || donVi.ORG_UNIT_NAME;
-                        html += '<option value="' + id + '">' + ten + '</option>';
+                    // Render dropdown đơn vị
+                    var html = '<option value="">-- Chọn đơn vị chủ quản --</option>';
+                    for (var i = 0; i < me.dsDonVi.length; i++) {
+                        var dv = me.dsDonVi[i];
+                        html += '<option value="' + (dv.ID || dv.ORG_UNIT_ID) + '">' + (dv.TEN || dv.ORG_UNIT_NAME) + '</option>';
                     }
-                    $("#ddlDonViChuQuan").html(html);
-                    console.log("Dropdown rendered successfully");
+                    $("#ddlDonVi").html(html);
                 } else {
-                    console.error("API Error:", data.Message);
-                    edu.system.alert("Lỗi khi tải danh sách đơn vị: " + data.Message);
-                    $("#ddlDonViChuQuan").html('<option value="">-- Chọn đơn vị --</option>');
+                    edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
-                console.error("Request Error:", er);
-                edu.system.alert("Lỗi khi tải danh sách đơn vị: " + JSON.stringify(er));
-                $("#ddlDonViChuQuan").html('<option value="">-- Chọn đơn vị --</option>');
+                edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
             type: "GET",
             action: obj_list.action,
@@ -379,358 +118,90 @@ PhanQuyenDuLieuNhanSu.prototype = {
     },
     
     /*------------------------------------------
-    --Lấy danh sách nhân sự theo Core Employment
+    --Lọc bảng dữ liệu theo từ khóa
+    -------------------------------------------*/
+    filterTable: function() {
+        var me = this;
+        var keyword = $("#txtSearchTable").val().toLowerCase().trim();
+        
+        // Xóa highlight cũ
+        $("#tblPhanQuyenDuLieu tbody tr").removeClass('search-highlight');
+        
+        // Hiển thị/ẩn nút xóa bộ lọc
+        if (keyword) {
+            $("#btnClearSearch").show();
+        } else {
+            $("#btnClearSearch").hide();
+        }
+        
+        if (!keyword) {
+            // Hiển thị lại tất cả dòng
+            $("#tblPhanQuyenDuLieu tbody tr").show();
+            $("#searchResultCount").text('');
+            return;
+        }
+        
+        var foundCount = 0;
+        var totalRows = $("#tblPhanQuyenDuLieu tbody tr").length;
+        
+        // Lọc các dòng trong bảng
+        $("#tblPhanQuyenDuLieu tbody tr").each(function() {
+            var $row = $(this);
+            var rowText = $row.text().toLowerCase();
+            
+            if (rowText.indexOf(keyword) !== -1) {
+                $row.show().addClass('search-highlight');
+                foundCount++;
+            } else {
+                $row.hide();
+            }
+        });
+        
+        // Hiển thị số lượng kết quả
+        if (foundCount === 0) {
+            $("#searchResultCount").html('<i class="fa-solid fa-exclamation-triangle" style="color: #dc3545;"></i> Không tìm thấy');
+        } else {
+            $("#searchResultCount").html('<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> ' + foundCount + '/' + totalRows + ' kết quả');
+        }
+    },
+    
+    /*------------------------------------------
+    --Lấy danh sách nhân sú theo Core Employment
     -------------------------------------------*/
     getList_NhanSu: function () {
         var me = this;
         
         // Kiểm tra đã chọn đơn vị chưa
         if (!me.selectedDonViId) {
-            console.log("selectedDonViId is empty, setting empty staff list");
-            // Set danh sách nhân sự rỗng và tiếp tục load dimensions
-            me.dsNhanSu = [];
-            $("#lblSoLuongNhanSu").text(0);
-            
-            // Vẫn load dimensions để hiển thị bảng
-            me.getList_DataDimension();
+            edu.system.alert("Vui lòng chọn đơn vị chủ quản trước");
             return;
         }
-        
-        console.log("=== getList_NhanSu START ===");
-        console.log("selectedDonViId:", me.selectedDonViId);
-        console.log("selectedVaiTroId:", me.selectedVaiTroId);
-        console.log("selectedChucNangIds:", me.selectedChucNangIds);
-        console.log("selectedQuyenIds:", me.selectedQuyenIds);
-        console.log("selectedVaiTroListIds:", me.selectedVaiTroListIds);
-        
-        // Kiểm tra có filter nào được chọn không
-        var hasVaiTroFilter = me.selectedVaiTroId && me.selectedVaiTroId !== '';
-        var hasChucNangFilter = me.selectedChucNangIds && me.selectedChucNangIds.length > 0;
-        var hasQuyenFilter = me.selectedQuyenIds && me.selectedQuyenIds.length > 0;
-        var hasVaiTroListFilter = me.selectedVaiTroListIds && me.selectedVaiTroListIds.length > 0;
-        
-        // Nếu có bất kỳ filter nào, gọi API lấy user theo filter
-        if (hasVaiTroFilter || hasChucNangFilter || hasQuyenFilter || hasVaiTroListFilter) {
-            me.getList_NhanSuTheoFilters();
-        } else {
-            // Không có filter, lấy tất cả nhân sự của đơn vị
-            me.getList_NhanSuTheoCore();
-        }
-    },
-    
-    /*------------------------------------------
-    --Lấy danh sách nhân sự theo các filters (Vai trò, Chức năng, Quyền)
-    -------------------------------------------*/
-    getList_NhanSuTheoFilters: function () {
-        var me = this;
-        
-        // Tạo danh sách các API call cần thực hiện
-        var apiCalls = [];
-        var userIdSets = []; // Mảng chứa các set user IDs từ mỗi filter
-        
-        // 1. Filter theo Vai trò (single select)
-        if (me.selectedVaiTroId && me.selectedVaiTroId !== '') {
-            apiCalls.push({
-                type: 'vaitro',
-                roleId: me.selectedVaiTroId
-            });
-        }
-        
-        // 2. Filter theo Chức năng (multi-select) - OR logic
-        if (me.selectedChucNangIds && me.selectedChucNangIds.length > 0) {
-            for (var i = 0; i < me.selectedChucNangIds.length; i++) {
-                apiCalls.push({
-                    type: 'chucnang',
-                    functionId: me.selectedChucNangIds[i]
-                });
-            }
-        }
-        
-        // 3. Filter theo Quyền (multi-select) - OR logic
-        if (me.selectedQuyenIds && me.selectedQuyenIds.length > 0) {
-            for (var j = 0; j < me.selectedQuyenIds.length; j++) {
-                apiCalls.push({
-                    type: 'quyen',
-                    permissionId: me.selectedQuyenIds[j]
-                });
-            }
-        }
-        
-        // 4. Filter theo Vai trò LIST (multi-select) - OR logic
-        if (me.selectedVaiTroListIds && me.selectedVaiTroListIds.length > 0) {
-            for (var k = 0; k < me.selectedVaiTroListIds.length; k++) {
-                apiCalls.push({
-                    type: 'vaitrolist',
-                    roleId: me.selectedVaiTroListIds[k]
-                });
-            }
-        }
-        
-        console.log("Total API calls to make:", apiCalls.length);
-        
-        if (apiCalls.length === 0) {
-            // Không có filter nào, load tất cả
-            me.getList_NhanSuTheoCore();
-            return;
-        }
-        
-        // Thực hiện tất cả API calls
-        var completedCalls = 0;
-        
-        for (var m = 0; m < apiCalls.length; m++) {
-            (function(call) {
-                var obj_list = null;
-                
-                if (call.type === 'vaitro' || call.type === 'vaitrolist') {
-                    // API lấy user theo vai trò
-                    obj_list = {
-                        'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMkHhQyJDMeFB4FIDUgHhIiLjEk',
-                        'func': 'PKG_CORE_QUANTRI_02.LayDSCore_User_Role_Scope',
-                        'iM': 'Azz',
-                        'strChucNang_Id': edu.system.strChucNang_Id,
-                        'strCore_Role_Id': call.roleId,
-                        'strOrg_Unit_Id': me.selectedDonViId,
-                        'strNguoiThucHien_Id': edu.system.userId
-                    };
-                } else if (call.type === 'chucnang') {
-                    // API lấy user theo chức năng (giả định có API này)
-                    obj_list = {
-                        'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMkHhQyJDMeFB4FIDUgHhIiLjEk',
-                        'func': 'PKG_CORE_QUANTRI_02.LayDSCore_User_Function_Scope',
-                        'iM': 'Azz',
-                        'strChucNang_Id': edu.system.strChucNang_Id,
-                        'strCore_Function_Id': call.functionId,
-                        'strOrg_Unit_Id': me.selectedDonViId,
-                        'strNguoiThucHien_Id': edu.system.userId
-                    };
-                } else if (call.type === 'quyen') {
-                    // API lấy user theo quyền (giả định có API này)
-                    obj_list = {
-                        'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMkHhQyJDMeFB4FIDUgHhIiLjEk',
-                        'func': 'PKG_CORE_QUANTRI_02.LayDSCore_User_Permission_Scope',
-                        'iM': 'Azz',
-                        'strChucNang_Id': edu.system.strChucNang_Id,
-                        'strCore_Permission_Id': call.permissionId,
-                        'strOrg_Unit_Id': me.selectedDonViId,
-                        'strNguoiThucHien_Id': edu.system.userId
-                    };
-                }
-                
-                edu.system.makeRequest({
-                    success: function (data) {
-                        completedCalls++;
-                        
-                        if (data.Success && data.Data) {
-                            // Lấy danh sách user IDs
-                            var userIds = [];
-                            for (var n = 0; n < data.Data.length; n++) {
-                                var userId = data.Data[n].USER_ID || data.Data[n].CORE_PERSON_ID || data.Data[n].PERSON_ID;
-                                if (userId && userIds.indexOf(userId) === -1) {
-                                    userIds.push(userId);
-                                }
-                            }
-                            userIdSets.push(userIds);
-                            console.log("Filter", call.type, "returned", userIds.length, "users");
-                        }
-                        
-                        // Khi tất cả API calls hoàn thành
-                        if (completedCalls === apiCalls.length) {
-                            // Gộp tất cả user IDs (OR logic - union)
-                            var allUserIds = [];
-                            for (var p = 0; p < userIdSets.length; p++) {
-                                for (var q = 0; q < userIdSets[p].length; q++) {
-                                    if (allUserIds.indexOf(userIdSets[p][q]) === -1) {
-                                        allUserIds.push(userIdSets[p][q]);
-                                    }
-                                }
-                            }
-                            
-                            console.log("Total unique users after filtering:", allUserIds.length);
-                            
-                            // Lấy thông tin chi tiết nhân sự
-                            me.getList_NhanSuByIds(allUserIds);
-                        }
-                    },
-                    error: function (er) {
-                        completedCalls++;
-                        console.error("Filter API error:", call.type, er);
-                        
-                        // Khi tất cả API calls hoàn thành (kể cả lỗi)
-                        if (completedCalls === apiCalls.length) {
-                            // Gộp tất cả user IDs
-                            var allUserIds = [];
-                            for (var p = 0; p < userIdSets.length; p++) {
-                                for (var q = 0; q < userIdSets[p].length; q++) {
-                                    if (allUserIds.indexOf(userIdSets[p][q]) === -1) {
-                                        allUserIds.push(userIdSets[p][q]);
-                                    }
-                                }
-                            }
-                            
-                            // Lấy thông tin chi tiết nhân sự
-                            me.getList_NhanSuByIds(allUserIds);
-                        }
-                    },
-                    type: "POST",
-                    action: obj_list.action,
-                    contentType: true,
-                    data: obj_list
-                }, false, false, false, null);
-            })(apiCalls[m]);
-        }
-    },
-    
-    /*------------------------------------------
-    --Lấy danh sách nhân sự theo Core Employment (tất cả)
-    -------------------------------------------*/
-    getList_NhanSuTheoCore: function () {
-        var me = this;
         
         var obj_list = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRIPKSAvEjQVKSQuAi4zJB4ELDEtLjgsJC81',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSNhanSuTheoCore_Employment',
             'iM': 'Azz',
-            'strOrg_Unit_Id': me.selectedDonViId,
+            'strOrg_Unit_Id': me.selectedDonViId, // Truyền đơn vị đã chọn
             'strNguoiThucHien_Id': edu.system.userId
         };
         
         edu.system.makeRequest({
             success: function (data) {
-                console.log("=== getList_NhanSuTheoCore RESPONSE ===", data);
-                
                 if (data.Success) {
                     me.dsNhanSu = data.Data || [];
-                    console.log("Số lượng nhân sự:", me.dsNhanSu.length);
                     
                     $("#lblSoLuongNhanSu").text(me.dsNhanSu.length);
                     
-                    // Load danh sách chiều dữ liệu
+                    // Sau khi có danh sách nhân sự, load dữ liệu chiều
                     me.getList_DataDimension();
                 } else {
-                    console.error("API Error:", data.Message);
                     edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
-                console.error("Request Error:", er);
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
-    },
-    
-    /*------------------------------------------
-    --Lấy danh sách nhân sự theo Vai trò
-    -------------------------------------------*/
-    getList_NhanSuTheoVaiTro: function () {
-        var me = this;
-        
-        var obj_list = {
-            'action': 'CMS_QuanTri02_MH/DSA4BRICPCQvLjMkHhQyJDMeFB4FIDUgHhIiLjEk',
-            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_User_Role_Scope',
-            'iM': 'Azz',
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strCore_Role_Id': me.selectedVaiTroId,
-            'strOrg_Unit_Id': me.selectedDonViId,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                console.log("=== getList_NhanSuTheoVaiTro RESPONSE ===", data);
-                
-                if (data.Success) {
-                    // API trả về danh sách user có vai trò này
-                    var dsUserRole = data.Data || [];
-                    console.log("Số lượng user có vai trò:", dsUserRole.length);
-                    
-                    // Lấy danh sách ID user
-                    var userIds = [];
-                    for (var i = 0; i < dsUserRole.length; i++) {
-                        var userId = dsUserRole[i].USER_ID || dsUserRole[i].CORE_PERSON_ID || dsUserRole[i].PERSON_ID;
-                        if (userId) {
-                            userIds.push(userId);
-                        }
-                    }
-                    
-                    console.log("User IDs:", userIds);
-                    
-                    // Lấy thông tin chi tiết nhân sự
-                    me.getList_NhanSuByIds(userIds);
-                } else {
-                    console.error("API Error:", data.Message);
-                    // Nếu lỗi, vẫn hiển thị bảng trống
-                    me.dsNhanSu = [];
-                    me.getList_DataDimension();
-                }
-            },
-            error: function (er) {
-                console.error("Request Error:", er);
-                // Nếu lỗi, vẫn hiển thị bảng trống
-                me.dsNhanSu = [];
-                me.getList_DataDimension();
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
-    },
-    
-    /*------------------------------------------
-    --Lấy thông tin nhân sự theo danh sách ID
-    -------------------------------------------*/
-    getList_NhanSuByIds: function (userIds) {
-        var me = this;
-        
-        if (!userIds || userIds.length === 0) {
-            console.log("No user IDs, showing empty table");
-            me.dsNhanSu = [];
-            me.getList_DataDimension();
-            return;
-        }
-        
-        var obj_list = {
-            'action': 'NS_HoSoNhanSu3_MH/DSA4BRIPKSAvEjQVKSQuAi4zJB4ELDEtLjgsJC81',
-            'func': 'PKG_CORE_HOSONHANSU_03.LayDSNhanSuTheoCore_Employment',
-            'iM': 'Azz',
-            'strOrg_Unit_Id': me.selectedDonViId,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
-        
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    var allNhanSu = data.Data || [];
-                    
-                    // Lọc chỉ lấy nhân sự có ID trong danh sách
-                    me.dsNhanSu = [];
-                    for (var i = 0; i < allNhanSu.length; i++) {
-                        var ns = allNhanSu[i];
-                        var nsId = ns.ID || ns.NHANSU_ID || ns.PERSON_ID;
-                        if (userIds.indexOf(nsId) !== -1) {
-                            me.dsNhanSu.push(ns);
-                        }
-                    }
-                    
-                    console.log("Filtered nhân sự:", me.dsNhanSu.length);
-                    $("#lblSoLuongNhanSu").text(me.dsNhanSu.length);
-                    
-                    // Load danh sách chiều dữ liệu
-                    me.getList_DataDimension();
-                } else {
-                    me.dsNhanSu = [];
-                    me.getList_DataDimension();
-                }
-            },
-            error: function (er) {
-                me.dsNhanSu = [];
-                me.getList_DataDimension();
-            },
-            type: "POST",
+            type: "GET",
             action: obj_list.action,
             contentType: true,
             data: obj_list
@@ -743,14 +214,9 @@ PhanQuyenDuLieuNhanSu.prototype = {
     getList_DataDimension: function () {
         var me = this;
         
-        console.log("=== getList_DataDimension START ===");
-        console.log("dsNhanSu length:", me.dsNhanSu.length);
-        console.log("selectedDonViId:", me.selectedDonViId);
-        
         // Kiểm tra đã chọn đơn vị chưa
         if (!me.selectedDonViId) {
-            console.log("selectedDonViId is empty, cannot load dimensions");
-            edu.system.alert("Vui lòng chọn Đơn vị trước");
+            edu.system.alert("Vui lòng chọn đơn vị chủ quản trước");
             return;
         }
         
@@ -764,21 +230,14 @@ PhanQuyenDuLieuNhanSu.prototype = {
         
         edu.system.makeRequest({
             success: function (data) {
-                console.log("=== getList_DataDimension RESPONSE ===", data);
-                console.log("Success:", data.Success);
-                console.log("Data length:", data.Data ? data.Data.length : 0);
-                
                 if (data.Success) {
                     me.dsDimensions = data.Data || [];
-                    console.log("Loaded", me.dsDimensions.length, "dimensions");
                     me.loadAllDimensionValues();
                 } else {
-                    console.error("API Error:", data.Message);
                     edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
-                console.error("API Request Error:", er);
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
             type: "POST",
@@ -793,9 +252,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
     -------------------------------------------*/
     loadAllDimensionValues: function () {
         var me = this;
-        console.log("=== loadAllDimensionValues START ===");
-        console.log("dsDimensions length:", me.dsDimensions.length);
-        
         $("#ddlDimension").closest('.search-bar-controls').find('select').parent().hide();
         me.loadAllDimensionsData();
     },
@@ -805,18 +261,13 @@ PhanQuyenDuLieuNhanSu.prototype = {
     -------------------------------------------*/
     loadAllDimensionsData: function () {
         var me = this;
-        console.log("=== loadAllDimensionsData START ===");
-        
         me.dsDataDimension = [];
         me.dimensionGroups = {};
         
         var loadedCount = 0;
         var totalDimensions = me.dsDimensions.length;
         
-        console.log("Total dimensions to load:", totalDimensions);
-        
         if (totalDimensions === 0) {
-            console.log("No dimensions, rendering table directly");
             me.genTable_DuLieu();
             return;
         }
@@ -876,35 +327,27 @@ PhanQuyenDuLieuNhanSu.prototype = {
     },
     
     /*------------------------------------------
-    --Tạo bảng dữ liệu
+    --Tạo bảng hiển thị dữ liệu - NHÂN SỰ x CHIỀU DỮ LIỆU
     -------------------------------------------*/
     genTable_DuLieu: function () {
         var me = this;
         
-        console.log("=== genTable_DuLieu START ===");
-        console.log("selectedDonViId:", me.selectedDonViId);
-        console.log("dimensionGroups:", Object.keys(me.dimensionGroups).length);
-        console.log("dsNhanSu:", me.dsNhanSu.length);
+        // Kiểm tra đã chọn đơn vị chưa
+        if (!me.selectedDonViId) {
+            $("#tblPhanQuyenDuLieu thead").html('');
+            $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px;"><i class="fa-solid fa-info-circle fa-3x" style="color: #ffc107;"></i><div style="margin-top: 15px; font-size: 16px; color: #666;">Vui lòng chọn đơn vị chủ quản để bắt đầu</div><div style="font-size: 13px; color: #999; margin-top: 5px;">Chọn đơn vị từ dropdown phía trên</div></td></tr>');
+            $("#paginationContainer").html('');
+            return;
+        }
         
-        // Kiểm tra đã có dimensions chưa
         if (Object.keys(me.dimensionGroups).length === 0) {
-            console.log("Chưa có dimension - hiển thị loading");
             $("#tblPhanQuyenDuLieu thead").html('');
             $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Đang tải dữ liệu...</div></td></tr>');
             return;
         }
         
-        // Lấy danh sách nhân sự (đã được lọc theo vai trò từ API)
+        // Không lọc nữa, hiển thị tất cả nhân sự của đơn vị
         me.filteredNhanSu = me.dsNhanSu;
-        
-        // Lọc theo Đơn vị đã chọn (nếu cần thêm filter)
-        if (me.selectedDonViId) {
-            me.filteredNhanSu = me.filteredNhanSu.filter(function(ns) {
-                return ns.DAOTAO_COCAUTOCHUC_ID === me.selectedDonViId;
-            });
-        }
-        
-        console.log("filteredNhanSu:", me.filteredNhanSu.length);
         
         // Tính phân trang
         me.totalRecords = me.filteredNhanSu.length;
@@ -927,7 +370,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
         }
         sortedDimensions.sort(function(a, b) { return a.order - b.order; });
         
-        // Tạo header - LUÔN HIỂN THỊ
+        // Tạo header
         var htmlHead = '<tr>';
         htmlHead += '<th rowspan="2" style="min-width: 200px; position: sticky; left: 0; z-index: 12; background: #223771; vertical-align: middle;">';
         htmlHead += '<div style="font-weight: 600; font-size: 13px;">Nhân sự</div>';
@@ -947,7 +390,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
         
         // Tạo body - Mỗi dòng là 1 nhân sự (có phân trang)
         var htmlBody = '';
-        var totalCols = 1 + sortedDimensions.length;
         
         if (pageNhanSu.length > 0) {
             for (var v = 0; v < pageNhanSu.length; v++) {
@@ -1004,21 +446,10 @@ PhanQuyenDuLieuNhanSu.prototype = {
                 htmlBody += '</tr>';
             }
         } else {
-            // Không có nhân sự - hiển thị thông báo NHƯNG VẪN GIỮ CẤU TRÚC BẢNG
-            htmlBody += '<tr>';
-            htmlBody += '<td colspan="' + totalCols + '" style="text-align: center; padding: 40px; background: #fff3cd;">';
-            htmlBody += '<i class="fa-solid fa-users-slash fa-3x" style="color: #856404;"></i>';
-            htmlBody += '<div style="margin-top: 15px; font-size: 16px; color: #856404; font-weight: 600;">Không tìm thấy nhân sự</div>';
-            if (!me.selectedDonViId) {
-                htmlBody += '<div style="font-size: 13px; color: #856404; margin-top: 5px;">Vui lòng chọn Đơn vị để bắt đầu</div>';
-            } else {
-                htmlBody += '<div style="font-size: 13px; color: #856404; margin-top: 5px;">Đơn vị này chưa có nhân sự hoặc dữ liệu chưa được cập nhật</div>';
-            }
-            htmlBody += '</td>';
-            htmlBody += '</tr>';
+            var totalCols = 1 + sortedDimensions.length;
+            htmlBody += '<tr><td colspan="' + totalCols + '" style="text-align: center; padding: 40px;"><i class="fa-solid fa-users-slash fa-3x"></i><div>Không tìm thấy nhân sự</div></td></tr>';
         }
         
-        console.log("Rendering table with", pageNhanSu.length, "rows");
         $("#tblPhanQuyenDuLieu tbody").html(htmlBody);
         
         // Bind event cho nút Xem kết quả
@@ -1243,7 +674,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
         
         if (!keyword) {
             // Không có từ khóa - hiển thị lại toàn bộ dữ liệu
-            me.modalFilteredData = null;
+            me.modalFilteredData = me.modalData;
             me.modalTotalRecords = me.modalData.length;
             me.modalCurrentPage = 1;
             me.modalTotalPages = Math.ceil(me.modalTotalRecords / me.modalPageSize);
@@ -1283,7 +714,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
         }
         
         // Render lại bảng với dữ liệu đã lọc
-        me.renderModalTable(me.modalNhanSuId, me.modalDimensionId);
+        me.renderModalTableWithFilteredData();
     },
 
     /*------------------------------------------
@@ -1485,6 +916,108 @@ PhanQuyenDuLieuNhanSu.prototype = {
         
         // Gọi lại function showDetailModal cũ với tên mới
         me.showDetailModal(nhanSuId, nhanSuName, dimensionId, dimensionName);
+    },
+
+    /*------------------------------------------
+    --Render bảng modal với dữ liệu đã lọc
+    -------------------------------------------*/
+    renderModalTableWithFilteredData: function() {
+        var me = this;
+        
+        // Sử dụng dữ liệu đã lọc thay vì dữ liệu gốc
+        var dataToUse = me.modalFilteredData || me.modalData;
+        
+        // Debug: Kiểm tra quyền hiện tại
+        console.log("=== DEBUG renderModalTableWithFilteredData ===");
+        console.log("NhanSuId:", me.modalNhanSuId);
+        console.log("DimensionId:", me.modalDimensionId);
+        console.log("Filtered data length:", dataToUse.length);
+        console.log("Total records:", me.modalTotalRecords);
+        
+        // Tính toán phân trang với dữ liệu đã lọc
+        var startIndex = (me.modalCurrentPage - 1) * me.modalPageSize;
+        var endIndex = Math.min(startIndex + me.modalPageSize, dataToUse.length);
+        var pageData = dataToUse.slice(startIndex, endIndex);
+        
+        // Tạo bảng
+        var tableHtml = '<div style="overflow-x: auto;">';
+        tableHtml += '<table class="table table-bordered table-hover" style="margin: 0; width: 100%;">';
+        tableHtml += '<thead style="background: #f8f9fa;">';
+        tableHtml += '<tr>';
+        tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">STT</th>';
+        tableHtml += '<th style="width: 150px; padding: 10px;">Mã<br/><span style="font-weight: normal; font-size: 11px;">VALUE_CODE</span></th>';
+        tableHtml += '<th style="padding: 10px;">Tên<br/><span style="font-weight: normal; font-size: 11px;">VALUE_NAME</span></th>';
+        tableHtml += '<th style="width: 120px; text-align: center; padding: 10px;">Ghi chú<br/><span style="font-weight: normal; font-size: 11px;">GhiChu</span></th>';
+        tableHtml += '<th style="width: 80px; text-align: center; background: #fff3cd; padding: 10px;">';
+        tableHtml += '<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">';
+        tableHtml += '<input type="checkbox" id="chkSelectAll" style="width: 18px; height: 18px; cursor: pointer;"/>';
+        tableHtml += '<span style="font-size: 10px;">Chọn tất cả</span>';
+        tableHtml += '</div>';
+        tableHtml += '</th>';
+        tableHtml += '</tr>';
+        tableHtml += '</thead>';
+        tableHtml += '<tbody>';
+        
+        for (var i = 0; i < pageData.length; i++) {
+            var item = pageData[i];
+            var globalIndex = startIndex + i + 1;
+            var valueId = item.ID || item.CORE_DATA_VALUE_ID || item.VALUE_ID;
+            var scopeId = me.modalExistingPermissions[valueId];
+            var hasPermission = !!scopeId;
+            
+            // Debug từng item
+            console.log("Item " + globalIndex + ":", {
+                valueId: valueId,
+                scopeId: scopeId,
+                hasPermission: hasPermission,
+                name: item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN
+            });
+            
+            tableHtml += '<tr style="' + (hasPermission ? 'background: #d4edda;' : (i % 2 === 0 ? 'background: #f9f9f9;' : '')) + '">';
+            tableHtml += '<td style="text-align: center; padding: 8px;">' + globalIndex + '</td>';
+            tableHtml += '<td style="padding: 8px;">' + (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + '</td>';
+            tableHtml += '<td style="padding: 8px;">';
+            tableHtml += (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || 'N/A');
+            if (hasPermission) {
+                tableHtml += ' <span style="color: #28a745; font-weight: bold; margin-left: 5px;"><i class="fa-solid fa-check-circle"></i> Đã có quyền</span>';
+            }
+            tableHtml += '</td>';
+            tableHtml += '<td style="text-align: center; padding: 8px;">' + (item.GHICHU || '') + '</td>';
+            tableHtml += '<td style="text-align: center; padding: 8px;">';
+            tableHtml += '<input type="checkbox" class="chkDetailItem" ';
+            tableHtml += 'data-value-id="' + valueId + '" ';
+            
+            if (hasPermission) {
+                tableHtml += 'data-scope-id="' + scopeId + '" ';
+                tableHtml += 'checked="checked" ';
+            }
+            
+            tableHtml += 'style="width: 18px; height: 18px; cursor: pointer;"/>';
+            tableHtml += '</td>';
+            tableHtml += '</tr>';
+        }
+        
+        tableHtml += '</tbody>';
+        tableHtml += '</table>';
+        tableHtml += '</div>';
+        
+        $("#modalTableContainer").html(tableHtml);
+        
+        // Bind event cho checkbox "Chọn tất cả"
+        $("#chkSelectAll").change(function() {
+            var isChecked = $(this).is(':checked');
+            $(".chkDetailItem").prop('checked', isChecked);
+        });
+        
+        // Bind event cho từng checkbox để cập nhật "Chọn tất cả"
+        $(document).on('change', '.chkDetailItem', function() {
+            var totalCheckboxes = $(".chkDetailItem").length;
+            var checkedCheckboxes = $(".chkDetailItem:checked").length;
+            $("#chkSelectAll").prop('checked', totalCheckboxes === checkedCheckboxes);
+        });
+        
+        // Render phân trang với dữ liệu đã lọc
+        me.renderModalPagination(me.modalNhanSuId, me.modalDimensionId);
     },
 
     /*------------------------------------------
@@ -1950,7 +1483,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
                     'strDimensionValueId': valueIds[i],
                     'strScopeMode': scopeMode,
                     'strScopeKind': scopeKind,
-                    'strFunctionId': '',
+                    'strFunctionId': edu.system.strChucNang_Id,
                     'dPriorityNo': 100,
                     'strEffectiveFrom': '',
                     'strEffectiveTo': '',
