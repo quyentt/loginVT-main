@@ -35,7 +35,7 @@ DuLieuThi.prototype = {
             //me.getList_DuLieuThi();
         });
         $('#dropSearch_HocPhan').on('select2:select', function (e) {
-            me.getList_DuLieuThi();
+            //me.getList_DuLieuThi();
         });
         $('#dropSearch_LoaiDiem').on('select2:select', function (e) {
             me.getList_SinhVien();

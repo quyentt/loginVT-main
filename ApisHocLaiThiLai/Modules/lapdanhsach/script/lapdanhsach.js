@@ -637,7 +637,7 @@ LapDanhSach.prototype = {
             'strChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh'),
             'strLopQuanLy_Id': edu.util.getValById('dropSearch_Lop'),
             'strTrangThaiNguoiHoc_Id': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_LHD').toString(),
-            'strDaoTao_HocPhan_Id': edu.util.getValById('dropAAAA'),
+            'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_DMHocPhan'),
             'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
         };
 
@@ -759,8 +759,8 @@ LapDanhSach.prototype = {
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': 1,
+            'pageSize': 100000,
         };
 
         edu.system.beginLoading();
@@ -807,10 +807,10 @@ LapDanhSach.prototype = {
             strTable_Id: strTable_Id,
             aaData: data,
 
-            bPaginate: {
-                strFuntionName: "main_doc.LapDanhSach.getList_TongHop()",
-                iDataRow: iPager
-            },
+            //bPaginate: {
+            //    strFuntionName: "main_doc.LapDanhSach.getList_TongHop()",
+            //    iDataRow: iPager
+            //},
             colPos: {
                 center: [0, 1, 2, 3, 4, 5],
             },
@@ -903,13 +903,18 @@ LapDanhSach.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    for (var i = 0; i < data.Data.length; i++) {
-                        var json = data.Data[i];
-                        $("#lblDiem_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.DIEM);
-                        $("#lbl_LanHoc_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.LANHOC);
-                        $("#lblLanThi_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.LANTHI);
-                        $("#lblDanhGia_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.DANHGIA_TEN);
+                    if (data.Data.length > 0) {
+                        for (var i = 0; i < data.Data.length; i++) {
+                            var json = data.Data[i];
+                            $("#lblDiem_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.DIEM);
+                            $("#lbl_LanHoc_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.LANHOC);
+                            $("#lblLanThi_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.LANTHI);
+                            $("#lblDanhGia_" + strQLSV_NguoiHoc_Id + "_" + strDoiTuong_Id).html(json.DANHGIA_TEN);
+                        }
+                    } else {
+                        $("#tblKetQua tbody tr[id=" + strQLSV_NguoiHoc_Id + "]").hide();
                     }
+                    
                 }
                 else {
                     console.log(data.Message);

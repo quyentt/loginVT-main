@@ -157,3 +157,6 @@ tbody tr:first-child td {
 .navbar-nav > .notifications-menu > .dropdown-menu, .navbar-nav > .messages-menu > .dropdown-menu, .navbar-nav > .tasks-menu > .dropdown-menu {
     min-width: 380px !important;
 }
+ul.dropdown-menu.form-container {
+    width: unset;
+}
