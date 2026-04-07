@@ -9464,7 +9464,7 @@ systemroot.prototype = {
 
                 edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
-            type: 'POST',
+            type: 'GET',
             action: obj_save.action,
 
             contentType: true,
