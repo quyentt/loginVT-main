@@ -179,6 +179,8 @@ systemroot.prototype = {
         strModal += '</div>';
         strModal += '</div>';
         $(me.ctPlacehoder).after('<div class="modal fade" id="modalBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog" style="width: ' + (window.screen.width - 40) + 'px">' + strModal + '</div></div>');
+
+        
         //me.nodeChat(urlNode)
         //function check() {
         //    if(ty)
@@ -221,7 +223,76 @@ systemroot.prototype = {
                 checkChangeversionJS();
             }, 600000)
         }
+        $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
+            e.preventDefault();
 
+            me.dtMauBaoCao = [{ "ID": "138B4918134A4E77A94959CA9A5A8B03", "NGUOIDUNG_ID": "4038E6FD0FFA4D339FA991E740348F01", "NGUOIDUNG_TAIKHOAN": "01", "NGUOIDUNG_TENDAYDU": "admin", "CHUCNANG_ID": "DA1FBF97187F4FA08D9F927E7F36A1F2", "CHUCNANG_TEN": "Danh sách còn nợ phí", "CHUCNANG_MA": "TC.NOTI", "MAUIMPORT_ID": "E6C13094F6424D19978B0FEE9D5C1273", "MAUIMPORT_TEN": "Xuat BC tong hop no", "MAUIMPORT_MA": "ThongKe_TongHopNoHocPhi", "MAUIMPORT_TENFILEMAU": "Xuat BC tong hop no", "MAUIMPORT_DUONGDANFILEMAU": null, "MAUIMPORT_DUONGDAN": null, "MAUIMPORT_MOTA": "Xuat BC tong hop no", "CHISODONGDOCDULIEUTUFILE": 0.0, "MAUIMPORT_STT": null, "XEMFILE": null, "UNGDUNG_ID": "8CA2986BE494410182F092897BF85572", "UNGDUNG_TEN": "Tài chính", "UNGDUNG_MA": "ApisTaiChinh", "NGUOITAO_ID": null, "NGUOITAO_TAIKHOAN": null, "NGUOITAO_TENDAYDU": null, "NGAYTAO": null, "NGAYTAO_DD_MM_YYYY": null, "NGAYCAPNHATCUOI": null, "NGAYCUOI_DD_MM_YYYY": null, "NGUOICAPNHATCUOI_ID": null, "NGUOICUOI_TAIKHOAN": null, "NGUOICUOI_TENDAYDU": null }, { "ID": "C0E59883F41C434696FAE0339C8402D9", "NGUOIDUNG_ID": "4038E6FD0FFA4D339FA991E740348F01", "NGUOIDUNG_TAIKHOAN": "01", "NGUOIDUNG_TENDAYDU": "admin", "CHUCNANG_ID": "DA1FBF97187F4FA08D9F927E7F36A1F2", "CHUCNANG_TEN": "Danh sách còn nợ phí", "CHUCNANG_MA": "TC.NOTI", "MAUIMPORT_ID": "15EB917AF36F439CB2251FB51587DC44", "MAUIMPORT_TEN": "Xuat BC tong hop no rieng", "MAUIMPORT_MA": "ThongKe_TongHopNoHocPhiRieng", "MAUIMPORT_TENFILEMAU": "Xuat BC tong hop no rieng", "MAUIMPORT_DUONGDANFILEMAU": null, "MAUIMPORT_DUONGDAN": null, "MAUIMPORT_MOTA": "Xuat BC tong hop no rieng", "CHISODONGDOCDULIEUTUFILE": 0.0, "MAUIMPORT_STT": null, "XEMFILE": null, "UNGDUNG_ID": "8CA2986BE494410182F092897BF85572", "UNGDUNG_TEN": "Tài chính", "UNGDUNG_MA": "ApisTaiChinh", "NGUOITAO_ID": null, "NGUOITAO_TAIKHOAN": null, "NGUOITAO_TENDAYDU": null, "NGAYTAO": null, "NGAYTAO_DD_MM_YYYY": null, "NGAYCAPNHATCUOI": null, "NGAYCUOI_DD_MM_YYYY": null, "NGUOICAPNHATCUOI_ID": null, "NGUOICUOI_TAIKHOAN": null, "NGUOICUOI_TENDAYDU": null }, { "ID": "33E9A15F074B4512AEBC5D71E3DAA2EB", "NGUOIDUNG_ID": "4038E6FD0FFA4D339FA991E740348F01", "NGUOIDUNG_TAIKHOAN": "01", "NGUOIDUNG_TENDAYDU": "admin", "CHUCNANG_ID": "DA1FBF97187F4FA08D9F927E7F36A1F2", "CHUCNANG_TEN": "Danh sách còn nợ phí", "CHUCNANG_MA": "TC.NOTI", "MAUIMPORT_ID": "EB7000A9BCE648B78A61C5BF7D34E05C", "MAUIMPORT_TEN": "Xuat BC tong hop no - hien thi thoi gian", "MAUIMPORT_MA": "ThongKe_TongHopNoHocPhi_HienThiCotTheoNoiDung", "MAUIMPORT_TENFILEMAU": "Xuat BC tong hop no - hien thi thoi gian", "MAUIMPORT_DUONGDANFILEMAU": null, "MAUIMPORT_DUONGDAN": null, "MAUIMPORT_MOTA": null, "CHISODONGDOCDULIEUTUFILE": 0.0, "MAUIMPORT_STT": null, "XEMFILE": null, "UNGDUNG_ID": "8CA2986BE494410182F092897BF85572", "UNGDUNG_TEN": "Tài chính", "UNGDUNG_MA": "ApisTaiChinh", "NGUOITAO_ID": null, "NGUOITAO_TAIKHOAN": null, "NGUOITAO_TENDAYDU": null, "NGAYTAO": null, "NGAYTAO_DD_MM_YYYY": null, "NGAYCAPNHATCUOI": null, "NGAYCUOI_DD_MM_YYYY": null, "NGUOICAPNHATCUOI_ID": null, "NGUOICUOI_TAIKHOAN": null, "NGUOICUOI_TENDAYDU": null }];
+            var html = '<div class="row">';
+
+            html += '<div class="pull-right" style="padding-bottom: 5px">';
+            html += '<a class="btn btn-primary btnAdd" id="btnAdd_MauBaoCao" href="#"><i class="fa fa-plus"></i> Thêm mới</a>';
+            html += '</div>';
+
+            html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
+            me.dtMauBaoCao.forEach((e, i) => {
+                html += '<li><a class="" name="' + e.MAUIMPORT_MA + '" duongdan="' + edu.util.returnEmpty(e.MAUIMPORT_DUONGDAN) + '"  href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
+            })
+            html += '</ul></div>'
+
+            html += '<div class="col-sm-9 item-search">'
+            html += '<table id="tblMauBaoCao" class="table table-hover table-bordered table-noborder">';
+            html += '<thead>';
+            html += '<th>Stt</th>';
+            html += '<th>Tên báo cáo</th>';
+            html += '<th>Tải báo cáo</th>';
+            html += '<th>Tải mẫu</th>';
+            html += '<th><th class="td-fixed td-center">Sửa</th></th>';
+            html += '<th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>';
+            html += '</thead>';
+            html += '<tbody></tbody>';
+            html += '</table>'
+            html += '</div>'
+
+            html += '</div>';
+
+            $("#modalBaoCao #modal_body").html(html)
+            $("#modalBaoCao").modal("show");
+        });
+
+        var strModal = '';
+        strModal += '<div class="modal-content">';
+        strModal += '<div class="modal-header">';
+        strModal += '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
+        strModal += '<h4 class="modal-title"><span class="myModalLabel"><i class="fa fa-plus"></i></span> <span class="lang" key=""> Mẫu Báo cáo</span> </h4>';
+        strModal += '</div>';
+        strModal += '<div class="modal-body">';
+
+        strModal += '<div class="row">';
+        strModal += '<div class="col-sm-3">';
+        strModal += '<label style="font-weight: normal"><span class="lang" key="">Tên hiển thị</span></label>';
+        strModal += '</div>';
+        strModal += '<div class="col-sm-9">';
+        strModal += '<input type="text" id="txtTenHienThi" class="form-control" />';
+        strModal += '</div>';
+        strModal += '<div class="clear"></div>';
+        strModal += '</div>';
+        strModal += '<div class="row">';
+        strModal += '<div class="col-sm-3">';
+        strModal += '<label style="font-weight: normal"><span class="lang" key="">Upload file</span></label>';
+        strModal += '</div>';
+        strModal += '<div class="col-sm-9">';
+        strModal += '<input type="text" id="txtTenHienThi" class="form-control" />';
+        strModal += '</div>';
+        strModal += '<div class="clear"></div>';
+        strModal += '</div>';
+
+        strModal += '</div>';
+        strModal += '<div class="modal-footer">';
+        strModal += '<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>';
+        strModal += '<a class="submit btn btn-primary" id="btnSave_MauBaoCao"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>';
+        strModal += '</div>';
+        strModal += '</div>';
+        $(me.ctPlacehoder).after('<div class="modal fade" id="modalMauBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog">' + strModal + '</div></div>');
     },
     versionPageJS: function () {
         var me = this;

@@ -18,7 +18,8 @@ CoCauToChuc.prototype = {
         -------------------------------------------*/
         $("#txtSearch_NgayXem").val(edu.util.dateToday());
         me.getList_CoCauToChuc();
-        edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIQUANHE", "dropSearch_LoaiDonVi,dropLoaiDonVi,dropLoaiQuanHe_ChaNew,dropLoaiQuanHe_Cha");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIQUANHE", "dropLoaiQuanHe_ChaNew,dropLoaiQuanHe_Cha");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIDONVI", "dropSearch_LoaiDonVi,dropLoaiDonVi");
 
         $("#tblCoCauToChuc").delegate(".btnEdit", "click", function () {
             var strId = this.id;
@@ -625,6 +626,7 @@ CoCauToChuc.prototype = {
     --ULR:  Modules
     -------------------------------------------*/
     genTable_QuanHe: function (data, iPager) {
+        var me = this;
         $("#lblQuanHe_Tong").html(iPager);
         var jsonForm = {
             strTable_Id: "tblQuanHe",
@@ -640,7 +642,7 @@ CoCauToChuc.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returmEmpty(aData.PARENT_ORG_NAME) + " - " + edu.util.returmEmpty(aData.PARENT_ORG_CODE);
+                        return edu.util.returnEmpty(aData.PARENT_ORG_NAME) + " - " + edu.util.returnEmpty(aData.PARENT_ORG_CODE);
                     }
                 },
                 {
@@ -673,7 +675,7 @@ CoCauToChuc.prototype = {
         if (data.length) {
             var data = data[0];
             me["strQuanHe_Id"] = data.ID;
-            edu.util.viewValById("dropDonVi_Cha", data.RELATION_TYPE_CODE_ID);
+            edu.util.viewValById("dropDonVi_Cha", data.PARENT_ORG_ID);
             edu.util.viewValById("txtNgayHieuLuc_Cha", data.START_DATE);
             edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.END_DATE);
             edu.util.viewValById("dropLoaiQuanHe_Cha", data.RELATION_TYPE_CODE_ID);
