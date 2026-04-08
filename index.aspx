@@ -397,6 +397,12 @@
   <script src="assets/js/custom.js"></script>
   <!-- <script src="assets/js/customs.js"></script> -->
   <script src="assets/js/cleave.min.js"></script>
+
+  <!-- Firebase Web Push (FCM) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+  <script type="text/javascript">window.FCM_VAPID_KEY = "BAaMGqYzL8EbC8cBXgEPwzgTwtF-4fTJ2x7XyusAxZuEyrCGKpIuij6VanSwjLQWRetpgpM32y98zlUZo-ZVuEE";</script>
+  <script src="assets/js/fcm-notify.js?v=<%= Guid.NewGuid().ToString() %>"></script>
   <script type="text/javascript" src="App_Themes/Plugins/jstree/dist/jstree.min.js"></script><!--Plugin jstree-->
 
   <script type="text/javascript" src="Core/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
@@ -411,7 +417,8 @@
 
       <script type="text/javascript">
 
-        var edu = {};
+        var edu = window.edu || {};
+        window.edu = edu;
         edu['system'] = new systemroot();
         edu['extend'] = new systemextend();
         edu['constant'] = new constant();
@@ -420,6 +427,15 @@
           edu.system.startApp();
           edu.extend.init();
           edu.constant.init();
+
+          try {
+
+            if (edu.fcm && typeof edu.fcm.init === 'function') 
+            {
+              edu.fcm.init();
+            }
+          } catch (e) {
+          }
         });
       </script>
 
