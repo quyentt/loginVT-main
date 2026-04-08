@@ -225,6 +225,7 @@ systemroot.prototype = {
         }
         $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
             e.preventDefault();
+            var strBaoCao_Id = this.id;
 
             var html = '<div class="row">';
 
@@ -257,6 +258,8 @@ systemroot.prototype = {
 
             $("#modalBaoCao #modal_body").html(html)
             $("#modalBaoCao").modal("show");
+            me["strMauBaoCao_Id"] = strBaoCao_Id;
+            me.getList_MauFileBaoCao();
 
             if ($("#modalMauBaoCao").length == 0) {
                 $("#zoneBaoCao").delegate(".btnBaoCao", "click", function () {
@@ -294,9 +297,7 @@ systemroot.prototype = {
                     edu.util.viewValById("dropSearch_BangA", data.TEN);
                     $("#modalMauBaoCao").modal("show");
                 });
-                $("#btnSave_MauFileBaoCao").click(function () {
-                    me.save_MauFileBaoCao();
-                });
+                
                 $("#btnDelete_MauFileBaoCao").click(function () {
                     var arrChecked_Id = edu.util.getArrCheckedIds("tblMauBaoCao", "checkX");
                     if (arrChecked_Id.length == 0) {
@@ -344,7 +345,7 @@ systemroot.prototype = {
                 strModal += '<label style="font-weight: normal"><span class="lang" key="">Sheet</span></label>';
                 strModal += '</div>';
                 strModal += '<div class="col-sm-9">';
-                strModal += '<select id="dropSearch_BangA" class="select-opt"></select>';
+                strModal += '<select id="dropSearch_BangA" class="select-opt" style="width: 100% !important"></select>';
                 strModal += '</div>';
                 strModal += '<div class="clear"></div>';
                 strModal += '</div>';
@@ -355,11 +356,13 @@ systemroot.prototype = {
                 strModal += '<a class="submit btn btn-primary" id="btnSave_MauFileBaoCao"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>';
                 strModal += '</div>';
                 strModal += '</div>';
-                $(me.ctPlacehoder).after('<div class="modal fade" id="modalMauBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog">' + strModal + '</div></div>');
+                $(me.ctPlacehoder).parent().append('<div class="modal fade" id="modalMauBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog">' + strModal + '</div></div>');
 
                 edu.system.uploadImport(["importToCheck"], me.getList_DataImport);
 
-
+                $("#btnSave_MauFileBaoCao").click(function () {
+                    me.save_MauFileBaoCao();
+                });
             }
         });
 
@@ -9392,6 +9395,7 @@ systemroot.prototype = {
     save_MauFileBaoCao: function () {
         var me = this;
         var obj_notify = {};
+        console.log(111111);
         //--Edit
         var obj_save = {
             'action': 'CM_Report/THEM_BC_NGUOIDUNG_TEMPLATE',
