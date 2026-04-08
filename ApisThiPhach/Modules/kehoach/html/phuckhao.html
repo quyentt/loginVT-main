@@ -3,6 +3,11 @@
     .radio-inline + .radio-inline {
         margin-left: 0px;
     }
+
+    /* Fix lệch header do rowspan/colspan */
+    #tblDSThi thead th {
+        vertical-align: middle;
+    }
 </style>
 <section class="content aps-thiphach">
     <div class="row aps-phuckhao">
@@ -78,9 +83,7 @@
                 <div class="box-header pl20 mt-15 pr20">
                     <h3 class="box-title">
                         <i class="fa-light fa-list-timeline"></i> Danh sách
-                        <span class="pull-right badge bg-light-blue ml-15">
-                            <span id="lblXacNhan_Tong"></span>
-                        </span>
+                        <span class="badge bg-light-blue ml-15">Tổng số bản ghi: <span id="lblXacNhan_Tong"></span></span>
                     </h3>
                     <div class="pull-right">
                         <a class="btn btn-primary" id="btnXacNhan" href="#">
@@ -96,10 +99,7 @@
                                     <th class="" colspan="15">
                                         Kết quả Thi ban đầu
                                     </th>
-                                    <th rowspan="2"><input type="checkbox" class="chkSystemSelectAll"></th>
-                                    <th class="" rowspan="2">
-                                        Khoa quản lý HP
-                                    </th>
+                                    <th colspan="2"></th>
                                     <th class="" colspan="5">
                                         Đăng ký phúc khảo
                                     </th>
@@ -113,67 +113,40 @@
                                 </tr>
 
                                 <tr>
-                                    <td class="text-center">
-                                        STT
-                                    </td>
-                                    <td>
-                                        Mã số
-                                    </td>
-                                    <td>
-                                        Họ đệm
-                                    </td>
-                                    <td>
-                                        Tên
-                                    </td>
-                                    <td>
-                                        Email
-                                    </td>
-                                    <td>
-                                        Khoa quản lý
-                                    </td>
-                                    <td>
-                                        Túi
-                                    </td>
-                                    <td>
-                                        Số phách
-                                    </td>
-                                    <td>
-                                        SBD
-                                    </td>
-                                    <td>
-                                        Ca thi
-                                    </td>
-                                    <td>
-                                        Phòng thi
-                                    </td>
-                                    <td>
-                                        Học phần thi
-                                    </td>
+                                    <th scope="col" class="text-center">STT</th>
+                                    <th scope="col">Mã số</th>
+                                    <th scope="col">Họ đệm</th>
+                                    <th scope="col">Tên</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Khoa quản lý</th>
+                                    <th scope="col">Túi</th>
+                                    <th scope="col">Số phách</th>
+                                    <th scope="col">SBD</th>
+                                    <th scope="col">Ca thi</th>
+                                    <th scope="col">Phòng thi</th>
+                                    <th scope="col">Học phần thi</th>
                                     <!--<td>
                                         Loại điểm thi
                                     </td>-->
-                                    <td>
-                                        Hình thức thi
-                                    </td>
-                                    <td>
-                                        Ngày thi
-                                    </td>
+                                    <th scope="col">Hình thức thi</th>
+                                    <th scope="col">Ngày thi</th>
                                     <!--<td>
                                         Ca thi
                                     </td>
                                     <td>
                                         Phòng thi
                                     </td>-->
-                                    <td class="has-border">
-                                        Kết quả
-                                    </td>
-                                    <td class="text-center">Ngày công <br> bố điểm</td>
-                                    <td class="text-center">Ngày đăng ký <br> Phúc khảo</td>
-                                    <td class="text-center">Ngày hết hạn đăng ký</td>
-                                    <td class="text-center">Ngày hết hạn nộp phí</td>
-                                    <td class="text-center">Phí phúc khảo <br> Tình trạng</td>
-                                    <td class="text-center has-border">Kết quả duyệt</td>
-                                    <td class="text-center ">Kết quả</td>
+                                    <th scope="col" class="has-border">Kết quả</th>
+                                    <th scope="col" class="text-center"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                    <th scope="col">Khoa quản lý HP</th>
+                                    <th scope="col" class="text-center">Ngày công <br> bố điểm</th>
+                                    <th scope="col" class="text-center">Ngày đăng ký <br> Phúc khảo</th>
+                                    <th scope="col" class="text-center">Ngày hết hạn đăng ký</th>
+                                    <th scope="col" class="text-center">Ngày hết hạn nộp phí</th>
+                                    <th scope="col" class="text-center">Phí phúc khảo <br> Tình trạng</th>
+                                    <th scope="col" class="text-center">Kết quả</th>
+                                    <th scope="col" class="text-center has-border">Kết quả duyệt</th>
+                                </tr>
                             </thead>
                             <tbody>
                                 <!-- load from js -->
