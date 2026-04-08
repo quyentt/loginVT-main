@@ -837,6 +837,9 @@ DanhMucDuLieu.prototype = {
         modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>Dữ liệu cha</label></div>";
         modalBody += "<div style='width:80%; float:left'><select id='DropDuLieuCha' class='select-opt'></select></div>";
         modalBody += "<div class='clear'></div>";
+        //modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>Trạng thái</label></div>";
+        //modalBody += "<div style='width:80%; float:left'><select id='DropTrangThaiDuLieu' class='select-opt'></select></div>";
+        //modalBody += "<div class='clear'></div>";
         $("#modal_body").append(modalBody);
         
         me.genCombo_DMDL();
