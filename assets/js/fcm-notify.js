@@ -14,6 +14,236 @@
         appId: '1:716994724011:web:4462bd887a65d2491ab7ee'
     };
 
+    var INBOX_KEY = 'FCM_NOTI_INBOX';
+    var UNREAD_KEY = 'FCM_NOTI_UNREAD';
+    var INBOX_MAX = 20;
+
+    var BASE_TITLE = '';
+    try { BASE_TITLE = document.title || ''; } catch (eT0) { BASE_TITLE = ''; }
+
+    function updateTabTitle(unread) {
+        try {
+            var n = unread || 0;
+            if (!BASE_TITLE) BASE_TITLE = document.title || '';
+            if (n > 0) {
+                document.title = '(' + (n > 99 ? '99+' : n) + ') ' + BASE_TITLE;
+            } else {
+                document.title = BASE_TITLE;
+            }
+        } catch (eT) {
+        }
+    }
+
+    function safeParseJson(str, fallback) {
+        try {
+            return JSON.parse(str);
+        } catch (e) {
+            return fallback;
+        }
+    }
+
+    function loadInbox() {
+        try {
+            var raw = localStorage.getItem(INBOX_KEY) || '[]';
+            var arr = safeParseJson(raw, []);
+            return Array.isArray(arr) ? arr : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveInbox(items) {
+        try {
+            localStorage.setItem(INBOX_KEY, JSON.stringify(items || []));
+        } catch (e) {
+        }
+    }
+
+    function getUnread() {
+        try {
+            var raw = localStorage.getItem(UNREAD_KEY);
+            var n = raw ? parseInt(raw, 10) : 0;
+            return isNaN(n) ? 0 : n;
+        } catch (e) {
+            return 0;
+        }
+    }
+
+    function setUnread(n) {
+        try {
+            localStorage.setItem(UNREAD_KEY, String(n || 0));
+        } catch (e) {
+        }
+
+        updateTabTitle(n || 0);
+    }
+
+    function extractNoti(payload) {
+        payload = payload || {};
+        var title = '';
+        var body = '';
+
+        if (payload.notification) {
+            title = payload.notification.title || '';
+            body = payload.notification.body || '';
+        }
+        if (!title && payload.data && payload.data.title) title = payload.data.title;
+        if (!body && payload.data && payload.data.body) body = payload.data.body;
+
+        return {
+            id: payload.messageId || (String(Date.now()) + '-' + Math.floor(Math.random() * 100000)),
+            title: title || 'Thông báo',
+            body: body || '',
+            receivedAt: Date.now(),
+            raw: payload
+        };
+    }
+
+    function renderHeaderInbox() {
+        var badge = document.getElementById('fcm-noti-badge');
+        var menu = document.getElementById('fcm-noti-menu');
+
+        if (!badge || !menu) return;
+
+        var unread = getUnread();
+        updateTabTitle(unread);
+        if (unread > 0) {
+            badge.style.display = '';
+            badge.textContent = unread > 99 ? '99+' : String(unread);
+        } else {
+            badge.style.display = 'none';
+            badge.textContent = '0';
+        }
+
+        var inbox = loadInbox();
+
+        // Clear & rebuild (keep structure consistent across pages)
+        while (menu.firstChild) menu.removeChild(menu.firstChild);
+
+        // Header
+        var liHeader = document.createElement('li');
+        liHeader.className = 'dropdown-header py-2 px-3';
+        liHeader.textContent = 'Thông báo';
+        menu.appendChild(liHeader);
+
+        var liDiv = document.createElement('li');
+        var hr = document.createElement('hr');
+        hr.className = 'dropdown-divider my-0';
+        liDiv.appendChild(hr);
+        menu.appendChild(liDiv);
+
+        if (!inbox.length) {
+            var liEmpty = document.createElement('li');
+            var aEmpty = document.createElement('a');
+            aEmpty.className = 'dropdown-item py-3 text-center';
+            aEmpty.href = 'javascript:void(0)';
+            aEmpty.id = 'fcm-noti-empty';
+            aEmpty.textContent = 'Chưa có thông báo';
+            liEmpty.appendChild(aEmpty);
+            menu.appendChild(liEmpty);
+            return;
+        }
+
+        for (var i = 0; i < inbox.length; i++) {
+            var it = inbox[i] || {};
+            var li = document.createElement('li');
+
+            var a = document.createElement('a');
+            a.className = 'dropdown-item py-2 px-3';
+            a.href = 'javascript:void(0)';
+
+            var wrap = document.createElement('div');
+            wrap.className = 'd-flex flex-column';
+
+            var title = document.createElement('div');
+            title.className = 'fcm-noti-item-title';
+            title.textContent = it.title || 'Thông báo';
+
+            if (it.body) {
+                var body = document.createElement('div');
+                body.className = 'small text-muted';
+                body.textContent = it.body;
+                wrap.appendChild(title);
+                wrap.appendChild(body);
+            } else {
+                wrap.appendChild(title);
+            }
+
+            var time = document.createElement('div');
+            time.className = 'small text-muted';
+            try {
+                time.textContent = new Date(it.receivedAt || Date.now()).toLocaleString();
+            } catch (eTime) {
+                time.textContent = '';
+            }
+            wrap.appendChild(time);
+
+            a.appendChild(wrap);
+            li.appendChild(a);
+            menu.appendChild(li);
+
+            if (i !== inbox.length - 1) {
+                var liSep = document.createElement('li');
+                var hr2 = document.createElement('hr');
+                hr2.className = 'dropdown-divider my-0';
+                liSep.appendChild(hr2);
+                menu.appendChild(liSep);
+            }
+        }
+    }
+
+    function pushInboxItem(item) {
+        var inbox = loadInbox();
+        // prevent duplicates by id
+        if (item && item.id) {
+            for (var i = 0; i < inbox.length; i++) {
+                if (inbox[i] && inbox[i].id === item.id) return;
+            }
+        }
+        inbox.unshift(item);
+        if (inbox.length > INBOX_MAX) inbox.length = INBOX_MAX;
+        saveInbox(inbox);
+    }
+
+    function handleIncoming(payload) {
+        var item = extractNoti(payload);
+        pushInboxItem(item);
+        setUnread(getUnread() + 1);
+        renderHeaderInbox();
+    }
+
+    function attachHeaderHandlersOnce() {
+        if (window.__fcmHeaderBound) return;
+        window.__fcmHeaderBound = true;
+
+        var btn = document.getElementById('fcm-noti-button');
+        if (btn) {
+            btn.addEventListener('click', function () {
+                // When user opens the dropdown, mark all as read
+                setUnread(0);
+                renderHeaderInbox();
+            });
+        }
+    }
+
+    function attachServiceWorkerMessageListenerOnce() {
+        if (window.__fcmSwMsgBound) return;
+        window.__fcmSwMsgBound = true;
+
+        try {
+            if (navigator && navigator.serviceWorker) {
+                navigator.serviceWorker.addEventListener('message', function (event) {
+                    var data = event && event.data ? event.data : null;
+                    if (!data) return;
+                    if (data.type === 'FCM_BG_MESSAGE' && data.payload) {
+                        handleIncoming(data.payload);
+                    }
+                });
+            }
+        } catch (e) {
+        }
+    }
+
     // You MUST set this (Firebase Console -> Project Settings -> Cloud Messaging -> Web Push certificates)
     // E.g. in index.aspx: window.FCM_VAPID_KEY = '...';
     function getVapidKey() {
@@ -201,7 +431,6 @@
                 localStorage.setItem('FCM_CURRENT_TOKEN', currentToken);
             } catch (eLs) {
             }
-
             console.log('[FCM] Token đang sử dụng là:', currentToken);
             var cacheKey = 'FCM_TOKEN_LAST';
             var lastToken = '';
@@ -223,6 +452,10 @@
             console.warn('[FCM] Web Push requires HTTPS (or localhost) + Notifications + ServiceWorker + PushManager');
             return;
         }
+
+        attachHeaderHandlersOnce();
+        attachServiceWorkerMessageListenerOnce();
+        try { renderHeaderInbox(); } catch (eRender0) { }
 
         // Request permission only when needed
         if (Notification.permission === 'denied') {
@@ -249,6 +482,7 @@
         try {
             if (typeof messaging.onMessage === 'function') {
                 messaging.onMessage(function (payload) {
+                    try { handleIncoming(payload); } catch (e0) { }
                     console.log('[FCM] foreground message:', payload);
                 });
             }
@@ -284,5 +518,74 @@
         } catch (e1) {
         }
         return '';
+    };
+
+    // Optional helpers
+    window.edu.fcm.getInbox = function () {
+        return loadInbox();
+    };
+
+    window.edu.fcm.markAllRead = function () {
+        setUnread(0);
+        renderHeaderInbox();
+    };
+
+    // Diagnostics: run in console -> edu.fcm.debug()
+    window.edu.fcm.debug = async function () {
+        var info = {
+            href: '',
+            origin: '',
+            isSecureContext: null,
+            notificationPermission: null,
+            vapidLen: 0,
+            swSupported: false,
+            swController: false,
+            swUrl: '',
+            swScope: '',
+            tokenCached: '',
+            unread: 0
+        };
+
+        try { info.href = String(location.href || ''); } catch (e0) { }
+        try { info.origin = String(location.origin || ''); } catch (e1) { }
+        try { info.isSecureContext = (typeof window.isSecureContext === 'boolean') ? window.isSecureContext : null; } catch (e2) { }
+        try { info.notificationPermission = (window.Notification && Notification.permission) ? Notification.permission : null; } catch (e3) { }
+        try { info.vapidLen = (getVapidKey() || '').length; } catch (e4) { }
+        try { info.swSupported = !!(navigator && navigator.serviceWorker); } catch (e5) { }
+        try { info.swController = !!(navigator && navigator.serviceWorker && navigator.serviceWorker.controller); } catch (e6) { }
+        try { info.swUrl = getServiceWorkerUrl(); } catch (e7) { }
+        try { info.tokenCached = window.edu && edu.fcm ? (edu.fcm.getToken ? edu.fcm.getToken() : (edu.fcm.currentToken || '')) : ''; } catch (e8) { }
+        try { info.unread = getUnread(); } catch (e9) { }
+
+        console.log('[FCM][debug] info:', info);
+
+        // Try SW register/ready
+        var reg = null;
+        try {
+            reg = await registerServiceWorker();
+            if (reg) {
+                info.swScope = reg.scope || '';
+                console.log('[FCM][debug] sw registration ok:', reg.scope);
+            } else {
+                console.warn('[FCM][debug] sw registration is null');
+            }
+        } catch (eReg) {
+            console.warn('[FCM][debug] sw registration failed:', eReg);
+        }
+
+        // Try getToken (will fail if permission not granted)
+        try {
+            var messaging = initFirebaseIfNeeded();
+            if (!messaging) {
+                console.warn('[FCM][debug] firebase.messaging unavailable');
+                return info;
+            }
+            await getAndSaveToken(messaging, reg);
+            console.log('[FCM][debug] token after getAndSaveToken:', (window.edu && edu.fcm) ? (edu.fcm.currentToken || edu.fcm.getToken()) : '');
+        } catch (eTok) {
+            console.warn('[FCM][debug] getToken failed:', eTok);
+        }
+
+        return info;
     };
 })();

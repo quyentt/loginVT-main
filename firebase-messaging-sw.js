@@ -35,6 +35,19 @@ messaging.onBackgroundMessage(function (payload) {
     };
 
     self.registration.showNotification(title, options);
+
+    // Also forward to any open tabs so UI can update (badge/inbox)
+    try {
+      self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(function (clientList) {
+        for (var i = 0; i < clientList.length; i++) {
+          try {
+            clientList[i].postMessage({ type: 'FCM_BG_MESSAGE', payload: payload });
+          } catch (ePost) {
+          }
+        }
+      });
+    } catch (eClients) {
+    }
   } catch (e) {
     // no-op
   }

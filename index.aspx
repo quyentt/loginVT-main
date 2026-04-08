@@ -12,6 +12,31 @@
     <link href="assets/pagination/simplePagination.min.css" rel="stylesheet" />
     <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/logo.ico" />
+
+    <style>
+      /* FCM header notifications: layout only (no new colors) */
+      #fcm-noti-button {
+        position: relative;
+      }
+
+      #fcm-noti-badge {
+        position: absolute;
+        top: -6px;
+        right: -10px;
+        line-height: 1;
+      }
+
+      #fcm-noti-menu {
+        min-width: 340px;
+        max-width: 420px;
+        max-height: 420px;
+        overflow: auto;
+      }
+
+      .fcm-noti-item-title {
+        font-weight: 600;
+      }
+    </style>
   </head>
 
   <body>
@@ -99,17 +124,19 @@
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
         </div>
+        --%>
+
         <div class="dropdown">
-          <div class="item noti" data-bs-toggle="dropdown">
+          <div class="item noti" id="fcm-noti-button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fal fa-bell"></i>
-            <span>9+</span>
+            <span id="fcm-noti-badge" class="badge rounded-pill bg-danger" style="display:none">0</span>
           </div>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <ul class="dropdown-menu dropdown-menu-end p-0" id="fcm-noti-menu">
+            <li class="dropdown-header py-2 px-3">Thông báo</li>
+            <li><hr class="dropdown-divider my-0"></li>
+            <li><a class="dropdown-item py-3 text-center" href="javascript:void(0)" id="fcm-noti-empty">Chưa có thông báo</a></li>
           </ul>
-        </div>--%>
+        </div>
         <div class="dropdown">
           <div class="item" data-bs-toggle="dropdown">
             <img src="assets/images/avata-user.png" class="avatar" />
