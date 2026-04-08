@@ -360,6 +360,11 @@ PhucKhao.prototype = {
     },
     genTable_PhucKhao: function (data, iPager) {
         var me = this;
+        var total = 0;
+        if (typeof iPager === "number") total = iPager;
+        else if (iPager && typeof iPager === "string" && iPager.trim() !== "") total = iPager;
+        else if (Array.isArray(data)) total = data.length;
+        $("#lblXacNhan_Tong").html(total);
         var jsonForm = {
             strTable_Id: "tblDSThi",
 
@@ -445,14 +450,25 @@ PhucKhao.prototype = {
                 {
                     //"mDataProp": "PhiPhucKhao - TinhTrangNopPhi"
                     mRender: function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.PHIPHUCKHAO) + " - " + edu.util.returnEmpty(aData.TINHTRANGNOPPHI)
+                        var tinhTrangNopPhi = aData.TINHTRANGNOPPHI;
+                        var daNop = false;
+                        if (typeof tinhTrangNopPhi === "boolean") daNop = tinhTrangNopPhi;
+                        else if (typeof tinhTrangNopPhi === "number") daNop = tinhTrangNopPhi !== 0;
+                        else if (typeof tinhTrangNopPhi === "string") {
+                            var v = tinhTrangNopPhi.trim().toLowerCase();
+                            daNop = v !== "" && v !== "0" && v !== "false" && v !== "chua nop" && v !== "chưa nộp";
+                        } else {
+                            daNop = !!tinhTrangNopPhi;
+                        }
+
+                        return edu.util.returnEmpty(aData.PHIPHUCKHAO) + " - " + (daNop ? "Đã nộp" : "Chưa nộp");
                     }
                 },
                 {
-                    "mDataProp": "TINHTRANG_TEN"
+                    "mDataProp": "KETQUAPHUCKHAO"
                 },
                 {
-                    "mDataProp": "KETQUAPHUCKHAO"
+                    "mDataProp": "TINHTRANG_TEN"
                 }
             ]
         };
