@@ -11126,7 +11126,10 @@ table#clone {
 .tblNhapDiem tr td:nth-last-child(3),
 .tblNhapDiem tr td:nth-last-child(5),
 .tblNhapDiem tr td:nth-last-child(7),
-.tblNhapDiem tr td:nth-last-child(4) {
+.tblNhapDiem tr td:nth-last-child(4),
+.tblTuiThi tr td:nth-child(7),
+.tblTuiThi tr td:nth-child(8),
+.tblTuiThi tr td:nth-child(9) {
     text-align: center !important;
 }
 
@@ -11144,4 +11147,8 @@ table#clone {
 }
 .change-tblNhapDiem .select2-container--default .select2-selection--single .select2-selection__arrow b {
     margin-left: 0px;
+}
+.tblTuiThi tr td:nth-child(10) .form-control {
+    width: 60px;
+    text-align: center;
 }
