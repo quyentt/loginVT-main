@@ -544,8 +544,14 @@ KetQua.prototype = {
                     me.dtThongKeHocPhan_Full = dtResult;
                     me.genTable_ThongKeHocPhan(dtResult, dtResult.length);
 =======
+<<<<<<< HEAD
+                    // Lưu toàn bộ data để phân trang client-side
+                    me.dtThongKeHocPhan_Full = dtResult;
+                    me.genTable_ThongKeHocPhan(dtResult, dtResult.length);
+=======
                     me.genTable_ThongKeHocPhan(dtResult);
 >>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
                 }
                 else {
                     edu.system.alert(obj_list.action + ": " + data.Message, "w");
@@ -570,11 +576,18 @@ KetQua.prototype = {
         
         // Tính tổng số sinh viên từ toàn bộ data
 =======
+<<<<<<< HEAD
+    genTable_ThongKeHocPhan: function (data, iPager) {
+        var me = this;
+        
+        // Tính tổng số sinh viên từ toàn bộ data
+=======
     genTable_ThongKeHocPhan: function (data) {
         var me = this;
         
         // Tính tổng số sinh viên
 >>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         var tongSoSV = 0;
         if (data && data.length > 0) {
             data.forEach(function(item) {
@@ -594,11 +607,21 @@ KetQua.prototype = {
                 iDataRow: data.length,
             },
 =======
+<<<<<<< HEAD
+        // Tạo bảng với framework có sẵn
+        var jsonForm = {
+            strTable_Id: "tblThongKeHocPhan",
+            aaData: data,
+            bPaginate: {
+                iDataRow: data.length,
+            },
+=======
         // Tạo bảng
         var jsonForm = {
             strTable_Id: "tblThongKeHocPhan",
             aaData: data,
 >>>>>>> 3e1523df43fc1c25eec1ee72e6be6be804aaa7d0
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
             colPos: {
                 center: [0, 3, 4],
             },

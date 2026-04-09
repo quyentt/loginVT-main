@@ -116,7 +116,7 @@ VaiTroNguoiDung.prototype = {
     },
     genTreeJs_Vaitro: function (dtResult, iPager) {
         var me = this;
-        me["dtVaiTroNguoiDung"] = dtResult;
+        console.log(1222222222);
         edu.util.viewHTMLById("lblDanhMucTenBang_Tong", iPager);
         var obj = {
             data: dtResult,
@@ -134,7 +134,7 @@ VaiTroNguoiDung.prototype = {
         $('#treesjs_vaitro_vtnd').on("select_node.jstree", function (e, data) {
             var strNameNode = data.node.id;
             me.strVaiTro_Id = strNameNode;
-            $("#lblVaiTroNguoiDung").html(me["dtVaiTroNguoiDung"].find(e => e.ID == strNameNode).TENVAITRO)
+            console.log(1222222222);
             me.getList_NguoiDungDaThem();
         });
     },
@@ -196,11 +196,8 @@ VaiTroNguoiDung.prototype = {
             'func': 'PKG_CORE_QUANTRI_01.LayDSNguoiDungVaiTro',
             'iM': edu.system.iM,
             'strVaiTro_Id': me.strVaiTro_Id,
-            'strTuKhoa': edu.system.getValById('tblNguoiDungDaThem_input'),
             'strHanhDong_Id': edu.system.getValById('dropAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
         };
         //
 
@@ -231,16 +228,14 @@ VaiTroNguoiDung.prototype = {
         }, false, false, false, null);
     },
     genTable_NguoiDungDaThem: function (data, iPager) {
-        console.log(iPager)
         edu.util.viewHTMLById("lblNguoiDung_Tong", iPager);
-        if (iPager == 1) iPager = 2;
         var jsonForm = {
             strTable_Id: "tblNguoiDungDaThem",
             aaData: data,
             bPaginate: {
                 strFuntionName: "main_doc.VaiTroNguoiDung.getList_NguoiDungDaThem()",
                 iDataRow: iPager,
-                bFilter: true,
+                iFilter: true,
             },
             arrClassName: ["tr-pointer", "btnEdit"],
             colPos: {

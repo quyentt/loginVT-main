@@ -54,10 +54,10 @@
                                 <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-4 item-search d-flex gap10">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
-                                        class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search">
+                                    <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                                 <a class="btn btn-primary btnXacNhan" href="#" title="Close"><i
-                                        class="fa-light fa-circle-check"></i> Xác nhận</a>
+                                        class="fa-light fa-circle-check"></i>Xác nhận</a>
                                 <div class="dropdown mr-0" id="zonebtnBaoCao_NhapDiem"></div>
                                 <div class="dropdown" id="zonebtnBaoCao_NhapDiem_Import"></div>
                                 <div class="dropdown" id="zonebtnBaoCao_NhapDiem_Import"></div>
@@ -78,20 +78,23 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div class="table-select2 aps-table-select mt-0">
-                        <table id="tblNhapDiem" class="table table-hover table-bordered mb-0">
+                    <div class="table-select2 aps-table-select mt-0 scroll-table-x">
+                        <table id="tblNhapDiem"
+                            class="table table-hover table-bordered mb-0 table-noborder tblNhapDiem">
                             <thead>
                                 <tr>
-                                    <th class="td-fixed td-center">Stt</th>
-                                    <th class="td-center">Mã danh sách thi</th>
-                                    <th class="td-center">Học phần</th>
-                                    <th class="td-center">Ngày thi</th>
-                                    <th class="td-center">Ca thi</th>
-                                    <th class="td-center">Phòng thi</th>
-                                    <th class="td-center">Số SV</th>
-                                    <th class="td-center" style="width: 120px">Ngày nhận bài</th>
-                                    <th class="td-center">THÔNG TIN CÁN BỘ CHẤM THI ĐÃ PHÂN CÔNG</th>
-                                    <th class="td-center">Xác nhận hoàn thành</th>
+                                    <th class="td-fixed td-center w-50px">Stt</th>
+                                    <th class="td-left">Mã danh sách thi</th>
+                                    <th class="td-left">Học phần</th>
+                                    <th class="td-left">Ngày thi</th>
+                                    <th class="td-center" style="min-width: 60px">Ca thi</th>
+                                    <th class="td-left">Phòng thi</th>
+                                    <th class="td-center" style="min-width: 60px">Số SV</th>
+                                    <th class="td-center" style="min-width: 120px;width: 120px">Ngày nhận bài</th>
+                                    <th class="td-center" style="min-width: 160px;width:160px">
+                                        Thông tin cán bộ chấm thi đã phân công
+                                    </th>
+                                    <th class="td-center" style="min-width: 100px;width:100px">Xác nhận hoàn thành</th>
                                     <th class="td-center td-fixed">
                                         <input type="checkbox" id="chkSelectAll_NhapDiem">
                                     </th>
@@ -107,37 +110,37 @@
         </div>
 
         <!-- Thông tin danh sách thi  -->
-        <div class="box box-solid zone-bus form-container add-absolue" id="zoneEdit" style="display: none">
+        <div class="box box-solid zone-bus form-container add-absolue aps-tt-danhsachthi" id="zoneEdit"
+            style="display: none">
             <div class="box-header with-border">
-                <h3 class="box-title"><span class="myModalLabel2"><i class="fa fa-plus"></i></span> Thông tin danh sách
-                    thi <span id="lblTenDot"></span></h3>
+                <h3 class="box-title"><span class="myModalLabel2"><i class="fa fa-plus"></i></span>
+                    Thông tin danh sách thi <span id="lblTenDot" class="ml-10"></span></h3>
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
             </div>
             <div class="box-body pd20">
-                <div class="col-sm-12 aps-table-select">
-                    <table id="tblTuiThi" class="table table-hover table-bordered mb-0 tblTuiThi">
+                <div class="col-sm-12 aps-table-select scroll-table-x">
+                    <table id="tblTuiThi" class="table table-hover table-bordered table-noborder mb-0 tblTuiThi">
                         <thead>
                             <tr>
-                                <td class="td-fixed td-center">Stt</td>
-                                <td class="td-center">Mã số</td>
-                                <td class="td-center">Họ đệm</td>
-                                <td class="td-center">Tên</td>
-                                <td class="td-center">Lớp quản lý</td>
-                                <td class="td-center">Điểm thành phần</td>
+                                <td class="td-fixed td-center w-50px">Stt</td>
+                                <td class="td-left">Mã số</td>
+                                <td class="td-left">Họ đệm</td>
+                                <td class="td-left">Tên</td>
+                                <td class="td-left">Lớp quản lý</td>
+                                <td class="td-left">Điểm thành phần</td>
                                 <td class="td-center">Lần học</td>
                                 <td class="td-center">Lần thi</td>
                                 <td class="td-center">Số báo danh</td>
                                 <td class="td-center">Điểm</td>
-                                <td class="td-center">Lớp đăng ký học</td>
-                                <td class="td-center">Người cập nhật</td>
-                                <td class="td-center">Ngày cập nhật</td>
+                                <td class="td-left">Lớp đăng ký học</td>
+                                <td class="td-left">Người cập nhật</td>
+                                <td class="td-left">Ngày cập nhật</td>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
-
                 </div>
             </div>
             <div class="box-footer">
@@ -152,10 +155,21 @@
         </div>
     </div>
 </section>
+<!-- ---------- -->
+<div class="aps-gap-10 btn-show pd20" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal_XacNhan">
+        Xác nhận</button>
+    <button type="button" class="btn btn-outline-secondary" data-toggle="modal"
+        data-target="#modal_XacNhanTungSinhVien">
+        Xác nhận</button>
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalCanBoChamThi">
+        Thêm mới</button>
+</div>
+<!-- ---------- -->
 <!-- Xác nhận -->
 <div class="modal fade modal_XacNhan" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-860">
+    <div class="modal-dialog modal-860 modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -240,7 +254,7 @@
 <!-- Xác nhận -->
 <div class="modal fade modal_XacNhanTungSinhVien" id="modal_XacNhanTungSinhVien" role="dialog"
     aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 800px; max-width: 1200px">
+    <div class="modal-dialog modal-860 modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -325,34 +339,41 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModalCanBoChamThi" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<!-- Thêm mới -->
+<div class="modal fade myModalCanBoChamThi" id="myModalCanBoChamThi" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-860 modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> <span class="lang" key="">Cán bộ</span> </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h4 class="modal-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> <span
+                        class="lang" key="">Cán bộ</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblCanBoChamThi" class="table table-hover table-bordered">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-center"><span class="lang" key="">Họ đệm</span></th>
-                            <th class="td-center"><span class="lang" key="">Tên</span></th>
-                            <th class="td-center"><span class="lang" key="">Mã số</span></th>
-                            <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
-
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table id="tblCanBoChamThi" class="table table-hover table-bordered table-noborder tblCanBoChamThi">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed w-50px">Stt</th>
+                                <th class="td-left"><span class="lang" key="">Họ đệm</span></th>
+                                <th class="td-left"><span class="lang" key="">Tên</span></th>
+                                <th class="td-left"><span class="lang" key="">Mã số</span></th>
+                                <th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-
-                <a class="btn btn-default" id="btnDelete_CanBoChamThi"><i class="fa fa-trash"></i> Xóa</a>
-                <!--<a class="btn btn-primary" id="btnSave_HocPhan_ThuTu"><i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>-->
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a class="btn btn-outline-danger " id="btnDelete_CanBoChamThi"><i class="fa fa-trash"></i> Xóa</a>
+                    <!--<a class="btn btn-primary" id="btnSave_HocPhan_ThuTu"><i class="fa fa-save"></i><span class="lang" key="">Lưu</span></a>-->
+                </div>
             </div>
         </div>
     </div>

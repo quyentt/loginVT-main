@@ -2398,6 +2398,7 @@
      color: #fff !important;
      font-size: 18px !important;
      font-weight: 500;
+     padding-top: 3px;
  }
 
  .modal-title i,
@@ -2426,9 +2427,9 @@
  }
 
  .modal-header .close {
-     margin-top: 1px !important;
+     margin-top: 4px !important;
      color: #fff !important;
-     padding-right: 3px;
+     padding-right: 0px;
      font-weight: 200 !important;
  }
 
@@ -5237,9 +5238,11 @@
  .aps-lichgiangphonghoc .register-school-right {
      padding-left: 0 !important;
  }
- .search-bar-info .info-item{
-    font-size: 14px !important;
+
+ .search-bar-info .info-item {
+     font-size: 14px !important;
  }
+
  .box-search #btnSearch {
-    min-width: 110px !important;
-}
+     min-width: 110px !important;
+ }
