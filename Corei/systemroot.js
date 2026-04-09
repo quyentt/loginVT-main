@@ -234,7 +234,7 @@ systemroot.prototype = {
             html += '<a id="btnDelete_MauFileBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>';
             html += '</div>';
 
-            html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul id="zoneBaoCao">'
+            html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
             me.dtMauBaoCao.forEach((e, i) => {
                 html += '<li class="btnBaoCao"  id="' + e.ID +'"><a   href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
             })
@@ -247,7 +247,7 @@ systemroot.prototype = {
             html += '<th>Tên báo cáo</th>';
             html += '<th>Tải báo cáo</th>';
             html += '<th>Tải mẫu</th>';
-            html += '<th><th class="td-fixed td-center">Sửa</th></th>';
+            html += '<th class="td-fixed td-center">Sửa</th>';
             html += '<th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>';
             html += '</thead>';
             html += '<tbody></tbody>';
@@ -262,7 +262,7 @@ systemroot.prototype = {
             me.getList_MauFileBaoCao();
 
             if ($("#modalMauBaoCao").length == 0) {
-                $("#zoneBaoCao").delegate(".btnBaoCao", "click", function () {
+                $("#modalBaoCao").delegate(".btnBaoCao", "click", function () {
                     var strId = this.id;
                     me["strMauBaoCao_Id"] = strId;
                     var data = me.dtMauBaoCao.find(e => e.ID == strId);
@@ -275,15 +275,21 @@ systemroot.prototype = {
                     me["strMauFileBaoCao_Id"] = data.ID;
                     edu.util.viewValById("txtTenHienThiMauBaoCao", data.TEN);
                     edu.util.viewValById("dropSearch_BangA", data.TEN);
+                    edu.util.viewValById("importToCheck", data.DUONGDAN);
                     $("#modalMauBaoCao").modal("show");
                 });
                 $("#tblMauBaoCao").delegate(".btnDownLoadBaoCao", "click", function () {
                     var strId = this.id;
+                    var dataBC = me.dtMauBaoCao.find(e => e.ID == me.strMauBaoCao_Id);
+
                     var data = me.dtMauFileBaoCao.find(e => e.ID == strId);
-                    var strMauBaoCao = data.MAUIMPORT_MA;
-                    var strDuongDan = data.MAUIMPORT_DUONGDAN;
-                    var strDuongDanFileBaoCao = $(this).attr("name");
-                    me.report(strMauBaoCao, strDuongDan, me.callbackBaoCao, null, null, null, strDuongDanFileBaoCao);
+                    var strMauBaoCao = dataBC.MAUIMPORT_MA;
+                    var strDuongDan = dataBC.MAUIMPORT_DUONGDAN;
+                    var strDuongDanFileBaoCao = data.DUONGDAN;
+                    me.report(strMauBaoCao, strDuongDan, me.callbackBaoCao, null, null, null, function (addKeyValue) {
+                        addKeyValue("strDuongDanFileBaoCao", strDuongDanFileBaoCao);
+                        addKeyValue("BAOCAO_NGUOIDUNG_TEMPLATE_ID", strId);
+                    });
                 });
                 //$("#tblMauBaoCao").delegate(".btnDownLoadMau", "click", function () {
                 //    var strId = this.id;
@@ -6785,14 +6791,13 @@ systemroot.prototype = {
             });
         }, "", "HESO1");
     },
-    report: function (strLoaiBaoCao, strDuongDan, callback, strTable_Id, checkBaoCao, bDatLich, strDuongDanFileBaoCao) {
+    report: function (strLoaiBaoCao, strDuongDan, callback, strTable_Id, checkBaoCao, bDatLich, callback2) {
         var me = this;
         var arrTuKhoa = [];
         var arrDuLieu = [];
         checkBaoCao = me.dtMauBaoCao ? me.dtMauBaoCao.find(e => e.MAUIMPORT_MA == strLoaiBaoCao) : {};
         //
         if (strTable_Id) addKeyValue("strTable_Id", strTable_Id);
-        if (strDuongDanFileBaoCao) addKeyValue("strDuongDanFileBaoCao", strDuongDanFileBaoCao);
         addKeyValue("strLoaiBaoCao", strLoaiBaoCao);
         addKeyValue("strReportCode", strLoaiBaoCao);
         addKeyValue("strNguoiThucHien_Id", me.userId);
@@ -6805,6 +6810,10 @@ systemroot.prototype = {
         if (jQuery.type(callback) == "function") {
             var check = callback(addKeyValue);
             console.log(check);
+            if (check == false) return;
+        }
+        if (jQuery.type(callback2) == "function") {
+            var check = callback2(addKeyValue);
             if (check == false) return;
         }
         //không sửa ở đây
@@ -9404,7 +9413,7 @@ systemroot.prototype = {
             'strBAOCAO_ID': me.strMauBaoCao_Id,
             'strCHUCNANG_ID': edu.system.getValById('txtAAAA'),
             'strDUONGDAN': edu.util.getValById("importToCheck"),
-            'strTENHIENTHI': edu.system.getValById('txtAAAA'),
+            'strTENHIENTHI': edu.system.getValById('txtTenHienThiMauBaoCao'),
             'strNGUOITHUCHIEN_ID': edu.system.getValById('txtAAAA'),
             'strNGAYTAO': edu.system.getValById('txtAAAA'),
         };
@@ -9537,6 +9546,10 @@ systemroot.prototype = {
     -------------------------------------------*/
     genTable_MauFileBaoCao: function (data, iPager) {
         $("#lblMauBaoCao_Tong").html(iPager);
+        let url = new URL(window.location.href);
+        let parts = url.pathname.split('/').filter(Boolean);
+
+        let result = `${url.origin}/${parts[0]}`;
         var jsonForm = {
             strTable_Id: "tblMauBaoCao",
             aaData: data,
@@ -9550,7 +9563,7 @@ systemroot.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "TEN"
+                    "mDataProp": "TENHIENTHI"
                 },
                 {
                     "mRender": function (nRow, aData) {
@@ -9559,7 +9572,16 @@ systemroot.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default" href="' + aData.DUONGDANFILE + '" title="Sửa"><i class="fa fa-cloud-download"></i></a></span>';
+                        var strDuongDan = aData.DUONGDAN;
+                        if (strDuongDan) {
+                            strDuongDan = strDuongDan.replace(/\\\\/g, '/');
+                            strDuongDan = strDuongDan.substring(strDuongDan.indexOf('Upload/File'));
+                            strDuongDan = result + '/' + strDuongDan;
+                            return '<span><a class="btn btn-default" href="' + strDuongDan + '" title="Sửa"><i class="fa fa-cloud-download"></i></a></span>';
+
+                        } else {
+                            return "";
+                        }
                     }
                 },
                 {
