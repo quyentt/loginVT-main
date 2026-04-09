@@ -82,6 +82,7 @@
                         <div class="pull-right">
                             <div>
                                 <a class="btn btn-primary" id="btnSave_XepLoai" href="#"><i class="fa fa-paper-plane"></i> Thực hiện xếp loại kỳ, năm, toàn khóa</a>
+                                <a class="btn btn-default" id="btnThongKe_ThieuDRL" href="#"><i class="fa fa-bar-chart"></i> Thống kê danh sách còn thiếu điểm RL</a>
                             </div>
                         </div>
                     </div>
@@ -106,6 +107,39 @@
                                                 <th class="td-center">Điểm rèn luyện</th>
                                                 <th class="td-center">Điểm RL quy đổi</th>
                                                 <th class="td-center">Ghi chú</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                        <tfoot></tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="box box-solid" id="zone_thongke_thieudrl" style="display: none">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <i class="fa fa-list-alt"></i> Danh sách còn thiếu điểm rèn luyện
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="col-sm-12 scroll-table-x">
+                                    <table id="tblThieuDRL" class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-fixed td-center">Stt</th>
+                                                <th class="td-center">Mã số</th>
+                                                <th class="td-center">Họ tên</th>
+                                                <th class="td-center">Trạng thái</th>
+                                                <th class="td-center">Lớp</th>
+                                                <th class="td-center">Chương trình</th>
+                                                <th class="td-center">Khóa học</th>
+                                                <th class="td-center">Khoa quản lý</th>
+                                                <th class="td-center">Hệ đào tạo</th>
                                             </tr>
                                         </thead>
                                         <tbody></tbody>

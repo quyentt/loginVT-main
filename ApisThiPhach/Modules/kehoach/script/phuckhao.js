@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------
+﻿    /*----------------------------------------------
 --Author: Văn Hiệp
 --Phone: 
 --Date of created: 
@@ -9,6 +9,8 @@
 function PhucKhao() { };
 PhucKhao.prototype = {
     dtPhucKhao: [],
+    dtPhucKhao_Full: [],
+    isThongKe_KhoaQLHP_Visible: false,
     strPhucKhao_Id: '',
     dtXacNhan: [],
 
@@ -38,6 +40,16 @@ PhucKhao.prototype = {
         });
         $('#dropSearch_HocPhan').on('select2:select', function (e) {
             //me.getList_PhucKhao();
+        });
+
+        // Filter thống kê theo khoa QLHP (client-side)
+        $("#dropFilter_KhoaQLHP").on('change', function () {
+            me.applyFilter_KhoaQLHP();
+        });
+
+        $("#btnToggleThongKe_KhoaQLHP").on('click', function (e) {
+            e.preventDefault();
+            me.toggleThongKe_KhoaQLHP();
         });
        
         $("#zoneBtnXacNhan").delegate('.btnxacnhan', 'click', function () {
@@ -139,6 +151,170 @@ PhucKhao.prototype = {
                 }
             });
         });
+    },
+
+    toggleThongKe_KhoaQLHP: function () {
+        var me = this;
+        me.isThongKe_KhoaQLHP_Visible = !me.isThongKe_KhoaQLHP_Visible;
+
+        if (me.isThongKe_KhoaQLHP_Visible) {
+            $("#rowThongKe_KhoaQLHP").show();
+            $("#btnToggleThongKe_KhoaQLHP").text("Ẩn thống kê theo khoa QLHP");
+            me.renderThongKe_KhoaQLHP(me.dtPhucKhao_Full);
+        } else {
+            $("#rowThongKe_KhoaQLHP").hide();
+            $("#btnToggleThongKe_KhoaQLHP").text("Thống kê theo khoa QLHP");
+        }
+    },
+
+    setTongBanGhi: function (iPager, data) {
+        var total = 0;
+        if (typeof iPager === "number") total = iPager;
+        else if (iPager && typeof iPager === "string" && iPager.trim() !== "") total = iPager;
+        else if (Array.isArray(data)) total = data.length;
+        $("#lblXacNhan_Tong").html(total);
+    },
+
+    getKhoaQLHP_Ten: function (row) {
+        var ten = row ? row.DAOTAO_KHOAQUANLYHP_TEN : "";
+        ten = (ten == null) ? "" : ("" + ten).trim();
+        return ten || "(Chưa xác định)";
+    },
+
+    populateFilter_KhoaQLHP: function (data) {
+        var me = this;
+        var seen = {};
+        var items = [];
+        if (Array.isArray(data)) {
+            for (var i = 0; i < data.length; i++) {
+                var ten = me.getKhoaQLHP_Ten(data[i]);
+                if (!seen[ten]) {
+                    seen[ten] = true;
+                    items.push(ten);
+                }
+            }
+        }
+
+        items.sort(function (a, b) {
+            return a.localeCompare(b);
+        });
+
+        var current = edu.util.getValById("dropFilter_KhoaQLHP");
+        var html = '<option value="">Tất cả</option>';
+        for (var j = 0; j < items.length; j++) {
+            var val = items[j].replace(/"/g, '&quot;');
+            html += '<option value="' + val + '">' + items[j] + '</option>';
+        }
+        $("#dropFilter_KhoaQLHP").html(html);
+
+        // Giữ lựa chọn hiện tại nếu còn tồn tại
+        if (current) {
+            $("#dropFilter_KhoaQLHP").val(current);
+        }
+        if ($.fn.select2) {
+            try {
+                $("#dropFilter_KhoaQLHP").trigger('change.select2');
+            } catch (e) { }
+        } else {
+            $("#dropFilter_KhoaQLHP").trigger('change');
+        }
+    },
+
+    renderThongKe_KhoaQLHP: function (data) {
+        var me = this;
+        var total = Array.isArray(data) ? data.length : 0;
+        var selected = edu.util.getValById("dropFilter_KhoaQLHP") || "Tất cả";
+        var filtered = me.getFilteredData_KhoaQLHP().length;
+        $("#lblThongKe_KhoaQLHP").html('Đang chọn: <b>' + selected + '</b> — Hiển thị: <b>' + filtered + '</b> / Tổng: <b>' + total + '</b>');
+
+        // Nếu đang ẩn chi tiết thì chỉ cập nhật dòng tổng hợp
+        if (!me.isThongKe_KhoaQLHP_Visible || !$("#rowThongKe_KhoaQLHP").is(":visible")) return;
+
+        var map = {};
+        if (Array.isArray(data)) {
+            for (var i = 0; i < data.length; i++) {
+                var key = me.getKhoaQLHP_Ten(data[i]);
+                map[key] = (map[key] || 0) + 1;
+            }
+        }
+
+        var keys = Object.keys(map);
+        keys.sort(function (a, b) {
+            return map[b] - map[a];
+        });
+
+        var maxVal = 0;
+        for (var mi = 0; mi < keys.length; mi++) {
+            var vv = map[keys[mi]] || 0;
+            if (vv > maxVal) maxVal = vv;
+        }
+
+        var row = '';
+        row += '<div class="table-responsive">';
+        row += '<table class="table table-bordered table-hover" style="margin-bottom:0;">';
+        row += '<thead><tr><th>Khoa QLHP</th><th style="width:120px" class="text-center">Số đơn</th></tr></thead>';
+        row += '<tbody>';
+        if (keys.length === 0) {
+            row += '<tr><td colspan="2" class="text-center text-muted">Chưa có dữ liệu</td></tr>';
+        } else {
+            for (var j = 0; j < keys.length; j++) {
+                var k = keys[j];
+                row += '<tr>';
+                row += '<td>' + k + '</td>';
+                row += '<td class="text-center">' + map[k] + '</td>';
+                row += '</tr>';
+            }
+        }
+        row += '</tbody></table></div>';
+        $("#zoneThongKe_KhoaQLHP").html(row);
+
+        // Biểu đồ cột ngang (progress bar)
+        var chart = '';
+        chart += '<div class="table-responsive">';
+        chart += '<table class="table table-bordered table-hover" style="margin-bottom:0;">';
+        chart += '<thead><tr><th colspan="3">Biểu đồ</th></tr></thead>';
+        chart += '<tbody>';
+        if (keys.length === 0) {
+            chart += '<tr><td colspan="3" class="text-center text-muted">Chưa có dữ liệu</td></tr>';
+        } else {
+            for (var ci = 0; ci < keys.length; ci++) {
+                var name = keys[ci];
+                var count = map[name] || 0;
+                var pct = (maxVal > 0) ? Math.round((count * 100) / maxVal) : 0;
+                if (count > 0 && pct < 2) pct = 2;
+                chart += '<tr>';
+                chart += '<td style="width: 45%;">' + name + '</td>';
+                chart += '<td style="width: 45%;">';
+                chart += '<div class="progress" style="margin-bottom: 0; height: 10px;">';
+                chart += '<div class="progress-bar progress-bar-info" role="progressbar" style="width:' + pct + '%"></div>';
+                chart += '</div>';
+                chart += '</td>';
+                chart += '<td style="width: 10%;" class="text-center">' + count + '</td>';
+                chart += '</tr>';
+            }
+        }
+        chart += '</tbody></table></div>';
+        $("#zoneBieuDo_KhoaQLHP").html(chart);
+    },
+
+    getFilteredData_KhoaQLHP: function () {
+        var me = this;
+        var selected = edu.util.getValById("dropFilter_KhoaQLHP");
+        var source = Array.isArray(me.dtPhucKhao_Full) ? me.dtPhucKhao_Full : [];
+        if (!selected) return source;
+
+        var out = [];
+        for (var i = 0; i < source.length; i++) {
+            if (me.getKhoaQLHP_Ten(source[i]) === selected) out.push(source[i]);
+        }
+        return out;
+    },
+
+    applyFilter_KhoaQLHP: function () {
+        var me = this;
+        var filtered = me.getFilteredData_KhoaQLHP();
+        me.genTable_PhucKhao(filtered);
+        me.renderThongKe_KhoaQLHP(me.dtPhucKhao_Full);
     },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
@@ -338,7 +514,10 @@ PhucKhao.prototype = {
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me.dtNhapDiem = dtReRult;
-                    me.genTable_PhucKhao(dtReRult, data.Pager);
+                    me.dtPhucKhao_Full = dtReRult || [];
+                    me.setTongBanGhi(data.Pager, me.dtPhucKhao_Full);
+                    me.populateFilter_KhoaQLHP(me.dtPhucKhao_Full);
+                    me.applyFilter_KhoaQLHP();
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -360,11 +539,6 @@ PhucKhao.prototype = {
     },
     genTable_PhucKhao: function (data, iPager) {
         var me = this;
-        var total = 0;
-        if (typeof iPager === "number") total = iPager;
-        else if (iPager && typeof iPager === "string" && iPager.trim() !== "") total = iPager;
-        else if (Array.isArray(data)) total = data.length;
-        $("#lblXacNhan_Tong").html(total);
         var jsonForm = {
             strTable_Id: "tblDSThi",
 

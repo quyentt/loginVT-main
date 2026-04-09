@@ -511,7 +511,6 @@
                                         <th class="text-center" style="min-width: 120px;">Trạng thái</th>
                                         <th class="text-center" style="min-width: 100px;">Quốc gia</th>
                                         <th class="text-center" style="min-width: 150px;">Tỉnh/thành</th>
-                                        <th class="text-center" style="min-width: 150px;">Quận/Huyện</th>
                                         <th class="text-center" style="min-width: 150px;">Phường/xã</th>
                                         <th style="min-width: 200px;">Địa chỉ chi tiết 1</th>
                                         <th style="min-width: 200px;">Địa chỉ chi tiết 2</th>
@@ -951,14 +950,6 @@
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Quận/Huyện</label>
-                            <div class="input-group">
-                                <select id="dropQuan" class="select-opt"></select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
                             <label class="form-label" style="width:200px !important">Phường/Xã</label>
                             <div class="input-group">
                                 <select id="dropPhuong" class="select-opt"></select>
@@ -1065,178 +1056,178 @@
             </div>
             
             <div class="container-fluid px-20">
-                <div class="row">
+                <div class="row g-2">
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Loại quan hệ <span class="text-danger">*</span></label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Loại quan hệ <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <select id="dropLoaiQuanHe" class="select-opt"></select>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Trạng thái quan hệ</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Trạng thái quan hệ</label>
                             <div class="input-group">
                                 <select id="dropTrangThaiQuanHe" class="select-opt"></select>
                             </div>
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Họ tên đầy đủ</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Họ tên đầy đủ</label>
                             <div class="input-group">
-                                <input class="form-control" id="txtHoTenDayDuGD" readonly style="background-color: #f5f6f8 !important" />
+                                <input class="form-control" id="txtHoTenDayDuGD" placeholder="Nhập họ tên đầy đủ" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Họ <span class="text-danger">*</span></label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Họ <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <input class="form-control" id="txtHoGD" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Tên đệm</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Tên đệm</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtTenDemGD" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Tên <span class="text-danger">*</span></label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Tên <span class="text-danger">*</span></label>
                             <div class="input-group">
                                 <input class="form-control" id="txtTenGD" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Giới tính</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Giới tính</label>
                             <div class="input-group">
                                 <select id="dropGioiTinhGD" class="select-opt"></select>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Mức độ chính xác ngày sinh</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0" style="width:200px !important">Mức độ chính xác ngày sinh</label>
                             <div class="input-group">
                                 <select id="dropMucDoNgaySinhGD" class="select-opt"></select>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Ngày sinh</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Ngày sinh</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtNgaySinhGD" type="number" min="1" max="31" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Tháng sinh</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Tháng sinh</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtThangSinhGD" type="number" min="1" max="12" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Năm sinh</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Năm sinh</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtNamSinhGD" type="number" min="1900" max="2100" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Nghề nghiệp</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Nghề nghiệp</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtNgheNghiep" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Nơi làm việc</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Nơi làm việc</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtNoiLamViec" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Số điện thoại</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Số điện thoại</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtSoDienThoaiGD" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Email</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Email</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtEmailGD" type="email" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Địa chỉ của thân nhân</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0" style="width:200px !important">Địa chỉ của thân nhân</label>
                             <div class="input-group">
                                 <textarea class="form-control" id="txtDiaChiGD" rows="2"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Người phụ thuộc</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Người phụ thuộc</label>
                             <div class="input-group">
                                 <input type="checkbox" id="chkNguoiPhuThuoc" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Người liên hệ khẩn cấp</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0" style="width:200px !important">Người liên hệ khẩn cấp</label>
                             <div class="input-group">
                                 <input type="checkbox" id="chkLienHeKhanCap" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-4">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Quan hệ chính</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Quan hệ chính</label>
                             <div class="input-group">
                                 <input type="checkbox" id="chkQuanHeChinh" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Ngày hiệu lực</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Ngày hiệu lực</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtNgayHieuLucGD" type="date" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Ngày hết hiệu lực</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Ngày hết hiệu lực</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtNgayHetHieuLucGD" type="date" />
                             </div>
                         </div>
                     </div>
                     <div class="col-12">
-                        <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Ghi chú</label>
+                        <div class="form-item d-flex align-items-center gap-2 mb-1 form-add-info">
+                            <label class="form-label mb-0 text-nowrap" style="width:200px !important">Ghi chú</label>
                             <div class="input-group">
                                 <textarea class="form-control" id="txtGhiChuGD" rows="2"></textarea>
                             </div>
@@ -1484,13 +1475,13 @@
                         <div class="form-item d-flex mb-0 form-add-info">
                             <label class="form-label" style="width:200px !important">Mã loại văn bằng</label>
                             <div class="input-group">
-                                <input class="form-control" id="txtMaLoaiVanBang" placeholder="Cử nhân, Thạc sĩ..." />
+                                <select id="txtMaLoaiVanBang" class="select-opt"></select>
                             </div>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-item d-flex mb-0 form-add-info">
-                            <label class="form-label" style="width:200px !important">Tên ngân hàng</label>
+                            <label class="form-label" style="width:200px !important">Tên Loại văn bằng</label>
                             <div class="input-group">
                                 <input class="form-control" id="txtTenNganHangHV" />
                             </div>

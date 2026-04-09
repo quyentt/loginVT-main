@@ -92,6 +92,26 @@
                     </div>
                 </div>
                 <div class="box-body pd20 pt0">
+                    <div class="row" style="margin-top: 10px;">
+                        <div class="col-sm-4 item-search">
+                            <label style="font-weight: normal; margin-bottom: 5px;">Lọc theo khoa QLHP</label>
+                            <select id="dropFilter_KhoaQLHP" class="select-opt" style="width:100% !important">
+                                <option value="">Tất cả</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-8" style="padding-top: 26px;">
+                            <span id="lblThongKe_KhoaQLHP" class="text-muted"></span>
+                            <a id="btnToggleThongKe_KhoaQLHP" class="btn btn-primary btn-sm" style="margin-left: 10px;">Thống kê theo khoa QLHP</a>
+                        </div>
+                    </div>
+                    <div class="row" id="rowThongKe_KhoaQLHP" style="margin-top: 10px; display: none;">
+                        <div class="col-sm-7">
+                            <div id="zoneThongKe_KhoaQLHP"></div>
+                        </div>
+                        <div class="col-sm-5">
+                            <div id="zoneBieuDo_KhoaQLHP"></div>
+                        </div>
+                    </div>
                     <div class="table-select2 aps-table-select mt-10">
                         <table id="tblDSThi" class="table table-hover table-bordered">
                             <thead>
