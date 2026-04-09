@@ -179,6 +179,8 @@ systemroot.prototype = {
         strModal += '</div>';
         strModal += '</div>';
         $(me.ctPlacehoder).after('<div class="modal fade" id="modalBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog" style="width: ' + (window.screen.width - 40) + 'px">' + strModal + '</div></div>');
+
+        
         //me.nodeChat(urlNode)
         //function check() {
         //    if(ty)
@@ -221,7 +223,156 @@ systemroot.prototype = {
                 checkChangeversionJS();
             }, 600000)
         }
+        $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
+            e.preventDefault();
+            var strBaoCao_Id = this.id;
 
+            var html = '<div class="row">';
+
+            html += '<div class="pull-right" style="padding-bottom: 5px">';
+            html += '<a class="btn btn-primary btnAdd" id="btnAdd_MauFileBaoCao" href="#"><i class="fa fa-plus"></i> Thêm mới</a>';
+            html += '<a id="btnDelete_MauFileBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>';
+            html += '</div>';
+
+            html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
+            me.dtMauBaoCao.forEach((e, i) => {
+                html += '<li class="btnBaoCao"  id="' + e.ID +'"><a   href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
+            })
+            html += '</ul></div>'
+
+            html += '<div class="col-sm-9 item-search">'
+            html += '<table id="tblMauBaoCao" class="table table-hover table-bordered table-noborder">';
+            html += '<thead>';
+            html += '<th>Stt</th>';
+            html += '<th>Tên báo cáo</th>';
+            html += '<th>Tải báo cáo</th>';
+            html += '<th>Tải mẫu</th>';
+            html += '<th class="td-fixed td-center">Sửa</th>';
+            html += '<th class="td-center td-fixed"><input type="checkbox" class="chkSystemSelectAll"></th>';
+            html += '</thead>';
+            html += '<tbody></tbody>';
+            html += '</table>'
+            html += '</div>'
+
+            html += '</div>';
+
+            $("#modalBaoCao #modal_body").html(html)
+            $("#modalBaoCao").modal("show");
+            me["strMauBaoCao_Id"] = strBaoCao_Id;
+            me.getList_MauFileBaoCao();
+
+            if ($("#modalMauBaoCao").length == 0) {
+                $("#modalBaoCao").delegate(".btnBaoCao", "click", function () {
+                    var strId = this.id;
+                    me["strMauBaoCao_Id"] = strId;
+                    var data = me.dtMauBaoCao.find(e => e.ID == strId);
+                    me.getList_MauFileBaoCao();
+                });
+
+                $("#tblMauBaoCao").delegate(".btnEdit", "click", function () {
+                    var strId = this.id;
+                    var data = me.dtMauFileBaoCao.find(e => e.ID == strId);
+                    me["strMauFileBaoCao_Id"] = data.ID;
+                    edu.util.viewValById("txtTenHienThiMauBaoCao", data.TEN);
+                    edu.util.viewValById("dropSearch_BangA", data.TEN);
+                    edu.util.viewValById("importToCheck", data.DUONGDAN);
+                    $("#modalMauBaoCao").modal("show");
+                });
+                $("#tblMauBaoCao").delegate(".btnDownLoadBaoCao", "click", function () {
+                    var strId = this.id;
+                    var dataBC = me.dtMauBaoCao.find(e => e.ID == me.strMauBaoCao_Id);
+
+                    var data = me.dtMauFileBaoCao.find(e => e.ID == strId);
+                    var strMauBaoCao = dataBC.MAUIMPORT_MA;
+                    var strDuongDan = dataBC.MAUIMPORT_DUONGDAN;
+                    var strDuongDanFileBaoCao = data.DUONGDAN;
+                    me.report(strMauBaoCao, strDuongDan, me.callbackBaoCao, null, null, null, function (addKeyValue) {
+                        addKeyValue("strDuongDanFileBaoCao", strDuongDanFileBaoCao);
+                        addKeyValue("BAOCAO_NGUOIDUNG_TEMPLATE_ID", strId);
+                    });
+                });
+                //$("#tblMauBaoCao").delegate(".btnDownLoadMau", "click", function () {
+                //    var strId = this.id;
+                //    var strDuongDanFileBaoCao = $(this).attr("name");
+                //    location.href = strDuongDanFileBaoCao;
+                //});
+                $("#btnAdd_MauFileBaoCao").click(function () {
+                    var data = {};
+                    me["strMauFileBaoCao_Id"] = data.ID;
+                    edu.util.viewValById("txtTenHienThiMauBaoCao", data.TEN);
+                    edu.util.viewValById("dropSearch_BangA", data.TEN);
+                    $("#modalMauBaoCao").modal("show");
+                });
+                
+                $("#btnDelete_MauFileBaoCao").click(function () {
+                    var arrChecked_Id = edu.util.getArrCheckedIds("tblMauBaoCao", "checkX");
+                    if (arrChecked_Id.length == 0) {
+                        edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                        return;
+                    }
+                    edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+                    $("#btnYes").click(function (e) {
+                        edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                        edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                        for (var i = 0; i < arrChecked_Id.length; i++) {
+                            me.delete_MauFileBaoCao(arrChecked_Id[i]);
+                        }
+                    });
+                });
+                
+                var strModal = '';
+                strModal += '<div class="modal-content">';
+                strModal += '<div class="modal-header">';
+                strModal += '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
+                strModal += '<h4 class="modal-title"><span class="myModalLabel"><i class="fa fa-plus"></i></span> <span class="lang" key=""> Mẫu Báo cáo</span> </h4>';
+                strModal += '</div>';
+                strModal += '<div class="modal-body">';
+
+                strModal += '<div class="row">';
+                strModal += '<div class="col-sm-3">';
+                strModal += '<label style="font-weight: normal"><span class="lang" key="">Tên hiển thị</span></label>';
+                strModal += '</div>';
+                strModal += '<div class="col-sm-9">';
+                strModal += '<input type="text" id="txtTenHienThiMauBaoCao" class="form-control" />';
+                strModal += '</div>';
+                strModal += '<div class="clear"></div>';
+                strModal += '</div>';
+                strModal += '<div class="row">';
+                strModal += '<div class="col-sm-3">';
+                strModal += '<label style="font-weight: normal"><span class="lang" key="">Upload file</span></label>';
+                strModal += '</div>';
+                strModal += '<div class="col-sm-9">';
+                strModal += '<div id="importToCheck"></div>';
+                strModal += '</div>';
+                strModal += '<div class="clear"></div>';
+                strModal += '</div>';
+                strModal += '<div class="row">';
+                strModal += '<div class="col-sm-3">';
+                strModal += '<label style="font-weight: normal"><span class="lang" key="">Sheet</span></label>';
+                strModal += '</div>';
+                strModal += '<div class="col-sm-9">';
+                strModal += '<select id="dropSearch_BangA" class="select-opt" style="width: 100% !important"></select>';
+                strModal += '</div>';
+                strModal += '<div class="clear"></div>';
+                strModal += '</div>';
+
+                strModal += '</div>';
+                strModal += '<div class="modal-footer">';
+                strModal += '<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>';
+                strModal += '<a class="submit btn btn-primary" id="btnSave_MauFileBaoCao"><i class="fa fa-check-circle"></i><span class="lang" key=""> Lưu</span></a>';
+                strModal += '</div>';
+                strModal += '</div>';
+                $(me.ctPlacehoder).parent().append('<div class="modal fade" id="modalMauBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog">' + strModal + '</div></div>');
+
+                edu.system.uploadImport(["importToCheck"], me.getList_DataImport);
+
+                $("#btnSave_MauFileBaoCao").click(function () {
+                    me.save_MauFileBaoCao();
+                });
+            }
+        });
+
+        
     },
     versionPageJS: function () {
         var me = this;
@@ -2197,7 +2348,7 @@ systemroot.prototype = {
             }
 
             if (default_val != "") {
-                $(dropGen).val(default_val).trigger("change");
+                $(dropGen).val(default_val).trigger("change").trigger({ type: 'select2:select' });
             }
         }
         function onCache(strId, dropToGen) {
@@ -6454,7 +6605,7 @@ systemroot.prototype = {
     -------------------------------------------*/
     getList_MauImport: function (strZoneButton, callback) {
         var me = this;
-
+        me["callbackBaoCao"] = callback;
         $("#" + strZoneButton).delegate(".btnBaoCao_LHD", "click", function (e) {
             e.preventDefault();
             me.report($(this).attr("name"), $(this).attr("duongdan"), callback);
@@ -6555,6 +6706,8 @@ systemroot.prototype = {
             if (data[i].MAUIMPORT_MA && data[i].MAUIMPORT_MA.length > 14) {
                 strCheck = data[i].MAUIMPORT_MA.substring(0, 14).toUpperCase();
             }
+            let htmlSuaFile = '';
+            if (data[i].SUAFILEBAOCAO) htmlSuaFile = '<a style="margin-left: auto; cursor: pointer" id="' + data[i].ID + '" class="btnEdit_MauBaoCao">Sửa mẫu</a>'
             switch (strCheck) {
                 case "REPORTALLTABLE": html += '<li><a class="btnReportAllTable" name="' + data[i].MAUIMPORT_MA + '" duongdan="' + edu.util.returnEmpty(data[i].MAUIMPORT_DUONGDAN) + '" href="#"> ' + (i + 1) + '. ' + data[i].MAUIMPORT_TENFILEMAU + ' - <i class="fa fa-eye" style="color:red"></i> </a></li>';
                     break;
@@ -6564,7 +6717,7 @@ systemroot.prototype = {
                     break;
                 case "IMPORTWITHPROC": htmlimport += '<li><a class="btnImportWithProce" name="' + data[i].MAUIMPORT_MA + '" title="' + data[i].MAUIMPORT_TENFILEMAU + '" href="#"> ' + (i + 1) + '. ' + data[i].MAUIMPORT_TENFILEMAU + '</a></li>';
                     break;
-                default: html += '<li><a class="btnBaoCao_LHD" name="' + data[i].MAUIMPORT_MA + '" duongdan="' + edu.util.returnEmpty(data[i].MAUIMPORT_DUONGDAN) + '"  href="#"> ' + (i + 1) + '. ' + data[i].MAUIMPORT_TENFILEMAU + ' </a></li>';
+                default: html += '<li style="display: flex"><a class="btnBaoCao_LHD" name="' + data[i].MAUIMPORT_MA + '" duongdan="' + edu.util.returnEmpty(data[i].MAUIMPORT_DUONGDAN) + '"  href="#"> ' + (i + 1) + '. ' + data[i].MAUIMPORT_TENFILEMAU + ' </a> ' + htmlSuaFile +'</li>';
             }
 
         }
@@ -6638,7 +6791,7 @@ systemroot.prototype = {
             });
         }, "", "HESO1");
     },
-    report: function (strLoaiBaoCao, strDuongDan, callback, strTable_Id, checkBaoCao, bDatLich) {
+    report: function (strLoaiBaoCao, strDuongDan, callback, strTable_Id, checkBaoCao, bDatLich, callback2) {
         var me = this;
         var arrTuKhoa = [];
         var arrDuLieu = [];
@@ -6657,6 +6810,10 @@ systemroot.prototype = {
         if (jQuery.type(callback) == "function") {
             var check = callback(addKeyValue);
             console.log(check);
+            if (check == false) return;
+        }
+        if (jQuery.type(callback2) == "function") {
+            var check = callback2(addKeyValue);
             if (check == false) return;
         }
         //không sửa ở đây
@@ -9244,5 +9401,202 @@ systemroot.prototype = {
             ]
         }, false, false, false, null);
     },
+    save_MauFileBaoCao: function () {
+        var me = this;
+        var obj_notify = {};
+        console.log(111111);
+        //--Edit
+        var obj_save = {
+            'action': 'CM_Report/THEM_BC_NGUOIDUNG_TEMPLATE',
+            'strId': me.strMauFileBaoCao_Id,
+            'strNGUOIDUNG_ID': edu.system.getValById('txtAAAA'),
+            'strBAOCAO_ID': me.strMauBaoCao_Id,
+            'strCHUCNANG_ID': edu.system.getValById('txtAAAA'),
+            'strDUONGDAN': edu.util.getValById("importToCheck"),
+            'strTENHIENTHI': edu.system.getValById('txtTenHienThiMauBaoCao'),
+            'strNGUOITHUCHIEN_ID': edu.system.getValById('txtAAAA'),
+            'strNGAYTAO': edu.system.getValById('txtAAAA'),
+        };
+        if (obj_save.strId) {
+            obj_save.action = 'CM_Report/UPDATE_BC_NGUOIDUNG_TEMPLATE';
+        }
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    if (!obj_save.strId) {
+                        edu.system.alert("Thêm mới thành công!");
+                    }
+                    else {
+                        edu.system.alert("Cập nhật thành công!");
+                    }
+                    me.getList_MauFileBaoCao();
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
 
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    getList_MauFileBaoCao: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'CM_Report/LayDSBAOCAO_NGUOIDUNG_TEMPLATE',
+            'strTuKhoa': edu.system.getValById('txtAAAA'),
+            'strNGUOIDUNG_ID': edu.system.getValById('txtAAAA'),
+            'strBAOCAO_ID': me.strMauBaoCao_Id,
+            'strCHUCNANG_ID': edu.system.getValById('txtAAAA'),
+            'PageNumber': edu.system.pageIndex_default,
+            'ItemPerPage': edu.system.pageSize_default,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    
+                    me["dtMauFileBaoCao"] = data.Data;
+                    me.genTable_MauFileBaoCao(data.Data);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    delete_MauFileBaoCao: function (Ids) {
+        var me = this;
+        //--Edit
+        var obj_save = {
+            'action': 'CM_Report/XOA_BC_NGUOIDUNG_TEMPLATE',
+            'strId': Ids,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //default
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    obj = {
+                        title: "",
+                        content: "Xóa dữ liệu thành công!",
+                        code: ""
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+                else {
+                    obj = {
+                        title: "",
+                        content: data.Message,
+                        code: "w"
+                    };
+                    edu.system.afterComfirm(obj);
+                }
+
+            },
+            error: function (er) {
+
+                obj = {
+                    title: "",
+                    content: JSON.stringify(er),
+                    code: "w"
+                };
+                edu.system.afterComfirm(obj);
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_MauFileBaoCao();
+                });
+            },
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    /*------------------------------------------
+    --Discription: [4] GenHTML Tiến độ đề tài
+    --ULR:  Modules
+    -------------------------------------------*/
+    genTable_MauFileBaoCao: function (data, iPager) {
+        $("#lblMauBaoCao_Tong").html(iPager);
+        let url = new URL(window.location.href);
+        let parts = url.pathname.split('/').filter(Boolean);
+
+        let result = `${url.origin}/${parts[0]}`;
+        var jsonForm = {
+            strTable_Id: "tblMauBaoCao",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.DonGia.getList_MauFileBaoCao()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "TENHIENTHI"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnDownLoadBaoCao" id="' + aData.ID + '" title="Sửa"><i class="fa fa-cloud-download"></i></a></span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var strDuongDan = aData.DUONGDAN;
+                        if (strDuongDan) {
+                            strDuongDan = strDuongDan.replace(/\\\\/g, '/');
+                            strDuongDan = strDuongDan.substring(strDuongDan.indexOf('Upload/File'));
+                            strDuongDan = result + '/' + strDuongDan;
+                            return '<span><a class="btn btn-default" href="' + strDuongDan + '" title="Sửa"><i class="fa fa-cloud-download"></i></a></span>';
+
+                        } else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Sửa"><i class="fa fa-edit color-active"></i></a></span>';
+                    }
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
 }

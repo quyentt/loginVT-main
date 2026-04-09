@@ -275,14 +275,14 @@
                             <p class="group-group-title-name border-0 mb-5">
                                 <span class="badge color-blue fz16 pd0">Thông tin lớp học phần cần dồn</span>
                             </p>
-                            <div class="box-tools pull-right d-none">
+                            <!--<div class="box-tools pull-right d-none">
                                 <a class="btn btn-warning" id="btnDeleteLopHocPhan" href="#"><i class="fa fa-trash"></i>
                                     Xóa</a>
-                            </div>
+                            </div>-->
                         </div>
                         <div class="row">
                             <table id="tblSinhVien"
-                                class="table table-hover table-bordered tblSinhVien table-noborder mb-10">
+                                   class="table table-hover table-bordered tblSinhVien table-noborder mb-10">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed td-center">Stt</th>
@@ -294,15 +294,22 @@
                                         <th class="td-center">Thời gian đăng ký</th>
                                         <th class="td-center">Số dự kiến</th>
                                         <!--<th class="td-center">Kết quả</th>-->
-                                        <th class="td-center"><input type="checkbox" id="chkSelectAll_SinhVien">
+                                        <th class="td-center">
+                                            <input type="checkbox" id="chkSelectAll_SinhVien">
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
+                            <div class="box-tools pull-left">
+                                <a class="btn btn-danger" id="btnDeleteLopHocPhanDangChon" href="#">
+                                    <i class="fa fa-trash"></i>Chỉ xóa đúng lớp chọn khi tồn tại ở 2 lớp cùng nhóm
+                                </a>
+                            </div>
                             <div class="box-tools pull-right">
                                 <a class="btn btn-danger" id="btnDeleteLopHocPhan" href="#">
-                                    <i class="fa fa-trash"></i>Xóa</a>
+                                    <i class="fa fa-trash"></i>Xóa
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -365,10 +372,10 @@
                         <div class="row aps-lable-name">
                             <p class="group-group-title-name border-0 mb-5">
                                 <span class="badge color-blue fz16 pd0">Thông tin lớp học phần cần dồn</span>
-                            <div class="box-tools pull-right d-none">
+                            <!--<div class="box-tools pull-right d-none">
                                 <a class="btn btn-primary" id="btnThucHienDonNhom" href="#"><i
                                         class="fa fa-paper-plane"></i> Xác nhận SV dồn lớp</a>
-                            </div>
+                            </div>-->
                             </p>
                         </div>
                         <div class="row aps-form-tabel">

@@ -6,7 +6,30 @@
 function PhanQuyenDuLieuM2() { };
 PhanQuyenDuLieuM2.prototype = {
     dsVaiTro: [], // Danh sách vai trò từ API
-    dsDuLieu: [], // Danh sách dữ liệu phân quyền
+    dsDimensions: [], // Danh sách các chiều dữ liệu (Hệ, Khóa, Khoa, CT, Lớp)
+    dsDataDimension: [], // Danh sách giá trị của các chiều
+    dimensionGroups: {}, // Nhóm dữ liệu theo chiều {dimensionId: {name: '', data: []}}
+    dsGrouped: {}, // Dữ liệu đã nhóm theo chiều
+    dsPermissions: {}, // Quyền hiện tại {vaiTroId_dimensionValueId: true}
+    currentDimensionName: '', // Tên chiều đang chọn
+    
+    // Phân trang modal
+    modalCurrentPage: 1,
+    modalPageSize: 10,
+    modalTotalRecords: 0,
+    modalTotalPages: 0,
+    modalData: [],
+    modalFilteredData: null, // Dữ liệu đã lọc theo tìm kiếm
+    
+    // Phân trang
+    currentPage: 1,
+    pageSize: 50,
+    totalRecords: 0,
+    totalPages: 0,
+    
+    // Filter
+    selectedDimensionId: '', // Chiều đang chọn để filter
+    
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     selectedDate: new Date(),
@@ -20,19 +43,43 @@ PhanQuyenDuLieuM2.prototype = {
         
         // Sự kiện tìm kiếm
         $("#btnSearch").click(function () {
-            me.getList_DuLieu();
+            me.genTable_DuLieu();
         });
         
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
-                me.getList_DuLieu();
+                me.genTable_DuLieu();
             }
         });
         
         // Sự kiện lưu phân quyền
         $("#btnLuuPhanQuyen").click(function () {
             me.save_PhanQuyen();
+        });
+        
+        // Sự kiện tìm kiếm trong bảng (debounce 300ms)
+        var tableSearchTimeout;
+        $("#txtSearchTable").on('input', function () {
+            clearTimeout(tableSearchTimeout);
+            tableSearchTimeout = setTimeout(function() {
+                me.filterTable();
+            }, 300);
+        });
+        
+        // Sự kiện tìm kiếm khi nhấn Enter cho bảng
+        $("#txtSearchTable").keypress(function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                clearTimeout(tableSearchTimeout);
+                me.filterTable();
+            }
+        });
+        
+        // Sự kiện nút xóa bộ lọc
+        $("#btnClearSearch").click(function() {
+            $("#txtSearchTable").val('');
+            me.filterTable();
         });
         
         // Sự kiện checkbox select all theo cột
@@ -43,13 +90,6 @@ PhanQuyenDuLieuM2.prototype = {
             $("#tblPhanQuyenDuLieu tbody tr").each(function() {
                 $(this).find("td").eq(colIndex).find("input[type='checkbox']").prop("checked", checked_status);
             });
-        });
-        
-        // Sự kiện checkbox select all theo row
-        $("#tblPhanQuyenDuLieu").delegate(".chkSelectAllRow", "click", function (e) {
-            e.stopImmediatePropagation();
-            var checked_status = this.checked;
-            $(this).closest("tr").find("input[type='checkbox']:not(.chkSelectAllRow)").prop("checked", checked_status);
         });
         
         // Sự kiện calendar
@@ -69,38 +109,73 @@ PhanQuyenDuLieuM2.prototype = {
     },
     
     /*------------------------------------------
+    --Lọc bảng dữ liệu theo từ khóa
+    -------------------------------------------*/
+    filterTable: function() {
+        var me = this;
+        var keyword = $("#txtSearchTable").val().toLowerCase().trim();
+        
+        // Xóa highlight cũ
+        $("#tblPhanQuyenDuLieu tbody tr").removeClass('search-highlight');
+        
+        // Hiển thị/ẩn nút xóa bộ lọc
+        if (keyword) {
+            $("#btnClearSearch").show();
+        } else {
+            $("#btnClearSearch").hide();
+        }
+        
+        if (!keyword) {
+            // Hiển thị lại tất cả dòng
+            $("#tblPhanQuyenDuLieu tbody tr").show();
+            $("#searchResultCount").text('');
+            return;
+        }
+        
+        var foundCount = 0;
+        var totalRows = $("#tblPhanQuyenDuLieu tbody tr").length;
+        
+        // Lọc các dòng trong bảng
+        $("#tblPhanQuyenDuLieu tbody tr").each(function() {
+            var $row = $(this);
+            var rowText = $row.text().toLowerCase();
+            
+            if (rowText.indexOf(keyword) !== -1) {
+                $row.show().addClass('search-highlight');
+                foundCount++;
+            } else {
+                $row.hide();
+            }
+        });
+        
+        // Hiển thị số lượng kết quả
+        if (foundCount === 0) {
+            $("#searchResultCount").html('<i class="fa-solid fa-exclamation-triangle" style="color: #dc3545;"></i> Không tìm thấy');
+        } else {
+            $("#searchResultCount").html('<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> ' + foundCount + '/' + totalRows + ' kết quả');
+        }
+    },
+    
+    /*------------------------------------------
     --Lấy danh sách vai trò từ API
     -------------------------------------------*/
     getList_VaiTro: function () {
         var me = this;
         var obj_list = {
-<<<<<<< HEAD
-            'action': 'CMS_VaiTro/LayDanhSach',
-            'strLoaiVaiTro_Id': '',
-            'strTuKhoa': '',
-            'pageIndex': 1,
-            'pageSize': 1000,
-            'dTrangThai': 1,
-            'strChucNang_Id': edu.system.strChucNang_Id,
-=======
             'action': 'CMS_QuanTri01_MH/DSA4BRIXICgVMy4PJjQuKAU0LyYP',
             'func': 'PKG_CORE_QUANTRI_01.LayDSVaiTroNguoiDung',
             'iM': 'Azz',
             'strChucNang_Id': '',
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
             'strNguoiThucHien_Id': edu.system.userId
         };
         
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dsVaiTro = data.Data;
-<<<<<<< HEAD
-                    console.log('Đã load ' + me.dsVaiTro.length + ' vai trò:', me.dsVaiTro);
-=======
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-                    // Sau khi có danh sách vai trò, load dữ liệu
-                    me.getList_DuLieu();
+                    me.dsVaiTro = data.Data || [];
+                    $("#lblSoLuongVaiTro").text(me.dsVaiTro.length);
+                    // Sau khi có danh sách vai trò, load dữ liệu chiều
+                    me.getList_DataDimension();
                 } else {
                     edu.system.alert("Lỗi: " + data.Message);
                 }
@@ -116,63 +191,16 @@ PhanQuyenDuLieuM2.prototype = {
     },
     
     /*------------------------------------------
-    --Lấy danh sách dữ liệu phân quyền
+    --Lấy danh sách chiều dữ liệu (Data Dimension)
     -------------------------------------------*/
-    getList_DuLieu: function () {
+    getList_DataDimension: function () {
         var me = this;
         
-<<<<<<< HEAD
-        // Tạm thời tạo dữ liệu demo để test giao diện
-        // Sau này sẽ thay bằng API thực tế
-        var demoData = [
-            {
-                ID: '1',
-                TEN: 'Hệ đào tạo',
-                HEDAOTAO: 'Hệ chính quy - Đại học - Văn bằng 1',
-                KHOADAOTAO: 'Khóa 2020 - 2024',
-                KHOAQUANLY: 'Khoa Công nghệ thông tin',
-                CHUONGTRINH: 'Công nghệ thông tin',
-                LOPQUANLY: 'CNTT01',
-                DSVAITRO_ID: '' // Danh sách ID vai trò đã được phân quyền (cách nhau bởi dấu phẩy)
-            },
-            {
-                ID: '2',
-                TEN: 'Hệ đào tạo',
-                HEDAOTAO: 'Hệ chính quy - Đại học - Văn bằng 2',
-                KHOADAOTAO: 'Khóa 2021 - 2025',
-                KHOAQUANLY: 'Khoa Kinh tế',
-                CHUONGTRINH: 'Quản trị kinh doanh',
-                LOPQUANLY: 'QTKD01',
-                DSVAITRO_ID: ''
-            },
-            {
-                ID: '3',
-                TEN: 'Hệ đào tạo',
-                HEDAOTAO: 'Hệ vừa làm vừa học',
-                KHOADAOTAO: 'Khóa 2022 - 2026',
-                KHOAQUANLY: 'Khoa Ngoại ngữ',
-                CHUONGTRINH: 'Tiếng Anh',
-                LOPQUANLY: 'TA01',
-                DSVAITRO_ID: ''
-            }
-        ];
-        
-        me.dsDuLieu = demoData;
-        me.genTable_DuLieu(demoData);
-        
-        // TODO: Uncomment khi có API thực tế
-        /*
+        // Bước 1: Lấy danh sách các chiều dữ liệu
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSCauTrucQuyenDuLieu',
-=======
-        // Gọi stored procedure để lấy dữ liệu hệ đào tạo
-        var obj_list = {
-            'action': 'CMS_PhanQuyen_DuLieu/LayDanhSachChieuDuLieu',
+            'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHgUgNSAeBSgsJC8yKC4v',
             'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Data_Dimension',
-            'ParamNguoiThucHien_Id': edu.system.userId,
-            'ParamErr': '',
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
+            'iM': 'Azz',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId
         };
@@ -180,8 +208,10 @@ PhanQuyenDuLieuM2.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dsDuLieu = data.Data;
-                    me.genTable_DuLieu(data.Data);
+                    me.dsDimensions = data.Data || [];
+                    
+                    // Bước 2: Load giá trị cho từng chiều
+                    me.loadAllDimensionValues();
                 } else {
                     edu.system.alert("Lỗi: " + data.Message);
                 }
@@ -189,243 +219,1461 @@ PhanQuyenDuLieuM2.prototype = {
             error: function (er) {
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             contentType: true,
             data: obj_list
         }, false, false, false, null);
-<<<<<<< HEAD
-        */
-=======
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
     },
     
     /*------------------------------------------
-    --Tạo bảng hiển thị dữ liệu động
+    --Load giá trị cho TẤT CẢ các chiều (hiển thị cùng lúc)
     -------------------------------------------*/
-    genTable_DuLieu: function (data) {
+    loadAllDimensionValues: function () {
         var me = this;
         
-<<<<<<< HEAD
-        // Cập nhật số lượng vai trò
-        $("#lblSoLuongVaiTro").text(me.dsVaiTro.length);
+        // Ẩn dropdown vì không cần nữa
+        $("#ddlDimension").closest('.search-bar-controls').find('select').parent().hide();
         
-        // Tạo header đơn giản 1 dòng
-        var htmlHead = '<tr>';
-        htmlHead += '<th class="td-center" style="min-width: 300px; background: #223771; color: white; position: sticky; left: 0; z-index: 12;">Chiều dữ liệu</th>';
+        // Load tất cả các chiều
+        me.loadAllDimensionsData();
+    },
+    
+    /*------------------------------------------
+    --Load dữ liệu cho tất cả các chiều
+    -------------------------------------------*/
+    loadAllDimensionsData: function () {
+        var me = this;
+        me.dsDataDimension = [];
+        me.dimensionGroups = {}; // Nhóm theo chiều {dimensionId: {name: '', data: []}}
         
-        // Thêm các cột vai trò
-        for (var i = 0; i < me.dsVaiTro.length; i++) {
-            htmlHead += '<th class="td-center" style="min-width: 150px; background: #223771; color: white; padding: 10px 8px;">';
-            htmlHead += '<div style="margin-bottom: 8px; font-weight: 600; font-size: 12px; line-height: 1.3;">' + me.dsVaiTro[i].TENVAITRO + '</div>';
-            htmlHead += '<input type="checkbox" class="chkSelectAllCol" data-col-index="' + (i + 1) + '" title="Chọn tất cả cột này" style="width: 20px; height: 20px;"/>';
-=======
-        // Tạo header động
-        var htmlHead = '<tr>';
-        htmlHead += '<th class="td-center" style="min-width: 200px;">Chiều dữ liệu</th>';
+        var loadedCount = 0;
+        var totalDimensions = me.dsDimensions.length;
         
-        // Thêm các cột động từ danh sách vai trò
-        for (var i = 0; i < me.dsVaiTro.length; i++) {
-            htmlHead += '<th class="td-center" style="min-width: 150px;">';
-            htmlHead += '<div style="margin-bottom: 5px;">' + me.dsVaiTro[i].TENVAITRO + '</div>';
-            htmlHead += '<input type="checkbox" class="chkSelectAllCol" data-col-index="' + (i + 1) + '" title="Chọn tất cả cột này"/>';
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-            htmlHead += '</th>';
+        if (totalDimensions === 0) {
+            me.genTable_DuLieu();
+            return;
         }
-        htmlHead += '</tr>';
         
-        $("#tblPhanQuyenDuLieu thead").html(htmlHead);
+        // Load từng chiều
+        for (var i = 0; i < me.dsDimensions.length; i++) {
+            var dimension = me.dsDimensions[i];
+            var dimensionId = dimension.ID || dimension.CORE_DATA_DIMENSION_ID;
+            var dimensionName = dimension.DIMENSION_NAME || dimension.TEN;
+            
+            (function(dimId, dimName) {
+                var obj_list = {
+                    'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHgUoLCQvMiguLx4XIC00JAPP',
+                    'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Dimension_Value',
+                    'iM': 'Azz',
+                    'strChucNang_Id': edu.system.strChucNang_Id,
+                    'strCore_Data_Dimension_Id': dimId,
+                    'strNguoiThucHien_Id': edu.system.userId
+                };
+                
+                edu.system.makeRequest({
+                    success: function (data) {
+                        loadedCount++;
+                        
+                        if (data.Success && data.Data) {
+                            me.dimensionGroups[dimId] = {
+                                name: dimName,
+                                data: data.Data,
+                                order: loadedCount
+                            };
+                            
+                            // Gắn thông tin chiều vào từng item
+                            for (var j = 0; j < data.Data.length; j++) {
+                                data.Data[j].DIMENSION_NAME = dimName;
+                                data.Data[j].CORE_DATA_DIMENSION_ID = dimId;
+                                me.dsDataDimension.push(data.Data[j]);
+                            }
+                        }
+                        
+                        // Khi đã load xong tất cả
+                        if (loadedCount === totalDimensions) {
+                            me.totalRecords = me.dsDataDimension.length;
+                            me.genTable_DuLieu();
+                        }
+                    },
+                    error: function (er) {
+                        loadedCount++;
+                        if (loadedCount === totalDimensions) {
+                            me.totalRecords = me.dsDataDimension.length;
+                            me.genTable_DuLieu();
+                        }
+                    },
+                    type: "POST",
+                    action: obj_list.action,
+                    contentType: true,
+                    data: obj_list
+                }, false, false, false, null);
+            })(dimensionId, dimensionName);
+        }
+    },
+    
+    /*------------------------------------------
+    --Render dropdown chọn chiều dữ liệu
+    -------------------------------------------*/
+    renderDimensionFilter: function () {
+        var me = this;
+        var html = '<option value="">-- Chọn chiều dữ liệu --</option>';
         
-        // Tạo body
+        for (var i = 0; i < me.dsDimensions.length; i++) {
+            var dim = me.dsDimensions[i];
+            var id = dim.ID || dim.CORE_DATA_DIMENSION_ID;
+            var name = dim.DIMENSION_NAME || dim.TEN;
+            html += '<option value="' + id + '">' + name + '</option>';
+        }
+        
+        $("#ddlDimension").html(html);
+        
+        // Bind event
+        $("#ddlDimension").change(function() {
+            me.selectedDimensionId = $(this).val();
+            me.currentPage = 1;
+            if (me.selectedDimensionId) {
+                me.loadDimensionValues(me.selectedDimensionId);
+            } else {
+                me.dsDataDimension = [];
+                me.totalRecords = 0;
+                me.totalPages = 0;
+                me.genTable_DuLieu();
+            }
+        });
+    },
+    
+    /*------------------------------------------
+    --Load giá trị cho 1 chiều cụ thể
+    -------------------------------------------*/
+    loadDimensionValues: function (dimensionId) {
+        var me = this;
+        me.dsDataDimension = [];
+        
+        var dimension = me.dsDimensions.find(function(d) {
+            return (d.ID || d.CORE_DATA_DIMENSION_ID) === dimensionId;
+        });
+        
+        if (!dimension) return;
+        
+        var dimensionName = dimension.TEN || dimension.CORE_DATA_DIMENSION_NAME || 'Khác';
+        
+        var obj_list = {
+            'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHgUoLCQvMiguLx4XIC00JAPP',
+            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_Dimension_Value',
+            'iM': 'Azz',
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strCore_Data_Dimension_Id': dimensionId,
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success && data.Data) {
+                    // Gắn tên chiều vào từng giá trị
+                    for (var j = 0; j < data.Data.length; j++) {
+                        data.Data[j].DIMENSION_NAME = dimensionName;
+                        data.Data[j].CORE_DATA_DIMENSION_ID = dimensionId;
+                        me.dsDataDimension.push(data.Data[j]);
+                    }
+                    
+                    me.totalRecords = me.dsDataDimension.length;
+                    me.totalPages = Math.ceil(me.totalRecords / me.pageSize);
+                    me.currentDimensionName = dimensionName; // Lưu tên chiều hiện tại
+                    me.genTable_DuLieu();
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi load dữ liệu");
+            },
+            type: "POST",
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list
+        }, false, false, false, null);
+    },
+    
+    /*------------------------------------------
+    --Nhóm dữ liệu theo chiều (Dimension)
+    -------------------------------------------*/
+    groupDataByDimension: function () {
+        var me = this;
+        
+        // Nhóm dữ liệu theo DIMENSION_NAME hoặc DIMENSION_TYPE
+        me.dsGrouped = {};
+        
+        for (var i = 0; i < me.dsDataDimension.length; i++) {
+            var item = me.dsDataDimension[i];
+            var dimensionName = item.DIMENSION_NAME || item.CORE_DATA_DIMENSION_NAME || 'Khác';
+            
+            if (!me.dsGrouped[dimensionName]) {
+                me.dsGrouped[dimensionName] = [];
+            }
+            
+            me.dsGrouped[dimensionName].push(item);
+        }
+    },
+    
+    /*------------------------------------------
+    --Tạo bảng hiển thị dữ liệu - HIỂN THỊ TẤT CẢ 6 CHIỀU
+    --Header 2 dòng: Dòng 1 = Tên chiều (colspan), Dòng 2 = Giá trị cụ thể
+    --Body: Mỗi dòng = 1 vai trò
+    -------------------------------------------*/
+    genTable_DuLieu: function () {
+        var me = this;
+        
+        if (Object.keys(me.dimensionGroups).length === 0) {
+            $("#tblPhanQuyenDuLieu thead").html('');
+            $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px; color: #999;"><i class="fa-solid fa-inbox fa-3x" style="display: block; margin-bottom: 15px; opacity: 0.3;"></i><div style="font-size: 16px;">Đang tải dữ liệu...</div></td></tr>');
+            return;
+        }
+        
+        // Sắp xếp các chiều theo thứ tự
+        var sortedDimensions = [];
+        for (var dimId in me.dimensionGroups) {
+            sortedDimensions.push({
+                id: dimId,
+                name: me.dimensionGroups[dimId].name,
+                data: me.dimensionGroups[dimId].data,
+                order: me.dimensionGroups[dimId].order
+            });
+        }
+        sortedDimensions.sort(function(a, b) { return a.order - b.order; });
+        
+        // Tạo header dòng 1 - Tên các chiều với colspan
+        var htmlHead1 = '<tr>';
+        htmlHead1 += '<th rowspan="2" class="td-center" style="min-width: 200px; position: sticky; left: 0; z-index: 12; background: #223771; vertical-align: middle;">';
+        htmlHead1 += '<div style="font-weight: 600; font-size: 13px;">Vai trò</div>';
+        htmlHead1 += '</th>';
+        
+        for (var i = 0; i < sortedDimensions.length; i++) {
+            var dim = sortedDimensions[i];
+            htmlHead1 += '<th class="td-center" style="background: #3c5398; color: white; padding: 10px; border: 1px solid #223771;">';
+            htmlHead1 += '<div style="font-weight: 600; font-size: 13px;">' + dim.name + '</div>';
+            htmlHead1 += '<div style="font-size: 10px; margin-top: 3px; opacity: 0.9;">(' + dim.data.length + ' giá trị)</div>';
+            htmlHead1 += '</th>';
+        }
+        htmlHead1 += '</tr>';
+        
+        $("#tblPhanQuyenDuLieu thead").html(htmlHead1);
+        
+        // Tạo body - Mỗi dòng là 1 vai trò
         var htmlBody = '';
         
-        if (data && data.length > 0) {
-            for (var i = 0; i < data.length; i++) {
+        if (me.dsVaiTro.length > 0) {
+            for (var v = 0; v < me.dsVaiTro.length; v++) {
+                var vaiTro = me.dsVaiTro[v];
                 htmlBody += '<tr>';
                 
-<<<<<<< HEAD
-                // Cột đầu tiên: Hiển thị thông tin phân cấp (sticky)
-                htmlBody += '<td style="padding: 15px; background: #f8f9fa; position: sticky; left: 0; z-index: 5;">';
-                
-                // Tiêu đề chính
-                htmlBody += '<div style="font-weight: 700; font-size: 14px; color: #223771; margin-bottom: 8px;">';
-                htmlBody += 'Hệ đào tạo';
+                // Cột đầu tiên: Tên vai trò
+                htmlBody += '<td style="padding: 10px 12px; position: sticky; left: 0; background: #f8f9fa; z-index: 5; border-right: 2px solid #dee2e6;">';
+                htmlBody += '<div style="display: flex; align-items: center; gap: 8px;">';
+                htmlBody += '<i class="fa-solid fa-user-shield" style="color: #223771; font-size: 12px;"></i>';
+                htmlBody += '<span style="font-weight: 500; font-size: 12px;">' + (vaiTro.TENVAITRO || vaiTro.TEN || 'N/A') + '</span>';
                 htmlBody += '</div>';
-                
-                // Chi tiết phân cấp với icon và indent
-                if (data[i].HEDAOTAO) {
-                    htmlBody += '<div style="padding-left: 15px; margin-bottom: 4px; font-size: 13px;">';
-                    htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-                    htmlBody += '<span style="color: #555;">' + data[i].HEDAOTAO + '</span>';
-                    htmlBody += '</div>';
-                }
-                
-                if (data[i].KHOADAOTAO) {
-                    htmlBody += '<div style="padding-left: 30px; margin-bottom: 4px; font-size: 13px;">';
-                    htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-                    htmlBody += '<span style="color: #555;">' + data[i].KHOADAOTAO + '</span>';
-                    htmlBody += '</div>';
-                }
-                
-                if (data[i].KHOAQUANLY) {
-                    htmlBody += '<div style="padding-left: 45px; margin-bottom: 4px; font-size: 13px;">';
-                    htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-                    htmlBody += '<span style="color: #555;">' + data[i].KHOAQUANLY + '</span>';
-                    htmlBody += '</div>';
-                }
-                
-                if (data[i].CHUONGTRINH) {
-                    htmlBody += '<div style="padding-left: 60px; margin-bottom: 4px; font-size: 13px;">';
-                    htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-                    htmlBody += '<span style="color: #555;">' + data[i].CHUONGTRINH + '</span>';
-                    htmlBody += '</div>';
-                }
-                
-                if (data[i].LOPQUANLY) {
-                    htmlBody += '<div style="padding-left: 75px; margin-bottom: 4px; font-size: 13px;">';
-                    htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-                    htmlBody += '<span style="color: #555;">' + data[i].LOPQUANLY + '</span>';
-=======
-                // Cột đầu tiên: Hiển thị thông tin chiều dữ liệu
-                htmlBody += '<td style="font-weight: 500;">';
-                htmlBody += '<div style="margin-bottom: 3px;"><strong>' + (data[i].TEN || data[i].DIMENSION_NAME || 'Hệ đào tạo') + '</strong></div>';
-                
-                // Hiển thị chi tiết các cấp
-                if (data[i].HEDAOTAO) {
-                    htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-                    htmlBody += '<i class="fa-solid fa-graduation-cap" style="margin-right: 5px;"></i>' + data[i].HEDAOTAO;
-                    htmlBody += '</div>';
-                }
-                if (data[i].KHOADAOTAO) {
-                    htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-                    htmlBody += '<i class="fa-solid fa-calendar" style="margin-right: 5px;"></i>' + data[i].KHOADAOTAO;
-                    htmlBody += '</div>';
-                }
-                if (data[i].KHOAQUANLY) {
-                    htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-                    htmlBody += '<i class="fa-solid fa-building" style="margin-right: 5px;"></i>' + data[i].KHOAQUANLY;
-                    htmlBody += '</div>';
-                }
-                if (data[i].CHUONGTRINH) {
-                    htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-                    htmlBody += '<i class="fa-solid fa-book" style="margin-right: 5px;"></i>' + data[i].CHUONGTRINH;
-                    htmlBody += '</div>';
-                }
-                if (data[i].LOPQUANLY) {
-                    htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-                    htmlBody += '<i class="fa-solid fa-users" style="margin-right: 5px;"></i>' + data[i].LOPQUANLY;
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-                    htmlBody += '</div>';
-                }
-                
                 htmlBody += '</td>';
                 
-                // Thêm checkbox cho từng vai trò
-                for (var j = 0; j < me.dsVaiTro.length; j++) {
-<<<<<<< HEAD
-                    htmlBody += '<td class="td-center" style="vertical-align: middle;">';
-=======
-                    htmlBody += '<td class="td-center">';
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-                    var isChecked = me.checkQuyen(data[i], me.dsVaiTro[j].ID);
-                    htmlBody += '<input type="checkbox" class="chkPhanQuyen" ';
-                    htmlBody += 'data-row-id="' + (data[i].ID || data[i].DIMENSION_ID || '') + '" ';
-                    htmlBody += 'data-vaitro-id="' + me.dsVaiTro[j].ID + '" ';
-                    htmlBody += 'data-vaitro-ma="' + me.dsVaiTro[j].MAVAITRO + '" ';
-<<<<<<< HEAD
-                    htmlBody += 'style="width: 18px; height: 18px;" ';
-=======
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-                    if (isChecked) {
-                        htmlBody += 'checked="checked" name="old" ';
-                    }
-                    htmlBody += '/>';
+                // Checkbox cho từng giá trị của từng chiều
+                for (var i = 0; i < sortedDimensions.length; i++) {
+                    var dim = sortedDimensions[i];
+                    
+                    htmlBody += '<td class="td-center" style="border: 1px solid #e0e0e0; padding: 8px;">';
+                    htmlBody += '<div style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">';
+                    
+                    // Nút Xem kết quả
+                    htmlBody += '<button type="button" class="btn btn-sm btn-info btnXemKetQua" ';
+                    htmlBody += 'data-vaitro-id="' + (vaiTro.ID || vaiTro.VAITRO_ID) + '" ';
+                    htmlBody += 'data-vaitro-name="' + (vaiTro.TENVAITRO || vaiTro.TEN || 'N/A') + '" ';
+                    htmlBody += 'data-dimension-id="' + dim.id + '" ';
+                    htmlBody += 'data-dimension-name="' + dim.name + '" ';
+                    htmlBody += 'style="font-size: 10px; padding: 3px 6px; white-space: nowrap;" title="Xem các quyền đã gán">';
+                    htmlBody += '<i class="fa-solid fa-list-check"></i> Xem kết quả';
+                    htmlBody += '</button>';
+                    
+                    // Nút Thêm quyền
+                    htmlBody += '<button type="button" class="btn btn-sm btn-success btnThemQuyen" ';
+                    htmlBody += 'data-vaitro-id="' + (vaiTro.ID || vaiTro.VAITRO_ID) + '" ';
+                    htmlBody += 'data-vaitro-name="' + (vaiTro.TENVAITRO || vaiTro.TEN || 'N/A') + '" ';
+                    htmlBody += 'data-dimension-id="' + dim.id + '" ';
+                    htmlBody += 'data-dimension-name="' + dim.name + '" ';
+                    htmlBody += 'style="font-size: 10px; padding: 3px 6px; white-space: nowrap;" title="Thêm quyền mới">';
+                    htmlBody += '<i class="fa-solid fa-plus"></i> Thêm quyền';
+                    htmlBody += '</button>';
+                    
+                    htmlBody += '</div>';
                     htmlBody += '</td>';
                 }
                 
                 htmlBody += '</tr>';
             }
         } else {
-            // Hiển thị dòng mẫu để demo cấu trúc
+            var totalCols = 1 + sortedDimensions.length;
+            
             htmlBody += '<tr>';
-<<<<<<< HEAD
-            htmlBody += '<td style="padding: 15px; background: #f8f9fa; position: sticky; left: 0; z-index: 5;">';
-            htmlBody += '<div style="font-weight: 700; font-size: 14px; color: #223771; margin-bottom: 8px;">Hệ đào tạo</div>';
-            htmlBody += '<div style="padding-left: 15px; margin-bottom: 4px; font-size: 13px;">';
-            htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-            htmlBody += '<span style="color: #555;">Hệ chính quy - Đại học - Văn bằng 1</span>';
-            htmlBody += '</div>';
-            htmlBody += '<div style="padding-left: 30px; margin-bottom: 4px; font-size: 13px;">';
-            htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-            htmlBody += '<span style="color: #555;">Khóa 2020 - 2024</span>';
-            htmlBody += '</div>';
-            htmlBody += '<div style="padding-left: 45px; margin-bottom: 4px; font-size: 13px;">';
-            htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-            htmlBody += '<span style="color: #555;">Khoa Công nghệ thông tin</span>';
-            htmlBody += '</div>';
-            htmlBody += '<div style="padding-left: 60px; margin-bottom: 4px; font-size: 13px;">';
-            htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-            htmlBody += '<span style="color: #555;">Công nghệ thông tin</span>';
-            htmlBody += '</div>';
-            htmlBody += '<div style="padding-left: 75px; margin-bottom: 4px; font-size: 13px;">';
-            htmlBody += '<i class="fa-solid fa-angle-right" style="color: #999; margin-right: 8px;"></i>';
-            htmlBody += '<span style="color: #555;">CNTT01</span>';
-=======
-            htmlBody += '<td style="font-weight: 500;">';
-            htmlBody += '<div style="margin-bottom: 3px;"><strong>Hệ đào tạo</strong></div>';
-            htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-            htmlBody += '<i class="fa-solid fa-graduation-cap" style="margin-right: 5px;"></i>Hệ chính quy - Đại học - Văn bằng 1';
-            htmlBody += '</div>';
-            htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-            htmlBody += '<i class="fa-solid fa-calendar" style="margin-right: 5px;"></i>Khóa 2020 - 2024';
-            htmlBody += '</div>';
-            htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-            htmlBody += '<i class="fa-solid fa-building" style="margin-right: 5px;"></i>Khoa Công nghệ thông tin';
-            htmlBody += '</div>';
-            htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-            htmlBody += '<i class="fa-solid fa-book" style="margin-right: 5px;"></i>Công nghệ thông tin';
-            htmlBody += '</div>';
-            htmlBody += '<div style="font-size: 12px; color: #666; padding-left: 10px;">';
-            htmlBody += '<i class="fa-solid fa-users" style="margin-right: 5px;"></i>Lớp CNTT01';
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-            htmlBody += '</div>';
+            htmlBody += '<td colspan="' + totalCols + '" style="text-align: center; padding: 40px; color: #999;">';
+            htmlBody += '<i class="fa-solid fa-users-slash fa-3x" style="display: block; margin-bottom: 15px; opacity: 0.3;"></i>';
+            htmlBody += '<div style="font-size: 16px;">Chưa có vai trò</div>';
             htmlBody += '</td>';
-            
-            for (var j = 0; j < me.dsVaiTro.length; j++) {
-<<<<<<< HEAD
-                htmlBody += '<td class="td-center" style="vertical-align: middle;">';
-=======
-                htmlBody += '<td class="td-center">';
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-                htmlBody += '<input type="checkbox" class="chkPhanQuyen" ';
-                htmlBody += 'data-row-id="demo" ';
-                htmlBody += 'data-vaitro-id="' + me.dsVaiTro[j].ID + '" ';
-                htmlBody += 'data-vaitro-ma="' + me.dsVaiTro[j].MAVAITRO + '" ';
-<<<<<<< HEAD
-                htmlBody += 'style="width: 18px; height: 18px;" ';
-=======
->>>>>>> 548cfe551fde60e8036a27734bb2e693ecb6f731
-                htmlBody += '/>';
-                htmlBody += '</td>';
-            }
-            
             htmlBody += '</tr>';
         }
         
         $("#tblPhanQuyenDuLieu tbody").html(htmlBody);
+        
+        // Bind event cho nút Xem kết quả
+        $(".btnXemKetQua").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var vaiTroId = $(this).data("vaitro-id");
+            var vaiTroName = $(this).data("vaitro-name");
+            var dimensionId = $(this).data("dimension-id");
+            var dimensionName = $(this).data("dimension-name");
+            
+            me.showResultModal(vaiTroId, vaiTroName, dimensionId, dimensionName);
+            return false;
+        });
+        
+        // Bind event cho nút Thêm quyền
+        $(".btnThemQuyen").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var vaiTroId = $(this).data("vaitro-id");
+            var vaiTroName = $(this).data("vaitro-name");
+            var dimensionId = $(this).data("dimension-id");
+            var dimensionName = $(this).data("dimension-name");
+            
+            me.showAddPermissionModal(vaiTroId, vaiTroName, dimensionId, dimensionName);
+            return false;
+        });
+        
+        // Không cần phân trang nữa vì hiển thị tất cả
+        $("#paginationContainer").html('<div style="padding: 15px; text-align: center; background: #f8f9fa; border-radius: 6px; margin-top: 15px;"><strong>Tổng: ' + me.totalRecords + ' giá trị</strong> từ ' + sortedDimensions.length + ' chiều dữ liệu</div>');
     },
     
     /*------------------------------------------
-    --Kiểm tra quyền đã được phân hay chưa
+    --Hiển thị modal chi tiết để chọn giá trị (CÓ PHÂN TRANG)
     -------------------------------------------*/
-    checkQuyen: function (dataRow, vaiTroId) {
-        // Logic kiểm tra quyền dựa vào dữ liệu từ server
-        // Có thể check trong dataRow có field chứa danh sách vai trò đã được phân
-        if (dataRow.DSVAITRO_ID) {
-            var arrVaiTro = dataRow.DSVAITRO_ID.split(',');
-            return arrVaiTro.indexOf(vaiTroId) > -1;
+    showDetailModal: function(vaiTroId, vaiTroName, dimensionId, dimensionName) {
+        var me = this;
+        
+        // Lấy dữ liệu của chiều này
+        var dimensionData = me.dimensionGroups[dimensionId];
+        if (!dimensionData) {
+            edu.system.alert("Không tìm thấy dữ liệu");
+            return;
         }
+        
+        // Reset phân trang
+        me.modalCurrentPage = 1;
+        me.modalPageSize = 10;
+        me.modalData = dimensionData.data;
+        me.modalFilteredData = null; // Reset dữ liệu lọc
+        me.modalTotalRecords = me.modalData.length;
+        me.modalTotalPages = Math.ceil(me.modalTotalRecords / me.modalPageSize);
+        me.modalVaiTroId = vaiTroId;
+        me.modalDimensionId = dimensionId;
+        me.modalExistingPermissions = {}; // {valueId: scopeId}
+        
+        // Tạo HTML cho modal
+        var modalHtml = '';
+        modalHtml += '<div id="modalChiTiet" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">';
+        modalHtml += '<div style="background: white; border-radius: 8px; width: 90%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">';
+        
+        // Header
+        modalHtml += '<div style="background: linear-gradient(135deg, #223771 0%, #3c5398 100%); color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">';
+        modalHtml += '<h5 style="margin: 0; font-size: 16px;"><i class="fa-solid fa-user-shield"></i> ' + vaiTroName + ' - ' + dimensionName + ' (' + me.modalTotalRecords + ' giá trị)</h5>';
+        modalHtml += '<button id="btnCloseModal" style="background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; line-height: 1;">&times;</button>';
+        modalHtml += '</div>';
+        
+        // Body
+        modalHtml += '<div style="padding: 20px; flex: 1; overflow-y: auto;">';
+        modalHtml += '<div style="margin-bottom: 15px; padding: 10px; background: #e3f2fd; border-left: 4px solid #2196f3; border-radius: 4px;">';
+        modalHtml += '<strong>Hướng dẫn:</strong> Chọn các giá trị bạn muốn gán quyền cho vai trò này. Các giá trị đã có quyền sẽ được đánh dấu sẵn.';
+        modalHtml += '</div>';
+        
+        // Search Bar trong modal
+        modalHtml += '<div style="margin-bottom: 15px; padding: 12px; background: linear-gradient(135deg, #f8fff9 0%, #e8f5e8 100%); border: 1px solid #28a745; border-radius: 6px;">';
+        modalHtml += '<div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">';
+        modalHtml += '<label style="font-size: 13px; font-weight: 600; color: #155724; white-space: nowrap;">';
+        modalHtml += '<i class="fa-solid fa-search"></i> Tìm kiếm:';
+        modalHtml += '</label>';
+        modalHtml += '<div style="flex: 1; position: relative; min-width: 200px;">';
+        modalHtml += '<input type="text" id="txtModalSearch" placeholder="Nhập mã, tên để tìm kiếm..." ';
+        modalHtml += 'style="width: 100%; padding: 8px 35px 8px 12px; border: 1px solid #28a745; border-radius: 4px; font-size: 13px;">';
+        modalHtml += '<i class="fa-solid fa-search" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); color: #28a745;"></i>';
+        modalHtml += '</div>';
+        modalHtml += '<div style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #155724; white-space: nowrap;">';
+        modalHtml += '<label>Hiển thị:</label>';
+        modalHtml += '<select id="ddlModalPageSize" style="padding: 4px 8px; border: 1px solid #28a745; border-radius: 3px; font-size: 12px;">';
+        modalHtml += '<option value="10" selected>10</option>';
+        modalHtml += '<option value="20">20</option>';
+        modalHtml += '<option value="50">50</option>';
+        modalHtml += '<option value="100">100</option>';
+        modalHtml += '</select>';
+        modalHtml += '</div>';
+        modalHtml += '<button type="button" id="btnClearModalSearch" class="btn btn-outline-secondary btn-sm" style="padding: 6px 10px; font-size: 11px; display: none;">';
+        modalHtml += '<i class="fa-solid fa-times"></i> Xóa';
+        modalHtml += '</button>';
+        modalHtml += '<div id="modalSearchCount" style="font-size: 11px; color: #666; white-space: nowrap;"></div>';
+        modalHtml += '</div>';
+        modalHtml += '</div>';
+        
+        // Loading indicator
+        modalHtml += '<div id="modalLoadingIndicator" style="text-align: center; padding: 20px;">';
+        modalHtml += '<i class="fa-solid fa-spinner fa-spin fa-2x" style="color: #223771;"></i>';
+        modalHtml += '<div style="margin-top: 10px;">Đang tải quyền hiện tại...</div>';
+        modalHtml += '</div>';
+        
+        // Container cho bảng
+        modalHtml += '<div id="modalTableContainer" style="display: none;"></div>';
+        
+        // Container cho phân trang
+        modalHtml += '<div id="modalPaginationContainer" style="margin-top: 15px;"></div>';
+        
+        modalHtml += '</div>';
+        
+        // Footer
+        modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
+        modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
+        modalHtml += '<button type="button" class="btn btn-success" id="btnThemChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-plus"></i> Thêm</button>';
+        modalHtml += '</div>';
+        
+        modalHtml += '</div>';
+        modalHtml += '</div>';
+        
+        // Xóa modal cũ nếu có
+        $("#modalChiTiet").remove();
+        
+        // Thêm modal vào body
+        $("body").append(modalHtml);
+        
+        // Load quyền hiện tại trước
+        me.loadExistingPermissions(vaiTroId, dimensionId, function() {
+            // Sau khi load xong quyền, render bảng
+            $("#modalLoadingIndicator").hide();
+            $("#modalTableContainer").show();
+            me.renderModalTable(vaiTroId, dimensionId);
+        });
+        
+        // Bind event đóng modal
+        $("#btnCloseModal, #btnDongModal, #modalChiTiet").click(function(e) {
+            if (e.target.id === "modalChiTiet" || e.target.id === "btnCloseModal" || e.target.id === "btnDongModal") {
+                $("#modalChiTiet").remove();
+            }
+        });
+        
+        // Ngăn click vào content đóng modal
+        $("#modalChiTiet > div").click(function(e) {
+            e.stopPropagation();
+        });
+        
+        // Bind event cho tìm kiếm trong modal
+        var modalSearchTimeout;
+        $("#txtModalSearch").on('input', function() {
+            clearTimeout(modalSearchTimeout);
+            modalSearchTimeout = setTimeout(function() {
+                me.filterModalTable();
+            }, 300);
+        });
+        
+        $("#txtModalSearch").keypress(function(e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                clearTimeout(modalSearchTimeout);
+                me.filterModalTable();
+            }
+        });
+        
+        $("#btnClearModalSearch").click(function() {
+            $("#txtModalSearch").val('');
+            me.filterModalTable();
+        });
+        
+        // Event cho thay đổi page size
+        $("#ddlModalPageSize").change(function() {
+            me.modalPageSize = parseInt($(this).val());
+            me.modalCurrentPage = 1;
+            me.modalTotalPages = Math.ceil(me.modalTotalRecords / me.modalPageSize);
+            me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+        });
+        
+        // Bind event cho nút Thêm
+        $("#btnThemChiTiet").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var selectedValues = [];
+            $(".chkDetailItem:not([data-scope-id]):checked").each(function() {
+                // Chỉ lấy các checkbox chưa có quyền (không có data-scope-id)
+                var valueId = $(this).data("value-id");
+                selectedValues.push(valueId);
+                console.log("Selected value to add:", valueId, "Has scope-id:", $(this).attr("data-scope-id"));
+            });
+            
+            console.log("Total selected values to add:", selectedValues.length);
+            console.log("Selected values:", selectedValues);
+            
+            if (selectedValues.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 giá trị chưa có quyền");
+                return false;
+            }
+            
+            // Hiển thị popup chọn chế độ và kiểu
+            me.showScopeModePopup(vaiTroId, dimensionId, selectedValues);
+            return false;
+        });
+    },
+    
+    /*------------------------------------------
+    --Lọc bảng trong modal theo từ khóa (TÌM KIẾM TOÀN BỘ DỮ LIỆU)
+    -------------------------------------------*/
+    filterModalTable: function() {
+        var me = this;
+        var keyword = $("#txtModalSearch").val().toLowerCase().trim();
+        
+        // Hiển thị/ẩn nút xóa
+        if (keyword) {
+            $("#btnClearModalSearch").show();
+        } else {
+            $("#btnClearModalSearch").hide();
+        }
+        
+        if (!keyword) {
+            // Không có từ khóa - hiển thị lại toàn bộ dữ liệu
+            me.modalFilteredData = me.modalData;
+            me.modalTotalRecords = me.modalData.length;
+            me.modalCurrentPage = 1;
+            me.modalTotalPages = Math.ceil(me.modalTotalRecords / me.modalPageSize);
+            $("#modalSearchCount").text('');
+            me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+            return;
+        }
+        
+        // Lọc toàn bộ dữ liệu theo từ khóa
+        me.modalFilteredData = [];
+        for (var i = 0; i < me.modalData.length; i++) {
+            var item = me.modalData[i];
+            var searchText = '';
+            
+            // Tạo chuỗi tìm kiếm từ các field
+            searchText += (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + ' ';
+            searchText += (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || '') + ' ';
+            searchText += (item.GHICHU || '') + ' ';
+            
+            searchText = searchText.toLowerCase();
+            
+            if (searchText.indexOf(keyword) !== -1) {
+                me.modalFilteredData.push(item);
+            }
+        }
+        
+        // Cập nhật phân trang với dữ liệu đã lọc
+        me.modalTotalRecords = me.modalFilteredData.length;
+        me.modalCurrentPage = 1;
+        me.modalTotalPages = Math.ceil(me.modalTotalRecords / me.modalPageSize);
+        
+        // Hiển thị số lượng kết quả
+        if (me.modalFilteredData.length === 0) {
+            $("#modalSearchCount").html('<i class="fa-solid fa-exclamation-triangle" style="color: #dc3545;"></i> Không tìm thấy');
+        } else {
+            $("#modalSearchCount").html('<i class="fa-solid fa-check-circle" style="color: #28a745;"></i> ' + me.modalFilteredData.length + '/' + me.modalData.length);
+        }
+        
+        // Render lại bảng với dữ liệu đã lọc
+        me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+    },
+
+    /*------------------------------------------
+    --Hiển thị modal XEM KẾT QUẢ (chỉ hiển thị quyền đã gán)
+    -------------------------------------------*/
+    showResultModal: function(vaiTroId, vaiTroName, dimensionId, dimensionName) {
+        var me = this;
+        
+        // Lấy dữ liệu của chiều này
+        var dimensionData = me.dimensionGroups[dimensionId];
+        if (!dimensionData) {
+            edu.system.alert("Không tìm thấy dữ liệu");
+            return;
+        }
+        
+        // Reset phân trang
+        me.modalCurrentPage = 1;
+        me.modalPageSize = 10;
+        me.modalData = dimensionData.data;
+        me.modalTotalRecords = me.modalData.length;
+        me.modalTotalPages = Math.ceil(me.modalTotalRecords / me.modalPageSize);
+        me.modalVaiTroId = vaiTroId;
+        me.modalDimensionId = dimensionId;
+        me.modalExistingPermissions = {}; // {valueId: scopeId}
+        
+        // Tạo HTML cho modal
+        var modalHtml = '';
+        modalHtml += '<div id="modalXemKetQua" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center;">';
+        modalHtml += '<div style="background: white; border-radius: 8px; width: 90%; max-width: 900px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">';
+        
+        // Header
+        modalHtml += '<div style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%); color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">';
+        modalHtml += '<h5 style="margin: 0; font-size: 16px;"><i class="fa-solid fa-list-check"></i> Kết quả phân quyền - ' + vaiTroName + ' - ' + dimensionName + '</h5>';
+        modalHtml += '<button id="btnCloseResultModal" style="background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; line-height: 1;">&times;</button>';
+        modalHtml += '</div>';
+        
+        // Body
+        modalHtml += '<div style="padding: 20px; flex: 1; overflow-y: auto;">';
+        modalHtml += '<div style="margin-bottom: 15px; padding: 10px; background: #d1ecf1; border-left: 4px solid #17a2b8; border-radius: 4px;">';
+        modalHtml += '<strong>Thông tin:</strong> Hiển thị các quyền đã được gán cho vai trò này. Chỉ xem, không thể chỉnh sửa.';
+        modalHtml += '</div>';
+        
+        // Loading indicator
+        modalHtml += '<div id="resultLoadingIndicator" style="text-align: center; padding: 20px;">';
+        modalHtml += '<i class="fa-solid fa-spinner fa-spin fa-2x" style="color: #17a2b8;"></i>';
+        modalHtml += '<div style="margin-top: 10px;">Đang tải quyền hiện tại...</div>';
+        modalHtml += '</div>';
+        
+        // Container cho bảng
+        modalHtml += '<div id="resultTableContainer" style="display: none;"></div>';
+        
+        modalHtml += '</div>';
+        
+        // Footer
+        modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
+        modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
+        modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa quyền đã chọn</button>';
+        modalHtml += '</div>';
+        
+        modalHtml += '</div>';
+        modalHtml += '</div>';
+        
+        // Xóa modal cũ nếu có
+        $("#modalXemKetQua").remove();
+        
+        // Thêm modal vào body
+        $("body").append(modalHtml);
+        
+        // Load quyền hiện tại
+        me.loadExistingPermissions(vaiTroId, dimensionId, function() {
+            $("#resultLoadingIndicator").hide();
+            $("#resultTableContainer").show();
+            me.renderResultTable();
+        });
+        
+        // Bind event đóng modal
+        $("#btnCloseResultModal, #btnDongResultModal, #modalXemKetQua").click(function(e) {
+            if (e.target.id === "modalXemKetQua" || e.target.id === "btnCloseResultModal" || e.target.id === "btnDongResultModal") {
+                $("#modalXemKetQua").remove();
+            }
+        });
+        
+        // Bind event cho nút Xóa
+        $("#btnXoaResultModal").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var selectedScopes = [];
+            $(".chkResultItem:checked").each(function() {
+                selectedScopes.push($(this).data("scope-id"));
+            });
+            
+            if (selectedScopes.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 quyền để xóa");
+                return false;
+            }
+            
+            me.deletePermissions(selectedScopes);
+            return false;
+        });
+        
+        // Ngăn click vào content đóng modal
+        $("#modalXemKetQua > div").click(function(e) {
+            e.stopPropagation();
+        });
+    },
+
+    /*------------------------------------------
+    --Render bảng kết quả (chỉ hiển thị quyền đã gán)
+    -------------------------------------------*/
+    renderResultTable: function() {
+        var me = this;
+        
+        // Lọc chỉ lấy các item đã có quyền
+        var assignedItems = [];
+        for (var i = 0; i < me.modalData.length; i++) {
+            var item = me.modalData[i];
+            var valueId = item.ID || item.CORE_DATA_VALUE_ID || item.VALUE_ID;
+            var scopeId = me.modalExistingPermissions[valueId];
+            
+            if (scopeId) {
+                assignedItems.push({
+                    item: item,
+                    valueId: valueId,
+                    scopeId: scopeId
+                });
+            }
+        }
+        
+        var tableHtml = '<div style="overflow-x: auto;">';
+        
+        if (assignedItems.length > 0) {
+            tableHtml += '<table class="table table-bordered table-hover" style="margin: 0; width: 100%;">';
+            tableHtml += '<thead style="background: #f8f9fa;">';
+            tableHtml += '<tr>';
+            tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">';
+            tableHtml += '<input type="checkbox" id="chkSelectAllResult" style="width: 18px; height: 18px; cursor: pointer;"/>';
+            tableHtml += '</th>';
+            tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">STT</th>';
+            tableHtml += '<th style="width: 150px; padding: 10px;">Mã</th>';
+            tableHtml += '<th style="padding: 10px;">Tên</th>';
+            tableHtml += '<th style="width: 120px; text-align: center; padding: 10px;">Trạng thái</th>';
+            tableHtml += '</tr>';
+            tableHtml += '</thead>';
+            tableHtml += '<tbody>';
+            
+            for (var j = 0; j < assignedItems.length; j++) {
+                var assigned = assignedItems[j];
+                var item = assigned.item;
+                
+                tableHtml += '<tr style="background: #d4edda;">';
+                tableHtml += '<td style="text-align: center; padding: 8px;">';
+                tableHtml += '<input type="checkbox" class="chkResultItem" data-scope-id="' + assigned.scopeId + '" style="width: 18px; height: 18px; cursor: pointer;"/>';
+                tableHtml += '</td>';
+                tableHtml += '<td style="text-align: center; padding: 8px;">' + (j + 1) + '</td>';
+                tableHtml += '<td style="padding: 8px;">' + (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + '</td>';
+                tableHtml += '<td style="padding: 8px;">' + (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || 'N/A') + '</td>';
+                tableHtml += '<td style="text-align: center; padding: 8px;">';
+                tableHtml += '<span style="color: #28a745; font-weight: bold;"><i class="fa-solid fa-check-circle"></i> Đã có quyền</span>';
+                tableHtml += '</td>';
+                tableHtml += '</tr>';
+            }
+            
+            tableHtml += '</tbody>';
+            tableHtml += '</table>';
+            
+            // Bind event cho checkbox "Chọn tất cả"
+            setTimeout(function() {
+                $("#chkSelectAllResult").change(function() {
+                    var isChecked = $(this).is(':checked');
+                    $(".chkResultItem").prop('checked', isChecked);
+                });
+                
+                // Bind event cho từng checkbox để cập nhật "Chọn tất cả"
+                $(document).on('change', '.chkResultItem', function() {
+                    var totalCheckboxes = $(".chkResultItem").length;
+                    var checkedCheckboxes = $(".chkResultItem:checked").length;
+                    $("#chkSelectAllResult").prop('checked', totalCheckboxes === checkedCheckboxes);
+                });
+            }, 100);
+        } else {
+            tableHtml += '<div style="text-align: center; padding: 40px;">';
+            tableHtml += '<i class="fa-solid fa-inbox fa-3x" style="color: #ccc;"></i>';
+            tableHtml += '<div style="margin-top: 15px; font-size: 16px; color: #666;">Chưa có quyền nào được gán</div>';
+            tableHtml += '<div style="font-size: 13px; color: #999; margin-top: 5px;">Sử dụng nút "Thêm quyền" để gán quyền mới</div>';
+            tableHtml += '</div>';
+        }
+        
+        tableHtml += '</div>';
+        
+        $("#resultTableContainer").html(tableHtml);
+    },
+
+    /*------------------------------------------
+    --Hiển thị modal THÊM QUYỀN (để chọn thêm quyền mới)
+    -------------------------------------------*/
+    showAddPermissionModal: function(vaiTroId, vaiTroName, dimensionId, dimensionName) {
+        var me = this;
+        
+        // Gọi lại function showDetailModal cũ với tên mới
+        me.showDetailModal(vaiTroId, vaiTroName, dimensionId, dimensionName);
+    },
+
+    /*------------------------------------------
+    --Hiển thị popup chọn chế độ và kiểu
+    -------------------------------------------*/
+    showScopeModePopup: function(vaiTroId, dimensionId, selectedValues) {
+        var me = this;
+        
+        // Tạo popup với loading
+        var popupHtml = '';
+        popupHtml += '<div id="popupScopeMode" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1050; display: flex; align-items: center; justify-content: center;">';
+        popupHtml += '<div style="background: white; border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">';
+        
+        // Header
+        popupHtml += '<div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">';
+        popupHtml += '<h5 style="margin: 0; font-size: 16px;"><i class="fa-solid fa-cog"></i> Cấu hình quyền</h5>';
+        popupHtml += '<button id="btnCloseScopePopup" style="background: transparent; border: none; color: white; font-size: 24px; cursor: pointer; padding: 0; width: 30px; height: 30px; line-height: 1;">&times;</button>';
+        popupHtml += '</div>';
+        
+        // Body
+        popupHtml += '<div style="padding: 25px;">';
+        
+        popupHtml += '<div style="margin-bottom: 15px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">';
+        popupHtml += '<strong>Thông tin:</strong> Đang thêm quyền cho <strong>' + selectedValues.length + '</strong> giá trị';
+        popupHtml += '</div>';
+        
+        // Loading
+        popupHtml += '<div id="scopeLoadingIndicator" style="text-align: center; padding: 20px;">';
+        popupHtml += '<i class="fa-solid fa-spinner fa-spin fa-2x" style="color: #28a745;"></i>';
+        popupHtml += '<div style="margin-top: 10px;">Đang tải danh sách...</div>';
+        popupHtml += '</div>';
+        
+        // Container cho form
+        popupHtml += '<div id="scopeFormContainer" style="display: none;"></div>';
+        
+        popupHtml += '</div>';
+        
+        // Footer
+        popupHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
+        popupHtml += '<button type="button" class="btn btn-secondary" id="btnHuyScopePopup" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Hủy</button>';
+        popupHtml += '<button type="button" class="btn btn-success" id="btnXacNhanScope" style="padding: 8px 16px; display: none;"><i class="fa-solid fa-check"></i> Xác nhận thêm</button>';
+        popupHtml += '</div>';
+        
+        popupHtml += '</div>';
+        popupHtml += '</div>';
+        
+        // Xóa popup cũ nếu có
+        $("#popupScopeMode").remove();
+        
+        // Thêm popup vào body
+        $("body").append(popupHtml);
+        
+        // Load danh sách SCOPE_MODE và SCOPE_KIND từ API
+        me.loadScopeOptions(vaiTroId, dimensionId, selectedValues);
+        
+        // Bind event đóng popup
+        $("#btnCloseScopePopup, #btnHuyScopePopup, #popupScopeMode").click(function(e) {
+            if (e.target.id === "popupScopeMode" || e.target.id === "btnCloseScopePopup" || e.target.id === "btnHuyScopePopup") {
+                $("#popupScopeMode").remove();
+            }
+        });
+        
+        // Ngăn click vào content đóng popup
+        $("#popupScopeMode > div").click(function(e) {
+            e.stopPropagation();
+        });
+    },
+    
+    /*------------------------------------------
+    --Load danh sách SCOPE_MODE và SCOPE_KIND
+    -------------------------------------------*/
+    loadScopeOptions: function(vaiTroId, dimensionId, selectedValues) {
+        var me = this;
+        
+        // Dùng giá trị mặc định (không cần gọi API)
+        var scopeModes = [
+            {CODE: 'INCLUDE', NAME: 'INCLUDE - Cho phép truy cập'},
+            {CODE: 'EXCLUDE', NAME: 'EXCLUDE - Từ chối truy cập'}
+        ];
+        
+        var scopeKinds = [
+            {CODE: 'EXPLICIT', NAME: 'EXPLICIT - Tường minh'},
+            {CODE: 'DIRECT', NAME: 'DIRECT - Trực tiếp'},
+            {CODE: 'LIST', NAME: 'LIST - Danh sách'}
+        ];
+        
+        // Render form ngay lập tức
+        me.renderScopeForm(scopeModes, scopeKinds, vaiTroId, dimensionId, selectedValues);
+    },
+    
+    /*------------------------------------------
+    --Render form chọn SCOPE_MODE và SCOPE_KIND
+    -------------------------------------------*/
+    renderScopeForm: function(scopeModes, scopeKinds, vaiTroId, dimensionId, selectedValues) {
+        var me = this;
+        
+        var formHtml = '';
+        
+        // Chế độ (SCOPE_MODE)
+        formHtml += '<div style="margin-bottom: 20px;">';
+        formHtml += '<label style="display: block; font-weight: 600; margin-bottom: 8px; color: #223771;">';
+        formHtml += '<i class="fa-solid fa-toggle-on"></i> Chế độ (SCOPE_MODE):';
+        formHtml += '</label>';
+        formHtml += '<select id="ddlScopeMode" class="form-select" style="width: 100%; padding: 10px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 14px;">';
+        
+        for (var i = 0; i < scopeModes.length; i++) {
+            formHtml += '<option value="' + scopeModes[i].CODE + '">' + scopeModes[i].NAME + '</option>';
+        }
+        
+        formHtml += '</select>';
+        formHtml += '<small style="color: #666; margin-top: 5px; display: block;">INCLUDE: Vai trò được phép truy cập dữ liệu này<br/>EXCLUDE: Vai trò bị từ chối truy cập dữ liệu này</small>';
+        formHtml += '</div>';
+        
+        // Kiểu (SCOPE_KIND)
+        formHtml += '<div style="margin-bottom: 20px;">';
+        formHtml += '<label style="display: block; font-weight: 600; margin-bottom: 8px; color: #223771;">';
+        formHtml += '<i class="fa-solid fa-list"></i> Kiểu (SCOPE_KIND):';
+        formHtml += '</label>';
+        formHtml += '<select id="ddlScopeKind" class="form-select" style="width: 100%; padding: 10px; border: 2px solid #dee2e6; border-radius: 6px; font-size: 14px;">';
+        
+        for (var j = 0; j < scopeKinds.length; j++) {
+            formHtml += '<option value="' + scopeKinds[j].CODE + '">' + scopeKinds[j].NAME + '</option>';
+        }
+        
+        formHtml += '</select>';
+        formHtml += '<small style="color: #666; margin-top: 5px; display: block;">EXPLICIT: Quyền được gán tường minh<br/>DIRECT: Quyền trực tiếp<br/>LIST: Quyền theo danh sách</small>';
+        formHtml += '</div>';
+        
+        $("#scopeFormContainer").html(formHtml);
+        $("#scopeLoadingIndicator").hide();
+        $("#scopeFormContainer").show();
+        $("#btnXacNhanScope").show();
+        
+        // Bind event cho nút Xác nhận
+        $("#btnXacNhanScope").off("click").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var scopeMode = $("#ddlScopeMode").val();
+            var scopeKind = $("#ddlScopeKind").val();
+            
+            if (!scopeMode || !scopeKind) {
+                edu.system.alert("Vui lòng chọn đầy đủ chế độ và kiểu");
+                return false;
+            }
+            
+            // Đóng popup chọn mode
+            $("#popupScopeMode").remove();
+            
+            // Gọi hàm thêm quyền với mode và kind đã chọn
+            me.savePermissions(vaiTroId, dimensionId, selectedValues, "ADD", scopeMode, scopeKind);
+            
+            return false;
+        });
+    },
+    
+    /*------------------------------------------
+    --Load danh sách quyền hiện tại
+    -------------------------------------------*/
+    loadExistingPermissions: function(vaiTroId, dimensionId, callback) {
+        var me = this;
+        
+        console.log("=== DEBUG loadExistingPermissions ===");
+        console.log("VaiTroId:", vaiTroId);
+        console.log("DimensionId:", dimensionId);
+        
+        var obj_list = {
+            'action': 'CMS_QuanTri02_MH/DSA4BRICLjMkHgUeFyAtNCQeEx4FIDUgHhIiLjEk',
+            'func': 'PKG_CORE_QUANTRI_02.LayDSCore_D_Value_R_Data_Scope',
+            'iM': 'Azz',
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strRoleId': vaiTroId,
+            'strCore_Data_Dimension_Id': dimensionId,
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        
+        console.log("Request params:", obj_list);
+        
+        edu.system.makeRequest({
+            success: function (data) {
+                console.log("API Response FULL:", JSON.stringify(data, null, 2));
+                
+                if (data.Success && data.Data) {
+                    console.log("Data.Data length:", data.Data.length);
+                    
+                    if (data.Data.length > 0) {
+                        console.log("First item FULL:", JSON.stringify(data.Data[0], null, 2));
+                        console.log("All keys in first item:", Object.keys(data.Data[0]));
+                    }
+                    
+                    // Lưu mapping valueId -> scopeId
+                    for (var i = 0; i < data.Data.length; i++) {
+                        var item = data.Data[i];
+                        console.log("Processing item " + i + ":", JSON.stringify(item, null, 2));
+                        
+                        // Thử nhiều tên field có thể
+                        var valueId = item.DIMENSION_VALUE_ID || item.CORE_DATA_VALUE_ID || 
+                                     item.VALUE_ID || item.CORE_DIMENSION_VALUE_ID || 
+                                     item.DIMENSIONVALUEID || item.COREDATAVALUEID;
+                        
+                        var scopeId = item.ID || item.SCOPE_ID || item.CORE_ROLE_DATA_SCOPE_ID || 
+                                     item.SCOPEID || item.COREROLEDATASCOPEID;
+                        
+                        console.log("  -> Extracted valueId:", valueId, "scopeId:", scopeId);
+                        
+                        if (valueId && scopeId) {
+                            me.modalExistingPermissions[valueId] = scopeId;
+                            console.log("  -> Added to permissions:", valueId, "=>", scopeId);
+                        } else {
+                            console.warn("  -> SKIPPED - Missing valueId or scopeId");
+                        }
+                    }
+                    
+                    console.log("Final modalExistingPermissions:", me.modalExistingPermissions);
+                    console.log("Total permissions loaded:", Object.keys(me.modalExistingPermissions).length);
+                } else {
+                    console.log("No data or not success. Success:", data.Success, "Data:", data.Data);
+                }
+                
+                if (callback) callback();
+            },
+            error: function (er) {
+                console.error("API Error:", er);
+                // Nếu lỗi vẫn tiếp tục hiển thị (có thể API chưa có)
+                if (callback) callback();
+            },
+            type: "POST",
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list
+        }, false, false, false, null);
+    },
+    
+    /*------------------------------------------
+    --Render bảng trong modal với phân trang
+    -------------------------------------------*/
+    renderModalTable: function(vaiTroId, dimensionId) {
+        var me = this;
+        
+        // Sử dụng dữ liệu đã lọc nếu có, nếu không thì dùng dữ liệu gốc
+        var dataToUse = me.modalFilteredData || me.modalData;
+        
+        // Debug: Kiểm tra quyền hiện tại
+        console.log("=== DEBUG renderModalTable ===");
+        console.log("VaiTroId:", vaiTroId);
+        console.log("DimensionId:", dimensionId);
+        console.log("Existing Permissions:", me.modalExistingPermissions);
+        console.log("Total permissions:", Object.keys(me.modalExistingPermissions).length);
+        console.log("Using filtered data:", !!me.modalFilteredData);
+        console.log("Data length:", dataToUse.length);
+        
+        // Tính toán phân trang
+        var startIndex = (me.modalCurrentPage - 1) * me.modalPageSize;
+        var endIndex = Math.min(startIndex + me.modalPageSize, dataToUse.length);
+        var pageData = dataToUse.slice(startIndex, endIndex);
+        
+        // Tạo bảng
+        var tableHtml = '<div style="overflow-x: auto;">';
+        tableHtml += '<table class="table table-bordered table-hover" style="margin: 0; width: 100%;">';
+        tableHtml += '<thead style="background: #f8f9fa;">';
+        tableHtml += '<tr>';
+        tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">STT</th>';
+        tableHtml += '<th style="width: 150px; padding: 10px;">Mã<br/><span style="font-weight: normal; font-size: 11px;">VALUE_CODE</span></th>';
+        tableHtml += '<th style="padding: 10px;">Tên<br/><span style="font-weight: normal; font-size: 11px;">VALUE_NAME</span></th>';
+        tableHtml += '<th style="width: 120px; text-align: center; padding: 10px;">Ghi chú<br/><span style="font-weight: normal; font-size: 11px;">GhiChu</span></th>';
+        tableHtml += '<th style="width: 80px; text-align: center; background: #fff3cd; padding: 10px;">';
+        tableHtml += '<div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">';
+        tableHtml += '<input type="checkbox" id="chkSelectAll" style="width: 18px; height: 18px; cursor: pointer;"/>';
+        tableHtml += '<span style="font-size: 10px;">Chọn tất cả</span>';
+        tableHtml += '</div>';
+        tableHtml += '</th>';
+        tableHtml += '</tr>';
+        tableHtml += '</thead>';
+        tableHtml += '<tbody>';
+        
+        for (var i = 0; i < pageData.length; i++) {
+            var item = pageData[i];
+            var globalIndex = startIndex + i + 1;
+            var valueId = item.ID || item.CORE_DATA_VALUE_ID || item.VALUE_ID;
+            var scopeId = me.modalExistingPermissions[valueId];
+            var hasPermission = !!scopeId;
+            
+            // Debug từng item
+            console.log("Item " + globalIndex + ":", {
+                valueId: valueId,
+                scopeId: scopeId,
+                hasPermission: hasPermission,
+                name: item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN
+            });
+            
+            tableHtml += '<tr style="' + (hasPermission ? 'background: #d4edda;' : (i % 2 === 0 ? 'background: #f9f9f9;' : '')) + '">';
+            tableHtml += '<td style="text-align: center; padding: 8px;">' + globalIndex + '</td>';
+            tableHtml += '<td style="padding: 8px;">' + (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + '</td>';
+            tableHtml += '<td style="padding: 8px;">';
+            tableHtml += (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || 'N/A');
+            if (hasPermission) {
+                tableHtml += ' <span style="color: #28a745; font-weight: bold; margin-left: 5px;"><i class="fa-solid fa-check-circle"></i> Đã có quyền</span>';
+            }
+            tableHtml += '</td>';
+            tableHtml += '<td style="text-align: center; padding: 8px;">' + (item.GHICHU || '') + '</td>';
+            tableHtml += '<td style="text-align: center; padding: 8px;">';
+            tableHtml += '<input type="checkbox" class="chkDetailItem" ';
+            tableHtml += 'data-value-id="' + valueId + '" ';
+            
+            if (hasPermission) {
+                tableHtml += 'data-scope-id="' + scopeId + '" ';
+                tableHtml += 'checked="checked" ';
+            }
+            
+            tableHtml += 'style="width: 18px; height: 18px; cursor: pointer;"/>';
+            tableHtml += '</td>';
+            tableHtml += '</tr>';
+        }
+        
+        tableHtml += '</tbody>';
+        tableHtml += '</table>';
+        tableHtml += '</div>';
+        
+        $("#modalTableContainer").html(tableHtml);
+        
+        // Bind event cho checkbox "Chọn tất cả"
+        $("#chkSelectAll").change(function() {
+            var isChecked = $(this).is(':checked');
+            $(".chkDetailItem").prop('checked', isChecked);
+        });
+        
+        // Bind event cho từng checkbox để cập nhật "Chọn tất cả"
+        $(document).on('change', '.chkDetailItem', function() {
+            var totalCheckboxes = $(".chkDetailItem").length;
+            var checkedCheckboxes = $(".chkDetailItem:checked").length;
+            $("#chkSelectAll").prop('checked', totalCheckboxes === checkedCheckboxes);
+        });
+        
+        // Render phân trang
+        me.renderModalPagination(vaiTroId, dimensionId);
+    },
+    
+    /*------------------------------------------
+    --Render phân trang cho modal
+    -------------------------------------------*/
+    renderModalPagination: function(vaiTroId, dimensionId) {
+        var me = this;
+        
+        var html = '<div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 6px;">';
+        
+        // Info
+        var from = me.modalTotalRecords > 0 ? ((me.modalCurrentPage - 1) * me.modalPageSize + 1) : 0;
+        var to = Math.min(me.modalCurrentPage * me.modalPageSize, me.modalTotalRecords);
+        html += '<div style="font-size: 13px; color: #555;">';
+        html += 'Hiển thị <strong>' + from + '</strong> - <strong>' + to + '</strong> / <strong>' + me.modalTotalRecords + '</strong> bản ghi';
+        html += '</div>';
+        
+        // Buttons
+        html += '<div style="display: flex; gap: 5px;">';
+        html += '<button class="btn btn-sm btn-outline-primary btnModalFirstPage" ' + (me.modalCurrentPage === 1 ? 'disabled' : '') + '><i class="fa-solid fa-angles-left"></i></button>';
+        html += '<button class="btn btn-sm btn-outline-primary btnModalPrevPage" ' + (me.modalCurrentPage === 1 ? 'disabled' : '') + '><i class="fa-solid fa-angle-left"></i></button>';
+        
+        var startPage = Math.max(1, me.modalCurrentPage - 2);
+        var endPage = Math.min(me.modalTotalPages, me.modalCurrentPage + 2);
+        
+        for (var i = startPage; i <= endPage; i++) {
+            html += '<button class="btn btn-sm ' + (i === me.modalCurrentPage ? 'btn-primary' : 'btn-outline-primary') + ' btnModalPage" data-page="' + i + '">' + i + '</button>';
+        }
+        
+        html += '<button class="btn btn-sm btn-outline-primary btnModalNextPage" ' + (me.modalCurrentPage === me.modalTotalPages ? 'disabled' : '') + '><i class="fa-solid fa-angle-right"></i></button>';
+        html += '<button class="btn btn-sm btn-outline-primary btnModalLastPage" ' + (me.modalCurrentPage === me.modalTotalPages ? 'disabled' : '') + '><i class="fa-solid fa-angles-right"></i></button>';
+        html += '</div>';
+        html += '</div>';
+        
+        $("#modalPaginationContainer").html(html);
+        
+        // Bind events
+        $(".btnModalFirstPage").click(function(e) {
+            e.preventDefault();
+            me.modalGoToPage(1, vaiTroId, dimensionId);
+            return false;
+        });
+        
+        $(".btnModalPrevPage").click(function(e) {
+            e.preventDefault();
+            me.modalGoToPage(me.modalCurrentPage - 1, vaiTroId, dimensionId);
+            return false;
+        });
+        
+        $(".btnModalNextPage").click(function(e) {
+            e.preventDefault();
+            me.modalGoToPage(me.modalCurrentPage + 1, vaiTroId, dimensionId);
+            return false;
+        });
+        
+        $(".btnModalLastPage").click(function(e) {
+            e.preventDefault();
+            me.modalGoToPage(me.modalTotalPages, vaiTroId, dimensionId);
+            return false;
+        });
+        
+        $(".btnModalPage").click(function(e) {
+            e.preventDefault();
+            me.modalGoToPage(parseInt($(this).data("page")), vaiTroId, dimensionId);
+            return false;
+        });
+    },
+    
+    /*------------------------------------------
+    --Chuyển trang trong modal
+    -------------------------------------------*/
+    modalGoToPage: function(page, vaiTroId, dimensionId) {
+        var me = this;
+        if (page < 1 || page > me.modalTotalPages) return;
+        me.modalCurrentPage = page;
+        me.renderModalTable(vaiTroId, dimensionId);
+    },
+    
+    /*------------------------------------------
+    --Lưu quyền (Thêm hoặc Xóa)
+    -------------------------------------------*/
+    savePermissions: function(vaiTroId, dimensionId, valueIds, action, scopeMode, scopeKind) {
+        var me = this;
+        
+        // Mặc định nếu không truyền
+        scopeMode = scopeMode || 'INCLUDE';
+        scopeKind = scopeKind || 'EXPLICIT';
+        
+        if (action === "ADD") {
+            // Thêm quyền
+            var completedCount = 0;
+            var totalCount = valueIds.length;
+            var successCount = 0;
+            var errorCount = 0;
+            var errorMessages = [];
+            
+            for (var i = 0; i < valueIds.length; i++) {
+                var obj_save = {
+                    'action': 'CMS_QuanTri02_MH/FSkkLB4CLjMkHhMuLSQeBSA1IB4SIi4xJAPP',
+                    'func': 'PKG_CORE_QUANTRI_02.Them_Core_Role_Data_Scope',
+                    'iM': 'Azz',
+                    'strChucNang_Id': edu.system.strChucNang_Id,
+                    'strRoleId': vaiTroId,
+                    'strDimensionId': dimensionId,
+                    'strDimensionValueId': valueIds[i],
+                    'strScopeMode': scopeMode,
+                    'strScopeKind': scopeKind,
+                    'strFunctionId': '',
+                    'dPriorityNo': 1,
+                    'strEffectiveFrom': '',
+                    'strEffectiveTo': '',
+                    'strSourceType': 'MANUAL',
+                    'strSourceRefId': '',
+                    'strAssignedBy': edu.system.userId,
+                    'strNote': '',
+                    'strNguoiThucHien_Id': edu.system.userId
+                };
+                
+                edu.system.makeRequest({
+                    success: function (data) {
+                        completedCount++;
+                        
+                        if (data.Success) {
+                            successCount++;
+                        } else {
+                            // Kiểm tra nếu là lỗi "đã tồn tại" thì coi như thành công
+                            var isDuplicate = data.Message && (
+                                data.Message.toLowerCase().indexOf("da ton tai") !== -1 ||
+                                data.Message.toLowerCase().indexOf("đã tồn tại") !== -1 ||
+                                data.Message.toLowerCase().indexOf("already exists") !== -1
+                            );
+                            
+                            if (isDuplicate) {
+                                // Coi như thành công vì quyền đã có rồi
+                                successCount++;
+                                console.log("Quyền đã tồn tại, bỏ qua:", data.Message);
+                            } else {
+                                // Lỗi thật sự
+                                errorCount++;
+                                errorMessages.push(data.Message);
+                            }
+                        }
+                        
+                        if (completedCount === totalCount) {
+                            // Reload lại popup để hiển thị quyền mới
+                            me.modalExistingPermissions = {};
+                            me.loadExistingPermissions(me.modalVaiTroId, me.modalDimensionId, function() {
+                                me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+                            });
+                            
+                            // Hiển thị thông báo
+                            if (errorMessages.length === 0) {
+                                edu.system.alert("Thêm/cập nhật thành công " + successCount + " quyền!");
+                            } else {
+                                edu.system.alert("Thêm thành công " + successCount + " quyền. Có " + errorMessages.length + " lỗi: " + errorMessages.join(", "));
+                            }
+                        }
+                    },
+                    error: function (er) {
+                        completedCount++;
+                        errorCount++;
+                        errorMessages.push("Lỗi kết nối");
+                        
+                        if (completedCount === totalCount) {
+                            // Reload lại popup
+                            me.modalExistingPermissions = {};
+                            me.loadExistingPermissions(me.modalVaiTroId, me.modalDimensionId, function() {
+                                me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+                            });
+                            
+                            edu.system.alert("Có lỗi khi thêm quyền: " + errorMessages.join(", "));
+                        }
+                    },
+                    type: "POST",
+                    action: obj_save.action,
+                    contentType: true,
+                    data: obj_save
+                }, false, false, false, null);
+            }
+        } else if (action === "DELETE") {
+            // Xóa quyền - cần gọi API lấy danh sách quyền hiện tại trước
+            edu.system.alert("Chức năng xóa đang được phát triển");
+            $("#modalChiTiet").remove();
+        }
+    },
+    
+    /*------------------------------------------
+    --Xóa quyền
+    -------------------------------------------*/
+    deletePermissions: function(scopeIds) {
+        var me = this;
+        
+        if (!scopeIds || scopeIds.length === 0) {
+            edu.system.alert("Không có quyền nào để xóa");
+            return;
+        }
+        
+        edu.system.confirm("Bạn có chắc chắn muốn xóa " + scopeIds.length + " quyền đã chọn?");
+        
+        $("#btnYes").off("click").click(function() {
+            var completedCount = 0;
+            var totalCount = scopeIds.length;
+            var successCount = 0;
+            var errorCount = 0;
+            var errorMessages = [];
+            
+            for (var i = 0; i < scopeIds.length; i++) {
+                var obj_delete = {
+                    'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeEy4tJB4FIDUgHhIiLjEk',
+                    'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_Role_Data_Scope',
+                    'iM': 'Azz',
+                    'strId': scopeIds[i],
+                    'strChucNang_Id': edu.system.strChucNang_Id,
+                    'strNguoiThucHien_Id': edu.system.userId
+                };
+                
+                edu.system.makeRequest({
+                    success: function (data) {
+                        completedCount++;
+                        
+                        if (data.Success) {
+                            successCount++;
+                        } else {
+                            errorCount++;
+                            if (data.Message) {
+                                errorMessages.push(data.Message);
+                            }
+                        }
+                        
+                        if (completedCount === totalCount) {
+                            // Reload lại popup để hiển thị quyền đã xóa
+                            me.modalExistingPermissions = {};
+                            me.loadExistingPermissions(me.modalVaiTroId, me.modalDimensionId, function() {
+                                me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+                            });
+                            
+                            // Hiển thị thông báo
+                            if (successCount > 0 && errorCount === 0) {
+                                edu.system.alert("Xóa thành công " + successCount + " quyền!");
+                            } else if (successCount > 0 && errorCount > 0) {
+                                edu.system.alert("Xóa thành công " + successCount + " quyền. Có " + errorCount + " lỗi: " + errorMessages.join(", "));
+                            } else {
+                                edu.system.alert("Không thể xóa quyền: " + errorMessages.join(", "));
+                            }
+                        }
+                    },
+                    error: function (er) {
+                        completedCount++;
+                        errorCount++;
+                        errorMessages.push("Lỗi kết nối");
+                        
+                        if (completedCount === totalCount) {
+                            // Reload lại popup
+                            me.modalExistingPermissions = {};
+                            me.loadExistingPermissions(me.modalVaiTroId, me.modalDimensionId, function() {
+                                me.renderModalTable(me.modalVaiTroId, me.modalDimensionId);
+                            });
+                            
+                            edu.system.alert("Có lỗi khi xóa quyền: " + errorMessages.join(", "));
+                        }
+                    },
+                    type: "POST",
+                    action: obj_delete.action,
+                    contentType: true,
+                    data: obj_delete
+                }, false, false, false, null);
+            }
+        });
+    },
+    
+    /*------------------------------------------
+    --Render phân trang
+    -------------------------------------------*/
+    renderPagination: function () {
+        var me = this;
+        
+        var html = '<div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: #f8f9fa; border-radius: 6px; margin-top: 15px;">';
+        
+        // Info
+        var from = me.totalRecords > 0 ? ((me.currentPage - 1) * me.pageSize + 1) : 0;
+        var to = Math.min(me.currentPage * me.pageSize, me.totalRecords);
+        html += '<div style="font-size: 13px; color: #555;">';
+        html += 'Hiển thị <strong>' + from + '</strong> - <strong>' + to + '</strong> / <strong>' + me.totalRecords + '</strong> bản ghi';
+        html += '</div>';
+        
+        // Buttons
+        html += '<div style="display: flex; gap: 5px;">';
+        html += '<button class="btn btn-sm btn-outline-primary" id="btnFirstPage" ' + (me.currentPage === 1 ? 'disabled' : '') + '><i class="fa-solid fa-angles-left"></i></button>';
+        html += '<button class="btn btn-sm btn-outline-primary" id="btnPrevPage" ' + (me.currentPage === 1 ? 'disabled' : '') + '><i class="fa-solid fa-angle-left"></i></button>';
+        
+        var startPage = Math.max(1, me.currentPage - 2);
+        var endPage = Math.min(me.totalPages, me.currentPage + 2);
+        
+        for (var i = startPage; i <= endPage; i++) {
+            html += '<button class="btn btn-sm ' + (i === me.currentPage ? 'btn-primary' : 'btn-outline-primary') + '" data-page="' + i + '">' + i + '</button>';
+        }
+        
+        html += '<button class="btn btn-sm btn-outline-primary" id="btnNextPage" ' + (me.currentPage === me.totalPages ? 'disabled' : '') + '><i class="fa-solid fa-angle-right"></i></button>';
+        html += '<button class="btn btn-sm btn-outline-primary" id="btnLastPage" ' + (me.currentPage === me.totalPages ? 'disabled' : '') + '><i class="fa-solid fa-angles-right"></i></button>';
+        html += '</div>';
+        html += '</div>';
+        
+        $("#paginationContainer").html(html);
+        
+        // Bind events
+        $("#btnFirstPage").click(function() { me.goToPage(1); });
+        $("#btnPrevPage").click(function() { me.goToPage(me.currentPage - 1); });
+        $("#btnNextPage").click(function() { me.goToPage(me.currentPage + 1); });
+        $("#btnLastPage").click(function() { me.goToPage(me.totalPages); });
+        $("[data-page]").click(function() { me.goToPage(parseInt($(this).data("page"))); });
+    },
+    
+    /*------------------------------------------
+    --Chuyển trang
+    -------------------------------------------*/
+    goToPage: function (page) {
+        var me = this;
+        if (page < 1 || page > me.totalPages) return;
+        me.currentPage = page;
+        me.genTable_DuLieu();
+    },
+    
+    /*------------------------------------------
+    --Kiểm tra quyền đã tồn tại
+    -------------------------------------------*/
+    checkPermission: function (dataItem, vaiTro) {
+        var me = this;
+        
+        // TODO: Gọi API để kiểm tra quyền đã tồn tại
+        // Tạm thời return false
         return false;
+    },
+    
+    /*------------------------------------------
+    --Render danh sách checkbox
+    -------------------------------------------*/
+    renderCheckboxList: function (dataList, vaiTroId, loaiDuLieu) {
+        var html = '';
+        
+        if (dataList && dataList.length > 0) {
+            for (var i = 0; i < dataList.length; i++) {
+                html += '<div style="margin-bottom: 6px; display: flex; align-items: center; gap: 8px;">';
+                html += '<input type="checkbox" class="chkPhanQuyen" ';
+                html += 'data-vaitro-id="' + vaiTroId + '" ';
+                html += 'data-loai="' + loaiDuLieu + '" ';
+                html += 'data-dulieu-id="' + dataList[i].ID + '" ';
+                html += 'style="width: 16px; height: 16px; flex-shrink: 0;" ';
+                html += '/>';
+                html += '<span style="font-size: 12px; color: #555; line-height: 1.3;">' + dataList[i].TEN + '</span>';
+                html += '</div>';
+            }
+        } else {
+            html = '<span style="color: #999; font-size: 12px; font-style: italic;">Chưa có dữ liệu</span>';
+        }
+        
+        return html;
     },
     
     /*------------------------------------------
@@ -442,27 +1690,28 @@ PhanQuyenDuLieuM2.prototype = {
         
         for (var i = 0; i < checkboxes.length; i++) {
             var $chk = $(checkboxes[i]);
-            var rowId = $chk.data("row-id");
             var vaiTroId = $chk.data("vaitro-id");
-            var vaiTroMa = $chk.data("vaitro-ma");
+            var dimensionId = $chk.data("dimension-id");
+            var valueId = $chk.data("value-id");
             
             if ($chk.is(':checked')) {
                 // Nếu checked mà không có attribute name="old" => thêm mới
                 if (!$chk.attr("name")) {
                     arrThem.push({
-                        rowId: rowId,
-                        vaiTroId: vaiTroId,
-                        vaiTroMa: vaiTroMa
+                        strRoleId: vaiTroId,
+                        strDimensionId: dimensionId,
+                        strDimensionValueId: valueId
                     });
                 }
             } else {
                 // Nếu không checked mà có attribute name="old" => xóa
                 if ($chk.attr("name") === "old") {
-                    arrXoa.push({
-                        rowId: rowId,
-                        vaiTroId: vaiTroId,
-                        vaiTroMa: vaiTroMa
-                    });
+                    var scopeId = $chk.data("scope-id");
+                    if (scopeId) {
+                        arrXoa.push({
+                            strId: scopeId
+                        });
+                    }
                 }
             }
         }
@@ -470,22 +1719,8 @@ PhanQuyenDuLieuM2.prototype = {
         if ((arrThem.length + arrXoa.length) > 0) {
             edu.system.confirm("Bạn có chắc chắn thêm " + arrThem.length + " quyền và hủy " + arrXoa.length + " quyền?");
             
-            $("#btnYes").click(function (e) {
-                // Thêm quyền
-                for (var i = 0; i < arrThem.length; i++) {
-                    me.save_ThemQuyen(arrThem[i]);
-                }
-                
-                // Xóa quyền
-                for (var i = 0; i < arrXoa.length; i++) {
-                    me.save_XoaQuyen(arrXoa[i]);
-                }
-                
-                // Reload lại dữ liệu sau khi lưu
-                setTimeout(function() {
-                    me.getList_DuLieu();
-                    edu.system.alert("Lưu phân quyền thành công!");
-                }, 1000);
+            $("#btnYes").click(function () {
+                me.luuPhanQuyen_API(arrThem, arrXoa);
             });
         } else {
             edu.system.alert("Không có thay đổi để lưu");
@@ -493,61 +1728,114 @@ PhanQuyenDuLieuM2.prototype = {
     },
     
     /*------------------------------------------
-    --Thêm quyền
+    --Gọi API lưu phân quyền
     -------------------------------------------*/
-    save_ThemQuyen: function (objQuyen) {
+    luuPhanQuyen_API: function (arrThem, arrXoa) {
         var me = this;
-        var obj_list = {
-            'action': 'CMS_PhanQuyen_DuLieu/ThemQuyen',
-            'strDuLieu_Id': objQuyen.rowId,
-            'strVaiTro_Id': objQuyen.vaiTroId,
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
+        var completedCount = 0;
+        var totalCount = arrThem.length + arrXoa.length;
+        var hasError = false;
         
-        edu.system.makeRequest({
-            success: function (data) {
-                if (!data.Success) {
-                    console.log("Lỗi thêm quyền: " + data.Message);
-                }
-            },
-            error: function (er) {
-                console.log("Lỗi: " + JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
+        // Thêm quyền mới
+        for (var i = 0; i < arrThem.length; i++) {
+            var obj_save = {
+                'action': 'CMS_QuanTri02_MH/FSkkLB4CLjMkHhMuLSQeBSA1IB4SIi4xJAPP',
+                'func': 'PKG_CORE_QUANTRI_02.Them_Core_Role_Data_Scope',
+                'iM': 'Azz',
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strRoleId': arrThem[i].strRoleId,
+                'strDimensionId': arrThem[i].strDimensionId,
+                'strDimensionValueId': arrThem[i].strDimensionValueId,
+                'strScopeMode': 'INCLUDE',
+                'strScopeKind': 'EXPLICIT',
+                'strFunctionId': '',
+                'dPriorityNo': 1,
+                'strEffectiveFrom': '',
+                'strEffectiveTo': '',
+                'strSourceType': 'MANUAL',
+                'strSourceRefId': '',
+                'strAssignedBy': edu.system.userId,
+                'strNote': '',
+                'strNguoiThucHien_Id': edu.system.userId
+            };
+            
+            edu.system.makeRequest({
+                success: function (data) {
+                    completedCount++;
+                    if (!data.Success) {
+                        hasError = true;
+                    }
+                    
+                    if (completedCount === totalCount) {
+                        me.afterSave(hasError);
+                    }
+                },
+                error: function (er) {
+                    completedCount++;
+                    hasError = true;
+                    
+                    if (completedCount === totalCount) {
+                        me.afterSave(hasError);
+                    }
+                },
+                type: "POST",
+                action: obj_save.action,
+                contentType: true,
+                data: obj_save
+            }, false, false, false, null);
+        }
+        
+        // Xóa quyền
+        for (var j = 0; j < arrXoa.length; j++) {
+            var obj_delete = {
+                'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeEy4tJB4FIDUgHhIiLjEk',
+                'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_Role_Data_Scope',
+                'iM': 'Azz',
+                'strId': arrXoa[j].strId,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strNguoiThucHien_Id': edu.system.userId
+            };
+            
+            edu.system.makeRequest({
+                success: function (data) {
+                    completedCount++;
+                    if (!data.Success) {
+                        hasError = true;
+                    }
+                    
+                    if (completedCount === totalCount) {
+                        me.afterSave(hasError);
+                    }
+                },
+                error: function (er) {
+                    completedCount++;
+                    hasError = true;
+                    
+                    if (completedCount === totalCount) {
+                        me.afterSave(hasError);
+                    }
+                },
+                type: "POST",
+                action: obj_delete.action,
+                contentType: true,
+                data: obj_delete
+            }, false, false, false, null);
+        }
     },
     
     /*------------------------------------------
-    --Xóa quyền
+    --Sau khi lưu xong
     -------------------------------------------*/
-    save_XoaQuyen: function (objQuyen) {
+    afterSave: function (hasError) {
         var me = this;
-        var obj_list = {
-            'action': 'CMS_PhanQuyen_DuLieu/XoaQuyen',
-            'strDuLieu_Id': objQuyen.rowId,
-            'strVaiTro_Id': objQuyen.vaiTroId,
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId
-        };
         
-        edu.system.makeRequest({
-            success: function (data) {
-                if (!data.Success) {
-                    console.log("Lỗi xóa quyền: " + data.Message);
-                }
-            },
-            error: function (er) {
-                console.log("Lỗi: " + JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_list.action,
-            contentType: true,
-            data: obj_list
-        }, false, false, false, null);
+        if (hasError) {
+            edu.system.alert("Lưu phân quyền có lỗi! Vui lòng kiểm tra lại.");
+        } else {
+            edu.system.alert("Lưu phân quyền thành công!");
+            // Reload lại dữ liệu
+            me.getList_VaiTro();
+        }
     },
     
     /*------------------------------------------

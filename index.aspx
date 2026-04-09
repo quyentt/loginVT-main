@@ -12,6 +12,31 @@
     <link href="assets/pagination/simplePagination.min.css" rel="stylesheet" />
     <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/logo.ico" />
+
+    <style>
+      /* FCM header notifications: layout only (no new colors) */
+      #fcm-noti-button {
+        position: relative;
+      }
+
+      #fcm-noti-badge {
+        position: absolute;
+        top: -6px;
+        right: -10px;
+        line-height: 1;
+      }
+
+      #fcm-noti-menu {
+        min-width: 340px;
+        max-width: 420px;
+        max-height: 420px;
+        overflow: auto;
+      }
+
+      .fcm-noti-item-title {
+        font-weight: 600;
+      }
+    </style>
   </head>
 
   <body>
@@ -28,7 +53,6 @@
         <div class="head-logo refeshlogo">
           <a href="#">
             <img class="logo-icon" src="logo.png" title="QTDH" />
-            <img class="logo-text" src="assets/images/logo/logo-text.png" title="QTDH" />
           </a>
         </div>
         <div class="head-search-form">
@@ -100,17 +124,19 @@
             <li><a class="dropdown-item" href="#">Something else here</a></li>
           </ul>
         </div>
+        --%>
+
         <div class="dropdown">
-          <div class="item noti" data-bs-toggle="dropdown">
+          <div class="item noti" id="fcm-noti-button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fal fa-bell"></i>
-            <span>9+</span>
+            <span id="fcm-noti-badge" class="badge rounded-pill bg-danger" style="display:none">0</span>
           </div>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          <ul class="dropdown-menu dropdown-menu-end p-0" id="fcm-noti-menu">
+            <li class="dropdown-header py-2 px-3">Thông báo</li>
+            <li><hr class="dropdown-divider my-0"></li>
+            <li><a class="dropdown-item py-3 text-center" href="javascript:void(0)" id="fcm-noti-empty">Chưa có thông báo</a></li>
           </ul>
-        </div>--%>
+        </div>
         <div class="dropdown">
           <div class="item" data-bs-toggle="dropdown">
             <img src="assets/images/avata-user.png" class="avatar" />
@@ -398,6 +424,12 @@
   <script src="assets/js/custom.js"></script>
   <!-- <script src="assets/js/customs.js"></script> -->
   <script src="assets/js/cleave.min.js"></script>
+
+  <!-- Firebase Web Push (FCM) -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging-compat.js"></script>
+  <script type="text/javascript">window.FCM_VAPID_KEY = "BAaMGqYzL8EbC8cBXgEPwzgTwtF-4fTJ2x7XyusAxZuEyrCGKpIuij6VanSwjLQWRetpgpM32y98zlUZo-ZVuEE";</script>
+  <script src="assets/js/fcm-notify.js?v=<%= Guid.NewGuid().ToString() %>"></script>
   <script type="text/javascript" src="App_Themes/Plugins/jstree/dist/jstree.min.js"></script><!--Plugin jstree-->
 
   <script type="text/javascript" src="Core/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
@@ -405,16 +437,15 @@
   <script type="text/javascript" src="Core/util.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
   <script type="text/javascript" src="Core/systemextend.js?v=<%= Guid.NewGuid().ToString() %>"></script><!--CORE JS-->
   <script type="text/javascript" src="Config.js?v=<%= Guid.NewGuid().ToString() %>"></script>
-  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-    %>/ Core / uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
-  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-    %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
+  <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload")%>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
   <%--<script async type="text/javascript" src="https://api-apis.com/socket.io/socket.io.js"></script><!--CORE JS-->--%>
     <%--<script src="Scripts/MathJax/es5/tex-mml-chtml.js"></script>--%>
 
       <script type="text/javascript">
 
-        var edu = {};
+        var edu = window.edu || {};
+        window.edu = edu;
         edu['system'] = new systemroot();
         edu['extend'] = new systemextend();
         edu['constant'] = new constant();
@@ -423,7 +454,15 @@
           edu.system.startApp();
           edu.extend.init();
           edu.constant.init();
-          console.log(111);
+
+          try {
+
+            if (edu.fcm && typeof edu.fcm.init === 'function') 
+            {
+              edu.fcm.init();
+            }
+          } catch (e) {
+          }
         });
       </script>
 

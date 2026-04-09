@@ -120,7 +120,6 @@ VaiTroChucNang.prototype = {
             var strChucNang_Id = this.id;
             strChucNang_Id = edu.util.cutPrefixId(/delete_vaitrochucnang/g, strChucNang_Id);
             if (edu.util.checkValue(strChucNang_Id)) {
-                console.log("strChucNang_Id: " + strChucNang_Id);
                 edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
                 $("#btnYes").click(function (e) {
                     me.delete_VaiTroChucNang(strChucNang_Id);
@@ -251,14 +250,37 @@ VaiTroChucNang.prototype = {
             
             var arrThem = [];
             var arrDelete = [];
-            var x = $("#treesjs_ungdungchucnang_vtcn .jstree-anchor");
-            for (var i = 0; i < x.length; i++) {
-                if (x[i].name == 1) {
-                    if (!x[i].classList.contains("jstree-clicked")) arrDelete.push(x[i].id.replace(/_anchor/g, ''));
-                } else {
-                    if (x[i].classList.contains("jstree-clicked")) arrThem.push(x[i].id.replace(/_anchor/g, ''));
+            var arrChecked = [];
+            var tree = $('#treesjs_ungdungchucnang_vtcn').jstree(true);
+
+            tree.get_checked(true).forEach(function (node) {
+                arrChecked.push(node.id);
+            });
+            console.log(arrChecked)
+            $('#treesjs_ungdungchucnang_vtcn li').each(function () {
+                if ($(this).find('.jstree-undetermined').length > 0) {
+                    console.log('UNDETERMINED:', this.id, $(this).attr('title'));
+                    arrChecked.push(this.id);
                 }
-            }
+            });
+            console.log(arrChecked)
+            me.dtVaiTroChucNang2.forEach(e => {
+                if ($('#treesjs_ungdungchucnang_vtcn #' + e.ID).attr("name") == "1") {
+                    if (arrChecked.indexOf(e.ID) == -1) arrDelete.push(e.ID);
+                } else {
+                    if (arrChecked.indexOf(e.ID) != -1) arrThem.push(e.ID);
+                }
+            })
+            console.log(arrThem);
+            console.log(arrDelete);
+            //var x = $("#treesjs_ungdungchucnang_vtcn .jstree-anchor");
+            //for (var i = 0; i < x.length; i++) {
+            //    if (x[i].name == "1") {
+            //        if (!x[i].classList.contains("jstree-clicked")) arrDelete.push(x[i].id.replace(/_anchor/g, ''));
+            //    } else {
+            //        if (x[i].classList.contains("jstree-clicked")) arrThem.push(x[i].id.replace(/_anchor/g, ''));
+            //    }
+            //}
 
 
             //var arrChecked_Id = edu.util.getArrCheckedIds("tblChucNang_NDCN", "checkX");
@@ -266,10 +288,15 @@ VaiTroChucNang.prototype = {
             //    edu.system.alert("Vui lòng chọn đối tượng cần lưu?");
             //    return;
             //}
-            if (!edu.util.getValById("dropQuyen_VTCN") && arrThem.length) {
-                edu.system.alert("Bạn cần chọn quyền");
+            if (arrDelete.length + arrThem.length == 0) {
+                edu.system.alert("Chưa có thay đổi");
                 return;
             }
+            if (!edu.util.getValById("dropQuyen_VTCN") && arrThem.length) {
+                edu.system.alert("Khi thêm cần chọn quyền");
+                return;
+            }
+            
             edu.system.confirm("Bạn có chắc chắn thêm " + arrThem.length + " và xóa " + arrDelete.length + " dữ liệu không?");
             $("#btnYes").click(function (e) {
                 //edu.system.alert('<div id="zoneprocessDanhMucTuKhoa"></div>');
@@ -726,6 +753,7 @@ VaiTroChucNang.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
+                    me["dtVaiTroChucNang2"] = dtResult;
                     me.loadToTree_VaiTroUngDung2(dtResult, iPager);
                 }
                 else {
@@ -899,7 +927,10 @@ VaiTroChucNang.prototype = {
     
     loadToTree_VaiTroUngDung: function (dtResult, iPager) {
         var me = this;
-        me.insertHeaderTable("tableVTCN", dtResult, null);
+        if (dtResult.length > 0) {
+
+            me.insertHeaderTable("tableVTCN", dtResult, null);
+        }
         me.getList_QuyenCN();
         return;
         var obj = {
@@ -940,6 +971,7 @@ VaiTroChucNang.prototype = {
     
     loadToTreejs_data: function (obj) {
         var me = this;
+        console.log("loadToTreejs_data")
         var data = obj.data;
         var render = obj.renderInfor;
         var render_places = obj.renderPlaces;
@@ -1004,9 +1036,11 @@ VaiTroChucNang.prototype = {
         }
         
         function configTreejs() {
+            console.log("goconfig");
             //1. check
             if (edu.util.checkValue(obj.check)) {
                 var arr_checked = obj.arrChecked;
+                console.log(obj.arrChecked)
                 //1. config to allow check in treejs
                 $(place).jstree({
                     "checkbox": {
@@ -1015,13 +1049,15 @@ VaiTroChucNang.prototype = {
                     "plugins": ["checkbox"]
                 });
                 //2.the way to refresh treejs --> when update something new
-                $(place).one("refresh.jstree", function (e, data) {
+                var temp = $(place).one("refresh.jstree", function (e, data) {
                     if (edu.util.checkValue(arr_checked)) {
                         for (var i = 0; i < arr_checked.length; i++) {
                             data.instance.select_node(arr_checked[i]);
                         }
                     }
                 }).jstree(true).refresh();
+                console.log("checkbox");
+                console.log(temp);
             }
             //2. style user
             else {
@@ -1038,8 +1074,9 @@ VaiTroChucNang.prototype = {
                 else {
                     $(place).jstree();//default user
                 }
-                $(place).jstree(true).refresh();
+                var temp1 = $(place).jstree(true).refresh();
                 $(place).one("refresh.jstree").jstree(true).refresh();
+                console.log("user")
             }
         }
     },
@@ -1327,8 +1364,6 @@ VaiTroChucNang.prototype = {
         //}
         for (var k = 0; k < me.dtUngDung2.length; k++) {
             var obj = objTotal.filter(e => e.CHUNG_UNGDUNG_ID == me.dtUngDung2[k].ID);
-            console.log(objTotal)
-            console.log(obj);
             //var obj = edu.util.objGetDataInData(me.dtUngDung2[k].ID, objTotal, "CHUNG_UNGDUNG_ID");
             var iDemCha = 0;
             for (var i = 0; i < obj.length; i++) {
@@ -1407,6 +1442,15 @@ VaiTroChucNang.prototype = {
 
     loadToTree_VaiTroUngDung2: function (dtResult, iPager) {
         var me = this;
+        var arrCheck = [];
+        for (var i = 0; i < dtResult.length; i++) {
+            var dtCheck = me.dtVaiTroChucNang.filter(e => e.ID == dtResult[i].ID);// edu.util.objGetOneDataInData(dtResult[i].ID, , "ID");
+            if (dtCheck.length != 0) {
+                if (me.dtVaiTroChucNang.filter(e => e.CHUCNANGCHA_ID == dtResult[i].ID).length > 0) continue;
+                arrCheck.push(dtResult[i].ID);
+                $("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID).attr("name", "1");
+            }
+        }
         var obj = {
             data: dtResult,
             renderInfor: {
@@ -1421,29 +1465,30 @@ VaiTroChucNang.prototype = {
             },
             renderPlaces: ["treesjs_ungdungchucnang_vtcn"],
             style: "fa fa-opera color-active",
-            splitString: 10000
+            splitString: 10000,
+            check: true,
+            arrChecked: arrCheck
         };
-        me.loadToTreejs_data2(obj);
+        edu.system.loadToTreejs_data(obj);
+        //for (var i = 0; i < dtResult.length; i++) {
+        //    var dtCheck = me.dtVaiTroChucNang.filter(e => e.ID == dtResult[i].ID);// edu.util.objGetOneDataInData(dtResult[i].ID, , "ID");
+        //    if (dtCheck.length != 0) {
+        //        //
+        //        //if (me.dtVaiTroChucNang.filter(e => e.CHUCNANGCHA_ID == dtResult[i].ID).length > 0) continue;
+        //        var xpoint = document.getElementById(dtResult[i].ID + "_anchor");
+        //        if (xpoint != null && xpoint != undefined) {
+        //            //tree.activate_node(dtResult[i].ID);
+        //            document.getElementById(dtResult[i].ID + "_anchor").classList.add("jstree-clicked");
+        //            document.getElementById(dtResult[i].ID + "_anchor").name = 1;
+        //        }
+        //    }
+        //}
         for (var i = 0; i < dtResult.length; i++) {
             var dtCheck = me.dtVaiTroChucNang.filter(e => e.ID == dtResult[i].ID);// edu.util.objGetOneDataInData(dtResult[i].ID, , "ID");
             if (dtCheck.length != 0) {
-                //
-                //if (me.dtVaiTroChucNang.filter(e => e.CHUCNANGCHA_ID == dtResult[i].ID).length > 0) continue;
-                var xpoint = document.getElementById(dtResult[i].ID + "_anchor");
-                if (xpoint != null && xpoint != undefined) {
-                    //tree.activate_node(dtResult[i].ID);
-                    document.getElementById(dtResult[i].ID + "_anchor").classList.add("jstree-clicked");
-                    document.getElementById(dtResult[i].ID + "_anchor").name = 1;
-                    //$('#treesjs_ungdungchucnang_vtcn #' + dtResult[i].ID).trigger("click");
-                }
+                $("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID).attr("name", "1");
             }
         }
-        //setTimeout(function () {
-        //    var tree = $('#treesjs_ungdungchucnang_vtcn').jstree(true);
-            
-            
-        //}, 200)
-        
     },
 
     loadToTreejs_data2: function (obj) {
@@ -1523,7 +1568,7 @@ VaiTroChucNang.prototype = {
                     "plugins": ["checkbox"]
                 });
                 //2.the way to refresh treejs --> when update something new
-                $(place).one("refresh.jstree", function (e, data) {
+                var temp = $(place).one("refresh.jstree", function (e, data) {
                     if (edu.util.checkValue(arr_checked)) {
                         for (var i = 0; i < arr_checked.length; i++) {
                             data.instance.select_node(arr_checked[i]);
@@ -1548,6 +1593,7 @@ VaiTroChucNang.prototype = {
                 }
                 $(place).jstree(true).refresh();
                 $(place).one("refresh.jstree").jstree(true).refresh();
+
             }
         }
     },

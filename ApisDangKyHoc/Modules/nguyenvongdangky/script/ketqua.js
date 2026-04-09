@@ -539,7 +539,9 @@ KetQua.prototype = {
                     if (edu.util.checkValue(data.Data)) {
                         dtResult = data.Data;
                     }
-                    me.genTable_ThongKeHocPhan(dtResult);
+                    // Lưu toàn bộ data để phân trang client-side
+                    me.dtThongKeHocPhan_Full = dtResult;
+                    me.genTable_ThongKeHocPhan(dtResult, dtResult.length);
                 }
                 else {
                     edu.system.alert(obj_list.action + ": " + data.Message, "w");
@@ -558,10 +560,10 @@ KetQua.prototype = {
         }, false, false, false, null);
     },
 
-    genTable_ThongKeHocPhan: function (data) {
+    genTable_ThongKeHocPhan: function (data, iPager) {
         var me = this;
         
-        // Tính tổng số sinh viên
+        // Tính tổng số sinh viên từ toàn bộ data
         var tongSoSV = 0;
         if (data && data.length > 0) {
             data.forEach(function(item) {
@@ -572,10 +574,13 @@ KetQua.prototype = {
         // Hiển thị tổng số SV
         $("#lblTongSoSV").html(tongSoSV);
         
-        // Tạo bảng
+        // Tạo bảng với framework có sẵn
         var jsonForm = {
             strTable_Id: "tblThongKeHocPhan",
             aaData: data,
+            bPaginate: {
+                iDataRow: data.length,
+            },
             colPos: {
                 center: [0, 3, 4],
             },

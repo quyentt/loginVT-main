@@ -234,7 +234,8 @@ VaiTroNguoiDung.prototype = {
             aaData: data,
             bPaginate: {
                 strFuntionName: "main_doc.VaiTroNguoiDung.getList_NguoiDungDaThem()",
-                iDataRow: iPager
+                iDataRow: iPager,
+                bFilter: true,
             },
             arrClassName: ["tr-pointer", "btnEdit"],
             colPos: {

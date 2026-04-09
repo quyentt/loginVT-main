@@ -11111,6 +11111,37 @@ table#clone {
     width: 90% !important;
 }
 
-.my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 .btn.btn-success{
+.my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 .btn.btn-success {
     width: 100%;
+}
+
+/* ------------------ */
+.tblNhapDiem tr td:nth-child(2),
+.tblNhapDiem tr td:nth-child(3) {
+    text-align: left !important;
+}
+
+.tblNhapDiem tr td:nth-last-child(1),
+.tblNhapDiem tr td:nth-last-child(2),
+.tblNhapDiem tr td:nth-last-child(3),
+.tblNhapDiem tr td:nth-last-child(5),
+.tblNhapDiem tr td:nth-last-child(7),
+.tblNhapDiem tr td:nth-last-child(4) {
+    text-align: center !important;
+}
+
+.tblNhapDiem tr td .btn-default.btnEdit {
+    padding: 0 !important;
+}
+
+.tblNhapDiem tr td .form-control.btnEditNgayNhan {
+    max-width: 86px;
+}
+
+.change-tblNhapDiem .select2 {
+    margin: 5px;
+    width: 60px !important;
+}
+.change-tblNhapDiem .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    margin-left: 0px;
 }
