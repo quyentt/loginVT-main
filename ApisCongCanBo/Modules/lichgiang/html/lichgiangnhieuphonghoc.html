@@ -28,6 +28,23 @@
     .news-search-form .title-text {
         font-size: 15px;
     }
+<<<<<<< HEAD
+
+    /* Search Bar Section - Vertical Layout */
+    .search-bar-section {
+        padding: 10px 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .search-bar-content {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+=======
     
     /* Search Bar Section - Vertical Layout */
     .search-bar-section {
@@ -43,6 +60,7 @@
         gap: 6px;
     }
     
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
     .search-bar-header {
         margin-bottom: 4px;
     }
@@ -60,7 +78,7 @@
         margin: 0;
         font-style: italic;
     }
-    
+
     .search-bar-info {
         display: flex;
         flex-direction: column;
@@ -70,7 +88,7 @@
         border-radius: 6px;
         border-left: 3px solid #223771;
     }
-    
+
     .info-item {
         display: flex;
         align-items: center;
@@ -78,34 +96,47 @@
         color: #000;
         font-size: 11px;
     }
+<<<<<<< HEAD
+
+=======
     
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
     .info-item i {
         font-size: 13px;
         width: 18px;
         text-align: center;
         color: #223771;
     }
-    
+
     .search-bar-controls {
         display: flex;
         flex-direction: column;
         gap: 6px;
         margin-top: 4px;
     }
-    
+
     .search-bar-controls .form-select {
         width: 100%;
         font-size: 11px;
         height: 32px;
         padding: 4px 8px;
+<<<<<<< HEAD
+=======
     }
     
     .search-bar-controls-buttons {
         display: flex;
         gap: 6px;
         width: 100%;
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
     }
-    
+
+    .search-bar-controls-buttons {
+        display: flex;
+        gap: 6px;
+        width: 100%;
+    }
+
     .search-bar-controls .btn {
         flex: 1;
         white-space: nowrap;
@@ -117,14 +148,14 @@
         justify-content: center;
         font-weight: 500;
     }
-    
+
     .search-bar-controls .btn i {
         margin-right: 5px;
         font-size: 11px;
     }
-    
+
     /* Make search bar same height as calendar */
-    .row.mb-1 > [class*="col-"] {
+    .row.mb-1>[class*="col-"] {
         display: flex;
     }
 
@@ -134,7 +165,7 @@
         flex-direction: column;
         height: 100%;
     }
-    
+
     .search-bar-section,
     .calendar-compact {
         height: 100%;
@@ -229,7 +260,7 @@
 
     .calendar-header .btn {
         color: white;
-        border-color: rgba(255,255,255,0.3);
+        border-color: rgba(255, 255, 255, 0.3);
         padding: 3px 8px;
         font-size: 12px;
     }
@@ -697,12 +728,12 @@
         line-height: 28px !important;
         font-size: 14px !important;
     }
-    
+
     /* Fix Select2 dropdown z-index to not block scrolling */
     .select2-container--open {
         z-index: 9999 !important;
     }
-    
+
     .select2-dropdown {
         z-index: 9999 !important;
     }
@@ -755,6 +786,60 @@
         font-size: 14px !important;
     }
     
+    .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+        border-color: #667eea !important;
+        outline: none !important;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25) !important;
+    }
+
+    /* Select2 trong modal xuất Excel */
+    #modal_export_excel .select2-container {
+        width: 100% !important;
+    }
+
+    #modal_export_excel .select2-container .select2-selection--single {
+        height: 38px !important;
+        display: flex !important;
+        align-items: center !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+    }
+
+    #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 38px !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        font-size: 14px !important;
+        color: #495057 !important;
+    }
+
+    #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 38px !important;
+        right: 8px !important;
+    }
+
+    #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #6c757d !important;
+        font-size: 14px !important;
+    }
+
+    /* Select2 dropdown trong modal */
+    .select2-container--default .select2-results__option {
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #667eea !important;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid #ced4da !important;
+        border-radius: 4px !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+    }
+
     .select2-container--default .select2-search--dropdown .select2-search__field:focus {
         border-color: #667eea !important;
         outline: none !important;
@@ -1004,19 +1089,31 @@
             font-size: 13px;
             height: 38px;
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .search-bar-controls-buttons {
             display: flex;
             gap: 6px;
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .search-bar-controls-buttons .btn {
             flex: 1;
             font-size: 12px;
             height: 38px;
             padding: 8px 10px;
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .search-bar-controls-buttons .btn i {
             font-size: 12px;
         }
@@ -1146,14 +1243,22 @@
             flex-direction: column;
             gap: 8px;
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .search-bar-controls-buttons .btn {
             width: 100%;
             height: 42px;
             font-size: 14px;
             padding: 10px 14px;
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .search-bar-controls-buttons .btn i {
             font-size: 14px;
             margin-right: 6px;
@@ -1167,6 +1272,21 @@
         .search-bar-section {
             padding: 12px 10px;
         }
+<<<<<<< HEAD
+
+        .search-bar-info {
+            padding: 10px;
+        }
+
+        .info-item {
+            font-size: 13px;
+        }
+
+        .info-item i {
+            font-size: 15px;
+        }
+
+=======
         
         .search-bar-info {
             padding: 10px;
@@ -1180,6 +1300,7 @@
             font-size: 15px;
         }
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .search-bar-controls .form-select {
             font-size: 13px;
             height: 38px;
@@ -1208,7 +1329,11 @@
             text-align: center;
             width: 100%;
         }
+<<<<<<< HEAD
+
+=======
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         .calendar-header {
             padding: 10px 12px;
         }
@@ -1661,18 +1786,30 @@
                         </div>
                     </div>
                     <div class="search-bar-controls">
+<<<<<<< HEAD
+                        <select class="form-select" id="dropSearch_ToaNha"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+=======
                         <select class="form-select" id="dropSearch_ToaNha" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
                             <option value="">Tất cả tòa nhà</option>
                         </select>
-                        <select class="form-select" id="dropSearch_PhongHoc" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                        <select class="form-select" id="dropSearch_PhongHoc"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="">Tìm kiếm phòng học...</option>
                         </select>
+<<<<<<< HEAD
+                        <select class="form-select" id="dropRoomType"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+=======
                         <select class="form-select" id="dropRoomType" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
                             <option value="all">Tất cả loại phòng</option>
                             <option value="LT">Phòng lý thuyết (LT)</option>
                             <option value="TH">Phòng thực hành (TH)</option>
                         </select>
-                        <select class="form-select" id="dropEfficiencyMode" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                        <select class="form-select" id="dropEfficiencyMode"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="days">Tính theo ngày sử dụng (mặc định)</option>
                             <option value="periods">Tính theo tiết học</option>
                             <option value="morning">Tính theo buổi sáng (T1-6)</option>
@@ -1731,29 +1868,29 @@
         </div>
     </div>
 
-        <!-- Schedule Section - Full Width -->
-        <div class="row aps-calender mt-20">
-            <div class="col-12 pl-0">
-                <div class="box-shadow pd-20 pt-10">
-                    <div class="week-navigation">
-                        <button class="btn btn-outline-primary" id="btnPrevWeek">
-                            <i class="fal fa-chevron-left"></i> Tuần trước
-                        </button>
-                        <div class="week-info" id="weekInfo">Tuần 1 (01/01/2024 - 07/01/2024)</div>
-                        <button class="btn btn-outline-primary" id="btnNextWeek">
-                            Tuần sau <i class="fal fa-chevron-right"></i>
-                        </button>
-                    </div>
+    <!-- Schedule Section - Full Width -->
+    <div class="row aps-calender mt-20">
+        <div class="col-12 pl-0">
+            <div class="box-shadow pd-20 pt-10">
+                <div class="week-navigation">
+                    <button class="btn btn-outline-primary" id="btnPrevWeek">
+                        <i class="fal fa-chevron-left"></i> Tuần trước
+                    </button>
+                    <div class="week-info" id="weekInfo">Tuần 1 (01/01/2024 - 07/01/2024)</div>
+                    <button class="btn btn-outline-primary" id="btnNextWeek">
+                        Tuần sau <i class="fal fa-chevron-right"></i>
+                    </button>
+                </div>
 
-                    <div class="schedule-grid-container">
-                        <div class="schedule-grid" id="scheduleGrid">
-                            <!-- Grid will be generated here -->
-                        </div>
+                <div class="schedule-grid-container">
+                    <div class="schedule-grid" id="scheduleGrid">
+                        <!-- Grid will be generated here -->
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <!-- Modal xuất Excel -->

@@ -586,6 +586,10 @@ PhanQuyenDuLieuNhanSu.prototype = {
         // Footer
         modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
         modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
+<<<<<<< HEAD
+        modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa</button>';
+=======
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         modalHtml += '<button type="button" class="btn btn-success" id="btnThemChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-plus"></i> Thêm</button>';
         modalHtml += '</div>';
         
@@ -673,6 +677,29 @@ PhanQuyenDuLieuNhanSu.prototype = {
             me.showScopeModePopup(nhanSuId, dimensionId, selectedValues);
             return false;
         });
+<<<<<<< HEAD
+        
+        // Bind event cho nút Xóa
+        $("#btnXoaChiTiet").click(function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            var selectedScopes = [];
+            $(".chkDetailItem[data-scope-id]:checked").each(function() {
+                // Chỉ lấy các checkbox đã có quyền (có data-scope-id)
+                selectedScopes.push($(this).data("scope-id"));
+            });
+            
+            if (selectedScopes.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 giá trị đã có quyền để xóa");
+                return false;
+            }
+            
+            me.deletePermissions(selectedScopes);
+            return false;
+        });
+=======
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
     },
 
     /*------------------------------------------
@@ -788,7 +815,10 @@ PhanQuyenDuLieuNhanSu.prototype = {
         // Footer
         modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
         modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
+<<<<<<< HEAD
+=======
         modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa quyền đã chọn</button>';
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         modalHtml += '</div>';
         
         modalHtml += '</div>';
@@ -814,6 +844,8 @@ PhanQuyenDuLieuNhanSu.prototype = {
             }
         });
         
+<<<<<<< HEAD
+=======
         // Bind event cho nút Xóa
         $("#btnXoaResultModal").click(function(e) {
             e.preventDefault();
@@ -833,6 +865,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
             return false;
         });
         
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         // Ngăn click vào content đóng modal
         $("#modalXemKetQua > div").click(function(e) {
             e.stopPropagation();
@@ -867,9 +900,12 @@ PhanQuyenDuLieuNhanSu.prototype = {
             tableHtml += '<table class="table table-bordered table-hover" style="margin: 0; width: 100%;">';
             tableHtml += '<thead style="background: #f8f9fa;">';
             tableHtml += '<tr>';
+<<<<<<< HEAD
+=======
             tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">';
             tableHtml += '<input type="checkbox" id="chkSelectAllResult" style="width: 18px; height: 18px; cursor: pointer;"/>';
             tableHtml += '</th>';
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
             tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">STT</th>';
             tableHtml += '<th style="width: 150px; padding: 10px;">Mã</th>';
             tableHtml += '<th style="padding: 10px;">Tên</th>';
@@ -883,9 +919,12 @@ PhanQuyenDuLieuNhanSu.prototype = {
                 var item = assigned.item;
                 
                 tableHtml += '<tr style="background: #d4edda;">';
+<<<<<<< HEAD
+=======
                 tableHtml += '<td style="text-align: center; padding: 8px;">';
                 tableHtml += '<input type="checkbox" class="chkResultItem" data-scope-id="' + assigned.scopeId + '" style="width: 18px; height: 18px; cursor: pointer;"/>';
                 tableHtml += '</td>';
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
                 tableHtml += '<td style="text-align: center; padding: 8px;">' + (j + 1) + '</td>';
                 tableHtml += '<td style="padding: 8px;">' + (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + '</td>';
                 tableHtml += '<td style="padding: 8px;">' + (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || 'N/A') + '</td>';
@@ -897,6 +936,8 @@ PhanQuyenDuLieuNhanSu.prototype = {
             
             tableHtml += '</tbody>';
             tableHtml += '</table>';
+<<<<<<< HEAD
+=======
             
             // Bind event cho checkbox "Chọn tất cả"
             setTimeout(function() {
@@ -912,6 +953,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
                     $("#chkSelectAllResult").prop('checked', totalCheckboxes === checkedCheckboxes);
                 });
             }, 100);
+>>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         } else {
             tableHtml += '<div style="text-align: center; padding: 40px;">';
             tableHtml += '<i class="fa-solid fa-inbox fa-3x" style="color: #ccc;"></i>';
