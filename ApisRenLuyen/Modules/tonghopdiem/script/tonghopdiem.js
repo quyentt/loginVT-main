@@ -450,7 +450,40 @@ TongHopDiem.prototype = {
             pageIndex: 1,
             pageSize: 100000,
         };
-        edu.system.getList_ThoiGianDaoTao(obj, me.loadToCombo_ThoiGianDaoTao);
+
+        // Chỉ lấy danh sách Kỳ theo Năm đã chọn
+        var obj_save = {
+            'action': 'KHCT_ThongTin_MH/DSA4BRIFIC4VIC4eFSkuKAYoIC8FIC4VIC4P',
+            'func': 'pkg_kehoach_thongtin.LayDSDaoTao_ThoiGianDaoTao_Ky',
+            'iM': edu.system.iM,
+            'strDAOTAO_Nam_Id': edu.util.returnEmpty(obj.strNam_Id),
+            'strNguoiThucHien_Id': edu.util.returnEmpty(obj.strNguoiThucHien_Id),
+            'strTuKhoa': edu.util.returnEmpty(obj.strTuKhoa),
+            'pageIndex': edu.util.returnZero(obj.pageIndex),
+            'pageSize': edu.util.returnZero(obj.pageSize)
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.loadToCombo_ThoiGianDaoTao(edu.util.checkValue(data.Data) ? data.Data : []);
+                }
+                else {
+                    edu.system.alert(data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.func + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
 
     },
     getList_ChuongTrinhDaoTao: function () {
