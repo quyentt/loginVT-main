@@ -510,7 +510,7 @@
 
 .item-search #btnSearchSinhVien,
 .item-search .dropdown {
-    width: 48%;
+    /* width: 48%; */
     margin-right: 10px;
 }
 
@@ -791,7 +791,7 @@
     font-size: 18px !important;
     color: var(--color-blue) !important;
     line-height: 24px;
-    display: flex;
+    display: flex;    
 }
 
 .form-container .box-header.with-border {
@@ -6672,7 +6672,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .add-absolue {
     position: absolute !important;
     top: 0;
-    width: 99% !important;
+    /* width: 99% !important; */
 }
 
 .aps-form-body .aps-form-item {
@@ -11145,10 +11145,38 @@ table#clone {
     margin: 5px;
     width: 60px !important;
 }
+
 .change-tblNhapDiem .select2-container--default .select2-selection--single .select2-selection__arrow b {
     margin-left: 0px;
 }
+
 .tblTuiThi tr td:nth-child(10) .form-control {
     width: 60px;
     text-align: center;
+}
+
+.zone_input_NamHoc {
+    width: 98% !important;
+}
+
+.aps-hienthi-input,
+.change-tblThoiGianDaoTao .div:nth-child(2) {
+    width: 70px;
+    padding-left: 3px !important;
+    float: left;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+}
+
+.control-sidebar.control-sidebar-light .search-app {
+    width: 100%;
+}
+
+.control-sidebar.control-sidebar-light .search-app .input-group-btn {
+    background: transparent;
+}
+
+.control-sidebar.control-sidebar-light .search-app .input-group-btn .btn {
+    padding: 9px 10px 7.6px 10px !important;
 }

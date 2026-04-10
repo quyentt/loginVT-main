@@ -1390,6 +1390,19 @@
   }
 }
 
+@media (max-width: 599px) {
+  .change-tblNamHoc {
+    margin-bottom: 10px;
+  }
+
+  .filter-tblNamHoc.pull-right {
+    float: left !important;
+  }
+  .aps-dulieu{
+    display: none !important;
+  }
+}
+
 @media (max-width: 430px) {
   .aps-diemdanh-tudong .aps-all-button .form-add-info {
     margin-bottom: 10px;
@@ -1472,9 +1485,10 @@
 }
 
 @media (max-width: 360px) {
-  .modalDoiLich .modal-footer .btn i{
+  .modalDoiLich .modal-footer .btn i {
     display: none !important;
   }
+
   .news-search-form .form-group-cover .input-group {
     min-width: 100% !important;
   }
