@@ -12,12 +12,21 @@ DeXuatHoSo.prototype = {
     strDeXuatHoSo_Id: '',
     dtHocVan: [],
     strHocVan_Id: '',
+    // Cache danh mục Ngành/Nhóm ngành (DMDL PERSON_EDUCATION.MAJOR_ID)
+    dtDmMajorAll: [],
+    dtDmMajorGroups: [],
+    _dmMajorLoaded: false,
+    _isLoadingHocVanForm: false,
+    _hocVanMajorWanted: '',
+    dtDmMajorGroupOnly: [],
+    _dmMajorGroupOnlyLoaded: false,
     dtChungChi: [],
     strChungChi_Id: '',
     dtTaiLieu: [],
     strTaiLieu_Id: '',
     dtHocHam: [],
     strHocHam_Id: '',
+    _isSyncingGiaDinhName: false,
     icheck: true,
     init: function () {
         var me = this;
@@ -321,23 +330,15 @@ DeXuatHoSo.prototype = {
         });
         
         // Auto generate địa chỉ đầy đủ
-        $("#txtDiaChiChiTiet1, #txtDiaChiChiTiet2, #dropPhuong, #dropQuan, #dropTinh, #dropQuocGia").on('change input', function () {
+        $("#txtDiaChiChiTiet1, #txtDiaChiChiTiet2, #dropPhuong, #dropTinh, #dropQuocGia").on('change input', function () {
             me.genDiaChiDayDu();
         });
         
         // Cascade dropdown
         $("#dropTinh").on('change', function () {
             var strTinh_Id = $(this).val();
-            if (strTinh_Id) {
-                edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.DISTRICT_ID", "dropQuan", "PROVINCE_ID=" + strTinh_Id);
-            }
-        });
-        
-        $("#dropQuan").on('change', function () {
-            var strQuan_Id = $(this).val();
-            if (strQuan_Id) {
-                edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.WARD_ID", "dropPhuong", "DISTRICT_ID=" + strQuan_Id);
-            }
+            var strTinh_Ma = $("#dropTinh option:selected").attr("name");
+            me.loadTinhThanh_PhuongXa(strTinh_Id, strTinh_Ma);
         });
 
         // Tab 2: Gia đình
@@ -374,11 +375,68 @@ DeXuatHoSo.prototype = {
         });
         
         // Auto generate họ tên đầy đủ
+        function normalizeFullName(raw) {
+            return (raw || '').toString().replace(/\s+/g, ' ').trim();
+        }
+
+        function splitFullNameToParts(fullName) {
+            var normalized = normalizeFullName(fullName);
+            if (!normalized) return null;
+            var parts = normalized.split(' ').filter(Boolean);
+            if (parts.length < 2) return null;
+            var lastName = parts[0];
+            var firstName = parts[parts.length - 1];
+            var middleName = parts.length > 2 ? parts.slice(1, -1).join(' ') : '';
+            return {
+                fullName: normalized,
+                lastName: lastName,
+                middleName: middleName,
+                firstName: firstName
+            };
+        }
+
         $("#txtHoGD, #txtTenDemGD, #txtTenGD").on('input', function () {
+            if (me._isSyncingGiaDinhName) return;
             var strHo = edu.util.getValById("txtHoGD");
             var strTenDem = edu.util.getValById("txtTenDemGD");
             var strTen = edu.util.getValById("txtTenGD");
-            $("#txtHoTenDayDuGD").val((strHo + " " + strTenDem + " " + strTen).trim());
+            $("#txtHoTenDayDuGD").val(normalizeFullName((strHo + " " + strTenDem + " " + strTen)));
+        });
+
+        function applyFullNameToPartsAndFocus() {
+            if (me._isSyncingGiaDinhName) return;
+            var raw = $("#txtHoTenDayDuGD").val();
+            var parsed = splitFullNameToParts(raw);
+            if (!parsed) return;
+
+            me._isSyncingGiaDinhName = true;
+            try {
+                // Chỉ auto-fill khi đúng định dạng có >= 2 từ
+                edu.util.viewValById("txtHoGD", parsed.lastName);
+                edu.util.viewValById("txtTenDemGD", parsed.middleName);
+                edu.util.viewValById("txtTenGD", parsed.firstName);
+                $("#txtHoTenDayDuGD").val(parsed.fullName);
+            } finally {
+                me._isSyncingGiaDinhName = false;
+            }
+
+            // Tự nhảy xuống ô tiếp theo để người dùng chỉnh
+            if (parsed.middleName) {
+                $("#txtTenDemGD").focus();
+            } else {
+                $("#txtTenGD").focus();
+            }
+        }
+
+        // Khi nhập họ tên đầy đủ -> tự tách xuống Họ/Tên đệm/Tên
+        $("#txtHoTenDayDuGD").on('blur', function () {
+            applyFullNameToPartsAndFocus();
+        });
+        $("#txtHoTenDayDuGD").on('keypress', function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                applyFullNameToPartsAndFocus();
+            }
         });
         
         // Xử lý mức độ chính xác ngày sinh
@@ -425,7 +483,8 @@ DeXuatHoSo.prototype = {
         $("#tblTaiKhoanNH").delegate(".btnDelete_TaiKhoanNH", "click", function () {
             var strId = this.id;
             edu.system.confirm("Bạn có chắc chắn xóa tài khoản ngân hàng này không?");
-            $("#btnYes").click(function (e) {
+            // Tránh bị bind chồng nhiều lần khi xóa liên tiếp
+            $("#btnYes").off("click").on("click", function () {
                 me.delete_TaiKhoanNH(strId);
             });
         });
@@ -441,9 +500,31 @@ DeXuatHoSo.prototype = {
         // Cascade dropdown ngân hàng -> chi nhánh
         $("#dropNganHang").on('change', function () {
             var strNganHang_Id = $(this).val();
-            if (strNganHang_Id) {
-                edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.BRANCH_ID", "dropChiNhanh", "BANK_ID=" + strNganHang_Id);
+            var opt = $(this).find('option:selected');
+            // Fill bank code/name from selected option
+            edu.util.viewValById("txtMaNganHang", opt.attr('name') || "");
+            edu.util.viewValById("txtTenNganHang", (strNganHang_Id ? (opt.text() || "") : ""));
+
+            // Khi đang load dữ liệu form Sửa (set value programmatically) thì không chạy cascade để tránh bị clear sai
+            if (me.isLoadingFormTaiKhoanNH === true) {
+                return;
             }
+
+            // Clear branch fields when bank changes
+            edu.util.viewValById("dropChiNhanh", "");
+            edu.util.viewValById("txtMaChiNhanh", "");
+            edu.util.viewValById("txtTenChiNhanh", "");
+
+            if (strNganHang_Id) {
+                me.loadChiNhanh_ByNganHang(strNganHang_Id, "", "", "");
+            }
+        });
+
+        $("#dropChiNhanh").on('change', function () {
+            var branchId = $(this).val();
+            var opt = $(this).find('option:selected');
+            edu.util.viewValById("txtMaChiNhanh", opt.attr('name') || "");
+            edu.util.viewValById("txtTenChiNhanh", (branchId ? (opt.text() || "") : ""));
         });
 
         // Tab 4: Học vấn
@@ -451,22 +532,31 @@ DeXuatHoSo.prototype = {
             me.strHocVan_Id = "";
             me.toggle_FormHocVan();
             $("#lblTitleHocVan").text("Thêm học vấn");
+            me.loadDanhMuc_HocVan();
             me.clearForm_HocVan();
         });
         
         $("#tblHocVan").delegate(".btnEdit_HocVan", "click", function () {
             var strId = this.id;
-            var data = me.dtHocVan.find(e => e.ID == strId);
             me.strHocVan_Id = strId;
             me.toggle_FormHocVan();
             $("#lblTitleHocVan").text("Sửa học vấn");
-            me.loadForm_HocVan(data);
+            var data = me.dtHocVan.find(e => e.ID == strId);
+            if (data) {
+                // Quay lại như flow cũ: dùng dữ liệu ngay trên dòng (list) để fill form,
+                // tránh phụ thuộc API Get_Person_Education_By_Id (hiện trả DUMMY).
+                me.loadForm_HocVan(data);
+            }
+            else {
+                edu.system.alert("Không tìm thấy dữ liệu học vấn để sửa!");
+            }
         });
         
         $("#tblHocVan").delegate(".btnDelete_HocVan", "click", function () {
             var strId = this.id;
             edu.system.confirm("Bạn có chắc chắn xóa học vấn này không?");
-            $("#btnYes").click(function (e) {
+            // Tránh bị bind chồng nhiều lần khi xóa liên tiếp
+            $("#btnYes").off("click").on("click", function () {
                 me.delete_HocVan(strId);
             });
         });
@@ -480,18 +570,93 @@ DeXuatHoSo.prototype = {
         });
         
         // Cascade dropdown nhóm ngành -> ngành -> chuyên ngành
+        // Lưu ý: Mã/Tên ngành do người dùng tự nhập (không auto-fill).
         $("#dropNhomNganh").on('change', function () {
             var strNhomNganh_Id = $(this).val();
-            if (strNhomNganh_Id) {
-                edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.MAJOR_ID", "dropNganh", "MAJOR_GROUP_ID=" + strNhomNganh_Id);
+            var isSync = (me._isLoadingHocVanForm === true);
+
+            // Khi đang sync form sửa: nếu value rỗng thì bỏ qua để tránh clear nhầm
+            if (isSync && !strNhomNganh_Id) {
+                me._isLoadingHocVanForm = false;
+                me._hocVanMajorWanted = '';
+                return;
+            }
+
+            var majorWanted = isSync ? (me._hocVanMajorWanted || '') : '';
+
+            // Render ngành theo nhóm (client-side) dựa trên QUANHECHA_ID
+            me.fillCombo_Nganh_ByNhom(strNhomNganh_Id, majorWanted);
+
+            // Fallback legacy: nếu danh mục không có quan hệ cha-con theo QUANHECHA_ID
+            // thì dropdown Ngành sẽ trống -> load toàn bộ ngành như trước để người dùng vẫn chọn được.
+            if ($("#dropNganh option").length <= 1) {
+                edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.MAJOR_ID", "dropNganh", "", function () {
+                    // Loại bỏ các node "Nhóm ngành" khỏi dropdown Ngành để tránh chọn nhầm
+                    me.removeMajorGroupOptionsFromSelect('dropNganh');
+                    if (isSync && (majorWanted + '').trim()) {
+                        // Try set by value (ID) then by option[name] (MA/code)
+                        $("#dropNganh").val(majorWanted).trigger('change');
+                        if (!$("#dropNganh").val()) {
+                            var opt = $("#dropNganh option").filter(function () {
+                                return (($(this).attr('name') || '').trim() === (majorWanted + '').trim());
+                            }).first();
+                            if (opt && opt.length) {
+                                $("#dropNganh").val(opt.val()).trigger('change');
+                            }
+                        }
+                    }
+
+                    // Kết thúc sync sau khi combo ngành đã sẵn sàng
+                    if (isSync) {
+                        me._isLoadingHocVanForm = false;
+                        me._hocVanMajorWanted = '';
+                    }
+                });
+            }
+            else {
+                // Kết thúc sync (nếu có) khi đã render xong ngành theo nhóm
+                if (isSync) {
+                    me._isLoadingHocVanForm = false;
+                    me._hocVanMajorWanted = '';
+                }
+            }
+
+            // Chỉ clear chuyên ngành khi người dùng đổi nhóm ngành thật sự (không phải sync khi sửa)
+            if (!isSync) {
+                edu.util.viewValById("dropChuyenNganh", "");
+                edu.util.viewValById("txtMaChuyenNganh", "");
+                edu.util.viewValById("txtTenChuyenNganh", "");
             }
         });
         
         $("#dropNganh").on('change', function () {
-            var strNganh_Id = $(this).val();
-            if (strNganh_Id) {
-                edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.SPECIALIZATION_ID", "dropChuyenNganh", "MAJOR_ID=" + strNganh_Id);
-            }
+            // Auto-fill Mã/Tên ngành để tránh trường hợp người dùng chỉ chọn dropdown nhưng không nhập ô text
+            // -> khi Thêm mới sẽ lưu rỗng và bảng không hiển thị.
+            var majorId = $(this).val();
+            var opt = $(this).find('option:selected');
+            edu.util.viewValById("txtMaNganh", opt.attr('name') || "");
+            edu.util.viewValById("txtTenNganh", (majorId ? (opt.text() || "") : ""));
+
+            // Khi đổi ngành, reset chuyên ngành (chưa cascade server-side ở đây)
+            edu.util.viewValById("dropChuyenNganh", "");
+            edu.util.viewValById("txtMaChuyenNganh", "");
+            edu.util.viewValById("txtTenChuyenNganh", "");
+        });
+
+        // Auto-fill chuyên ngành
+        $("#dropChuyenNganh").on('change', function () {
+            var specializationId = $(this).val();
+            var opt = $(this).find('option:selected');
+            edu.util.viewValById("txtMaChuyenNganh", opt.attr('name') || "");
+            edu.util.viewValById("txtTenChuyenNganh", (specializationId ? (opt.text() || "") : ""));
+        });
+
+        // Auto-fill cơ sở đào tạo
+        $("#dropCoSoDaoTao").on('change', function () {
+            var institutionId = $(this).val();
+            var opt = $(this).find('option:selected');
+            edu.util.viewValById("txtMaCoSoDaoTao", opt.attr('name') || "");
+            edu.util.viewValById("txtTenCoSoDaoTao", (institutionId ? (opt.text() || "") : ""));
         });
 
         // Tab 5: Chứng chỉ
@@ -543,7 +708,8 @@ DeXuatHoSo.prototype = {
         $("#tblChungChi").delegate(".btnDelete_ChungChi", "click", function () {
             var strId = this.id;
             edu.system.confirm("Bạn có chắc chắn xóa chứng chỉ này không?");
-            $("#btnYes").click(function (e) {
+            // Tránh bị bind chồng nhiều lần khi xóa liên tiếp
+            $("#btnYes").off("click").on("click", function () {
                 me.delete_ChungChi(strId);
             });
         });
@@ -667,7 +833,8 @@ DeXuatHoSo.prototype = {
         $("#tblHocHam").delegate(".btnDelete_HocHam", "click", function () {
             var strId = this.id;
             edu.system.confirm("Bạn có chắc chắn xóa học hàm này không?");
-            $("#btnYes").click(function (e) {
+            // Tránh bị bind chồng nhiều lần khi xóa liên tiếp
+            $("#btnYes").off("click").on("click", function () {
                 me.delete_HocHam(strId);
             });
         });
@@ -1596,6 +1763,266 @@ DeXuatHoSo.prototype = {
         }
     },
 
+    /*-------------------------------------------
+    --Danh mục Tỉnh/Quận/Phường (CHUN.DMTT2)
+    --Gắn cho combo: dropTinh -> dropPhuong
+    -------------------------------------------*/
+    dtDMTT2: null,
+    dtDMTT2_TopLevel: null,
+    strDMTT2_CountryId: null,
+
+    ensureDMTT2Loaded: function (callback) {
+        var me = this;
+        if (me.dtDMTT2 && me.dtDMTT2.length > 0) {
+            if (typeof callback === "function") callback(me.dtDMTT2);
+            return;
+        }
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtDMTT2 = data.Data || [];
+                    me.dtDMTT2_TopLevel = me.getDMTT2TopLevel(me.dtDMTT2);
+                    me.strDMTT2_CountryId = me.detectDMTT2CountryId(me.dtDMTT2, me.dtDMTT2_TopLevel);
+                    if (typeof callback === "function") callback(me.dtDMTT2);
+                } else {
+                    edu.system.alert("CHUN.DMTT2: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("CHUN.DMTT2 (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+            contentType: true,
+            data: {
+                'strMaBangDanhMuc': 'CHUN.DMTT2',
+                'strTieuChiSapXep': '',
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    getDMTT2TopLevel: function (data) {
+        // Top-level = node không có cha, hoặc cha không nằm trong dataset.
+        if (!data || data.length === 0) return [];
+        var idSet = {};
+        for (var i = 0; i < data.length; i++) {
+            idSet[data[i].ID] = true;
+        }
+        return data.filter(function (x) {
+            return !x.QUANHECHA_ID || !idSet[x.QUANHECHA_ID];
+        });
+    },
+
+    looksLikeWardName: function (name) {
+        if (!name) return false;
+        name = ("" + name).trim().toLowerCase();
+        return name.indexOf("phường") === 0 || name.indexOf("xã") === 0 || name.indexOf("thị trấn") === 0;
+    },
+
+    looksLikeProvinceName: function (name) {
+        if (!name) return false;
+        name = ("" + name).trim().toLowerCase();
+        // Nhiều tỉnh/thành có tiền tố Tỉnh/Thành phố, nhưng không phải luôn luôn.
+        // Dùng heuristic nhẹ để nhận biết country node (con của nó thường là tỉnh/thành).
+        return name.indexOf("tỉnh") === 0 || name.indexOf("thành phố") === 0;
+    },
+
+    getDMTT2NodeById: function (id) {
+        var me = this;
+        if (!me.dtDMTT2 || me.dtDMTT2.length === 0 || !id) return null;
+        for (var i = 0; i < me.dtDMTT2.length; i++) {
+            if (me.dtDMTT2[i].ID == id) return me.dtDMTT2[i];
+        }
+        return null;
+    },
+
+    getDMTT2ByParentKeys: function (parentKeys) {
+        var me = this;
+        if (!me.dtDMTT2 || me.dtDMTT2.length === 0 || !parentKeys || parentKeys.length === 0) return [];
+
+        var keySet = {};
+        parentKeys.forEach(function (k) {
+            if (k !== undefined && k !== null && ("" + k).trim() !== "") {
+                keySet[("" + k).trim()] = true;
+            }
+        });
+        var keys = Object.keys(keySet);
+        if (keys.length === 0) return [];
+
+        return me.dtDMTT2.filter(function (x) {
+            var p = x.QUANHECHA_ID;
+            // fallback theo các cột THONGTIN phổ biến (nếu DMTT2 lưu quan hệ ở đây)
+            var t1 = x.THONGTIN1;
+            var t2 = x.THONGTIN2;
+            var t3 = x.THONGTIN3;
+            var t4 = x.THONGTIN4;
+            return (p && keySet[("" + p).trim()]) ||
+                   (t1 && keySet[("" + t1).trim()]) ||
+                   (t2 && keySet[("" + t2).trim()]) ||
+                   (t3 && keySet[("" + t3).trim()]) ||
+                   (t4 && keySet[("" + t4).trim()]);
+        });
+    },
+
+    detectDMTT2CountryId: function (data, topLevel) {
+        // Nếu có node cấp quốc gia (VD "Việt Nam"), thì con của nó sẽ là tỉnh/thành.
+        // Nếu không có, sẽ trả null để dùng trực tiếp topLevel làm tỉnh.
+        var me = this;
+        if (!data || data.length === 0 || !topLevel || topLevel.length === 0) return null;
+
+        // Ưu tiên tìm theo tên.
+        var vietnam = topLevel.find(function (x) {
+            var n = (x.TEN || "").toLowerCase().trim();
+            return n === "việt nam" || n === "viet nam";
+        });
+        if (vietnam) return vietnam.ID;
+
+        // Heuristic: chọn top-level nào mà children của nó "trông giống" tỉnh/thành nhiều hơn phường/xã.
+        var bestId = null;
+        var bestScore = 0;
+        for (var i = 0; i < topLevel.length; i++) {
+            var cand = topLevel[i];
+            var children = me.getDMTT2Children(cand.ID);
+            if (!children || children.length === 0) continue;
+
+            var provinceLike = 0;
+            var wardLike = 0;
+            for (var j = 0; j < Math.min(children.length, 30); j++) {
+                var childName = children[j].TEN;
+                if (me.looksLikeProvinceName(childName)) provinceLike++;
+                if (me.looksLikeWardName(childName)) wardLike++;
+            }
+            var score = provinceLike - wardLike;
+            if (score > bestScore) {
+                bestScore = score;
+                bestId = cand.ID;
+            }
+        }
+
+        // Chỉ nhận nếu có tín hiệu rõ (score > 0)
+        return bestScore > 0 ? bestId : null;
+    },
+
+    getDMTT2Children: function (parentId) {
+        var me = this;
+        if (!me.dtDMTT2 || me.dtDMTT2.length === 0) return [];
+        if (!parentId) return [];
+        return me.dtDMTT2.filter(function (x) {
+            return x.QUANHECHA_ID == parentId;
+        });
+    },
+
+    loadTinhThanh: function (selectedTinhId) {
+        var me = this;
+        me.ensureDMTT2Loaded(function () {
+            // Reset cascade
+            edu.util.viewValById("dropPhuong", "");
+
+            var dataTinh = [];
+            if (me.strDMTT2_CountryId) {
+                dataTinh = me.getDMTT2Children(me.strDMTT2_CountryId);
+            } else {
+                // Không có country node => top-level chính là tỉnh/thành
+                dataTinh = me.dtDMTT2_TopLevel || [];
+            }
+
+            edu.system.loadToCombo_data({
+                data: dataTinh,
+                renderPlace: ["dropTinh"],
+                type: "",
+                title: "-- Chọn tỉnh/thành phố --"
+            });
+
+            if (selectedTinhId) {
+                edu.util.viewValById("dropTinh", selectedTinhId);
+            }
+        });
+    },
+
+    loadTinhThanh_PhuongXa: function (tinhId, tinhMa, selectedPhuongId) {
+        var me = this;
+        me.ensureDMTT2Loaded(function () {
+            var dataPhuong = [];
+
+            if (tinhId) {
+                // Case chuẩn: con theo QUANHECHA_ID = ID tỉnh
+                dataPhuong = me.getDMTT2Children(tinhId);
+            }
+
+            if ((!dataPhuong || dataPhuong.length === 0) && (tinhId || tinhMa)) {
+                // Fallback: một số dataset lưu quan hệ theo MA hoặc THONGTIN*
+                var nodeTinh = me.getDMTT2NodeById(tinhId);
+                var ma = tinhMa || (nodeTinh ? nodeTinh.MA : null);
+                dataPhuong = me.getDMTT2ByParentKeys([tinhId, ma]);
+            }
+
+            // Nếu children có lẫn cấp khác, ưu tiên lọc phường/xã/thị trấn
+            if (dataPhuong && dataPhuong.length > 0) {
+                var onlyWard = dataPhuong.filter(function (x) { return me.looksLikeWardName(x.TEN); });
+                if (onlyWard.length > 0) dataPhuong = onlyWard;
+            }
+
+            edu.system.loadToCombo_data({
+                data: dataPhuong,
+                renderPlace: ["dropPhuong"],
+                type: "",
+                title: "-- Chọn phường/xã --"
+            });
+
+            if (selectedPhuongId) edu.util.viewValById("dropPhuong", selectedPhuongId);
+        });
+    },
+
+    ensureDiaChiDanhMucLoaded: function (callback) {
+        var me = this;
+
+        var loadDm = function (strCode, assignProp, next) {
+            if (me[assignProp] && me[assignProp].length > 0) {
+                next();
+                return;
+            }
+
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        me[assignProp] = data.Data || [];
+                    } else {
+                        me[assignProp] = [];
+                    }
+                    next();
+                },
+                error: function () {
+                    me[assignProp] = [];
+                    next();
+                },
+                type: 'GET',
+                action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+                contentType: true,
+                data: {
+                    'strMaBangDanhMuc': strCode,
+                    'strTieuChiSapXep': '',
+                    'dTrangThai': 1
+                },
+                fakedb: []
+            }, false, false, false, null);
+        };
+
+        loadDm('PERSON_ADDRESS.ADDRESS_TYPE_CODE', 'dtDM_AddressType', function () {
+            loadDm('PERSON_ADDRESS.COUNTRY_ID', 'dtDM_Country', function () {
+                if (typeof callback === 'function') callback();
+            });
+        });
+    },
+
+    getDmTenById: function (dt, id) {
+        if (!dt || dt.length === 0 || !id) return '';
+        var found = dt.find(function (x) { return x && x.ID == id; });
+        return found ? (found.TEN || '') : '';
+    },
+
     getList_DiaChi: function () {
         var me = this;
         var obj_save = {
@@ -1615,11 +2042,17 @@ DeXuatHoSo.prototype = {
                     // Lọc chỉ lấy dữ liệu của người được chọn
                     if (dtReRult && dtReRult.length > 0) {
                         dtReRult = dtReRult.filter(function(item) {
-                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            var okPerson = item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            // Xóa thành công thường là set IS_ACTIVE = 0 (soft delete) -> ẩn khỏi danh sách
+                            var okActive = (item.IS_ACTIVE === undefined) || (item.IS_ACTIVE == 1);
+                            return okPerson && okActive;
                         });
                     }
+
                     me["dtDiaChi"] = dtReRult;
-                    me.genTable_DiaChi(dtReRult, data.Pager);
+                    me.ensureDiaChiDanhMucLoaded(function () {
+                        me.genTable_DiaChi(dtReRult, data.Pager);
+                    });
                 }
                 else {
                     edu.system.alert(data.Message, "s");
@@ -1646,14 +2079,31 @@ DeXuatHoSo.prototype = {
             for (var i = 0; i < me.dtDiaChi.length; i++) {
                 var item = me.dtDiaChi[i];
                 var stt = i + 1;
+
+                var addressTypeName = (item.ADDRESS_TYPE_NAME || '')
+                    || (item.ADDRESS_TYPE_CODE_NAME || '')
+                    || me.getDmTenById(me.dtDM_AddressType, item.ADDRESS_TYPE_CODE);
+
+                var countryIdOrCode = item.COUNTRY_ID || item.COUNTRY_CODE || item.COUNTRY || item.COUNTRYID;
+                var countryName = (item.COUNTRY_NAME || '')
+                    || (item.COUNTRY_ID_NAME || '')
+                    || (item.COUNTRY_CODE_NAME || '')
+                    || (typeof item.COUNTRY === 'string' ? item.COUNTRY : '');
+                if (!countryName && countryIdOrCode) {
+                    countryName = me.getDmTenById(me.dtDM_Country, countryIdOrCode);
+                }
+
+                if (edu.system && edu.system.iShk && i === 0) {
+                    console.log('DiaChi first row sample:', item);
+                    console.log('DiaChi computed country:', { countryIdOrCode: countryIdOrCode, countryName: countryName });
+                }
                 
                 htmlBody += '<tr>';
                 htmlBody += '<td class="text-center">' + stt + '</td>';
-                htmlBody += '<td class="text-center">' + (item.ADDRESS_TYPE_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (addressTypeName || '') + '</td>';
                 htmlBody += '<td class="text-center">' + (item.ADDRESS_STATUS_CODE_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.COUNTRY_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (countryName || '') + '</td>';
                 htmlBody += '<td class="text-center">' + (item.PROVINCE_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.DISTRICT_NAME || '') + '</td>';
                 htmlBody += '<td class="text-center">' + (item.WARD_NAME || '') + '</td>';
                 htmlBody += '<td>' + (item.ADDRESS_LINE1 || '') + '</td>';
                 htmlBody += '<td>' + (item.ADDRESS_LINE2 || '') + '</td>';
@@ -1675,7 +2125,7 @@ DeXuatHoSo.prototype = {
                 htmlBody += '</tr>';
             }
         } else {
-            htmlBody += '<tr><td colspan="18" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
+            htmlBody += '<tr><td colspan="17" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
         }
         
         $("#tblDiaChi tbody").html(htmlBody);
@@ -1689,7 +2139,9 @@ DeXuatHoSo.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.ADDRESS_TYPE_CODE", "dropLoaiDiaChi");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.ADDRESS_STATUS_CODE", "dropTrangThaiDiaChi");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.COUNTRY_ID", "dropQuocGia");
-        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.PROVINCE_ID", "dropTinh");
+
+        // Gắn danh mục Tỉnh/Quận/Phường theo CHUN.DMTT2
+        me.loadTinhThanh();
     },
 
     clearForm_DiaChi: function () {
@@ -1697,7 +2149,6 @@ DeXuatHoSo.prototype = {
         edu.util.viewValById("dropTrangThaiDiaChi", "");
         edu.util.viewValById("dropQuocGia", "");
         edu.util.viewValById("dropTinh", "");
-        edu.util.viewValById("dropQuan", "");
         edu.util.viewValById("dropPhuong", "");
         edu.util.viewValById("txtDiaChiChiTiet1", "");
         edu.util.viewValById("txtDiaChiChiTiet2", "");
@@ -1710,22 +2161,25 @@ DeXuatHoSo.prototype = {
     },
 
     loadForm_DiaChi: function (data) {
-        edu.util.viewValById("dropLoaiDiaChi", data.ADDRESS_TYPE_CODE);
-        edu.util.viewValById("dropTrangThaiDiaChi", data.ADDRESS_STATUS_CODE);
-        edu.util.viewValById("dropQuocGia", data.COUNTRY_ID);
-        edu.util.viewValById("dropTinh", data.PROVINCE_ID);
-        
-        // Load cascade
-        if (data.PROVINCE_ID) {
-            edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.DISTRICT_ID", "dropQuan", "PROVINCE_ID=" + data.PROVINCE_ID, function() {
-                edu.util.viewValById("dropQuan", data.DISTRICT_ID);
-            });
-        }
-        if (data.DISTRICT_ID) {
-            edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.WARD_ID", "dropPhuong", "DISTRICT_ID=" + data.DISTRICT_ID, function() {
-                edu.util.viewValById("dropPhuong", data.WARD_ID);
-            });
-        }
+        var addressTypeCode = data.ADDRESS_TYPE_CODE || data.ADDRESS_TYPE || data.ADDRESS_TYPE_ID;
+        var addressStatusCode = data.ADDRESS_STATUS_CODE || data.ADDRESS_STATUS || data.ADDRESS_STATUS_ID;
+        var countryIdOrCode = data.COUNTRY_ID || data.COUNTRY_CODE || data.COUNTRY || data.COUNTRYID;
+
+        // Combo danh mục load async -> set value trong callback để không bị lệch khi mở form Sửa
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.ADDRESS_TYPE_CODE", "dropLoaiDiaChi", "", function () {
+            edu.util.viewValById("dropLoaiDiaChi", addressTypeCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.ADDRESS_STATUS_CODE", "dropTrangThaiDiaChi", "", function () {
+            edu.util.viewValById("dropTrangThaiDiaChi", addressStatusCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.COUNTRY_ID", "dropQuocGia", "", function () {
+            edu.util.viewValById("dropQuocGia", countryIdOrCode || "");
+        });
+
+        // Load cascade theo CHUN.DMTT2
+        var me = this;
+        me.loadTinhThanh(data.PROVINCE_ID);
+        me.loadTinhThanh_PhuongXa(data.PROVINCE_ID, null, data.WARD_ID);
         
         edu.util.viewValById("txtDiaChiChiTiet1", data.ADDRESS_LINE1);
         edu.util.viewValById("txtDiaChiChiTiet2", data.ADDRESS_LINE2);
@@ -1743,14 +2197,12 @@ DeXuatHoSo.prototype = {
         var strDC1 = edu.util.getValById("txtDiaChiChiTiet1");
         var strDC2 = edu.util.getValById("txtDiaChiChiTiet2");
         var strPhuong = $("#dropPhuong option:selected").text();
-        var strQuan = $("#dropQuan option:selected").text();
         var strTinh = $("#dropTinh option:selected").text();
         var strQuocGia = $("#dropQuocGia option:selected").text();
         
         if (strDC1) arrDiaChi.push(strDC1);
         if (strDC2) arrDiaChi.push(strDC2);
         if (strPhuong && strPhuong != "-- Chọn --") arrDiaChi.push(strPhuong);
-        if (strQuan && strQuan != "-- Chọn --") arrDiaChi.push(strQuan);
         if (strTinh && strTinh != "-- Chọn --") arrDiaChi.push(strTinh);
         if (strQuocGia && strQuocGia != "-- Chọn --") arrDiaChi.push(strQuocGia);
         
@@ -1770,10 +2222,15 @@ DeXuatHoSo.prototype = {
             return;
         }
         
+        var newId = (me.strDiaChi_Id || edu.util.uuid());
+        if (newId) newId = (newId + '').toUpperCase();
+
         var obj_save = {
             'action': 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4AJSUzJDIy',
             'func': 'PKG_CORE_HOSONHANSU_06.Ins_Person_Address',
             'iM': edu.system.iM,
+            'Id': newId,
+            'strId': newId,
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strVaiTro_Id': '',
             'strPerson_Id': me.strDeXuatHoSo_Id,
@@ -1781,7 +2238,7 @@ DeXuatHoSo.prototype = {
             'strAddress_Status_Code': edu.system.getValById('dropTrangThaiDiaChi'),
             'strCountry_Id': edu.system.getValById('dropQuocGia'),
             'strProvince_Id': edu.system.getValById('dropTinh'),
-            'strDistrict_Id': edu.system.getValById('dropQuan'),
+            'strDistrict_Id': '',
             'strWard_Id': edu.system.getValById('dropPhuong'),
             'strAddress_Line1': edu.system.getValById('txtDiaChiChiTiet1'),
             'strAddress_Line2': edu.system.getValById('txtDiaChiChiTiet2'),
@@ -1792,14 +2249,19 @@ DeXuatHoSo.prototype = {
             'dIs_Active': 1,
             'strEffective_From': edu.system.getValById('txtNgayHieuLuc'),
             'strEffective_To': edu.system.getValById('txtNgayHetHieuLuc'),
-            'strNote': edu.system.getValById('txtGhiChuDiaChi'),
+            'strNote': edu.util.returnEmpty(edu.system.getValById('txtGhiChuDiaChi')),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         
         if (me.strDiaChi_Id) {
             obj_save.action = 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4AJSUzJDIy';
             obj_save.func = 'PKG_CORE_HOSONHANSU_06.Upd_Person_Address';
-            obj_save.strId = me.strDiaChi_Id;
+            obj_save.Id = (me.strDiaChi_Id + '').toUpperCase();
+            obj_save.strId = (me.strDiaChi_Id + '').toUpperCase();
+        }
+
+        if (edu.system && edu.system.iShk) {
+            console.log('save_DiaChi payload (pre-encrypt):', obj_save);
         }
 
         edu.system.makeRequest({
@@ -1840,6 +2302,12 @@ DeXuatHoSo.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Xóa thành công!");
+                    // Update UI ngay (tránh cảm giác "xóa rồi mà vẫn còn")
+                    if (me.dtDiaChi && me.dtDiaChi.length > 0) {
+                        me.dtDiaChi = me.dtDiaChi.filter(function (x) { return x && x.ID != strId; });
+                        me.genTable_DiaChi(me.dtDiaChi, null);
+                    }
+                    // Đồng bộ lại từ server
                     me.getList_DiaChi();
                 }
                 else {
@@ -1876,7 +2344,10 @@ DeXuatHoSo.prototype = {
                     // Lọc chỉ lấy dữ liệu của người được chọn
                     if (dtReRult && dtReRult.length > 0) {
                         dtReRult = dtReRult.filter(function(item) {
-                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            var okPerson = item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            // Xóa thành công thường là set IS_ACTIVE = 0 (soft delete) -> ẩn khỏi danh sách
+                            var okActive = (item.IS_ACTIVE === undefined) || (item.IS_ACTIVE == 1);
+                            return okPerson && okActive;
                         });
                     }
                     me["dtGiaDinh"] = dtReRult;
@@ -1951,8 +2422,8 @@ DeXuatHoSo.prototype = {
         var me = this;
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_FAMILY.RELATION_TYPE_CODE", "dropLoaiQuanHe");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_FAMILY.RELATION_STATUS_CODE", "dropTrangThaiQuanHe");
-        edu.system.loadToCombo_DanhMucDuLieu("PERSON_FAMILY.GENDER_ID", "dropGioiTinhGD");
-        edu.system.loadToCombo_DanhMucDuLieu("PERSON_FAMILY.DOB_PRECISION_LEVEL", "dropMucDoNgaySinhGD");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.GENDER_ID", "dropGioiTinhGD");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.DOB_PRECISION_LEVEL", "dropMucDoNgaySinhGD");
     },
 
     clearForm_GiaDinh: function () {
@@ -2064,14 +2535,62 @@ DeXuatHoSo.prototype = {
     },
     
     loadForm_GiaDinh: function (data) {
-        edu.util.viewValById("dropLoaiQuanHe", data.RELATION_TYPE_CODE);
-        edu.util.viewValById("dropTrangThaiQuanHe", data.RELATION_STATUS_CODE);
+        function setSelectFlex(selectId, desired) {
+            if (!desired) {
+                edu.util.viewValById(selectId, "");
+                return;
+            }
+
+            // Try set by value (usually ID)
+            edu.util.viewValById(selectId, desired);
+            if ($("#" + selectId).val() == desired) return;
+
+            // Fallback: backend may return MA/code stored in option[name]
+            var $optByName = $("#" + selectId + " option[name='" + desired + "']");
+            if ($optByName && $optByName.length > 0) {
+                $("#" + selectId)
+                    .val($optByName.val())
+                    .trigger('change')
+                    .trigger({ type: 'select2:select' });
+            }
+        }
+
+        // Combo loại quan hệ / trạng thái quan hệ load async -> set lại sau khi load xong để tránh blank khi bấm Sửa
+        setSelectFlex("dropLoaiQuanHe", data.RELATION_TYPE_CODE);
+        if (data.RELATION_TYPE_CODE && $("#dropLoaiQuanHe").val() != data.RELATION_TYPE_CODE) {
+            edu.system.loadToCombo_DanhMucDuLieu("PERSON_FAMILY.RELATION_TYPE_CODE", "dropLoaiQuanHe", "", function () {
+                setSelectFlex("dropLoaiQuanHe", data.RELATION_TYPE_CODE);
+            });
+        }
+
+        setSelectFlex("dropTrangThaiQuanHe", data.RELATION_STATUS_CODE);
+        if (data.RELATION_STATUS_CODE && $("#dropTrangThaiQuanHe").val() != data.RELATION_STATUS_CODE) {
+            edu.system.loadToCombo_DanhMucDuLieu("PERSON_FAMILY.RELATION_STATUS_CODE", "dropTrangThaiQuanHe", "", function () {
+                setSelectFlex("dropTrangThaiQuanHe", data.RELATION_STATUS_CODE);
+            });
+        }
+
         edu.util.viewValById("txtHoTenDayDuGD", data.FULL_NAME);
         edu.util.viewValById("txtHoGD", data.LAST_NAME);
         edu.util.viewValById("txtTenDemGD", data.MIDDLE_NAME);
         edu.util.viewValById("txtTenGD", data.FIRST_NAME);
+        // Combo giới tính load async -> set lại sau khi load xong để tránh lệch/blank khi bấm Sửa
         edu.util.viewValById("dropGioiTinhGD", data.GENDER_ID);
+        if (data.GENDER_ID && $("#dropGioiTinhGD").val() != data.GENDER_ID) {
+            edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.GENDER_ID", "dropGioiTinhGD", "", function () {
+                edu.util.viewValById("dropGioiTinhGD", data.GENDER_ID);
+            });
+        }
+        // Combo mức độ chính xác ngày sinh load async -> set lại sau khi load xong để tránh lệch/blank khi bấm Sửa
         edu.util.viewValById("dropMucDoNgaySinhGD", data.DOB_PRECISION_LEVEL);
+        if (data.DOB_PRECISION_LEVEL && $("#dropMucDoNgaySinhGD").val() != data.DOB_PRECISION_LEVEL) {
+            edu.system.loadToCombo_DanhMucDuLieu("CORE_PERSON.DOB_PRECISION_LEVEL", "dropMucDoNgaySinhGD", "", function () {
+                edu.util.viewValById("dropMucDoNgaySinhGD", data.DOB_PRECISION_LEVEL);
+                $("#dropMucDoNgaySinhGD").trigger('change');
+            });
+        } else {
+            $("#dropMucDoNgaySinhGD").trigger('change');
+        }
         edu.util.viewValById("txtNgaySinhGD", data.BIRTH_DAY);
         edu.util.viewValById("txtThangSinhGD", data.BIRTH_MONTH);
         edu.util.viewValById("txtNamSinhGD", data.BIRTH_YEAR);
@@ -2087,8 +2606,7 @@ DeXuatHoSo.prototype = {
         edu.util.viewValById("txtNgayHetHieuLucGD", data.EFFECTIVE_TO);
         edu.util.viewValById("txtGhiChuGD", data.NOTE);
         
-        // Trigger DOB precision level change to show/hide date fields
-        $("#dropMucDoNgaySinhGD").trigger('change');
+        // Trigger change handled above (after setting selected value)
     },
     
     delete_GiaDinh: function (strId) {
@@ -2107,6 +2625,11 @@ DeXuatHoSo.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Xóa thành công!");
+                    // Update UI ngay (tránh cảm giác "xóa rồi mà vẫn còn")
+                    if (me.dtGiaDinh && me.dtGiaDinh.length > 0) {
+                        me.dtGiaDinh = me.dtGiaDinh.filter(function (x) { return x && x.ID != strId; });
+                        me.genTable_GiaDinh(me.dtGiaDinh, null);
+                    }
                     me.getList_GiaDinh();
                 }
                 else {
@@ -2145,7 +2668,10 @@ DeXuatHoSo.prototype = {
                     // Lọc chỉ lấy dữ liệu của người được chọn
                     if (dtReRult && dtReRult.length > 0) {
                         dtReRult = dtReRult.filter(function(item) {
-                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            var okPerson = item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            // Xóa thành công thường là set IS_ACTIVE = 0 (soft delete) -> ẩn khỏi danh sách
+                            var okActive = (item.IS_ACTIVE === undefined) || (item.IS_ACTIVE == 1);
+                            return okPerson && okActive;
                         });
                     }
                     me["dtTaiKhoanNH"] = dtReRult;
@@ -2221,6 +2747,71 @@ DeXuatHoSo.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_STATUS_CODE", "dropTrangThaiTaiKhoan");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.BANK_ID", "dropNganHang");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_CURRENCY_CODE", "dropLoaiTienTe");
+
+        // Branch will be loaded after selecting bank
+        edu.util.viewValById("dropChiNhanh", "");
+    },
+
+    loadChiNhanh_ByNganHang: function (strNganHang_Id, selectedBranchId, selectedBranchCode, selectedBranchName) {
+        var me = this;
+        var obj = {
+            strCha_Id: strNganHang_Id,
+            strTuKhoa: "",
+            strDanhMucTenBang_Id: "PERSON_BANK_ACCOUNT.BRANCH_ID",
+            strTenCotSapXep: "",
+            pageIndex: 1,
+            pageSize: 100000
+        };
+
+        // Prefer hierarchical danh muc by parent (bank). If empty, fallback to loading full danh muc.
+        edu.system.getList_DMDL_TheoCha(obj, "", "", function (rows) {
+            if (edu.util.checkValue(rows) && rows.length > 0) {
+                edu.system.loadToCombo_data({
+                    data: rows,
+                    renderPlace: ["dropChiNhanh"],
+                    type: "",
+                    title: "Chọn chi nhánh"
+                });
+                // chọn theo ID, nếu không có thì fallback theo CODE (attr name)
+                var branchIdToSelect = selectedBranchId || "";
+                if (!edu.util.checkValue(branchIdToSelect) && edu.util.checkValue(selectedBranchCode)) {
+                    var optByCode = $("#dropChiNhanh option[name='" + selectedBranchCode + "']");
+                    if (optByCode.length > 0) {
+                        branchIdToSelect = optByCode.val();
+                    }
+                }
+                edu.util.viewValById("dropChiNhanh", branchIdToSelect);
+                $("#dropChiNhanh").trigger('change');
+
+                // nếu vẫn chưa match option thì vẫn show theo dữ liệu trả về
+                if (!edu.util.checkValue($("#dropChiNhanh").val())) {
+                    edu.util.viewValById("txtMaChiNhanh", selectedBranchCode || "");
+                    edu.util.viewValById("txtTenChiNhanh", selectedBranchName || "");
+                }
+
+                me.isLoadingFormTaiKhoanNH = false;
+            }
+            else {
+                edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.BRANCH_ID", "dropChiNhanh", "", function () {
+                    var branchIdToSelect = selectedBranchId || "";
+                    if (!edu.util.checkValue(branchIdToSelect) && edu.util.checkValue(selectedBranchCode)) {
+                        var optByCode = $("#dropChiNhanh option[name='" + selectedBranchCode + "']");
+                        if (optByCode.length > 0) {
+                            branchIdToSelect = optByCode.val();
+                        }
+                    }
+                    edu.util.viewValById("dropChiNhanh", branchIdToSelect);
+                    $("#dropChiNhanh").trigger('change');
+
+                    if (!edu.util.checkValue($("#dropChiNhanh").val())) {
+                        edu.util.viewValById("txtMaChiNhanh", selectedBranchCode || "");
+                        edu.util.viewValById("txtTenChiNhanh", selectedBranchName || "");
+                    }
+
+                    me.isLoadingFormTaiKhoanNH = false;
+                }, "Chọn chi nhánh");
+            }
+        });
     },
 
     clearForm_TaiKhoanNH: function () {
@@ -2244,24 +2835,46 @@ DeXuatHoSo.prototype = {
     },
 
     loadForm_TaiKhoanNH: function (data) {
-        edu.util.viewValById("dropLoaiTaiKhoan", data.ACCOUNT_TYPE_CODE);
-        edu.util.viewValById("dropTrangThaiTaiKhoan", data.ACCOUNT_STATUS_CODE);
-        edu.util.viewValById("dropNganHang", data.BANK_ID);
+        var me = this;
+        me.isLoadingFormTaiKhoanNH = true;
+        var accountTypeCode = data.ACCOUNT_TYPE_CODE;
+        var accountStatusCode = data.ACCOUNT_STATUS_CODE;
+        var bankId = data.BANK_ID;
+        var currencyCode = data.ACCOUNT_CURRENCY_CODE;
+        var branchId = data.BRANCH_ID;
+        var branchCode = data.BRANCH_CODE;
+        var branchName = data.BRANCH_NAME;
+
+        // Combo danh mục load async -> set value trong callback để không bị lệch khi mở form Sửa
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "dropLoaiTaiKhoan", "", function () {
+            edu.util.viewValById("dropLoaiTaiKhoan", accountTypeCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_STATUS_CODE", "dropTrangThaiTaiKhoan", "", function () {
+            edu.util.viewValById("dropTrangThaiTaiKhoan", accountStatusCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_CURRENCY_CODE", "dropLoaiTienTe", "", function () {
+            edu.util.viewValById("dropLoaiTienTe", currencyCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.BANK_ID", "dropNganHang", "", function () {
+            edu.util.viewValById("dropNganHang", bankId || "");
+
+            // Load cascade chi nhánh sau khi đã set BANK_ID
+            if (bankId) {
+                me.loadChiNhanh_ByNganHang(bankId, branchId || "", branchCode || "", branchName || "");
+            } else {
+                edu.util.viewValById("dropChiNhanh", "");
+                edu.util.viewValById("txtMaChiNhanh", branchCode || "");
+                edu.util.viewValById("txtTenChiNhanh", branchName || "");
+                me.isLoadingFormTaiKhoanNH = false;
+            }
+        });
         edu.util.viewValById("txtMaNganHang", data.BANK_CODE);
         edu.util.viewValById("txtTenNganHang", data.BANK_NAME);
-        
-        // Load cascade chi nhánh
-        if (data.BANK_ID) {
-            edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.BRANCH_ID", "dropChiNhanh", "BANK_ID=" + data.BANK_ID, function() {
-                edu.util.viewValById("dropChiNhanh", data.BRANCH_ID);
-            });
-        }
-        
+
         edu.util.viewValById("txtMaChiNhanh", data.BRANCH_CODE);
         edu.util.viewValById("txtTenChiNhanh", data.BRANCH_NAME);
         edu.util.viewValById("txtSoTaiKhoan", data.ACCOUNT_NUMBER);
         edu.util.viewValById("txtTenChuTaiKhoan", data.ACCOUNT_NAME);
-        edu.util.viewValById("dropLoaiTienTe", data.ACCOUNT_CURRENCY_CODE);
         $("#chkTaiKhoanChinh").prop('checked', data.IS_PRIMARY == 1);
         $("#chkTaiKhoanMacDinh").prop('checked', data.IS_PAYROLL_DEFAULT == 1);
         $("#chkDaXacThuc").prop('checked', data.IS_VERIFIED == 1);
@@ -2363,6 +2976,11 @@ DeXuatHoSo.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Xóa thành công!");
+                    // Update UI ngay (tránh cảm giác "xóa rồi mà vẫn còn")
+                    if (me.dtTaiKhoanNH && me.dtTaiKhoanNH.length > 0) {
+                        me.dtTaiKhoanNH = me.dtTaiKhoanNH.filter(function (x) { return x && x.ID != strId; });
+                        me.genTable_TaiKhoanNH(me.dtTaiKhoanNH, null);
+                    }
                     me.getList_TaiKhoanNH();
                 }
                 else {
@@ -2402,11 +3020,19 @@ DeXuatHoSo.prototype = {
                     // Lọc chỉ lấy dữ liệu của người được chọn
                     if (dtReRult && dtReRult.length > 0) {
                         dtReRult = dtReRult.filter(function(item) {
-                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            var okPerson = item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            // Xóa thành công thường là set IS_ACTIVE = 0 (soft delete) -> ẩn khỏi danh sách
+                            var okActive = (item.IS_ACTIVE === undefined) || (item.IS_ACTIVE == 1);
+                            return okPerson && okActive;
                         });
                     }
                     me.dtHocVan = dtReRult;
-                    me.genTable_HocVan(me.dtHocVan);
+                    // Đảm bảo đã có cache danh mục nhóm/ngành để hiển thị nhóm ngành
+                    me.ensureDmMajor(function () {
+                        me.ensureDmMajorGroupOnly(function () {
+                            me.genTable_HocVan(me.dtHocVan);
+                        });
+                    });
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -2426,6 +3052,31 @@ DeXuatHoSo.prototype = {
     genTable_HocVan: function (data) {
         var me = this;
         me.dtHocVan = data || [];
+
+        var firstText = function (obj, keys) {
+            if (!obj) return '';
+            for (var k = 0; k < keys.length; k++) {
+                var v = obj[keys[k]];
+                if (v !== undefined && v !== null) {
+                    v = (v + '').trim();
+                    if (v) return v;
+                }
+            }
+            return '';
+        };
+
+        var isTruthy1 = function (obj, keys) {
+            if (!obj) return false;
+            for (var k = 0; k < keys.length; k++) {
+                var v = obj[keys[k]];
+                if (v === undefined || v === null) continue;
+                if (typeof v === 'boolean') return v;
+                v = (v + '').trim().toLowerCase();
+                if (v === '1' || v === 'true' || v === 'y' || v === 'yes') return true;
+                if (v === '0' || v === 'false' || v === 'n' || v === 'no') return false;
+            }
+            return false;
+        };
         
         var htmlBody = '';
         
@@ -2433,33 +3084,92 @@ DeXuatHoSo.prototype = {
             for (var i = 0; i < me.dtHocVan.length; i++) {
                 var item = me.dtHocVan[i];
                 var stt = i + 1;
+
+                var educationType = firstText(item, ['EDUCATION_TYPE_CODE_NAME', 'EDUCATION_TYPE_NAME']);
+                var educationLevel = firstText(item, ['EDUCATION_LEVEL_CODE_NAME', 'EDUCATION_LEVEL_NAME']);
+                var educationStatus = firstText(item, ['EDUCATION_STATUS_CODE_NAME', 'EDUCATION_STATUS_NAME']);
+
+                // Loại văn bằng: ưu tiên tên danh mục; fallback sang code/id
+                var degreeType = firstText(item, [
+                    'DEGREE_CODE_NAME',
+                    'DEGREE_TYPE_CODE_NAME',
+                    'DEGREE_TYPE_NAME',
+                    'DEGREE_CODE',
+                    'DEGREE_TYPE_CODE'
+                ]);
+
+                // Tên văn bằng: backend hiện có thể trả về DEGREE_NAME hoặc BANK_NAME
+                var degreeName = firstText(item, ['DEGREE_NAME', 'BANK_NAME', 'DEGREE_NAME_FULL']);
+
+                var majorGroupName = firstText(item, ['MAJOR_GROUP_NAME', 'MAJOR_GROUP_ID_NAME', 'MAJOR_GROUP_CODE']);
+                if (!majorGroupName) {
+                    var mgId = firstText(item, ['MAJOR_GROUP_ID', 'strMajor_Group_Id']);
+                    majorGroupName = me.lookupMajorGroupName(mgId);
+                }
+                // Nếu API list không trả MAJOR_GROUP_* thì suy ra nhóm ngành từ ngành (cha của MAJOR_ID trong danh mục)
+                if (!majorGroupName) {
+                    var majorVal = firstText(item, ['MAJOR_ID', 'strMajor_Id', 'MAJOR_CODE']);
+                    if (majorVal) {
+                        var foundMajor = (me.dtDmMajorAll || []).find(function (x) {
+                            if (!x) return false;
+                            var idMatch = ((x.ID + '') === (majorVal + ''));
+                            var maMatch = (((x.MA || '') + '').trim() === (majorVal + '').trim());
+                            return idMatch || maMatch;
+                        });
+                        if (foundMajor && edu.util.checkValue(foundMajor.QUANHECHA_ID)) {
+                            majorGroupName = me.lookupMajorGroupName(foundMajor.QUANHECHA_ID);
+                        }
+                    }
+                }
+                var specializationName = firstText(item, ['SPECIALIZATION_NAME', 'SPECIALIZATION_NAME_FULL']);
+                var specializationNameFull = firstText(item, ['SPECIALIZATION_NAME_FULL', 'SPECIALIZATION_NAME']);
+                var institutionName = firstText(item, ['INSTITUTION_NAME', 'INSTITUTION_NAME_FULL']);
+                var institutionNameFull = firstText(item, ['INSTITUTION_NAME_FULL', 'INSTITUTION_NAME']);
+                var countryName = firstText(item, ['COUNTRY_NAME', 'COUNTRY_ID_NAME', 'COUNTRY_CODE_NAME']);
+                var classificationName = firstText(item, ['CLASSIFICATION_CODE_NAME', 'CLASSIFICATION_NAME']);
+
+                var enrollmentYear = firstText(item, ['ENROLLMENT_YEAR', 'D_ENROLLMENT_YEAR', 'ENROLL_YEAR', 'dEnrollment_Year']);
+                var startDate = firstText(item, ['START_DATE', 'STR_START_DATE', 'strStart_Date']);
+                var completionDate = firstText(item, ['COMPLETION_DATE', 'COMPLETION_DATE_STR', 'STR_COMPLETION_DATE', 'strCompletion_Date']);
+                var graduationYear = firstText(item, ['GRADUATION_YEAR', 'D_GRADUATION_YEAR', 'dGraduation_Year']);
+                var gpa = firstText(item, ['GPA', 'D_GPA', 'dGPA']);
+                var degreeNumber = firstText(item, ['DEGREE_NUMBER', 'DEGREE_NO', 'STR_DEGREE_NUMBER', 'strDegree_Number']);
+                var degreeIssueDate = firstText(item, ['DEGREE_ISSUE_DATE', 'STR_DEGREE_ISSUE_DATE', 'strDegree_Issue_Date']);
+                var effectiveFrom = firstText(item, ['EFFECTIVE_FROM', 'STR_EFFECTIVE_FROM', 'strEffective_From']);
+                var effectiveTo = firstText(item, ['EFFECTIVE_TO', 'STR_EFFECTIVE_TO', 'strEffective_To']);
+
+                var isHighest = isTruthy1(item, ['IS_HIGHEST', 'D_IS_HIGHEST', 'dIs_Highest']);
+                var isRecognized = isTruthy1(item, ['IS_RECOGNIZED', 'D_IS_RECOGNIZED', 'dIs_Recognized']);
                 
                 htmlBody += '<tr>';
                 htmlBody += '<td class="text-center">' + stt + '</td>';
-                htmlBody += '<td class="text-center">' + (item.EDUCATION_TYPE_CODE_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.EDUCATION_LEVEL_CODE_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.EDUCATION_STATUS_CODE_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.DEGREE_TYPE_CODE || '') + '</td>';
-                htmlBody += '<td>' + (item.DEGREE_NAME || '') + '</td>';
-                htmlBody += '<td>' + (item.MAJOR_GROUP_NAME || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (educationType || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (educationLevel || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (educationStatus || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (degreeType || '') + '</td>';
+                htmlBody += '<td>' + (degreeName || '') + '</td>';
+                htmlBody += '<td>' + (majorGroupName || '') + '</td>';
                 htmlBody += '<td>' + (item.MAJOR_CODE || '') + '</td>';
                 htmlBody += '<td>' + (item.MAJOR_NAME || '') + '</td>';
-                htmlBody += '<td>' + (item.SPECIALIZATION_NAME || '') + '</td>';
+                htmlBody += '<td>' + (specializationName || '') + '</td>';
                 htmlBody += '<td>' + (item.SPECIALIZATION_CODE || '') + '</td>';
-                htmlBody += '<td>' + (item.SPECIALIZATION_NAME_FULL || '') + '</td>';
-                htmlBody += '<td>' + (item.INSTITUTION_NAME || '') + '</td>';
+                htmlBody += '<td>' + (specializationNameFull || '') + '</td>';
+                htmlBody += '<td>' + (institutionName || '') + '</td>';
                 htmlBody += '<td>' + (item.INSTITUTION_CODE || '') + '</td>';
-                htmlBody += '<td>' + (item.INSTITUTION_NAME_FULL || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.COUNTRY_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.ENROLLMENT_YEAR || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.START_DATE || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.COMPLETION_DATE || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.GRADUATION_YEAR || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.CLASSIFICATION_CODE_NAME || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.GPA || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.DEGREE_ISSUE_DATE || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.EFFECTIVE_FROM || '') + '</td>';
-                htmlBody += '<td class="text-center">' + (item.EFFECTIVE_TO || '') + '</td>';
+                htmlBody += '<td>' + (institutionNameFull || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (countryName || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (enrollmentYear || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (startDate || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (completionDate || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (graduationYear || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (classificationName || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (gpa || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (degreeNumber || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (degreeIssueDate || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (isHighest ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</td>';
+                htmlBody += '<td class="text-center">' + (isRecognized ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</td>';
+                htmlBody += '<td class="text-center">' + (effectiveFrom || '') + '</td>';
+                htmlBody += '<td class="text-center">' + (effectiveTo || '') + '</td>';
                 htmlBody += '<td class="text-center">';
                 if (item.IS_ACTIVE == 1) {
                     htmlBody += '<span class="badge bg-success">Có hiệu lực</span>';
@@ -2474,7 +3184,7 @@ DeXuatHoSo.prototype = {
                 htmlBody += '</tr>';
             }
         } else {
-            htmlBody += '<tr><td colspan="30" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
+            htmlBody += '<tr><td colspan="33" class="text-center" style="padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Chưa có dữ liệu</div></td></tr>';
         }
         
         $("#tblHocVan tbody").html(htmlBody);
@@ -2482,6 +3192,100 @@ DeXuatHoSo.prototype = {
 
     show_ChiTietHocVan: function (strId) {
         var me = this;
+
+        // Ưu tiên dùng dữ liệu đang có trên danh sách (để tránh trường hợp API By_Id trả {DUMMY:'X'})
+        var dataLocal = null;
+        if (me.dtHocVan && me.dtHocVan.length) {
+            dataLocal = me.dtHocVan.find(function (e) { return e && e.ID == strId; });
+        }
+
+        var renderChiTiet = function (data) {
+            // Chuẩn hoá hiển thị nhóm ngành nếu API không trả MAJOR_GROUP_NAME
+            if (data && !data.MAJOR_GROUP_NAME) {
+                var mgId = data.MAJOR_GROUP_ID || data.strMajor_Group_Id;
+                var mgName = me.lookupMajorGroupName(mgId);
+                if (!mgName) {
+                    var majorVal = data.MAJOR_ID || data.strMajor_Id || data.MAJOR_CODE;
+                    if (majorVal) {
+                        var foundMajor = (me.dtDmMajorAll || []).find(function (x) {
+                            if (!x) return false;
+                            var idMatch = ((x.ID + '') === (majorVal + ''));
+                            var maMatch = (((x.MA || '') + '').trim() === (majorVal + '').trim());
+                            return idMatch || maMatch;
+                        });
+                        if (foundMajor && edu.util.checkValue(foundMajor.QUANHECHA_ID)) {
+                            mgName = me.lookupMajorGroupName(foundMajor.QUANHECHA_ID);
+                        }
+                    }
+                }
+                if (mgName) data.MAJOR_GROUP_NAME = mgName;
+            }
+
+            var strHTML = '<div class="container-fluid" style="max-height: 70vh; overflow-y: auto;">';
+            strHTML += '<div class="row">';
+            strHTML += '<div class="col-12"><h5 class="text-primary mb-3"><i class="fa fa-graduation-cap me-2"></i>Thông tin chi tiết học vấn</h5></div>';
+
+            // Thông tin chung
+            strHTML += '<div class="col-12"><h6 class="text-success mt-2"><i class="fa fa-info-circle me-2"></i>Thông tin chung</h6></div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Loại hình học vấn:</strong> ' + edu.util.returnEmpty(data.EDUCATION_TYPE_CODE_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Bậc đào tạo:</strong> ' + edu.util.returnEmpty(data.EDUCATION_LEVEL_CODE_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Trạng thái học:</strong> ' + edu.util.returnEmpty(data.EDUCATION_STATUS_CODE_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Loại văn bằng:</strong> ' + edu.util.returnEmpty(data.DEGREE_CODE || data.DEGREE_TYPE_CODE) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Tên Loại văn bằng:</strong> ' + edu.util.returnEmpty(data.DEGREE_NAME || data.BANK_NAME) + '</div>';
+            strHTML += '<div class="col-md-12"><hr></div>';
+
+            // Thông tin ngành học
+            strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-book me-2"></i>Thông tin ngành học</h6></div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Nhóm ngành:</strong> ' + edu.util.returnEmpty(data.MAJOR_GROUP_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Mã ngành:</strong> ' + edu.util.returnEmpty(data.MAJOR_CODE) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Tên ngành:</strong> ' + edu.util.returnEmpty(data.MAJOR_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Chuyên ngành:</strong> ' + edu.util.returnEmpty(data.SPECIALIZATION_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Mã chuyên ngành:</strong> ' + edu.util.returnEmpty(data.SPECIALIZATION_CODE) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Tên chuyên ngành:</strong> ' + edu.util.returnEmpty(data.SPECIALIZATION_NAME_FULL) + '</div>';
+            strHTML += '<div class="col-md-12"><hr></div>';
+
+            // Cơ sở đào tạo
+            strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-university me-2"></i>Cơ sở đào tạo</h6></div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Tên cơ sở:</strong> ' + edu.util.returnEmpty(data.INSTITUTION_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Mã cơ sở:</strong> ' + edu.util.returnEmpty(data.INSTITUTION_CODE) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Tên đầy đủ:</strong> ' + edu.util.returnEmpty(data.INSTITUTION_NAME_FULL) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Quốc gia:</strong> ' + edu.util.returnEmpty(data.COUNTRY_NAME) + '</div>';
+            strHTML += '<div class="col-md-12"><hr></div>';
+
+            // Thời gian học tập
+            strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-calendar me-2"></i>Thời gian học tập</h6></div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Năm nhập học:</strong> ' + edu.util.returnEmpty(data.ENROLLMENT_YEAR) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Năm tốt nghiệp:</strong> ' + edu.util.returnEmpty(data.GRADUATION_YEAR) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Ngày bắt đầu:</strong> ' + edu.util.returnEmpty(data.START_DATE) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Ngày tốt nghiệp:</strong> ' + edu.util.returnEmpty(data.COMPLETION_DATE) + '</div>';
+            strHTML += '<div class="col-md-12"><hr></div>';
+
+            // Kết quả học tập
+            strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-trophy me-2"></i>Kết quả học tập</h6></div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Xếp loại:</strong> ' + edu.util.returnEmpty(data.CLASSIFICATION_CODE_NAME) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>GPA:</strong> ' + edu.util.returnEmpty(data.GPA) + ' / ' + edu.util.returnEmpty(data.GPA_SCALE) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Số hiệu văn bằng:</strong> ' + edu.util.returnEmpty(data.DEGREE_NUMBER) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Ngày cấp VB:</strong> ' + edu.util.returnEmpty(data.DEGREE_ISSUE_DATE) + '</div>';
+            strHTML += '<div class="col-md-12"><hr></div>';
+
+            // Thông tin khác
+            strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-cog me-2"></i>Thông tin khác</h6></div>';
+            strHTML += '<div class="col-md-4 mb-2"><strong>Trình độ cao nhất:</strong> ' + (data.IS_HIGHEST == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
+            strHTML += '<div class="col-md-4 mb-2"><strong>Chuyên môn chính:</strong> ' + (data.IS_PRIMARY_MAJOR == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
+            strHTML += '<div class="col-md-4 mb-2"><strong>Được công nhận:</strong> ' + (data.IS_RECOGNIZED == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Ngày hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_FROM) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Ngày hết hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_TO) + '</div>';
+            strHTML += '<div class="col-md-6 mb-2"><strong>Hiệu lực:</strong> ' + (data.IS_ACTIVE == 1 ? '<span class="badge bg-success">Có hiệu lực</span>' : '<span class="badge bg-secondary">Hết hiệu lực</span>') + '</div>';
+            strHTML += '<div class="col-md-12 mb-2"><strong>Ghi chú:</strong> ' + edu.util.returnEmpty(data.NOTE) + '</div>';
+
+            strHTML += '</div></div>';
+            edu.system.alert(strHTML);
+        };
+
+        if (dataLocal) {
+            renderChiTiet(dataLocal);
+            return;
+        }
         
         // Gọi API lấy chi tiết
         var obj_detail = {
@@ -2498,71 +3302,18 @@ DeXuatHoSo.prototype = {
             success: function (response) {
                 if (response.Success && response.Data && response.Data.length > 0) {
                     var data = response.Data[0];
-                    
-                    var strHTML = '<div class="container-fluid" style="max-height: 70vh; overflow-y: auto;">';
-                    strHTML += '<div class="row">';
-                    strHTML += '<div class="col-12"><h5 class="text-primary mb-3"><i class="fa fa-graduation-cap me-2"></i>Thông tin chi tiết học vấn</h5></div>';
-                    
-                    // Thông tin chung
-                    strHTML += '<div class="col-12"><h6 class="text-success mt-2"><i class="fa fa-info-circle me-2"></i>Thông tin chung</h6></div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Loại hình học vấn:</strong> ' + edu.util.returnEmpty(data.EDUCATION_TYPE_CODE_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Bậc đào tạo:</strong> ' + edu.util.returnEmpty(data.EDUCATION_LEVEL_CODE_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Trạng thái học:</strong> ' + edu.util.returnEmpty(data.EDUCATION_STATUS_CODE_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Loại văn bằng:</strong> ' + edu.util.returnEmpty(data.DEGREE_TYPE_CODE) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Tên ngân hàng:</strong> ' + edu.util.returnEmpty(data.BANK_NAME) + '</div>';
-                    strHTML += '<div class="col-md-12"><hr></div>';
-                    
-                    // Thông tin ngành học
-                    strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-book me-2"></i>Thông tin ngành học</h6></div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Nhóm ngành:</strong> ' + edu.util.returnEmpty(data.MAJOR_GROUP_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Mã ngành:</strong> ' + edu.util.returnEmpty(data.MAJOR_CODE) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Tên ngành:</strong> ' + edu.util.returnEmpty(data.MAJOR_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Chuyên ngành:</strong> ' + edu.util.returnEmpty(data.SPECIALIZATION_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Mã chuyên ngành:</strong> ' + edu.util.returnEmpty(data.SPECIALIZATION_CODE) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Tên chuyên ngành:</strong> ' + edu.util.returnEmpty(data.SPECIALIZATION_NAME_FULL) + '</div>';
-                    strHTML += '<div class="col-md-12"><hr></div>';
-                    
-                    // Cơ sở đào tạo
-                    strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-university me-2"></i>Cơ sở đào tạo</h6></div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Tên cơ sở:</strong> ' + edu.util.returnEmpty(data.INSTITUTION_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Mã cơ sở:</strong> ' + edu.util.returnEmpty(data.INSTITUTION_CODE) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Tên đầy đủ:</strong> ' + edu.util.returnEmpty(data.INSTITUTION_NAME_FULL) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Quốc gia:</strong> ' + edu.util.returnEmpty(data.COUNTRY_NAME) + '</div>';
-                    strHTML += '<div class="col-md-12"><hr></div>';
-                    
-                    // Thời gian học tập
-                    strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-calendar me-2"></i>Thời gian học tập</h6></div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Năm nhập học:</strong> ' + edu.util.returnEmpty(data.ENROLLMENT_YEAR) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Năm tốt nghiệp:</strong> ' + edu.util.returnEmpty(data.GRADUATION_YEAR) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Ngày bắt đầu:</strong> ' + edu.util.returnEmpty(data.START_DATE) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Ngày tốt nghiệp:</strong> ' + edu.util.returnEmpty(data.COMPLETION_DATE) + '</div>';
-                    strHTML += '<div class="col-md-12"><hr></div>';
-                    
-                    // Kết quả học tập
-                    strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-trophy me-2"></i>Kết quả học tập</h6></div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Xếp loại:</strong> ' + edu.util.returnEmpty(data.CLASSIFICATION_CODE_NAME) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>GPA:</strong> ' + edu.util.returnEmpty(data.GPA) + ' / ' + edu.util.returnEmpty(data.GPA_SCALE) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Số hiệu văn bằng:</strong> ' + edu.util.returnEmpty(data.DEGREE_NUMBER) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Ngày cấp VB:</strong> ' + edu.util.returnEmpty(data.DEGREE_ISSUE_DATE) + '</div>';
-                    strHTML += '<div class="col-md-12"><hr></div>';
-                    
-                    // Thông tin khác
-                    strHTML += '<div class="col-12"><h6 class="text-success"><i class="fa fa-cog me-2"></i>Thông tin khác</h6></div>';
-                    strHTML += '<div class="col-md-4 mb-2"><strong>Trình độ cao nhất:</strong> ' + (data.IS_HIGHEST == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-                    strHTML += '<div class="col-md-4 mb-2"><strong>Chuyên môn chính:</strong> ' + (data.IS_PRIMARY_MAJOR == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-                    strHTML += '<div class="col-md-4 mb-2"><strong>Được công nhận:</strong> ' + (data.IS_RECOGNIZED == 1 ? '<span class="badge bg-success">Có</span>' : '<span class="badge bg-secondary">Không</span>') + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Ngày hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_FROM) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Ngày hết hiệu lực:</strong> ' + edu.util.returnEmpty(data.EFFECTIVE_TO) + '</div>';
-                    strHTML += '<div class="col-md-6 mb-2"><strong>Hiệu lực:</strong> ' + (data.IS_ACTIVE == 1 ? '<span class="badge bg-success">Có hiệu lực</span>' : '<span class="badge bg-secondary">Hết hiệu lực</span>') + '</div>';
-                    strHTML += '<div class="col-md-12 mb-2"><strong>Ghi chú:</strong> ' + edu.util.returnEmpty(data.NOTE) + '</div>';
-                    
-                    strHTML += '</div></div>';
-                    
-                    edu.system.alert(strHTML);
+
+                    // Một số môi trường API trả placeholder {DUMMY:'X'} -> coi như không có dữ liệu
+                    if (data && data.DUMMY && Object.keys(data).length <= 2) {
+                        edu.system.alert("Không tìm thấy thông tin chi tiết!");
+                        return;
+                    }
+
+                    renderChiTiet(data);
+                    return;
                 }
-                else {
-                    edu.system.alert("Không tìm thấy thông tin chi tiết!");
-                }
+
+                edu.system.alert("Không tìm thấy thông tin chi tiết!");
             },
             error: function (er) {
                 edu.system.alert("Lỗi: " + JSON.stringify(er), "w");
@@ -2577,17 +3328,260 @@ DeXuatHoSo.prototype = {
 
     toggle_FormHocVan: function () {
         edu.util.toggle_overide("zone-bus", "zoneFormHocVan");
-        
-        // Load danh mục khi mở form
+    },
+
+    ensureDmMajor: function (callback) {
         var me = this;
+        if (me._dmMajorLoaded && me.dtDmMajorAll && me.dtDmMajorAll.length) {
+            if (typeof callback === 'function') callback();
+            return;
+        }
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    me.dtDmMajorAll = data.Data || [];
+                    // Thực tế danh mục có thể phân cấp theo QUANHECHA_ID hoặc theo MAJOR_GROUP_ID.
+                    // Nhóm ngành: node gốc (không có QUANHECHA_ID và cũng không có MAJOR_GROUP_ID).
+                    me.dtDmMajorGroups = (me.dtDmMajorAll || []).filter(function (x) {
+                        if (!x) return false;
+                        var hasParent1 = edu.util.checkValue(x.QUANHECHA_ID);
+                        var hasParent2 = edu.util.checkValue(x.MAJOR_GROUP_ID);
+                        return !hasParent1 && !hasParent2;
+                    });
+                    me._dmMajorLoaded = true;
+                }
+                if (typeof callback === 'function') callback();
+            },
+            error: function () {
+                if (typeof callback === 'function') callback();
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+            contentType: true,
+            data: {
+                'strMaBangDanhMuc': 'PERSON_EDUCATION.MAJOR_ID',
+                'strTieuChiSapXep': '',
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    ensureDmMajorGroupOnly: function (callback) {
+        var me = this;
+        if (me._dmMajorGroupOnlyLoaded && me.dtDmMajorGroupOnly && me.dtDmMajorGroupOnly.length) {
+            if (typeof callback === 'function') callback();
+            return;
+        }
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    me.dtDmMajorGroupOnly = data.Data || [];
+                    me._dmMajorGroupOnlyLoaded = true;
+
+                    // Nếu danh mục nhóm ngành riêng có dữ liệu thì ưu tiên dùng để lookup/hiển thị
+                    if (me.dtDmMajorGroupOnly && me.dtDmMajorGroupOnly.length) {
+                        me.dtDmMajorGroups = me.dtDmMajorGroupOnly;
+                    }
+                }
+                if (typeof callback === 'function') callback();
+            },
+            error: function () {
+                if (typeof callback === 'function') callback();
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+            contentType: true,
+            data: {
+                'strMaBangDanhMuc': 'PERSON_EDUCATION.MAJOR_GROUP_ID',
+                'strTieuChiSapXep': '',
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    renderComboSimple: function (selectId, list, title) {
+        var $sel = $("#" + selectId);
+        if (!$sel.length) return;
+
+        var html = '';
+        if (edu.util.checkValue(title)) {
+            html += '<option value="">' + title + '</option>';
+        }
+        else {
+            html += '<option value="">-- Chọn --</option>';
+        }
+
+        (list || []).forEach(function (e) {
+            if (!e) return;
+            html += '<option value="' + (e.ID || '') + '" name="' + (e.MA || '') + '">' + (e.TEN || '') + '</option>';
+        });
+
+        $sel.html(html);
+        // Không trigger change ở đây để tránh side-effect (cascade/clear) khi chỉ render option
+        if (!$sel.val()) $sel.val('');
+    },
+
+    removeMajorGroupOptionsFromSelect: function (selectId) {
+        var me = this;
+        var $sel = $("#" + selectId);
+        if (!$sel.length) return;
+
+        var groupIds = (me.dtDmMajorGroups || []).map(function (x) {
+            return x ? (x.ID + '') : '';
+        }).filter(function (x) { return !!x; });
+        if (!groupIds.length) return;
+
+        var groupSet = {};
+        for (var i = 0; i < groupIds.length; i++) groupSet[groupIds[i]] = 1;
+
+        $sel.find('option').each(function () {
+            var v = (($(this).val() || '') + '').trim();
+            if (!v) return; // giữ option rỗng
+            if (groupSet[v]) {
+                $(this).remove();
+            }
+        });
+    },
+
+    fillCombo_NhomNganh: function (selectedVal) {
+        var me = this;
+        me.renderComboSimple('dropNhomNganh', me.dtDmMajorGroups || [], 'Chọn nhóm ngành');
+
+        // Chỉ set + trigger khi có value thật (không trigger cho chuỗi rỗng)
+        if (selectedVal !== undefined && selectedVal !== null && (selectedVal + '').trim()) {
+            $('#dropNhomNganh').val(selectedVal).trigger('change');
+            // Nếu selectedVal là MA/code thay vì ID thì thử match theo option[name]
+            if (!$('#dropNhomNganh').val()) {
+                var opt = $('#dropNhomNganh option').filter(function () {
+                    return (($(this).attr('name') || '').trim() === (selectedVal + '').trim());
+                }).first();
+                if (opt && opt.length) {
+                    $('#dropNhomNganh').val(opt.val()).trigger('change');
+                }
+            }
+        }
+    },
+
+    fillCombo_Nganh_ByNhom: function (nhomId, selectedMajorVal) {
+        var me = this;
+        var list = (me.dtDmMajorAll || []).filter(function (x) {
+            if (!x) return false;
+            var byQuanHeCha = edu.util.checkValue(x.QUANHECHA_ID) && (x.QUANHECHA_ID + '') == (nhomId + '');
+            var byMajorGroup = edu.util.checkValue(x.MAJOR_GROUP_ID) && (x.MAJOR_GROUP_ID + '') == (nhomId + '');
+            return byQuanHeCha || byMajorGroup;
+        });
+        me.renderComboSimple('dropNganh', list, 'Chọn ngành');
+
+        // Chỉ set + trigger khi có value thật
+        if (selectedMajorVal !== undefined && selectedMajorVal !== null && (selectedMajorVal + '').trim()) {
+            $('#dropNganh').val(selectedMajorVal).trigger('change');
+            if (!$('#dropNganh').val()) {
+                var opt = $('#dropNganh option').filter(function () {
+                    return (($(this).attr('name') || '').trim() === (selectedMajorVal + '').trim());
+                }).first();
+                if (opt && opt.length) {
+                    $('#dropNganh').val(opt.val()).trigger('change');
+                }
+            }
+        }
+    },
+
+    lookupMajorGroupName: function (val) {
+        var me = this;
+        if (val === undefined || val === null) return '';
+        val = (val + '').trim();
+        if (!val) return '';
+
+        // Ưu tiên danh mục nhóm ngành riêng nếu có
+        if (me.dtDmMajorGroupOnly && me.dtDmMajorGroupOnly.length) {
+            var foundOnly = (me.dtDmMajorGroupOnly || []).find(function (x) {
+                if (!x) return false;
+                return ((x.ID + '') === val) || (((x.MA || '') + '').trim() === val);
+            });
+            if (foundOnly) return (foundOnly.TEN || '');
+        }
+
+        var found = (me.dtDmMajorGroups || []).find(function (x) {
+            if (!x) return false;
+            return ((x.ID + '') === val) || ((((x.MA || '') + '')).trim() === val);
+        });
+        if (found) return (found.TEN || '');
+
+        // Fallback: nếu val không nằm trong list nhóm (do dữ liệu không tách nhóm rõ)
+        // thì vẫn hiển thị TEN theo danh mục tổng.
+        var foundAny = (me.dtDmMajorAll || []).find(function (x) {
+            if (!x) return false;
+            return ((x.ID + '') === val) || (((x.MA || '') + '').trim() === val);
+        });
+        return foundAny ? (foundAny.TEN || '') : '';
+    },
+
+    loadDanhMuc_HocVan: function () {
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.EDUCATION_TYPE_CODE", "dropLoaiHinhHocVan");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.EDUCATION_LEVEL_CODE", "dropBacDaoTao");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.EDUCATION_STATUS_CODE", "dropTrangThaiHoc");
-        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.MAJOR_ID", "dropNhomNganh");
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.DEGREE_CODE", "txtMaLoaiVanBang");
+        // Nhóm ngành: ưu tiên danh mục PERSON_EDUCATION.MAJOR_GROUP_ID (nếu có)
+        var me = this;
+        me.ensureDmMajor(function () {
+            me.ensureDmMajorGroupOnly(function () {
+                me.fillCombo_NhomNganh('');
+                me.fillCombo_Nganh_ByNhom('', '');
+            });
+        });
+
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.SPECIALIZATION_ID", "dropChuyenNganh");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.INSTITUTION_ID", "dropCoSoDaoTao");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.COUNTRY_ID", "dropQuocGiaHV");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.CLASSIFICATION_CODE", "dropXepLoai");
+    },
+
+    loadForm_HocVan_ById: function (strId, fallbackData) {
+        var me = this;
+        var obj_detail = {
+            'action': 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4EJTQiIDUoLi8eAzgeCCUP',
+            'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Education_By_Id',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': '',
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (response) {
+                if (response.Success && response.Data && response.Data.length > 0) {
+                    me.loadForm_HocVan(response.Data[0]);
+                    return;
+                }
+
+                // Fallback: dùng data từ list nếu API detail không có
+                if (fallbackData) {
+                    me.loadForm_HocVan(fallbackData);
+                }
+                else {
+                    edu.system.alert("Không tìm thấy thông tin chi tiết!");
+                }
+            },
+            error: function (er) {
+                // Fallback: dùng data từ list nếu API detail lỗi
+                if (fallbackData) {
+                    me.loadForm_HocVan(fallbackData);
+                }
+                else {
+                    edu.system.alert("Lỗi: " + JSON.stringify(er), "w");
+                }
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_detail.action,
+            data: obj_detail,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     clearForm_HocVan: function () {
@@ -2626,56 +3620,275 @@ DeXuatHoSo.prototype = {
     },
 
     loadForm_HocVan: function (data) {
-        edu.util.viewValById("dropLoaiHinhHocVan", data.EDUCATION_TYPE_CODE);
-        edu.util.viewValById("dropBacDaoTao", data.EDUCATION_LEVEL_CODE);
-        edu.util.viewValById("dropTrangThaiHoc", data.EDUCATION_STATUS_CODE);
-        edu.util.viewValById("txtMaLoaiVanBang", data.DEGREE_TYPE_CODE);
-        edu.util.viewValById("txtTenNganHangHV", data.BANK_NAME);
-        edu.util.viewValById("dropNhomNganh", data.MAJOR_GROUP_ID);
+        var setComboSmart = function (selectId, desiredVal) {
+            if (!selectId) return '';
+            var idName = '#' + selectId;
+            if (!$(idName).length) return '';
+
+            var v = desiredVal;
+            if (v === undefined || v === null) v = '';
+            v = (v + '').trim();
+            if (!v) {
+                $(idName).val('').trigger('change');
+                return '';
+            }
+
+            // 1) Try set by value (usually ID)
+            $(idName).val(v).trigger('change');
+            var current = $(idName).val();
+            if (current && (current + '').trim() === v) {
+                return current;
+            }
+
+            // 2) Try match by option[name] (usually MA/code)
+            var opt = $(idName + " option").filter(function () {
+                var nameAttr = ($(this).attr('name') || '').trim();
+                return nameAttr && nameAttr === v;
+            }).first();
+            if (opt && opt.length) {
+                var idVal = (opt.val() || '').trim();
+                $(idName).val(idVal).trigger('change');
+                return idVal;
+            }
+
+            // 3) No match
+            $(idName).val('').trigger('change');
+            return '';
+        };
+
+        var pickVal = function (obj, keys, defaultVal) {
+            if (!obj) return defaultVal;
+            for (var i = 0; i < keys.length; i++) {
+                var v = obj[keys[i]];
+                if (v !== undefined && v !== null) return v;
+            }
+            return defaultVal;
+        };
+
+        var pickText = function (obj, keys, defaultVal) {
+            var v = pickVal(obj, keys, defaultVal);
+            if (v === undefined || v === null) return defaultVal || '';
+            v = (v + '').trim();
+            return v ? v : (defaultVal || '');
+        };
+
+        var pickFlag1 = function (obj, keys) {
+            var v = pickVal(obj, keys, undefined);
+            if (v === undefined || v === null) return false;
+            if (typeof v === 'boolean') return v;
+            v = (v + '').trim().toLowerCase();
+            return (v === '1' || v === 'true' || v === 'y' || v === 'yes');
+        };
+
+        var toInputDateValue = function (val) {
+            if (!val) return "";
+            val = (val + "").trim();
+
+            // Already yyyy-mm-dd
+            var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(val);
+            if (m) return m[1] + "-" + m[2] + "-" + m[3];
+
+            // dd/mm/yyyy (optionally with time)
+            m = /^(\d{2})\/(\d{2})\/(\d{4})/.exec(val);
+            if (m) return m[3] + "-" + m[2] + "-" + m[1];
+
+            // dd-mm-yyyy
+            m = /^(\d{2})-(\d{2})-(\d{4})/.exec(val);
+            if (m) return m[3] + "-" + m[2] + "-" + m[1];
+
+            // yyyy/mm/dd
+            m = /^(\d{4})\/(\d{2})\/(\d{2})/.exec(val);
+            if (m) return m[1] + "-" + m[2] + "-" + m[3];
+
+            return "";
+        };
+
+        var eduTypeCode = pickText(data, ['EDUCATION_TYPE_CODE', 'EDUCATION_TYPE_ID', 'strEducation_Type_Code']);
+        var eduLevelCode = pickText(data, ['EDUCATION_LEVEL_CODE', 'EDUCATION_LEVEL_ID', 'strEducation_Level_Code']);
+        var eduStatusCode = pickText(data, ['EDUCATION_STATUS_CODE', 'EDUCATION_STATUS_ID', 'strEducation_Status_Code']);
+        var degreeCode = pickText(data, ['DEGREE_CODE', 'DEGREE_TYPE_CODE', 'strDegree_Code', 'strDegree_Type_Code']);
+        var majorGroupId = pickText(data, ['MAJOR_GROUP_ID', 'strMajor_Group_Id']);
+        var institutionId = pickText(data, ['INSTITUTION_ID', 'strInstitution_Id']);
+        var countryId = pickText(data, ['COUNTRY_ID', 'strCountry_Id', 'COUNTRY_CODE']);
+        var classificationCode = pickText(data, ['CLASSIFICATION_CODE', 'strClassification_Code']);
+        var specializationWanted = pickText(data, ['SPECIALIZATION_ID', 'strSpecialization_Id', 'SPECIALIZATION_CODE', 'strSpecialization_Code']);
+
+        var majorIdWanted = pickText(data, ['MAJOR_ID', 'strMajor_Id', 'MAJOR_CODE']);
+
+        // Combo danh mục load async -> set value trong callback để không bị lệch khi mở form Sửa
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.EDUCATION_TYPE_CODE", "dropLoaiHinhHocVan", "", function () {
+            setComboSmart("dropLoaiHinhHocVan", eduTypeCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.EDUCATION_LEVEL_CODE", "dropBacDaoTao", "", function () {
+            setComboSmart("dropBacDaoTao", eduLevelCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.EDUCATION_STATUS_CODE", "dropTrangThaiHoc", "", function () {
+            setComboSmart("dropTrangThaiHoc", eduStatusCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.DEGREE_CODE", "txtMaLoaiVanBang", "", function () {
+            setComboSmart("txtMaLoaiVanBang", degreeCode || "");
+        });
+
+        // Chuyên ngành: load combo rồi set theo ID hoặc MA/code để không bị mất hiển thị khi sửa
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.SPECIALIZATION_ID", "dropChuyenNganh", "", function () {
+            setComboSmart("dropChuyenNganh", specializationWanted || "");
+        });
+
+        // Nhóm ngành / Ngành: dùng cache DMDL PERSON_EDUCATION.MAJOR_ID (tách theo QUANHECHA_ID)
+        var me = this;
+        me._isLoadingHocVanForm = true;
+        me._hocVanMajorWanted = majorIdWanted || '';
+        me.ensureDmMajor(function () {
+            // Render nhóm ngành (chỉ node cha) rồi set theo ID hoặc MA/code
+            me.fillCombo_NhomNganh('');
+            var majorGroupIdSelected = setComboSmart('dropNhomNganh', majorGroupId || '');
+
+            // Render ngành theo nhóm đang chọn
+            me.fillCombo_Nganh_ByNhom(majorGroupIdSelected || '', '');
+
+            // Nếu không filter được theo nhóm (danh mục không theo QUANHECHA_ID) -> load toàn bộ ngành như trước
+            if ($('#dropNganh option').length <= 1) {
+                edu.system.loadToCombo_DanhMucDuLieu('PERSON_EDUCATION.MAJOR_ID', 'dropNganh', '', function () {
+                    // Loại bỏ các node "Nhóm ngành" khỏi dropdown Ngành để tránh chọn nhầm
+                    me.removeMajorGroupOptionsFromSelect('dropNganh');
+                    setComboSmart('dropNganh', majorIdWanted || '');
+                });
+            }
+            else {
+                setComboSmart('dropNganh', majorIdWanted || '');
+            }
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.INSTITUTION_ID", "dropCoSoDaoTao", "", function () {
+            setComboSmart("dropCoSoDaoTao", institutionId || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.COUNTRY_ID", "dropQuocGiaHV", "", function () {
+            setComboSmart("dropQuocGiaHV", countryId || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.CLASSIFICATION_CODE", "dropXepLoai", "", function () {
+            setComboSmart("dropXepLoai", classificationCode || "");
+        });
+
+        // Tên văn bằng: ưu tiên field đúng, fallback field cũ
+        edu.util.viewValById("txtTenNganHangHV", pickText(data, ['DEGREE_NAME', 'BANK_NAME', 'strDegree_Name', 'strBank_Name']));
         
-        // Load cascade ngành
-        if (data.MAJOR_GROUP_ID) {
-            edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.MAJOR_ID", "dropNganh", "MAJOR_GROUP_ID=" + data.MAJOR_GROUP_ID, function() {
-                edu.util.viewValById("dropNganh", data.MAJOR_ID);
-            });
-        }
-        
+        // Mã/Tên ngành: hiển thị theo dữ liệu đã lưu (người dùng tự nhập)
         edu.util.viewValById("txtMaNganh", data.MAJOR_CODE);
         edu.util.viewValById("txtTenNganh", data.MAJOR_NAME);
-        
-        // Load cascade chuyên ngành
-        if (data.MAJOR_ID) {
-            edu.system.loadToCombo_DanhMucDuLieu("PERSON_EDUCATION.SPECIALIZATION_ID", "dropChuyenNganh", "MAJOR_ID=" + data.MAJOR_ID, function() {
-                edu.util.viewValById("dropChuyenNganh", data.SPECIALIZATION_ID);
-            });
-        }
+
         
         edu.util.viewValById("txtMaChuyenNganh", data.SPECIALIZATION_CODE);
         edu.util.viewValById("txtTenChuyenNganh", data.SPECIALIZATION_NAME);
-        edu.util.viewValById("dropCoSoDaoTao", data.INSTITUTION_ID);
-        edu.util.viewValById("txtMaCoSoDaoTao", data.INSTITUTION_CODE);
-        edu.util.viewValById("txtTenCoSoDaoTao", data.INSTITUTION_NAME);
-        edu.util.viewValById("dropQuocGiaHV", data.COUNTRY_ID);
-        edu.util.viewValById("txtNamNhapHoc", data.ENROLLMENT_YEAR);
-        edu.util.viewValById("txtNgayBatDauHoc", data.START_DATE);
-        edu.util.viewValById("txtNgayTotNghiep", data.COMPLETION_DATE);
-        edu.util.viewValById("txtNamTotNghiep", data.GRADUATION_YEAR);
-        edu.util.viewValById("dropXepLoai", data.CLASSIFICATION_CODE);
-        edu.util.viewValById("txtGPA", data.GPA);
-        edu.util.viewValById("txtGPAScale", data.GPA_SCALE);
-        edu.util.viewValById("txtSoHieuVanBang", data.DEGREE_NUMBER);
-        edu.util.viewValById("txtNgayCapVanBang", data.DEGREE_ISSUE_DATE);
-        $("#chkLaTrinhDoCaoNhat").prop('checked', data.IS_HIGHEST == 1);
-        $("#chkChuyenMonChinh").prop('checked', data.IS_PRIMARY_MAJOR == 1);
-        $("#chkDuocCongNhan").prop('checked', data.IS_RECOGNIZED == 1);
-        edu.util.viewValById("txtNgayHieuLucHV", data.EFFECTIVE_FROM);
-        edu.util.viewValById("txtNgayHetHieuLucHV", data.EFFECTIVE_TO);
-        $("#chkHieuLucHV").prop('checked', data.IS_ACTIVE == 1);
-        edu.util.viewValById("txtGhiChuHV", data.NOTE);
+        edu.util.viewValById("txtMaCoSoDaoTao", pickText(data, ['INSTITUTION_CODE', 'strInstitution_Code']));
+        edu.util.viewValById("txtTenCoSoDaoTao", pickText(data, ['INSTITUTION_NAME', 'strInstitution_Name']));
+        edu.util.viewValById("txtNamNhapHoc", pickText(data, ['ENROLLMENT_YEAR', 'D_ENROLLMENT_YEAR', 'dEnrollment_Year']));
+        edu.util.viewValById("txtNgayBatDauHoc", toInputDateValue(pickText(data, ['START_DATE', 'strStart_Date'])));
+        edu.util.viewValById("txtNgayTotNghiep", toInputDateValue(pickText(data, ['COMPLETION_DATE', 'COMPLETION_DATE_STR', 'strCompletion_Date'])));
+        edu.util.viewValById("txtNamTotNghiep", pickText(data, ['GRADUATION_YEAR', 'D_GRADUATION_YEAR', 'dGraduation_Year']));
+        edu.util.viewValById("txtGPA", pickText(data, ['GPA', 'D_GPA', 'dGPA']));
+        edu.util.viewValById("txtGPAScale", pickText(data, ['GPA_SCALE', 'D_GPA_SCALE', 'dGPA_Scale']));
+        edu.util.viewValById("txtSoHieuVanBang", pickText(data, ['DEGREE_NUMBER', 'DEGREE_NO', 'strDegree_Number']));
+        edu.util.viewValById("txtNgayCapVanBang", toInputDateValue(pickText(data, ['DEGREE_ISSUE_DATE', 'strDegree_Issue_Date'])));
+        $("#chkLaTrinhDoCaoNhat").prop('checked', pickFlag1(data, ['IS_HIGHEST', 'dIs_Highest']));
+        $("#chkChuyenMonChinh").prop('checked', pickFlag1(data, ['IS_PRIMARY_MAJOR', 'dIs_Primary_Major']));
+        $("#chkDuocCongNhan").prop('checked', pickFlag1(data, ['IS_RECOGNIZED', 'dIs_Recognized']));
+        edu.util.viewValById("txtNgayHieuLucHV", toInputDateValue(pickText(data, ['EFFECTIVE_FROM', 'strEffective_From'])));
+        edu.util.viewValById("txtNgayHetHieuLucHV", toInputDateValue(pickText(data, ['EFFECTIVE_TO', 'strEffective_To'])));
+        $("#chkHieuLucHV").prop('checked', pickFlag1(data, ['IS_ACTIVE', 'dIs_Active']));
+        edu.util.viewValById("txtGhiChuHV", pickText(data, ['NOTE', 'strNote']));
     },
 
     save_HocVan: function () {
         var me = this;
+
+        var normEmpty = function (v) {
+            if (v === undefined || v === null) return '';
+            return ((v + '')).trim();
+        };
+
+        // Đọc value an toàn: một số màn hình/phiên bản helper chỉ đọc đúng ở edu.util hoặc jquery
+        var getValSafe = function (id) {
+            try {
+                var v1 = (edu && edu.util && typeof edu.util.getValById === 'function') ? edu.util.getValById(id) : '';
+                if (normEmpty(v1)) return normEmpty(v1);
+            } catch (e) { }
+            try {
+                var v2 = (edu && edu.system && typeof edu.system.getValById === 'function') ? edu.system.getValById(id) : '';
+                if (normEmpty(v2)) return normEmpty(v2);
+            } catch (e2) { }
+            var $el = $('#' + id);
+            if ($el && $el.length) return normEmpty($el.val());
+            return '';
+        };
+
+        var deriveMajorGroupFromMajor = function (majorVal) {
+            majorVal = normEmpty(majorVal);
+            if (!majorVal) return '';
+            var foundMajor = (me.dtDmMajorAll || []).find(function (x) {
+                if (!x) return false;
+                return ((x.ID + '') === (majorVal + '')) || (((x.MA || '') + '').trim() === majorVal);
+            });
+            if (foundMajor) {
+                if (edu.util.checkValue(foundMajor.MAJOR_GROUP_ID)) return (foundMajor.MAJOR_GROUP_ID + '');
+                if (edu.util.checkValue(foundMajor.QUANHECHA_ID)) return (foundMajor.QUANHECHA_ID + '');
+            }
+            return '';
+        };
+
+        // Khi dropdown Ngành (`dropNganh`) bị ẩn/không dùng (HTML đang display:none),
+        // vẫn cần suy ra `strMajor_Id` từ Mã/Tên ngành để backend có FK và API list trả đủ dữ liệu.
+        var tryDeriveMajorIdFromInputs = function (majorCode, majorName, majorGroupId) {
+            majorCode = normEmpty(majorCode);
+            majorName = normEmpty(majorName);
+            majorGroupId = normEmpty(majorGroupId);
+
+            var list = (me.dtDmMajorAll || []).filter(function (x) {
+                if (!x) return false;
+                // Bỏ qua node Nhóm ngành (thường không có cha)
+                var hasParent = edu.util.checkValue(x.QUANHECHA_ID) || edu.util.checkValue(x.MAJOR_GROUP_ID);
+                if (!hasParent) return false;
+
+                // Nếu đang có majorGroupId thì ưu tiên match đúng nhóm để tránh trùng MA
+                if (majorGroupId) {
+                    var parentId = (x.QUANHECHA_ID || x.MAJOR_GROUP_ID || '') + '';
+                    if (parentId !== (majorGroupId + '')) return false;
+                }
+
+                if (majorCode) {
+                    return (((x.MA || '') + '').trim() === majorCode);
+                }
+                if (majorName) {
+                    return (((x.TEN || '') + '').trim().toLowerCase() === majorName.toLowerCase());
+                }
+                return false;
+            });
+
+            if (!list.length) return '';
+            return (list[0].ID || '');
+        };
+
+        // Oracle thường parse ngày theo DD/MM/YYYY; input type=date trả YYYY-MM-DD
+        var normalizeDateForOracle = function (val) {
+            if (!val) return "";
+            val = (val + "").trim();
+            if (!val) return "";
+
+            // dd/mm/yyyy
+            if (/^\d{2}\/\d{2}\/\d{4}$/.test(val)) return val;
+
+            // yyyy-mm-dd
+            var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(val);
+            if (m) return m[3] + "/" + m[2] + "/" + m[1];
+
+            // yyyy/mm/dd
+            m = /^(\d{4})\/(\d{2})\/(\d{2})$/.exec(val);
+            if (m) return m[3] + "/" + m[2] + "/" + m[1];
+
+            // dd-mm-yyyy
+            m = /^(\d{2})-(\d{2})-(\d{4})$/.exec(val);
+            if (m) return m[1] + "/" + m[2] + "/" + m[3];
+
+            return val;
+        };
         
         // Validation
         if (!edu.util.getValById("dropLoaiHinhHocVan")) {
@@ -2686,6 +3899,29 @@ DeXuatHoSo.prototype = {
             edu.system.alert("Vui lòng chọn bậc đào tạo!");
             return;
         }
+
+        // Nếu dropdown ngành bị ẩn và người dùng nhập mã/tên ngành,
+        // cần đảm bảo danh mục ngành đã load xong để suy ra `strMajor_Id` ổn định.
+        try {
+            var majorDropValNow = normEmpty(getValSafe('dropNganh'));
+            var majorCodeNow = normEmpty(getValSafe('txtMaNganh'));
+            var majorNameNow = normEmpty(getValSafe('txtTenNganh'));
+            var $dropMajor = $('#dropNganh');
+            var majorDropHidden = ($dropMajor && $dropMajor.length && !$dropMajor.is(':visible'));
+
+            var needDeriveMajorId = (!majorDropValNow && (majorCodeNow || majorNameNow) && majorDropHidden);
+            var dmMajorReady = (me._dmMajorLoaded === true) && (me.dtDmMajorAll && me.dtDmMajorAll.length);
+
+            if (needDeriveMajorId && !dmMajorReady) {
+                if (me._isSavingHocVan === true) return;
+                me._isSavingHocVan = true;
+                me.ensureDmMajor(function () {
+                    me._isSavingHocVan = false;
+                    me.save_HocVan();
+                });
+                return;
+            }
+        } catch (eWait) { }
         
         var obj_save = {
             'action': 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4EJTQiIDUoLi8P',
@@ -2694,39 +3930,80 @@ DeXuatHoSo.prototype = {
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strVaiTro_Id': '',
             'strPerson_Id': me.strDeXuatHoSo_Id,
-            'strEducation_Type_Code': edu.system.getValById('dropLoaiHinhHocVan'),
-            'strEducation_Level_Code': edu.system.getValById('dropBacDaoTao'),
-            'strEducation_Status_Code': edu.system.getValById('dropTrangThaiHoc'),
-            'strDegree_Type_Code': edu.system.getValById('txtMaLoaiVanBang'),
-            'strBank_Name': edu.system.getValById('txtTenNganHangHV'),
-            'strMajor_Id': edu.system.getValById('dropNganh'),
-            'strMajor_Code': edu.system.getValById('txtMaNganh'),
-            'strMajor_Name': edu.system.getValById('txtTenNganh'),
-            'strSpecialization_Id': edu.system.getValById('dropChuyenNganh'),
-            'strSpecialization_Code': edu.system.getValById('txtMaChuyenNganh'),
-            'strSpecialization_Name': edu.system.getValById('txtTenChuyenNganh'),
-            'strInstitution_Id': edu.system.getValById('dropCoSoDaoTao'),
-            'strInstitution_Code': edu.system.getValById('txtMaCoSoDaoTao'),
-            'strInstitution_Name': edu.system.getValById('txtTenCoSoDaoTao'),
-            'strCountry_Id': edu.system.getValById('dropQuocGiaHV'),
-            'dEnrollment_Year': edu.system.getValById('txtNamNhapHoc'),
-            'strStart_Date': edu.system.getValById('txtNgayBatDauHoc'),
-            'strCompletion_Date': edu.system.getValById('txtNgayTotNghiep'),
-            'dGraduation_Year': edu.system.getValById('txtNamTotNghiep'),
-            'strClassification_Code': edu.system.getValById('dropXepLoai'),
-            'dGPA': edu.system.getValById('txtGPA'),
-            'dGPA_Scale': edu.system.getValById('txtGPAScale'),
-            'strDegree_Number': edu.system.getValById('txtSoHieuVanBang'),
-            'strDegree_Issue_Date': edu.system.getValById('txtNgayCapVanBang'),
+            'strEducation_Type_Code': getValSafe('dropLoaiHinhHocVan'),
+            'strEducation_Level_Code': getValSafe('dropBacDaoTao'),
+            'strEducation_Status_Code': getValSafe('dropTrangThaiHoc'),
+            // Backend legacy param names (đang dùng)
+            'strDegree_Type_Code': getValSafe('txtMaLoaiVanBang'),
+            'strBank_Name': getValSafe('txtTenNganHangHV'),
+            // Aliases để đảm bảo DB lưu đúng các field mà API list đang trả về
+            'strDegree_Code': getValSafe('txtMaLoaiVanBang'),
+            'strDegree_Name': getValSafe('txtTenNganHangHV'),
+            'strMajor_Group_Id': '',
+            'strMajor_Id': '',
+            'strMajor_Code': normEmpty(getValSafe('txtMaNganh')),
+            'strMajor_Name': normEmpty(getValSafe('txtTenNganh')),
+            'strSpecialization_Id': normEmpty(getValSafe('dropChuyenNganh')),
+            'strSpecialization_Code': normEmpty(getValSafe('txtMaChuyenNganh')),
+            'strSpecialization_Name': normEmpty(getValSafe('txtTenChuyenNganh')),
+            'strInstitution_Id': normEmpty(getValSafe('dropCoSoDaoTao')),
+            'strInstitution_Code': normEmpty(getValSafe('txtMaCoSoDaoTao')),
+            'strInstitution_Name': normEmpty(getValSafe('txtTenCoSoDaoTao')),
+            'strCountry_Id': normEmpty(getValSafe('dropQuocGiaHV')),
+            'dEnrollment_Year': normEmpty(getValSafe('txtNamNhapHoc')),
+            'strStart_Date': normalizeDateForOracle(normEmpty(getValSafe('txtNgayBatDauHoc'))),
+            'strCompletion_Date': normalizeDateForOracle(normEmpty(getValSafe('txtNgayTotNghiep'))),
+            'dGraduation_Year': normEmpty(getValSafe('txtNamTotNghiep')),
+            'strClassification_Code': normEmpty(getValSafe('dropXepLoai')),
+            'dGPA': normEmpty(getValSafe('txtGPA')),
+            'dGPA_Scale': normEmpty(getValSafe('txtGPAScale')),
+            'strDegree_Number': normEmpty(getValSafe('txtSoHieuVanBang')),
+            'strDegree_Issue_Date': normalizeDateForOracle(normEmpty(getValSafe('txtNgayCapVanBang'))),
             'dIs_Highest': $("#chkLaTrinhDoCaoNhat").is(':checked') ? 1 : 0,
             'dIs_Primary_Major': $("#chkChuyenMonChinh").is(':checked') ? 1 : 0,
             'dIs_Recognized': $("#chkDuocCongNhan").is(':checked') ? 1 : 0,
-            'strEffective_From': edu.system.getValById('txtNgayHieuLucHV'),
-            'strEffective_To': edu.system.getValById('txtNgayHetHieuLucHV'),
+            'strEffective_From': normalizeDateForOracle(getValSafe('txtNgayHieuLucHV')),
+            'strEffective_To': normalizeDateForOracle(getValSafe('txtNgayHetHieuLucHV')),
             'dIs_Active': $("#chkHieuLucHV").is(':checked') ? 1 : 0,
-            'strNote': edu.system.getValById('txtGhiChuHV'),
+            'strNote': getValSafe('txtGhiChuHV'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
+
+        // Chuẩn hoá Major/Group: tránh majorId == majorGroupId (chọn nhầm node nhóm)
+        var majorId = normEmpty(getValSafe('dropNganh'));
+        var majorGroupId = normEmpty(getValSafe('dropNhomNganh'));
+
+        // Nếu không chọn được ngành từ dropdown (thường do dropdown đang ẩn) -> suy ra từ mã/tên ngành
+        if (!majorId) {
+            var majorIdDerived = tryDeriveMajorIdFromInputs(
+                getValSafe('txtMaNganh'),
+                getValSafe('txtTenNganh'),
+                majorGroupId
+            );
+            if (majorIdDerived) {
+                majorId = normEmpty(majorIdDerived);
+            }
+        }
+
+        if (majorId && majorGroupId && majorId === majorGroupId) {
+            var derivedParent = deriveMajorGroupFromMajor(majorId);
+            if (derivedParent) {
+                majorGroupId = derivedParent;
+            }
+            else {
+                // Nếu không suy ra được cha -> coi như chỉ chọn nhóm, bỏ ngành
+                majorId = '';
+            }
+        }
+
+        // Nếu có ngành nhưng không có nhóm -> suy ra nhóm
+        if (majorId && !majorGroupId) {
+            var derived = deriveMajorGroupFromMajor(majorId);
+            if (derived) majorGroupId = derived;
+        }
+
+        obj_save.strMajor_Id = majorId;
+        obj_save.strMajor_Group_Id = majorGroupId;
         
         if (me.strHocVan_Id) {
             obj_save.action = 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4EJTQiIDUoLi8P';
@@ -2810,8 +4087,11 @@ DeXuatHoSo.prototype = {
                     var dtReRult = data.Data || [];
                     // Lọc chỉ lấy dữ liệu của người được chọn
                     if (dtReRult && dtReRult.length > 0) {
-                        dtReRult = dtReRult.filter(function(item) {
-                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        dtReRult = dtReRult.filter(function (item) {
+                            var okPerson = item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            // Xóa thành công thường là set IS_ACTIVE = 0 (soft delete) -> ẩn khỏi danh sách
+                            var okActive = (item.IS_ACTIVE === undefined) || (item.IS_ACTIVE == 1);
+                            return okPerson && okActive;
                         });
                     }
                     me.dtChungChi = dtReRult;
@@ -2989,7 +4269,15 @@ DeXuatHoSo.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.LEVEL_ID", "dropCapDoChungChi");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.CLASSIFICATION_CODE", "dropXepLoaiCC");
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.ISSUED_BY_ORG_ID", "dropDonViCap");
-        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.COUNTRY_ID", "dropQuocGiaCC");
+        // Quốc gia: một số môi trường chưa khai báo danh mục theo PERSON_CERTIFICATE.COUNTRY_ID
+        // -> fallback sang PERSON_ADDRESS.COUNTRY_ID (đang dùng ổn ở Tab Địa chỉ).
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.COUNTRY_ID", "dropQuocGiaCC", "", function () {
+            try {
+                if ($('#dropQuocGiaCC option').length <= 1) {
+                    edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.COUNTRY_ID", "dropQuocGiaCC");
+                }
+            } catch (e) { }
+        });
     },
 
     clearForm_ChungChi: function () {
@@ -3025,26 +4313,62 @@ DeXuatHoSo.prototype = {
     },
 
     loadForm_ChungChi: function (data) {
-        edu.util.viewValById("dropLoaiChungChi", data.CERTIFICATE_TYPE_CODE);
-        edu.util.viewValById("dropTrangThaiChungChi", data.CERTIFICATE_STATUS_CODE);
-        edu.util.viewValById("dropMaChungChi", data.CERTIFICATE_CODE);
+        var certTypeCode = data.CERTIFICATE_TYPE_CODE;
+        var certStatusCode = data.CERTIFICATE_STATUS_CODE;
+        var certCode = data.CERTIFICATE_CODE;
+        var categoryId = data.CATEGORY_ID;
+        var levelId = data.LEVEL_ID;
+        var classificationCode = data.CLASSIFICATION_CODE;
+        var issuedByOrgId = data.ISSUED_BY_ORG_ID;
+        var countryId = data.COUNTRY_ID;
+
+        // Combo danh mục load async -> set value trong callback để không bị lệch khi mở form Sửa
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.CERTIFICATE_TYPE_CODE", "dropLoaiChungChi", "", function () {
+            edu.util.viewValById("dropLoaiChungChi", certTypeCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.CERTIFICATE_STATUS_CODE", "dropTrangThaiChungChi", "", function () {
+            edu.util.viewValById("dropTrangThaiChungChi", certStatusCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.CERTIFICATE_CODE", "dropMaChungChi", "", function () {
+            edu.util.viewValById("dropMaChungChi", certCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.CATEGORY_ID", "dropNhomChungChi", "", function () {
+            edu.util.viewValById("dropNhomChungChi", categoryId || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.LEVEL_ID", "dropCapDoChungChi", "", function () {
+            edu.util.viewValById("dropCapDoChungChi", levelId || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.CLASSIFICATION_CODE", "dropXepLoaiCC", "", function () {
+            edu.util.viewValById("dropXepLoaiCC", classificationCode || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.ISSUED_BY_ORG_ID", "dropDonViCap", "", function () {
+            edu.util.viewValById("dropDonViCap", issuedByOrgId || "");
+        });
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.COUNTRY_ID", "dropQuocGiaCC", "", function () {
+            // Fallback nếu danh mục chứng chỉ không có dữ liệu
+            try {
+                if ($('#dropQuocGiaCC option').length <= 1) {
+                    edu.system.loadToCombo_DanhMucDuLieu("PERSON_ADDRESS.COUNTRY_ID", "dropQuocGiaCC", "", function () {
+                        edu.util.viewValById("dropQuocGiaCC", countryId || "");
+                    });
+                    return;
+                }
+            } catch (e) { }
+            edu.util.viewValById("dropQuocGiaCC", countryId || "");
+        });
+
         edu.util.viewValById("txtTenChungChi", data.CERTIFICATE_NAME);
-        edu.util.viewValById("dropNhomChungChi", data.CATEGORY_ID);
         edu.util.viewValById("txtMaNhomChungChi", data.CATEGORY_CODE);
         edu.util.viewValById("txtTenNhomChungChi", data.CATEGORY_NAME);
-        edu.util.viewValById("dropCapDoChungChi", data.LEVEL_ID);
         edu.util.viewValById("txtMaCapDo", data.LEVEL_CODE);
         edu.util.viewValById("txtTenCapDo", data.LEVEL_NAME);
         edu.util.viewValById("txtDiemSo", data.SCORE);
         edu.util.viewValById("txtThangDiem", data.SCORE_SCALE);
-        edu.util.viewValById("dropXepLoaiCC", data.CLASSIFICATION_CODE);
         edu.util.viewValById("txtMoTaKetQua", data.RESULT_TEXT);
         edu.util.viewValById("txtSoChungChi", data.CERTIFICATE_NO);
         edu.util.viewValById("txtSoSeri", data.SERIAL_NO);
-        edu.util.viewValById("dropDonViCap", data.ISSUED_BY_ORG_ID);
         edu.util.viewValById("txtMaDonViCap", data.ISSUED_BY_ORG_CODE);
         edu.util.viewValById("txtTenDonViCap", data.ISSUED_BY_ORG_NAME);
-        edu.util.viewValById("dropQuocGiaCC", data.COUNTRY_ID);
         edu.util.viewValById("txtNgayCap", data.ISSUE_DATE);
         edu.util.viewValById("txtNgayHetHan", data.EXPIRE_DATE);
         $("#chkVoThoiHan").prop('checked', data.IS_LIFETIME == 1);
@@ -3511,8 +4835,11 @@ DeXuatHoSo.prototype = {
                     var dtReRult = data.Data || [];
                     // Lọc chỉ lấy dữ liệu của người được chọn
                     if (dtReRult && dtReRult.length > 0) {
-                        dtReRult = dtReRult.filter(function(item) {
-                            return item.PERSON_ID == me.strDeXuatHoSo_Id;
+                        dtReRult = dtReRult.filter(function (item) {
+                            var okPerson = item.PERSON_ID == me.strDeXuatHoSo_Id;
+                            // Xóa thành công thường là set IS_ACTIVE = 0 (soft delete) -> ẩn khỏi danh sách
+                            var okActive = (item.IS_ACTIVE === undefined) || (item.IS_ACTIVE == 1);
+                            return okPerson && okActive;
                         });
                     }
                     me.dtHocHam = dtReRult;
@@ -3650,7 +4977,21 @@ DeXuatHoSo.prototype = {
         // Load danh mục khi mở form
         var me = this;
         edu.system.loadToCombo_DanhMucDuLieu("PERSON_ACADEMIC_RANK.ACADEMIC_RANK_CODE", "dropMaHocHam");
-        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ACADEMIC_RANK.ISSUED_BY_ORG_ID", "dropDonViCapHH");
+        // Đơn vị cấp: một số môi trường chưa khai báo danh mục theo PERSON_ACADEMIC_RANK.ISSUED_BY_ORG_ID
+        // -> fallback sang danh mục đang dùng ổn ở Tab Chứng chỉ/Tài liệu.
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ACADEMIC_RANK.ISSUED_BY_ORG_ID", "dropDonViCapHH", "", function () {
+            try {
+                if ($('#dropDonViCapHH option').length <= 1) {
+                    edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.ISSUED_BY_ORG_ID", "dropDonViCapHH", "", function () {
+                        try {
+                            if ($('#dropDonViCapHH option').length <= 1) {
+                                edu.system.loadToCombo_DanhMucDuLieu("PERSON_DOCUMENT.ISSUED_BY_ORG_ID", "dropDonViCapHH");
+                            }
+                        } catch (e2) { }
+                    });
+                }
+            } catch (e) { }
+        });
     },
 
     clearForm_HocHam: function () {
@@ -3669,12 +5010,39 @@ DeXuatHoSo.prototype = {
     },
 
     loadForm_HocHam: function (data) {
-        edu.util.viewValById("dropMaHocHam", data.ACADEMIC_RANK_CODE);
+        var academicRankCode = data.ACADEMIC_RANK_CODE;
+        var issuedByOrgId = data.ISSUED_BY_ORG_ID;
+
+        // Combo danh mục load async -> set value trong callback để không bị lệch khi mở form Sửa
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ACADEMIC_RANK.ACADEMIC_RANK_CODE", "dropMaHocHam", "", function () {
+            edu.util.viewValById("dropMaHocHam", academicRankCode || "");
+        });
+
+        // Đơn vị cấp: load theo danh mục học hàm, fallback sang chứng chỉ/tài liệu nếu rỗng
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_ACADEMIC_RANK.ISSUED_BY_ORG_ID", "dropDonViCapHH", "", function () {
+            try {
+                if ($('#dropDonViCapHH option').length <= 1) {
+                    edu.system.loadToCombo_DanhMucDuLieu("PERSON_CERTIFICATE.ISSUED_BY_ORG_ID", "dropDonViCapHH", "", function () {
+                        try {
+                            if ($('#dropDonViCapHH option').length <= 1) {
+                                edu.system.loadToCombo_DanhMucDuLieu("PERSON_DOCUMENT.ISSUED_BY_ORG_ID", "dropDonViCapHH", "", function () {
+                                    edu.util.viewValById("dropDonViCapHH", issuedByOrgId || "");
+                                });
+                                return;
+                            }
+                        } catch (e2) { }
+                        edu.util.viewValById("dropDonViCapHH", issuedByOrgId || "");
+                    });
+                    return;
+                }
+            } catch (e) { }
+            edu.util.viewValById("dropDonViCapHH", issuedByOrgId || "");
+        });
+
         edu.util.viewValById("txtTenHocHam", data.ACADEMIC_RANK_NAME);
         edu.util.viewValById("txtSoQuyetDinhHH", data.DECISION_NO);
         edu.util.viewValById("txtNgayQuyetDinhHH", data.DECISION_DATE);
         edu.util.viewValById("txtNgayCongNhanHH", data.RECOGNITION_DATE);
-        edu.util.viewValById("dropDonViCapHH", data.ISSUED_BY_ORG_ID);
         edu.util.viewValById("txtTenDonViCapHH", data.ISSUED_BY_ORG_NAME);
         $("#chkHocHamHienTai").prop('checked', data.IS_CURRENT == 1);
         edu.util.viewValById("txtNgayHieuLucHH", data.EFFECTIVE_FROM);

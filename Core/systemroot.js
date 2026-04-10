@@ -1378,7 +1378,7 @@ systemroot.prototype = {
             row_change += '<div class="aps-hienthi" style="padding-left:0 !important; margin-top:10px; float:left; font-style:italic">';
             row_change += '<label>Hiển thị</label>';
             row_change += '</div>';
-            row_change += '<div style="width: 70px; padding-left:3px !important; float:left">';
+            row_change += '<div class="aps-hienthi-input" style="width: 70px; padding-left:3px !important; float:left">';
             row_change += '<select id="dropPageSize' + strPageSize_Id + '" class="select-opt">';
             row_change += '<option value="10"> 10 </option>';
             row_change += '<option value="15"> 15 </option>';
@@ -1424,7 +1424,7 @@ systemroot.prototype = {
         //zonePagHeader += '<div style="padding-left:0 !important; margin-top:6px; float:left; font-style:italic">';
         //zonePagHeader += '<label>Hiển thị</label>';
         //zonePagHeader += '</div>';
-        //zonePagHeader += '<div style="width: 70px; padding-left:3px !important; float:left">';
+        //zonePagHeader += '<div class="aps-hienthi-input" style="width: 70px; padding-left:3px !important; float:left">';
         //zonePagHeader += '<select id="dropPageSizechange' + strTable_Id + '" class="select-opt">';
         //zonePagHeader += '<option value="10"> 10 </option>';
         //zonePagHeader += '<option value="15"> 15 </option>';

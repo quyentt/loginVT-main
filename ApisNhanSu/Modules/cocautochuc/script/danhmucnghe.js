@@ -93,6 +93,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtNgayHetHieuLuc_BN", data.END_DATE);
             edu.util.viewValById("txtMoTa_BN", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_BN", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_BN", data.SORT_ORDER);
             $("#modalBacNghe").modal("show");
         });
         $("#btnAdd_BacNghe").click(function () {
@@ -104,6 +105,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtNgayHetHieuLuc_BN", data.END_DATE);
             edu.util.viewValById("txtMoTa_BN", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_BN", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_BN", data.SORT_ORDER);
             $("#modalBacNghe").modal("show");
         });
         $("#btnSave_BacNghe").click(function () {
@@ -129,7 +131,7 @@ DanhMucNghe.prototype = {
             var strId = this.id;
             var data = me.dtChucDanh.find(e => e.ID == strId);
             me["strChucDanh_Id"] = data.ID;
-            edu.util.viewValById("dropNhomNghe_CD", data.CORE_JOB_FAMILY_ID);
+            edu.util.viewValById("dropNhomNghe_CD", data.FAMILY_ID);
             edu.util.viewValById("txtMa_CD", data.CODE);
             edu.util.viewValById("txtTen_CD", data.NAME);
             edu.util.viewValById("txtNgayHieuLuc_CD", data.START_DATE);
@@ -137,6 +139,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_CD", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_CD", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_CD", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_CD", data.SORT_ORDER);
             $("#modalChucDanh").modal("show");
         });
         $("#btnAdd_ChucDanh").click(function () {
@@ -150,6 +153,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_CD", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_CD", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_CD", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_CD", data.SORT_ORDER);
             $("#modalChucDanh").modal("show");
         });
         $("#btnSave_ChucDanh").click(function () {
@@ -175,7 +179,7 @@ DanhMucNghe.prototype = {
             var strId = this.id;
             var data = me.dtNhomNghe.find(e => e.ID == strId);
             me["strNhomNghe_Id"] = data.ID;
-            edu.util.viewValById("dropNhomNghe_NN", data.CORE_JOB_FAMILY_ID);
+            edu.util.viewValById("dropNhomNghe_NN", data.CATEGORY_ID);
             edu.util.viewValById("txtMa_NN", data.CODE);
             edu.util.viewValById("txtTen_NN", data.NAME);
             edu.util.viewValById("txtNgayHieuLuc_NN", data.START_DATE);
@@ -183,12 +187,13 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_NN", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_NN", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_NN", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_NN", data.SORT_ORDER);
             $("#modalNhomNghe").modal("show");
         });
         $("#btnAdd_NhomNghe").click(function () {
             var data = {};
             me["strNhomNghe_Id"] = data.ID;
-            edu.util.viewValById("dropNhomNghe_NN", data.CORE_JOB_FAMILY_ID);
+            edu.util.viewValById("dropNhomNghe_NN", data.CATEGORY_ID);
             edu.util.viewValById("txtMa_NN", data.CODE);
             edu.util.viewValById("txtTen_NN", data.NAME);
             edu.util.viewValById("txtNgayHieuLuc_NN", data.START_DATE);
@@ -196,6 +201,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_NN", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_NN", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_NN", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_NN", data.SORT_ORDER);
             $("#modalNhomNghe").modal("show");
         });
         $("#btnSave_NhomNghe").click(function () {
@@ -228,6 +234,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_LN", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_LN", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_LN", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_LN", data.SORT_ORDER);
             $("#modalLoaiNghe").modal("show");
         });
         $("#btnAdd_LoaiNghe").click(function () {
@@ -240,6 +247,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_LN", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_LN", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_LN", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_LN", data.SORT_ORDER);
             $("#modalLoaiNghe").modal("show");
         });
         $("#btnSave_LoaiNghe").click(function () {
@@ -265,15 +273,16 @@ DanhMucNghe.prototype = {
             var strId = this.id;
             var data = me.dtNgheNghiep.find(e => e.ID == strId);
             me["strNgheNghiep_Id"] = data.ID;
-            edu.util.viewValById("dropChucDanh_DM", data.CORE_JOB_GROUP_ID);
-            edu.util.viewValById("dropCapBac_DM", data.CORE_JOB_LEVEL_ID);
-            edu.util.viewValById("txtMa_DM", data.CODE);
-            edu.util.viewValById("txtTen_DM", data.NAME);
+            edu.util.viewValById("dropChucDanh_DM", data.JOB_GROUP_ID);
+            edu.util.viewValById("dropCapBac_DM", data.JOB_LEVEL_ID);
+            edu.util.viewValById("txtMa_DM", data.JOB_CODE);
+            edu.util.viewValById("txtTen_DM", data.JOB_NAME);
             edu.util.viewValById("txtNgayHieuLuc_DM", data.START_DATE);
             edu.util.viewValById("txtNgayHetHieuLuc_DM", data.END_DATE);
             edu.util.viewValById("txtMoTa_DM", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_DM", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_DM", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_DM", data.SORT_ORDER);
             $("#modalNgheNghiep").modal("show");
         });
         $("#btnAdd_NgheNghiep").click(function () {
@@ -288,6 +297,7 @@ DanhMucNghe.prototype = {
             edu.util.viewValById("txtMoTa_DM", data.DESCRIPTION);
             edu.util.viewHTMLById("txtMoTa_DM", data.DESCRIPTION);
             edu.util.viewValById("dropTinhTrang_DM", data.IS_ACTIVE);
+            edu.util.viewValById("txtThuTu_DM", data.SORT_ORDER);
             $("#modalNgheNghiep").modal("show");
         });
         $("#btnSave_NgheNghiep").click(function () {
@@ -1088,7 +1098,7 @@ DanhMucNghe.prototype = {
                     "mDataProp": "DESCRIPTION"
                 },
                 {
-                    "mDataProp": "CORE_JOB_CATEGORY_NAME"
+                    "mDataProp": "CORE_JOB_FAMILY_NAME"
                 },
                 {
                     "mRender": function (nRow, aData) {
