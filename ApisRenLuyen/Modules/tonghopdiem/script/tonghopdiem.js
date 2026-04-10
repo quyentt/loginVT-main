@@ -11,6 +11,8 @@ TongHopDiem.prototype = {
     strTongHopDiem_Id: '',
     dtTongHopDiem: [],
     strPhamViMa: '',
+    dtThieuDRL: [],
+    isLoading_ThieuDRL: false,
 
     init: function () {
         var me = this;
@@ -39,6 +41,12 @@ TongHopDiem.prototype = {
 
         $("#btnSearch").click(function () {
             me.getList_TongHopDiem();
+        });
+
+        $("#btnThongKe_ThieuDRL").click(function (e) {
+            e.preventDefault();
+            if (me.isLoading_ThieuDRL === true) return;
+            me.getList_TongHopThieuDRL();
         });
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
@@ -181,6 +189,113 @@ TongHopDiem.prototype = {
             ]
         }, false, false, false, null);
     },
+
+    getList_TieuChiXepLoai: function () {
+        var me = this;
+        me.getList_TongHopDiem();
+    },
+
+    getList_TongHopThieuDRL: function () {
+        var me = this;
+        var strNamHoc = edu.util.getValById('dropSearch_NamHoc');
+        var strThoiGianDaoTao = edu.util.getValById('dropSearch_ThoiGianDaoTao');
+        if (!edu.util.checkValue(strNamHoc) && !edu.util.checkValue(strThoiGianDaoTao)) {
+            edu.system.alert("Vui lòng chọn năm học hoặc thời gian đào tạo", "w");
+            return;
+        }
+
+        // Tránh query quá rộng gây timeout: yêu cầu chọn thêm ít nhất 1 điều kiện lọc
+        var strHeDaoTao = edu.util.getValCombo('dropSearch_HeDaoTao') || edu.system.getValById('dropSearch_HeDaoTao');
+        var strKhoaDaoTao = edu.util.getValCombo('dropSearch_KhoaDaoTao') || edu.system.getValById('dropSearch_KhoaDaoTao');
+        var strChuongTrinh = edu.util.getValCombo('dropSearch_ChuongTrinhDaoTao') || edu.system.getValById('dropSearch_ChuongTrinhDaoTao');
+        var strLopQuanLy = edu.util.getValCombo('dropSearch_LopQuanLy');
+        if (!edu.util.checkValue(strHeDaoTao) && !edu.util.checkValue(strKhoaDaoTao) && !edu.util.checkValue(strChuongTrinh) && !edu.util.checkValue(strLopQuanLy)) {
+            edu.system.alert("Vui lòng chọn ít nhất 1 điều kiện lọc (Hệ đào tạo/Khóa đào tạo/Chương trình/Lớp quản lý)", "w");
+            return;
+        }
+
+        var strDaoTao_ThoiGianDaoTao_Id = edu.util.checkValue(strThoiGianDaoTao) ? strThoiGianDaoTao : strNamHoc;
+
+        var obj_save = {
+            'action': 'XLHV_RL_ThongTin_MH/DSA4BRIVLi8mCS4xFSkoJDQFEw0P',
+            'func': 'pkg_diemrenluyen_thongtin.LayDSTongHopThieuDRL',
+            'iM': edu.system.iM,
+            'strQLSV_TrangThaiNguoiHoc_Id': edu.util.getValById('dropSearch_TrangThai'),
+            'strDaoTao_ThoiGianDaoTao_Id': strDaoTao_ThoiGianDaoTao_Id,
+            'strDaoTao_HeDaoTao_Id': strHeDaoTao,
+            'strDaoTao_KhoaDaoTao_Id': strKhoaDaoTao,
+            'strDaoTao_ChuongTrinh_Id': strChuongTrinh,
+            'strDaoTao_LopQuanLy_Id': strLopQuanLy,
+            'strDoiTuongApDung_Id': edu.util.getValById('dropSearch_DoiTuong'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        var t0 = new Date().getTime();
+        try {
+            console.log("[TongHopDiem][ThieuDRL] request", obj_save);
+        } catch (e) { }
+
+        me.isLoading_ThieuDRL = true;
+        $("#btnThongKe_ThieuDRL").addClass("disabled");
+
+        edu.system.makeRequest({
+            success: function (data) {
+                try {
+                    console.log("[TongHopDiem][ThieuDRL] response", data, "elapsed(ms)=", (new Date().getTime() - t0));
+                } catch (e) { }
+                if (data.Success) {
+                    var dtReRult = data.Data;
+                    var rows = (dtReRult && dtReRult.rsChiTiet) ? dtReRult.rsChiTiet : dtReRult;
+                    me.dtThieuDRL = rows || [];
+                    $("#zone_thongke_thieudrl").show();
+                    edu.system.pageIndex_default = 1;
+                    me.renderTable_ThieuDRL_Paged();
+                }
+                else {
+                    edu.system.alert(data.Message, "s");
+                }
+            },
+            error: function (er) {
+                try {
+                    console.log("[TongHopDiem][ThieuDRL] error", er, "elapsed(ms)=", (new Date().getTime() - t0));
+                } catch (e) { }
+                if (er && er.statusText === "timeout") {
+                    edu.system.alert("Timeout khi thống kê (60s). Vui lòng chọn thêm điều kiện lọc (ưu tiên Lớp quản lý) rồi thử lại.", "w");
+                }
+                else {
+                    edu.system.alert(JSON.stringify(er), "w");
+                }
+            },
+            complete: function () {
+                me.isLoading_ThieuDRL = false;
+                $("#btnThongKe_ThieuDRL").removeClass("disabled");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            timeout: 60000,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+
+    renderTable_ThieuDRL_Paged: function () {
+        var me = this;
+        var allRows = me.dtThieuDRL || [];
+        var totalRows = allRows.length;
+        var pageIndex = edu.system.pageIndex_default || 1;
+        var pageSize = edu.system.pageSize_default || 10;
+        if (pageSize == -1) pageSize = 1000000;
+        var start = (pageIndex - 1) * pageSize;
+        if (start < 0) start = 0;
+        if (start > totalRows) start = 0;
+        var end = start + pageSize;
+        if (end > totalRows) end = totalRows;
+        var pageRows = allRows.slice(start, end);
+        me.genTable_ThieuDRL(pageRows, totalRows);
+    },
     /*------------------------------------------
     --Discription: [4] GenHTML Tiến độ đề tài
     --ULR:  Modules
@@ -255,6 +370,51 @@ TongHopDiem.prototype = {
         edu.system.loadToTable_data(jsonForm);
         edu.system.insertSumAfterTable(jsonForm.strTable_Id, [2]);
     },
+
+    genTable_ThieuDRL: function (data, iPager) {
+        var me = this;
+        var jsonForm = {
+            strTable_Id: "tblThieuDRL",
+            bPaginate: {
+                strFuntionName: "main_doc.TongHopDiem.renderTable_ThieuDRL_Paged()",
+                iDataRow: iPager,
+            },
+            aaData: data,
+            aoColumns: [
+                {
+                    "mDataProp": "MASO"
+                },
+                {
+                    "mData": "HoTen",
+                    "mRender": function (nrow, aData) {
+                        return edu.util.returnEmpty(aData.HODEM) + " " + edu.util.returnEmpty(aData.TEN);
+                    }
+                },
+                {
+                    "mDataProp": "TRANGTHAI_TEN"
+                },
+                {
+                    "mDataProp": "TENLOP"
+                },
+                {
+                    "mData": "ChuongTrinh",
+                    "mRender": function (nrow, aData) {
+                        return edu.util.returnEmpty(aData.TENCHUONGTRINH) + " - " + edu.util.returnEmpty(aData.MACHUONGTRINH);
+                    }
+                },
+                {
+                    "mDataProp": "TENKHOA"
+                },
+                {
+                    "mDataProp": "TENKHOAQUANLY"
+                },
+                {
+                    "mDataProp": "TENHEDAOTAO"
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
     /*------------------------------------------
 	--Discription: [2] ACCESS DB ==> Systemroot HeDaoTao/KhoaDaoTao/ChuongTrinhDaoTao
     --Author:
@@ -290,7 +450,40 @@ TongHopDiem.prototype = {
             pageIndex: 1,
             pageSize: 100000,
         };
-        edu.system.getList_ThoiGianDaoTao(obj, me.loadToCombo_ThoiGianDaoTao);
+
+        // Chỉ lấy danh sách Kỳ theo Năm đã chọn
+        var obj_save = {
+            'action': 'KHCT_ThongTin_MH/DSA4BRIFIC4VIC4eFSkuKAYoIC8FIC4VIC4P',
+            'func': 'pkg_kehoach_thongtin.LayDSDaoTao_ThoiGianDaoTao_Ky',
+            'iM': edu.system.iM,
+            'strDAOTAO_Nam_Id': edu.util.returnEmpty(obj.strNam_Id),
+            'strNguoiThucHien_Id': edu.util.returnEmpty(obj.strNguoiThucHien_Id),
+            'strTuKhoa': edu.util.returnEmpty(obj.strTuKhoa),
+            'pageIndex': edu.util.returnZero(obj.pageIndex),
+            'pageSize': edu.util.returnZero(obj.pageSize)
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.loadToCombo_ThoiGianDaoTao(edu.util.checkValue(data.Data) ? data.Data : []);
+                }
+                else {
+                    edu.system.alert(data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.func + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
 
     },
     getList_ChuongTrinhDaoTao: function () {
