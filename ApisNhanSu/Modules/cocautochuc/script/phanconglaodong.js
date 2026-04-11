@@ -293,6 +293,23 @@ PhanCongLaoDong.prototype = {
             me.getList_PhanCongLaoDong();
         });
 
+        // Khi đổi đơn vị phân công thì reload danh sách vị trí theo đơn vị đó
+        var onDonViPhanCongChanged = function () {
+            try {
+                // clear vị trí đang chọn để tránh lệch đơn vị
+                $("#dropViTri").val("").trigger('change');
+                // clear option cũ (nếu có) để tránh hiển thị vị trí của đơn vị khác
+                try {
+                    $("#dropViTri").html('<option value="">Chọn vị trí</option>');
+                } catch (e2) { }
+                var orgId = edu.system.getValById('dropDonVi');
+                if (orgId) me.getList_ViTri(orgId);
+            } catch (e) { }
+        };
+        $('#dropDonVi').on('change', onDonViPhanCongChanged);
+        // nếu select được enhance bằng select2 thì bắt thêm event này
+        $('#dropDonVi').on('select2:select', onDonViPhanCongChanged);
+
         $("#tblPhanCong").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtPhanCongLaoDong.find(e => e.ID == strId);
@@ -339,11 +356,19 @@ PhanCongLaoDong.prototype = {
         });
         $("#btnAdd_NhiemVu").click(function () {
             me["strNhiemVu_Id"] = "";
+            $("#dropDonVi").val("").trigger('change');
+            // reset vị trí cho tới khi chọn đơn vị
+            try { $("#dropViTri").html('<option value="">Chọn vị trí</option>'); } catch (e) { }
             $("#dropViTri").val("").trigger('change');
             $("#dropPhanLoai").val("").trigger('change');
             $("#dropTrangThaiPhanCong").val("").trigger('change');
             edu.util.viewValById("txtNgayHieuLuc", "");
             edu.util.viewValById("txtNgayHetHieuLuc", "");
+
+            // Mặc định: chính thức
+            try { $('#chkChinhThuc').prop('checked', true); } catch (e) { }
+            edu.util.viewValById("txtNote", "");
+
             $("#modalAddNhiemVu .modal-header .title .myModalLabel").html('<i class="fa fa-plus"></i>');
             $("#modalAddNhiemVu").modal("show");
         });
@@ -556,13 +581,18 @@ PhanCongLaoDong.prototype = {
             return;
         }
         
-        // Lấy thông tin đơn vị từ quan hệ lao động đã chọn (bắt buộc khi insert assignment)
+        // Đơn vị phân công (bắt buộc khi insert assignment)
         var strPositionId = edu.system.getValById('dropViTri');
-        var strOrgId = me.currentOrgUnitForPosition || aData.EMPLOYER_ORG_ID || aData.ORG_ID || aData.ORG_UNIT_ID || '';
-        if (!strOrgId) {
-            edu.system.alert("Thiếu đơn vị của quan hệ lao động (strOrg_Id). Vui lòng chọn lại quan hệ lao động!", "w");
+        var selectedOrgId = edu.system.getValById('dropDonVi');
+        if (!selectedOrgId) {
+            edu.system.alert("Vui lòng chọn đơn vị phân công!", "w");
             return;
         }
+        var strOrgId = selectedOrgId;
+
+        var dIsPrimary = 0;
+        try { dIsPrimary = $('#chkChinhThuc').is(':checked') ? 1 : 0; } catch (e) { dIsPrimary = 0; }
+        var strNote = edu.system.getValById('txtNote') || '';
         
         //--Edit
         var obj_save = {
@@ -578,13 +608,13 @@ PhanCongLaoDong.prototype = {
             'strAssignment_Status_Code': edu.system.getValById('dropTrangThaiPhanCong'),
             'strOrg_Id': strOrgId,
             'strPosition_Id': strPositionId,
-            'dIs_Primary': 1,
+            'dIs_Primary': dIsPrimary,
             'dFte_Ratio': 1,
             'strEffective_From': edu.system.getValById('txtNgayHieuLuc'),
             'strEffective_To': edu.system.getValById('txtNgayHetHieuLuc'),
             'strDecision_Id': '',
             'strSource_Event_Id': '',
-            'strNote': '',
+            'strNote': strNote,
             'dIs_Active': 1,
             'strNguoiThucHien_Id': edu.system.userId,
         };
@@ -743,11 +773,36 @@ PhanCongLaoDong.prototype = {
             success: function (data) {
                 if (data.Success && data.Data && data.Data.length > 0) {
                     var detail = data.Data[0];
-                    $("#dropViTri").val(detail.POSITION_ID).trigger('change');
+                    // Đơn vị phân công
+                    try {
+                        var orgId = detail.ORG_ID || detail.ORG_UNIT_ID || detail.EMPLOYER_ORG_ID || '';
+                        if (orgId) {
+                            $("#dropDonVi").val(orgId).trigger('change');
+                            // chủ động load vị trí theo đơn vị
+                            me.getList_ViTri(orgId);
+                            // đợi combo vị trí load xong rồi set POSITION_ID
+                            setTimeout(function () {
+                                $("#dropViTri").val(detail.POSITION_ID).trigger('change');
+                            }, 350);
+                        }
+                    } catch (e) { }
+                    // fallback: nếu không có orgId thì vẫn set vị trí (trường hợp backend không trả org)
+                    if (!(detail.ORG_ID || detail.ORG_UNIT_ID || detail.EMPLOYER_ORG_ID)) {
+                        $("#dropViTri").val(detail.POSITION_ID).trigger('change');
+                    }
                     $("#dropPhanLoai").val(detail.ASSIGNMENT_TYPE_CODE).trigger('change');
                     $("#dropTrangThaiPhanCong").val(detail.ASSIGNMENT_STATUS_CODE).trigger('change');
                     edu.util.viewValById("txtNgayHieuLuc", detail.EFFECTIVE_FROM);
                     edu.util.viewValById("txtNgayHetHieuLuc", detail.EFFECTIVE_TO);
+                    // Chính thức
+                    try {
+                        var isPrimary = detail.IS_PRIMARY;
+                        if (isPrimary == null) isPrimary = detail.D_IS_PRIMARY;
+                        if (isPrimary == null) isPrimary = detail.IS_PRIMARY_ASSIGNMENT;
+                        $('#chkChinhThuc').prop('checked', (isPrimary === 1 || isPrimary === '1' || isPrimary === true));
+                    } catch (e) { }
+                    // Note
+                    try { edu.util.viewValById("txtNote", detail.NOTE || detail.NOTE_TEXT || detail.STR_NOTE || ""); } catch (e) { }
                     $("#modalAddNhiemVu .modal-header .title .myModalLabel").html('<i class="fa fa-pencil"></i>');
                     $("#modalAddNhiemVu").modal("show");
                 }
@@ -849,7 +904,7 @@ PhanCongLaoDong.prototype = {
                             code: "",
                             avatar: ""
                         },
-                        renderPlace: ["dropSearch_DonVi"],
+                        renderPlace: ["dropSearch_DonVi", "dropDonVi"],
                         type: "",
                         title: "Chọn đơn vị",
                     })
@@ -994,7 +1049,7 @@ PhanCongLaoDong.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-primary btnChon" id="' + aData.ID + '" title="Chọn"><i class="fa fa-check"></i> Chọn</a></span>';
+                        return '<span><a class="btn btn-primary btnChon" id="' + aData.ID + '" title="Chọn phân nhiệm vụ"><i class="fa fa-check"></i> Chọn phân nhiệm vụ</a></span>';
                     }
                 }
             ]

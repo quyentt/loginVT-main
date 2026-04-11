@@ -149,7 +149,7 @@
                                         <th class="text-left">Từ ngày</th>
                                         <th class="text-left">Đến ngày</th>
                                         <th class="text-left">Quan hệ chính</th>
-                                        <th class="text-center" style="min-width: 80px;">Chọn</th>
+                                        <th class="text-center" style="min-width: 80px;">Chọn phân nhiệm vụ</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -165,7 +165,7 @@
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                 </div>
-            </div>
+            </div>S
         </div>
     </div>
 </div>
@@ -249,21 +249,7 @@
                     <!-- Row 1 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
-                            <div class="title-name">Vị trí</div>
-                        </div>
-                        <div class="col-12 col-sm-9 aps-form-input pr0">
-                            <div class="custom-select">
-                                <select id="dropViTri" class="select-opt form-select"
-                                        aria-label="Default select example">
-                                    
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Row 2 -->
-                    <!--<div class="row aps-form-item pd0">
-                        <div class="col-12 col-sm-3 aps-lable-name pl0">
-                            <div class="title-name">Đơn vị công tác</div>
+                            <div class="title-name">Đơn vị phân công</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-input pr0">
                             <div class="custom-select">
@@ -271,7 +257,19 @@
                                         aria-label="Default select example"></select>
                             </div>
                         </div>
-                    </div>-->
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Vị trí</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropViTri" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Row 3 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
@@ -297,6 +295,18 @@
                         </div>
                     </div>
 
+                    <!-- Row 4.1 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Chính thức</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="d-flex align-items-center" style="min-height: 38px;">
+                                <input type="checkbox" id="chkChinhThuc" />
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Row 5 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
@@ -310,6 +320,16 @@
                         </div>
                         <div class="col-12 col-sm-3 aps-form-input pr0 pos-relative">
                             <input id="txtNgayHetHieuLuc" class="form-control" placeholder="dd/mm/yyyy">
+                        </div>
+                    </div>
+
+                    <!-- Row 6 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 aps-lable-name pl0">
+                            <div class="title-name">Ghi chú</div>
+                        </div>
+                        <div class="col-12 aps-form-input pr0">
+                            <textarea id="txtNote" class="form-control" rows="6" placeholder="Ghi chú"></textarea>
                         </div>
                     </div>
                 </div>
@@ -329,6 +349,14 @@
 </div>
 <!-- page script -->
 <script src="modules/cocautochuc/script/phanconglaodong.js?v=1.0.0.5"></script>
+<style>
+    /* Override global .form-control height so textarea shows as multi-line */
+    #modalAddNhiemVu #txtNote {
+        min-height: 140px !important;
+        height: 140px !important;
+        resize: vertical;
+    }
+</style>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanCongLaoDong'] = new PhanCongLaoDong();
