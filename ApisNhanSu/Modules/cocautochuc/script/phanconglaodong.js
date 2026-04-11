@@ -10,12 +10,135 @@ function PhanCongLaoDong() { };
 PhanCongLaoDong.prototype = {
     strCoCauToChuc_Id: '',
     dtCoCauToChuc: [],
+    version: '1.0.0.5',
+
+    getVaiTroId: function () {
+        // Backend thường lọc theo strVaiTro_Id (vai trò). Một số luồng UI lại dùng appId (ứng dụng).
+        // Ưu tiên dùng edu.system.strVaiTro_Id nếu đã có; fallback sang appId/sessionStorage.
+        try {
+            if (edu && edu.system) {
+                if (edu.system.strVaiTro_Id) return edu.system.strVaiTro_Id;
+                if (edu.system.appId) return edu.system.appId;
+            }
+            var strChucNang = sessionStorage.getItem("strChucNang");
+            if (strChucNang) {
+                var objChucNang = JSON.parse(strChucNang);
+                return objChucNang && objChucNang.appId ? objChucNang.appId : "";
+            }
+        } catch (e) {
+        }
+        return "";
+    },
+
+    ensureMappingCombos: function () {
+        // Tạo combo ẩn để map tên trạng thái quan hệ lao động khi API chỉ trả CODE
+        try {
+            if ($("#dropHiddenTrangThaiQHLD").length === 0) {
+                $("body").append('<select id="dropHiddenTrangThaiQHLD" style="display:none"></select>');
+            }
+            edu.system.loadToCombo_DanhMucDuLieu("CORE.QUANHELAODONG.TRANGTHAI", "dropHiddenTrangThaiQHLD");
+        } catch (e) {
+        }
+    },
+
+    normalizeEmploymentRows: function (rows) {
+        var me = this;
+        if (!Array.isArray(rows)) return [];
+
+        var getOptionText = function (selectId, value) {
+            try {
+                if (value === null || value === undefined || value === "") return "";
+                var $opt = $("#" + selectId + " option[value='" + value + "']");
+                if ($opt && $opt.length) return ($opt.text() || "").trim();
+            } catch (e) { }
+            return "";
+        };
+
+        var lookupOrgName = function (orgId) {
+            if (!orgId) return "";
+            try {
+                if (Array.isArray(me.dtDonVi) && me.dtDonVi.length) {
+                    var found = me.dtDonVi.find(function (x) { return x && x.ID == orgId; });
+                    if (found && found.NAME) return found.NAME;
+                }
+            } catch (e) { }
+            return "";
+        };
+
+        return rows.map(function (r) {
+            if (!r) return r;
+            // Legal entity
+            if (!r.LEGAL_ENTITY_NAME && r.LEGAL_ENTITY_ID) {
+                r.LEGAL_ENTITY_NAME = lookupOrgName(r.LEGAL_ENTITY_ID);
+            }
+            // Status name
+            if (!r.EMPLOYMENT_STATUS_CODE_NAME && r.EMPLOYMENT_STATUS_CODE) {
+                r.EMPLOYMENT_STATUS_CODE_NAME = getOptionText("dropHiddenTrangThaiQHLD", r.EMPLOYMENT_STATUS_CODE);
+            }
+            // Type name (page đã có combo CORE.QUANHELAODONG.LOAI)
+            if (!r.EMPLOYMENT_TYPE_CODE_NAME && r.EMPLOYMENT_TYPE_CODE) {
+                r.EMPLOYMENT_TYPE_CODE_NAME = getOptionText("dropSearch_QuanHe", r.EMPLOYMENT_TYPE_CODE);
+            }
+            return r;
+        });
+    },
+
+    buildQuanHeFromPersonList: function (personId) {
+        var me = this;
+        var pid = personId || (me.currentNhanSu && (me.currentNhanSu.PERSON_ID || me.currentNhanSu.ID)) || "";
+        if (!pid) return [];
+
+        // Nguồn ưu tiên: row đang chọn -> danh sách phân công
+        var source = (me.currentNhanSu && (me.currentNhanSu.PERSON_ID || me.currentNhanSu.ID) == pid) ? me.currentNhanSu : null;
+        if (!source && Array.isArray(me.dtPhanCongLaoDong)) {
+            source = me.dtPhanCongLaoDong.find(function (x) {
+                return x && ((x.PERSON_ID || x.ID) == pid);
+            });
+        }
+        if (!source) return [];
+
+        // Person list trả CORE_EMPLOYMENT_ID + EMPLOYMENT_* (join)
+        var employmentId = source.CORE_EMPLOYMENT_ID || source.EMPLOYMENT_ID;
+        if (!employmentId) return [];
+
+        var employerOrgId = source.EMPLOYMENT_ORG_ID || source.ORG_ID || source.EMPLOYER_ORG_ID;
+        return [
+            {
+                ID: employmentId,
+                PERSON_ID: pid,
+                EMPLOYMENT_TYPE_CODE: source.EMPLOYMENT_TYPE_CODE,
+                EMPLOYMENT_TYPE_CODE_NAME: source.EMPLOYMENT_TYPE_CODE_NAME,
+                EMPLOYMENT_STATUS_CODE: source.EMPLOYMENT_STATUS_CODE,
+                EMPLOYMENT_STATUS_CODE_NAME: source.EMPLOYMENT_STATUS_CODE_NAME,
+                LEGAL_ENTITY_ID: source.LEGAL_ENTITY_ID,
+                LEGAL_ENTITY_NAME: source.LEGAL_ENTITY_NAME,
+                EMPLOYER_ORG_ID: employerOrgId,
+                EFFECTIVE_FROM: source.EMPLOYMENT_EFFECTIVE_FROM || source.EFFECTIVE_FROM,
+                EFFECTIVE_TO: source.EMPLOYMENT_EFFECTIVE_TO || source.EFFECTIVE_TO,
+                IS_PRIMARY: source.EMPLOYMENT_IS_PRIMARY != null ? source.EMPLOYMENT_IS_PRIMARY : source.IS_PRIMARY
+            }
+        ];
+    },
 
     init: function () {
         var me = this;
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
+        // Đồng bộ vai trò: hệ thống đang dùng edu.system.appId (vai trò/ứng dụng).
+        try {
+            if (edu && edu.system && !edu.system.strVaiTro_Id) {
+                edu.system.strVaiTro_Id = me.getVaiTroId();
+            }
+            window.__PCLD_VERSION__ = me.version;
+            console.log('[PCLD]', me.version, {
+                appId: edu && edu.system ? edu.system.appId : undefined,
+                strVaiTro_Id: edu && edu.system ? edu.system.strVaiTro_Id : undefined,
+                resolvedVaiTroId: me.getVaiTroId()
+            });
+        } catch (e) { }
+
+        me.ensureMappingCombos();
         me.getList_PhanCongLaoDong();
         me.getList_DonVi_Search();
         edu.system.loadToCombo_DanhMucDuLieu("CORE.QUANHELAODONG.LOAI", "dropSearch_QuanHe,dropPhanLoai");
@@ -256,7 +379,7 @@ PhanCongLaoDong.prototype = {
             'iM': edu.system.iM,
             'strId': me.strNhiemVu_Id,
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strVaiTro_Id': edu.system.strVaiTro_Id || "",
+            'strVaiTro_Id': me.getVaiTroId(),
             'strPerson_Id': aData.PERSON_ID || aData.ID,
             'strEmployment_Id': aData.EMPLOYMENT_ID,
             'strAssignment_Type_Code': edu.system.getValById('dropPhanLoai'),
@@ -309,13 +432,18 @@ PhanCongLaoDong.prototype = {
     getList_NhiemVu: function () {
         var me = this;
         var aData = me.currentNhanSu;
+        var strPersonId = (aData && (aData.PERSON_ID || aData.ID)) || '';
+        var strEmploymentId = (aData && aData.EMPLOYMENT_ID) || '';
         var obj_save = {
-            'action': 'NS_HoSoNhanSu4_MH/DSA4BRICLjMkHgAyMigmLywkLzUDOAPP',
-            'func': 'PKG_CORE_HOSONHANSU_04.LayDSCore_AssignmentBy',
+            'action': 'NS_HoSoNhanSu4_MH/BiQ1HgIuMyQeADIyKCYvLCQvNQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Get_Core_Assignment',
             'iM': edu.system.iM,
-            'strPerson_Id': (aData && (aData.PERSON_ID || aData.ID)) || '',
-            'strEmplotment_Id': aData.EMPLOYMENT_ID,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
             'strNguoiThucHien_Id': edu.system.userId,
+
+            'strPerson_Id': strPersonId,
+            'strEmployment_Id': strEmploymentId,
         };
         //
 
@@ -348,10 +476,12 @@ PhanCongLaoDong.prototype = {
         var me = this;
         //--Edit
         var obj_save = {
-            'action': 'NS_HoSoNhanSu4_MH/GS4gHgIuMyQeADIyKCYvLCQvNQPP',
-            'func': 'PKG_CORE_HOSONHANSU_04.Xoa_Core_Assignment',
+            'action': 'NS_HoSoNhanSu4_MH/BSQtHgIuMyQeADIyKCYvLCQvNQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Del_Core_Assignment',
             'iM': edu.system.iM,
             'strId': Ids,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //default
@@ -402,9 +532,11 @@ PhanCongLaoDong.prototype = {
     getDetail_Assignment: function (strId) {
         var me = this;
         var obj_save = {
-            'action': 'NS_HoSoNhanSu4_MH/DSA4BRICLjMkHgAyMigmLywkLzUTT',
-            'func': 'PKG_CORE_HOSONHANSU_04.LayTTCore_Assignment',
+            'action': 'NS_HoSoNhanSu4_MH/BiQ1HgIuMyQeADIyKCYvLCQvNR4DOB4IJQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Get_Core_Assignment_By_Id',
             'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
             'strId': strId,
             'strNguoiThucHien_Id': edu.system.userId,
         };
@@ -509,6 +641,7 @@ PhanCongLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
+                    me.dtDonVi = data.Data || [];
                     edu.system.loadToCombo_data({
                         data: data.Data,
                         renderInfor: {
@@ -592,7 +725,7 @@ PhanCongLaoDong.prototype = {
             'func': 'PKG_CORE_HOSONHANSU_04.Get_Core_Employment',
             'iM': edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strVaiTro_Id': edu.system.strVaiTro_Id || "",
+            'strVaiTro_Id': me.getVaiTroId(),
             'strNguoiThucHien_Id': edu.system.userId,
             'strPerson_Id': strPersonId,
         };
@@ -600,8 +733,19 @@ PhanCongLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me["dtQuanHeLaoDong"] = data.Data;
-                    me.genTable_QuanHeLaoDong(data.Data);
+                    var rows = (data.Data && data.Data.length) ? data.Data : me.buildQuanHeFromPersonList(strPersonId);
+                    rows = me.normalizeEmploymentRows(rows);
+                    me["dtQuanHeLaoDong"] = rows;
+                    me.genTable_QuanHeLaoDong(rows);
+
+                    // Combo danh mục load async; rerender 1 nhịp để map tên trạng thái
+                    setTimeout(function () {
+                        try {
+                            var re = me.normalizeEmploymentRows(me.dtQuanHeLaoDong || []);
+                            me.dtQuanHeLaoDong = re;
+                            me.genTable_QuanHeLaoDong(re);
+                        } catch (e) { }
+                    }, 300);
                 }
                 else {
                     edu.system.alert("Lỗi: " + data.Message, "s");
@@ -631,7 +775,7 @@ PhanCongLaoDong.prototype = {
                     "mDataProp": "EMPLOYMENT_TYPE_CODE_NAME"
                 },
                 {
-                    "mDataProp": "EMPLOYER_ORG_NAME"
+                    "mDataProp": "LEGAL_ENTITY_NAME"
                 },
                 {
                     "mDataProp": "EMPLOYMENT_STATUS_CODE_NAME"
