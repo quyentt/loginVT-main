@@ -44,7 +44,7 @@ ViTriCongViec.prototype = {
             edu.util.viewValById("txtMa", data.POSITION_CODE);
             edu.util.viewValById("txtTen", data.POSITION_NAME);
             edu.util.viewValById("txtTenVietTat", data.POSITION_SHORT_NAME);
-            edu.util.viewValById("dropPhanLoai", data.RELATION_TYPE_CODE_ID);
+            edu.util.viewValById("dropPhanLoai", data.POSITION_TYPE_CODE);
             edu.util.viewValById("dropChuChot", data.IS_KEY_POSITION);
             edu.util.viewValById("dropChucDanh", strChucDanh);
             edu.util.viewValById("txtHeadCount", data.MAX_HEADCOUNT);

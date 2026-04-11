@@ -13,6 +13,7 @@ CoCauToChuc.prototype = {
 
     init: function () {
         var me = this;
+        console.log(22222222);
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -57,7 +58,7 @@ CoCauToChuc.prototype = {
         $("#btnDelete_CoCauToChuc").click(function () {
             edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
             $("#btnYes").click(function (e) {
-                me.delete_CoCauToChuc(arrChecked_Id[i]);
+                me.delete_CoCauToChuc(me.strCoCauToChuc_Id);
             });
         });
 
@@ -78,7 +79,7 @@ CoCauToChuc.prototype = {
             var strId = this.id;
             var data = me.dtQuanHe.find(e => e.ID == strId);
             me["strQuanHe_Id"] = data.ID;
-            edu.util.viewValById("dropDonVi_ChaNew", data.RELATION_TYPE_CODE_ID);
+            edu.util.viewValById("dropDonVi_ChaNew", data.PARENT_ORG_ID);
             edu.util.viewValById("txtNgayHieuLuc_ChaNew", data.START_DATE);
             edu.util.viewValById("txtNgayHetHieuLuc_ChaNew", data.END_DATE);
             edu.util.viewValById("dropLoaiQuanHe_ChaNew", data.RELATION_TYPE_CODE_ID);
@@ -442,7 +443,7 @@ CoCauToChuc.prototype = {
                 code: "",
                 avatar: ""
             },
-            renderPlace: ["dropDonVi_Cha"],
+            renderPlace: ["dropDonVi_Cha", "dropDonVi_ChaNew"],
             type: "",
             title: "Chọn cơ cấu tổ chức cha",
         })
@@ -461,16 +462,25 @@ CoCauToChuc.prototype = {
         edu.system.loadToTreejs_data(obj);
         $('#treesjs_cocautochuc').on("select_node.jstree", function (e, data) {
             var strId = data.node.id;
+            console.log(111111);
+            //$(".btnOpenDelete").show();
+            //$(".zoneOpenNew").hide();
             var data = me.dtCoCauToChuc.find(e => e.ID == strId);
             me["strCoCauToChuc_Id"] = data.ID;
             edu.util.viewValById("txtMa", data.CODE);
             edu.util.viewValById("txtTen", data.NAME);
             edu.util.viewValById("dropLoaiDonVi", data.ORG_TYPE_CODE);
-            edu.util.viewValById("txtTenVietTat", data.MOTA);
+            edu.util.viewValById("txtTenVietTat", data.SHORT_NAME);
             edu.util.viewValById("txtNgayHieuLuc", data.UNIT_START_DATE);
             edu.util.viewValById("txtNgayHetHieuLuc", data.UNIT_END_DATE);
             edu.util.viewValById("dropTrangThai", data.UNIT_IS_ACTIVE);
             $("#modalDonVi").modal("show");
+            me["strQuanHe_Id"] = "";
+            edu.util.viewValById("dropDonVi_Cha", data.MOTA);
+            edu.util.viewValById("txtNgayHieuLuc_Cha", data.MOTA);
+            edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.MOTA);
+            edu.util.viewValById("dropLoaiQuanHe_Cha", data.MOTA);
+            edu.util.viewValById("dropTrangThai_Cha", 1);
             me.getList_QuanHe();
         });
         /*III. Callback*/
@@ -501,6 +511,14 @@ CoCauToChuc.prototype = {
         if (obj_save.strId) {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeDjMmHhMkLSA1KC4v';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Org_Relation'
+            
+        }
+        if ($('#modalQuanHe').hasClass('show')) {
+            obj_save.strParent_Org_Id = edu.system.getValById('dropDonVi_ChaNew');
+            obj_save.strRelation_Type_Code = edu.system.getValById('dropLoaiQuanHe_ChaNew');
+            obj_save.dIs_Active = edu.system.getValById('dropTrangThai_ChaNew');
+            obj_save.strStart_Date = edu.system.getValById('txtNgayHieuLuc_ChaNew');
+            obj_save.strEnd_Date = edu.system.getValById('txtNgayHetHieuLuc_ChaNew');
         }
         //default
         edu.system.makeRequest({
@@ -513,6 +531,7 @@ CoCauToChuc.prototype = {
                         edu.system.alert("Cập nhật thành công!");
                     }
                     me.getList_QuanHe();
+                    me.getList_CoCauToChuc();
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -612,6 +631,7 @@ CoCauToChuc.prototype = {
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
                     me.getList_QuanHe();
+                    me.getList_CoCauToChuc();
                 });
             },
             contentType: true,
@@ -680,6 +700,15 @@ CoCauToChuc.prototype = {
             edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.END_DATE);
             edu.util.viewValById("dropLoaiQuanHe_Cha", data.RELATION_TYPE_CODE_ID);
             edu.util.viewValById("dropTrangThai_Cha", data.IS_ACTIVE);
+            $("#tblQuanHe").parent().parent().parent().show();
+        } else {
+            me["strQuanHe_Id"] = "";
+            edu.util.viewValById("dropDonVi_Cha", data.MOTA);
+            edu.util.viewValById("txtNgayHieuLuc_Cha", data.MOTA);
+            edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.MOTA);
+            edu.util.viewValById("dropLoaiQuanHe_Cha", data.MOTA);
+            edu.util.viewValById("dropTrangThai_Cha", 1);
+            $("#tblQuanHe").parent().parent().parent().hide();
         }
         /*III. Callback*/
     },
