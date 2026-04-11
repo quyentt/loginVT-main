@@ -226,22 +226,26 @@ systemroot.prototype = {
         $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
             e.preventDefault();
             var strBaoCao_Id = this.id;
+            me["strMauBaoCao_Id"] = strBaoCao_Id;
+            var data = me.dtMauBaoCao.find(e => e.ID == strBaoCao_Id);
 
             var html = '<div class="row">';
-
+            html += '<div class="pull-left" style="padding-bottom: 5px">';
+            html += '<a id="btnDownload_MauFileBaoCao" href="' + me.strhost + data.SUAFILEBAOCAO + '" class="btn btn-default"><i class="fa fa-cloud-download"></i> Tải mẫu chuẩn</a>';
+            html += '</div>';
             html += '<div class="pull-right" style="padding-bottom: 5px">';
             html += '<a class="btn btn-primary btnAdd" id="btnAdd_MauFileBaoCao" href="#"><i class="fa fa-plus"></i> Thêm mới</a>';
             html += '<a id="btnDelete_MauFileBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>';
             html += '</div>';
 
-            html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
-            me.dtMauBaoCao.forEach((e, i) => {
-                if (!e.SUAFILEBAOCAO) return;
-                html += '<li class="btnBaoCao"  id="' + e.ID +'"><a   href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
-            })
-            html += '</ul></div>'
+            //html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
+            //me.dtMauBaoCao.forEach((e, i) => {
+            //    if (!e.SUAFILEBAOCAO) return;
+            //    html += '<li class="btnBaoCao"  id="' + e.ID +'"><a   href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
+            //})
+            //html += '</ul></div>'
 
-            html += '<div class="col-sm-9 item-search">'
+            html += '<div class="col-sm-12 item-search">'
             html += '<table id="tblMauBaoCao" class="table table-hover table-bordered table-noborder">';
             html += '<thead>';
             html += '<th>Stt</th>';
@@ -259,8 +263,9 @@ systemroot.prototype = {
 
             $("#modalBaoCao #modal_body").html(html)
             $("#modalBaoCao").modal("show");
-            me["strMauBaoCao_Id"] = strBaoCao_Id;
+            
             me.getList_MauFileBaoCao();
+            $("#modalBaoCao .myModalLabel1").html('<i class="fa fa-plus"></i></span> <span class="lang" key="">Báo cáo - ' + data.MAUIMPORT_TEN + '</span>')
             $("#modalBaoCao").delegate(".btnBaoCao", "click", function () {
                 var strId = this.id;
                 me["strMauBaoCao_Id"] = strId;
@@ -322,6 +327,9 @@ systemroot.prototype = {
                         me.delete_MauFileBaoCao(arrChecked_Id[i]);
                     }
                 });
+            });
+            $("#btnDownload_MauFileBaoCao").click(function () {
+                var data = me.dtMauBaoCao.find(e => e.ID == me.strMauBaoCao_Id);
             });
 
             if ($("#modalMauBaoCao").length == 0) {
@@ -6919,6 +6927,7 @@ systemroot.prototype = {
                     if (d.Success) {
                         $("#modalBaoCao #modal_body").html('<iframe src="' + me.strhost + d.Data + '" width="' + (window.screen.width - 100) + 'px" height="' + (window.screen.width - 300) + 'px"></iframe>');
                         $("#modalBaoCao").modal("show");
+                        $("#modalBaoCao .myModalLabel1").html('<i class="fa fa-plus"></i></span> <span class="lang" key="">Báo cáo</span>')
 
                     } else {
                         edu.system.alert(d.Message);
@@ -9463,8 +9472,8 @@ systemroot.prototype = {
             'strNGUOIDUNG_ID': edu.system.getValById('txtAAAA'),
             'strBAOCAO_ID': me.strMauBaoCao_Id,
             'strCHUCNANG_ID': edu.system.getValById('txtAAAA'),
-            'PageNumber': edu.system.pageIndex_default,
-            'ItemPerPage': edu.system.pageSize_default,
+            'PageNumber': 1,
+            'ItemPerPage': 100000,
         };
         //
 
