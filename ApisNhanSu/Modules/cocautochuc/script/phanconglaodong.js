@@ -45,6 +45,39 @@ PhanCongLaoDong.prototype = {
         var me = this;
         if (!Array.isArray(rows)) return [];
 
+        var parseVNDate = function (s) {
+            try {
+                if (!s) return null;
+                if (typeof s !== 'string') s = String(s);
+                s = s.trim();
+                // Expect dd/mm/yyyy
+                var parts = s.split('/');
+                if (parts.length !== 3) return null;
+                var dd = parseInt(parts[0], 10);
+                var mm = parseInt(parts[1], 10);
+                var yy = parseInt(parts[2], 10);
+                if (!dd || !mm || !yy) return null;
+                var d = new Date(yy, mm - 1, dd);
+                if (isNaN(d.getTime())) return null;
+                return d;
+            } catch (e) {
+                return null;
+            }
+        };
+
+        var computeEffectiveStatusName = function (fromStr, toStr) {
+            var fromD = parseVNDate(fromStr);
+            var toD = parseVNDate(toStr);
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (fromD && fromD.getTime() > today.getTime()) return "Chưa hiệu lực";
+            if (toD && toD.getTime() < today.getTime()) return "Hết hiệu lực";
+            // Nếu không có toD hoặc nằm trong khoảng
+            if (fromD || toD) return "Còn hiệu lực";
+            return "";
+        };
+
         var getOptionText = function (selectId, value) {
             try {
                 if (value === null || value === undefined || value === "") return "";
@@ -67,6 +100,8 @@ PhanCongLaoDong.prototype = {
 
         return rows.map(function (r) {
             if (!r) return r;
+            // Soft-delete: nếu API có cờ active thì bỏ các bản ghi đã xóa
+            if (r.IS_ACTIVE === 0 || r.IS_ACTIVE === "0") return null;
             // Legal entity
             if (!r.LEGAL_ENTITY_NAME && r.LEGAL_ENTITY_ID) {
                 r.LEGAL_ENTITY_NAME = lookupOrgName(r.LEGAL_ENTITY_ID);
@@ -75,12 +110,19 @@ PhanCongLaoDong.prototype = {
             if (!r.EMPLOYMENT_STATUS_CODE_NAME && r.EMPLOYMENT_STATUS_CODE) {
                 r.EMPLOYMENT_STATUS_CODE_NAME = getOptionText("dropHiddenTrangThaiQHLD", r.EMPLOYMENT_STATUS_CODE);
             }
+            // Fallback theo ngày hiệu lực nếu vẫn chưa map được tên
+            if (!r.EMPLOYMENT_STATUS_CODE_NAME) {
+                var fromStr = r.EMPLOYMENT_EFFECTIVE_FROM || r.EFFECTIVE_FROM;
+                var toStr = r.EMPLOYMENT_EFFECTIVE_TO || r.EFFECTIVE_TO;
+                var computed = computeEffectiveStatusName(fromStr, toStr);
+                if (computed) r.EMPLOYMENT_STATUS_CODE_NAME = computed;
+            }
             // Type name (page đã có combo CORE.QUANHELAODONG.LOAI)
             if (!r.EMPLOYMENT_TYPE_CODE_NAME && r.EMPLOYMENT_TYPE_CODE) {
                 r.EMPLOYMENT_TYPE_CODE_NAME = getOptionText("dropSearch_QuanHe", r.EMPLOYMENT_TYPE_CODE);
             }
             return r;
-        });
+        }).filter(function (x) { return !!x; });
     },
 
     buildQuanHeFromPersonList: function (personId) {
@@ -97,9 +139,13 @@ PhanCongLaoDong.prototype = {
         }
         if (!source) return [];
 
-        // Person list trả CORE_EMPLOYMENT_ID + EMPLOYMENT_* (join)
-        var employmentId = source.CORE_EMPLOYMENT_ID || source.EMPLOYMENT_ID;
+        // Person list trả CORE_EMPLOYMENT_ID/EMPLOYMENT_ID + EMPLOYMENT_* (join)
+        var employmentId = source.CORE_EMPLOYMENT_ID || source.EMPLOYMENT_ID || source.EMPLOYMENT_Id;
         if (!employmentId) return [];
+
+        // Soft-delete: nếu nguồn list có cờ active thì bỏ các bản ghi đã xóa
+        var isActive = (source.EMPLOYMENT_IS_ACTIVE != null) ? source.EMPLOYMENT_IS_ACTIVE : source.IS_ACTIVE;
+        if (isActive === 0 || isActive === "0") return [];
 
         var employerOrgId = source.EMPLOYMENT_ORG_ID || source.ORG_ID || source.EMPLOYER_ORG_ID;
         return [
@@ -118,6 +164,92 @@ PhanCongLaoDong.prototype = {
                 IS_PRIMARY: source.EMPLOYMENT_IS_PRIMARY != null ? source.EMPLOYMENT_IS_PRIMARY : source.IS_PRIMARY
             }
         ];
+    },
+
+    fetchEmploymentById: function (employmentId, callback) {
+        var me = this;
+        if (!employmentId) {
+            if (typeof callback === "function") callback("missing employmentId");
+            return;
+        }
+
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu4_MH/BiQ1HgIuMyQeBCwxLS44LCQvNR4DOB4IJQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Get_Core_Employment_By_Id',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strId': employmentId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                try {
+                    if (data && data.Success) {
+                        var detail = (data.Data && data.Data.length) ? data.Data[0] : null;
+                        if (typeof callback === "function") callback(null, detail);
+                        return;
+                    }
+                    if (typeof callback === "function") callback((data && data.Message) ? data.Message : "fetch failed");
+                } catch (e) {
+                    if (typeof callback === "function") callback(e);
+                }
+            },
+            error: function (er) {
+                if (typeof callback === "function") callback(er);
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    enrichEmploymentRowsFromDetails: function (rows, done) {
+        var me = this;
+        if (!Array.isArray(rows) || rows.length === 0) {
+            if (typeof done === "function") done([]);
+            return;
+        }
+
+        var enriched = [];
+        var i = 0;
+        var next = function () {
+            if (i >= rows.length) {
+                if (typeof done === "function") done(enriched);
+                return;
+            }
+
+            var baseRow = rows[i++] || {};
+            var id = baseRow.ID;
+            if (!id) {
+                enriched.push(baseRow);
+                next();
+                return;
+            }
+
+            me.fetchEmploymentById(id, function (err, detail) {
+                if (!err && detail) {
+                    // Merge: ưu tiên detail, fallback baseRow cho các field hiển thị
+                    var merged = $.extend({}, baseRow, detail);
+                    merged.ID = detail.ID || detail.Id || baseRow.ID;
+                    merged.EFFECTIVE_FROM = merged.EFFECTIVE_FROM || baseRow.EFFECTIVE_FROM;
+                    merged.EFFECTIVE_TO = merged.EFFECTIVE_TO || baseRow.EFFECTIVE_TO;
+                    merged.EMPLOYMENT_TYPE_CODE_NAME = merged.EMPLOYMENT_TYPE_CODE_NAME || baseRow.EMPLOYMENT_TYPE_CODE_NAME;
+                    merged.EMPLOYMENT_STATUS_CODE_NAME = merged.EMPLOYMENT_STATUS_CODE_NAME || baseRow.EMPLOYMENT_STATUS_CODE_NAME;
+                    merged.LEGAL_ENTITY_NAME = merged.LEGAL_ENTITY_NAME || baseRow.LEGAL_ENTITY_NAME;
+                    merged.EMPLOYER_ORG_ID = merged.EMPLOYER_ORG_ID || merged.ORG_ID || baseRow.EMPLOYER_ORG_ID;
+                    enriched.push(merged);
+                } else {
+                    enriched.push(baseRow);
+                }
+                next();
+            });
+        };
+
+        next();
     },
 
     init: function () {
@@ -187,6 +319,9 @@ PhanCongLaoDong.prototype = {
             var dataQH = me.dtQuanHeLaoDong.find(e => e.ID == strEmploymentId);
             me["currentNhanSu"]["EMPLOYMENT_ID"] = strEmploymentId;
             me["currentNhanSu"]["EMPLOYMENT_TYPE_CODE_NAME"] = dataQH.EMPLOYMENT_TYPE_CODE_NAME;
+            // Lưu đơn vị của quan hệ lao động đã chọn để dùng khi insert assignment (ORG_ID thường NOT NULL)
+            me["currentNhanSu"]["EMPLOYER_ORG_ID"] = dataQH.EMPLOYER_ORG_ID || dataQH.ORG_ID || dataQH.ORG_UNIT_ID || me["currentNhanSu"]["EMPLOYER_ORG_ID"];
+            me["currentOrgUnitForPosition"] = dataQH.EMPLOYER_ORG_ID || dataQH.ORG_ID || dataQH.ORG_UNIT_ID || me["currentOrgUnitForPosition"];
             
             // Đóng modal chọn quan hệ và mở modal nhiệm vụ
             $("#modalChonQuanHe").modal("hide");
@@ -250,9 +385,62 @@ PhanCongLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
+                    var dtReRult = data.Data || [];
+
+                    var selectedEmploymentType = edu.system.getValById('dropSearch_QuanHe');
+                    var selectedOrgId = edu.system.getValById('dropSearch_DonVi');
+
+                    // Đồng bộ với trang Quan hệ lao động: chỉ hiển thị người thực sự có QHLD hợp lệ
+                    // (có employment id và chưa soft-delete)
+                    dtReRult = dtReRult.filter(function (x) {
+                        if (!x) return false;
+                        var employmentId = x.CORE_EMPLOYMENT_ID || x.EMPLOYMENT_ID || x.EMPLOYMENT_Id;
+                        if (!employmentId) return false;
+                        var isActive = (x.EMPLOYMENT_IS_ACTIVE != null) ? x.EMPLOYMENT_IS_ACTIVE : x.IS_ACTIVE;
+                        if (isActive === 0 || isActive === "0") return false;
+
+                        // Bộ lọc loại quan hệ lao động
+                        if (selectedEmploymentType) {
+                            var typeCode = x.EMPLOYMENT_TYPE_CODE || x.EMPLOYMENT_TYPE_Code || '';
+                            var typeName = x.EMPLOYMENT_TYPE_CODE_NAME || x.EMPLOYMENT_TYPE_CODE_Name || '';
+                            if (typeCode) {
+                                if (typeCode != selectedEmploymentType) return false;
+                            } else {
+                                // fallback theo tên nếu backend chỉ trả name
+                                var selectedText = '';
+                                try { selectedText = ($('#dropSearch_QuanHe option:selected').text() || '').trim(); } catch (e) { }
+                                if (selectedText && typeName && (typeName || '').trim() !== selectedText) return false;
+                            }
+                        }
+
+                        // Bộ lọc đơn vị
+                        if (selectedOrgId) {
+                            var orgId = x.ORG_ID || x.ORG_UNIT_ID || x.EMPLOYMENT_ORG_ID || x.EMPLOYER_ORG_ID || '';
+                            if (orgId) {
+                                if (orgId != selectedOrgId) return false;
+                            } else {
+                                // fallback theo tên nếu backend chỉ trả ORG_NAME
+                                var selectedOrgText = '';
+                                try { selectedOrgText = ($('#dropSearch_DonVi option:selected').text() || '').trim(); } catch (e) { }
+                                var orgName = (x.ORG_NAME || '').trim();
+                                if (selectedOrgText && orgName && orgName !== selectedOrgText) return false;
+                            }
+                        }
+                        return true;
+                    });
+
+                    dtReRult = me.normalizeEmploymentRows(dtReRult);
                     me["dtPhanCongLaoDong"] = dtReRult;
                     me.genTable_PhanCongLaoDong(dtReRult, data.Pager, "tblPhanCong");
+
+                    // Combo trạng thái QHLD load async; rerender 1 nhịp để map tên trạng thái
+                    setTimeout(function () {
+                        try {
+                            var re = me.normalizeEmploymentRows(me.dtPhanCongLaoDong || []);
+                            me.dtPhanCongLaoDong = re;
+                            me.genTable_PhanCongLaoDong(re, data.Pager, "tblPhanCong");
+                        } catch (e) { }
+                    }, 300);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -368,9 +556,13 @@ PhanCongLaoDong.prototype = {
             return;
         }
         
-        // Lấy thông tin đơn vị từ vị trí đã chọn
+        // Lấy thông tin đơn vị từ quan hệ lao động đã chọn (bắt buộc khi insert assignment)
         var strPositionId = edu.system.getValById('dropViTri');
-        var strOrgId = aData.ORG_UNIT_ID || '';
+        var strOrgId = me.currentOrgUnitForPosition || aData.EMPLOYER_ORG_ID || aData.ORG_ID || aData.ORG_UNIT_ID || '';
+        if (!strOrgId) {
+            edu.system.alert("Thiếu đơn vị của quan hệ lao động (strOrg_Id). Vui lòng chọn lại quan hệ lao động!", "w");
+            return;
+        }
         
         //--Edit
         var obj_save = {
@@ -450,8 +642,14 @@ PhanCongLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me["dtNhiemVu"] = data.Data;
-                    me.genTable_NhiemVu(data.Data);
+                    var rows = data.Data || [];
+                    // Soft-delete: backend set IS_ACTIVE=0 => không hiển thị như đã xóa
+                    rows = rows.filter(function (x) {
+                        if (!x) return false;
+                        return !(x.IS_ACTIVE === 0 || x.IS_ACTIVE === "0");
+                    });
+                    me["dtNhiemVu"] = rows;
+                    me.genTable_NhiemVu(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -733,19 +931,22 @@ PhanCongLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var rows = (data.Data && data.Data.length) ? data.Data : me.buildQuanHeFromPersonList(strPersonId);
+                    var rows = data.Data;
+                    var fromListApi = Array.isArray(rows) && rows.length > 0;
+
+                    if (!fromListApi) {
+                        rows = me.buildQuanHeFromPersonList(strPersonId);
+                        me.enrichEmploymentRowsFromDetails(rows, function (enriched) {
+                            enriched = me.normalizeEmploymentRows(enriched);
+                            me["dtQuanHeLaoDong"] = enriched;
+                            me.genTable_QuanHeLaoDong(enriched);
+                        });
+                        return;
+                    }
+
                     rows = me.normalizeEmploymentRows(rows);
                     me["dtQuanHeLaoDong"] = rows;
                     me.genTable_QuanHeLaoDong(rows);
-
-                    // Combo danh mục load async; rerender 1 nhịp để map tên trạng thái
-                    setTimeout(function () {
-                        try {
-                            var re = me.normalizeEmploymentRows(me.dtQuanHeLaoDong || []);
-                            me.dtQuanHeLaoDong = re;
-                            me.genTable_QuanHeLaoDong(re);
-                        } catch (e) { }
-                    }, 300);
                 }
                 else {
                     edu.system.alert("Lỗi: " + data.Message, "s");

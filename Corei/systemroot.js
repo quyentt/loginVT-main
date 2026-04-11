@@ -238,21 +238,12 @@ systemroot.prototype = {
             html += '<a id="btnDelete_MauFileBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>';
             html += '</div>';
 
-<<<<<<< HEAD
             //html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
             //me.dtMauBaoCao.forEach((e, i) => {
             //    if (!e.SUAFILEBAOCAO) return;
             //    html += '<li class="btnBaoCao"  id="' + e.ID +'"><a   href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
             //})
             //html += '</ul></div>'
-=======
-            html += '<div class="col-sm-3 item-search">Danh sách mẫu báo cáo<ul>'
-            me.dtMauBaoCao.forEach((e, i) => {
-                if (!e.SUAFILEBAOCAO) return;
-                html += '<li class="btnBaoCao"  id="' + e.ID +'"><a   href="#"> ' + (i + 1) + '. ' + e.MAUIMPORT_TENFILEMAU + ' </a></li>';
-            })
-            html += '</ul></div>'
->>>>>>> 38e0b7ce538f9bc421bc74420e1b5e96ab02c2ea
 
             html += '<div class="col-sm-12 item-search">'
             html += '<table id="tblMauBaoCao" class="table table-hover table-bordered table-noborder">';
@@ -274,10 +265,7 @@ systemroot.prototype = {
             $("#modalBaoCao").modal("show");
             
             me.getList_MauFileBaoCao();
-<<<<<<< HEAD
             $("#modalBaoCao .myModalLabel1").html('<i class="fa fa-plus"></i></span> <span class="lang" key="">Báo cáo - ' + data.MAUIMPORT_TEN + '</span>')
-=======
->>>>>>> 38e0b7ce538f9bc421bc74420e1b5e96ab02c2ea
             $("#modalBaoCao").delegate(".btnBaoCao", "click", function () {
                 var strId = this.id;
                 me["strMauBaoCao_Id"] = strId;
@@ -340,12 +328,9 @@ systemroot.prototype = {
                     }
                 });
             });
-<<<<<<< HEAD
             $("#btnDownload_MauFileBaoCao").click(function () {
                 var data = me.dtMauBaoCao.find(e => e.ID == me.strMauBaoCao_Id);
             });
-=======
->>>>>>> 38e0b7ce538f9bc421bc74420e1b5e96ab02c2ea
 
             if ($("#modalMauBaoCao").length == 0) {
                 
