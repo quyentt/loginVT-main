@@ -10,6 +10,8 @@ function ViTriCongViec() { };
 ViTriCongViec.prototype = {
     strCoCauToChuc_Id: '',
     dtCoCauToChuc: [],
+    _suggestTimer: null,
+    _suggestLastKeyword: '',
 
     init: function () {
         var me = this;
@@ -23,15 +25,37 @@ ViTriCongViec.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIVITRI", "dropPhanLoai");
         
         $("#btnSearch").click(function () {
+            me.hideSuggest_CoCauToChuc();
             me.getList_CoCauToChuc();
         });
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
+                me.hideSuggest_CoCauToChuc();
                 me.getList_CoCauToChuc();
             }
         });
+        // Gợi ý tìm kiếm (autocomplete) – giới hạn dữ liệu trong API Org Unit của màn này
+        $("#txtSearch_TuKhoa").on("input", function () {
+            var keyword = (this.value || "").trim();
+            me.debounceSuggest_CoCauToChuc(keyword);
+        });
+        // Ẩn gợi ý khi click ra ngoài
+        $(document).on("click", function (e) {
+            var $target = $(e.target);
+            if ($target.closest("#txtSearch_TuKhoa").length) return;
+            if ($target.closest("#txtSearch_TuKhoa_Suggest").length) return;
+            me.hideSuggest_CoCauToChuc();
+        });
+        // Click chọn gợi ý
+        $("#txtSearch_TuKhoa_Suggest").on("click", ".js-suggest-item", function () {
+            var name = $(this).data("name") || $(this).text();
+            edu.util.viewValById("txtSearch_TuKhoa", name);
+            me.hideSuggest_CoCauToChuc();
+            me.getList_CoCauToChuc();
+        });
         $('#dropSearch_LoaiDonVi').on('select2:select', function () {
+            me.hideSuggest_CoCauToChuc();
             me.getList_CoCauToChuc();
         });
         
@@ -91,6 +115,87 @@ ViTriCongViec.prototype = {
             });
         });
     },
+
+    debounceSuggest_CoCauToChuc: function (keyword) {
+        var me = this;
+        clearTimeout(me._suggestTimer);
+
+        // Bắt gợi ý từ 1 ký tự
+        if (!keyword || keyword.length < 1) {
+            me._suggestLastKeyword = keyword || '';
+            me.hideSuggest_CoCauToChuc();
+            return;
+        }
+
+        me._suggestTimer = setTimeout(function () {
+            // Tránh bắn lại nếu không đổi keyword
+            if (me._suggestLastKeyword === keyword) return;
+            me._suggestLastKeyword = keyword;
+            me.getSuggest_CoCauToChuc(keyword);
+        }, 80);
+    },
+
+    getSuggest_CoCauToChuc: function (keyword) {
+        var me = this;
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHg4zJh4ULyg1',
+            'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Org_Unit',
+            'iM': edu.system.iM,
+            'strTuKhoa': keyword,
+            'strOrg_Type_Code': edu.system.getValById('dropSearch_LoaiDonVi'),
+            'dIs_Offcial': edu.system.getValById('txtAAAA'),
+            'dIs_Active': edu.system.getValById('dropSearch_TrangThai'),
+            'strNgayXem': edu.system.getValById('txtSearch_NgayXem'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.renderSuggest_CoCauToChuc((data.Data || []).slice(0, 10));
+                }
+                else {
+                    me.hideSuggest_CoCauToChuc();
+                }
+            },
+            error: function () {
+                me.hideSuggest_CoCauToChuc();
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    renderSuggest_CoCauToChuc: function (items) {
+        var $box = $("#txtSearch_TuKhoa_Suggest");
+        if (!items || items.length === 0) {
+            $box.addClass("d-none").empty();
+            return;
+        }
+
+        var html = "";
+        for (var i = 0; i < items.length; i++) {
+            var it = items[i] || {};
+            var name = it.NAME || "";
+            var code = it.CODE ? (" (" + it.CODE + ")") : "";
+            html += '<button type="button" class="list-group-item list-group-item-action js-suggest-item"'
+                + ' data-id="' + (it.ID || "") + '"'
+                + ' data-name="' + (name.replace(/"/g, '&quot;')) + '"'
+                + '>'
+                + '<span>' + name + '</span>'
+                + (code ? '<small class="text-muted">' + code + '</small>' : '')
+                + '</button>';
+        }
+
+        $box.html(html).removeClass("d-none");
+    },
+
+    hideSuggest_CoCauToChuc: function () {
+        $("#txtSearch_TuKhoa_Suggest").addClass("d-none").empty();
+    },
     /*------------------------------------------
     --Discription: [3] AccessDB HOC
     --ULR:  Modules
@@ -115,14 +220,28 @@ ViTriCongViec.prototype = {
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me["dtCoCauToChuc"] = dtReRult;
+
+                    // Badge tổng số đơn vị (Pager thường null nên fallback theo Data.length)
+                    var total = 0;
+                    if (data.Pager) {
+                        total = data.Pager.TotalRecords || data.Pager.totalRecords || data.Pager.iTotalRecords
+                            || data.Pager.Total || data.Pager.total || 0;
+                    }
+                    if (!total && dtReRult && dtReRult.length !== undefined) {
+                        total = dtReRult.length;
+                    }
+                    $("#lblCoCauToChuc_Tong").text(total);
+
                     me.genTable_CoCauToChuc(dtReRult, data.Pager);
                 }
                 else {
+                    $("#lblCoCauToChuc_Tong").text('0');
                     edu.system.alert(" : " + data.Message, "s");
                 }
 
             },
             error: function (er) {
+                $("#lblCoCauToChuc_Tong").text('0');
 
                 edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
@@ -142,9 +261,21 @@ ViTriCongViec.prototype = {
     -------------------------------------------*/
     genTable_CoCauToChuc: function (data, iPager) {
         var me = this;
-        
+
+        // Khi filter theo từ khóa, DB có thể chỉ trả về node con mà không kèm node cha.
+        // `edu.system.loadToTreejs_data` render root bằng điều kiện parentId == null.
+        // Fix: coi các node có parent thiếu là root (set parentId = null).
+        var orgIds = new Set((data || []).map(function (x) { return x && x.ID; }));
+        var dataForTree = (data || []).map(function (x) {
+            if (!x) return x;
+            if (x.PARENT_ORG_ID && !orgIds.has(x.PARENT_ORG_ID)) {
+                x.PARENT_ORG_ID = null;
+            }
+            return x;
+        });
+
         var obj = {
-            data: data,
+            data: dataForTree,
             renderInfor: {
                 id: "ID",
                 parentId: "PARENT_ORG_ID",
@@ -156,7 +287,9 @@ ViTriCongViec.prototype = {
             splitString: 1000,
         };
         edu.system.loadToTreejs_data(obj);
-        $('#treesjs_cocautochuc').on("select_node.jstree", function (e, data) {
+
+        // Tránh bind trùng sự kiện khi render lại tree
+        $('#treesjs_cocautochuc').off("select_node.jstree").on("select_node.jstree", function (e, data) {
             var strId = data.node.id;
             var data = me.dtCoCauToChuc.find(e => e.ID == strId);
             me["strCoCauToChuc_Id"] = data.ID;

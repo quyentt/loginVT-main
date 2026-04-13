@@ -11,11 +11,21 @@ DanhMucNghe.prototype = {
     strDanhMucNghe_Id: '',
     dtDanhMucNghe: [],
 
+    // Master (unfiltered) lists for filter dropdowns
+    dtLoaiNgheAll: [],
+    dtNhomNgheAll: [],
+    dtChucDanhAll: [],
+    dtBacNgheAll: [],
+    _filterTimers: {},
+
     init: function () {
         var me = this;
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
+        if ($('#tblLoaiNghe').length > 0) {
+            me.loadFilterCombos();
+        }
         me.getList_BacNghe();
         me.getList_NgheNghiep();
         me.getList_NhomNghe();
@@ -317,6 +327,159 @@ DanhMucNghe.prototype = {
                     me.delete_NgheNghiep(arrChecked_Id[i]);
                 }
             });
+        });
+
+        if ($('#tblLoaiNghe').length > 0) {
+            me.bindFilters();
+        }
+    },
+
+    getValSafe: function (id) {
+        try {
+            return edu.system.getValById(id);
+        }
+        catch (e) {
+            return '';
+        }
+    },
+
+    debounce: function (key, fn, delayMs) {
+        var me = this;
+        if (!delayMs) delayMs = 250;
+        if (me._filterTimers[key]) {
+            clearTimeout(me._filterTimers[key]);
+        }
+        me._filterTimers[key] = setTimeout(function () {
+            fn();
+        }, delayMs);
+    },
+
+    bindFilters: function () {
+        var me = this;
+
+        // Loại nghề
+        $('#txtSearch_TuKhoa_LN').on('input', function () {
+            me.debounce('LN', function () { me.getList_LoaiNghe(); });
+        });
+        $('#dropSearch_TrangThai_LN').on('change select2:select', function () {
+            me.getList_LoaiNghe();
+        });
+
+        // Nhóm nghề
+        $('#txtSearch_TuKhoa_NN').on('input', function () {
+            me.debounce('NN', function () { me.getList_NhomNghe(); });
+        });
+        $('#dropSearch_TrangThai_NN').on('change select2:select', function () {
+            me.getList_NhomNghe();
+        });
+        $('#dropSearch_LoaiNghe_NN').on('change select2:select', function () {
+            me.getList_NhomNghe();
+        });
+
+        // Nhóm chức danh
+        $('#txtSearch_TuKhoa_CD').on('input', function () {
+            me.debounce('CD', function () { me.getList_ChucDanh(); });
+        });
+        $('#dropSearch_TrangThai_CD').on('change select2:select', function () {
+            me.getList_ChucDanh();
+        });
+        $('#dropSearch_LoaiNghe_CD').on('change select2:select', function () {
+            edu.util.viewValById('dropSearch_NhomNghe_CD', '');
+            me.applyFilter_NhomNghe_ForChucDanh();
+            me.getList_ChucDanh();
+        });
+        $('#dropSearch_NhomNghe_CD').on('change select2:select', function () {
+            me.getList_ChucDanh();
+        });
+
+        // Cấp bậc nghề
+        $('#txtSearch_TuKhoa_BN').on('input', function () {
+            me.debounce('BN', function () { me.getList_BacNghe(); });
+        });
+        $('#dropSearch_TrangThai_BN').on('change select2:select', function () {
+            me.getList_BacNghe();
+        });
+
+        // Nghề nghiệp
+        $('#txtSearch_TuKhoa_DM').on('input', function () {
+            me.debounce('DM', function () { me.getList_NgheNghiep(); });
+        });
+        $('#dropSearch_TrangThai_DM').on('change select2:select', function () {
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_LoaiNghe_DM').on('change select2:select', function () {
+            edu.util.viewValById('dropSearch_NhomNghe_DM', '');
+            edu.util.viewValById('dropSearch_ChucDanh_DM', '');
+            me.applyFilter_NhomNghe_ForNgheNghiep();
+            me.applyFilter_ChucDanh_ForNgheNghiep();
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_NhomNghe_DM').on('change select2:select', function () {
+            edu.util.viewValById('dropSearch_ChucDanh_DM', '');
+            me.applyFilter_ChucDanh_ForNgheNghiep();
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_ChucDanh_DM').on('change select2:select', function () {
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_BacNghe_DM').on('change select2:select', function () {
+            me.getList_NgheNghiep();
+        });
+    },
+
+    loadFilterCombos: function () {
+        var me = this;
+        me.getList_LoaiNghe({ forCombo: true });
+        me.getList_NhomNghe({ forCombo: true });
+        me.getList_ChucDanh({ forCombo: true });
+        me.getList_BacNghe({ forCombo: true });
+    },
+
+    applyFilter_NhomNghe_ForChucDanh: function () {
+        var me = this;
+        var cateId = me.getValSafe('dropSearch_LoaiNghe_CD');
+        var data = me.dtNhomNgheAll || [];
+        if (cateId) {
+            data = $.grep(data, function (x) { return (x.CATEGORY_ID == cateId); });
+        }
+        edu.system.loadToCombo_data({
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+            renderPlace: ["dropSearch_NhomNghe_CD"],
+            type: "",
+            title: "Chọn nhóm nghề",
+        });
+    },
+
+    applyFilter_NhomNghe_ForNgheNghiep: function () {
+        var me = this;
+        var cateId = me.getValSafe('dropSearch_LoaiNghe_DM');
+        var data = me.dtNhomNgheAll || [];
+        if (cateId) {
+            data = $.grep(data, function (x) { return (x.CATEGORY_ID == cateId); });
+        }
+        edu.system.loadToCombo_data({
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+            renderPlace: ["dropSearch_NhomNghe_DM"],
+            type: "",
+            title: "Chọn nhóm nghề",
+        });
+    },
+
+    applyFilter_ChucDanh_ForNgheNghiep: function () {
+        var me = this;
+        var familyId = me.getValSafe('dropSearch_NhomNghe_DM');
+        var data = me.dtChucDanhAll || [];
+        if (familyId) {
+            data = $.grep(data, function (x) { return (x.FAMILY_ID == familyId); });
+        }
+        edu.system.loadToCombo_data({
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+            renderPlace: ["dropSearch_ChucDanh_DM"],
+            type: "",
+            title: "Chọn chức danh",
         });
     },
     /*------------------------------------------
@@ -725,6 +888,7 @@ DanhMucNghe.prototype = {
                     else {
                         edu.system.alert("Cập nhật thành công!");
                     }
+                    me.getList_BacNghe({ forCombo: true });
                     me.getList_BacNghe();
                 }
                 else {
@@ -743,8 +907,9 @@ DanhMucNghe.prototype = {
             ]
         }, false, false, false, null);
     },
-    getList_BacNghe: function () {
+    getList_BacNghe: function (options) {
         var me = this;
+        options = options || {};
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4NJDckLQPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_Level',
@@ -756,22 +921,38 @@ DanhMucNghe.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    
-                    me["dtBacNghe"] = data.Data;
-                    me.genTable_BacNghe(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropCapBac_DM"],
-                        type: "",
-                        title: "Chọn bậc nghề",
-                    })
+
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtBacNgheAll = rows;
+                        edu.system.loadToCombo_data({
+                            data: rows,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropCapBac_DM", "dropSearch_BacNghe_DM"],
+                            type: "",
+                            title: "Chọn bậc nghề",
+                        });
+                        return;
+                    }
+
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_BN') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_BN');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    me["dtBacNghe"] = rows;
+                    me.genTable_BacNghe(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -837,6 +1018,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_BacNghe({ forCombo: true });
                     me.getList_BacNghe();
                 });
             },
@@ -861,7 +1043,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 7: Edit, 8: Checkbox
+                center: [0, 7, 8],
                 //right: [5]
             },
             aoColumns: [
@@ -939,6 +1122,7 @@ DanhMucNghe.prototype = {
                     else {
                         edu.system.alert("Cập nhật thành công!");
                     }
+                    me.getList_ChucDanh({ forCombo: true });
                     me.getList_ChucDanh();
                 }
                 else {
@@ -957,14 +1141,15 @@ DanhMucNghe.prototype = {
             ]
         }, false, false, false, null);
     },
-    getList_ChucDanh: function () {
+    getList_ChucDanh: function (options) {
         var me = this;
+        options = options || {};
 
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4GMy40MQPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_Group',
             'iM': edu.system.iM,
-            'strFamily_Id': edu.system.getValById('dropAAAA'),
+            'strFamily_Id': options.forCombo ? edu.system.getValById('dropAAAA') : (me.getValSafe('dropSearch_NhomNghe_CD') || edu.system.getValById('dropAAAA')),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -973,22 +1158,38 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtChucDanh"] = data.Data;
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtChucDanhAll = rows;
+                        edu.system.loadToCombo_data({
+                            data: rows,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropChucDanh_DM", "dropSearch_ChucDanh_DM"],
+                            type: "",
+                            title: "Chọn chức danh",
+                        });
+                        me.applyFilter_ChucDanh_ForNgheNghiep();
+                        return;
+                    }
 
-                    me.genTable_ChucDanh(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropChucDanh_DM"],
-                        type: "",
-                        title: "Chọn chức danh",
-                    })
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_CD') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_CD');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    me["dtChucDanh"] = rows;
+                    me.genTable_ChucDanh(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1054,6 +1255,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_ChucDanh({ forCombo: true });
                     me.getList_ChucDanh();
                 });
             },
@@ -1078,7 +1280,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 8: Edit, 9: Checkbox
+                center: [0, 8, 9],
                 //right: [5]
             },
             aoColumns: [
@@ -1159,6 +1362,7 @@ DanhMucNghe.prototype = {
                     else {
                         edu.system.alert("Cập nhật thành công!");
                     }
+                    me.getList_NhomNghe({ forCombo: true });
                     me.getList_NhomNghe();
                 }
                 else {
@@ -1177,14 +1381,15 @@ DanhMucNghe.prototype = {
             ]
         }, false, false, false, null);
     },
-    getList_NhomNghe: function () {
+    getList_NhomNghe: function (options) {
         var me = this;
+        options = options || {};
 
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4HICwoLTgP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_Family',
             'iM': edu.system.iM,
-            'strCateGory_Id': edu.system.getValById('dropAAAA'),
+            'strCateGory_Id': options.forCombo ? edu.system.getValById('dropAAAA') : (me.getValSafe('dropSearch_LoaiNghe_NN') || edu.system.getValById('dropAAAA')),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -1193,21 +1398,39 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtNhomNghe"] = data.Data;
-                    me.genTable_NhomNghe(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropNhomNghe_CD"],
-                        type: "",
-                        title: "Chọn nhóm nghề",
-                    })
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtNhomNgheAll = rows;
+                        edu.system.loadToCombo_data({
+                            data: rows,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropNhomNghe_CD", "dropSearch_NhomNghe_CD", "dropSearch_NhomNghe_DM"],
+                            type: "",
+                            title: "Chọn nhóm nghề",
+                        });
+                        me.applyFilter_NhomNghe_ForChucDanh();
+                        me.applyFilter_NhomNghe_ForNgheNghiep();
+                        return;
+                    }
+
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_NN') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_NN');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    me["dtNhomNghe"] = rows;
+                    me.genTable_NhomNghe(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1273,6 +1496,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_NhomNghe({ forCombo: true });
                     me.getList_NhomNghe();
                 });
             },
@@ -1297,7 +1521,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 8: Edit, 9: Checkbox
+                center: [0, 8, 9],
                 //right: [5]
             },
             aoColumns: [
@@ -1377,6 +1602,7 @@ DanhMucNghe.prototype = {
                     else {
                         edu.system.alert("Cập nhật thành công!");
                     }
+                    me.getList_LoaiNghe({ forCombo: true });
                     me.getList_LoaiNghe();
                 }
                 else {
@@ -1395,8 +1621,9 @@ DanhMucNghe.prototype = {
             ]
         }, false, false, false, null);
     },
-    getList_LoaiNghe: function () {
+    getList_LoaiNghe: function (options) {
         var me = this;
+        options = options || {};
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4CIDUkBi4zOAPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_CateGory',
@@ -1409,21 +1636,39 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtLoaiNghe"] = data.Data;
-                    me.genTable_LoaiNghe(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropNhomNghe_NN"],
-                        type: "",
-                        title: "Chọn loại nghề nghiệp",
-                    })
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtLoaiNgheAll = rows;
+                        edu.system.loadToCombo_data({
+                            data: rows,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropNhomNghe_NN", "dropSearch_LoaiNghe_NN", "dropSearch_LoaiNghe_CD", "dropSearch_LoaiNghe_DM"],
+                            type: "",
+                            title: "Chọn loại nghề",
+                        });
+                        me.applyFilter_NhomNghe_ForChucDanh();
+                        me.applyFilter_NhomNghe_ForNgheNghiep();
+                        return;
+                    }
+
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_LN') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_LN');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    me["dtLoaiNghe"] = rows;
+                    me.genTable_LoaiNghe(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1489,6 +1734,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_LoaiNghe({ forCombo: true });
                     me.getList_LoaiNghe();
                 });
             },
@@ -1513,7 +1759,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 7: Edit, 8: Checkbox
+                center: [0, 7, 8],
                 //right: [5]
             },
             aoColumns: [
@@ -1617,8 +1864,8 @@ DanhMucNghe.prototype = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIwPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job',
             'iM': edu.system.iM,
-            'strJob_Group_Id': edu.system.getValById('dropAAAA'),
-            'strJob_Level_Id': edu.system.getValById('dropAAAA'),
+            'strJob_Group_Id': me.getValSafe('dropSearch_ChucDanh_DM') || edu.system.getValById('dropAAAA'),
+            'strJob_Level_Id': me.getValSafe('dropSearch_BacNghe_DM') || edu.system.getValById('dropAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -1627,8 +1874,25 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtNgheNghiep"] = data.Data;
-                    me.genTable_NgheNghiep(data.Data);
+                    var rows = data.Data || [];
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_DM') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_DM');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.JOB_CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.JOB_NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    me["dtNgheNghiep"] = rows;
+                    me.genTable_NgheNghiep(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1718,7 +1982,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 9: Edit, 10: Checkbox
+                center: [0, 9, 10],
                 //right: [5]
             },
             aoColumns: [

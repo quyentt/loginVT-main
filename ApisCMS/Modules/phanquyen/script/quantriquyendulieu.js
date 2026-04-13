@@ -38,6 +38,31 @@ PhanQuyenDuLieuNhanSu.prototype = {
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     selectedDate: new Date(),
+
+    renderTableStatus: function (message, type) {
+        var me = this;
+        type = type || 'info'; // info | warning | error
+
+        function escapeHtml(str) {
+            return ('' + (str == null ? '' : str))
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        var alertClass = type === 'error' ? 'alert-danger' : (type === 'warning' ? 'alert-warning' : 'alert-info');
+
+        $("#tblPhanQuyenDuLieu thead").html('');
+        $("#tblPhanQuyenDuLieu tbody").html(
+            '<tr><td colspan="99" style="padding: 16px;">'
+            + '<div class="alert ' + alertClass + '" style="margin:0; text-align:center; font-weight:600;">'
+            + escapeHtml(message)
+            + '</div>'
+            + '</td></tr>'
+        );
+    },
     
     init: function () {
         var me = this;
@@ -93,6 +118,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
     page_load: function () {
         var me = this;
         // Load danh sách nhân sự
+        me.renderTableStatus('Đang tải danh sách nhân sự...', 'info');
         me.getList_NhanSu();
     },
     
@@ -171,10 +197,12 @@ PhanQuyenDuLieuNhanSu.prototype = {
                     // Sau khi có danh sách nhân sự, load dữ liệu chiều
                     me.getList_DataDimension();
                 } else {
+                    me.renderTableStatus('Không tải được danh sách nhân sự: ' + (data.Message || 'Không rõ nguyên nhân'), 'error');
                     edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
+                me.renderTableStatus('Lỗi kết nối khi tải danh sách nhân sự. Vui lòng thử lại.', 'error');
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
             type: "GET",
@@ -202,12 +230,18 @@ PhanQuyenDuLieuNhanSu.prototype = {
             success: function (data) {
                 if (data.Success) {
                     me.dsDimensions = data.Data || [];
+                    if (!me.dsDimensions || me.dsDimensions.length === 0) {
+                        me.renderTableStatus('Chưa cấu hình chiều dữ liệu để phân quyền.', 'warning');
+                        return;
+                    }
                     me.loadAllDimensionValues();
                 } else {
+                    me.renderTableStatus('Không tải được danh sách chiều dữ liệu: ' + (data.Message || 'Không rõ nguyên nhân'), 'error');
                     edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
+                me.renderTableStatus('Lỗi kết nối khi tải danh sách chiều dữ liệu. Vui lòng thử lại.', 'error');
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
             type: "POST",
@@ -340,10 +374,14 @@ PhanQuyenDuLieuNhanSu.prototype = {
     -------------------------------------------*/
     genTable_DuLieu: function () {
         var me = this;
+
+        if (!me.dsDimensions || me.dsDimensions.length === 0) {
+            me.renderTableStatus('Chưa cấu hình chiều dữ liệu để phân quyền.', 'warning');
+            return;
+        }
         
         if (Object.keys(me.dimensionGroups).length === 0) {
-            $("#tblPhanQuyenDuLieu thead").html('');
-            $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Đang tải dữ liệu...</div></td></tr>');
+            me.renderTableStatus('Đang tải dữ liệu chiều...', 'info');
             return;
         }
         
