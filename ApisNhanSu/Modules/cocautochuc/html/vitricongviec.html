@@ -99,10 +99,13 @@
                                                     <div class="col-12 col-lg-12 col-md-12 mb-15"
                                                          style="padding-right: 10px !important;">
                                                         <div class="form-item d-flex form-add-info">
-                                                            <div class="input-group no-icon">
-                                                                <input type="email" id-="txtSearch_TuKhoa"
+                                                            <div class="input-group no-icon pos-relative" style="position: relative;">
+                                                                <input type="text" id="txtSearch_TuKhoa"
                                                                        class="form-control"
-                                                                       placeholder="Từ khóa tìm kiếm">
+                                                                       placeholder="Từ khóa tìm kiếm" autocomplete="off">
+                                                                <div id="txtSearch_TuKhoa_Suggest"
+                                                                     class="list-group position-absolute w-100 d-none"
+                                                                     style="top: 100%; left: 0; z-index: 1050; max-height: 260px; overflow: auto;"></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -123,7 +126,7 @@
                                                         style="margin-top: 10px !important;">
                                                         <i class="fa-solid fa-list-tree"></i>
                                                         Danh sách đơn vị hành chính
-                                                        <span class="badge bg-dask-link color-white">
+                                                        <span class="badge bg-primary text-white">
                                                             <span id="lblCoCauToChuc_Tong"></span>
                                                         </span>
                                                     </h3>

@@ -42,6 +42,7 @@
   --red: #ff0000;
   --color-danger: #dc3545;
   --color-link: #1a71e8 !important;
+  --color-test:var(--red);
 }
 
 /*-----------------------*/
