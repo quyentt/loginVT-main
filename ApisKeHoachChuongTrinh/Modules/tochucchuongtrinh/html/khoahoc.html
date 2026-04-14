@@ -16,7 +16,7 @@
                                 placeholder="Nhập từ khóa tìm kiếm">
                         </div>
                     </div>
-                    <div class="col-sm-3 item-search">
+                    <div class="col-sm-3 item-search item-search-btn">
                         <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
                                 class="lang" key="">Tìm kiếm</span></a>
                     </div>
@@ -25,17 +25,17 @@
             <!-- /.Danh sách năm học -->
             <div class="box box-solid aps-list-khoahoc mt-15">
                 <div class="box-header pt20 pl20 pr20 pb0">
-                    <h3 class="box-title mt-0 line-20 mt-10" title="Danh sách khóa học">
-                        <i class="fa-solid fa-list-timeline"></i> Danh sách khóa học
+                    <h3 class="box-title mt-0 line-38 mt-10" title="Danh sách khóa học">
+                        <i class="fa-solid fa-list-timeline line-38"></i> Danh sách khóa học
                     </h3>
-                    <span class="badge bg-light-blue mt-10"><span id="lblKhoaHoc_Tong"></span></span>
+                    <span class="badge bg-light-blue mt-20 "><span id="lblKhoaHoc_Tong"></span></span>
                     <div class="box-tools pull-right mr-10 d-flex">
                         <a id="btnDelete" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                         <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
-                <div class="box-body pl20 pr20 mt-10 pb20">
-                    <div class="aps-table-select">
+                <div class="box-body pl20 pr20 pb20">
+                    <div class="aps-table-select scroll-table-x">
                         <table id="tblKhoaDaoTao" class="table table-hover table-bordered table-noborder tblKhoaDaoTao">
                             <thead>
                                 <tr>
@@ -61,7 +61,7 @@
         </div>
     </div>
     <!-- Thêm mới - Chương trình -->
-    <div class="box box-solid form-container zone-bus  add-absolue" id="zone_input_KhoaDaoTao" style="display: none">
+    <div class="box box-solid form-container zone-bus add-absolue zone_input_KhoaDaoTao" id="zone_input_KhoaDaoTao" style="display: none">
         <div class="box-header with-border">
             <h3 class="box-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> Khóa học
             </h3>
@@ -125,7 +125,7 @@
                         </div>
                         <!--row 2-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Năm kết thúc theo kế hoạch</div>
+                            <div class="col-sm-3 aps-form-lable text-fixmobi">Năm kết thúc theo kế hoạch</div>
                             <div class="col-sm-9 aps-form-input">
                                 <input id="txtKH_NamKetThucTheoKeHoach" class="form-control" />
                             </div>
@@ -141,15 +141,15 @@
                         <a id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
 
                     </div>
-                </div>s
+                </div>
                 <div class="col-lg-5 pl20">
                     <div class="aps-img pt10 pb15"> <img src="Upload/images/img-kehoach_2.svg"></div>
                 </div>
             </div>
             <div class="box-footer" style="display:none !important;">
                 <div class="pull-right">
-                    <a class="btn btn-outline-primary btnReWrite" href="#" title="Xóa trắng toàn bộ thông tin nhập"><i
-                            class="fa fa-save-circle-arrow-right"></i>Lưu và Nhập tiếp</a>
+                    <a class="btn btn-outline-primary btnReWrite" href="#" title="Xóa trắng toàn bộ thông tin nhập">
+                        <i class="fa fa-save-circle-arrow-right"></i>Lưu và Nhập tiếp</a>
                     <a id="btnSave" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i>
                         Đóng</a>
