@@ -4343,9 +4343,7 @@
  }
 
  /* ----------- */
- .tab-Phieu .cmc-tabs {
-     <<<<<<< HEAD
- }
+ .tab-Phieu .cmc-tabs {}
 
  .box-ds-phongThi {
      padding-bottom: 40px !important;
@@ -4358,7 +4356,6 @@
 
  .myModalLabel {
      padding-right: 5px;
-     =======
  }
 
  /* --------------- */
