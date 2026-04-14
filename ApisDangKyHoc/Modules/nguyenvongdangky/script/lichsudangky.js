@@ -19,7 +19,7 @@ LichSu.prototype = {
         --Discription: Initial system
         -------------------------------------------*/
         //me.strNguoiHoc_Id = edu.system.userId;
-        //me.getList_LichSu();
+        //me.getList_LichSu(); 
 
         $("#btnSearch").click(function () {
             me.getList_KeHoachDangKy();
