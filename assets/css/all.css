@@ -7490,7 +7490,7 @@ tr:last-child .d-flex.gap-3 {
 .action-group {
   display: flex;
   flex-wrap: wrap;
-  max-width: 1512px;
+  /* max-width: 1512px; */
   margin-top: 12px;
   margin: 0 10px;
   padding: 0 !important;

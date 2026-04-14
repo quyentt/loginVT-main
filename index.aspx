@@ -126,7 +126,7 @@
         </div>
         --%>
 
-        <div class="dropdown">
+        <div class="dropdown box-notify">
           <div class="item noti" id="fcm-noti-button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fal fa-bell"></i>
             <span id="fcm-noti-badge" class="badge rounded-pill bg-danger" style="display:none">0</span>
@@ -137,7 +137,7 @@
             <li><a class="dropdown-item py-3 text-center" href="javascript:void(0)" id="fcm-noti-empty">Chưa có thông báo</a></li>
           </ul>
         </div>
-        <div class="dropdown">
+        <div class="dropdown box-acc-user">
           <div class="item" data-bs-toggle="dropdown">
             <img src="assets/images/avata-user.png" class="avatar" />
             <span class="hidden-xs">

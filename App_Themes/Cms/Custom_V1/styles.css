@@ -1164,7 +1164,7 @@
  .btn-social>:first-child {
      left: 15px !important;
      width: 40px !important;
-     line-height: 44px !important;
+     line-height: 45px !important;
      padding-right: 15px !important;
      border-right: 1px solid rgba(0, 0, 0, 0.15) !important;
      font-size: 1.4em;
@@ -1200,7 +1200,7 @@
      color: #fff !important;
  }
 
- .login-box-body .col-xs-5 .form-control {
+ .login-box-body .login-language .form-control {
      height: 44px;
      font-size: 16px !important;
      border-radius: 90px !important;
@@ -1209,7 +1209,7 @@
      position: relative;
  }
 
- .login-box-body .col-xs-5:after {
+ .login-box-body .login-language:after {
      color: #3c8dee !important;
      content: "\f1ab" !important;
      position: absolute;
@@ -1255,6 +1255,13 @@
      box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2) !important;
  }
 
+ .btn-social.btn-google {
+     height: 44px;
+     line-height: 27px;
+     border-radius: 90px !important;
+     font-size: 16px !important;
+ }
+
  .icon-login {
      width: 86px !important;
      height: 86px !important;
@@ -1296,6 +1303,46 @@
      width: 20px;
      height: 20px;
      z-index: 22;
+ }
+
+ .login-box-body .form-group.has-feedback.email_getpassword:first-of-type::after {
+     color: #3c8dee !important;
+     content: "\f658" !important;
+     position: absolute;
+     top: 8px;
+     left: 35px;
+     font-family: "Font Awesome 6 Pro";
+     font-weight: 300;
+     font-size: 18px;
+     width: 20px;
+     height: 20px;
+     z-index: 22;
+ }
+
+ .form-control-feedback.fa {
+     line-height: 40px !important;
+ }
+
+ .btn-primary.btn-block.btn-flat {
+     margin-left: 0 !important;
+ }
+
+ .btn-flat.cms_forget_password {
+     border-radius: 50px !important;
+     font-size: 16px !important;
+     margin-left: 0px !important;
+ }
+
+ .form-group.email_getpassword {
+     margin-bottom: 0px;
+ }
+
+ #ctl00 {
+     width: 100%;
+ }
+
+ .forgetPass.login-box::before {
+     height: 110% !important;
  }
 
  /* mật khẩu */
@@ -5253,9 +5300,11 @@
  .box-search #btnSearch {
      min-width: 110px !important;
  }
- .form-container.zone-bus.add-absolue{
-        width: 97.6666% !important;
+
+ .form-container.zone-bus.add-absolue {
+     width: 97.6666% !important;
  }
- .tblThoiGianDaoTao tr td:nth-child(2){
-    text-align: center !important;
+
+ .tblThoiGianDaoTao tr td:nth-child(2) {
+     text-align: center !important;
  }

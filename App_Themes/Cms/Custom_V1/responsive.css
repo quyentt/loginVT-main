@@ -36,6 +36,13 @@
 }
 
 @media only screen and (max-width: 1200px) {
+
+    .hold-transition.login-page,
+    .register-page {
+        background-attachment: fixed !important;
+        background-position: center !important;
+    }
+
     .box-header .pull-right {
         position: relative;
     }
@@ -86,7 +93,30 @@
     }
 }
 
+@media (min-width: 1024px) and (max-width:1180px) {
+
+    .login-page .login-box,
+    .register-box {
+        width: 100% !important;
+    }
+}
+
 @media (max-width: 1024px) {
+
+    .hold-transition.login-page,
+    .register-page {
+        background-attachment: fixed !important;
+        background-position: center !important;
+    }
+
+    .zone_input_HeDaoTao .aps-add-new .aps-form-input {
+        width: 100%;
+    }
+
+    .zone-bus .box-header .btn-default.btnClose {
+        top: -21px !important;
+        right: -15px !important;
+    }
 
     .zone_input_KhoaDaoTao .pr20 {
         padding-right: 0px !important;
@@ -102,11 +132,17 @@
         margin-top: 10px !important;
     }
 
-    .aps-list-khoahoc .pl20 {
+    .aps-list-year .box-body {
+        margin-top: 5px !important;
+    }
+
+    .aps-list-khoahoc .pl20,
+    .aps-list-year .pl20 {
         padding-left: 10px !important;
     }
 
-    .aps-list-khoahoc .pr20 {
+    .aps-list-khoahoc .pr20,
+    .aps-list-year .pr20 {
         padding-right: 10px !important;
     }
 
@@ -130,7 +166,7 @@
         padding-top: 50px;
     }
 
-   
+
 
     .control-sidebar {
         padding-top: 60px !important;
@@ -162,7 +198,25 @@
     }
 }
 
-@media (max-width: 820px) {}
+@media (max-width: 820px) {
+    .zone_input_HeDaoTao .aps-add-new .col-lg-7 {
+        display: flow-root;
+        padding-right: 0 !important;
+        padding-bottom: 20px;
+    }
+
+    .zone_input_HeDaoTao .aps-add-new .col-lg-5 {
+        padding-left: 0 !important;
+    }
+
+    .zone_input_HeDaoTao .aps-form {
+        margin-bottom: 10px;
+    }
+
+    .zone_input_HeDaoTao .aps-add-new .btn-default.btnClose {
+        display: none;
+    }
+}
 
 @media (min-width: 799px) and (max-width:1024px) {
     .box-search .item-search {
@@ -289,7 +343,34 @@
     }
 }
 
+@media (min-width: 800px) and (max-width:1024px) {
+    .action-group .item {
+        width: calc(24.3333% - 7.5px) !important;
+    }
+
+    .formLoginSSO {
+        width: 800px !important;
+        /* overflow: hidden; */
+    }
+
+    .login-box::before,
+    .register-box::before {
+        /* width: 400px !important; */
+    }
+
+    .formLoginSSO .login-box,
+    .formLoginSSO .register-box {
+        width: 100% !important;
+    }
+}
+
 @media (min-width: 768px) and (max-width:1024px) {
+    .quick-action {
+        padding: 0 20px !important;
+    }
+
+
+
     .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
         min-width: 200px;
     }
@@ -339,6 +420,22 @@
 }
 
 @media (min-width: 600px) and (max-width:1024px) {
+
+
+    .zone_input_HeDaoTao .box-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .zone_input_HeDaoTao .aps-form .aps-form-item .aps-form-lable,
+    .zone_input_NamHoc .aps-form .aps-form-item .aps-form-lable {
+        min-width: 150px;
+    }
+
+    .zone_input_NamHoc .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
+
     .aps-form-item {
         margin-bottom: 10px !important;
     }
@@ -419,7 +516,39 @@
     }
 }
 
+@media (min-width: 768px) and (max-width:799px) {
+    .formLoginSSO {
+        width: 430px !important;
+    }
+
+    .action-group .item {
+        /* width: 31.333333% !important; */
+        width: calc(32.888888% - 7.5px) !important;
+    }
+
+    .feature-box {
+        min-height: 110px;
+    }
+}
+
 @media (min-width: 600px) and (max-width:767px) {
+    .formLoginSSO {
+        width: 430px !important;
+    }
+
+    .action-group .item {
+        width: 31% !important;
+    }
+
+    /* ---------- */
+    .box-search .item-search:last-child {
+        margin-bottom: 6px !important;
+    }
+
+    .box-search .item-search {
+        padding-right: 0 !important;
+    }
+
     .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
         width: 200px;
         min-width: 200px;
@@ -460,6 +589,58 @@
 
 @media only screen and (max-width: 600px) {
 
+    .login-page,
+    .register-page {
+        overflow: hidden;
+    }
+
+    /* 
+    .hold-transition.login-page,
+    .register-page {
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+    } */
+
+    .login-box .login-logo,
+    .login-box .login-box-body,
+    .login-box .login-box-footer {
+        width: 100% !important;
+    }
+
+    .login-box-body,
+    .register-box-body {
+        padding: 0px !important;
+    }
+
+    .login-box .login-logo {
+        padding: 0px 0 10px 0 !important;
+    }
+
+    .login-box-msg {
+        padding-bottom: 15px !important;
+    }
+
+    .login-box-msg span {
+        font-size: 22px !important;
+    }
+
+    .login-box-body .pull-right .btn {
+        margin-left: 0px !important;
+    }
+
+    .login-notify .box-notify {
+        padding: 10px 0 !important;
+    }
+
+    .login-box .login-box-footer {
+        padding: 0px 0px 30px 0 !important;
+    }
+
+    .social-auth-links {
+        margin: 10px 0 10px 0px !important;
+    }
+
+    /* ----- */
     .aps-ds-tuibai .tblTuiBai,
     .aps-ds-thivd .tblThi {
         min-width: 900px !important;
@@ -661,13 +842,80 @@
     }
 }
 
-@media (max-width: 599px) {}
-
 
 @media only screen and (max-width: 599px) {
-     .logo.refeshlogo {
+
+    .account-group .box-acc-user .dropdown-menu {
+        margin-top: 11px !important;
+    }
+
+    /* ---Fix home */
+    .quick-action .welcome {
+        padding-top: 10px;
+    }
+
+    .quick-action .quick-acction-title {
+        font-size: 20px;
+        margin-top: 5px;
+    }
+
+    .account-group .dropdown {
+        width: fit-content !important;
+        margin-left: 10px;
+    }
+
+    .account-group .dropdown.box-notify {
+        width: fit-content !important;
+        margin-left: 0px;
+        margin-top: 2px;
+        margin-right: 8px;
+    }
+
+    .action-group {
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .action-group .item {
+        width: calc(50% - 7.5px);
+        padding: 0;
+    }
+
+    .account-group .dropdown-menu {
+        border-radius: 0 0 6px 6px !important;
+    }
+
+    /* ---End fix home */
+    .skin-blue .main-header .logo {
+        width: fit-content !important;
+    }
+
+    .zone_input_HeDaoTao .box-body {
+        padding: 0 10px !important;
+    }
+
+    .zone_input_HeDaoTao .aps-form .aps-form-item .aps-form-lable {
+        min-width: 120px;
+    }
+
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
+        min-width: 100px;
+    }
+
+    .box-search .item-search:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    #lbLogo_large {
         display: none;
     }
+
+    .main-header .logo .logo-lg::after {
+        content: "\e00d";
+        font-family: var(--fa-style-family, "Font Awesome 6 Pro") !important;
+        font-weight: 300;
+    }
+
     .aps-list-khoahoc.mt-15 {
         margin-top: 0 !important;
     }
@@ -727,11 +975,14 @@
         margin-top: 5px;
     }
 
-    .tblKhoaDaoTao {
+    .tblKhoaDaoTao,
+    .tblHeDaoTao {
         min-width: 680px;
     }
 
     .info-tblKhoaDaoTao,
+    .info-tblHeDaoTao,
+    .light-paginationtblHeDaoTao,
     .filter-tblKhoaDaoTao,
     .light-paginationtblKhoaDaoTao,
     .change-tblKhoaDaoTao {
@@ -740,6 +991,7 @@
     }
 
     .light-paginationtblKhoaDaoTao.simple-pagination ul,
+    .light-paginationtblHeDaoTao.simple-pagination ul,
     .filter-tblKhoaDaoTao .pull-right {
         float: left !important;
     }
@@ -1427,6 +1679,18 @@
 
     .modal_XacNhan_hoanthanh .select-group:first-child {
         margin-bottom: 10px;
+    }
+}
+
+@media (min-width: 460px) and (max-width:680px) {
+    .formLoginSSO {
+        width: 430px !important;
+    }
+}
+
+@media (max-width:460px) {
+    .formLoginSSO {
+        width: 100% !important;
     }
 }
 

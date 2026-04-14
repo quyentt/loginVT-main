@@ -1217,8 +1217,10 @@
   }
 
   .account-group .item i {
-    font-size: 20px;
-    color: var(--color-text);
+    font-size: 22px;
+    color: #fff;
+    font-family: "Font Awesome 6 Pro";
+    font-family: 200 !important;
   }
 
   .list-row-4 .item {
@@ -1398,7 +1400,8 @@
   .filter-tblNamHoc.pull-right {
     float: left !important;
   }
-  .aps-dulieu{
+
+  .aps-dulieu {
     display: none !important;
   }
 }
