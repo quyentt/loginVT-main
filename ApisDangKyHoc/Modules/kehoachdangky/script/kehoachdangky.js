@@ -1075,7 +1075,7 @@ KeHoachDangKy.prototype = {
             $(this).prop('checked', true);
         });
         if (data.TRANGTHAISINHVIEN_IDS) {
-            if (data.TRANGTHAISINHVIEN_IDS.length > 100) {
+            if (data.TRANGTHAISINHVIEN_IDS.indexOf(',') != -1) {
                 data.TRANGTHAISINHVIEN_IDS.split(',').forEach(e => {
                     console.log(("#DSTrangThaiSV #" + e))
                     $("#DSTrangThaiSV #" + e).each(function () {
