@@ -1,7 +1,7 @@
 ﻿<!-- Main content -->
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-noidungdaotao-monhoc">
-        <div class="box box-solid zone-bus col-lg-12 pd0" id="zone_notify_MonHoc">
+        <div class="box box-solid zone-bus col-lg-12 pd0 zone_notify_MonHoc" id="zone_notify_MonHoc">
             <!-- /.Tìm kiếm -->
             <div class="box box-solid box-search pd15 pb5">
                 <div class="box-body pd0">
@@ -17,35 +17,35 @@
                         </div>
                     </div>
                     <div class="col-sm-3 item-search">
-                        <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i>
-                            <span class="lang" key="">Tìm kiếm</span></a>
+                        <a id="btnSearch" class="btn btn-default btn-search">
+                            <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                     </div>
                 </div>
             </div>
             <!-- /.Danh sách năm học -->
             <div class="box box-solid aps-list-monhoc mt-15">
                 <div class="box-header pt20 pl20 pr20 pb0">
-                    <h3 class="box-title mt-0 line-20 mt-10" title="Danh sách môn học">
-                        <i class="fa-solid fa-list-timeline"></i> Danh sách môn học
+                    <h3 class="box-title mt-0 line-38" title="Danh sách môn học">
+                        <i class="fa-solid fa-list-timeline line-38"></i> Danh sách môn học
                     </h3>
                     <span class="badge bg-light-blue mt-10">
                         <span id="lblMonHoc_Tong"></span>
                     </span>
-                    <div class="box-tools pull-right mr-10 d-flex">
+                    <div class="aps-list-btn pull-right d-flex">
                         <a id="btnDelete" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                         <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
-                <div class="box-body pl20 pr20 mt-10">
-                    <div class="aps-table-select pb20">
-                        <table id="tblMonHoc" class="table table-hover table-bordered table-noborder tblMonHoc">
+                <div class="box-body pl20 pr20 mt-5">
+                    <div class="aps-table-select pb10 scroll-table-x mb-20">
+                        <table id="tblMonHoc" class="table table-hover table-bordered table-noborder tblMonHoc mb-0">
                             <thead>
                                 <tr>
                                     <th class="td-center" style="width: 50px">STT</th>
                                     <th class="td-left" style="width: 400px">Mã môn học</th>
                                     <th class="td-left" style="width: 600px">Tên môn học</th>
                                     <th class="td-left" style="width: 600px">Bộ môn</th>
-                                    <th class="td-center" style="width: 200px">Số tín chỉ</th>
+                                    <th class="td-center" style="min-width: 80px">Số tín chỉ</th>
                                     <th class="td-center" style="width: 50px">Sửa</th>
                                     <th class="td-center td-fixed w-50px">
                                         <input type="checkbox" id="chkSelectAll">

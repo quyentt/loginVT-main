@@ -1833,6 +1833,7 @@
 
  .control-sidebar-app .table>tbody>tr>td.fa-app {
      padding-left: 15px !important;
+         border-right: 0 !important;
  }
 
 
@@ -2351,7 +2352,10 @@
      border-top-left-radius: 10px;
      border-top-right-radius: 10px;
  }
-
+ .navbar-custom-menu .dropdown-menu .user-body .text-center {
+    text-align: left !important;
+}
+/* ---------- */
  .change-tblSinhVien .select2-container--default .select2-selection--single {
      padding: 8px 1px !important;
      height: 30px;
@@ -4794,9 +4798,9 @@
 
  .aps-list-hocphan,
  .zoneHocPhan_Selected_KBB {
-     border-left: 1px solid #e1e1e1;
-     border-right: 1px solid #e1e1e1;
-     border-bottom: 1px solid #e1e1e1;
+     /* border-left: 1px solid #e1e1e1; */
+     /* border-right: 1px solid #e1e1e1;
+     border-bottom: 1px solid #e1e1e1; */
      padding: 0px;
  }
 
