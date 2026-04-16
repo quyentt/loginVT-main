@@ -157,24 +157,26 @@ PhanQuyenDuLieuM2.prototype = {
     },
     
     /*------------------------------------------
-    --Lấy danh sách vai trò từ API
+    --Lấy danh sách vai trò dạng cây cha-con
     -------------------------------------------*/
     getList_VaiTro: function () {
         var me = this;
         var obj_list = {
-            'action': 'CMS_QuanTri01_MH/DSA4BRIXICgVMy4PJjQuKAU0LyYP',
-            'func': 'PKG_CORE_QUANTRI_01.LayDSVaiTroNguoiDung',
-            'iM': 'Azz',
-            'strChucNang_Id': '',
-            'strNguoiThucHien_Id': edu.system.userId
+            'action': 'CMS_VaiTro/LayDanhSach',
+            'strLoaiVaiTro_Id': '',
+            'strTuKhoa': '',
+            'pageIndex': 1,
+            'pageSize': 1000,
+            'dTrangThai': 1
         };
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dsVaiTro = data.Data || [];
+                    var raw = data.Data || [];
+                    // Xây cây cha-con → danh sách phẳng có thứ tự + depth
+                    me.dsVaiTro = me.buildVaiTroTree(raw);
                     $("#lblSoLuongVaiTro").text(me.dsVaiTro.length);
-                    // Sau khi có danh sách vai trò, load dữ liệu chiều
                     me.getList_DataDimension();
                 } else {
                     edu.system.alert("Lỗi: " + data.Message);
@@ -183,11 +185,64 @@ PhanQuyenDuLieuM2.prototype = {
             error: function (er) {
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
-            type: "GET",
+            type: 'GET',
             action: obj_list.action,
             contentType: true,
-            data: obj_list
+            data: obj_list,
+            fakedb: []
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Xây cây cha-con → mảng phẳng có thứ tự + depth
+    -------------------------------------------*/
+    buildVaiTroTree: function (data) {
+        var childrenMap = {};
+        for (var i = 0; i < data.length; i++) {
+            var item = data[i];
+            var pid = item.CHUNG_VAITRO_CHA_ID || '#';
+            if (!childrenMap[pid]) childrenMap[pid] = [];
+            childrenMap[pid].push(item);
+        }
+
+        // Sắp xếp mỗi nhóm theo THUTU rồi TENVAITRO
+        for (var pid in childrenMap) {
+            childrenMap[pid].sort(function(a, b) {
+                var ta = (a.THUTU != null ? a.THUTU : 999);
+                var tb = (b.THUTU != null ? b.THUTU : 999);
+                if (ta !== tb) return ta - tb;
+                return (a.TENVAITRO || '').localeCompare(b.TENVAITRO || '', 'vi');
+            });
+        }
+
+        var result = [];
+        // lineGuides: mảng boolean cho từng cấp tổ tiên,
+        // lineGuides[d] = true nếu ở cấp d vẫn còn node anh em phía dưới (cần vẽ đường dọc)
+        function walk(nodeId, depth, lineGuides) {
+            var children = childrenMap[nodeId];
+            if (!children) return;
+            for (var j = 0; j < children.length; j++) {
+                var node = children[j];
+                var isLast = (j === children.length - 1);
+                node._depth = depth;
+                node._isLast = isLast;
+                node._lineGuides = lineGuides.slice();
+                result.push(node);
+                walk(node.ID, depth + 1, lineGuides.concat([!isLast]));
+            }
+        }
+        walk('#', 0, []);
+
+        // Fallback: nếu cây rỗng (không có root '#') thì dùng flat
+        if (result.length === 0) {
+            for (var k = 0; k < data.length; k++) {
+                data[k]._depth = 0;
+                data[k]._isLast = true;
+                data[k]._lineGuides = [];
+            }
+            return data;
+        }
+        return result;
     },
     
     /*------------------------------------------
@@ -465,11 +520,39 @@ PhanQuyenDuLieuM2.prototype = {
                 var vaiTro = me.dsVaiTro[v];
                 htmlBody += '<tr>';
                 
-                // Cột đầu tiên: Tên vai trò
-                htmlBody += '<td style="padding: 10px 12px; position: sticky; left: 0; background: #f8f9fa; z-index: 5; border-right: 2px solid #dee2e6;">';
-                htmlBody += '<div style="display: flex; align-items: center; gap: 8px;">';
-                htmlBody += '<i class="fa-solid fa-user-shield" style="color: #223771; font-size: 12px;"></i>';
-                htmlBody += '<span style="font-weight: 500; font-size: 12px;">' + (vaiTro.TENVAITRO || vaiTro.TEN || 'N/A') + '</span>';
+                // Cột đầu tiên: Tên vai trò (cây cha-con với đường kẻ nối CSS)
+                var depth = vaiTro._depth || 0;
+                var isLast = vaiTro._isLast !== false;
+                var lineGuides = vaiTro._lineGuides || [];
+                var bgColor = depth === 0 ? '#e8edf5' : '#f8f9fa';
+                var fontWeight = depth === 0 ? '700' : '500';
+                var paddingLeft = depth * 20 + 12;
+                htmlBody += '<td style="padding: 0; position: sticky; left: 0; background: ' + bgColor + '; z-index: 5; border-right: 2px solid #dee2e6;">';
+                htmlBody += '<div style="position:relative; padding: 9px 12px 9px ' + paddingLeft + 'px; display:flex; align-items:center; gap:5px; min-height:38px;">';
+
+                if (depth > 0) {
+                    var lineColor = '#b0b8c9';
+                    var connX = (depth - 1) * 20 + 10; // x của đường nối tại cấp hiện tại
+
+                    // Đường dọc từ trên xuống giữa (luôn vẽ cho depth > 0)
+                    htmlBody += '<div style="position:absolute;left:' + connX + 'px;top:0;height:50%;border-left:1.5px solid ' + lineColor + ';"></div>';
+                    // Đường ngang nối vào icon
+                    htmlBody += '<div style="position:absolute;left:' + connX + 'px;top:50%;width:10px;border-bottom:1.5px solid ' + lineColor + ';"></div>';
+                    // Đường dọc từ giữa xuống dưới (nếu không phải con cuối)
+                    if (!isLast) {
+                        htmlBody += '<div style="position:absolute;left:' + connX + 'px;top:50%;bottom:0;border-left:1.5px solid ' + lineColor + ';"></div>';
+                    }
+                    // Đường dọc xuyên suốt cho các cấp tổ tiên vẫn còn anh em phía dưới
+                    for (var d = 0; d < depth - 1; d++) {
+                        if (lineGuides[d]) {
+                            var gx = d * 20 + 10;
+                            htmlBody += '<div style="position:absolute;left:' + gx + 'px;top:0;bottom:0;border-left:1.5px solid ' + lineColor + ';"></div>';
+                        }
+                    }
+                }
+
+                htmlBody += '<i class="fa-solid fa-' + (depth === 0 ? 'users' : 'user-shield') + '" style="color:#223771;font-size:11px;flex-shrink:0;"></i>';
+                htmlBody += '<span style="font-weight:' + fontWeight + ';font-size:12px;">' + (vaiTro.TENVAITRO || 'N/A') + '</span>';
                 htmlBody += '</div>';
                 htmlBody += '</td>';
                 
@@ -1155,7 +1238,7 @@ PhanQuyenDuLieuM2.prototype = {
             'iM': 'Azz',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strRoleId': vaiTroId,
-            'strCore_Data_Dimension_Id': dimensionId,
+            'strDimensionId': dimensionId,
             'strNguoiThucHien_Id': edu.system.userId
         };
         
