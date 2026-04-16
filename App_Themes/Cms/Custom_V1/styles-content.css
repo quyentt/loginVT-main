@@ -791,7 +791,7 @@
     font-size: 18px !important;
     color: var(--color-blue) !important;
     line-height: 24px;
-    display: flex;    
+    display: flex;
 }
 
 .form-container .box-header.with-border {
@@ -1389,7 +1389,9 @@
     padding: 15px 15px 15px 15px !important;
     border-width: 0px !important;
 }
-
+.navbar-custom-menu .navbar-nav>.user-menu>.dropdown-menu>.user-footer .pull-right .btn {
+    padding: 15px 15px 15px 5px !important;
+}
 #btnThemDong .color-active,
 .btnThemDong .color-active {
     color: #fff !important;
@@ -3172,7 +3174,24 @@
     text-align: right;
     padding-right: 10px;
     height: 38px;
-    line-height: 44px;
+    line-height: 38px;
+}
+
+.modal-alert,
+.modal-confirm {
+    margin-top: auto !important;
+}
+
+.modal-alert .modal-dialog,
+.modal-dialog-centered {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+    min-height: calc(100% - (.5rem * 2));
+
 }
 
 /*----------*/
@@ -3225,7 +3244,7 @@
     min-width: 186px !important;
     padding: 10px 0 !important;
     font-size: 14px !important;
-    border-radius:0 0 6px 6px !important;
+    border-radius: 0 0 6px 6px !important;
     -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, .175) !important;
     box-shadow: 0 6px 12px rgba(0, 0, 0, .175) !important;
 }
@@ -6989,7 +7008,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 22px !important;
+    line-height: 36px !important;
     padding-left: 2px !important;
     padding-top: 5px !important;
 }

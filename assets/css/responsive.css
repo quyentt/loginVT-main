@@ -844,7 +844,7 @@
   .head-search-form {
     margin-right: 0 !important;
     position: absolute !important;
-    right: 200px;
+    right: 220px;
   }
 }
 
@@ -939,7 +939,7 @@
   .head-search-form {
     position: absolute !important;
     /* margin-left: auto; */
-    right: 200px !important;
+    right: 220px !important;
   }
 
   .calendar-week-table .date {
@@ -1459,7 +1459,7 @@
   .head-search-form {
     margin-right: 0 !important;
     position: absolute !important;
-    right: 200px;
+    right: 220px;
   }
 
   /* .account-group .item span */
