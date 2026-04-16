@@ -68,6 +68,22 @@ NhapDiemHocPhan.prototype = {
             //var arrChecked_Id = edu.util.getArrCheckedIds("tblNhapDiem", "checkX");
             //arrChecked_Id.forEach(e => addKeyValue("strDanhSachThi_Id", e));
         });
+        edu.system.loadToCombo_DanhMucDuLieu("DIEM.TRANGTHAILOC", "", "", data => {
+            var obj = {
+                data: data,
+                renderInfor: {
+                    id: "MA",
+                    parentId: "",
+                    name: "TEN",
+                    code: "",
+                    avatar: ""
+                },
+                renderPlace: ["dropSearch_HoanThanhNhapDiem"],
+                type: "",
+                title: "Chọn lọc",
+            };
+            edu.system.loadToCombo_data(obj);
+        });
     },
     
     /*------------------------------------------
@@ -78,8 +94,11 @@ NhapDiemHocPhan.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': me.bcheck ? 'TP_ToChucThi/LayDSLopHocPhanTatCa' : 'TP_ToChucThi/LayDSHocPhanTheoKeHoach2',
-            'type': 'GET',
+            'action': me.bcheck ? 'XLHV_TP_ToChucThi_MH/DSA4BRINLjEJLiIRKSAvFSA1AiAP' : 'XLHV_TP_ToChucThi_MH/DSA4BRIJLiIRKSAvFSkkLgokCS4gIilz',
+            'func': me.bcheck ? 'pkg_thi_tochucthi.LayDSLopHocPhanTatCa' : 'pkg_thi_tochucthi.LayDSHocPhanTheoKeHoach2',
+            'type': 'POST',
+            'iM': edu.system.iM,
+            'dLocKhongHoanThanhNhapDiem': edu.system.getValById('txtAAAA'),
             'strTuKhoa': edu.util.getValById('txtSearch'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
             'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),

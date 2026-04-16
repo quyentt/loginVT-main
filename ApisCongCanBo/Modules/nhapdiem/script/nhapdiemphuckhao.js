@@ -278,6 +278,9 @@ NhapDiemPK.prototype = {
                     "mDataProp": "DAOTAO_LOPHOCPHAN_TEN"
                 },
                 {
+                    "mDataProp": "DIEM"
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" name="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" />';
                     }
@@ -506,6 +509,13 @@ NhapDiemPK.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
+        var obj_save = {
+            'action': 'XLHV_TP_PhucKhao_MH/DSA4CS4iESkgLxEpNCIKKSAuBTQ4JDUP',
+            'func': 'PKG_THI_PHACH_PHUCKHAO.LayHocPhanPhucKhaoDuyet',
+            'iM': edu.system.iM,
+            'strDaoTao_ThoiGianDaoTao_Id': edu.system.getValById('dropSearch_ThoiGian'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
         //
 
         edu.system.makeRequest({
@@ -523,11 +533,11 @@ NhapDiemPK.prototype = {
 
                 edu.system.alert(JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
 
             contentType: true,
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
