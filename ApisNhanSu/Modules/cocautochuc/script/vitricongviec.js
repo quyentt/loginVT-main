@@ -202,37 +202,49 @@ ViTriCongViec.prototype = {
     -------------------------------------------*/
     getList_CoCauToChuc: function (strDanhSach_Id) {
         var me = this;
-        var obj_save = {
-            'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHg4zJh4ULyg1',
-            'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Org_Unit',
-            'iM': edu.system.iM,
-            'strTuKhoa': edu.system.getValById('txtSearch_TuKhoa'),
-            'strOrg_Type_Code': edu.system.getValById('dropSearch_LoaiDonVi'),
-            'dIs_Offcial': edu.system.getValById('txtAAAA'),
-            'dIs_Active': edu.system.getValById('dropSearch_TrangThai'),
-            'strNgayXem': edu.system.getValById('txtSearch_NgayXem'),
-            'strNguoiThucHien_Id': edu.system.userId,
+        // Call the CoCauToChuc list API (same as cocautochucv2.js)
+        var obj_list = {
+            action: 'NS_CoCauToChuc/LayDanhSach',
+            dTrangThai: edu.system.getValById('dropSearch_TrangThai') || 1,
+            strLoaiCoCauToChuc_Id: edu.system.getValById('dropSearch_LoaiDonVi'),
+            strCoCauToChucCha_Id: ""
         };
-        //
 
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
-                    me["dtCoCauToChuc"] = dtReRult;
+                    var raw = data.Data || [];
+                    // Map backend fields to the shape expected by this module (ID, NAME, PARENT_ORG_ID, CODE)
+                    var dtResult = raw.map(function (item) {
+                        if (!item) return item;
+                        return {
+                            // keep ID
+                            ID: item.ID || item.Id || null,
+                            // name used by this module
+                            NAME: item.TEN || item.NAME || item.TEXT || "",
+                            // tree parent id (normalize '#' or null -> null)
+                            PARENT_ORG_ID: (item.PARENT === "#" || item.PARENT == null) ? null : item.PARENT,
+                            // code
+                            CODE: item.MA || item.CODE || "",
+                            // store original raw object for other usages
+                            __raw: item
+                        };
+                    });
 
-                    // Badge tổng số đơn vị (Pager thường null nên fallback theo Data.length)
+                    me["dtCoCauToChuc"] = dtResult;
+
+                    // Badge tổng số đơn vị (use Data.length fallback)
                     var total = 0;
                     if (data.Pager) {
                         total = data.Pager.TotalRecords || data.Pager.totalRecords || data.Pager.iTotalRecords
                             || data.Pager.Total || data.Pager.total || 0;
                     }
-                    if (!total && dtReRult && dtReRult.length !== undefined) {
-                        total = dtReRult.length;
+                    if (!total && dtResult && dtResult.length !== undefined) {
+                        total = dtResult.length;
                     }
                     $("#lblCoCauToChuc_Tong").text(total);
 
-                    me.genTable_CoCauToChuc(dtReRult, data.Pager);
+                    me.genTable_CoCauToChuc(dtResult, data.Pager);
                 }
                 else {
                     $("#lblCoCauToChuc_Tong").text('0');
@@ -245,14 +257,12 @@ ViTriCongViec.prototype = {
 
                 edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
-            type: 'POST',
-            action: obj_save.action,
+            type: 'GET',
+            action: obj_list.action,
 
             contentType: true,
-            data: obj_save,
-            fakedb: [
-
-            ]
+            data: obj_list,
+            fakedb: []
         }, false, false, false, null);
     },
     /*------------------------------------------

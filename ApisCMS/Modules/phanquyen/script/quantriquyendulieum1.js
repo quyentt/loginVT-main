@@ -1656,13 +1656,13 @@ PhanQuyenDuLieuNhanSu.prototype = {
             'func': 'PKG_CORE_QUANTRI_02.LayDSCore_D_Value_U_Data_Scope',
             'iM': 'Azz',
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strCore_Person_Id': nhanSuId,
-            'strCore_Data_Dimension_Id': dimensionId,
+            'strUserId': nhanSuId,
+            'strDimensionId': dimensionId,
             'strNguoiThucHien_Id': edu.system.userId
         };
-        
+
         console.log("Request params:", obj_list);
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 console.log("=== DEBUG loadExistingPermissions FULL RESPONSE ===");

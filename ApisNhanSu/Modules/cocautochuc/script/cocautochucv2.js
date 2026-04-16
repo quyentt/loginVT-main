@@ -292,6 +292,7 @@ CoCauToChuc.prototype = {
 
         edu.system.makeRequest({
             success: function (data) {
+                console.log("Kết quả trả về từ backend:", data);
                 if (data.Success) {
                     var dtResult = [];
                     var iPager = 0;
@@ -349,6 +350,7 @@ CoCauToChuc.prototype = {
     -------------------------------------------*/
     genTable_CoCauToChuc: function (data, iPager) {
         var me = this;
+        console.log("Dữ liệu danh sách đơn vị hành chính:", data);
         edu.util.viewHTMLById("lblCoCauToChuc_Tong", data.length);
         edu.system.loadToCombo_data({
             data: data,
