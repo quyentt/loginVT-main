@@ -583,6 +583,9 @@ NhapDiem.prototype = {
                     }
                 },
                 {
+                    "mDataProp": "DiemPhucKhao".toUpperCase()
+                },
+                {
                     "mDataProp": "DIEM_DANHSACHHOC_TEN"
                 },
                 {
