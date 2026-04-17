@@ -11199,3 +11199,6 @@ table#clone {
 .control-sidebar.control-sidebar-light .search-app .input-group-btn .btn {
     padding: 9px 10px 7.6px 10px !important;
 }
+.tblDSDiem tr td:nth-child(3){
+    text-align: left !important;
+}
