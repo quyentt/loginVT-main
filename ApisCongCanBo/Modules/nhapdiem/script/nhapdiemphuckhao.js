@@ -10,6 +10,12 @@ function NhapDiemPK() { };
 NhapDiemPK.prototype = {
     dtNhapDiem: [],
     strNhapDiem_Id: '',
+    formatDiem: function (val) {
+        if (val === null || val === undefined || val === '') return '';
+        var num = parseFloat(String(val).replace(',', '.'));
+        if (isNaN(num)) return '';
+        return num.toFixed(1).replace('.', ',');
+    },
 
     init: function () {
         var me = this;
@@ -278,11 +284,14 @@ NhapDiemPK.prototype = {
                     "mDataProp": "DAOTAO_LOPHOCPHAN_TEN"
                 },
                 {
-                    "mDataProp": "DIEM"
+                    "mRender": function (nRow, aData) {
+                        return me.formatDiem(aData.DIEM);
+                    }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" name="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" />';
+                        var v = me.formatDiem(aData.DIEMBANDAU);
+                        return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + v + '" name="' + v + '" />';
                     }
                 },
                 {
@@ -346,11 +355,14 @@ NhapDiemPK.prototype = {
                     "mDataProp": "SOBAODANH"
                 },
                 {
-                    "mDataProp": "DIEM"
+                    "mRender": function (nRow, aData) {
+                        return me.formatDiem(aData.DIEM);
+                    }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" name="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" />';
+                        var v = me.formatDiem(aData.DIEMBANDAU);
+                        return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + v + '" name="' + v + '" />';
                     }
                 },
                 {
@@ -416,11 +428,14 @@ NhapDiemPK.prototype = {
                     "mDataProp": "SOPHACH"
                 },
                 {
-                    "mDataProp": "DIEM"
+                    "mRender": function (nRow, aData) {
+                        return me.formatDiem(aData.DIEM);
+                    }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" name="' + edu.util.returnEmpty(aData.DIEMBANDAU) + '" />';
+                        var v = me.formatDiem(aData.DIEMBANDAU);
+                        return '<input id="txtDiem' + aData.ID + '" class="form-control" value="' + v + '" name="' + v + '" />';
                     }
                 },
                 {
@@ -580,8 +595,9 @@ NhapDiemPK.prototype = {
                     var json = data.Data;
                     json.forEach(e => {
                         var x = $(strTable + "#txtDiem" + objNguoiHoc.ID);
-                        x.val(edu.util.returnEmpty(e.DIEM));
-                        x.attr("name", edu.util.returnEmpty(e.DIEM));
+                        var v = me.formatDiem(e.DIEM);
+                        x.val(v);
+                        x.attr("name", v);
                     })
                 } else {
                     edu.system.alert(data.Message);
