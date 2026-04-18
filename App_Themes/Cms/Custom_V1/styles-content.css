@@ -880,8 +880,8 @@
 }
 
 .box-body .table {
-    margin-right: 20px;
-    margin-bottom: 20px;
+    margin-right: 0 !important;
+    margin-bottom: 10px;
 }
 
 .form-container .box-header .box-title {
@@ -3284,7 +3284,7 @@
 }
 
 .scroll-table-x .table>tbody>tr>td {
-    padding: 8px 5px 4px 8px !important;
+    padding: 8px 5px !important;
 }
 
 .scroll-table-x .table>tbody>tr>td:first-child {
