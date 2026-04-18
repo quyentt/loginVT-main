@@ -40,19 +40,24 @@ QuanHeLaoDong.prototype = {
         var rows = me.dtQuanHeLaoDong
             .filter(function (x) {
                 var rowPersonId = x.PERSON_ID || x.ID;
-                if (!(rowPersonId == personId && x.CORE_EMPLOYMENT_ID)) return false;
+                var employmentId = x.CORE_EMPLOYMENT_ID || x.EMPLOYMENT_ID || x.EMPLOYMENT_Id;
+                if (!(rowPersonId == personId && employmentId)) return false;
                 // Soft-delete: nếu nguồn list có cờ active thì bỏ các bản ghi đã xóa
                 var isActive = (x.EMPLOYMENT_IS_ACTIVE != null) ? x.EMPLOYMENT_IS_ACTIVE : x.IS_ACTIVE;
                 if (isActive === 0 || isActive === "0") return false;
                 return true;
             })
             .map(function (x) {
+                var employmentId = x.CORE_EMPLOYMENT_ID || x.EMPLOYMENT_ID || x.EMPLOYMENT_Id;
                 return {
-                    ID: x.CORE_EMPLOYMENT_ID,
+                    ID: employmentId,
+                    EMPLOYMENT_TYPE_CODE: x.EMPLOYMENT_TYPE_CODE || x.EMPLOYMENT_TYPE_Code || "",
                     EMPLOYMENT_TYPE_CODE_NAME: x.EMPLOYMENT_TYPE_CODE_NAME || x.EMPLOYMENT_TYPE_CODE_Name || "",
+                    EMPLOYMENT_STATUS_CODE: x.EMPLOYMENT_STATUS_CODE || x.EMPLOYMENT_STATUS_Code || "",
                     EMPLOYMENT_STATUS_CODE_NAME: x.EMPLOYMENT_STATUS_CODE_NAME || x.EMPLOYMENT_STATUS_CODE_Name || "",
                     LEGAL_ENTITY_ID: x.LEGAL_ENTITY_ID || "",
                     LEGAL_ENTITY_NAME: x.LEGAL_ENTITY_NAME || "",
+                    EMPLOYER_ORG_ID: x.EMPLOYMENT_ORG_ID || x.EMPLOYER_ORG_ID || x.ORG_ID || x.ORG_UNIT_ID || "",
                     EFFECTIVE_FROM: x.EMPLOYMENT_EFFECTIVE_FROM || x.EFFECTIVE_FROM || "",
                     EFFECTIVE_TO: x.EMPLOYMENT_EFFECTIVE_TO || x.EFFECTIVE_TO || "",
                     IS_PRIMARY: x.EMPLOYMENT_IS_PRIMARY != null ? x.EMPLOYMENT_IS_PRIMARY : x.IS_PRIMARY
@@ -110,6 +115,90 @@ QuanHeLaoDong.prototype = {
             if (!r.EMPLOYMENT_TYPE_CODE_NAME && r.EMPLOYMENT_TYPE_CODE) {
                 r.EMPLOYMENT_TYPE_CODE_NAME = getOptionText("dropLoaiQuanHe", r.EMPLOYMENT_TYPE_CODE);
             }
+            return r;
+        });
+    },
+
+    normalizePersonListRows: function (rows) {
+        var me = this;
+        if (!Array.isArray(rows)) return [];
+
+        var getOptionText = function (selectId, value) {
+            try {
+                if (value === null || value === undefined || value === "") return "";
+                var $opt = $("#" + selectId + " option[value='" + value + "']");
+                if ($opt && $opt.length) return ($opt.text() || "").trim();
+            } catch (e) { }
+            return "";
+        };
+
+        var lookupOrgName = function (orgId) {
+            if (!orgId) return "";
+            try {
+                if (Array.isArray(me.dtDonVi) && me.dtDonVi.length) {
+                    var found = me.dtDonVi.find(function (x) { return x && x.ID == orgId; });
+                    if (found && found.NAME) return found.NAME;
+                }
+            } catch (e) { }
+            return "";
+        };
+
+        var parseVNDate = function (s) {
+            try {
+                if (!s) return null;
+                if (typeof s !== 'string') s = String(s);
+                s = s.trim();
+                var parts = s.split('/');
+                if (parts.length !== 3) return null;
+                var dd = parseInt(parts[0], 10);
+                var mm = parseInt(parts[1], 10);
+                var yy = parseInt(parts[2], 10);
+                if (!dd || !mm || !yy) return null;
+                var d = new Date(yy, mm - 1, dd);
+                if (isNaN(d.getTime())) return null;
+                return d;
+            } catch (e) {
+                return null;
+            }
+        };
+
+        var computeEffectiveStatusName = function (fromStr, toStr) {
+            var fromD = parseVNDate(fromStr);
+            var toD = parseVNDate(toStr);
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (fromD && fromD.getTime() > today.getTime()) return "Chưa hiệu lực";
+            if (toD && toD.getTime() < today.getTime()) return "Hết hiệu lực";
+            if (fromD || toD) return "Còn hiệu lực";
+            return "";
+        };
+
+        return rows.map(function (r) {
+            if (!r) return r;
+
+            // Đơn vị hiển thị
+            if (!r.ORG_NAME && (r.ORG_ID || r.ORG_UNIT_ID)) {
+                r.ORG_NAME = lookupOrgName(r.ORG_ID || r.ORG_UNIT_ID);
+            }
+
+            // Trạng thái QHLD (map code -> name)
+            if (!r.EMPLOYMENT_STATUS_CODE_NAME && r.EMPLOYMENT_STATUS_CODE) {
+                r.EMPLOYMENT_STATUS_CODE_NAME = getOptionText("dropTrangThaiQuanHe", r.EMPLOYMENT_STATUS_CODE);
+            }
+            // Fallback theo ngày hiệu lực (khi chưa map được tên)
+            if (!r.EMPLOYMENT_STATUS_CODE_NAME) {
+                var fromStr = r.EMPLOYMENT_EFFECTIVE_FROM || r.EFFECTIVE_FROM;
+                var toStr = r.EMPLOYMENT_EFFECTIVE_TO || r.EFFECTIVE_TO;
+                var computed = computeEffectiveStatusName(fromStr, toStr);
+                if (computed) r.EMPLOYMENT_STATUS_CODE_NAME = computed;
+            }
+
+            // Loại QHLD (map code -> name)
+            if (!r.EMPLOYMENT_TYPE_CODE_NAME && r.EMPLOYMENT_TYPE_CODE) {
+                r.EMPLOYMENT_TYPE_CODE_NAME = getOptionText("dropLoaiQuanHe", r.EMPLOYMENT_TYPE_CODE);
+            }
+
             return r;
         });
     },
@@ -371,9 +460,18 @@ QuanHeLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
+                    var dtReRult = me.normalizePersonListRows(data.Data || []);
                     me["dtQuanHeLaoDong"] = dtReRult;
                     me.genTable_QuanHeLaoDong(dtReRult, data.Pager, "tblChuaQH");
+
+                    // Combo danh mục load async; rerender 1 nhịp để map tên trạng thái
+                    setTimeout(function () {
+                        try {
+                            var re = me.normalizePersonListRows(me.dtQuanHeLaoDong || []);
+                            me.dtQuanHeLaoDong = re;
+                            me.genTable_QuanHeLaoDong(re, data.Pager, "tblChuaQH");
+                        } catch (e) { }
+                    }, 300);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -409,9 +507,31 @@ QuanHeLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
+                    var dtReRult = data.Data || [];
+
+                    // Lọc lại để tránh trường hợp package list trả "Có QHLD" nhưng thực tế không có bản ghi hợp lệ
+                    // (không có employment id hoặc đã soft-delete)
+                    dtReRult = dtReRult.filter(function (x) {
+                        if (!x) return false;
+                        var employmentId = x.CORE_EMPLOYMENT_ID || x.EMPLOYMENT_ID || x.EMPLOYMENT_Id;
+                        if (!employmentId) return false;
+                        var isActive = (x.EMPLOYMENT_IS_ACTIVE != null) ? x.EMPLOYMENT_IS_ACTIVE : x.IS_ACTIVE;
+                        if (isActive === 0 || isActive === "0") return false;
+                        return true;
+                    });
+
+                    dtReRult = me.normalizePersonListRows(dtReRult);
                     me["dtQuanHeLaoDong"] = dtReRult;
                     me.genTable_QuanHeLaoDong(dtReRult, data.Pager, "tblCoQH");
+
+                    // Combo danh mục load async; rerender 1 nhịp để map tên trạng thái
+                    setTimeout(function () {
+                        try {
+                            var re = me.normalizePersonListRows(me.dtQuanHeLaoDong || []);
+                            me.dtQuanHeLaoDong = re;
+                            me.genTable_QuanHeLaoDong(re, data.Pager, "tblCoQH");
+                        } catch (e) { }
+                    }, 300);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -447,9 +567,18 @@ QuanHeLaoDong.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
+                    var dtReRult = me.normalizePersonListRows(data.Data || []);
                     me["dtQuanHeLaoDong"] = dtReRult;
                     me.genTable_QuanHeLaoDong(dtReRult, data.Pager, "tblNghiViec");
+
+                    // Combo danh mục load async; rerender 1 nhịp để map tên trạng thái
+                    setTimeout(function () {
+                        try {
+                            var re = me.normalizePersonListRows(me.dtQuanHeLaoDong || []);
+                            me.dtQuanHeLaoDong = re;
+                            me.genTable_QuanHeLaoDong(re, data.Pager, "tblNghiViec");
+                        } catch (e) { }
+                    }, 300);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");

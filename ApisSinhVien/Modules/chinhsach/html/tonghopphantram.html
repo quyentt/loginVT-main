@@ -75,6 +75,9 @@
                             <a class="btn btn-primary" id="btnAdd_KeThua">
                                 <i class="fa-light fa-copy"></i><span class="lang" key="lb_luu"> Kế thừa</span>
                             </a>
+                            <a class="btn btn-info" id="btnThongKeNhieuDoiTuong">
+                                <i class="fa fa-bar-chart"></i><span class="lang" key=""> Thống kê khai &gt; 1 đối tượng</span>
+                            </a>
 
                             <div class="dropdown" id="zonebtnBaoCao_THPT_Import"
                                  style="width: auto !important; margin: 0 !important;"></div>
@@ -177,7 +180,7 @@
                         class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="myModalLabel"><span class="lang" key="">Kế thừa</span></h4>
             </div>
-            <div class="modal-body" style="">
+            <div class="modal-body">
                 <div class="row aps-form">
                     <!--row 1-->
                     <div class="row aps-form-item">
@@ -278,6 +281,37 @@
                 </table>
             </div>
             <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thống kê SV khai > 1 đối tượng -->
+<div class="modal fade" id="myModalThongKeNhieuDoiTuong" role="dialog" aria-labelledby="myModalThongKeNhieuDoiTuongLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalThongKeNhieuDoiTuongLabel"><span class="lang" key="">Thống kê khai &gt; 1 đối tượng</span></h4>
+            </div>
+            <div class="modal-body">
+                <table id="tblThongKeNhieuDT" class="table table-hover table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã số</span></th>
+                            <th class="td-center"><span class="lang" key="">Họ tên</span></th>
+                            <th class="td-center"><span class="lang" key="">Lớp</span></th>
+                            <th class="td-center"><span class="lang" key="">Chương trình</span></th>
+                            <th class="td-center"><span class="lang" key="">Số đối tượng</span></th>
+                            <th class="td-center"><span class="lang" key="">Danh sách đối tượng</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
             </div>

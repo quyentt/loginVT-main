@@ -13,6 +13,44 @@
         padding-left: 3px !important;
         border: 0 !important;
     }
+
+    /* Thu gọn bảng danh sách bảng điểm */
+    #tblDSDiem {
+        table-layout: fixed !important;
+        width: 100% !important;
+    }
+
+    #tblDSDiem th:nth-child(1),
+    #tblDSDiem td:nth-child(1) {
+        width: 50px !important;
+        text-align: center !important;
+    }
+
+    #tblDSDiem th:nth-child(2),
+    #tblDSDiem td:nth-child(2) {
+        width: 120px !important;
+        text-align: left !important;
+    }
+
+    #tblDSDiem th:nth-child(3),
+    #tblDSDiem td:nth-child(3) {
+        text-align: left !important;
+    }
+
+    #tblDSDiem th:nth-child(4),
+    #tblDSDiem td:nth-child(4) {
+        width: 40px !important;
+        text-align: center !important;
+    }
+
+    #tblDSDiem tbody td {
+        text-align: left !important;
+    }
+
+    #tblDSDiem tbody td:first-child,
+    #tblDSDiem tbody td:last-child {
+        text-align: center !important;
+    }
 </style>
 <link href="Modules/TraCuuDiem/css/bootstrap-colorselector.min.css" rel="stylesheet" /><!-- editor -->
 
@@ -183,21 +221,24 @@
                         </span>
                     </div>
                     <div class="box-body pd0">
-                        <table id="tblDSDiem" class="table table-hover table-bordered table-noborder tblDSDiem mt-10">
-                            <thead>
-                                <tr>
-                                    <th class="td-fixed td-center w-50px">Stt</th>
-                                    <th class="td-left">Mã</th>
-                                    <th class="td-left">Tên</th>
-                                    <th class="td-center td-fixed">
-                                        <input type="checkbox" id="chkSelectAll_Diem">
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Load from js -->
-                            </tbody>
-                        </table>
+                        <div class="aps-table-select scroll-table-x">
+                            <table id="tblDSDiem"
+                                class="table table-hover table-bordered table-noborder tblDSDiem mt-10">
+                                <thead>
+                                    <tr>
+                                        <th class="td-fixed td-center w-50px">Stt</th>
+                                        <th class="td-left">Mã</th>
+                                        <th class="td-left">Tên</th>
+                                        <th class="td-center td-fixed">
+                                            <input type="checkbox" id="chkSelectAll_Diem">
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Load from js -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

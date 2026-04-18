@@ -664,11 +664,33 @@
     </div>
 </div>
 
-<script src="modules/phanquyen/script/quantriquyendulieu.js?v=1.0.0.1"></script>
 <script type="text/javascript">
-    var main_doc = {};
-    main_doc['PhanQuyenDuLieuNhanSu'] = new PhanQuyenDuLieuNhanSu();
-    $(document).ready(function () {
-        main_doc.PhanQuyenDuLieuNhanSu.init();
-    });
+    (function () {
+        function buildAppBaseUrl() {
+            if (window.edu && edu.system && edu.system.rootPath && edu.system.appCode) {
+                var rootPath = ("" + edu.system.rootPath).replace(/\/+$/, "");
+                var appCode = ("" + edu.system.appCode).replace(/^\/+|\/+$/g, "");
+                return rootPath + "/" + appCode;
+            }
+            return "";
+        }
+
+        var baseUrl = buildAppBaseUrl();
+        var scriptUrl = (baseUrl ? baseUrl : "") + "/modules/phanquyen/script/quantriquyendulieu.js?v=1.0.0.6";
+
+        var s = document.createElement("script");
+        s.src = scriptUrl;
+        s.async = false;
+        s.onload = function () {
+            window.main_doc = window.main_doc || {};
+            main_doc['PhanQuyenDuLieuNhanSu'] = new PhanQuyenDuLieuNhanSu();
+            $(document).ready(function () {
+                main_doc.PhanQuyenDuLieuNhanSu.init();
+            });
+        };
+        s.onerror = function () {
+            console.error("Không load được JS:", scriptUrl);
+        };
+        document.head.appendChild(s);
+    })();
 </script>

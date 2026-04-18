@@ -13,43 +13,42 @@ CoCauToChuc.prototype = {
 
     init: function () {
         var me = this;
+        console.log(22222222);
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
         $("#txtSearch_NgayXem").val(edu.util.dateToday());
         me.getList_CoCauToChuc();
-        edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIQUANHE", "dropLoaiQuanHe_ChaNew,dropLoaiQuanHe_Cha");
-        edu.system.loadToCombo_DanhMucDuLieu("CORE.DONVI.LOAIDONVI", "dropSearch_LoaiDonVi,dropLoaiDonVi");
+        // Đồng bộ nguồn dữ liệu với trang khởi tạo CCTC (cocautochuc.js)
+        // Loại cơ cấu tổ chức: NS.LCTC
+        edu.system.loadToCombo_DanhMucDuLieu("NS.LCTC", "dropSearch_LoaiDonVi,dropLoaiDonVi");
 
         $("#tblCoCauToChuc").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtCoCauToChuc.find(e => e.ID == strId);
             me["strCoCauToChuc_Id"] = data.ID;
-            edu.util.viewValById("txtMa", data.KLGD_DANHMUCAPCoCauToChuc_ID);
-            edu.util.viewValById("txtTen", data.DONVITINH_ID);
-            edu.util.viewValById("dropLoaiDonVi", data.CoCauToChuc);
-            edu.util.viewValById("txtTenVietTat", data.MOTA);
-            edu.util.viewValById("txtNgayHieuLuc", data.MOTA);
-            edu.util.viewValById("txtNgayHetHieuLuc", data.MOTA);
-            edu.util.viewValById("dropTrangThai", data.MOTA);
+            edu.util.viewValById("txtMa", data.MA);
+            edu.util.viewValById("txtTen", data.TEN);
+            edu.util.viewValById("dropLoaiDonVi", data.DAOTAO_LOAICOCAUTOCHUC_ID);
+            edu.util.viewValById("txtTenVietTat", edu.util.returnEmpty(data.GHICHU));
+            edu.util.viewValById("txtNgayHieuLuc", "");
+            edu.util.viewValById("txtNgayHetHieuLuc", "");
+            edu.util.viewValById("dropTrangThai", edu.util.returnEmpty(data.TRANGTHAI) || 1);
             $("#modalDonVi").modal("show");
         });
         $("#btnAdd_CoCauToChuc").click(function () {
             var data = {};
             me["strCoCauToChuc_Id"] = data.ID;
-            edu.util.viewValById("txtMa", data.KLGD_DANHMUCAPCoCauToChuc_ID);
-            edu.util.viewValById("txtTen", data.DONVITINH_ID);
-            edu.util.viewValById("dropLoaiDonVi", data.CoCauToChuc);
-            edu.util.viewValById("txtTenVietTat", data.MOTA);
-            edu.util.viewValById("txtNgayHieuLuc", data.MOTA);
-            edu.util.viewValById("txtNgayHetHieuLuc", data.MOTA);
+            edu.util.viewValById("txtMa", "");
+            edu.util.viewValById("txtTen", "");
+            edu.util.viewValById("dropLoaiDonVi", "");
+            edu.util.viewValById("txtTenVietTat", "");
+            edu.util.viewValById("txtNgayHieuLuc", "");
+            edu.util.viewValById("txtNgayHetHieuLuc", "");
             edu.util.viewValById("dropTrangThai", 1);
             $("#modalDonVi").modal("show");
-            edu.util.viewValById("dropDonVi_Cha", data.MOTA);
-            edu.util.viewValById("txtNgayHieuLuc_Cha", data.MOTA);
-            edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.MOTA);
-            edu.util.viewValById("dropLoaiQuanHe_Cha", data.MOTA);
-            edu.util.viewValById("dropTrangThai_Cha", 1);
+            // Thuộc cơ cấu (cha)
+            edu.util.viewValById("dropDonVi_Cha", "");
         });
         $("#btnSave_CoCauToChuc").click(function () {
             me.save_CoCauToChuc();
@@ -57,12 +56,19 @@ CoCauToChuc.prototype = {
         $("#btnDelete_CoCauToChuc").click(function () {
             edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
             $("#btnYes").click(function (e) {
-                me.delete_CoCauToChuc(arrChecked_Id[i]);
+                me.delete_CoCauToChuc(me.strCoCauToChuc_Id);
             });
         });
 
         $("#btnSearch").click(function () {
             me.getList_CoCauToChuc();
+        });
+        // Từ khóa lọc client-side (giống cocautochuc.js)
+        $("#txtSearch_TuKhoa").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#treesjs_cocautochuc ul li").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+            }).css("color", "red");
         });
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
@@ -72,46 +78,6 @@ CoCauToChuc.prototype = {
         });
         $('#dropSearch_LoaiDonVi').on('select2:select', function () {
             me.getList_CoCauToChuc();
-        });
-        
-        $("#tblQuanHe").delegate(".btnEdit", "click", function () {
-            var strId = this.id;
-            var data = me.dtQuanHe.find(e => e.ID == strId);
-            me["strQuanHe_Id"] = data.ID;
-            edu.util.viewValById("dropDonVi_ChaNew", data.RELATION_TYPE_CODE_ID);
-            edu.util.viewValById("txtNgayHieuLuc_ChaNew", data.START_DATE);
-            edu.util.viewValById("txtNgayHetHieuLuc_ChaNew", data.END_DATE);
-            edu.util.viewValById("dropLoaiQuanHe_ChaNew", data.RELATION_TYPE_CODE_ID);
-            edu.util.viewValById("dropTrangThai_ChaNew", data.IS_ACTIVE);
-            $("#modalQuanHe").modal("show");
-        });
-        $("#btnAdd_QuanHe").click(function () {
-            var data = {};
-            me["strQuanHe_Id"] = data.ID;
-            edu.util.viewValById("dropDonVi_ChaNew", data.MA);
-            edu.util.viewValById("txtNgayHieuLuc_ChaNew", data.TEN);
-            edu.util.viewValById("txtNgayHetHieuLuc_ChaNew", data.MOTA);
-            edu.util.viewValById("dropLoaiQuanHe_ChaNew", data.PHANLOAI_ID);
-            edu.util.viewValById("dropTrangThai_ChaNew", 1);
-            $("#modalQuanHe").modal("show");
-        });
-        $("#btnSave_QuanHe").click(function () {
-            me.save_QuanHe();
-        });
-        $("#btnDelete_QuanHe").click(function () {
-            var arrChecked_Id = edu.util.getArrCheckedIds("tblQuanHe", "checkX");
-            if (arrChecked_Id.length == 0) {
-                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
-                return;
-            }
-            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
-            $("#btnYes").click(function (e) {
-                edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.delete_QuanHe(arrChecked_Id[i]);
-                }
-            });
         });
     },
     /*------------------------------------------
@@ -278,152 +244,104 @@ CoCauToChuc.prototype = {
     save_CoCauToChuc: function () {
         var me = this;
         var obj_notify = {};
-        //--Edit
+        // Đồng bộ theo NS_CoCauToChuc (giống cocautochuc.js)
+        var isUpdate = edu.util.checkValue(me.strCoCauToChuc_Id);
         var obj_save = {
-            'action': 'NS_HoSoNhanSu3_MH/FSkkLB4CLjMkHg4zJh4ULyg1',
-            'func': 'PKG_CORE_HOSONHANSU_03.Them_Core_Org_Unit',
-            'iM': edu.system.iM,
-            'strId': me.strCoCauToChuc_Id,
-            'strCode': edu.system.getValById('txtMa'),
-            'strName': edu.system.getValById('txtTen'),
-            'strOrg_Type_Code': edu.system.getValById('dropLoaiDonVi'),
-            'strShort_Name': edu.system.getValById('txtTenVietTat'),
-            'dIs_Offcial': 1,
-            'dIs_Active': edu.system.getValById('dropTrangThai'),
-            'strStart_Date': edu.system.getValById('txtNgayHieuLuc'),
-            'strEnd_Date': edu.system.getValById('txtNgayHetHieuLuc'),
-            'strDescription': edu.system.getValById('txtAAAA'),
-            'strNguoiThucHien_Id': edu.system.userId,
+            action: isUpdate ? 'NS_CoCauToChuc/CapNhat' : 'NS_CoCauToChuc/ThemMoi',
+
+            strTen: edu.system.getValById('txtTen'),
+            strMa: edu.system.getValById('txtMa'),
+            strDaoTao_Loai_Id: edu.system.getValById('dropLoaiDonVi'),
+            dThuTu: 1,
+            dTrangThai: edu.system.getValById('dropTrangThai') || 1,
+            strDaoTao_CoCau_Cha_Id: edu.system.getValById('dropDonVi_Cha'),
+            // Không có field ghi chú riêng trong UI v2 → tạm dùng "Tên viết tắt" làm ghi chú.
+            strGhiChu: edu.system.getValById('txtTenVietTat'),
+            strNguoiThucHien_Id: edu.system.userId,
+            strId: isUpdate ? me.strCoCauToChuc_Id : ""
         };
-        if (obj_save.strId) {
-            obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeDjMmHhQvKDUP';
-            obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Org_Unit'
-        }
-        //default
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    if (!obj_save.strId) {
-                        me.strCoCauToChuc_Id = data.Id;
-                        edu.system.alert("Thêm mới thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                    }
-                    me.save_QuanHe();
+                    edu.system.alert(isUpdate ? "Cập nhật thành công!" : "Thêm mới thành công!");
                     me.getList_CoCauToChuc();
-                }
-                else {
-                    edu.system.alert(data.Message);
+                    $("#modalDonVi").modal("hide");
+                } else {
+                    edu.system.alert(obj_save.action + ": " + data.Message);
                 }
             },
             error: function (er) {
-                edu.system.alert(JSON.stringify(er));
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
-
             contentType: true,
             data: obj_save,
-            fakedb: [
-            ]
+            fakedb: []
         }, false, false, false, null);
     },
     getList_CoCauToChuc: function (strDanhSach_Id) {
         var me = this;
-        var obj_save = {
-            'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHg4zJh4ULyg1',
-            'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Org_Unit',
-            'iM': edu.system.iM,
-            'strTuKhoa': edu.system.getValById('txtSearch_TuKhoa'),
-            'strOrg_Type_Code': edu.system.getValById('dropSearch_LoaiDonVi'),
-            'dIs_Offcial': edu.system.getValById('txtAAAA'),
-            'dIs_Active': edu.system.getValById('dropSearch_TrangThai'),
-            'strNgayXem': edu.system.getValById('txtSearch_NgayXem'),
-            'strNguoiThucHien_Id': edu.system.userId,
+        var obj_list = {
+            action: 'NS_CoCauToChuc/LayDanhSach',
+            dTrangThai: edu.system.getValById('dropSearch_TrangThai') || 1,
+            strLoaiCoCauToChuc_Id: edu.system.getValById('dropSearch_LoaiDonVi'),
+            strCoCauToChucCha_Id: ""
         };
-        //
 
         edu.system.makeRequest({
             success: function (data) {
+                console.log("Kết quả trả về từ backend:", data);
                 if (data.Success) {
-                    var dtReRult = data.Data;
-                    me["dtCoCauToChuc"] = dtReRult;
-                    me.genTable_CoCauToChuc(dtReRult, data.Pager);
+                    var dtResult = [];
+                    var iPager = 0;
+                    if (edu.util.checkValue(data.Data)) {
+                        dtResult = data.Data;
+                        iPager = data.Pager;
+                    }
+                    me.dtCoCauToChuc = dtResult;
+                    me.genTable_CoCauToChuc(dtResult, iPager);
+                } else {
+                    edu.system.alert(obj_list.action + ": " + data.Message);
                 }
-                else {
-                    edu.system.alert(" : " + data.Message, "s");
-                }
-
             },
             error: function (er) {
-
-                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
             },
-            type: 'POST',
-            action: obj_save.action,
-
+            type: 'GET',
+            action: obj_list.action,
             contentType: true,
-            data: obj_save,
-            fakedb: [
-
-            ]
+            data: obj_list,
+            fakedb: []
         }, false, false, false, null);
     },
     delete_CoCauToChuc: function (Ids) {
         var me = this;
-        //--Edit
-        var obj_save = {
-            'action': 'NS_HoSoNhanSu3_MH/GS4gHgIuMyQeDjMmHhQvKDUP',
-            'func': 'PKG_CORE_HOSONHANSU_03.Xoa_Core_Org_Unit',
-            'iM': edu.system.iM,
-            'strId': me.strCoCauToChuc_Id,
-            'strNguoiThucHien_Id': edu.system.userId,
+        var obj_delete = {
+            action: 'NS_HoSo_V2/Xoa_DaoTao_CoCauToChuc',
+            strId: me.strCoCauToChuc_Id,
+            strNguoiThucHien_Id: edu.system.userId
         };
-        //default
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    obj = {
-                        title: "",
-                        content: "Xóa dữ liệu thành công!",
-                        code: ""
-                    };
-                    edu.system.afterComfirm(obj);
+                    edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
                     me.getList_CoCauToChuc();
+                    $("#modalDonVi").modal("hide");
+                } else {
+                    edu.system.afterComfirm({ title: "", content: data.Message, code: "w" });
                 }
-                else {
-                    obj = {
-                        title: "",
-                        content: data.Message,
-                        code: "w"
-                    };
-                    edu.system.afterComfirm(obj);
-                }
-
             },
             error: function (er) {
-
-                obj = {
-                    title: "",
-                    content: JSON.stringify(er),
-                    code: "w"
-                };
-                edu.system.afterComfirm(obj);
+                edu.system.afterComfirm({ title: "", content: JSON.stringify(er), code: "w" });
             },
-            type: "POST",
-            action: obj_save.action,
-
-            complete: function () {
-                edu.system.start_Progress("zoneprocessXXXX", function () {
-                    me.getList_CoCauToChuc();
-                });
-            },
+            type: 'POST',
+            action: obj_delete.action,
             contentType: true,
-
-            data: obj_save,
-            fakedb: [
-            ]
+            data: obj_delete,
+            fakedb: []
         }, false, false, false, null);
     },
     /*------------------------------------------
@@ -432,17 +350,18 @@ CoCauToChuc.prototype = {
     -------------------------------------------*/
     genTable_CoCauToChuc: function (data, iPager) {
         var me = this;
+        console.log("Dữ liệu danh sách đơn vị hành chính:", data);
         edu.util.viewHTMLById("lblCoCauToChuc_Tong", data.length);
         edu.system.loadToCombo_data({
             data: data,
             renderInfor: {
                 id: "ID",
                 parentId: "",
-                name: "NAME",
-                code: "",
+                name: "TEN",
+                code: "MA",
                 avatar: ""
             },
-            renderPlace: ["dropDonVi_Cha"],
+            renderPlace: ["dropDonVi_Cha", "dropDonVi_ChaNew"],
             type: "",
             title: "Chọn cơ cấu tổ chức cha",
         })
@@ -450,9 +369,9 @@ CoCauToChuc.prototype = {
             data: data,
             renderInfor: {
                 id: "ID",
-                parentId: "PARENT_ORG_ID",
-                name: "NAME",
-                code: ""
+                parentId: "DAOTAO_COCAUTOCHUC_CHA_ID",
+                name: "TEN",
+                code: "MA"
             },
             renderPlaces: ["treesjs_cocautochuc"],
             style: "fa fa-institution color-active",
@@ -461,17 +380,21 @@ CoCauToChuc.prototype = {
         edu.system.loadToTreejs_data(obj);
         $('#treesjs_cocautochuc').on("select_node.jstree", function (e, data) {
             var strId = data.node.id;
+            console.log(111111);
+            //$(".btnOpenDelete").show();
+            //$(".zoneOpenNew").hide();
             var data = me.dtCoCauToChuc.find(e => e.ID == strId);
             me["strCoCauToChuc_Id"] = data.ID;
-            edu.util.viewValById("txtMa", data.CODE);
-            edu.util.viewValById("txtTen", data.NAME);
-            edu.util.viewValById("dropLoaiDonVi", data.ORG_TYPE_CODE);
-            edu.util.viewValById("txtTenVietTat", data.MOTA);
-            edu.util.viewValById("txtNgayHieuLuc", data.UNIT_START_DATE);
-            edu.util.viewValById("txtNgayHetHieuLuc", data.UNIT_END_DATE);
-            edu.util.viewValById("dropTrangThai", data.UNIT_IS_ACTIVE);
+            edu.util.viewValById("txtMa", data.MA);
+            edu.util.viewValById("txtTen", data.TEN);
+            edu.util.viewValById("dropLoaiDonVi", data.DAOTAO_LOAICOCAUTOCHUC_ID);
+            edu.util.viewValById("txtTenVietTat", edu.util.returnEmpty(data.GHICHU));
+            edu.util.viewValById("txtNgayHieuLuc", "");
+            edu.util.viewValById("txtNgayHetHieuLuc", "");
+            edu.util.viewValById("dropTrangThai", edu.util.returnEmpty(data.TRANGTHAI) || 1);
             $("#modalDonVi").modal("show");
-            me.getList_QuanHe();
+            // Thuộc cơ cấu (cha)
+            edu.util.viewValById("dropDonVi_Cha", data.DAOTAO_COCAUTOCHUC_CHA_ID);
         });
         /*III. Callback*/
     },
@@ -501,6 +424,14 @@ CoCauToChuc.prototype = {
         if (obj_save.strId) {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeDjMmHhMkLSA1KC4v';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Org_Relation'
+            
+        }
+        if ($('#modalQuanHe').hasClass('show')) {
+            obj_save.strParent_Org_Id = edu.system.getValById('dropDonVi_ChaNew');
+            obj_save.strRelation_Type_Code = edu.system.getValById('dropLoaiQuanHe_ChaNew');
+            obj_save.dIs_Active = edu.system.getValById('dropTrangThai_ChaNew');
+            obj_save.strStart_Date = edu.system.getValById('txtNgayHieuLuc_ChaNew');
+            obj_save.strEnd_Date = edu.system.getValById('txtNgayHetHieuLuc_ChaNew');
         }
         //default
         edu.system.makeRequest({
@@ -513,6 +444,7 @@ CoCauToChuc.prototype = {
                         edu.system.alert("Cập nhật thành công!");
                     }
                     me.getList_QuanHe();
+                    me.getList_CoCauToChuc();
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -612,6 +544,7 @@ CoCauToChuc.prototype = {
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
                     me.getList_QuanHe();
+                    me.getList_CoCauToChuc();
                 });
             },
             contentType: true,
@@ -680,6 +613,15 @@ CoCauToChuc.prototype = {
             edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.END_DATE);
             edu.util.viewValById("dropLoaiQuanHe_Cha", data.RELATION_TYPE_CODE_ID);
             edu.util.viewValById("dropTrangThai_Cha", data.IS_ACTIVE);
+            $("#tblQuanHe").parent().parent().parent().show();
+        } else {
+            me["strQuanHe_Id"] = "";
+            edu.util.viewValById("dropDonVi_Cha", data.MOTA);
+            edu.util.viewValById("txtNgayHieuLuc_Cha", data.MOTA);
+            edu.util.viewValById("txtNgayHetHieuLuc_Cha", data.MOTA);
+            edu.util.viewValById("dropLoaiQuanHe_Cha", data.MOTA);
+            edu.util.viewValById("dropTrangThai_Cha", 1);
+            $("#tblQuanHe").parent().parent().parent().hide();
         }
         /*III. Callback*/
     },

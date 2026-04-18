@@ -42,6 +42,7 @@
   --red: #ff0000;
   --color-danger: #dc3545;
   --color-link: #1a71e8 !important;
+  --color-test:var(--red);
 }
 
 /*-----------------------*/
@@ -7489,7 +7490,7 @@ tr:last-child .d-flex.gap-3 {
 .action-group {
   display: flex;
   flex-wrap: wrap;
-  max-width: 1512px;
+  /* max-width: 1512px; */
   margin-top: 12px;
   margin: 0 10px;
   padding: 0 !important;

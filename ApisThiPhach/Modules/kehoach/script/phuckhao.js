@@ -599,7 +599,13 @@ PhucKhao.prototype = {
                 //    "mDataProp": "PHONGTHI_TEN"
                 //},
                 {
-                    "mDataProp": "DIEM"
+                    mRender: function (nRow, aData) {
+                        var val = aData.DIEM;
+                        if (val === null || val === undefined || val === "") return "";
+                        var num = parseFloat(val);
+                        if (isNaN(num)) return val;
+                        return num.toFixed(1).replace('.', ',');
+                    }
                 },
                 {
                     "mRender": function (nRow, aData) {
@@ -639,7 +645,13 @@ PhucKhao.prototype = {
                     }
                 },
                 {
-                    "mDataProp": "KETQUAPHUCKHAO"
+                    mRender: function (nRow, aData) {
+                        var val = aData.KETQUAPHUCKHAO;
+                        if (val === null || val === undefined || val === "") return "";
+                        var num = parseFloat(val);
+                        if (isNaN(num)) return val;
+                        return num.toFixed(1).replace('.', ',');
+                    }
                 },
                 {
                     "mDataProp": "TINHTRANG_TEN"

@@ -1631,6 +1631,18 @@ systemroot.prototype = {
         }
         mainTable();
         //
+        function renumberStt() {
+            try {
+                var rows = document.getElementById(strTableId).getElementsByTagName("tbody")[0].rows;
+                for (var i = 0; i < rows.length; i++) {
+                    if (rows[i].cells && rows[i].cells.length > 0) {
+                        rows[i].cells[0].innerHTML = (i + 1);
+                    }
+                }
+            } catch (e) {
+                return;
+            }
+        }
         function mainTable() {
             $("#" + strTableId + " tbody").html("");
             if (edu.util.checkValue(jsonData)) {
@@ -1638,6 +1650,7 @@ systemroot.prototype = {
                     addPagination();
                     fillTable();
                     sortAndOrder();
+                    renumberStt();
                     changeStyle();
                     posColumn();
                     addClassName();
@@ -1840,6 +1853,9 @@ systemroot.prototype = {
                         }
                     }
                 }).appendTo(tbody);
+
+                // Re-number STT to match displayed order
+                renumberStt();
 
             }
             //Heading click

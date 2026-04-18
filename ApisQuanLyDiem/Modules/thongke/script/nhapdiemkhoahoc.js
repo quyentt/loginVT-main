@@ -67,6 +67,22 @@ NhapDiemHocPhan.prototype = {
             //var arrChecked_Id = edu.util.getArrCheckedIds("tblNhapDiem", "checkX");
             //arrChecked_Id.forEach(e => addKeyValue("strDanhSachThi_Id", e));
         });
+        edu.system.loadToCombo_DanhMucDuLieu("DIEM.TRANGTHAILOC", "", "", data => {
+            var obj = {
+                data: data,
+                renderInfor: {
+                    id: "MA",
+                    parentId: "",
+                    name: "TEN",
+                    code: "",
+                    avatar: ""
+                },
+                renderPlace: ["dropSearch_HoanThanhNhapDiem"],
+                type: "",
+                title: "Chọn lọc",
+            };
+            edu.system.loadToCombo_data(obj);
+        });
     },
     
     /*------------------------------------------
@@ -77,8 +93,11 @@ NhapDiemHocPhan.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'TP_ToChucThi/LayDSLopHocPhanTatCa',
+            'action': 'XLHV_TP_ToChucThi_MH/DSA4BRINLjEJLiIRKSAvFSA1AiAP',
+            'func': 'pkg_thi_tochucthi.LayDSLopHocPhanTatCa',
+            'iM': edu.system.iM,
             'type': 'POST',
+            'dLocKhongHoanThanhNhapDiem': edu.system.getValById('dropSearch_HoanThanhNhapDiem'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropHeDaoTao_TK'),
             'strDaoTao_KhoaDaoTao_Id': edu.util.getValById('dropKhoaDaoTao_TK'),

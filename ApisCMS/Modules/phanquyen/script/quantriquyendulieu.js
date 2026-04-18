@@ -12,6 +12,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
     dsPermissions: {}, // Quyền hiện tại
     currentDimensionName: '',
     dsKhoa: [], // Danh sách khoa
+    dsDonVi: [], // Danh sách đơn vị từ API NS_CoCauToChuc
     selectedKhoaId: '', // Khoa đang chọn
     
     // Phân trang modal
@@ -38,6 +39,31 @@ PhanQuyenDuLieuNhanSu.prototype = {
     currentMonth: new Date().getMonth(),
     currentYear: new Date().getFullYear(),
     selectedDate: new Date(),
+
+    renderTableStatus: function (message, type) {
+        var me = this;
+        type = type || 'info'; // info | warning | error
+
+        function escapeHtml(str) {
+            return ('' + (str == null ? '' : str))
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        var alertClass = type === 'error' ? 'alert-danger' : (type === 'warning' ? 'alert-warning' : 'alert-info');
+
+        $("#tblPhanQuyenDuLieu thead").html('');
+        $("#tblPhanQuyenDuLieu tbody").html(
+            '<tr><td colspan="99" style="padding: 16px;">'
+            + '<div class="alert ' + alertClass + '" style="margin:0; text-align:center; font-weight:600;">'
+            + escapeHtml(message)
+            + '</div>'
+            + '</td></tr>'
+        );
+    },
     
     init: function () {
         var me = this;
@@ -73,11 +99,16 @@ PhanQuyenDuLieuNhanSu.prototype = {
             me.genTable_DuLieu();
         });
         
-        // Sự kiện lọc theo Khoa
+        // Sự kiện lọc theo Khoa/Đơn vị — load nhân sự theo đơn vị từ API
         $("#ddlKhoa").change(function () {
             me.selectedKhoaId = $(this).val();
             me.currentPage = 1;
-            me.genTable_DuLieu();
+            if (me.selectedKhoaId) {
+                me.getList_NhanSuTheoDonVi(me.selectedKhoaId);
+            } else {
+                me.dsNhanSu = [];
+                me.renderTableStatus('Vui lòng chọn Khoa/Đơn vị để xem danh sách nhân sự.', 'info');
+            }
         });
         
         // Sự kiện calendar
@@ -92,8 +123,9 @@ PhanQuyenDuLieuNhanSu.prototype = {
     
     page_load: function () {
         var me = this;
-        // Load danh sách nhân sự
-        me.getList_NhanSu();
+        me.renderTableStatus('Vui lòng chọn Khoa/Đơn vị để xem danh sách nhân sự.', 'info');
+        me.getList_DonVi();
+        me.getList_DataDimension();
     },
     
     /*------------------------------------------
@@ -164,17 +196,16 @@ PhanQuyenDuLieuNhanSu.prototype = {
                     me.dsNhanSu = data.Data || [];
                     
                     $("#lblSoLuongNhanSu").text(me.dsNhanSu.length);
-                    
-                    // Load danh sách Khoa từ nhân sự
-                    me.loadDanhSachKhoa();
-                    
+
                     // Sau khi có danh sách nhân sự, load dữ liệu chiều
                     me.getList_DataDimension();
                 } else {
+                    me.renderTableStatus('Không tải được danh sách nhân sự: ' + (data.Message || 'Không rõ nguyên nhân'), 'error');
                     edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
+                me.renderTableStatus('Lỗi kết nối khi tải danh sách nhân sự. Vui lòng thử lại.', 'error');
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
             type: "GET",
@@ -184,6 +215,35 @@ PhanQuyenDuLieuNhanSu.prototype = {
         }, false, false, false, null);
     },
     
+    /*------------------------------------------
+    --Lấy nhân sự theo đơn vị (gọi khi chọn ddlKhoa)
+    -------------------------------------------*/
+    getList_NhanSuTheoDonVi: function (strCoCauToChuc_Id) {
+        var me = this;
+        me.renderTableStatus('Đang tải danh sách nhân sự...', 'info');
+
+        var obj = {
+            strTuKhoa: '',
+            pageIndex: 1,
+            pageSize: 100000,
+            strCoCauToChuc_Id: strCoCauToChuc_Id,
+            strNguoiThucHien_Id: edu.system.userId,
+            dLaCanBoNgoaiTruong: 0
+        };
+
+        edu.system.getList_NhanSu(obj, '', '', function (data) {
+            // Chuẩn hóa field: HOTEN = HODEM + TEN nếu chưa có
+            for (var i = 0; i < data.length; i++) {
+                if (!data[i].HOTEN) {
+                    data[i].HOTEN = ((data[i].HODEM || '') + ' ' + (data[i].TEN || '')).trim();
+                }
+            }
+            me.dsNhanSu = data;
+            me.currentPage = 1;
+            me.genTable_DuLieu();
+        });
+    },
+
     /*------------------------------------------
     --Lấy danh sách chiều dữ liệu (Data Dimension)
     -------------------------------------------*/
@@ -202,12 +262,18 @@ PhanQuyenDuLieuNhanSu.prototype = {
             success: function (data) {
                 if (data.Success) {
                     me.dsDimensions = data.Data || [];
+                    if (!me.dsDimensions || me.dsDimensions.length === 0) {
+                        me.renderTableStatus('Chưa cấu hình chiều dữ liệu để phân quyền.', 'warning');
+                        return;
+                    }
                     me.loadAllDimensionValues();
                 } else {
+                    me.renderTableStatus('Không tải được danh sách chiều dữ liệu: ' + (data.Message || 'Không rõ nguyên nhân'), 'error');
                     edu.system.alert("Lỗi: " + data.Message);
                 }
             },
             error: function (er) {
+                me.renderTableStatus('Lỗi kết nối khi tải danh sách chiều dữ liệu. Vui lòng thử lại.', 'error');
                 edu.system.alert("Lỗi: " + JSON.stringify(er));
             },
             type: "POST",
@@ -218,37 +284,115 @@ PhanQuyenDuLieuNhanSu.prototype = {
     },
     
     /*------------------------------------------
-    --Load danh sách Khoa từ nhân sự
+    --Lấy danh sách đơn vị hành chính từ API
+    -------------------------------------------*/
+    getList_DonVi: function () {
+        var me = this;
+
+        var obj_list = {
+            'action': 'NS_CoCauToChuc/LayDanhSach',
+            'dTrangThai': 1,
+            'strLoaiCoCauToChuc_Id': '',
+            'strCoCauToChucCha_Id': ''
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                console.log('[getList_DonVi] response:', data);
+                if (data.Success && data.Data) {
+                    me.dsDonVi = data.Data || [];
+                    console.log('[getList_DonVi] total:', me.dsDonVi.length);
+                    me.loadDanhSachKhoa();
+                } else {
+                    console.warn('[getList_DonVi] không lấy được dữ liệu, fallback:', data.Message);
+                    me.loadDanhSachKhoaFromNhanSu();
+                }
+            },
+            error: function (er) {
+                console.error('[getList_DonVi] lỗi API:', er);
+                me.loadDanhSachKhoaFromNhanSu();
+            },
+            type: 'GET',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Render dropdown Khoa dạng cây cha-con
     -------------------------------------------*/
     loadDanhSachKhoa: function () {
         var me = this;
-        
-        // Lấy danh sách Khoa unique từ nhân sự
+
+        var ds = me.dsDonVi;
+        if (!ds || ds.length === 0) return;
+
+        // Build map children: parentId -> [children]
+        var childrenMap = {};
+        for (var i = 0; i < ds.length; i++) {
+            var item = ds[i];
+            var pid = item.PARENT || '#';
+            if (!childrenMap[pid]) childrenMap[pid] = [];
+            childrenMap[pid].push(item);
+        }
+
+        // Sắp xếp mỗi nhóm theo THUTU rồi TEN
+        for (var pid in childrenMap) {
+            childrenMap[pid].sort(function(a, b) {
+                var ta = (a.THUTU != null ? a.THUTU : 999);
+                var tb = (b.THUTU != null ? b.THUTU : 999);
+                if (ta !== tb) return ta - tb;
+                return (a.TEN || '').localeCompare(b.TEN || '', 'vi');
+            });
+        }
+
+        var html = '<option value="">-- Tất cả --</option>';
+
+        // Đệ quy render cây
+        function renderNode(nodeId, depth) {
+            var children = childrenMap[nodeId];
+            if (!children) return;
+            for (var j = 0; j < children.length; j++) {
+                var node = children[j];
+                var prefix = '';
+                for (var d = 0; d < depth; d++) prefix += '\u00A0\u00A0\u00A0';
+                if (depth > 0) prefix += '\u2514 ';
+                html += '<option value="' + node.ID + '">' + prefix + node.TEN + '</option>';
+                renderNode(node.ID, depth + 1);
+            }
+        }
+
+        renderNode('#', 0);
+
+        $("#ddlKhoa").html(html);
+    },
+
+    /*------------------------------------------
+    --Fallback: Build dropdown Khoa từ dữ liệu nhân sự
+    -------------------------------------------*/
+    loadDanhSachKhoaFromNhanSu: function () {
+        var me = this;
+
         var khoaMap = {};
         for (var i = 0; i < me.dsNhanSu.length; i++) {
             var ns = me.dsNhanSu[i];
             var khoaId = ns.DAOTAO_COCAUTOCHUC_ID;
             var khoaTen = ns.DAOTAO_COCAUTOCHUC_TEN;
-            
             if (khoaId && khoaTen && !khoaMap[khoaId]) {
                 khoaMap[khoaId] = khoaTen;
             }
         }
-        
-        // Chuyển thành mảng và sắp xếp
+
         me.dsKhoa = [];
         for (var id in khoaMap) {
-            me.dsKhoa.push({
-                ID: id,
-                TEN: khoaMap[id]
-            });
+            me.dsKhoa.push({ ID: id, TEN: khoaMap[id] });
         }
-        
         me.dsKhoa.sort(function(a, b) {
             return a.TEN.localeCompare(b.TEN, 'vi');
         });
-        
-        // Render dropdown
+
         var html = '<option value="">-- Tất cả --</option>';
         for (var j = 0; j < me.dsKhoa.length; j++) {
             html += '<option value="' + me.dsKhoa[j].ID + '">' + me.dsKhoa[j].TEN + '</option>';
@@ -340,29 +484,32 @@ PhanQuyenDuLieuNhanSu.prototype = {
     -------------------------------------------*/
     genTable_DuLieu: function () {
         var me = this;
-        
-        if (Object.keys(me.dimensionGroups).length === 0) {
-            $("#tblPhanQuyenDuLieu thead").html('');
-            $("#tblPhanQuyenDuLieu tbody").html('<tr><td colspan="2" style="text-align: center; padding: 40px;"><i class="fa-solid fa-inbox fa-3x"></i><div>Đang tải dữ liệu...</div></td></tr>');
+
+        if (!me.dsDimensions || me.dsDimensions.length === 0) {
+            me.renderTableStatus('Chưa cấu hình chiều dữ liệu để phân quyền.', 'warning');
             return;
         }
         
-        // Lọc nhân sự theo từ khóa
+        if (Object.keys(me.dimensionGroups).length === 0) {
+            me.renderTableStatus('Đang tải dữ liệu chiều...', 'info');
+            return;
+        }
+        
+        // Nếu chưa chọn đơn vị, không render
+        if (!me.selectedKhoaId) {
+            me.renderTableStatus('Vui lòng chọn Khoa/Đơn vị để xem danh sách nhân sự.', 'info');
+            return;
+        }
+
+        // Lọc nhân sự theo từ khóa tìm kiếm
         var keyword = $("#txtSearch_TuKhoa").val().toLowerCase().trim();
         me.filteredNhanSu = me.dsNhanSu;
-        
+
         if (keyword) {
             me.filteredNhanSu = me.filteredNhanSu.filter(function(ns) {
                 var hoTen = (ns.HOTEN || '').toLowerCase();
                 var maSo = (ns.MASO || '').toLowerCase();
                 return hoTen.indexOf(keyword) !== -1 || maSo.indexOf(keyword) !== -1;
-            });
-        }
-        
-        // Lọc theo Khoa
-        if (me.selectedKhoaId) {
-            me.filteredNhanSu = me.filteredNhanSu.filter(function(ns) {
-                return ns.DAOTAO_COCAUTOCHUC_ID === me.selectedKhoaId;
             });
         }
         
@@ -586,10 +733,7 @@ PhanQuyenDuLieuNhanSu.prototype = {
         // Footer
         modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
         modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
-<<<<<<< HEAD
         modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa</button>';
-=======
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         modalHtml += '<button type="button" class="btn btn-success" id="btnThemChiTiet" style="padding: 8px 16px;"><i class="fa-solid fa-plus"></i> Thêm</button>';
         modalHtml += '</div>';
         
@@ -677,7 +821,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
             me.showScopeModePopup(nhanSuId, dimensionId, selectedValues);
             return false;
         });
-<<<<<<< HEAD
         
         // Bind event cho nút Xóa
         $("#btnXoaChiTiet").click(function(e) {
@@ -698,8 +841,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
             me.deletePermissions(selectedScopes);
             return false;
         });
-=======
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
     },
 
     /*------------------------------------------
@@ -815,10 +956,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
         // Footer
         modalHtml += '<div style="padding: 15px 20px; border-top: 1px solid #dee2e6; display: flex; justify-content: flex-end; gap: 10px; background: #f8f9fa; border-radius: 0 0 8px 8px;">';
         modalHtml += '<button type="button" class="btn btn-secondary" id="btnDongResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-times"></i> Đóng</button>';
-<<<<<<< HEAD
-=======
-        modalHtml += '<button type="button" class="btn btn-danger" id="btnXoaResultModal" style="padding: 8px 16px;"><i class="fa-solid fa-trash"></i> Xóa quyền đã chọn</button>';
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         modalHtml += '</div>';
         
         modalHtml += '</div>';
@@ -844,28 +981,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
             }
         });
         
-<<<<<<< HEAD
-=======
-        // Bind event cho nút Xóa
-        $("#btnXoaResultModal").click(function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            var selectedScopes = [];
-            $(".chkResultItem:checked").each(function() {
-                selectedScopes.push($(this).data("scope-id"));
-            });
-            
-            if (selectedScopes.length === 0) {
-                edu.system.alert("Vui lòng chọn ít nhất 1 quyền để xóa");
-                return false;
-            }
-            
-            me.deletePermissions(selectedScopes);
-            return false;
-        });
-        
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         // Ngăn click vào content đóng modal
         $("#modalXemKetQua > div").click(function(e) {
             e.stopPropagation();
@@ -900,12 +1015,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
             tableHtml += '<table class="table table-bordered table-hover" style="margin: 0; width: 100%;">';
             tableHtml += '<thead style="background: #f8f9fa;">';
             tableHtml += '<tr>';
-<<<<<<< HEAD
-=======
-            tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">';
-            tableHtml += '<input type="checkbox" id="chkSelectAllResult" style="width: 18px; height: 18px; cursor: pointer;"/>';
-            tableHtml += '</th>';
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
             tableHtml += '<th style="width: 50px; text-align: center; padding: 10px;">STT</th>';
             tableHtml += '<th style="width: 150px; padding: 10px;">Mã</th>';
             tableHtml += '<th style="padding: 10px;">Tên</th>';
@@ -919,12 +1028,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
                 var item = assigned.item;
                 
                 tableHtml += '<tr style="background: #d4edda;">';
-<<<<<<< HEAD
-=======
-                tableHtml += '<td style="text-align: center; padding: 8px;">';
-                tableHtml += '<input type="checkbox" class="chkResultItem" data-scope-id="' + assigned.scopeId + '" style="width: 18px; height: 18px; cursor: pointer;"/>';
-                tableHtml += '</td>';
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
                 tableHtml += '<td style="text-align: center; padding: 8px;">' + (j + 1) + '</td>';
                 tableHtml += '<td style="padding: 8px;">' + (item.VALUE_CODE || item.CORE_DATA_VALUE_CODE || '') + '</td>';
                 tableHtml += '<td style="padding: 8px;">' + (item.VALUE_NAME || item.CORE_DATA_VALUE_NAME || item.TEN || 'N/A') + '</td>';
@@ -936,24 +1039,6 @@ PhanQuyenDuLieuNhanSu.prototype = {
             
             tableHtml += '</tbody>';
             tableHtml += '</table>';
-<<<<<<< HEAD
-=======
-            
-            // Bind event cho checkbox "Chọn tất cả"
-            setTimeout(function() {
-                $("#chkSelectAllResult").change(function() {
-                    var isChecked = $(this).is(':checked');
-                    $(".chkResultItem").prop('checked', isChecked);
-                });
-                
-                // Bind event cho từng checkbox để cập nhật "Chọn tất cả"
-                $(document).on('change', '.chkResultItem', function() {
-                    var totalCheckboxes = $(".chkResultItem").length;
-                    var checkedCheckboxes = $(".chkResultItem:checked").length;
-                    $("#chkSelectAllResult").prop('checked', totalCheckboxes === checkedCheckboxes);
-                });
-            }, 100);
->>>>>>> 23b367d38a9ef7d6e98048d60bc0b21fc60d5279
         } else {
             tableHtml += '<div style="text-align: center; padding: 40px;">';
             tableHtml += '<i class="fa-solid fa-inbox fa-3x" style="color: #ccc;"></i>';
@@ -1252,9 +1337,9 @@ PhanQuyenDuLieuNhanSu.prototype = {
             'strCore_Data_Dimension_Id': dimensionId,
             'strNguoiThucHien_Id': edu.system.userId
         };
-        
+
         console.log("Request params:", obj_list);
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 console.log("=== DEBUG loadExistingPermissions FULL RESPONSE ===");

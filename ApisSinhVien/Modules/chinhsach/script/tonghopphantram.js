@@ -1,4 +1,4 @@
-﻿/*----------------------------------------------
+﻿ /*----------------------------------------------
 --Author: 
 --Phone: 
 --Date of created: 
@@ -40,6 +40,9 @@ TongHopPhanTram.prototype = {
         });
         $("#btnAdd_KeThua").click(function () {
             $("#myModalKeThua").modal("show");
+        });
+        $("#btnThongKeNhieuDoiTuong").click(function () {
+            me.getList_ThongKeNhieuDoiTuong();
         });
         $("#btnSave_KeThua").click(function () {
             $('#myModalKeThua').modal('hide');
@@ -181,6 +184,21 @@ TongHopPhanTram.prototype = {
             if (x[0] == "") {
                 $(point).val(x[1]).trigger("change");
             }
+        }
+    },
+    getValByIdSafe: function (id) {
+        try {
+            var $el = $("#" + id);
+            if ($el.length === 0) return "";
+            var val = $el.val();
+            if (val == null) return "";
+            if (Array.isArray(val)) {
+                var filtered = val.filter(function (x) { return x !== ""; });
+                return filtered.join(",");
+            }
+            return val;
+        } catch (e) {
+            return "";
         }
     },
     getList_HeDaoTao: function () {
@@ -677,6 +695,141 @@ TongHopPhanTram.prototype = {
             ]
         }, false, false, false, null);
     },
+
+    getList_ThongKeNhieuDoiTuong: function () {
+        var me = this;
+        if ((edu.util.getValById("dropSearch_HocKy") == "") || edu.util.getValById("dropSearch_KieuHoc") == "" || edu.util.getValById("dropSearch_CheDo") == "" || edu.util.getValById("dropSearch_KhoanThu") == "") {
+            edu.system.alert("Bạn cần chọn đủ học kỳ, kiểu học, khoản thu và chế độ!", "w");
+            return;
+        }
+
+        var toCsv = function (val) {
+            if (val == null) return "";
+            if (Array.isArray(val)) {
+                return val.filter(function (x) { return x != null && x !== ""; }).join(",");
+            }
+            return val;
+        };
+        var toNullIfEmpty = function (val) {
+            var v = toCsv(val);
+            if (v === "") return null;
+            return v;
+        };
+
+        var obj_save = {
+            'action': 'SV_ChinhSach_MH/DSA4BRIVLi8mCS4xDykoJDQFLigVNC4vJgPP',
+            'func': 'PKG_HOSOSINHVIEN_CHINHSACH.LayDSTongHopNhieuDoiTuong',
+            'iM': edu.system.iM,
+
+            'strTrangThaiNguoiHoc_Id': toNullIfEmpty(edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_LHD').toString()),
+            'strDaoTao_ThoiGianDaoTao_Id': toNullIfEmpty(edu.util.getValById('dropSearch_HocKy')),
+            'strHeDaoTao_Id': toNullIfEmpty(edu.util.getValById('dropSearch_HeDaoTao')),
+            'strKhoaDaoTao_Id': toNullIfEmpty(edu.util.getValById('dropSearch_KhoaDaoTao')),
+            'strKhoaQuanLy_Id': toNullIfEmpty(me.getValByIdSafe('dropSearch_KhoaQuanLy') || me.getValByIdSafe('dropAAAA')),
+            'strChuongTrinh_Id': toNullIfEmpty(edu.util.getValById('dropSearch_ChuongTrinh')),
+            'strLopQuanLy_Id': toNullIfEmpty(edu.util.getValById('dropSearch_Lop')),
+            'strTaiChinh_CacKhoanThu_Id': toNullIfEmpty(edu.util.getValById('dropSearch_KhoanThu')),
+            'strKieuHoc_Id': toNullIfEmpty(edu.util.getValById('dropSearch_KieuHoc')),
+            'strCheDoChinhSach_Id': toNullIfEmpty(edu.util.getValById('dropSearch_CheDo')),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        try {
+            console.log("[ThongKeNhieuDT] request payload:", JSON.parse(JSON.stringify(obj_save)));
+        } catch (e) {
+            console.log("[ThongKeNhieuDT] request payload (raw):", obj_save);
+        }
+
+        edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                try {
+                    console.log("[ThongKeNhieuDT] response:", data);
+                    var len = (data && data.Data && data.Data.length) ? data.Data.length : 0;
+                    console.log("[ThongKeNhieuDT] rows:", len);
+                    if (len > 0) {
+                        console.log("[ThongKeNhieuDT] first row:", data.Data[0]);
+                        if (console.table) console.table(data.Data.slice(0, Math.min(10, len)));
+                    }
+                } catch (e) {
+                    // ignore logging errors
+                }
+                if (data.Success) {
+                    me.genTable_ThongKeNhieuDoiTuong(data.Data, data.Pager);
+                    $('#myModalThongKeNhieuDoiTuong').modal('show');
+                }
+                else {
+                    edu.system.alert(data.Message, "w");
+                }
+                edu.system.endLoading();
+            },
+            error: function (er) {
+                edu.system.endLoading();
+                try { console.log("[ThongKeNhieuDT] error:", er); } catch (e) { }
+                edu.system.alert(JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genTable_ThongKeNhieuDoiTuong: function (data, iPager) {
+        var me = this;
+        var pick = function (obj, keys) {
+            for (var i = 0; i < keys.length; i++) {
+                var k = keys[i];
+                if (obj && obj[k] != null && obj[k] !== "") return obj[k];
+            }
+            return "";
+        };
+        var jsonForm = {
+            strTable_Id: "tblThongKeNhieuDT",
+            aaData: data,
+            colPos: {
+                center: [0],
+            },
+            aoColumns: [
+                {
+                    "mRender": function (nRow, aData) {
+                        return pick(aData, ["QLSV_NGUOIHOC_MASO", "MASO", "NGUOIHOC_MASO"]);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var hoten = pick(aData, ["QLSV_NGUOIHOC_HOTEN", "HOTEN", "NGUOIHOC_HOTEN"]);
+                        if (hoten !== "") return hoten;
+                        var hodem = pick(aData, ["QLSV_NGUOIHOC_HODEM", "HODEM"]);
+                        var ten = pick(aData, ["QLSV_NGUOIHOC_TEN", "TEN"]);
+                        return (edu.util.returnEmpty(hodem) + " " + edu.util.returnEmpty(ten)).trim();
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return pick(aData, ["DAOTAO_LOPQUANLY_TEN", "LOP_TEN", "LOPQUANLY_TEN", "LOP"]);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return pick(aData, ["DAOTAO_CHUONGTRINH_TEN", "CHUONGTRINH_TEN", "CHUONGTRINH"]);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return pick(aData, ["SO_DOITUONG", "SODOITUONG", "SLDOITUONG", "SOLUONGDOITUONG", "DOITUONG_SOLUONG"]);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return pick(aData, ["DS_DOITUONG", "DSDOITUONG", "DOITUONG_DS", "DOITUONG_TEN", "DS_DOITUONG_TEN"]);
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
     genTable_TongHop: function (data, iPager) {
         var me = this;
         var strTable_Id = "tblKetQua";
@@ -830,7 +983,7 @@ TongHopPhanTram.prototype = {
             'dSoThang': $(point).val(),
             'strDiem_KieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
             'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropSearch_KhoanThu'),
-            'strDoiTuongChinhSach_Id': edu.system.getValById('dropSearch_DoiTuong'),
+            'strDoiTuongChinhSach_Id': edu.system.getValById('dropSearch_CheDo'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({

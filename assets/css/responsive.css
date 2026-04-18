@@ -844,7 +844,7 @@
   .head-search-form {
     margin-right: 0 !important;
     position: absolute !important;
-    right: 200px;
+    right: 220px;
   }
 }
 
@@ -939,7 +939,7 @@
   .head-search-form {
     position: absolute !important;
     /* margin-left: auto; */
-    right: 200px !important;
+    right: 220px !important;
   }
 
   .calendar-week-table .date {
@@ -1217,8 +1217,10 @@
   }
 
   .account-group .item i {
-    font-size: 20px;
-    color: var(--color-text);
+    font-size: 22px;
+    color: #fff;
+    font-family: "Font Awesome 6 Pro";
+    font-family: 200 !important;
   }
 
   .list-row-4 .item {
@@ -1398,7 +1400,8 @@
   .filter-tblNamHoc.pull-right {
     float: left !important;
   }
-  .aps-dulieu{
+
+  .aps-dulieu {
     display: none !important;
   }
 }
@@ -1456,7 +1459,7 @@
   .head-search-form {
     margin-right: 0 !important;
     position: absolute !important;
-    right: 200px;
+    right: 220px;
   }
 
   /* .account-group .item span */

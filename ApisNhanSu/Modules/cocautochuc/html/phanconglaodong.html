@@ -84,29 +84,30 @@
                                             </div>
                                         </div>
                                         <div class="aps-table-quanhe-ld pd20 mb-20">
-                                            <table class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered" id="tblPhanCong">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center w-50px" scope="col">STT</th>
-                                                        <th class="text-left">Mã số</th>
-                                                        <th class="text-left">Họ tên</th>
-                                                        <th class="text-left">Ngày sinh</th>
-                                                        <th class="text-left">Giới tính</th>
-                                                        <th class="text-left">CCCD/Số định danh</th>
-                                                        <th class="text-left">Đơn vị hiện tại</th>
-                                                        <th class="text-left">Vị trí hiện tại</th>
-                                                        <th class="text-left">Trạng thái nhân sự</th>
-                                                        <th class="text-left">Trạng thái quan hệ lao động</th>
-                                                        <th class="text-center" style="min-width: 80px;">
-                                                            Chọn
-                                                        </th>
-                                                        <th class="td-center td-fixed">
-                                                            <input type="checkbox" class="chkSystemSelectAll">
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
+                                            <div class="table-responsive fs-14 no-swiper pd0">
+                                                <table class="table table-hover transcrip-table tabs-scores h-auto mb-0 table-noborder table-bordered" id="tblPhanCong">
+                                                    <thead>
+                                                        <tr>
+                                                            <th class="text-center w-50px" scope="col">STT</th>
+                                                            <th class="text-left">Mã số</th>
+                                                            <th class="text-left">Họ tên</th>
+                                                            <th class="text-left">Ngày sinh</th>
+                                                            <th class="text-left">Giới tính</th>
+                                                            <th class="text-left">CCCD/Số định danh</th>
+                                                            <th class="text-left">Đơn vị hiện tại</th>
+                                                            <th class="text-left">Vị trí hiện tại</th>
+                                                            <th class="text-left">Trạng thái nhân sự</th>
+                                                            <th class="text-left">Trạng thái quan hệ lao động</th>
+                                                            <th class="text-left">Quan hệ lao động</th>
+                                                            <th class="text-center" style="min-width: 80px;">Chọn</th>
+                                                            <th class="td-center td-fixed">
+                                                                <input type="checkbox" class="chkSystemSelectAll">
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -148,7 +149,7 @@
                                         <th class="text-left">Từ ngày</th>
                                         <th class="text-left">Đến ngày</th>
                                         <th class="text-left">Quan hệ chính</th>
-                                        <th class="text-center" style="min-width: 80px;">Chọn</th>
+                                        <th class="text-center" style="min-width: 80px;">Chọn phân nhiệm vụ</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -164,7 +165,7 @@
                         <i class="fal fa-times"></i><span>Đóng</span>
                     </button>
                 </div>
-            </div>
+            </div>S
         </div>
     </div>
 </div>
@@ -248,21 +249,7 @@
                     <!-- Row 1 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
-                            <div class="title-name">Vị trí</div>
-                        </div>
-                        <div class="col-12 col-sm-9 aps-form-input pr0">
-                            <div class="custom-select">
-                                <select id="dropViTri" class="select-opt form-select"
-                                        aria-label="Default select example">
-                                    
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Row 2 -->
-                    <!--<div class="row aps-form-item pd0">
-                        <div class="col-12 col-sm-3 aps-lable-name pl0">
-                            <div class="title-name">Đơn vị công tác</div>
+                            <div class="title-name">Đơn vị phân công</div>
                         </div>
                         <div class="col-12 col-sm-9 aps-form-input pr0">
                             <div class="custom-select">
@@ -270,7 +257,19 @@
                                         aria-label="Default select example"></select>
                             </div>
                         </div>
-                    </div>-->
+                    </div>
+                    <!-- Row 2 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Vị trí</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <select id="dropViTri" class="select-opt form-select"
+                                        aria-label="Default select example"></select>
+                            </div>
+                        </div>
+                    </div>
                     <!-- Row 3 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
@@ -296,6 +295,18 @@
                         </div>
                     </div>
 
+                    <!-- Row 4.1 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Chính thức</div>
+                        </div>
+                        <div class="col-12 col-sm-9 aps-form-input pr0">
+                            <div class="d-flex align-items-center" style="min-height: 38px;">
+                                <input type="checkbox" id="chkChinhThuc" />
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Row 5 -->
                     <div class="row aps-form-item pd0">
                         <div class="col-12 col-sm-3 aps-lable-name pl0">
@@ -309,6 +320,16 @@
                         </div>
                         <div class="col-12 col-sm-3 aps-form-input pr0 pos-relative">
                             <input id="txtNgayHetHieuLuc" class="form-control" placeholder="dd/mm/yyyy">
+                        </div>
+                    </div>
+
+                    <!-- Row 6 -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-12 aps-lable-name pl0">
+                            <div class="title-name">Ghi chú</div>
+                        </div>
+                        <div class="col-12 aps-form-input pr0">
+                            <textarea id="txtNote" class="form-control" rows="6" placeholder="Ghi chú"></textarea>
                         </div>
                     </div>
                 </div>
@@ -328,6 +349,14 @@
 </div>
 <!-- page script -->
 <script src="modules/cocautochuc/script/phanconglaodong.js?v=1.0.0.5"></script>
+<style>
+    /* Override global .form-control height so textarea shows as multi-line */
+    #modalAddNhiemVu #txtNote {
+        min-height: 140px !important;
+        height: 140px !important;
+        resize: vertical;
+    }
+</style>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanCongLaoDong'] = new PhanCongLaoDong();

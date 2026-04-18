@@ -670,41 +670,21 @@ DeXuatHoSo.prototype = {
         $("#tblChungChi").delegate(".btnEdit_ChungChi", "click", function () {
             var strId = this.id;
             me.strChungChi_Id = strId;
-            
-            // Gọi API lấy chi tiết để load vào form
-            var obj_detail = {
-                'action': 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4CJDM1KCcoIiA1JB4DOB4IJQPP',
-                'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Certificate_By_Id',
-                'iM': edu.system.iM,
-                'strChucNang_Id': edu.system.strChucNang_Id,
-                'strVaiTro_Id': '',
-                'strId': strId,
-                'strNguoiThucHien_Id': edu.system.userId,
-            };
 
-            edu.system.makeRequest({
-                success: function (response) {
-                    if (response.Success && response.Data && response.Data.length > 0) {
-                        var data = response.Data[0];
-                        me.toggle_FormChungChi();
-                        $("#lblTitleChungChi").text("Sửa chứng chỉ");
-                        me.loadForm_ChungChi(data);
-                    }
-                    else {
-                        edu.system.alert("Không tìm thấy thông tin chi tiết!");
-                    }
-                },
-                error: function (er) {
-                    edu.system.alert("Lỗi: " + JSON.stringify(er), "w");
-                },
-                type: 'POST',
-                contentType: true,
-                action: obj_detail.action,
-                data: obj_detail,
-                fakedb: []
-            }, false, false, false, null);
+            // Dùng dữ liệu từ list cache thay vì gọi API Get_Person_Certificate_By_Id
+            // vì API đó hiện trả DUMMY (chưa implement ở backend).
+            var data = me.dtChungChi.find(function (e) { return e.ID == strId; });
+            if (data) {
+                // Chỉ chuyển zone, không gọi toggle_FormChungChi() để tránh race condition
+                // (toggle load combo không callback → về sau ghi đè value vừa set).
+                edu.util.toggle_overide("zone-bus", "zoneFormChungChi");
+                $("#lblTitleChungChi").text("Sửa chứng chỉ");
+                me.loadForm_ChungChi(data);
+            } else {
+                edu.system.alert("Không tìm thấy dữ liệu chứng chỉ để sửa!");
+            }
         });
-        
+
         $("#tblChungChi").delegate(".btnDelete_ChungChi", "click", function () {
             var strId = this.id;
             edu.system.confirm("Bạn có chắc chắn xóa chứng chỉ này không?");

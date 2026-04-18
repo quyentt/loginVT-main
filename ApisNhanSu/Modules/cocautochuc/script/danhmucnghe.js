@@ -11,11 +11,21 @@ DanhMucNghe.prototype = {
     strDanhMucNghe_Id: '',
     dtDanhMucNghe: [],
 
+    // Master (unfiltered) lists for filter dropdowns
+    dtLoaiNgheAll: [],
+    dtNhomNgheAll: [],
+    dtChucDanhAll: [],
+    dtBacNgheAll: [],
+    _filterTimers: {},
+
     init: function () {
         var me = this;
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
+        if ($('#tblLoaiNghe').length > 0) {
+            me.loadFilterCombos();
+        }
         me.getList_BacNghe();
         me.getList_NgheNghiep();
         me.getList_NhomNghe();
@@ -317,6 +327,394 @@ DanhMucNghe.prototype = {
                     me.delete_NgheNghiep(arrChecked_Id[i]);
                 }
             });
+        });
+
+        if ($('#tblLoaiNghe').length > 0) {
+            me.bindFilters();
+        }
+    },
+
+    getValSafe: function (id) {
+        try {
+            var v = edu.system.getValById(id);
+            if (v === null || v === undefined) return '';
+            return v;
+        }
+        catch (e) {
+            return '';
+        }
+    },
+
+    debounce: function (key, fn, delayMs) {
+        var me = this;
+        if (!delayMs) delayMs = 250;
+        if (me._filterTimers[key]) {
+            clearTimeout(me._filterTimers[key]);
+        }
+        me._filterTimers[key] = setTimeout(function () {
+            fn();
+        }, delayMs);
+    },
+
+    sortBySortOrder: function (rows) {
+        if (!rows || rows.length === 0) return rows;
+        return rows.sort(function (a, b) {
+            var ax = (a && a.SORT_ORDER !== undefined && a.SORT_ORDER !== null && a.SORT_ORDER !== '') ? parseInt(a.SORT_ORDER, 10) : 999999999;
+            var bx = (b && b.SORT_ORDER !== undefined && b.SORT_ORDER !== null && b.SORT_ORDER !== '') ? parseInt(b.SORT_ORDER, 10) : 999999999;
+            if (isNaN(ax)) ax = 999999999;
+            if (isNaN(bx)) bx = 999999999;
+            if (ax !== bx) return ax - bx;
+            var an = (a && a.NAME) ? (a.NAME + '') : '';
+            var bn = (b && b.NAME) ? (b.NAME + '') : '';
+            return an.localeCompare(bn);
+        });
+    },
+
+    // For Job Family (Nhóm nghề) when loading ALL categories (strCateGory_Id = ''),
+    // sort by Category first, then by Family SORT_ORDER.
+    sortNhomNgheByCategoryAndSortOrder: function (rows) {
+        var me = this;
+        if (!rows || rows.length === 0) return rows;
+
+        var catMeta = {};
+        var cats = me.dtLoaiNgheAll || me.dtLoaiNghe || [];
+        for (var i = 0; i < cats.length; i++) {
+            var c = cats[i];
+            if (!c || !c.ID) continue;
+            var cso = me._parseSortOrder(c.SORT_ORDER);
+            catMeta[c.ID] = {
+                so: (cso === null ? 999999999 : cso),
+                name: (c.NAME || '').toString()
+            };
+        }
+
+        return rows.sort(function (a, b) {
+            var aCatId = a ? a.CATEGORY_ID : null;
+            var bCatId = b ? b.CATEGORY_ID : null;
+
+            var aMeta = (aCatId && catMeta[aCatId]) ? catMeta[aCatId] : null;
+            var bMeta = (bCatId && catMeta[bCatId]) ? catMeta[bCatId] : null;
+
+            var aCatSo = aMeta ? aMeta.so : 999999999;
+            var bCatSo = bMeta ? bMeta.so : 999999999;
+            if (aCatSo !== bCatSo) return aCatSo - bCatSo;
+
+            var aCatName = aMeta ? aMeta.name : ((a && a.CORE_JOB_CATEGORY_NAME) ? (a.CORE_JOB_CATEGORY_NAME + '') : '');
+            var bCatName = bMeta ? bMeta.name : ((b && b.CORE_JOB_CATEGORY_NAME) ? (b.CORE_JOB_CATEGORY_NAME + '') : '');
+            var cmpCatName = aCatName.localeCompare(bCatName);
+            if (cmpCatName !== 0) return cmpCatName;
+
+            var ax = me._parseSortOrder(a ? a.SORT_ORDER : null);
+            var bx = me._parseSortOrder(b ? b.SORT_ORDER : null);
+            if (ax === null) ax = 999999999;
+            if (bx === null) bx = 999999999;
+            if (ax !== bx) return ax - bx;
+
+            var an = (a && a.NAME) ? (a.NAME + '') : '';
+            var bn = (b && b.NAME) ? (b.NAME + '') : '';
+            return an.localeCompare(bn);
+        });
+    },
+
+    _parseSortOrder: function (val) {
+        if (val === null || val === undefined || val === '') return null;
+        var n = parseInt(val, 10);
+        return isNaN(n) ? null : n;
+    },
+
+    _updateSortOrderRow: function (entity, row, newSort, done) {
+        var me = this;
+        var obj_save = {
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        if (entity === 'BacNghe') {
+            obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHg0kNyQt';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_Level';
+            obj_save.strId = row.ID;
+            obj_save.strCode = row.CODE;
+            obj_save.strName = row.NAME;
+            obj_save.dSort_Order = newSort;
+            obj_save.strStart_Date = row.START_DATE;
+            obj_save.strEnd_Date = row.END_DATE;
+            obj_save.dIs_Active = row.IS_ACTIVE;
+            obj_save.strDescription = row.DESCRIPTION;
+        }
+        else if (entity === 'LoaiNghe') {
+            obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHgIgNSQGLjM4';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_CateGory';
+            obj_save.strId = row.ID;
+            obj_save.strCode = row.CODE;
+            obj_save.strName = row.NAME;
+            obj_save.dSort_Order = newSort;
+            obj_save.strStart_Date = row.START_DATE;
+            obj_save.strEnd_Date = row.END_DATE;
+            obj_save.dIs_Active = row.IS_ACTIVE;
+            obj_save.strDescription = row.DESCRIPTION;
+        }
+        else if (entity === 'NhomNghe') {
+            obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHgcgLCgtOAPP';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_Family';
+            obj_save.strId = row.ID;
+            obj_save.strCateGory_Id = row.CATEGORY_ID;
+            obj_save.strCode = row.CODE;
+            obj_save.strName = row.NAME;
+            obj_save.dSort_Order = newSort;
+            obj_save.strStart_Date = row.START_DATE;
+            obj_save.strEnd_Date = row.END_DATE;
+            obj_save.dIs_Active = row.IS_ACTIVE;
+            obj_save.strDescription = row.DESCRIPTION;
+        }
+        else if (entity === 'ChucDanh') {
+            obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHgYzLjQx';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_Group';
+            obj_save.strId = row.ID;
+            obj_save.strFamily_Id = row.FAMILY_ID;
+            obj_save.strCode = row.CODE;
+            obj_save.strName = row.NAME;
+            obj_save.dSort_Order = newSort;
+            obj_save.strStart_Date = row.START_DATE;
+            obj_save.strEnd_Date = row.END_DATE;
+            obj_save.dIs_Active = row.IS_ACTIVE;
+            obj_save.strDescription = row.DESCRIPTION;
+        }
+        else if (entity === 'NgheNghiep') {
+            obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4j';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job';
+            obj_save.strId = row.ID;
+            obj_save.strJob_Group_Id = row.JOB_GROUP_ID;
+            obj_save.strJob_Level_Id = row.JOB_LEVEL_ID;
+            obj_save.strJob_Code = row.JOB_CODE;
+            obj_save.strJob_Name = row.JOB_NAME;
+            obj_save.dSort_Order = newSort;
+            obj_save.strStart_Date = row.START_DATE;
+            obj_save.strEnd_Date = row.END_DATE;
+            obj_save.dIs_Active = row.IS_ACTIVE;
+            obj_save.strDescription = row.DESCRIPTION;
+        }
+        else {
+            if (done) done();
+            return;
+        }
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (done) done(data && data.Success);
+            },
+            error: function () {
+                if (done) done(false);
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _shiftSortOrdersIfNeeded: function (entity, desiredSortVal, currentId, scopeFn, done) {
+        var me = this;
+        var desired = me._parseSortOrder(desiredSortVal);
+        if (desired === null) {
+            if (done) done();
+            return;
+        }
+
+        var source = [];
+        if (entity === 'BacNghe') source = me.dtBacNgheAll || me.dtBacNghe || [];
+        else if (entity === 'LoaiNghe') source = me.dtLoaiNgheAll || me.dtLoaiNghe || [];
+        else if (entity === 'NhomNghe') source = me.dtNhomNgheAll || me.dtNhomNghe || [];
+        else if (entity === 'ChucDanh') source = me.dtChucDanhAll || me.dtChucDanh || [];
+        else if (entity === 'NgheNghiep') source = me.dtNgheNghiep || [];
+
+        if (!scopeFn) scopeFn = function () { return true; };
+
+        var affected = $.grep(source, function (x) {
+            if (!x || !x.ID) return false;
+            if (currentId && x.ID == currentId) return false;
+            if (!scopeFn(x)) return false;
+            var so = me._parseSortOrder(x.SORT_ORDER);
+            return (so !== null && so >= desired);
+        });
+
+        if (!affected || affected.length === 0) {
+            if (done) done();
+            return;
+        }
+
+        affected.sort(function (a, b) {
+            var ax = me._parseSortOrder(a.SORT_ORDER);
+            var bx = me._parseSortOrder(b.SORT_ORDER);
+            if (ax === null) ax = -999999999;
+            if (bx === null) bx = -999999999;
+            if (ax !== bx) return bx - ax; // desc
+            var an = (a.NAME || '').toString();
+            var bn = (b.NAME || '').toString();
+            return bn.localeCompare(an);
+        });
+
+        // Assign unique target sort orders while shifting upward
+        var assigned = {};
+        for (var i = 0; i < affected.length; i++) {
+            var oldSo = me._parseSortOrder(affected[i].SORT_ORDER);
+            if (oldSo === null) continue;
+            var target = oldSo + 1;
+            while (assigned[target]) target++;
+            affected[i].__newSort = target;
+            assigned[target] = true;
+        }
+
+        var idx = 0;
+        function next() {
+            if (idx >= affected.length) {
+                if (done) done();
+                return;
+            }
+            var row = affected[idx++];
+            if (!row || row.__newSort === undefined || row.__newSort === null) {
+                next();
+                return;
+            }
+            var oldSo2 = me._parseSortOrder(row.SORT_ORDER);
+            if (oldSo2 === null || oldSo2 == row.__newSort) {
+                next();
+                return;
+            }
+
+            me._updateSortOrderRow(entity, row, row.__newSort, function (ok) {
+                // continue regardless; avoid blocking save
+                next();
+            });
+        }
+        next();
+    },
+
+    bindFilters: function () {
+        var me = this;
+
+        // Loại nghề
+        $('#txtSearch_TuKhoa_LN').on('input', function () {
+            me.debounce('LN', function () { me.getList_LoaiNghe(); });
+        });
+        $('#dropSearch_TrangThai_LN').on('change select2:select', function () {
+            me.getList_LoaiNghe();
+        });
+
+        // Nhóm nghề
+        $('#txtSearch_TuKhoa_NN').on('input', function () {
+            me.debounce('NN', function () { me.getList_NhomNghe(); });
+        });
+        $('#dropSearch_TrangThai_NN').on('change select2:select', function () {
+            me.getList_NhomNghe();
+        });
+        $('#dropSearch_LoaiNghe_NN').on('change select2:select', function () {
+            me.getList_NhomNghe();
+        });
+
+        // Nhóm chức danh
+        $('#txtSearch_TuKhoa_CD').on('input', function () {
+            me.debounce('CD', function () { me.getList_ChucDanh(); });
+        });
+        $('#dropSearch_TrangThai_CD').on('change select2:select', function () {
+            me.getList_ChucDanh();
+        });
+        $('#dropSearch_LoaiNghe_CD').on('change select2:select', function () {
+            edu.util.viewValById('dropSearch_NhomNghe_CD', '');
+            me.applyFilter_NhomNghe_ForChucDanh();
+            me.getList_ChucDanh();
+        });
+        $('#dropSearch_NhomNghe_CD').on('change select2:select', function () {
+            me.getList_ChucDanh();
+        });
+
+        // Cấp bậc nghề
+        $('#txtSearch_TuKhoa_BN').on('input', function () {
+            me.debounce('BN', function () { me.getList_BacNghe(); });
+        });
+        $('#dropSearch_TrangThai_BN').on('change select2:select', function () {
+            me.getList_BacNghe();
+        });
+
+        // Nghề nghiệp
+        $('#txtSearch_TuKhoa_DM').on('input', function () {
+            me.debounce('DM', function () { me.getList_NgheNghiep(); });
+        });
+        $('#dropSearch_TrangThai_DM').on('change select2:select', function () {
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_LoaiNghe_DM').on('change select2:select', function () {
+            edu.util.viewValById('dropSearch_NhomNghe_DM', '');
+            edu.util.viewValById('dropSearch_ChucDanh_DM', '');
+            me.applyFilter_NhomNghe_ForNgheNghiep();
+            me.applyFilter_ChucDanh_ForNgheNghiep();
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_NhomNghe_DM').on('change select2:select', function () {
+            edu.util.viewValById('dropSearch_ChucDanh_DM', '');
+            me.applyFilter_ChucDanh_ForNgheNghiep();
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_ChucDanh_DM').on('change select2:select', function () {
+            me.getList_NgheNghiep();
+        });
+        $('#dropSearch_BacNghe_DM').on('change select2:select', function () {
+            me.getList_NgheNghiep();
+        });
+    },
+
+    loadFilterCombos: function () {
+        var me = this;
+        me.getList_LoaiNghe({ forCombo: true });
+        me.getList_NhomNghe({ forCombo: true });
+        me.getList_ChucDanh({ forCombo: true });
+        me.getList_BacNghe({ forCombo: true });
+    },
+
+    applyFilter_NhomNghe_ForChucDanh: function () {
+        var me = this;
+        var cateId = me.getValSafe('dropSearch_LoaiNghe_CD');
+        var data = me.dtNhomNgheAll || [];
+        if (cateId) {
+            data = $.grep(data, function (x) { return (x.CATEGORY_ID == cateId); });
+        }
+        edu.system.loadToCombo_data({
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+            renderPlace: ["dropSearch_NhomNghe_CD"],
+            type: "",
+            title: "Chọn nhóm nghề",
+        });
+    },
+
+    applyFilter_NhomNghe_ForNgheNghiep: function () {
+        var me = this;
+        var cateId = me.getValSafe('dropSearch_LoaiNghe_DM');
+        var data = me.dtNhomNgheAll || [];
+        if (cateId) {
+            data = $.grep(data, function (x) { return (x.CATEGORY_ID == cateId); });
+        }
+        edu.system.loadToCombo_data({
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+            renderPlace: ["dropSearch_NhomNghe_DM"],
+            type: "",
+            title: "Chọn nhóm nghề",
+        });
+    },
+
+    applyFilter_ChucDanh_ForNgheNghiep: function () {
+        var me = this;
+        var familyId = me.getValSafe('dropSearch_NhomNghe_DM');
+        var data = me.dtChucDanhAll || [];
+        if (familyId) {
+            data = $.grep(data, function (x) { return (x.FAMILY_ID == familyId); });
+        }
+        edu.system.loadToCombo_data({
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+            renderPlace: ["dropSearch_ChucDanh_DM"],
+            type: "",
+            title: "Chọn chức danh",
         });
     },
     /*------------------------------------------
@@ -715,36 +1113,41 @@ DanhMucNghe.prototype = {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHg0kNyQt';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_Level'
         }
-        //default
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thêm mới thành công!");
+
+        me._shiftSortOrdersIfNeeded('BacNghe', obj_save.dSort_Order, obj_save.strId, null, function () {
+            //default
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        if (!obj_save.strId) {
+                            edu.system.alert("Thêm mới thành công!");
+                        }
+                        else {
+                            edu.system.alert("Cập nhật thành công!");
+                        }
+                        me.getList_BacNghe({ forCombo: true });
+                        me.getList_BacNghe();
                     }
                     else {
-                        edu.system.alert("Cập nhật thành công!");
+                        edu.system.alert(data.Message);
                     }
-                    me.getList_BacNghe();
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert(JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_save.action,
+                },
+                error: function (er) {
+                    edu.system.alert(JSON.stringify(er));
+                },
+                type: "POST",
+                action: obj_save.action,
 
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+                contentType: true,
+                data: obj_save,
+                fakedb: [
+                ]
+            }, false, false, false, null);
+        });
     },
-    getList_BacNghe: function () {
+    getList_BacNghe: function (options) {
         var me = this;
+        options = options || {};
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4NJDckLQPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_Level',
@@ -756,22 +1159,40 @@ DanhMucNghe.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    
-                    me["dtBacNghe"] = data.Data;
-                    me.genTable_BacNghe(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropCapBac_DM"],
-                        type: "",
-                        title: "Chọn bậc nghề",
-                    })
+
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtBacNgheAll = me.sortBySortOrder(rows);
+                        edu.system.loadToCombo_data({
+                            data: me.dtBacNgheAll,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropCapBac_DM", "dropSearch_BacNghe_DM"],
+                            type: "",
+                            title: "Chọn bậc nghề",
+                        });
+                        return;
+                    }
+
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_BN') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_BN');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    rows = me.sortBySortOrder(rows);
+
+                    me["dtBacNghe"] = rows;
+                    me.genTable_BacNghe(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -837,6 +1258,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_BacNghe({ forCombo: true });
                     me.getList_BacNghe();
                 });
             },
@@ -861,7 +1283,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 7: Edit, 8: Checkbox
+                center: [0, 7, 8],
                 //right: [5]
             },
             aoColumns: [
@@ -929,42 +1352,53 @@ DanhMucNghe.prototype = {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHgYzLjQx';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_Group'
         }
-        //default
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thêm mới thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                    }
-                    me.getList_ChucDanh();
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert(JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_save.action,
 
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+        me._shiftSortOrdersIfNeeded(
+            'ChucDanh',
+            obj_save.dSort_Order,
+            obj_save.strId,
+            function (x) { return x.FAMILY_ID == obj_save.strFamily_Id; },
+            function () {
+                //default
+                edu.system.makeRequest({
+                    success: function (data) {
+                        if (data.Success) {
+                            if (!obj_save.strId) {
+                                edu.system.alert("Thêm mới thành công!");
+                            }
+                            else {
+                                edu.system.alert("Cập nhật thành công!");
+                            }
+                            me.getList_ChucDanh({ forCombo: true });
+                            me.getList_ChucDanh();
+                        }
+                        else {
+                            edu.system.alert(data.Message);
+                        }
+                    },
+                    error: function (er) {
+                        edu.system.alert(JSON.stringify(er));
+                    },
+                    type: "POST",
+                    action: obj_save.action,
+
+                    contentType: true,
+                    data: obj_save,
+                    fakedb: [
+                    ]
+                }, false, false, false, null);
+            }
+        );
     },
-    getList_ChucDanh: function () {
+    getList_ChucDanh: function (options) {
         var me = this;
+        options = options || {};
 
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4GMy40MQPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_Group',
             'iM': edu.system.iM,
-            'strFamily_Id': edu.system.getValById('dropAAAA'),
+            'strFamily_Id': options.forCombo ? me.getValSafe('dropAAAA') : (me.getValSafe('dropSearch_NhomNghe_CD') || me.getValSafe('dropAAAA')),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -973,22 +1407,40 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtChucDanh"] = data.Data;
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtChucDanhAll = me.sortBySortOrder(rows);
+                        edu.system.loadToCombo_data({
+                            data: me.dtChucDanhAll,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropChucDanh_DM", "dropSearch_ChucDanh_DM"],
+                            type: "",
+                            title: "Chọn chức danh",
+                        });
+                        me.applyFilter_ChucDanh_ForNgheNghiep();
+                        return;
+                    }
 
-                    me.genTable_ChucDanh(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropChucDanh_DM"],
-                        type: "",
-                        title: "Chọn chức danh",
-                    })
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_CD') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_CD');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    rows = me.sortBySortOrder(rows);
+
+                    me["dtChucDanh"] = rows;
+                    me.genTable_ChucDanh(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1054,6 +1506,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_ChucDanh({ forCombo: true });
                     me.getList_ChucDanh();
                 });
             },
@@ -1078,7 +1531,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 8: Edit, 9: Checkbox
+                center: [0, 8, 9],
                 //right: [5]
             },
             aoColumns: [
@@ -1149,42 +1603,53 @@ DanhMucNghe.prototype = {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHgcgLCgtOAPP';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_Family'
         }
-        //default
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thêm mới thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                    }
-                    me.getList_NhomNghe();
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert(JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_save.action,
 
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+        me._shiftSortOrdersIfNeeded(
+            'NhomNghe',
+            obj_save.dSort_Order,
+            obj_save.strId,
+            function (x) { return x.CATEGORY_ID == obj_save.strCateGory_Id; },
+            function () {
+                //default
+                edu.system.makeRequest({
+                    success: function (data) {
+                        if (data.Success) {
+                            if (!obj_save.strId) {
+                                edu.system.alert("Thêm mới thành công!");
+                            }
+                            else {
+                                edu.system.alert("Cập nhật thành công!");
+                            }
+                            me.getList_NhomNghe({ forCombo: true });
+                            me.getList_NhomNghe();
+                        }
+                        else {
+                            edu.system.alert(data.Message);
+                        }
+                    },
+                    error: function (er) {
+                        edu.system.alert(JSON.stringify(er));
+                    },
+                    type: "POST",
+                    action: obj_save.action,
+
+                    contentType: true,
+                    data: obj_save,
+                    fakedb: [
+                    ]
+                }, false, false, false, null);
+            }
+        );
     },
-    getList_NhomNghe: function () {
+    getList_NhomNghe: function (options) {
         var me = this;
+        options = options || {};
 
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4HICwoLTgP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_Family',
             'iM': edu.system.iM,
-            'strCateGory_Id': edu.system.getValById('dropAAAA'),
+            'strCateGory_Id': options.forCombo ? me.getValSafe('dropAAAA') : (me.getValSafe('dropSearch_LoaiNghe_NN') || me.getValSafe('dropAAAA')),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -1193,21 +1658,47 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtNhomNghe"] = data.Data;
-                    me.genTable_NhomNghe(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropNhomNghe_CD"],
-                        type: "",
-                        title: "Chọn nhóm nghề",
-                    })
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        // When loading all categories (common for combos), keep grouping by category stable
+                        me.dtNhomNgheAll = me.sortNhomNgheByCategoryAndSortOrder(rows);
+                        edu.system.loadToCombo_data({
+                            data: me.dtNhomNgheAll,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropNhomNghe_CD", "dropSearch_NhomNghe_CD", "dropSearch_NhomNghe_DM"],
+                            type: "",
+                            title: "Chọn nhóm nghề",
+                        });
+                        me.applyFilter_NhomNghe_ForChucDanh();
+                        me.applyFilter_NhomNghe_ForNgheNghiep();
+                        return;
+                    }
+
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_NN') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_NN');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    // If no specific category filter is selected, sort by Category first to avoid
+                    // interleaving rows with same SORT_ORDER across different categories.
+                    var catFilter = obj_save.strCateGory_Id;
+                    if (catFilter === null || catFilter === undefined) catFilter = '';
+                    if (catFilter === '') rows = me.sortNhomNgheByCategoryAndSortOrder(rows);
+                    else rows = me.sortBySortOrder(rows);
+
+                    me["dtNhomNghe"] = rows;
+                    me.genTable_NhomNghe(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1273,6 +1764,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_NhomNghe({ forCombo: true });
                     me.getList_NhomNghe();
                 });
             },
@@ -1297,7 +1789,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 8: Edit, 9: Checkbox
+                center: [0, 8, 9],
                 //right: [5]
             },
             aoColumns: [
@@ -1367,36 +1860,41 @@ DanhMucNghe.prototype = {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4jHgIgNSQGLjM4';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job_CateGory'
         }
-        //default
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thêm mới thành công!");
+
+        me._shiftSortOrdersIfNeeded('LoaiNghe', obj_save.dSort_Order, obj_save.strId, null, function () {
+            //default
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        if (!obj_save.strId) {
+                            edu.system.alert("Thêm mới thành công!");
+                        }
+                        else {
+                            edu.system.alert("Cập nhật thành công!");
+                        }
+                        me.getList_LoaiNghe({ forCombo: true });
+                        me.getList_LoaiNghe();
                     }
                     else {
-                        edu.system.alert("Cập nhật thành công!");
+                        edu.system.alert(data.Message);
                     }
-                    me.getList_LoaiNghe();
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert(JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_save.action,
+                },
+                error: function (er) {
+                    edu.system.alert(JSON.stringify(er));
+                },
+                type: "POST",
+                action: obj_save.action,
 
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+                contentType: true,
+                data: obj_save,
+                fakedb: [
+                ]
+            }, false, false, false, null);
+        });
     },
-    getList_LoaiNghe: function () {
+    getList_LoaiNghe: function (options) {
         var me = this;
+        options = options || {};
         var obj_save = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIx4CIDUkBi4zOAPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job_CateGory',
@@ -1409,21 +1907,41 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtLoaiNghe"] = data.Data;
-                    me.genTable_LoaiNghe(data.Data);
-                    edu.system.loadToCombo_data({
-                        data: data.Data,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "NAME",
-                            code: "",
-                            avatar: ""
-                        },
-                        renderPlace: ["dropNhomNghe_NN"],
-                        type: "",
-                        title: "Chọn loại nghề nghiệp",
-                    })
+                    var rows = data.Data || [];
+                    if (options.forCombo) {
+                        me.dtLoaiNgheAll = me.sortBySortOrder(rows);
+                        edu.system.loadToCombo_data({
+                            data: me.dtLoaiNgheAll,
+                            renderInfor: { id: "ID", parentId: "", name: "NAME", code: "", avatar: "" },
+                            renderPlace: ["dropNhomNghe_NN", "dropSearch_LoaiNghe_NN", "dropSearch_LoaiNghe_CD", "dropSearch_LoaiNghe_DM"],
+                            type: "",
+                            title: "Chọn loại nghề",
+                        });
+                        me.applyFilter_NhomNghe_ForChucDanh();
+                        me.applyFilter_NhomNghe_ForNgheNghiep();
+                        return;
+                    }
+
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_LN') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_LN');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    rows = me.sortBySortOrder(rows);
+
+                    me["dtLoaiNghe"] = rows;
+                    me.genTable_LoaiNghe(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1489,6 +2007,7 @@ DanhMucNghe.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_LoaiNghe({ forCombo: true });
                     me.getList_LoaiNghe();
                 });
             },
@@ -1513,7 +2032,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 7: Edit, 8: Checkbox
+                center: [0, 7, 8],
                 //right: [5]
             },
             aoColumns: [
@@ -1582,33 +2102,42 @@ DanhMucNghe.prototype = {
             obj_save.action = 'NS_HoSoNhanSu3_MH/EjQgHgIuMyQeCy4j';
             obj_save.func = 'PKG_CORE_HOSONHANSU_03.Sua_Core_Job'
         }
-        //default
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thêm mới thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                    }
-                    me.getList_NgheNghiep();
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert(JSON.stringify(er));
-            },
-            type: "POST",
-            action: obj_save.action,
 
-            contentType: true,
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+        me._shiftSortOrdersIfNeeded(
+            'NgheNghiep',
+            obj_save.dSort_Order,
+            obj_save.strId,
+            function (x) { return x.JOB_GROUP_ID == obj_save.strJob_Group_Id && x.JOB_LEVEL_ID == obj_save.strJob_Level_Id; },
+            function () {
+                //default
+                edu.system.makeRequest({
+                    success: function (data) {
+                        if (data.Success) {
+                            if (!obj_save.strId) {
+                                edu.system.alert("Thêm mới thành công!");
+                            }
+                            else {
+                                edu.system.alert("Cập nhật thành công!");
+                            }
+                            me.getList_NgheNghiep();
+                        }
+                        else {
+                            edu.system.alert(data.Message);
+                        }
+                    },
+                    error: function (er) {
+                        edu.system.alert(JSON.stringify(er));
+                    },
+                    type: "POST",
+                    action: obj_save.action,
+
+                    contentType: true,
+                    data: obj_save,
+                    fakedb: [
+                    ]
+                }, false, false, false, null);
+            }
+        );
     },
     getList_NgheNghiep: function () {
         var me = this;
@@ -1617,8 +2146,8 @@ DanhMucNghe.prototype = {
             'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHgsuIwPP',
             'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_Job',
             'iM': edu.system.iM,
-            'strJob_Group_Id': edu.system.getValById('dropAAAA'),
-            'strJob_Level_Id': edu.system.getValById('dropAAAA'),
+            'strJob_Group_Id': me.getValSafe('dropSearch_ChucDanh_DM') || me.getValSafe('dropAAAA'),
+            'strJob_Level_Id': me.getValSafe('dropSearch_BacNghe_DM') || me.getValSafe('dropAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
@@ -1627,8 +2156,27 @@ DanhMucNghe.prototype = {
             success: function (data) {
                 if (data.Success) {
 
-                    me["dtNgheNghiep"] = data.Data;
-                    me.genTable_NgheNghiep(data.Data);
+                    var rows = data.Data || [];
+                    var tuKhoa = (me.getValSafe('txtSearch_TuKhoa_DM') || '').toLowerCase();
+                    var trangThai = me.getValSafe('dropSearch_TrangThai_DM');
+                    if (trangThai === null || trangThai === undefined) trangThai = '';
+                    if (tuKhoa) {
+                        rows = $.grep(rows, function (x) {
+                            return ((x.JOB_CODE || '').toLowerCase().indexOf(tuKhoa) >= 0)
+                                || ((x.JOB_NAME || '').toLowerCase().indexOf(tuKhoa) >= 0);
+                        });
+                    }
+                    if (trangThai !== '') {
+                        var isActive = (trangThai == '1');
+                        rows = $.grep(rows, function (x) {
+                            return (!!x.IS_ACTIVE) === isActive;
+                        });
+                    }
+
+                    rows = me.sortBySortOrder(rows);
+
+                    me["dtNgheNghiep"] = rows;
+                    me.genTable_NgheNghiep(rows);
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1718,7 +2266,8 @@ DanhMucNghe.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0],
+                // 0: STT (auto), 9: Edit, 10: Checkbox
+                center: [0, 9, 10],
                 //right: [5]
             },
             aoColumns: [
