@@ -3,8 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Đăng ký mua đồng phục - bảo hiểm</title>
+    <title>Kế hoạch tổ chức đăng ký mua</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
   </head>
 
   <body>
@@ -423,8 +424,8 @@
                 data-bs-target="#collapse5"
                 href="javascrip:void(0)"
               >
-                <i class="far fa-user-graduate item-icon"></i>
-                <span>Sinh viên</span>
+                <i class="fal fa-user-tie item-icon"></i>
+                <span>Cán bộ</span>
                 <i class="fal fa-chevron-right item-arrow-icon"></i>
                 <i class="fal fa-chevron-down item-arrow-icon down"></i>
               </a>
@@ -438,7 +439,7 @@
                     class="active"
                     href="HTML-SV-Dang-Ky-Mua-Dong-Phuc.html"
                     data-position="1"
-                    >Đăng ký mua đồng phục - bảo hie</a
+                    >Kế hoạch tổ chức đăng ký mua</a
                   >
                   <a href="#" data-position="0">Quản lý dm nghề nghiệp</a>
                   <a href="QuanTriNhom.html" data-position="1"
@@ -463,9 +464,9 @@
           <div class="d-flex justify-content-between">
             <div class="nav-content-left">
               <p class="link">
-                <a href="#">Sinh viên</a>
+                <a href="#">Cán bộ</a>
                 <i class="fal fa-angle-right"></i>
-                <a href="#">Đăng ký mua đồng phục - bảo hiểm</a>
+                <a href="#">Kế hoạch tổ chức đăng ký mua</a>
               </p>
             </div>
 
@@ -479,7 +480,13 @@
         <div class="box-content pt-0 pl20 pr20">
           <!-- Thiết lập quản trị nhóm -->
           <div class="box box-solid box-shadow pd0 aps-dangKy-dongphuc">
-            <div class="form-top box-search">
+            <div class="box-header with-border pd20 bg-header bg-blue">
+              <h3 class="box-title">
+                <i class="fas fa-file-contract"></i> Kế hoạch tổ chức đăng ký
+                mua
+              </h3>
+            </div>
+            <div class="form-top box-search d-none">
               <div class="row">
                 <div class="col-lg-5 col-md-6 mb-15">
                   <div class="form-item d-flex form-add-info flex-grow-1">
@@ -511,9 +518,9 @@
             <div class="box box-solid mt-15 aps-list-dangky-dongphuc">
               <div class="box-header d-flex pt20 pl20 pr20 pb0">
                 <h3 class="box-title line-38" style="padding: 0 !important">
-                  <i class="fa-light fa-list-timeline line-38"></i> Thông tin
-                  đăng ký mua
-                  <span class="pull-right badge bg-light-blue ml-15">
+                  <i class="fa-light fa-list-timeline line-38"></i> Danh sách kế
+                  hoạch tổ chức đăng ký mua
+                  <span class="pull-right badge bg-light-blue ml-15 d-none">
                     <span id="lblVeThang_Tong"></span>
                   </span>
                 </h3>
@@ -522,245 +529,114 @@
                     ><i class="fa fa-trash"></i>Xóa</a
                   >
                   <a
-                    class="btn btn-primary"
+                    class="btn btn-success"
                     href=""
                     data-bs-toggle="modal"
-                    data-bs-target="#ds_dangky"
-                    ><i class="fal fa-tshirt"></i> Kết quả đã đăng ký mua</a
+                    data-bs-target="#moKeHoachMoi"
+                    ><i class="fas fa-edit"></i> Mở kế hoạch mới</a
                   >
                 </div>
               </div>
               <div class="box-body pl20 pr20 pb10 mt-10">
                 <div class="aps-table-select scroll-table-x pb-0 mb-20">
                   <table
-                    id="tblDangKyMua"
-                    class="table table-hover table-bordered table-noborder tblDangKyMua"
+                    id="tblkehoach-dk-mua"
+                    class="table table-hover table-bordered table-noborder tblkehoach-dk-mua"
                   >
                     <thead>
                       <tr>
                         <th class="td-fixed td-center w-50px">Stt</th>
-                        <th class="td-left">Loại</th>
-                        <th class="td-right">Đơn giá</th>
-                        <th class="td-center" style="width: 100px">Số lượng</th>
-                        <th class="td-center" style="width: 120px">
-                          Xác nhận Mua
+                        <th class="td-left">Tên kế hoạch</th>
+                        <th class="td-left">Mô tả</th>
+                        <th class="td-left" style="width: 100px">Từ ngày</th>
+                        <th class="td-left" style="width: 100px">Đến ngày</th>
+                        <th class="td-center" style="width: 180px">
+                          Loại khoản và đơn giá
                         </th>
                         <th class="td-center" style="width: 180px">
-                          Xác nhận không Mua
+                          Mở cho đối tượng nào
                         </th>
-                        <th class="td-center td-fixed d-none">
-                          <input type="checkbox" id="chkSelectAll_VeThang" />
+                        <th class="td-center" style="width: 180px">
+                          Kết quả đăng ký mua
+                        </th>
+                        <th class="td-center td-fixed w-50px">
+                          <input type="checkbox" id="chkSelectAll_chon" />
                         </th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         <td class="td-center td-fix">1</td>
-                        <td class="td-left">
-                          Áo sơ mi: Trắng hoặc màu quy định, thường có thêu logo
-                          trường.
-                        </td>
-                        <td class="td-right">100.000</td>
-                        <td class="td-center" style="max-width: 60px">
-                          <input
-                            id="1"
-                            class="form-control editmota"
-                            value=""
-                            name=""
-                          />
-                        </td>
+                        <td class="td-left">Tên kế hoạch</td>
+                        <td class="td-left">Mô tả</td>
+                        <td class="td-left">20/3/2025</td>
+                        <td class="td-left">10/4/2025</td>
                         <td class="td-center">
                           <a
-                            class="btn btn-default btnXacNhanMua"
-                            title="Xác nhận mua"
+                            class="btn btn-default btnXemChiTiet"
+                            title="Xem chi tiết"
                             data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_mua"
-                            >Xác nhận mua</a
+                            data-bs-target="#Loaikhoan_donGia"
+                            >Xem chi tiết</a
                           >
                         </td>
                         <td class="td-center">
                           <a
-                            class="btn btn-default btnXacNhanKhongMua"
-                            title="Xác nhận không mua"
+                            class="btn btn-default btnXemChiTiet"
+                            title="Xem chi tiết"
                             data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_khongmua"
-                            href=""
-                            >Xác nhận không mua</a
+                            data-bs-target="#phamViDoiTuong"
+                            >Xem chi tiết</a
                           >
+                        </td>
+                        <td class="td-center">
+                          <a
+                            class="btn btn-default btnXemChiTiet"
+                            title="Xem chi tiết"
+                            data-bs-toggle="modal"
+                            data-bs-target="#ketQua_dangKy_mua"
+                            >Xem chi tiết</a
+                          >
+                        </td>
+                        <td class="td-center">
+                          <input type="checkbox" id="chkSelectAll_chon" />
                         </td>
                       </tr>
                       <tr>
-                        <td class="td-center td-fix">2</td>
-                        <td class="td-left">
-                          Áo sơ mi: Trắng hoặc màu quy định, thường có thêu logo
-                          trường.
-                        </td>
-                        <td class="td-right">100.000</td>
-                        <td class="td-center" style="max-width: 60px">
-                          <input
-                            id="1"
-                            class="form-control editmota"
-                            value=""
-                            name=""
-                          />
-                        </td>
+                        <td class="td-center td-fix">1</td>
+                        <td class="td-left">Tên kế hoạch</td>
+                        <td class="td-left">Mô tả</td>
+                        <td class="td-left">20/3/2025</td>
+                        <td class="td-left">10/4/2025</td>
                         <td class="td-center">
                           <a
-                            class="btn btn-default btnXacNhanMua"
-                            title="Xác nhận mua"
+                            class="btn btn-default btnXemChiTiet"
+                            title="Xem chi tiết"
                             data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_mua"
-                            >Xác nhận mua</a
+                            data-bs-target="#Loaikhoan_donGia"
+                            >Xem chi tiết</a
                           >
                         </td>
                         <td class="td-center">
                           <a
-                            class="btn btn-default btnXacNhanKhongMua"
-                            title="Xác nhận không mua"
+                            class="btn btn-default btnXemChiTiet"
+                            title="Xem chi tiết"
                             data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_khongmua"
-                            href=""
-                            >Xác nhận không mua</a
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="td-center td-fix">3</td>
-                        <td class="td-left">
-                          Quần tây/Quần dài: Dành cho nam và nữ, màu xanh đen,
-                          đen, hoặc xám.
-                        </td>
-                        <td class="td-right">100.000</td>
-                        <td class="td-center" style="max-width: 60px">
-                          <input
-                            id="1"
-                            class="form-control editmota"
-                            value=""
-                            name=""
-                          />
-                        </td>
-                        <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanMua"
-                            title="Xác nhận mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_mua"
-                            >Xác nhận mua</a
+                            data-bs-target="#phamViDoiTuong"
+                            >Xem chi tiết</a
                           >
                         </td>
                         <td class="td-center">
                           <a
-                            class="btn btn-default btnXacNhanKhongMua"
-                            title="Xác nhận không mua"
+                            class="btn btn-default btnXemChiTiet"
+                            title="Xem chi tiết"
                             data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_khongmua"
-                            href=""
-                            >Xác nhận không mua</a
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="td-center td-fix">4</td>
-                        <td class="td-left">
-                          Váy/Chân váy: Váy chữ A, váy xếp ly dành cho nữ sinh
-                        </td>
-                        <td class="td-right">100.000</td>
-                        <td class="td-center" style="max-width: 60px">
-                          <input
-                            id="1"
-                            class="form-control editmota"
-                            value=""
-                            name=""
-                          />
-                        </td>
-                        <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanMua"
-                            title="Xác nhận mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_mua"
-                            >Xác nhận mua</a
+                            data-bs-target="#ketQua_dangKy_mua"
+                            >Xem chi tiết</a
                           >
                         </td>
                         <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanKhongMua"
-                            title="Xác nhận không mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_khongmua"
-                            href=""
-                            >Xác nhận không mua</a
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="td-center td-fix">5</td>
-                        <td class="td-left">
-                          Áo Polo: Thường dùng vào mùa hè hoặc các ngày hoạt
-                          động ngoại khóa.
-                        </td>
-                        <td class="td-right">100.000</td>
-                        <td class="td-center" style="max-width: 60px">
-                          <input
-                            id="1"
-                            class="form-control editmota"
-                            value=""
-                            name=""
-                          />
-                        </td>
-                        <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanMua"
-                            title="Xác nhận mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_mua"
-                            >Xác nhận mua</a
-                          >
-                        </td>
-                        <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanKhongMua"
-                            title="Xác nhận không mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_khongmua"
-                            href=""
-                            >Xác nhận không mua</a
-                          >
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="td-center td-fix">6</td>
-                        <td class="td-left">
-                          Bộ đồ thể thao: Áo thun cổ tròn/cổ bẻ và quần thể thao
-                          co giãn, thoáng mát (hè) hoặc quần dài nỉ (đông).
-                        </td>
-                        <td class="td-right">100.000</td>
-                        <td class="td-center" style="max-width: 60px">
-                          <input
-                            id="1"
-                            class="form-control editmota"
-                            value=""
-                            name=""
-                          />
-                        </td>
-                        <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanMua"
-                            title="Xác nhận mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_mua"
-                            >Xác nhận mua</a
-                          >
-                        </td>
-                        <td class="td-center">
-                          <a
-                            class="btn btn-default btnXacNhanKhongMua"
-                            title="Xác nhận không mua"
-                            data-bs-toggle="modal"
-                            data-bs-target="#them_xacnhan_khongmua"
-                            href=""
-                            >Xác nhận không mua</a
-                          >
+                          <input type="checkbox" id="chkSelectAll_chon" />
                         </td>
                       </tr>
                     </tbody>
@@ -773,8 +649,8 @@
       </div>
     </div>
 
-    <!-- modal Xác nhận mua  -->
-    <div class="modal fade modal_them_xacnhan_mua" id="them_xacnhan_mua">
+    <!-- modal Mở kế hoạch mới  -->
+    <div class="modal fade modal_moKeHoachMoi" id="moKeHoachMoi">
       <div
         class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680"
       >
@@ -782,7 +658,7 @@
           <div class="modal-header">
             <div class="modal-header-wrap">
               <div class="title">
-                <i class="fal fa-check-circle"></i>Xác nhận mua
+                <i class="fas fa-edit"></i> Mở kế hoạch mới
               </div>
               <button
                 type="button"
@@ -807,97 +683,16 @@
               <!-- Row 1 -->
               <div class="row aps-form-item pd0">
                 <div class="col-sm-3 aps-lable-name pl0">
-                  <div class="title-name">Loại đồng phục</div>
+                  <div class="title-name">Tên kế hoạch</div>
                 </div>
                 <div class="col-sm-9 aps-form-input pr0">
-                  <div class="custom-select">
-                    <i class="fa-light fa-chevron-down"></i>
-                    <select name="" id="" class="form-select">
-                      <option value="">Chọn loại đồng phục cần mua</option>
-                      <option value="" selected="">
-                        Áo sơ mi: Trắng hoặc màu quy định, thường có thêu logo
-                        trường.
-                      </option>
-                      <option value="">
-                        Quần tây/Quần dài: Dành cho nam và nữ, màu xanh đen,
-                        đen, hoặc xám.
-                      </option>
-                      <option value="">
-                        Váy/Chân váy: Váy chữ A, váy xếp ly dành cho nữ sinh
-                      </option>
-                      <option value="">
-                        Áo Polo: Thường dùng vào mùa hè hoặc các ngày hoạt động
-                        ngoại khóa.
-                      </option>
-                      <option value="">
-                        Bộ đồ thể thao: Áo thun cổ tròn/cổ bẻ và quần thể thao
-                        co giãn, thoáng mát (hè) hoặc quần dài nỉ (đông).
-                      </option>
-                    </select>
-                  </div>
+                  <input id="#" class="form-control" />
                 </div>
               </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <div class="pull-right d-flex">
-              <button
-                class="btn btn-default"
-                data-bs-toggle="modal"
-                data-bs-target="#giaoDeTai_chitiet"
-              >
-                <i class="fal fa-times"></i><span>Đóng</span>
-              </button>
-              <button class="btn btn-danger d-none">
-                <i class="fa fa-trash"></i><span>Xóa</span>
-              </button>
-              <button class="btn btn-success">
-                <i class="fas fa-check-circle"></i><span>Đồng ý</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- modal Xác nhận không mua  -->
-    <div
-      class="modal fade modal_them_xacnhan_khongmua"
-      id="them_xacnhan_khongmua"
-    >
-      <div
-        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680"
-      >
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="modal-header-wrap">
-              <div class="title">
-                <i class="fal fa-check-circle"></i>Xác nhận không mua
-              </div>
-              <button
-                type="button"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-          </div>
-          <div class="modal-body aps-add-new">
-            <div class="aps-form mb-0">
-              <!-- Row lable -->
-              <div class="row aps-lable-name mb-10 d-none">
-                <p class="group-group-title-name mb-10 pl0 pr0">
-                  <span
-                    class="badge color-blue fz18"
-                    style="font-size: 18px !important; font-weight: 600"
-                  >
-                    Thông tin đơn vị con</span
-                  >
-                </p>
-              </div>
-              <!-- Row 1 -->
+              <!-- Row 2 -->
               <div class="row aps-form-item pd0">
                 <div class="col-sm-3 aps-lable-name pl0">
-                  <div class="title-name">Mô tả lý do</div>
+                  <div class="title-name">Từ ngày</div>
                 </div>
                 <div class="col-sm-9 aps-form-input pr0">
                   <textarea
@@ -907,13 +702,22 @@
                   ></textarea>
                 </div>
               </div>
-              <!-- Row 2 -->
+              <!-- Row 3 -->
               <div class="row aps-form-item pd0">
                 <div class="col-sm-3 aps-lable-name pl0">
-                  <div class="title-name">Minh chứng</div>
+                  <div class="title-name">Đến ngày</div>
                 </div>
                 <div class="col-sm-9 aps-form-input pr0">
-                  <input type="file" id="myFile" name="filename" class="mt-5" />
+                  <input id="#" class="form-control" />
+                </div>
+              </div>
+              <!-- Row 4 -->
+              <div class="row aps-form-item pd0">
+                <div class="col-sm-3 aps-lable-name pl0">
+                  <div class="title-name">Tên kế hoạch</div>
+                </div>
+                <div class="col-sm-9 aps-form-input pr0">
+                  <input id="#" class="form-control" />
                 </div>
               </div>
             </div>
@@ -927,19 +731,20 @@
               >
                 <i class="fal fa-times"></i><span>Đóng</span>
               </button>
-              <button class="btn btn-danger d-none">
+              <button class="btn btn-danger">
                 <i class="fa fa-trash"></i><span>Xóa</span>
               </button>
-              <button class="btn btn-success">
-                <i class="fas fa-check-circle"></i><span>Đồng ý</span>
+              <button class="btn btn-primary">
+                <i class="far fa-save"></i><span>Lưu</span>
               </button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- modal Kết quả đã đăng ký mua -->
-    <div class="modal fade modal_ds_dangky" id="ds_dangky">
+    <!-- ----------------------------------------------------- -->
+    <!-- modal Loại khoản và đơn giá -->
+    <div class="modal fade modal_Loaikhoan_donGia" id="Loaikhoan_donGia">
       <div
         class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200"
       >
@@ -947,7 +752,7 @@
           <div class="modal-header">
             <div class="modal-header-wrap">
               <div class="title">
-                <i class="fal fa-tshirt"></i> Kết quả đã đăng ký mua
+                <i class="fas fa-donate"></i> Loại khoản và đơn giá
               </div>
               <button
                 type="button"
@@ -965,113 +770,26 @@
                 <thead>
                   <tr>
                     <th class="td-fixed td-center w-50px">Stt</th>
-                    <th class="td-left">Loại</th>
-                    <th class="td-right" style="width: 100px">Đơn giá</th>
-                    <th class="td-center" style="width: 100px">Số lượng</th>
-                    <th class="td-right" style="width: 100px">Tổng tiền</th>
-                    <th class="td-center" style="width: 120px">Xác nhận Mua</th>
-                    <th class="td-center" style="width: 180px">
-                      Xác nhận không Mua
-                    </th>
-                    <th class="td-center td-fixed d-none">
-                      <input type="checkbox" id="chkSelectAll_VeThang" />
-                    </th>
+                    <th class="td-left">Loại khoản</th>
+                    <th class="td-left">Đơn giá</th>
+                    <th class="td-left">Phân loại</th>
+                    <th class="td-center" style="width: 120px">Chọn</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="td-center td-fix">1</td>
-                    <td class="td-left">
-                      Áo sơ mi: Trắng hoặc màu quy định, thường có thêu logo
-                      trường.
-                    </td>
-                    <td class="td-right">100.000</td>
-                    <td class="td-center" style="max-width: 60px">3</td>
-                    <td class="td-right color-orange fw-bold">300.000</td>
+                    <td class="td-left">Loại khoản</td>
+                    <td class="td-left">Đơn giá</td>
+                    <td class="td-left">Phân loại</td>
                     <td class="td-center">
-                      <span class="color-success">Xác nhận mua</span>
-                    </td>
-                    <td class="td-center">
-                      <span class="color-red">Xác nhận hủy</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="td-center td-fix">2</td>
-                    <td class="td-left">
-                      Áo sơ mi: Trắng hoặc màu quy định, thường có thêu logo
-                      trường.
-                    </td>
-                    <td class="td-right">100.000</td>
-                    <td class="td-center" style="max-width: 60px">3</td>
-                    <td class="td-right color-orange fw-bold">300.000</td>
-                    <td class="td-center">
-                      <span class="color-success">Xác nhận mua</span>
-                    </td>
-                    <td class="td-center">
-                      <span class="color-red">Xác nhận hủy</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="td-center td-fix">3</td>
-                    <td class="td-left">
-                      Quần tây/Quần dài: Dành cho nam và nữ, màu xanh đen, đen,
-                      hoặc xám.
-                    </td>
-                    <td class="td-right">100.000</td>
-                    <td class="td-center" style="max-width: 60px">3</td>
-                    <td class="td-right color-orange fw-bold">300.000</td>
-                    <td class="td-center">
-                      <span class="color-success">Xác nhận mua</span>
-                    </td>
-                    <td class="td-center">
-                      <span class="color-red">Xác nhận hủy</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="td-center td-fix">4</td>
-                    <td class="td-left">
-                      Váy/Chân váy: Váy chữ A, váy xếp ly dành cho nữ sinh
-                    </td>
-                    <td class="td-right">100.000</td>
-                    <td class="td-center" style="max-width: 60px">3</td>
-                    <td class="td-right color-orange fw-bold">300.000</td>
-                    <td class="td-center">
-                      <span class="color-success">Xác nhận mua</span>
-                    </td>
-                    <td class="td-center">
-                      <span class="color-red">Xác nhận hủy</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="td-center td-fix">5</td>
-                    <td class="td-left">
-                      Áo Polo: Thường dùng vào mùa hè hoặc các ngày hoạt động
-                      ngoại khóa.
-                    </td>
-                    <td class="td-right">100.000</td>
-                    <td class="td-center" style="max-width: 60px">3</td>
-                    <td class="td-right color-orange fw-bold">300.000</td>
-                    <td class="td-center">
-                      <span class="color-success">Xác nhận mua</span>
-                    </td>
-                    <td class="td-center">
-                      <span class="color-red">Xác nhận hủy</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="td-center td-fix">6</td>
-                    <td class="td-left">
-                      Bộ đồ thể thao: Áo thun cổ tròn/cổ bẻ và quần thể thao co
-                      giãn, thoáng mát (hè) hoặc quần dài nỉ (đông).
-                    </td>
-                    <td class="td-right">100.000</td>
-                    <td class="td-center" style="max-width: 60px">3</td>
-                    <td class="td-right color-orange fw-bold">300.000</td>
-                    <td class="td-center">
-                      <span class="color-success">Xác nhận mua</span>
-                    </td>
-                    <td class="td-center">
-                      <span class="color-red">Xác nhận hủy</span>
+                      <a
+                        class="btn btn-default btnChiTiet"
+                        title="Xem chi tiết"
+                        data-bs-toggle="modal"
+                        data-bs-target="#chitiet"
+                        >Chi tiết</a
+                      >
                     </td>
                   </tr>
                 </tbody>
@@ -1090,8 +808,331 @@
               <button class="btn btn-danger d-none">
                 <i class="fa fa-trash"></i><span>Xóa</span>
               </button>
-              <button class="btn btn-success d-none">
-                <i class="fas fa-check-circle"></i><span>Đồng ý</span>
+              <button
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#add_loaikhoan_donGia"
+              >
+                <i class="fas fa-plus"></i><span>Thêm mới</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal Thêm mới Loại khoản và đơn giá -->
+    <div
+      class="modal fade modal_add_loaikhoan_donGia"
+      id="add_loaikhoan_donGia"
+    >
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-wrap">
+              <div class="title">
+                <i class="fas fa-plus"></i> Thêm mới loại khoản và đơn giá
+              </div>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          <div class="modal-body aps-add-new">
+            <div class="aps-form mb-0">
+              <!-- Row 1 -->
+              <div class="row aps-form-item pd0">
+                <div class="col-sm-3 aps-lable-name pl0">
+                  <div class="title-name">Loại khoản</div>
+                </div>
+                <div class="col-sm-9 aps-form-input pr0">
+                  <div class="custom-select">
+                    <i class="fa-light fa-chevron-down"></i>
+                    <select name="" id="" class="form-select">
+                      <option value="">Chọn loại khoản</option>
+                      <option value="" selected="">Loại khoản 1</option>
+                      <option value="">Loại khoản 2</option>
+                      <option value="">Loại khoản 3</option>
+                      <option value="">Loại khoản 4</option>
+                      <option value="">Loại khoản 5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Row 2 -->
+              <div class="row aps-form-item pd0">
+                <div class="col-sm-3 aps-lable-name pl0">
+                  <div class="title-name">Đơn giá</div>
+                </div>
+                <div class="col-sm-9 aps-form-input pr0">
+                  <input id="#" class="form-control" />
+                </div>
+              </div>
+              <!-- Row 3 -->
+              <div class="row aps-form-item pd0">
+                <div class="col-sm-3 aps-lable-name pl0">
+                  <div class="title-name">Phân loại</div>
+                </div>
+                <div class="col-sm-9 aps-form-input pr0">
+                  <div class="custom-select">
+                    <i class="fa-light fa-chevron-down"></i>
+                    <select name="" id="" class="form-select">
+                      <option value="">Chọn phân loại</option>
+                      <option value="" selected="">Phân loại 1</option>
+                      <option value="">Phân loại 2</option>
+                      <option value="">Phân loại 3</option>
+                      <option value="">Phân loại 4</option>
+                      <option value="">Phân loại 5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right d-flex">
+              <button
+                class="btn btn-default"
+                data-bs-toggle="modal"
+                data-bs-target="#giaoDeTai_chitiet"
+              >
+                <i class="fal fa-times"></i><span>Đóng</span>
+              </button>
+              <button class="btn btn-danger d-none">
+                <i class="fa fa-trash"></i><span>Xóa</span>
+              </button>
+              <button class="btn btn-primary">
+                <i class="far fa-save"></i><span>Lưu</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- ----------------------------------------------------- -->
+    <!-- modal Phạm vi đối tượng nào -->
+    <div class="modal fade modal_phamViDoiTuong" id="phamViDoiTuong">
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1140"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-wrap">
+              <div class="title">
+                <i class="far fa-users-cog"></i> Phạm vi đối tượng nào
+              </div>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          <div class="modal-body aps-add-new">
+            <div class="aps-table-select scroll-table-x pb-0 mb-0">
+              <table
+                id="tblVeThang"
+                class="table table-hover table-bordered table-noborder"
+              >
+                <thead>
+                  <tr>
+                    <th class="td-fixed td-center w-50px">Stt</th>
+                    <th class="td-left">Phạm vi</th>
+                    <th class="td-left">Ghi chú</th>
+                    <th class="td-center" style="width: 120px">Chọn</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-center td-fix">1</td>
+                    <td class="td-left">Phạm vi</td>
+                    <td class="td-left">Ghi chú</td>
+                    <td class="td-center">
+                      <a
+                        class="btn btn-default btnChiTiet_phamVi"
+                        title="Xem chi tiết"
+                        data-bs-toggle="modal"
+                        data-bs-target="#chitiet_phamVi"
+                        >Chi tiết</a
+                      >
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right d-flex">
+              <button
+                class="btn btn-default"
+                data-bs-toggle="modal"
+                data-bs-target="#giaoDeTai_chitiet"
+              >
+                <i class="fal fa-times"></i><span>Đóng</span>
+              </button>
+              <button class="btn btn-danger d-none">
+                <i class="fa fa-trash"></i><span>Xóa</span>
+              </button>
+              <button
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#add_phamVi_doiTuong"
+              >
+                <i class="fas fa-plus"></i><span>Thêm mới</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- modal Thêm mới Phạm vi đối tượng nào -->
+    <div class="modal fade modal_add_phamVi_doiTuong" id="add_phamVi_doiTuong">
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-wrap">
+              <div class="title">
+                <i class="fas fa-plus"></i> Thêm mới phạm vi đối tượng nào
+              </div>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          <div class="modal-body aps-add-new">
+            <div class="aps-form mb-0">
+              <!-- Row 1 -->
+              <div class="row aps-form-item pd0">
+                <div class="col-sm-3 aps-lable-name pl0">
+                  <div class="title-name">Phạm vi</div>
+                </div>
+                <div class="col-sm-9 aps-form-input pr0">
+                  <div class="custom-select">
+                    <i class="fa-light fa-chevron-down"></i>
+                    <select name="" id="" class="form-select">
+                      <option value="">Chọn phạm vi</option>
+                      <option value="" selected="">Phạm vi 1</option>
+                      <option value="">Phạm vi 2</option>
+                      <option value="">Phạm vi 3</option>
+                      <option value="">Phạm vi 4</option>
+                      <option value="">Phạm vi 5</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <div class="pull-right d-flex">
+              <button
+                class="btn btn-default"
+                data-bs-toggle="modal"
+                data-bs-target="#giaoDeTai_chitiet"
+              >
+                <i class="fal fa-times"></i><span>Đóng</span>
+              </button>
+              <button class="btn btn-danger d-none">
+                <i class="fa fa-trash"></i><span>Xóa</span>
+              </button>
+              <button class="btn btn-primary">
+                <i class="far fa-save"></i><span>Lưu</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ----------------------------------------------------- -->
+    <!-- modal Kết quả đăng ký mua -->
+    <div class="modal fade modal_ketQua_dangKy_mua" id="ketQua_dangKy_mua">
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200"
+      >
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-header-wrap">
+              <div class="title">
+                <i class="far fa-money-check-edit-alt"></i> Kết quả đăng ký mua
+              </div>
+              <button
+                type="button"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+          </div>
+          <div class="modal-body aps-add-new">
+            <div class="aps-table-select scroll-table-x pb-0 mb-0">
+              <table
+                id="tblKetQua_DK_mua"
+                class="table table-hover table-bordered table-noborder tblKetQua_DK_mua"
+              >
+                <thead>
+                  <tr>
+                    <th class="td-fixed td-center w-50px">Stt</th>
+                    <th class="td-left">Mã số</th>
+                    <th class="td-left">Ngày mua</th>
+                    <th class="td-left">Phân loại</th>
+                    <th class="td-left">Loại khoản</th>
+                    <th class="td-center" style="width: 80px">Số lượng</th>
+
+                    <th class="td-center" style="width: 140px">
+                      Số tiền phải nộp
+                    </th>
+                    <th class="td-center" style="width: 120px">
+                      Số tiền đã nộp
+                    </th>
+                    <th class="td-center w-50px">Chọn</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="td-center td-fix">1</td>
+                    <td class="td-left">MS_0001</td>
+                    <td class="td-left">15/02/2026</td>
+                    <td class="td-left">Phân loại</td>
+                    <td class="td-left">Loại khoản</td>
+
+                    <td class="td-center">2</td>
+                    <td class="td-center">200.000</td>
+                    <td class="td-center">200.000</td>
+                    <td class="td-center">
+                      <input type="checkbox" id="chkSelectAll_kq_dk_mua" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="modal-footer" style="display: none !important">
+            <div class="pull-right d-flex">
+              <button
+                class="btn btn-default"
+                data-bs-toggle="modal"
+                data-bs-target="#giaoDeTai_chitiet"
+              >
+                <i class="fal fa-times"></i><span>Đóng</span>
+              </button>
+              <button class="btn btn-danger d-none">
+                <i class="fa fa-trash"></i><span>Xóa</span>
+              </button>
+              <button
+                class="btn btn-success"
+                data-bs-toggle="modal"
+                data-bs-target="#add_loaikhoan_donGia"
+              >
+                <i class="fas fa-plus"></i><span>Thêm mới</span>
               </button>
             </div>
           </div>
