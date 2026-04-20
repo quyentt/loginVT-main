@@ -279,10 +279,14 @@ TraCuuDiem.prototype = {
         var row = '';
         row += '<tr>';
         var dChieuDaiHead = 0;
+        var iLeftPos = 0;
         for (var i = 0; i < dtNguoiHoc.length; i++) {
-            row += '<th rowspan="2" ' + me.getstyle(dtNguoiHoc[i]) + ' >' + dtNguoiHoc[i].TENCOT + '</th>';
-            dChieuDaiHead += edu.util.returnZero(dtNguoiHoc[i].DORONG);
+            var colWidth = edu.util.returnZero(dtNguoiHoc[i].DORONG);
+            row += '<th rowspan="2" class="sticky-col sticky-col-' + i + '" ' + me.getstyle(dtNguoiHoc[i]) + ' >' + dtNguoiHoc[i].TENCOT + '</th>';
+            dChieuDaiHead += colWidth;
+            iLeftPos += colWidth;
         }
+        me.stickyColCount = dtNguoiHoc.length;
         row += '</tr><tr></tr>';
         //$("#tblTraCuuDiemNguoiHoc thead").html(row);
         var strDiemTrungBinh = "";
@@ -418,7 +422,7 @@ TraCuuDiem.prototype = {
         for (var i = 0; i < data.length; i++) {
             row += '<tr id="' + data[i].ID + '">';
             for (var j = 0; j < me.dtCotNguoiHoc.length; j++) {
-                row += '<td>' + edu.util.returnEmpty(data[i][me.dtCotNguoiHoc[j].MACOT]) + '</td>';
+                row += '<td class="sticky-col sticky-col-' + j + '">' + edu.util.returnEmpty(data[i][me.dtCotNguoiHoc[j].MACOT]) + '</td>';
             }
             for (var j = 0; j < me.arrHeadDiem_Id.length; j++) {
                 row += '<td id="' + data[i].QLSV_NGUOIHOC_ID + '_' + me.arrHeadDiem_Id[j].MACOT + '" ' + me.getstyledata(me.arrHeadDiem_Id[j]) + '>';

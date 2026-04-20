@@ -15,6 +15,7 @@ PhanPhucKhao.prototype = {
         var me = this;
         me.getList_ThoiGian();
         me.getList_HocPhan();
+        me.getList_Khoa();
         me.getList_PhucKhao();
         edu.system.loadToCombo_DanhMucDuLieu("THI.PHUCKHAO.TINHTRANG", "dropSearch_KetQuaDuyet,dropLoaiXacNhan");
         $("#btnSearch").click(function (e) {
@@ -31,6 +32,9 @@ PhanPhucKhao.prototype = {
             me.getList_PhucKhao();
         });
         $('#dropSearch_HocPhan').on('select2:select', function (e) {
+            me.getList_PhucKhao();
+        });
+        $('#dropSearch_Khoa').on('select2:select', function (e) {
             me.getList_PhucKhao();
         });
 
@@ -186,6 +190,15 @@ PhanPhucKhao.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    // Lọc theo khoa phía client
+                    var strKhoa_Id = edu.util.getValById('dropSearch_Khoa');
+                    if (strKhoa_Id) {
+                        var strKhoa_Ten = $('#dropSearch_Khoa option:selected').text().trim();
+                        dtReRult = dtReRult.filter(function (e) {
+                            return edu.util.returnEmpty(e.DAOTAO_KHOAQUANLYSV_TEN).indexOf(strKhoa_Ten) !== -1
+                                || edu.util.returnEmpty(e.DAOTAO_KHOAQUANLYHP_TEN).indexOf(strKhoa_Ten) !== -1;
+                        });
+                    }
                     me.dtNhapDiem = dtReRult;
                     me.genTable_PhucKhao(dtReRult, data.Pager);
                 }
@@ -414,6 +427,24 @@ PhanPhucKhao.prototype = {
         };
         edu.system.loadToCombo_data(obj);
         //$("#dropSearch_HocPhan").select2();
+    },
+
+    getList_Khoa: function () {
+        var me = this;
+        edu.system.getList_KhoaQuanLy({}, "", "", me.genCombo_Khoa);
+    },
+    genCombo_Khoa: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+            },
+            renderPlace: ["dropSearch_Khoa"],
+            title: "Chọn khoa"
+        };
+        edu.system.loadToCombo_data(obj);
     },
     
     getList_PhanCong: function () {
