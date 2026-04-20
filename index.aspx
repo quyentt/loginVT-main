@@ -36,6 +36,49 @@
       .fcm-noti-item-title {
         font-weight: 600;
       }
+
+      .head-search-box { position: relative; }
+      .search-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #e3e6ef;
+        border-radius: 6px;
+        box-shadow: 0 6px 20px rgba(0,0,0,.12);
+        margin-top: 4px;
+        max-height: 360px;
+        overflow-y: auto;
+        z-index: 2050;
+        display: none;
+        padding: 4px 0;
+        list-style: none;
+      }
+      .search-suggestions.show { display: block; }
+      .search-suggestions li {
+        padding: 8px 14px;
+        cursor: pointer;
+        color: #333;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .search-suggestions li:hover,
+      .search-suggestions li.active { background: #f1f5ff; color: #1967d2; }
+      .search-suggestions li i { color: #1967d2; width: 16px; text-align: center; }
+      .search-suggestions li .parent {
+        margin-left: auto;
+        font-size: 12px;
+        color: #8a8f99;
+      }
+      .search-suggestions .empty {
+        padding: 10px 14px;
+        color: #8a8f99;
+        font-style: italic;
+        cursor: default;
+      }
     </style>
   </head>
 
@@ -61,11 +104,12 @@
           </div>
           <div class="head-search-box">
             <div class="form">
-              <input type="text" class="search-imput" placeholder="Tìm kiếm thông tin" />
+              <input type="text" id="global-search-input" class="search-imput" placeholder="Tìm kiếm thông tin" autocomplete="off" />
               <button class="search-btn">
                 <i class="fal fa-search"></i>
               </button>
             </div>
+            <ul id="global-search-suggestions" class="search-suggestions"></ul>
           </div>
         </div>
         <div class="main-menu">
@@ -457,13 +501,248 @@
 
           try {
 
-            if (edu.fcm && typeof edu.fcm.init === 'function') 
+            if (edu.fcm && typeof edu.fcm.init === 'function')
             {
               edu.fcm.init();
             }
           } catch (e) {
           }
+
+          initGlobalSearch();
         });
+
+        function initGlobalSearch() {
+          var $input = $('#global-search-input');
+          var $box = $('#global-search-suggestions');
+          if (!$input.length) return;
+
+          var _allScreens = [];
+          var _allScreensRaw = [];
+          var _allApps = [];
+          var _loading = false;
+
+          function removeDiacritics(s) {
+            return (s || '').toString().toLowerCase()
+              .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+              .replace(/đ/g, 'd').replace(/Đ/g, 'd');
+          }
+
+          function loadAllApps() {
+            if (_allApps.length) return;
+            edu.system.makeRequest({
+              type: 'GET',
+              action: 'CMS_UngDung/LayDanhSach',
+              contentType: true,
+              data: { strTuKhoa: '', pageIndex: 1, pageSize: 1000, dTrangThai: 1 },
+              success: function (data) {
+                if (data && data.Success && data.Data) {
+                  _allApps = data.Data;
+                  console.log('[global-search] loaded', _allApps.length, 'apps. Sample:', _allApps[0]);
+                }
+              },
+              error: function () {},
+              fakedb: []
+            }, false, false, false, null);
+          }
+
+          function loadAllScreens(cb) {
+            if (_loading) return;
+            if (_allScreens.length) { cb && cb(); return; }
+            _loading = true;
+            edu.system.makeRequest({
+              type: 'GET',
+              action: 'CMS_ChucNang/LayDanhSach',
+              contentType: true,
+              data: {
+                action: 'CMS_ChucNang/LayDanhSach',
+                versionAPI: 'v1.0',
+                strTuKhoa: '',
+                strChung_UngDung_Id: '',
+                strCHUCNANGCHA_Id: '',
+                pageIndex: 1,
+                pageSize: 5000,
+                strNGUONTRUYCAP_Id: '',
+                dTrangThai: 1
+              },
+              success: function (data) {
+                _loading = false;
+                if (data && data.Success && data.Data) {
+                  _allScreensRaw = data.Data;
+                  _allScreens = data.Data.filter(function (e) { return e && e.DUONGDANFILE; });
+                  console.log('[global-search] loaded', _allScreens.length, 'screens. Sample:', _allScreens[0]);
+                  cb && cb();
+                }
+              },
+              error: function () { _loading = false; },
+              fakedb: []
+            }, false, false, false, null);
+          }
+
+          function resolveAppCode(obj) {
+            if (obj.MAUNGDUNG) return obj.MAUNGDUNG;
+            if (obj.MA_UNGDUNG) return obj.MA_UNGDUNG;
+            var appId = obj.CHUNG_UNGDUNG_ID || obj.UNGDUNG_ID;
+            if (appId && _allApps.length) {
+              var app = _allApps.find(function (a) { return a.ID === appId; });
+              if (app) return app.MAUNGDUNG || app.MA_UNGDUNG || app.MA || app.TENUNGDUNG;
+            }
+            var sysMatch = ((edu.system.dtChucNang) || []).find(function (e) { return e.ID === obj.ID; });
+            if (sysMatch && sysMatch.MAUNGDUNG) return sysMatch.MAUNGDUNG;
+            return null;
+          }
+
+          function getRaw() {
+            if (_allScreens.length) return _allScreens;
+            return ((edu && edu.system && edu.system.dtChucNang) || [])
+              .filter(function (e) { return e && e.DUONGDANFILE; });
+          }
+          function getList() { return getRaw(); }
+
+          function render(items, keyword) {
+            if (!getRaw().length) {
+              $box.html('<li class="empty">Đang tải danh sách màn hình, vui lòng thử lại sau giây lát...</li>').addClass('show');
+              return;
+            }
+            if (!items.length) {
+              $box.html('<li class="empty">Không tìm thấy màn hình phù hợp với "' + (keyword || '') + '"</li>').addClass('show');
+              return;
+            }
+            var all = getList();
+            var html = items.map(function (it) {
+              var parent = all.find(function (x) { return x.ID === it.CHUCNANGCHA_ID; });
+              var icon = it.TENANH && it.TENANH.indexOf('fa') === 0 ? it.TENANH : 'fal fa-file';
+              return '<li data-id="' + it.ID + '" data-href="' + (it.DUONGDANHIENTHI || '#') + '" data-file="' + (it.DUONGDANFILE || '') + '">' +
+                '<i class="' + icon + '"></i>' +
+                '<span>' + highlight(it.TENCHUCNANG, keyword) + '</span>' +
+                (parent ? '<span class="parent">' + parent.TENCHUCNANG + '</span>' : '') +
+                '</li>';
+            }).join('');
+            $box.html(html).addClass('show');
+          }
+
+          function highlight(text, kw) {
+            if (!kw) return text;
+            var t = text || '';
+            var normT = removeDiacritics(t);
+            var normKw = removeDiacritics(kw);
+            var idx = normT.indexOf(normKw);
+            if (idx < 0) return t;
+            return t.substring(0, idx) + '<mark>' + t.substring(idx, idx + kw.length) + '</mark>' + t.substring(idx + kw.length);
+          }
+
+          function search(kw) {
+            var list = getList();
+            var nKw = removeDiacritics(kw);
+            if (!nKw) { $box.removeClass('show').empty(); return; }
+            if (!list.length) {
+              render([], kw);
+              loadAllScreens(function () {
+                if ($input.val().trim() === kw) search(kw);
+              });
+              return;
+            }
+            var matches = list.filter(function (e) {
+              return removeDiacritics(e.TENCHUCNANG).indexOf(nKw) >= 0
+                  || removeDiacritics(e.MACHUCNANG).indexOf(nKw) >= 0;
+            }).slice(0, 15);
+            render(matches, kw);
+          }
+
+          loadAllScreens();
+          loadAllApps();
+
+          $input.on('input', function () { search($(this).val().trim()); });
+          $input.on('focus', function () {
+            loadAllScreens();
+            var v = $(this).val().trim();
+            if (v) search(v);
+          });
+
+          $input.on('keydown', function (ev) {
+            var $items = $box.find('li[data-id]');
+            if (!$items.length) return;
+            var idx = $items.index($items.filter('.active'));
+            if (ev.key === 'ArrowDown') {
+              ev.preventDefault();
+              idx = (idx + 1) % $items.length;
+              $items.removeClass('active').eq(idx).addClass('active')[0].scrollIntoView({ block: 'nearest' });
+            } else if (ev.key === 'ArrowUp') {
+              ev.preventDefault();
+              idx = idx <= 0 ? $items.length - 1 : idx - 1;
+              $items.removeClass('active').eq(idx).addClass('active')[0].scrollIntoView({ block: 'nearest' });
+            } else if (ev.key === 'Enter') {
+              ev.preventDefault();
+              var $chosen = idx >= 0 ? $items.eq(idx) : $items.first();
+              $chosen.trigger('click');
+            } else if (ev.key === 'Escape') {
+              $box.removeClass('show');
+            }
+          });
+
+          $box.on('click', 'li[data-id]', function () {
+            var id = $(this).data('id');
+            $box.removeClass('show');
+            $input.val('');
+            var obj = _allScreens.find(function (e) { return e.ID === id; });
+            if (!obj) return;
+            console.log('[global-search] click obj:', obj);
+            try {
+              var sys = edu.system;
+              var appCode = resolveAppCode(obj);
+              if (!appCode) {
+                console.warn('[global-search] cannot resolve appCode for obj', obj, 'apps:', _allApps);
+                edu.system.alert && edu.system.alert('Không xác định được ứng dụng cho chức năng này.', 'w');
+                return;
+              }
+              var objFull = Object.assign({}, obj, { MAUNGDUNG: appCode });
+              sys.dtChucNang = sys.dtChucNang || [];
+
+              function upsert(item) {
+                if (!item) return;
+                var i = sys.dtChucNang.findIndex(function (e) { return e.ID === item.ID; });
+                if (i < 0) sys.dtChucNang.push(item); else sys.dtChucNang[i] = item;
+              }
+
+              var parent = obj.CHUCNANGCHA_ID
+                ? _allScreensRaw.find(function (e) { return e.ID === obj.CHUCNANGCHA_ID; })
+                : null;
+              var grandparent = parent && parent.CHUCNANGCHA_ID
+                ? _allScreensRaw.find(function (e) { return e.ID === parent.CHUCNANGCHA_ID; })
+                : null;
+              upsert(grandparent);
+              upsert(parent);
+              upsert(objFull);
+
+              sys.strChucNang_Id = obj.ID;
+              sys.appCode = appCode;
+              if (obj.TENFILEDINHKEM) sys.rootPathReport = obj.TENFILEDINHKEM;
+              sessionStorage.setItem('strChucNang_Id', obj.ID);
+
+              if (typeof sys.genHTML_MenuVertical === 'function') {
+                sys.genHTML_MenuVertical(sys.dtChucNang);
+              }
+
+              var $menuItem = $('#chucnang' + obj.ID);
+              if ($menuItem.length) {
+                $menuItem[0].click();
+              } else if (typeof sys.initMain === 'function') {
+                sys.initMain(obj.DUONGDANHIENTHI, obj.DUONGDANFILE, obj.ID);
+              }
+            } catch (e) { console.error('[global-search] click error:', e); }
+          });
+
+          $(document).on('click', function (ev) {
+            if (!$(ev.target).closest('.head-search-box').length) {
+              $box.removeClass('show');
+            }
+          });
+
+          $('.search-btn').on('click', function (ev) {
+            ev.preventDefault();
+            search($input.val().trim());
+            $input.focus();
+          });
+        }
       </script>
 
   </html>
