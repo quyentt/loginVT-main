@@ -718,15 +718,34 @@
               if (obj.TENFILEDINHKEM) sys.rootPathReport = obj.TENFILEDINHKEM;
               sessionStorage.setItem('strChucNang_Id', obj.ID);
 
-              if (typeof sys.genHTML_MenuVertical === 'function') {
-                sys.genHTML_MenuVertical(sys.dtChucNang);
+              var _origInitMain = sys.initMain;
+              sys.initMain = function () {};
+              try {
+                if (typeof sys.genHTML_MenuVertical === 'function') {
+                  sys.genHTML_MenuVertical(sys.dtChucNang);
+                }
+              } finally {
+                sys.initMain = _origInitMain;
               }
 
+              $('#sidebar-menu .active').removeClass('active');
               var $menuItem = $('#chucnang' + obj.ID);
               if ($menuItem.length) {
-                $menuItem[0].click();
-              } else if (typeof sys.initMain === 'function') {
-                sys.initMain(obj.DUONGDANHIENTHI, obj.DUONGDANFILE, obj.ID);
+                if (objFull.CHUCNANGCHA_ID) {
+                  $menuItem.addClass('active');
+                  var $parent = $('#chucnang' + objFull.CHUCNANGCHA_ID);
+                  $parent.removeClass('collapsed').parent().addClass('active');
+                  $('#collapse' + objFull.CHUCNANGCHA_ID).addClass('show');
+                } else {
+                  $menuItem.parent().addClass('active');
+                }
+              }
+
+              if (obj.DUONGDANHIENTHI) {
+                try { window.location.hash = obj.DUONGDANHIENTHI.replace(/^#/, ''); } catch (e) {}
+              }
+              if (typeof sys.loadFunctionPath === 'function') {
+                sys.loadFunctionPath(obj.DUONGDANFILE);
               }
             } catch (e) { console.error('[global-search] click error:', e); }
           });
