@@ -14,6 +14,38 @@
         border: 0 !important;
     }
 
+    /* Scroll ngang cho bảng điểm chi tiết */
+    #zone_input_TraCuuDiem #table-container.scroll-table-x {
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        max-width: 100%;
+        max-height: calc(100vh - 200px);
+    }
+
+    /* Cố định các cột đầu (Stt, MSV, Họ đệm, Tên) khi scroll ngang */
+    #tblTraCuuDiem .sticky-col {
+        position: sticky !important;
+        z-index: 2 !important;
+        background: #fff !important;
+    }
+
+    #tblTraCuuDiem thead .sticky-col {
+        z-index: 3 !important;
+    }
+
+    #tblTraCuuDiem tbody tr:hover .sticky-col {
+        background: #f5f5f5 !important;
+    }
+
+    #tblTraCuuDiem tbody tr.tr-bg-diem .sticky-col {
+        background: #b3b3b3 !important;
+    }
+
+    /* Border phải cho cột sticky cuối cùng */
+    #tblTraCuuDiem .sticky-col-last {
+        border-right: 2px solid #ccc !important;
+    }
+
     /* Thu gọn bảng danh sách bảng điểm */
     #tblDSDiem {
         table-layout: fixed !important;
@@ -267,6 +299,9 @@
                                 <!--<div style="float: left">
                                     <table id="tblTraCuuDiemNguoiHoc" class="table table-hover table-bordered" ><thead class="mauthangbo" style="font-weight: bold"></thead><tbody></tbody></table>
                                 </div>-->
+                                <div id="top-scroll-wrapper" style="overflow-x:auto;overflow-y:hidden;">
+                                    <div id="top-scroll-content" style="height:1px;"></div>
+                                </div>
                                 <div id="table-container" class="scroll-table-x">
                                     <table id="tblTraCuuDiem" class="table table-hover table-bordered"></table>
                                     <div id="bottom_anchor"></div>
@@ -287,5 +322,67 @@
     main_doc['TraCuuDiem'] = new TraCuuDiem();
     $(document).ready(function () {
         main_doc.TraCuuDiem.init();
+
+        // Đồng bộ scroll ngang trên-dưới cho bảng điểm
+        var topScroll = document.getElementById('top-scroll-wrapper');
+        var bottomScroll = document.getElementById('table-container');
+        var isSyncingTop = false;
+        var isSyncingBottom = false;
+
+        function syncTopScrollWidth() {
+            var tbl = document.getElementById('tblTraCuuDiem');
+            if (tbl) {
+                document.getElementById('top-scroll-content').style.width = tbl.scrollWidth + 'px';
+            }
+        }
+
+        topScroll.addEventListener('scroll', function () {
+            if (isSyncingTop) { isSyncingTop = false; return; }
+            isSyncingBottom = true;
+            bottomScroll.scrollLeft = topScroll.scrollLeft;
+        });
+
+        bottomScroll.addEventListener('scroll', function () {
+            if (isSyncingBottom) { isSyncingBottom = false; return; }
+            isSyncingTop = true;
+            topScroll.scrollLeft = bottomScroll.scrollLeft;
+        });
+
+        // Cập nhật chiều rộng scroll trên + tính left cho sticky cols khi bảng thay đổi
+        function applyStickyPositions() {
+            syncTopScrollWidth();
+            var tbl = document.getElementById('tblTraCuuDiem');
+            if (!tbl) return;
+            var headerRow = tbl.querySelector('thead tr');
+            if (!headerRow) return;
+            var stickyCols = headerRow.querySelectorAll('.sticky-col');
+            if (stickyCols.length === 0) return;
+
+            // Tính left cho từng cột sticky dựa trên width thực tế
+            var leftPositions = [];
+            var cumLeft = 0;
+            for (var k = 0; k < stickyCols.length; k++) {
+                leftPositions.push(cumLeft);
+                cumLeft += stickyCols[k].offsetWidth;
+            }
+
+            // Áp dụng left cho tất cả sticky-col trong thead và tbody
+            for (var k = 0; k < stickyCols.length; k++) {
+                var colClass = 'sticky-col-' + k;
+                var allCells = tbl.querySelectorAll('.' + colClass);
+                for (var m = 0; m < allCells.length; m++) {
+                    allCells[m].style.left = leftPositions[k] + 'px';
+                }
+                // Đánh dấu cột sticky cuối cùng
+                if (k === stickyCols.length - 1) {
+                    for (var m = 0; m < allCells.length; m++) {
+                        allCells[m].classList.add('sticky-col-last');
+                    }
+                }
+            }
+        }
+
+        var observer = new MutationObserver(applyStickyPositions);
+        observer.observe(document.getElementById('tblTraCuuDiem'), { childList: true, subtree: true });
     });
 </script>
