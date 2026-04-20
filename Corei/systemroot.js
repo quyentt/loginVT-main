@@ -2229,7 +2229,7 @@ systemroot.prototype = {
             else {
                 getList += "<option value=''>-- Không tìm thấy dữ liệu! --</option>";
             }
-            bindData(dropToGen);
+            bindData();
             if (!default_val) onCache(render_places[i], $(dropToGen));
 
         }
@@ -2321,11 +2321,12 @@ systemroot.prototype = {
 
             if (data.length > 1) {
                 me.combonode = "";
-                if (edu.util.checkValue(parent_id)) {
-                    getList += me.recursive_combo(obj, data[j][id], style);
-                }
                 if (render != undefined && render.selectFirst == true) {
                     default_val = data[0][id];
+                }
+
+                if (edu.util.checkValue(parent_id)) {
+                    getList += me.recursive_combo(obj, data[j][id], style);
                 }
             }
             else {
@@ -2336,13 +2337,14 @@ systemroot.prototype = {
                 }
             }
         }
-        function bindData(dropGen) {
+        function bindData() {
 
-            $(dropGen).html(getList);//fill data
+            $(dropToGen).html(getList);//fill data
 
-            if ($(dropGen).attr("multiple") !== undefined) {
-                $(dropGen).val("").trigger("change");
-                $(dropGen).on('select2:select', function (e) {
+            if ($(dropToGen).attr("multiple") !== undefined) {
+                $(dropToGen).val("").trigger("change");
+                $(dropToGen).on('select2:select', function (e) {
+                    var dropId = "#" + this.id
                     var x = $(this).val();
                     if (x.length == 2) {
                         if (x[0] == "") {
@@ -2352,18 +2354,19 @@ systemroot.prototype = {
                     if (x.includes("SELECTALL")) {
                         e.stopImmediatePropagation();
                         var arr = [];
-                        var arrID = $(dropGen + " option");
+                        var arrID = $(dropId + " option");
                         for (var k = 0; k < arrID.length; k++) {
                             var temVal = arrID[k].value;
                             if (temVal !== "" && temVal !== "SELECTALL") arr.push(temVal);
                         }
-                        $(dropGen).val(arr).trigger("change").trigger({ type: 'select2:select' });
+                        $(dropId).val(arr).trigger("change").trigger({ type: 'select2:select' });
+
                     }
                 });
             }
 
-            if (default_val != "") {
-                $(dropGen).val(default_val).trigger("change").trigger({ type: 'select2:select' });
+            if (default_val) {
+                $(dropToGen).val(default_val).trigger("change").trigger({ type: 'select2:select' });
             }
         }
         function onCache(strId, dropToGen) {
@@ -2381,14 +2384,10 @@ systemroot.prototype = {
                                     dropToGen.trigger("change");
                                     dropToGen.trigger({ type: 'select2:select' });
                                 }
-                                console.log(" OnCache : " + strDropBox_Id + " : " + tempSave);
-                            } else {
-                                console.log("NoValueCache : " + strDropBox_Id + " : " + tempSave);
                             }
                         }
                         if (strId.indexOf("dr") === 0) {
                             dropToGen.on("select2:select", function () {
-                                console.log("cache : " + strDropBox_Id + " : " + this.value);
                                 localStorage.setItem(strDropBox_Id, this.value);
                             });
                         }
@@ -2399,13 +2398,9 @@ systemroot.prototype = {
                         if (data.find(e => e.ID === tempSave)) {
                             dropToGen.val(tempSave).trigger("change");
                             dropToGen.trigger({ type: 'select2:select' });
-                            console.log(" OnCache : " + strDropBox_Id + " : " + tempSave);
-                        } else {
-                            console.log("NoValueCache : " + strDropBox_Id + " : " + tempSave);
                         }
                     }
                     dropToGen.on("select2:select", function () {
-                        console.log("cache : " + strDropBox_Id + " : " + this.value);
                         localStorage.setItem(strDropBox_Id, this.value);
                     });
                 }
