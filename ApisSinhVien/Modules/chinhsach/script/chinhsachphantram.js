@@ -843,7 +843,7 @@ ChinhSachPhanTram.prototype = {
             'dSoThang': $(point).val(),
             'strDiem_KieuHoc_Id': edu.util.getValById('dropSearch_KieuHoc'),
             'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropSearch_KhoanThu'),
-            'strDoiTuongChinhSach_Id': edu.system.getValById('dropSearch_DoiTuong'),
+            'strDoiTuongChinhSach_Id': edu.system.getValById('dropSearch_CheDo'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({
