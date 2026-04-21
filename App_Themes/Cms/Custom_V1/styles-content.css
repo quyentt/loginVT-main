@@ -880,8 +880,13 @@
 }
 
 .box-body .table {
+<<<<<<< HEAD
+    margin-right: 0;
+    margin-bottom: 0;
+=======
     margin-right: 0 !important;
     margin-bottom: 10px;
+>>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 }
 
 .form-container .box-header .box-title {
@@ -1389,9 +1394,11 @@
     padding: 15px 15px 15px 15px !important;
     border-width: 0px !important;
 }
+
 .navbar-custom-menu .navbar-nav>.user-menu>.dropdown-menu>.user-footer .pull-right .btn {
     padding: 15px 15px 15px 5px !important;
 }
+
 #btnThemDong .color-active,
 .btnThemDong .color-active {
     color: #fff !important;
@@ -1422,6 +1429,10 @@
 
 .aps-form-input {
     margin-bottom: 0 !important;
+}
+
+.aps-form .aps-form-item .aps-form-input {
+    flex: 1;
 }
 
 .aps-form-item .txtSQLSoure,
@@ -6296,11 +6307,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .light-paginationtblThanhPhanDiem.simple-pagination {
     padding: 0 0 12px 0 !important;
-}
-
-.aps-table-select .table {
-    /* margin-right: 20px; */
-    margin-bottom: 10px;
 }
 
 .aps-khaibaothanhphandiemapdung-choose .box-header .bg-light-blue {
@@ -11200,6 +11206,28 @@ table#clone {
 .control-sidebar.control-sidebar-light .search-app .input-group-btn .btn {
     padding: 9px 10px 7.6px 10px !important;
 }
-.tblDSDiem tr td:nth-child(3){
+
+.tblDSDiem tr td:nth-child(3) {
+    text-align: left !important;
+}
+/* ------------------ */
+.zone_chuongtrinhhocphan,.zone_inputhocphan,.zone_edithocphan,
+.zone_inputhocphan_khoibatbuoc,.zone_inputhocphan_khoituchondon,
+.zone_ketquahocphan,.zone_input_dinhhuong,.zoneViewHocPhan{
+    width: calc(100% - 40px) !important;
+}
+.zone_chuongtrinhhocphan-detail {
+    border-radius: 12px !important;
+    overflow: hidden;
+}
+.zoneViewHocPhan{
+    z-index: 99;
+}
+.tblVDinhHuong tr td,.tblViewKhoiBatBuoc tfoot tr td,.tblViewKhoiTuChon tfoot tr td,
+.tblViewKhoiBatBuoc tr td:nth-child(6),.tblViewKhoiTuChon tr td:nth-child(6),
+.tblViewKhoiTuChon tr td:nth-last-child(9){
+    text-align: center !important;
+}
+.tblViewKhoiBatBuoc tr td:nth-child(1),.tblViewKhoiTuChon tr td:nth-child(1){
     text-align: left !important;
 }
