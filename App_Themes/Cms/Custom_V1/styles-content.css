@@ -613,18 +613,12 @@
     font-size: 16px;
     color: #222 !important;
 }
-
-.aps-add-new .zone-box .box-view {}
-
 .aps-add-new .group-group-title-name {
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 15px;
     line-height: 38px;
 }
 
-.aps-add-new .box-view div {
-    /*line-height: 38px;*/
-}
 
 .aps-add-new .checkbox label,
 .aps-add-new .radio label {
@@ -648,8 +642,6 @@
 #divKiemTranTrungThoiGian .col-sm-4 {
     width: 100% !important;
 }
-
-.aps-add-new .box-footer {}
 
 .aps-add-new .box-footer {
     border-bottom-right-radius: 8px !important;
@@ -880,13 +872,10 @@
 }
 
 .box-body .table {
-<<<<<<< HEAD
     margin-right: 0;
     margin-bottom: 0;
-=======
     margin-right: 0 !important;
     margin-bottom: 10px;
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 }
 
 .form-container .box-header .box-title {
@@ -11210,24 +11199,38 @@ table#clone {
 .tblDSDiem tr td:nth-child(3) {
     text-align: left !important;
 }
+
 /* ------------------ */
-.zone_chuongtrinhhocphan,.zone_inputhocphan,.zone_edithocphan,
-.zone_inputhocphan_khoibatbuoc,.zone_inputhocphan_khoituchondon,
-.zone_ketquahocphan,.zone_input_dinhhuong,.zoneViewHocPhan{
+.zone_chuongtrinhhocphan,
+.zone_inputhocphan,
+.zone_edithocphan,
+.zone_inputhocphan_khoibatbuoc,
+.zone_inputhocphan_khoituchondon,
+.zone_ketquahocphan,
+.zone_input_dinhhuong,
+.zoneViewHocPhan {
     width: calc(100% - 40px) !important;
 }
+
 .zone_chuongtrinhhocphan-detail {
     border-radius: 12px !important;
     overflow: hidden;
 }
-.zoneViewHocPhan{
+
+.zoneViewHocPhan {
     z-index: 99;
 }
-.tblVDinhHuong tr td,.tblViewKhoiBatBuoc tfoot tr td,.tblViewKhoiTuChon tfoot tr td,
-.tblViewKhoiBatBuoc tr td:nth-child(6),.tblViewKhoiTuChon tr td:nth-child(6),
-.tblViewKhoiTuChon tr td:nth-last-child(9){
+
+.tblVDinhHuong tr td,
+.tblViewKhoiBatBuoc tfoot tr td,
+.tblViewKhoiTuChon tfoot tr td,
+.tblViewKhoiBatBuoc tr td:nth-child(6),
+.tblViewKhoiTuChon tr td:nth-child(6),
+.tblViewKhoiTuChon tr td:nth-last-child(9) {
     text-align: center !important;
 }
-.tblViewKhoiBatBuoc tr td:nth-child(1),.tblViewKhoiTuChon tr td:nth-child(1){
+
+.tblViewKhoiBatBuoc tr td:nth-child(1),
+.tblViewKhoiTuChon tr td:nth-child(1) {
     text-align: left !important;
 }
