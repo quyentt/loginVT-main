@@ -636,15 +636,15 @@
         <!-- Filter Row 2: Chức năng - Quyền - Vai trò LIST -->
         <div class="filter-section" style="margin-top: 15px;">
             <div class="filter-group">
-                <label><i class="fa-solid fa-cog"></i> Chức năng</label>
+                <label><i class="fa-solid fa-cog"></i> Chức năng <span style="font-weight: 400; color: #999; font-size: 11px;">(theo Vai trò)</span></label>
                 <select id="ddlChucNang" class="form-select" multiple size="5" style="height: auto;">
-                    <option value="">-- Tất cả chức năng --</option>
+                    <option value="">-- Chọn vai trò để xem chức năng --</option>
                 </select>
                 <small style="color: #666; font-size: 11px; margin-top: 3px; display: block;">
                     <i class="fa-solid fa-info-circle"></i> Giữ Ctrl để chọn nhiều
                 </small>
             </div>
-            <div class="filter-group">
+            <div class="filter-group" style="display: none;">
                 <label><i class="fa-solid fa-key"></i> Quyền</label>
                 <select id="ddlQuyen" class="form-select" multiple size="5" style="height: auto;">
                     <option value="">-- Tất cả quyền --</option>
@@ -653,7 +653,7 @@
                     <i class="fa-solid fa-info-circle"></i> Giữ Ctrl để chọn nhiều
                 </small>
             </div>
-            <div class="filter-group">
+            <div class="filter-group" style="display: none;">
                 <label><i class="fa-solid fa-users"></i> Vai trò (LIST)</label>
                 <select id="ddlVaiTroList" class="form-select" multiple size="5" style="height: auto;">
                     <option value="">-- Tất cả vai trò --</option>
@@ -694,7 +694,7 @@
     </div>
 </div>
 
-<script src="modules/phanquyen/script/quantriquyendulieu.js?v=1.0.0.5"></script>
+<script src="modules/phanquyen/script/quantriquyendulieum1.js?v=1.0.0.21"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['PhanQuyenDuLieuNhanSu'] = new PhanQuyenDuLieuNhanSu();
