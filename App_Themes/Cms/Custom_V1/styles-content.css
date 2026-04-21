@@ -880,8 +880,13 @@
 }
 
 .box-body .table {
+<<<<<<< HEAD
     margin-right: 0;
     margin-bottom: 0;
+=======
+    margin-right: 0 !important;
+    margin-bottom: 10px;
+>>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 }
 
 .form-container .box-header .box-title {
@@ -3309,7 +3314,8 @@
 }
 
 .scroll-table-x .table>tbody>tr>td {
-    padding: 8px 5px 4px 8px !important;
+    padding: 10px 8px 9px 8px !important;
+    min-height: 38px !important;
 }
 
 .scroll-table-x .table>tbody>tr>td:first-child {

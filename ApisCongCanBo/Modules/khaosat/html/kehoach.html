@@ -1,4 +1,58 @@
-﻿<div class="one-door aps-khaosat-kehoach">
+﻿<style>
+    .mini-popover {
+        display: none;
+        position: absolute;
+        min-width: 280px;
+        max-width: 360px;
+        background: #fff;
+        border: 1px solid #d9d9d9;
+        border-radius: 6px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        z-index: 9999;
+        padding: 0;
+    }
+
+    .mini-popover-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 10px;
+        border-bottom: 1px solid #eee;
+        font-weight: bold;
+        background: #f8f8f8;
+    }
+
+        .mini-popover-header button {
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+    .mini-popover-body {
+        padding: 10px;
+        max-height: 220px;
+        overflow-y: auto;
+    }
+
+    .popover-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .popover-table th,
+        .popover-table td {
+            padding: 6px;
+            border: 1px solid #e5e5e5;
+            text-align: left;
+            font-size: 13px;
+        }
+    #tblKhoaHocPopup th,
+    #tblKhoaHocPopup td {
+        color: gray !important;
+    }
+</style>
+<div class="one-door aps-khaosat-kehoach">
     <div class="overlay"></div>
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
@@ -54,7 +108,7 @@
 
             </div>
             <table class="table transcrip-table tabs-scores h-auto tblKeHoach table-bordered table-noborder"
-                id="tblKeHoach">
+                   id="tblKeHoach">
                 <thead>
                     <tr>
                         <th class="text-center w-50px" scope="col">STT</th>
@@ -69,6 +123,7 @@
                         <th class="text-center" scope="col">Tổng số phiếu gửi</th>
                         <th class="text-center" scope="col">Tổng số phiếu đã thực hiện</th>
                         <th class="text-center" scope="col">Tỷ lệ hoàn thành</th>
+                        <th class="text-center" scope="col">Khóa học</th>
                         <th class="text-center" scope="col">Phiếu khảo sát mẫu</th>
                         <th class="text-center w-50px" scope="col">Sửa</th>
                         <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll_KeHoach"></th>
@@ -76,6 +131,53 @@
                 </thead>
                 <tbody></tbody>
             </table>
+            <!--<div class="popup-overlay" id="popupOverlay" style="display: none">
+        <div class="popup-box popup-large">
+            <div class="popup-header">
+                <h3>Danh sách lựa chọn</h3>
+                <button type="button" class="popup-close" onclick="closePopup()">X</button>
+            </div>
+            <div class="popup-content">
+                <table class="popup-table" id="tblKhoaHocPopup">
+                    <thead>
+                        <tr>
+                            <th>Stt</th>
+                            <th>Khóa học</th>
+                            <th>
+                                <input type="checkbox" class="chkSystemSelectAll" />
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup-footer">
+                <button type="button" onclick="closePopup()">Đóng</button>
+            </div>
+        </div>
+    </div>-->
+            <div id="miniPopover" class="mini-popover">
+                <div class="mini-popover-header">
+                    <span id="lblTenKeHoachPopUp">Chọn mục</span>
+                    <button type="button" id="btnClosePopup">×</button>
+                </div>
+                <div class="mini-popover-body">
+                    <table class="popup-table" id="tblKhoaHocPopup" style="min-width: 300px">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" >Stt</th>
+                                <th class="text-center">Khóa học</th>
+                                <th class="text-center w-50px" scope="col">
+                                    <input type="checkbox" class="chkSystemSelectAll" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
         </div>
 
     </div>

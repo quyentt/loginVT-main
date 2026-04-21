@@ -554,6 +554,62 @@
                         </div>
                     </div>
 
+                    
+                    <!--Quan hệ tương đương-->
+                    <div class="row aps-form mt-10">
+                        <!--row 1-->
+                        <div class="row">
+                            <p class="group-group-title-name border-0 mb-0">
+                                <span class="badge bg-blue color-blue" style="color:#FF0000 !important;">Quan hệ thay thế</span>
+                            </p>
+                        </div>
+                        <!--row 2-->
+                        <div class="row aps-form-table">
+                            <table id="tblInput_HocPhan_ThayThe" class="table tblInput_HocPhan_ThayThe">
+                                <tbody></tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td class="aps-table-lable col-sm-2">
+                                            Khóa đào tạo<span class="title-colon">:</span>
+                                        </td>
+                                        <td class="col-sm-2 aps-form-input">
+                                            <select id="dropEdit_KhoaDaoTao_ThayThe" class="select-opt">
+                                                <!-- Load from js -->
+                                            </select>
+                                        </td>
+                                        <td class="aps-table-lable col-sm-2">
+                                            Chương trình đào tạo<span class="title-colon">:</span>
+                                        </td>
+                                        <td class="col-sm-2 aps-form-input">
+                                            <select id="dropEdit_ChuongTrinhDaoTao_ThayThe" class="select-opt">
+                                                <!-- Load from js -->
+                                            </select>
+                                        </td>
+                                        <td class="aps-table-lable col-sm-2">
+                                            Học phần tương đương<span class="title-colon">:</span>
+                                        </td>
+                                        <td class="col-sm-2 aps-form-input">
+                                            <select id="dropEdit_HocPhan_ThayThe" class="select-opt">
+                                                <!-- Load from js -->
+                                            </select>
+                                        </td>
+                                        <td class="aps-table-lable col-sm-2">
+                                            Nhóm<span class="title-colon">:</span>
+                                        </td>
+                                        <td class="col-sm-2 aps-form-input">
+                                            <input id="txtNhom_HPTD_ThayThe" class="form-control" />
+                                        </td>
+                                        <td class="td-fixed td-center">
+                                            <a class="btn btn-default poiter" id="btnAdd_HocPhan_ThayThe">
+                                                <i class="fa fa-plus"></i> Thêm
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
                     <!--Bài học-->
                     <div class="row aps-form mt-10">
                         <!--row 1-->
@@ -1991,6 +2047,7 @@
             aria-labelledby="myModalLabel" aria-hidden="true">
             <!-- load from js -->
         </div>
+    </div>
 </section>
 <!-- page script -->
 <script src="modules/chuongtrinhhocphan/script/cthp.js?v=1.0.0.2"></script>

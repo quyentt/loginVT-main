@@ -477,7 +477,7 @@ QuyetDinh.prototype = {
         var arrId = ["txtQuyetDinh_Ten", "dropQuyetDinh_Loai", "txtQuyetDinh_So",
             "txtQuyetDinh_Ngay", "txtQuyetDinh_NgayHieuLuc", "txtQuyetDinh_NgayKetThuc",
             "dropThoiGianDaoTao_QD", "txQuyetDinh_MoTa", "dropQuyetDinh_Cap",
-            "txtQuyetDinh_NguoiKy", "txtQuyetDinh_ChuKy", "dropHinhThuc"];
+            "txtQuyetDinh_NguoiKy", "txtQuyetDinh_ChuKy", "dropHinhThuc", "txtNgayHetHieuLuc"];
         edu.util.resetValByArrId(arrId);
         edu.system.viewFiles("txtQuyetDinh_File", "");
         $("#tblInput_DTSV_SinhVien tbody").html("");
@@ -860,8 +860,9 @@ QuyetDinh.prototype = {
     save_QuyetDinh: function () {
         var me = this;
         var obj_save = {
-            'action': 'SV_QuyetDinh/ThemMoi',            
-
+			'action': 'SV_QuyetDinh_MH/FSkkLB4QDRIXHhA0OCQ1BSgvKQPP',
+			'func': 'PKG_HOSOHOCVIEN_QUYETDINH.Them_QLSV_QuyetDinh',
+			'iM' : edu.system.iM,
             'strId': me.strQuyetDinh_Id,
             'strHinhThucQuyetDinh_Id': edu.util.getValById('dropHinhThuc'),
             'strLoaiQuyetDinh_Id': edu.util.getValById('dropQuyetDinh_Loai'),
@@ -871,10 +872,12 @@ QuyetDinh.prototype = {
             'strNgayHieuLuc': edu.util.getValById('txtQuyetDinh_NgayHieuLuc'),
             'strNguyenNhan_LyDo': edu.util.getValById('txQuyetDinh_MoTa'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropThoiGianDaoTao_QD'),
+			'strNgayHetHieuLuc' : edu.system.getValById('txtNgayHetHieuLuc'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (obj_save.strId != "") {
-            obj_save.action = 'SV_QuyetDinh/CapNhat'
+            obj_save.action = 'SV_QuyetDinh_MH/EjQgHhANEhceEDQ4JDUFKC8p'
+            obj_save.func = 'PKG_HOSOHOCVIEN_QUYETDINH.Sua_QLSV_QuyetDinh';
         }        
         edu.system.makeRequest({
             success: function (data) {
@@ -1043,6 +1046,7 @@ QuyetDinh.prototype = {
         edu.util.viewValById("txtQuyetDinh_So", data.SOQUYETDINH);
         edu.util.viewValById("txtQuyetDinh_Ngay", data.NGAYQUYETDINH);
         edu.util.viewValById("txtQuyetDinh_NgayHieuLuc", data.NGAYHIEULUC);
+        edu.util.viewValById("txtNgayHetHieuLuc", data.NGAYHETHIEULUC);
         edu.util.viewValById("txQuyetDinh_MoTa", data.NGUYENNHAN_LYDO);
         edu.util.viewValById("dropHinhThuc", data.HINHTHUCQUYETDINH_ID);
         edu.system.viewFiles("txtQuyetDinh_File", data.ID, "SV_Files");

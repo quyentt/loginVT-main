@@ -531,8 +531,10 @@ KeHoach.prototype = {
         });
         edu.system.getList_MauImport("zonebtnBaoCao_KeHoach", function (addKeyValue) {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblKeHoach", "checkX");
+            var arrCheckedKhoaHoc_Id = edu.util.getArrCheckedIds("tblKhoaHocPopup", "checkX");
             //addKeyValue("dHieuLuc", edu.util.getValById("dropSearch_HieuLuc"));
             arrChecked_Id.forEach(e => addKeyValue("strKS_KeHoachKhaoSat_Id", e));
+            arrCheckedKhoaHoc_Id.forEach(e => addKeyValue("strDaoTao_KhoaHoc_Id", e));
         });
 
         $("#tblThamGia").delegate('.btnXemPhieu', 'click', function (e) {
@@ -542,6 +544,46 @@ KeHoach.prototype = {
             url += '?strPhieu_Id=' + me.strPhieu_Id;
             url += '&strNguoiThucHien_Id=' + strId;
             window.open(url, "_blank", 'location=yes, height=' + window.screen.height + ', width=' + window.screen.width + ', scrollbars=yes, status=yes');
+        });
+
+        function showPopup() {
+            document.getElementById("popupOverlay").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("popupOverlay").style.display = "none";
+        }
+        $("#tblKeHoach").delegate('.btnKhoaHoc', 'click', function (e) {
+            var strId = this.id;
+            e.stopPropagation();
+
+            var pop = document.getElementById("miniPopover");
+            pop.style.display = "block";
+
+            var x = e.pageX;
+            var y = e.pageY;
+
+            pop.style.left = x + "px";
+            pop.style.top = y + "px";
+
+            var popRect = pop.getBoundingClientRect();
+            var maxRight = window.pageXOffset + window.innerWidth;
+            var maxBottom = window.pageYOffset + window.innerHeight;
+
+            if (x + popRect.width > maxRight) {
+                pop.style.left = (maxRight - popRect.width - 10) + "px";
+            }
+
+            if (y + popRect.height > maxBottom) {
+                pop.style.top = (y - popRect.height - 10) + "px";
+            }
+            var aData = me.dtKeHoach.find(e => e.ID == strId);
+            console.log(aData);
+            $("#lblTenKeHoachPopUp").html(aData.TENKEHOACH);
+            me.getList_KhoaHoc(strId);
+        });
+        $("#btnClosePopup").click(function () {
+            $("#miniPopover").hide();
         });
     },
 
@@ -898,6 +940,12 @@ KeHoach.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         return tinhPhanTram(aData.TONGSOPHIEUDATHUCHIEN, aData.TONGSOPHIEUGUI, 2);
+                    }
+                },
+                {
+                    "mData": "SOLUONG",
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnKhoaHoc" id="' + aData.ID + '" title="Chi tiết">Xem</a></span>';
                     }
                 },
                 {
@@ -2941,8 +2989,7 @@ KeHoach.prototype = {
             ]
         }, false, false, false, null);
     },
-
-
+    
     save_CustomAPI: function () {
         var me = this;
         var Nonce = edu.util.uuid();
@@ -3080,5 +3127,76 @@ KeHoach.prototype = {
         function setValueJson(objJson, objData) {
             objJson[objData.KEY_API] = getValue(objData, null);
         }
+    },
+
+
+    getList_KhoaHoc: function (strKS_KeHoachKhaoSat_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'TS_KS_BaoCao_MH/DSA4BRIKEh4KKS4gCikgLhIgNQPP',
+            'func': 'KHAOSAT_BAOCAO.LayDSKS_KhoaKhaoSat',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.system.getValById('txtAAAA'),
+            'strKS_KeHoachKhaoSat_Id': strKS_KeHoachKhaoSat_Id,
+            'strKS_PhieuKhaoSat_Id': edu.system.getValById('dropAAAA'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me["dtKhoaHoc"] = data.Data;
+                    me.genTable_KhoaHoc(data.Data);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+    /*------------------------------------------
+    --Discription: [4] GenHTML Tiến độ đề tài
+    --ULR:  Modules
+    -------------------------------------------*/
+    genTable_KhoaHoc: function (data, iPager) {
+        $("#lblDMDonGia_Tong").html(iPager);
+        var jsonForm = {
+            strTable_Id: "tblKhoaHocPopup",
+            aaData: data,
+            //bPaginate: {
+            //    strFuntionName: "main_doc.DonGia.getList_DMDonGia()",
+            //    iDataRow: iPager
+            //},
+            colPos: {
+                center: [0],
+                //right: [5]
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "DAOTAO_KHOADAOTAO_TEN"
+                }
+                , {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
     },
 }

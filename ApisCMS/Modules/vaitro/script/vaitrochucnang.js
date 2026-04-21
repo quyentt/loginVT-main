@@ -435,12 +435,21 @@ VaiTroChucNang.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    if (!dtReRult || dtReRult.length == 0) {
+                        edu.system.alert("Chức năng này chưa được tạo quyền. Vui lòng vào trang Chức năng để thêm quyền (thêm, sửa, xóa...) trước khi gán cho vai trò!");
+                        return;
+                    }
                     var arrQuyenKhiChon = $("#dropQuyen_VTCN").val();
+                    var iDaGan = 0;
                     dtReRult.forEach(e => {
                         if (arrQuyenKhiChon.indexOf(e.HANHDONG_ID) != -1) {
                             me.save_QuyenCN(e.ID);
+                            iDaGan++;
                         }
                     })
+                    if (iDaGan == 0) {
+                        edu.system.alert("Không có quyền nào phù hợp để gán. Vui lòng kiểm tra lại quyền đã tạo cho chức năng này!");
+                    }
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
