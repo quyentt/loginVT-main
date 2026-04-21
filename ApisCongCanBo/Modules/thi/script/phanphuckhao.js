@@ -282,7 +282,13 @@ PhanPhucKhao.prototype = {
                 //    "mDataProp": "PHONGTHI_TEN"
                 //},
                 {
-                    "mDataProp": "DIEM"
+                    mRender: function (nRow, aData) {
+                        var v = aData.DIEM;
+                        if (v === null || v === undefined || v === "") return "";
+                        var num = parseFloat(v);
+                        if (isNaN(num)) return edu.util.returnEmpty(v);
+                        return (Number.isInteger(num) ? num.toFixed(1) : num.toString()).replace(".", ",");
+                    }
                 },
                 {
                     "mDataProp": "DSNHANSUCHAMTHIPK"
@@ -317,7 +323,13 @@ PhanPhucKhao.prototype = {
                     "mDataProp": "TINHTRANG_TEN"
                 },
                 {
-                    "mDataProp": "KETQUAPHUCKHAO"
+                    mRender: function (nRow, aData) {
+                        var v = aData.KETQUAPHUCKHAO;
+                        if (v === null || v === undefined || v === "") return "";
+                        var num = parseFloat(v);
+                        if (isNaN(num)) return edu.util.returnEmpty(v);
+                        return (Number.isInteger(num) ? num.toFixed(1) : num.toString()).replace(".", ",");
+                    }
                 }
             ]
         };

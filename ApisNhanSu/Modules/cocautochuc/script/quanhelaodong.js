@@ -10,7 +10,13 @@ function QuanHeLaoDong() { };
 QuanHeLaoDong.prototype = {
     strCoCauToChuc_Id: '',
     dtCoCauToChuc: [],
-    version: '1.0.0.8',
+    version: '1.0.1.2',
+    // Employment hiện đang chọn (cột trái) để biết mở form phân công theo QHLD nào
+    currentEmploymentId: '',
+    currentQuanHe: null,
+    currentNhanSu: null,
+    currentOrgUnitForPosition: '',
+    strNhiemVu_Id: '',
 
     getVaiTroId: function () {
         // Backend thường lọc theo strVaiTro_Id (vai trò). Một số luồng UI lại dùng appId (ứng dụng).
@@ -329,7 +335,11 @@ QuanHeLaoDong.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("CORE_EMPLOYMENT.STAFF_CODE_STATUS_CODE", "dropTrangThaiNguonMaSo");
         edu.system.loadToCombo_DanhMucDuLieu("CORE_EMPLOYMENT.WORKING_TIME_MODE_CODE", "dropCheDoThoiGian");
         edu.system.loadToCombo_DanhMucDuLieu("CORE_EMPLOYMENT.WORK_ARRANGEMENT_CODE", "dropHinhThucBoTri");
-        
+
+        // Combo cho form Phân công nhiệm vụ
+        edu.system.loadToCombo_DanhMucDuLieu("CORE_ASSIGNMENT.ASSIGNMENT_TYPE_CODE", "dropPhanLoai");
+        edu.system.loadToCombo_DanhMucDuLieu("CORE_ASSIGNMENT.ASSIGNMENT_STATUS_CODE", "dropTrangThaiPhanCong");
+
         me.getList_DonVi();
 
         // Sự kiện khi click vào các tab
@@ -360,7 +370,17 @@ QuanHeLaoDong.prototype = {
             var strId = this.id;
             var data = me.dtQuanHeLaoDong.find(e => e.ID == strId);
             me["strNhanSu_Id"] = data.ID;
-            $("#lblNguoiQH").html(data.FULL_NAME + " - " + data.CURRENT_EMPLOYEE_CODE)
+            me["currentNhanSu"] = data;
+            me["currentEmploymentId"] = '';
+            me["currentQuanHe"] = null;
+            me["currentOrgUnitForPosition"] = '';
+            $("#lblNguoiQH").html(data.FULL_NAME + " - " + data.CURRENT_EMPLOYEE_CODE);
+            // reset cột phân công
+            try { $("#lblQHLD_DaChon").text(" - (Chọn 1 quan hệ lao động bên trái)"); } catch (e) { }
+            try {
+                $("#tblNhiemVu tbody").empty();
+                me.dtNhiemVu = [];
+            } catch (e) { }
             me.getList_QuanHe();
             $("#modalQuanHe").modal("show");
         });
@@ -407,6 +427,105 @@ QuanHeLaoDong.prototype = {
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.delete_QuanHe(arrChecked_Id[i]);
+                }
+            });
+        });
+
+        // Hàm chọn QHLD theo row <tr>
+        var selectQHLDRow = function ($tr, opts) {
+            if (!$tr || !$tr.length) return;
+            opts = opts || {};
+            var rowIdx = $tr.index();
+            var data = (me.dtQuanHe || [])[rowIdx];
+            if (!data) return;
+
+            me["currentEmploymentId"] = data.ID;
+            me["currentQuanHe"] = data;
+            me["currentOrgUnitForPosition"] = data.EMPLOYER_ORG_ID || data.ORG_ID || data.ORG_UNIT_ID || '';
+
+            $("#tblQuanHe tbody tr").removeClass("row-selected");
+            $tr.addClass("row-selected");
+
+            // Đồng bộ checkbox: tick đúng row đang chọn (bỏ tick row khác) để có feedback trực quan
+            if (!opts.skipCheckSync) {
+                $("#tblQuanHe tbody input[type='checkbox']").prop('checked', false);
+                $tr.find("input[type='checkbox']").prop('checked', true);
+            }
+
+            var nameQH = data.EMPLOYMENT_TYPE_CODE_NAME || '';
+            $("#lblQHLD_DaChon").text(nameQH ? (" - " + nameQH) : " - (đã chọn)");
+            me.getList_NhiemVu();
+        };
+
+        // Click row tblQuanHe => chọn QHLD (trừ khi click vào nút Sửa)
+        $("#tblQuanHe").delegate("tbody tr", "click", function (e) {
+            if ($(e.target).closest('.btnEdit').length) return;
+            var isCheckboxClick = $(e.target).is('input[type="checkbox"]');
+            selectQHLDRow($(this), { skipCheckSync: isCheckboxClick });
+        });
+
+        // Thêm phân công
+        $("#btnAdd_NhiemVu").click(function () {
+            if (!me.currentEmploymentId) {
+                edu.system.alert("Vui lòng chọn 1 quan hệ lao động bên trái trước!", "w");
+                return;
+            }
+            me["strNhiemVu_Id"] = "";
+            // Mặc định đơn vị phân công = đơn vị của QHLD đã chọn
+            var defaultOrg = me.currentOrgUnitForPosition || '';
+            $("#dropDonVi_NV").val(defaultOrg).trigger('change');
+            try { $("#dropViTri").html('<option value="">Chọn vị trí</option>'); } catch (e) { }
+            $("#dropViTri").val("").trigger('change');
+            $("#dropPhanLoai").val("").trigger('change');
+            $("#dropTrangThaiPhanCong").val("").trigger('change');
+            edu.util.viewValById("txtNgayHieuLuc", "");
+            edu.util.viewValById("txtNgayHetHieuLuc", "");
+            try { $('#chkChinhThuc').prop('checked', true); } catch (e) { }
+            edu.util.viewValById("txtNote", "");
+
+            if (defaultOrg) me.getList_ViTri(defaultOrg);
+
+            $("#modalAddNhiemVu .modal-header .title .myModalLabel_NV").html('<i class="fa fa-plus"></i>');
+            $("#modalAddNhiemVu").modal("show");
+        });
+
+        // Đổi đơn vị trong form phân công => reload vị trí
+        var onDonVi_NV_Changed = function () {
+            try {
+                $("#dropViTri").val("").trigger('change');
+                try { $("#dropViTri").html('<option value="">Chọn vị trí</option>'); } catch (e2) { }
+                var orgId = edu.system.getValById('dropDonVi_NV');
+                if (orgId) me.getList_ViTri(orgId);
+            } catch (e) { }
+        };
+        $('#dropDonVi_NV').on('change', onDonVi_NV_Changed);
+        $('#dropDonVi_NV').on('select2:select', onDonVi_NV_Changed);
+
+        // Lưu phân công
+        $("#btnSave_NhiemVu").click(function () {
+            me.save_NhiemVu();
+        });
+
+        // Sửa 1 dòng phân công
+        $("#tblNhiemVu").delegate(".btnEdit", "click", function () {
+            var strId = this.id;
+            me["strNhiemVu_Id"] = strId;
+            me.getDetail_Assignment(strId);
+        });
+
+        // Xóa phân công
+        $("#btnDelete_NhiemVu").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblNhiemVu", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.delete_NhiemVu(arrChecked_Id[i]);
                 }
             });
         });
@@ -1065,6 +1184,7 @@ QuanHeLaoDong.prototype = {
                     edu.system.loadToCombo_data($.extend({}, comboObj, { renderPlace: ["dropDonViSuDung"] }));
                     edu.system.loadToCombo_data($.extend({}, comboObj, { renderPlace: ["dropDonViQuanLy"] }));
                     edu.system.loadToCombo_data($.extend({}, comboObj, { renderPlace: ["dropPhapNhan"] }));
+                    edu.system.loadToCombo_data($.extend({}, comboObj, { renderPlace: ["dropDonVi_NV"] }));
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1083,6 +1203,269 @@ QuanHeLaoDong.prototype = {
             fakedb: [
 
             ]
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: Assignment (Phân công nhiệm vụ)
+    -------------------------------------------*/
+    getList_ViTri: function (strOrg_Unit_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu3_MH/DSA4BRICLjMkHhEuMig1KC4vAzgULyg1',
+            'func': 'PKG_CORE_HOSONHANSU_03.LayDSCore_PositionByUnit',
+            'iM': edu.system.iM,
+            'strOrg_Unit_Id': strOrg_Unit_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.loadToCombo_data({
+                        data: data.Data,
+                        renderInfor: { id: "ID", parentId: "", name: "POSITION_NAME", code: "", avatar: "" },
+                        renderPlace: ["dropViTri"],
+                        type: "",
+                        title: "Chọn vị trí",
+                    });
+                } else {
+                    edu.system.alert("Lỗi: " + data.Message, "s");
+                }
+            },
+            error: function (er) { edu.system.alert("Lỗi: " + JSON.stringify(er), "w"); },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    getList_NhiemVu: function () {
+        var me = this;
+        if (!me.currentEmploymentId) {
+            me.dtNhiemVu = [];
+            me.genTable_NhiemVu([]);
+            return;
+        }
+        var strPersonId = (me.currentNhanSu && (me.currentNhanSu.PERSON_ID || me.currentNhanSu.ID)) || me.strNhanSu_Id || '';
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu4_MH/BiQ1HgIuMyQeADIyKCYvLCQvNQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Get_Core_Assignment',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strPerson_Id': strPersonId,
+            'strEmployment_Id': me.currentEmploymentId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var rows = data.Data || [];
+                    rows = rows.filter(function (x) {
+                        if (!x) return false;
+                        return !(x.IS_ACTIVE === 0 || x.IS_ACTIVE === "0");
+                    });
+                    me["dtNhiemVu"] = rows;
+                    me.genTable_NhiemVu(rows);
+                } else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+            },
+            error: function (er) { edu.system.alert(" (er): " + JSON.stringify(er), "w"); },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genTable_NhiemVu: function (data) {
+        var jsonForm = {
+            strTable_Id: "tblNhiemVu",
+            aaData: data,
+            colPos: { center: [0] },
+            aoColumns: [
+                { "mDataProp": "POSITION_NAME" },
+                { "mDataProp": "ASSIGNMENT_TYPE_CODE_NAME" },
+                { "mDataProp": "EFFECTIVE_FROM" },
+                { "mDataProp": "EFFECTIVE_TO" },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnEdit" id="' + aData.ID + '" title="Chi tiết"><i class="fa fa-edit color-active"></i></a></span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    save_NhiemVu: function () {
+        var me = this;
+        var aData = me.currentNhanSu;
+        if (!aData || !me.currentEmploymentId) {
+            edu.system.alert("Vui lòng chọn quan hệ lao động trước khi phân công!", "w");
+            return;
+        }
+        if (!edu.system.getValById('dropViTri')) {
+            edu.system.alert("Vui lòng chọn vị trí!");
+            return;
+        }
+        if (!edu.system.getValById('dropPhanLoai')) {
+            edu.system.alert("Vui lòng chọn loại phân công!");
+            return;
+        }
+        if (!edu.system.getValById('txtNgayHieuLuc')) {
+            edu.system.alert("Vui lòng nhập ngày bắt đầu hiệu lực!");
+            return;
+        }
+        var strOrgId = edu.system.getValById('dropDonVi_NV');
+        if (!strOrgId) {
+            edu.system.alert("Vui lòng chọn đơn vị phân công!", "w");
+            return;
+        }
+        var dIsPrimary = 0;
+        try { dIsPrimary = $('#chkChinhThuc').is(':checked') ? 1 : 0; } catch (e) { dIsPrimary = 0; }
+
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu4_MH/CC8yHgIuMyQeADIyKCYvLCQvNQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Ins_Core_Assignment',
+            'iM': edu.system.iM,
+            'strId': me.strNhiemVu_Id,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
+            'strPerson_Id': aData.PERSON_ID || aData.ID,
+            'strEmployment_Id': me.currentEmploymentId,
+            'strAssignment_Type_Code': edu.system.getValById('dropPhanLoai'),
+            'strAssignment_Status_Code': edu.system.getValById('dropTrangThaiPhanCong'),
+            'strOrg_Id': strOrgId,
+            'strPosition_Id': edu.system.getValById('dropViTri'),
+            'dIs_Primary': dIsPrimary,
+            'dFte_Ratio': 1,
+            'strEffective_From': edu.system.getValById('txtNgayHieuLuc'),
+            'strEffective_To': edu.system.getValById('txtNgayHetHieuLuc'),
+            'strDecision_Id': '',
+            'strSource_Event_Id': '',
+            'strNote': edu.system.getValById('txtNote') || '',
+            'dIs_Active': 1,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        if (obj_save.strId) {
+            obj_save.action = 'NS_HoSoNhanSu4_MH/FDElHgIuMyQeADIyKCYvLCQvNQPP';
+            obj_save.func = 'PKG_CORE_HOSONHANSU_04.Upd_Core_Assignment';
+        }
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert(obj_save.strId ? "Cập nhật thành công!" : "Thêm mới thành công!");
+                    $("#modalAddNhiemVu").modal("hide");
+                    me.getList_NhiemVu();
+                } else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) { edu.system.alert(JSON.stringify(er)); },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    delete_NhiemVu: function (Ids) {
+        var me = this;
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu4_MH/BSQtHgIuMyQeADIyKCYvLCQvNQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Del_Core_Assignment',
+            'iM': edu.system.iM,
+            'strId': Ids,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.afterComfirm({ title: "", content: "Xóa dữ liệu thành công!", code: "" });
+                } else {
+                    edu.system.afterComfirm({ title: "", content: data.Message, code: "w" });
+                }
+            },
+            error: function (er) {
+                edu.system.afterComfirm({ title: "", content: JSON.stringify(er), code: "w" });
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_NhiemVu();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    getDetail_Assignment: function (strId) {
+        var me = this;
+        var obj_save = {
+            'action': 'NS_HoSoNhanSu4_MH/BiQ1HgIuMyQeADIyKCYvLCQvNR4DOB4IJQPP',
+            'func': 'PKG_CORE_HOSONHANSU_04.Get_Core_Assignment_By_Id',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': me.getVaiTroId(),
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success && data.Data && data.Data.length > 0) {
+                    var detail = data.Data[0];
+                    try {
+                        var orgId = detail.ORG_ID || detail.ORG_UNIT_ID || detail.EMPLOYER_ORG_ID || '';
+                        if (orgId) {
+                            $("#dropDonVi_NV").val(orgId).trigger('change');
+                            me.getList_ViTri(orgId);
+                            setTimeout(function () {
+                                $("#dropViTri").val(detail.POSITION_ID).trigger('change');
+                            }, 350);
+                        }
+                    } catch (e) { }
+                    if (!(detail.ORG_ID || detail.ORG_UNIT_ID || detail.EMPLOYER_ORG_ID)) {
+                        $("#dropViTri").val(detail.POSITION_ID).trigger('change');
+                    }
+                    $("#dropPhanLoai").val(detail.ASSIGNMENT_TYPE_CODE).trigger('change');
+                    $("#dropTrangThaiPhanCong").val(detail.ASSIGNMENT_STATUS_CODE).trigger('change');
+                    edu.util.viewValById("txtNgayHieuLuc", detail.EFFECTIVE_FROM);
+                    edu.util.viewValById("txtNgayHetHieuLuc", detail.EFFECTIVE_TO);
+                    try {
+                        var isPrimary = detail.IS_PRIMARY;
+                        if (isPrimary == null) isPrimary = detail.D_IS_PRIMARY;
+                        if (isPrimary == null) isPrimary = detail.IS_PRIMARY_ASSIGNMENT;
+                        $('#chkChinhThuc').prop('checked', (isPrimary === 1 || isPrimary === '1' || isPrimary === true));
+                    } catch (e) { }
+                    try { edu.util.viewValById("txtNote", detail.NOTE || detail.NOTE_TEXT || detail.STR_NOTE || ""); } catch (e) { }
+                    $("#modalAddNhiemVu .modal-header .title .myModalLabel_NV").html('<i class="fa fa-pencil"></i>');
+                    $("#modalAddNhiemVu").modal("show");
+                } else {
+                    edu.system.alert("Không tìm thấy thông tin chi tiết!");
+                }
+            },
+            error: function (er) { edu.system.alert("Lỗi: " + JSON.stringify(er), "w"); },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
         }, false, false, false, null);
     },
 }
