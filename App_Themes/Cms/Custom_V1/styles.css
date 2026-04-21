@@ -912,11 +912,11 @@
 
  .f16,
  .fz16 {
-     font-size: 16px;
+     font-size: 16px !important;
  }
 
  .fz15 {
-     font-size: 15px;
+     font-size: 15px !important;
  }
 
  .fz20 {

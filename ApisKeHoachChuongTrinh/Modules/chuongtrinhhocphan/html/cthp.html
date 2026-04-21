@@ -1,6 +1,6 @@
 ﻿<section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
-        <div class="zone-content" id="zone_chuongtrinh">
+        <div class="zone-content zone_chuongtrinh" id="zone_chuongtrinh">
             <!-- /.Tìm kiếm -->
             <div class="box box-solid box-search pd15 pb5">
                 <div class="box-header with-border d-none">
@@ -51,7 +51,7 @@
                 <div class="box box-solid pd0">
                     <div class="box-header pt15 pl20 pr20 pb0 bg-green color-white pb10"
                         style="text-align: left; border-top-right-radius: 12px; border-top-left-radius: 12px">
-                        <a style="font-weight: bold; font-size: 20px; color:white;" class="mt-5">
+                        <a style="font-weight: bold; font-size: 18px; color:white;" class="mt-5">
                             Nội dung học phần theo chương trình:
                             <span class="color-yellow" id="lblNoiDungChuongTrinh"></span>
                         </a>
@@ -63,11 +63,11 @@
                     </div>
                 </div>
                 <div class="row pd0 zone_chuongtrinhhocphan-detail bg-f8">
-                    <div class="col-sm-8 bg-white pr0 zone_chuongtrinhhocphan-left">
+                    <div class="col-sm-9 bg-white pr0 zone_chuongtrinhhocphan-left">
                         <div class="box box-solid pd20">
                             <div class="box-header pl0 pr0">
-                                <h3 class="box-title color-blue" title="Danh sách học phần">
-                                    <i class="fa-solid fa-book-open-reader"></i> Danh sách học phần
+                                <h3 class="box-title color-blue line-38" style="padding-top: 0 !important;margin-bottom: 0 !important;" title="Danh sách học phần">
+                                    <i class="fa-solid fa-book-open-reader line-38"></i> Danh sách học phần
                                 </h3>
                                 <span class="pull-right d-flex">
                                     <div class="dropdown" id="zonebtnHPCT_Import" style="float: left;">
@@ -110,8 +110,8 @@
                                     </a>
                                 </span>
                             </div>
-                            <div class="box-body pd0">
-                                <div class="aps-table-select mt-5">
+                            <div class="box-body pd0 mt-10">
+                                <div class="aps-table-select scroll-table-x">
                                     <table id="tblHocPhan" class="table table-bordered table-noborder tblHocPhan">
                                         <thead>
                                             <tr>
@@ -158,10 +158,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-4 bg-f8 zone_chuongtrinhhocphan-right" id="">
+                    <div class="col-sm-3 bg-f8 zone_chuongtrinhhocphan-right" id="">
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
-                                <h3 class="box-title color-blue  line-20">
+                                <h3 class="box-title color-blue line-20" style="font-size: 16px !important;">
                                     <i class="fa-solid fa-books"></i>Các khối lựa chọn bắt buộc <span
                                         id="lblKhoiBatBuoc"></span>
                                 </h3>
@@ -180,7 +180,7 @@
                         <div class="line-height-1 mt-10"></div>
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
-                                <h3 class="box-title color-green line-20">
+                                <h3 class="box-title color-green line-20" style="font-size: 16px !important;">
                                     <i class="fa-solid fa-books-medical color-green"></i>Các khối lựa chọn đơn <span
                                         id="lblKhoiTuChonDon"></span>
                                 </h3>
@@ -199,7 +199,7 @@
                         <div class="line-height-1 mt-10"></div>
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
-                                <h3 class="box-title color-red line-20">
+                                <h3 class="box-title color-red line-20" style="font-size: 16px !important;">
                                     <i class="fa-solid fa-book color-red"></i>Các định hướng
                                 </h3>
                                 <span class="pull-right">
@@ -1361,7 +1361,7 @@
         <div class="box box-solid zone-content form-container zoneViewHocPhan add-absolue pd0" id="zoneViewHocPhan"
             style="display: none;">
             <div class="box-header pl20 pr20 mb-10 bg-blue ">
-                <h3 class="box-title pt15 pb15"><i class="fa-solid fa-chalkboard-user"></i>Chương trình học phần</h3>
+                <h3 class="box-title pt15 pb15"><i class="fa-solid fa-chalkboard-user mt-3"></i>Chương trình học phần</h3>
                 <div class="pull-right pull-right-absolute mt-10 mr-10">
                     <a class="btn btn-none-white btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
@@ -1372,9 +1372,9 @@
                     <div class="col-sm-6 pr15">
                         <div class="row aps-form mb-0">
                             <!--row 1-->
-                            <div class="row aps-form-item">
+                            <div class="row aps-form-item mb-0">
                                 <p class="group-group-title-name mb-0 border-0 ">
-                                    <span class="badge bg-blue" style="color:#3380db !important;">
+                                    <span class="badge bg-blue mb-0" style="color:#3380db !important;margin-bottom: 0 !important;">
                                         Thông tin chung về chương trình</span>
                                 </p>
                             </div>
@@ -1391,14 +1391,14 @@
                                 </p>
                             </div>
                             <!--row 2-->
-                            <div class="row aps-form-item">
+                            <div class="row aps-form-item scroll-table-x">
                                 <table id="tblVDinhHuong"
-                                    class="table table-hover table-bordered table-border tblVDinhHuong mr-0">
+                                    class="table table-hover table-bordered table-noborder tblVDinhHuong mr-0">
                                     <thead>
                                         <tr>
                                             <td class="td-fixed td-center w-50px">Stt</td>
-                                            <td class="td-center">Mã định hướng</td>
-                                            <td class="td-center">Tên định hướng</td>
+                                            <td class="td-left">Mã định hướng</td>
+                                            <td class="td-left">Tên định hướng</td>
                                             <td class="td-center">Người học</td>
                                             <td class="td-center">Khối kiến thức</td>
                                         </tr>
@@ -1410,7 +1410,6 @@
                         </div>
                     </div>
                     <div class="clear"></div>
-
                     <div class="row aps-form">
                         <!--row 1-->
                         <div class="row aps-form-item mb-0">
@@ -1421,7 +1420,7 @@
                         <div id="zoneprocessXXXXA"></div>
                         <!--row 2-->
                         <div class="row aps-form-item w-100">
-                            <div class="aps-table-select w-100">
+                            <div class="aps-table-select w-100 scroll-table-x">
                                 <table id="tblViewKhoiBatBuoc"
                                     class="table table-hover table-bordered table-border tblViewKhoiBatBuoc mr-0">
                                     <thead>
@@ -1430,15 +1429,15 @@
                                             <th class="td-center" colspan="9">Thông tin khối học phần</th>
                                         </tr>
                                         <tr>
-                                            <th class="td-center">Mã khối</th>
-                                            <th class="td-center">Tên khối</th>
+                                            <th class="td-left">Mã khối</th>
+                                            <th class="td-left">Tên khối</th>
                                             <th class="td-center">Phân loại</th>
                                             <th class="td-center">Tổng số tín học tập</th>
                                             <th class="td-center">Tổng số tín học phí</th>
 
                                             <th class="td-center td-fixed">STT</th>
-                                            <th class="td-center">Mã</th>
-                                            <th class="td-center">Tên học phần</th>
+                                            <th class="td-left">Mã</th>
+                                            <th class="td-left">Tên học phần</th>
                                             <th class="td-center">Tên tiếng anh</th>
                                             <th class="td-center">Số tín học tập</th>
                                             <th class="td-center">Số tín học phí</th>
@@ -1464,7 +1463,7 @@
                         <div id="zoneprocessXXXXB"></div>
                         <!--row 2-->
                         <div class="row aps-form-item">
-                            <div class="aps-table-select w-100">
+                            <div class="aps-table-select w-100 scroll-table-x">
                                 <table id="tblViewKhoiTuChon"
                                     class="table table-hover table-bordered mb-5 tblViewKhoiTuChon table-border">
                                     <thead>
@@ -1473,15 +1472,15 @@
                                             <th class="td-center" colspan="9">Thông tin khối học phần</th>
                                         </tr>
                                         <tr>
-                                            <th class="td-center">Mã khối</th>
-                                            <th class="td-center">Tên khối</th>
+                                            <th class="td-left">Mã khối</th>
+                                            <th class="td-left">Tên khối</th>
                                             <th class="td-center">Phân loại</th>
                                             <th class="td-center">Tổng số tín học tập</th>
                                             <th class="td-center">Tổng số tín học phí</th>
 
                                             <th class="td-center td-fixed">STT</th>
-                                            <th class="td-center">Mã</th>
-                                            <th class="td-center">Tên học phần</th>
+                                            <th class="td-left">Mã</th>
+                                            <th class="td-left">Tên học phần</th>
                                             <th class="td-center">Tên tiếng anh</th>
                                             <th class="td-center">Số tín học tập</th>
                                             <th class="td-center">Số tín học phí</th>
@@ -1988,8 +1987,8 @@
             </div>
         </div>
 
-        <div class="modal fade aps-modal-nhansu aps-modal-sinhvien" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel"
-            aria-hidden="true">
+        <div class="modal fade aps-modal-nhansu aps-modal-sinhvien" id="modal_sinhvien" role="dialog"
+            aria-labelledby="myModalLabel" aria-hidden="true">
             <!-- load from js -->
         </div>
 </section>

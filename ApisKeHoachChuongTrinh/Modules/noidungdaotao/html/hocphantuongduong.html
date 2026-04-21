@@ -37,13 +37,13 @@
             <!-- /.Danh sách năm học -->
             <div class="box box-solid aps-list-hocPhan mt-15" id="zonebatdau">
                 <div class="box-header  pt20 pl20 pr20 pb0">
-                    <h3 class="box-title mt-0 line-20 mt-10">
-                        <i class="fa-solid fa-book-open-cover"></i> Danh sách học phần tương đương
-                        <span class="pull-right badge bg-light-blue ml-15 mt-10">
+                    <h3 class="box-title line-38">
+                        <i class="fa-solid fa-book-open-cover line-38"></i> Danh sách học phần tương đương
+                        <span class="badge bg-light-blue ml-15 mt-10">
                             <span id="lblHocPhanTuongDuong_Tong"></span>
                         </span>
                     </h3>
-                    <div class="box-tools pull-right mr-10 d-flex">
+                    <div class="aps-list-btn pull-right d-flex">
                         <a id="btnDelete" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                         <a id="btnChuyenDiem" class="btn btn-primary">
                             <i class="fa-regular fa-money-bill-transfer"></i>Chuyển điểm tương đương 1 - nhiều</a>
@@ -51,16 +51,16 @@
 
                     </div>
                 </div>
-                <div class="box-body pl20 pr20 mt-10 pb20">
-                    <div class="aps-table-select">
+                <div class="box-body pl20 pr20 mt-5 pb20">
+                    <div class="aps-table-select scroll-table-x">
                         <table id="tblHocPhanTuongDuong"
                             class="table table-hover table-bordered tblHocPhanTuongDuong mb-0 table-noborder">
                             <thead>
                                 <tr>
-                                    <th class="td-fixed td-center w-50px">Stt</th>
+                                    <th class="td-fixed td-center w-50px">STT</th>
                                     <th class="td-left">Học phần</th>
-                                    <th class="td-left">Chương trình</th>
-                                    <th class="td-left">Học phần tương đương</th>
+                                    <th class="td-left" style="min-width: 100px;">Chương trình</th>
+                                    <th class="td-left" style="min-width: 168px;">Học phần tương đương</th>
                                     <th class="td-left">Chương trình tương đương</th>
                                     <th class="td-left">Nhóm</th>
                                     <th class="td-fixed td-center w-50px">Sửa</th>
@@ -80,7 +80,7 @@
     </div>
 
     <!-- Thêm mới - Chương trình -->
-    <div class="box box-solid form-container zone-bus  col-lg-12 add-absolue" id="zone_input_HocPhanTuongDuong"
+    <div class="box box-solid form-container zone-bus  col-lg-12 add-absolue zone_input_HocPhanTuongDuong" id="zone_input_HocPhanTuongDuong"
         style="display: none">
         <div class="box-header with-border">
             <h3 class="box-title"><span class="myModalLabel">
@@ -121,7 +121,7 @@
                         </div>
                         <!--row 4-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Chương trình tương đương</div>
+                            <div class="col-sm-3 aps-form-lable aps-form-lable-mobi">Chương trình tương đương</div>
                             <div class="col-sm-9 aps-form-input">
                                 <select id="dropChuongTrinhTuongDuong" class="select-opt">
                                     <option id="" value="">--Chọn chương trình tương đương--</option>
@@ -130,7 +130,7 @@
                         </div>
                         <!--row 5-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Học phần tương đương</div>
+                            <div class="col-sm-3 aps-form-lable  aps-form-lable-mobi">Học phần tương đương</div>
                             <div class="col-sm-9 aps-form-input">
                                 <select id="dropHocPhanTuongDuong" class="select-opt">
                                     <option id="" value="">--Chọn học phần tương đương--</option>

@@ -11,6 +11,18 @@
     }
 }
 
+@media only screen and (min-width: 2000px) {
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
+        width: 100% !important;
+    }
+}
+
 @media only screen and (max-width: 1400px) {
 
     .aps-thanhtoan-naptien .col-sm-3,
@@ -111,11 +123,61 @@
 }
 
 @media (max-width: 1024px) {
+    .aps-chuongtrinhhocphan .zone_chuongtrinh .box-solid.box-search {
+        padding-bottom: 15px !important;
+    }
+
+    /* .zone_chuongtrinhhocphan,
+    .zone_inputhocphan,
+    .zone_edithocphan,
+    .zone_inputhocphan_khoibatbuoc,
+    .zone_inputhocphan_khoituchondon,
+    .zone_ketquahocphan,
+    .zone_input_dinhhuong,
+    .zoneViewHocPhan {
+        width: calc(100% - 20px) !important;
+        min-width: calc(100% - 20px);
+    } */
+
+    .aps-table-select .table {
+        min-width: 680px;
+    }
+
+    .aps-table-select .table.tblLopHoc {
+        min-width: 1200px;
+    }
+
+    .tblHocPhanTuongDuong {
+        min-width: 860px !important;
+    }
+
+    .box-solid.box-search .box-body::before,
+    .box-solid.box-search .box-body .clear {
+        display: none !important;
+    }
+
+    .zone-bus .box-search .item-search {
+        padding-right: 0px !important;
+        width: 100%;
+    }
+
+    .box.box-solid .box-header,
+    .box.box-solid .box-body {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .box.box-solid.box-search .box-body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
     .aps-list-hocphan.box {
         border-radius: 0 !important;
     }
 
-    .zone_input_MonHoc .aps-form .aps-form-item .aps-form-lable {
+    .zone_input_MonHoc .aps-form .aps-form-item .aps-form-lable,
+    .zone_input_DeCuongHocTap .aps-form .aps-form-item .aps-form-lable {
         min-width: 100px !important;
     }
 
@@ -124,7 +186,8 @@
     }
 
     .zone_input_MonHoc .aps-form .aps-form-item .aps-form-input,
-    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-input {
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-input,
+    .zone_input_DeCuongHocTap .aps-form .aps-form-item .aps-form-input {
         width: 100%;
     }
 
@@ -205,10 +268,6 @@
         width: 100%;
     }
 
-    .zone-bus .box-header .btn-default.btnClose {
-        top: -21px !important;
-        right: -15px !important;
-    }
 
     .zone_input_KhoaDaoTao .pr20,
     .zone_input_HocPhan .aps-add-new .col-lg-8.pr20 {
@@ -317,6 +376,13 @@
 
 /* Extra small devices (phones, 768px and down) */
 @media only screen and (max-width: 768px) {
+    .zone_input_BaiHoc .aps-form .aps-form-item .aps-form-lable {
+        min-width: 100px;
+    }
+
+    .zone_input_BaiHoc .aps-form .aps-form-item .aps-form-input {
+        width: 100% !important;
+    }
 
     .zone_notify_NoiDungChuongTrinh .box-search .item-search:first-child {
         min-width: 280px !important;
@@ -470,12 +536,81 @@
 }
 
 @media (min-width: 900px) and (max-width:1024px) {
+    .zone_chuongtrinh .box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .zone_chuongtrinh .box-search .item-search {
+        margin-bottom: 0 !important;
+    }
+
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 268px !important;
+    }
+
+    .box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
+
+    .zone-bus .box-search .item-search {
+        /* margin-bottom: 0 !important; */
+    }
+}
+
+@media (min-width:600px) and (max-width:900px) {
+    .box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .zone-bus .box-search .item-search {
+        margin-bottom: 0 !important;
     }
 }
 
 @media (min-width: 768px) and (max-width:1024px) {
+    .zoneBox_ChuongTrinh {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+
+    .aps-list-chuongtrinh.box.box-solid {
+        padding: 20px 15px !important;
+    }
+
+    .aps-list-chuongtrinh.box.box-solid .box-body,
+    .aps-list-chuongtrinh.box.box-solid .box-header {
+        padding: 0 !important;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
+        width: 100% !important;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView .small-box {
+        text-align: left !important;
+    }
+
+    /* ----------------- */
+    .box.box-solid.box-search .item-search {
+        margin-right: 0 !important;
+        width: 100%;
+        padding-right: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+
+
+    .zone_input_HocPhanTuongDuong .aps-form .aps-form-item .aps-form-lable {
+        min-width: 200px;
+    }
+
     .box-search .item-search {
         margin-right: 10px !important;
     }
@@ -489,7 +624,7 @@
     }
 
     .zone-bus .box-search .item-search {
-        padding-right: 10px !important;
+        padding-right: 10px;
     }
 
     .aps-tochucchuongtrinh-thoigiandaotao .zone-bus .box-search .item-search {
@@ -582,7 +717,35 @@
 }
 
 @media (min-width: 600px) and (max-width:1024px) {
+    .zoneViewHocPhan .box-body {
+        padding: 0 15px !important;
+    }
 
+    #lblThongTinChuongTrinh .small-box .inner {
+        text-align: left;
+    }
+
+    .zoneViewHocPhan {
+        padding-top: 0 !important;
+    }
+
+
+    .zone_chuongtrinhhocphan,
+    .zone_inputhocphan,
+    .zone_edithocphan,
+    .zone_inputhocphan_khoibatbuoc,
+    .zone_inputhocphan_khoituchondon,
+    .zone_ketquahocphan,
+    .zone_input_dinhhuong,
+    .zoneViewHocPhan {
+        width: calc(100% - 20px) !important;
+        min-width: calc(100% - 20px);
+    }
+
+    .zone-bus .box-header .btn-default.btnClose {
+        top: -20px !important;
+        right: -20px !important;
+    }
 
     .zone_notify_HeDaoTao .box-solid.box-search .box-body {
         display: grid;
@@ -720,6 +883,42 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+    .zoneBox_ChuongTrinh {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px !important;
+    }
+
+    .aps-list-chuongtrinh.box.box-solid {
+        padding: 20px 15px !important;
+    }
+
+    .aps-list-chuongtrinh.box.box-solid .box-body,
+    .aps-list-chuongtrinh.box.box-solid .box-header {
+        padding: 0 !important;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
+        width: 100% !important;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView .small-box {
+        text-align: left !important;
+    }
+
+    .zoneBox_ChuongTrinh .small-box>.small-box-footer i {
+        display: none;
+    }
+
+    /* -------------------- */
+    .zone_input_LopHoc .aps-form .aps-form-item .aps-form-lable {
+        min-width: 125px !important;
+    }
+
+    .aps-list-monhoc .aps-list-btn.pull-right {
+        padding-top: 10px;
+    }
+
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 180px !important;
     }
@@ -777,9 +976,30 @@
         width: 100%;
     }
 
+    .box-solid.box-search .item-search {
+        margin-bottom: 0 !important;
+    }
+
 }
 
 @media only screen and (max-width: 600px) {
+    .box-solid.box-search .item-search {
+        margin-bottom: 10px;
+    }
+
+    .aps-list-baiHoc .pull-right {
+        float: left !important;
+        width: 100%;
+    }
+
+    .aps-list-baiHoc .box-header .pull-right .btn {
+        margin-left: 0 !important;
+        margin-right: 10px !important;
+    }
+
+    .tblBaiHoc {
+        min-width: 680px !important;
+    }
 
     .login-page,
     .register-page {
@@ -1036,6 +1256,122 @@
 
 
 @media only screen and (max-width: 599px) {
+    .box.box-solid.box-search {
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+    }
+
+    .aps-list-chuongtrinh.box.box-solid {
+        padding: 20px 15px !important;
+    }
+
+    .aps-list-chuongtrinh.box.box-solid .box-body,
+    .aps-list-chuongtrinh.box.box-solid .box-header {
+        padding: 0 !important;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
+        width: 100% !important;
+    }
+
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView .small-box {
+        text-align: left !important;
+    }
+
+    /* .small-box-footer {
+        margin-top: 10px !important;
+    } */
+
+    /* ----- */
+    .zone_chuongtrinhhocphan,
+    .zone_inputhocphan,
+    .zone_edithocphan,
+    .zone_inputhocphan_khoibatbuoc,
+    .zone_inputhocphan_khoituchondon,
+    .zone_ketquahocphan,
+    .zone_input_dinhhuong,
+    .zoneViewHocPhan {
+        min-width: 100% !important;
+    }
+
+    .zone-bus .box-header .btn-default.btnClose {
+        top: -20px !important;
+        right: -30px !important;
+    }
+
+    .info-tblLopHoc,
+    .light-paginationtblLopHoc {
+        width: 100% !important;
+    }
+
+    .myModalPhanNhom .aps-form {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+        padding-bottom: 0 !important;
+    }
+
+    .modal-content .modal-footer {
+        padding: 15px 10px !important;
+    }
+
+    /* -------------- */
+    .zone_input_LopHoc .aps-add-new .aps-form-item {
+        display: grid;
+        grid-template-columns: 1fr 3fr;
+        /* Tỷ lệ 2:1 */
+        gap: 10px;
+        margin-bottom: 0px !important;
+    }
+
+    .zone_input_LopHoc .aps-add-new .aps-form-item.row:before,
+    .zone_input_LopHoc .aps-add-new .clear {
+        display: none;
+    }
+
+    .zone_input_LopHoc .aps-add-new .aps-form .aps-form-item .aps-form-lable {
+        text-align: left !important;
+        justify-content: flex-start !important;
+        padding-right: 0 !important;
+        min-width: 88px;
+        display: block !important;
+    }
+
+    /* ------------ */
+    .filter-tblLopHoc {
+        margin-top: 8px;
+    }
+
+    .light-paginationtblLopHoc ul {
+        display: flex !important;
+    }
+
+    .info-tblHocPhanTuongDuong,
+    .light-paginationtblHocPhanTuongDuong,
+    .light-paginationtblHocPhanTuongDuong.simple-pagination ul {
+        width: 100% !important;
+        float: left;
+    }
+
+    .light-paginationtblLopHoc.simple-pagination,
+    .filter-tblLopHoc .pull-right,
+    .filter-tblLopHoc.pull-right {
+        float: left !important;
+    }
+
+    .filter-tblHocPhanTuongDuong {
+        float: left !important;
+        margin-top: 5px;
+    }
+
+    .aps-list-hocPhan .box-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .zone_input_HocPhanTuongDuong .aps-form .aps-form-item .aps-form-lable {
+        min-width: 130px;
+    }
 
     .light-paginationtblHocPhan.simple-pagination ul,
     .filter-tblHocPhan {
@@ -1046,7 +1382,8 @@
         margin-top: 10px;
     }
 
-    .aps-list-hocphan .pull-right.aps-list-btn {
+    .aps-list-hocphan .pull-right.aps-list-btn,
+    .zone_input_HocPhanTuongDuong .aps-form .aps-form-item .aps-form-input {
         width: 100%;
     }
 
@@ -1540,7 +1877,7 @@
     }
 
     .modal-open .modal .modal-body {
-        padding: 20px 10px !important;
+        /* padding: 20px 10px !important; */
     }
 
     .modal_XacNhan .aps-add-new .aps-form {
@@ -1576,6 +1913,20 @@
 }
 
 @media (max-width: 400px) {
+    .zone_input_HocPhanTuongDuong.form-container .box-header.with-border {
+        height: auto !important;
+        line-height: 30px !important;
+    }
+
+    .zone_input_HocPhanTuongDuong.form-container .box-header .box-title {
+        display: block !important;
+    }
+
+    .zone_input_HocPhanTuongDuong .aps-form .aps-form-item .aps-form-lable {
+        min-width: 115px;
+    }
+
+    /* -------- */
     .finance-modal.my-calendar .modal-body .justify-content-between {
         margin-bottom: 10px;
     }
@@ -2069,6 +2420,7 @@
 }
 
 @media (max-width:460px) {
+
     .formLoginSSO {
         width: 100% !important;
     }
