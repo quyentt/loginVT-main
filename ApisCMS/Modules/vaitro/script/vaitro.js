@@ -82,7 +82,11 @@ VaiTro.prototype = {
         var me = this;
         var obj_notify = {};
         //--Edit
-        
+        var strChaId = edu.util.getValById("dropVaiTro_Cha");
+        if (me.strVaiTro_Id != '' && strChaId == me.strVaiTro_Id) {
+            edu.system.alert("Vai trò cha không được trùng với chính vai trò đang chỉnh sửa!", "w");
+            return;
+        }
         var obj_save = {
             'action'            : 'CMS_VaiTro/ThemMoi',
             'versionAPI'        : 'v1.0',
@@ -298,8 +302,31 @@ VaiTro.prototype = {
     },
     genCombo_VaiTro: function () {
         var me = this;
+        //--Sanitize: phá vòng lặp cha-con (self-parent hoặc cycle) để tránh đệ quy vô hạn
+        var dtSafe = [];
+        if (me.dtVaiTro && me.dtVaiTro.length > 0) {
+            var mapById = {};
+            for (var i = 0; i < me.dtVaiTro.length; i++) {
+                mapById[me.dtVaiTro[i].ID] = me.dtVaiTro[i];
+            }
+            for (var j = 0; j < me.dtVaiTro.length; j++) {
+                var item = Object.assign({}, me.dtVaiTro[j]);
+                var parentId = item.CHUNG_VAITRO_CHA_ID;
+                var visited = {};
+                visited[item.ID] = true;
+                while (parentId && mapById[parentId]) {
+                    if (visited[parentId]) {
+                        item.CHUNG_VAITRO_CHA_ID = "";
+                        break;
+                    }
+                    visited[parentId] = true;
+                    parentId = mapById[parentId].CHUNG_VAITRO_CHA_ID;
+                }
+                dtSafe.push(item);
+            }
+        }
         var obj = {
-            data: me.dtVaiTro,
+            data: dtSafe,
             renderInfor: {
                 id: "ID",
                 parentId: "CHUNG_VAITRO_CHA_ID",
