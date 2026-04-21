@@ -1,14 +1,14 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 1920px) {
-  .box-ThongTinHSSV .nav-tabs-custom > .nav-tabs > li {
-    max-width: 135px;
-    text-align: center;
-    height: 68px;
-  }
+    .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
+        max-width: 135px;
+        text-align: center;
+        height: 68px;
+    }
 
-  .box-ThongTinHSSV .nav-tabs-custom > .nav-tabs > li > a {
-    height: 66px;
-  }
+    .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
+        height: 66px;
+    }
 }
 
 @media only screen and (min-width: 2000px) {
@@ -24,101 +24,104 @@
 }
 
 @media only screen and (max-width: 1400px) {
-  .aps-thanhtoan-naptien .col-sm-3,
-  .aps-tinnhanthongthong-l .col-sm-3,
-  .col-sm-3.aps-tinnhandiem-l,
-  .aps-RenLuyen-danhmuc-l {
-    width: 100%;
-    margin-bottom: 20px !important;
-  }
 
-  .aps-thanhtoan-naptien .zone-cat-9.col-sm-9,
-  .aps-tinnhanthongthong-r.pl20,
-  .aps-tinnhandiem-r.pl20,
-  .aps-RenLuyen-danhmuc-r {
-    width: 100%;
-    padding-left: 0 !important;
-  }
+    .aps-thanhtoan-naptien .col-sm-3,
+    .aps-tinnhanthongthong-l .col-sm-3,
+    .col-sm-3.aps-tinnhandiem-l,
+    .aps-RenLuyen-danhmuc-l {
+        width: 100%;
+        margin-bottom: 20px !important;
+    }
 
-  .col-lg-3.checkbox-inline {
-    padding-left: 40px;
-  }
+    .aps-thanhtoan-naptien .zone-cat-9.col-sm-9,
+    .aps-tinnhanthongthong-r.pl20,
+    .aps-tinnhandiem-r.pl20,
+    .aps-RenLuyen-danhmuc-r {
+        width: 100%;
+        padding-left: 0 !important;
+    }
+
+    .col-lg-3.checkbox-inline {
+        padding-left: 40px;
+    }
 }
 
 @media only screen and (max-width: 1200px) {
-  .hold-transition.login-page,
-  .register-page {
-    background-attachment: fixed !important;
-    background-position: center !important;
-  }
 
-  .box-header .pull-right {
-    position: relative;
-  }
+    .hold-transition.login-page,
+    .register-page {
+        background-attachment: fixed !important;
+        background-position: center !important;
+    }
 
-  .bo .aps-danhmucDL-l,
-  .aps-danhmucDL-r {
-    width: 100%;
-    margin-bottom: 20px !important;
-  }
+    .box-header .pull-right {
+        position: relative;
+    }
 
-  .aps-danhmucDL-r,
-  .aps-khaibaothanhphandiemapdung-r.pl20 {
-    padding-left: 0 !important;
-  }
+    .bo .aps-danhmucDL-l,
+    .aps-danhmucDL-r {
+        width: 100%;
+        margin-bottom: 20px !important;
+    }
 
-  .zone-bus .bss-item .item-search {
-    width: 33.333333%;
-  }
+    .aps-danhmucDL-r,
+    .aps-khaibaothanhphandiemapdung-r.pl20 {
+        padding-left: 0 !important;
+    }
 
-  .zone-bus .bss-item .item-search:last-child {
-    width: 66.666667%;
-  }
+    .zone-bus .bss-item .item-search {
+        width: 33.333333%;
+    }
 
-  .asp-dangky-dv-tab .nav-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    row-gap: 10px;
-  }
+    .zone-bus .bss-item .item-search:last-child {
+        width: 66.666667%;
+    }
 
-  .asp-dangky-dv-tab .nav-tabs li:nth-child(3) {
-    margin-left: auto;
-  }
+    .asp-dangky-dv-tab .nav-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 10px;
+    }
+
+    .asp-dangky-dv-tab .nav-tabs li:nth-child(3) {
+        margin-left: auto;
+    }
 }
 
 @media only screen and (min-width: 1200px) {
-  .aps-ds-tuibai .tblTuiBai,
-  .aps-ds-thivd .tblThi {
-    min-width: 2000px;
-  }
+
+    .aps-ds-tuibai .tblTuiBai,
+    .aps-ds-thivd .tblThi {
+        min-width: 2000px;
+    }
 }
 
 @media (min-width: 1024px) and (max-width: 1280px) {
-  .zone_notify_HocPhan .box.box-solid.box-search .box-body {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
+    .zone_notify_HocPhan .box.box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+    }
 
-  .zone_notify_HocPhan .box-search .item-search {
-    padding-right: 0px !important;
-  }
+    .zone_notify_HocPhan .box-search .item-search {
+        padding-right: 0px !important;
+    }
 
-  .aps-ds-tuibai .tblTuiBai,
-  .aps-ds-thivd .tblThi {
-    min-width: 1200px;
-  }
+    .aps-ds-tuibai .tblTuiBai,
+    .aps-ds-thivd .tblThi {
+        min-width: 1200px;
+    }
 }
 
 @media (min-width: 1024px) and (max-width: 1180px) {
-  .login-page .login-box,
-  .register-box {
-    width: 100% !important;
-  }
+
+    .login-page .login-box,
+    .register-box {
+        width: 100% !important;
+    }
 }
 
 @media (max-width: 1024px) {
-<<<<<<< HEAD
     .aps-chuongtrinhhocphan .zone_chuongtrinh .box-solid.box-search {
         padding-bottom: 15px !important;
     }
@@ -176,226 +179,221 @@
     .zone_input_DeCuongHocTap .aps-form .aps-form-item .aps-form-lable {
         min-width: 100px !important;
     }
-=======
-  .aps-list-hocphan.box {
-    border-radius: 0 !important;
-  }
-  .modal_moKeHoachMoi .aps-form .aps-form-item .aps-form-lable {
-    min-width: 110px !important;
-  }
-  .zone_input_MonHoc .aps-form .aps-form-item .aps-form-lable {
-    min-width: 100px !important;
-  }
 
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
-    min-width: 110px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .aps-list-hocphan.box {
+        border-radius: 0 !important;
+    }
 
-  .zone_input_MonHoc .aps-form .aps-form-item .aps-form-input,
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-input {
-    width: 100%;
-  }
+    .modal_moKeHoachMoi .aps-form .aps-form-item .aps-form-lable {
+        min-width: 110px !important;
+    }
 
-<<<<<<< HEAD
+    .zone_input_MonHoc .aps-form .aps-form-item .aps-form-lable {
+        min-width: 100px !important;
+    }
+
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
+        min-width: 110px !important;
+    }
+
+    .zone_input_MonHoc .aps-form .aps-form-item .aps-form-input,
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
+
     .zone_input_MonHoc .aps-form .aps-form-item .aps-form-input,
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-input,
     .zone_input_DeCuongHocTap .aps-form .aps-form-item .aps-form-input {
         width: 100%;
     }
-=======
-  .aps-list-monhoc .box-header,
-  .box-content.pl20.pr20,
-  .box-content .box-header,
-  .box-content .box-body,
-  .aps-list-hocphan .box-header,
-  .aps-list-hocphan .box-body,
-  .aps-list-monhoc .box-body {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 
-  .aps-form-item-col1 {
-    display: block !important;
-    margin-top: 10px !important;
-  }
+    .aps-list-monhoc .box-header,
+    .box-content.pl20.pr20,
+    .box-content .box-header,
+    .box-content .box-body,
+    .aps-list-hocphan .box-header,
+    .aps-list-hocphan .box-body,
+    .aps-list-monhoc .box-body {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
 
-  .aps-form-item-col2 {
-    width: 100%;
-    display: flex;
-  }
+    .aps-form-item-col1 {
+        display: block !important;
+        margin-top: 10px !important;
+    }
 
-  .aps-form-item-col2:nth-child(2) {
-    margin-top: 10px !important;
-  }
+    .aps-form-item-col2 {
+        width: 100%;
+        display: flex;
+    }
 
-  .aps-form-item-col2 .justify-content-end {
-    justify-content: flex-start !important;
-  }
+    .aps-form-item-col2:nth-child(2) {
+        margin-top: 10px !important;
+    }
 
-  /* ----------- */
-  .tblMonHoc {
-    min-width: 680px;
-  }
+    .aps-form-item-col2 .justify-content-end {
+        justify-content: flex-start !important;
+    }
 
-  .tblMonHoc thead tr th:last-child(3) {
-    min-width: 80px !important;
-  }
+    /* ----------- */
+    .tblMonHoc {
+        min-width: 680px;
+    }
 
-  .tblNoiDungChuongTrinh {
-    min-width: 600px;
-  }
+    .tblMonHoc thead tr th:last-child(3) {
+        min-width: 80px !important;
+    }
 
-  .zone_input_NoiDungChuongTrinh .aps-form .aps-form-item .aps-form-lable {
-    min-width: 100px;
-  }
+    .tblNoiDungChuongTrinh {
+        min-width: 600px;
+    }
 
-  .zone_input_NoiDungChuongTrinh .aps-form .aps-form-item .aps-form-input {
-    width: 100%;
-  }
+    .zone_input_NoiDungChuongTrinh .aps-form .aps-form-item .aps-form-lable {
+        min-width: 100px;
+    }
 
-  .form-container.zone-bus .box-body.pd20 {
-    padding: 20px 15px !important;
-  }
+    .zone_input_NoiDungChuongTrinh .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
 
-  .form-container.zone-bus .col-lg-7.pr20 {
-    padding-right: 0 !important;
-    display: flow-root;
-    padding-bottom: 20px;
-  }
+    .form-container.zone-bus .box-body.pd20 {
+        padding: 20px 15px !important;
+    }
 
-  .form-container.zone-bus .col-lg-7.pr20 .aps-form {
-    margin-bottom: 10px !important;
-  }
+    .form-container.zone-bus .col-lg-7.pr20 {
+        padding-right: 0 !important;
+        display: flow-root;
+        padding-bottom: 20px;
+    }
 
-  .form-container.zone-bus .col-lg-5.pl20 {
-    padding-left: 0 !important;
-  }
+    .form-container.zone-bus .col-lg-7.pr20 .aps-form {
+        margin-bottom: 10px !important;
+    }
 
-  .hold-transition.login-page,
-  .register-page {
-    background-attachment: fixed !important;
-    background-position: center !important;
-  }
+    .form-container.zone-bus .col-lg-5.pl20 {
+        padding-left: 0 !important;
+    }
 
-  .zone_input_HeDaoTao .aps-add-new .aps-form-input {
-    width: 100%;
-  }
+    .hold-transition.login-page,
+    .register-page {
+        background-attachment: fixed !important;
+        background-position: center !important;
+    }
 
-  .zone-bus .box-header .btn-default.btnClose {
-    top: -21px !important;
-    right: -15px !important;
-  }
+    .zone_input_HeDaoTao .aps-add-new .aps-form-input {
+        width: 100%;
+    }
 
-  .zone_input_KhoaDaoTao .pr20,
-  .zone_input_HocPhan .aps-add-new .col-lg-8.pr20 {
-    padding-right: 0px !important;
-    display: flow-root;
-  }
+    .zone-bus .box-header .btn-default.btnClose {
+        top: -21px !important;
+        right: -15px !important;
+    }
 
-  .zone_input_HocPhan .aps-add-new .col-lg-8.pr20 {
-    padding-bottom: 20px;
-  }
+    .zone_input_KhoaDaoTao .pr20,
+    .zone_input_HocPhan .aps-add-new .col-lg-8.pr20 {
+        padding-right: 0px !important;
+        display: flow-root;
+    }
 
-<<<<<<< HEAD
-=======
-  .zone_input_KhoaDaoTao .pl20 {
-    padding-left: 0 !important;
-    padding-top: 20px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .zone_input_HocPhan .aps-add-new .col-lg-8.pr20 {
+        padding-bottom: 20px;
+    }
 
-  .aps-list-khoahoc.mt-15 {
-    margin-top: 10px !important;
-  }
+    .zone_input_KhoaDaoTao .pl20 {
+        padding-left: 0 !important;
+        padding-top: 20px !important;
+    }
 
-  .aps-list-year .box-body {
-    margin-top: 5px !important;
-  }
+    .aps-list-khoahoc.mt-15 {
+        margin-top: 10px !important;
+    }
 
-  .aps-list-khoahoc .pl20,
-  .aps-list-year .pl20 {
-    padding-left: 10px !important;
-  }
+    .aps-list-year .box-body {
+        margin-top: 5px !important;
+    }
 
-  .aps-list-khoahoc .pr20,
-  .aps-list-year .pr20 {
-    padding-right: 10px !important;
-  }
+    .aps-list-khoahoc .pl20,
+    .aps-list-year .pl20 {
+        padding-left: 10px !important;
+    }
 
-  .aps-form-item {
-    margin-bottom: 10px !important;
-  }
+    .aps-list-khoahoc .pr20,
+    .aps-list-year .pr20 {
+        padding-right: 10px !important;
+    }
 
-  .main-sidebar .sidebar-form .input-group-btn .btn {
-    padding: 9px 5px 7.6px 15px !important;
-  }
+    .aps-form-item {
+        margin-bottom: 10px !important;
+    }
 
-  .sidebar-form .btn-flat i {
-    margin-top: 3px !important;
-  }
+    .main-sidebar .sidebar-form .input-group-btn .btn {
+        padding: 9px 5px 7.6px 15px !important;
+    }
 
-  .control-sidebar .control-sidebar-app {
-    padding: 0 0px 20px 0px !important;
-  }
+    .sidebar-form .btn-flat i {
+        margin-top: 3px !important;
+    }
 
-  .main-sidebar {
-    padding-top: 50px;
-  }
+    .control-sidebar .control-sidebar-app {
+        padding: 0 0px 20px 0px !important;
+    }
 
-  .control-sidebar {
-    padding-top: 60px !important;
-  }
+    .main-sidebar {
+        padding-top: 50px;
+    }
 
-  .box-body .table {
-    margin-right: 0px !important;
-  }
+    .control-sidebar {
+        padding-top: 60px !important;
+    }
 
-  .control-sidebar-app .tblApp .table-noborder.table > tbody > tr > td,
-  .control-sidebar-app .tblApp .table-noborder.table > tbody > tr > th {
-    border-right: 0 solid #e9e9e9 !important;
-  }
+    .box-body .table {
+        margin-right: 0px !important;
+    }
+
+    .control-sidebar-app .tblApp .table-noborder.table>tbody>tr>td,
+    .control-sidebar-app .tblApp .table-noborder.table>tbody>tr>th {
+        border-right: 0 solid #e9e9e9 !important;
+    }
 }
 
 @media (max-width: 990px) {
-  .modal-body {
-    padding: 20px 15px !important;
-  }
+    .modal-body {
+        padding: 20px 15px !important;
+    }
 
-  .my-calendar .modal-dialog {
-    width: 96% !important;
-    min-width: 96% !important;
-  }
+    .my-calendar .modal-dialog {
+        width: 96% !important;
+        min-width: 96% !important;
+    }
 
-  .modal-nhapdiem .scroll-table-x table {
-    min-width: 1000px;
-  }
+    .modal-nhapdiem .scroll-table-x table {
+        min-width: 1000px;
+    }
 }
 
 @media (max-width: 820px) {
-  .zone_input_HeDaoTao .aps-add-new .col-lg-7 {
-    display: flow-root;
-    padding-right: 0 !important;
-    padding-bottom: 20px;
-  }
+    .zone_input_HeDaoTao .aps-add-new .col-lg-7 {
+        display: flow-root;
+        padding-right: 0 !important;
+        padding-bottom: 20px;
+    }
 
-  .zone_input_HeDaoTao .aps-add-new .col-lg-5 {
-    padding-left: 0 !important;
-  }
+    .zone_input_HeDaoTao .aps-add-new .col-lg-5 {
+        padding-left: 0 !important;
+    }
 
-  .zone_input_HeDaoTao .aps-form {
-    margin-bottom: 10px;
-  }
+    .zone_input_HeDaoTao .aps-form {
+        margin-bottom: 10px;
+    }
 
-  .zone_input_HeDaoTao .aps-add-new .btn-default.btnClose {
-    display: none;
-  }
+    .zone_input_HeDaoTao .aps-add-new .btn-default.btnClose {
+        display: none;
+    }
 }
 
 /* Extra small devices (phones, 768px and down) */
 @media only screen and (max-width: 768px) {
-<<<<<<< HEAD
     .zone_input_BaiHoc .aps-form .aps-form-item .aps-form-lable {
         min-width: 100px;
     }
@@ -403,156 +401,154 @@
     .zone_input_BaiHoc .aps-form .aps-form-item .aps-form-input {
         width: 100% !important;
     }
-=======
-  .zone_notify_NoiDungChuongTrinh .box-search .item-search:first-child {
-    min-width: 280px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 
-  .box-nhapdiemchamkiemtra .col-lg-7 {
-    padding-right: 0 !important;
-  }
+    .zone_notify_NoiDungChuongTrinh .box-search .item-search:first-child {
+        min-width: 280px !important;
+    }
 
-  .my-calendar.modal_XacNhan .aps-form-lable {
-    display: none !important;
-  }
+    .box-nhapdiemchamkiemtra .col-lg-7 {
+        padding-right: 0 !important;
+    }
 
-  .khoa-sldl-xn {
-    padding-right: 0 !important;
-  }
+    .my-calendar.modal_XacNhan .aps-form-lable {
+        display: none !important;
+    }
 
-  /*----------------start----------------------*/
-  .box-header > .box-tools {
-    position: relative;
-    right: 10px;
-    top: 0px;
-  }
+    .khoa-sldl-xn {
+        padding-right: 0 !important;
+    }
 
-  .box-header > .box-tools a {
-    margin-top: 10px;
-  }
+    /*----------------start----------------------*/
+    .box-header>.box-tools {
+        position: relative;
+        right: 10px;
+        top: 0px;
+    }
 
-  .box-search .box-body .row {
-    flex-wrap: wrap;
-  }
+    .box-header>.box-tools a {
+        margin-top: 10px;
+    }
 
-  .item-search .btn-search#btnSearchSinhVien,
-  .item-search #zonebtnBaoCao_DangKyHoc_Import {
-    width: auto !important;
-  }
+    .box-search .box-body .row {
+        flex-wrap: wrap;
+    }
 
-  .col-lg-3.checkbox-inline.user-check-print {
-    padding-left: 40px;
-  }
+    .item-search .btn-search#btnSearchSinhVien,
+    .item-search #zonebtnBaoCao_DangKyHoc_Import {
+        width: auto !important;
+    }
 
-  .col-sm-3.item-search.d-flex.gap {
-    flex-direction: column;
-  }
+    .col-lg-3.checkbox-inline.user-check-print {
+        padding-left: 40px;
+    }
 
-  .scroll-table-x {
-    overflow-x: auto;
-  }
+    .col-sm-3.item-search.d-flex.gap {
+        flex-direction: column;
+    }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs {
-    margin-left: 0 !important;
-    width: 100%;
-    padding-left: 0;
-    padding-bottom: 20px;
-    padding-right: 0;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: start;
-    gap: 9px;
-  }
+    .scroll-table-x {
+        overflow-x: auto;
+    }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs > li.active > a {
-    border-radius: 6px;
-  }
+    .aps-box-table .nav-tabs-custom>.nav-tabs {
+        margin-left: 0 !important;
+        width: 100%;
+        padding-left: 0;
+        padding-bottom: 20px;
+        padding-right: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: start;
+        gap: 9px;
+    }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs > li.pull-right {
-    margin-left: auto !important;
-    margin-right: 0 !important;
-  }
+    .aps-box-table .nav-tabs-custom>.nav-tabs>li.active>a {
+        border-radius: 6px;
+    }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs > li.pull-right ~ li.pull-right {
-    margin-left: 0 !important;
-  }
+    .aps-box-table .nav-tabs-custom>.nav-tabs>li.pull-right {
+        margin-left: auto !important;
+        margin-right: 0 !important;
+    }
 
-  /*.........................................*/
-  .content-wrapper,
-  .main-footer {
-    margin-left: 0px !important;
-  }
+    .aps-box-table .nav-tabs-custom>.nav-tabs>li.pull-right~li.pull-right {
+        margin-left: 0 !important;
+    }
 
-  .main-sidebar {
-    -webkit-transform: translate(-280px, 0) !important;
-    -ms-transform: translate(-280px, 0) !important;
-    -o-transform: translate(-280px, 0) !important;
-    transform: translate(-280px, 0) !important;
-  }
+    /*.........................................*/
+    .content-wrapper,
+    .main-footer {
+        margin-left: 0px !important;
+    }
 
-  .sidebar-collapse .main-sidebar,
-  .sidebar-open .main-sidebar {
-    transform: translate(0, 0) !important;
-  }
+    .main-sidebar {
+        -webkit-transform: translate(-280px, 0) !important;
+        -ms-transform: translate(-280px, 0) !important;
+        -o-transform: translate(-280px, 0) !important;
+        transform: translate(-280px, 0) !important;
+    }
 
-  .aps-taichinh-r {
-    padding-left: 0 !important;
-    margin-top: 15px !important;
-  }
+    .sidebar-collapse .main-sidebar,
+    .sidebar-open .main-sidebar {
+        transform: translate(0, 0) !important;
+    }
+
+    .aps-taichinh-r {
+        padding-left: 0 !important;
+        margin-top: 15px !important;
+    }
 }
 
 @media (min-width: 800px) and (max-width: 1024px) {
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
-    min-width: 260px !important;
-  }
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
+        min-width: 260px !important;
+    }
 
-  .zone_notify_HocPhan .box.box-solid.box-search .box-body:before {
-    display: none;
-  }
+    .zone_notify_HocPhan .box.box-solid.box-search .box-body:before {
+        display: none;
+    }
 
-  .zone_notify_HocPhan .box-search .item-search {
-    padding-right: 0 !important;
-    width: 100% !important;
-  }
+    .zone_notify_HocPhan .box-search .item-search {
+        padding-right: 0 !important;
+        width: 100% !important;
+    }
 
-  .zone_notify_HocPhan .box-search .item-search.item-search-btn {
-    display: -webkit-inline-box !important;
-  }
+    .zone_notify_HocPhan .box-search .item-search.item-search-btn {
+        display: -webkit-inline-box !important;
+    }
 
-  .zone_notify_HocPhan .box.box-solid.box-search .box-body {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* Chia đều 3 cột, mỗi cột 1 phần không gian */
-    gap: 10px;
-    /* Khoảng cách giữa các cột */
-  }
+    .zone_notify_HocPhan .box.box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* Chia đều 3 cột, mỗi cột 1 phần không gian */
+        gap: 10px;
+        /* Khoảng cách giữa các cột */
+    }
 
-  .zone-bus.zone_notify_HocPhan .box-search .item-search {
-    padding-right: 0px !important;
-  }
+    .zone-bus.zone_notify_HocPhan .box-search .item-search {
+        padding-right: 0px !important;
+    }
 
-  .action-group .item {
-    width: calc(24.3333% - 7.5px) !important;
-  }
+    .action-group .item {
+        width: calc(24.3333% - 7.5px) !important;
+    }
 
-  .formLoginSSO {
-    width: 800px !important;
-    /* overflow: hidden; */
-  }
+    .formLoginSSO {
+        width: 800px !important;
+        /* overflow: hidden; */
+    }
 
-  .login-box::before,
-  .register-box::before {
-    /* width: 400px !important; */
-  }
+    .login-box::before,
+    .register-box::before {
+        /* width: 400px !important; */
+    }
 
-  .formLoginSSO .login-box,
-  .formLoginSSO .register-box {
-    width: 100% !important;
-  }
+    .formLoginSSO .login-box,
+    .formLoginSSO .register-box {
+        width: 100% !important;
+    }
 }
 
-<<<<<<< HEAD
 @media (min-width: 900px) and (max-width:1024px) {
     .zone_chuongtrinh .box-solid.box-search .box-body {
         display: grid;
@@ -632,124 +628,121 @@
     .box-search .item-search {
         margin-right: 10px !important;
     }
-=======
+}
+
 @media (min-width: 900px) and (max-width: 1024px) {
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
-    min-width: 268px !important;
-  }
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
+        min-width: 268px !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  .box-search .item-search {
-    margin-right: 10px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .box-search .item-search {
+        margin-right: 10px !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .col-lg-7 {
-    width: 100% !important;
-  }
+    .zone_input_ThoiGianDaoTao .col-lg-7 {
+        width: 100% !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .col-lg-5.pl20 {
-    padding-left: 0px !important;
-  }
+    .zone_input_ThoiGianDaoTao .col-lg-5.pl20 {
+        padding-left: 0px !important;
+    }
 
-<<<<<<< HEAD
     .zone-bus .box-search .item-search {
         padding-right: 10px;
     }
-=======
-  .zone-bus .box-search .item-search {
-    padding-right: 10px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 
-  .aps-tochucchuongtrinh-thoigiandaotao .zone-bus .box-search .item-search {
-    margin-bottom: 0 !important;
-  }
+    .zone-bus .box-search .item-search {
+        padding-right: 10px !important;
+    }
 
-  .aps-tochucchuongtrinh-thoigiandaotao .zone-bus .box-search .bss-item {
-    margin-bottom: 0;
-  }
+    .aps-tochucchuongtrinh-thoigiandaotao .zone-bus .box-search .item-search {
+        margin-bottom: 0 !important;
+    }
 
-  .zone_notify_MonHoc .box-solid.box-search .box-body {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* Chia đều 3 cột */
-    gap: 10px;
-  }
+    .aps-tochucchuongtrinh-thoigiandaotao .zone-bus .box-search .bss-item {
+        margin-bottom: 0;
+    }
 
-  .zone-bus.zone_notify_MonHoc .box.box-solid.box-search {
-    padding: 10px 10px 2px 10px !important;
-  }
+    .zone_notify_MonHoc .box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* Chia đều 3 cột */
+        gap: 10px;
+    }
 
-  .zone_notify_MonHoc .box-solid.box-search .box-body:before {
-    display: none;
-  }
+    .zone-bus.zone_notify_MonHoc .box.box-solid.box-search {
+        padding: 10px 10px 2px 10px !important;
+    }
 
-  .zone_notify_MonHoc .box-solid.box-search .box-body .item-search {
-    width: 100%;
-    padding-right: 0 !important;
-    margin-bottom: 0 !important;
-  }
+    .zone_notify_MonHoc .box-solid.box-search .box-body:before {
+        display: none;
+    }
 
-  .zone_notify_NoiDungChuongTrinh .box-search .item-search.item-search-btn {
-    width: fit-content !important;
-    min-width: fit-content !important;
-  }
+    .zone_notify_MonHoc .box-solid.box-search .box-body .item-search {
+        width: 100%;
+        padding-right: 0 !important;
+        margin-bottom: 0 !important;
+    }
 
-  .quick-action {
-    padding: 0 20px !important;
-  }
+    .zone_notify_NoiDungChuongTrinh .box-search .item-search.item-search-btn {
+        width: fit-content !important;
+        min-width: fit-content !important;
+    }
 
-  .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
-    min-width: 200px;
-  }
+    .quick-action {
+        padding: 0 20px !important;
+    }
 
-  .box-search .item-search {
-    margin-bottom: 5px !important;
-  }
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
+        min-width: 200px;
+    }
 
-  .zone_input_NamHoc .aps-add-new .pl20 {
-    padding-left: 0 !important;
-  }
+    .box-search .item-search {
+        margin-bottom: 5px !important;
+    }
 
-  .aps-img {
-    text-align: center !important;
-  }
+    .zone_input_NamHoc .aps-add-new .pl20 {
+        padding-left: 0 !important;
+    }
 
-  .aps-img img {
-    max-width: 500px !important;
-  }
+    .aps-img {
+        text-align: center !important;
+    }
 
-  .content-wrapper .content,
-  .list-group,
-  .box.box-solid.aps-list-nhapdiemdst {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
+    .aps-img img {
+        max-width: 500px !important;
+    }
 
-  .content .box.box-solid.box-search {
-    padding: 10px 10px 6px 10px !important;
-  }
+    .content-wrapper .content,
+    .list-group,
+    .box.box-solid.aps-list-nhapdiemdst {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 
-  .box-search .inputSearch .item-search.col-sm-3 {
-    width: 33% !important;
-  }
+    .content .box.box-solid.box-search {
+        padding: 10px 10px 6px 10px !important;
+    }
 
-  .box-search .inputSearch .item-search.col-sm-3:nth-child(3) {
-    padding-right: 0 !important;
-  }
+    .box-search .inputSearch .item-search.col-sm-3 {
+        width: 33% !important;
+    }
 
-  .box-search .inputSearch .item-search.col-sm-3:nth-child(4) {
-    padding-right: 10px !important;
-  }
+    .box-search .inputSearch .item-search.col-sm-3:nth-child(3) {
+        padding-right: 0 !important;
+    }
 
-  .box-search .item-search .dropdown {
-    width: auto !important;
-  }
+    .box-search .inputSearch .item-search.col-sm-3:nth-child(4) {
+        padding-right: 10px !important;
+    }
+
+    .box-search .item-search .dropdown {
+        width: auto !important;
+    }
 }
 
-<<<<<<< HEAD
 @media (min-width: 600px) and (max-width:1024px) {
     .zoneViewHocPhan .box-body {
         padding: 0 15px !important;
@@ -780,148 +773,144 @@
         top: -20px !important;
         right: -20px !important;
     }
-=======
+}
+
 @media (min-width: 600px) and (max-width: 1024px) {
-  .zone_notify_HeDaoTao .box-solid.box-search .box-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* Chia thành 2 cột bằng nhau */
-    gap: 10px;
-  }
+    .zone_notify_HeDaoTao .box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* Chia thành 2 cột bằng nhau */
+        gap: 10px;
+    }
 
-  .zone_notify_HeDaoTao .box-solid.box-search .box-body:before {
-    display: none;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .zone_notify_HeDaoTao .box-solid.box-search .box-body:before {
+        display: none;
+    }
 
-  .zone_notify_HeDaoTao .box-search .item-search {
-    padding-right: 0px !important;
-    width: 100%;
-    padding-bottom: 0 !important;
-  }
+    .zone_notify_HeDaoTao .box-search .item-search {
+        padding-right: 0px !important;
+        width: 100%;
+        padding-bottom: 0 !important;
+    }
 
-  .zone_notify_HeDaoTao .box.box-solid.box-search {
-    padding: 10px 10px 0 10px !important;
-  }
+    .zone_notify_HeDaoTao .box.box-solid.box-search {
+        padding: 10px 10px 0 10px !important;
+    }
 
-  /* ---------------- */
-  .zone_input_HeDaoTao .box-body {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
+    /* ---------------- */
+    .zone_input_HeDaoTao .box-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 
-  .zone_input_HeDaoTao .aps-form .aps-form-item .aps-form-lable,
-  .zone_input_NamHoc .aps-form .aps-form-item .aps-form-lable {
-    min-width: 150px;
-  }
+    .zone_input_HeDaoTao .aps-form .aps-form-item .aps-form-lable,
+    .zone_input_NamHoc .aps-form .aps-form-item .aps-form-lable {
+        min-width: 150px;
+    }
 
-  .zone_input_NamHoc .aps-form .aps-form-item .aps-form-input {
-    width: 100%;
-  }
+    .zone_input_NamHoc .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
 
-  .aps-form-item {
-    margin-bottom: 10px !important;
-  }
+    .aps-form-item {
+        margin-bottom: 10px !important;
+    }
 
-  .aps-form-time .aps-form-item .aps-form-lable {
-    min-width: 120px;
-  }
+    .aps-form-time .aps-form-item .aps-form-lable {
+        min-width: 120px;
+    }
 
-  .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue {
-    width: 97% !important;
-  }
+    .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue {
+        width: 97% !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .box-body.pd20 {
-    padding: 20px 10px !important;
-  }
+    .zone_input_ThoiGianDaoTao .box-body.pd20 {
+        padding: 20px 10px !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .aps-form .aps-form-item .aps-form-lable {
-    width: 80px !important;
-    min-width: 80px;
-    text-align: left !important;
-    display: block !important;
-  }
+    .zone_input_ThoiGianDaoTao .aps-form .aps-form-item .aps-form-lable {
+        width: 80px !important;
+        min-width: 80px;
+        text-align: left !important;
+        display: block !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .aps-form {
-    column-count: 2;
-    column-gap: 20px;
-  }
+    .zone_input_ThoiGianDaoTao .aps-form {
+        column-count: 2;
+        column-gap: 20px;
+    }
 
-  .zone_input_ThoiGianDaoTao .aps-form .aps-form-input {
-    width: 100% !important;
-  }
+    .zone_input_ThoiGianDaoTao .aps-form .aps-form-input {
+        width: 100% !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .aps-form .aps-lable-name {
-    width: 100%;
-    display: contents;
-  }
+    .zone_input_ThoiGianDaoTao .aps-form .aps-lable-name {
+        width: 100%;
+        display: contents;
+    }
 
-  .aps-list-hocky .box-header,
-  .aps-list-hocky .box-body,
-  .zone-bus .box-solid.box-search {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
+    .aps-list-hocky .box-header,
+    .aps-list-hocky .box-body,
+    .zone-bus .box-solid.box-search {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 
-  .box-search .item-search {
-    padding-right: 10px !important;
-  }
+    .box-search .item-search {
+        padding-right: 10px !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .aps-form .aps-form-item {
-    /* display: inline-grid !important; */
-    /* margin-bottom: 0px; */
-    width: 100% !important;
-  }
+    .zone_input_ThoiGianDaoTao .aps-form .aps-form-item {
+        /* display: inline-grid !important; */
+        /* margin-bottom: 0px; */
+        width: 100% !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .box-body.pd20 {
-    padding: 20px !important;
-  }
+    .zone_input_ThoiGianDaoTao .box-body.pd20 {
+        padding: 20px !important;
+    }
 
-  .zone_input_ThoiGianDaoTao .col-lg-7 {
-    padding-right: 0 !important;
-    display: inline-block;
-    margin-bottom: 20px !important;
-    width: 100%;
-  }
+    .zone_input_ThoiGianDaoTao .col-lg-7 {
+        padding-right: 0 !important;
+        display: inline-block;
+        margin-bottom: 20px !important;
+        width: 100%;
+    }
 
-  .aps-list-hocky .box-header .box-title {
-    padding-top: 12px;
-  }
+    .aps-list-hocky .box-header .box-title {
+        padding-top: 12px;
+    }
 
-  .aps-tochucchuongtrinh-thoigiandaotao
-    .aps-list-hocky
-    .box-header
-    .bg-light-blue.badge {
-    margin-top: 16px !important;
-  }
+    .aps-tochucchuongtrinh-thoigiandaotao .aps-list-hocky .box-header .bg-light-blue.badge {
+        margin-top: 16px !important;
+    }
 
-  .content-wrapper .content,
-  .content-header .list-group {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
+    .content-wrapper .content,
+    .content-header .list-group {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 799px) {
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
-    min-width: 250px !important;
-  }
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
+        min-width: 250px !important;
+    }
 
-  .formLoginSSO {
-    width: 430px !important;
-  }
+    .formLoginSSO {
+        width: 430px !important;
+    }
 
-  .action-group .item {
-    /* width: 31.333333% !important; */
-    width: calc(32.888888% - 7.5px) !important;
-  }
+    .action-group .item {
+        /* width: 31.333333% !important; */
+        width: calc(32.888888% - 7.5px) !important;
+    }
 
-  .feature-box {
-    min-height: 110px;
-  }
+    .feature-box {
+        min-height: 110px;
+    }
 }
 
-<<<<<<< HEAD
 @media (min-width: 600px) and (max-width:767px) {
     .zoneBox_ChuongTrinh {
         display: grid !important;
@@ -962,63 +951,62 @@
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 180px !important;
     }
-=======
+}
+
 @media (min-width: 600px) and (max-width: 767px) {
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
-    min-width: 180px !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
+        min-width: 180px !important;
+    }
 
-  .formLoginSSO {
-    width: 430px !important;
-  }
+    .formLoginSSO {
+        width: 430px !important;
+    }
 
-  .action-group .item {
-    width: 31% !important;
-  }
+    .action-group .item {
+        width: 31% !important;
+    }
 
-  /* ---------- */
-  .box-search .item-search:last-child {
-    margin-bottom: 6px !important;
-  }
+    /* ---------- */
+    .box-search .item-search:last-child {
+        margin-bottom: 6px !important;
+    }
 
-  .box-search .item-search {
-    padding-right: 0 !important;
-  }
+    .box-search .item-search {
+        padding-right: 0 !important;
+    }
 
-  .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
-    width: 200px;
-    min-width: 200px;
-  }
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
+        width: 200px;
+        min-width: 200px;
+    }
 
-  .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-input {
-    width: 100% !important;
-  }
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-input {
+        width: 100% !important;
+    }
 
-  /* ----------- */
-  .aps-img {
-    text-align: center;
-  }
+    /* ----------- */
+    .aps-img {
+        text-align: center;
+    }
 
-  .aps-img img {
-    max-width: 480px !important;
-  }
+    .aps-img img {
+        max-width: 480px !important;
+    }
 
-  .form-container.zone_input_NamHoc .aps-add-new .col-lg-7.pr20 {
-    display: flow-root;
-    margin-bottom: 20px !important;
-    padding-right: 0 !important;
-  }
+    .form-container.zone_input_NamHoc .aps-add-new .col-lg-7.pr20 {
+        display: flow-root;
+        margin-bottom: 20px !important;
+        padding-right: 0 !important;
+    }
 
-  .modal-open .modal {
-    padding: 10px !important;
-  }
+    .modal-open .modal {
+        padding: 10px !important;
+    }
 
-  .modal-dialog {
-    margin: 0 !important;
-  }
+    .modal-dialog {
+        margin: 0 !important;
+    }
 
-<<<<<<< HEAD
     .box-solid.box-search .item-search {
         margin-bottom: 0 !important;
     }
@@ -1043,270 +1031,268 @@
     .tblBaiHoc {
         min-width: 680px !important;
     }
-=======
-  .modal_XacNhan .aps-add-new .aps-form .aps-form-input {
-    width: 100%;
-  }
+
+    .modal_XacNhan .aps-add-new .aps-form .aps-form-input {
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 600px) {
-  .login-page,
-  .register-page {
-    overflow: hidden;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
 
-  /* 
+    .login-page,
+    .register-page {
+        overflow: hidden;
+    }
+
+    /* 
     .hold-transition.login-page,
     .register-page {
         background-size: cover !important;
         background-repeat: no-repeat !important;
     } */
 
-  .login-box .login-logo,
-  .login-box .login-box-body,
-  .login-box .login-box-footer {
-    width: 100% !important;
-  }
+    .login-box .login-logo,
+    .login-box .login-box-body,
+    .login-box .login-box-footer {
+        width: 100% !important;
+    }
 
-  .login-box-body,
-  .register-box-body {
-    padding: 0px !important;
-  }
+    .login-box-body,
+    .register-box-body {
+        padding: 0px !important;
+    }
 
-  .login-box .login-logo {
-    padding: 0px 0 10px 0 !important;
-  }
+    .login-box .login-logo {
+        padding: 0px 0 10px 0 !important;
+    }
 
-  .login-box-msg {
-    padding-bottom: 15px !important;
-  }
+    .login-box-msg {
+        padding-bottom: 15px !important;
+    }
 
-  .login-box-msg span {
-    font-size: 22px !important;
-  }
+    .login-box-msg span {
+        font-size: 22px !important;
+    }
 
-  .login-box-body .pull-right .btn {
-    margin-left: 0px !important;
-  }
+    .login-box-body .pull-right .btn {
+        margin-left: 0px !important;
+    }
 
-  .login-notify .box-notify {
-    padding: 10px 0 !important;
-  }
+    .login-notify .box-notify {
+        padding: 10px 0 !important;
+    }
 
-  .login-box .login-box-footer {
-    padding: 0px 0px 30px 0 !important;
-  }
+    .login-box .login-box-footer {
+        padding: 0px 0px 30px 0 !important;
+    }
 
-  .social-auth-links {
-    margin: 10px 0 10px 0px !important;
-  }
+    .social-auth-links {
+        margin: 10px 0 10px 0px !important;
+    }
 
-  /* ----- */
-  .aps-ds-tuibai .tblTuiBai,
-  .aps-ds-thivd .tblThi {
-    min-width: 900px !important;
-  }
+    /* ----- */
+    .aps-ds-tuibai .tblTuiBai,
+    .aps-ds-thivd .tblThi {
+        min-width: 900px !important;
+    }
 
-  .aps-khoiluongcanhan .klcn-info {
-    padding-right: 0 !important;
-  }
+    .aps-khoiluongcanhan .klcn-info {
+        padding-right: 0 !important;
+    }
 
-  .aps-khoiluongcanhan .klcn-info .item {
-    margin-right: 0 !important;
-    width: 100% !important;
-  }
+    .aps-khoiluongcanhan .klcn-info .item {
+        margin-right: 0 !important;
+        width: 100% !important;
+    }
 
-  .aps-form-search {
-    display: block !important;
-  }
+    .aps-form-search {
+        display: block !important;
+    }
 
-  .aps-form-search .form-add-info {
-    margin-bottom: 10px;
-  }
+    .aps-form-search .form-add-info {
+        margin-bottom: 10px;
+    }
 
-  .modalPheDuyet .aps-form label,
-  .modalPheDuyet2 .aps-form label {
-    display: none;
-  }
+    .modalPheDuyet .aps-form label,
+    .modalPheDuyet2 .aps-form label {
+        display: none;
+    }
 
-  .aps-lichgiangkhoa .calendar-time .date-input,
-  .apslichgiangdaotao .calendar-time .date-input {
-    padding-left: 0 !important;
-  }
+    .aps-lichgiangkhoa .calendar-time .date-input,
+    .apslichgiangdaotao .calendar-time .date-input {
+        padding-left: 0 !important;
+    }
 
-  .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(1),
-  .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(2),
-  .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(3) {
-    min-width: 90px !important;
-  }
+    .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(1),
+    .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(2),
+    .mymodal_NhapChuyenCan.modal.modal-spec .table thead th:last-child(3) {
+        min-width: 90px !important;
+    }
 
-  .tblNhapChuyenCan tr td .inputChuyenCan {
-    float: left !important;
-    margin-left: 20px !important;
-  }
+    .tblNhapChuyenCan tr td .inputChuyenCan {
+        float: left !important;
+        margin-left: 20px !important;
+    }
 
-  .calendar-modal-meta .item {
-    padding-left: 0 !important;
-  }
+    .calendar-modal-meta .item {
+        padding-left: 0 !important;
+    }
 
-  .finance-user-info .form-item.form-add-info {
-    margin-bottom: 10px;
-    margin-top: 10px;
-  }
+    .finance-user-info .form-item.form-add-info {
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
 
-  .scroll-table-x .tblNguoiHoc {
-    min-width: 680px;
-  }
+    .scroll-table-x .tblNguoiHoc {
+        min-width: 680px;
+    }
 
-  .dkcn_diem .nav-item {
-    width: 49% !important;
-  }
+    .dkcn_diem .nav-item {
+        width: 49% !important;
+    }
 
-  .study-program-detail .scroll-table-x .tblHocPhan_PhanBo {
-    min-width: 100%;
-  }
+    .study-program-detail .scroll-table-x .tblHocPhan_PhanBo {
+        min-width: 100%;
+    }
 
-  .myModal_KetQuaDangKy.modal .modal-header {
-    min-height: auto !important;
-  }
+    .myModal_KetQuaDangKy.modal .modal-header {
+        min-height: auto !important;
+    }
 
-  .myModal_KetQuaDangKy .form-item.form-add-info {
-    margin-left: 0px;
-  }
+    .myModal_KetQuaDangKy .form-item.form-add-info {
+        margin-left: 0px;
+    }
 
-  .myModal_KetQuaDangKy .scroll-table-x table {
-    min-width: 860px !important;
-  }
+    .myModal_KetQuaDangKy .scroll-table-x table {
+        min-width: 860px !important;
+    }
 
-  .my-calendar.modal_XacNhan .modal-860 {
-    max-width: 100% !important;
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-  }
+    .my-calendar.modal_XacNhan .modal-860 {
+        max-width: 100% !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
 
-  .my-calendar.modal_XacNhan .change-calendar .form-item.form-add-info {
-    width: 100% !important;
-  }
+    .my-calendar.modal_XacNhan .change-calendar .form-item.form-add-info {
+        width: 100% !important;
+    }
 
-  .khoa-sldl-left {
-    display: block !important;
-    width: 62% !important;
-  }
+    .khoa-sldl-left {
+        display: block !important;
+        width: 62% !important;
+    }
 
-  .my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 {
-    width: 38% !important;
-  }
+    .my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 {
+        width: 38% !important;
+    }
 
-  .my-calendar.modal_XacNhan .aps-form-table {
-    display: none;
-  }
+    .my-calendar.modal_XacNhan .aps-form-table {
+        display: none;
+    }
 
-  .aps-nhapdiemphuckhao .form-top .btn-default.btn-search {
-    width: 100% !important;
-  }
+    .aps-nhapdiemphuckhao .form-top .btn-default.btn-search {
+        width: 100% !important;
+    }
 
-  .register-school-right,
-  .register-school-left {
-  }
+    .register-school-right,
+    .register-school-left {}
 
-  .tblSinhVien tr td:nth-child(8),
-  .tblSinhVien tr td:nth-child(13),
-  .tblSinhVien tr td:nth-child(14),
-  .tblSinhVien tr td:nth-child(15),
-  .tblSinhVien tr td:nth-child(n + 15) {
-    text-align: center !important;
-  }
+    .tblSinhVien tr td:nth-child(8),
+    .tblSinhVien tr td:nth-child(13),
+    .tblSinhVien tr td:nth-child(14),
+    .tblSinhVien tr td:nth-child(15),
+    .tblSinhVien tr td:nth-child(n + 15) {
+        text-align: center !important;
+    }
 
-  .scroll-table-x .tblHocPhanChuaQua,
-  .tblLop_KetQua {
-    min-width: 860px !important;
-  }
+    .scroll-table-x .tblHocPhanChuaQua,
+    .tblLop_KetQua {
+        min-width: 860px !important;
+    }
 
-  .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6,
-  .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
-    padding: 0 !important;
-  }
+    .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6,
+    .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
+        padding: 0 !important;
+    }
 
-  /* 
+    /* 
     .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
         padding-right: 0 !important;
         padding-left: 0 !important;
     } */
-  .aps-chiTiet-taiChinh .aps-table-select.scroll-table-x {
-    margin-bottom: 15px !important;
-  }
+    .aps-chiTiet-taiChinh .aps-table-select.scroll-table-x {
+        margin-bottom: 15px !important;
+    }
 
-  .aps-chiTiet-taiChinh .form-container-body .btn {
-    padding: 9px 0 0px 0 !important;
-    margin-bottom: 5px !important;
-    height: 30px !important;
-  }
+    .aps-chiTiet-taiChinh .form-container-body .btn {
+        padding: 9px 0 0px 0 !important;
+        margin-bottom: 5px !important;
+        height: 30px !important;
+    }
 
-  .register-school.study-program .table-title {
-    display: block !important;
-  }
+    .register-school.study-program .table-title {
+        display: block !important;
+    }
 
-  .study-program-detail .label-bottom-line span {
-    width: 100% !important;
-  }
+    .study-program-detail .label-bottom-line span {
+        width: 100% !important;
+    }
 
-  .aps-tt-hocPhan .col-12.col-md-6:last-child {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
+    .aps-tt-hocPhan .col-12.col-md-6:last-child {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
-  .study-program-detail .scroll-table-x table {
-    min-width: 600px;
-  }
+    .study-program-detail .scroll-table-x table {
+        min-width: 600px;
+    }
 
-  .register-school.study-program .line {
-    display: none !important;
-  }
+    .register-school.study-program .line {
+        display: none !important;
+    }
 
-  .modal-860,
-  .modal_XacNhan .modal-860 {
-    max-width: 100% !important;
-  }
+    .modal-860,
+    .modal_XacNhan .modal-860 {
+        max-width: 100% !important;
+    }
 
-  .kqht-modal {
-    display: block !important;
-  }
+    .kqht-modal {
+        display: block !important;
+    }
 
-  .kqht-modal .left {
-    width: 100% !important;
-  }
+    .kqht-modal .left {
+        width: 100% !important;
+    }
 
-  .kqht-modal .right {
-    width: 100% !important;
-    padding-left: 0 !important;
-  }
+    .kqht-modal .right {
+        width: 100% !important;
+        padding-left: 0 !important;
+    }
 
-  .aps-inbangdiem-detail .aps-btn-list {
-    /* display: block !important; */
-    margin-top: 10px;
-  }
+    .aps-inbangdiem-detail .aps-btn-list {
+        /* display: block !important; */
+        margin-top: 10px;
+    }
 
-  .aps-inbangdiem-detail .aps-btn-list .btn {
-    /* width: 100% !important; */
-    height: auto !important;
-  }
+    .aps-inbangdiem-detail .aps-btn-list .btn {
+        /* width: 100% !important; */
+        height: auto !important;
+    }
 
-  .viewchungtu {
-    width: 100% !important;
-  }
+    .viewchungtu {
+        width: 100% !important;
+    }
 
-  .zone-bus .bss-item .item-search {
-    width: 100%;
-  }
+    .zone-bus .bss-item .item-search {
+        width: 100%;
+    }
 
-  .zone-bus .bss-item .item-search:last-child {
-    width: 100%;
-  }
+    .zone-bus .bss-item .item-search:last-child {
+        width: 100%;
+    }
 }
 
 @media only screen and (max-width: 599px) {
-<<<<<<< HEAD
     .box.box-solid.box-search {
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
@@ -1981,1138 +1967,1121 @@
     .finance-modal.my-calendar .modal-body .justify-content-between {
         margin-bottom: 10px;
     }
-=======
-  .light-paginationtblHocPhan.simple-pagination ul,
-  .filter-tblHocPhan {
-    float: left !important;
-  }
-
-  .filter-tblHocPhan {
-    margin-top: 10px;
-  }
-
-  .aps-list-hocphan .pull-right.aps-list-btn {
-    width: 100%;
-  }
-
-  .aps-list-monhoc .box-header .aps-list-btn.pull-right {
-    width: 100%;
-  }
-
-  .aps-form .aps-form-item .aps-form-input {
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
-
-  .myModalKeThua .aps-form .aps-form-item .aps-form-lable {
-    min-width: 110px !important;
-  }
-
-  .myModalKeThua .aps-form .aps-form-item .aps-form-input {
-    width: 100%;
-  }
-
-  .modal-content {
-    width: 100%;
-  }
-
-  .modal-dialog.modal-680 {
-    width: 100% !important;
-  }
-
-  .aps-list-chuongtrinh .box-header,
-  .aps-list-chuongtrinh .box-body {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-
-  .aps-list-chuongtrinh .pull-right {
-    float: left !important;
-  }
-
-  .info-tblChuongTrinh,
-  .light-paginationtblChuongTrinh {
-    width: 100% !important;
-    float: left !important;
-  }
-
-  .light-paginationtblChuongTrinh.simple-pagination ul {
-    float: left;
-  }
-
-  .aps-list-chuongtrinh .box-header .pull-right .btn {
-    margin-left: 0px !important;
-    margin-right: 10px !important;
-  }
-
-  .change-tblChuongTrinh {
-    margin-bottom: 5px !important;
-  }
-
-  .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-lable {
-    min-width: 145px;
-  }
-
-  .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-input {
-    width: 100%;
-  }
-
-  .zone_input_ChuongTrinh .aps-add-new .col-lg-7.pr20 {
-    padding-right: 0 !important;
-    display: flow-root;
-    padding-bottom: 20px;
-  }
-
-  .zone_input_ChuongTrinh .aps-add-new .col-lg-5.pl20 {
-    padding-left: 0 !important;
-  }
-
-  .zone_input_ChuongTrinh .aps-form {
-    margin-bottom: 10px;
-  }
-
-  .aps-form-lable-mobi {
-    line-height: 20px !important;
-  }
-
-  /* ---Fix home */
-  .account-group .box-acc-user .dropdown-menu {
-    margin-top: 11px !important;
-  }
-
-  /* ---Fix home */
-  .quick-action .welcome {
-    padding-top: 10px;
-  }
-
-  .quick-action .quick-acction-title {
-    font-size: 20px;
-    margin-top: 5px;
-  }
-
-  .account-group .dropdown {
-    width: fit-content !important;
-    margin-left: 10px;
-  }
-
-  .account-group .dropdown.box-notify {
-    width: fit-content !important;
-    margin-left: 0px;
-    margin-top: 2px;
-    margin-right: 8px;
-  }
-
-  .action-group {
-    gap: 15px;
-    margin-top: 10px;
-  }
-
-  .action-group .item {
-    width: calc(50% - 7.5px);
-    padding: 0;
-  }
-
-  .account-group .dropdown-menu {
-    border-radius: 0 0 6px 6px !important;
-  }
-
-  /* ---End fix home */
-  .skin-blue .main-header .logo {
-    width: fit-content !important;
-  }
-
-  .zone_input_HeDaoTao .box-body {
-    padding: 0 10px !important;
-  }
-
-  .zone_input_HeDaoTao .aps-form .aps-form-item .aps-form-lable {
-    min-width: 120px;
-  }
-
-  .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
-    min-width: 100px;
-  }
-
-  .box-search .item-search:last-child {
-    margin-bottom: 0 !important;
-  }
-
-  #lbLogo_large {
-    display: none;
-  }
-
-  .main-header .logo .logo-lg::after {
-    content: "\e00d";
-    font-family: var(--fa-style-family, "Font Awesome 6 Pro") !important;
-    font-weight: 300;
-  }
-
-  .aps-list-khoahoc.mt-15 {
-    margin-top: 0 !important;
-  }
-
-  .text-fixmobi.aps-form-lable {
-    line-height: 18px !important;
-  }
-
-  .zone_input_KhoaDaoTao .btn-default.btnClose {
-    position: absolute;
-    top: -53px;
-    right: -10px;
-    background: transparent !important;
-    border: 0 !important;
-    color: #fff !important;
-  }
-
-  .zone_input_KhoaDaoTao .btn-default.btnClose:hover {
-    background: transparent !important;
-    border: 0 !important;
-    color: #ffd900 !important;
-  }
-
-  .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
-    width: 100px;
-    min-width: 100px;
-  }
-
-  .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-input {
-    width: 100% !important;
-  }
-
-  .zone_input_KhoaDaoTao .pr20 {
-    padding-right: 0px !important;
-    display: flow-root;
-  }
-
-  .zone_input_KhoaDaoTao .pl20 {
-    padding-left: 0 !important;
-    padding-top: 20px !important;
-  }
-
-  .zone_input_KhoaDaoTao .aps-form:last-child {
-    border-bottom: 1px solid #f1f1f1 !important;
-    padding-bottom: 15px !important;
-  }
-
-  .aps-list-khoahoc .box-header .box-tools.pull-right {
-    right: auto !important;
-    left: 0 !important;
-    width: 100%;
-  }
-
-  .aps-list-khoahoc .box-header .pull-right .btn {
-    margin-left: 0 !important;
-    margin-right: 10px;
-    margin-top: 5px;
-  }
-
-  .tblKhoaDaoTao,
-  .tblHeDaoTao {
-    min-width: 680px;
-  }
-
-  .info-tblKhoaDaoTao,
-  .info-tblHeDaoTao,
-  .light-paginationtblHeDaoTao,
-  .filter-tblKhoaDaoTao,
-  .light-paginationtblKhoaDaoTao,
-  .change-tblKhoaDaoTao {
-    width: 100% !important;
-    float: left !important;
-  }
-
-  .light-paginationtblKhoaDaoTao.simple-pagination ul,
-  .light-paginationtblHeDaoTao.simple-pagination ul,
-  .filter-tblKhoaDaoTao .pull-right {
-    float: left !important;
-  }
-
-  .filter-tblKhoaDaoTao .pull-right {
-    margin-top: 8px !important;
-  }
-
-  .aps-table-select .table.tblKhoaDaoTao {
-    margin-bottom: 2px !important;
-  }
-
-  /* ------------- */
-  .zone_input_ThoiGianDaoTao .btn-default.btnClose {
-    position: absolute;
-    top: -54px;
-    right: -8px;
-    background: transparent !important;
-    border: 0 !important;
-    color: #fff !important;
-  }
-
-  .aps-form-time .aps-form-item .col-sm-6.aps-form-lable {
-    text-align: left !important;
-    max-width: 110px;
-  }
-
-  .aps-KeHoachChuongTrinh
-    .aps-tochucchuongtrinh-thoigiandaotao
-    .box-solid.box-search {
-    padding-bottom: 0 !important;
-  }
-
-  .info-tblThoiGianDaoTao,
-  .light-paginationtblThoiGianDaoTao {
-    width: 100% !important;
-    text-align: right;
-  }
-
-  .aps-list-year .box-header,
-  .aps-list-year .aps-table-year,
-  .aps-list-hocky .box-header,
-  .aps-list-hocky .box-body {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
-
-  .content-wrapper .list-group {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  .skin-blue .main-header .navbar .nav > li > .dropdown-toggle {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-  }
-
-  .aps-form-time .aps-form-item {
-    display: block !important;
-  }
-
-  .aps-form-time .aps-form-item .col-sm-6.col-12 {
-    width: 100% !important;
-  }
-
-  .zone_input_ThoiGianDaoTao .col-lg-5.pl20 {
-    padding-left: 0px !important;
-    padding-top: 20px;
-  }
-
-  .zone_input_ThoiGianDaoTao .col-lg-7 {
-    z-index: 1;
-  }
-
-  .zone_input_ThoiGianDaoTao .pull-right .btn {
-    margin-bottom: 10px;
-  }
-
-  .zone_input_ThoiGianDaoTao .pull-right .btn {
-    margin-left: 10px;
-    margin-right: 0px !important;
-  }
-
-  .aps-form-time .aps-form-item {
-    display: block !important;
-  }
-
-  .aps-form-time .aps-form-item .col-sm-6 {
-    width: 100% !important;
-  }
-
-  .aps-form-time .aps-form-item .col-sm-6.col-12:first-child {
-    margin-bottom: 10px !important;
-  }
-
-  .aps-form-item {
-    margin-bottom: 10px;
-  }
-
-  .zone_input_ThoiGianDaoTao .aps-form .aps-form-item .aps-form-lable {
-    width: 90px !important;
-    min-width: 90px;
-    text-align: left !important;
-    display: block !important;
-  }
-
-  .zone_input_ThoiGianDaoTao .aps-form .aps-form-item .aps-form-input {
-    width: 100% !important;
-  }
-
-  .zone_input_ThoiGianDaoTao .aps-add-new .pr20 {
-    padding-right: 0px !important;
-    display: flow-root;
-  }
-
-  /* --------- */
-  .filter-tblThoiGianDaoTao .pull-right,
-  .filter-tblThoiGianDaoTao {
-    float: left !important;
-    margin-top: 5px;
-  }
-
-  .table thead tr th {
-    position: sticky;
-    top: 0;
-    background-color: #fff;
-    z-index: 10;
-  }
-
-  .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue {
-    width: 100% !important;
-  }
-
-  .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue .box-body.pd20 {
-    padding: 10px !important;
-  }
-
-  .form-container.zone_input_NamHoc .aps-add-new .col-lg-7.pr20 {
-    padding-right: 0px !important;
-    z-index: 99;
-    display: flow-root;
-  }
-
-  .form-container.zone_input_NamHoc .aps-add-new .col-lg-5.pl20 {
-    padding: 20px !important;
-  }
-
-  .form-container.zone_input_NamHoc .pd20 {
-    padding: 10px !important;
-  }
-
-  .aps-KeHoachChuongTrinh .form-container.zone_input_NamHoc {
-    width: 100% !important;
-  }
-
-  .aps-list-year .box-header .box-tools.pull-right,
-  .aps-list-hocky .box-header .box-tools.pull-right {
-    width: 100%;
-    margin-left: 0 !important;
-    padding-left: 0 !important;
-  }
-
-  .aps-list-year .box-header .box-tools.pull-right .btn,
-  .aps-list-hocky .box-header .box-tools.pull-right .btn {
-    margin-left: 0 !important;
-    margin-right: 10px;
-  }
-
-  .aps-list-year .aps-table-select,
-  .aps-list-hocky .box-body {
-    margin-top: 0 !important;
-  }
-
-  .change-tblNamHoc {
-    margin-bottom: 10px;
-  }
-
-  .filter-tblNamHoc.pull-right {
-    float: left !important;
-    width: 100%;
-    margin-top: 8px;
-  }
-
-  .filter-tblNamHoc.pull-right .pull-right {
-    float: left !important;
-  }
-
-  .zone-pag-footertblNamHoc {
-    margin-top: 0 !important;
-  }
-
-  .light-paginationtblNamHoc,
-  .info-tblNamHoc {
-    float: left !important;
-    width: 100% !important;
-  }
-
-  .light-paginationtblNamHoc.simple-pagination ul {
-    float: left !important;
-  }
-
-  .aps-dulieu {
-    /* display: none !important; */
-  }
-
-  .content .box-solid.box-search {
-    padding: 10px !important;
-  }
-
-  .content .box-solid.box-search .item-search:last-child {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
-  }
-
-  .content .box-solid.box-search .item-search {
-    padding-right: 0px !important;
-  }
-
-  .aps-thiphach .box-search .item-search .btn {
-    width: 100% !important;
-    margin-bottom: 10px !important;
-  }
-
-  .aps-thiphach .box-search .item-search .dropdown {
-    width: 100% !important;
-  }
-
-  .content .box-solid.box-search .item-search.gap10 {
-    display: block !important;
-  }
-
-  .content .box.box-solid.aps-list-nhapdiemdst {
-    padding: 20px 10px !important;
-  }
-
-  .content-wrapper .content {
-    padding: 0 !important;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-    border-radius: 0px !important;
-  }
-
-  .content-wrapper .content .zone-bus {
-    border-radius: 0 !important;
-    -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
-    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
-  }
-
-  .content-wrapper .content .zone-bus .box-search {
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-  }
-
-  .modal-open .modal {
-    padding: 10px !important;
-  }
-
-  .modal-dialog {
-    margin: 0 !important;
-  }
-
-  .modal-open .modal .modal-body {
-    padding: 20px 10px !important;
-  }
-
-  .modal_XacNhan .aps-add-new .aps-form {
-    margin-bottom: 10px;
-  }
-
-  .modal_XacNhan .aps-add-new .aps-form .aps-form-input {
-    width: 100%;
-  }
-
-  .d-flex.aps-BtnXacNhan {
-    display: block !important;
-  }
-
-  .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large {
-    width: 100% !important;
-    padding: 0 !important;
-  }
-
-  .modal_XacNhan .aps-form .tblModal_XacNhan,
-  .tblModal_XacNhanDSTungSinhVien,
-  .tblCanBoChamThi {
-    min-width: 680px;
-  }
-
-  .modal_XacNhan .aps-add-new .aps-form:last-child {
-    margin-bottom: 0 !important;
-  }
-
-  .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large {
-    margin-bottom: 0px !important;
-  }
+
+    .light-paginationtblHocPhan.simple-pagination ul,
+    .filter-tblHocPhan {
+        float: left !important;
+    }
+
+    .filter-tblHocPhan {
+        margin-top: 10px;
+    }
+
+    .aps-list-hocphan .pull-right.aps-list-btn {
+        width: 100%;
+    }
+
+    .aps-list-monhoc .box-header .aps-list-btn.pull-right {
+        width: 100%;
+    }
+
+    .aps-form .aps-form-item .aps-form-input {
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .myModalKeThua .aps-form .aps-form-item .aps-form-lable {
+        min-width: 110px !important;
+    }
+
+    .myModalKeThua .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
+
+    .modal-content {
+        width: 100%;
+    }
+
+    .modal-dialog.modal-680 {
+        width: 100% !important;
+    }
+
+    .aps-list-chuongtrinh .box-header,
+    .aps-list-chuongtrinh .box-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .aps-list-chuongtrinh .pull-right {
+        float: left !important;
+    }
+
+    .info-tblChuongTrinh,
+    .light-paginationtblChuongTrinh {
+        width: 100% !important;
+        float: left !important;
+    }
+
+    .light-paginationtblChuongTrinh.simple-pagination ul {
+        float: left;
+    }
+
+    .aps-list-chuongtrinh .box-header .pull-right .btn {
+        margin-left: 0px !important;
+        margin-right: 10px !important;
+    }
+
+    .change-tblChuongTrinh {
+        margin-bottom: 5px !important;
+    }
+
+    .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-lable {
+        min-width: 145px;
+    }
+
+    .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
+
+    .zone_input_ChuongTrinh .aps-add-new .col-lg-7.pr20 {
+        padding-right: 0 !important;
+        display: flow-root;
+        padding-bottom: 20px;
+    }
+
+    .zone_input_ChuongTrinh .aps-add-new .col-lg-5.pl20 {
+        padding-left: 0 !important;
+    }
+
+    .zone_input_ChuongTrinh .aps-form {
+        margin-bottom: 10px;
+    }
+
+    .aps-form-lable-mobi {
+        line-height: 20px !important;
+    }
+
+    /* ---Fix home */
+    .account-group .box-acc-user .dropdown-menu {
+        margin-top: 11px !important;
+    }
+
+    /* ---Fix home */
+    .quick-action .welcome {
+        padding-top: 10px;
+    }
+
+    .quick-action .quick-acction-title {
+        font-size: 20px;
+        margin-top: 5px;
+    }
+
+    .account-group .dropdown {
+        width: fit-content !important;
+        margin-left: 10px;
+    }
+
+    .account-group .dropdown.box-notify {
+        width: fit-content !important;
+        margin-left: 0px;
+        margin-top: 2px;
+        margin-right: 8px;
+    }
+
+    .action-group {
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .action-group .item {
+        width: calc(50% - 7.5px);
+        padding: 0;
+    }
+
+    .account-group .dropdown-menu {
+        border-radius: 0 0 6px 6px !important;
+    }
+
+    /* ---End fix home */
+    .skin-blue .main-header .logo {
+        width: fit-content !important;
+    }
+
+    .zone_input_HeDaoTao .box-body {
+        padding: 0 10px !important;
+    }
+
+    .zone_input_HeDaoTao .aps-form .aps-form-item .aps-form-lable {
+        min-width: 120px;
+    }
+
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
+        min-width: 100px;
+    }
+
+    .box-search .item-search:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    #lbLogo_large {
+        display: none;
+    }
+
+    .main-header .logo .logo-lg::after {
+        content: "\e00d";
+        font-family: var(--fa-style-family, "Font Awesome 6 Pro") !important;
+        font-weight: 300;
+    }
+
+    .aps-list-khoahoc.mt-15 {
+        margin-top: 0 !important;
+    }
+
+    .text-fixmobi.aps-form-lable {
+        line-height: 18px !important;
+    }
+
+    .zone_input_KhoaDaoTao .btn-default.btnClose {
+        position: absolute;
+        top: -53px;
+        right: -10px;
+        background: transparent !important;
+        border: 0 !important;
+        color: #fff !important;
+    }
+
+    .zone_input_KhoaDaoTao .btn-default.btnClose:hover {
+        background: transparent !important;
+        border: 0 !important;
+        color: #ffd900 !important;
+    }
+
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-lable {
+        width: 100px;
+        min-width: 100px;
+    }
+
+    .zone_input_KhoaDaoTao .aps-form .aps-form-item .aps-form-input {
+        width: 100% !important;
+    }
+
+    .zone_input_KhoaDaoTao .pr20 {
+        padding-right: 0px !important;
+        display: flow-root;
+    }
+
+    .zone_input_KhoaDaoTao .pl20 {
+        padding-left: 0 !important;
+        padding-top: 20px !important;
+    }
+
+    .zone_input_KhoaDaoTao .aps-form:last-child {
+        border-bottom: 1px solid #f1f1f1 !important;
+        padding-bottom: 15px !important;
+    }
+
+    .aps-list-khoahoc .box-header .box-tools.pull-right {
+        right: auto !important;
+        left: 0 !important;
+        width: 100%;
+    }
+
+    .aps-list-khoahoc .box-header .pull-right .btn {
+        margin-left: 0 !important;
+        margin-right: 10px;
+        margin-top: 5px;
+    }
+
+    .tblKhoaDaoTao,
+    .tblHeDaoTao {
+        min-width: 680px;
+    }
+
+    .info-tblKhoaDaoTao,
+    .info-tblHeDaoTao,
+    .light-paginationtblHeDaoTao,
+    .filter-tblKhoaDaoTao,
+    .light-paginationtblKhoaDaoTao,
+    .change-tblKhoaDaoTao {
+        width: 100% !important;
+        float: left !important;
+    }
+
+    .light-paginationtblKhoaDaoTao.simple-pagination ul,
+    .light-paginationtblHeDaoTao.simple-pagination ul,
+    .filter-tblKhoaDaoTao .pull-right {
+        float: left !important;
+    }
+
+    .filter-tblKhoaDaoTao .pull-right {
+        margin-top: 8px !important;
+    }
+
+    .aps-table-select .table.tblKhoaDaoTao {
+        margin-bottom: 2px !important;
+    }
+
+    /* ------------- */
+    .zone_input_ThoiGianDaoTao .btn-default.btnClose {
+        position: absolute;
+        top: -54px;
+        right: -8px;
+        background: transparent !important;
+        border: 0 !important;
+        color: #fff !important;
+    }
+
+    .aps-form-time .aps-form-item .col-sm-6.aps-form-lable {
+        text-align: left !important;
+        max-width: 110px;
+    }
+
+    .aps-KeHoachChuongTrinh .aps-tochucchuongtrinh-thoigiandaotao .box-solid.box-search {
+        padding-bottom: 0 !important;
+    }
+
+    .info-tblThoiGianDaoTao,
+    .light-paginationtblThoiGianDaoTao {
+        width: 100% !important;
+        text-align: right;
+    }
+
+    .aps-list-year .box-header,
+    .aps-list-year .aps-table-year,
+    .aps-list-hocky .box-header,
+    .aps-list-hocky .box-body {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .content-wrapper .list-group {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .skin-blue .main-header .navbar .nav>li>.dropdown-toggle {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .aps-form-time .aps-form-item {
+        display: block !important;
+    }
+
+    .aps-form-time .aps-form-item .col-sm-6.col-12 {
+        width: 100% !important;
+    }
+
+    .zone_input_ThoiGianDaoTao .col-lg-5.pl20 {
+        padding-left: 0px !important;
+        padding-top: 20px;
+    }
+
+    .zone_input_ThoiGianDaoTao .col-lg-7 {
+        z-index: 1;
+    }
+
+    .zone_input_ThoiGianDaoTao .pull-right .btn {
+        margin-bottom: 10px;
+    }
+
+    .zone_input_ThoiGianDaoTao .pull-right .btn {
+        margin-left: 10px;
+        margin-right: 0px !important;
+    }
+
+    .aps-form-time .aps-form-item {
+        display: block !important;
+    }
+
+    .aps-form-time .aps-form-item .col-sm-6 {
+        width: 100% !important;
+    }
+
+    .aps-form-time .aps-form-item .col-sm-6.col-12:first-child {
+        margin-bottom: 10px !important;
+    }
+
+    .aps-form-item {
+        margin-bottom: 10px;
+    }
+
+    .zone_input_ThoiGianDaoTao .aps-form .aps-form-item .aps-form-lable {
+        width: 90px !important;
+        min-width: 90px;
+        text-align: left !important;
+        display: block !important;
+    }
+
+    .zone_input_ThoiGianDaoTao .aps-form .aps-form-item .aps-form-input {
+        width: 100% !important;
+    }
+
+    .zone_input_ThoiGianDaoTao .aps-add-new .pr20 {
+        padding-right: 0px !important;
+        display: flow-root;
+    }
+
+    /* --------- */
+    .filter-tblThoiGianDaoTao .pull-right,
+    .filter-tblThoiGianDaoTao {
+        float: left !important;
+        margin-top: 5px;
+    }
+
+    .table thead tr th {
+        position: sticky;
+        top: 0;
+        background-color: #fff;
+        z-index: 10;
+    }
+
+    .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue {
+        width: 100% !important;
+    }
+
+    .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue .box-body.pd20 {
+        padding: 10px !important;
+    }
+
+    .form-container.zone_input_NamHoc .aps-add-new .col-lg-7.pr20 {
+        padding-right: 0px !important;
+        z-index: 99;
+        display: flow-root;
+    }
+
+    .form-container.zone_input_NamHoc .aps-add-new .col-lg-5.pl20 {
+        padding: 20px !important;
+    }
+
+    .form-container.zone_input_NamHoc .pd20 {
+        padding: 10px !important;
+    }
+
+    .aps-KeHoachChuongTrinh .form-container.zone_input_NamHoc {
+        width: 100% !important;
+    }
+
+    .aps-list-year .box-header .box-tools.pull-right,
+    .aps-list-hocky .box-header .box-tools.pull-right {
+        width: 100%;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+    }
+
+    .aps-list-year .box-header .box-tools.pull-right .btn,
+    .aps-list-hocky .box-header .box-tools.pull-right .btn {
+        margin-left: 0 !important;
+        margin-right: 10px;
+    }
+
+    .aps-list-year .aps-table-select,
+    .aps-list-hocky .box-body {
+        margin-top: 0 !important;
+    }
+
+    .change-tblNamHoc {
+        margin-bottom: 10px;
+    }
+
+    .filter-tblNamHoc.pull-right {
+        float: left !important;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .filter-tblNamHoc.pull-right .pull-right {
+        float: left !important;
+    }
+
+    .zone-pag-footertblNamHoc {
+        margin-top: 0 !important;
+    }
+
+    .light-paginationtblNamHoc,
+    .info-tblNamHoc {
+        float: left !important;
+        width: 100% !important;
+    }
+
+    .light-paginationtblNamHoc.simple-pagination ul {
+        float: left !important;
+    }
+
+    .aps-dulieu {
+        /* display: none !important; */
+    }
+
+    .content .box-solid.box-search {
+        padding: 10px !important;
+    }
+
+    .content .box-solid.box-search .item-search:last-child {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .content .box-solid.box-search .item-search {
+        padding-right: 0px !important;
+    }
+
+    .aps-thiphach .box-search .item-search .btn {
+        width: 100% !important;
+        margin-bottom: 10px !important;
+    }
+
+    .aps-thiphach .box-search .item-search .dropdown {
+        width: 100% !important;
+    }
+
+    .content .box-solid.box-search .item-search.gap10 {
+        display: block !important;
+    }
+
+    .content .box.box-solid.aps-list-nhapdiemdst {
+        padding: 20px 10px !important;
+    }
+
+    .content-wrapper .content {
+        padding: 0 !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        border-radius: 0px !important;
+    }
+
+    .content-wrapper .content .zone-bus {
+        border-radius: 0 !important;
+        -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+        box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+    }
+
+    .content-wrapper .content .zone-bus .box-search {
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .modal-open .modal {
+        padding: 10px !important;
+    }
+
+    .modal-dialog {
+        margin: 0 !important;
+    }
+
+    .modal-open .modal .modal-body {
+        padding: 20px 10px !important;
+    }
+
+    .modal_XacNhan .aps-add-new .aps-form {
+        margin-bottom: 10px;
+    }
+
+    .modal_XacNhan .aps-add-new .aps-form .aps-form-input {
+        width: 100%;
+    }
+
+    .d-flex.aps-BtnXacNhan {
+        display: block !important;
+    }
+
+    .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large {
+        width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .modal_XacNhan .aps-form .tblModal_XacNhan,
+    .tblModal_XacNhanDSTungSinhVien,
+    .tblCanBoChamThi {
+        min-width: 680px;
+    }
+
+    .modal_XacNhan .aps-add-new .aps-form:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large {
+        margin-bottom: 0px !important;
+    }
 }
 
 @media (max-width: 400px) {
-  .finance-modal.my-calendar .modal-body .justify-content-between {
-    margin-bottom: 10px;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .finance-modal.my-calendar .modal-body .justify-content-between {
+        margin-bottom: 10px;
+    }
 
-  .khoa-sldl-left {
-    width: 100% !important;
-  }
+    .khoa-sldl-left {
+        width: 100% !important;
+    }
 
-  .my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 {
-    width: 100% !important;
-    text-align: right;
-    padding-left: 0 !important;
-  }
+    .my-calendar.modal_XacNhan .change-calendar .col-md-2.col-lg-2 {
+        width: 100% !important;
+        text-align: right;
+        padding-left: 0 !important;
+    }
 
-  .my-calendar.modal_XacNhan .change-calendar .form-item {
-    margin-bottom: 10px;
-  }
+    .my-calendar.modal_XacNhan .change-calendar .form-item {
+        margin-bottom: 10px;
+    }
 
-  .tblTaskBar_TongHopKetQua,
-  .tblTaskBar_TongHopKetQua tr td {
-    width: 100% !important;
-  }
+    .tblTaskBar_TongHopKetQua,
+    .tblTaskBar_TongHopKetQua tr td {
+        width: 100% !important;
+    }
 
-  .tblTaskBar_TongHopKetQua tr td:first-child {
-    display: none !important;
-  }
+    .tblTaskBar_TongHopKetQua tr td:first-child {
+        display: none !important;
+    }
 
-  .tblTaskBar_TongHopKetQua tr {
-    display: grid !important;
-  }
+    .tblTaskBar_TongHopKetQua tr {
+        display: grid !important;
+    }
 }
 
 /* Small devices (portrait tablets and large phones, 600px and up) */
 @media only screen and (min-width: 600px) {
-  .modal-dialog {
-    margin: 0 auto !important;
-    padding-right: 0 !important;
-  }
+    .modal-dialog {
+        margin: 0 auto !important;
+        padding-right: 0 !important;
+    }
 
-  .modal-dialog {
-    margin: 0 auto !important;
-    padding-right: 0 !important;
-  }
+    .modal-dialog {
+        margin: 0 auto !important;
+        padding-right: 0 !important;
+    }
 
-  .modal-content {
-    width: 100%;
-  }
+    .modal-content {
+        width: 100%;
+    }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 769px) {
-  .sidebar-collapse .main-sidebar {
-    -webkit-transform: translate(-280px, 0) !important;
-    -ms-transform: translate(-280px, 0) !important;
-    -o-transform: translate(-280px, 0) !important;
-    transform: translate(-280px, 0) !important;
-  }
+    .sidebar-collapse .main-sidebar {
+        -webkit-transform: translate(-280px, 0) !important;
+        -ms-transform: translate(-280px, 0) !important;
+        -o-transform: translate(-280px, 0) !important;
+        transform: translate(-280px, 0) !important;
+    }
 
-  /* Large devices (laptops/desktops, 992px and up) */
+    /* Large devices (laptops/desktops, 992px and up) */
 
-  #viewThanhPhan .table > thead > tr > th:first-child {
-    border-left: 0 solid #e1e1e1 !important;
-    /* font-weight: 400; */
-  }
+    #viewThanhPhan .table>thead>tr>th:first-child {
+        border-left: 0 solid #e1e1e1 !important;
+        /* font-weight: 400; */
+    }
 
-  #viewThanhPhan thead tr th {
-    font-weight: 400;
-  }
+    #viewThanhPhan thead tr th {
+        font-weight: 400;
+    }
 
-  #viewThanhPhan tbody tr td,
-  #viewThanhPhan thead tr th {
-    border-left: 0 !important;
-    border-right: 0 !important;
-  }
+    #viewThanhPhan tbody tr td,
+    #viewThanhPhan thead tr th {
+        border-left: 0 !important;
+        border-right: 0 !important;
+    }
 
-  #viewThanhPhan .table tr:last-child {
-    border-right: 0px solid #d1d1d1 !important;
-  }
+    #viewThanhPhan .table tr:last-child {
+        border-right: 0px solid #d1d1d1 !important;
+    }
 }
 
 /* Large devices (laptops/desktops, 992px and up) */
 @media screen and (min-width: 768px) and (max-width: 992px) {
-  .main-sidebar {
-    -webkit-transform: translate(-280px, 0) !important;
-    -ms-transform: translate(-280px, 0) !important;
-    -o-transform: translate(-280px, 0) !important;
-    transform: translate(-280px, 0) !important;
-  }
+    .main-sidebar {
+        -webkit-transform: translate(-280px, 0) !important;
+        -ms-transform: translate(-280px, 0) !important;
+        -o-transform: translate(-280px, 0) !important;
+        transform: translate(-280px, 0) !important;
+    }
 
-  .content-wrapper {
-    margin-left: 0 !important;
-  }
+    .content-wrapper {
+        margin-left: 0 !important;
+    }
 
-  .sidebar-collapse .main-sidebar {
-    -webkit-transform: translate(0, 0) !important;
-    -ms-transform: translate(0, 0) !important;
-    -o-transform: translate(0, 0) !important;
-    transform: translate(0, 0) !important;
-  }
+    .sidebar-collapse .main-sidebar {
+        -webkit-transform: translate(0, 0) !important;
+        -ms-transform: translate(0, 0) !important;
+        -o-transform: translate(0, 0) !important;
+        transform: translate(0, 0) !important;
+    }
 
-  .sidebar-collapse .content-wrapper {
-    margin-left: 280px !important;
-  }
+    .sidebar-collapse .content-wrapper {
+        margin-left: 280px !important;
+    }
 
-  .form-top .col-12:nth-child(4),
-  .form-top .col-12:nth-child(8),
-  .form-top .col-12:nth-child(12) {
-    padding-right: 10px !important;
-  }
+    .form-top .col-12:nth-child(4),
+    .form-top .col-12:nth-child(8),
+    .form-top .col-12:nth-child(12) {
+        padding-right: 10px !important;
+    }
 
-  .form-top .col-12:nth-child(2),
-  .form-top .col-12:nth-child(4),
-  .form-top .col-12:nth-child(6) {
-    padding-right: 0 !important;
-  }
+    .form-top .col-12:nth-child(2),
+    .form-top .col-12:nth-child(4),
+    .form-top .col-12:nth-child(6) {
+        padding-right: 0 !important;
+    }
 
-  #zone_notify_nhapdiem .form-top .col-12:nth-child(4) {
-    padding-right: 10px !important;
-  }
+    #zone_notify_nhapdiem .form-top .col-12:nth-child(4) {
+        padding-right: 10px !important;
+    }
 
-  .tblDSDiem {
-    min-width: 1860px !important;
-  }
+    .tblDSDiem {
+        min-width: 1860px !important;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1024px) {
-  .aps-list-hocky .box-header .box-title {
-    padding-top: 12px;
-  }
+    .aps-list-hocky .box-header .box-title {
+        padding-top: 12px;
+    }
 
-  .aps-tochucchuongtrinh-thoigiandaotao
-    .aps-list-hocky
-    .box-header
-    .bg-light-blue.badge {
-    margin-top: 16px !important;
-  }
+    .aps-tochucchuongtrinh-thoigiandaotao .aps-list-hocky .box-header .bg-light-blue.badge {
+        margin-top: 16px !important;
+    }
 
-  .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
-    padding: 0px 15px 0 0 !important;
-  }
+    .aps-chiTiet-taiChinh .form-container-body.pl-0.col-sm-6 {
+        padding: 0px 15px 0 0 !important;
+    }
 
-  .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6 {
-    padding: 0 0 0 15px !important;
-  }
+    .aps-chiTiet-taiChinh .form-container-body.pr0.col-sm-6 {
+        padding: 0 0 0 15px !important;
+    }
 
-  .zoneThongTinBoSung .col-lg-3 {
-    /*padding-right: 15px;*/
-  }
+    .zoneThongTinBoSung .col-lg-3 {
+        /*padding-right: 15px;*/
+    }
 
-  .aps-chiTiet-taiChinh .aps-table-select .table tfoot tr td {
-    border-left: 0 solid #d1d1d1 !important;
-    border-right: 0 !important;
-    padding: 10px 8px 4px 8px !important;
-  }
+    .aps-chiTiet-taiChinh .aps-table-select .table tfoot tr td {
+        border-left: 0 solid #d1d1d1 !important;
+        border-right: 0 !important;
+        padding: 10px 8px 4px 8px !important;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (min-width: 1680px) {
-  .zoneThongTinBoSung .col-lg-3:nth-child(4n) {
-    padding-right: 0 !important;
-  }
+    .zoneThongTinBoSung .col-lg-3:nth-child(4n) {
+        padding-right: 0 !important;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (max-width: 1900px) and (min-width: 1380px) {
-  .viewchungtu {
-    width: 25% !important;
-  }
+    .viewchungtu {
+        width: 25% !important;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (max-width: 1500px) and (min-width: 1200px) {
-  .aps-table-fileimport tr td {
-    display: flex;
-    height: 38px !important;
-  }
+    .aps-table-fileimport tr td {
+        display: flex;
+        height: 38px !important;
+    }
 
-  .aps-table-fileimport tr .aps-form-input,
-  .aps-table-fileimport tr .aps-form-btn {
-    height: 48px !important;
-  }
+    .aps-table-fileimport tr .aps-form-input,
+    .aps-table-fileimport tr .aps-form-btn {
+        height: 48px !important;
+    }
 
-  .aps-table-fileimport tr:first-child td:nth-child(3) {
-    display: none;
-  }
+    .aps-table-fileimport tr:first-child td:nth-child(3) {
+        display: none;
+    }
 
-  .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
-    height: 73px !important;
-  }
+    .aps-table-fileimport .nav-tabs-custom .nav-tabs li .lang {
+        height: 73px !important;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (max-width: 1380px) and (min-width: 1140px) {
-  .viewchungtu {
-    width: 33.3333% !important;
-  }
+    .viewchungtu {
+        width: 33.3333% !important;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
 @media only screen and (max-width: 1140px) and (min-width: 600px) {
-  .viewchungtu {
-    width: 50% !important;
-  }
+    .viewchungtu {
+        width: 50% !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-  /* .item-search.item-search-btn {
+    /* .item-search.item-search-btn {
         margin-bottom: 0px !important;
         width: 100% !important;
     } */
 
-  .aps-ds-tuibai .tblTuiBai,
-  .aps-ds-thivd .tblThi {
-    min-width: 1200px;
-  }
+    .aps-ds-tuibai .tblTuiBai,
+    .aps-ds-thivd .tblThi {
+        min-width: 1200px;
+    }
 
-  .aps-diemdanh-tudong,
-  .aps-diemdanh-thucong {
-    display: block !important;
-  }
+    .aps-diemdanh-tudong,
+    .aps-diemdanh-thucong {
+        display: block !important;
+    }
 
-  .aps-nguoihoc .group-2 {
-    display: block !important;
-  }
+    .aps-nguoihoc .group-2 {
+        display: block !important;
+    }
 
-  .aps-nguoihoc .group-2 .form-list-input {
-    margin-bottom: 10px;
-  }
+    .aps-nguoihoc .group-2 .form-list-input {
+        margin-bottom: 10px;
+    }
 
-  .aps-nguoihoc .form-top .col-12 {
-    padding-right: 0 !important;
-  }
+    .aps-nguoihoc .form-top .col-12 {
+        padding-right: 0 !important;
+    }
 
-  .aps-nguoihoc .group-2 .form-item:last-child {
-    margin-right: 0 !important;
-  }
+    .aps-nguoihoc .group-2 .form-item:last-child {
+        margin-right: 0 !important;
+    }
 
-  .modal_XacNhan_hoanthanh .action-group .select-group {
-    display: block !important;
-  }
+    .modal_XacNhan_hoanthanh .action-group .select-group {
+        display: block !important;
+    }
 
-  .modal_XacNhan_hoanthanh .action-group .select-group .label {
-    margin-bottom: 5px;
-    text-align: left !important;
-  }
+    .modal_XacNhan_hoanthanh .action-group .select-group .label {
+        margin-bottom: 5px;
+        text-align: left !important;
+    }
 
-  .modal_XacNhan_hoanthanh .select-group:first-child {
-    padding-right: 10px !important;
-  }
+    .modal_XacNhan_hoanthanh .select-group:first-child {
+        padding-right: 10px !important;
+    }
 
-  .modal_XacNhan_hoanthanh .action-group .btnDongYXacNhan {
-    margin-top: 24px !important;
-  }
+    .modal_XacNhan_hoanthanh .action-group .btnDongYXacNhan {
+        margin-top: 24px !important;
+    }
 
-  .box-nhapdiemchamkiemtra .aps-form-button {
-    padding-left: 10px !important;
-  }
+    .box-nhapdiemchamkiemtra .aps-form-button {
+        padding-left: 10px !important;
+    }
 
-  .my-calendar.modal_XacNhan .change-calendar .gv-button-group {
-    align-items: flex-start !important;
-  }
+    .my-calendar.modal_XacNhan .change-calendar .gv-button-group {
+        align-items: flex-start !important;
+    }
 
-  .box-nhapdiemchamkiemtra .col-lg-7 {
-    padding-right: 0 !important;
-  }
+    .box-nhapdiemchamkiemtra .col-lg-7 {
+        padding-right: 0 !important;
+    }
 
-  .kqht-modal .right {
-    padding-left: 0 !important;
-    margin-top: 10px !important;
-  }
+    .kqht-modal .right {
+        padding-left: 0 !important;
+        margin-top: 10px !important;
+    }
 
-  .kqht-modal {
-    display: block !important;
-  }
+    .kqht-modal {
+        display: block !important;
+    }
 
-  .my-calendar.modal_XacNhan .change-calendar .scroll-table-x table {
-    min-width: 680px !important;
-  }
+    .my-calendar.modal_XacNhan .change-calendar .scroll-table-x table {
+        min-width: 680px !important;
+    }
 
-  .modal-dialog-scrollable .modal-body .col-md-10 {
-    width: 80% !important;
-  }
+    .modal-dialog-scrollable .modal-body .col-md-10 {
+        width: 80% !important;
+    }
 
-  .modal-dialog-scrollable .modal-body .col-md-2 {
-    width: 20% !important;
-  }
+    .modal-dialog-scrollable .modal-body .col-md-2 {
+        width: 20% !important;
+    }
 
-  .aps-nhapdiemphuckhao .form-top .aps-all-button {
-    padding-left: 10px !important;
-  }
+    .aps-nhapdiemphuckhao .form-top .aps-all-button {
+        padding-left: 10px !important;
+    }
 
-  .aps-chiTiet-taiChinh .table > tfoot > tr > td:first-child,
-  .aps-chiTiet-taiChinh .table > tfoot > tr > td {
-    border-left: 0px solid #d1d1d1 !important;
-    border-right: 0 !important;
-  }
+    .aps-chiTiet-taiChinh .table>tfoot>tr>td:first-child,
+    .aps-chiTiet-taiChinh .table>tfoot>tr>td {
+        border-left: 0px solid #d1d1d1 !important;
+        border-right: 0 !important;
+    }
 
-  .form-container-body {
-    padding: 0px !important;
-    width: 100% !important;
-  }
+    .form-container-body {
+        padding: 0px !important;
+        width: 100% !important;
+    }
 
-  .DSTrangThaiSV_QD .col-lg-2 {
-    width: 25% !important;
-  }
+    .DSTrangThaiSV_QD .col-lg-2 {
+        width: 25% !important;
+    }
 
-  .aps-chiTiet-taiChinh .scroll-table-x table {
-    min-width: 680px !important;
-  }
+    .aps-chiTiet-taiChinh .scroll-table-x table {
+        min-width: 680px !important;
+    }
 
-  .calendar-week-table .date {
-    width: 68px !important;
-  }
+    .calendar-week-table .date {
+        width: 68px !important;
+    }
 
-  .hour-row::before {
-    width: 105% !important;
-  }
+    .hour-row::before {
+        width: 105% !important;
+    }
 
-  .modal-body {
-    padding: 15px !important;
-  }
+    .modal-body {
+        padding: 15px !important;
+    }
 
-  .modal .modal-dialog {
-    padding: 20px;
-  }
+    .modal .modal-dialog {
+        padding: 20px;
+    }
 
-  .modal-860 {
-    width: 100% !important;
-  }
+    .modal-860 {
+        width: 100% !important;
+    }
 
-  .modal-96,
-  .modal-90,
-  .finance-modal.study-program-modal .modal-xl,
-  .khoikienthucchuyennganh .modal-xl {
-    max-width: 98% !important;
-    padding: 0 !important;
-  }
+    .modal-96,
+    .modal-90,
+    .finance-modal.study-program-modal .modal-xl,
+    .khoikienthucchuyennganh .modal-xl {
+        max-width: 98% !important;
+        padding: 0 !important;
+    }
 
-  .khoikienthucchuyennganh .modal-xl {
-    width: 100% !important;
-  }
+    .khoikienthucchuyennganh .modal-xl {
+        width: 100% !important;
+    }
 
-  .zoneLichHoc .register-school-left {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-  }
+    .zoneLichHoc .register-school-left {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 }
 
 @media (min-width: 600px) and (max-width: 1024px) {
-  .zone_input_ChuongTrinh .aps-add-new .col-lg-7.pr20 {
-    display: flow-root;
-    padding-right: 0 !important;
-    padding-bottom: 20px;
-  }
+    .zone_input_ChuongTrinh .aps-add-new .col-lg-7.pr20 {
+        display: flow-root;
+        padding-right: 0 !important;
+        padding-bottom: 20px;
+    }
 
-  .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-lable {
-    min-width: 186px;
-  }
+    .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-lable {
+        min-width: 186px;
+    }
 
-  .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-input {
-    width: 100%;
-  }
+    .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
 
-  .aps-list-chuongtrinh .box-header,
-  .aps-list-chuongtrinh .box-body {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
-  }
+    .aps-list-chuongtrinh .box-header,
+    .aps-list-chuongtrinh .box-body {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
 
-  .box-search .item-search {
-    margin-right: 10px !important;
-  }
+    .box-search .item-search {
+        margin-right: 10px !important;
+    }
 
-  .modal-860,
-  .modal_XacNhan .modal-860 {
-    max-width: 100% !important;
-  }
+    .modal-860,
+    .modal_XacNhan .modal-860 {
+        max-width: 100% !important;
+    }
 
-  .dkcn_diem .tblBangDiem,
-  .dkcn_diem .tblChungChi {
-    min-width: 100px !important;
-  }
+    .dkcn_diem .tblBangDiem,
+    .dkcn_diem .tblChungChi {
+        min-width: 100px !important;
+    }
 
-  .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .box-body {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    /* Chia thành 2 cột bằng nhau */
-    gap: 10px;
-  }
+    .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .box-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        /* Chia thành 2 cột bằng nhau */
+        gap: 10px;
+    }
 
-  .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .box-body:before {
-    display: none;
-  }
+    .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .box-body:before {
+        display: none;
+    }
 
-  .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .item-search {
-    margin-bottom: 0 !important;
-  }
+    .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .item-search {
+        margin-bottom: 0 !important;
+    }
 
-  .aps-tochucchuongtrinh-chuongtrinh
-    .box-solid.box-search
-    .item-search:nth-child(1),
-  .aps-tochucchuongtrinh-chuongtrinh
-    .box-solid.box-search
-    .item-search:nth-child(2) {
-    width: 100% !important;
-    padding-right: 0 !important;
-  }
+    .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .item-search:nth-child(1),
+    .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .item-search:nth-child(2) {
+        width: 100% !important;
+        padding-right: 0 !important;
+    }
 
-  .aps-tochucchuongtrinh-chuongtrinh
-    .box-solid.box-search
-    .col-sm-5.item-search {
-    width: 100%;
-    padding-right: 0 !important;
-  }
+    .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .col-sm-5.item-search {
+        width: 100%;
+        padding-right: 0 !important;
+    }
 }
 
 @media (min-width: 600px) and (max-width: 767px) {
-  .aps-list-chuongtrinh .box-header .pull-right.box-list-btn {
-    margin-top: 5px;
-    float: left !important;
-    width: 100%;
-  }
+    .aps-list-chuongtrinh .box-header .pull-right.box-list-btn {
+        margin-top: 5px;
+        float: left !important;
+        width: 100%;
+    }
 
-  .aps-list-chuongtrinh .box-header .pull-right.box-list-btn .btn {
-    margin-left: 0 !important;
-    margin-right: 10px !important;
-  }
+    .aps-list-chuongtrinh .box-header .pull-right.box-list-btn .btn {
+        margin-left: 0 !important;
+        margin-right: 10px !important;
+    }
 
-  .aps-ds-tuibai .tblTuiBai,
-  .aps-ds-thivd .tblThi {
-    min-width: 900px;
-  }
+    .aps-ds-tuibai .tblTuiBai,
+    .aps-ds-thivd .tblThi {
+        min-width: 900px;
+    }
 
-  .aps-diemdanh-tudong .aps-all-button {
-    display: block !important;
-    width: 100%;
-  }
+    .aps-diemdanh-tudong .aps-all-button {
+        display: block !important;
+        width: 100%;
+    }
 
-  .modal-dialog.modal-680,
-  .myModalKeThua .aps-form .aps-form-item .aps-form-input {
-    width: 100% !important;
-    /* max-width: 500px !important; */
-  }
+    .modal-dialog.modal-680,
+    .myModalKeThua .aps-form .aps-form-item .aps-form-input {
+        width: 100% !important;
+        /* max-width: 500px !important; */
+    }
 
-  .myModalKeThua .aps-form .aps-form-item .aps-form-lable {
-    width: 150px !important;
-  }
+    .myModalKeThua .aps-form .aps-form-item .aps-form-lable {
+        width: 150px !important;
+    }
 
-  .aps-diemdanh-tudong .aps-all-button .form-add-info {
-    margin-bottom: 10px;
-  }
+    .aps-diemdanh-tudong .aps-all-button .form-add-info {
+        margin-bottom: 10px;
+    }
 
-  .modal-1360 {
-    max-width: 97% !important;
-    min-width: 96% !important;
-    margin-left: 0 !important;
-  }
+    .modal-1360 {
+        max-width: 97% !important;
+        min-width: 96% !important;
+        margin-left: 0 !important;
+    }
 
-  .modal_XacNhan_hoanthanh .action-group .select-group .label {
-    text-align: left !important;
-  }
+    .modal_XacNhan_hoanthanh .action-group .select-group .label {
+        text-align: left !important;
+    }
 
-  .modal_XacNhan_hoanthanh .action-group .min-w-100p {
-    width: 120px !important;
-    margin-right: 0 !important;
-  }
+    .modal_XacNhan_hoanthanh .action-group .min-w-100p {
+        width: 120px !important;
+        margin-right: 0 !important;
+    }
 
-  .modal_XacNhan_hoanthanh .select-group {
-    padding-left: 0px;
-  }
+    .modal_XacNhan_hoanthanh .select-group {
+        padding-left: 0px;
+    }
 
-  .modal_XacNhan_hoanthanh .select-group:first-child {
-    margin-bottom: 10px;
-  }
+    .modal_XacNhan_hoanthanh .select-group:first-child {
+        margin-bottom: 10px;
+    }
 }
 
 @media (min-width: 460px) and (max-width: 680px) {
-  .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
-    min-width: 168px !important;
-  }
+    .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
+        min-width: 168px !important;
+    }
 
-  .zone_input_HocPhan .aps-form-lable-mobi {
-    line-height: 38px !important;
-  }
+    .zone_input_HocPhan .aps-form-lable-mobi {
+        line-height: 38px !important;
+    }
 
-  .aps-list-chuongtrinh .box-header .aps-all-btn.pull-right {
-    margin-left: auto;
-    margin-top: 0px;
-    width: 100%;
-  }
+    .aps-list-chuongtrinh .box-header .aps-all-btn.pull-right {
+        margin-left: auto;
+        margin-top: 0px;
+        width: 100%;
+    }
 
-  .formLoginSSO {
-    width: 430px !important;
-  }
+    .formLoginSSO {
+        width: 430px !important;
+    }
 }
 
-<<<<<<< HEAD
 @media (max-width:460px) {
 
     .formLoginSSO {
         width: 100% !important;
     }
-=======
+}
+
 @media (max-width: 460px) {
-  .formLoginSSO {
-    width: 100% !important;
-  }
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
+    .formLoginSSO {
+        width: 100% !important;
+    }
 
-  .navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
-    right: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    min-width: 100% !important;
-  }
+    .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
+        right: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        min-width: 100% !important;
+    }
 
-  .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-lable {
-    min-width: 120px;
-  }
+    .zone_input_ChuongTrinh .aps-form .aps-form-item .aps-form-lable {
+        min-width: 120px;
+    }
 }
 
 @media (min-width: 400px) and (max-width: 680px) {
-  .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue .box-body.pd20 {
-    padding: 15px !important;
-  }
+    .aps-KeHoachChuongTrinh .form-container.zone-bus.add-absolue .box-body.pd20 {
+        padding: 15px !important;
+    }
 }
 
 @media (min-width: 320px) and (max-width: 440px) {
-  .aps-nguoihoc .form-list-input {
-    display: block !important;
-    width: 100% !important;
-  }
+    .aps-nguoihoc .form-list-input {
+        display: block !important;
+        width: 100% !important;
+    }
 
-  .aps-nguoihoc .form-list-input .form-item {
-    margin-bottom: 10px !important;
-  }
+    .aps-nguoihoc .form-list-input .form-item {
+        margin-bottom: 10px !important;
+    }
 
-  .aps-nguoihoc .form-list-input .form-item:last-child {
-    margin-bottom: 0 !important;
-  }
+    .aps-nguoihoc .form-list-input .form-item:last-child {
+        margin-bottom: 0 !important;
+    }
 }
 
 @media (min-width: 380px) and (max-width: 680px) {
-  .DSTrangThaiSV_QD .col-12 {
-    width: 50%;
-  }
+    .DSTrangThaiSV_QD .col-12 {
+        width: 50%;
+    }
 }
 
 @media (max-width: 380px) {
-  .form-container.zone_input_NamHoc
-    .aps-add-new
-    .col-lg-7.pr20
-    .btn-default.btnClose
-    .fa {
-    display: none;
-  }
+    .form-container.zone_input_NamHoc .aps-add-new .col-lg-7.pr20 .btn-default.btnClose .fa {
+        display: none;
+    }
 
-  #btnKhoiPhucDiemDanh i,
-  #btnDiemDanh i {
-    /* display: none !important; */
-  }
+    #btnKhoiPhucDiemDanh i,
+    #btnDiemDanh i {
+        /* display: none !important; */
+    }
 }
 
 @media (max-width: 350px) {
-  .simple-pagination li a {
-    max-height: 30px !important;
-    min-width: 30px !important;
-  }
+    .simple-pagination li a {
+        max-height: 30px !important;
+        min-width: 30px !important;
+    }
 
-  .main-header .sidebar-toggle {
-    padding: 15px 10px !important;
-  }
+    .main-header .sidebar-toggle {
+        padding: 15px 10px !important;
+    }
 
-  .aps-list-year .box-header,
-  .aps-list-year .aps-table-year {
-    padding-left: 10px !important;
-    padding-right: 10px !important;
-  }
+    .aps-list-year .box-header,
+    .aps-list-year .aps-table-year {
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
 }
 
 @media (min-width: 1200px) {
-  .modal-xl {
-    width: 1140px;
-  }
+    .modal-xl {
+        width: 1140px;
+    }
 }
 
 @media (min-width: 576px) {
-  .modal-sm {
-    --bs-modal-width: 300px;
-  }
+    .modal-sm {
+        --bs-modal-width: 300px;
+    }
 }

@@ -292,7 +292,7 @@ input::placeholder {
      color:var(--color-blue) !important;
  } */
 
-<<<<<<< HEAD
+
  .table-hover>tbody>tr:hover .btn .fa {
      color: #fff !important;
  }
@@ -2715,7 +2715,6 @@ input:active,
 }
 
 /* @media (min-width: 768px) {
->>>>>>> 017f214a065762cf7a5b41299ad8b64b2880cbe5
      .sidebar-collapse .main-sidebar {
          -webkit-transform: translate(-280px, 0);
          -ms-transform: translate(-280px, 0);
