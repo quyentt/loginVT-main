@@ -307,7 +307,7 @@ VaiTro.prototype = {
                 code: "MAVAITRO"
             },
             renderPlace: ["dropVaiTro_Cha"],
-            type: "order",
+            type: "unorder",
             title: "Chọn vai trò"
         };
         edu.system.loadToCombo_data(obj);

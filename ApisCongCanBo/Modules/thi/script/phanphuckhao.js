@@ -72,15 +72,20 @@ PhanPhucKhao.prototype = {
                 return;
             }
             $("#modal_PhanPhucKhao").modal("show");
+            me.arrPhanPhucKhao_Id = arrChecked_Id;
             me.strPhanPhucKhao_Id = arrChecked_Id.toString();
             me.getList_PhanCong();
         });
         $("#btnAddGiangVien").click(function () {
             edu.extend.genModal_NhanSu(arrChecked_Id => {
+                var arrPhucKhao_Id = me.arrPhanPhucKhao_Id || [me.strPhanPhucKhao_Id];
+                var iTotal = arrChecked_Id.length * arrPhucKhao_Id.length;
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                edu.system.genHTML_Progress("zoneprocessXXXX", iTotal);
                 for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_PhanCong(arrChecked_Id[i]);
+                    for (var j = 0; j < arrPhucKhao_Id.length; j++) {
+                        me.save_PhanCong(arrChecked_Id[i], arrPhucKhao_Id[j]);
+                    }
                 }
             });
             edu.extend.getList_NhanSu();
@@ -536,7 +541,7 @@ PhanPhucKhao.prototype = {
         /*III. Callback*/
     },
 
-    save_PhanCong: function (strGiangVien_Id) {
+    save_PhanCong: function (strGiangVien_Id, strPhucKhao_Id) {
         var me = this;
         //var aData = me.dtPhanGiangVien.find(e => e.ID == me.strPhanGiangVien_Id);
         //--Edit
@@ -544,7 +549,7 @@ PhanPhucKhao.prototype = {
             'action': 'XLHV_TP_PhanCong_MH/FSkkLB4VKSgeBiggLhcoJC8eAikgLBUpKBEK',
             'func': 'pkg_thi_phancong.Them_Thi_GiaoVien_ChamThiPK',
             'iM': edu.system.iM,
-            'strDuLieuPhanCongChamThi_Id': me.strPhanPhucKhao_Id,
+            'strDuLieuPhanCongChamThi_Id': strPhucKhao_Id || me.strPhanPhucKhao_Id,
             'strNhanSu_HoSoCanBo_v2_Id': strGiangVien_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
