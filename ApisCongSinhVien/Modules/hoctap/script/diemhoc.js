@@ -10,6 +10,18 @@ function DiemHoc() { };
 DiemHoc.prototype = {
     dtKetQua: [],
     strNguoiHoc_Id: '',
+    resolveNguoiHocId: function () {
+        // Only allow viewing another student's data when this page is embedded
+        // inside the staff timetable modal (zoneHTSinhVien/modalHTSinhVien).
+        try {
+            var isEmbeddedViewer = $("#zoneHTSinhVien").length > 0 || $("#modalHTSinhVien").length > 0;
+            if (isEmbeddedViewer && window.main_doc && main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) {
+                return main_doc.LichGiang.strSinhVien_Id;
+            }
+        } catch (e) {
+        }
+        return edu.system.userId;
+    },
     init: function () {
         var me = this;
 
@@ -29,13 +41,7 @@ DiemHoc.prototype = {
             var id = this.id;
             me.getList_DiemThanhPhan(id, point);
         });
-        try {
-            if (main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) me.strNguoiHoc_Id = main_doc.LichGiang.strSinhVien_Id
-            else
-                me.strNguoiHoc_Id = edu.system.userId;// 'e7c4d5e4b2ed4ea1a50c3aaaac1988f6';
-        } catch {
-            me.strNguoiHoc_Id = edu.system.userId;// 'e7c4d5e4b2ed4ea1a50c3aaaac1988f6';
-        }
+        me.strNguoiHoc_Id = me.resolveNguoiHocId();
 
         me.getList_ChuongTrinhHoc();
         me.getList_ThoiGianDangKy(me.strNguoiHoc_Id);
@@ -160,8 +166,9 @@ DiemHoc.prototype = {
     genHtml_ThongTinCaNhan: function () {
         var me = this;
         var jsonSV = me.dtKetQua.rsThongTinNguoiHoc[0];
+        var hoTen = edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN);
+        $("#lblHoTen_DiemHoc").html(hoTen);
         $(".lblHoTen").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
-        console.log(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
         $("#lblMaSo").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_MASO));
         $("#lblNgaySinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_NGAYSINH));
         $("#lblGioiTinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_GIOITINH));

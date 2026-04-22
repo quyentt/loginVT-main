@@ -1,161 +1,122 @@
-﻿<!-- Main content -->
-<style>
-    #tblTimKiem td {
-        border: none !important;
+﻿<style>
+    #btntindaluu {
+        background-color: var(--orange);
+        color: white;
     }
 
-    #tblTimKiem tr {
-        border: none !important;
-    }
-
-
-    .imgtintuc {
-        width: 141px;
-        height: 87px;
-        top: 0;
-        left: 0;
-    }
-
-    @media (min-width: 768px) {
-        .imgtintuc {
-            width: 240px;
-            height: 148px;
-        }
-    }
-
-    #zonetintuc .user-image {
-        float: left;
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        margin-right: 10px;
+    .file-data span {
+        max-width: unset;
+        align-items: center;
+        display: flex
     }
 </style>
-<section class="content">
-    <div class="row">
-        <div class="col-sm-2">
-            <div class="box box-solid">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Đơn vị đăng tin</h3>
-
-                    <div class="box-tools">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body no-padding">
-                    <ul class="nav nav-pills nav-stacked" id="zoneDonVi">
-                        <li class="active">
-                            <a href="#"><i class="fa fa-inbox"></i> Toàn bộ<span class="label label-primary pull-right">12</span></a>
-                        </li>
-                        <!--<li><a href="#"><i class="fa fa-envelope-o"></i> Sent</a></li>
-                        <li><a href="#"><i class="fa fa-file-text-o"></i> Drafts</a></li>
-                        <li><a href="#"><i class="fa fa-filter"></i> Junk <span class="label label-warning pull-right">65</span></a></li>
-                        <li><a href="#"><i class="fa fa-trash-o"></i> Trash</a></li>-->
-                    </ul>
-                </div>
-                <!-- /.box-body -->
+<div class="one-door study-space">
+    <div class="content-tab no-tab content-search">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+                <p class="link"><a href="#">Tin tức</a><i class="fal fa-angle-right"></i><a href="#">Toàn bộ</a></p>
             </div>
-            <!-- /. box -->
-            <div class="box box-solid" style="margin-top: 10px">
-                <div class="box-header with-border">
-                    <h3 class="box-title">Bộ lọc tìm kiếm</h3>
 
-                    <div class="box-tools">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                            <i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="box-body no-padding">
-                    <table id="tblTimKiem" style="width: 100%" class="table">
-                        <tbody>
-                            <tr>
-                                <!--<td>Từ khóa</td>-->
-                                <td>
-                                    <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <!--<td>Từ ngày</td>-->
-                                <td>
-                                    <input id="txtSearch_TuNgay" class="form-control input-datepicker" placeholder="Tìm từ ngày" title="Tìm từ ngày" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <!--<td>Đến ngày</td>-->
-                                <td>
-                                    <input id="txtSearch_DenNgay" class="form-control input-datepicker" placeholder="Tìm đến ngày" title="Tìm đến ngày" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <!--<td></td>-->
-                                <td class="pull-right">
-                                    <a class="btn btn-default" id="btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <!-- /.box-body -->
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
             </div>
-            <!-- /.box -->
         </div>
-        <!-- /.col -->
-        <div class="col-sm-10" id="zonetintuc">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <div class="col-sm-3">
-                        <img src="https://imgproxy.k7.tinhte.vn/SuO7lq_wVOz9XiNMKHM7Yv-bEpDAvVYB8k4lPwP_P_s/h:460/plain/https://photo2.tinhte.vn/data/attachment-files/2021/12/5800697_Cover_Epic.jpg" alt="Cộng đồng mạng: Một giống loài với trí nhớ vô cùng ngắn hạn" style="border-radius: 8px; width: 100%">
-
-                    </div>
-
-                    <div class="col-sm-8" style="padding-left: 20px">
-                        <div style="font-weight: bold; font-size: 24px">
-                            Ba phần Tomb Raider reboot đang tặng free 100% trên Epic Game Store, anh em lấy trước ngày 7/1
-                        </div>
-                        <div>
-                            Kết thúc chuỗi sự kiện “15 Days of Free Games”, sau khi tặng miễn phí cho anh em có tài khoản Epic Games Store những tác phẩm như Shenmue III và Control,
-                        </div>
-                        <div style="padding-top: 10px">
-                            <p style="display: table;">
-                                <!-- The user image in the navbar-->
-                                <img class="user-image" alt="User Image" src="http://14.232.210.131/upload/congcanbo/avatar/kadarahazz.png">
-                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs" style="font-size: 18px;display: table-cell; vertical-align: middle;">Kadara H. Azz</span>
-                                <!-- The user image in the navbar-->
-                                <!--<p style="margin-left: 15px"></p>-->
-                                <!--<span class="fa-stack" style="margin-left: 15px;display: table-cell;">
-                                    <i class="fa fa-circle fa-stack-2x user-icon-bg"></i>
-                                    <i class="fa fa-delicious fa-stack-1x text-primary user-icon"></i>
-                                </span>-->
-                                <!--<span style="margin-left: 15px;font-size:36px"><i class="fa fa-adjust"></i></span>-->
-
-                                <img class="user-image" alt="User Image" src="http://14.232.210.131/upload/Core/images/no-avatar.png" style="margin-left: 15px">
-                                <!-- hidden-xs hides the username on small devices so only the image appears. -->
-                                <span class="hidden-xs" style="font-size: 18px;display: table-cell;; vertical-align: middle;">Phòng tài chính</span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
+        <div class="news-search-form">
+            <div class="form-group search-input">
+                <label for="search_input" class="form-label btnSearch"><i class="fal fa-search"></i></label>
+                <input class="form-control" id="txtSearch_TuKhoa" placeholder="Tìm kiếm thông tin">
 
             </div>
+            <div class="form-group date-input">
+                <label for="txtSearch_TuNgay" class="form-label"><i class="fal fa-calendar-alt"></i></label>
+                <input class="form-control input-datepicker" id="txtSearch_TuNgay" placeholder="Từ ngày" value="">
 
+            </div>
+            <div class="form-group date-input">
+                <label for="txtSearch_DenNgay" class="form-label"><i class="fal fa-calendar-alt"></i></label>
+                <input class="form-control input-datepicker" id="txtSearch_DenNgay" placeholder="Đến ngày" value="">
 
-
-
-            <!-- /. box -->
+            </div>
+            <button class="btn btnSearch" id="">Tìm kiếm</button>
         </div>
-        <!-- /.col -->
+        <div class="nav-news" id="zoneDonVi">
+            <a class="active nav-new-item" href="#">Toàn bộ</a>
+        </div>
     </div>
-    <!-- /.row -->
-</section>
-<!-- /.content -->
+
+    <div class="news-page container-fluid">
+        <div class="row">
+            <div class="col-12 col-lg-9">
+                <div class="row news-list zone-bus" id="zonetintuc">
+
+                </div>
+                <div class="box-shadow news-detail zone-bus" id="newsdetail" style="display: none">
+                    <h4 class="title" id="newstitle"></h4>
+
+                    <div class="meta">
+                        <a class="cate-link" href=""><i class="fas fa-caret-right me-1"></i><span
+                                id="newscoso"></span></a>
+                        <p class="mb-0 ms4"><i class="fal fa-calendar-alt me-1"></i><span id="newsngay"></span></p>
+                    </div>
+                    <div class="news-content" id="newscontent">
+                    </div>
+
+                    <div class="news-content txtFileDinhKem" id="txtFileDinhKem">
+                    </div>
+                    <div class="line"></div>
+                    <div class="group-btn">
+                        <a href="#" class="btnClose"><i class="fal fa-chevron-left me-1"></i> Quay lại</a>
+                        <a class="color-orange" id="btnLuuDanhDau" href="#">Lưu đánh dấu<i
+                                class="fal fa-bookmark ms-2"></i></a>
+                        <a id="btntindaluu" href="#" styles="display: none">Đã lưu<i
+                                class="fal fa-bookmark ms-2"></i></a>
+                    </div>
+                    <div class="comments mt-3">
+                        <p class="fs-18 fst-italic fw-bold text-decoration-underline mb-5">Ý kiến cá nhân</p>
+                        <div class="news-search-form">
+                            <div class="form-group date-input" style="max-width: unset">
+
+                                <textarea class="form-control txtNoiDungTinNhan" rows="3" id="txtNoiDungTinNhan"
+                                    placeholder="Bạn nghĩ gì về tin này?"></textarea>
+                                <label for="start_date_input" id="btnGuiTin" class="form-label"
+                                    style="top:20px; right: 15px; cursor: pointer;">Gửi</label>
+
+                            </div>
+                        </div>
+                        <div class="commented">
+                            <div class="com-label  position-relative">
+                                <div class="group d-flex align-items-center bg-white pe-4">
+                                    <img src="assets/images/comment-icon.png">
+                                    <span class="fs-18 fw-bold ms-2" id="lblTongBinhLuan">Bình luận (0)</span>
+                                </div>
+                            </div>
+                            <div id="commented">
+
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="col-12 col-lg-3 block-news" id="zonetindadanhdau" style="display: none">
+                <div class="box-shadow">
+                    <div class="dashboad-cate-title">
+                        <span class="icon"></span>
+                        <span>Tin đã đánh dấu</span>
+                    </div>
+                    <div class="row news-list" id="tindanhdau">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="modules/tintuc/script/tintuc.js?v=1.0.1.4"></script>
+<script src="modules/tintuc/script/crypto-js.js"></script>
 <script type="text/javascript">
-    var main_doc = {};
+    //var main_doc = {};
+    if (!main_doc) var main_doc = {};
     main_doc['TinTuc'] = new TinTuc();
     $(document).ready(function () {
         main_doc.TinTuc.init();

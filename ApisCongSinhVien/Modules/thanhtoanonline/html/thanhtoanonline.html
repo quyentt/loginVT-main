@@ -1,143 +1,221 @@
 ﻿<style>
-    .inputsotien {
-        text-align: right;
-        font-size: 20px;
-        padding-right: 10px;
-        border: 1px #f1f1f1 solid;
+    .text-lable {
+        padding-top: unset !important;
+    }
+
+    /* Fix overlapped icons inside the bank select (credit-card + angle-down) */
+    #Maininfo .form-add-info .input-group {
+        position: relative;
+    }
+
+    #Maininfo .form-add-info .input-group>i.fa-credit-card {
+        left: 10px;
+        top: 11px;
+    }
+
+    #Maininfo .form-add-info .input-group>i.fa-angle-down {
+        left: auto !important;
+        right: 12px !important;
+        top: 11px;
+        pointer-events: none;
+    }
+
+    #Maininfo .form-add-info .form-select {
+        padding-right: 40px;
+    }
+
+    /* Avoid text sticking to the left icon */
+    #Maininfo #drpNganHang.form-select {
+        padding-left: 48px;
     }
 </style>
-<section class="content">
-    <!-- /.left-content -->
-    <!-- /.right-content -->
-    <div class="col-lg-12">
-        <!-- box Notify_GT -->
-        <div class="box box-solid zone-bus" id="zonebatdau">
-            <div class="box box-solid">
-               
-                <div class="box box-solid">
-                    <div class="box box-solid zone-bus" id="zoneThongtin">
+<div class="one-door">
+    <div class="overlay"></div>
+    <div class="content-tab no-tab">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+                <p class="link"><a href="#">Tài chính</a><i class="fal fa-angle-right"></i><a href="#">Thanh toán học
+                        phí</a></p>
+            </div>
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
+            </div>
+        </div>
+    </div>
 
-                        <div class="box box-solid">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"><i class="fa fa-address-card"></i> Thông tin cá nhân</h3>
+    <!-- thanh toán học phí -->
+    <div class="box-shadow register-wish tuition-pay aps-thanhtoanonline" id="Maininfo">
+        <div class="row thanhtoanonline-content pd0">
+            <div class="col-12 col-md-3 box-tt-canhan pd20">
+                <div class="title-under-line text-uppercase fw-bold color-dask-blue mb-15">
+                    <span>Thông tin cá nhân</span>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-12 mb-15">
+                        <div class="row align-items-center">
+                            <div class=" col-3 text-lable">Họ tên:</div>
+                            <div class=" col-9 text-form-right ">
+                                <b id="lblHoTen1"></b>
                             </div>
-                            <div class="box-body">
-                                <div class="row zone-box">
-                                    <div class="row">
-                                        <div class="col-sm-1">
-                                            <div class="group-title-name">
-                                                Họ tên: <span class="title-colon">:</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label id="lblHoTen" style="color: #0073b7"></label>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <div class="group-title-name">
-                                                Mã sinh viên: <span class="title-colon">:</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label id="lblMaSinhVien" style="color: #0073b7"></label>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <div class="group-title-name">
-                                                Ngày sinh <span class="title-colon">:</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label id="lblNgaySinh" style="color: #0073b7"></label>
-                                        </div>
-                                     
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-1">
-                                            <div class="group-title-name">
-                                                Lớp <span class="title-colon">:</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label id="lblLopQuanLy" style="color: #0073b7"></label>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <div class="group-title-name">
-                                                Ngành <span class="title-colon">:</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label id="lblNganh" style="color: #0073b7"></label>
-                                        </div>
-                                        <div class="col-sm-1">
-                                            <div class="group-title-name">
-                                                Khóa <span class="title-colon">:</span>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <label id="lblKhoa" style="color: #0073b7"></label>
-                                        </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 mb-15">
+                        <div class="row align-items-center">
+                            <div class=" col-3 text-lable">Mã Sinh viên:</div>
+                            <div class=" col-9 text-form-right">
+                                <b id="lblMaSinhVien"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 mb-15">
+                        <div class="row align-items-center">
+                            <div class=" col-3 text-lable">Ngày sinh:</div>
+                            <div class=" col-9 text-form-right">
+                                <b id="lblNgaySinh"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 mb-15">
+                        <div class="row align-items-center">
+                            <div class=" col-3 text-lable">Lớp:</div>
+                            <div class=" col-9 text-form-right">
+                                <b id="lblLopQuanLy"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 mb-15">
+                        <div class="row align-items-center">
+                            <div class=" col-3 text-lable">Ngành:</div>
+                            <div class=" col-9 text-form-right">
+                                <b id="lblNganh"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-12 mb-15">
+                        <div class="row align-items-center">
+                            <div class=" col-3 text-lable">Khóa:</div>
+                            <div class=" col-9 text-form-right">
+                                <b id="lblKhoa"></b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6"></div>
 
-                                    </div>
+                    <div class="col-12 col-lg-12 justify-content-end d-flex mb-15 flex-wrap box-form">
+                        <div class="form-item d-flex  form-add-info flex-grow-1 me-2">
+                            <div class="input-group">
+                                <i class="fal fa-credit-card"></i>
+                                <i class="fal fa-angle-down"></i>
+                                <select class="form-select" aria-label="Default select example"
+                                    id="drpNganHang"></select>
+                            </div>
+                        </div>
 
+                        <div class="btn btn-dask-blue" id="btnThucHienThanhToan"><i
+                                class="fal fa-paper-plane me-2"></i>Thực
+                            hiện thanh toán</div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 col-md-9 box-tt-thanhtoan pd20">
+                <p class="color-dask-blue fw-bold mt-3 mb-10">Thông tin thanh toán<span id="lbSoTienDaChon"
+                        style="color: red;float:right"></span></p>
+                <div class="aps-table-select scroll-table-x">
+                    <table
+                        class="table transcrip-table tabs-scores table-hover table-bordered table-noborder tblThanhToan"
+                        id="tblThanhToan">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px" scope="col">STT</th>
+                                <th scope="col" class="text-left">Nội dung</th>
+                                <th scope="col" class="text-center">Số tiền</th>
+                                <th scope="col" class="text-left">Ghi chú</th>
+                                <th class="text-center w-50px" scope="col"><input type="checkbox"
+                                        id="chkSelectAll_ThanhToan" name="chkSelectAll_ThanhToan"></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-end" id="zonebtnNopTruoc"
+                    style="display: none !important; margin-top: 10px;">
+                    <div class="btn btn-default" id="btnDelete_NopTruoc"><i class="fal fa-trash me-2"></i>Hủy nộp trước
+                    </div>
+                    <div class="btn btn-dask-blue" id="btnAdd_NopTruoc"><i class="fal fa-plus me-2"></i>Nộp trước</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end đăng ký nguyện vọng -->
+</div>
+<!-- ------------------- -->
+<div class="aps-gap-10 btn-show pd20" style="display: none !important;">
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalKhoanNopTruoc"
+        data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt;">
+        Thêm khoản Nộp trước</button>
+</div>
+<!-- ------------------ -->
+<div class="modal fade modalKhoanNopTruoc" id="modalKhoanNopTruoc">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal ">
+                    <p><b>Thêm khoản Nộp trước</b> </p>
+
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex align-items-end flex-wrap flex-md-nowrap mb-10">
+                    <div class="flex-grow-1 form-KhoanNopTruoc">
+                        <div class="row mb-15">
+                            <label class="mt-7 color-88 fz14 mb-5 form-lable">Khoản</label>
+                            <div class="form-item d-flex  form-add-info">
+                                <div class="input-group">
+                                    <!-- <i class="far fa-hands-usd"></i> -->
+                                    <select id="dropKhoanNopTruoc" class="select-opt form-select"></select>
                                 </div>
                             </div>
                         </div>
-
-                    </div>
-                </div>
-                <div class="box-body">
-                    <!-- Bộ tìm kiếm -->
-                    <div class="col-sm-12 item-search">
-
-                        <div style="width:200px; float: right; margin-right: 5px">
-                            <a id="btnThucHienThanhToan" class="btnAdd btn btn-primary"><i class="fa fa-send"></i> Thực hiện thanh toán</a>
+                        <div class="row mb-15">
+                            <label class="mt-7 color-88 fz14 mb-5 form-lable">Số tiền</label>
+                            <div class="form-item d-flex  form-add-info">
+                                <div class="input-group">
+                                    <!-- <i class="far fa-money-check-edit-alt"></i> -->
+                                    <input type="text" id="txtSoTienNopTruoc" class="form-control inputsotien">
+                                </div>
+                            </div>
                         </div>
-                        <div style="width:400px; float: right; margin-right: 5px">
-                            <select id="drpNganHang" class="select-opt" style="width:400px;">
-                                <option value="">Chọn ngân hàng thanh t</option>
-                                <!-- Load from js -->
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="box box-solid">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            <i class="fa fa-hdd-o"></i> Thanh toán
-                            <span class="pull-right badge bg-light-blue">
-                                <span id="lblThanhToan_Tong"></span>
-                            </span>
-                        </h3>
+                        <div class="row">
+                            <label class="mt-7 color-88 fz14 mb-5 form-lable">Nội dung</label>
+                            <div class="form-item d-flex  form-add-info">
+                                <div class="input-group">
+                                    <!-- <i class="far fa-money-check-edit"></i> -->
+                                    <!-- <input type="text" id="txtNoiDungNopTruoc" class="form-control"> -->
+                                    <textarea type="textarea" id="txtNoiDungNopTruoc" class="form-textarea min-h68">
 
-                    </div>
-                    <div class="box-body">
-
-                        <div class="col-sm-12 scroll-table-x">
-                            <table id="tblThanhToan" class="table table-hover table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th class="td-fixed td-center">Stt</th>
-                                        <th class="td-center">Nội dung</th>
-                                        <th style="width: 100px"><span class="lang" key="">Số tiền</span></th>
-                                        <th class="td-center">Ghi chú</th>
-                                        <th class="td-fixed td-center">
-                                            <input type="checkbox" id="chkSelectAll_ThanhToan" name="chkSelectAll_ThanhToan">
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <!-- load from js -->
-                                </tbody>
-                                <tfoot></tfoot>
-                            </table>
+                                    </textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>     
-        <div class="clear"></div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-primary" id="btnSave_KhoanNopTruoc" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fal fa-save mr-5"></i>
+                        <span>Lưu</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
-</section>
-<script src="modules/thanhtoanonline/script/thanhtoanonline.js?v=1.0.1.5"></script>
+</div>
+<script src="modules/thanhtoanonline/script/thanhtoanonline.js?v=1.0.1.6"></script>
+<script src="modules/thanhtoanonline/script/qrcode.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['thanhtoanonline'] = new thanhtoanonline();
@@ -145,4 +223,3 @@
         main_doc.thanhtoanonline.init();
     });
 </script>
-

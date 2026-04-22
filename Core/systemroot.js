@@ -160,6 +160,15 @@ systemroot.prototype = {
         $("#main-content-wrapper").delegate('.ungdung', 'click', function (e) {
             var strId = this.id;
             var objUngDung = me.dtUngDung.find(e => e.ID === strId);
+            if (objUngDung.MAVAITRO == "ApisCongSinhVien") {
+                edu.system.alert('Hãy nhập ID sinh viên <input id="txtIDSinhVienCanVo" class="form-control" placeholder="ID sinh viên" /> <a class="btn btn-default" id="btnTruyCapIDSinhVien"><i class="fa fa-search"></i> <span class="lang" key="">Truy cập</span></a>');
+                $("#btnTruyCapIDSinhVien").click(function () {
+                    edu.system.userId = $("#txtIDSinhVienCanVo").val();
+                    $("#myModalAlert").modal("hide");
+                    me.setUngDung(objUngDung);
+                });
+                return;
+            }
             me.setUngDung(objUngDung);
         });
 

@@ -1,89 +1,90 @@
 ﻿
-<section class="content">
-    <div class="row">
-
-        <div class="col-lg-12">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <div class="col-sm-12 box-view">
-                        <!-- 1. Thong tin tham so hoc tap chung -->
-                        <div class="row">
-                            <div class="row">
-                                <p class="group-title-name">
-                                    <span class="badge bg-blue">Thông tin cá nhân</span>
-                                </p>
-                            </div>
-                            <div class="row">
-                                <table>
-                                    <thead>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Họ và tên: </td>
-                                            <td id="lblHoTen"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ngày sinh: </td>
-                                            <td id="lblNgaySinh"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>CMND/CCCD: </td>
-                                            <td id="lblCMT"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mã sinh viên: </td>
-                                            <td id="lblMaSinhVien"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ngành học: </td>
-                                            <td id="lblNganhHoc"></td>
-                                            <td>Mã ngành: </td>
-                                            <td id="lblMaNganh"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<div class="one-door">
+    <div class="content-tab">
+        <p class="link"><a href="#">Profile</a><i class="fal fa-angle-right"></i> <a href="#">Tự nhập hồ sơ</a></p>
+        <div class="tab-list swiper service-slider tab-profile">
+            <div class="swiper-wrapper" id="zoneTab">
             </div>
         </div>
-        <div class="col-lg-12">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <div class="col-sm-12">
-                        <!-- 1. Thong tin tham so hoc tap chung -->
-                        <div class="row">
-                            <div class="row">
-                                <p class="group-title-name">
-                                    <span class="badge bg-blue">Hồ sơ giấy tờ</span>
-                                </p>
+    </div>
+
+    <div class="swiper service-content-slider">
+        <div class="swiper-wrapper">
+            <!-- Thông tin cá nhân-->
+            <div class="swiper-slide">
+                <!-- dashboad -->
+                <div class="dashboad">
+                    <div class="sv-add-info">
+                        <div class="sv-lable"><h3>Thông tin cá nhân</h3></div>
+                        <div class="sv-add-info-content sv-info-profile">
+                            <div class="row sv-info-base">
+                                <!--<div class="col-12 col-md-2 sv-info-base-avata">
+                                    <div class="avata-img">
+                                        <img src="assets/images/avata-form.jpg" id="uploadPicture_SV">
+                                        <a href="#" class="upload-avata">
+                                            <i class="fal fa-camera color-dask-blue"></i>
+                                        </a>
+                                    </div>
+                                </div>-->
+                                <div class="col-12 col-md-10 sv-info-base-text">
+                                    <div class="row">
+                                        <div class="col-12 col-md-2"><span>Họ và tên:</span></div>
+                                        <div class="col-12 col-md-10"><b id="lblHoTen"></b></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-2"><span>Ngày sinh:</span></div>
+                                        <div class="col-12 col-md-10" id="lblNgaySinh"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-2"><span>CMND/CCCD:</span></div>
+                                        <div class="col-12 col-md-10" id="lblCMT"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-2"><span>Mã sinh viên:</span></div>
+                                        <div class="col-12 col-md-10" id="lblMaSinhVien"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12 col-md-2"><span>Ngành học:</span></div>
+                                        <div class="col-12 col-md-10" id="lblNganhHoc"></div>
+                                    </div>
+                                    <!--<div class="row">
+                                        <div class="col-12 col-md-2"><span>Kế hoạch:</span></div>
+                                        <div class="col-12 col-md-4">
+                                            <select class="form-select" id="dropSearch_KeHoach"></select>
+                                        </div>
+                                    </div>-->
+                                </div>
                             </div>
-                            <div class="row">
-                                <table id="tbl_HoSoGiayTo" class="table table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th class="td-fixed td-center">Stt</th>
-                                            <th class="td-center">Loại hồ sơ</th>
-                                            <th class="td-center">Mô tả</th>
-                                            <th class="td-center">Files dữ liệu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                            <div class="sv-info-detail">
+                                <div class="row sv-info-detail-lable">
+                                    <!--<div class="col-12 col-md-1">STT</div>-->
+                                    <div class="col-12 col-md-6">Loại hồ sơ</div>
+                                    <div class="col-12 col-md-2">Mô tả</div>
+                                    <div class="col-12 col-md-4">Files dữ liệu</div>
+                                </div>
+                                <div class="sv-info-detail-form" id="tbl_HoSoGiayTo">
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="box-footer">
-                    <div class="pull-right">
-                        <a id="btnLuuHoSo" class="btn btn-primary"><i class="fa fa-paper-plane"></i> Lưu</a>
+                        <div class="sv-ground-button">
+                            <div class="row">
+                                <div class="col-12 col-sm-8"></div>
+                                <div class="col-12 col-sm-4 sv-button">
+
+                                    <button type="submit" class="btn btn-continue" id="btnLuuHoSo">
+                                        Lưu thông tin <i class="fal fa-save"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+
+</div>
 
 <!-- page script -->
 <script src="modules/profile/script/minhchung.js?v=1.0.0.1"></script>
@@ -94,3 +95,4 @@
         main_doc.MinhChung.init();
     });
 </script>
+
