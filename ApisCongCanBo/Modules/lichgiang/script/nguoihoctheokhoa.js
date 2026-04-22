@@ -1266,7 +1266,7 @@ TheoKhoa.prototype = {
             },
             renderPlace: ["dropLoaiXacNhan"],
             type: "",
-            title: "Chọn xác nhận"
+            title: "-----"
         };
         edu.system.loadToCombo_data(obj);
     },
