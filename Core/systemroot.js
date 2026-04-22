@@ -455,6 +455,8 @@ systemroot.prototype = {
         if (me.iSoLuong == 1) document.getElementById('overlay').style.display = "";
         if (!dataPost.strChucNang_Id) dataPost["strChucNang_Id"] = edu.system.strChucNang_Id;
         if (!dataPost.strNguoiThucHien_Id) dataPost["strNguoiThucHien_Id"] = edu.system.userId;
+        if (!dataPost.strVaiTroDangNhap_Id) dataPost["strVaiTroDangNhap_Id"] = edu.system.appId;
+        if (!dataPost.strChucNangHeThong_Id) dataPost["strChucNangHeThong_Id"] = edu.system.strChucNang_Id;
         //AzzMH
         let dtShow = dataPost;
         if (dataPost.iM) {
