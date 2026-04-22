@@ -1,4 +1,51 @@
-﻿<!-- Main content -->
+﻿<style>
+    .popover,
+    .popover *,
+    .popover-title,
+    .popover-title *,
+    .popover-header,
+    .popover-header *,
+    .popover-content,
+    .popover-content *,
+    .popover-body,
+    .popover-body * {
+        font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, "Noto Sans", sans-serif !important;
+        font-stretch: normal !important;
+        font-variant: normal !important;
+        font-style: normal !important;
+    }
+    .popover {
+        font-size: 13px !important;
+        border-radius: 8px !important;
+        border: 1px solid #dfe3e8 !important;
+        box-shadow: 0 6px 18px rgba(0,0,0,.08) !important;
+        max-width: 320px;
+    }
+    .popover-title,
+    .popover-header {
+        background: #f4f9fd !important;
+        color: #2472a4 !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+        letter-spacing: 0.2px !important;
+        text-transform: none !important;
+        padding: 10px 14px !important;
+        border-bottom: 1px solid #e5ecf2 !important;
+        border-radius: 8px 8px 0 0 !important;
+    }
+    .popover-title i,
+    .popover-header i {
+        margin-right: 6px;
+        color: #3c8dbc;
+    }
+    .popover-content,
+    .popover-body {
+        padding: 10px 12px !important;
+        color: #333 !important;
+        line-height: 1.5 !important;
+    }
+</style>
+<!-- Main content -->
 <section class="content aps-cms">
     <div class="row aps-nguoidung">
         <!-- /.left-content -->
@@ -7,42 +54,91 @@
                 <div class="box box-solid box-search" style="padding-bottom: 0 !important;">
                     <div class="box-body">
                         <!-- Bộ tìm kiếm -->
-                        <div class="bs-item input-group">
+                        <div class="bs-item input-group aps-search-input">
                             <input type="text" id="txtSearch_NguoiDung_TuKhoa" class="form-control"
                                    placeholder="Nhập từ khóa tìm kiếm">
-                            <span class="input-group-addon poiter btnExtend_Search" title="Kéo xuống">
-                                <i class="fa fa-angle-double-down"></i>
+                            <span class="input-group-addon poiter btnExtend_Search" title="Tìm kiếm">
+                                <i class="fa fa-search"></i>
                             </span>
                         </div>
-                        <div class="box-sub-search">
-                            <div class="bss-item">
-                                <i>Chọn điều kiện tìm kiếm:</i>
-                            </div>
-                            <div class="bss-item">
-                                <div class="radio-box row mb-0">
-                                    <div class="col col-lg-4 col-sm-6"><input type="radio" class="rdNguoiDung_PhanLoai"
-                                                                              name="rdNguoiDung_PhanLoai" value="CANBO"
-                                                                              checked="checked"> Cán bộ
-                                    </div>
-                                    <div class="col col-lg-4 col-sm-6"><input type="radio" class="rdNguoiDung_PhanLoai"
-                                                                              name="rdNguoiDung_PhanLoai"
-                                                                              value="SINHVIEN"> Sinh viên
-                                    </div>
-                                    <div class="col col-lg-4 col-sm-6"><input type="radio" class="rdNguoiDung_PhanLoai"
-                                                                              name="rdNguoiDung_PhanLoai"
-                                                                              value="CUUSINHVIEN"> Cựu sinh viên
-                                    </div>
-                                    <div class="col col-lg-4 col-sm-6"><input type="radio" class="rdNguoiDung_PhanLoai"
-                                                                              name="rdNguoiDung_PhanLoai"
-                                                                              value="GIADINH"> Gia đình
-                                    </div>
-                                    <div class="col col-lg-4 col-sm-6"><input type="radio" class="rdNguoiDung_PhanLoai"
-                                                                              name="rdNguoiDung_PhanLoai"
-                                                                              value="DOITAC"> Đối tác
-                                    </div>
-                                </div>
+                        <style>
+                            .aps-search-input .form-control {
+                                padding-left: 34px !important;
+                                text-indent: 0;
+                                background-position: 10px center !important;
+                                background-size: 14px 14px !important;
+                            }
+                            .aps-search-input .form-control::placeholder {
+                                color: #9aa0a6;
+                                opacity: 1;
+                            }
+                        </style>
+                        <div class="box-sub-search aps-filter-panel">
+                            <div class="aps-filter-title">Chọn điều kiện tìm kiếm</div>
+                            <div class="aps-filter-options">
+                                <label class="aps-filter-option">
+                                    <input type="radio" class="rdNguoiDung_PhanLoai" name="rdNguoiDung_PhanLoai" value="CANBO" checked="checked">
+                                    <span>Cán bộ</span>
+                                </label>
+                                <label class="aps-filter-option">
+                                    <input type="radio" class="rdNguoiDung_PhanLoai" name="rdNguoiDung_PhanLoai" value="SINHVIEN">
+                                    <span>Sinh viên</span>
+                                </label>
+                                <label class="aps-filter-option">
+                                    <input type="radio" class="rdNguoiDung_PhanLoai" name="rdNguoiDung_PhanLoai" value="CUUSINHVIEN">
+                                    <span>Cựu sinh viên</span>
+                                </label>
+                                <label class="aps-filter-option">
+                                    <input type="radio" class="rdNguoiDung_PhanLoai" name="rdNguoiDung_PhanLoai" value="GIADINH">
+                                    <span>Gia đình</span>
+                                </label>
+                                <label class="aps-filter-option">
+                                    <input type="radio" class="rdNguoiDung_PhanLoai" name="rdNguoiDung_PhanLoai" value="DOITAC">
+                                    <span>Đối tác</span>
+                                </label>
                             </div>
                         </div>
+                        <style>
+                            .aps-filter-panel { padding: 8px 4px 4px; }
+                            .aps-filter-title {
+                                font-size: 13px;
+                                font-weight: 600;
+                                color: #333;
+                                margin-bottom: 8px;
+                                padding-bottom: 6px;
+                                border-bottom: 1px solid #e5e5e5;
+                            }
+                            .aps-filter-options {
+                                display: flex;
+                                flex-wrap: wrap;
+                                gap: 6px;
+                            }
+                            .aps-filter-option {
+                                display: inline-flex;
+                                align-items: center;
+                                gap: 6px;
+                                padding: 5px 10px;
+                                margin: 0;
+                                border: 1px solid #d5dbe0;
+                                border-radius: 16px;
+                                background: #fff;
+                                font-size: 13px;
+                                font-weight: 400;
+                                white-space: nowrap;
+                                cursor: pointer;
+                                transition: all .15s ease;
+                            }
+                            .aps-filter-option:hover {
+                                border-color: #3c8dbc;
+                                background: #f4f9fd;
+                            }
+                            .aps-filter-option input[type="radio"] { margin: 0; cursor: pointer; }
+                            .aps-filter-option input[type="radio"]:checked + span { color: #3c8dbc; font-weight: 600; }
+                            .aps-filter-option:has(input:checked) {
+                                border-color: #3c8dbc;
+                                background: #eaf4fb;
+                            }
+                        </style>
                     </div>
                 </div>
                 <div class="box box-solid box-nguoidung" style="padding-top: 0 !important;">
@@ -58,6 +154,73 @@
                         <table id="tblNguoiDung" class="table table-hover tblNguoiDung">
                             <tbody></tbody>
                         </table>
+                        <style>
+                            .aps-nguoidung-table .dataTables_wrapper .dataTables_info,
+                            .aps-nguoidung-table .dataTables_info {
+                                float: none !important;
+                                display: block;
+                                text-align: center;
+                                font-size: 12px;
+                                color: #666;
+                                padding: 6px 0 4px;
+                                white-space: normal;
+                            }
+                            .aps-nguoidung-table .dataTables_paginate,
+                            .aps-nguoidung-table .dataTables_wrapper .dataTables_paginate {
+                                float: none !important;
+                                display: flex;
+                                justify-content: center;
+                                flex-wrap: wrap;
+                                gap: 4px;
+                                padding: 4px 0 8px;
+                                text-align: center;
+                            }
+                            .aps-nguoidung-table .dataTables_paginate .paginate_button,
+                            .aps-nguoidung-table .pagination > li > a,
+                            .aps-nguoidung-table .pagination > li > span {
+                                min-width: 28px;
+                                height: 28px;
+                                padding: 0 8px !important;
+                                margin: 0 !important;
+                                line-height: 28px !important;
+                                font-size: 12px;
+                                display: inline-flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
+                            .aps-nguoidung-table .pagination {
+                                margin: 0 !important;
+                                display: inline-flex;
+                                flex-wrap: wrap;
+                                gap: 4px;
+                                justify-content: center;
+                            }
+                            .aps-nguoidung-table .row {
+                                margin-left: 0;
+                                margin-right: 0;
+                            }
+                            .aps-nguoidung-table .row > [class*="col-"] {
+                                width: 100%;
+                                float: none;
+                                padding: 0;
+                            }
+                            .aps-nguoidung-table .table-img {
+                                width: 40px !important;
+                                height: 40px !important;
+                                min-width: 40px;
+                                min-height: 40px;
+                                max-width: 40px;
+                                max-height: 40px;
+                                object-fit: cover;
+                                object-position: center;
+                                border-radius: 50%;
+                                background: #f0f0f0;
+                                display: block;
+                            }
+                            .aps-nguoidung-table td {
+                                vertical-align: middle !important;
+                            }
+                        </style>
                     </div>
                 </div>
             </div>
