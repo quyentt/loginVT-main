@@ -223,9 +223,8 @@
         padding-right: 0 !important;
     }
 
-    .table-khoibatbuoc tr td .aps-list-hocphan,
-    .zoneHocPhan_Selected_KBB {
-        height: 380px !important;
+    .table-khoibatbuoc .fa.fa-forward {
+        font-size: 30px;
     }
 
     .zone_inputhocphan.form-container .box-body {
@@ -965,6 +964,42 @@
 
 @media (min-width: 600px) and (max-width: 1024px) {
 
+    .zone_chuongtrinhhocphan-right .box-header .pull-right .btnAdd,
+    .zone_chuongtrinhhocphan-right .box-header .btn.submit {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 30px !important;
+        line-height: 32px !important;
+        padding: 0 !important;
+    }
+
+    .zone_chuongtrinhhocphan-right .box.box-solid .box-header {
+        display: grid !important;
+        grid-template-columns: 76% 20%;
+        gap: 0;
+    }
+
+    .zone_chuongtrinhhocphan-right .box.box-solid .box-header:before,
+    .zone_chuongtrinhhocphan-right .box.box-solid .box-body:after {
+        display: none;
+    }
+
+    .zone_chuongtrinhhocphan-right .box.box-solid {
+        border-right: 3px solid #fff;
+    }
+
+    .zone_chuongtrinhhocphan-right .box.box-solid .box-header .box-title i {
+        margin-top: 2px;
+    }
+
+    .zone_chuongtrinhhocphan-detail {
+        display: contents !important;
+    }
+
+    .zone_chuongtrinhhocphan-detail .box-header.pl0.pr0 {
+        display: flow-root !important;
+    }
+
     .zone_notify_HeDaoTao .box-solid.box-search .box-body,
     .zone_inputhocphan_khoibatbuoc .aps-add-new .aps-form-item.gap10 {
         display: grid;
@@ -1525,10 +1560,66 @@
 }
 
 @media only screen and (max-width: 599px) {
-    .zone_chuongtrinhhocphan .box-header.bg-green {
+    .zone_inputhocphan .box-header .pull-right .btn {
+        padding: 14px 5px 7.6px 15px !important;
+
+    }
+
+    .zone_inputhocphan .box-header .box-title {
+        display: inline-block !important;
+    }
+
+    .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a {
+        background: #fff !important;
+    }
+
+    .table-khoibatbuoc .aps-list-hocphan.sidebar-menu li {
+        padding: 0px !important;
+    }
+
+    .table-khoibatbuoc .aps-list-hocphan.sidebar-menu li a,
+    .table-khoibatbuoc .sidebar-menu.zoneHocPhan_Selected_KBB li a {
+        padding: 13px 0 11px 0px !important;
+    }
+
+    .table-khoibatbuoc .aps-list-hocphan.sidebar-menu .item-li .submit.btn {
+        right: 0px;
+    }
+
+    .table-khoibatbuoc .aps-list-hocphan.sidebar-menu .item-li a span,
+    .sidebar-menu.zoneHocPhan_Selected_KBB>li>a span {
+        width: 70% !important;
+        line-height: 20px;
+    }
+
+    .aps-list-hocphan.sidebar-menu li a,
+    .zoneHocPhan_Selected_KBB.sidebar-menu li a {
+        padding: 13px 0 11px 0 !important
+    }
+
+    .myModalKeThua .modal-body .box-view.aps-add-new.pd20 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-top: 0 !important;
+    }
+
+    .table-khoibatbuoc .box-sub-search .item-search {
+        padding-right: 0 !important;
+    }
+
+    .myModalKeThua .aps-add-new .pull-right.pr10 {
+        padding-right: 0 !important;
+    }
+
+    .myModalKeThua .aps-add-new .aps-form-item.aps-gap-10 .aps-form-input {
+        margin-bottom: 10px !important;
+    }
+
+    .zone_chuongtrinhhocphan .box-header.bg-green,
+    .box-solid.zone_inputhocphan .box-header.bg-blue {
         height: auto !important;
         line-height: 24px !important;
-        padding: 11px 15px 0 15px !important;
+        padding: 11px 15px 8px 15px !important;
     }
 
     .zone_chuongtrinhhocphan .box.box-solid .box-header .pull-right-absolute {
@@ -2770,9 +2861,11 @@
     .modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large {
         margin-bottom: 0px !important;
     }
-}
 
-@media (max-width: 400px) {
+    .table-khoibatbuoc.table .bss-item .btn-table-none.btn i {
+        display: none;
+    }
+
     .finance-modal.my-calendar .modal-body .justify-content-between {
         margin-bottom: 10px;
     }

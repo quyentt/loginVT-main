@@ -227,8 +227,7 @@
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
                     <i class="fa-sharp-duotone fa-solid fa-book-open-reader fw-bold"></i> Chọn học phần cho chương
-                    trình:
-                    <span id="lblInputHocPhan" class="color-active"></span>
+                    trình: <span id="lblInputHocPhan" class="color-yellow pl10 fw-bold"></span>
                 </h3>
                 <div class="pull-right pull-right-absolute">
                     <a class="btn btn-outline-white btnClose_SelectHocPhan border-0" href="#" title="Close">
@@ -298,7 +297,7 @@
                                             </div>
 
                                             <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
-                                                id="zoneTongHocPhan" style="height: 480px; overflow-y: scroll"></ul>
+                                                id="zoneTongHocPhan" style="max-height: 480px; overflow-y: scroll"></ul>
                                         </div>
                                         <div class="box-footer border-0">
                                             <div class="pull-right mt-0">
@@ -315,10 +314,11 @@
                                     class="border-0">
                                     <i class="fa fa-forward" style="font-size:44px;color:red"></i>
                                 </td>
-                                <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;position:relative;"
+                                <td style="width: 100%; display: flex;flex-direction: column;
+                                padding:0 !important;border-left: 0 !important;border-right: 0 !important;position:relative;"
                                     class="border-0">
                                     <div class="box box-solid pd0"
-                                        style="background-color: #fff !important;position: absolute; top: 0">
+                                        style="background-color: #fff !important;position: relative; top: 0">
                                         <div class="box-header pd0">
                                             <h3 class="box-title" title="Danh sách kết quả học phần chương trình"
                                                 style="color:#FF0000 !important;">
@@ -334,7 +334,7 @@
                                                     style="width: 99%">
                                             </div>
                                             <ul class="sidebar-menu zoneHocPhan_Selected_KBB" data-widget="tree"
-                                                id="zoneHocPhan_Selected" style="height: 480px; overflow-y: scroll"
+                                                id="zoneHocPhan_Selected" style="max-height: 480px; overflow-y: scroll"
                                                 ondrop="main_doc.ChuongTrinhHocPhan.drop_handler(event);"
                                                 ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                         </div>
@@ -1781,14 +1781,14 @@
                                         <option id="" value=""> --Kỳ kế thừa--</option>
                                     </select>
                                 </div>
+                                <div class="aps-form-input col-sm-8">
+                                    <span class="pull-right pr10">
+                                        <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i>
+                                            <span class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
+                                    </span>
+                                </div>
                                 <div class="clear"></div>
-                            </div>
-                            <div class="row">
-                                <span class="pull-right pr10">
-                                    <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i> <span
-                                            class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
-                                </span>
-                            </div>
+                            </div>                           
                             <div class="row aps-form-table pl10 pr10 mt-10 scroll-table-x DSHocPhan" id="DSHocPhan">
                                 <table id="tblHocPhanKeThua"
                                     class="table table-hover table-bordered table-noborder tblHocPhanKeThua">

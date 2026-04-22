@@ -50,7 +50,7 @@ CongNhanDiem.prototype = {
             me.toggle_edit();
             me.strDsHocPhan_Id = arrChecked_Id.toString();
             me.getList_CongNhanDiem(arrChecked_Id.toString());
-            edu.system.viewFiles("txtFileDinhKemDS", "CongNhan" + edu.util.getValById("dropSearch_KeHoach")  + me.strNguoiHoc_Id, "SV_Files");
+            edu.system.viewFiles("txtFileDinhKemDS", "CongNhan" + edu.util.getValById("dropSearch_KeHoach") + me.strNguoiHoc_Id, "SV_Files");
         });
 
         $('#dropSearch_KeHoach').on('select2:select', function () {
@@ -73,7 +73,7 @@ CongNhanDiem.prototype = {
         $('#dropLoaiCongNhan').on('select2:select', function () {
             me.getList_CoSoTable("", "");
         });;
-        
+
         $("#tblHocPhan").delegate('.btnEdit', 'click', function (e) {
             var id = this.id;
             console.log(11111111);
@@ -429,7 +429,7 @@ CongNhanDiem.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
     genTable_CongNhanDiem: function (data) {
         var me = this;
         var jsonForm = {
@@ -574,13 +574,11 @@ CongNhanDiem.prototype = {
                 {
                     //"mDataProp": "KETQUA",
                     mRender: function (nRow, aData) {
-<<<<<<< HEAD
                         var html = '';
                         html += '<div class="form-check mb-0 min-h-auto pointer">';
                         html += aData.DADANGKYCONGNHAN ? "" : '<input class="form-check-input" type="checkbox" value="" id="checkX' + aData.DAOTAO_HOCPHAN_ID + '">';
                         html += '<a id="' + aData.DAOTAO_HOCPHAN_ID + '" class="btnEdit form-check-label fw-normal" for="chk' + aData.DAOTAO_HOCPHAN_ID + '">';
-                        html += aData.DADANGKYCONGNHAN ? '<span style="color: green">Đã đăng ký</span>': "Đăng ký";
-=======
+                        html += aData.DADANGKYCONGNHAN ? '<span style="color: green">Đã đăng ký</span>' : "Đăng ký";
                         var tinhTrangTen = edu.util.returnEmpty(aData.TINHTRANG_TEN);
                         var isHetHieuLuc = tinhTrangTen === "Hết hiệu lực";
                         var isDaDangKy = !!aData.DADANGKYCONGNHAN && !isHetHieuLuc;
@@ -590,22 +588,18 @@ CongNhanDiem.prototype = {
                         html += isDaDangKy ? "" : '<input class="form-check-input" type="checkbox" value="" id="checkX' + aData.DAOTAO_HOCPHAN_ID + '">';
                         html += '<a id="' + aData.DAOTAO_HOCPHAN_ID + '" class="btnEdit form-check-label fw-normal" for="chk' + aData.DAOTAO_HOCPHAN_ID + '">';
                         html += isDaDangKy ? '<span style="color: green">Đã đăng ký</span>' : "Đăng ký";
->>>>>>> 9bd67e124ca5e5dfcf33170def49855e2181cf3e
                         html += '</a>';
                         html += '</div>';
                         return html;
                         //return edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN) + " - " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO)
                     }
-                }, 
+                },
                 {
-<<<<<<< HEAD
                     "mDataProp": "TINHTRANG_TEN" 
-=======
                     mRender: function (nRow, aData) {
                         var tinhTrangTen = edu.util.returnEmpty(aData.TINHTRANG_TEN);
                         return tinhTrangTen === "Hết hiệu lực" ? "" : tinhTrangTen;
                     }
->>>>>>> 9bd67e124ca5e5dfcf33170def49855e2181cf3e
                 }
             ]
         };
@@ -634,9 +628,9 @@ CongNhanDiem.prototype = {
         }
     },
     /*------------------------------------------
-	--Discription: [4]  ACESS DB ==> thoi gian dao tao
+    --Discription: [4]  ACESS DB ==> thoi gian dao tao
     --Author: duyentt
-	-------------------------------------------*/
+    -------------------------------------------*/
     getList_KeHoach: function () {
         var me = this;
         var obj_save = {
@@ -683,7 +677,7 @@ CongNhanDiem.prototype = {
                 id: "ID",
                 parentId: "",
                 name: "TEN",
-                selectOne:true,
+                selectOne: true,
             },
             renderPlace: ["dropSearch_KeHoach"],
             title: "Chọn kế hoạch"
@@ -896,7 +890,7 @@ CongNhanDiem.prototype = {
         edu.system.loadToCombo_data(obj);
         $("#" + strDrop_Id).select2();
     },
-    
+
     getList_LoaiChungChi: function () {
         var me = this;
         var obj_save = {
@@ -994,7 +988,7 @@ CongNhanDiem.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
 
     getList_PhanLoai2: function () {
         var me = this;
@@ -1013,7 +1007,7 @@ CongNhanDiem.prototype = {
                     var iPager = 0;
                     dtResult = data.Data;
                     iPager = data.Pager;
-                    
+
                     me.genComBo_PhanLoai2(dtResult);
                 }
                 else {

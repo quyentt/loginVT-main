@@ -8586,16 +8586,20 @@ input#tblInput_DTSV_SinhVien_input {
 .table.table-khoituchon tr:last-child {
     border-right: 0 solid #d1d1d1 !important;
 }
-.table-khoibatbuoc tr:hover .btn.btn-outline-primary{
-    color:#0d6efd !important ;
+
+.table-khoibatbuoc tr:hover .btn.btn-outline-primary {
+    color: #0d6efd !important;
 }
-.table-khoibatbuoc tr:hover .btn.btn-outline-success{
-    color:#198754 !important ;
+
+.table-khoibatbuoc tr:hover .btn.btn-outline-success {
+    color: #198754 !important;
 }
+
 .table-khoibatbuoc tr .btn.btn-outline-primary:hover,
-.table-khoibatbuoc tr .btn.btn-outline-success:hover{
-    color:#fff !important ;
+.table-khoibatbuoc tr .btn.btn-outline-success:hover {
+    color: #fff !important;
 }
+
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a,
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.active:hover>a,
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open:hover>a {
@@ -11256,4 +11260,18 @@ table#clone {
 .tblViewKhoiBatBuoc tr td:nth-child(1),
 .tblViewKhoiTuChon tr td:nth-child(1) {
     text-align: left !important;
+}
+
+#myModalAlert .modal-dialog {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+    min-height: calc(100% - (.5rem * 2));
+}
+
+#myModalAlert {
+    padding: 10px !important;
 }
