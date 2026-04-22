@@ -160,12 +160,117 @@ systemroot.prototype = {
         $("#main-content-wrapper").delegate('.ungdung', 'click', function (e) {
             var strId = this.id;
             var objUngDung = me.dtUngDung.find(e => e.ID === strId);
+            me.currentSinhVien = null;
             if (objUngDung.MAVAITRO == "ApisCongSinhVien") {
-                edu.system.alert('Hãy nhập ID sinh viên <input id="txtIDSinhVienCanVo" class="form-control" placeholder="ID sinh viên" /> <a class="btn btn-default" id="btnTruyCapIDSinhVien"><i class="fa fa-search"></i> <span class="lang" key="">Truy cập</span></a>');
-                $("#btnTruyCapIDSinhVien").click(function () {
-                    edu.system.userId = $("#txtIDSinhVienCanVo").val();
+                var strHtmlForm = ''
+                    + '<div style="text-align:left">'
+                    + '  <div class="mb-2 fw-bold" style="font-size:14px;color:#1e3a8a"><i class="fa fa-user-graduate fa-solid"></i>&nbsp;&nbsp;Nhập thông tin định danh sinh viên</div>'
+                    + '  <div class="input-group mb-2" style="box-shadow:0 1px 3px rgba(0,0,0,.08);border-radius:6px">'
+                    + '    <span class="input-group-text bg-light" style="padding-left:12px;padding-right:12px">'
+                    + '      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6c757d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><circle cx="9" cy="12" r="2.5"></circle><line x1="14" y1="10" x2="19" y2="10"></line><line x1="14" y1="14" x2="17" y2="14"></line></svg>'
+                    + '    </span>'
+                    + '    <input id="txtIDSinhVienCanVo" class="form-control" placeholder="Nhập ID / MSSV / Họ tên / Email..." autocomplete="off" />'
+                    + '    <button class="btn btn-primary" id="btnTruyCapIDSinhVien" type="button" style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap">'
+                    + '      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>'
+                    + '      <span>Tìm sinh viên</span>'
+                    + '    </button>'
+                    + '  </div>'
+                    + '</div>'
+                    + '<div id="divKQTimSinhVien" style="margin-top:12px;text-align:left"></div>';
+                edu.system.alert(strHtmlForm);
+                $("#myModalAlert .modal-dialog").addClass("modal-lg");
+                var chonSinhVien = function (record) {
+                    edu.system.userId = record.ID || record.Id || record.id;
+                    edu.system.currentSinhVien = {
+                        ten: record.FULLNAME || record.HOTEN || record.HoTen || '',
+                        ma: record.NAME || record.MSSV || record.MA || '',
+                        email: record.EMAIL || record.Email || ''
+                    };
                     $("#myModalAlert").modal("hide");
                     me.setUngDung(objUngDung);
+                };
+                var renderBangSinhVien = function (rs, title, offset, footerHtml) {
+                    var html = ''
+                        + '<div class="alert alert-info py-2 px-3 mb-2" style="font-size:13px;border-left:3px solid #0d6efd">'
+                        + '  <i class="fa fa-info-circle fa-solid"></i>&nbsp;&nbsp;' + title
+                        + '</div>'
+                        + '<div style="max-height:380px;overflow-y:auto;border:1px solid #dee2e6;border-radius:6px">'
+                        + '<table class="table table-hover table-striped align-middle mb-0" style="font-size:13px">'
+                        + '  <thead class="table-light" style="position:sticky;top:0;z-index:1">'
+                        + '    <tr>'
+                        + '      <th style="width:42px;text-align:center">#</th>'
+                        + '      <th>Họ tên</th>'
+                        + '      <th style="width:130px">Mã</th>'
+                        + '      <th>Email</th>'
+                        + '    </tr>'
+                        + '  </thead><tbody>';
+                    rs.forEach(function (r, i) {
+                        var ten = r.FULLNAME || r.HOTEN || r.HoTen || '';
+                        var ma = r.NAME || r.MSSV || r.MA || '';
+                        var email = r.EMAIL || r.Email || '';
+                        html += ''
+                            + '<tr class="rowSinhVienChon" data-idx="' + i + '" style="cursor:pointer">'
+                            + '  <td style="text-align:center;color:#6c757d">' + (offset + i + 1) + '</td>'
+                            + '  <td><i class="fa fa-user-circle fa-solid text-primary"></i>&nbsp;&nbsp;<b>' + ten + '</b></td>'
+                            + '  <td><span class="badge bg-secondary" style="font-family:monospace">' + ma + '</span></td>'
+                            + '  <td class="text-muted">' + email + '</td>'
+                            + '</tr>';
+                    });
+                    html += '</tbody></table></div>';
+                    if (footerHtml) html += footerHtml;
+                    $("#divKQTimSinhVien").html(html);
+                    $(".rowSinhVienChon").click(function () {
+                        var idx = parseInt($(this).data('idx'), 10);
+                        chonSinhVien(rs[idx]);
+                    });
+                };
+                var showError = function (msg) {
+                    $("#divKQTimSinhVien").html('<div class="alert alert-warning py-2 px-3 mb-0" style="font-size:13px"><i class="fa fa-exclamation-triangle fa-solid"></i>&nbsp;&nbsp;' + msg + '</div>');
+                };
+                $("#btnTruyCapIDSinhVien").click(function () {
+                    var strThongTinDinhDanh = $("#txtIDSinhVienCanVo").val();
+                    if (!strThongTinDinhDanh) {
+                        showError('Vui lòng nhập thông tin định danh!');
+                        return;
+                    }
+                    var obj_save = {
+                        'action': 'CMS_QuanTri02_MH/CigkLBUzIBUpLi8mFSgvBSgvKQUgLykP',
+                        'func': 'PKG_CORE_QUANTRI_02.KiemTraThongTinDinhDanh',
+                        'iM': edu.system.iM,
+                        'strThongTinDinhDanh': strThongTinDinhDanh,
+                        'strNguoiThucHien_Id': edu.system.userId,
+                        'strVaiTroDangNhap_Id': objUngDung.ID,
+                        'strChucNangHeThong_Id': objUngDung.ID,
+                        'strHanhDong_Code': '',
+                    };
+                    me.makeRequest({
+                        success: function (data) {
+                            if (!data.Success) {
+                                showError(data.Message || 'Có lỗi xảy ra!');
+                                return;
+                            }
+                            var rs = [];
+                            if (data.Data && data.Data.rs) rs = data.Data.rs;
+                            else if (Array.isArray(data.Data)) rs = data.Data;
+                            if (!rs || rs.length == 0) {
+                                showError('Không tìm thấy sinh viên phù hợp!');
+                                return;
+                            }
+                            if (rs.length == 1) {
+                                chonSinhVien(rs[0]);
+                                return;
+                            }
+                            renderBangSinhVien(rs, 'Tìm thấy <b>' + rs.length + '</b> kết quả — click vào 1 dòng để chọn', 0, '');
+                        },
+                        error: function (er) {
+                            showError(JSON.stringify(er));
+                        },
+                        type: 'POST',
+                        action: obj_save.action,
+                        contentType: true,
+                        data: obj_save,
+                        fakedb: []
+                    }, false, false, false, null);
                 });
                 return;
             }
@@ -6002,6 +6107,16 @@ systemroot.prototype = {
         }
         //1. Append to left_content_tree
         $("#sidebar-menu").html(node);
+        if (me.currentSinhVien && me.currentSinhVien.ten) {
+            var sv = me.currentSinhVien;
+            var svInfo = ''
+                + '<div class="sidebar-student-info" style="padding:10px 12px;background:#eff6ff;border-radius:6px;margin:8px;border-left:3px solid #0d6efd">'
+                + '  <div style="font-size:10px;color:#6c757d;text-transform:uppercase;font-weight:600;letter-spacing:.3px">Sinh viên đang xem</div>'
+                + '  <div style="font-weight:700;color:#1e3a8a;font-size:13px;margin-top:3px;line-height:1.25;word-break:break-word">' + sv.ten + '</div>'
+                + (sv.ma ? '  <div style="font-family:monospace;color:#6c757d;font-size:12px;margin-top:2px">' + sv.ma + '</div>' : '')
+                + '</div>';
+            $("#sidebar-menu").prepend(svInfo);
+        }
         var strChucNang_Id = (me.strChucNang_Id) ? me.strChucNang_Id : sessionStorage.getItem("strChucNang_Id");
         me.triggerChucNang_Id(strChucNang_Id);
         if (!sessionStorage.getItem("strChucNang_Id") && window.innerWidth < 769) {
