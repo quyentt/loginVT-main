@@ -42,11 +42,8 @@ DiemHoc.prototype = {
             me.getList_DiemThanhPhan(id, point);
         });
         me.strNguoiHoc_Id = me.resolveNguoiHocId();
-<<<<<<< HEAD
         
-=======
 
->>>>>>> 9bd67e124ca5e5dfcf33170def49855e2181cf3e
         me.getList_ChuongTrinhHoc();
         me.getList_ThoiGianDangKy(me.strNguoiHoc_Id);
         me.getList_QuaTrinhQuyetDinh();
@@ -172,10 +169,7 @@ DiemHoc.prototype = {
         var jsonSV = me.dtKetQua.rsThongTinNguoiHoc[0];
         var hoTen = edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN);
         $("#lblHoTen_DiemHoc").html(hoTen);
-<<<<<<< HEAD
-=======
         $(".lblHoTen").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
->>>>>>> 9bd67e124ca5e5dfcf33170def49855e2181cf3e
         $("#lblMaSo").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_MASO));
         $("#lblNgaySinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_NGAYSINH));
         $("#lblGioiTinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_GIOITINH));
