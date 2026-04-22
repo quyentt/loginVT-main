@@ -9,6 +9,10 @@
     .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
         height: 66px;
     }
+
+    .aps-list-chuongtrinh.box-solid {
+        padding-right: 20px !important;
+    }
 }
 
 @media only screen and (min-width: 2000px) {
@@ -89,6 +93,18 @@
 }
 
 @media only screen and (min-width: 1200px) {
+    .myModalKeThua .aps-add-new .row {
+        margin-right: -10px !important;
+        margin-left: -10px !important;
+    }
+
+    .modal.fade {
+        padding: 0 !important;
+    }
+
+    .modal.fade .modal-dialog {
+        padding: 15px !important;
+    }
 
     .aps-ds-tuibai .tblTuiBai,
     .aps-ds-thivd .tblThi {
@@ -96,7 +112,73 @@
     }
 }
 
-@media (min-width: 1024px) and (max-width: 1180px) {}
+@media (min-width: 1600px) and (max-width: 2000px) {}
+
+@media (min-width: 1280px) and (max-width: 1599px) {
+    .zoneBox_ChuongTrinh {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px;
+    }
+
+    .zoneBox_ChuongTrinh .col-sm-3.btnView {
+        width: 100% !important;
+    }
+}
+
+@media (min-width: 1180px) and (max-width: 1920px) {
+    .zone_chuongtrinhhocphan-detail {
+        width: 100% !important;
+    }
+
+    .zone_chuongtrinhhocphan-right .box-header .btn .lang {
+        display: none !important;
+    }
+
+    .zone_chuongtrinhhocphan-right .box-header .btn i {
+        padding-right: 0px;
+    }
+}
+
+@media (min-width: 1180px) and (max-width: 1599px) {
+
+    .zone_chuongtrinhhocphan-left,
+    .zone_chuongtrinhhocphan-right {
+        width: 100% !important;
+    }
+
+    .zone_chuongtrinhhocphan-right {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* Chia 3 cột đều nhau */
+        gap: 20px;
+    }
+
+    .zone_chuongtrinhhocphan-right .line-height-1 {
+        display: none;
+    }
+
+    .zone_chuongtrinhhocphan-right .box.box-solid {
+        padding-bottom: 20px !important;
+        border-right: 5px solid #fff;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1180px) {
+    .zoneBox_ChuongTrinh {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 20px;
+    }
+
+    .zoneBox_ChuongTrinh .col-sm-3.btnView {
+        width: 100% !important;
+    }
+
+    .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn i {
+        display: none !important;
+    }
+}
 
 @media (min-width: 1024px) and (max-width: 1280px) {
     .zone_notify_HocPhan .box.box-solid.box-search .box-body {
@@ -124,6 +206,12 @@
 }
 
 @media (max-width: 1024px) {
+
+    .zone_chuongtrinhhocphan-left,
+    .zone_chuongtrinhhocphan-right {
+        width: 100% !important;
+    }
+
     .table-khoibatbuoc tr td:nth-child(2) i {
         rotate: 90deg;
     }
@@ -173,7 +261,7 @@
     }
 
     .zone_chuongtrinhhocphan-left .aps-table-select .table {
-        min-width: 860px;
+        min-width: 1200px;
     }
 
     .tblThuTuHocPhan {
@@ -607,6 +695,24 @@
 }
 
 @media (min-width: 800px) and (max-width: 1024px) {
+    .zone_chuongtrinhhocphan-right {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr);
+        /* Chia 3 cột đều nhau */
+        gap: 20px;
+        /* Khoảng cách giữa các cột */
+
+    }
+
+    .zone_chuongtrinhhocphan-right .line-height-1,
+    .zone_chuongtrinhhocphan-right .box-header .pull-right .btn .lang {
+        display: none;
+    }
+
+    .zone_chuongtrinhhocphan-right .box-header .pull-right .btn i {
+        padding-right: 0px;
+    }
+
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 260px !important;
     }
@@ -1419,6 +1525,32 @@
 }
 
 @media only screen and (max-width: 599px) {
+    .zone_chuongtrinhhocphan .box-header.bg-green {
+        height: auto !important;
+        line-height: 24px !important;
+        padding: 11px 15px 0 15px !important;
+    }
+
+    .zone_chuongtrinhhocphan .box.box-solid .box-header .pull-right-absolute {
+        right: -21px !important;
+        top: -10px !important;
+    }
+
+    /* -------------- */
+    .table.table-sum tr {
+        display: grid !important;
+        padding: 15px 0 !important;
+    }
+
+    .table.table-sum tr td {
+        padding-left: 0 !important;
+        padding-bottom: 0 !important;
+        padding-top: 0 !important;
+        line-height: 30px !important;
+        height: 30px !important;
+        min-height: 30px !important;
+    }
+
     .box.box-solid.box-search {
         border-top-left-radius: 0 !important;
         border-top-right-radius: 0 !important;
@@ -2076,6 +2208,14 @@
 }
 
 @media (max-width: 400px) {
+    .zone_chuongtrinhhocphan-right .box-header .btn .lang {
+        display: none !important;
+    }
+
+    .zone_chuongtrinhhocphan-right .box-header .btn i {
+        padding-right: 0px;
+    }
+
     .zone_input_HocPhanTuongDuong.form-container .box-header.with-border {
         height: auto !important;
         line-height: 30px !important;
@@ -3197,6 +3337,10 @@
     .aps-list-year .aps-table-year {
         padding-left: 10px !important;
         padding-right: 10px !important;
+    }
+
+    .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn i {
+        display: none !important;
     }
 }
 

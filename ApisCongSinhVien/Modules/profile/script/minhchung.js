@@ -19,8 +19,10 @@ MinhChung.prototype = {
         var me = this;
 
         //--Edit
-        var obj_list = {
-            'action': 'NH_QuyDinhHoSo_ApDung/LayDSCacHoSoNhapHoc',
+        var obj_save = {
+            'action': 'TS_NH_ThongTin_MH/DSA4BRICICIJLhIuDykgMQkuIgPP',
+            'func': 'pkg_nhaphoc_thongtin.LayDSCacHoSoNhapHoc',
+            'iM': edu.system.iM,
             'strQLSV_NguoiHoc_TTTS_Id': edu.system.userId,
         };
 
@@ -35,20 +37,20 @@ MinhChung.prototype = {
                     me.genTable_HoSo(dtResult);
                 }
                 else {
-                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
                 }
 
             },
             error: function (er) {
-                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
 
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
 
             contentType: true,
 
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
@@ -56,28 +58,48 @@ MinhChung.prototype = {
     },
 
     genTable_HoSo: function (data, iPager) {
-        var jsonForm = {
-            strTable_Id: "tbl_HoSoGiayTo",
-            aaData: data,
-            colPos: {
-                center: [0],
-                //right: [5]
-            },
-            aoColumns: [
-                {
-                    "mDataProp": "LOAIHOSO_TEN"
-                },
-                {
-                    "mDataProp": "MOTA"
-                }
-                , {
-                    "mRender": function (nRow, aData) {
-                        return '<div id="file' + aData.ID + '" ></div>';
-                    }
-                }
-            ]
-        };
-        edu.system.loadToTable_data(jsonForm);
+        //var jsonForm = {
+        //    strTable_Id: "tbl_HoSoGiayTo",
+        //    aaData: data,
+        //    colPos: {
+        //        center: [0],
+        //        //right: [5]
+        //    },
+        //    aoColumns: [
+        //        {
+        //            "mDataProp": "LOAIHOSO_TEN"
+        //        },
+        //        {
+        //            "mDataProp": "MOTA"
+        //        }
+        //        , {
+        //            "mRender": function (nRow, aData) {
+        //                return '<div id="file' + aData.ID + '" ></div>';
+        //            }
+        //        }
+        //    ]
+        //};
+        //edu.system.loadToTable_data(jsonForm);
+
+        var html = '';
+        //var strGroup = data.length > 0 ? data[0].THUOCNHOM : "";
+        data.forEach((aData, nRow) => {
+            //var strTempG = aData.THUOCNHOM;
+            //if (nRow != 0 && strTempG != strGroup) {
+            //    strGroup = strTempG;
+            //    html += '<hr>';
+            //} else {
+            //    if (nRow != 0)
+            //        strTempG = "";
+            //}
+            html += '<div class="row sv-info-detail-item">';
+            //html += '<div class="col-12 col-md-1 ">' + (nRow + 1) + '. </div>';
+            html += '<div class="col-12 col-md-6 ">' + (nRow + 1) + ". " + edu.util.returnEmpty(aData.LOAIHOSO_TEN) + '</div>';
+            html += '<div class="col-12 col-md-2 ">' + edu.util.returnEmpty(aData.TEN) + '</div>';
+            html += '<div class="col-12 col-md-4"><div id="file' + aData.ID + '" ></div></div>';
+            html += '</div> <hr />';
+        });
+        $("#tbl_HoSoGiayTo").html(html);
         var arrUpload = [];
         data.forEach(e => { arrUpload.push("file" + e.ID); });
         edu.system.uploadFiles(arrUpload);
@@ -89,12 +111,13 @@ MinhChung.prototype = {
 
     save_HoSoGiayTo: function (element) {
         var strId = element.ID;
-        var temp = $("#zoneFileDinhKemfile" + strId + " ul li");
+        var temp = $("#zoneFileDinhKemfile" + strId + " div");
         if (temp.length > 0) {
 
             var obj_save = {
-                'action': 'NH_NguoiHoc_ThongTinTuyenSinh/NhapHoc_ThuHoSo',
-                'type': 'POST',
+                'action': 'TS_NH_ThongTin_MH/DykgMQkuIh4VKTQJLhIu',
+                'func': 'pkg_nhaphoc_thongtin.NhapHoc_ThuHoSo',
+                'iM': edu.system.iM,
                 'strQLSV_NguoiHoc_TTTS_Id': edu.system.userId,
                 'strLoaiHoSo_Ids': element.LOAIHOSO_ID,
                 'strLoaiHoSo_SoLuong_s': temp.length,
@@ -142,9 +165,10 @@ MinhChung.prototype = {
         var me = this;
 
         //--Edit
-        var obj_list = {
-            'action': 'SV_HoSo/LayChiTiet',
-            'type': 'GET',
+        var obj_save = {
+            'action': 'SV_HoSoHocVien_MH/DSA4FSkuLyYVKC8CKSgVKCQ1CS4SLgPP',
+            'func': 'pkg_hosohocvien.LayThongTinChiTietHoSo',
+            'iM': edu.system.iM,
             'strId': edu.system.userId,
         };
 
@@ -158,20 +182,20 @@ MinhChung.prototype = {
                     }
                 }
                 else {
-                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
                 }
 
             },
             error: function (er) {
-                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
 
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
 
             contentType: true,
 
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

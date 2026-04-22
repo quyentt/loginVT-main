@@ -2,6 +2,7 @@
 @import "responsive.css";
 @import "styles-content.css?v2";
 @import "../../../assets/css/root.css";
+
 /* @import "../../../assets/css/gochoctap.css"; */
 /* @import "../../../assets/css/all.css"; */
 
@@ -198,7 +199,9 @@ input::placeholder {
 .w-200px {
   width: 200px !important;
 }
-
+.min-w100{
+  min-width: 100px !important;
+}
 .line-38 {
   line-height: 38px !important;
 }
@@ -4178,7 +4181,7 @@ button:not(:disabled) {
   --bs-btn-disabled-border-color: #198754;
   --bs-gradient: none;
   border: 1px solid var(--color-green) !important;
-  color: var(--color-green);
+  color: var(--color-green) !important;
 }
 
 .btn-outline-success:hover {
@@ -6689,4 +6692,14 @@ input[type="radio"] {
 
 .tblThoiGianDaoTao tr td:nth-child(2) {
   text-align: center !important;
+}
+
+/* -------------------- */
+.tblHocPhanKeThua tr td:nth-last-child(3),
+.tblHocPhanKeThua tr td:nth-last-child(4),
+.tblHocPhanKeThua tr td:nth-last-child(5){
+  text-align: center !important;
+}
+.tblHocPhanKeThua .table-select{
+  width: 100% !important;
 }
