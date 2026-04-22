@@ -54,6 +54,12 @@ VaiTro.prototype = {
         $("#btnRewrite_VaiTro").click(function () {
             me.rewrite();
         });
+        $("#btnAddNew_VaiTro").click(function () {
+            me.rewrite();
+            $(".myModalLabel").html('<i class="fa-light fa-user-gear"></i> Thêm mới vai trò ');
+            $(".btnOpenDelete").hide();
+            $("#btnUndo_VaiTro").hide();
+        });
         /*------------------------------------------
         --Discription: Action_extra 
         -------------------------------------------*/
@@ -72,6 +78,7 @@ VaiTro.prototype = {
         edu.util.resetValById("txtVaiTro_ThuTuHienThi");
         edu.util.resetValById("txtVaiTro_MoTa");
         edu.util.resetValById("dropVaiTro_Loai");
+        edu.util.resetValById("dropVaiTro_Cha");
         me.strVaiTro_Id = "";
     },
     /*----------------------------------------------

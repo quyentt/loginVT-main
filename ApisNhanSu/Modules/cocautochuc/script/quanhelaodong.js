@@ -10,7 +10,7 @@ function QuanHeLaoDong() { };
 QuanHeLaoDong.prototype = {
     strCoCauToChuc_Id: '',
     dtCoCauToChuc: [],
-    version: '1.0.1.2',
+    version: '1.0.1.3',
     // Employment hiện đang chọn (cột trái) để biết mở form phân công theo QHLD nào
     currentEmploymentId: '',
     currentQuanHe: null,
@@ -375,6 +375,17 @@ QuanHeLaoDong.prototype = {
             me["currentQuanHe"] = null;
             me["currentOrgUnitForPosition"] = '';
             $("#lblNguoiQH").html(data.FULL_NAME + " - " + data.CURRENT_EMPLOYEE_CODE);
+
+            // Chỉ hiển thị cột Phân công nhiệm vụ khi mở từ tab "Có QHLD còn hiệu lực"
+            var sourceTable = $(this).closest('table').attr('id');
+            if (sourceTable === 'tblCoQH') {
+                $("#colPhanCong").show();
+                $("#colQuanHe").removeClass('col-lg-12').addClass('col-lg-6').css('border-right', '1px solid #eee');
+            } else {
+                $("#colPhanCong").hide();
+                $("#colQuanHe").removeClass('col-lg-6').addClass('col-lg-12').css('border-right', 'none');
+            }
+
             // reset cột phân công
             try { $("#lblQHLD_DaChon").text(" - (Chọn 1 quan hệ lao động bên trái)"); } catch (e) { }
             try {
