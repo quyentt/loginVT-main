@@ -508,8 +508,123 @@
           } catch (e) {
           }
 
+          initHashDeepLink();
           initGlobalSearch();
         });
+
+        // Hash deep-link: mở URL dạng index.aspx#<duongdanhienthi> đúng màn hình khi đã đăng nhập.
+        // 2 giai đoạn: (1) nếu đang ở trang chọn vai trò, tra hash -> ứng dụng (role) -> auto
+        // setUngDung; (2) sau khi dtChucNang load xong, override strChucNang_Id để mở đúng màn.
+        // Không đụng Core/systemroot.js.
+        function initHashDeepLink() {
+          var sys = edu.system;
+          if (!sys) return;
+
+          function normalizeHash() {
+            var raw = (window.location.hash || '').replace(/^#/, '');
+            try { raw = decodeURIComponent(raw); } catch (e) {}
+            return raw;
+          }
+          function matchByHash(list, key) {
+            if (!key || !list || !list.length) return null;
+            return list.find(function (e) {
+              if (!e) return false;
+              var d = (e.DUONGDANHIENTHI || '').replace(/^#/, '');
+              return d === key;
+            }) || null;
+          }
+
+          // (2) Patch menu render: hash thắng sessionStorage khi chọn màn mặc định.
+          if (!sys.__hashDeepLinkPatched) {
+            sys.__hashDeepLinkPatched = true;
+            var _origGenMenu = sys.genHTML_MenuVertical;
+            if (typeof _origGenMenu === 'function') {
+              sys.genHTML_MenuVertical = function (data) {
+                var key = normalizeHash();
+                var obj = matchByHash(data, key);
+                if (obj) {
+                  sys.strChucNang_Id = obj.ID;
+                  try { sessionStorage.setItem('strChucNang_Id', obj.ID); } catch (e) {}
+                }
+                return _origGenMenu.call(this, data);
+              };
+            }
+          }
+
+          // (1) Nếu đang ở role picker: tra hash -> ứng dụng -> setUngDung.
+          var hashKey = normalizeHash();
+          if (hashKey && !sys.appId) {
+            edu.system.makeRequest({
+              type: 'GET',
+              action: 'CMS_ChucNang/LayDanhSach',
+              contentType: true,
+              data: {
+                action: 'CMS_ChucNang/LayDanhSach',
+                versionAPI: 'v1.0',
+                strTuKhoa: '', strChung_UngDung_Id: '', strCHUCNANGCHA_Id: '',
+                pageIndex: 1, pageSize: 5000,
+                strNGUONTRUYCAP_Id: '', dTrangThai: 1
+              },
+              success: function (data) {
+                if (!(data && data.Success && data.Data)) return;
+                var obj = matchByHash(data.Data, hashKey);
+                if (!obj) return;
+                var appId = obj.CHUNG_UNGDUNG_ID || obj.UNGDUNG_ID;
+                if (!appId) return;
+
+                var tries = 0;
+                var timer = setInterval(function () {
+                  tries++;
+                  var apps = sys.dtUngDung || [];
+                  if (apps.length) {
+                    var app = apps.find(function (a) { return a.ID === appId; });
+                    if (app && !sys.appId) {
+                      clearInterval(timer);
+                      try { sessionStorage.setItem('strChucNang_Id', obj.ID); } catch (e) {}
+                      sys.strChucNang_Id = obj.ID;
+                      sys.setUngDung(app);
+                    } else if (!app || sys.appId) {
+                      clearInterval(timer);
+                    }
+                  }
+                  if (tries > 100) clearInterval(timer);
+                }, 150);
+              },
+              error: function () {},
+              fakedb: []
+            }, false, false, false, null);
+          }
+
+          // (3) Đổi hash khi đã trong app -> mở màn tương ứng.
+          window.addEventListener('hashchange', function () {
+            var key = normalizeHash();
+            if (!key) {
+              // Back về state không hash (vd browser back từ deep-link) -> reset về dashboard
+              // của app đang chọn. Clear strChucNang_Id để triggerChucNang_Id fallback #dashboard.
+              if (sys.strChucNang_Id) {
+                try { sessionStorage.removeItem('strChucNang_Id'); } catch (e) {}
+                sys.strChucNang_Id = '';
+                var dash = (sys.dtChucNang || []).find(function (e) {
+                  return e && e.DUONGDANHIENTHI === '#dashboard';
+                });
+                if (dash) {
+                  try {
+                    sys.initMain(dash.DUONGDANHIENTHI, dash.DUONGDANFILE, dash.ID);
+                  } catch (e) { location.reload(); }
+                } else {
+                  location.reload();
+                }
+              }
+              return;
+            }
+            var obj = matchByHash(sys.dtChucNang, key);
+            if (!obj) return;
+            if (sys.strChucNang_Id === obj.ID) return;
+            try {
+              sys.initMain(obj.DUONGDANHIENTHI, obj.DUONGDANFILE, obj.ID);
+            } catch (e) { console.error('[deep-link] initMain error:', e); }
+          });
+        }
 
         function initGlobalSearch() {
           var $input = $('#global-search-input');
