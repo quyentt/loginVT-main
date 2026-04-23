@@ -4363,7 +4363,7 @@ ChuongTrinhHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div style="width: 200px; float: left"><select id="dropThoiGian_' + aData.ID + '" class="select-opt" style="width:100% !important"></select></div>';
+                        return '<div class="table-select"><select id="dropThoiGian_' + aData.ID + '" class="select-opt" style="width:100% !important"></select></div>';
                     }
                 },
                 {

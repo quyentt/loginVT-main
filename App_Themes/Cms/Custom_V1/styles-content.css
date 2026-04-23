@@ -613,6 +613,7 @@
     font-size: 16px;
     color: #222 !important;
 }
+
 .aps-add-new .group-group-title-name {
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 15px;
@@ -6021,7 +6022,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .aps-add-dulieuDiem .modal-body .select-opt {
     padding: 3px 10px !important;
     height: 38px !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     line-height: 41px !important;
     border-radius: 5px;
     border: 1px solid #d2d6de;
@@ -6457,13 +6458,26 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .select-opt {
     height: 38px !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
     line-height: 41px !important;
     border-radius: 5px;
     border: 1px solid #d2d6de;
     padding: 3px 10px !important;
     background: #fff;
     border-radius: 5px;
+    position: relative;
+}
+
+.select-opt::before {
+    content: "\f107";
+    top: 0;
+    right: 0;
+    position: absolute;
+    font-family: "Font Awesome 5 Pro";
+    font-weight: 300;
+    font-size: 14px;
+    width: 30px;
+    height: 30px;
 }
 
 .aps-modal_nhansu .modal-body .col-sm-9 .group-title i:last-child {
@@ -8504,7 +8518,7 @@ input#tblInput_DTSV_SinhVien_input {
 
 .aps-list-hocphan.sidebar-menu li a,
 .zoneHocPhan_Selected_KBB.sidebar-menu li a {
-    padding: 13px 12px 11px 15px !important;
+    padding: 13px 12px 11px 10px !important;
 }
 
 .aps-list-hocphan.sidebar-menu .item-li a i {
@@ -8573,6 +8587,19 @@ input#tblInput_DTSV_SinhVien_input {
     border-right: 0 solid #d1d1d1 !important;
 }
 
+.table-khoibatbuoc tr:hover .btn.btn-outline-primary {
+    color: #0d6efd !important;
+}
+
+.table-khoibatbuoc tr:hover .btn.btn-outline-success {
+    color: #198754 !important;
+}
+
+.table-khoibatbuoc tr .btn.btn-outline-primary:hover,
+.table-khoibatbuoc tr .btn.btn-outline-success:hover {
+    color: #fff !important;
+}
+
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a,
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.active:hover>a,
 .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open:hover>a {
@@ -8590,7 +8617,7 @@ input#tblInput_DTSV_SinhVien_input {
 
 .aps-list-hocphan.sidebar-menu .item-li .submit.btn {
     position: absolute;
-    top: 10px;
+    top: 7px;
     right: 10px;
     height: 30px;
     padding-top: 0px !important;
@@ -11233,4 +11260,18 @@ table#clone {
 .tblViewKhoiBatBuoc tr td:nth-child(1),
 .tblViewKhoiTuChon tr td:nth-child(1) {
     text-align: left !important;
+}
+
+#myModalAlert .modal-dialog {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center !important;
+    -ms-flex-align: center !important;
+    align-items: center !important;
+    min-height: calc(100% - (.5rem * 2));
+}
+
+#myModalAlert {
+    padding: 10px !important;
 }

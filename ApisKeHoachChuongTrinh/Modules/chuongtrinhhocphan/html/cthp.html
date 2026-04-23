@@ -46,7 +46,7 @@
 
         <!--Nội dung học phần theo chương trình: zone_chuongtrinhhocphan-->
         <div class="zone-content box box-solid zone_chuongtrinhhocphan pd0 color-white add-absolue"
-            id="zone_chuongtrinhhocphan" style="display: block;">
+            id="zone_chuongtrinhhocphan" style="display: none;">
             <div class="row pd0">
                 <div class="box box-solid pd0">
                     <div class="box-header pt15 pl20 pr20 pb0 bg-green color-white pb10"
@@ -227,8 +227,7 @@
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
                     <i class="fa-sharp-duotone fa-solid fa-book-open-reader fw-bold"></i> Chọn học phần cho chương
-                    trình:
-                    <span id="lblInputHocPhan" class="color-active"></span>
+                    trình: <span id="lblInputHocPhan" class="color-yellow pl10 fw-bold"></span>
                 </h3>
                 <div class="pull-right pull-right-absolute">
                     <a class="btn btn-outline-white btnClose_SelectHocPhan border-0" href="#" title="Close">
@@ -298,7 +297,7 @@
                                             </div>
 
                                             <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
-                                                id="zoneTongHocPhan" style="height: 480px; overflow-y: scroll"></ul>
+                                                id="zoneTongHocPhan" style="max-height: 480px; overflow-y: scroll"></ul>
                                         </div>
                                         <div class="box-footer border-0">
                                             <div class="pull-right mt-0">
@@ -315,10 +314,11 @@
                                     class="border-0">
                                     <i class="fa fa-forward" style="font-size:44px;color:red"></i>
                                 </td>
-                                <td style="width: 48%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;position:relative;"
+                                <td style="width: 100%; display: flex;flex-direction: column;
+                                padding:0 !important;border-left: 0 !important;border-right: 0 !important;position:relative;"
                                     class="border-0">
                                     <div class="box box-solid pd0"
-                                        style="background-color: #fff !important;position: absolute; top: 0">
+                                        style="background-color: #fff !important;position: relative; top: 0">
                                         <div class="box-header pd0">
                                             <h3 class="box-title" title="Danh sách kết quả học phần chương trình"
                                                 style="color:#FF0000 !important;">
@@ -334,7 +334,7 @@
                                                     style="width: 99%">
                                             </div>
                                             <ul class="sidebar-menu zoneHocPhan_Selected_KBB" data-widget="tree"
-                                                id="zoneHocPhan_Selected" style="height: 480px; overflow-y: scroll"
+                                                id="zoneHocPhan_Selected" style="max-height: 480px; overflow-y: scroll"
                                                 ondrop="main_doc.ChuongTrinhHocPhan.drop_handler(event);"
                                                 ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                         </div>
@@ -830,7 +830,7 @@
                                                     </div>
                                                 </div>
                                                 <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
-                                                    id="zoneTongHocPhan_KBB" style="height: 490px; overflow-y: scroll">
+                                                    id="zoneTongHocPhan_KBB" style="height: 491px; overflow-y: scroll">
                                                 </ul>
                                             </div>
                                             <div class="box-footer" style="display:none !important;"></div>
@@ -1044,7 +1044,7 @@
                                             </div>
                                         </div>
                                         <ul class="sidebar-menu aps-list-hocphan" data-widget="tree"
-                                            id="zoneTongHocPhan_KTCD" style="height: 490px; overflow-y: scroll"></ul>
+                                            id="zoneTongHocPhan_KTCD" style="height: 491px; overflow-y: scroll"></ul>
                                     </div>
                                 </div>
                                 <div class="pull-right mt-15">
@@ -1076,7 +1076,7 @@
                                                 style="width: 99%">
                                         </div>
                                         <ul class="sidebar-menu zoneHocPhan_Selected_KBB" data-widget="tree"
-                                            id="zoneHocPhan_Selected_KTCD" style="height: 490px; overflow-y: scroll"
+                                            id="zoneHocPhan_Selected_KTCD" style="height: 491px; overflow-y: scroll"
                                             ondrop="main_doc.ChuongTrinhHocPhan.drop_KTCD_handler(event);"
                                             ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                     </div>
@@ -1588,7 +1588,7 @@
         <!-- ---------- -->
         <!-- Học phần -->
         <div class="modal fade myModal" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-680 modal-dialog-scrollable">
+            <div class="modal-dialog modal-680 modal-dialog-scrollable modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -1718,7 +1718,7 @@
         <!--Kế thừa-->
         <div class="modal fade myModalKeThua" id="myModalKeThua" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 99%">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 100%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -1771,33 +1771,33 @@
                                 <div class="clear"></div>
                             </div>
                             <!--row 2-->
-                            <div class="row aps-form-item pl5">
-                                <div class="col-sm-1 aps-form-lable d-none">
+                            <div class="row aps-form-item pl10">
+                                <div class="col-sm-12 aps-form-lable d-none">
                                     <label style="font-weight: normal"><span class="lang" key="">Kỳ kế
                                             thừa</span></label>
                                 </div>
-                                <div style="width: 60%; float: left">
+                                <div class="aps-form-input col-sm-4">
                                     <select id="dropKy_KT_Fill" class="select-opt" style="width:100% !important">
                                         <option id="" value=""> --Kỳ kế thừa--</option>
                                     </select>
                                 </div>
+                                <div class="aps-form-input col-sm-8">
+                                    <span class="pull-right pr10">
+                                        <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i>
+                                            <span class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
+                                    </span>
+                                </div>
                                 <div class="clear"></div>
-                            </div>
-                            <div class="row">
-                                <span class="pull-right pr10">
-                                    <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i> <span
-                                            class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
-                                </span>
-                            </div>
+                            </div>                           
                             <div class="row aps-form-table pl10 pr10 mt-10 scroll-table-x DSHocPhan" id="DSHocPhan">
                                 <table id="tblHocPhanKeThua"
                                     class="table table-hover table-bordered table-noborder tblHocPhanKeThua">
                                     <thead>
                                         <tr>
                                             <th class="td-center td-fixed w-50px">STT</th>
-                                            <th class="td-center">Mã học phần</th>
-                                            <th class="td-center">Tên học phần</th>
-                                            <th class="td-center">Số tín chỉ</th>
+                                            <th class="td-left">Mã học phần</th>
+                                            <th class="td-left">Tên học phần</th>
+                                            <th class="td-center min-w100">Số tín chỉ</th>
                                             <th class="td-center">Khối</th>
                                             <th class="td-center">Học kỳ</th>
                                             <th class="td-center">Học kỳ kế thừa</th>
@@ -1827,7 +1827,7 @@
         <!-- Thêm mới - Thứ tự học phần -->
         <div class="modal fade myModalThuTu" id="myModalThuTu" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 95%">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 100%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -1923,7 +1923,7 @@
         <!-- Sửa thời gian -->
         <div class="modal fade myModalEditHocKy" id="myModalEditHocKy" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-680">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-680">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span
@@ -1960,7 +1960,7 @@
         <!-- Sửa thời gian -->
         <div class="modal fade myModalEditHocKyAll" id="myModalEditHocKyAll" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span
@@ -1992,7 +1992,7 @@
         <!-- Kế thừa Quan hệ học phần -->
         <div class="modal fade myModalKeThuaQH" id="myModalKeThuaQH" role="dialog" aria-labelledby="myModalLabel"
             aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal"><span

@@ -10,18 +10,6 @@ function DiemHoc() { };
 DiemHoc.prototype = {
     dtKetQua: [],
     strNguoiHoc_Id: '',
-    resolveNguoiHocId: function () {
-        // Only allow viewing another student's data when this page is embedded
-        // inside the staff timetable modal (zoneHTSinhVien/modalHTSinhVien).
-        try {
-            var isEmbeddedViewer = $("#zoneHTSinhVien").length > 0 || $("#modalHTSinhVien").length > 0;
-            if (isEmbeddedViewer && window.main_doc && main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) {
-                return main_doc.LichGiang.strSinhVien_Id;
-            }
-        } catch (e) {
-        }
-        return edu.system.userId;
-    },
     init: function () {
         var me = this;
 
@@ -41,8 +29,13 @@ DiemHoc.prototype = {
             var id = this.id;
             me.getList_DiemThanhPhan(id, point);
         });
-        me.strNguoiHoc_Id = me.resolveNguoiHocId();
-        
+        try {
+            if (main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) me.strNguoiHoc_Id = main_doc.LichGiang.strSinhVien_Id
+            else
+                me.strNguoiHoc_Id = edu.system.userId;// 'e7c4d5e4b2ed4ea1a50c3aaaac1988f6';
+        } catch {
+            me.strNguoiHoc_Id = edu.system.userId;// 'e7c4d5e4b2ed4ea1a50c3aaaac1988f6';
+        }
 
         me.getList_ChuongTrinhHoc();
         me.getList_ThoiGianDangKy(me.strNguoiHoc_Id);
@@ -50,7 +43,7 @@ DiemHoc.prototype = {
         me.getList_VanBang();
         me.getList_DiemRenLuyen();
         // test
-        
+
         //me.dtKetQua = JSON.parse(dtResult).Data;
 
         //me.genHtml_ThongTinCaNhan();
@@ -167,9 +160,8 @@ DiemHoc.prototype = {
     genHtml_ThongTinCaNhan: function () {
         var me = this;
         var jsonSV = me.dtKetQua.rsThongTinNguoiHoc[0];
-        var hoTen = edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN);
-        $("#lblHoTen_DiemHoc").html(hoTen);
         $(".lblHoTen").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
+        console.log(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_TEN));
         $("#lblMaSo").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_MASO));
         $("#lblNgaySinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_NGAYSINH));
         $("#lblGioiTinh").html(edu.util.returnEmpty(jsonSV.QLSV_NGUOIHOC_GIOITINH));
@@ -228,9 +220,9 @@ DiemHoc.prototype = {
         var jsonSV = me.dtKetQua.rsDiemTrungBinhChung;
 
         var temp = jsonSV.find(element => element.DAOTAO_THOIGIANDAOTAO_ID === null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '10');
-        
+
         temp !== undefined ? $("#lblTongTinChi").html(edu.util.returnEmpty(temp.TONGSOTINCHI)) : $("#lblTongTinChi").html("");
-        
+
         //temp = jsonSV.find(element => element.DAOTAO_THOIGIANDAOTAO_ID === null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '10');
         temp !== undefined ? $("#lblTrungBinh10").html(edu.util.returnEmpty(temp.DIEMTRUNGBINH)) : $("#lblTrungBinh10").html("");
 
@@ -309,7 +301,7 @@ DiemHoc.prototype = {
                 htmlBangDiem += '</tr>';
             });
 
-            htmlBangDiem +='</tbody>';
+            htmlBangDiem += '</tbody>';
             htmlBangDiem += '<tfoot></tfoot>';
             htmlBangDiem += '</table>';
             htmlBangDiem += '<div class="row py-4">';
@@ -321,7 +313,7 @@ DiemHoc.prototype = {
             var diem = temp !== undefined ? edu.util.returnEmpty(temp.TONGSOTINCHI) : "...";
             //console.log("TONGSOTINCHI");
             //console.log(temp);
-            htmlBangDiem += '<span>'+ diem +'</span>';
+            htmlBangDiem += '<span>' + diem + '</span>';
             htmlBangDiem += '</div>';
             htmlBangDiem += '</div>';
             htmlBangDiem += '<div class="col-12 col-md-6">';
@@ -342,7 +334,7 @@ DiemHoc.prototype = {
             htmlBangDiem += '<div class="col-12 col-md-6">';
             htmlBangDiem += '<div class="summary-row">';
             htmlBangDiem += '<span class="color-66">Điểm trung bình hệ 4</span>';
-            temp = me.dtKetQua.rsDiemTrungBinhChung.find(element => element.DAOTAO_THOIGIANDAOTAO_ID !== null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '4' && element.NAMHOC === strNamHoc && element.DAOTAO_THOIGIANDAOTAO_KY == strHocKy && element.DOTHOC === null  && element.PHAMVITONGHOPDIEM_TEN == 'HOCKY');
+            temp = me.dtKetQua.rsDiemTrungBinhChung.find(element => element.DAOTAO_THOIGIANDAOTAO_ID !== null && element.LOAIDIEMTRUNGBINH_MA === 'TRUNGBINHCHUNG' && element.THUOCTINHLANTINH === 0 && element.THANGDIEM_MA === '4' && element.NAMHOC === strNamHoc && element.DAOTAO_THOIGIANDAOTAO_KY == strHocKy && element.DOTHOC === null && element.PHAMVITONGHOPDIEM_TEN == 'HOCKY');
             diem = temp !== undefined ? edu.util.returnEmpty(temp.DIEMTRUNGBINH) : "...";
             htmlBangDiem += '<span>' + diem + '</span>';
             htmlBangDiem += '</div>';
@@ -431,7 +423,7 @@ DiemHoc.prototype = {
             });
             $(point).popover('show');
         }
-        
+
     },
     view_DiemThanhPhan: function (data) {
         var me = this;
@@ -501,7 +493,7 @@ DiemHoc.prototype = {
             strTable_Id: "tblHocPhanChuaQua",
             aaData: me.dtKetQua.rsHocPhanChuaHoanThanh,
             colPos: {
-                center: [0,3, 4, 5,6, 7, 8, 9],
+                center: [0, 3, 4, 5, 6, 7, 8, 9],
                 //right: [5]
             },
             aoColumns: [
@@ -677,7 +669,7 @@ DiemHoc.prototype = {
 
             aaData: data,
             colPos: {
-                center: [0, 1, 3, 6, 7,8,9,10,11],
+                center: [0, 1, 3, 6, 7, 8, 9, 10, 11],
             },
             bHiddenOrder: true,
             aoColumns: [
@@ -944,7 +936,7 @@ DiemHoc.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
     getList_QuaTrinhQuyetDinh: function (point) {
         var me = this;
         var obj_save = {
@@ -1003,7 +995,7 @@ DiemHoc.prototype = {
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
     },
-    
+
     getList_VanBang: function (point) {
         var me = this;
         var obj_save = {
@@ -1194,7 +1186,7 @@ DiemHoc.prototype = {
         //edu.system.actionRowSpan("tblLichHoc", [1,2,3]);
         /*III. Callback*/
     },
-    
+
     getList_DiemRenLuyen: function (strDangKy_LopHocPhan_Id) {
         var me = this;
         var obj_save = {
