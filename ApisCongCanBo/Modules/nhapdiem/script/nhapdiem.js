@@ -59,7 +59,8 @@ NhapDiem.prototype = {
         /*------------------------------------------
         --Discription: Load Select
         -------------------------------------------*/
-        $(".btnClose").click(function () {
+        $(".btnClose").click(function (e) {
+            e.preventDefault();
             me.toggle_notify();
         });
         $("#btnSearch").click(function () {
@@ -393,6 +394,10 @@ NhapDiem.prototype = {
     },
     toggle_notify: function () {
         edu.util.toggle_overide("zone-bus", "zone_notify_nhapdiem");
+        if ($("body.skin-blue.sidebar-collapse").length > 0) {
+            $("nav .sidebar-toggle").trigger("click");
+        }
+        $(window).scrollTop(0);
     },
     toggle_detail: function (strDanhSach_Id) {
         var me = this;

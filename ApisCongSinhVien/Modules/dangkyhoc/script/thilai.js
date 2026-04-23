@@ -66,12 +66,14 @@ ThiLai.prototype = {
         });
 
         $("#tblChuaDangKy").delegate('.btnEdit', 'click', function (e) {
+            e.preventDefault();
             $('#modalChiTietDiem').modal('show');
             var strId = this.id;
             var aData = me.dtThiLai.rsHocPhanDuDK.find(e => e.ID == strId);
             me.getList_QuanSoTheoLop(aData.QLSV_NGUOIHOC_ID, aData.DIEM_DANHSACHHOC_ID);
         });
         $("#tblDaDangKy").delegate('.btnEdit', 'click', function (e) {
+            e.preventDefault();
             $('#modalChiTietDiem').modal('show');
             var strId = this.id;
             var aData = me.dtThiLai.rsKetQua.find(e => e.ID == strId);
