@@ -180,6 +180,13 @@
     }
 }
 
+@media only screen and (min-width: 1025px) {
+    .row.aps-form-item.gap10 {
+        margin-left: -10px !important;
+        margin-right: -10px;
+    }
+}
+
 @media (min-width: 1024px) and (max-width: 1280px) {
     .zone_notify_HocPhan .box.box-solid.box-search .box-body {
         display: grid;
@@ -206,6 +213,74 @@
 }
 
 @media (max-width: 1024px) {
+    .zone_inputhocphan_khoibatbuoc .aps-form-item .aps-form-input {
+        width: 100% !important;
+    }
+
+    .zone_inputhocphan_khoibatbuoc .table-khoibatbuoc tr {
+        display: grid !important;
+    }
+
+    .zone_inputhocphan_khoibatbuoc .table-khoibatbuoc tr td {
+        width: 100% !important;
+    }
+
+    /* ------------------------- */
+    .aps-form-tuchon.aps-form-item.row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-left: 0 !important;
+    }
+
+    .aps-form-tuchon.aps-form-item::before {
+        display: none;
+    }
+
+    .row.aps-form-item.gap10 {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
+    .row.aps-form-item.gap10.aps-form-tuchon {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .table.table-khoituchon tr {
+        display: grid !important;
+    }
+
+    .table.table-khoituchon tr td {
+        width: 100% !important;
+        margin-top: 0 !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .box-view.aps-add-new.mb-10.pb10 {
+        padding-bottom: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    .table-khoituchon .box.box-solid .box-header,
+    .table-khoituchon .box.box-solid .box-body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .table-khoituchon #txtSearch_TuKhoa_SelectHocPhan_KTCD {
+        max-width: 168px;
+        margin-right: 10px;
+    }
+
+    .table-khoituchon .inputSearch .item-search {
+        margin-bottom: 0px;
+    }
+
+    .table-khoituchon .sidebar-menu {
+        margin-top: 10px !important;
+    }
+
+    /* ---------------- */
     #btnSearch_ModalSinhVien.btn-default {
         background: var(--color-blue) !important;
         border: var(--color-blue) !important;
@@ -221,8 +296,13 @@
     }
 
     .aps-modal-nhansu .col-sm-3 .box.box-solid .box-body,
-    .aps-modal-nhansu.modal .col-sm-9 .box-body {
+    .aps-modal-nhansu.modal .col-sm-9 .box-body,
+    .zone_ketquahocphan .box-view.aps-add-new {
         padding: 0 !important;
+    }
+
+    .zone_ketquahocphan .box-view.aps-add-new {
+        margin-top: 10px !important;
     }
 
     #zoneChonNhieuSV {
@@ -395,7 +475,10 @@
         min-width: calc(100% - 20px);
     } */
 
-    .aps-table-select .table {
+    .aps-table-select .table,
+    .tblKetQua3,
+    .tblKetQua2,
+    .tblKetQua1 {
         min-width: 680px;
     }
 
@@ -1082,6 +1165,26 @@
 
 @media (min-width: 600px) and (max-width: 1024px) {
 
+    .row.aps-form-item.gap10.aps-form-tuchon .col-sm-3.aps-form-input,
+    .row.aps-form-item.gap10.aps-form-tuchon .col-sm-3.aps-form-input .form-control,
+    .row.aps-form-item.gap10.aps-form-tuchon .col-sm-2.aps-form-input,
+    .row.aps-form-item.gap10.aps-form-tuchon .col-sm-2.aps-form-input .form-control {
+        width: 100% !important;
+    }
+
+    .table-khoituchon .inputSearch .item-search.col-sm-7 {
+        width: 53% !important;
+    }
+
+    .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
+        top: 7px !important;
+    }
+
+    .table-khoituchon #txtSearch_TuKhoa_SelectHocPhan_KTCD {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
     #zoneChonNhieuSV .search,
     .aps-modal-nhansu .modal-body .col-sm-3 .search {
         display: grid;
@@ -1317,6 +1420,12 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+
+    .info-tblModal_SinhVien,
+    .light-paginationtblModal_SinhVien {
+        width: 100% !important;
+    }
+
     .zone_input_dinhhuong .aps-form .aps-form-item .aps-form-lable {
         display: flex;
         justify-content: flex-start !important;
@@ -1760,6 +1869,86 @@
 }
 
 @media only screen and (max-width: 599px) {
+
+    .zone_inputhocphan_khoibatbuoc .table-khoibatbuoc tr td {
+        width: 95% !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .aps-list-hocphan.sidebar-menu li a,
+    .zone_inputhocphan_khoituchondon .zoneHocPhan_Selected_KBB.sidebar-menu li a {
+        padding: 13px 0 11px 0 !important;
+    }
+
+    .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a .btn-danger.btnSelectHocPhan {
+        line-height: 34px !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .aps-list-hocphan.sidebar-menu .item-li .submit.btn,
+    .zone_inputhocphan_khoituchondon .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
+        right: 0px !important;
+        line-height: 34px !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .table-khoituchon .inputSearch {
+        display: grid !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .col-sm-7.item-search {
+        width: 100%;
+        padding-right: 0 !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .table-khoituchon .inputSearch .item-search.col-sm-5 {
+        margin-bottom: 0px;
+        display: contents !important;
+    }
+
+    .zone_inputhocphan_khoituchondon .table-khoituchon .col-sm-7.item-search .form-control {
+        max-width: 100% !important;
+        margin-right: 0px;
+        margin-bottom: 10px !important;
+    }
+
+    .aps-form-tuchon.aps-form-item.row,
+    .row.aps-form-item.gap10 {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+        gap: 10px;
+        margin-left: 0 !important;
+    }
+
+    .row.aps-form-item.gap10 {
+        margin-right: 0 !important;
+        margin-bottom: 0 !important;
+        margin-top: -10px !important;
+    }
+
+    .input-group-addon.btnTrongDanhMuc {
+        margin-top: 10px !important;
+        margin-left: 0 !important;
+    }
+
+    /* ----------------------- */
+    .zone_ketquahocphan .group-group-title-name .badge {
+        line-height: 22px;
+        text-align: left;
+        white-space: normal;
+        vertical-align: middle;
+    }
+
+    .light-paginationtblModal_SinhVien ul {
+        display: flex;
+    }
+
+    .info-tblModal_SinhVien,
+    .light-paginationtblModal_SinhVien {
+        width: 100% !important;
+    }
+
+    .modal.aps-modal-nhansu #modalContent {
+        padding: 0 !important;
+    }
+
     .zone_input_dinhhuong .aps-form .aps-form-item .aps-form-lable {
         display: flex;
         justify-content: flex-start !important;
@@ -2522,6 +2711,15 @@
 }
 
 @media (max-width: 400px) {
+    .sidebar-menu.aps-list-hocphan>li a span {
+        width: 70% !important;
+    }
+
+    .sidebar-menu.zoneHocPhan_Selected_KBB>li>a span {
+        width: 61% !important;
+        line-height: 22px !important;
+    }
+
     .zone_chuongtrinhhocphan-right .box-header .btn .lang {
         display: none !important;
     }
