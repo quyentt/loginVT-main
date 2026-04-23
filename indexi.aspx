@@ -32,8 +32,9 @@
         <form id="c_login" runat="server">
             <div class="wrapper">          
                 <div id="loading"></div>
-                <div class="overlay" id="overlay" style="position:fixed; margin-top:150px; z-index:1051; margin-left:50%; display:none">
-                    <i style="color:#00a65a; font-size: 40px" class="fa fa-refresh fa-spin"></i>
+                <div class="overlay" id="overlay" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1051; display:none; background:#fff; padding:30px 55px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); text-align:center; min-width:220px;">
+                    <i class="fas fa-spinner fa-spin fa-3x text-primary" style="color:#223771;"></i>
+                    <h5 style="margin:18px 0 0; color:#223771; font-weight:600; font-size:15px;">Đang tải dữ liệu...</h5>
                 </div>
                 <!-- Header-horizontal -->
                 <header class="main-header">
