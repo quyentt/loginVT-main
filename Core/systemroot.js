@@ -364,11 +364,14 @@ systemroot.prototype = {
 
         var strModal = '';
         strModal += '<div class="modal-content">';
-        strModal += '<div class="modal-header">';
-        strModal += '<div class="finance-user-info in-modal "><p><b>Báo cáo</b></p> <a class="btn btn-primary" id="btnDownloadFileBaoCao" title="" href="#"><i class="fa fa-cloud-download"></i> Tải file</a></div>';
-        strModal += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">&times;</span><span class="sr-only">Close</span></button>';
+        strModal += '<div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; padding:10px 20px; background:#f8f9fa; border-bottom:1px solid #dee2e6;">';
+        strModal += '<div class="finance-user-info in-modal" style="display:flex; align-items:center; gap:15px; margin:0; flex:1;">';
+        strModal += '<p style="margin:0; font-size:16px; font-weight:600; color:#212529;"><i class="fa fa-file-pdf-o" style="color:#dc3545; margin-right:6px;"></i>Báo cáo</p>';
+        strModal += '<a class="btn btn-primary btn-sm" id="btnDownloadFileBaoCao" title="" href="javascript:void(0)" style="display:inline-flex; align-items:center; gap:6px;"><i class="fa fa-cloud-download"></i> Tải file</a>';
         strModal += '</div>';
-        strModal += '<div class="modal-body" id="modal_body"></div>';
+        strModal += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+        strModal += '</div>';
+        strModal += '<div class="modal-body" id="modal_body" style="padding:0;"></div>';
         strModal += '<div class="modal-footer">';
         strModal += '<button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>';
         strModal += '</div>';
@@ -6555,6 +6558,7 @@ systemroot.prototype = {
         }
 
         function getList_BaoCao(strUrl, strToken) {
+            $("#overlay").show();
             //--Edit
             $.ajax({
                 type: "GET",
@@ -6562,16 +6566,30 @@ systemroot.prototype = {
                 url: strUrl,
                 success: function (d, s, x) {
                     if (d.Success) {
-                        $("#btnDownloadFileBaoCao").attr("href", me.strhost + d.Data);
-                        $("#modalBaoCao #modal_body").html('<iframe src="' + me.strhost + d.Data + '" width="' + (window.screen.width - 100) + 'px" height="' + (window.screen.height - 300) + 'px"></iframe>');
-                        $("#modalBaoCao").modal("show");
-
+                        var strFileUrl = me.strhost + d.Data;
+                        $("#btnDownloadFileBaoCao").attr("href", strFileUrl);
+                        var iframe = document.createElement("iframe");
+                        iframe.width = (window.screen.width - 100) + "px";
+                        iframe.height = (window.screen.height - 300) + "px";
+                        iframe.style.border = "0";
+                        iframe.onload = function () {
+                            $("#overlay").hide();
+                            $("#modalBaoCao").modal("show");
+                        };
+                        iframe.onerror = function () {
+                            $("#overlay").hide();
+                            $("#modalBaoCao").modal("show");
+                        };
+                        $("#modalBaoCao #modal_body").html("");
+                        $("#modalBaoCao #modal_body")[0].appendChild(iframe);
+                        iframe.src = strFileUrl;
                     } else {
+                        $("#overlay").hide();
                         edu.system.alert(d.Message);
                     }
-
                 },
                 error: function (x, t, m) {
+                    $("#overlay").hide();
                     edu.system.alert(x);
                 },
                 data: {
