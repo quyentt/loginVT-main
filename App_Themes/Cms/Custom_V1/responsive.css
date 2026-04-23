@@ -15,11 +15,11 @@
     }
 }
 
-@media only screen and (min-width: 2000px) {
+@media only screen and (min-width:2000px) {
     .aps-list-chuongtrinh .zoneBox_ChuongTrinh {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 10px;
+        gap: 20px !important;
     }
 
     .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
@@ -206,9 +206,81 @@
 }
 
 @media (max-width: 1024px) {
+    #btnSearch_ModalSinhVien.btn-default {
+        background: var(--color-blue) !important;
+        border: var(--color-blue) !important;
+        color: #fff !important;
+    }
+
+    #btnSearch_ModalSinhVien.btn-default i {
+        color: #fff !important;
+    }
+
+    .aps-modal-nhansu .modal-dialog {
+        width: 100% !important;
+    }
+
+    .aps-modal-nhansu .col-sm-3 .box.box-solid .box-body,
+    .aps-modal-nhansu.modal .col-sm-9 .box-body {
+        padding: 0 !important;
+    }
+
+    #zoneChonNhieuSV {
+        margin-top: 15px;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-3 {
+        height: auto !important;
+    }
+
+    .aps-modal-nhansu .col-sm-9 .box.box-solid {
+        padding: 15px !important;
+    }
+
+    #modalContent .scroll-table-x {
+        margin-top: 10px;
+    }
+
+    #tblModal_SinhVien {
+        min-width: 1200px;
+    }
+
+    /* ----------------- */
+    .myModalEditHocKy .aps-lable-name,
+    .myModalEditHocKyAll .aps-lable-name,
+    .myModalKeThuaQH .aps-lable-name {
+        min-width: 100px;
+    }
+
+    .table {
+        margin-bottom: 5px !important;
+    }
+
+    .myModalKeThua .modal-body {
+        padding-top: 15px !important;
+    }
+
+    .myModalLabel .aps-form-item .aps-form-lable label {
+        min-width: 140px;
+        text-align: left !important;
+    }
+
+    .modal .modal-body {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .scroll-table-x {
+        overflow-x: scroll !important;
+    }
+
+    .zoneViewHocPhan .box-view.aps-add-new .col-sm-6.pl15 {
+        padding-left: 0 !important;
+    }
 
     .zone_chuongtrinhhocphan-left,
-    .zone_chuongtrinhhocphan-right {
+    .zone_chuongtrinhhocphan-right,
+    .zoneViewHocPhan .box-view.aps-add-new .col-sm-6 {
         width: 100% !important;
     }
 
@@ -224,7 +296,7 @@
     }
 
     .table-khoibatbuoc .fa.fa-forward {
-        font-size: 30px;
+        font-size: 30px !important;
     }
 
     .zone_inputhocphan.form-container .box-body {
@@ -327,11 +399,14 @@
         min-width: 680px;
     }
 
-    .aps-table-select .table.tblLopHoc {
-        min-width: 1200px;
+    .aps-table-select .table.tblLopHoc,
+    .tblViewKhoiBatBuoc,
+    .tblViewKhoiTuChon {
+        min-width: 1200px !important;
     }
 
     .tblHocPhanTuongDuong,
+    .tblVDinhHuong,
     .tblHocPhanKeThua {
         min-width: 860px !important;
     }
@@ -431,7 +506,8 @@
         min-width: 80px !important;
     }
 
-    .tblNoiDungChuongTrinh {
+    .tblNoiDungChuongTrinh,
+    .tblGanSinhVien {
         min-width: 600px;
     }
 
@@ -540,6 +616,26 @@
     .control-sidebar-app .tblApp .table-noborder.table>tbody>tr>td,
     .control-sidebar-app .tblApp .table-noborder.table>tbody>tr>th {
         border-right: 0 solid #e9e9e9 !important;
+    }
+
+    .myModalKeThua .box-view.aps-add-new .aps-form-btn {
+        margin-top: 10px !important;
+    }
+
+    .myModalKeThua .aps-add-new .pull-right.pr10 {
+        padding-right: 0 !important;
+    }
+
+    .modal.myModalThuTu {
+        padding: 15px;
+    }
+
+    .box-solid.form-container .box-header .pull-right-absolute {
+        right: 0px;
+    }
+
+    .box-solid.form-container .box-header .pull-right-absolute .btn {
+        padding: 9px 10px 7.6px 10px !important;
     }
 }
 
@@ -799,8 +895,6 @@
     }
 }
 
-
-
 @media (min-width: 900px) and (max-width: 1024px) {
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 268px !important;
@@ -808,6 +902,30 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+    .myModalKeThua .modal-body .aps-add-new.pd20 {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+        padding-top: 0 !important;
+    }
+
+    .modal.myModalKeThua .modal-dialog {
+        padding-right: 20px !important;
+    }
+
+    .myModalKeThua .modal-body .aps-add-new .aps-form-input {
+        margin-bottom: 10px !important;
+        padding-right: 10px;
+    }
+
+    .myModalKeThua .modal-body .aps-add-new .aps-form-input:nth-child(3n) {
+        padding-right: 0 !important;
+    }
+
+    .myModalKeThua .modal-body .aps-add-new .aps-form-input {
+        margin-bottom: 10px !important;
+        padding-right: 10px;
+    }
+
     .myModalKeThua .aps-add-new .aps-form-item {
         display: grid;
         grid-template-columns: repeat(3, 1fr) !important;
@@ -963,6 +1081,33 @@
 
 
 @media (min-width: 600px) and (max-width: 1024px) {
+
+    #zoneChonNhieuSV .search,
+    .aps-modal-nhansu .modal-body .col-sm-3 .search {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    #zoneChonNhieuSV .search .item-modal,
+    .aps-modal-nhansu.modal .modal-body .col-sm-3 .item-modal {
+        margin-bottom: 0 !important;
+    }
+
+    #zoneChonNhieuSV .search .item-modal:first-child,
+    .aps-modal-nhansu .modal-body .col-sm-3 .search .item-modal:first-child {
+        display: none;
+    }
+
+    .aps-modal-nhansu.modal .modal-body .col-sm-3 .area-search .inputSearch .user-check-print {
+        width: 50% !important;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-3 .area-search {
+        margin-top: 15px !important;
+    }
+
+    /* ------------- */
 
     .zone_chuongtrinhhocphan-right .box-header .pull-right .btnAdd,
     .zone_chuongtrinhhocphan-right .box-header .btn.submit {
@@ -1172,6 +1317,42 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+    .zone_input_dinhhuong .aps-form .aps-form-item .aps-form-lable {
+        display: flex;
+        justify-content: flex-start !important;
+        width: 200px;
+        text-align: left !important;
+    }
+
+    .aps-colum-2.aps-form-item {
+        display: block !important;
+        margin-bottom: 0 !important;
+    }
+
+    .aps-colum-2 .col-sm-5.row,
+    .aps-colum-2 .col-sm-7.row {
+        width: 100% !important;
+        display: flex !important;
+        margin-bottom: 10px !important;
+    }
+
+    .zone_input_dinhhuong .box-view.aps-add-new .col-sm-7.pr20 {
+        padding-right: 0 !important;
+        display: flow-root;
+        margin-block: 20px;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+
+    .zone_inputhocphan .box-header .pull-right .btn {
+        padding: 14px 5px 7.6px 15px !important;
+
+    }
+
+    .zone_inputhocphan .box-header .box-title {
+        display: inline-block !important;
+    }
+
     .myModalKeThua .aps-add-new .aps-form-item.aps-gap-10 {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
@@ -1218,9 +1399,7 @@
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 180px !important;
     }
-}
 
-@media (min-width: 600px) and (max-width: 767px) {
     .zone_input_HocPhan .aps-form .aps-form-item .aps-form-lable {
         min-width: 180px !important;
     }
@@ -1281,6 +1460,30 @@
 }
 
 @media only screen and (max-width: 600px) {
+
+    #lblThongTinChuongTrinh .small-box>.inner h4 {
+        margin-top: 0px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .zoneViewHocPhan .box-view.aps-add-new .col-sm-6 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .zoneViewHocPhan .box-view.aps-add-new .col-sm-6 .inner {
+        text-align: left;
+    }
+
+    .pull-right-absolute {
+        right: -8px;
+    }
+
+    .sidebar-menu.aps-list-hocphan,
+    .sidebar-menu.zoneHocPhan_Selected_KBB {
+        max-height: 320px !important;
+    }
+
     .box-solid.box-search .item-search {
         margin-bottom: 10px;
     }
@@ -1302,9 +1505,6 @@
     .modal_XacNhan .aps-add-new .aps-form .aps-form-input {
         width: 100%;
     }
-}
-
-@media only screen and (max-width: 600px) {
 
     .login-page,
     .register-page {
@@ -1560,6 +1760,29 @@
 }
 
 @media only screen and (max-width: 599px) {
+    .zone_input_dinhhuong .aps-form .aps-form-item .aps-form-lable {
+        display: flex;
+        justify-content: flex-start !important;
+        width: 125px;
+        text-align: left !important;
+    }
+
+    .aps-colum-2.aps-form-item {
+        display: block !important;
+        margin-bottom: 0 !important;
+    }
+
+    .aps-colum-2 .col-sm-5.row,
+    .aps-colum-2 .col-sm-7.row {
+        width: 100% !important;
+        display: flex !important;
+        margin-bottom: 10px !important;
+    }
+
+    .zone_input_dinhhuong .box-view.aps-add-new .col-sm-7.pr20 {
+        padding-right: 0 !important;
+    }
+
     .zone_inputhocphan .box-header .pull-right .btn {
         padding: 14px 5px 7.6px 15px !important;
 
@@ -2307,12 +2530,14 @@
         padding-right: 0px;
     }
 
-    .zone_input_HocPhanTuongDuong.form-container .box-header.with-border {
+    .zone_input_HocPhanTuongDuong.form-container .box-header.with-border,
+    .zone_input_dinhhuong.form-container .box-header.with-border {
         height: auto !important;
         line-height: 30px !important;
     }
 
-    .zone_input_HocPhanTuongDuong.form-container .box-header .box-title {
+    .zone_input_HocPhanTuongDuong.form-container .box-header .box-title,
+    .zone_input_dinhhuong.form-container .box-header .box-title {
         display: block !important;
     }
 
@@ -3186,9 +3411,9 @@
         padding: 15px !important;
     }
 
-    .modal .modal-dialog {
+    /* .modal .modal-dialog {
         padding: 20px;
-    }
+    } */
 
     .modal-860 {
         width: 100% !important;

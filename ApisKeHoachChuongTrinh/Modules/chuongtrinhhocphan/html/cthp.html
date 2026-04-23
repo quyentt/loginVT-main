@@ -34,7 +34,7 @@
                 </div>
             </div>
             <!-- /.Danh sách  -->
-            <div class="box box-solid aps-list-chuongtrinh pd20 pr5">
+            <div class="box box-solid aps-list-chuongtrinh pd20 pr10">
                 <div class="box-header pd0 pb5">
                     <h3 class="box-title mt-0 line-20"><i class="fa-solid fa-books"></i> Danh sách chương trình</h3>
                 </div>
@@ -1209,7 +1209,7 @@
 
         <!--Thêm mới - định hướng cho chương trình-->
         <div class="box box-solid form-container zone-content add-absolue zone_input_dinhhuong pd0"
-            id="zone_input_dinhhuong" style="display: none;">
+            id="zone_input_dinhhuong" style="display: block;">
             <div class="box-header with-border bg-red">
                 <h3 class="box-title">
                     <span class="myModalLabel">
@@ -1242,22 +1242,25 @@
                                 </div>
                             </div>
                             <!--row 3-->
-                            <div class="row aps-form-item">
-                                <div class="col-sm-3 aps-form-lable">
-                                    Mã định hướng <span class="color-red ml-5">(*)</span>
-                                </div>
+                            <div class="row aps-form-item aps-colum-2">
+                                <div class="row col-sm-5">
+                                    <div class="col-sm-7 aps-form-lable">
+                                        Mã định hướng <span class="color-red ml-5">(*)</span>
+                                    </div>
 
-                                <div class="col-sm-2 aps-form-input">
-                                    <input id="txtMaDinhHuong" class="form-control form-border" />
+                                    <div class="col-sm-5 aps-form-input">
+                                        <input id="txtMaDinhHuong" class="form-control form-border" />
+                                    </div>
                                 </div>
-
-                                <div class="col-sm-4 aps-form-lable justify-content-end pr15">
-                                    Chế độ đăng ký định hướng
-                                </div>
-                                <div class="col-sm-4 aps-form-input">
-                                    <select id="dropCheDoDinhHuong" class="select-opt">
-                                        <option value="">--Chọn bộ môn--</option>
-                                    </select>
+                                <div class=" row col-sm-7">
+                                    <div class="col-sm-7 aps-form-lable justify-content-end pr15 aps-form-lable-mobi">
+                                        Chế độ đăng ký định hướng
+                                    </div>
+                                    <div class="col-sm-5 aps-form-input">
+                                        <select id="dropCheDoDinhHuong" class="select-opt">
+                                            <option value="">--Chọn bộ môn--</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <!--row 3-->
@@ -1270,22 +1273,24 @@
                                 </div>
                             </div>
 
-                            <!--row 2-->
-                            <div class="row aps-form-item">
-                                <div class="col-sm-3 aps-form-lable">Ngày bắt đầu</div>
-                                <div class="col-sm-2 aps-form-input">
-                                    <input id="txtNgayBatDau" class="form-control form-border input-datepicker"
-                                        placeholder="dd/mm/yyyy" />
+                            <!--row 4-->
+                            <div class="row aps-form-item aps-colum-2">
+                                <div class="row col-sm-5">
+                                    <div class="col-sm-7 aps-form-lable">Ngày bắt đầu</div>
+                                    <div class="col-sm-5 aps-form-input">
+                                        <input id="txtNgayBatDau" class="form-control form-border input-datepicker"
+                                            placeholder="dd/mm/yyyy" />
+                                    </div>
                                 </div>
-
-                                <div class="col-sm-3 aps-form-lable  justify-content-end pr15">Ngày kết thúc</div>
-                                <div class="col-sm-2 aps-form-input">
-                                    <input id="txtNgayKetThuc" class="form-control form-border input-datepicker"
-                                        placeholder="dd/mm/yyyy" />
+                                <div class=" row col-sm-7">
+                                    <div class="col-sm-7 aps-form-lable  justify-content-end pr15">Ngày kết thúc</div>
+                                    <div class="col-sm-5 aps-form-input">
+                                        <input id="txtNgayKetThuc" class="form-control form-border input-datepicker"
+                                            placeholder="dd/mm/yyyy" />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                         <!--khoản phí-->
                         <div class="row aps-form mt-15">
                             <!--row 1-->
@@ -1296,7 +1301,7 @@
                                 </p>
                             </div>
                             <!--row 2-->
-                            <div class="row aps-form-item mb-10">
+                            <div class="row aps-form-item mb-10 scroll-table-x">
                                 <table id="tblGanKhoiKienThuc"
                                     class="table table-hover table-bordered mr-0 mb-0 table-noborder tblGanKhoiKienThuc">
                                     <thead>
@@ -1329,7 +1334,7 @@
                                 </p>
                             </div>
                             <!--row 2-->
-                            <div class="row aps-form-table mb-10">
+                            <div class="row aps-form-table mb-10 scroll-table-x">
                                 <table id="tblGanHocPhan"
                                     class="table table-hover table-bordered table-noborder tblGanHocPhan mr-0 mb-0">
                                     <thead>
@@ -1363,7 +1368,7 @@
                                 </p>
                             </div>
                             <!--row 2-->
-                            <div class="row  aps-form-table mb-10">
+                            <div class="row  aps-form-table mb-10 scroll-table-x">
                                 <table id="tblGanSinhVien"
                                     class="table table-hover table-bordered tblGanSinhVien table-noborder mr-0 mb-0">
                                     <thead>
@@ -1419,8 +1424,9 @@
         <!-- Chương trình học phần-->
         <div class="box box-solid zone-content form-container zoneViewHocPhan add-absolue pd0" id="zoneViewHocPhan"
             style="display: none;">
-            <div class="box-header pl20 pr20 mb-10 bg-blue ">
-                <h3 class="box-title pt15 pb15"><i class="fa-solid fa-chalkboard-user mt-3"></i>Chương trình học phần
+            <div class="box-header pl20 pr20 bg-blue ">
+                <h3 class="box-title pt15 pb15"><i class="fa-solid fa-chalkboard-user mt-3"></i>Chương trình học
+                    phần
                 </h3>
                 <div class="pull-right pull-right-absolute mt-10 mr-10">
                     <a class="btn btn-none-white btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
@@ -1460,8 +1466,8 @@
                                             <td class="td-fixed td-center w-50px">Stt</td>
                                             <td class="td-left">Mã định hướng</td>
                                             <td class="td-left">Tên định hướng</td>
-                                            <td class="td-center">Người học</td>
-                                            <td class="td-center">Khối kiến thức</td>
+                                            <td class="td-left">Người học</td>
+                                            <td class="td-left">Khối kiến thức</td>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -1587,7 +1593,8 @@
         </div>
         <!-- ---------- -->
         <!-- Học phần -->
-        <div class="modal fade myModal" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal fade myModal myModalLabel" id="myModal" role="dialog" aria-labelledby="myModalLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-680 modal-dialog-scrollable modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -1603,7 +1610,8 @@
                                 <!--row 1-->
                                 <div class="row aps-form-item">
                                     <div class="col-sm-3 aps-form-lable">
-                                        <label style="font-weight: normal"><span class="lang color-888" key="">Mã học
+                                        <label style="font-weight: normal"><span class="lang color-888" key="">Mã
+                                                học
                                                 phần</span></label>
                                     </div>
                                     <div class="col-sm-9 aps-form-input">
@@ -1614,7 +1622,8 @@
                                 <!--row 2-->
                                 <div class="row aps-form-item">
                                     <div class="col-sm-3 aps-form-lable">
-                                        <label style="font-weight: normal"><span class="lang color-888" key="">Tên học
+                                        <label style="font-weight: normal"><span class="lang color-888" key="">Tên
+                                                học
                                                 phần</span></label>
                                     </div>
                                     <div class="col-sm-9 aps-form-input">
@@ -1626,7 +1635,8 @@
                                 <!--row 3-->
                                 <div class="row aps-form-item">
                                     <div class="col-sm-3 aps-form-lable">
-                                        <label style="font-weight: normal"><span class="lang color-888" key="">Thuộc bộ
+                                        <label style="font-weight: normal"><span class="lang color-888" key="">Thuộc
+                                                bộ
                                                 môn</span></label>
                                     </div>
                                     <div class="col-sm-9 aps-form-input">
@@ -1666,7 +1676,8 @@
                                 <!--row 6-->
                                 <div class="row aps-form-item">
                                     <div class="col-sm-3 aps-form-lable">
-                                        <label style="font-weight: normal"><span class="lang color-888" key="">Số tín
+                                        <label style="font-weight: normal"><span class="lang color-888" key="">Số
+                                                tín
                                                 chỉ</span></label>
                                     </div>
                                     <div class="col-sm-9 aps-form-input">
@@ -1761,12 +1772,14 @@
                                 </div>
                                 <div class="col-sm-2 aps-form-input">
                                     <a class="btn btn-default btn-search" id="btnSearchKT">
-                                        <i class="fa fa-search pr0"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                        <i class="fa fa-search pr0"></i> <span class="lang" key="">Tìm
+                                            kiếm</span></a>
                                 </div>
                             </div>
                             <div class="row aps-form-item pl10 mb-0">
                                 <div style="width: 100%; float: left">
-                                    <label style="font-weight: bold"><span class="lang" key="">Học phần</span></label>
+                                    <label style="font-weight: bold"><span class="lang" key="">Học
+                                            phần</span></label>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -1781,14 +1794,14 @@
                                         <option id="" value=""> --Kỳ kế thừa--</option>
                                     </select>
                                 </div>
-                                <div class="aps-form-input col-sm-8">
+                                <div class="aps-form-btn col-sm-8">
                                     <span class="pull-right pr10">
                                         <a class="btn btn-primary" id="btnAnhXaThuTuKy"><i class="fa fa-refresh"></i>
                                             <span class="lang" key="lb_luu"> Ánh xạ theo thứ tự kỳ</span></a>
                                     </span>
                                 </div>
                                 <div class="clear"></div>
-                            </div>                           
+                            </div>
                             <div class="row aps-form-table pl10 pr10 mt-10 scroll-table-x DSHocPhan" id="DSHocPhan">
                                 <table id="tblHocPhanKeThua"
                                     class="table table-hover table-bordered table-noborder tblHocPhanKeThua">
@@ -1857,7 +1870,8 @@
                                         <th style="width: 100px"><span class="lang" key="">Số tín chỉ</span></th>
                                         <th style="width: 170px"><span class="lang" key="">Thuộc tính</span></th>
                                         <th class="td-center"><span class="lang" key="">Tính điểm</span></th>
-                                        <th class="td-center"><span class="lang" key="">Kỳ dự kiến kế hoạch</span></th>
+                                        <th class="td-center"><span class="lang" key="">Kỳ dự kiến kế hoạch</span>
+                                        </th>
                                         <th class="td-center"><span class="lang" key="">Thứ tự</span></th>
                                     </tr>
                                 </thead>
@@ -1882,7 +1896,7 @@
         <!-- Khối kiến thức -->
         <div class="modal fade myModalVKhoiKienThuc" id="myModalVKhoiKienThuc" role="dialog"
             aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-scrollable modal-860">
+            <div class="modal-dialog modal-dialog-scrollable modal-860 modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal">
@@ -1890,8 +1904,8 @@
                         </button>
                         <h4 class="modal-title"><i class="fa-solid fa-book-open-reader"></i>Khối kiến thức </h4>
                     </div>
-                    <div class="modal-body pd0" id="modal_body">
-                        <div class="aps-table-select pd20">
+                    <div class="modal-body pd20" id="modal_body">
+                        <div class="aps-table-select scroll-table-x">
                             <table id="tblVKhoiKienThuc"
                                 class="table table-hover table-bordered table-noborder tblVKhoiKienThuc">
                                 <thead>
@@ -1933,13 +1947,13 @@
                     </div>
                     <div class="modal-body" style="">
                         <div class="aps-add-new pd-0">
-                            <div class="aps-form">
+                            <div class="aps-form mb-0">
                                 <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-lable-name">
+                                    <div class="col-sm-3 aps-lable-name">
                                         <label style="font-weight: normal"><span class="lang color-888" key="">Thời
                                                 gian</span></label>
                                     </div>
-                                    <div class="col-sm-10 aps-form-input">
+                                    <div class="col-sm-9 aps-form-input">
                                         <select id="dropEditHocKy" class="select-opt" multiple="multiple"></select>
                                     </div>
                                     <div class="clear"></div>
@@ -1969,15 +1983,18 @@
                                     class="fa-solid fa-pen-to-square"></i>Sửa thời gian</span></h4>
                     </div>
                     <div class="modal-body" style="">
-                        <div class="row aps-form-item">
-                            <div style="width: 40%; float: left">
-                                <label style="font-weight: normal"><span class="lang" key="">Thời gian</span></label>
+                        <div class="aps-form mb-0">
+                            <div class="row aps-form-item">
+                                <div class="col-sm-3 aps-lable-name">
+                                    <label style="font-weight: normal"><span class="lang color-888" key="">Thời
+                                            gian</span></label>
+                                </div>
+                                <div class="col-sm-9 aps-form-input">
+                                    <select id="dropEditHocKyAll" class="select-opt w-100" multiple="multiple"></select>
+                                </div>
                             </div>
-                            <div style="width: 60%; float: left">
-                                <select id="dropEditHocKyAll" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="clear"></div>
                         </div>
+                        <div class="clear"></div>
                     </div>
                     <div id="notify"></div>
                     <div class="modal-footer">
@@ -2004,7 +2021,7 @@
                     </div>
                     <div class="modal-body" style="">
                         <div class="aps-add-new">
-                            <div class="aps-form">
+                            <div class="aps-form mb-0">
                                 <div class="row aps-form-item">
                                     <div class="col-sm-3 aps-lable-name">
                                         <label style="font-weight: normal">

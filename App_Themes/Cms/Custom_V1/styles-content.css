@@ -10417,7 +10417,7 @@ table#clone {
 }
 
 .aps-lable-name {
-    line-height: 38spx;
+    line-height: 38px;
     color: #888;
 }
 
@@ -11248,7 +11248,6 @@ table#clone {
     z-index: 99;
 }
 
-.tblVDinhHuong tr td,
 .tblViewKhoiBatBuoc tfoot tr td,
 .tblViewKhoiTuChon tfoot tr td,
 .tblViewKhoiBatBuoc tr td:nth-child(6),
@@ -11274,4 +11273,14 @@ table#clone {
 
 #myModalAlert {
     padding: 10px !important;
+}
+
+.scroll-table-x {
+    overflow-x: scroll !important;
+}
+
+/* --------------------- */
+.myModalThuTu .modal-dialog,
+.myModalKeThua .modal-dialog {
+    max-width: 1440px;
 }
