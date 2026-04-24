@@ -1399,7 +1399,7 @@
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="col-sm-12 pd0 mb-10">
-                    <input id="txtSearch_ChonLHP" class="form-control" placeholder="Cho cơ chế gõ tìm..." />
+                    <input id="txtSearch_ChonLHP" class="form-control" placeholder="tìm kiếm ....." />
                 </div>
                 <div class="clear"></div>
                 <div class="aps-table-select mt-10">
@@ -1417,26 +1417,24 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-10"
-                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                    <div>
-                        <span>Hiển thị</span>
-                        <select id="dropPageSize_ChonLHP" class="form-control"
-                            style="width:80px; display:inline-block;">
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                        <span>dữ liệu</span>
-                        <span id="lblPageInfo_ChonLHP" class="ml-10"></span>
-                    </div>
-                    <div id="pager_ChonLHP" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
-                </div>
             </div>
             <div id="notify"></div>
-            <div class="modal-footer">
-                <div class="pull-right d-flex">
+            <div class="modal-footer"
+                style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span>Hiển thị</span>
+                    <select id="dropPageSize_ChonLHP" class="form-control"
+                        style="width:80px; display:inline-block;">
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    <span>dữ liệu</span>
+                    <span id="lblPageInfo_ChonLHP" class="ml-10"></span>
+                </div>
+                <div id="pager_ChonLHP" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
+                <div style="display:flex; gap:6px;">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
                     </button>

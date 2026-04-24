@@ -2080,6 +2080,7 @@ KeHoachDangKy.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    //console.log("[DEBUG] Pr_DangKy_PhanCong_LHP_GetBy first row:", arr[0], "total:", arr.length);
                     me.genTable_ChonLHP(arr);
                 }
                 else {
@@ -2106,9 +2107,9 @@ KeHoachDangKy.prototype = {
         var me = this;
         me.dtChonLHP_All = (data || []).map(function (row) {
             return {
-                ID: row.ID || row.DANGKY_LOPHOCPHAN_ID || '',
-                TENLOP: row.DANGKY_LOPHOCPHAN_TEN || row.TENLOP || row.LOPHOCPHAN_TEN || '',
-                MALOP: row.DANGKY_LOPHOCPHAN_MA || row.MALOP || row.LOPHOCPHAN_MA || ''
+                ID: row.DANGKY_LOPHOCPHAN_ID || row.LOPHOCPHAN_ID || row.ID || '',
+                TENLOP: row.DANGKY_LOPHOCPHAN_TEN || row.LOPHOCPHAN_TEN || row.TENLOP || '',
+                MALOP: row.DANGKY_LOPHOCPHAN_MA || row.LOPHOCPHAN_MA || row.MALOP || ''
             };
         });
         me.pageIndex_ChonLHP = 1;
@@ -2206,10 +2207,11 @@ KeHoachDangKy.prototype = {
     getList_XuLyLHP: function () {
         var me = this;
         var obj_save = {
-            'action': 'DKH_ThongTin2_MH/ETMeBQoeCikeDS4xCTEeBSAiFSk0HgYkNQM4CCUP',
-            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DK_Kh_LopHp_DacThu_GetById',
+            'action': 'DKH_ThongTin2_MH/ETMeBQoeCikeDS4xCTEeBSAiFSk0HgYkNQM4',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DK_Kh_LopHp_DacThu_GetBy',
             'iM': edu.system.iM,
-            'strId': me.strKeHoachDangKy_Id,
+            'strDangKy_KeHoachDangKy_Id': me.strKeHoachDangKy_Id,
+            'strXuLyDacThu_Id': '',
             'strNguoiThucHien_Id': edu.system.userId,
             'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id,
             'strChucNangHeThong_Id': edu.system.strChucNang_Id,
@@ -2220,21 +2222,15 @@ KeHoachDangKy.prototype = {
                 $("#tblXuLyLHP tbody").html("");
                 if (data.Success) {
                     var arr = edu.util.checkValue(data.Data) ? data.Data : [];
-                    if (arr.length == 0) {
-                        me.addRow_XuLyLHP();
-                    } else {
-                        for (var i = 0; i < arr.length; i++) {
-                            me.addRow_XuLyLHP(arr[i]);
-                        }
+                    for (var i = 0; i < arr.length; i++) {
+                        me.addRow_XuLyLHP(arr[i]);
                     }
                 }
                 else {
-                    me.addRow_XuLyLHP();
                     edu.system.alert(obj_save.action + ": " + data.Message, "w");
                 }
             },
             error: function (er) {
-                me.addRow_XuLyLHP();
                 edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
