@@ -162,6 +162,7 @@ systemroot.prototype = {
             var objUngDung = me.dtUngDung.find(e => e.ID === strId);
             me.currentThuVai = null;
             if (objUngDung.CHOPHEPTHUVAI == 1) {
+                me["strNguoiThucVai_Id"] = edu.system.userId;
                 var strTenVaiTro = objUngDung.TENVAITRO || objUngDung.TENUNGDUNG || 'người dùng';
                 var strHtmlForm = ''
                     + '<div style="text-align:left">'
@@ -348,6 +349,8 @@ systemroot.prototype = {
                     }, false, false, false, null);
                 });
                 return;
+            } else {
+                me["strNguoiThucVai_Id"] = undefined;
             }
             me.setUngDung(objUngDung);
         });
@@ -533,6 +536,7 @@ systemroot.prototype = {
         if (!dataPost.strNguoiThucHien_Id) dataPost["strNguoiThucHien_Id"] = edu.system.userId;
         if (!dataPost.strVaiTroDangNhap_Id) dataPost["strVaiTroDangNhap_Id"] = edu.system.appId;
         if (!dataPost.strChucNangHeThong_Id) dataPost["strChucNangHeThong_Id"] = edu.system.strChucNang_Id;
+        dataPost["strNguoiThucVai_Id"] = edu.system.strNguoiThucVai_Id;
         //AzzMH
         let dtShow = dataPost;
         if (dataPost.iM) {
