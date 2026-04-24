@@ -2101,7 +2101,7 @@ KeHoachDangKy.prototype = {
     dtChonLHP_All: [],
     dtChonLHP_Filtered: [],
     pageIndex_ChonLHP: 1,
-    pageSize_ChonLHP: 20,
+    pageSize_ChonLHP: 10,
     genTable_ChonLHP: function (data) {
         var me = this;
         me.dtChonLHP_All = (data || []).map(function (row) {
@@ -2112,7 +2112,7 @@ KeHoachDangKy.prototype = {
             };
         });
         me.pageIndex_ChonLHP = 1;
-        me.pageSize_ChonLHP = parseInt($("#dropPageSize_ChonLHP").val()) || 20;
+        me.pageSize_ChonLHP = parseInt($("#dropPageSize_ChonLHP").val()) || 10;
         me.filter_ChonLHP();
     },
     filter_ChonLHP: function () {
@@ -2179,22 +2179,26 @@ KeHoachDangKy.prototype = {
         var me = this;
         var cur = me.pageIndex_ChonLHP;
         var $pager = $("#pager_ChonLHP");
-        if (totalPages <= 1) { $pager.html(""); return; }
         var html = '';
         var btn = function (label, page, disabled, active) {
             var cls = 'btn btn-sm btnPage_ChonLHP ' + (active ? 'btn-primary' : 'btn-default');
-            var dis = disabled ? ' disabled' : '';
-            return '<button type="button" class="' + cls + dis + '" data-page="' + page + '"' + (disabled ? ' disabled' : '') + '>' + label + '</button>';
+            return '<button type="button" class="' + cls + '" data-page="' + page + '"' + (disabled ? ' disabled' : '') + ' style="min-width:34px">' + label + '</button>';
         };
         html += btn('«', 1, cur == 1, false);
         html += btn('‹', cur - 1, cur == 1, false);
         var from = Math.max(1, cur - 2);
         var to = Math.min(totalPages, cur + 2);
-        if (from > 1) html += '<span class="px-5">...</span>';
+        if (from > 1) {
+            html += btn(1, 1, false, cur == 1);
+            if (from > 2) html += '<span style="padding:0 6px; line-height:30px;">…</span>';
+        }
         for (var p = from; p <= to; p++) {
             html += btn(p, p, false, p == cur);
         }
-        if (to < totalPages) html += '<span class="px-5">...</span>';
+        if (to < totalPages) {
+            if (to < totalPages - 1) html += '<span style="padding:0 6px; line-height:30px;">…</span>';
+            html += btn(totalPages, totalPages, false, cur == totalPages);
+        }
         html += btn('›', cur + 1, cur == totalPages, false);
         html += btn('»', totalPages, cur == totalPages, false);
         $pager.html(html);

@@ -1417,20 +1417,21 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-10 d-flex" style="justify-content: space-between; align-items: center;">
+                <div class="mt-10"
+                    style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
                     <div>
                         <span>Hiển thị</span>
-                        <select id="dropPageSize_ChonLHP" class="form-control d-inline-block"
+                        <select id="dropPageSize_ChonLHP" class="form-control"
                             style="width:80px; display:inline-block;">
-                            <option value="10">10</option>
-                            <option value="20" selected>20</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
                         </select>
                         <span>dữ liệu</span>
                         <span id="lblPageInfo_ChonLHP" class="ml-10"></span>
                     </div>
-                    <div id="pager_ChonLHP" class="d-flex" style="gap:4px"></div>
+                    <div id="pager_ChonLHP" style="display:flex; gap:4px; flex-wrap:wrap;"></div>
                 </div>
             </div>
             <div id="notify"></div>
