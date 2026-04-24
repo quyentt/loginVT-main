@@ -188,7 +188,8 @@ KeHoachDangKy.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("QLSV.TRANGTHAI", "", "", me.genList_TrangThaiSV);
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.PHANLOAIDOT", "dropPhanLoaiDot");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.MOHINHUTDANGKYNGUYENVONG", "dropMucUuTienNguyenVong");
-        edu.system.loadToCombo_DanhMucDuLieu("DANGKY.SOTINCHI.KHOIKT.TUCHON", "dropTuyChonKTVuot"); 
+        edu.system.loadToCombo_DanhMucDuLieu("DANGKY.SOTINCHI.KHOIKT.TUCHON", "dropTuyChonKTVuot");
+        edu.system.loadToCombo_DanhMucDuLieu("DANGKY.QUYDINH.LOP.XULYDACTHU", "", "", me.cbLoad_XuLyDacThu);
         me.getList_NguyenVongUuTien();
         //edu.system.loadToList_DanhMucDuLieu("DKH.QDTCTD", "divQD_TCCT", 12);
         //edu.system.loadToList_DanhMucDuLieu("DKH.QDDKND", "divNangDiem", 12);
@@ -198,6 +199,72 @@ KeHoachDangKy.prototype = {
         //edu.system.loadToList_DanhMucDuLieu("DKH.TTSV", "divTrangThaiSinhVien");
         //edu.system.loadToList_DanhMucDuLieu("DKH.CHEDODANGKY", "divCheDoDangKy");
 
+        $(document).on('show.bs.modal', '.modal', function () {
+            var zIndex = 1040 + (10 * $('.modal:visible').length);
+            $(this).css('z-index', zIndex);
+            setTimeout(function () {
+                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+            }, 0);
+        });
+        $(document).on('hidden.bs.modal', '.modal', function () {
+            if ($('.modal:visible').length) {
+                $(document.body).addClass('modal-open');
+            }
+        });
+        $("#tblKHDK").delegate('.btnThietDatXuLyLHP', 'click', function (e) {
+            e.stopPropagation();
+            me.strKeHoachDangKy_Id = this.id;
+            me.openModal_XuLyLHP(this.id);
+        });
+        $("#btnAddXuLyLHP").click(function () {
+            me.openModal_ChonLHP();
+        });
+        $("#tblChonLHP").delegate('.btnChonLHP', 'click', function () {
+            var $tr = $(this).closest('tr');
+            var dataRow = {
+                TENLOP: $tr.attr('data-tenlop') || '',
+                MALOP: $tr.attr('data-malop') || '',
+                DANGKY_LOPHOCPHAN_ID: $tr.attr('data-id') || ''
+            };
+            me.addRow_XuLyLHP(dataRow);
+            $tr.addClass('row-selected');
+            $(this).html('<i class="fa fa-check text-success"></i>').prop('disabled', true);
+        });
+        $("#txtSearch_ChonLHP").on('input', function () {
+            me.filter_ChonLHP();
+        });
+        $("#dropPageSize_ChonLHP").on('change', function () {
+            me.pageSize_ChonLHP = parseInt($(this).val()) || 20;
+            me.pageIndex_ChonLHP = 1;
+            me.renderPage_ChonLHP();
+        });
+        $("#pager_ChonLHP").delegate('.btnPage_ChonLHP', 'click', function () {
+            var p = parseInt($(this).attr('data-page'));
+            if (!isNaN(p)) {
+                me.pageIndex_ChonLHP = p;
+                me.renderPage_ChonLHP();
+            }
+        });
+        $("#btnSave_ChonLHP").click(function () {
+            $("#myModalChonLHP").modal("hide");
+        });
+        $("#tblXuLyLHP").delegate('.btnDeleteXuLyLHP', 'click', function () {
+            var $tr = $(this).closest('tr');
+            var rowId = $tr.attr("data-id") || "";
+            if (rowId) {
+                edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
+                $("#btnYes").click(function () {
+                    me.delete_XuLyLHP(rowId, $tr);
+                });
+            }
+            else {
+                $tr.remove();
+                me.reindexRows_XuLyLHP();
+            }
+        });
+        $("#btnSave_XuLyLHP").click(function () {
+            me.save_XuLyLHP();
+        });
         $("#tblKHDK").delegate('.btnDetail', 'click', function (e) {
             $('#myModal').modal('show');
             me.getList_QuanSoTheoLop(this.id);
@@ -928,7 +995,7 @@ KeHoachDangKy.prototype = {
                 iDataRow: iPager
             },
             colPos: {
-                center: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+                center: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
             },
             aoColumns: [
                 {
@@ -941,6 +1008,11 @@ KeHoachDangKy.prototype = {
             },
             {
                 "mDataProp": "TENKEHOACH"
+            },
+            {
+                "mRender": function (nRow, aData) {
+                    return '<span><a class="btn btn-default btnThietDatXuLyLHP" id="' + aData.ID + '" title="Thiết đặt thêm xử lý lớp HP"><i class="fa fa-cog"></i></a></span>';
+                }
             },
             {
                 "mDataProp": "NGAYBATDAU"
@@ -1959,6 +2031,350 @@ KeHoachDangKy.prototype = {
             fakedb: [
 
             ]
+        }, false, false, false, null);
+    },
+
+    dtXuLyDacThu: [],
+    cbLoad_XuLyDacThu: function (data) {
+        main_doc.KeHoachDangKy.dtXuLyDacThu = edu.util.checkValue(data) ? data : [];
+    },
+    genOptions_XuLyDacThu: function (selectedId) {
+        var me = main_doc.KeHoachDangKy;
+        var options = '<option value="">-- Chọn --</option>';
+        var arr = me.dtXuLyDacThu || [];
+        for (var i = 0; i < arr.length; i++) {
+            var item = arr[i];
+            var id = item.ID || item.MA || '';
+            var ten = item.TEN || item.TENDANHMUC || '';
+            var sel = (selectedId && String(selectedId) == String(id)) ? ' selected' : '';
+            options += '<option value="' + id + '"' + sel + '>' + ten + '</option>';
+        }
+        return options;
+    },
+    openModal_XuLyLHP: function (strId) {
+        var me = this;
+        $("#tblXuLyLHP tbody").html("");
+        $("#myModalXuLyLHP").modal("show");
+        me.getList_XuLyLHP();
+    },
+    openModal_ChonLHP: function () {
+        var me = this;
+        $("#txtSearch_ChonLHP").val("");
+        $("#tblChonLHP tbody").html("");
+        $("#myModalChonLHP").modal("show");
+        me.getList_PhanCongLHP();
+    },
+    getList_PhanCongLHP: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4HhEpIC8CLi8mHg0JER4GJDUDOAPP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DangKy_PhanCong_LHP_GetBy',
+            'iM': edu.system.iM,
+            'strDangKy_KeHoachDangKy_Id': me.strKeHoachDangKy_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id,
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.genTable_ChonLHP(arr);
+                }
+                else {
+                    me.genTable_ChonLHP([]);
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                me.genTable_ChonLHP([]);
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    dtChonLHP_All: [],
+    dtChonLHP_Filtered: [],
+    pageIndex_ChonLHP: 1,
+    pageSize_ChonLHP: 20,
+    genTable_ChonLHP: function (data) {
+        var me = this;
+        me.dtChonLHP_All = (data || []).map(function (row) {
+            return {
+                ID: row.ID || row.DANGKY_LOPHOCPHAN_ID || '',
+                TENLOP: row.DANGKY_LOPHOCPHAN_TEN || row.TENLOP || row.LOPHOCPHAN_TEN || '',
+                MALOP: row.DANGKY_LOPHOCPHAN_MA || row.MALOP || row.LOPHOCPHAN_MA || ''
+            };
+        });
+        me.pageIndex_ChonLHP = 1;
+        me.pageSize_ChonLHP = parseInt($("#dropPageSize_ChonLHP").val()) || 20;
+        me.filter_ChonLHP();
+    },
+    filter_ChonLHP: function () {
+        var me = this;
+        var kw = ($("#txtSearch_ChonLHP").val() || '').toLowerCase().trim();
+        if (!kw) {
+            me.dtChonLHP_Filtered = me.dtChonLHP_All.slice();
+        }
+        else {
+            me.dtChonLHP_Filtered = me.dtChonLHP_All.filter(function (row) {
+                return (row.TENLOP || '').toLowerCase().indexOf(kw) !== -1
+                    || (row.MALOP || '').toLowerCase().indexOf(kw) !== -1;
+            });
+        }
+        me.pageIndex_ChonLHP = 1;
+        me.renderPage_ChonLHP();
+    },
+    renderPage_ChonLHP: function () {
+        var me = this;
+        var $tbody = $("#tblChonLHP tbody");
+        var data = me.dtChonLHP_Filtered || [];
+        var total = data.length;
+        var pageSize = me.pageSize_ChonLHP;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (me.pageIndex_ChonLHP > totalPages) me.pageIndex_ChonLHP = totalPages;
+        if (me.pageIndex_ChonLHP < 1) me.pageIndex_ChonLHP = 1;
+        var start = (me.pageIndex_ChonLHP - 1) * pageSize;
+        var end = Math.min(start + pageSize, total);
+
+        $tbody.html("");
+        if (total == 0) {
+            $tbody.html('<tr><td colspan="4" class="td-center">Không có dữ liệu</td></tr>');
+            $("#lblPageInfo_ChonLHP").text("");
+            $("#pager_ChonLHP").html("");
+            return;
+        }
+        var existingIds = {};
+        $("#tblXuLyLHP tbody tr").each(function () {
+            var id = $(this).attr("data-lhp-id");
+            if (id) existingIds[id] = true;
+        });
+        var html = '';
+        for (var i = start; i < end; i++) {
+            var row = data[i];
+            var id = row.ID;
+            var tenLop = row.TENLOP;
+            var maLop = row.MALOP;
+            var already = existingIds[id];
+            var btn = already
+                ? '<i class="fa fa-check text-success"></i>'
+                : '<a class="btn btn-default btn-sm btnChonLHP" title="Chọn">x</a>';
+            html += "<tr data-id='" + id + "' data-tenlop='" + String(tenLop).replace(/'/g, "&#39;") + "' data-malop='" + String(maLop).replace(/'/g, "&#39;") + "'" + (already ? " class='row-selected'" : "") + ">";
+            html += "<td class='td-center'>" + (i + 1) + "</td>";
+            html += "<td class='td-left'>" + tenLop + "</td>";
+            html += "<td class='td-left'>" + maLop + "</td>";
+            html += "<td class='td-center'>" + btn + "</td>";
+            html += "</tr>";
+        }
+        $tbody.html(html);
+        $("#lblPageInfo_ChonLHP").text("(" + (start + 1) + "–" + end + " / " + total + ")");
+        me.renderPager_ChonLHP(totalPages);
+    },
+    renderPager_ChonLHP: function (totalPages) {
+        var me = this;
+        var cur = me.pageIndex_ChonLHP;
+        var $pager = $("#pager_ChonLHP");
+        if (totalPages <= 1) { $pager.html(""); return; }
+        var html = '';
+        var btn = function (label, page, disabled, active) {
+            var cls = 'btn btn-sm btnPage_ChonLHP ' + (active ? 'btn-primary' : 'btn-default');
+            var dis = disabled ? ' disabled' : '';
+            return '<button type="button" class="' + cls + dis + '" data-page="' + page + '"' + (disabled ? ' disabled' : '') + '>' + label + '</button>';
+        };
+        html += btn('«', 1, cur == 1, false);
+        html += btn('‹', cur - 1, cur == 1, false);
+        var from = Math.max(1, cur - 2);
+        var to = Math.min(totalPages, cur + 2);
+        if (from > 1) html += '<span class="px-5">...</span>';
+        for (var p = from; p <= to; p++) {
+            html += btn(p, p, false, p == cur);
+        }
+        if (to < totalPages) html += '<span class="px-5">...</span>';
+        html += btn('›', cur + 1, cur == totalPages, false);
+        html += btn('»', totalPages, cur == totalPages, false);
+        $pager.html(html);
+    },
+    getList_XuLyLHP: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/ETMeBQoeCikeDS4xCTEeBSAiFSk0HgYkNQM4CCUP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DK_Kh_LopHp_DacThu_GetById',
+            'iM': edu.system.iM,
+            'strId': me.strKeHoachDangKy_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id,
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                $("#tblXuLyLHP tbody").html("");
+                if (data.Success) {
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    if (arr.length == 0) {
+                        me.addRow_XuLyLHP();
+                    } else {
+                        for (var i = 0; i < arr.length; i++) {
+                            me.addRow_XuLyLHP(arr[i]);
+                        }
+                    }
+                }
+                else {
+                    me.addRow_XuLyLHP();
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                me.addRow_XuLyLHP();
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    addRow_XuLyLHP: function (data) {
+        var me = this;
+        data = data || {};
+        var $tbody = $("#tblXuLyLHP tbody");
+        var stt = $tbody.find("tr").length + 1;
+        var tenLop = data.TENLOP || data.DANGKY_LOPHOCPHAN_TEN || data.LOPHOCPHAN_TEN || "";
+        var maLop = data.MALOP || data.DANGKY_LOPHOCPHAN_MA || data.LOPHOCPHAN_MA || "";
+        var lhpId = data.DANGKY_LOPHOCPHAN_ID || "";
+        var html = "";
+        html += "<tr data-id='" + (data.ID || "") + "' data-lhp-id='" + lhpId + "'>";
+        html += "<td class='td-center rowStt'>" + stt + "</td>";
+        html += "<td><input type='text' class='form-control txtTenLop' placeholder='Tên lớp' value='" + tenLop + "' readonly /></td>";
+        html += "<td><input type='text' class='form-control txtMaLop' placeholder='Mã lớp' value='" + maLop + "' readonly /></td>";
+        html += "<td><select class='form-control dropXuLyDacThu'>" + me.genOptions_XuLyDacThu(data.XULYDACTHU_ID || data.QUYDINHLOPXULYDACTHU_ID) + "</select></td>";
+        html += "<td class='td-center'><a class='btn btn-danger btn-sm btnDeleteXuLyLHP' title='Xóa'><i class='fa fa-trash'></i></a></td>";
+        html += "</tr>";
+        $tbody.append(html);
+    },
+    reindexRows_XuLyLHP: function () {
+        $("#tblXuLyLHP tbody tr").each(function (i) {
+            $(this).find(".rowStt").text(i + 1);
+        });
+    },
+    delete_XuLyLHP: function (strId, $tr) {
+        var me = this;
+        var obj_delete = {
+            'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4HgoJHg0uMQkxHgUgIhUpNB4FJC0P',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DangKy_KH_LopHp_DacThu_Del',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id,
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    if ($tr && $tr.length) {
+                        $tr.remove();
+                        me.reindexRows_XuLyLHP();
+                    }
+                    edu.system.afterComfirm({
+                        content: "Xóa thành công!",
+                        code: ""
+                    });
+                }
+                else {
+                    edu.system.afterComfirm({
+                        content: obj_delete.action + ": " + data.Message,
+                        code: "w"
+                    });
+                }
+            },
+            error: function (er) {
+                edu.system.afterComfirm({
+                    content: obj_delete.action + " (er): " + JSON.stringify(er),
+                    code: "w"
+                });
+            },
+            type: "POST",
+            action: obj_delete.action,
+            contentType: true,
+            data: obj_delete,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    save_XuLyLHP: function () {
+        var me = this;
+        var arrRow = [];
+        var hasInvalid = false;
+        $("#tblXuLyLHP tbody tr").each(function () {
+            var rowId = $(this).attr("data-id") || "";
+            var lhpId = $(this).attr("data-lhp-id") || "";
+            var xuLyId = $(this).find(".dropXuLyDacThu").val() || "";
+            if (!lhpId) return;
+            if (!xuLyId) {
+                hasInvalid = true;
+                return;
+            }
+            arrRow.push({ rowId: rowId, lhpId: lhpId, xuLyId: xuLyId });
+        });
+        if (hasInvalid) {
+            edu.system.alert("Vui lòng chọn xử lý đặc thù cho tất cả lớp học phần!");
+            return;
+        }
+        if (arrRow.length == 0) {
+            edu.system.alert("Vui lòng thêm ít nhất một lớp học phần!");
+            return;
+        }
+        var arrNew = arrRow.filter(function (r) { return !r.rowId; });
+        if (arrNew.length == 0) {
+            edu.system.alert("Không có dữ liệu mới cần lưu!");
+            $("#myModalXuLyLHP").modal("hide");
+            return;
+        }
+        for (var i = 0; i < arrNew.length; i++) {
+            me.insert_XuLyLHP(arrNew[i], i == arrNew.length - 1);
+        }
+    },
+    insert_XuLyLHP: function (row, isLast) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4HgoJHg0uMQkxHgUgIhUpNB4ILzIP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DangKy_KH_LopHp_DacThu_Ins',
+            'iM': edu.system.iM,
+            'strDangKy_KeHoachDangKy_Id': me.strKeHoachDangKy_Id,
+            'strDangKy_LopHocPhan_Id': row.lhpId,
+            'strHieuLuc': '1',
+            'strXuLyDacThu_Id': row.xuLyId,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id,
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    if (isLast) {
+                        edu.system.alert("Lưu thiết đặt xử lý lớp HP thành công!");
+                        $("#myModalXuLyLHP").modal("hide");
+                    }
+                }
+                else {
+                    edu.system.alert(obj_save.action + ": " + data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er));
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
         }, false, false, false, null);
     },
 };

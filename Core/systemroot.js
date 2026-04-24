@@ -176,21 +176,94 @@ systemroot.prototype = {
                     + '      <span>Tìm kiếm</span>'
                     + '    </button>'
                     + '  </div>'
+                    + '  <div id="divGoiY"></div>'
                     + '</div>'
                     + '<div id="divKQTimSinhVien" style="margin-top:12px;text-align:left"></div>';
                 edu.system.alert(strHtmlForm);
                 $("#myModalAlert .modal-dialog").addClass("modal-lg");
+
+                var hideGoiY = function () { $("#divGoiY").html(''); };
+                var renderGoiYDropdown = function (items) {
+                    if (!items.length) return hideGoiY();
+                    var html = '<div style="background:#fff;border:1px solid #dee2e6;border-radius:6px;max-height:260px;overflow-y:auto;margin-bottom:8px">';
+                    items.forEach(function (r, i) {
+                        var ten = r.FULLNAME || r.ten || '';
+                        var ma = r.NAME || r.ma || '';
+                        var email = r.EMAIL || r.email || '';
+                        html += ''
+                            + '<div class="goiy-item" data-idx="' + i + '" style="padding:8px 12px;cursor:pointer;border-bottom:1px solid #f1f3f5">'
+                            + '  <div style="font-weight:600;color:#1e3a8a;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + ten + '</div>'
+                            + '  <div style="font-size:11px;color:#6c757d"><span style="font-family:monospace">' + ma + '</span>' + (email ? ' • ' + email : '') + '</div>'
+                            + '</div>';
+                    });
+                    html += '</div>';
+                    $("#divGoiY").html(html);
+                    $(".goiy-item").hover(
+                        function () { $(this).css('background', '#eff6ff'); },
+                        function () { $(this).css('background', '#fff'); }
+                    );
+                    $(".goiy-item").click(function () {
+                        var idx = parseInt($(this).data('idx'), 10);
+                        chonNguoiDung(items[idx]);
+                    });
+                };
+
                 var chonNguoiDung = function (record) {
                     edu.system.userId = record.ID || record.Id || record.id;
                     edu.system.currentThuVai = {
-                        ten: record.FULLNAME || record.HOTEN || record.HoTen || '',
-                        ma: record.NAME || record.MSSV || record.MA || '',
-                        email: record.EMAIL || record.Email || '',
+                        ten: record.FULLNAME || record.HOTEN || record.HoTen || record.ten || '',
+                        ma: record.NAME || record.MSSV || record.MA || record.ma || '',
+                        email: record.EMAIL || record.Email || record.email || '',
                         tenVaiTro: strTenVaiTro
                     };
                     $("#myModalAlert").modal("hide");
                     me.setUngDung(objUngDung);
                 };
+
+                var timerGoiY = null;
+                var goiYSuggest = function (keyword) {
+                    var obj_save = {
+                        'action': 'CMS_QuanTri02_MH/CigkLBUzIBUpLi8mFSgvBSgvKQUgLykP',
+                        'func': 'PKG_CORE_QUANTRI_02.KiemTraThongTinDinhDanh',
+                        'iM': edu.system.iM,
+                        'strThongTinDinhDanh': keyword,
+                        'strNguoiThucHien_Id': edu.system.userId,
+                        'strVaiTroDangNhap_Id': objUngDung.ID,
+                        'strChucNangHeThong_Id': objUngDung.ID,
+                        'strHanhDong_Code': '',
+                    };
+                    me.makeRequest({
+                        success: function (data) {
+                            if ($("#txtIDSinhVienCanVo").val().trim() !== keyword) return;
+                            if (!data.Success) return hideGoiY();
+                            var rs = [];
+                            if (data.Data && data.Data.rs) rs = data.Data.rs;
+                            else if (Array.isArray(data.Data)) rs = data.Data;
+                            renderGoiYDropdown(rs);
+                        },
+                        error: function () { hideGoiY(); },
+                        type: 'POST',
+                        action: obj_save.action,
+                        contentType: true,
+                        data: obj_save,
+                        fakedb: []
+                    }, false, false, false, null);
+                };
+
+                $("#txtIDSinhVienCanVo").on('input', function () {
+                    clearTimeout(timerGoiY);
+                    var v = $(this).val().trim();
+                    if (v.length < 2) { hideGoiY(); return; }
+                    timerGoiY = setTimeout(function () { goiYSuggest(v); }, 350);
+                });
+                $("#txtIDSinhVienCanVo").on('focus', function () {
+                    var v = $(this).val().trim();
+                    if (v.length >= 2) goiYSuggest(v);
+                });
+                $("#txtIDSinhVienCanVo").on('blur', function () {
+                    setTimeout(hideGoiY, 200);
+                });
+                $("#divGoiY").on('mousedown', function (e) { e.preventDefault(); });
                 var renderBangKetQua = function (rs, title, offset, footerHtml) {
                     var html = ''
                         + '<div class="alert alert-info py-2 px-3 mb-2" style="font-size:13px;border-left:3px solid #0d6efd">'
