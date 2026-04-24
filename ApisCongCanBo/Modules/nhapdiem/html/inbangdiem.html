@@ -281,6 +281,7 @@
                             <th class="text-center" scope="col">Kết quả đăng ký</th>
                             <th class="text-center" scope="col">Kết quả đăng ký cả lớp</th>
                             <th class="text-center" scope="col">Khung chương trình</th>
+                            <th class="text-center" scope="col">Điểm rèn luyện</th>
                             <th scope="col" class="text-center"><input type="checkbox" name=""
                                     id="chkSelectAll_QuyetDinh"></th>
                         </tr>
@@ -1255,6 +1256,76 @@
                             </tr>
                         </thead>
                         <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Điểm rèn luyện -->
+<div class="modal fade block-knowledge myModalDiemRenLuyen" id="myModalDiemRenLuyen" tabindex="-1"
+    aria-labelledby="zoomfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1440 modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="zoomfileLabel">
+                    <i class="fa-solid fa-star fw-bold"></i>Điểm rèn luyện - <span class="lblSinhVien"></span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-1 fz16 aps-title"><b>Kỳ</b></div>
+                <div class="aps-table-select scroll-table-x">
+                    <table class="table table-classroom table-bordered table-noborder tblDRL_Ky" id="tblDRL_Ky">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px">STT</th>
+                                <th class="text-left">Mã số</th>
+                                <th class="text-left">Họ tên</th>
+                                <th class="text-left">Chương trình</th>
+                                <th class="text-left">Điểm</th>
+                                <th class="text-left">Xếp loại</th>
+                                <th class="text-left">Kỳ</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+                <div class="mb-1 fz16 mt-10 aps-title"><b>Năm</b></div>
+                <div class="aps-table-select scroll-table-x">
+                    <table class="table table-classroom table-bordered table-noborder tblDRL_Nam" id="tblDRL_Nam">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px">STT</th>
+                                <th class="text-left">Mã số</th>
+                                <th class="text-left">Họ tên</th>
+                                <th class="text-left">Chương trình</th>
+                                <th class="text-left">Điểm</th>
+                                <th class="text-left">Xếp loại</th>
+                                <th class="text-left">Năm</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
+                    </table>
+                </div>
+                <div class="mb-1 fz16 mt-10 aps-title"><b>Toàn khóa</b></div>
+                <div class="aps-table-select scroll-table-x">
+                    <table class="table table-classroom table-bordered table-noborder tblDRL_ToanKhoa" id="tblDRL_ToanKhoa">
+                        <thead>
+                            <tr>
+                                <th class="text-center w-50px">STT</th>
+                                <th class="text-left">Mã số</th>
+                                <th class="text-left">Họ tên</th>
+                                <th class="text-left">Chương trình</th>
+                                <th class="text-left">Điểm</th>
+                                <th class="text-left">Xếp loại</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot></tfoot>
                     </table>
                 </div>
             </div>

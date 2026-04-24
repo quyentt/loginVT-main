@@ -204,6 +204,13 @@ InBangDiem.prototype = {
             me.getList_CanhBao(data.QLSV_NGUOIHOC_ID, data.DAOTAO_TOCHUCCHUONGTRINH_ID);
 
         });
+        $("#tblSinhVien").delegate('.btnViewDiemRenLuyen', 'click', function (e) {
+            var strId = this.id;
+            $("#myModalDiemRenLuyen").modal("show");
+            var data = me.dtQuyetDinh.find(e => e.ID == strId);
+            $(".lblSinhVien").html(edu.util.returnEmpty(data.QLSV_NGUOIHOC_MASO) + " - " + edu.util.returnEmpty(data.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(data.QLSV_NGUOIHOC_TEN) + " - " + edu.util.returnEmpty(data.DAOTAO_LOPQUANLY_TEN));
+            me.getList_DiemRenLuyen(data.QLSV_NGUOIHOC_ID, data.DAOTAO_TOCHUCCHUONGTRINH_ID);
+        });
         $("#tblSinhVien").delegate('.btnQuyetDinh', 'click', function (e) {
             var strId = this.id;
             $("#myModalQuyetDinh").modal("show");
@@ -823,7 +830,7 @@ InBangDiem.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 10, 11, 12, 13, 14, 15],
+                center: [0, 10, 11, 12, 13, 14, 15, 24],
                 right: [6]
             },
             aoColumns: [
@@ -918,6 +925,11 @@ InBangDiem.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnViewChuongTrinh" id="' + aData.ID + '" title="xem">Xem</a></span>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnViewDiemRenLuyen" id="' + aData.ID + '" title="xem">Xem</a></span>';
                     }
                 },
                 {
@@ -2999,6 +3011,78 @@ InBangDiem.prototype = {
 
         //edu.system.actionRowSpan("tblLichHoc", [1,2,3]);
         /*III. Callback*/
+    },
+
+    getList_DiemRenLuyen: function (strQLSV_NguoiHoc_Id, strDaoTao_ChuongTrinh_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_ThongTin_MH/DSA4ChATJC8NNDgkLwIgDykgLwPP',
+            'func': 'pkg_congthongtin_hssv_thongtin.LayKQRenLuyenCaNhan',
+            'iM': edu.system.iM,
+            'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+            'strDaoTao_ChuongTrinh_Id': strDaoTao_ChuongTrinh_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.genTable_DiemRenLuyen(data.Data);
+                }
+                else {
+                    edu.system.alert(" : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    genTable_DiemRenLuyen: function (data) {
+        var me = this;
+        var jsonForm = {
+            strTable_Id: "tblDRL_ToanKhoa",
+            aaData: data.rsToanKhoa,
+            colPos: {
+                center: [0],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN) + " (" + edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA) + ")";
+                    }
+                },
+                {
+                    "mDataProp": "DIEM"
+                },
+                {
+                    "mDataProp": "XEPLOAI_TEN"
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+        jsonForm.aoColumns.push({
+            "mDataProp": "THOIGIAN"
+        });
+        jsonForm.strTable_Id = "tblDRL_Nam";
+        jsonForm.aaData = data.rsNam;
+        edu.system.loadToTable_data(jsonForm);
+        jsonForm.strTable_Id = "tblDRL_Ky";
+        jsonForm.aaData = data.rsKy;
+        edu.system.loadToTable_data(jsonForm);
     },
 
     getList_TongHopDuLieu: function (strQLSV_NguoiHoc_Id, strDaoTao_ChuongTrinh_Id) {

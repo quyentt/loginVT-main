@@ -1398,8 +1398,14 @@
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-12 pd0 mb-10">
-                    <input id="txtSearch_ChonLHP" class="form-control" placeholder="tìm kiếm ....." />
+                <div class="col-sm-8 pd0 mb-10" style="padding-right:10px;">
+                    <input id="txtSearch_ChonLHP" class="form-control" placeholder="Tìm theo tên / mã lớp..." />
+                </div>
+                <div class="col-sm-4 pd0 mb-10" style="padding-left:5px;">
+                    <select id="dropLaLopRieng" class="form-control">
+                        <option value="">Tất cả lớp</option>
+                        <option value="1">Chỉ lớp riêng</option>
+                    </select>
                 </div>
                 <div class="clear"></div>
                 <div class="aps-table-select mt-10">
@@ -1409,6 +1415,7 @@
                                 <th class="td-fixed td-center w-50px">STT</th>
                                 <th class="td-left">Tên lớp</th>
                                 <th class="td-left">Mã lớp</th>
+                                <th class="td-center w-90px">Lớp riêng</th>
                                 <th class="td-center td-fixed w-80px">Chọn</th>
                             </tr>
                         </thead>

@@ -219,19 +219,36 @@ KeHoachDangKy.prototype = {
         $("#btnAddXuLyLHP").click(function () {
             me.openModal_ChonLHP();
         });
-        $("#tblChonLHP").delegate('.btnChonLHP', 'click', function () {
+        $("#tblChonLHP").delegate('.chkChonLHP', 'change', function () {
             var $tr = $(this).closest('tr');
-            var dataRow = {
-                TENLOP: $tr.attr('data-tenlop') || '',
-                MALOP: $tr.attr('data-malop') || '',
-                DANGKY_LOPHOCPHAN_ID: $tr.attr('data-id') || ''
-            };
-            me.addRow_XuLyLHP(dataRow);
-            $tr.addClass('row-selected');
-            $(this).html('<i class="fa fa-check text-success"></i>').prop('disabled', true);
+            var lhpId = $tr.attr('data-id') || '';
+            if (this.checked) {
+                var dataRow = {
+                    TENLOP: $tr.attr('data-tenlop') || '',
+                    MALOP: $tr.attr('data-malop') || '',
+                    DANGKY_LOPHOCPHAN_ID: lhpId
+                };
+                me.addRow_XuLyLHP(dataRow);
+                $tr.addClass('row-selected');
+            }
+            else {
+                var $target = $("#tblXuLyLHP tbody tr[data-lhp-id='" + lhpId + "']");
+                var savedId = $target.attr('data-id') || '';
+                if (savedId) {
+                    this.checked = true;
+                    edu.system.alert("Dòng này đã lưu trong DB. Hãy dùng nút xóa trong bảng bên dưới để xóa.");
+                    return;
+                }
+                $target.remove();
+                me.reindexRows_XuLyLHP();
+                $tr.removeClass('row-selected');
+            }
         });
         $("#txtSearch_ChonLHP").on('input', function () {
             me.filter_ChonLHP();
+        });
+        $("#dropLaLopRieng").on('change', function () {
+            me.getList_PhanCongLHP();
         });
         $("#dropPageSize_ChonLHP").on('change', function () {
             me.pageSize_ChonLHP = parseInt($(this).val()) || 20;
@@ -2060,6 +2077,7 @@ KeHoachDangKy.prototype = {
     openModal_ChonLHP: function () {
         var me = this;
         $("#txtSearch_ChonLHP").val("");
+        $("#dropLaLopRieng").val("");
         $("#tblChonLHP tbody").html("");
         $("#myModalChonLHP").modal("show");
         me.getList_PhanCongLHP();
@@ -2071,6 +2089,7 @@ KeHoachDangKy.prototype = {
             'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DangKy_PhanCong_LHP_GetBy',
             'iM': edu.system.iM,
             'strDangKy_KeHoachDangKy_Id': me.strKeHoachDangKy_Id,
+            'strLaLopRieng': $("#dropLaLopRieng").val() || '',
             'strNguoiThucHien_Id': edu.system.userId,
             'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id,
             'strChucNangHeThong_Id': edu.system.strChucNang_Id,
@@ -2109,7 +2128,8 @@ KeHoachDangKy.prototype = {
             return {
                 ID: row.DANGKY_LOPHOCPHAN_ID || row.LOPHOCPHAN_ID || row.ID || '',
                 TENLOP: row.DANGKY_LOPHOCPHAN_TEN || row.LOPHOCPHAN_TEN || row.TENLOP || '',
-                MALOP: row.DANGKY_LOPHOCPHAN_MA || row.LOPHOCPHAN_MA || row.MALOP || ''
+                MALOP: row.DANGKY_LOPHOCPHAN_MA || row.LOPHOCPHAN_MA || row.MALOP || '',
+                LALOPRIENG: (row.LALOPRIENG == 1 || row.LA_LOP_RIENG == 1 || row.LALOPRIENG === '1' || row.LA_LOP_RIENG === '1') ? 1 : 0
             };
         });
         me.pageIndex_ChonLHP = 1;
@@ -2145,7 +2165,7 @@ KeHoachDangKy.prototype = {
 
         $tbody.html("");
         if (total == 0) {
-            $tbody.html('<tr><td colspan="4" class="td-center">Không có dữ liệu</td></tr>');
+            $tbody.html('<tr><td colspan="5" class="td-center">Không có dữ liệu</td></tr>');
             $("#lblPageInfo_ChonLHP").text("");
             $("#pager_ChonLHP").html("");
             return;
@@ -2161,15 +2181,19 @@ KeHoachDangKy.prototype = {
             var id = row.ID;
             var tenLop = row.TENLOP;
             var maLop = row.MALOP;
+            var laLopRieng = row.LALOPRIENG == 1;
             var already = existingIds[id];
-            var btn = already
-                ? '<i class="fa fa-check text-success"></i>'
-                : '<a class="btn btn-default btn-sm btnChonLHP" title="Chọn">x</a>';
+            var chk = '<input type="checkbox" class="chkChonLHP" style="width:18px; height:18px; cursor:pointer;"'
+                + (already ? ' checked' : '') + ' />';
+            var badgeRieng = laLopRieng
+                ? '<span class="badge" style="background:#198754; color:#fff; padding:3px 8px; border-radius:10px;">Có</span>'
+                : '<span style="color:#aaa;">—</span>';
             html += "<tr data-id='" + id + "' data-tenlop='" + String(tenLop).replace(/'/g, "&#39;") + "' data-malop='" + String(maLop).replace(/'/g, "&#39;") + "'" + (already ? " class='row-selected'" : "") + ">";
             html += "<td class='td-center'>" + (i + 1) + "</td>";
             html += "<td class='td-left'>" + tenLop + "</td>";
             html += "<td class='td-left'>" + maLop + "</td>";
-            html += "<td class='td-center'>" + btn + "</td>";
+            html += "<td class='td-center'>" + badgeRieng + "</td>";
+            html += "<td class='td-center'>" + chk + "</td>";
             html += "</tr>";
         }
         $tbody.html(html);
