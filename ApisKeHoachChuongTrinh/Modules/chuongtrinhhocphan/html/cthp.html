@@ -367,7 +367,7 @@
 
         <!--Chỉnh sửa học phần:-->
         <div class="box box-solid form-container zone-content add-absolue pd0 zone_edithocphan" id="zone_edithocphan"
-            style="display: none;">
+            style="display: block;">
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
                     <i class="fa-solid fa-pen-field"></i> Chỉnh sửa học phần:
@@ -392,27 +392,26 @@
                         </div>
                         <!--row 2-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Mã học phần</div>
-                            <div class="col-sm-2 aps-form-input">
+                            <div class="col-sm-2 aps-form-lable">Mã học phần</div>
+                            <div class="col-sm-4 aps-form-input">
                                 <input id="txtHocPhan_MaHocPhan" class="form-control" />
                             </div>
-                            <div class="col-sm-3 aps-form-lable justify-content-end pr15">Tên học phần</div>
-                            <div class="col-sm-6 aps-form-input">
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Tên học phần</div>
+                            <div class="col-sm-4 aps-form-input">
                                 <input id="txtHocPhan_TenHocPhan" class="form-control" />
                             </div>
                         </div>
                         <!--row 3-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Số tín học phần</div>
+                            <div class="col-sm-2 aps-form-lable">Số tín học phần</div>
                             <div class="col-sm-2 aps-form-input">
                                 <input id="txtHocPhan_SoTinHocPhan" class="form-control" />
                             </div>
-                            <div class="col-sm-3 aps-form-lable justify-content-end pr15">Số tín học phí</div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Số tín học phí</div>
                             <div class="col-sm-2 aps-form-input">
                                 <input id="txtHocPhan_SoTinHocPhi" class="form-control" />
                             </div>
-                            <div class="col-sm-3 aps-form-lable justify-content-end pr15">Là môn tính điểm</div>
-
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Là môn tính điểm</div>
                             <div class="col-sm-2 aps-form-input">
                                 <select id="dropHocPhan_LaMonTinhDiem" class="select-opt">
                                     <option value="1">Tính điểm</option>
@@ -422,26 +421,26 @@
                         </div>
                         <!--row 4-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Học kỳ dự kiến</div>
+                            <div class="col-sm-2 aps-form-lable">Học kỳ dự kiến</div>
                             <div class="col-sm-2 aps-form-input">
                                 <select id="dropHocPhan_HocKyDuKien" class="select-opt" multiple="multiple"></select>
                             </div>
-                            <div class="col-sm-3 aps-form-lable justify-content-end pr15">Học kỳ thực tế</div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Học kỳ thực tế</div>
                             <div class="col-sm-2 aps-form-input">
                                 <select id="dropHocPhan_HocKyThucTe" class="select-opt" multiple="multiple"></select>
                             </div>
-                            <div class="col-sm-3 aps-form-lable justify-content-end pr15">Thuộc tính học phần</div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Thuộc tính học phần</div>
                             <div class="col-sm-2 aps-form-input">
                                 <select id="dropHocPhan_ThuocTinh" class="select-opt"></select>
                             </div>
                         </div>
                         <!--row 5-->
                         <div class="row aps-form-item">
-                            <div class="col-sm-3 aps-form-lable">Phạm vi đảm nhiệm</div>
+                            <div class="col-sm-2 aps-form-lable">Phạm vi đảm nhiệm</div>
                             <div class="col-sm-2 aps-form-input">
                                 <select id="dropHocPhan_PhamViDamNhiem" class="select-opt"></select>
                             </div>
-                            <div class="col-sm-3 aps-form-lable justify-content-end pr15">Thứ tự</div>
+                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Thứ tự</div>
                             <div class="col-sm-2 aps-form-input">
                                 <input id="txtHocPhan_ThuTu" class="form-control" />
                             </div>
@@ -457,7 +456,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table id="tblInput_HocPhan_QuanHe" class="table tblInput_HocPhan_QuanHe">
                                 <tbody></tbody>
                                 <tfoot>
@@ -510,7 +509,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table id="tblInput_HocPhan_QuanHeTT" class="table tblInput_HocPhan_QuanHeTT">
                                 <tbody></tbody>
                                 <tfoot>
@@ -556,7 +555,6 @@
                         </div>
                     </div>
 
-
                     <!--Quan hệ tương đương-->
                     <div class="row aps-form mt-10">
                         <!--row 1-->
@@ -567,7 +565,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table  scroll-table-x">
                             <table id="tblInput_HocPhan_ThayThe" class="table tblInput_HocPhan_ThayThe">
                                 <tbody></tbody>
                                 <tfoot>
@@ -622,7 +620,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table id="tblInput_HocPhan_BaiHoc" class="table tblInput_HocPhan_BaiHoc">
                                 <tbody></tbody>
                                 <tfoot>
@@ -672,7 +670,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table id="tblHocPhan_PhanBo"
                                 class="table table-hover table-bordered table-noborder tblHocPhan_PhanBo mb-10">
                                 <thead>
@@ -686,7 +684,7 @@
                                 <tbody></tbody>
                             </table>
                         </div>
-                        <!--row 2-->
+                        <!--row 3-->
                         <div class="row">
                             <div class="pull-right">
                                 <a class="btn btn-outline-primary" id="btnThemDong_PhanBo">
@@ -694,7 +692,7 @@
                                 </a>
                             </div>
                         </div>
-                        <!--row 2-->
+                        <!--row 42-->
                         <!--<div class="row aps-form-table mt-15">
                             <table id="tblInput_HocPhan_PhanBo" class="table mb-0">
                                 <tbody></tbody>
@@ -740,7 +738,7 @@
 
         <!--Thông tin khối bắt buộc-->
         <div class="box box-solid form-container zone-content zone_inputhocphan_khoibatbuoc add-absolue pd0"
-            id="zone_inputhocphan_khoibatbuoc" style="display: block">
+            id="zone_inputhocphan_khoibatbuoc" style="display: none">
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
                     <i class="fa-solid fa-screen-users fw-bold"></i> <span id="mylbl_KhoiBatBuoc">Khối bắt buộc</span>
