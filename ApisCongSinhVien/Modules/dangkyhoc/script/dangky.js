@@ -1142,6 +1142,7 @@ DangKy.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
             'strDangKy_LopHocPhan_Cu_Ids': strDangKy_LopHocPhan_Cu_Ids,
             'strDangKy_LopHocPhan_Moi_Ids': strDangKy_LopHocPhan_Moi_Ids,
+            'strNguoiThucVai_Id': edu.system.strNguoiThucVai_Id,
         };
         //default
 
