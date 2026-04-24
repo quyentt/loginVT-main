@@ -68,7 +68,11 @@
             </div>
             <div class="clear"></div>
             <!-- Danh sách -->
-            <div class="box box-solid aps-list-nhapdiemdst pd20 pt10">
+            <div class="box box-solid aps-list-nhapdiemdst pd20 pt10" style="position:relative;">
+                <div id="loading_NhapDiem" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); z-index:10; display:none; background:#fff; padding:30px 55px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); text-align:center; min-width:220px;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color:#223771;"></i>
+                    <h5 style="margin:18px 0 0; color:#223771; font-weight:600; font-size:15px;">Đang tải dữ liệu...</h5>
+                </div>
                 <div class="box-header">
                     <h3 class="box-title">
                         <i class="fa-light fa-list-timeline"></i> Danh sách
@@ -78,7 +82,10 @@
                     </h3>
                 </div>
                 <div class="box-body">
-                    <div class="table-select2 aps-table-select mt-0 scroll-table-x">
+                    <div id="topScroll_tblNhapDiem" class="top-scroll-x" style="overflow-x:auto; overflow-y:hidden;">
+                        <div id="topScrollInner_tblNhapDiem" style="height:1px;"></div>
+                    </div>
+                    <div id="wrapScroll_tblNhapDiem" class="table-select2 aps-table-select mt-0 scroll-table-x">
                         <table id="tblNhapDiem"
                             class="table table-hover table-bordered mb-0 table-noborder tblNhapDiem">
                             <thead>

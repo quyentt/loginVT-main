@@ -281,8 +281,10 @@ NhapDiem.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
+        $("#loading_NhapDiem").show();
         edu.system.makeRequest({
             success: function (data) {
+                $("#loading_NhapDiem").hide();
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me.dtTuiBai = dtReRult;
@@ -293,7 +295,7 @@ NhapDiem.prototype = {
                 }
             },
             error: function (er) {
-
+                $("#loading_NhapDiem").hide();
                 edu.system.alert(JSON.stringify(er), "w");
             },
             type: 'POST',
@@ -312,15 +314,21 @@ NhapDiem.prototype = {
     -------------------------------------------*/
     genTable_TuiBai: function (data, iPager) {
         var me = this;
-        $("#lblTuiBai_Tong").html(iPager);
+        var iTotal = (iPager && iPager > 0) ? iPager : (data ? data.length : 0);
+        var iPageSize = parseInt(edu.system.pageSize_default) || 10;
+        var iPageIndex = parseInt(edu.system.pageIndex_default) || 1;
+        var iStart = (iPageIndex - 1) * iPageSize;
+        var dataPage = (data || []).slice(iStart, iStart + iPageSize);
+        $("#lblTuiBai_Tong").html(iTotal);
+        $("#lblNhapDiem_Tong").html(iTotal);
         var jsonForm = {
             strTable_Id: "tblNhapDiem",
 
             bPaginate: {
                 strFuntionName: "main_doc.NhapDiem.getList_TuiBai()",
-                iDataRow: iPager,
+                iDataRow: iTotal,
             },
-            aaData: data,
+            aaData: dataPage,
             colPos: {
                 center: [0],
             },
@@ -391,6 +399,25 @@ NhapDiem.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.syncTopScroll_TuiBai();
+    },
+    syncTopScroll_TuiBai: function () {
+        var $top = $("#topScroll_tblNhapDiem");
+        var $topInner = $("#topScrollInner_tblNhapDiem");
+        var $wrap = $("#wrapScroll_tblNhapDiem");
+        if (!$top.length || !$wrap.length) return;
+        var resize = function () {
+            var w = $wrap[0].scrollWidth;
+            $topInner.css("width", w + "px");
+        };
+        resize();
+        setTimeout(resize, 50);
+        if (!$top.data("synced")) {
+            $top.data("synced", true);
+            $top.on("scroll", function () { $wrap.scrollLeft($top.scrollLeft()); });
+            $wrap.on("scroll", function () { $top.scrollLeft($wrap.scrollLeft()); });
+            $(window).on("resize", resize);
+        }
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
