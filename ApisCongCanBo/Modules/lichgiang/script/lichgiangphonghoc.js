@@ -2483,34 +2483,34 @@ LichGiang.prototype = {
         }
         data.forEach(function (e, i) {
             var nguoiDK = pick(e,
-                'NGUOIDANGKY_HIENTHI', 'NGUOIDANGKY_HOVATEN', 'NGUOIDANGKY_TENDAYDU',
+                'NGUOIDANGKY_FULLNAME', 'NGUOIDANGKY', 'NGUOIDANGKY_HIENTHI',
+                'NGUOIDANGKY_HOVATEN', 'NGUOIDANGKY_TENDAYDU', 'NGUOIDANGKY_NAME',
                 'NGUOIDANGKY_TEN', 'NGUOITAO_HIENTHI', 'NGUOITAO_HOVATEN',
                 'NGUOITHUCHIEN_HIENTHI', 'HOVATEN', 'HOTEN');
             var thoiGianTH = pick(e,
                 'THOIGIANTHUCHIEN', 'NGAYTAO_DD_MM_YYYY_HHMMSS', 'NGAYTAO_HIENTHI',
                 'NGAYTAO', 'THOIGIAN');
             var phongTen = pick(e,
-                'PHONGDANGKY_TEN', 'TKB_PHONG_TEN', 'TKBPHONG_TEN', 'PHONG_TEN',
-                'TENPHONG', 'TENPHONGHOC', 'PHONGHOC_TEN', 'TEN_PHONG', 'PHONGDANGKY');
-            var ngaySD = pick(e, 'NGAYSUDUNG_HIENTHI', 'NGAYSUDUNG', 'NGAYSD', 'NGAY');
+                'PHONGDANGKY', 'PHONGDANGKY_TEN', 'TKB_PHONG_TEN', 'TKBPHONG_TEN',
+                'PHONG_TEN', 'TENPHONG', 'TENPHONGHOC', 'PHONGHOC_TEN');
+            var ngaySD = pick(e, 'NGAYSUDUNG', 'NGAYSUDUNG_HIENTHI', 'NGAYSD', 'NGAY');
             var gioPhutBD = pick(e, 'GIOPHUTBATDAU', 'GIOPHUT_BATDAU');
             var gioPhutKT = pick(e, 'GIOPHUTKETTHUC', 'GIOPHUT_KETTHUC');
             var gioBD = pick(e, 'GIOBATDAU', 'GIOBD');
             var phutBD = pick(e, 'PHUTBATDAU', 'PHUTBD');
             var gioKT = pick(e, 'GIOKETTHUC', 'GIOKT');
             var phutKT = pick(e, 'PHUTKETTHUC', 'PHUTKT');
-            var mucDich = pick(e, 'MUCDICHSUDUNG', 'MUCDICH', 'NOIDUNG', 'GHICHU');
+            var mucDich = pick(e, 'MUCDICHSUDUNG', 'MUCDICH', 'MOTA', 'NOIDUNG', 'GHICHU');
             var tinhTrang = pick(e,
-                'TINHTRANG_TEN', 'TRANGTHAI_TEN', 'TRANGTHAIDUYET_TEN',
-                'TINHTRANGDUYET_TEN', 'KETQUAXULY', 'TINHTRANG', 'TRANGTHAI');
+                'TINHTRANG_DUYET_TEN', 'TINHTRANGDUYET_TEN', 'TRANGTHAIDUYET_TEN',
+                'TINHTRANG_TEN', 'TRANGTHAI_TEN', 'KETQUAXULY',
+                'TINHTRANG', 'TRANGTHAI');
             var rowId = pick(e,
-                'ID',
-                'TKB_DANGKY_PHONG_ID', 'TKB_DANGKYPHONG_ID',
-                'TKB_DK_PHONG_TG_ID', 'TKB_DK_P_TG_ID', 'TKB_DK_PHONG_ID',
-                'DANGKY_PHONG_ID', 'DANGKYPHONG_ID',
-                'TKB_DANGKY_PHONG_TG_ID', 'DK_PHONG_TG_ID', 'DK_PHONG_ID');
+                'TKB_DANGKY_PHONG_THOIGIAN_ID', 'TKB_DK_PHONG_THOIGIAN_ID',
+                'TKB_DANGKY_PHONG_ID', 'TKB_DK_PHONG_ID',
+                'TKB_DK_P_TG_ID', 'TKB_DANGKY_PHONG_TG_ID', 'ID');
             if (!rowId) {
-                console.warn("[DangKyMuonPhong] row missing ID, available keys:", Object.keys(e));
+                console.warn("[KetQuaCaNhan] row missing ID, available keys:", Object.keys(e));
             }
 
             var strGioBD = gioPhutBD !== ""
