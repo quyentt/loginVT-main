@@ -219,36 +219,95 @@ KeHoachDangKy.prototype = {
         $("#btnAddXuLyLHP").click(function () {
             me.openModal_ChonLHP();
         });
+        $("#chkSelectAll_XuLyLHP").on('change', function () {
+            var checked = this.checked;
+            for (var i = 0; i < me.dtXuLyLHP_All.length; i++) me.dtXuLyLHP_All[i]._selected = checked;
+            $("#tblXuLyLHP tbody .chkRow_XuLyLHP").prop('checked', checked);
+        });
+        $("#tblXuLyLHP").delegate('.chkRow_XuLyLHP', 'change', function () {
+            var idx = parseInt($(this).closest('tr').attr('data-idx'));
+            if (!isNaN(idx)) me.dtXuLyLHP_All[idx]._selected = this.checked;
+            me.syncSelectAll_XuLyLHP();
+        });
+        $("#tblXuLyLHP").delegate('.dropXuLyDacThu', 'change', function () {
+            var idx = parseInt($(this).closest('tr').attr('data-idx'));
+            if (!isNaN(idx)) me.dtXuLyLHP_All[idx].XULYDACTHU_ID = $(this).val();
+        });
+        $("#btnApDungTatCa").click(function () {
+            var bulkVal = $("#dropBulkXuLyDacThu").val() || '';
+            if (!bulkVal) {
+                edu.system.alert("Vui lòng chọn xử lý đặc thù trước khi áp dụng!");
+                return;
+            }
+            var data = me.dtXuLyLHP_All || [];
+            if (data.length === 0) {
+                edu.system.alert("Chưa có lớp học phần nào trong bảng!");
+                return;
+            }
+            var hasPicked = data.some(function (d) { return d._selected; });
+            var changed = 0;
+            for (var i = 0; i < data.length; i++) {
+                if (!hasPicked || data[i]._selected) {
+                    data[i].XULYDACTHU_ID = bulkVal;
+                    changed++;
+                }
+            }
+            me.renderPage_XuLyLHP();
+            edu.system.alert("Đã áp dụng cho " + changed + " dòng.");
+        });
+        $("#dropPageSize_XuLyLHP").on('change', function () {
+            me.pageSize_XuLyLHP = parseInt($(this).val()) || 20;
+            me.pageIndex_XuLyLHP = 1;
+            me.renderPage_XuLyLHP();
+        });
+        $("#pager_XuLyLHP").delegate('.btnPage_XuLyLHP', 'click', function () {
+            var p = parseInt($(this).attr('data-page'));
+            if (!isNaN(p)) {
+                me.pageIndex_XuLyLHP = p;
+                me.renderPage_XuLyLHP();
+            }
+        });
         $("#tblChonLHP").delegate('.chkChonLHP', 'change', function () {
             var $tr = $(this).closest('tr');
             var lhpId = $tr.attr('data-id') || '';
             if (this.checked) {
-                var dataRow = {
+                me.addRow_XuLyLHP({
                     TENLOP: $tr.attr('data-tenlop') || '',
                     MALOP: $tr.attr('data-malop') || '',
                     DANGKY_LOPHOCPHAN_ID: lhpId
-                };
-                me.addRow_XuLyLHP(dataRow);
+                });
                 $tr.addClass('row-selected');
             }
             else {
-                var $target = $("#tblXuLyLHP tbody tr[data-lhp-id='" + lhpId + "']");
-                var savedId = $target.attr('data-id') || '';
-                if (savedId) {
+                var foundIdx = -1, foundSaved = false;
+                for (var i = 0; i < me.dtXuLyLHP_All.length; i++) {
+                    if (me.dtXuLyLHP_All[i].DANGKY_LOPHOCPHAN_ID === lhpId) {
+                        foundIdx = i;
+                        foundSaved = !!me.dtXuLyLHP_All[i].ID;
+                        break;
+                    }
+                }
+                if (foundSaved) {
                     this.checked = true;
                     edu.system.alert("Dòng này đã lưu trong DB. Hãy dùng nút xóa trong bảng bên dưới để xóa.");
                     return;
                 }
-                $target.remove();
-                me.reindexRows_XuLyLHP();
+                if (foundIdx >= 0) {
+                    me.dtXuLyLHP_All.splice(foundIdx, 1);
+                    me.renderPage_XuLyLHP();
+                }
                 $tr.removeClass('row-selected');
             }
+            me.syncHeaderCheckbox_ChonLHP();
         });
         $("#txtSearch_ChonLHP").on('input', function () {
             me.filter_ChonLHP();
         });
         $("#dropLaLopRieng").on('change', function () {
             me.getList_PhanCongLHP();
+        });
+        $("#chkSelectAll_ChonLHP").on('change', function () {
+            me.toggleSelectAll_ChonLHP(this.checked);
         });
         $("#dropPageSize_ChonLHP").on('change', function () {
             me.pageSize_ChonLHP = parseInt($(this).val()) || 20;
@@ -267,16 +326,18 @@ KeHoachDangKy.prototype = {
         });
         $("#tblXuLyLHP").delegate('.btnDeleteXuLyLHP', 'click', function () {
             var $tr = $(this).closest('tr');
-            var rowId = $tr.attr("data-id") || "";
+            var idx = parseInt($tr.attr("data-idx"));
+            if (isNaN(idx)) return;
+            var rowId = me.dtXuLyLHP_All[idx] && me.dtXuLyLHP_All[idx].ID;
             if (rowId) {
                 edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
                 $("#btnYes").click(function () {
-                    me.delete_XuLyLHP(rowId, $tr);
+                    me.delete_XuLyLHP(rowId, idx);
                 });
             }
             else {
-                $tr.remove();
-                me.reindexRows_XuLyLHP();
+                me.dtXuLyLHP_All.splice(idx, 1);
+                me.renderPage_XuLyLHP();
             }
         });
         $("#btnSave_XuLyLHP").click(function () {
@@ -2068,9 +2129,17 @@ KeHoachDangKy.prototype = {
         }
         return options;
     },
+    dtXuLyLHP_All: [],
+    pageIndex_XuLyLHP: 1,
+    pageSize_XuLyLHP: 20,
     openModal_XuLyLHP: function (strId) {
         var me = this;
+        me.dtXuLyLHP_All = [];
+        me.pageIndex_XuLyLHP = 1;
+        me.pageSize_XuLyLHP = parseInt($("#dropPageSize_XuLyLHP").val()) || 20;
         $("#tblXuLyLHP tbody").html("");
+        $("#dropBulkXuLyDacThu").html(me.genOptions_XuLyDacThu(""));
+        $("#chkSelectAll_XuLyLHP").prop({ checked: false, indeterminate: false });
         $("#myModalXuLyLHP").modal("show");
         me.getList_XuLyLHP();
     },
@@ -2078,9 +2147,80 @@ KeHoachDangKy.prototype = {
         var me = this;
         $("#txtSearch_ChonLHP").val("");
         $("#dropLaLopRieng").val("");
+        $("#chkSelectAll_ChonLHP").prop('checked', false);
         $("#tblChonLHP tbody").html("");
         $("#myModalChonLHP").modal("show");
         me.getList_PhanCongLHP();
+    },
+    syncHeaderCheckbox_ChonLHP: function () {
+        var me = this;
+        var existingIds = {};
+        for (var k = 0; k < me.dtXuLyLHP_All.length; k++) {
+            var did = me.dtXuLyLHP_All[k].DANGKY_LOPHOCPHAN_ID;
+            if (did) existingIds[did] = true;
+        }
+        var arr = me.dtChonLHP_Filtered || [];
+        if (arr.length === 0) {
+            $("#chkSelectAll_ChonLHP").prop({ checked: false, indeterminate: false });
+            return;
+        }
+        var selectedCount = 0;
+        for (var i = 0; i < arr.length; i++) {
+            if (existingIds[arr[i].ID]) selectedCount++;
+        }
+        var $hdr = $("#chkSelectAll_ChonLHP");
+        if (selectedCount === 0) {
+            $hdr.prop({ checked: false, indeterminate: false });
+        } else if (selectedCount === arr.length) {
+            $hdr.prop({ checked: true, indeterminate: false });
+        } else {
+            $hdr.prop({ checked: false, indeterminate: true });
+        }
+    },
+    toggleSelectAll_ChonLHP: function (checked) {
+        var me = this;
+        var existingMap = {};
+        for (var i = 0; i < me.dtXuLyLHP_All.length; i++) {
+            var d = me.dtXuLyLHP_All[i];
+            if (d.DANGKY_LOPHOCPHAN_ID) existingMap[d.DANGKY_LOPHOCPHAN_ID] = i;
+        }
+        var arr = me.dtChonLHP_Filtered || [];
+        var blockedSaved = 0;
+        var idsToRemove = {};
+        for (var j = 0; j < arr.length; j++) {
+            var row = arr[j];
+            var lhpId = row.ID;
+            if (!lhpId) continue;
+            if (checked) {
+                if (existingMap.hasOwnProperty(lhpId)) continue;
+                me.dtXuLyLHP_All.push({
+                    ID: '',
+                    DANGKY_LOPHOCPHAN_ID: lhpId,
+                    TENLOP: row.TENLOP,
+                    MALOP: row.MALOP,
+                    XULYDACTHU_ID: '',
+                    _selected: false
+                });
+            }
+            else {
+                if (!existingMap.hasOwnProperty(lhpId)) continue;
+                if (me.dtXuLyLHP_All[existingMap[lhpId]].ID) {
+                    blockedSaved++;
+                    continue;
+                }
+                idsToRemove[lhpId] = true;
+            }
+        }
+        if (!checked && Object.keys(idsToRemove).length) {
+            me.dtXuLyLHP_All = me.dtXuLyLHP_All.filter(function (d) {
+                return !(idsToRemove[d.DANGKY_LOPHOCPHAN_ID] && !d.ID);
+            });
+        }
+        me.renderPage_XuLyLHP();
+        me.renderPage_ChonLHP();
+        if (blockedSaved > 0) {
+            edu.system.alert("Có " + blockedSaved + " lớp đã lưu trước đó nên không thể bỏ chọn ở đây. Hãy dùng nút xóa trong bảng bên dưới.");
+        }
     },
     getList_PhanCongLHP: function () {
         var me = this;
@@ -2171,10 +2311,10 @@ KeHoachDangKy.prototype = {
             return;
         }
         var existingIds = {};
-        $("#tblXuLyLHP tbody tr").each(function () {
-            var id = $(this).attr("data-lhp-id");
-            if (id) existingIds[id] = true;
-        });
+        for (var k = 0; k < me.dtXuLyLHP_All.length; k++) {
+            var did = me.dtXuLyLHP_All[k].DANGKY_LOPHOCPHAN_ID;
+            if (did) existingIds[did] = true;
+        }
         var html = '';
         for (var i = start; i < end; i++) {
             var row = data[i];
@@ -2199,6 +2339,7 @@ KeHoachDangKy.prototype = {
         $tbody.html(html);
         $("#lblPageInfo_ChonLHP").text("(" + (start + 1) + "–" + end + " / " + total + ")");
         me.renderPager_ChonLHP(totalPages);
+        me.syncHeaderCheckbox_ChonLHP();
     },
     renderPager_ChonLHP: function (totalPages) {
         var me = this;
@@ -2243,12 +2384,20 @@ KeHoachDangKy.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                $("#tblXuLyLHP tbody").html("");
                 if (data.Success) {
                     var arr = edu.util.checkValue(data.Data) ? data.Data : [];
-                    for (var i = 0; i < arr.length; i++) {
-                        me.addRow_XuLyLHP(arr[i]);
-                    }
+                    me.dtXuLyLHP_All = arr.map(function (r) {
+                        return {
+                            ID: r.ID || '',
+                            DANGKY_LOPHOCPHAN_ID: r.DANGKY_LOPHOCPHAN_ID || r.LOPHOCPHAN_ID || '',
+                            TENLOP: r.TENLOP || r.DANGKY_LOPHOCPHAN_TEN || r.LOPHOCPHAN_TEN || '',
+                            MALOP: r.MALOP || r.DANGKY_LOPHOCPHAN_MA || r.LOPHOCPHAN_MA || '',
+                            XULYDACTHU_ID: r.XULYDACTHU_ID || r.QUYDINHLOPXULYDACTHU_ID || '',
+                            _selected: false
+                        };
+                    });
+                    me.pageIndex_XuLyLHP = 1;
+                    me.renderPage_XuLyLHP();
                 }
                 else {
                     edu.system.alert(obj_save.action + ": " + data.Message, "w");
@@ -2267,27 +2416,100 @@ KeHoachDangKy.prototype = {
     addRow_XuLyLHP: function (data) {
         var me = this;
         data = data || {};
-        var $tbody = $("#tblXuLyLHP tbody");
-        var stt = $tbody.find("tr").length + 1;
-        var tenLop = data.TENLOP || data.DANGKY_LOPHOCPHAN_TEN || data.LOPHOCPHAN_TEN || "";
-        var maLop = data.MALOP || data.DANGKY_LOPHOCPHAN_MA || data.LOPHOCPHAN_MA || "";
         var lhpId = data.DANGKY_LOPHOCPHAN_ID || "";
-        var html = "";
-        html += "<tr data-id='" + (data.ID || "") + "' data-lhp-id='" + lhpId + "'>";
-        html += "<td class='td-center rowStt'>" + stt + "</td>";
-        html += "<td><input type='text' class='form-control txtTenLop' placeholder='Tên lớp' value='" + tenLop + "' readonly /></td>";
-        html += "<td><input type='text' class='form-control txtMaLop' placeholder='Mã lớp' value='" + maLop + "' readonly /></td>";
-        html += "<td><select class='form-control dropXuLyDacThu'>" + me.genOptions_XuLyDacThu(data.XULYDACTHU_ID || data.QUYDINHLOPXULYDACTHU_ID) + "</select></td>";
-        html += "<td class='td-center'><a class='btn btn-danger btn-sm btnDeleteXuLyLHP' title='Xóa'><i class='fa fa-trash'></i></a></td>";
-        html += "</tr>";
-        $tbody.append(html);
+        for (var i = 0; i < me.dtXuLyLHP_All.length; i++) {
+            if (lhpId && me.dtXuLyLHP_All[i].DANGKY_LOPHOCPHAN_ID === lhpId) return;
+        }
+        me.dtXuLyLHP_All.push({
+            ID: data.ID || '',
+            DANGKY_LOPHOCPHAN_ID: lhpId,
+            TENLOP: data.TENLOP || data.DANGKY_LOPHOCPHAN_TEN || data.LOPHOCPHAN_TEN || '',
+            MALOP: data.MALOP || data.DANGKY_LOPHOCPHAN_MA || data.LOPHOCPHAN_MA || '',
+            XULYDACTHU_ID: data.XULYDACTHU_ID || data.QUYDINHLOPXULYDACTHU_ID || '',
+            _selected: false
+        });
+        me.renderPage_XuLyLHP();
+    },
+    renderPage_XuLyLHP: function () {
+        var me = this;
+        var $tbody = $("#tblXuLyLHP tbody");
+        var data = me.dtXuLyLHP_All || [];
+        var total = data.length;
+        var pageSize = me.pageSize_XuLyLHP || 20;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (me.pageIndex_XuLyLHP > totalPages) me.pageIndex_XuLyLHP = totalPages;
+        if (me.pageIndex_XuLyLHP < 1) me.pageIndex_XuLyLHP = 1;
+        var start = (me.pageIndex_XuLyLHP - 1) * pageSize;
+        var end = Math.min(start + pageSize, total);
+        $tbody.html("");
+        if (total === 0) {
+            $("#lblPageInfo_XuLyLHP").text("");
+            $("#pager_XuLyLHP").html("");
+            me.syncSelectAll_XuLyLHP();
+            return;
+        }
+        var html = '';
+        for (var i = start; i < end; i++) {
+            var d = data[i];
+            html += "<tr data-idx='" + i + "' data-id='" + (d.ID || "") + "' data-lhp-id='" + (d.DANGKY_LOPHOCPHAN_ID || "") + "'>";
+            html += "<td class='td-center'><input type='checkbox' class='chkRow_XuLyLHP'" + (d._selected ? " checked" : "") + " /> <span class='rowStt' style='margin-left:4px;'>" + (i + 1) + "</span></td>";
+            html += "<td><input type='text' class='form-control txtTenLop' value=\"" + String(d.TENLOP || '').replace(/"/g, '&quot;') + "\" readonly /></td>";
+            html += "<td><input type='text' class='form-control txtMaLop' value=\"" + String(d.MALOP || '').replace(/"/g, '&quot;') + "\" readonly /></td>";
+            html += "<td><select class='form-control dropXuLyDacThu'>" + me.genOptions_XuLyDacThu(d.XULYDACTHU_ID) + "</select></td>";
+            html += "<td class='td-center'><a class='btn btn-danger btn-sm btnDeleteXuLyLHP' title='Xóa'><i class='fa fa-trash'></i></a></td>";
+            html += "</tr>";
+        }
+        $tbody.html(html);
+        $("#lblPageInfo_XuLyLHP").text("(" + (start + 1) + "–" + end + " / " + total + ")");
+        me.renderPager_XuLyLHP(totalPages);
+        me.syncSelectAll_XuLyLHP();
+    },
+    renderPager_XuLyLHP: function (totalPages) {
+        var me = this;
+        var cur = me.pageIndex_XuLyLHP;
+        var $pager = $("#pager_XuLyLHP");
+        var html = '';
+        var btn = function (label, page, disabled, active) {
+            var cls = 'btn btn-sm btnPage_XuLyLHP ' + (active ? 'btn-primary' : 'btn-default');
+            return '<button type="button" class="' + cls + '" data-page="' + page + '"' + (disabled ? ' disabled' : '') + ' style="min-width:34px">' + label + '</button>';
+        };
+        html += btn('«', 1, cur == 1, false);
+        html += btn('‹', cur - 1, cur == 1, false);
+        var from = Math.max(1, cur - 2);
+        var to = Math.min(totalPages, cur + 2);
+        if (from > 1) {
+            html += btn(1, 1, false, cur == 1);
+            if (from > 2) html += '<span style="padding:0 6px; line-height:30px;">…</span>';
+        }
+        for (var p = from; p <= to; p++) {
+            html += btn(p, p, false, p == cur);
+        }
+        if (to < totalPages) {
+            if (to < totalPages - 1) html += '<span style="padding:0 6px; line-height:30px;">…</span>';
+            html += btn(totalPages, totalPages, false, cur == totalPages);
+        }
+        html += btn('›', cur + 1, cur == totalPages, false);
+        html += btn('»', totalPages, cur == totalPages, false);
+        $pager.html(html);
+    },
+    syncSelectAll_XuLyLHP: function () {
+        var me = this;
+        var data = me.dtXuLyLHP_All || [];
+        var selCnt = 0;
+        for (var i = 0; i < data.length; i++) if (data[i]._selected) selCnt++;
+        var $h = $("#chkSelectAll_XuLyLHP");
+        if (data.length === 0) { $h.prop({ checked: false, indeterminate: false }); return; }
+        if (selCnt === 0) $h.prop({ checked: false, indeterminate: false });
+        else if (selCnt === data.length) $h.prop({ checked: true, indeterminate: false });
+        else $h.prop({ checked: false, indeterminate: true });
     },
     reindexRows_XuLyLHP: function () {
-        $("#tblXuLyLHP tbody tr").each(function (i) {
-            $(this).find(".rowStt").text(i + 1);
+        $("#tblXuLyLHP tbody tr").each(function () {
+            var idx = parseInt($(this).attr("data-idx"));
+            if (!isNaN(idx)) $(this).find(".rowStt").text(idx + 1);
         });
     },
-    delete_XuLyLHP: function (strId, $tr) {
+    delete_XuLyLHP: function (strId, idx) {
         var me = this;
         var obj_delete = {
             'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4HgoJHg0uMQkxHgUgIhUpNB4FJC0P',
@@ -2302,9 +2524,9 @@ KeHoachDangKy.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    if ($tr && $tr.length) {
-                        $tr.remove();
-                        me.reindexRows_XuLyLHP();
+                    if (typeof idx === 'number' && idx >= 0 && idx < me.dtXuLyLHP_All.length) {
+                        me.dtXuLyLHP_All.splice(idx, 1);
+                        me.renderPage_XuLyLHP();
                     }
                     edu.system.afterComfirm({
                         content: "Xóa thành công!",
@@ -2333,19 +2555,15 @@ KeHoachDangKy.prototype = {
     },
     save_XuLyLHP: function () {
         var me = this;
+        var data = me.dtXuLyLHP_All || [];
         var arrRow = [];
         var hasInvalid = false;
-        $("#tblXuLyLHP tbody tr").each(function () {
-            var rowId = $(this).attr("data-id") || "";
-            var lhpId = $(this).attr("data-lhp-id") || "";
-            var xuLyId = $(this).find(".dropXuLyDacThu").val() || "";
-            if (!lhpId) return;
-            if (!xuLyId) {
-                hasInvalid = true;
-                return;
-            }
-            arrRow.push({ rowId: rowId, lhpId: lhpId, xuLyId: xuLyId });
-        });
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            if (!d.DANGKY_LOPHOCPHAN_ID) continue;
+            if (!d.XULYDACTHU_ID) { hasInvalid = true; continue; }
+            arrRow.push({ rowId: d.ID || '', lhpId: d.DANGKY_LOPHOCPHAN_ID, xuLyId: d.XULYDACTHU_ID });
+        }
         if (hasInvalid) {
             edu.system.alert("Vui lòng chọn xử lý đặc thù cho tất cả lớp học phần!");
             return;
