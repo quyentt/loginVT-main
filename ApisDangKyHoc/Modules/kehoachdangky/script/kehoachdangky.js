@@ -304,7 +304,7 @@ KeHoachDangKy.prototype = {
             me.filter_ChonLHP();
         });
         $("#dropLaLopRieng").on('change', function () {
-            me.getList_PhanCongLHP();
+            me.filter_ChonLHP();
         });
         $("#chkSelectAll_ChonLHP").on('change', function () {
             me.toggleSelectAll_ChonLHP(this.checked);
@@ -324,21 +324,8 @@ KeHoachDangKy.prototype = {
         $("#btnSave_ChonLHP").click(function () {
             $("#myModalChonLHP").modal("hide");
         });
-        $("#tblXuLyLHP").delegate('.btnDeleteXuLyLHP', 'click', function () {
-            var $tr = $(this).closest('tr');
-            var idx = parseInt($tr.attr("data-idx"));
-            if (isNaN(idx)) return;
-            var rowId = me.dtXuLyLHP_All[idx] && me.dtXuLyLHP_All[idx].ID;
-            if (rowId) {
-                edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
-                $("#btnYes").click(function () {
-                    me.delete_XuLyLHP(rowId, idx);
-                });
-            }
-            else {
-                me.dtXuLyLHP_All.splice(idx, 1);
-                me.renderPage_XuLyLHP();
-            }
+        $("#btnDeleteSelected_XuLyLHP").click(function () {
+            me.deleteSelected_XuLyLHP();
         });
         $("#btnSave_XuLyLHP").click(function () {
             me.save_XuLyLHP();
@@ -2269,7 +2256,12 @@ KeHoachDangKy.prototype = {
                 ID: row.DANGKY_LOPHOCPHAN_ID || row.LOPHOCPHAN_ID || row.ID || '',
                 TENLOP: row.DANGKY_LOPHOCPHAN_TEN || row.LOPHOCPHAN_TEN || row.TENLOP || '',
                 MALOP: row.DANGKY_LOPHOCPHAN_MA || row.LOPHOCPHAN_MA || row.MALOP || '',
-                LALOPRIENG: (row.LALOPRIENG == 1 || row.LA_LOP_RIENG == 1 || row.LALOPRIENG === '1' || row.LA_LOP_RIENG === '1') ? 1 : 0
+                LALOPRIENG: (
+                    row.LOPRIENG == 1 || row.LOPRIENG === '1' ||
+                    row.LopRieng == 1 || row.LopRieng === '1' ||
+                    row.LALOPRIENG == 1 || row.LALOPRIENG === '1' ||
+                    row.LA_LOP_RIENG == 1 || row.LA_LOP_RIENG === '1'
+                ) ? 1 : 0
             };
         });
         me.pageIndex_ChonLHP = 1;
@@ -2279,15 +2271,17 @@ KeHoachDangKy.prototype = {
     filter_ChonLHP: function () {
         var me = this;
         var kw = ($("#txtSearch_ChonLHP").val() || '').toLowerCase().trim();
-        if (!kw) {
-            me.dtChonLHP_Filtered = me.dtChonLHP_All.slice();
-        }
-        else {
-            me.dtChonLHP_Filtered = me.dtChonLHP_All.filter(function (row) {
-                return (row.TENLOP || '').toLowerCase().indexOf(kw) !== -1
+        var laRiengFilter = $("#dropLaLopRieng").val() || '';
+        me.dtChonLHP_Filtered = me.dtChonLHP_All.filter(function (row) {
+            if (kw) {
+                var hit = (row.TENLOP || '').toLowerCase().indexOf(kw) !== -1
                     || (row.MALOP || '').toLowerCase().indexOf(kw) !== -1;
-            });
-        }
+                if (!hit) return false;
+            }
+            if (laRiengFilter === '1' && row.LALOPRIENG != 1) return false;
+            if (laRiengFilter === '0' && row.LALOPRIENG == 1) return false;
+            return true;
+        });
         me.pageIndex_ChonLHP = 1;
         me.renderPage_ChonLHP();
     },
@@ -2326,8 +2320,8 @@ KeHoachDangKy.prototype = {
             var chk = '<input type="checkbox" class="chkChonLHP" style="width:18px; height:18px; cursor:pointer;"'
                 + (already ? ' checked' : '') + ' />';
             var badgeRieng = laLopRieng
-                ? '<span class="badge" style="background:#198754; color:#fff; padding:3px 8px; border-radius:10px;">Có</span>'
-                : '<span style="color:#aaa;">—</span>';
+                ? '<span class="badge" style="background:#198754; color:#fff; padding:3px 10px; border-radius:10px;">Có</span>'
+                : '<span class="badge" style="background:#6c757d; color:#fff; padding:3px 10px; border-radius:10px;">Không</span>';
             html += "<tr data-id='" + id + "' data-tenlop='" + String(tenLop).replace(/'/g, "&#39;") + "' data-malop='" + String(maLop).replace(/'/g, "&#39;") + "'" + (already ? " class='row-selected'" : "") + ">";
             html += "<td class='td-center'>" + (i + 1) + "</td>";
             html += "<td class='td-left'>" + tenLop + "</td>";
@@ -2456,7 +2450,6 @@ KeHoachDangKy.prototype = {
             html += "<td><input type='text' class='form-control txtTenLop' value=\"" + String(d.TENLOP || '').replace(/"/g, '&quot;') + "\" readonly /></td>";
             html += "<td><input type='text' class='form-control txtMaLop' value=\"" + String(d.MALOP || '').replace(/"/g, '&quot;') + "\" readonly /></td>";
             html += "<td><select class='form-control dropXuLyDacThu'>" + me.genOptions_XuLyDacThu(d.XULYDACTHU_ID) + "</select></td>";
-            html += "<td class='td-center'><a class='btn btn-danger btn-sm btnDeleteXuLyLHP' title='Xóa'><i class='fa fa-trash'></i></a></td>";
             html += "</tr>";
         }
         $tbody.html(html);
@@ -2509,7 +2502,42 @@ KeHoachDangKy.prototype = {
             if (!isNaN(idx)) $(this).find(".rowStt").text(idx + 1);
         });
     },
-    delete_XuLyLHP: function (strId, idx) {
+    deleteSelected_XuLyLHP: function () {
+        var me = this;
+        var data = me.dtXuLyLHP_All || [];
+        var savedIds = [];
+        var unsavedIds = {};
+        for (var i = 0; i < data.length; i++) {
+            if (!data[i]._selected) continue;
+            if (data[i].ID) savedIds.push(data[i].ID);
+            else if (data[i].DANGKY_LOPHOCPHAN_ID) unsavedIds[data[i].DANGKY_LOPHOCPHAN_ID] = true;
+        }
+        var totalSel = savedIds.length + Object.keys(unsavedIds).length;
+        if (totalSel == 0) {
+            edu.system.alert("Vui lòng tick chọn ít nhất một dòng!");
+            return;
+        }
+        edu.system.confirm("Bạn có chắc chắn muốn xóa " + totalSel + " dòng đã chọn?");
+        $("#btnYes").click(function () {
+            if (Object.keys(unsavedIds).length) {
+                me.dtXuLyLHP_All = me.dtXuLyLHP_All.filter(function (d) {
+                    return !(unsavedIds[d.DANGKY_LOPHOCPHAN_ID] && !d.ID);
+                });
+            }
+            if (savedIds.length == 0) {
+                me.renderPage_XuLyLHP();
+                edu.system.afterComfirm({ content: "Đã xóa " + totalSel + " dòng!", code: "" });
+                return;
+            }
+            me._delCount = 0;
+            me._delTotal = savedIds.length;
+            me._delFailed = 0;
+            for (var j = 0; j < savedIds.length; j++) {
+                me.delete_XuLyLHP(savedIds[j], null, true);
+            }
+        });
+    },
+    delete_XuLyLHP: function (strId, idx, isBulk) {
         var me = this;
         var obj_delete = {
             'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4HgoJHg0uMQkxHgUgIhUpNB4FJC0P',
@@ -2521,9 +2549,30 @@ KeHoachDangKy.prototype = {
             'strChucNangHeThong_Id': edu.system.strChucNang_Id,
             'strHanhDong_Code': '',
         };
+        var onDone = function (success, message) {
+            if (!isBulk) return;
+            if (!success) me._delFailed++;
+            me._delCount++;
+            if (success) {
+                me.dtXuLyLHP_All = me.dtXuLyLHP_All.filter(function (d) { return d.ID !== strId; });
+            }
+            if (me._delCount >= me._delTotal) {
+                me.renderPage_XuLyLHP();
+                var ok = me._delTotal - me._delFailed;
+                if (me._delFailed == 0) {
+                    edu.system.afterComfirm({ content: "Đã xóa " + ok + " dòng!", code: "" });
+                } else {
+                    edu.system.afterComfirm({ content: "Xóa " + ok + "/" + me._delTotal + " dòng. " + me._delFailed + " dòng lỗi.", code: "w" });
+                }
+            }
+        };
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
+                    if (isBulk) {
+                        onDone(true);
+                        return;
+                    }
                     if (typeof idx === 'number' && idx >= 0 && idx < me.dtXuLyLHP_All.length) {
                         me.dtXuLyLHP_All.splice(idx, 1);
                         me.renderPage_XuLyLHP();
@@ -2534,6 +2583,7 @@ KeHoachDangKy.prototype = {
                     });
                 }
                 else {
+                    if (isBulk) { onDone(false); return; }
                     edu.system.afterComfirm({
                         content: obj_delete.action + ": " + data.Message,
                         code: "w"
@@ -2541,6 +2591,7 @@ KeHoachDangKy.prototype = {
                 }
             },
             error: function (er) {
+                if (isBulk) { onDone(false); return; }
                 edu.system.afterComfirm({
                     content: obj_delete.action + " (er): " + JSON.stringify(er),
                     code: "w"

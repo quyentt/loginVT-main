@@ -1405,6 +1405,7 @@
                     <select id="dropLaLopRieng" class="form-control">
                         <option value="">Tất cả lớp</option>
                         <option value="1">Chỉ lớp riêng</option>
+                        <option value="0">Không phải lớp riêng</option>
                     </select>
                 </div>
                 <div class="clear"></div>
@@ -1483,6 +1484,14 @@
                         <i class="fa fa-magic"></i> Áp dụng
                     </a>
                 </div>
+                <div class="mb-10" style="display:flex; justify-content:flex-end; gap:6px;">
+                    <a class="btn btn-danger btn-sm" id="btnDeleteSelected_XuLyLHP">
+                        <i class="fa fa-trash"></i> Xóa các dòng đã chọn
+                    </a>
+                    <a class="btn btn-success btn-sm" id="btnAddXuLyLHP">
+                        <i class="fa fa-plus"></i> Thêm lớp
+                    </a>
+                </div>
                 <div class="aps-table-select">
                     <table id="tblXuLyLHP" class="table table-hover table-bordered mb-0 tblXuLyLHP">
                         <thead>
@@ -1493,11 +1502,6 @@
                                 <th class="td-center">Lớp học phần</th>
                                 <th class="td-center">Mã lớp</th>
                                 <th class="td-center">Xử lý đặc thù</th>
-                                <th class="td-fixed td-center w-80px">
-                                    <a class="btn btn-success btn-sm btnAddXuLyLHP" id="btnAddXuLyLHP">
-                                        <i class="fa fa-plus"></i> Thêm lớp
-                                    </a>
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1535,7 +1539,7 @@
     </div>
 </div>
 <!-- page script -->
-<script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.4"></script>
+<script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.8"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachDangKy'] = new KeHoachDangKy();
