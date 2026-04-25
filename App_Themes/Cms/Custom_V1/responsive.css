@@ -185,6 +185,10 @@
         margin-left: -10px !important;
         margin-right: -10px;
     }
+
+    .zone_input_dinhhuong .aps-form .aps-form-item .aps-form-lable {
+        width: 200px;
+    }
 }
 
 @media (min-width: 1024px) and (max-width: 1280px) {
@@ -213,6 +217,11 @@
 }
 
 @media (max-width: 1024px) {
+
+    .sidebar-menu.aps-list-hocphan {
+        border-bottom: 1px solid #e1e1e1;
+    }
+
     .zone_inputhocphan_khoibatbuoc .aps-form-item .aps-form-input {
         width: 100% !important;
     }
@@ -873,6 +882,22 @@
 }
 
 @media (min-width: 800px) and (max-width: 1024px) {
+
+    .aps-list-hocphan.sidebar-menu .item-li .submit.btn,
+    .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
+        right: 0px !important;
+    }
+
+    .table-khoibatbuoc .aps-list-hocphan.sidebar-menu li a,
+    .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu li a {
+        padding: 13px 0 11px 0 !important;
+    }
+
+    .table-khoibatbuoc .aps-list-hocphan.sidebar-menu>li>a span,
+    .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu>li>a span {
+        width: 74% !important;
+    }
+
     .zone_chuongtrinhhocphan-right {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr);
@@ -985,6 +1010,42 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+
+    .tblInput_HocPhan_ThayThe .aps-form-input .form-control,
+    .tblInput_HocPhan_QuanHeTT .aps-form-input .form-control,
+    .tblInput_HocPhan_QuanHe .aps-form-input .form-control,
+    .tblInput_HocPhan_BaiHoc .aps-form-input .form-control {
+        min-width: 100px;
+    }
+
+    .tblInput_HocPhan_ThayThe,
+    .tblInput_HocPhan_BaiHoc {
+        min-width: 1200px !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6.mb-10 {
+        width: 100%;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-4,
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6.aps-form-lable.justify-content-end {
+        width: 40% !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-8,
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6.aps-form-input {
+        width: 60% !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .aps-form-lable {
+        line-height: 38px !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item.row {
+        margin-bottom: -20px !important;
+    }
+
+    /* ----------------- */
     .myModalKeThua .modal-body .aps-add-new.pd20 {
         padding-left: 0px !important;
         padding-right: 0px !important;
@@ -1164,6 +1225,18 @@
 
 
 @media (min-width: 600px) and (max-width: 1024px) {
+    .zone_chuongtrinhhocphan-right {
+        padding-top: 5px;
+    }
+
+    .zone_input_dinhhuong .col-sm-7.pr20 {
+        width: 100% !important;
+        padding-right: 0px !important;
+    }
+
+    .zone_input_dinhhuong .aps-form .aps-form-item .aps-form-lable {
+        width: 200px;
+    }
 
     .row.aps-form-item.gap10.aps-form-tuchon .col-sm-3.aps-form-input,
     .row.aps-form-item.gap10.aps-form-tuchon .col-sm-3.aps-form-input .form-control,
@@ -1212,14 +1285,7 @@
 
     /* ------------- */
 
-    .zone_chuongtrinhhocphan-right .box-header .pull-right .btnAdd,
-    .zone_chuongtrinhhocphan-right .box-header .btn.submit {
-        width: 32px !important;
-        height: 32px !important;
-        border-radius: 30px !important;
-        line-height: 32px !important;
-        padding: 0 !important;
-    }
+
 
     .zone_chuongtrinhhocphan-right .box.box-solid .box-header {
         display: grid !important;
@@ -1398,6 +1464,41 @@
         padding-left: 10px !important;
         padding-right: 10px !important;
     }
+
+    /* --------------------- */
+    .tblInput_HocPhan_QuanHe,
+    .tblInput_HocPhan_QuanHeTT {
+        min-width: 1400px !important;
+    }
+
+    /* ---------------- */
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list {
+        grid-template-columns: 100% !important;
+        padding-right: 0px !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item {
+        display: grid !important;
+        grid-template-columns: 50% 50%;
+        gap: 10px;
+        padding-right: 10px;
+        margin-bottom: 0 !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-12,
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6 {
+        margin-bottom: 0 !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item::before {
+        display: none;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .aps-form-lable {
+        color: #666;
+        line-height: 26px;
+        justify-content: flex-start !important;
+    }
 }
 
 @media (min-width: 768px) and (max-width: 799px) {
@@ -1421,6 +1522,94 @@
 
 @media (min-width: 600px) and (max-width:767px) {
 
+    .table-khoibatbuoc .box-sub-search .item-search,
+    .table-khoibatbuoc .inputSearch.mr-10 {
+        padding-right: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    /* ----------------------- */
+    .table-mobi.aps-form-table {
+        overflow: hidden !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT,
+    .table-mobi .table {
+        min-width: 100% !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT tfoot tr,
+    .table-mobi .table tr {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        min-width: 100% !important;
+    }
+
+
+    .tblInput_HocPhan_QuanHeTT tr td:last-child,
+    .table-mobi .table tr td:last-child {
+        grid-column: 1 / -1 !important;
+        /* Chạy từ cột 1 đến cột cuối cùng */
+        text-align: right !important;
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT tr td a.btn,
+    .table-mobi .table tr td a.btn {
+        width: 60%;
+        border: 1px solid var(--color-blue) !important;
+    }
+
+    .table-mobi .table tr td a.btn:hover {
+        color: #fff !important;
+        background: var(--color-blue) !important;
+        border: 1px solid var(--color-blue) !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr td,
+    .table-mobi .table tr td {
+        border-left: 0 solid #d1d1d1 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr .aps-table-lable,
+    .table-mobi .table tr .aps-table-lable {
+        line-height: 38px;
+    }
+
+
+    .scroll-table-x .tblInput_HocPhan_QuanHeTT.table tr:last-child,
+    .table-mobi .table tfoot tr:last-child,
+    .table-mobi .table tbody tr:last-child {
+        border-bottom: 0px solid #d1d1d1 !important;
+        border-right: 0px solid #d1d1d1 !important;
+        border: 0 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table>tr>td:first-child,
+    .table-mobi .table tfoot>tr>td:first-child {
+        border-left: 0 solid #e1e1e1 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table .td-fixed,
+    .table-mobi .table .td-fixed {
+        width: 100% !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr td,
+    .table-mobi .table tr td {
+        border-top: 0px solid #c1c1c1 !important;
+        padding-bottom: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr td:last-child,
+    .table-mobi .table tr td:last-child {
+        border-right: 0 solid #d1d1d1;
+    }
+
+    /* -------------------------------- */
     .info-tblModal_SinhVien,
     .light-paginationtblModal_SinhVien {
         width: 100% !important;
@@ -1438,7 +1627,7 @@
         margin-bottom: 0 !important;
     }
 
-    .aps-colum-2 .col-sm-5.row,
+    .aps-colum-2 .col-sm-6.row,
     .aps-colum-2 .col-sm-7.row {
         width: 100% !important;
         display: flex !important;
@@ -1870,6 +2059,120 @@
 
 @media only screen and (max-width: 599px) {
 
+    .zone_chuongtrinhhocphan-right .box-header .pull-right .btnAdd,
+    .zone_chuongtrinhhocphan-right .box-header .btn.submit {
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 30px !important;
+        line-height: 32px !important;
+        padding: 0 !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list {
+        display: block !important;
+        padding-right: 0 !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .col-sm-12,
+    .zone_edithocphan .box-view.aps-add-new .aps-form-list .col-sm-6.mb-10 {
+        display: flex !important;
+    }
+
+    .zone_edithocphan .box-view.aps-add-new .aps-form-item .aps-form-lable {
+        justify-content: flex-start !important;
+        min-width: 135px;
+    }
+
+    .zone_edithocphan .aps-form .table {
+        min-width: 1200px;
+    }
+
+    /* ----------------------- */
+    .table-mobi.aps-form-table {
+        overflow: hidden !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT,
+    .table-mobi .table {
+        min-width: 100% !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT tfoot tr,
+    .table-mobi .table tr {
+        display: grid;
+        grid-template-columns: 40% 60%;
+        min-width: 100% !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT tfoot tr,
+    .tblInput_HocPhan_ThayThe tfoot tr {
+        grid-template-columns: 50% 50% !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT tr td:last-child,
+    .table-mobi .table tr td:last-child {
+        grid-column: 1 / -1 !important;
+        /* Chạy từ cột 1 đến cột cuối cùng */
+        text-align: right !important;
+        border-bottom: 1px solid #e1e1e1;
+        padding-bottom: 10px !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT tr td a.btn,
+    .table-mobi .table tr td a.btn {
+        width: 50%;
+        border: 1px solid var(--color-blue) !important;
+    }
+
+    .table-mobi .table tr td a.btn:hover {
+        color: #fff !important;
+        background: var(--color-blue) !important;
+        border: 1px solid var(--color-blue) !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr td,
+    .table-mobi .table tr td {
+        border-left: 0 solid #d1d1d1 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr .aps-table-lable,
+    .table-mobi .table tr .aps-table-lable {
+        line-height: 38px;
+    }
+
+
+    .scroll-table-x .tblInput_HocPhan_QuanHeTT.table tr:last-child,
+    .table-mobi .table tfoot tr:last-child,
+    .table-mobi .table tbody tr:last-child {
+        border-bottom: 0px solid #d1d1d1 !important;
+        border-right: 0px solid #d1d1d1 !important;
+        border: 0 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table>tr>td:first-child,
+    .table-mobi .table tfoot>tr>td:first-child {
+        border-left: 0 solid #e1e1e1 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table .td-fixed,
+    .table-mobi .table .td-fixed {
+        width: 100% !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr td,
+    .table-mobi .table tr td {
+        border-top: 0px solid #c1c1c1 !important;
+        padding-bottom: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .tblInput_HocPhan_QuanHeTT.table tr td:last-child,
+    .table-mobi .table tr td:last-child {
+        border-right: 0 solid #d1d1d1;
+    }
+
+    /* ------------------- */
     .zone_inputhocphan_khoibatbuoc .table-khoibatbuoc tr td {
         width: 95% !important;
     }
@@ -1961,11 +2264,19 @@
         margin-bottom: 0 !important;
     }
 
-    .aps-colum-2 .col-sm-5.row,
+    .aps-colum-2 .col-sm-6.row,
     .aps-colum-2 .col-sm-7.row {
         width: 100% !important;
         display: flex !important;
         margin-bottom: 10px !important;
+    }
+
+    .zone_chuongtrinhhocphan-right .box-header .btn .lang {
+        display: none !important;
+    }
+
+    .zone_chuongtrinhhocphan-right .box-header .btn i {
+        padding-right: 0px !important;
     }
 
     .zone_input_dinhhuong .box-view.aps-add-new .col-sm-7.pr20 {

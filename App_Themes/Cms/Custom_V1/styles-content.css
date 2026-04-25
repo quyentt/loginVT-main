@@ -11284,3 +11284,14 @@ table#clone {
 .myModalKeThua .modal-dialog {
     max-width: 1440px;
 }
+
+/* ------------------ */
+.aps-form-item.d-block{
+    display: block !important;
+}
+.zone_edithocphan .box-view.aps-add-new .aps-form-list {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 20px;
+    padding-right: 20px;
+}
