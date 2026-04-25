@@ -367,7 +367,7 @@
 
         <!--Chỉnh sửa học phần:-->
         <div class="box box-solid form-container zone-content add-absolue pd0 zone_edithocphan" id="zone_edithocphan"
-            style="display: block;">
+            style="display: none;">
             <div class="box-header with-border bg-blue">
                 <h3 class="box-title">
                     <i class="fa-solid fa-pen-field"></i> Chỉnh sửa học phần:
@@ -390,60 +390,80 @@
                                     phần</span>
                             </p>
                         </div>
-                        <!--row 2-->
-                        <div class="row aps-form-item">
-                            <div class="col-sm-2 aps-form-lable">Mã học phần</div>
-                            <div class="col-sm-4 aps-form-input">
-                                <input id="txtHocPhan_MaHocPhan" class="form-control" />
+                        <div class="aps-form-list">
+                            <!--row 2-->
+                            <div class="row aps-form-item d-block">
+                                <div class="col-sm-12 mb-10">
+                                    <div class="col-sm-4 aps-form-lable">Mã học phần</div>
+                                    <div class="col-sm-8 aps-form-input">
+                                        <input id="txtHocPhan_MaHocPhan" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 mb-10">
+                                    <div class="col-sm-4 aps-form-lable pr15">Tên học phần</div>
+                                    <div class="col-sm-8 aps-form-input">
+                                        <input id="txtHocPhan_TenHocPhan" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 mb-10">
+                                    <div class="col-sm-4 aps-form-lable">Phạm vi đảm nhiệm</div>
+                                    <div class="col-sm-8 aps-form-input">
+                                        <select id="dropHocPhan_PhamViDamNhiem" class="select-opt"></select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <div class="col-sm-4 aps-form-lable">Thuộc tính học phần
+                                    </div>
+                                    <div class="col-sm-8 aps-form-input">
+                                        <select id="dropHocPhan_ThuocTinh" class="select-opt"></select>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Tên học phần</div>
-                            <div class="col-sm-4 aps-form-input">
-                                <input id="txtHocPhan_TenHocPhan" class="form-control" />
+                            <!--row 3-->
+                            <div class="row aps-form-item d-block">
+                                <div class="col-sm-6 mb-10">
+                                    <div class="col-sm-6 aps-form-lable justify-content-end pr15">Số tín học phần</div>
+                                    <div class="col-sm-6 aps-form-input">
+                                        <input id="txtHocPhan_SoTinHocPhan" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-10">
+                                    <div class="col-sm-6 aps-form-lable justify-content-end pr15">Số tín học phí</div>
+                                    <div class="col-sm-6 aps-form-input">
+                                        <input id="txtHocPhan_SoTinHocPhi" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-10">
+                                    <div class="col-sm-6 aps-form-lable justify-content-end pr15">Là môn tính điểm</div>
+                                    <div class="col-sm-6 aps-form-input">
+                                        <select id="dropHocPhan_LaMonTinhDiem" class="select-opt">
+                                            <option value="1">Tính điểm</option>
+                                            <option value="0">Không tính điểm</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-10">
+                                    <div class="col-sm-6 aps-form-lable justify-content-end pr15">Học kỳ dự kiến</div>
+                                    <div class="col-sm-6 aps-form-input">
+                                        <select id="dropHocPhan_HocKyDuKien" class="select-opt"
+                                            multiple="multiple"></select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-10">
+                                    <div class="col-sm-6 aps-form-lable justify-content-end pr15">Học kỳ thực tế</div>
+                                    <div class="col-sm-6 aps-form-input">
+                                        <select id="dropHocPhan_HocKyThucTe" class="select-opt"
+                                            multiple="multiple"></select>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 mb-10">
+                                    <div class="col-sm-6 aps-form-lable justify-content-end pr15">Thứ tự</div>
+                                    <div class="col-sm-6 aps-form-input">
+                                        <input id="txtHocPhan_ThuTu" class="form-control" />
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <!--row 3-->
-                        <div class="row aps-form-item">
-                            <div class="col-sm-2 aps-form-lable">Số tín học phần</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <input id="txtHocPhan_SoTinHocPhan" class="form-control" />
-                            </div>
-                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Số tín học phí</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <input id="txtHocPhan_SoTinHocPhi" class="form-control" />
-                            </div>
-                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Là môn tính điểm</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <select id="dropHocPhan_LaMonTinhDiem" class="select-opt">
-                                    <option value="1">Tính điểm</option>
-                                    <option value="0">Không tính điểm</option>
-                                </select>
-                            </div>
-                        </div>
-                        <!--row 4-->
-                        <div class="row aps-form-item">
-                            <div class="col-sm-2 aps-form-lable">Học kỳ dự kiến</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <select id="dropHocPhan_HocKyDuKien" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Học kỳ thực tế</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <select id="dropHocPhan_HocKyThucTe" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Thuộc tính học phần</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <select id="dropHocPhan_ThuocTinh" class="select-opt"></select>
-                            </div>
-                        </div>
-                        <!--row 5-->
-                        <div class="row aps-form-item">
-                            <div class="col-sm-2 aps-form-lable">Phạm vi đảm nhiệm</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <select id="dropHocPhan_PhamViDamNhiem" class="select-opt"></select>
-                            </div>
-                            <div class="col-sm-2 aps-form-lable justify-content-end pr15">Thứ tự</div>
-                            <div class="col-sm-2 aps-form-input">
-                                <input id="txtHocPhan_ThuTu" class="form-control" />
-                            </div>
+                          
                         </div>
                     </div>
                     <!--Quan hệ học phần-->
@@ -456,7 +476,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table scroll-table-x">
+                        <div class="row aps-form-table scroll-table-x table-mobi">
                             <table id="tblInput_HocPhan_QuanHe" class="table tblInput_HocPhan_QuanHe">
                                 <tbody></tbody>
                                 <tfoot>
@@ -509,8 +529,8 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table scroll-table-x">
-                            <table id="tblInput_HocPhan_QuanHeTT" class="table tblInput_HocPhan_QuanHeTT">
+                        <div class="row aps-form-table scroll-table-x table-mobi">
+                            <table id="tblInput_HocPhan_QuanHeTT" class="table tblInput_HocPhan_QuanHeTT ">
                                 <tbody></tbody>
                                 <tfoot>
                                     <tr>
@@ -565,7 +585,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table  scroll-table-x">
+                        <div class="row aps-form-table  scroll-table-x  table-mobi">
                             <table id="tblInput_HocPhan_ThayThe" class="table tblInput_HocPhan_ThayThe">
                                 <tbody></tbody>
                                 <tfoot>
@@ -620,7 +640,7 @@
                             </p>
                         </div>
                         <!--row 2-->
-                        <div class="row aps-form-table scroll-table-x">
+                        <div class="row aps-form-table scroll-table-x  table-mobi">
                             <table id="tblInput_HocPhan_BaiHoc" class="table tblInput_HocPhan_BaiHoc">
                                 <tbody></tbody>
                                 <tfoot>
@@ -847,10 +867,8 @@
                                         <i class="fa fa-forward" style="font-size:44px;color:red"></i>
                                     </td>
                                     <td style="width: 100%;padding:0 !important;border-left: 0 !important;border-right: 0 !important;
-                                    display: flex;flex-direction: column;"
-                                        class="border-0 pd0">
-                                        <div class="box box-solid pd0"
-                                            style="background-color: #fff !important;">
+                                    display: flex;flex-direction: column;" class="border-0 pd0">
+                                        <div class="box box-solid pd0" style="background-color: #fff !important;">
                                             <div class="box-header pd0">
                                                 <h3 class="box-title mt-15 line-20"
                                                     title="Danh sách kết quả học phần khối bắt buộc"
@@ -1244,20 +1262,20 @@
                             </div>
                             <!--row 3-->
                             <div class="row aps-form-item aps-colum-2">
-                                <div class="row col-sm-7">
+                                <div class="row col-sm-6 d-flex">
                                     <div class="col-sm-3 aps-form-lable">
                                         Mã định hướng <span class="color-red ml-5">(*)</span>
                                     </div>
 
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-7 aps-form-input">
                                         <input id="txtMaDinhHuong" class="form-control form-border" />
                                     </div>
                                 </div>
-                                <div class="row col-sm-5">
+                                <div class="row col-sm-6 d-flex">
                                     <div class="col-sm-4 aps-form-lable aps-form-lable-mobi justify-content-end pr15">
                                         Chế độ đăng ký định hướng
                                     </div>
-                                    <div class="col-sm-4 aps-form-input">
+                                    <div class="col-sm-8 aps-form-input">
                                         <select id="dropCheDoDinhHuong" class="select-opt">
                                             <option value="">--Chọn bộ môn--</option>
                                         </select>
@@ -1276,14 +1294,14 @@
 
                             <!--row 2-->
                             <div class="row aps-form-item aps-colum-2">
-                                <div class="row col-sm-7">
+                                <div class="row col-sm-6 d-flex">
                                     <div class="col-sm-7 aps-form-lable">Ngày bắt đầu</div>
                                     <div class="col-sm-5 aps-form-input">
                                         <input id="txtNgayBatDau" class="form-control form-border input-datepicker"
                                             placeholder="dd/mm/yyyy" />
                                     </div>
                                 </div>
-                                <div class="row col-sm-5">
+                                <div class="row col-sm-6 d-flex">
                                     <div class="col-sm-7 aps-form-lable  justify-content-end pr15">Ngày kết thúc</div>
                                     <div class="col-sm-5 aps-form-input">
                                         <input id="txtNgayKetThuc" class="form-control form-border input-datepicker"
