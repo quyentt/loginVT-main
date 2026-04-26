@@ -1416,7 +1416,11 @@
                                 <th class="td-left">Tên lớp</th>
                                 <th class="td-left">Mã lớp</th>
                                 <th class="td-center w-90px">Lớp riêng</th>
-                                <th class="td-center td-fixed w-80px">Chọn</th>
+                                <th class="td-center td-fixed w-80px">
+                                    <input type="checkbox" id="chkSelectAll_ChonLHP"
+                                        title="Chọn tất cả kết quả đang lọc"
+                                        style="width:18px; height:18px; cursor:pointer;" />
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1469,11 +1473,23 @@
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
+                <div class="mb-10"
+                    style="display:flex; align-items:center; gap:10px; padding:10px; background:#f4f8fb; border:1px solid #dde6ee; border-radius:6px;">
+                    <span style="font-weight:600;">Áp dụng cho tất cả:</span>
+                    <select id="dropBulkXuLyDacThu" class="form-control" style="flex:1; max-width:480px;">
+                        <option value="">-- Chọn xử lý đặc thù --</option>
+                    </select>
+                    <a id="btnApDungTatCa" class="btn btn-primary btn-sm">
+                        <i class="fa fa-magic"></i> Áp dụng
+                    </a>
+                </div>
                 <div class="aps-table-select">
                     <table id="tblXuLyLHP" class="table table-hover table-bordered mb-0 tblXuLyLHP">
                         <thead>
                             <tr>
-                                <th class="td-fixed td-center w-50px">STT</th>
+                                <th class="td-fixed td-center w-50px">
+                                    <input type="checkbox" id="chkSelectAll_XuLyLHP" title="Chọn tất cả" />
+                                </th>
                                 <th class="td-center">Lớp học phần</th>
                                 <th class="td-center">Mã lớp</th>
                                 <th class="td-center">Xử lý đặc thù</th>
@@ -1505,7 +1521,7 @@
     </div>
 </div>
 <!-- page script -->
-<script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.1"></script>
+<script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachDangKy'] = new KeHoachDangKy();

@@ -219,6 +219,24 @@ KeHoachDangKy.prototype = {
         $("#btnAddXuLyLHP").click(function () {
             me.openModal_ChonLHP();
         });
+        $("#chkSelectAll_XuLyLHP").on('change', function () {
+            $("#tblXuLyLHP tbody .chkRow_XuLyLHP").prop('checked', this.checked);
+        });
+        $("#btnApDungTatCa").click(function () {
+            var bulkVal = $("#dropBulkXuLyDacThu").val() || '';
+            if (!bulkVal) {
+                edu.system.alert("Vui lòng chọn xử lý đặc thù trước khi áp dụng!");
+                return;
+            }
+            var $rows = $("#tblXuLyLHP tbody tr");
+            if ($rows.length === 0) {
+                edu.system.alert("Chưa có lớp học phần nào trong bảng!");
+                return;
+            }
+            var $picked = $rows.has('.chkRow_XuLyLHP:checked');
+            var $target = $picked.length ? $picked : $rows;
+            $target.find('.dropXuLyDacThu').val(bulkVal);
+        });
         $("#tblChonLHP").delegate('.chkChonLHP', 'change', function () {
             var $tr = $(this).closest('tr');
             var lhpId = $tr.attr('data-id') || '';
@@ -243,12 +261,16 @@ KeHoachDangKy.prototype = {
                 me.reindexRows_XuLyLHP();
                 $tr.removeClass('row-selected');
             }
+            me.syncHeaderCheckbox_ChonLHP();
         });
         $("#txtSearch_ChonLHP").on('input', function () {
             me.filter_ChonLHP();
         });
         $("#dropLaLopRieng").on('change', function () {
             me.getList_PhanCongLHP();
+        });
+        $("#chkSelectAll_ChonLHP").on('change', function () {
+            me.toggleSelectAll_ChonLHP(this.checked);
         });
         $("#dropPageSize_ChonLHP").on('change', function () {
             me.pageSize_ChonLHP = parseInt($(this).val()) || 20;
@@ -2071,6 +2093,8 @@ KeHoachDangKy.prototype = {
     openModal_XuLyLHP: function (strId) {
         var me = this;
         $("#tblXuLyLHP tbody").html("");
+        $("#dropBulkXuLyDacThu").html(me.genOptions_XuLyDacThu(""));
+        $("#chkSelectAll_XuLyLHP").prop('checked', false);
         $("#myModalXuLyLHP").modal("show");
         me.getList_XuLyLHP();
     },
@@ -2078,9 +2102,73 @@ KeHoachDangKy.prototype = {
         var me = this;
         $("#txtSearch_ChonLHP").val("");
         $("#dropLaLopRieng").val("");
+        $("#chkSelectAll_ChonLHP").prop('checked', false);
         $("#tblChonLHP tbody").html("");
         $("#myModalChonLHP").modal("show");
         me.getList_PhanCongLHP();
+    },
+    syncHeaderCheckbox_ChonLHP: function () {
+        var me = this;
+        var existingIds = {};
+        $("#tblXuLyLHP tbody tr").each(function () {
+            var id = $(this).attr("data-lhp-id");
+            if (id) existingIds[id] = true;
+        });
+        var arr = me.dtChonLHP_Filtered || [];
+        if (arr.length === 0) {
+            $("#chkSelectAll_ChonLHP").prop({ checked: false, indeterminate: false });
+            return;
+        }
+        var selectedCount = 0;
+        for (var i = 0; i < arr.length; i++) {
+            if (existingIds[arr[i].ID]) selectedCount++;
+        }
+        var $hdr = $("#chkSelectAll_ChonLHP");
+        if (selectedCount === 0) {
+            $hdr.prop({ checked: false, indeterminate: false });
+        } else if (selectedCount === arr.length) {
+            $hdr.prop({ checked: true, indeterminate: false });
+        } else {
+            $hdr.prop({ checked: false, indeterminate: true });
+        }
+    },
+    toggleSelectAll_ChonLHP: function (checked) {
+        var me = this;
+        var existingIds = {};
+        $("#tblXuLyLHP tbody tr").each(function () {
+            var id = $(this).attr("data-lhp-id");
+            if (id) existingIds[id] = $(this);
+        });
+        var arr = me.dtChonLHP_Filtered || [];
+        var addCount = 0, blockedSaved = 0;
+        for (var i = 0; i < arr.length; i++) {
+            var row = arr[i];
+            var lhpId = row.ID;
+            if (!lhpId) continue;
+            if (checked) {
+                if (existingIds[lhpId]) continue;
+                me.addRow_XuLyLHP({
+                    TENLOP: row.TENLOP,
+                    MALOP: row.MALOP,
+                    DANGKY_LOPHOCPHAN_ID: lhpId
+                });
+                addCount++;
+            }
+            else {
+                var $existing = existingIds[lhpId];
+                if (!$existing) continue;
+                if ($existing.attr("data-id")) {
+                    blockedSaved++;
+                    continue;
+                }
+                $existing.remove();
+            }
+        }
+        if (!checked) me.reindexRows_XuLyLHP();
+        me.renderPage_ChonLHP();
+        if (blockedSaved > 0) {
+            edu.system.alert("Có " + blockedSaved + " lớp đã lưu trước đó nên không thể bỏ chọn ở đây. Hãy dùng nút xóa trong bảng bên dưới.");
+        }
     },
     getList_PhanCongLHP: function () {
         var me = this;
@@ -2199,6 +2287,7 @@ KeHoachDangKy.prototype = {
         $tbody.html(html);
         $("#lblPageInfo_ChonLHP").text("(" + (start + 1) + "–" + end + " / " + total + ")");
         me.renderPager_ChonLHP(totalPages);
+        me.syncHeaderCheckbox_ChonLHP();
     },
     renderPager_ChonLHP: function (totalPages) {
         var me = this;
@@ -2274,7 +2363,7 @@ KeHoachDangKy.prototype = {
         var lhpId = data.DANGKY_LOPHOCPHAN_ID || "";
         var html = "";
         html += "<tr data-id='" + (data.ID || "") + "' data-lhp-id='" + lhpId + "'>";
-        html += "<td class='td-center rowStt'>" + stt + "</td>";
+        html += "<td class='td-center'><input type='checkbox' class='chkRow_XuLyLHP' /> <span class='rowStt' style='margin-left:4px;'>" + stt + "</span></td>";
         html += "<td><input type='text' class='form-control txtTenLop' placeholder='Tên lớp' value='" + tenLop + "' readonly /></td>";
         html += "<td><input type='text' class='form-control txtMaLop' placeholder='Mã lớp' value='" + maLop + "' readonly /></td>";
         html += "<td><select class='form-control dropXuLyDacThu'>" + me.genOptions_XuLyDacThu(data.XULYDACTHU_ID || data.QUYDINHLOPXULYDACTHU_ID) + "</select></td>";
