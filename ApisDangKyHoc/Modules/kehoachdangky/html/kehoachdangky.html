@@ -1405,6 +1405,7 @@
                     <select id="dropLaLopRieng" class="form-control">
                         <option value="">Tất cả lớp</option>
                         <option value="1">Chỉ lớp riêng</option>
+                        <option value="0">Không phải lớp riêng</option>
                     </select>
                 </div>
                 <div class="clear"></div>
@@ -1461,8 +1462,8 @@
 <!-- Thiết đặt thêm xử lý lớp HP -->
 <div class="modal fade myModalXuLyLHP" id="myModalXuLyLHP" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable" style="width: 80%">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: 80%; max-height:90vh;">
+        <div class="modal-content" style="max-height:90vh; display:flex; flex-direction:column;">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
@@ -1472,7 +1473,11 @@
                     <span class="lang" key="">Thiết đặt thêm xử lý lớp HP</span>
                 </h4>
             </div>
+<<<<<<< HEAD
             <div class="modal-body" id="modal_body">
+=======
+            <div class="modal-body" id="modal_body" style="overflow-y:auto; flex:1 1 auto;">
+>>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
                 <div class="mb-10"
                     style="display:flex; align-items:center; gap:10px; padding:10px; background:#f4f8fb; border:1px solid #dde6ee; border-radius:6px;">
                     <span style="font-weight:600;">Áp dụng cho tất cả:</span>
@@ -1483,6 +1488,17 @@
                         <i class="fa fa-magic"></i> Áp dụng
                     </a>
                 </div>
+<<<<<<< HEAD
+=======
+                <div class="mb-10" style="display:flex; justify-content:flex-end; gap:6px;">
+                    <a class="btn btn-danger btn-sm" id="btnDeleteSelected_XuLyLHP">
+                        <i class="fa fa-trash"></i> Xóa các dòng đã chọn
+                    </a>
+                    <a class="btn btn-success btn-sm" id="btnAddXuLyLHP">
+                        <i class="fa fa-plus"></i> Thêm lớp
+                    </a>
+                </div>
+>>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
                 <div class="aps-table-select">
                     <table id="tblXuLyLHP" class="table table-hover table-bordered mb-0 tblXuLyLHP">
                         <thead>
@@ -1493,11 +1509,6 @@
                                 <th class="td-center">Lớp học phần</th>
                                 <th class="td-center">Mã lớp</th>
                                 <th class="td-center">Xử lý đặc thù</th>
-                                <th class="td-fixed td-center w-80px">
-                                    <a class="btn btn-success btn-sm btnAddXuLyLHP" id="btnAddXuLyLHP">
-                                        <i class="fa fa-plus"></i> Thêm lớp
-                                    </a>
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1507,8 +1518,22 @@
                 </div>
             </div>
             <div id="notify"></div>
-            <div class="modal-footer">
-                <div class="pull-right d-flex">
+            <div class="modal-footer"
+                style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span>Hiển thị</span>
+                    <select id="dropPageSize_XuLyLHP" class="form-control"
+                        style="width:80px; display:inline-block;">
+                        <option value="20" selected>20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="200">200</option>
+                    </select>
+                    <span>dữ liệu</span>
+                    <span id="lblPageInfo_XuLyLHP" class="ml-10"></span>
+                </div>
+                <div id="pager_XuLyLHP" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
+                <div style="display:flex; gap:6px;">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
                     </button>
@@ -1521,7 +1546,11 @@
     </div>
 </div>
 <!-- page script -->
+<<<<<<< HEAD
 <script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.2"></script>
+=======
+<script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.8"></script>
+>>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachDangKy'] = new KeHoachDangKy();

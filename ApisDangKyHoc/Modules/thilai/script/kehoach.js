@@ -575,6 +575,14 @@ KeHoachXuLy.prototype = {
                 me.getList_SinhVien();
             }
         });
+        $("#txtSearch_SV").on('input', function () {
+            var kw = ($(this).val() || '').toLowerCase().trim();
+            $("#tblInput_DTSV_SinhVien tbody tr").each(function () {
+                if (!kw) { $(this).show(); return; }
+                var txt = $(this).text().toLowerCase();
+                $(this).toggle(txt.indexOf(kw) !== -1);
+            });
+        });
 
         $('#dropTinhTrangNop').on('select2:select', function (e) {
             me.getList_SinhVien();
