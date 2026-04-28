@@ -1,19 +1,36 @@
 <style>
+  /* Modal "Xem chi tiết" KHÔNG full màn hình — căn giữa, rộng vừa khít bảng */
+  #Loaikhoan_donGia .modal-dialog {
+    max-width: 1340px !important;
+    width: min(1340px, 95vw) !important;
+    margin: 30px auto !important;
+    height: auto !important;
+  }
+  #phamViDoiTuong .modal-dialog {
+    max-width: 820px !important;
+    width: min(820px, 95vw) !important;
+    margin: 30px auto !important;
+    height: auto !important;
+  }
+  #ketQua_dangKy_mua .modal-dialog {
+    max-width: 1500px !important;
+    width: min(1500px, 95vw) !important;
+    margin: 30px auto !important;
+    height: auto !important;
+  }
   #Loaikhoan_donGia .modal-content,
   #phamViDoiTuong .modal-content,
   #ketQua_dangKy_mua .modal-content {
-    height: 100vh !important;
-    width: 100vw !important;
-    border: 0 !important;
-    border-radius: 0 !important;
-  }
-  #Loaikhoan_donGia .modal-dialog,
-  #phamViDoiTuong .modal-dialog,
-  #ketQua_dangKy_mua .modal-dialog {
-    max-width: 100% !important;
+    height: auto !important;
+    max-height: calc(100vh - 60px);
     width: 100% !important;
-    margin: 0 !important;
-    height: 100vh !important;
+    border-radius: 8px !important;
+    border: 1px solid #dee2e6 !important;
+  }
+  #Loaikhoan_donGia .modal-body,
+  #phamViDoiTuong .modal-body,
+  #ketQua_dangKy_mua .modal-body {
+    overflow: auto;
   }
   /* Chip / tag cho phạm vi đã chọn */
   .pv-selected-wrap {
@@ -386,10 +403,7 @@
     <!-- ----------------------------------------------------- -->
     <!-- modal Loại khoản và đơn giá -->
     <div class="modal fade modal_Loaikhoan_donGia" id="Loaikhoan_donGia">
-      <div
-        class="modal-dialog modal-dialog-scrollable"
-        style="max-width:100%; width:100%; height:100vh; margin:0;"
-      >
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <div class="modal-header-wrap">
@@ -404,26 +418,27 @@
             </div>
           </div>
           <div class="modal-body aps-add-new">
-            <div class="aps-table-select scroll-table-x pb-0 mb-0">
+            <div class="aps-table-select scroll-table-x pb-0 mb-0" style="overflow-x:auto; width:100%;">
               <table
                 id="tblLoaiKhoan_DonGia"
                 class="table table-hover table-bordered table-noborder"
+                style="width:100%;"
               >
                 <thead>
                   <tr>
-                    <th class="td-fixed td-center w-50px">Stt</th>
-                    <th class="td-left">Loại khoản</th>
-                    <th class="td-center" style="width: 100px">Đơn giá</th>
-                    <th class="td-left" style="width: 130px">Phân loại</th>
-                    <th class="td-left" style="width: 110px">Đơn vị tính</th>
-                    <th class="td-center" style="width: 130px">Cho phép không mua</th>
-                    <th class="td-center" style="width: 90px">Bắt buộc</th>
-                    <th class="td-center" style="width: 150px">Cho phép nhập số lượng</th>
-                    <th class="td-center" style="width: 100px">Số tối thiểu</th>
-                    <th class="td-center" style="width: 100px">Số tối đa</th>
-                    <th class="td-center" style="width: 140px">Ngày tạo</th>
-                    <th class="td-left" style="width: 120px">Người tạo</th>
-                    <th class="td-center" style="width: 90px">Chọn</th>
+                    <th class="td-fixed td-center" style="width: 50px">Stt</th>
+                    <th class="td-left" style="width: 200px">Loại khoản</th>
+                    <th class="td-center" style="width: 90px">Đơn giá</th>
+                    <th class="td-left" style="width: 110px">Phân loại</th>
+                    <th class="td-left" style="width: 100px">Đơn vị tính</th>
+                    <th class="td-center" style="width: 110px">Cho phép không mua</th>
+                    <th class="td-center" style="width: 80px">Bắt buộc</th>
+                    <th class="td-center" style="width: 130px">Cho phép nhập số lượng</th>
+                    <th class="td-center" style="width: 90px">Số tối thiểu</th>
+                    <th class="td-center" style="width: 80px">Số tối đa</th>
+                    <th class="td-center" style="width: 110px">Ngày tạo</th>
+                    <th class="td-left" style="width: 90px">Người tạo</th>
+                    <th class="td-center" style="width: 70px">Chọn</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -627,10 +642,7 @@
     <!-- ----------------------------------------------------- -->
     <!-- modal Phạm vi đối tượng nào -->
     <div class="modal fade modal_phamViDoiTuong" id="phamViDoiTuong">
-      <div
-        class="modal-dialog modal-dialog-scrollable"
-        style="max-width:100%; width:100%; height:100vh; margin:0;"
-      >
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <div class="modal-header-wrap">
@@ -649,14 +661,15 @@
               <table
                 id="tblPhamVi_DoiTuong"
                 class="table table-hover table-bordered table-noborder"
+                style="width:100%;"
               >
                 <thead>
                   <tr>
-                    <th class="td-fixed td-center w-50px">Stt</th>
-                    <th class="td-left">Phạm vi</th>
-                    <th class="td-center" style="width: 100px">Hiệu lực</th>
-                    <th class="td-center" style="width: 140px">Ngày tạo</th>
-                    <th class="td-left" style="width: 140px">Người tạo</th>
+                    <th class="td-fixed td-center" style="width: 50px">Stt</th>
+                    <th class="td-left" style="width: 280px">Phạm vi</th>
+                    <th class="td-center" style="width: 90px">Hiệu lực</th>
+                    <th class="td-center" style="width: 130px">Ngày tạo</th>
+                    <th class="td-left" style="width: 130px">Người tạo</th>
                     <th class="td-center" style="width: 60px">
                       <input type="checkbox" id="chkSelectAll_PhamVi" />
                     </th>
@@ -822,10 +835,7 @@
     <!-- ----------------------------------------------------- -->
     <!-- modal Kết quả đăng ký mua -->
     <div class="modal fade modal_ketQua_dangKy_mua" id="ketQua_dangKy_mua">
-      <div
-        class="modal-dialog modal-dialog-scrollable"
-        style="max-width:100%; width:100%; height:100vh; margin:0;"
-      >
+      <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
             <div class="modal-header-wrap">
@@ -844,7 +854,7 @@
               <table
                 id="tblKetQua_DK_mua"
                 class="table table-hover table-bordered table-noborder tblKetQua_DK_mua"
-                style="min-width: 1900px;"
+                style="width:100%;"
               >
                 <thead>
                   <tr>

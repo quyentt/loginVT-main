@@ -170,6 +170,14 @@ KeHoachMua.prototype = {
             }
         });
 
+        // Live search: gõ tới đâu lọc tới đó (debounce 300ms)
+        $(document).off("input.txtSearchLive", "#txtSearch_ThongTin").on("input.txtSearchLive", "#txtSearch_ThongTin", function () {
+            clearTimeout(me._txtSearchTimer);
+            me._txtSearchTimer = setTimeout(function () {
+                me.getList_KeHoachMua();
+            }, 300);
+        });
+
         $(document).off("change.dropSearchLoaiKH", "#dropSearch_LoaiKeHoach").on("change.dropSearchLoaiKH", "#dropSearch_LoaiKeHoach", function () {
             me.getList_KeHoachMua();
         });
