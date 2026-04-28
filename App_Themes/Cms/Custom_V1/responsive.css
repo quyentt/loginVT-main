@@ -1010,6 +1010,9 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+    .modal-open .modal {
+        padding: 10px;
+    }
 
     .tblInput_HocPhan_ThayThe .aps-form-input .form-control,
     .tblInput_HocPhan_QuanHeTT .aps-form-input .form-control,
@@ -1498,6 +1501,35 @@
         color: #666;
         line-height: 26px;
         justify-content: flex-start !important;
+    }
+
+    /* --------------- */
+    .aps-csdl-hocphan .box-header .pull-right .item-search {
+        width: 250px !important;
+        padding-right: 0px !important;
+    }
+
+    .aps-csdl-hocphan .box.box-solid .box-header.pl0.pr0,
+    .aps-csdl-hocphan .box.box-solid .box-body.pd0 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .aps-csdl-hocphan .box-search .box-body.pt20 {
+        padding-top: 0 !important;
+    }
+
+    .aps-csdl-hocphan .box-search .box-body {
+        grid-template-columns: 100% !important;
+    }
+
+    .aps-csdl-hocphan .box-search .bss-item {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        /* Chia 3 cột đều nhau */
+        gap: 10px;
+        /* Khoảng cách giữa các cột */
+        margin-bottom: 0 !important;
     }
 }
 
@@ -2058,7 +2090,43 @@
 }
 
 @media only screen and (max-width: 599px) {
+    .aps-csdl-hocphan .box-search .box-body.pt20 {
+        padding-top: 0 !important;
+    }
 
+    .aps-csdl-hocphan .box-search .item-search {
+        width: 100%;
+    }
+
+    .aps-csdl-hocphan .box.box-solid .box-header.pl0.pr0,
+    .aps-csdl-hocphan .box.box-solid .box-body.pd0 {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .aps-csdl-hocphan .box-header .pull-right {
+        display: block !important;
+        margin-top: 10px;
+        float: left !important;
+    }
+
+    .aps-csdl-hocphan .box-header .pull-right .item-search {
+        margin-bottom: 10px !important;
+        margin-right: 10px !important;
+    }
+
+    .aps-csdl-hocphan .box-header .pull-right .btn {
+        margin-left: 0 !important;
+        margin-right: 10px !important;
+    }
+
+    .zone-pag-footertblHocPhan .info-tblHocPhan,
+    .light-paginationtblHocPhan {
+        width: 100% !important;
+        float: left !important;
+    }
+
+    /* ------------------ */
     .zone_chuongtrinhhocphan-right .box-header .pull-right .btnAdd,
     .zone_chuongtrinhhocphan-right .box-header .btn.submit {
         width: 32px !important;
