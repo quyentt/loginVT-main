@@ -25,11 +25,15 @@ LopRieng.prototype = {
                 edu.system.alert("Vui lòng chọn đối tượng?");
                 return;
             }
-            edu.system.alert('<div id="zoneprocessXXXX"></div>');
-            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-            for (var i = 0; i < arrChecked_Id.length; i++) {
-                me.save_LopRieng(arrChecked_Id[i]);
-            }
+            edu.system.confirm("Bạn có chắc chắn muốn chốt " + arrChecked_Id.length + " đối tượng đã chọn không?");
+            $("#btnYes").off("click").on("click", function (e) {
+                $('#myModalAlert').modal('hide');
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_LopRieng(arrChecked_Id[i]);
+                }
+            });
         });
 
         $("#btnSaveLai_LopRieng").click(function () {
