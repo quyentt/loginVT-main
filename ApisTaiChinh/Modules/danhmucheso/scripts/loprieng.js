@@ -25,11 +25,32 @@ LopRieng.prototype = {
                 edu.system.alert("Vui lòng chọn đối tượng?");
                 return;
             }
-            edu.system.alert('<div id="zoneprocessXXXX"></div>');
-            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-            for (var i = 0; i < arrChecked_Id.length; i++) {
-                me.save_LopRieng(arrChecked_Id[i]);
+            edu.system.confirm("Bạn có chắc chắn muốn chốt " + arrChecked_Id.length + " đối tượng đã chọn không?");
+            $("#btnYes").off("click").on("click", function (e) {
+                $('#myModalAlert').modal('hide');
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_LopRieng(arrChecked_Id[i]);
+                }
+            });
+        });
+
+        $("#btnSaveLai_LopRieng").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopRieng", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
             }
+            edu.system.confirm("Bạn có chắc chắn muốn chốt lại " + arrChecked_Id.length + " đối tượng đã chọn không?");
+            $("#btnYes").off("click").on("click", function (e) {
+                $('#myModalAlert').modal('hide');
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.saveLai_LopRieng(arrChecked_Id[i]);
+                }
+            });
         });
         
 
@@ -301,6 +322,41 @@ LopRieng.prototype = {
             ]
         }, false, false, false, null);
     },
+    saveLai_LopRieng: function (strDangKy_LopHocPhan_Id) {
+        var me = this;
+        var obj_notify = {};
+        var obj_save = {
+            'action': 'TC_LopRieng_MH/FSkkLB4FIC8mCjgeDS4xCS4iESkgLx4CKS41DSAo',
+            'func': 'PKG_TAICHINH_LOPRIENG.Them_DangKy_LopHocPhan_ChotLai',
+            'iM': edu.system.iM,
+            'strDangKy_LopHocPhan_Id': strDangKy_LopHocPhan_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alertOnModal(obj_notify);
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_LopRieng();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
     getList_LopRieng: function (strDanhSach_Id) {
         var me = this;
         //--Edit
@@ -355,7 +411,7 @@ LopRieng.prototype = {
             //    iDataRow: iPager
             //},
             colPos: {
-                center: [0, 5],
+                center: [0, 1, 5, 6, 7],
                 //right: [5]
             },
             aoColumns: [
