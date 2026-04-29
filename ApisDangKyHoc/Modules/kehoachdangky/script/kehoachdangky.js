@@ -220,9 +220,7 @@ KeHoachDangKy.prototype = {
             me.openModal_ChonLHP();
         });
         $("#chkSelectAll_XuLyLHP").on('change', function () {
-<<<<<<< HEAD
             $("#tblXuLyLHP tbody .chkRow_XuLyLHP").prop('checked', this.checked);
-=======
             var checked = this.checked;
             for (var i = 0; i < me.dtXuLyLHP_All.length; i++) me.dtXuLyLHP_All[i]._selected = checked;
             $("#tblXuLyLHP tbody .chkRow_XuLyLHP").prop('checked', checked);
@@ -235,7 +233,6 @@ KeHoachDangKy.prototype = {
         $("#tblXuLyLHP").delegate('.dropXuLyDacThu', 'change', function () {
             var idx = parseInt($(this).closest('tr').attr('data-idx'));
             if (!isNaN(idx)) me.dtXuLyLHP_All[idx].XULYDACTHU_ID = $(this).val();
->>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
         });
         $("#btnApDungTatCa").click(function () {
             var bulkVal = $("#dropBulkXuLyDacThu").val() || '';
@@ -243,7 +240,6 @@ KeHoachDangKy.prototype = {
                 edu.system.alert("Vui lòng chọn xử lý đặc thù trước khi áp dụng!");
                 return;
             }
-<<<<<<< HEAD
             var $rows = $("#tblXuLyLHP tbody tr");
             if ($rows.length === 0) {
                 edu.system.alert("Chưa có lớp học phần nào trong bảng!");
@@ -252,7 +248,6 @@ KeHoachDangKy.prototype = {
             var $picked = $rows.has('.chkRow_XuLyLHP:checked');
             var $target = $picked.length ? $picked : $rows;
             $target.find('.dropXuLyDacThu').val(bulkVal);
-=======
             var data = me.dtXuLyLHP_All || [];
             if (data.length === 0) {
                 edu.system.alert("Chưa có lớp học phần nào trong bảng!");
@@ -2144,11 +2139,8 @@ KeHoachDangKy.prototype = {
         me.pageSize_XuLyLHP = parseInt($("#dropPageSize_XuLyLHP").val()) || 20;
         $("#tblXuLyLHP tbody").html("");
         $("#dropBulkXuLyDacThu").html(me.genOptions_XuLyDacThu(""));
-<<<<<<< HEAD
         $("#chkSelectAll_XuLyLHP").prop('checked', false);
-=======
         $("#chkSelectAll_XuLyLHP").prop({ checked: false, indeterminate: false });
->>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
         $("#myModalXuLyLHP").modal("show");
         me.getList_XuLyLHP();
     },
@@ -2164,17 +2156,14 @@ KeHoachDangKy.prototype = {
     syncHeaderCheckbox_ChonLHP: function () {
         var me = this;
         var existingIds = {};
-<<<<<<< HEAD
         $("#tblXuLyLHP tbody tr").each(function () {
             var id = $(this).attr("data-lhp-id");
             if (id) existingIds[id] = true;
         });
-=======
         for (var k = 0; k < me.dtXuLyLHP_All.length; k++) {
             var did = me.dtXuLyLHP_All[k].DANGKY_LOPHOCPHAN_ID;
             if (did) existingIds[did] = true;
         }
->>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
         var arr = me.dtChonLHP_Filtered || [];
         if (arr.length === 0) {
             $("#chkSelectAll_ChonLHP").prop({ checked: false, indeterminate: false });
@@ -2195,7 +2184,6 @@ KeHoachDangKy.prototype = {
     },
     toggleSelectAll_ChonLHP: function (checked) {
         var me = this;
-<<<<<<< HEAD
         var existingIds = {};
         $("#tblXuLyLHP tbody tr").each(function () {
             var id = $(this).attr("data-lhp-id");
@@ -2227,7 +2215,6 @@ KeHoachDangKy.prototype = {
             }
         }
         if (!checked) me.reindexRows_XuLyLHP();
-=======
         var existingMap = {};
         for (var i = 0; i < me.dtXuLyLHP_All.length; i++) {
             var d = me.dtXuLyLHP_All[i];
