@@ -1422,7 +1422,7 @@
 }
 
 .aps-form .aps-form-item .aps-form-input {
-    flex: 1;
+    /* flex: 1; */
 }
 
 .aps-form-item .txtSQLSoure,
@@ -3004,6 +3004,24 @@
     margin-bottom: 5px;
 }
 
+/* font-weight: 400; */
+.aps-modal-nhansu .col-sm-9 .table tbody tr {
+    border-bottom: 1px solid #e1e1e1 !important;
+}
+
+.aps-modal-nhansu .col-sm-9 .table tbody tr:nth-child(2n+2) {
+    background-color: #f8f8f8;
+}
+
+.aps-modal-nhansu .col-sm-9 .table>tbody>tr>td,
+.aps-modal-nhansu .col-sm-9 .table>thead>tr>th {
+    border-left: 0 solid #e1e1e1 !important;
+    border-right: 0 solid #e1e1e1 !important;
+}
+
+.aps-modal-nhansu .col-sm-9 .table tr:last-child {
+    border-right: 0 solid #d1d1d1 !important;
+}
 .aps-modal-nhansu .col-sm-9 .simple-pagination {
     padding: 0 0 5px 0 !important;
 }
@@ -11286,9 +11304,10 @@ table#clone {
 }
 
 /* ------------------ */
-.aps-form-item.d-block{
+.aps-form-item.d-block {
     display: block !important;
 }
+
 .zone_edithocphan .box-view.aps-add-new .aps-form-list {
     display: grid;
     grid-template-columns: 50% 50%;

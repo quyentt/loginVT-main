@@ -6,10 +6,10 @@
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row box box-solid  aps-kehoach pd0">
-        <div class="zone-bus" id="zonebatdau">
+        <div class="zone-bus zonebatdau" id="zonebatdau">
             <!--Tìm kiếm-->
             <div class="box box-solid box-search pd0">
-                <div class="box-body pr10 pl20 pt20 pb-15">
+                <div class="box-body pr10 pl15 pt15 pb-15">
                     <div class="group-title d-none">
                         <p class="titleSearchContent">
                             <i class="fa fa-window-restore">
@@ -34,11 +34,11 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="box box-solid pd20">
-                <div class="box-header">
-                    <h3 class="box-title line-20 mt-15">
-                        <i class="fa-solid fa-list-timeline"></i>Danh sách kế hoạch
-                        <span class="pull-right badge bg-light-blue">
+            <div class="box box-solid pd20 pt10">
+                <div class="box-header line-38">
+                    <h3 class="box-title line-38">
+                        <i class="fa-solid fa-list-timeline line-38"></i>Danh sách kế hoạch
+                        <span class="pull-right badge bg-light-blue" style="margin-top: 8px !important;">
                             <span id="lblKeHoachXuLy_Tong"></span>
                         </span>
                     </h3>
@@ -49,7 +49,7 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div class="aps-table-select mt-10">
+                    <div class="aps-table-select mt-10 scroll-table-x">
                         <table id="tblKeHoachXuLy"
                             class="table table-hover table-bordered table-noborder tblKeHoachXuLy">
                             <thead>
@@ -84,7 +84,8 @@
             </div>
         </div>
 
-        <div class="box box-solid zone-bus form-container" id="zoneEdit" style="display: none">
+        <div class="box box-solid zone-bus form-container zoneEdit" 
+        id="zoneEdit" style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title"><span class="myModalLabel"><i class="fa fa-plus"></i> Thêm mới - </span> Kế hoạch
                 </h3>
@@ -167,7 +168,7 @@
                                     Hiệu lực<span class="title-colon">:</span>
                                 </div>
                             </div>
-                            <div class="col-sm-4 aps-lable-name">
+                            <div class="col-sm-4 aps-form-input">
                                 <select id="dropHieuLuc" class="select-opt">
                                     <option value="1">Có hiệu lực</option>
                                     <option value="0">Hết hiệu lực</option>
@@ -180,7 +181,7 @@
                                     Khóa dữ liệu<span class="title-colon">:</span>
                                 </div>
                             </div>
-                            <div class="col-sm-4 aps-lable-name">
+                            <div class="col-sm-4 aps-form-input">
                                 <select id="dropKhoaDuLieu" class="select-opt">
                                     <option value="0">Không khóa</option>
                                     <option value="1">Khóa</option>
@@ -196,7 +197,7 @@
                                 <span class="badge color-blue fz16">Thời gian</span>
                             </p>
                         </div>
-                        <div class="row aps-form-item">
+                        <div class="row aps-form-item scroll-table-x">
                             <table id="tblThoiGian"
                                 class="table table-hover table-bordered table-noborder tblThoiGian mr-0 mb-0">
                                 <thead>
@@ -228,7 +229,8 @@
         </div>
 
         <!-- Danh sách -->
-        <div class="box box-solid zone-bus form-container" id="zoneDSNhanSu" style="display: none">
+        <div class="box box-solid zone-bus form-container zoneDSNhanSu"
+         id="zoneDSNhanSu" style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title line-20" style="margin-top: 2px !important;"><span class="myModalLabel1"> </span>
                     <i class="fa-solid fa-list-timeline"></i>Danh sách
@@ -237,8 +239,8 @@
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
             </div>
-            <div class="box-body">
-                <div class="aps-table-select pd20 pb-10">
+            <div class="box-body pd20">
+                <div class="aps-table-select scroll-table-x">
                     <table id="tblPhanCong" class="table table-hover table-bordered table-noborder tblPhanCong">
                         <thead>
                             <tr>
@@ -266,7 +268,8 @@
         </div>
 
         <!-- Danh sách -->
-        <div class="box box-solid zone-bus form-container" id="zoneKeHoachChiTiet" style="display: none">
+        <div class="box box-solid zone-bus form-container zoneKeHoachChiTiet" 
+        id="zoneKeHoachChiTiet" style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title line-20" style="margin-top: 2px !important;"><span class="myModalLabel1"></span><i
                         class="fa-solid fa-list-timeline"></i>Danh sách</h3>
@@ -274,13 +277,13 @@
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
             </div>
-            <div class="box-body">
-                <div class="aps-table-select pd20">
+            <div class="box-body pd20">
+                <div class="aps-table-select scroll-table-x">
                     <table id="tblKeHoachChiTiet"
-                        class="table table-hover table-bordered table-noborder tblKeHoachChiTiet">
+                        class="tblKeHoachChiTiet table table-hover table-bordered table-noborder tblKeHoachChiTiet">
                         <thead>
                             <tr>
-                                <th class="td-fixed td-center">Stt</th>
+                                <th class="td-fixed td-center w-50px">Stt</th>
                                 <th class="td-left">Tên</th>
                                 <th class="td-left">Mã</th>
                                 <th class="td-left">Thời gian</th>
@@ -312,16 +315,15 @@
     </div>
 </section>
 <!-- ---------- -->
-<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" 
+style="display: none !important;">
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal_XacNhan">
         Xác nhận</button>
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal_nhansu">
-        Nhân sự</button>
 </div>
 <!-- ---------- -->
 <div class="modal fade modal_XacNhan" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-860 modal-dialog-scrollable">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -383,7 +385,7 @@
                                     <span class="loaiXacNhan" title="">Xác nhận</span></span>
                             </p>
                         </div>
-                        <div class="row aps-form-table">
+                        <div class="row aps-form-table scroll-table-x">
                             <table id="tblModal_XacNhan"
                                 class="table mb-0 mr-0 table-bordered table-noborder tblModal_XacNhan">
                                 <thead>
@@ -409,7 +411,7 @@
         </div>
     </div>
 </div>
-
+<!-- - -->
 <div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <!-- load from js -->

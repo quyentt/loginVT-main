@@ -217,12 +217,72 @@
 }
 
 @media (max-width: 1024px) {
+    .aps-modal-nhansu .modal-body .col-sm-3 {
+        width: 30% !important;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-9 {
+        width: 70% !important;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-9 .group-title {
+        padding: 0 !important;
+    }
+
+    #tblModal_NhanSu {
+        min-width: 680px;
+    }
+
+    .info-tblModal_NhanSu,
+    .light-paginationtblModal_NhanSu {
+        width: 100% !important;
+    }
+
+    .box-footer {
+        padding: 18px 15px 5px 15px !important;
+    }
+
+    .aps-KeHoachChuongTrinh .zoneDSNhanSu.form-container.box.box-solid .box-body,
+    .aps-KeHoachChuongTrinh .zoneKeHoachChiTiet.form-container.box.box-solid .box-body {
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+
+    .aps-KeHoachChuongTrinh .aps-kehoach .box.box-solid.pd20,
+    .zoneEdit .aps-add-new.pd20 {
+        padding: 15px !important;
+    }
+
+    .aps-KeHoachChuongTrinh .zonebatdau .box.box-solid .box-header,
+    .aps-KeHoachChuongTrinh .zonebatdau .box.box-solid .box-body,
+    .aps-KeHoachChuongTrinh .form-container.box.box-solid .box-body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .aps-KeHoachChuongTrinh .form-container .box-header.with-border {
+        padding: 17px 20px 14px 15px !important;
+    }
+
+
+
+    .aps-csdl-hocphan .box-search .box-body.pt20 {
+        padding-top: 0 !important;
+    }
+
+    .form-container.zoneEdit .aps-form .title-name {
+        min-width: 90px;
+    }
+
+    .form-container.zoneEdit .aps-form .aps-form-item .aps-form-input {
+        flex: 1 !important;
+    }
 
     .sidebar-menu.aps-list-hocphan {
         border-bottom: 1px solid #e1e1e1;
     }
 
-    .zone_inputhocphan_khoibatbuoc .aps-form-item .aps-form-input {
+    s .zone_inputhocphan_khoibatbuoc .aps-form-item .aps-form-input {
         width: 100% !important;
     }
 
@@ -330,7 +390,8 @@
         margin-top: 10px;
     }
 
-    #tblModal_SinhVien {
+    #tblModal_SinhVien,
+    .aps-table-select .table.tblKeHoachXuLy {
         min-width: 1200px;
     }
 
@@ -807,9 +868,9 @@
         top: 0px;
     }
 
-    .box-header>.box-tools a {
+    /* .box-header>.box-tools a {
         margin-top: 10px;
-    }
+    } */
 
     .box-search .box-body .row {
         flex-wrap: wrap;
@@ -882,6 +943,7 @@
 }
 
 @media (min-width: 800px) and (max-width: 1024px) {
+
 
     .aps-list-hocphan.sidebar-menu .item-li .submit.btn,
     .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
@@ -1010,6 +1072,20 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+    .modal.aps-modal-nhansu .modal-body .col-sm-3 {
+        height: 100vh !important;
+    }
+
+    .modal.aps-modal-nhansu {
+        padding-left: 10px !important;
+    }
+
+    .modal.aps-modal-nhansu .modal-body .col-sm-9 .simple-pagination ul,
+    .modal.aps-modal-nhansu .modal-body .col-sm-9 .pull-right {
+        float: left !important;
+    }
+
+    /* ---------- */
     .modal-open .modal {
         padding: 10px;
     }
@@ -1228,6 +1304,44 @@
 
 
 @media (min-width: 600px) and (max-width: 1024px) {
+    .modal.aps-modal-nhansu .modal-body .col-sm-3 .search {
+        display: grid;
+        grid-template-columns: 1fr !important;
+        gap: 10px;
+    }
+
+    .zonebatdau .box-search .box-body {
+        padding-top: 0 !important;
+    }
+
+    .zonebatdau .box-search .area-search .item-search {
+        /* display: grid; */
+        /* grid-template-columns: 20% 60% 20%; */
+        /* gap: 10px; */
+    }
+
+    .zonebatdau .box-search .box-body {
+        display: flex !important;
+        padding-right: 15px !important;
+    }
+
+    .zonebatdau .box-search .area-search .item-search .form-control,
+    .zonebatdau .box-search .inputSearch .item-search.col-sm-3 {
+        width: 100% !important;
+    }
+
+    .zonebatdau .box-search .box-body .area-search {
+        width: 100%;
+        padding-right: 15px;
+    }
+
+    .zonebatdau .area-search .inputSearch {
+        display: grid;
+        grid-template-columns: 30% 50% 20%;
+        gap: 10px;
+
+    }
+
     .zone_chuongtrinhhocphan-right {
         padding-top: 5px;
     }
@@ -1553,6 +1667,19 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+    .zone-bus.zonebatdau .box-solid.box-search {
+        padding-top: 15px !important;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-3 .box-body .search {
+        display: grid;
+        grid-template-columns: 1fr 1fr !important;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-3,
+    .aps-modal-nhansu .modal-body .col-sm-9 {
+        width: 100% !important;
+    }
 
     .table-khoibatbuoc .box-sub-search .item-search,
     .table-khoibatbuoc .inputSearch.mr-10 {
@@ -2090,9 +2217,46 @@
 }
 
 @media only screen and (max-width: 599px) {
-    .aps-csdl-hocphan .box-search .box-body.pt20 {
-        padding-top: 0 !important;
+    .modal.modal_XacNhan .aps-form .zoneBtnXacNhan .btn-large {
+        padding: 0px 15px !important;
     }
+
+    .aps-modal-nhansu .modal-body .col-sm-3,
+    .aps-modal-nhansu .modal-body .col-sm-9 {
+        width: 100% !important;
+    }
+
+    .aps-modal-nhansu .modal-body .col-sm-3 .item-modal:last-child {
+        margin-bottom: 0 !important;
+    }
+
+    /* --------------- */
+    .aps-KeHoachChuongTrinh .aps-kehoach .box-search .box-body {
+        padding-top: 5px !important;
+    }
+
+    .form-container.zoneEdit .aps-form .aps-form-item:nth-child(3),
+    .form-container.zoneEdit .aps-form .aps-form-item:nth-child(4),
+    .form-container.zoneEdit .aps-form .aps-form-item:nth-child(5) {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 10px;
+        margin-bottom: 0 !important;
+    }
+
+    .form-container.zoneEdit .aps-form .aps-form-item .aps-form-input {
+        flex: 1 !important;
+    }
+
+    .form-container.zoneEdit .aps-form .aps-form-item .aps-lable-name {
+        text-align: left !important;
+    }
+
+    .form-container.zoneEdit .aps-form .aps-form-item:before {
+        display: none;
+    }
+
+
 
     .aps-csdl-hocphan .box-search .item-search {
         width: 100%;
