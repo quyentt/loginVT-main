@@ -5696,11 +5696,11 @@ ChuongTrinhHocPhan.prototype = {
             if (aData.TONGSOTINCHITINHPHI) iTongTP += aData.TONGSOTINCHITINHPHI;
             me.dtVKhoiBatBuocHP.filter(e => e.DAOTAO_KHOIBATBUOC_ID == aData.ID).forEach((aDataHP, nRow) => {
                 html += '<tr>'
-                html += '<td style="text-align: center;">' + edu.util.returnEmpty(aData.KYHIEU) + '</td>'
-                html += '<td style="text-align: center;">' + edu.util.returnEmpty(aData.TEN) + '</td>'
-                html += '<td style="text-align: center;">' + edu.util.returnEmpty(aData.PHANLOAI_TEN) + '</td>'
-                html += '<td style="text-align: center;">' + edu.util.returnEmpty(aData.TONGSOTINCHI) + '</td>'
-                html += '<td style="text-align: center;">' + edu.util.returnEmpty(aData.TONGSOTINCHITINHPHI) + '</td>'
+                html += '<td style="text-align: center;"><span style="display:none">' + aData.ID + '</span>' + edu.util.returnEmpty(aData.KYHIEU) + '</td>'
+                html += '<td style="text-align: center;"><span style="display:none">' + aData.ID + '</span>' + edu.util.returnEmpty(aData.TEN) + '</td>'
+                html += '<td style="text-align: center;"><span style="display:none">' + aData.ID + '</span>' + edu.util.returnEmpty(aData.PHANLOAI_TEN) + '</td>'
+                html += '<td style="text-align: center;"><span style="display:none">' + aData.ID + '</span>' + edu.util.returnEmpty(aData.TONGSOTINCHI) + '</td>'
+                html += '<td style="text-align: center;"><span style="display:none">' + aData.ID + '</span>' + edu.util.returnEmpty(aData.TONGSOTINCHITINHPHI) + '</td>'
                 html += '<td style="text-align: center;">' + (nRow + 1) + '</td>'
                 html += '<td>' + edu.util.returnEmpty(aDataHP.DAOTAO_HOCPHAN_MA) + '</td>'
                 html += '<td>' + edu.util.returnEmpty(aDataHP.DAOTAO_HOCPHAN_TEN) + '</td>'
