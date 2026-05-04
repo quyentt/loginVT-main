@@ -24,7 +24,6 @@
                                 <a id="btnSearch" class="btn btn-default btn-search">
                                     <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -33,7 +32,7 @@
             <div class="box box-solid aps-phanconglop-ds pl20 pr20 pb20 pt10">
                 <div class="box-header pd0">
                     <h3 class="box-title color-blue line-20 mt-10">
-                        <i class="far fa-clipboard-list-check"></i> Danh sách phân công 
+                        <i class="far fa-clipboard-list-check"></i> Danh sách phân công
                         <span class="pull-right badge bg-light-blue ml-15">
                             <span id="lblPhanCongLop_Tong"></span>
                         </span>
@@ -44,10 +43,9 @@
                     </div>
                 </div>
                 <div class="box-body pd0 mt-20">
-                    <div class="col-sm-12 scroll-table-x" id="zonePhanCong">
+                    <div class="col-sm-12 zonePhanCong" id="zonePhanCong">
                         <table id="tblPhanCongSinhVien"
-                            class="table table-hover table-bordered table-noborder tblPhanCongSinhVien"
-                            style="width: 300px; float: left">
+                            class="table table-hover table-bordered table-border tblPhanCongSinhVien">
                             <thead>
                                 <tr>
                                     <th class="td-center td-fixed">
@@ -61,8 +59,7 @@
                                 <!-- load from js -->
                             </tbody>
                         </table>
-                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                            style="width: 300px; float: left">
+                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered table-noborder">
                             <thead>
                                 <tr>
                                     <th class="td-center td-fixed">
@@ -76,8 +73,7 @@
                                 <!-- load from js -->
                             </tbody>
                         </table>
-                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                            style="width: 300px; float: left">
+                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th class="td-center td-fixed">
@@ -91,8 +87,7 @@
                                 <!-- load from js -->
                             </tbody>
                         </table>
-                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                            style="width: 300px; float: left">
+                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th class="td-center td-fixed">
@@ -106,8 +101,7 @@
                                 <!-- load from js -->
                             </tbody>
                         </table>
-                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                            style="width: 300px; float: left">
+                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th class="td-center td-fixed">
@@ -121,8 +115,7 @@
                                 <!-- load from js -->
                             </tbody>
                         </table>
-                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
-                            style="width: 300px; float: left">
+                        <table id="tblPhanCongSinhVien" class="table table-hover table-bordered">
                             <thead>
                                 <tr>
                                     <th class="td-center td-fixed">
@@ -141,7 +134,7 @@
             </div>
         </div>
 
-        <div class="box box-solid zone-bus form-container aps-add-new " id="zoneEdit" style="display: none">
+        <div class="box box-solid zone-bus form-container aps-add-new aps-them-phanCong" id="zoneEdit" style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title"><span class="myModalLabel">
                         <i class="fa fa-plus" style="color: #fff !important;"></i>
@@ -310,7 +303,7 @@
                                     <span class="badge bg-blue">Thông tin bắt buộc</span>
                                 </p>
                             </div>
-                            <div class="row">
+                            <div class="row col-TT-batbuoc-form">
                                 <!--<div class="col-sm-2">
                                     <div class="group-title-name">
                                         Thời gan <span class="title-colon">:</span>
@@ -347,7 +340,7 @@
                                     </div>
                                 </div>-->
                             </div>
-                            <div class="row">
+                            <div class="row col-TT-batbuoc-check">
                                 <div class="col-sm-3 aps-lable-name">
                                     <select id="dropHocPhan" class="select-opt" style="width:100% !important"></select>
                                 </div>
@@ -365,7 +358,7 @@
                                 </div>
                             </div>
                             <div class="row mt-10">
-                                <div class="aps-table-select">
+                                <div class="aps-table-select scroll-table-x">
                                     <table id="tblLopHocPhan"
                                         class="table table-hover table-bordered table-noborder tblLopHocPhan mb-0">
                                         <thead>

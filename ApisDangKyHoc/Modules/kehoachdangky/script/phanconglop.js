@@ -441,7 +441,7 @@ PhanCongLop.prototype = {
             var tempData = data.filter(element => element.PHANCAPAPDUNG_ID === ele.ID);
             console.log(tempData);
             if (tempData != undefined && tempData.length > 0) {
-                var rowHead = '<table id="tblPhanCong' + ele.ID  +'" class="table table-hover table-bordered" style="width: 300px; float: left">';
+                var rowHead = '<table id="tblPhanCong' + ele.ID  +'" class="table table-hover table-bordered">';
                 rowHead += '<thead>';
                 rowHead += '<tr>';
                 rowHead += '<th class="td-center td-fixed">';

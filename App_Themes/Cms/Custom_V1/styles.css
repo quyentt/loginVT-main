@@ -208,6 +208,30 @@ input::placeholder {
   line-height: 38px !important;
 }
 
+/* -----modal---------- */
+.modal-700 {
+  width: 700px !important;
+}
+
+.modal-1360 {
+  width: 1360px !important;
+}
+
+.modal-680 .modal-content {
+  width: 100% !important;
+  max-width: 680px !important;
+}
+
+.modal-860 .modal-content {
+  width: 100% !important;
+  max-width: 860px !important;
+}
+
+.modal-860,
+.modal_XacNhan .modal-860 {
+  max-width: 860px !important;
+}
+
 /* -----Table---------- */
 .table>tbody>tr>td,
 .table>tbody>tr>th,
@@ -6525,7 +6549,8 @@ input[type="radio"] {
 .table {
   margin-bottom: 5px !important;
 }
+
 /* ---------------------- */
 .zoneEdit .aps-form .aps-form-item .aps-form-input {
-    flex: inherit !important;
+  flex: inherit !important;
 }

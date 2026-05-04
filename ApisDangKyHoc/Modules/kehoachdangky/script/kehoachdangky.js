@@ -2461,7 +2461,6 @@ KeHoachDangKy.prototype = {
         var me = this;
         data = data || {};
         var lhpId = data.DANGKY_LOPHOCPHAN_ID || "";
-<<<<<<< HEAD
         var html = "";
         html += "<tr data-id='" + (data.ID || "") + "' data-lhp-id='" + lhpId + "'>";
         html += "<td class='td-center'><input type='checkbox' class='chkRow_XuLyLHP' /> <span class='rowStt' style='margin-left:4px;'>" + stt + "</span></td>";
@@ -2471,7 +2470,6 @@ KeHoachDangKy.prototype = {
         html += "<td class='td-center'><a class='btn btn-danger btn-sm btnDeleteXuLyLHP' title='Xóa'><i class='fa fa-trash'></i></a></td>";
         html += "</tr>";
         $tbody.append(html);
-=======
         for (var i = 0; i < me.dtXuLyLHP_All.length; i++) {
             if (lhpId && me.dtXuLyLHP_All[i].DANGKY_LOPHOCPHAN_ID === lhpId) return;
         }

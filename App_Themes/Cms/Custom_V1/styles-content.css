@@ -293,8 +293,6 @@
     border-color: #5c636a !important;
 }
 
-
-
 /*--------------------*/
 .aps-box-table .row-tab {
     padding-left: 0px !important;
@@ -3022,6 +3020,7 @@
 .aps-modal-nhansu .col-sm-9 .table tr:last-child {
     border-right: 0 solid #d1d1d1 !important;
 }
+
 .aps-modal-nhansu .col-sm-9 .simple-pagination {
     padding: 0 0 5px 0 !important;
 }
@@ -11313,4 +11312,37 @@ table#clone {
     grid-template-columns: 50% 50%;
     gap: 20px;
     padding-right: 20px;
+}
+
+#zonepercentInDS {
+    line-height: 27px !important;
+}
+
+/* --------------- */
+.zonePhanCong {
+    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    /* 4 cột bằng nhau */
+}
+
+.zonePhanCong .table.table-hover {
+    border-left: 1px solid #e1e1e1 !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+    float: left;
+}
+
+.zonePhanCong .table>tbody>tr>td,
+.zonePhanCong .table>tbody>tr>th {
+    /* border-right: 0 solid #e1e1e1 !important; */
+}
+
+.zonePhanCong .table>thead>tr>th,
+.zonePhanCong .table>tbody>tr>th {
+    border-right: 1px solid #e1e1e1 !important;
+}
+
+.zonePhanCong .table.table-hover tr th:nth-child(2) {
+    text-align: left !important;
 }

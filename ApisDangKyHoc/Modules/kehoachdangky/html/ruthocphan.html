@@ -19,20 +19,22 @@
                             <div class="col-sm-3 item-search">
                                 <input id="txtSearch_TuKhoa" class="form-control" placeholder="Thông tin người học" />
                             </div>
-                            <div class="col-sm-3 item-search">
+                            <div class="col-sm-3 item-search item-search-button d-flex aps-gap-10">
                                 <a class="btn btn-default btn-search" id="btnSearch"
-                                   style="border-radius: 5px !important;">
+                                    style="border-radius: 5px !important;">
                                     <i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span>
                                 </a>
-                            </div>
-                            <div class="col-sm-3 item-search">
+
                                 <div class="dropdown" id="zonebtnBaoCao_RHP_Import">
-                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <button class="btn btn-success dropdown-toggle" type="button"
+                                        data-toggle="dropdown">
                                         <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu form-container">
-                                        <li><a class="btnImportWithProce" name="IMPORTWITHPROC_RHP" title="Rút học phần" href="#"> 1. Import Rút học phần</a></li>
-                                        <li><a class="btnImportWithProce" name="IMPORTWITHPROC_HRHP" title=" Hủy Rút" href="#"> 2. Import Hủy Rút học phần</a></li>
+                                        <li><a class="btnImportWithProce" name="IMPORTWITHPROC_RHP" title="Rút học phần"
+                                                href="#"> 1. Import Rút học phần</a></li>
+                                        <li><a class="btnImportWithProce" name="IMPORTWITHPROC_HRHP" title=" Hủy Rút"
+                                                href="#"> 2. Import Hủy Rút học phần</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -42,9 +44,9 @@
                 <!-- Học phần đã rút -->
                 <div class="box box-solid pd20 aps-hocphan-darut">
                     <div class="box-header">
-                        <h3 class="box-title color-blue line-20 mt-15">
-                            <i class="fal fa-book-reader"></i> Học phần đã rút
-                            <span class="badge bg-light-blue">
+                        <h3 class="box-title color-blue line-38">
+                            <i class="fal fa-book-reader line-38"></i> Học phần đã rút
+                            <span class="badge bg-light-blue mt-10">
                                 <span id="lblRutHocPhan_Tong"></span>
                             </span>
                         </h3>
@@ -93,9 +95,9 @@
                 <!-- Kết quả đã đăng ký -->
                 <div class="box box-solid pd20 aps-ketqua-dangky pt0">
                     <div class="box-header">
-                        <h3 class="box-title color-green line-20 mt-15">
-                            <i class="far fa-address-book color-green"></i> Kết quả đã đăng ký
-                            <!--<span class="badge bg-light-blue">
+                        <h3 class="box-title color-green line-38">
+                            <i class="far fa-address-book color-green line-38"></i> Kết quả đã đăng ký
+                            <!--<span class="badge bg-light-blue mt-10">
                                 <span id="lblRutHocPhan_Tong"></span>
                             </span>-->
                         </h3>
@@ -142,32 +144,34 @@
     </div>
 </section>
 <!-- ---------- -->
-<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none  !important;">
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
         Rút học phần</button>
 </div>
 <!-- ---------- -->
 <div class="modal fade myModal" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-860 modal-dialog-scrollable">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
                 <h3 class="box-title mt-2"><span class="myModalLabel">
-                    <i class="fa-solid fa-money-simple-from-bracket"></i></span>Rút học phần</h3>
+                        <i class="fa-solid fa-money-simple-from-bracket"></i></span>Rút học phần</h3>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblXacNhan" class="table table-hover table-bordered table-noborder tblXacNhan">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed td-center">Stt</th>
-                            <th class="td-left">Học phần</th>
-                            <th class="td-left">Phần trăm phải đóng</th>
-                            <th class="td-left">Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table id="tblXacNhan" class="table table-hover table-bordered table-noborder tblXacNhan">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center">Stt</th>
+                                <th class="td-left">Học phần</th>
+                                <th class="td-left">Phần trăm phải đóng</th>
+                                <th class="td-left">Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div class="clear"></div>
             <div id="notify"></div>

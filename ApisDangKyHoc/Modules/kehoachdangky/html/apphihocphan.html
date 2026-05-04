@@ -28,9 +28,9 @@
             <!-- 2. Học phần áp phí  -->
             <div class="box box-solid box-hocphanapphi pd20">
                 <div class="box-header pl0 pr0">
-                    <h3 class="box-title color-blue line-20 mt-10">
-                        <i class="fa-solid fa-circle-dollar-to-slot"></i> Học phần áp phí
-                        <span class="badge bg-light-blue">
+                    <h3 class="box-title color-blue line-38 ">
+                        <i class="fa-solid fa-circle-dollar-to-slot line-38 "></i> Học phần áp phí
+                        <span class="badge bg-light-blue mt-10">
                             <span id="lblApPhiHocPhan_Tong"></span>
                         </span>
                     </h3>
@@ -73,9 +73,9 @@
             <!-- 3. Kết quả đã đăng ký -->
             <div class="box box-solid box-ketquadk pd20">
                 <div class="box-header  pl0 pr0">
-                    <h3 class="box-title color-blue line-20 mt-10">
-                        <i class="fa-solid fa-address-book"></i> Kết quả đã đăng ký
-                        <!--<span class="badge bg-light-blue">
+                    <h3 class="box-title color-blue line-38">
+                        <i class="fa-solid fa-address-book line-38"></i> Kết quả đã đăng ký
+                        <!--<span class="badge bg-light-blue mt-10">
                                 <span id="lblApPhiHocPhan_Tong"></span>
                             </span>-->
                     </h3>
@@ -122,7 +122,7 @@
 </div>
 <!-- ---------- -->
 <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-860 modal-dialog-scrollable">
+    <div class="modal-dialog modal-860 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -130,17 +130,19 @@
                 <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> </h3>
             </div>
             <div class="modal-body" id="modal_body">
-                <table id="tblXacNhan" class="table table-hover table-bordered table-noborder tblXacNhan">
-                    <thead>
-                        <tr>
-                            <th class="td-fixed td-center">Stt</th>
-                            <th class="td-left">Học phần</th>
-                            <th class="td-left">Phần trăm phải đóng</th>
-                            <th class="td-left">Ghi chú</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                <div class="aps-table-select scroll-table-x">
+                    <table id="tblXacNhan" class="table table-hover table-bordered table-noborder tblXacNhan">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center w-50px">Stt</th>
+                                <th class="td-left">Học phần</th>
+                                <th class="td-left">Phần trăm phải đóng</th>
+                                <th class="td-left">Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
             <div class="clear"></div>
             <div id="notify"></div>

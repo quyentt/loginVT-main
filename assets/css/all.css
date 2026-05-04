@@ -2521,11 +2521,11 @@ input::placeholder {
 }
 
 .modal-700 {
-  max-width: 700px;
+  width: 700px !important;
 }
 
 .modal-1360 {
-  max-width: 1360px;
+  width: 1360px !important;
 }
 
 .action-group {

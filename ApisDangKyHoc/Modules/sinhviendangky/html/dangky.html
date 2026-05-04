@@ -122,11 +122,10 @@
                         <li id="tab3_nvdk" class=""><a href="#zone_content_nvdk" data-toggle="tab"
                                 aria-expanded="false"><i class="fa-light fa-chalkboard-user"></i> Nguyện vọng đăng ký
                                 (<span id="tab3_total">0</span>)</a></li>
-                        <li class="pull-right ml-10 mr-0">
+                        <li class="pull-right ml-10 mr-0 d-flex aps-gap-10">
                             <a id="btnRefresh" class="btn btn-warning lblRefresh btnRefresh d-flex">
                                 <i class="fa fa-refresh"></i> <span class="lang" key="">Tải lại</span></a>
-                        </li>
-                        <li class="pull-right ml-10 mr-0">
+
                             <a id="btnClearCache" class="btn btn-secondary lblRefresh btnClearCache d-flex">
                                 <i class="fa-light fa-broom-wide"></i><span class="lang" key="">Clear cache</span></a>
                         </li>
@@ -156,12 +155,13 @@
                                 -->
                                     <div class="clear"></div>
                                 </div>
-                                <div class="scroll-table-x">
+                                <div class="scroll-table-x aps-table-select">
                                     <table id="tblDangKy"
                                         class="table table-hover table-bordered table-noborder tblDangKy">
                                         <thead>
                                             <tr>
-                                                <th class="td-center td-fixed"><span class="lang" key="">#</span></th>
+                                                <th class="td-center td-fixed w-50px"><span class="lang" key="">#</span>
+                                                </th>
                                                 <th class="td-center"><span class="lang" key="">Chọn</span></th>
                                                 <th class="td-left">Mã Lớp</th>
                                                 <th class="td-left"><span class="lang" key="">Tình trạng</span></th>
@@ -443,3 +443,71 @@
         main_doc.DangKy.init();
     });
 </script>
+<!-- tabs -> accordion -->
+ <script>
+    $(document).ready(function () {
+
+  function isMobile() {
+    return window.innerWidth < 768;
+  }
+
+  function initMobileTab() {
+
+    //  remove toàn bộ event cũ trước
+    $('.nav-tabs li a').off('click.mobile');
+
+    $('.nav-tabs li a').on('click.mobile', function (e) {
+
+      if (!isMobile()) return;
+
+      e.preventDefault();
+
+      const target = $(this).attr('href');
+      const $li = $(this).parent();
+      const $content = $(target);
+
+      if (!$content.length) return;
+
+      // đóng hết
+      $('.tab-pane').stop(true, true).slideUp().removeClass('active');
+      $('.nav-tabs li').removeClass('active');
+
+      // active
+      $li.addClass('active');
+
+      // move xuống dưới LI
+      $('.tab-pane').not($content).appendTo('.tab-content'); // đưa về chỗ cũ trước
+      $li.after($content);
+
+      // mở
+      $content.addClass('active').stop(true, true).slideDown();
+    });
+
+    // auto mở tab active
+    $('.nav-tabs li.active a').trigger('click.mobile');
+  }
+
+//   function resetDesktop() {
+//     if (isMobile()) return;
+
+//     $('.nav-tabs li a').off('click.mobile');
+
+//     // đưa content về lại tab-content
+//     $('.tab-pane').each(function () {
+//       $('.tab-content').append($(this)).show();
+//     });
+//   }
+
+  function handle() {
+    if (isMobile()) {
+      initMobileTab();
+    } else {
+      resetDesktop();
+    }
+  }
+
+  handle();
+  $(window).on('resize', handle);
+
+});
+ </script>
