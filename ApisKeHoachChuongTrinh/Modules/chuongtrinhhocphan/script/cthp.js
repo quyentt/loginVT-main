@@ -131,17 +131,39 @@ ChuongTrinhHocPhan.prototype = {
                 $("#tblViewKhoiTuChon tbody").html("");
                 $("#tblViewKhoiTuChon tfoot").html("");
 
-                var data = edu.util.objGetDataInData(strId, me.dtChuongTrinh, "ID")[0]; 
-                var html = "";
-                html += '<div class="small-box">';
-                html += '<div class="inner">';
-                html += '<h4>' + edu.util.returnEmpty(data.TENCHUONGTRINH) + '</h4>';
-                html += '<p>Mã: ' + edu.util.returnEmpty(data.MACHUONGTRINH) + '</p>';
-                html += '<p>Số tín chỉ quy định theo chương trình: ' + edu.util.returnEmpty(data.TONGSOTINCHIQUYDINH) + '</p>';
-                html += '<p>Số tín chỉ theo khối khai báo: ' + edu.util.returnEmpty(data.TONGSOTINCHITHEOKHOIKT) + '</p>';
-                html += '<p>Tổng số SV còn đang học/ Tổng số: ' + edu.util.returnEmpty(data.SODANGHOC) + '/ ' + + edu.util.returnEmpty(data.TONGSOSV) + '</p>';
-                html += '</div>';
-                html += '</div>';
+                var data = edu.util.objGetDataInData(strId, me.dtChuongTrinh, "ID")[0];
+                var sTen = edu.util.returnEmpty(data.TENCHUONGTRINH);
+                var sMa = edu.util.returnEmpty(data.MACHUONGTRINH);
+                var sTinQD = edu.util.returnEmpty(data.TONGSOTINCHIQUYDINH);
+                var sTinKK = edu.util.returnEmpty(data.TONGSOTINCHITHEOKHOIKT);
+                var sSVDH = edu.util.returnEmpty(data.SODANGHOC);
+                var sSVTS = edu.util.returnEmpty(data.TONGSOSV);
+                var html = ''
+                    + '<div class="ct-info-card" style="background:#fff;border:1px solid #e6ebf1;border-radius:10px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.04);">'
+                    +   '<div class="ct-info-head" style="display:flex;align-items:center;gap:10px;border-bottom:1px solid #f0f3f7;padding-bottom:10px;margin-bottom:12px;">'
+                    +     '<i class="fa-solid fa-graduation-cap" style="font-size:20px;color:#3380db;"></i>'
+                    +     '<div style="flex:1;min-width:0;">'
+                    +       '<div style="font-size:15px;font-weight:600;color:#1f2d3d;line-height:1.3;">' + sTen + '</div>'
+                    +       '<div style="font-size:12px;color:#7a869a;margin-top:2px;"><i class="fa-solid fa-hashtag"></i> ' + sMa + '</div>'
+                    +     '</div>'
+                    +   '</div>'
+                    +   '<div class="ct-info-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">'
+                    +     '<div style="background:#f5faff;border-left:3px solid #3380db;border-radius:6px;padding:8px 10px;">'
+                    +       '<div style="font-size:11px;color:#7a869a;text-transform:uppercase;letter-spacing:.3px;">Tín chỉ quy định</div>'
+                    +       '<div style="font-size:18px;font-weight:700;color:#3380db;">' + sTinQD + '</div>'
+                    +     '</div>'
+                    +     '<div style="background:#f3fbf6;border-left:3px solid #28a745;border-radius:6px;padding:8px 10px;">'
+                    +       '<div style="font-size:11px;color:#7a869a;text-transform:uppercase;letter-spacing:.3px;">Tín chỉ theo khối</div>'
+                    +       '<div style="font-size:18px;font-weight:700;color:#28a745;">' + sTinKK + '</div>'
+                    +     '</div>'
+                    +     '<div style="grid-column:1 / -1;background:#fff8f0;border-left:3px solid #f39c12;border-radius:6px;padding:8px 10px;display:flex;align-items:center;justify-content:space-between;">'
+                    +       '<div>'
+                    +         '<div style="font-size:11px;color:#7a869a;text-transform:uppercase;letter-spacing:.3px;"><i class="fa-solid fa-user-graduate"></i> Sinh viên đang học / Tổng</div>'
+                    +         '<div style="font-size:16px;font-weight:600;color:#1f2d3d;margin-top:2px;"><span style="color:#f39c12;">' + sSVDH + '</span> <span style="color:#bdbdbd;">/</span> ' + sSVTS + '</div>'
+                    +       '</div>'
+                    +     '</div>'
+                    +   '</div>'
+                    + '</div>';
                 $("#lblThongTinChuongTrinh").html(html);
             }
             else {
@@ -5718,6 +5740,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.system.actionRowSpan("tblViewKhoiBatBuoc", [0, [1, 2, 3, 4]]);
         $("#tblViewKhoiBatBuoc tfoot td:eq(3)").html(iTong)
         $("#tblViewKhoiBatBuoc tfoot td:eq(4)").html(iTongTP)
+        $("#tblViewKhoiBatBuoc tfoot td").css("text-align", "center");
         /*III. Callback*/
     },
 
@@ -5846,6 +5869,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.system.actionRowSpan("tblViewKhoiTuChon", [0, [1, 2, 3, 4]]);
         $("#tblViewKhoiTuChon tfoot td:eq(3)").html(iTong)
         $("#tblViewKhoiTuChon tfoot td:eq(4)").html(iTongTP)
+        $("#tblViewKhoiTuChon tfoot td").css("text-align", "center");
     },
 
     getList_KhoiKienThuc_KT: function () {
