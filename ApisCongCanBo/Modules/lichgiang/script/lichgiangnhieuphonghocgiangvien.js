@@ -196,7 +196,8 @@ LichGiangNhieuPhong.prototype = {
 
         // Search button
         $("#btnSearch").click(function () {
-            var hasFilter = $("#dropSearch_DonVi").val() || $("#dropSearch_CanBo").val();
+            var arrMulti = $("#dropSearch_CanBoMulti").val() || [];
+            var hasFilter = $("#dropSearch_DonVi").val() || $("#dropSearch_CanBo").val() || arrMulti.length > 0;
             if (hasFilter) {
                 $(".days .active").trigger("click");
             } else {
@@ -204,11 +205,35 @@ LichGiangNhieuPhong.prototype = {
             }
         });
 
+        // View multi button — chỉ load khi user bấm
+        $("#btnViewMulti").click(function () {
+            var arrMulti = $("#dropSearch_CanBoMulti").val() || [];
+            if (arrMulti.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 giảng viên để xem");
+                return;
+            }
+            if (!me.strNgayBatDau || !me.strNgayKetThuc) {
+                edu.system.alert("Vui lòng chọn tuần trên lịch");
+                return;
+            }
+            me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+        });
+
         // View all button
         $("#btnViewAll").click(function () {
             $("#dropSearch_DonVi").val('').trigger('change');
             $("#dropSearch_CanBo").val('').trigger('change');
+            $("#dropSearch_CanBoMulti").val(null).trigger('change.select2');
             $(".days .active").trigger("click");
+        });
+
+        // Multi cán bộ filter change — KHÔNG tự load, chỉ reset filter đơn để không xung đột
+        $("#dropSearch_CanBoMulti").change(function () {
+            var selected = $(this).val() || [];
+            console.log("Đã chọn", selected.length, "giảng viên (chờ bấm 'Xem nhiều giảng viên')");
+            if (selected.length > 0) {
+                $("#dropSearch_CanBo").val('').trigger('change.select2');
+            }
         });
 
         // Đơn vị filter change
@@ -583,13 +608,23 @@ LichGiangNhieuPhong.prototype = {
             me.dtCanBoOriginal = arr;
             me.dtCanBoFull = arr.slice();
 
-            // Apply filter giảng viên cụ thể nếu có
-            var strCanBo_Id = $("#dropSearch_CanBo").val() || '';
-            if (strCanBo_Id) {
+            // Apply multi-cán bộ filter (ưu tiên nếu chọn nhiều giảng viên)
+            var arrCanBo_Ids = $("#dropSearch_CanBoMulti").val() || [];
+            if (arrCanBo_Ids.length > 0) {
+                console.log("Lọc theo nhiều giảng viên:", arrCanBo_Ids.length);
                 me.dtCanBoFull = me.dtCanBoFull.filter(function (cb) {
-                    return cb.ID === strCanBo_Id;
+                    return arrCanBo_Ids.indexOf(cb.ID) !== -1;
                 });
-                console.log("Sau khi lọc giảng viên:", me.dtCanBoFull.length);
+                console.log("Sau khi lọc nhiều giảng viên:", me.dtCanBoFull.length);
+            } else {
+                // Apply filter giảng viên cụ thể nếu có
+                var strCanBo_Id = $("#dropSearch_CanBo").val() || '';
+                if (strCanBo_Id) {
+                    me.dtCanBoFull = me.dtCanBoFull.filter(function (cb) {
+                        return cb.ID === strCanBo_Id;
+                    });
+                    console.log("Sau khi lọc giảng viên:", me.dtCanBoFull.length);
+                }
             }
 
             if (typeof callback === 'function') callback();
@@ -689,27 +724,121 @@ LichGiangNhieuPhong.prototype = {
         });
     },
 
-    renderCanBoDropdown: function (arr) {
-        var obj = {
-            data: arr,
-            renderInfor: {
-                id: "ID",
-                parentId: "",
-                name: "THOIGIAN",
-                mRender: function (nRow, aData) {
-                    return (edu.util.returnEmpty(aData.HODEM) + ' ' + edu.util.returnEmpty(aData.TEN)).trim()
-                        + ' - ' + edu.util.returnEmpty(aData.MASO)
-                        + ' - ' + edu.util.returnEmpty(aData.DAOTAO_COCAUTOCHUC_TEN);
-                }
-            },
-            renderPlace: ["dropSearch_CanBo"],
-            title: "Tìm kiếm giảng viên..."
+    // Build label hiển thị cho 1 cán bộ
+    formatCanBoLabel: function (cb) {
+        var label = ((cb.HODEM || '') + ' ' + (cb.TEN || '')).trim();
+        if (cb.MASO) label += ' - ' + cb.MASO;
+        if (cb.DAOTAO_COCAUTOCHUC_TEN) label += ' - ' + cb.DAOTAO_COCAUTOCHUC_TEN;
+        return label || ('CB-' + cb.ID);
+    },
+
+    // Tạo cấu hình ajax phân trang client-side cho Select2
+    buildCanBoSelect2Ajax: function () {
+        var me = this;
+        var pageSize = 50;
+
+        return {
+            placeholder: "",
+            allowClear: true,
+            // Bắt buộc có 1 option rỗng để Select2 ajax hoạt động bình thường
+            // Custom transport: trả về dữ liệu từ dtCanBoList theo trang
+            ajax: {
+                transport: function (params, success) {
+                    var term = (params.data.term || '').toLowerCase().trim();
+                    var page = params.data.page || 1;
+                    var source = me.dtCanBoList || [];
+
+                    var filtered = term ? source.filter(function (cb) {
+                        var label = me.formatCanBoLabel(cb).toLowerCase();
+                        return label.indexOf(term) !== -1;
+                    }) : source;
+
+                    var startIdx = (page - 1) * pageSize;
+                    var endIdx = startIdx + pageSize;
+                    var slice = filtered.slice(startIdx, endIdx);
+
+                    var results = slice.map(function (cb) {
+                        return { id: cb.ID, text: me.formatCanBoLabel(cb) };
+                    });
+
+                    success({
+                        results: results,
+                        pagination: { more: endIdx < filtered.length }
+                    });
+                },
+                delay: 150
+            }
         };
-        edu.system.loadToCombo_data(obj);
-        $("#dropSearch_CanBo").select2({
-            placeholder: "Tìm kiếm giảng viên...",
-            allowClear: true
+    },
+
+    // Đảm bảo option đang chọn có trong DOM (ajax chỉ load 1 trang)
+    ensureSelectedOption: function ($el, ids) {
+        var me = this;
+        var arrIds = Array.isArray(ids) ? ids : (ids ? [ids] : []);
+        arrIds.forEach(function (id) {
+            if (!id) return;
+            if ($el.find('option[value="' + id + '"]').length) return;
+            var found = (me.dtCanBoList || []).find(function (c) { return c.ID === id; });
+            if (found) {
+                $el.append(new Option(me.formatCanBoLabel(found), found.ID, true, true));
+            }
         });
+    },
+
+    renderCanBoDropdown: function (arr) {
+        var me = this;
+
+        // Lưu nguồn dữ liệu cho Select2 ajax dùng
+        me.dtCanBoList = arr || [];
+
+        var $single = $("#dropSearch_CanBo");
+        var prevSingle = $single.val();
+        if ($single.hasClass("select2-hidden-accessible")) {
+            $single.select2('destroy');
+        }
+        $single.html('<option value=""></option>');
+
+        var ajaxCfg = me.buildCanBoSelect2Ajax();
+        $single.select2($.extend({}, ajaxCfg, {
+            placeholder: "Tìm kiếm giảng viên...",
+            allowClear: true,
+            width: '100%'
+        }));
+
+        if (prevSingle) {
+            me.ensureSelectedOption($single, prevSingle);
+            $single.val(prevSingle).trigger('change.select2');
+        }
+
+        // Load multi-select với cùng cơ chế phân trang
+        me.populateMultiCanBoDropdown(arr);
+    },
+
+    populateMultiCanBoDropdown: function (arr) {
+        var me = this;
+        var $multi = $("#dropSearch_CanBoMulti");
+
+        me.dtCanBoList = arr || me.dtCanBoList || [];
+
+        var prevMulti = $multi.val();
+        if ($multi.hasClass("select2-hidden-accessible")) {
+            $multi.select2('destroy');
+        }
+        $multi.html('');
+
+        var ajaxCfg = me.buildCanBoSelect2Ajax();
+        $multi.select2($.extend({}, ajaxCfg, {
+            placeholder: "Chọn nhiều giảng viên...",
+            allowClear: true,
+            multiple: true,
+            closeOnSelect: false,
+            width: '100%'
+        }));
+
+        if (prevMulti && prevMulti.length) {
+            me.ensureSelectedOption($multi, prevMulti);
+            $multi.val(prevMulti).trigger('change.select2');
+        }
     },
 
     loadCanBoByDonVi: function (donViId) {
@@ -733,6 +862,7 @@ LichGiangNhieuPhong.prototype = {
             me.dtCanBoList = arr;
             me.renderCanBoDropdown(arr);
             $("#dropSearch_CanBo").val('').trigger('change');
+            $("#dropSearch_CanBoMulti").val(null);
         });
     },
 

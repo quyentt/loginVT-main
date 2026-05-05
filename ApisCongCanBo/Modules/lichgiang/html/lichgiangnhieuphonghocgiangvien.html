@@ -704,7 +704,147 @@
     .select2-dropdown {
         z-index: 9999 !important;
     }
-    
+
+    /* Đồng bộ Select2 đơn trong khu tìm kiếm — cùng kích thước & style với multi */
+    .search-bar-controls .select2-container .select2-selection--single,
+    .search-bar-controls .form-select {
+        height: 38px !important;
+        min-height: 38px !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        background: #fff !important;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .search-bar-controls .select2-container--focus .select2-selection--single,
+    .search-bar-controls .select2-container--open .select2-selection--single {
+        border-color: #223771 !important;
+        box-shadow: 0 0 0 0.15rem rgba(34, 55, 113, 0.15) !important;
+    }
+
+    .search-bar-controls .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px !important;
+        text-align: left !important;
+        padding: 0 28px 0 12px !important;
+        font-size: 13px !important;
+        color: #223771 !important;
+        font-weight: 500;
+    }
+
+    .search-bar-controls .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        text-align: left !important;
+        line-height: 36px !important;
+        font-size: 13px !important;
+        color: #6c757d !important;
+        font-style: italic;
+        font-weight: 400;
+    }
+
+    .search-bar-controls .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px !important;
+        right: 6px !important;
+    }
+
+    .search-bar-controls .select2-container--default .select2-selection--single .select2-selection__clear {
+        margin-right: 22px !important;
+        color: #888 !important;
+        font-size: 16px !important;
+        font-weight: 600;
+    }
+
+    .search-bar-controls .select2-container--default .select2-selection--single .select2-selection__clear:hover {
+        color: #dc3545 !important;
+    }
+
+    /* Multi-select chọn nhiều giảng viên — đẹp hơn */
+    #dropSearch_CanBoMulti + .select2-container .select2-selection--multiple {
+        min-height: 38px !important;
+        max-height: 110px;
+        overflow-y: auto;
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+        padding: 3px 6px !important;
+        background: #fff;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container--focus .select2-selection--multiple,
+    #dropSearch_CanBoMulti + .select2-container--open .select2-selection--multiple {
+        border-color: #223771 !important;
+        box-shadow: 0 0 0 0.15rem rgba(34, 55, 113, 0.15) !important;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__rendered {
+        padding: 0 !important;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        align-items: center;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice {
+        background: linear-gradient(135deg, #223771 0%, #3c5398 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 14px !important;
+        padding: 3px 10px 3px 8px !important;
+        margin: 2px !important;
+        font-size: 11px !important;
+        font-weight: 500;
+        line-height: 1.4;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 5px rgba(34, 55, 113, 0.3);
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice__remove {
+        color: #fff !important;
+        font-weight: 700 !important;
+        margin-right: 2px !important;
+        opacity: 0.8;
+        font-size: 13px !important;
+        order: 2;
+        margin-left: 4px;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice__remove:hover {
+        opacity: 1;
+        color: #ffd1d1 !important;
+        background: transparent !important;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__clear {
+        color: #888 !important;
+        margin-right: 6px !important;
+        font-size: 16px;
+        line-height: 1;
+        align-self: center;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-search--inline {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-search--inline .select2-search__field {
+        margin-top: 4px !important;
+        font-size: 12px !important;
+        min-height: 24px;
+    }
+
+    #dropSearch_CanBoMulti + .select2-container .select2-selection__placeholder {
+        color: #6c757d;
+        font-size: 12px;
+        font-style: italic;
+    }
+
     /* Select2 trong modal xuất Excel */
     #modal_export_excel .select2-container {
         width: 100% !important;
@@ -1713,6 +1853,9 @@
                             style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="">Tìm kiếm giảng viên...</option>
                         </select>
+                        <select class="form-select" id="dropSearch_CanBoMulti" multiple="multiple"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                        </select>
                         <select class="form-select" id="dropEfficiencyMode"
                             style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="days">Tính theo ngày có lịch dạy (mặc định)</option>
@@ -1727,6 +1870,9 @@
                         <div class="search-bar-controls-buttons">
                             <button class="btn btn-primary" id="btnSearch">
                                 <i class="fa-solid fa-search"></i> Xem lịch giảng viên
+                            </button>
+                            <button class="btn btn-info text-white" id="btnViewMulti">
+                                <i class="fa-solid fa-layer-group"></i> Xem nhiều giảng viên
                             </button>
                             <button class="btn btn-outline-secondary" id="btnViewAll">
                                 <i class="fa-solid fa-th-list"></i> Xem tất cả lịch giảng

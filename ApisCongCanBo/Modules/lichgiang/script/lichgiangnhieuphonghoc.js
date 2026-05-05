@@ -253,19 +253,28 @@ LichGiangNhieuPhong.prototype = {
             }
         });
 
-        // Multi-room filter change (chọn nhiều phòng)
+        // Multi-room filter change — KHÔNG tự load, chỉ reset filter đơn để không xung đột
         $("#dropSearch_PhongHocMulti").change(function () {
             var selected = $(this).val() || [];
-            console.log("Chọn nhiều phòng:", selected.length, "phòng");
+            console.log("Đã chọn", selected.length, "phòng (chờ bấm 'Xem nhiều phòng')");
 
             if (selected.length > 0) {
-                // Khi đã chọn nhiều phòng thì reset filter phòng đơn để tránh xung đột
                 $("#dropSearch_PhongHoc").val('').trigger('change.select2');
             }
+        });
 
-            if (me.strNgayBatDau && me.strNgayKetThuc) {
-                me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+        // View multi-room button — chỉ load khi user bấm
+        $("#btnViewMulti").click(function () {
+            var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
+            if (arrMulti.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 phòng để xem");
+                return;
             }
+            if (!me.strNgayBatDau || !me.strNgayKetThuc) {
+                edu.system.alert("Vui lòng chọn tuần trên lịch");
+                return;
+            }
+            me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
         });
 
         // Room type filter change
