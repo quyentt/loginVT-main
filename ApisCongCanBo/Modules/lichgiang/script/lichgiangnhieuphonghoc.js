@@ -206,7 +206,8 @@ LichGiangNhieuPhong.prototype = {
 
         // Search button
         $("#btnSearch").click(function () {
-            var hasFilter = $("#dropSearch_ToaNha").val() || $("#dropSearch_PhongHoc").val();
+            var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
+            var hasFilter = $("#dropSearch_ToaNha").val() || $("#dropSearch_PhongHoc").val() || arrMulti.length > 0;
             if (hasFilter) {
                 $(".days .active").trigger("click");
             } else {
@@ -218,6 +219,7 @@ LichGiangNhieuPhong.prototype = {
         $("#btnViewAll").click(function () {
             $("#dropSearch_ToaNha").val('').trigger('change');
             $("#dropSearch_PhongHoc").val('').trigger('change');
+            $("#dropSearch_PhongHocMulti").val(null).trigger('change.select2');
             $(".days .active").trigger("click");
         });
 
@@ -241,11 +243,26 @@ LichGiangNhieuPhong.prototype = {
         // Room filter change
         $("#dropSearch_PhongHoc").change(function () {
             console.log("Phòng học filter changed to:", $(this).val());
-            
+
             // Đóng dropdown Select2
             $(this).select2('close');
-            
+
             // Auto load data if week is selected
+            if (me.strNgayBatDau && me.strNgayKetThuc) {
+                me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+            }
+        });
+
+        // Multi-room filter change (chọn nhiều phòng)
+        $("#dropSearch_PhongHocMulti").change(function () {
+            var selected = $(this).val() || [];
+            console.log("Chọn nhiều phòng:", selected.length, "phòng");
+
+            if (selected.length > 0) {
+                // Khi đã chọn nhiều phòng thì reset filter phòng đơn để tránh xung đột
+                $("#dropSearch_PhongHoc").val('').trigger('change.select2');
+            }
+
             if (me.strNgayBatDau && me.strNgayKetThuc) {
                 me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
             }
@@ -627,14 +644,24 @@ LichGiangNhieuPhong.prototype = {
                     // Bắt đầu từ bản gốc để filter
                     me.dtPhongHocFull = me.dtPhongHocOriginal.slice();
                     
-                    // Apply room filter if selected (lọc theo phòng cụ thể)
-                    var strPhongHoc_Id = $("#dropSearch_PhongHoc").val() || '';
-                    if (strPhongHoc_Id) {
-                        console.log("Lọc theo phòng ID:", strPhongHoc_Id);
+                    // Apply multi-room filter (ưu tiên nếu chọn nhiều phòng)
+                    var arrPhongHoc_Ids = $("#dropSearch_PhongHocMulti").val() || [];
+                    if (arrPhongHoc_Ids.length > 0) {
+                        console.log("Lọc theo nhiều phòng:", arrPhongHoc_Ids);
                         me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
-                            return room.ID === strPhongHoc_Id;
+                            return arrPhongHoc_Ids.indexOf(room.ID) !== -1;
                         });
-                        console.log("Sau khi lọc phòng:", me.dtPhongHocFull.length, "phòng");
+                        console.log("Sau khi lọc nhiều phòng:", me.dtPhongHocFull.length, "phòng");
+                    } else {
+                        // Apply room filter if selected (lọc theo phòng cụ thể)
+                        var strPhongHoc_Id = $("#dropSearch_PhongHoc").val() || '';
+                        if (strPhongHoc_Id) {
+                            console.log("Lọc theo phòng ID:", strPhongHoc_Id);
+                            me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
+                                return room.ID === strPhongHoc_Id;
+                            });
+                            console.log("Sau khi lọc phòng:", me.dtPhongHocFull.length, "phòng");
+                        }
                     }
                     
                     // Apply room type filter
@@ -813,6 +840,9 @@ LichGiangNhieuPhong.prototype = {
                         placeholder: "Tìm kiếm phòng học...",
                         allowClear: true
                     });
+
+                    // Load options cho multi-select chọn nhiều phòng
+                    me.populateMultiRoomDropdown(roomList);
                 } else {
                     console.error("API failed:", data.Message);
                 }
@@ -825,6 +855,29 @@ LichGiangNhieuPhong.prototype = {
             contentType: true,
             data: obj_save,
         }, false, false, false, null);
+    },
+
+    populateMultiRoomDropdown: function (roomList) {
+        var $multi = $("#dropSearch_PhongHocMulti");
+
+        // Destroy Select2 cũ trước khi load options mới
+        if ($multi.hasClass("select2-hidden-accessible")) {
+            $multi.select2('destroy');
+        }
+
+        var options = '';
+        roomList.forEach(function(room) {
+            options += '<option value="' + room.ID + '">' + room.TEN + '</option>';
+        });
+        $multi.html(options);
+
+        $multi.select2({
+            placeholder: "Chọn nhiều phòng học...",
+            allowClear: true,
+            multiple: true,
+            closeOnSelect: false,
+            width: '100%'
+        });
     },
 
     loadPhongHocByToaNha: function (toaNhaId) {
@@ -878,6 +931,10 @@ LichGiangNhieuPhong.prototype = {
                         placeholder: "Tìm kiếm phòng học...",
                         allowClear: true
                     });
+
+                    // Reset & reload multi-select theo tòa nhà mới
+                    $("#dropSearch_PhongHocMulti").val(null);
+                    me.populateMultiRoomDropdown(roomList);
                 } else {
                     console.error("API failed:", data.Message);
                 }
