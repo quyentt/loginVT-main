@@ -73,10 +73,6 @@ blockquote {
   background-color: #fff !important;
 }
 
-.btn {
-  /* display: flex !important; */
-}
-
 .bg-f8 {
   background: #f8f8f8 !important;
 }
@@ -231,7 +227,10 @@ input::placeholder {
 .modal_XacNhan .modal-860 {
   max-width: 860px !important;
 }
-
+.modal-100{
+  width: 100% !important;
+  max-width: 100% !important;
+}
 /* -----Table---------- */
 .table>tbody>tr>td,
 .table>tbody>tr>th,

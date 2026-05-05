@@ -11346,3 +11346,19 @@ table#clone {
 .zonePhanCong .table.table-hover tr th:nth-child(2) {
     text-align: left !important;
 }
+/* ========== */
+.form-top.box-search .item-search{
+    padding-left: 0 !important;
+}
+.aps-keHoach-tuyenSinh .item-search:nth-child(3){
+    padding-right: 0 !important;
+}
+.tblKHtyensinh{
+    min-width: 1860px !important;
+}
+.form-tt-input .form-tt-input{
+  padding-left: 0 !important;
+}
+.list-chekbox .aps-lable-name .title-name {
+    line-height: 30px;
+}
