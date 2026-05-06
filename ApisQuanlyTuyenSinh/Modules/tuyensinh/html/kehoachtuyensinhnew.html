@@ -1,0 +1,758 @@
+<section class="content">
+    <div class="box-content pt-0 pl20 pr20">
+        <!-- Kế hoạch tuyển sinh -->
+        <div class="box box-solid box-shadow pd0 aps-keHoach-tuyenSinh">
+            <!-- Filter -->
+            <div class="form-top box-search">
+                <div class="row">
+                    <div class="col-lg-6 col-sm-6 item-search">
+                        <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-ms-6 item-search">
+                        <div class="form-item d-flex form-add-info flex-grow-1">
+                            <div class="input-group no-icon">
+                                <i class="fal fa-angle-down"></i>
+                                <select id="ddlLoaiNguonTuyenSinh" class="form-select" aria-label="Default select example">
+                                    <option value="" selected>Loại nguồn tuyển sinh</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-ms-6 item-search">
+                        <div class="form-item d-flex form-add-info flex-grow-1">
+                            <div class="input-group no-icon">
+                                <i class="fal fa-angle-down"></i>
+                                <select id="ddlPhuongAnTuyenSinh" class="form-select" aria-label="Default select example">
+                                    <option value="" selected>Phương án tuyển sinh</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-sm-2 item-search">
+                        <input id="txtSearch_NamTuyenSinh" class="form-control" placeholder="Năm tuyển sinh">
+                    </div>
+                    <div class="col-lg-2 col-sm-2 item-search">
+                        <input id="txtSearch_NamHoc" class="form-control" placeholder="Năm học">
+                    </div>
+                    <div class="col-lg-2 col-sm-2 item-search">
+                        <input id="txtSearch_HocKy" class="form-control" placeholder="Học kỳ">
+                    </div>
+
+                    <div class="col-lg-2 col-md-2 col-ms-6 item-search">
+                        <div class="form-item d-flex form-add-info flex-grow-1">
+                            <div class="input-group no-icon">
+                                <i class="fal fa-angle-down"></i>
+                                <select id="ddlTinhTrangKeHoach" class="form-select" aria-label="Default select example">
+                                    <option value="" selected>Tình trạng kế hoạch</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-ms-6 item-search">
+                        <div class="form-item d-flex form-add-info flex-grow-1">
+                            <div class="input-group no-icon">
+                                <i class="fal fa-angle-down"></i>
+                                <select id="ddlConHieuLuc" class="form-select" aria-label="Default select example">
+                                    <option value="" selected>Còn hiệu lực không</option>
+                                    <option value="1">Còn hiệu lực</option>
+                                    <option value="0">Hết hiệu lực</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-ms-6 item-search pl0">
+                        <div class="d-flex align-items-center">
+                            <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i>
+                                <span class="lang" key="">Tìm kiếm</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- List -->
+            <div class="box box-solid mt-15 aps-list-keHoach-tuyenSinh">
+                <div class="box-header d-flex pt20 pl20 pr20 pb0">
+                    <h3 class="box-title line-38" style="padding: 0 !important">
+                        <i class="fa-light fa-list-timeline line-38"></i> Danh sách kế hoạch tuyển sinh
+                        <span class="pull-right badge bg-light-blue ml-15">
+                            <span id="lblKeHoachTuyenSinh_Tong"></span>
+                        </span>
+                    </h3>
+                    <div class="box-list-btn pull-right d-flex">
+                        <a id="btnXoaKeHoach" class="btn btn-danger d-none"><i class="fa fa-trash"></i>Xóa</a>
+                        <a id="btnAddKeHoach" class="btn btn-primary" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#them-moi">
+                            <i class="fa-regular fa-plus"></i> Thêm mới</a>
+                    </div>
+                </div>
+                <div class="box-body pl20 pr20 pb10 mt-10">
+                    <div class="aps-table-select scroll-table-x pb-0 mb-20">
+                        <table id="tblKHtyensinh" class="table table-hover table-bordered table-noborder tblKHtyensinh">
+                            <thead>
+                                <tr>
+                                    <th class="td-center w-50px">Stt</th>
+                                    <th class="td-left">Mã</th>
+                                    <th class="td-left">Tên</th>
+                                    <th class="td-left">Loại nguồn tuyển sinh</th>
+                                    <th class="td-left">Phương án tuyển sinh</th>
+                                    <th class="td-center">Năm tuyển sinh</th>
+                                    <th class="td-center">Năm học</th>
+                                    <th class="td-center">Học kỳ</th>
+                                    <th class="td-center">Các đợt tuyển sinh</th>
+                                    <th class="td-center">Phân công nhân sự</th>
+                                    <th class="td-center">Kế hoạch đầu ra</th>
+                                    <th class="td-center">Quy định phí</th>
+                                    <th class="td-center">Mẫu khai hồ sơ</th>
+                                    <th class="td-center">Kết quả đăng ký</th>
+                                    <th class="td-center">Tình trạng kế hoạch</th>
+                                    <th class="td-center">Có public ko</th>
+                                    <th class="td-center">Có khóa không</th>
+                                    <th class="td-center">Hiệu lực</th>
+                                    <th class="td-center">Người tạo</th>
+                                    <th class="td-center">Ngày tạo</th>
+                                    <th class="td-center">Chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal: Thêm mới đợt tuyển sinh -->
+<div class="modal fade modal_them_moi" id="them-moi">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-plus"></i> Thêm mới đợt tuyển sinh
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-form mb-0">
+                    <!-- Thông tin chung -->
+                    <div class="row aps-form-tt">
+                        <div class="col-lg-8 pr20 pl0 form-tt-input ">
+                            <div class="row aps-form-item">
+                                <div class="col-sm-3 aps-lable-name pl0">
+                                    <div class="title-name">Mã</div>
+                                </div>
+                                <div class="col-sm-9 aps-form-input pr0">
+                                    <input id="txtDot_Ma" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row aps-form-item">
+                                <div class="col-sm-3 aps-lable-name pl0">
+                                    <div class="title-name">Tên</div>
+                                </div>
+                                <div class="col-sm-9 aps-form-input pr0">
+                                    <input id="txtDot_Ten" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 aps-form-year pl20 pr0">
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-4 aps-lable-name pl0">
+                                    <div class="title-name">Số đợt thứ</div>
+                                </div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtDot_SoDotThu" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-4 aps-lable-name pl0">
+                                    <div class="title-name">Phân loại đợt</div>
+                                </div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddl_KieuDot" class="form-select">
+                                            <option value="">Chọn phân loại đợt</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 25px;"></div>
+
+                    <!-- Các mốc thời gian -->
+                    <div class="row aps-form-item">
+                        <div class="col-sm-6 d-flex pl0 pr10">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày bắt đầu đăng ký</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayBatDau_DangKy" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex pl10 pr0">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày kết thúc đăng ký</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayKetThuc_DangKy" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-6 d-flex pl0 pr10">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày bắt đầu nộp hồ sơ</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayBatDau_NopHS" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex pl10 pr0">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày kết thúc nộp hồ sơ</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayKetThuc_NopHS" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-6 d-flex pl0 pr10">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày bắt đầu xử lý</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayBatDau_XuLy" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex pl10 pr0">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày kết thúc xử lý</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayKetThuc_XuLy" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0">
+                            <div class="title-name">Ngày công bố kết quả</div>
+                        </div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <input id="txtDot_NgayCongBoKQ" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-6 d-flex pl0 pr10">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày bắt đầu xác nhận nhập học</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayBatDau_XNNH" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex pl10 pr0">
+                            <div class="col-sm-5 aps-lable-name pl0">
+                                <div class="title-name">Ngày kết thúc xác nhận nhập học</div>
+                            </div>
+                            <div class="col-sm-7 aps-form-input pr0">
+                                <input id="txtDot_NgayKetThuc_XNNH" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 25px;"></div>
+
+                    <!-- 4 yêu cầu checkbox -->
+                    <div class="row aps-form-item pd0 list-chekbox">
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDot_YeuCauCanBoDuyet" />
+                            <div class="title-name ml-10">Yêu cầu cán bộ duyệt</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDot_YeuCauKiemTraHS" class="mt-0" />
+                            <div class="title-name ml-10">Yêu cầu kiểm tra hồ sơ</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDot_YeuCauThanhToan" class="mt-0" />
+                            <div class="title-name ml-10">Yêu cầu thanh toán trước khi hoàn tất</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDot_ChoPhepThayDoiDauRa" class="mt-0" />
+                            <div class="title-name ml-10">Có được phép thay đổi đầu ra sau khi trúng tuyển không</div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 30px;"></div>
+
+                    <!-- Mẫu hồ sơ + Chỉ tiêu | 5 LABEL số đã + Tình trạng đợt -->
+                    <div class="row aps-form-tt">
+                        <div class="col-lg-8 pr20 pl0 form-tt-input ">
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-4 aps-lable-name pl0">
+                                    <div class="title-name">Mẫu hồ sơ</div>
+                                </div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddl_MauHoSo" class="form-select">
+                                            <option value="">Chọn mẫu hồ sơ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form-item">
+                                <div class="col-sm-4 aps-lable-name pl0">
+                                    <div class="title-name">Chỉ tiêu</div>
+                                </div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtDot_ChiTieu" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 aps-form-number pl20 pr0">
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0">
+                                    <div class="title-name">Số đã đăng ký</div>
+                                </div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblDot_SoDaDangKy" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0">
+                                    <div class="title-name">Số đã nộp hồ sơ</div>
+                                </div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblDot_SoDaNopHS" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0">
+                                    <div class="title-name">Số đã trúng tuyển</div>
+                                </div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblDot_SoDaTrungTuyen" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0">
+                                    <div class="title-name">Số đã tiếp nhận</div>
+                                </div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblDot_SoDaTiepNhan" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0">
+                                    <div class="title-name">Số đã nhập học</div>
+                                </div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblDot_SoDaNhapHoc" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0">
+                                    <div class="title-name">Tình trạng đợt</div>
+                                </div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddl_TinhTrangDot" class="form-select">
+                                            <option value="">Chọn tình trạng đợt</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 30px;"></div>
+
+                    <!-- 3 checkbox + Ghi chú -->
+                    <div class="row aps-form-item pd0 ">
+                        <div class="col-sm-3 list-chekbox pl0">
+                            <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                <input type="checkbox" id="chkDot_CoMoPublic" />
+                                <div class="title-name ml-10">Có mở public không</div>
+                            </div>
+                            <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                <input type="checkbox" id="chkDot_CoKhoa" class="mt-0" />
+                                <div class="title-name ml-10">Có khóa không</div>
+                            </div>
+                            <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                <input type="checkbox" id="chkDot_ConHieuLuc" class="mt-0" checked />
+                                <div class="title-name ml-10">Còn hiệu lực không</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 ghi-chu pl0 d-flex pr0">
+                            <div class="col-sm-2 aps-lable-name pl0">
+                                <div class="title-name">Ghi chú</div>
+                            </div>
+                            <div class="col-sm-10 aps-form-input pr0">
+                                <textarea id="txtDot_GhiChu" class="min-h-86 form-control-textarea w100"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button id="btnDelete_Dot" class="btn btn-danger d-none">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnSaveDot" class="btn btn-primary">
+                        <i class="fas fa-save"></i><span>Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Các đợt tuyển sinh -->
+<div class="modal fade modal_dot_tuyen_sinh" id="dot-tuyen-sinh">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-users"></i> Các đợt tuyển sinh
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-table-select scroll-table-x pb-0 mb-20">
+                    <table id="tblDotTuyenSinh" class="table table-hover table-bordered table-noborder">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center w-50px">Stt</th>
+                                <th class="td-left">Mã</th>
+                                <th class="td-left">Tên</th>
+                                <th class="td-left">Kiểu đợt</th>
+                                <th class="td-center">Ngày bắt đầu đăng ký</th>
+                                <th class="td-center">Ngày kết thúc đăng ký</th>
+                                <th class="td-center">Phương thức tuyển</th>
+                                <th class="td-center">Kế hoạch đầu ra</th>
+                                <th class="td-center">Mẫu khai hồ sơ</th>
+                                <th class="td-center">Kết quả đăng ký</th>
+                                <th class="td-center">Tình trạng kế hoạch</th>
+                                <th class="td-center">Có public ko</th>
+                                <th class="td-center">Có khóa không</th>
+                                <th class="td-center">Hiệu lực</th>
+                                <th class="td-center">Người tạo</th>
+                                <th class="td-center">Ngày tạo</th>
+                                <th class="td-center">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button class="btn btn-danger d-none">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnAddDotTuyenSinh" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#them-moi">
+                        <i class="fa-regular fa-plus"></i><span> Thêm mới</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Xem - sửa kế hoạch tuyển sinh -->
+<div class="modal fade modal_them_moi" id="chi-tiet">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-pen-to-square"></i> Xem - sửa kế hoạch tuyển sinh
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-form mb-0">
+                    <!-- Thông tin chung -->
+                    <div class="row aps-form-tt">
+                        <div class="col-lg-8 pr20 pl0 form-tt-input ">
+                            <div class="row aps-form-item">
+                                <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Mã</div></div>
+                                <div class="col-sm-9 aps-form-input pr0">
+                                    <input id="txtKH_Ma" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row aps-form-item">
+                                <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Tên</div></div>
+                                <div class="col-sm-9 aps-form-input pr0">
+                                    <input id="txtKH_Ten" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Loại nguồn tuyển sinh</div></div>
+                                <div class="col-sm-9 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_LoaiNguonTuyenSinh" class="form-select">
+                                            <option value="">Chọn loại nguồn tuyển sinh</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Phương án tuyển sinh</div></div>
+                                <div class="col-sm-9 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_PhuongAnTuyenSinh" class="form-select">
+                                            <option value="">Chọn phương án tuyển sinh</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 aps-form-year pl20 pr0">
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Năm tuyển sinh</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtKH_NamTuyenSinh" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Năm học</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtKH_NamHoc" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Học kỳ</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtKH_HocKy" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 25px;"></div>
+
+                    <!-- 10 checkbox cấu hình -->
+                    <div class="row aps-form-item pd0 list-chekbox">
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_TaoTaiKhoan" />
+                            <div class="title-name ml-10">Tạo tài khoản để đăng ký</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_ChoTSTuDangKy" class="mt-0" />
+                            <div class="title-name ml-10">Cho thí sinh tự đăng ký trực tuyến</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_ChoCanBoNhapHS" class="mt-0" />
+                            <div class="title-name ml-10">Cho phép cán bộ nhập hồ sơ</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_ChoImport" class="mt-0" />
+                            <div class="title-name ml-10">Cho phép Import nguồn từ ngoài</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_ChoDocApi" class="mt-0" />
+                            <div class="title-name ml-10">Cho phép đọc từ API</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_YeuCauCanBoDuyet" class="mt-0" />
+                            <div class="title-name ml-10">Yêu cầu cán bộ duyệt</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_YeuCauKiemTraHS" class="mt-0" />
+                            <div class="title-name ml-10">Yêu cầu kiểm tra hồ sơ</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_YeuCauThanhToan" class="mt-0" />
+                            <div class="title-name ml-10">Yêu cầu thanh toán trước khi hoàn tất</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_ChoPhepThayDoiDauRa" class="mt-0" />
+                            <div class="title-name ml-10">Có được phép thay đổi đầu ra sau khi trúng tuyển không</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkKH_KiemSoatTrungHS" class="mt-0" />
+                            <div class="title-name ml-10">Kiểm soát trùng hồ sơ</div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 30px;"></div>
+
+                    <!-- Số hồ sơ + thống kê -->
+                    <div class="row aps-form-tt">
+                        <div class="col-lg-8 pr20 pl0 form-tt-input ">
+                            <div class="row aps-form-item">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Số hồ sơ tối đa được khai</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtKH_SoHoSoToiDa" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Mẫu hồ sơ</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_MauHoSo" class="form-select">
+                                            <option value="">Chọn mẫu hồ sơ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Đơn vị quản lý kế hoạch</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_DonViQLKH" class="form-select">
+                                            <option value="">Chọn đơn vị quản lý kế hoạch</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Đơn vị quản lý hồ sơ</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_DonViQLHS" class="form-select">
+                                            <option value="">Chọn đơn vị quản lý hồ sơ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form-item pd0">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Đơn vị tiếp nhận hồ sơ</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_DonViTiepNhan" class="form-select">
+                                            <option value="">Chọn đơn vị tiếp nhận hồ sơ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row aps-form-item">
+                                <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Chỉ tiêu</div></div>
+                                <div class="col-sm-8 aps-form-input pr0">
+                                    <input id="txtKH_ChiTieu" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 aps-form-number pl20 pr0">
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Số đã đăng ký</div></div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblKH_SoDaDangKy" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Số đã nộp hồ sơ</div></div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblKH_SoDaNopHS" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Số đã trúng tuyển</div></div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblKH_SoDaTrungTuyen" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Số đã tiếp nhận</div></div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblKH_SoDaTiepNhan" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Số đã nhập học</div></div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <input id="lblKH_SoDaNhapHoc" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 d-flex mb-10">
+                                <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Tình trạng kế hoạch</div></div>
+                                <div class="col-sm-7 aps-form-input pr0">
+                                    <div class="custom-select">
+                                        <i class="fa-light fa-chevron-down"></i>
+                                        <select id="ddlKH_TinhTrang" class="form-select">
+                                            <option value="">Chọn tình trạng kế hoạch</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 30px;margin-bottom: 30px;"></div>
+
+                    <!-- 3 checkbox + Ghi chú -->
+                    <div class="row aps-form-item pd0 ">
+                        <div class="col-sm-3 list-chekbox pl0">
+                            <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                <input type="checkbox" id="chkKH_CoMoPublic" />
+                                <div class="title-name ml-10">Có mở public không</div>
+                            </div>
+                            <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                <input type="checkbox" id="chkKH_CoKhoa" class="mt-0" />
+                                <div class="title-name ml-10">Có khóa không</div>
+                            </div>
+                            <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                <input type="checkbox" id="chkKH_ConHieuLuc" class="mt-0" checked />
+                                <div class="title-name ml-10">Còn hiệu lực không</div>
+                            </div>
+                        </div>
+                        <div class="col-sm-9 ghi-chu pl0 d-flex pr0">
+                            <div class="col-sm-2 aps-lable-name pl0"><div class="title-name">Ghi chú</div></div>
+                            <div class="col-sm-10 aps-form-input pr0">
+                                <textarea id="txtKH_GhiChu" class="min-h-86 form-control-textarea w100"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button id="btnDelete_KH" class="btn btn-danger">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnUpdate_KH" class="btn btn-primary">
+                        <i class="fas fa-save"></i><span>Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- page script -->
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.1"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
+    $(document).ready(function () {
+        main_doc.KeHoachTuyenSinhNew.init();
+    });
+</script>
