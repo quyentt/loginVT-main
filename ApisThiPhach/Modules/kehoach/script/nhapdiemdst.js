@@ -22,6 +22,7 @@ NhapDiem.prototype = {
         me.getList_ThoiGian();
         //me.getList_TuiBai();
         me.getList_DotThi();
+        me.getList_KhoaQuanLy();
         me.getList_MonThi();
         me.getList_HinhThucThi();
         me.getList_LoaiDiem();
@@ -133,6 +134,9 @@ NhapDiem.prototype = {
         $('#dropSearch_DotThi').on('select2:select', function (e) {
 
             //me.getList_TuiBai();
+            me.getList_MonThi();
+        });
+        $('#dropSearch_KhoaQuanLy').on('select2:select', function (e) {
             me.getList_MonThi();
         });
         $('#dropSearch_MonThi').on('select2:select', function (e) {
@@ -803,6 +807,34 @@ NhapDiem.prototype = {
         edu.system.loadToCombo_data(obj);
     },
     /*------------------------------------------
+    --Discription: [0] GEN HTML ==> Khoa quản lý
+    --ULR: Modules
+    -------------------------------------------*/
+    getList_KhoaQuanLy: function () {
+        var me = this;
+        var obj = {
+            strCCTC_Loai_Id: "",
+            strCCTC_Cha_Id: "",
+            iTrangThai: 1
+        };
+        edu.system.getList_CoCauToChuc(obj, "", "", me.cbGenCombo_KhoaQuanLy);
+    },
+    cbGenCombo_KhoaQuanLy: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "MA",
+                order: "unorder"
+            },
+            renderPlace: ["dropSearch_KhoaQuanLy"],
+            title: "Chọn khoa quản lý"
+        };
+        edu.system.loadToCombo_data(obj);
+    },
+    /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
@@ -817,6 +849,7 @@ NhapDiem.prototype = {
             'strHinhThucThi_Id': edu.util.getValById('dropSearch_HinhThuc'),
             'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
