@@ -475,6 +475,523 @@
     </div>
 </div>
 
+<!-- Modal: Thêm mới nhân sự (phân công) -->
+<div class="modal fade modal_them_moi_nhan_su" id="them-moi-nhansu">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-user-plus"></i> Thêm mới phân công nhân sự
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-form mb-0">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-12 aps-form-input pr0 pl0">
+                            <div class="aps-table-select scroll-table-x pb-0 mb-20">
+                                <table id="tblNhanSuDaChon" class="table table-hover table-bordered table-border">
+                                    <thead>
+                                        <tr>
+                                            <th class="td-fixed td-center w-50px" rowspan="2">Stt</th>
+                                            <th class="td-left" rowspan="2" style="width: 260px;">
+                                                <span class="mt-10" style="float: left;">Nhân sự</span>
+                                                <button id="btnChonNhanSu" class="btn btn-primary" type="button" style="float: right;">
+                                                    <i class="fas fa-plus mr-5"></i><span>Chọn nhân sự</span>
+                                                </button>
+                                            </th>
+                                            <th class="td-center" rowspan="2">
+                                                <input type="checkbox" id="chkPC_SelectAll" />
+                                            </th>
+                                            <th class="td-center bg-f2" colspan="6">Khai thông tin cần gán cho nhân sự chọn</th>
+                                        </tr>
+                                        <tr>
+                                            <th class="td-center bg-f2">Vai trò</th>
+                                            <th class="td-center bg-f2" style="width: 120px;">Ngày bắt đầu</th>
+                                            <th class="td-center bg-f2" style="width: 120px;">Ngày kết thúc</th>
+                                            <th class="td-center bg-f2" style="width: 130px;">Cho phép/Chặn</th>
+                                            <th class="td-center bg-f2" style="width: 120px;">Hiệu lực</th>
+                                            <th class="td-center bg-f2">Ghi chú</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="fz18 color-red">Nhân sự nào được chọn <input type="checkbox" disabled checked /> mới được lưu thông tin phân công</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button class="btn btn-danger d-none">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnSavePhanCong" class="btn btn-primary">
+                        <i class="fas fa-save"></i><span>Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Thêm mới kế hoạch đầu ra -->
+<div class="modal fade modal_them_moi" id="them-moi-dau-ra">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-plus"></i> Thêm mới kế hoạch đầu ra
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-form mb-0">
+                    <!-- Top: chọn Hệ + Khóa -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-sm-6 d-flex pl0 pr10">
+                            <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Hệ đào tạo</div></div>
+                            <div class="col-sm-8 aps-form-input pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select id="ddlDR_HeDaoTao" class="form-select">
+                                        <option value="">Chọn hệ đào tạo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 d-flex pl10 pr0">
+                            <div class="col-sm-4 aps-lable-name pl0"><div class="title-name">Khóa đào tạo</div></div>
+                            <div class="col-sm-8 aps-form-input pr0">
+                                <div class="custom-select">
+                                    <i class="fa-light fa-chevron-down"></i>
+                                    <select id="ddlDR_KhoaDaoTao" class="form-select">
+                                        <option value="">Chọn khóa đào tạo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 25px;margin-bottom: 15px;"></div>
+
+                    <!-- Section: Danh sách chương trình -->
+                    <h4 class="box-title" style="background:#fff3cd;padding:8px 12px;border-left:4px solid #ffc107;">
+                        <i class="fa-regular fa-list"></i> Danh sách chương trình
+                    </h4>
+
+                    <div class="aps-table-select scroll-table-x pb-0 mb-20 mt-10">
+                        <table id="tblChuongTrinhDauRa" class="table table-hover table-bordered table-border">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center w-50px">Stt</th>
+                                    <th class="td-left">Mã chương trình</th>
+                                    <th class="td-left">Tên chương trình</th>
+                                    <th class="td-left">Ngành TS</th>
+                                    <th class="td-left">Ngành ĐT</th>
+                                    <th class="td-center" style="width: 110px;">Chỉ tiêu</th>
+                                    <th class="td-center" style="width: 130px;">Chỉ tiêu tối đa</th>
+                                    <th class="td-center" style="width: 130px;">Chỉ tiêu tối thiểu</th>
+                                    <th class="td-center" style="width: 90px;">
+                                        <input type="checkbox" id="chkDR_SelectAll" />
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="line" style="margin-top: 15px;margin-bottom: 15px;"></div>
+
+                    <!-- Section: Thông tin chung cần khai cho các đầu ra -->
+                    <h4 class="box-title" style="background:#d1ecf1;padding:8px 12px;border-left:4px solid #17a2b8;">
+                        <i class="fa-regular fa-circle-info"></i> Thông tin chung cần khai cho các đầu ra
+                    </h4>
+                    <div id="zoneDR_ThongTinChung" class="mt-10">
+                        <p class="color-muted">(Bạn gửi spec các field "thông tin chung" tôi sẽ build vào đây)</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button class="btn btn-danger d-none">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnSaveDauRa" class="btn btn-primary">
+                        <i class="fas fa-save"></i><span>Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Xem - sửa kế hoạch đầu ra -->
+<div class="modal fade modal_them_moi" id="xem-sua-dau-ra">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-pen-to-square"></i> Xem - sửa kế hoạch đầu ra
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-form mb-0">
+                    <!-- Hệ / Khóa / Chương trình (readonly) -->
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Hệ</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><span id="lblDR_He" class="form-control bg-readonly"></span></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Khóa</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><span id="lblDR_Khoa" class="form-control bg-readonly"></span></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Chương trình</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><span id="lblDR_ChuongTrinh" class="form-control bg-readonly"></span></div>
+                    </div>
+
+                    <div class="line" style="margin-top: 20px;margin-bottom: 15px;"></div>
+
+                    <!-- Chỉ tiêu -->
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Chỉ tiêu</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_ChiTieu" type="number" class="form-control" min="0"></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Chỉ tiêu tối đa</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_ChiTieuToiDa" type="number" class="form-control" min="0"></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Chỉ tiêu tối thiểu</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_ChiTieuToiThieu" type="number" class="form-control" min="0"></div>
+                    </div>
+
+                    <div class="line" style="margin-top: 20px;margin-bottom: 15px;"></div>
+
+                    <!-- Mã / Tên / Mã hiển thị / Tên hiển thị -->
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Mã</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_Ma" class="form-control"></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Tên</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_Ten" class="form-control"></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Mã hiển thị</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_MaHienThi" class="form-control"></div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Tên hiển thị</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_TenHienThi" class="form-control"></div>
+                    </div>
+
+                    <!-- Loại đầu ra tuyển / Kiểu học sau khi vào -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Loại đầu ra tuyển</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlDR_LoaiDauRa" class="form-select"><option value="">Chọn loại đầu ra</option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item pd0">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Kiểu học sau khi vào</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlDR_KieuHocTap" class="form-select"><option value="">Chọn kiểu học</option></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row aps-form-item pd0 list-chekbox">
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_HighLight" />
+                            <div class="title-name ml-10">Là ngành nổi bật cần hiện lên đầu</div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Thứ tự hiển thị</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><input id="txtDR_ThuTuHienThi" type="number" class="form-control"></div>
+                    </div>
+
+                    <div class="line" style="margin-top: 20px;margin-bottom: 15px;"></div>
+
+                    <!-- 6 checkbox cấu hình -->
+                    <div class="row aps-form-item pd0 list-chekbox">
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_AllowRegister" />
+                            <div class="title-name ml-10">Cho phép đăng ký trực tuyến</div>
+                        </div>
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_AllowWaitlist" class="mt-0" />
+                            <div class="title-name ml-10">Cho phép đăng ký nếu hết chỉ tiêu (Đưa vào danh sách chờ)</div>
+                        </div>
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_AllowTransferIn" class="mt-0" />
+                            <div class="title-name ml-10">Cho phép tiếp nhận trường hợp chuyển trường không</div>
+                        </div>
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_AutoIntake" class="mt-0" />
+                            <div class="title-name ml-10">Có tự động tạo dữ liệu chuẩn bị nhập học khi đủ điều kiện tiếp nhận không</div>
+                        </div>
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_AutoEnrollment" class="mt-0" />
+                            <div class="title-name ml-10">Có tự động tạo hồ sơ học tập không</div>
+                        </div>
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_AutoClassAssign" class="mt-0" />
+                            <div class="title-name ml-10">Có tự động phân lớp không</div>
+                        </div>
+                    </div>
+
+                    <div class="line" style="margin-top: 20px;margin-bottom: 15px;"></div>
+
+                    <!-- Trạng thái / Public / Hiệu lực / Ghi chú -->
+                    <div class="row aps-form-item pd0">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Trạng thái của đầu ra</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlDR_TrangThai" class="form-select"><option value="">Chọn trạng thái</option></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item pd0 list-chekbox">
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_Public" />
+                            <div class="title-name ml-10">Có cho phép public qua cổng Portal không</div>
+                        </div>
+                        <div class="col-sm-12 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkDR_Active" class="mt-0" checked />
+                            <div class="title-name ml-10">Hiệu lực</div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Ghi chú</div></div>
+                        <div class="col-sm-9 aps-form-input pr0"><textarea id="txtDR_GhiChu" class="form-control" rows="3"></textarea></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal"><i class="fal fa-times"></i><span>Đóng</span></button>
+                    <button id="btnDelete_DauRa" class="btn btn-danger"><i class="fa fa-trash"></i><span>Xóa</span></button>
+                    <button id="btnUpdate_DauRa" class="btn btn-primary"><i class="fas fa-save"></i><span>Lưu</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Kế hoạch đầu ra -->
+<div class="modal fade modal_dot_tuyen_sinh" id="ke-hoach-dau-ra">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-list-check"></i> Kế hoạch đầu ra
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="aps-table-select scroll-table-x pb-0 mb-20">
+                    <table id="tblKeHoachDauRa" class="table table-hover table-bordered table-noborder">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center w-50px">Stt</th>
+                                <th class="td-left">Mã</th>
+                                <th class="td-left">Tên</th>
+                                <th class="td-left">Loại đầu ra</th>
+                                <th class="td-left">Kiểu học tập</th>
+                                <th class="td-left">Hệ mở</th>
+                                <th class="td-left">Khóa mở</th>
+                                <th class="td-left">Chương trình mở</th>
+                                <th class="td-left">Ngành tuyển sinh</th>
+                                <th class="td-left">Ngành đào tạo</th>
+                                <th class="td-left">Tên hiển thị</th>
+                                <th class="td-left">Mã hiển thị</th>
+                                <th class="td-center">Là ngành nổi bật cần hiện lên đầu</th>
+                                <th class="td-center">Thứ tự hiển thị</th>
+                                <th class="td-center">Chỉ tiêu</th>
+                                <th class="td-center">Chỉ tiêu tối đa</th>
+                                <th class="td-center">Chỉ tiêu tối thiểu</th>
+                                <th class="td-center">Hiệu lực</th>
+                                <th class="td-center">Người tạo</th>
+                                <th class="td-center">Ngày tạo</th>
+                                <th class="td-center">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button class="btn btn-danger d-none">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnAddKeHoachDauRa" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#them-moi-dau-ra">
+                        <i class="fa-regular fa-plus"></i><span> Thêm mới</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Xem - sửa phân công nhân sự -->
+<div class="modal fade modal_them_moi" id="xem-sua-phancong">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-pen-to-square"></i> Xem - sửa phân công nhân sự
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body aps-add-new">
+                <div class="aps-form mb-0">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Thông tin nhân sự</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <span id="lblXS_NhanSu" class="form-control bg-readonly"></span>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item pd0">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Vai trò</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <div class="custom-select">
+                                <i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlXS_VaiTro" class="form-select">
+                                    <option value="">Chọn vai trò</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Ngày bắt đầu</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <input id="txtXS_NgayBatDau" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Ngày kết thúc</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <input id="txtXS_NgayKetThuc" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                        </div>
+                    </div>
+                    <div class="row aps-form-item pd0 list-chekbox">
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkXS_Allowed" />
+                            <div class="title-name ml-10">Cho phép / Chặn</div>
+                        </div>
+                        <div class="col-sm-6 aps-lable-name d-flex pl0">
+                            <input type="checkbox" id="chkXS_Active" class="mt-0" checked />
+                            <div class="title-name ml-10">Hiệu lực</div>
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Ghi chú</div></div>
+                        <div class="col-sm-9 aps-form-input pr0">
+                            <textarea id="txtXS_GhiChu" class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button id="btnDelete_PhanCong" class="btn btn-danger">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnUpdate_PhanCong" class="btn btn-primary">
+                        <i class="fas fa-save"></i><span>Lưu</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Phân công nhân sự -->
+<div class="modal fade modal_phan_cong_ns" id="phan-cong-nhan-su">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-regular fa-screen-users"></i> Phân công nhân sự
+                    </div>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="aps-table-select scroll-table-x pb-0 mb-20">
+                    <table id="tblPhanCongNhanSu" class="table table-hover table-bordered table-noborder">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed td-center w-50px">Stt</th>
+                                <th class="td-left">Nhân sự</th>
+                                <th class="td-left">Kế hoạch</th>
+                                <th class="td-left">Đợt</th>
+                                <th class="td-left">Phương thức</th>
+                                <th class="td-center">Vai trò tham gia</th>
+                                <th class="td-center">Quyền tham gia</th>
+                                <th class="td-center">Phạm vi phân công</th>
+                                <th class="td-center">Ngày bắt đầu</th>
+                                <th class="td-center">Ngày kết thúc</th>
+                                <th class="td-center">Cho phép/Hạn chế</th>
+                                <th class="td-center">Hiệu lực</th>
+                                <th class="td-center">Người tạo</th>
+                                <th class="td-center">Ngày tạo</th>
+                                <th class="td-center">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fal fa-times"></i><span>Đóng</span>
+                    </button>
+                    <button class="btn btn-danger d-none">
+                        <i class="fa fa-trash"></i><span>Xóa</span>
+                    </button>
+                    <button id="btnAddPhanCongNhanSu" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#them-moi-nhansu">
+                        <i class="fa-regular fa-plus"></i><span> Thêm mới</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal: Xem - sửa kế hoạch tuyển sinh -->
 <div class="modal fade modal_them_moi" id="chi-tiet">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
