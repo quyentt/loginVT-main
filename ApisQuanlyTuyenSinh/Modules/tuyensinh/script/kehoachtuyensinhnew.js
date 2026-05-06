@@ -645,11 +645,12 @@ KeHoachTuyenSinhNew.prototype = {
             'txtDot_NgayBatDau_XuLy', 'txtDot_NgayKetThuc_XuLy',
             'txtDot_NgayCongBoKQ',
             'txtDot_NgayBatDau_XNNH', 'txtDot_NgayKetThuc_XNNH',
-            'txtDot_ChiTieu', 'txtDot_GhiChu',
-            'lblDot_SoDaDangKy', 'lblDot_SoDaNopHS', 'lblDot_SoDaTrungTuyen',
-            'lblDot_SoDaTiepNhan', 'lblDot_SoDaNhapHoc'
+            'txtDot_ChiTieu', 'txtDot_ChiTieuToiThieu', 'txtDot_ChiTieuToiDa',
+            'txtDot_GhiChu'
         ];
         edu.util.resetValByArrId(arrTxt);
+        // 5 LABEL view-only — set text 0
+        $('#lblDot_SoDaDangKy, #lblDot_SoDaNopHS, #lblDot_SoDaTrungTuyen, #lblDot_SoDaTiepNhan, #lblDot_SoDaNhapHoc').text('0');
         $('#ddl_KieuDot, #ddl_MauHoSo, #ddl_TinhTrangDot').val('');
         $('#chkDot_YeuCauCanBoDuyet, #chkDot_YeuCauKiemTraHS, #chkDot_YeuCauThanhToan, #chkDot_ChoPhepThayDoiDauRa, #chkDot_CoMoPublic, #chkDot_CoKhoa').prop('checked', false);
         $('#chkDot_ConHieuLuc').prop('checked', true);
@@ -709,11 +710,13 @@ KeHoachTuyenSinhNew.prototype = {
             'strForm_Layout_Id': edu.system.getValById('ddl_MauHoSo'),
             'dForm_Version_No': '',
             'dChi_Tieu': edu.system.getValById('txtDot_ChiTieu'),
-            'dSo_Da_DangKy': edu.system.getValById('lblDot_SoDaDangKy'),
-            'dSo_Da_Nop_HoSo': edu.system.getValById('lblDot_SoDaNopHS'),
-            'dSo_Da_TrungTuyen': edu.system.getValById('lblDot_SoDaTrungTuyen'),
-            'dSo_Da_TiepNhan': edu.system.getValById('lblDot_SoDaTiepNhan'),
-            'dSo_Da_NhapHoc': edu.system.getValById('lblDot_SoDaNhapHoc'),
+            'dChi_Tieu_Toi_Thieu': edu.system.getValById('txtDot_ChiTieuToiThieu'),
+            'dChi_Tieu_Toi_Da': edu.system.getValById('txtDot_ChiTieuToiDa'),
+            'dSo_Da_DangKy': $('#lblDot_SoDaDangKy').text() || 0,
+            'dSo_Da_Nop_HoSo': $('#lblDot_SoDaNopHS').text() || 0,
+            'dSo_Da_TrungTuyen': $('#lblDot_SoDaTrungTuyen').text() || 0,
+            'dSo_Da_TiepNhan': $('#lblDot_SoDaTiepNhan').text() || 0,
+            'dSo_Da_NhapHoc': $('#lblDot_SoDaNhapHoc').text() || 0,
             'strDot_Status_Code': edu.system.getValById('ddl_TinhTrangDot'),
             'dIs_Public': $('#chkDot_CoMoPublic').is(':checked') ? 1 : 0,
             'dIs_Default': 0,
@@ -788,6 +791,8 @@ KeHoachTuyenSinhNew.prototype = {
             'strForm_Layout_Id': edu.system.getValById('ddl_MauHoSo'),
             'dForm_Version_No': '',
             'dChi_Tieu': edu.system.getValById('txtDot_ChiTieu'),
+            'dChi_Tieu_Toi_Thieu': edu.system.getValById('txtDot_ChiTieuToiThieu'),
+            'dChi_Tieu_Toi_Da': edu.system.getValById('txtDot_ChiTieuToiDa'),
             'strDot_Status_Code': edu.system.getValById('ddl_TinhTrangDot'),
             'dIs_Public': $('#chkDot_CoMoPublic').is(':checked') ? 1 : 0,
             'dIs_Default': 0,
@@ -1000,13 +1005,16 @@ KeHoachTuyenSinhNew.prototype = {
         edu.util.viewValById('txtDot_NgayBatDau_XNNH', d.NGAY_BD_XACNHAN_NHAPHOC || '');
         edu.util.viewValById('txtDot_NgayKetThuc_XNNH', d.NGAY_KT_XACNHAN_NHAPHOC || '');
         edu.util.viewValById('txtDot_ChiTieu', d.CHI_TIEU || '');
+        edu.util.viewValById('txtDot_ChiTieuToiThieu', d.CHI_TIEU_TOI_THIEU || '');
+        edu.util.viewValById('txtDot_ChiTieuToiDa', d.CHI_TIEU_TOI_DA || '');
         edu.util.viewValById('txtDot_GhiChu', d.GHICHU || '');
 
-        edu.util.viewValById('lblDot_SoDaDangKy', d.SO_DA_DANGKY || 0);
-        edu.util.viewValById('lblDot_SoDaNopHS', d.SO_DA_NOP_HOSO || 0);
-        edu.util.viewValById('lblDot_SoDaTrungTuyen', d.SO_DA_TRUNGTUYEN || 0);
-        edu.util.viewValById('lblDot_SoDaTiepNhan', d.SO_DA_TIEPNHAN || 0);
-        edu.util.viewValById('lblDot_SoDaNhapHoc', d.SO_DA_NHAPHOC || 0);
+        // 5 LABEL view-only — set text trực tiếp (span chứ không phải input)
+        $('#lblDot_SoDaDangKy').text(d.SO_DA_DANGKY || 0);
+        $('#lblDot_SoDaNopHS').text(d.SO_DA_NOP_HOSO || 0);
+        $('#lblDot_SoDaTrungTuyen').text(d.SO_DA_TRUNGTUYEN || 0);
+        $('#lblDot_SoDaTiepNhan').text(d.SO_DA_TIEPNHAN || 0);
+        $('#lblDot_SoDaNhapHoc').text(d.SO_DA_NHAPHOC || 0);
 
         $('#ddl_KieuDot').val(d.DOT_TYPE_CODE || '');
         $('#ddl_MauHoSo').val(d.FORM_LAYOUT_ID || '');
