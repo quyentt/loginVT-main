@@ -68,7 +68,16 @@ KeHoachTuyenSinhNew.prototype = {
             if (edu.util.checkValue(strId)) {
                 me.strKeHoachTuyenSinh_Id = strId;
                 me.getDetail_KeHoachTuyenSinh(strId);
+                // Chế độ Xem-sửa: hiện nút Xóa, đổi title
+                $('#chi-tiet .modal-header .title').html('<i class="fa-regular fa-pen-to-square"></i> Xem - sửa kế hoạch tuyển sinh');
+                $('#btnDelete_KH').removeClass('d-none');
             }
+        });
+
+        // Click "Thêm mới" main page → mở #chi-tiet ở chế độ Thêm mới
+        $("#btnAddKeHoach").click(function () {
+            me.strKeHoachTuyenSinh_Id = '';
+            me.rewrite_KeHoach();
         });
 
         // Khi user click "Xem" ở cột "Các đợt tuyển sinh" → ghi nhớ KH parent để dùng khi Thêm mới đợt
@@ -192,13 +201,13 @@ KeHoachTuyenSinhNew.prototype = {
         $("#tblDotTuyenSinh").delegate(".btnDetailDot", "click", function () {
             var strId = $(this).attr('data-id');
             if (!edu.util.checkValue(strId)) return;
-            $('#them-moi').modal('show');   // → show.bs.modal fires → rewrite_Dot reset form trước
-            me.strDot_Id = strId;            // → set sau khi rewrite_Dot xong
+            $('#them-moi-dot').modal('show');   // → show.bs.modal fires → rewrite_Dot reset form trước
+            me.strDot_Id = strId;                // → set sau khi rewrite_Dot xong
             me.getDetail_Dot(strId);
         });
 
         // Khi mở modal Thêm mới đợt → reset form
-        $("#them-moi").on('show.bs.modal', function () {
+        $("#them-moi-dot").on('show.bs.modal', function () {
             me.rewrite_Dot();
         });
 
@@ -218,7 +227,7 @@ KeHoachTuyenSinhNew.prototype = {
         });
 
         $("#btnUpdate_KH").click(function () {
-            me.update_KeHoachTuyenSinh();
+            me.save_KeHoachTuyenSinh();
         });
 
         $("#btnDelete_KH").click(function () {
@@ -655,7 +664,7 @@ KeHoachTuyenSinhNew.prototype = {
         $('#chkDot_YeuCauCanBoDuyet, #chkDot_YeuCauKiemTraHS, #chkDot_YeuCauThanhToan, #chkDot_ChoPhepThayDoiDauRa, #chkDot_CoMoPublic, #chkDot_CoKhoa').prop('checked', false);
         $('#chkDot_ConHieuLuc').prop('checked', true);
         me.strDot_Id = '';
-        $('#them-moi .modal-header .title').html('<i class="fa-regular fa-plus"></i> Thêm mới đợt tuyển sinh');
+        $('#them-moi-dot .modal-header .title').html('<i class="fa-regular fa-plus"></i> Thêm mới đợt tuyển sinh');
         $('#btnDelete_Dot').addClass('d-none');  // ẩn nút Xóa khi Thêm mới
     },
 
@@ -733,7 +742,7 @@ KeHoachTuyenSinhNew.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Thêm mới thành công");
-                    $("#them-moi").modal('hide');
+                    $("#them-moi-dot").modal('hide');
                     me.getList_DotTuyenSinh();
                 }
                 else {
@@ -809,7 +818,7 @@ KeHoachTuyenSinhNew.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Cập nhật thành công");
-                    $("#them-moi").modal('hide');
+                    $("#them-moi-dot").modal('hide');
                     me.getList_DotTuyenSinh();
                 }
                 else {
@@ -849,7 +858,7 @@ KeHoachTuyenSinhNew.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Xóa thành công");
-                    $("#them-moi").modal('hide');
+                    $("#them-moi-dot").modal('hide');
                     me.strDot_Id = '';
                     me.getList_DotTuyenSinh();
                 }
@@ -866,6 +875,44 @@ KeHoachTuyenSinhNew.prototype = {
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Reset form Kế hoạch (modal #chi-tiet) — dùng cho mode Thêm mới
+    -------------------------------------------*/
+    rewrite_KeHoach: function () {
+        var arrTxt = [
+            'txtKH_Ma', 'txtKH_Ten', 'txtKH_NamTuyenSinh', 'txtKH_NamHoc', 'txtKH_HocKy',
+            'txtKH_SoHoSoToiDa', 'txtKH_ChiTieu', 'txtKH_GhiChu',
+            'lblKH_SoDaDangKy', 'lblKH_SoDaNopHS', 'lblKH_SoDaTrungTuyen',
+            'lblKH_SoDaTiepNhan', 'lblKH_SoDaNhapHoc'
+        ];
+        edu.util.resetValByArrId(arrTxt);
+        $('#ddlKH_LoaiNguonTuyenSinh, #ddlKH_PhuongAnTuyenSinh, #ddlKH_MauHoSo, #ddlKH_DonViQLKH, #ddlKH_DonViQLHS, #ddlKH_DonViTiepNhan, #ddlKH_TinhTrang').val('');
+        $('#chkKH_TaoTaiKhoan, #chkKH_ChoTSTuDangKy, #chkKH_ChoCanBoNhapHS, #chkKH_ChoImport, #chkKH_ChoDocApi, #chkKH_YeuCauCanBoDuyet, #chkKH_YeuCauKiemTraHS, #chkKH_YeuCauThanhToan, #chkKH_ChoPhepThayDoiDauRa, #chkKH_KiemSoatTrungHS, #chkKH_CoMoPublic, #chkKH_CoKhoa').prop('checked', false);
+        $('#chkKH_ConHieuLuc').prop('checked', true);
+        $('#chi-tiet .modal-header .title').html('<i class="fa-regular fa-plus"></i> Thêm mới kế hoạch tuyển sinh');
+        $('#btnDelete_KH').addClass('d-none');
+    },
+
+    /*------------------------------------------
+    -- Dispatcher: nếu strKeHoachTuyenSinh_Id có → update, không → insert
+    -------------------------------------------*/
+    save_KeHoachTuyenSinh: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            me.update_KeHoachTuyenSinh();
+        } else {
+            me.insert_KeHoachTuyenSinh();
+        }
+    },
+
+    /*------------------------------------------
+    -- Thêm mới kế hoạch tuyển sinh
+    -- TODO: bạn gửi spec API Pr_Ts_KeHoach_TuyenSinh_Insert (hoặc tương đương) để wire vào.
+    -------------------------------------------*/
+    insert_KeHoachTuyenSinh: function () {
+        edu.system.alert("Chưa có API Insert cho kế hoạch tuyển sinh. Vui lòng gửi spec Pr_Ts_KeHoach_TuyenSinh_Insert (hoặc tương đương).", "w");
     },
 
     /*------------------------------------------
@@ -980,7 +1027,7 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Đổ data đợt vào modal #them-moi (chế độ Xem-sửa)
+    -- Đổ data đợt vào modal #them-moi-dot (chế độ Xem-sửa)
     -- NOTE: tên cột (Ma, Ten, DOT_NO, DOT_TYPE_CODE, NGAY_BATDAU_DANGKY, ...) đoán theo convention.
     --       Nếu API trả khác thì sửa lại tại đây.
     -------------------------------------------*/
@@ -989,7 +1036,7 @@ KeHoachTuyenSinhNew.prototype = {
         var d = data;
 
         // Đổi title sang chế độ Xem-sửa + hiện nút Xóa
-        $('#them-moi .modal-header .title').html('<i class="fa-regular fa-pen-to-square"></i> Xem - sửa đợt tuyển sinh');
+        $('#them-moi-dot .modal-header .title').html('<i class="fa-regular fa-pen-to-square"></i> Xem - sửa đợt tuyển sinh');
         $('#btnDelete_Dot').removeClass('d-none');
 
         edu.util.viewValById('txtDot_Ma', d.Ma || d.MA || '');
