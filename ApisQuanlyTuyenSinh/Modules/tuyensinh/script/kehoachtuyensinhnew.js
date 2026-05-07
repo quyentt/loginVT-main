@@ -9,6 +9,7 @@ KeHoachTuyenSinhNew.prototype = {
     dtPhuongAnTuyenSinh: [],
     dtTinhTrangKeHoach: [],
     dtKeHoachTuyenSinh: [],
+    dtCoCauToChuc: [],
     strKeHoachTuyenSinh_Id: '',
     dtChiTiet: null,
     dtKieuDot: [],
@@ -46,6 +47,7 @@ KeHoachTuyenSinhNew.prototype = {
         me.getList_LoaiDauRa();
         me.getList_KieuHocTap();
         me.getList_TrangThaiDauRa();
+        me.getList_CoCauToChuc();
         me.getList_KeHoachTuyenSinh();
 
         /*------------------------------------------
@@ -289,7 +291,8 @@ KeHoachTuyenSinhNew.prototype = {
             renderInfor: {
                 id: "ID",
                 parentId: "",
-                name: "TENLOAITUYENSINH",
+                name: "TEN",
+                code: "MA",
                 default_val: default_val
             },
             renderPlace: [strDrop_Id],
@@ -345,11 +348,52 @@ KeHoachTuyenSinhNew.prototype = {
             renderInfor: {
                 id: "ID",
                 parentId: "",
-                name: "TENPHUONGANTUYENSINH",
+                name: "TEN",
+                code: "MA",
                 default_val: default_val
             },
             renderPlace: [strDrop_Id],
             title: "Phương án tuyển sinh"
+        };
+        edu.system.loadToCombo_data(obj);
+    },
+
+    /*------------------------------------------
+    -- [Shared] NS_CoCauToChuc/LayDanhSach
+    -- Đổ vào 3 dropdown: Đơn vị quản lý KH / quản lý HS / tiếp nhận HS
+    -------------------------------------------*/
+    getList_CoCauToChuc: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtCoCauToChuc = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.genCombo_DonVi('ddlKH_DonViQLKH', '');
+                    me.genCombo_DonVi('ddlKH_DonViQLHS', '');
+                    me.genCombo_DonVi('ddlKH_DonViTiepNhan', '');
+                }
+            },
+            error: function () { },
+            type: 'GET',
+            action: 'NS_CoCauToChuc/LayDanhSach',
+            contentType: true,
+            data: {
+                'dTrangThai': 1,
+                'strLoaiCoCauToChuc_Id': '',
+                'strCoCauToChucCha_Id': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genCombo_DonVi: function (strDrop_Id, default_val) {
+        var me = this;
+        var obj = {
+            data: me.dtCoCauToChuc,
+            renderInfor: { id: "ID", parentId: "", name: "TEN", code: "MA" },
+            renderPlace: [strDrop_Id],
+            title: "Chọn đơn vị",
+            default_val: default_val
         };
         edu.system.loadToCombo_data(obj);
     },
