@@ -14,6 +14,98 @@ DuLieuThi.prototype = {
     strLopHocPhan_Id: '',
     bcheck: '',
     arrChecked_Id: [],
+    MAX_SELECTED: 500,
+    BATCH_SIZE: 30,
+
+    /*------------------------------------------
+    --Discription: Sanity-check chống chọn quá lớn (10000+). Trong luồng bình thường
+    --             đã có batching nên giới hạn này hiếm khi chạm.
+    -------------------------------------------*/
+    checkSelectionLimit: function (elementId, label) {
+        var val = $("#" + elementId).val();
+        var count = 0;
+        if (Array.isArray(val)) {
+            count = val.filter(function (x) { return x !== "" && x != null; }).length;
+        } else if (typeof val === "string" && val.length > 0) {
+            count = val.split(",").filter(function (x) { return x !== ""; }).length;
+        }
+        if (count > this.MAX_SELECTED) {
+            edu.system.alert(
+                "Bạn đã chọn " + count + " " + label +
+                ", vượt ngưỡng tối đa " + this.MAX_SELECTED +
+                ". Vui lòng bỏ bớt lựa chọn để tránh quá tải.",
+                "w"
+            );
+            return false;
+        }
+        return true;
+    },
+
+    /*------------------------------------------
+    --Discription: Chia 1 mảng ID dài thành các batch nhỏ rồi gọi API song song,
+    --             gộp data.Data từ tất cả batch trước khi gọi onComplete.
+    --             Tránh URL vượt 2048 ký tự khi user chọn rất nhiều mục.
+    --Params:
+    --   idArray         : mảng ID cần chia (rỗng hoặc null = 1 batch chuỗi rỗng)
+    --   batchSize       : số ID tối đa mỗi batch
+    --   requestBuilder  : (idStr) => config truyền cho edu.system.makeRequest
+    --   onComplete      : (allData) => xử lý kết quả gộp
+    --   dedupeKey       : (tùy chọn) tên field để loại trùng (vd "ID")
+    -------------------------------------------*/
+    loadInBatches: function (idArray, batchSize, requestBuilder, onComplete, dedupeKey) {
+        var batches = [];
+        if (!idArray || idArray.length === 0) {
+            batches.push("");
+        } else {
+            for (var i = 0; i < idArray.length; i += batchSize) {
+                batches.push(idArray.slice(i, i + batchSize).join(","));
+            }
+        }
+        var aggregated = [];
+        var done = 0;
+        var firstError = null;
+        function finish() {
+            if (firstError) edu.system.alert("Lỗi tải dữ liệu: " + firstError, "w");
+            if (dedupeKey) {
+                var seen = {};
+                aggregated = aggregated.filter(function (item) {
+                    var k = item[dedupeKey];
+                    if (k == null) return true;
+                    if (seen[k]) return false;
+                    seen[k] = true;
+                    return true;
+                });
+            }
+            onComplete(aggregated);
+        }
+        batches.forEach(function (idStr) {
+            var cfg = requestBuilder(idStr);
+            cfg.success = function (data) {
+                if (data && data.Success) {
+                    if (Array.isArray(data.Data)) aggregated = aggregated.concat(data.Data);
+                } else if (data && !data.Success && !firstError) {
+                    firstError = data.Message || "Server trả về Success=false";
+                }
+                done++;
+                if (done === batches.length) finish();
+            };
+            cfg.error = function (er) {
+                if (!firstError) firstError = JSON.stringify(er);
+                done++;
+                if (done === batches.length) finish();
+            };
+            edu.system.makeRequest(cfg, false, false, false, null);
+        });
+    },
+
+    /*------------------------------------------
+    --Discription: Chuẩn hóa giá trị select2 multi-select thành mảng ID lọc rỗng.
+    -------------------------------------------*/
+    getMultiVal: function (elementId) {
+        var raw = $("#" + elementId).val();
+        var arr = Array.isArray(raw) ? raw : (raw ? raw.toString().split(",") : []);
+        return arr.filter(function (x) { return x !== "" && x != null; });
+    },
 
     init: function () {
         var me = this;
@@ -42,11 +134,19 @@ DuLieuThi.prototype = {
         });
 
         $("#btnSearch").click(function () {
+            if (!me.checkSelectionLimit('dropSearch_ThoiGianDaoTao', 'thời gian đào tạo')) return;
+            if (!me.checkSelectionLimit('dropSearch_HeDaoTao', 'hệ đào tạo')) return;
+            if (!me.checkSelectionLimit('dropSearch_KhoaDaoTao', 'khóa đào tạo')) return;
+            if (!me.checkSelectionLimit('dropSearch_KeHoach', 'kế hoạch')) return;
             me.getList_DuLieuThi();
         });
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
+                if (!me.checkSelectionLimit('dropSearch_ThoiGianDaoTao', 'thời gian đào tạo')) return;
+                if (!me.checkSelectionLimit('dropSearch_HeDaoTao', 'hệ đào tạo')) return;
+                if (!me.checkSelectionLimit('dropSearch_KhoaDaoTao', 'khóa đào tạo')) return;
+                if (!me.checkSelectionLimit('dropSearch_KeHoach', 'kế hoạch')) return;
                 me.getList_DuLieuThi();
             }
         });
@@ -237,7 +337,7 @@ DuLieuThi.prototype = {
         $("#btnCongBoDotThi").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_CongBoLichThi_DotThi';
             var arrChecked_Id = $("#dropSearch_DotThi").val();
-            if (arrChecked_Id.length == 0) {
+            if (!arrChecked_Id || arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đợt thi!");
                 return;
             }
@@ -249,7 +349,7 @@ DuLieuThi.prototype = {
         $("#btnCongBoDanhSachThi").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_QLTHI_CongBoLichThi';
             var arrChecked_Id = $("#dropSearch_DanhSach").val();
-            if (arrChecked_Id.length == 0) {
+            if (!arrChecked_Id || arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn danh sách thi!");
                 return;
             }
@@ -261,7 +361,7 @@ DuLieuThi.prototype = {
         $("#btnCongBoHocPhan").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_CongBoLichThi_HocPhan';
             var arrChecked_Id = $("#dropSearch_HocPhan_CC").val();
-            if (arrChecked_Id.length == 0) {
+            if (!arrChecked_Id || arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn học phần!");
                 return;
             }
@@ -1406,41 +1506,32 @@ DuLieuThi.prototype = {
     -------------------------------------------*/
     getList_HocPhan_CC: function () {
         var me = this;
-        //--Edit
+        var arrDotThi = me.getMultiVal('dropSearch_DotThi');
+        if (arrDotThi.length > me.MAX_SELECTED) {
+            if (!me.checkSelectionLimit('dropSearch_DotThi', 'đợt thi')) return;
+        }
 
-        var obj_list = {
-            'action': 'TP_ToChucThi/LayDSHocPhan',
-            'type': 'GET',
-            'strDotThi_Id': edu.util.getValById('dropSearch_DotThi'),
-            'strHinhThucThi_Id': edu.util.getValById('dropAAAA'),
-            'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
-            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
-
-            'strTHI_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
-            'strNguoiThucHien_Id': edu.system.userId,
-        };
-
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    var json = data.Data;
-                    me.cbGenCombo_HocPhan(json);
-                } else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert("Lỗi: " + JSON.stringify(er));
-            },
-            type: obj_list.type,
-            action: obj_list.action,
-
-            contentType: true,
-            data: obj_list,
-            fakedb: [
-
-            ]
-        }, false, false, false, null);
+        me.loadInBatches(arrDotThi, me.BATCH_SIZE, function (idStr) {
+            var obj_list = {
+                'action': 'TP_ToChucThi/LayDSHocPhan',
+                'type': 'GET',
+                'strDotThi_Id': idStr,
+                'strHinhThucThi_Id': edu.util.getValById('dropAAAA'),
+                'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
+                'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+                'strTHI_DotThi_Id': idStr,
+                'strNguoiThucHien_Id': edu.system.userId,
+            };
+            return {
+                type: 'GET',
+                action: obj_list.action,
+                contentType: true,
+                data: obj_list,
+                fakedb: []
+            };
+        }, function (allData) {
+            me.cbGenCombo_HocPhan(allData);
+        }, "ID");
     },
     cbGenCombo_HocPhan: function (data) {
         var me = this;
@@ -1468,38 +1559,43 @@ DuLieuThi.prototype = {
     -------------------------------------------*/
     getList_DanhSachThi: function () {
         var me = this;
-        //--Edit
-        var obj_list = {
-            'action': 'TP_ToChucThi/LayDSThi',
-            'type': 'GET',
-            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
-            'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan_CC'),
-            'strTHI_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
-            'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
-            'strNguoiThucHien_Id': edu.system.userId,
-        };
+        var arrHP = me.getMultiVal('dropSearch_HocPhan_CC');
+        var arrDT = me.getMultiVal('dropSearch_DotThi');
 
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    var json = data.Data;
-                    me.cbGenCombo_DanhSachThi(json);
-                } else {
-                    edu.system.alert(data.Message);
-                }
-            },
-            error: function (er) {
-                edu.system.alert("Lỗi: " + JSON.stringify(er));
-            },
-            type: obj_list.type,
-            action: obj_list.action,
+        // Batch theo mảng lớn hơn để giảm tổng số request và tránh URL quá dài.
+        var primary, fixedKey, fixedStr, primaryKey;
+        if (arrHP.length >= arrDT.length) {
+            primary = arrHP;
+            primaryKey = 'strDaoTao_HocPhan_Id';
+            fixedKey = 'strTHI_DotThi_Id';
+            fixedStr = arrDT.join(',');
+        } else {
+            primary = arrDT;
+            primaryKey = 'strTHI_DotThi_Id';
+            fixedKey = 'strDaoTao_HocPhan_Id';
+            fixedStr = arrHP.join(',');
+        }
 
-            contentType: true,
-            data: obj_list,
-            fakedb: [
-
-            ]
-        }, false, false, false, null);
+        me.loadInBatches(primary, me.BATCH_SIZE, function (idStr) {
+            var obj_list = {
+                'action': 'TP_ToChucThi/LayDSThi',
+                'type': 'GET',
+                'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+                'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
+                'strNguoiThucHien_Id': edu.system.userId,
+            };
+            obj_list[primaryKey] = idStr;
+            obj_list[fixedKey] = fixedStr;
+            return {
+                type: 'GET',
+                action: obj_list.action,
+                contentType: true,
+                data: obj_list,
+                fakedb: []
+            };
+        }, function (allData) {
+            me.cbGenCombo_DanhSachThi(allData);
+        }, "ID");
     },
     cbGenCombo_DanhSachThi: function (data) {
         var me = this;
@@ -1570,39 +1666,32 @@ DuLieuThi.prototype = {
     },
     getList_CongBo: function (strHoSoDuTuyen_Id, strTable_Id, callback) {
         var me = this;
-        var obj_save = {
-            'action': 'TP_CongBoLichThi/LayDSQLTHI_CongBoLichThi',
-            'strTuKhoa': "",
-            'strsanpham_Id': strHoSoDuTuyen_Id,
-            'strTinhTrang_Id': "",
-            'strNguoiThucHien_Id': '',
-            'pageIndex': 1,
-            'pageSize': 100000,
-        };
-        //default
+        var arrIds = (strHoSoDuTuyen_Id || "").toString().split(",").filter(function (x) { return x; });
 
-        edu.system.makeRequest({
-            success: function (data) {
-                if (typeof (callback) == "function") {
-                    callback(data.Data);
-                }
-                else {
-                    me.genTable_CongBo(data.Data, strTable_Id);
-                }
-            },
-            error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
-            },
-            type: "GET",
-            action: obj_save.action,
-
-            contentType: true,
-
-            data: obj_save,
-            fakedb: [
-            ]
-        }, false, false, false, null);
+        me.loadInBatches(arrIds, me.BATCH_SIZE, function (idStr) {
+            var obj_save = {
+                'action': 'TP_CongBoLichThi/LayDSQLTHI_CongBoLichThi',
+                'strTuKhoa': "",
+                'strsanpham_Id': idStr,
+                'strTinhTrang_Id': "",
+                'strNguoiThucHien_Id': '',
+                'pageIndex': 1,
+                'pageSize': 100000,
+            };
+            return {
+                type: "GET",
+                action: obj_save.action,
+                contentType: true,
+                data: obj_save,
+                fakedb: []
+            };
+        }, function (allData) {
+            if (typeof (callback) == "function") {
+                callback(allData);
+            } else {
+                me.genTable_CongBo(allData, strTable_Id);
+            }
+        });
     },
 
     genTable_CongBo: function (data, strTable_Id) {
