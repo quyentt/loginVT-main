@@ -39,6 +39,41 @@
     .block-calendar ul li.active span {
         background-color: var(--orange) !important;
     }
+
+    .aps-lichhoc .block-calendar ul.weekdays,
+    .aps-lichhoc .block-calendar ul.days {
+        display: grid !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+
+    .aps-lichhoc .block-calendar ul.weekdays > li,
+    .aps-lichhoc .block-calendar ul.days > li {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        flex: unset !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 0;
+        cursor: pointer;
+    }
+
+    .aps-lichhoc .block-calendar ul.days > li.today:not(.active) span {
+        width: 100%;
+        max-width: 32px;
+        aspect-ratio: 1 / 1;
+        background-color: var(--color-link, #2f55a4);
+        color: #fff;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 </style>
 <div class="one-door study-space">
     <div class="overlay"></div>
@@ -48,7 +83,7 @@
             <a href="#">Thời khóa biểu admin</a>
         </p>
     </div>
-    <div class="row register-school my-calendar aps-lichgiangadmin">
+    <div class="row register-school my-calendar aps-lichgiangadmin aps-lichhoc">
         <div class="col-12 col-md-9 register-school-right pl0">
             <div class="box-shadow ">
                 <div class="news-search-form">
