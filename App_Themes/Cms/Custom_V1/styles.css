@@ -153,6 +153,10 @@ input::placeholder {
   color: #8a2be2;
 }
 
+.bg-f8 {
+  background: #f8f8f8;
+}
+
 /* --------------- */
 .border-bottom {
   border-bottom: 1px solid #e1e1e1;
@@ -206,11 +210,18 @@ input::placeholder {
 
 /* -----modal---------- */
 .modal-700 {
-  width: 700px !important;
+  max-width: 700px !important;
+  width: 100%;
+}
+
+.modal-1200 {
+  max-width: 1200px !important;
+  width: 100%;
 }
 
 .modal-1360 {
-  width: 1360px !important;
+  max-width: 1360px !important;
+  width: 100%;
 }
 
 .modal-680 .modal-content {
@@ -227,10 +238,13 @@ input::placeholder {
 .modal_XacNhan .modal-860 {
   max-width: 860px !important;
 }
+
+
 .modal-100{
   width: 100% !important;
   max-width: 100% !important;
 }
+
 /* -----Table---------- */
 .table>tbody>tr>td,
 .table>tbody>tr>th,
@@ -511,16 +525,10 @@ thead {
   padding-right: 0 !important;
 }
 
-.table-bordered .btn,
-.table .btn {
-  /* padding: 3.5px 10px !important; */
-  line-height: auto !important;
-}
 
 .table-bordered .btn-default,
 .table .btn-default {
   background: none !important;
-  /* line-height: 34px; */
 }
 
 .table-bordered .btn-default:hover,
@@ -1709,11 +1717,6 @@ thead {
   padding-right: 0 !important;
 }
 
-.table-bordered .btn,
-.table .btn {
-  /* padding: 3.5px 10px !important; */
-  line-height: auto !important;
-}
 
 .table-bordered .btn-default,
 .table .btn-default {
@@ -6552,4 +6555,50 @@ input[type="radio"] {
 /* ---------------------- */
 .zoneEdit .aps-form .aps-form-item .aps-form-input {
   flex: inherit !important;
+}
+
+.aps-add-new .col-TT-phamvi .aps-lable-name {
+  min-width: 140px !important;
+}
+
+.aps-ds-hocphan {
+  display: flex;
+  align-items: stretch;
+}
+
+.zonePhanCong .table-hover tr td span .btn {
+  white-space: inherit !important;
+  line-height: 20px !important;
+  text-align: left;
+  display: contents;
+}
+
+.filter-tblQuanSoLop {
+  display: none;
+}
+
+.zone-pag-footertblQuanSoLop .info-tblQuanSoLop {
+  width: 100%;
+  float: left;
+  height: 34px;
+}
+
+.change-tblQuanSoLop {
+  margin-bottom: 10px !important;
+}
+
+.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop {
+  width: 100% !important;
+  float: left !important;
+}
+
+.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop.simple-pagination ul {
+  float: left !important;
+}
+
+.zone-pag-footertblQuanSoLop {
+  margin-top: 0px !important;
+}
+.form-ds-hocphan .aps-lable-name .group-group-title-name .badge {
+    background: #f8f8f8 !important;
 }
