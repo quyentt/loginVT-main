@@ -2020,6 +2020,16 @@
                     </select>
                 </div>
 
+                <div class="mb-3">
+                    <label class="form-label fw-bold">
+                        <i class="fa-solid fa-palette me-2"></i>Kiểu mẫu xuất
+                    </label>
+                    <select class="form-select" id="exportTemplateMode">
+                        <option value="full">Đầy đủ thông tin (mặc định)</option>
+                        <option value="busy">Đánh dấu phòng bận (tô vàng, ẩn nội dung)</option>
+                    </select>
+                </div>
+
                 <div class="alert alert-info mb-0">
                     <i class="fa-solid fa-info-circle me-2"></i>
                     <small>File Excel sẽ bao gồm đầy đủ thông tin: Phòng học, Thời gian, Học phần, Lớp, Giảng
@@ -2125,7 +2135,7 @@
 </div>
 
 <!-- CDN không hoạt động, bỏ qua và dùng XLSX fallback trực tiếp -->
-<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.2.0.0"></script>
+<script src="modules/lichgiang/script/lichgiangnhieuphonghoc.js?v=3.6.0.1"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         // Check if XLSX library is loaded
