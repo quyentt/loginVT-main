@@ -5655,7 +5655,9 @@ systemroot.prototype = {
             var strhtmlcontent = change_alias(content);
             var iThuTu = me.arrcheckcontent.indexOf(strhtmlcontent);
             if (iThuTu == -1) {
-                $('#myModalAlert #alert_content').append('<p>' + content + ' <span id="' + strhtmlcontent + '"></span></p>');
+                var $p = $('<p>').text(content);
+                $p.append(' ').append($('<span>').attr('id', strhtmlcontent));
+                $('#myModalAlert #alert_content').append($p);
                 me.arrcheckcontent.push(strhtmlcontent);
                 me.arrStt.push(1);
             } else {
