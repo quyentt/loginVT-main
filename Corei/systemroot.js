@@ -5655,7 +5655,8 @@ systemroot.prototype = {
             var strhtmlcontent = change_alias(content);
             var iThuTu = me.arrcheckcontent.indexOf(strhtmlcontent);
             if (iThuTu == -1) {
-                var $p = $('<p>').text(content);
+                var isHtml = /^\s*</.test(String(content));
+                var $p = isHtml ? $('<p>').html(content) : $('<p>').text(content);
                 $p.append(' ').append($('<span>').attr('id', strhtmlcontent));
                 $('#myModalAlert #alert_content').append($p);
                 me.arrcheckcontent.push(strhtmlcontent);
