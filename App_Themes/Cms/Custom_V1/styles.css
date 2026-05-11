@@ -6602,3 +6602,10 @@ input[type="radio"] {
 .form-ds-hocphan .aps-lable-name .group-group-title-name .badge {
     background: #f8f8f8 !important;
 }
+.btnChiTietLopHocPhan{
+    min-width: 90px;
+    color:#3380db !important; ;
+}
+.btnDangKyHocPhan{
+  min-width: 100px;
+}
