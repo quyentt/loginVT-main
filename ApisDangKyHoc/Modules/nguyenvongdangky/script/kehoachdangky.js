@@ -252,6 +252,25 @@ KeHoach.prototype = {
     
     save_KeHoach: function () {
         var me = this;
+        if (!edu.util.checkValue(edu.util.getValById('txtTenKeHoach'))) {
+            edu.system.alert("Vui lòng nhập Tên kế hoạch", "w"); return;
+        }
+        if (!edu.util.checkValue(edu.util.getValById('txtMaKeHoach'))) {
+            edu.system.alert("Vui lòng nhập Mã kế hoạch", "w"); return;
+        }
+        if (!edu.util.checkValue(edu.util.getValById('dropThoiGian'))) {
+            edu.system.alert("Vui lòng chọn Đợt (Thời gian đăng ký)", "w"); return;
+        }
+        if (!edu.util.checkValue(edu.util.getValById('txtBD_Ngay')) ||
+            !edu.util.checkValue(edu.util.getValById('txtKT_Ngay'))) {
+            edu.system.alert("Vui lòng nhập Ngày bắt đầu và Ngày kết thúc", "w"); return;
+        }
+        if (!edu.util.getValCheckBoxByDiv("divKieuDangKy")) {
+            edu.system.alert("Vui lòng chọn ít nhất một Kiểu đăng ký", "w"); return;
+        }
+        if (!edu.util.getValCheckBoxByDiv("divCheDoDangKy")) {
+            edu.system.alert("Vui lòng chọn Chế độ đăng ký", "w"); return;
+        }
         var KDK_val = edu.util.getValCheckBoxByDiv("divKieuDangKy");//Kiểu check box
         var CheDoDangKy_val = edu.util.getValCheckBoxByDiv("divCheDoDangKy");//Kiểu radio
         var TrangThaiSinhVien_val = edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV').toString();//Kiểu check box
@@ -318,21 +337,12 @@ KeHoach.prototype = {
                     //});
                 }
                 else {
-                    obj_notify = {
-                        type: "w",
-                        content: obj_save.action + " (er): " + data.Message,
-                    }
-                    edu.system.alert(obj_save.action + " (er): " + data.Message);
+                    edu.system.alert("Lưu kế hoạch không thành công: " + data.Message, "w");
                 }
-                
+
             },
             error: function (er) {
-                
-                obj_notify = {
-                    type: "s",
-                    content: obj_save.action + " (er): " + er,
-                }
-                edu.system.alert(obj_save.action + " (er): " + er);
+                edu.system.alert("Lưu kế hoạch không thành công: " + (er && er.statusText ? er.statusText : JSON.stringify(er)), "w");
             },
             type: "POST",
             action: obj_save.action,

@@ -761,7 +761,7 @@ LopHocPhan.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 3, 4, 5, 6, 7],
+                center: [0, 3, 4, 6, 7, 8],
             },
             aoColumns: [
                 {
@@ -780,6 +780,23 @@ LopHocPhan.prototype = {
                     "mRender": function (nRow, aData) {
                         return edu.util.returnEmpty(aData.THOIGIANCHITIET);
                         //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        if (edu.util.checkValue(aData.GiangVien)) return aData.GiangVien;
+                        // Fallback: trích tên GV từ THOIGIANCHITIET (mỗi dòng "Thu X tiet ..., <Tên GV>")
+                        var str = edu.util.returnEmpty(aData.THOIGIANCHITIET);
+                        if (!str) return "";
+                        var names = [];
+                        str.split(/<br\s*\/?>|\n/i).forEach(function (line) {
+                            var m = line.match(/tiet\s+[\d,\s]+,\s*(.+)$/i);
+                            if (m && m[1]) {
+                                var name = m[1].trim();
+                                if (names.indexOf(name) === -1) names.push(name);
+                            }
+                        });
+                        return names.join("<br/>");
                     }
                 },
                 {

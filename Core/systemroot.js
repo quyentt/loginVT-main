@@ -5505,7 +5505,10 @@ systemroot.prototype = {
             var strhtmlcontent = change_alias(content);
             var iThuTu = me.arrcheckcontent.indexOf(strhtmlcontent);
             if (iThuTu == -1) {
-                $('#myModalAlert #alert_content').append('<p>' + content + ' <span id="' + strhtmlcontent + '"></span></p>');
+                var hasHtmlTag = /<\s*\/?\s*[a-z][a-z0-9]*[\s>\/]/i.test(String(content));
+                var $p = hasHtmlTag ? $('<p>').html(content) : $('<p>').text(content);
+                $p.append(' ').append($('<span>').attr('id', strhtmlcontent));
+                $('#myModalAlert #alert_content').append($p);
                 me.arrcheckcontent.push(strhtmlcontent);
                 me.arrStt.push(1);
             } else {
