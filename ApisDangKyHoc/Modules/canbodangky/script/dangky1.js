@@ -1,4 +1,4 @@
-﻿﻿/*----------------------------------------------
+/*----------------------------------------------
 --Author: nnthuong
 --Phone: 
 --Date of created: 31/05/2018 
@@ -24,8 +24,8 @@ DangKy.prototype = {
     init: function () {
         var me = this;
         /*------------------------------------------
-        --Discription: Initial system
-        -------------------------------------------*/
+		--Discription: Initial system
+		-------------------------------------------*/
         //Test
         $("#txtAnhCaNhan").attr("src", edu.system.getRootPathImg(""));
         if (me.bSinhVien) {
@@ -105,7 +105,7 @@ DangKy.prototype = {
                 me.getList_NhomDinhHuong();
             });
             $('#dropSearch_DinhHuong').on('select2:select', function (e) {
-
+                
                 me.getList_NhomDinhHuong();
                 me.getList_HSSV();
             });
@@ -191,7 +191,7 @@ DangKy.prototype = {
                 //    edu.system.beginLoadings();
                 //    runAA(0, strLopHocPhan_Id);
                 //} else {
-
+                    
 
                 //}
             });
@@ -399,8 +399,8 @@ DangKy.prototype = {
         $(point).popover('show');
     },
     /*------------------------------------------
-    --Discription: Xem ho so sinh vien
-    -------------------------------------------*/
+	--Discription: Xem ho so sinh vien
+	-------------------------------------------*/
     viewForm_HS: function (data) {
         var strAnh = edu.system.getRootPathImg(data.ANH);
         $("#lblTenPhong").html(edu.util.returnEmpty(data.MASO));
@@ -693,7 +693,7 @@ DangKy.prototype = {
             row += '<tr class="day-hocphan">';
             row += '<td height="10" style="text-align: left"><span>Ngày:</span>' + edu.util.returnEmpty(aData.NGAYBATDAU) + '</td>';
             row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
-            row += '<td height="10" rowspan="3" ><div name="' + aData.ID + '" title="' + edu.util.returnEmpty(aData.TENLOP) + '" class="btnChiTietLopHocPhan poiter btn btn-outline-primary">Xem chi tiết</div></td>';
+            row += '<td height="10" rowspan="3" ><div name="' + aData.ID + '" title="' + edu.util.returnEmpty(aData.TENLOP) + '" class="btnChiTietLopHocPhan btn poiter">Xem chi tiết</div></td>';
             row += '</tr>';
             row += '<tr class="thu-hocphan">';
             row += '<td colspan="2" style=""><span>Thứ:</span>' + edu.util.returnEmpty(aData.THUHOC) + '</td>';
@@ -704,11 +704,11 @@ DangKy.prototype = {
             row += '<tr class="tongso-hocphan">';
             // row += '<td style=" text-align: left">Tổng số:</td>';
             row += '<td colspan="2" style=""><span>Tổng số:</span>' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
-            aData.SOLOPTHUOCCUNGNHOM == 1 ? row += '<td rowspan="2"><div id="' + aData.ID + '" class="btnDangKyHocPhan btn btn-success' + classDangKy + ' poiter" style="' + classDangKy + '" >' + lblDangKy + '</div></td>'
-                : row += '<td rowspan="2" ><div style="' + classDangKy + '" id="' + aData.ID + '" class="btnChonHocPhan btn btn-warning' + classDangKy + ' poiter">' + lblChonThem + edu.util.returnEmpty(aData.SOLOPTHUOCCUNGNHOM) + '</div></td>';
+            aData.SOLOPTHUOCCUNGNHOM == 1 ? row += '<td rowspan="2"><div id="' + aData.ID + '" class="btnDangKyHocPhan' + classDangKy + ' poiter" style="background-color: #fa0000' + classDangKy + '">' + lblDangKy + '</div></td>'
+               : row += '<td rowspan="2" style="background-color: yellow' + classDangKy + '" id="' + aData.ID + '" class="btnChonHocPhan' + classDangKy + ' poiter">' + lblChonThem + edu.util.returnEmpty(aData.SOLOPTHUOCCUNGNHOM) + '</td>';
             row += '</tr>';
             row += '<tr class="dangky-hocphan">';
-            // row += '<td style="text-align: left">Đã đăng ký:</td>';
+            // row += '<td style="text-align: left"><span>Đã đăng ký:</span></td>';
             row += '<td colspan="2" style=""><span>Đã đăng ký:</span>' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</td>';
             row += '</tr>';
             row += '<tr class="phi-hocphan">';
@@ -818,7 +818,7 @@ DangKy.prototype = {
             edu.system.genHTML_Progress("zoneprocessXXXX", me.arrSinhVien_Id.length);
             me.arrSinhVien_Id.forEach(e => {
                 var obj_Clone = { ...obj_save };
-                obj_Clone.strQLSV_NguoiHoc_Id = e.substring(0, 32);
+                obj_Clone.strQLSV_NguoiHoc_Id = e.substring(0,32);
                 obj_Clone.strDaoTao_ChuongTrinh_Id = e.substring(33);
                 console.log(obj_Clone);
                 edu.system.makeRequest({
@@ -828,7 +828,7 @@ DangKy.prototype = {
                             if (edu.util.checkValue(data.Id)) {
                                 //edu.system.alert("Đăng ký thành công!");
                                 strMessage = "Đăng ký thành công!";
-
+                               
                                 //me.getList_TinhTrangTaiChinh();
                             }
                         }
@@ -896,7 +896,7 @@ DangKy.prototype = {
             success: function (data) {
                 if (data.Success) {
                     edu.system.alert("Hủy thành công!");
-
+                  
                 }
                 else {
                     obj_notify = {
@@ -989,29 +989,29 @@ DangKy.prototype = {
             row += '<div class="box-hocphan zoneNhomLopHocPhan zone' + aData.THUOCTINHLOP_ID + '" id="NhomLopHocPhan' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '">';
             row += '<table class="table" style="text-align: center;">';
             row += '<tbody>';
-            row += '<tr>';
+            row += '<tr class="name-hocphan">';
             row += '<td colspan="2" style="font-weight: bold; text-align: center" id="lblTenLop' + aData.ID + '">' + edu.util.returnEmpty(aData.TENLOP) + '</td>';
             row += '<td style="width: 80px;">' + edu.util.returnEmpty(aData.THUOCTINHLOP_TEN) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="day-hocphan">';
             row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYBATDAU) + '</td>';
-            row += '<td height="10" style="text-align: right">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
+            row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
             row += '<td height="10" rowspan="3" style="">Xem chi tiết</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="thu-hocphan">';
             row += '<td colspan="2" style="">Thứ: ' + edu.util.returnEmpty(aData.THUHOC) + '</td>';
             row += '</tr>';
-            row += '<tr>';
-            row += '<td colspan="2" style="">' + edu.util.returnEmpty(aData.GIANGVIEN) + '</td>';
+            row += '<tr class="giangvien-hocphan">';
+            row += '<td colspan="2" style="">Giảng viên:' + edu.util.returnEmpty(aData.GIANGVIEN) + '</td>';
             row += '</tr>';
-            row += '<tr>';
-            row += '<td style=" text-align: left">Tổng số:</td>';
-            row += '<td style="">' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
-            row += '<td rowspan="2" style="background-color: yellowgreen" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '" class="btnChonNhomLopHocPhan">Chọn lớp ' + aData.THUOCTINHLOP_TEN + '</td>'
+            row += '<tr class="tongso-hocphan">';
+            // row += '<td style=" text-align: left">Tổng số:</td>';
+            row += '<td colspan="2" style="">Tổng số:' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
+            row += '<td rowspan="2"><div class="style="background-color: yellowgreen" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '" class="btnChonNhomLopHocPhan">Chọn lớp ' + aData.THUOCTINHLOP_TEN + '</div></td>'
             row += '</tr>';
-            row += '<tr>';
-            row += '<td style="text-align: left">Đã đăng ký:</td>';
-            row += '<td style="">' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</td>';
+            row += '<tr class="dangky-hocphan">';
+            // row += '<td style="text-align: left">Đã đăng ký:</td>';
+            row += '<td colspan="2" style="">Đã đăng ký:' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</td>';
             row += '</tr>';
             row += '<tr>';
             row += '<td colspan="3" style="">' + edu.util.formatCurrency(aData.PHISAUKHITRUMIEN) + ' VND</td>';
@@ -1118,35 +1118,35 @@ DangKy.prototype = {
                 mau ? mau = '' : mau = 'background-color: #63e55c';
                 console.log(mau);
             }
-            row += '<div class=" col-sm-3">';
+            row += '<div class="col-sm-3 item-hocphan">';
             row += '<div class="box-hocphan" id="zoneChon' + aData.ID + '" style="width: 99%; ' + mau + '">';
             row += '<table class="table " style="text-align: center;">';
             row += '<tbody>';
-            row += '<tr>';
+            row += '<tr  class="name-hocphan">';
             row += '<td colspan="2" style="font-weight: bold; text-align: center" id="lblTenLop' + aData.ID + '" name="' + aData.DANGKY_LOPHOCPHAN_ID + '"  title="' + edu.util.returnEmpty(aData.DANGKY_LOPHOCPHAN_TEN) + '" class="btnChiTietLopHocPhan poiter"><a href="#">' + edu.util.returnEmpty(aData.DANGKY_LOPHOCPHAN_TEN) + '</a></td>';
             row += '<td style="width: 80px;" class= "' + edu.util.returnEmpty(aData.MANHOMLOP) + '">' + edu.util.returnEmpty(aData.THUOCTINHLOP_TEN) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr  class="doilich-hocphan">';
             row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYBATDAU) + '</td>';
-            row += '<td height="10" style="text-align: right">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
+            row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
             row += '<td height="10" id="' + aData.ID + '" class="btnDoiLich poiter" rowspan="3" style=""> Đổi lịch</td>';
             row += '</tr>';
-            row += '<tr>';
-            row += '<td colspan="2" style="">Thứ: ' + edu.util.returnEmpty(aData.THUHOC) + '</td>';
+            row += '<tr class="day-gv-hocphan">';
+            row += '<td colspan="2" style="" class="day-hocphan">Thứ: ' + edu.util.returnEmpty(aData.THUHOC) + '</td>';
             row += '</tr>';
-            row += '<tr>';
-            row += '<td colspan="2" style="">' + edu.util.returnEmpty(aData.GIANGVIEN) + '</td>';
+            row += '<tr class="gv-hocphan">';
+            row += '<td colspan="2" style=""> Giảng viên: ' + edu.util.returnEmpty(aData.GIANGVIEN) + '</td>';
             row += '</tr>';
-            row += '<tr>';
-            row += '<td style=" text-align: left">Tổng số:</td>';
-            row += '<td style="">' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
+            row += '<tr class="tongso-hocphan">';
+            // row += '<td style=" text-align: left">Tổng số:</td>';
+            row += '<td colspan="2" style="">Tổng số:' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
             row += '<td rowspan="2" id="' + aData.ID + '" class="btnHuyHocPhan poiter" style="background-color: red"> Hủy</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="dangky-hocphan">';
             row += '<td style="text-align: left">Đã đăng ký:</td>';
             row += '<td style="">' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="phi-hocphan">';
             row += '<td colspan="3" style="">' + edu.util.formatCurrency(aData.PHISAUKHITRUMIEN) + ' VND</td>';
             row += '</tr>';
             row += '</tbody>';
@@ -1223,35 +1223,35 @@ DangKy.prototype = {
             if (aData.ID === me.objDoiLichHoc.DANGKY_LOPHOCPHAN_ID) continue;
             if (aData.SOLOPTHUOCCUNGNHOM > 1 && aData.LOPHOCPHANCHINH == 1) continue;
             idem++;
-            row += '<div class="col-lg-3">';
+            row += '<div class="col-lg-3 item-hocphan">';
             row += '<div class="box-hocphan">';
             row += '<table class="table" style="text-align: center;">';
             row += '<tbody>';
-            row += '<tr>';
+            row += '<tr class="name-hocphan">';
             row += '<td colspan="2" style="font-weight: bold; text-align: center" id="lblTenLop' + aData.ID + '">' + edu.util.returnEmpty(aData.TENLOP) + '</td>';
             row += '<td style="width: 80px;">' + edu.util.returnEmpty(aData.THUOCTINHLOP_TEN) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="day-hocphan">';
             row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYBATDAU) + '</td>';
-            row += '<td height="10" style="text-align: right">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
+            row += '<td height="10" style="text-align: left">' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</td>';
             row += '<td height="10" rowspan="3" name="' + aData.ID + '" title="' + edu.util.returnEmpty(aData.TENLOP) + '" class="btnChiTietLopHocPhan poiter">Xem chi tiết</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="thu-hocphan">';
             row += '<td colspan="2" style="">Thứ: ' + edu.util.returnEmpty(aData.THUHOC) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="gv-hocphan">';
             row += '<td colspan="2" style="">' + edu.util.returnEmpty(aData.GIANGVIEN) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="tongso-hocphan">';
             row += '<td style=" text-align: left">Tổng số:</td>';
             row += '<td style="">' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
             row += '<td rowspan="2" style="background-color: yellowgreen" id="' + aData.ID + '" name="' + aData.THUOCTINHLOP_ID + '" class="btnDoiNhomLopHocPhan">Đổi lớp ' + aData.THUOCTINHLOP_TEN + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="dangky-hocphan">';
             row += '<td style="text-align: left">Đã đăng ký:</td>';
             row += '<td style="">' + edu.util.returnEmpty(aData.SOTHUCTEDANGKYHOC) + '</td>';
             row += '</tr>';
-            row += '<tr>';
+            row += '<tr class="phi-hocphan">';
             row += '<td colspan="3" style="">' + edu.util.returnEmpty(aData.PHISAUKHITRUMIEN) + ' VND</td>';
             row += '</tr>';
             row += '</tbody>';
@@ -1819,7 +1819,7 @@ DangKy.prototype = {
         }
         edu.system.loadToCombo_data(obj);
     },
-
+    
     getList_HSSV: function (dLocTheoDuLieuImport) {
         var me = this;
         if (!dLocTheoDuLieuImport) dLocTheoDuLieuImport = -1;
@@ -2054,7 +2054,7 @@ DangKy.prototype = {
             ]
         }, false, false, false, null);
     },
-
+    
     getList_DinhHuong: function () {
         var me = this;
         var obj_save = {

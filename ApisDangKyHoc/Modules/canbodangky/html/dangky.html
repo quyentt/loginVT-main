@@ -166,8 +166,8 @@
 </style>
 <!-- Main content -->
 <section class="content aps-canbo-dangky">
-    <!-- /.left-content -->
     <div class="row zone-bus" id="zonebatdau">
+        <!-- Tìm kiếm -->
         <div class="box box-solid box-search pt20 pl20 pr20 pt10">
             <div class="box-header with-border d-none">
                 <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
@@ -195,14 +195,15 @@
                             <option id="" value=""> --Chọn lớp-- </option>
                         </select>
                     </div>
+
+                </div>
+                <div class="row mb-0">
                     <div class="col-sm-3 item-search">
                         <select id="dropSearch_DinhHuong" class="select-opt" style="width:100% !important"></select>
                     </div>
                     <div class="col-sm-3 item-search">
                         <select id="dropSearch_NhomDinhHuong" class="select-opt" style="width:100% !important"></select>
                     </div>
-                </div>
-                <div class="row mb-0">
                     <div class="col-sm-3 item-search">
                         <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                     </div>
@@ -224,7 +225,7 @@
                     <div class="col-sm-3 item-search"></div>
                 </div>
                 <!-- Chọn trạng thái sinh viên -->
-                <div class="col-sm-12 item-search chosse-status-student">
+                <div class="col-sm-12 item-search chosse-status-student mt-0">
                     <div class="group-title">
                         <p class="titleSearchContent line-20">
                             <i class="far fa-user-graduate"></i>
@@ -238,11 +239,12 @@
                 </div>
             </div>
         </div>
+        <!-- Danh sách sinh viên -->
         <div class="box box-solid box-reg-sv pd20">
             <div class="box-header pd0">
-                <h3 class="box-title color-blue line-20 mt-10">
-                    <i class="far fa-address-book"></i> Danh sách sinh viên
-                    <span class="pull-right badge bg-light-blue">
+                <h3 class="box-title color-blue line-38">
+                    <i class="far fa-address-book line-38"></i> Danh sách sinh viên
+                    <span class="pull-right badge bg-light-blue mt-10">
                         <span id="lblSinhVien"></span>
                     </span>
                 </h3>
@@ -254,7 +256,7 @@
                 </div>
             </div>
             <div class="box-body mt-10">
-                <div class="aps-table-select">
+                <div class="aps-table-select scroll-table-x">
                     <table id="tblSinhVien" class="table table-hover table-bordered table-noborder tblSinhVien mb-5">
                         <thead>
                             <tr>
@@ -280,6 +282,7 @@
             </div>
         </div>
     </div>
+
     <div class="row zone-bus aps-canbo-dangky-add" id="zonehocphan" style="display: none">
         <!-- /.left-content -->
         <div class="col-lg-3 aps-canbo-dangky-add-l">
@@ -346,21 +349,21 @@
                         </h3>
                     </div>
                     <div class="box-body mt20">
-                        <div class="bs-item">
+                        <div class="bs-item bold">
                             Giảng viên
-                            <div id="DSGiangVien" style="margin-left: 20px"></div>
+                            <div id="DSGiangVien" style="margin-left: 20px" class="mt-5"></div>
                         </div>
                     </div>
                     <div class="box-body mt-10">
-                        <div class="bs-item">
+                        <div class="bs-item bold">
                             Thứ học
-                            <div id="DSThuHoc" style="margin-left: 20px"></div>
+                            <div id="DSThuHoc" style="margin-left: 20px"  class="mt-5"></div>
                         </div>
                     </div>
                     <div class="box-body mt-10">
-                        <div class="bs-item">
+                        <div class="bs-item bold">
                             Phương án đăng ký
-                            <div class="filter-plan-reg-list" id="DSPhuongAn"></div>
+                            <div class="filter-plan-reg-list mt-5" id="DSPhuongAn"></div>
                         </div>
                     </div>
                     <div class="box-body mt-10">
@@ -409,12 +412,12 @@
             </div>
         </div>
         <!-- /.right-content -->
-        <div class="col-lg-9 aps-canbo-dangky-add-r pl20 pt20 pr20" id="zoneDangKy">
+        <div class="col-lg-9 aps-canbo-dangky-add-r pd20" id="zoneDangKy">
             <div class="col-lg-12" style="margin-left: 4px;">
                 <!--<div class="box-header with-border" style="text-align: center">
                         <h3 class="box-title"><i class="fa fa-pencil"></i> Năm học: 2019_1</h3>
                     </div>-->
-                <div class="aps-canbo-dangky-add-item">
+                <div class="aps-canbo-dangky-add-item aps-ctdt">
                     <div class="col-sm-12 box-view">
                         <!-- 1. Noi dung bai bao -->
                         <div class="row zone-box">
@@ -435,11 +438,12 @@
                         </div>
                     </div>
                 </div>
-                <div class="aps-canbo-dangky-add-item">
+
+                <div class="aps-canbo-dangky-add-item aps-kehoach">
                     <div class="col-sm-12 box-view">
                         <!-- 1. Noi dung bai bao -->
                         <div class="row zone-box">
-                            <div class="row">
+                            <div class="row box-plan">
                                 <div class="col-sm-2 row-select">
                                     <div class="group-title-name">
                                         <b>Kế hoạch</b><span class="title-colon">:</span>
@@ -447,20 +451,23 @@
 
                                 </div>
                                 <div class="col-sm-10">
-                                    <div class="row-select" id="zoneKeHoach" style="float: left">
+                                    <div class="row row-select zoneKeHoach w-100" id="zoneKeHoach" style="float: left">
                                     </div>
-                                    <div class="active" style="width: 300px; float: right; margin-top: 7px">
-                                        <span style="color: green" id="zoneThoiGian"></span>
-                                    </div>
-                                    <div class="group-title-name" style="width: 90px; float: right; margin-top: 7px">
-                                        <b>Thời gian</b><span class="title-colon">:</span>
+                                    <div class="row plan-time w-100">
+                                        <div class="group-title-name"
+                                            style="width: 80px;  float: left;height: 20px !important;line-height: 20px !important; margin-right: 10px;margin-left: 8px;">
+                                            <b>Thời gian</b><span class="title-colon">:</span>
+                                        </div>
+                                        <div class="active" style="float: left;">
+                                            <span style="color: green" id="zoneThoiGian"></span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="aps-canbo-dangky-add-item">
+                <div class="aps-canbo-dangky-add-item aps-hocphan">
                     <div class="col-sm-12 box-view">
                         <!-- 1. Noi dung bai bao -->
                         <div class="row zone-box">
@@ -470,7 +477,7 @@
                                         <b>Học phần</b><span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-10 row-select" id="zoneDSHocPhan">
+                                <div class="col-sm-10 row-select zoneDSHocPhan" id="zoneDSHocPhan">
                                 </div>
                             </div>
                         </div>
@@ -478,9 +485,10 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div id="zoneLopHocPhan"></div>
+            <div id="zoneLopHocPhan" class="zoneLopHocPhan"></div>
         </div>
     </div>
+
     <div class="row zone-bus form-container" id="zonechonmonhocphan" style="display: none">
         <div class="box box-solid form-container">
             <div class="box-header with-border">
@@ -515,6 +523,7 @@
             </div>
         </div>
     </div>
+
     <div class="row zone-bus form-container" id="zoneketquahocphan" style="display: none">
         <div class="box box-solid form-container">
             <div class="box-header with-border">
@@ -534,7 +543,15 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- -----Open modal -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: block !important;">
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
+        Danh sách học phần</button>
+    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModalPhamVi">
+        Danh sách phạm vi</button>
+</div>
+<!-- ---------- -->
+<div class="modal fade modal-ds-hocphan" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
@@ -555,8 +572,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="myModalChiTietLich" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%">
+<div class="modal fade myModalChiTietLich" id="myModalChiTietLich" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
@@ -566,11 +583,11 @@
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="clear"></div>
-                <table id="tblLichHoc" class="table table-hover table-bordered">
+                <table id="tblLichHoc" class="table table-hover table-bordered table-noborder tblLichHoc">
                     <thead>
                         <tr>
-                            <th class="td-center td-fix"><span class="lang" key="">Stt</span></th>
-                            <th class="td-center"><span class="lang" key="">Buổi học</span></th>
+                            <th class="td-center w-50px td-fix"><span class="lang" key="">Stt</span></th>
+                            <th class="td-left"><span class="lang" key="">Buổi học</span></th>
                             <th class="td-center"><span class="lang" key="">Ngày bắt đầu</span></th>
                             <th class="td-center"><span class="lang" key="">Ngày kết thúc</span></th>
                             <th class="td-center"><span class="lang" key="">Thứ học</span></th>
@@ -580,8 +597,8 @@
                             <th class="td-center"><span class="lang" key="">Giờ, phút bắt đầu</span></th>
                             <th class="td-center"><span class="lang" key="">Giờ, phút kết thúc</span></th>
                             <th class="td-center"><span class="lang" key="">Phòng học</span></th>
-                            <th class="td-center"><span class="lang" key="">Giảng viên</span></th>
-                            <th class="td-center"><span class="lang" key="">Kiểu học</span></th>
+                            <th class="td-left"><span class="lang" key="">Giảng viên</span></th>
+                            <th class="td-left"><span class="lang" key="">Kiểu học</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -595,8 +612,7 @@
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="phuongan_dangky" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade phuongan_dangky" id="phuongan_dangky" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
