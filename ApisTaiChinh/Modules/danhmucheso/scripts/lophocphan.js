@@ -761,7 +761,7 @@ LopHocPhan.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 3, 4, 6, 7, 8],
+                center: [0, 3, 4, 5, 7, 8, 9],
             },
             aoColumns: [
                 {
@@ -784,7 +784,16 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.MaGiangVien || aData.GIANGVIEN_MASO || aData.GIANGVIEN_MA || aData.MAGIANGVIEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
                         if (edu.util.checkValue(aData.GiangVien)) return aData.GiangVien;
+                        if (edu.util.checkValue(aData.GIANGVIEN_HOTEN)) return aData.GIANGVIEN_HOTEN;
+                        if (edu.util.checkValue(aData.GIANGVIEN_HODEM) || edu.util.checkValue(aData.GIANGVIEN_TEN)) {
+                            return edu.util.returnEmpty(aData.GIANGVIEN_HODEM) + " " + edu.util.returnEmpty(aData.GIANGVIEN_TEN);
+                        }
                         // Fallback: trích tên GV từ THOIGIANCHITIET (mỗi dòng "Thu X tiet ..., <Tên GV>")
                         var str = edu.util.returnEmpty(aData.THOIGIANCHITIET);
                         if (!str) return "";
