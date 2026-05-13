@@ -942,7 +942,8 @@
                                                         <div class="row row-tab row-align">
                                                             <div class="table-responsive">
                                                                 <div class="scroll-table-x">
-                                                                    <table id="tblDaNopRieng" style="border-bottom: 0 !important;"
+                                                                    <table id="tblDaNopRieng"
+                                                                        style="border-bottom: 0 !important;"
                                                                         class="table tblDaNopRieng table-bordered table-noborder">
                                                                         <thead>
                                                                             <!--Load from js-->
@@ -962,7 +963,8 @@
                                                         <div class="row row-tab row-align">
                                                             <div class="table-responsive">
                                                                 <div class="scroll-table-x">
-                                                                    <table id="tblPhaiNopRieng" style="border-bottom: 0 !important;"
+                                                                    <table id="tblPhaiNopRieng"
+                                                                        style="border-bottom: 0 !important;"
                                                                         class="table table-bordered table-noborder tblPhaiNopRieng">
                                                                         <thead>
                                                                             <!--Load from js-->
@@ -982,7 +984,8 @@
                                                         <div class="row row-tab row-align">
                                                             <div class="table-responsive">
                                                                 <div class="scroll-table-x">
-                                                                    <table id="tblHoaDonRieng" style="border-bottom: 0 !important;"
+                                                                    <table id="tblHoaDonRieng"
+                                                                        style="border-bottom: 0 !important;"
                                                                         class="table  table-bordered table-noborder tblHoaDonRieng">
                                                                         <thead>
                                                                             <!--Load from js-->
@@ -1002,7 +1005,8 @@
                                                         <div class="row row-tab row-align">
                                                             <div class="table-responsive">
                                                                 <div class="scroll-table-x">
-                                                                    <table id="tblPhieuThuRieng"  style="border-bottom: 0 !important;"
+                                                                    <table id="tblPhieuThuRieng"
+                                                                        style="border-bottom: 0 !important;"
                                                                         class="table  table-bordered table-noborder tblPhieuThuRieng">
                                                                         <thead>
                                                                             <!--Load from js-->
@@ -1022,7 +1026,8 @@
                                                         <div class="row row-tab row-align">
                                                             <div class="table-responsive">
                                                                 <div class="scroll-table-x">
-                                                                    <table id="tblRutRieng" style="border-bottom: 0 !important;"
+                                                                    <table id="tblRutRieng"
+                                                                        style="border-bottom: 0 !important;"
                                                                         class="table tblRutRieng  table-bordered table-noborder">
                                                                         <thead>
                                                                             <!--Load from js-->
@@ -1279,43 +1284,45 @@
                                     <div class="UD"></div>
                                     <div class="vh" id="top_notifications_PhieuThu"
                                         style="font-size: 300%;height: 74px;">
-                                        <span><span id="link_enable_notifications_PhieuThu" class="lang" key="">Đang gửi</span> ...</span>
+                                        <span><span id="link_enable_notifications_PhieuThu" class="lang" key="">Đang
+                                                gửi</span> ...</span>
                                     </div>
                                     <div class="UB"></div>
                                 </div>
                             </div>
                         </div>
+                        <div id="MauInPhieuThu" class="MauInPhieuThu"></div>
                         <div class="aps-list-btn d-flex">
-                            <div id="zoneActionXuatHoaDon" class="aps-btn"> </div>
-                            <div id="btnHuy_HDBL" class="aps-btn">
-                                <a class="btn"><i style="color: #dd4b39" class="fa fa-trash-o fa-4x"></i></a>
-                                <a class="color-active bold lbsymbolHD">Hủy chứng từ</a>
-                            </div>
-                            <div id="zoneActionHoaDon" class="aps-btn d-flex">
+                            <div id="zoneActionHoaDon" class="aps-btn-in zoneActionHoaDon">
+                                <div id="zoneActionXuatHoaDon" class="aps-btn"> </div>
+                                <div id="btnHuy_HDBL" class="aps-btn">
+                                    <a class="btn btn-danger"><i class="fal fa-times"></i>Hủy chứng từ</a>
+                                    <!-- <a class="color-active bold lbsymbolHD">Hủy chứng từ</a> -->
+                                </div>
                                 <div id="btnIn_HDBL">
-                                    <a class="btn"><i class="fal fa-times-circle"></i></a>
-                                    <a class="color-active bold lbsymbolHD">In chứng từ</a>
+                                    <a class="btn btn-primary"><i class="fal fa-times-circle"></i> In chứng từ</a>
+                                    <!-- <a class="color-active bold lbsymbolHD"></a> -->
                                 </div>
-                                <div id="btnClose_HDBL" class="aps-btn">
-                                    <a class="btn"><i style="color: #337ab7"
-                                            class="fa fa-angle-double-down fa-4x"></i></a>
-                                    <a class="color-active bold lbsymbolHD">Đóng</a>
-                                </div>
+
                                 <div id="btnLienHoaDon" class="aps-btn">
-                                    <a title="Liên Hóa đơn" class="btn"><i style="color: #00a65a"
-                                            class="fa fa fa-copy fa-4x"></i></a>
+                                    <a title="Liên Hóa đơn" class="btn btn-success">
+                                        <i class="fa fa fa-copy fa-4x"></i> </a>
                                     <div id="zoneLienHoaDon"></div>
-                                    <div class="clear"></div>
-                                    <a class="color-active bold lbsymbolHD">Liên </a>
+                                    <!-- <div class="clear"></div>  -->
+
                                 </div>
                                 <div id="btnThuTien" class="aps-btn">
-                                    <a class="btn"><i style="color: #00a65a" class="fa fa-money fa-4x"></i></a>
-                                    <div class="clear"></div>
-                                    <a class="color-active bold lbsymbolHD">Thu tiền - không sinh hóa đơn biên lai</a>
+                                    <a class="btn btn-danger">
+                                        <i class="fa fa-money"></i>Thu tiền - không sinh hóa đơn biên lai</a>
                                 </div>
+                                <div id="btnClose_HDBL" class="aps-btn">
+                                    <a class="btn btn-secondary"><i class="fal fa-times"></i> Đóng</a>
+                                    <!-- <a class="color-active bold lbsymbolHD">Đóng</a> -->
+                                </div>
+
                             </div>
                         </div>
-                        <div id="MauInPhieuThu" class="MauInPhieuThu"></div>
+
                     </div>
                     <div class="clear"></div>
                 </div>
@@ -1645,7 +1652,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
                 <h3 class="box-title"><span class="myModalLabel">
-                     <i class="fa-solid fa-circle-dollar"></i></span>
+                        <i class="fa-solid fa-circle-dollar"></i></span>
                     Khoản đã nộp</h3>
             </div>
             <div class="modal-body pd0">
@@ -1761,8 +1768,8 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> 
-                    <i class="fa-thin fa-money-from-bracket"></i></span>
+                <h3 class="box-title"><span class="myModalLabel">
+                        <i class="fa-thin fa-money-from-bracket"></i></span>
                     Khoản đã rút</h3>
             </div>
             <div class="modal-body pd0">
@@ -1994,8 +2001,8 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> 
-                    <i class="fa-solid fa-memo-circle-info"></i></span>
+                <h3 class="box-title"><span class="myModalLabel">
+                        <i class="fa-solid fa-memo-circle-info"></i></span>
                     Chi tiết khoản
                     <span id="lblChiTietKhoanThu"></span>
                 </h3>
