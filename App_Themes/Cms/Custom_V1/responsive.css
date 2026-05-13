@@ -224,6 +224,16 @@
 }
 
 @media (max-width: 1024px) {
+    .DSTrangThaiSV_LHD {
+        padding-left: 0 !important;
+    }
+
+    .DSTrangThaiSV_LHD .col-lg-3.checkbox-inline.user-check-print {
+        padding-left: 20px;
+        padding-right: 30px;
+    }
+
+    /* --- */
     .aps-phanconglop-search .box.box-solid.box-search .box-body {
         padding-top: 5px !important;
         padding-bottom: 5px !important;
@@ -1210,9 +1220,12 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
-    .aps-add-phancong .phancong-time{
+
+
+    .aps-add-phancong .phancong-time {
         padding-left: 0 !important;
     }
+
     .modal.modal-ds-hocphan .modal-body {
         padding-left: 0 !important;
         padding-right: 0 !important;
@@ -1465,6 +1478,20 @@
 }
 
 @media (min-width: 600px) and (max-width: 1024px) {
+    .aps-canbo-dangky .box-solid.box-search .chosse-status-student {
+        grid-column: span 2 !important;
+    }
+
+    .chosse-status-student .DSTrangThaiSV_LHD {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) !important;
+        /* gap: 10px !important; */
+    }
+
+    .aps-table-select .table.tblSinhVien {
+        min-width: 1000px;
+    }
+
     .aps-phancongphamvi-search.box-solid.box-search .box-body {
         grid-template-columns: 100% !important;
     }
@@ -1966,6 +1993,10 @@
 
     .form-ds-hocphan .aps-form {
         margin-bottom: 0px !important;
+    }
+
+    .aps-canbo-dangky .box-solid.box-search .item-search {
+        margin-bottom: 10px !important;
     }
 
     /* ------- */
@@ -2567,6 +2598,77 @@
 }
 
 @media only screen and (max-width: 599px) {
+    .aps-canbo-dangky-add-l .aps-info-sv {
+        padding: 15px !important;
+    }
+
+    .aps-canbo-dangky-add-l .menu-header-image .widget-user-image.col-sm-4 {
+        margin-right: 15px;
+    }
+
+    .aps-canbo-dangky-add-l .box.box-solid .box-header {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .aps-canbo-dangky-add-l .aps-info-sv,
+    .aps-canbo-dangky-add-l {
+        height: auto !important;
+        border-top-left-radius: 0 !important;
+        border-top-right-radius: 0 !important;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+
+    .zone-bus.aps-canbo-dangky-add .aps-canbo-dangky-add-l {
+        height: auto !important;
+    }
+
+    /* ---- */
+    .chosse-status-student .DSTrangThaiSV_LHD {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) !important;
+        /* gap: 10px !important; */
+    }
+
+    .DSTrangThaiSV_LHD {
+        padding-left: 0 !important;
+    }
+
+    .box-reg-sv .box-header .pull-right {
+        display: block !important;
+    }
+
+    .box-reg-sv .box-header .pull-right .btn {
+        margin-left: 0px !important;
+        margin-bottom: 10px !important;
+        margin-right: 10px !important;
+    }
+
+    .light-paginationtblSinhVien {
+        float: left !important;
+        margin-top: 10px;
+    }
+
+    .zone-pag-footertblSinhVien {
+        margin-top: 0 !important;
+    }
+
+    .info-tblSinhVien,
+    .light-paginationtblSinhVien {
+        width: 100% !important;
+        float: left;
+    }
+
+    .aps-canbo-dangky .row.d-flex.mb-0 {
+        margin-bottom: 10px !important;
+    }
+
+    .DSTrangThaiSV_LHD .col-lg-3.checkbox-inline.user-check-print {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
     .form-container.aps-add-phancong .box-body.pd20 {
         padding: 10px 15px !important;
     }

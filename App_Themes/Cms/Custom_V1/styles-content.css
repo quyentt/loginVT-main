@@ -5576,24 +5576,30 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .aps-canbo-dangky-add-item .zone-box .btn {
     margin-left: 8px !important;
-    padding: 8px 15px 7.6px 15px !important;
+    padding: 8px 15px 6.6px 15px !important;
     margin-bottom: 8px;
     float: left;
     white-space: normal !important;
     color: #222;
     height: auto !important;
     text-align: left;
+    min-height: 38px;
 }
-.tblLichHoc tr th .lang{
+
+.tblLichHoc tr th .lang {
     height: 48px !important;
 }
-.tblLichHoc tr th{
+
+.tblLichHoc tr th {
     padding: 0px 8px 0px 8px !important;
-     height: 48px !important;
+    height: 48px !important;
 }
-.tblLichHoc tr td:nth-child(9),.tblLichHoc tr td:nth-child(10){
+
+.tblLichHoc tr td:nth-child(9),
+.tblLichHoc tr td:nth-child(10) {
     text-align: center !important;
 }
+
 .aps-canbo-dangky-add-item .zone-box .btn .fa-check-circle {
     margin-left: 5px;
     font-weight: 700 !important;
@@ -5602,9 +5608,12 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .aps-canbo-dangky-add-item .zone-box .btn:hover {
     margin-left: 8px !important;
-    padding: 8px 15px 7.6px 15px !important;
     color: #3c8dee;
     border: 1px solid #3c8dee;
+}
+
+.aps-canbo-dangky-add-item .zone-box .btn.btnCloseSinhVien:hover {
+    border: 0 solid #3c8dee !important;
 }
 
 .aps-canbo-dangky-add-item .zone-box .btn:hover .fa-check-circle {
@@ -5616,8 +5625,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     -webkit-box-shadow: 0 0 0 0 #ccc;
     -moz-box-shadow: 0 0 0 0 #ccc;
     box-shadow: 0 0 0 0 #ccc;
-    margin-left: 8px !important;
-    height: 34px;
     line-height: 18px;
     text-align: left !important;
 }
@@ -5643,7 +5650,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .zoneLopHocPhan {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
-    gap: 10px;
+    gap: 15px;
 }
 
 .zoneLopHocPhan .col-lg-3 {
@@ -5656,18 +5663,22 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .zoneLopHocPhan .col-lg-3 .box-hocphan tr td {
-    padding: 5px !important;
+    padding: 5px 8px !important;
 }
 
 .zoneLopHocPhan .col-lg-3 .box-hocphan .name-hocphan {
     border-bottom: 1px solid #e1e1e1 !important;
     padding: 10px 5px !important;
+    background: #3380db !important;
+    color: #fff !important;
+    height: 54px !important;
 }
 
 .zoneLopHocPhan .col-lg-3 .box-hocphan .name-hocphan td:first-child {
     text-align: left !important;
     font-size: 15px;
     border-right: 0 !important;
+    word-break: break-all !important;
 }
 
 .thu-hocphan td,
@@ -5686,7 +5697,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .gv-hocphan td:nth-child(1),
 .tongso-hocphan td:nth-child(1),
 .dangky-hocphan td:nth-child(1),
-.zoneLopHocPhan .col-lg-3 .box-hocphan tr td:nth-child(1){
+.zoneLopHocPhan .col-lg-3 .box-hocphan tr td:nth-child(1) {
     border-right: 0 !important;
 }
 
@@ -5711,15 +5722,18 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     color: red;
     font-weight: bold;
 }
-.box-hocphan tr td span{
+
+.box-hocphan tr td span {
     color: #888;
     padding-right: 6px;
 }
+
 .box-hocphan tr td .btnChiTietLopHocPhan {
     min-width: 100px;
     color: #3380db !important;
     border: 1px solid #3380db !important;
 }
+
 /* ---- */
 .btnDelete_PhamVi {
     position: absolute;
@@ -11549,3 +11563,40 @@ table#clone {
     height: 34px !important;
     color: #222;
 }
+
+.zoneLopHocPhan .box-hocphan tr:hover .btnChiTietLopHocPhan {
+    color: #3380db !important;
+}
+
+.zoneLopHocPhan .box-hocphan tr .btnChiTietLopHocPhan:hover {
+    color: #fff !important;
+}
+
+.zoneLopHocPhan .box-hocphan {
+    margin: 0;
+}
+
+.zoneLopHocPhan .item-hocphan .table {
+    margin-bottom: 0 !important;
+}
+
+/* .aps-canbo-dangky-add {
+    position: relative;
+    background-color: #f1f1f1 !important;
+} */
+
+/* .aps-canbo-dangky-add-r {
+    background-color: #fff !important;
+    height: 100vh !important;
+} */
+
+/* .aps-canbo-dangky-add::before {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 25%;
+    background-color: #f1f1f1 !important;
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    height: 100vh !important;
+} */
