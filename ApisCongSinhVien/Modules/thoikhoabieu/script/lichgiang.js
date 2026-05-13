@@ -56,52 +56,23 @@ LichGiang.prototype = {
             var strClass = $(this).attr('name');
             strClass = $("." + strClass);
             var html = '';
-            html += '<div class="date">';
+            html += '<div class="date" title="Giờ Việt Nam (GMT+7)">';
             html += '<i class="fal fa-clock day color-66"></i>';
-            html += '<p class="m-0 text">GMT+7</p>';
+            html += '<p class="m-0 text">Giờ VN</p>';
             html += '</div>';
 
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[0]).attr('title') +'</div>';
-            html += '<div class="text">Mon</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[1]).attr('title') +'</div>';
-            html += '<div class="text">Tue</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[2]).attr('title') +'</div>';
-            html += '<div class="text">Wed</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[3]).attr('title') +'</div>';
-            html += '<div class="text">Thu</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[4]).attr('title') +'</div>';
-            html += '<div class="text">Fri</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[5]).attr('title') +'</div>';
-            html += '<div class="text">Sat</div>';
-            html += '</div>';
-            html += '</div>';
-
-            html += '<div class="day-of-week">';
-            html += '<div class="day">' + $(strClass[6]).attr('title') +'</div>';
-            html += '<div class="text">Sun</div>';
-            html += '</div>';
-            html += '</div>';
+            var arrDayName = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ nhật'];
+            var todayObj = new Date();
+            var todayStr = ('0' + todayObj.getDate()).slice(-2) + '/' + ('0' + (todayObj.getMonth() + 1)).slice(-2) + '/' + todayObj.getFullYear();
+            for (var iDay = 0; iDay < 7; iDay++) {
+                var dayTitle = $(strClass[iDay]).attr('title');
+                var isToday = dayTitle === todayStr;
+                html += '<div class="day-of-week' + (isToday ? ' today-col' : '') + '">';
+                html += '<div class="day">' + dayTitle + '</div>';
+                html += '<div class="text">' + arrDayName[iDay] + '</div>';
+                html += '</div>';
+                html += '</div>';
+            }
 
             $("#date-header").html(html);
             me.arrDay = [];
@@ -291,6 +262,102 @@ LichGiang.prototype = {
 
         header.__scrollSyncBound = true;
         body.__scrollSyncBound = true;
+
+        this.bindDragScroll(body);
+        this.bindDragScroll(header);
+    },
+
+    bindDragScroll: function (el) {
+        if (!el || el.__dragScrollBound) return;
+        el.__dragScrollBound = true;
+
+        var isDown = false, startX = 0, startY = 0, moved = false;
+        var xTarget = null, yTarget = null, xStart = 0, yStart = 0;
+
+        el.style.cursor = 'grab';
+
+        function findScrollable(node, axis) {
+            while (node && node !== document.body && node !== document.documentElement) {
+                var style = window.getComputedStyle(node);
+                var ov = axis === 'x' ? style.overflowX : style.overflowY;
+                var canScroll = (ov === 'auto' || ov === 'scroll' || ov === 'overlay');
+                var dim = axis === 'x' ? (node.scrollWidth - node.clientWidth) : (node.scrollHeight - node.clientHeight);
+                if (canScroll && dim > 1) return node;
+                node = node.parentElement;
+            }
+            return null;
+        }
+
+        function getScroll(target, axis) {
+            if (!target) return window['scroll' + (axis === 'x' ? 'X' : 'Y')] || (document.documentElement['scroll' + (axis === 'x' ? 'Left' : 'Top')]);
+            return axis === 'x' ? target.scrollLeft : target.scrollTop;
+        }
+
+        function setScroll(target, axis, val) {
+            if (!target) {
+                if (axis === 'x') window.scrollTo({ left: val, top: window.scrollY, behavior: 'instant' });
+                else window.scrollTo({ left: window.scrollX, top: val, behavior: 'instant' });
+                return;
+            }
+            if (axis === 'x') target.scrollLeft = val;
+            else target.scrollTop = val;
+        }
+
+        el.addEventListener('mousedown', function (e) {
+            if (e.button !== 0) return;
+            if (e.target.closest('.task, .btnLichHoc, .btnLichThi, .eval, .btnEmoChange, .btnEmoPlus, .btnEmoMinus, a, button, input, select, textarea')) return;
+            isDown = true;
+            moved = false;
+            startX = e.pageX;
+            startY = e.pageY;
+
+            xTarget = findScrollable(el, 'x') || findScrollable(el.parentElement, 'x');
+            yTarget = findScrollable(el, 'y') || findScrollable(el.parentElement, 'y');
+
+            xStart = xTarget ? xTarget.scrollLeft : (window.scrollX || document.documentElement.scrollLeft);
+            yStart = yTarget ? yTarget.scrollTop : (window.scrollY || document.documentElement.scrollTop);
+
+            el.style.cursor = 'grabbing';
+            document.body.style.userSelect = 'none';
+            e.preventDefault();
+        });
+
+    
+        var stop = function () {
+            if (!isDown) return;
+            isDown = false;
+            el.style.cursor = 'grab';
+            document.body.style.userSelect = '';
+        };
+
+        document.addEventListener('mouseup', stop);
+
+        document.addEventListener('mousemove', function (e) {
+            if (!isDown) return;
+            var dx = e.pageX - startX;
+            var dy = e.pageY - startY;
+            if (Math.abs(dx) > 3 || Math.abs(dy) > 3) moved = true;
+
+            if (xTarget) {
+                xTarget.scrollLeft = xStart - dx;
+            } else {
+                window.scrollTo({ left: xStart - dx, top: window.scrollY, behavior: 'instant' });
+            }
+
+            if (yTarget) {
+                yTarget.scrollTop = yStart - dy;
+            } else if (Math.abs(dy) > 0) {
+                window.scrollTo({ left: window.scrollX, top: yStart - dy, behavior: 'instant' });
+            }
+        });
+
+        el.addEventListener('click', function (e) {
+            if (moved) {
+                e.stopPropagation();
+                e.preventDefault();
+                moved = false;
+            }
+        }, true);
     },
 
     getList_TKBLopKhongCoLichChiTiet: function (strNgay) {
@@ -342,7 +409,15 @@ LichGiang.prototype = {
 
         if (!data || data.length === 0) {
             $zone.show();
-            $tbody.html('<tr><td colspan="6" class="text-center color-66">Không có dữ liệu</td></tr>');
+            $tbody.html(''
+                + '<tr class="empty-state-row">'
+                + '<td colspan="6" style="text-align:center; padding:36px 16px; border:none;">'
+                + '<div style="display:inline-block; padding:18px 28px; background:#fafbff; border:1px dashed #d9deeb; border-radius:14px; color:#7a8499;">'
+                + '<i class="fal fa-users-class" style="font-size:42px; color:#b8c0d4; display:block; margin-bottom:8px;"></i>'
+                + '<div style="font-size:14px;">Hiện tại chưa có lớp học phần (không có lịch chi tiết) nào</div>'
+                + '</div>'
+                + '</td>'
+                + '</tr>');
             return;
         }
 
@@ -573,6 +648,16 @@ LichGiang.prototype = {
     -------------------------------------------*/
     genTable_ThongTin: function (data, iPager) {
         var me = this;
+        if (!data || data.length === 0) {
+            $("#datebody").html(''
+                + '<div style="width:100%; padding:48px 16px; text-align:center;">'
+                + '<div style="display:inline-block; padding:24px 36px; background:#fafbff; border:1px dashed #d9deeb; border-radius:14px; color:#7a8499;">'
+                + '<i class="fal fa-calendar-week" style="font-size:48px; color:#b8c0d4; display:block; margin-bottom:10px;"></i>'
+                + '<div style="font-size:14px;">Hiện tại chưa có lịch học cá nhân nào trong tuần này</div>'
+                + '</div>'
+                + '</div>');
+            return;
+        }
         var iGioMin = 24;
         var iGioMax = 0;
         data.forEach(e => {
@@ -635,7 +720,7 @@ LichGiang.prototype = {
             html += '<i class="eval-minus fal fa-minus btnEmoMinus"></i>';
             html += '<div class="eval-icon">';
             html += '<span id="lblSoLuong' + e.ID +'"></span>';
-            html += '<img id="mainicon" name="emoji1" src="assets/images/eval-emoji/1.png" alt="">';
+            html += '<i id="mainicon" class="fas fa-thumbs-up" style="color:#1877f2; font-size:14px; filter: drop-shadow(0 1px 2px rgba(24,119,242,0.4)); transition: transform 0.2s ease;" onmouseover="this.style.transform=\'scale(1.25)\'" onmouseout="this.style.transform=\'scale(1)\'"></i>';
             //html += '<div class="eval-icon-list" ><div class="item btnEmoChange" name="4AA5E457B3F74AD1A1A7F7310B41544F"><img src="assets/images/eval-emoji/happy.png.png" alt=""><span>undefined</span></div><div class="item btnEmoChange" name="6A36858F671A43CEAE6DDDAEDF443A31"><img src="assets/images/eval-emoji/neutral.png.png" alt=""><span>undefined</span></div><div class="item btnEmoChange" name="3FC3A490EB374C3EAFE9E512050171B6"><img src="assets/images/eval-emoji/unhappy.png.png" alt=""><span>undefined</span></div>';
             html += '<div class="eval-icon-list" id="listIcon' + e.ID + '">';
             html += me.strCamXuc;
@@ -719,41 +804,54 @@ LichGiang.prototype = {
         var strDay = edu.util.dateToday();
         var iDay = parseInt(strDay.substr(0, strDay.indexOf("/")));
 
-        var iThu = new Date(nYear, nMonth - 1, 1, 0, 0, 0, 0);
-        iThu = iThu.getDay();
+        var iThu = new Date(nYear, nMonth - 1, 1).getDay();
         if (iThu == 0) iThu = 7;
+        var iPadStart = iThu - 1;
+
+        var iPreMonth = nMonth - 1, iPreYear = nYear;
+        if (iPreMonth == 0) { iPreMonth = 12; iPreYear--; }
+        var iDayOfPreMonth = getDay(iPreMonth, iPreYear);
+
+        var iNextMonth = nMonth + 1, iNextYear = nYear;
+        if (iNextMonth == 13) { iNextMonth = 1; iNextYear++; }
+
+        var date = new Date();
+        var bIsCurrentMonth = (date.getMonth() + 1 == nMonth && date.getFullYear() == nYear);
+        var iToday = bIsCurrentMonth ? date.getDate() : -1;
+        if (!bIsCurrentMonth) iDay = 1;
+
+        var iTotalCells = Math.ceil((iPadStart + iDayOfMonth) / 7) * 7;
         var html = "";
+        var uuid = edu.util.uuid();
         var strNgayBatDau = '';
         var strNgayKetThuc = '';
-        var uuid = edu.util.uuid();
-        var iDayOfPreMonth = getDay(nMonth - 1, nYear);
-        for (var i = iThu - 2; i >= 0; i--) {
-            html += '<li class="day-of-other-month ' + uuid + '" title="' + getSMonth(iDayOfPreMonth - i, (nMonth - 1), nYear) + '" >' + (iDayOfPreMonth - i) + '</li>';
-        }
 
-        //var bCheck = false;
-        var date = new Date();
-        if (date.getMonth() + 1 != nMonth || date.getFullYear() != nYear) iDay = 1;
-
-        if (iThu > 1) {
-            strNgayBatDau = getSMonth(iDayOfPreMonth - iThu + 2, (nMonth - 1), nYear);
-            strNgayKetThuc = getSMonth(8 - iThu, nMonth, nYear);
-        }
-        for (var i = 1; i <= iDayOfMonth; i++) {
-            var strClass = "";
-            if (i == iDay) strClass = 'active';
-            if ((i % 7 + iThu) % 7 == 2) {
-                strNgayBatDau = getSMonth(i, nMonth, nYear);
-                strNgayKetThuc = (i + 6 > iDayOfMonth) ? getSMonth(i + 6 - iDayOfMonth, (nMonth + 1), nYear) : getSMonth(i + 6, nMonth, nYear);
-                uuid = edu.util.uuid();
+        function cellInfo(c) {
+            if (c < iPadStart) {
+                return { day: iDayOfPreMonth - (iPadStart - 1 - c), m: iPreMonth, y: iPreYear, isCur: false };
+            } else if (c < iPadStart + iDayOfMonth) {
+                return { day: c - iPadStart + 1, m: nMonth, y: nYear, isCur: true };
+            } else {
+                return { day: c - iPadStart - iDayOfMonth + 1, m: iNextMonth, y: iNextYear, isCur: false };
             }
-
-            html += '<li class="poiter ' + strClass + ' ' + uuid + '" ngay="' + i + '"  title="' + getSMonth(i, nMonth, nYear) + '" name="' + uuid + '" batdau="' + strNgayBatDau + '" ketthuc="' + strNgayKetThuc + '"><span>' + i + '</span></li>';
         }
-        var iMax = 35 - iDayOfMonth - iThu;
-        if (iMax < 0) iMax += 7;
-        for (var i = 1; i < iMax + 2; i++) {
-            html += '<li class="day-of-other-month ' + uuid + '" title="' + getSMonth(i, (nMonth + 1), nYear) + '">' + i + '</li>';
+
+        for (var c = 0; c < iTotalCells; c++) {
+            if (c % 7 == 0) {
+                uuid = edu.util.uuid();
+                var s = cellInfo(c);
+                var e = cellInfo(c + 6);
+                strNgayBatDau = getSMonth(s.day, s.m, s.y);
+                strNgayKetThuc = getSMonth(e.day, e.m, e.y);
+            }
+            var info = cellInfo(c);
+            if (!info.isCur) {
+                html += '<li class="day-of-other-month ' + uuid + '" title="' + getSMonth(info.day, info.m, info.y) + '">' + info.day + '</li>';
+            } else {
+                var strClass = (info.day == iDay) ? 'active' : '';
+                if (info.day == iToday) strClass += ' today';
+                html += '<li class="poiter ' + strClass + ' ' + uuid + '" ngay="' + info.day + '"  title="' + getSMonth(info.day, info.m, info.y) + '" name="' + uuid + '" batdau="' + strNgayBatDau + '" ketthuc="' + strNgayKetThuc + '"><span>' + info.day + '</span></li>';
+            }
         }
         $(".days").html(html);
         setTimeout(function () {
@@ -1296,9 +1394,9 @@ LichGiang.prototype = {
                     var dtReRult = data.Data;
                     if (dtReRult.length > 0) {
                         var aData = dtReRult[0];
-                        var Emo = $("#" + strId + " #mainicon");
-                        Emo.attr("name", aData.ID);
-                        Emo.attr("src", "assets/images/eval-emoji/" + aData.DG_CHUCNANG_CHUDE_CHITIET_ANH);
+                        var $oldEmo = $("#" + strId + " #mainicon");
+                        var newImg = '<img id="mainicon" name="' + aData.ID + '" src="assets/images/eval-emoji/' + aData.DG_CHUCNANG_CHUDE_CHITIET_ANH + '" alt="" style="width:18px; height:18px; cursor:pointer; transition: transform 0.2s ease;" onmouseover="this.style.transform=\'scale(1.25)\'" onmouseout="this.style.transform=\'scale(1)\'">';
+                        $oldEmo.replaceWith(newImg);
                         if (aData.SOLUONG) $("#lblSoLuong" + strId).html(edu.util.returnEmpty(aData.SOLUONG));
                         else $("#lblSoLuong" + strId).html("");
                     }
