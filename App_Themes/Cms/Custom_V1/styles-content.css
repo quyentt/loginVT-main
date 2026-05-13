@@ -5323,12 +5323,44 @@
 .aps-BienLaiHoaDon,
 #zoneBienLaiHoaDon {
     padding-left: 0 !important;
+
+}
+
+#zoneBienLaiHoaDon {
+    /* display: flex; */
+}
+
+.aps-BienLaiHoaDon .aps-list-btn {
+    /* display: flex;
+    width: 200px; */
+    border-right: 5px #fff solid !important;
+    border-left: 5px #fff solid !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
 }
 
 .aps-BienLaiHoaDon #zoneActionXuatHoaDon {
     float: left;
     margin-right: 3px;
     background: #f1f1f1;
+    display: flex;
+    gap: 10px;
+    margin: 0px 10px;
+}
+
+.MauInPhieuThu {
+    width: 100% !important;
+    padding: 40px 40px 0 40px;
+}
+
+.MauInPhieuThu .pr-containt {
+    width: 880px;
+    background-color: #f1f1f1;
+    margin: 0px auto;
+}
+
+.zoneThongTinBoSung .group-title {
+    padding: 10px 0 6px 0;
 }
 
 .btnXuat_HDDT,
@@ -5384,7 +5416,8 @@
 
 .aps-BienLaiHoaDon .aps-list-btn {
     background-color: #f1f1f1 !important;
-    display: flex;
+    display: flex !important;
+    padding: 20px;
 }
 
 .MauInPhieuThu,
@@ -11600,3 +11633,99 @@ table#clone {
     border-bottom-left-radius: 12px;
     height: 100vh !important;
 } */
+/* ---- */
+.aps-thutien-r {
+    /* padding-left: 0 !important; */
+}
+
+.aps-thutien-r .aps-BienLaiHoaDon {
+    /* margin-left: -20px !important; */
+}
+
+.zoneActionHoaDon {
+    margin: auto !important;
+    display: flex;
+}
+
+.aps-BienLaiHoaDon .aps-list-btn #btnThuTien .btn i {
+    font-size: 14px !important;
+}
+
+.aps-BienLaiHoaDon .aps-list-btn #btnClose_HDBL .btn {
+    padding-right: 15px !important;
+}
+
+.aps-BienLaiHoaDon .aps-list-btn #btnClose_HDBL .btn i {
+    font-size: 14px !important;
+    padding-right: 3px;
+}
+.aps-BienLaiHoaDon .aps-list-btn .btnXuat_HDDT, 
+.aps-BienLaiHoaDon .aps-list-btn .btnXuat_HDDT {
+    margin-bottom: 0px !important;
+}
+.btnXuat_HDDT,
+#btnSaveHDBL {
+    border: 1px solid #1a71e8 !important;
+    color: #fff !important;
+    height: 38px;
+    line-height: 38px !important;
+    padding: 0px 15px 7.6px 15px !important;
+    font-size: 14px !important;
+    border-radius: 5px !important;
+    width: auto !important;
+}
+
+#btnSaveHDBL {
+    background: #1a71e8 !important;
+}
+
+.btnXuat_HDDT {
+    background: #198754 !important;
+}
+
+#btnSaveHDBL i,
+.btnXuat_HDDT i {
+    font-size: 14px !important;
+    color: #fff !important;
+}
+
+#btnSaveHDBL .btn,
+.btnXuat_HDDT .btn {
+    padding: 0 !important;
+    line-height: 34px;
+    padding-right: 1px !important;
+}
+
+#btnSaveHDBL .lbsymbolHD,
+.btnXuat_HDDT .lbsymbolHD {
+    font-size: 14px !important;
+    color: #fff !important;
+    font-weight: 400 !important;
+    padding: 0 !important;
+}
+.aps-BienLaiHoaDon .aps-list-btn .btn {
+    margin-left: 0 !important;
+}
+#btnClose_HDBL {
+    margin-left: 10px !important;
+}
+.btnXuat_HDDT:last-child{
+       border: 1px solid #0dcaf0 !important; 
+       background: #0dcaf0 !important;
+       color: #222 !important;
+}
+.pr-containt .pr-table tr td {
+    line-height: 38px;
+}
+
+.pr-containt .pr-table tr td .select-opt {
+    height: 30px !important;
+    border-radius: 3px;
+    margin-left: 10px;
+}
+
+.table-hoadon {
+    /* border: 1px solid #999 !important; */
+    margin-top: 10px !important;
+}
+
