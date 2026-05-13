@@ -761,7 +761,7 @@ LopHocPhan.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 3, 4, 5, 7, 8, 9],
+                center: [0, 3, 4, 5, 6, 7, 9, 10, 11],
             },
             aoColumns: [
                 {
@@ -775,6 +775,16 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mDataProp": "HINHTHUCHOC_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.SoTinChi || aData.SOTINCHI || aData.SO_TIN_CHI || aData.DAOTAO_HOCPHAN_SOTINCHI);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.ThongTinPhanBo || aData.THONGTINPHANBO || aData.THONG_TIN_PHAN_BO || aData.PHANBO);
+                    }
                 },
                 {
                     "mRender": function (nRow, aData) {
