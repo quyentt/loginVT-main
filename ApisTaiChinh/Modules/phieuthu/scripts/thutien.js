@@ -5247,7 +5247,7 @@ PhieuThu.prototype = {
             $("#btnIn_HDBL").hide();
             $("#btnHuy_HDBL").hide();
             if (document.getElementById('btnSaveHDBL') == undefined) {
-                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất biên lai" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất biên Lai</a></div>');
+                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất biên lai" class="btn"><i style="color: #00a65a" class="far fa-receipt fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất biên Lai</a></div>');
                 $("#btnSaveHDBL").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
                     $("#btnYes").click(function (e) {
@@ -5442,7 +5442,7 @@ PhieuThu.prototype = {
             //$("#btnThuTien").show();
             $("#btnHuy_HDBL").hide();
             if (document.getElementById('btnSaveHDBL') == undefined) {
-                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất biên lai" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất biên lai</a></div>');
+                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất biên lai" class="btn"><i style="color: #00a65a" class="fal fa-file-invoice fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất biên lai</a></div>');
                 $("#btnSaveHDBL").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
                     $("#btnYes").click(function (e) {
@@ -5452,7 +5452,7 @@ PhieuThu.prototype = {
                 });
                 if (bThuTien) {
                     $("#btnThuTien").show();
-                    var row = '<div id="btnXuat_HD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất hóa đơn" class="btn" ><i style="color: red" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất hóa đơn</a></div>';
+                    var row = '<div id="btnXuat_HD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất hóa đơn" class="btn" ><i style="color: red" class="fal fa-file-invoice fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất hóa đơn</a></div>';
                     row += me.strHDDT;
                     $("#zoneActionXuatHoaDon").html(row);
                     $("#btnXuat_HD").click(function (e) {
