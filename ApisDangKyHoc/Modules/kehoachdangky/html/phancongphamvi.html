@@ -6,8 +6,8 @@
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-phancongphamvi">
-        <div class="zone-bus aps-phancongphamvi-search" id="zonebatdau">
-            <div class="box box-solid aps-phancongphamvi-ds box-search pl20 pt20 pr20 pb10">
+        <div class="zone-bus aps-phancongphamvi-content" id="zonebatdau">
+            <div class="box box-solid aps-phancongphamvi-search box-search pl20 pt20 pr20 pb10">
                 <div class="box-body pd0">
                     <div class="group-title d-none">
                         <p class="titleSearchContent">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="box box-solid pl20 pr20 pt5">
+            <div class="box box-solid aps-phancongphamvi-list pl20 pr20 pt5">
                 <div class="box-header">
                     <h3 class="box-title color-blue line-20 mt-10">
                         <i class="far fa-clipboard-list-check"></i> Danh sách phân công
@@ -38,13 +38,14 @@
                         </span>
                     </h3>
                     <div class="box-tools pull-right d-flex">
-                        <a id="btnTinhToan" class="btn btn-primary"><i class="fa fa-plus"></i> Tính toán dữ liệu phục vụ đăng ký học</a>
+                        <a id="btnTinhToan" class="btn btn-primary"><i class="fa fa-plus"></i> Tính toán dữ liệu phục vụ
+                            đăng ký học</a>
                         <a id="btnXoaPhanCongPhamVi" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                         <a id="btnAddnew" class="btn btn-primary btnAdd"><i class="fa fa-plus"></i>Thêm mới</a>
                     </div>
                 </div>
-                <div class="box-body mt-10">
-                    <div class="col-sm-12 scroll-table-x" id="zonePhanCong">
+                <div class="box-body pd0 mt-20 mb-20">
+                    <div class="col-sm-12 zonePhanCong pb20" id="zonePhanCong">
                         <table id="tblPhanCongSinhVien" class="table table-hover table-bordered"
                             style="width: 300px; float: left">
                             <thead>
@@ -140,18 +141,20 @@
             </div>
         </div>
 
-        <div class="box box-solid zone-bus form-container aps-add-new" id="zoneEdit" style="display: none">
+        <div class="box box-solid zone-bus form-container aps-add-new aps-add-phancong" id="zoneEdit"
+            style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title" style="font-weight: 400 !important;"><span class="myModalLabel">
-                        <i class="fa fa-plus"></i>  Thêm mới - </span> Phân công</h3>
+                        <i class="fa fa-plus"></i> Thêm mới - </span> Phân công</h3>
                 <div class="pull-right">
-                    <a class="btn btn-default btnClose" href="#" title="Close" style="top: 22px !important; right: 15px !important;"><i class="fa fa-times"></i></a>
+                    <a class="btn btn-default btnClose" href="#" title="Close"
+                        style="top: 22px !important; right: 15px !important;"><i class="fa fa-times"></i></a>
                 </div>
             </div>
             <div class="box-body pd20">
                 <div class="col-sm-12 box-view  aps-add-new">
                     <div class="row zone-box pd0 aps-form">
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 phancong-phamvi">
                             <!-- Row 3 -->
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name border-0 mb-5">
@@ -258,10 +261,11 @@
                             </div>
 
                             <div class="row pull-right">
-                                <a id="addKhoaQuanKyKhoaHoc" class="btn btn-primary"  title="Thêm Khoa quản lý - khóa học">
+                                <a id="addKhoaQuanKyKhoaHoc" class="btn btn-primary"
+                                    title="Thêm Khoa quản lý - khóa học">
                                     <i class="fa fa-plus"></i>Thêm Khoa quản lý - khóa học</a>
                             </div>
-                           <div class="clear"></div>
+                            <div class="clear"></div>
                             <!-- Row 3 -->
                             <div class="row aps-form-item">
                                 <p class="group-title-name" style="border-bottom: 0 !important;">
@@ -270,68 +274,66 @@
                                 </p>
                             </div>
                         </div>
-                        <div class="col-lg-6" style="padding-left: 40px">
+                        <div class="col-lg-6 phancong-time" style="padding-left: 40px">
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name border-0 mb-5">
                                     <span class="badge color-blue fz16">Thời gian</span>
                                 </p>
                             </div>
-                            <div class="row mb-10 aps-form-item">
-                                <div class="col-sm-2 aps-lable-name">
+                            <div class="row mb-10 aps-form-item day-begin">
+                                <div class="col-sm-2 aps-lable-name item">
                                     <div class="title-name">
                                         Ngày bắt đầu <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 aps-form-input">
+                                <div class="col-sm-3 aps-form-input  item">
                                     <input id="txtNgayBatDau" class="form-control input-datepicker" />
                                 </div>
-                                <div class="col-sm-1 aps-lable-name">
+                                <div class="col-sm-1 aps-lable-name  item">
                                     <div class="title-name pull-right pr10">
                                         Giờ <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 aps-form-input">
+                                <div class="col-sm-2 aps-form-input item">
                                     <input id="txtNgayBatDau_Gio" class="form-control" placeholder="hh" />
                                 </div>
 
-                                <div class="col-sm-1 aps-lable-name">
+                                <div class="col-sm-1 aps-lable-name item">
                                     <div class="title-name pull-right pr10">
                                         Phút <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 aps-form-input">
+                                <div class="col-sm-2 aps-form-input item">
                                     <input id="txtNgayBatDau_Phut" class="form-control" placeholder="mm" />
                                 </div>
                             </div>
-                            <div class="row mb-10 aps-form-item">
-                                <div class="col-sm-2 aps-lable-name">
+                            <div class="row mb-10 aps-form-item day-end">
+                                <div class="col-sm-2 aps-lable-name item">
                                     <div class="title-name">
                                         Ngày kết thúc <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 aps-form-input">
+                                <div class="col-sm-3 aps-form-input item">
                                     <input id="txtNgayKetThuc" class="form-control input-datepicker" />
                                 </div>
-
-                                <div class="col-sm-1 aps-lable-name">
+                                <div class="col-sm-1 aps-lable-name item">
                                     <div class="title-name pull-right pr10">
                                         Giờ <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 aps-form-input">
+                                <div class="col-sm-2 aps-form-input item">
                                     <input id="txtNgayKetThuc_Gio" class="form-control" placeholder="hh" />
                                 </div>
-
-                                <div class="col-sm-1 aps-lable-name">
+                                <div class="col-sm-1 aps-lable-name item">
                                     <div class="title-name pull-right pr10">
                                         Phút <span class="title-colon">:</span>
                                     </div>
                                 </div>
-                                <div class="col-sm-2 aps-form-input">
+                                <div class="col-sm-2 aps-form-input item">
                                     <input id="txtNgayKetThuc_Phut" class="form-control" placeholder="mm" />
                                 </div>
                             </div>
-                            <div class="row mb-10 aps-form-item">
+                            <div class="row mb-10 aps-form-item soTin-row1">
                                 <div class="col-sm-2 aps-lable-name">
                                     <div class="title-name">
                                         Số tín tối đa N1 <span class="title-colon">:</span>
@@ -350,7 +352,7 @@
                                     <input id="txtSoTinToiThieu" class="form-control" placeholder="" />
                                 </div>
                             </div>
-                            <div class="row mb-10 aps-form-item">
+                            <div class="row mb-10 aps-form-item soTin-row2">
                                 <div class="col-sm-2 aps-lable-name">
                                     <div class="title-name">
                                         Số tín tối đa N2 <span class="title-colon">:</span>
@@ -398,18 +400,19 @@
     <!-- load from js -->
 </div>
 <!-- Danh sách học phần -->
-<div class="modal fade myModal" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%">
+<div class="modal fade myModal modal-ds-hocphan" id="myModal" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-1200">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
                 <h4 class="modal-title"><span class="myModalLabel1">
-                    <i class="fa-solid fa-book-open-reader"></i>Danh sách học phần</span> </h4>
+                        <i class="fa-solid fa-book-open-reader"></i>Danh sách học phần</span> </h4>
             </div>
-            <div class="modal-body" id="modal_body">
-                <div class="row">
-                    <div class="col col-md-8 col-lg-8 mb-20">
+            <div class="modal-body pd0" id="modal_body">
+                <div class="row aps-ds-hocphan pd0">
+                    <div class="col col-md-6 col-lg-6 pd20 form-ds-hocphan bg-f8">
                         <div class="row aps-add-new">
                             <div class="row aps-form">
                                 <div class="row aps-lable-name">
@@ -417,119 +420,120 @@
                                         <span class="badge color-blue fz16">Thời gian</span>
                                     </p>
                                 </div>
-                                <!-- Row 3 -->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-lable-name">
+                                <!-- Row 1 -->
+                                <div class="row aps-form-item day-begin">
+                                    <div class="col-sm-3 aps-lable-name item">
                                         <div class="title-name">
                                             Ngày bắt đầu <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input item">
                                         <input id="txtNgayBatDau_Edit" class="form-control input-datepicker" />
                                     </div>
-
-                                    <div class="col-sm-1 aps-lable-name text-right pr10">
+                                    <div class="col-sm-1 aps-lable-name text-right pr10  item">
                                         <div class="title-name">
                                             Giờ <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 aps-form-input">
+                                    <div class="col-sm-2 aps-form-input  item">
                                         <input id="txtNgayBatDau_Gio_Edit" class="form-control" placeholder="hh" />
                                     </div>
-
-                                    <div class="col-sm-1 aps-lable-name text-right pr10">
+                                    <div class="col-sm-1 aps-lable-name text-right pr10 item">
                                         <div class="title-name">
                                             Phút <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 aps-form-input">
+                                    <div class="col-sm-2 aps-form-input item">
                                         <input id="txtNgayBatDau_Phut_Edit" class="form-control" placeholder="mm" />
                                     </div>
                                 </div>
-                                <!-- Row 3 -->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-lable-name">
+                                <!-- Row 2 -->
+                                <div class="row aps-form-item day-end">
+                                    <div class="col-sm-3 aps-lable-name item">
                                         <div class="title-name">
                                             Ngày kết thúc <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input item">
                                         <input id="txtNgayKetThuc_Edit" class="form-control input-datepicker" />
                                     </div>
-
-                                    <div class="col-sm-1 aps-lable-name text-right pr10">
+                                    <div class="col-sm-1 aps-lable-name text-right pr10 item">
                                         <div class="title-name">
                                             Giờ <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 aps-form-input">
+                                    <div class="col-sm-2 aps-form-input item">
                                         <input id="txtNgayKetThuc_Gio_Edit" class="form-control" placeholder="hh" />
                                     </div>
-
-                                    <div class="col-sm-1 aps-lable-name text-right pr10">
+                                    <div class="col-sm-1 aps-lable-name text-right pr10 item">
                                         <div class="title-name">
                                             Phút <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 aps-form-input">
+                                    <div class="col-sm-2 aps-form-input  item">
                                         <input id="txtNgayKetThuc_Phut_Edit" class="form-control" placeholder="mm" />
                                     </div>
                                 </div>
                                 <!-- Row 3 -->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-lable-name">
+                                <div class="row aps-form-item soTin-row1">
+                                    <div class="col-sm-3 aps-lable-name">
                                         <div class="title-name">
                                             Số tín tối đa N1 <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input">
                                         <input id="txtSoTinToiDa_Edit" class="form-control" placeholder="" />
                                     </div>
 
-                                    <div class="col-sm-2 aps-lable-name text-right pr10">
+                                    <div class="col-sm-3 aps-lable-name text-right pr10">
                                         <div class="title-name">
                                             Số tín tối thiểu N1 <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input">
                                         <input id="txtSoTinToiThieu_Edit" class="form-control" placeholder="" />
                                     </div>
                                 </div>
-                                <!-- Row 3 -->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-lable-name">
+                                <!-- Row 4 -->
+                                <div class="row aps-form-item soTin-row2">
+                                    <div class="col-sm-3 aps-lable-name">
                                         <div class="title-name">
                                             Số tín tối đa N2 <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input">
                                         <input id="txtSoTinToiDa_EditN2" class="form-control" placeholder="" />
                                     </div>
 
-                                    <div class="col-sm-2 aps-lable-name text-right pr10">
+                                    <div class="col-sm-3 aps-lable-name text-right pr10">
                                         <div class="title-name">
                                             Số tín tối thiểu N2 <span class="title-colon">:</span>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input">
                                         <input id="txtSoTinToiThieu_EditN2" class="form-control" placeholder="" />
                                     </div>
                                 </div>
-                                <!-- Row 3 -->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-3 aps-lable-name">
+                                <!-- Row 5 -->
+                                <div class="row aps-form-item day-begin-moc">
+                                    <div class="col-sm-9 aps-lable-name">
                                         <div class="title-name">
                                             Ngày bắt đầu tính mốc rút học phần <span class="title-colon"></span></div>
                                     </div>
-                                    <div class="col-sm-2 aps-form-input">
+                                    <div class="col-sm-3 aps-form-input">
                                         <input type="text" id="txtNgayBDRutHP" class="form-control input-datepicker"
                                             placeholder="dd/mm/yyyy" />
                                     </div>
                                 </div>
+                            </div>
 
-                                <!-- Row 3 -->
+                        </div>
+                    </div>
+                    <div class="col col-md-6 col-lg-6 pd20 table-ds-hocphan">
+                        <div class="row aps-add-new">
+                            <div class="row aps-form">
                                 <!-- Row lable -->
-                                <div class="row aps-lable-name1">
+                                <div class="row aps-lable-name1 d-none">
                                     <p class="group-group-title-name border-0 mb-0">
                                         <span class="badge color-blue fz16 mb-0">Danh sách</span>
                                     </p>
@@ -548,22 +552,22 @@
                                     <tbody></tbody>
                                 </table>
                             </div>
-                            <div class="pull-right d-flex">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">
-                                    <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
-                                <a id="btnSave_QuanSo" class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
-                            </div>
+
                         </div>
-                    </div>
-                    <div class="col col-md-4 col-lg-4 pd20">
-                        <div class="aps-thamso-img text-center w-100">
+                        <div id="notify"></div>
+                        <div class="aps-thamso-img text-center w-100 d-none">
                             <img src="Upload/images/img-edu-04.png">
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="notify"></div>
-            <div class="modal-footer d-none">
+
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span></button>
+                    <a id="btnSave_QuanSo" class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a>
+                </div>
             </div>
         </div>
     </div>
@@ -574,5 +578,10 @@
     main_doc['PhanCongPhamVi'] = new PhanCongPhamVi();
     $(document).ready(function () {
         main_doc.PhanCongPhamVi.init();
+    });
+</script>
+<script>
+    $(window).on("load", function () {
+        // $("#myModal").modal("show");
     });
 </script>

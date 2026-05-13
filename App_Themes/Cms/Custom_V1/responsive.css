@@ -899,6 +899,17 @@
         padding-left: 0 !important;
     }
 
+    /* ---------- */
+    .form-ds-hocphan.pd20,
+    .table-ds-hocphan.pd20 {
+        padding: 15px !important;
+    }
+
+    /* ---------------- */
+    .aps-phancongphamvi-content .aps-phancongphamvi-list {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
 
 }
 
@@ -1199,6 +1210,19 @@
 }
 
 @media (min-width: 768px) and (max-width: 1024px) {
+    .aps-add-phancong .phancong-time{
+        padding-left: 0 !important;
+    }
+    .modal.modal-ds-hocphan .modal-body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .form-ds-hocphan .day-begin .col-sm-1.aps-lable-name,
+    .form-ds-hocphan .day-end .col-sm-1.aps-lable-name {
+        min-width: 68px;
+    }
+
     .zonePhanCong {
         grid-template-columns: repeat(2, 1fr) !important;
     }
@@ -1441,6 +1465,17 @@
 }
 
 @media (min-width: 600px) and (max-width: 1024px) {
+    .aps-phancongphamvi-search.box-solid.box-search .box-body {
+        grid-template-columns: 100% !important;
+    }
+
+    .aps-phancongphamvi-search.box-search .inputSearch {
+        grid-template-columns: 2fr 1fr !important;
+        display: grid !important;
+        gap: 10px;
+    }
+
+    /* -------- */
     .col-TT-batbuoc-form {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -1909,6 +1944,67 @@
 }
 
 @media (min-width: 600px) and (max-width:767px) {
+    .modal.modal-ds-hocphan .modal-body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    .modal-ds-hocphan .aps-ds-hocphan {
+        display: block !important;
+    }
+
+    .day-begin-moc {
+        display: grid !important;
+        grid-template-columns: 2fr 1fr !important;
+        gap: 10px;
+    }
+
+    .day-begin-moc::after,
+    .day-begin-moc::before {
+        display: none !important;
+    }
+
+    .form-ds-hocphan .aps-form {
+        margin-bottom: 0px !important;
+    }
+
+    /* ------- */
+    .aps-add-phancong .aps-form .phancong-phamvi .title-name {
+        min-width: 120px;
+    }
+
+    .aps-add-phancong .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
+
+    .aps-add-phancong .phancong-time {
+        padding-left: 0 !important;
+    }
+
+    .aps-form .aps-form-item.day-begin .item:first-child .title-name,
+    .aps-form .aps-form-item.day-end .item:first-child .title-name,
+    .aps-form .aps-form-item.soTin-row1 .aps-lable-name .title-name,
+    .aps-form .aps-form-item.soTin-row2 .aps-lable-name .title-name {
+        min-width: 130px;
+    }
+
+    .aps-form-item.day-begin .aps-form-input.item:nth-child(4) .form-control {
+        /* max-width: 50%; */
+    }
+
+    .aps-form-item.day-begin .aps-lable-name.item:nth-child(3),
+    .aps-form-item.day-begin .aps-lable-name.item:nth-child(5),
+    .aps-form-item.day-end .aps-lable-name.item:nth-child(3),
+    .aps-form-item.day-end .aps-lable-name.item:nth-child(5) {
+        min-width: 68px !important;
+        text-align: right !important;
+    }
+
+    .aps-phancongphamvi-list .box-header .box-tools.pull-right {
+        margin-top: 10px;
+    }
+
+    /* ---- */
     #modalContent .scroll-table-x {
         margin-top: 30px !important;
     }
@@ -2471,6 +2567,116 @@
 }
 
 @media only screen and (max-width: 599px) {
+    .form-container.aps-add-phancong .box-body.pd20 {
+        padding: 10px 15px !important;
+    }
+
+    .form-container.aps-add-phancong .aps-form .aps-form-item .aps-form-input .select2-container {
+        overflow: hidden;
+    }
+
+    .form-container.aps-add-phancong .aps-form .aps-form-item .aps-form-input {
+        width: 100%;
+    }
+
+    .form-container.aps-add-phancong .aps-form .row.pull-right {
+        margin-bottom: 10px !important;
+    }
+
+    .phancong-time {
+        padding-left: 0 !important;
+    }
+
+    /* ------- */
+    .aps-phancongphamvi-content .box-header .box-tools.pull-right {
+        left: 0 !important;
+        right: auto !important;
+        display: block !important;
+    }
+
+    .aps-phancongphamvi-content .box-header .pull-right .btn {
+        margin-left: 0 !important;
+        margin-top: 10px;
+        margin-right: 10px !important;
+    }
+
+    .day-begin,
+    .day-end {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr 1fr !important;
+        gap: 10px;
+    }
+
+    /* Hàng trên: 2 item */
+    .day-begin .item:nth-child(1),
+    .day-end .item:nth-child(1) {
+        grid-column: span 2;
+    }
+
+    .day-begin .item:nth-child(2),
+    .day-end .item:nth-child(2) {
+        grid-column: span 2;
+    }
+
+    .day-begin::before,
+    .day-end::before,
+    .soTin-row1::before,
+    .soTin-row2::before,
+    .day-begin-moc::before {
+        display: none;
+    }
+
+    .soTin-row1,
+    .soTin-row2,
+    .day-begin-moc {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 10px;
+    }
+
+    .aps-form-item.soTin-row1,
+    .aps-form-item.soTin-row2,
+    .day-begin,
+    .day-end {
+        margin-bottom: 0 !important;
+    }
+
+    .aps-form-item.soTin-row1 .title-name,
+    .aps-form-item.soTin-row2 .title-name {
+        text-align: left !important;
+    }
+
+    .aps-form .day-begin-moc .title-name {
+        line-height: 20px !important;
+    }
+
+    .form-ds-hocphan .aps-form {
+        margin-bottom: 0 !important;
+    }
+
+    .form-ds-hocphan.pd20,
+    .table-ds-hocphan.pd20 {
+        padding-bottom: 5px !important;
+    }
+
+    .aps-add-phancong .aps-form .phancong-phamvi .title-name {
+        min-width: 95px;
+    }
+
+    .zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop.simple-pagination ul {
+        display: flex !important;
+    }
+
+    /* ---------- */
+    .modal-open .modal-ds-hocphan.modal .modal-body {
+        padding: 0 !important;
+    }
+
+    .modal-ds-hocphan.modal .aps-ds-hocphan {
+        display: block !important;
+    }
+
+    /* ----------------- */
     .col-TT-phamvi .aps-form-item {
         display: block !important;
     }
@@ -2648,8 +2854,6 @@
     .form-container.zoneEdit .aps-form .aps-form-item:before {
         display: none;
     }
-
-
 
     .aps-csdl-hocphan .box-search .item-search {
         width: 100%;
@@ -3647,7 +3851,11 @@
 }
 
 @media (max-width: 400px) {
+    .aps-add-phancong .aps-add-new .aps-form-item .btn .fa {
+        display: none !important;
+    }
 
+    /* ---------- */
     .aps-hocphan-darut.box.box-solid .box-header .pull-right,
     .box-hocphanapphi.box.box-solid .box-header .pull-right,
     .box-ketquadk.box.box-solid .box-header .pull-right {
