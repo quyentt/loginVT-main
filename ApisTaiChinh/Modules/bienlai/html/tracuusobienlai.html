@@ -42,17 +42,63 @@
     /*    font-family: 'Times New Roman', Times, serif*/
     /*}*/
 
-    /*.btnMauInChungTu {*/
-    /*    width: 85px;*/
-    /*    text-align: center;*/
-    /*    background-color: #fff;*/
-    /*    border-bottom: 1px solid #f1f1f1;*/
-    /*    cursor: pointer*/
-    /*}*/
+    /*.btnMauInChungTu {
+        width: 85px;
+        text-align: center;
+        background-color: #fff;
+        border-bottom: 1px solid #f1f1f1;
+        cursor: pointer
+    }*/
 
     /*.activeLien {*/
     /*    background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;*/
     /*}*/
+    #MauInPhieuThu.print-preview {
+        width: 100%;
+        min-height: 100vh;
+        padding: 24px 16px;
+        background: #f5f5f5;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        box-sizing: border-box;
+    }
+
+    #MauInPhieuThu .receipt-paper {
+        width: 800px;
+        max-width: 100%;
+        background: #fff;
+        padding: 24px 36px;
+        box-sizing: border-box;
+        font-family: "Times New Roman", serif;
+        font-size: 14px;
+        color: #000;
+    }
+
+    #MauInPhieuThu .receipt-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 32px;
+        margin-bottom: 24px;
+    }
+
+    #MauInPhieuThu .left-info,
+    #MauInPhieuThu .right-info {
+        width: 50%;
+        line-height: 1.5;
+    }
+
+    #MauInPhieuThu .right-info {
+        text-align: center;
+    }
+
+    #MauInPhieuThu .receipt-title {
+        margin: 12px 0 20px;
+        text-align: center;
+        font-size: 22px;
+        font-weight: bold;
+    }
 </style>
 <!-- Main content -->
 <section class="content aps-tracuu-bienlai">
@@ -168,7 +214,8 @@
                 </div>
             </div>
         </div>
-        <div id="zoneThongTinPhieuThu" class="col-sm-12 beforeActive zoneThongTinPhieuThu"
+    </div>
+    <div id="zoneThongTinPhieuThu" class="col-sm-12 beforeActive zoneThongTinPhieuThu"
             style="display: none; width: 100%;">
             <div class="box-zoneThongTinPhieuThu box-footer">
                 <div id="zoneActionHoaDon" class="zoneActionHoaDon aps-all-btn" style="float:left; margin-left: 3px;">
