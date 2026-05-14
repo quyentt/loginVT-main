@@ -761,7 +761,7 @@ LopHocPhan.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 3, 4, 5, 6, 7, 8, 10, 11, 12],
+                center: [0, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13],
             },
             aoColumns: [
                 {
@@ -830,6 +830,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mDataProp": "SOLUONGDUKIENHOC"
+                },
+                {
+                    "mDataProp": "SOSVCHOT"
                 },
                 {
                     "mRender": function (nRow, aData) {
