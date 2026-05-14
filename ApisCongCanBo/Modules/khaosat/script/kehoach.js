@@ -491,38 +491,24 @@ KeHoach.prototype = {
                 edu.system.alert("Vui lòng chọn ít nhất 1 Khoa quản lý!");
                 return;
             }
-            //--Normalize Khoa IDs về mảng rồi gom thành chuỗi "id1,id2,id3" gửi 1 lần / phiếu
-            //  (KhoaQuanLy là metadata, KHÔNG nhân số phiếu — 1 cặp Lớp×GV = đúng 1 phiếu)
+            //--Normalize Khoa IDs về chuỗi "id1,id2,id3" gửi 1 lần / phiếu
             var arrKhoa_Id = Array.isArray(valKhoa)
                 ? valKhoa.filter(Boolean)
                 : String(valKhoa).split(',').map(s => s.trim()).filter(Boolean);
             var strKhoaQuanLy_Id = arrKhoa_Id.join(',');
-            me.loadGVMap_TabPan(function () {
-                var arrPairs = me.buildPairs_TabPan(arrChecked_Id);
-                var iSoDongCoGV = new Set(arrPairs.map(p => p.lop)).size;
-                var iSoDongKhongGV = arrChecked_Id.length - iSoDongCoGV;
-                if (arrPairs.length == 0) {
-                    edu.system.alert("Tất cả " + arrChecked_Id.length + " dòng đã chọn đều không có Giảng viên. Không thể tạo phiếu!");
-                    return;
-                }
-                function _go() {
-                    me.runBatchProgress(arrPairs, strTitle, function (pair, done) {
-                        me.save_TabPan(pair.lop, pair.gv, strKhoaQuanLy_Id, iChayTienTrinh, done);
-                    });
-                }
-                if (iSoDongKhongGV > 0) {
-                    edu.system.confirm(
-                        "Có <strong>" + iSoDongKhongGV + "</strong> dòng không có Giảng viên (sẽ bỏ qua).<br>" +
-                        "Sẽ tạo <strong>" + arrPairs.length + "</strong> phiếu cho <strong>" + iSoDongCoGV + "</strong> dòng còn lại.<br>" +
-                        "Bạn có muốn tiếp tục?"
-                    );
-                    $("#btnYes").off("click.tabpan").on("click.tabpan", function () {
-                        $('#myModalAlert').modal('hide');
-                        _go();
-                    });
-                } else {
-                    _go();
-                }
+            //--V3: 1 dòng = 1 call (BE tự xác định GV trong DB). Không cần lookup/split GV.
+            function _go() {
+                me.runBatchProgress(arrChecked_Id, strTitle, function (strLopHP_Id, done) {
+                    me.save_TabPan(strLopHP_Id, strKhoaQuanLy_Id, iChayTienTrinh, done);
+                });
+            }
+            edu.system.confirm(
+                "Sẽ tạo phiếu cho <strong>" + arrChecked_Id.length + "</strong> lớp học phần.<br>" +
+                "Bạn có muốn tiếp tục?"
+            );
+            $("#btnYes").off("click.tabpan").on("click.tabpan", function () {
+                $('#myModalAlert').modal('hide');
+                _go();
             });
         }
         $("#btnTaoPhieuTabPan").click(function () {
@@ -2594,8 +2580,6 @@ KeHoach.prototype = {
                     var fullName = ((gv.HODEM || '') + ' ' + (gv.TEN || '')).replace(/\s+/g, ' ').trim();
                     if (fullName && gv.ID) me.gvMap_TabPan[fullName] = gv.ID;
                 });
-                console.log("[GV-ID] Map GV nạp xong:", Object.keys(me.gvMap_TabPan).length, "GV");
-                console.table(Object.entries(me.gvMap_TabPan).map(([name, id]) => ({ HoTen: name, ID: id })));
                 if (typeof cb === 'function') cb();
             },
             error: function (er) { edu.system.alert(JSON.stringify(er), "w"); },
@@ -2606,13 +2590,13 @@ KeHoach.prototype = {
             fakedb: []
         }, false, false, false, null);
     },
+    //--[DEAD CODE] Chỉ dùng nếu quay lại SP V1 (1 GV/call). V3 hiện không cần.
     buildPairs_TabPan: function (arrChecked_Id) {
         var me = this;
         var pairs = [];
         var gvMap = me.gvMap_TabPan || {};
         (arrChecked_Id || []).forEach(function (strLopHP_Id) {
             var aRow = (me.dtTabPan || []).find(e => e.ID == strLopHP_Id) || {};
-            //--Trường hợp BE đã trả sẵn GIANGVIEN_ID (string đơn hoặc "id1,id2"): dùng luôn.
             var raw = aRow.GIANGVIEN_ID || aRow.DSGIANGVIEN_ID || '';
             if (raw) {
                 String(raw).split(',').forEach(function (gvId) {
@@ -2621,36 +2605,28 @@ KeHoach.prototype = {
                 });
                 return;
             }
-            //--Fallback: tra GV ID từ tên (split GIANGVIEN_TEN, lookup gvMap).
             var names = String(aRow.GIANGVIEN_TEN || '').split(',');
             names.forEach(function (name) {
                 var key = (name || '').replace(/\s+/g, ' ').trim();
                 if (!key) return;
                 var id = gvMap[key];
-                if (id) {
-                    pairs.push({ lop: strLopHP_Id, gv: id });
-                } else {
-                    console.warn("[buildPairs_TabPan] Không khớp được GV ID cho tên:", key, "row:", aRow);
-                }
+                if (id) pairs.push({ lop: strLopHP_Id, gv: id });
             });
         });
-        console.log("[GV-ID] Tổng số cặp (LopHP, GV) sẽ gọi SP:", pairs.length, "(từ", (arrChecked_Id || []).length, "dòng tick)");
-        console.table(pairs.map(p => ({ LopHP_Id: p.lop, GiangVien_Id: p.gv })));
         return pairs;
     },
-    save_TabPan: function (strDaoTao_LopHocPhan_Id, strGiangVien_Id, strDaoTao_KhoaQuanLy_Id, iChayTienTrinh, cbComplete) {
+    save_TabPan: function (strDaoTao_LopHocPhan_Id, strDaoTao_KhoaQuanLy_Id, iChayTienTrinh, cbComplete) {
         var me = this;
-        console.log("[GV-ID][save_TabPan] gọi SP với GiangVien_Id =", strGiangVien_Id, "| LopHP_Id =", strDaoTao_LopHocPhan_Id, "| KhoaQL_Id =", strDaoTao_KhoaQuanLy_Id);
-        //--SP GenPhieuTuDongTrucTiepGV1 nhận 6 params. iM/iChayTienTrinh/func dùng ở tầng wrapper C#.
+        //--SP GenPhieuTuDongTrucTiepGV3: BE tự xác định GV từ LopHocPhan_Id, JS không cần tách.
         var obj_save = {
-            'action': 'TS_KS_TaoPhieu_MH/BiQvESkoJDQVNAUuLyYVMzQiFSgkMQYXcAPP',
-            'func': 'khaosat_taophieu.GenPhieuTuDongTrucTiepGV1',
+            'action': 'TS_KS_TaoPhieu_MH/BiQvESkoJDQVNAUuLyYVMzQiFSgkMQYXcgPP',
+            'func': 'khaosat_taophieu.GenPhieuTuDongTrucTiepGV3',
             'type': 'POST',
             'iM': edu.system.iM,
             'iChayTienTrinh': iChayTienTrinh || 0,
             'strKS_KeHoachKhaoSat_Id': me.strKeHoach_Id,
             'strKS_PhieuKhaoSat_Mau_Id': me.strMauPhieu_Id,
-            'strGiangVien_Id': strGiangVien_Id || '',
+            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianTabPan'),
             'strDaoTao_KhoaQuanLy_Id': strDaoTao_KhoaQuanLy_Id || '',
             'strNguoiThucHien_Id': edu.system.userId,
