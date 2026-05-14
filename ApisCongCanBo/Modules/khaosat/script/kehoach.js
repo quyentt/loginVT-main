@@ -486,13 +486,19 @@ KeHoach.prototype = {
                 edu.system.alert("Vui lòng chọn đối tượng?");
                 return;
             }
-            if (!edu.util.getValById("dropKhoaQuanLy_TabPan")) {
-                edu.system.alert("Vui lòng chọn Khoa quản lý!");
+            var valKhoa = edu.util.getValById("dropKhoaQuanLy_TabPan");
+            if (!valKhoa || (Array.isArray(valKhoa) && valKhoa.length === 0)) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 Khoa quản lý!");
                 return;
             }
+            //--Normalize Khoa IDs về mảng rồi gom thành chuỗi "id1,id2,id3" gửi 1 lần / phiếu
+            //  (KhoaQuanLy là metadata, KHÔNG nhân số phiếu — 1 cặp Lớp×GV = đúng 1 phiếu)
+            var arrKhoa_Id = Array.isArray(valKhoa)
+                ? valKhoa.filter(Boolean)
+                : String(valKhoa).split(',').map(s => s.trim()).filter(Boolean);
+            var strKhoaQuanLy_Id = arrKhoa_Id.join(',');
             me.loadGVMap_TabPan(function () {
                 var arrPairs = me.buildPairs_TabPan(arrChecked_Id);
-                //--Đếm số dòng không có GV để cảnh báo user
                 var iSoDongCoGV = new Set(arrPairs.map(p => p.lop)).size;
                 var iSoDongKhongGV = arrChecked_Id.length - iSoDongCoGV;
                 if (arrPairs.length == 0) {
@@ -501,7 +507,7 @@ KeHoach.prototype = {
                 }
                 function _go() {
                     me.runBatchProgress(arrPairs, strTitle, function (pair, done) {
-                        me.save_TabPan(pair.lop, pair.gv, iChayTienTrinh, done);
+                        me.save_TabPan(pair.lop, pair.gv, strKhoaQuanLy_Id, iChayTienTrinh, done);
                     });
                 }
                 if (iSoDongKhongGV > 0) {
@@ -2263,6 +2269,7 @@ KeHoach.prototype = {
 
     save_TabHome: function (strGiangVien_Id, cbComplete) {
         var me = this;
+        console.log("[GV-ID][save_TabHome] gọi SP với GiangVien_Id =", strGiangVien_Id);
         var obj_save = {
             'action': 'KS_TaoPhieu/GenPhieuTuDongTrucTiepGV1',
             'type': 'POST',
@@ -2372,9 +2379,8 @@ KeHoach.prototype = {
         /*III. Callback*/
     },
 
-    save_TabPro: function (strDaoTao_HocPhan_Id) {
+    save_TabPro: function (strDaoTao_HocPhan_Id, cbComplete) {
         var me = this;
-        //--Edit
         var obj_save = {
             'action': 'KS_TaoPhieu/GenPhieuTuDongTrucTiepGV2',
             'type': 'POST',
@@ -2384,42 +2390,19 @@ KeHoach.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianTabPro'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    var strKeHoach_Id = "";
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thực hiện thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                        strKeHoach_Id = obj_save.strId
-                    }
-
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
-
-                me.getList_KeHoach();
+                if (!data.Success && data.Message) console.warn("[save_TabPro]", data.Message, obj_save);
             },
-            error: function (er) {
-                edu.system.alert(" (er): " + JSON.stringify(er), "w");
-
-            },
+            error: function (er) { console.warn("[save_TabPro] error:", er); },
             type: 'POST',
             complete: function () {
-                edu.system.start_Progress("zoneprocessXXXX", function () {
-                    me.getList_HocPhanCT();
-                });
+                if (typeof cbComplete === 'function') cbComplete();
             },
             contentType: true,
-
             action: obj_save.action,
             data: obj_save,
-            fakedb: [
-            ]
+            fakedb: []
         }, false, false, false, null);
     },
     getList_TabPro: function () {
@@ -2520,7 +2503,7 @@ KeHoach.prototype = {
                 renderInfor: { id: "ID", parentId: "", name: "TEN", code: "MA" },
                 renderPlace: ["dropKhoaQuanLy_TabPan"],
                 type: "",
-                title: "Chọn khoa quản lý"
+                title: "Chọn 1 hoặc nhiều khoa quản lý"
             });
         });
     },
@@ -2534,7 +2517,12 @@ KeHoach.prototype = {
     runBatchProgress: function (arrItems, strTitle, fnRun) {
         var iTotal = (arrItems || []).length;
         if (!iTotal) return;
+        //--Dọn modal alert hệ thống và popup cũ nếu có
         $('#aps-batch-popup-wrap').remove();
+        $('#myModalAlert').modal('hide').remove();
+        edu.system.flag_alert = false;
+        edu.system.arrcheckcontent = [];
+        edu.system.arrStt = [];
         var strZone_Id = "aps_batch_inner_" + Date.now();
         var $wrap = $(
             '<div id="aps-batch-popup-wrap" ' +
@@ -2543,7 +2531,7 @@ KeHoach.prototype = {
                 '<div id="aps-batch-popup" ' +
                 'style="width:min(560px,90vw);background:#fff;border-radius:10px;' +
                 'box-shadow:0 12px 40px rgba(0,0,0,0.25);overflow:hidden;font-size:14px">' +
-                    '<div style="background:#0969da;color:#fff;padding:14px 20px;' +
+                    '<div class="aps-batch-header" style="background:#0969da;color:#fff;padding:14px 20px;' +
                     'font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px">' +
                         '<i class="fal fa-spinner fa-spin"></i>' +
                         '<span class="aps-batch-title">' + (strTitle || 'Đang xử lý...') + '</span>' +
@@ -2558,14 +2546,19 @@ KeHoach.prototype = {
             '</div>'
         ).appendTo('body');
         edu.system.genHTML_Progress(strZone_Id, iTotal);
+        //--Ẩn liên tục #overlay và #myModalAlert trong khi batch đang chạy để chống bị bật lại
+        var hKeepHidden = setInterval(function () {
+            $('#overlay').hide();
+            $('#myModalAlert').not('#aps-batch-popup-wrap *').remove();
+        }, 100);
         var iDone = 0;
         arrItems.forEach(function (item) {
             fnRun(item, function () {
                 iDone++;
                 edu.system.start_Progress(strZone_Id);
-                $('#overlay').hide();
                 if (iDone === iTotal) {
-                    $wrap.find('.aps-batch-title').parent().html(
+                    clearInterval(hKeepHidden);
+                    $wrap.find('.aps-batch-header').html(
                         '<i class="fal fa-check-circle"></i>' +
                         '<span>Hoàn tất! Đã xử lý ' + iTotal + ' bản ghi.</span>'
                     ).css('background', '#1a7f37');
@@ -2575,7 +2568,6 @@ KeHoach.prototype = {
                 }
             });
         });
-        //--Đã có popup progress riêng → ẩn overlay spinner toàn cục để nhất quán
         $('#overlay').hide();
     },
     /*
@@ -2602,6 +2594,8 @@ KeHoach.prototype = {
                     var fullName = ((gv.HODEM || '') + ' ' + (gv.TEN || '')).replace(/\s+/g, ' ').trim();
                     if (fullName && gv.ID) me.gvMap_TabPan[fullName] = gv.ID;
                 });
+                console.log("[GV-ID] Map GV nạp xong:", Object.keys(me.gvMap_TabPan).length, "GV");
+                console.table(Object.entries(me.gvMap_TabPan).map(([name, id]) => ({ HoTen: name, ID: id })));
                 if (typeof cb === 'function') cb();
             },
             error: function (er) { edu.system.alert(JSON.stringify(er), "w"); },
@@ -2640,10 +2634,13 @@ KeHoach.prototype = {
                 }
             });
         });
+        console.log("[GV-ID] Tổng số cặp (LopHP, GV) sẽ gọi SP:", pairs.length, "(từ", (arrChecked_Id || []).length, "dòng tick)");
+        console.table(pairs.map(p => ({ LopHP_Id: p.lop, GiangVien_Id: p.gv })));
         return pairs;
     },
-    save_TabPan: function (strDaoTao_LopHocPhan_Id, strGiangVien_Id, iChayTienTrinh, cbComplete) {
+    save_TabPan: function (strDaoTao_LopHocPhan_Id, strGiangVien_Id, strDaoTao_KhoaQuanLy_Id, iChayTienTrinh, cbComplete) {
         var me = this;
+        console.log("[GV-ID][save_TabPan] gọi SP với GiangVien_Id =", strGiangVien_Id, "| LopHP_Id =", strDaoTao_LopHocPhan_Id, "| KhoaQL_Id =", strDaoTao_KhoaQuanLy_Id);
         //--SP GenPhieuTuDongTrucTiepGV1 nhận 6 params. iM/iChayTienTrinh/func dùng ở tầng wrapper C#.
         var obj_save = {
             'action': 'TS_KS_TaoPhieu_MH/BiQvESkoJDQVNAUuLyYVMzQiFSgkMQYXcAPP',
@@ -2655,7 +2652,7 @@ KeHoach.prototype = {
             'strKS_PhieuKhaoSat_Mau_Id': me.strMauPhieu_Id,
             'strGiangVien_Id': strGiangVien_Id || '',
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianTabPan'),
-            'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropKhoaQuanLy_TabPan'),
+            'strDaoTao_KhoaQuanLy_Id': strDaoTao_KhoaQuanLy_Id || '',
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({
