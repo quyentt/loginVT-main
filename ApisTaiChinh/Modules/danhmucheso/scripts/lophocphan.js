@@ -761,7 +761,7 @@ LopHocPhan.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 3, 4, 5, 6, 7, 9, 10, 11, 12],
+                center: [0, 3, 4, 5, 6, 7, 8, 10, 11, 12],
             },
             aoColumns: [
                 {
@@ -794,6 +794,9 @@ LopHocPhan.prototype = {
                     }
                 },
                 {
+                    "mDataProp": "CHUDANHGIANGVIEN"
+                },
+                {
                     "mRender": function (nRow, aData) {
                         if (edu.util.checkValue(aData.GiangVien)) return aData.GiangVien;
                         if (edu.util.checkValue(aData.GIANGVIEN_HOTEN)) return aData.GIANGVIEN_HOTEN;
@@ -813,9 +816,6 @@ LopHocPhan.prototype = {
                         });
                         return names.join("<br/>");
                     }
-                },
-                {
-                    "mDataProp": "CHUDANHGIANGVIEN"
                 },
                 {
                     "mRender": function (nRow, aData) {
