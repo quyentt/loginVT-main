@@ -48,6 +48,27 @@ systemroot.prototype = {
     arrcheckcontent: [],
     arrStt: [],
     strhost: '',
+    viMessageMap: {
+        "du lieu khong hop le": "Dữ liệu không hợp lệ",
+        "du lieu khong ton tai": "Dữ liệu không tồn tại",
+        "thanh cong": "Thành công",
+        "luu thanh cong": "Lưu thành công",
+        "xoa thanh cong": "Xóa thành công",
+        "loi he thong": "Lỗi hệ thống",
+        "loi khi luu du lieu": "Lỗi khi lưu dữ liệu",
+        "loi khi xoa du lieu": "Lỗi khi xóa dữ liệu",
+        "khong co quyen": "Không có quyền",
+        "khong co quyen truy cap": "Không có quyền truy cập",
+        "khong co du lieu": "Không có dữ liệu",
+        "khong tim thay du lieu": "Không tìm thấy dữ liệu",
+        "vui long chon doi tuong": "Vui lòng chọn đối tượng",
+        "vui long chon doi tuong?": "Vui lòng chọn đối tượng?",
+        "vui long chon du lieu": "Vui lòng chọn dữ liệu",
+        "ban co chac chan luu du lieu khong?": "Bạn có chắc chắn lưu dữ liệu không?",
+        "ban co chac chan xoa du lieu khong?": "Bạn có chắc chắn xóa dữ liệu không?",
+        "ban chua dang nhap": "Bạn chưa đăng nhập",
+        "phien lam viec da het han": "Phiên làm việc đã hết hạn"
+    },
     strlogouturl:'',
     iNewLogin: '1',
     //Chỗ biến này chỉ dùng cho load bảng động
@@ -5441,6 +5462,10 @@ systemroot.prototype = {
         var alert = "";
         var title = "";
         if (content === null || content === undefined) return;
+        if (typeof content === "string") {
+            var _viKey = content.trim().toLowerCase();
+            if (me.viMessageMap && me.viMessageMap[_viKey]) content = me.viMessageMap[_viKey];
+        }
         main();
         function main() {
             switch (code) {
@@ -5505,7 +5530,10 @@ systemroot.prototype = {
             var strhtmlcontent = change_alias(content);
             var iThuTu = me.arrcheckcontent.indexOf(strhtmlcontent);
             if (iThuTu == -1) {
-                $('#myModalAlert #alert_content').append('<p>' + content + ' <span id="' + strhtmlcontent + '"></span></p>');
+                var hasHtmlTag = /<\s*\/?\s*[a-z][a-z0-9]*[\s>\/]/i.test(String(content));
+                var $p = hasHtmlTag ? $('<p>').html(content) : $('<p>').text(content);
+                $p.append(' ').append($('<span>').attr('id', strhtmlcontent));
+                $('#myModalAlert #alert_content').append($p);
                 me.arrcheckcontent.push(strhtmlcontent);
                 me.arrStt.push(1);
             } else {

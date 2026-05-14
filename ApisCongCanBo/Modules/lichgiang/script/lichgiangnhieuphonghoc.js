@@ -1429,6 +1429,7 @@ LichGiangNhieuPhong.prototype = {
         $("#exportTimeRange").val("current_week");
         $("#exportRoomFilter").val("all");
         $("#exportFileFormat").val("xlsx");
+        $("#exportTemplateMode").val("full");
         $("#customDateSection").hide();
         $("#customRangeSection").hide();
         $("#customRoomSection").hide();
@@ -1462,6 +1463,7 @@ LichGiangNhieuPhong.prototype = {
         var timeRange = $("#exportTimeRange").val();
         var roomFilter = $("#exportRoomFilter").val();
         var fileFormat = $("#exportFileFormat").val();
+        var templateMode = $("#exportTemplateMode").val() || 'full';
         
         var startDate, endDate;
         
@@ -1536,15 +1538,16 @@ LichGiangNhieuPhong.prototype = {
         console.log("- Thời gian:", startDate, "-", endDate);
         console.log("- Số phòng:", roomsToExport.length);
         console.log("- Định dạng:", fileFormat);
-        
+        console.log("- Kiểu mẫu:", templateMode);
+
         // Đóng modal
         $("#modal_export_excel").modal("hide");
-        
+
         // Gọi API lấy dữ liệu theo khoảng thời gian mới
-        me.exportWithCustomData(startDate, endDate, roomsToExport, fileFormat);
+        me.exportWithCustomData(startDate, endDate, roomsToExport, fileFormat, templateMode);
     },
 
-    exportWithCustomData: function (startDate, endDate, rooms, fileFormat) {
+    exportWithCustomData: function (startDate, endDate, rooms, fileFormat, templateMode) {
         var me = this;
         var exportData = [];
         var loadedCount = 0;
@@ -1570,9 +1573,9 @@ LichGiangNhieuPhong.prototype = {
                     if (loadedCount === rooms.length) {
                         // Đã load xong tất cả
                         if (fileFormat === "xlsx") {
-                            me.exportToExcelAdvanced(startDate, endDate, rooms, exportData);
+                            me.exportToExcelAdvanced(startDate, endDate, rooms, exportData, templateMode);
                         } else {
-                            me.exportToCSVAdvanced(startDate, endDate, rooms, exportData);
+                            me.exportToCSVAdvanced(startDate, endDate, rooms, exportData, templateMode);
                         }
                     }
                 },
@@ -1594,16 +1597,16 @@ LichGiangNhieuPhong.prototype = {
         });
     },
 
-    exportToExcelAdvanced: function (startDate, endDate, rooms, scheduleData) {
+    exportToExcelAdvanced: function (startDate, endDate, rooms, scheduleData, templateMode) {
         var me = this;
-        
+
         console.log("=== EXPORT EXCEL VERSION 3.0.0.4 - DIRECT XLSX FORMAT ===");
-        
+
         // Bỏ qua ExcelJS vì CDN không load được, dùng thẳng XLSX format mới
-        me.exportToExcelWithXLSX(startDate, endDate, rooms, scheduleData);
+        me.exportToExcelWithXLSX(startDate, endDate, rooms, scheduleData, templateMode);
     },
-    
-    exportToExcelWithXLSX: function (startDate, endDate, rooms, scheduleData) {
+
+    exportToExcelWithXLSX: function (startDate, endDate, rooms, scheduleData, templateMode) {
         var me = this;
         
         console.log("=== EXPORT WITH SIMPLE HTML TABLE METHOD ===");
@@ -1613,6 +1616,7 @@ LichGiangNhieuPhong.prototype = {
         
         // Delay nhỏ để loading hiển thị
         setTimeout(function() {
+            var isBusyMode = (templateMode === 'busy');
             // Tạo HTML table và xuất thành Excel
             var arrDays = me.getDaysInWeek(startDate, endDate);
             
@@ -1626,10 +1630,14 @@ LichGiangNhieuPhong.prototype = {
             
             // Tiêu đề
             var numCols = arrDays.length + 3;
-            html += '<tr><td colspan="' + numCols + '" align="center" style="font-size:16px;font-weight:bold;height:30px;">LỊCH GIẢNG NHIỀU PHÒNG HỌC</td></tr>';
+            var titleText = isBusyMode ? 'LỊCH GIẢNG NHIỀU PHÒNG HỌC (ĐÁNH DẤU PHÒNG BẬN)' : 'LỊCH GIẢNG NHIỀU PHÒNG HỌC';
+            html += '<tr><td colspan="' + numCols + '" align="center" style="font-size:16px;font-weight:bold;height:30px;">' + titleText + '</td></tr>';
             html += '<tr><td colspan="' + numCols + '" style="height:25px;">Thời gian: ' + startDate + ' - ' + endDate + '</td></tr>';
             html += '<tr><td colspan="' + numCols + '" style="height:25px;">Số phòng: ' + rooms.length + '</td></tr>';
             html += '<tr><td colspan="' + numCols + '" style="height:25px;">Ngày xuất: ' + new Date().toLocaleString('vi-VN') + '</td></tr>';
+            if (isBusyMode) {
+                html += '<tr><td colspan="' + numCols + '" style="height:25px;font-style:italic;color:#666;">Ghi chú: Ô <span style="background-color:#FFEB3B;padding:0 8px;">&nbsp;&nbsp;&nbsp;</span> = phòng đã có lịch sử dụng</td></tr>';
+            }
             html += '<tr><td colspan="' + numCols + '" style="height:10px;"></td></tr>';
             
             // Header
@@ -1675,25 +1683,35 @@ LichGiangNhieuPhong.prototype = {
                     // Các ngày
                     arrDays.forEach(function(day) {
                         var events = roomSchedules.filter(function(item) {
-                            return item.NGAYHOC === day.date && 
-                                   item.TIETBATDAU >= session.min && 
+                            return item.NGAYHOC === day.date &&
+                                   item.TIETBATDAU >= session.min &&
                                    item.TIETBATDAU <= session.max;
                         });
-                        
+
                         events.sort(function(a, b) {
                             return (a.GIOBATDAU * 60 + a.PHUTBATDAU) - (b.GIOBATDAU * 60 + b.PHUTBATDAU);
                         });
-                        
+
+                        // Mẫu mới: chỉ tô vàng cell có lịch, không hiện nội dung
+                        if (isBusyMode) {
+                            if (events.length > 0) {
+                                html += '<td bgcolor="#FFFF00" style="background-color:#FFFF00;background:#FFFF00;mso-pattern:auto none #FFFF00;height:80px;">&nbsp;</td>';
+                            } else {
+                                html += '<td style="height:80px;">&nbsp;</td>';
+                            }
+                            return;
+                        }
+
                         html += '<td valign="top" style="white-space:pre-wrap;">';
-                        
+
                         if (events.length > 0) {
                             events.forEach(function(event, idx) {
                                 if (idx > 0) html += '<br>---<br>';
-                                
+
                                 // Thời gian
-                                html += me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + 
+                                html += me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) +
                                        '-' + me.returnTwo(event.GIOKETTHUC) + ':' + me.returnTwo(event.PHUTKETTHUC);
-                                
+
                                 if (event.TIETBATDAU) {
                                     html += ' (T' + event.TIETBATDAU;
                                     if (event.TIETKETTHUC && event.TIETKETTHUC !== event.TIETBATDAU) {
@@ -1701,20 +1719,20 @@ LichGiangNhieuPhong.prototype = {
                                     }
                                     html += ')';
                                 }
-                                
+
                                 html += '<br>' + event.TENHOCPHAN;
-                                
+
                                 if (event.TENLOPHOCPHAN) {
                                     html += '<br>Lớp: ' + event.TENLOPHOCPHAN;
                                 }
-                                
+
                                 if (event.THONGTINGIANGVIEN) {
                                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                                     html += '<br>GV: ' + giangVien;
                                 }
                             });
                         }
-                        
+
                         html += '</td>';
                     });
                     
@@ -1873,17 +1891,22 @@ LichGiangNhieuPhong.prototype = {
         return fileName;
     },
     
-    exportToCSVAdvanced: function (startDate, endDate, rooms, scheduleData) {
+    exportToCSVAdvanced: function (startDate, endDate, rooms, scheduleData, templateMode) {
         var me = this;
-        
+        var isBusyMode = (templateMode === 'busy');
+
         // Tạo CSV content
         var csvContent = '';
-        
+
         // Tiêu đề
-        csvContent += 'LỊCH GIẢNG NHIỀU PHÒNG HỌC\n';
+        csvContent += (isBusyMode ? 'LỊCH GIẢNG NHIỀU PHÒNG HỌC (ĐÁNH DẤU PHÒNG BẬN)' : 'LỊCH GIẢNG NHIỀU PHÒNG HỌC') + '\n';
         csvContent += 'Thời gian: ' + startDate + ' - ' + endDate + '\n';
         csvContent += 'Số phòng: ' + rooms.length + '\n';
-        csvContent += 'Ngày xuất: ' + new Date().toLocaleString('vi-VN') + '\n\n';
+        csvContent += 'Ngày xuất: ' + new Date().toLocaleString('vi-VN') + '\n';
+        if (isBusyMode) {
+            csvContent += 'Ghi chú: ô có giá trị "BẬN" = phòng đã có lịch sử dụng\n';
+        }
+        csvContent += '\n';
         
         // Header
         var arrDays = me.getDaysInWeek(startDate, endDate);
@@ -1906,30 +1929,36 @@ LichGiangNhieuPhong.prototype = {
                 events.sort(function (a, b) {
                     return (a.GIOBATDAU * 60 + a.PHUTBATDAU) - (b.GIOBATDAU * 60 + b.PHUTBATDAU);
                 });
-                
+
+                // Mẫu mới: chỉ đánh dấu BẬN, không xuất nội dung
+                if (isBusyMode) {
+                    csvContent += ',"' + (events.length > 0 ? 'BẬN' : '') + '"';
+                    return;
+                }
+
                 // Ghép các buổi học
                 var cellContent = '';
                 events.forEach(function (event, idx) {
                     if (idx > 0) cellContent += ' | ';
-                    
-                    cellContent += me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + 
+
+                    cellContent += me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) +
                                   '-' + me.returnTwo(event.GIOKETTHUC) + ':' + me.returnTwo(event.PHUTKETTHUC);
-                    
+
                     if (event.TIETBATDAU) {
                         cellContent += ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')';
                     }
-                    
+
                     cellContent += ' ' + event.TENHOCPHAN;
-                    
+
                     if (event.TENLOPHOCPHAN) {
                         cellContent += ' - Lớp: ' + event.TENLOPHOCPHAN;
                     }
-                    
+
                     if (event.THONGTINGIANGVIEN) {
                         cellContent += ' - GV: ' + event.THONGTINGIANGVIEN;
                     }
                 });
-                
+
                 csvContent += ',"' + cellContent.replace(/"/g, '""') + '"';
             });
             

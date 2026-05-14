@@ -455,6 +455,24 @@ KeHoachXuLy.prototype = {
             var strSanPham = aData.ID + aData.QLSV_NGUOIHOC_ID + aData.DAOTAO_HOCPHAN_ID + aData.DAOTAO_THOIGIANDAOTAO_ID;
             me.getList_XacNhan(strSanPham, "tblModal_XacNhan", null, me.strLoaiXacNhan);
         });
+        $(".btnTinhPhi").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            edu.system.alert('<div id="zoneprocessTinhPhi"></div>');
+            edu.system.genHTML_Progress("zoneprocessTinhPhi", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                var aData = me.dtKetQua.find(e => e.ID == arrChecked_Id[i]);
+                if (aData) {
+                    me.tinhPhiThiTuDong(aData.QLSV_NGUOIHOC_ID, aData.ID);
+                }
+            }
+            setTimeout(function () {
+                me.getList_SinhVien();
+            }, arrChecked_Id.length * 50);
+        });
         $("#zoneBtnXacNhan").delegate('.btnxacnhan', 'click', function () {
             var strTinhTrang = this.id;
             var strMoTa = edu.util.getValById("txtNoiDungXacNhanSanPham");
@@ -935,6 +953,35 @@ KeHoachXuLy.prototype = {
         }, false, false, false, null);
     },
 
+    tinhPhiThiTuDong: function (strQLSV_NguoiHoc_Id, strNguonDuLieu_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'TC_TinhPhi_MH/FSgvKREpKBUpKBU0BS4vJgPP',
+            'func': 'pkg_taichinh_tinhphi.TinhPhiThiTuDong',
+            'iM': edu.system.iM,
+            'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+            'strNguonDuLieu_Id': strNguonDuLieu_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.afterComfirm({ content: "Tính phí thành công!", code: "" });
+                }
+                else {
+                    edu.system.afterComfirm({ content: "TinhPhiThiTuDong: " + data.Message, code: "" });
+                }
+            },
+            error: function (er) {
+                edu.system.afterComfirm({ content: "TinhPhiThiTuDong (er): " + JSON.stringify(er), code: "w" });
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
     save_Lop: function (strXLDH_KeHoach_Id, strDaoTao_LopQuanLy_Id) {
         var me = this;
         //--Edit

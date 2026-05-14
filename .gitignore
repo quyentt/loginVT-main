@@ -15,7 +15,8 @@ Global.asax
 Config.js
 Web.config
 logo.png
-
+Web.txt
+test.js
 # System logs
 Logs/
 *.log

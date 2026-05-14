@@ -673,41 +673,54 @@ LichGiang.prototype = {
         var strDay = edu.util.dateToday();
         var iDay = parseInt(strDay.substr(0, strDay.indexOf("/")));
 
-        var iThu = new Date(nYear, nMonth - 1, 1, 0, 0, 0, 0);
-        iThu = iThu.getDay();
+        var iThu = new Date(nYear, nMonth - 1, 1).getDay();
         if (iThu == 0) iThu = 7;
+        var iPadStart = iThu - 1;
+
+        var iPreMonth = nMonth - 1, iPreYear = nYear;
+        if (iPreMonth == 0) { iPreMonth = 12; iPreYear--; }
+        var iDayOfPreMonth = getDay(iPreMonth, iPreYear);
+
+        var iNextMonth = nMonth + 1, iNextYear = nYear;
+        if (iNextMonth == 13) { iNextMonth = 1; iNextYear++; }
+
+        var date = new Date();
+        var bIsCurrentMonth = (date.getMonth() + 1 == nMonth && date.getFullYear() == nYear);
+        var iToday = bIsCurrentMonth ? date.getDate() : -1;
+        if (!bIsCurrentMonth) iDay = 1;
+
+        var iTotalCells = Math.ceil((iPadStart + iDayOfMonth) / 7) * 7;
         var html = "";
+        var uuid = edu.util.uuid();
         var strNgayBatDau = '';
         var strNgayKetThuc = '';
-        var uuid = edu.util.uuid();
-        var iDayOfPreMonth = getDay(nMonth - 1, nYear);
-        for (var i = iThu - 2; i >= 0; i--) {
-            html += '<li class="day-of-other-month ' + uuid + '" title="' + getSMonth(iDayOfPreMonth - i, (nMonth - 1), nYear) + '" >' + (iDayOfPreMonth - i) + '</li>';
-        }
 
-        //var bCheck = false;
-        var date = new Date();
-        if (date.getMonth() + 1 != nMonth || date.getFullYear() != nYear) iDay = 1;
-
-        if (iThu > 1) {
-            strNgayBatDau = getSMonth(iDayOfPreMonth - iThu + 2, (nMonth - 1), nYear);
-            strNgayKetThuc = getSMonth(8 - iThu, nMonth, nYear);
-        }
-        for (var i = 1; i <= iDayOfMonth; i++) {
-            var strClass = "";
-            if (i == iDay) strClass = 'active';
-            if ((i % 7 + iThu) % 7 == 2) {
-                strNgayBatDau = getSMonth(i, nMonth, nYear);
-                strNgayKetThuc = (i + 6 > iDayOfMonth) ? getSMonth(i + 6 - iDayOfMonth, (nMonth + 1), nYear) : getSMonth(i + 6, nMonth, nYear);
-                uuid = edu.util.uuid();
+        function cellInfo(c) {
+            if (c < iPadStart) {
+                return { day: iDayOfPreMonth - (iPadStart - 1 - c), m: iPreMonth, y: iPreYear, isCur: false };
+            } else if (c < iPadStart + iDayOfMonth) {
+                return { day: c - iPadStart + 1, m: nMonth, y: nYear, isCur: true };
+            } else {
+                return { day: c - iPadStart - iDayOfMonth + 1, m: iNextMonth, y: iNextYear, isCur: false };
             }
-
-            html += '<li class="poiter ' + strClass + ' ' + uuid + '" ngay="' + i + '"  title="' + getSMonth(i, nMonth, nYear) + '" name="' + uuid + '" batdau="' + strNgayBatDau + '" ketthuc="' + strNgayKetThuc + '"><span>' + i + '</span></li>';
         }
-        var iMax = 35 - iDayOfMonth - iThu;
-        if (iMax < 0) iMax += 7;
-        for (var i = 1; i < iMax + 2; i++) {
-            html += '<li class="day-of-other-month ' + uuid + '" title="' + getSMonth(i, (nMonth + 1), nYear) + '">' + i + '</li>';
+
+        for (var c = 0; c < iTotalCells; c++) {
+            if (c % 7 == 0) {
+                uuid = edu.util.uuid();
+                var s = cellInfo(c);
+                var e = cellInfo(c + 6);
+                strNgayBatDau = getSMonth(s.day, s.m, s.y);
+                strNgayKetThuc = getSMonth(e.day, e.m, e.y);
+            }
+            var info = cellInfo(c);
+            if (!info.isCur) {
+                html += '<li class="day-of-other-month ' + uuid + '" title="' + getSMonth(info.day, info.m, info.y) + '">' + info.day + '</li>';
+            } else {
+                var strClass = (info.day == iDay) ? 'active' : '';
+                if (info.day == iToday) strClass += ' today';
+                html += '<li class="poiter ' + strClass + ' ' + uuid + '" ngay="' + info.day + '"  title="' + getSMonth(info.day, info.m, info.y) + '" name="' + uuid + '" batdau="' + strNgayBatDau + '" ketthuc="' + strNgayKetThuc + '"><span>' + info.day + '</span></li>';
+            }
         }
         $(".days").html(html);
         setTimeout(function () {
