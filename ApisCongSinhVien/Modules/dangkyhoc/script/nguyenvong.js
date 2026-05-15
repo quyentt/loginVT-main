@@ -47,6 +47,7 @@ NguyenVong.prototype = {
         //    me.save_NguyenVong();
         //});
         $("#btnDangKy").click(function () {
+            if (!me.kiemTraBatBuoc()) return;
             var arrChecked_Id = edu.util.getArrCheckedIds("tblHocPhanChuaDangKy", "checkX");
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng cần lưu?");
@@ -78,6 +79,7 @@ NguyenVong.prototype = {
         });
 
         $("#btnSearch").click(function () {
+            if (!me.kiemTraBatBuoc()) return;
             me.getList_ChuaDangKy();
             me.getList_DaDangKy();
         });
@@ -98,6 +100,7 @@ NguyenVong.prototype = {
         });
 
         $('#dropSearch_KeHoachDangKy').on('select2:select', function (e) {
+            $('#wrapKeHoach').removeClass('field-error');
             me.getList_KieuHoc();
             me.getList_ChuaDangKy();
             me.getList_QuyMo();
@@ -108,12 +111,35 @@ NguyenVong.prototype = {
             $("#txtSoTinToiDa").val(strId)
         });
         $('#dropSearch_KieuHoc').on('select2:select', function (e) {
+            $('#wrapKieuHoc').removeClass('field-error');
             me.getList_ChuaDangKy();
             me.getList_DaDangKy();
+        });
+        $('#dropSearch_KeHoachDangKy, #dropSearch_KieuHoc').on('change', function () {
+            if ($(this).val()) {
+                $(this).closest('.aps-form-item').removeClass('field-error');
+            }
         });
         setTimeout(function () {
             me.getDetail_SinhVien();
         }, 1000)
+    },
+    kiemTraBatBuoc: function () {
+        $('#wrapKeHoach, #wrapKieuHoc').removeClass('field-error');
+        var arrThieu = [];
+        if (!edu.util.checkValue(edu.util.getValById('dropSearch_KeHoachDangKy'))) {
+            $('#wrapKeHoach').addClass('field-error');
+            arrThieu.push("Kế hoạch");
+        }
+        if (!edu.util.checkValue(edu.util.getValById('dropSearch_KieuHoc'))) {
+            $('#wrapKieuHoc').addClass('field-error');
+            arrThieu.push("Kiểu học");
+        }
+        if (arrThieu.length > 0) {
+            edu.system.alert("Vui lòng chọn: " + arrThieu.join(", ") + "!", "w");
+            return false;
+        }
+        return true;
     },
     popup: function () {
         //show

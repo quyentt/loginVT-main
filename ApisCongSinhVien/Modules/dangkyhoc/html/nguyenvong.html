@@ -1,4 +1,18 @@
-﻿<div class="one-door">
+﻿<style>
+    .field-error select.form-select,
+    .field-error input.form-control,
+    .field-error .select2-selection,
+    .field-error .select2-selection--single {
+        border: 2px solid #dc3545 !important;
+        box-shadow: 0 0 5px rgba(220, 53, 69, 0.4) !important;
+        background-color: #fff5f5 !important;
+    }
+    .field-error .text-lable {
+        color: #dc3545 !important;
+        font-weight: 600;
+    }
+</style>
+<div class="one-door">
     <!-- đăng ký nguyện vọng -->
     <div class="box-shadow register-wish aps-nguyenvong">
         <div class="container-xl">
@@ -74,9 +88,9 @@
             </div>
         </div>
     </div>-->
-                <div class="col-lg-6 mb-15 aps-form-item">
+                <div class="col-lg-6 mb-15 aps-form-item" id="wrapKeHoach">
                     <div class="row align-items-center">
-                        <div class="col-md-3 text-lable">Kế hoạch</div>
+                        <div class="col-md-3 text-lable">Kế hoạch <span style="color: red">*</span></div>
                         <div class="col-md-9">
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group">
@@ -87,9 +101,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-6 mb-15 aps-form-item">
+                <div class="col-lg-6 mb-15 aps-form-item" id="wrapKieuHoc">
                     <div class="row align-items-center">
-                        <div class="col-md-3 text-lable">Kiểu học</div>
+                        <div class="col-md-3 text-lable">Kiểu học <span style="color: red">*</span></div>
                         <div class="col-md-9">
                             <div class="form-item d-flex  form-add-info">
                                 <div class="input-group">
