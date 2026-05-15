@@ -835,6 +835,9 @@ LopHocPhan.prototype = {
                     "mDataProp": "SOSVCHOT"
                 },
                 {
+                    "mDataProp": "DAOTAO_CHUONGTRINH"
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return aData.HOCPHITINHRIENG ? 'Lớp riêng': '';
                     }
@@ -855,6 +858,25 @@ LopHocPhan.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.syncTopScroll_LopHocPhan();
+    },
+    syncTopScroll_LopHocPhan: function () {
+        var $top = $("#topScroll_tblLopHocPhan");
+        var $topInner = $("#topScrollInner_tblLopHocPhan");
+        var $wrap = $("#wrapScroll_tblLopHocPhan");
+        if (!$top.length || !$wrap.length) return;
+        var resize = function () {
+            var w = $wrap[0].scrollWidth;
+            $topInner.css("width", w + "px");
+        };
+        resize();
+        setTimeout(resize, 50);
+        if (!$top.data("synced")) {
+            $top.data("synced", true);
+            $top.on("scroll", function () { $wrap.scrollLeft($top.scrollLeft()); });
+            $wrap.on("scroll", function () { $top.scrollLeft($wrap.scrollLeft()); });
+            $(window).on("resize", resize);
+        }
     },
 
     /*------------------------------------------
