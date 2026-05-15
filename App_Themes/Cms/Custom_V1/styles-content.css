@@ -4,6 +4,10 @@
 @import "../../../assets/css/root.css";
 
 /* --------------- */
+.min-h-186{
+    min-height: 186px !important;
+}
+/* --------------- */
 .color-222 {
     color: #222 !important;
 }
@@ -43,7 +47,10 @@
 .color-success {
     color: var(--color-green) !important;
 }
-
+/*-----------------------*/
+.gap0 {
+    gap: 0 !important;
+}
 /*-----------------------*/
 .box-header>.box-tools {
     position: relative !important;
@@ -11535,6 +11542,21 @@ table#clone {
 }
 
 .list-chekbox .aps-lable-name .title-name {
+<<<<<<< HEAD
+    line-height: 30px 
+}
+/* ---------- */
+.aps-form-them-KH .list-chekbox .title-name {
+    line-height: 30px !important;
+}
+.list-chekbox-right{
+    /* border: 1px solid #e1e1e1; */
+}
+
+.tblmucThu_nhapHoc,.tblketQua_nhapHoc{
+    min-width: 2800px !important;
+}
+=======
     line-height: 30px
 }
 
@@ -11729,3 +11751,4 @@ table#clone {
     margin-top: 10px !important;
 }
 
+>>>>>>> 2c69f21431cdfe91dfff0d8e6b0043269760fe2c
