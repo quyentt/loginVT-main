@@ -107,6 +107,7 @@ LopHocPhan.prototype = {
         });
         $("#tblLopHocPhan").delegate('.btnSinhVien', 'click', function (e) {
             $('#myModal').modal('show');
+            me["strDSSVLopHocPhan_Id"] = this.id;
             me.getList_QuanSoTheoLop(this.id);
         });
 
@@ -1494,7 +1495,7 @@ LopHocPhan.prototype = {
             'action': 'DKH_PhanCong_LopHP/LayDSDangKyHoc',
             'type': 'GET',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
-            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strDaoTao_LopHocPhan_Id': me.strDSSVLopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
             'pageSize': 1000000,
@@ -1569,6 +1570,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mDataProp": "DAOTAO_HEDAOTAO_TEN"
+                },
+                {
+                    "mDataProp": "CHEDOTINHPHI_TEN"
                 },
                 {
                     "mRender": function (nRow, aData) {
@@ -2470,7 +2474,11 @@ LopHocPhan.prototype = {
             },
             type: "POST",
             action: obj_save.action,
-
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_QuanSoTheoLop();
+                });
+            },
             contentType: true,
 
             data: obj_save,

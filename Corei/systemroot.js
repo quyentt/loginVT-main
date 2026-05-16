@@ -6410,6 +6410,7 @@ systemroot.prototype = {
                     node += '<i class="' + data[j].TENANH + '""></i> <span id="mark_submenu' + data[j].ID + '">' + data[j].TENCHUCNANG + '</span>';
                 }
                 else {
+                    strDuongDanHienThi = "#" + data[j].ID;
                     node += '<a onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + strDuongDanFile + "\'" + ',' + "\'" + data[j].ID + "\'" + ')" href="' + strDuongDanHienThi + '">';
                     node += '<i class="' + data[j].TENANH + '""></i> <span>' + data[j].TENCHUCNANG + '</span>';
                 }
@@ -6422,6 +6423,7 @@ systemroot.prototype = {
         //1. Append to left_content_tree
         $("#menu_vertical").append(node);
         var strChucNang_Id = sessionStorage.getItem("strChucNang_Id");
+        console.log(strChucNang_Id)
         if (strChucNang_Id != "" || strChucNang_Id != undefined) {
             var x = edu.util.objGetOneDataInData(strChucNang_Id, data, "ID");
             if (x.ID != undefined) {
@@ -6489,7 +6491,6 @@ systemroot.prototype = {
     genPath_ChucNang: function () {
         var me = edu.system;
         var data = edu.util.objGetDataInData(me.strChucNang_Id, me.dtChucNang, "ID");
-        console.log(data);
         me.pathChucNang = '<a onclick="" class="list-group-a"><span class="fa fa-home"></span> Bảng điều khiển</a>';
         me.pathChucNang += getNameChucNang(data[0]);
         if (edu.util.checkValue(data[0].DUONGDANHUONGDANSUDUNG)) {
