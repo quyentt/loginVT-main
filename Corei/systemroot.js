@@ -6489,6 +6489,7 @@ systemroot.prototype = {
     genPath_ChucNang: function () {
         var me = edu.system;
         var data = edu.util.objGetDataInData(me.strChucNang_Id, me.dtChucNang, "ID");
+        console.log(data);
         me.pathChucNang = '<a onclick="" class="list-group-a"><span class="fa fa-home"></span> Bảng điều khiển</a>';
         me.pathChucNang += getNameChucNang(data[0]);
         if (edu.util.checkValue(data[0].DUONGDANHUONGDANSUDUNG)) {

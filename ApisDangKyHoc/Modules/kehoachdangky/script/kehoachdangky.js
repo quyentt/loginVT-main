@@ -275,7 +275,6 @@ KeHoachDangKy.prototype = {
                 me.pageIndex_XuLyLHP = p;
                 me.renderPage_XuLyLHP();
             }
->>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
         });
         $("#tblChonLHP").delegate('.chkChonLHP', 'change', function () {
             var $tr = $(this).closest('tr');
@@ -2253,7 +2252,6 @@ KeHoachDangKy.prototype = {
             });
         }
         me.renderPage_XuLyLHP();
->>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
         me.renderPage_ChonLHP();
         if (blockedSaved > 0) {
             edu.system.alert("Có " + blockedSaved + " lớp đã lưu trước đó nên không thể bỏ chọn ở đây. Hãy dùng nút xóa trong bảng bên dưới.");
@@ -2554,7 +2552,6 @@ KeHoachDangKy.prototype = {
         if (selCnt === 0) $h.prop({ checked: false, indeterminate: false });
         else if (selCnt === data.length) $h.prop({ checked: true, indeterminate: false });
         else $h.prop({ checked: false, indeterminate: true });
->>>>>>> 1161e7a44d9bf7b2af05f9a6bfe5faeeab1611fd
     },
     reindexRows_XuLyLHP: function () {
         $("#tblXuLyLHP tbody tr").each(function () {
