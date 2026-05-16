@@ -157,9 +157,11 @@ DanhMucImport.prototype = {
         //me.strFunc_Id = "";
         me.strParam_id = "";
         //edu.util.viewValById("dropUngDung_DMIP", "");
-        //edu.util.viewValById("txtTenHamImport", "");
-        //edu.util.viewValById("txtMaHamImport", "");
-        //edu.util.viewValById("txtSQLSoure", "");
+        edu.util.viewValById("txtTenHamImport", "IMPORTWITHPROC_");
+        edu.util.viewValById("txtMaHamImport", "IMPORTWITHPROC_");
+        var strSQL = "create or replace package XXXXXXX is\n procedure "
+        edu.util.viewValById("txtSQLSoure", strSQL);
+        edu.util.viewHTMLById("txtSQLSoure", strSQL);
         //edu.util.viewValById("txtTenThamSo", "");
         //edu.util.viewValById("txtMaCotExcel", "");
         //edu.util.viewValById("txtMaDataBase", "");
