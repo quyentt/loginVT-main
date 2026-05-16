@@ -797,25 +797,7 @@ LopHocPhan.prototype = {
                     "mDataProp": "CHUDANHGIANGVIEN"
                 },
                 {
-                    "mRender": function (nRow, aData) {
-                        if (edu.util.checkValue(aData.GiangVien)) return aData.GiangVien;
-                        if (edu.util.checkValue(aData.GIANGVIEN_HOTEN)) return aData.GIANGVIEN_HOTEN;
-                        if (edu.util.checkValue(aData.GIANGVIEN_HODEM) || edu.util.checkValue(aData.GIANGVIEN_TEN)) {
-                            return edu.util.returnEmpty(aData.GIANGVIEN_HODEM) + " " + edu.util.returnEmpty(aData.GIANGVIEN_TEN);
-                        }
-                        // Fallback: trích tên GV từ THOIGIANCHITIET (mỗi dòng "Thu X tiet ..., <Tên GV>")
-                        var str = edu.util.returnEmpty(aData.THOIGIANCHITIET);
-                        if (!str) return "";
-                        var names = [];
-                        str.split(/<br\s*\/?>|\n/i).forEach(function (line) {
-                            var m = line.match(/tiet\s+[\d,\s]+,\s*(.+)$/i);
-                            if (m && m[1]) {
-                                var name = m[1].trim();
-                                if (names.indexOf(name) === -1) names.push(name);
-                            }
-                        });
-                        return names.join("<br/>");
-                    }
+                    "mDataProp": "GIANGVIEN"
                 },
                 {
                     "mRender": function (nRow, aData) {

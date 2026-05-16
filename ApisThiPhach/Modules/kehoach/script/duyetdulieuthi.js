@@ -11,6 +11,7 @@ DuLieuThi.prototype = {
     strDuLieuThi_Id: '',
     dtDuLieuThi: [],
     dtXacNhan: [],
+    dtDanhSachThi: [],
     strLopHocPhan_Id: '',
     bcheck: '',
     arrChecked_Id: [],
@@ -348,8 +349,11 @@ DuLieuThi.prototype = {
         });
         $("#btnCongBoDanhSachThi").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_QLTHI_CongBoLichThi';
-            var arrChecked_Id = $("#dropSearch_DanhSach").val();
-            if (!arrChecked_Id || arrChecked_Id.length == 0) {
+            var arrChecked_Id = [];
+            $("#tblDanhSachThi tbody .checkDSThi:checked").each(function () {
+                arrChecked_Id.push(this.id.replace("checkDSThi_", ""));
+            });
+            if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn danh sách thi!");
                 return;
             }
@@ -357,6 +361,12 @@ DuLieuThi.prototype = {
             $("#modal_CongBo").modal("show");
 
             me.getList_CongBo(arrChecked_Id.toString(), "tblModal_CongBo");
+        });
+        $("#btnSearch_DanhSachThi").click(function () {
+            me.getList_DanhSachThi();
+        });
+        $("#chkSelectAll_DanhSachThi").on("click", function () {
+            edu.util.checkedAll_BgRow(this, { table_id: "tblDanhSachThi" });
         });
         $("#btnCongBoHocPhan").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_CongBoLichThi_HocPhan';
@@ -1582,6 +1592,10 @@ DuLieuThi.prototype = {
                 'type': 'GET',
                 'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
                 'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
+                'strThi_CaThi_Id': '',
+                'strNgayThi': edu.util.getValById('txtSearch_NgayThi'),
+                'strNgayThiBatDau': edu.util.getValById('txtSearch_NgayThi_TuNgay'),
+                'strNgayThiKetThuc': edu.util.getValById('txtSearch_NgayThi_DenNgay'),
                 'strNguoiThucHien_Id': edu.system.userId,
             };
             obj_list[primaryKey] = idStr;
@@ -1594,25 +1608,35 @@ DuLieuThi.prototype = {
                 fakedb: []
             };
         }, function (allData) {
-            me.cbGenCombo_DanhSachThi(allData);
+            me.genTable_DanhSachThi(allData);
         }, "ID");
     },
-    cbGenCombo_DanhSachThi: function (data) {
+    genTable_DanhSachThi: function (data) {
         var me = this;
-        var obj = {
-            data: data,
-            renderInfor: {
-                id: "ID",
-                parentId: "",
-                name: "MADANHSACHTHI",
-                code: "",
-                avatar: ""
+        me.dtDanhSachThi = data || [];
+        $("#lblDanhSachThi_Tong").html(me.dtDanhSachThi.length);
+        var jsonForm = {
+            strTable_Id: "tblDanhSachThi",
+            aaData: me.dtDanhSachThi,
+            colPos: {
+                center: [0]
             },
-            renderPlace: ["dropSearch_DanhSach"],
-            type: "",
-            title: "Chọn danh sách thi",
+            aoColumns: [
+                { "mDataProp": "MADANHSACHTHI" },
+                { "mDataProp": "TKB_PHONGHOC_TEN" },
+                { "mDataProp": "NGAYTHI" },
+                { "mDataProp": "THI_CATHI_TEN" },
+                { "mDataProp": "DAOTAO_HOCPHAN_TEN" },
+                { "mDataProp": "HINHTHUCTHI_TEN" },
+                { "mDataProp": "THONGTINLOPHOCPHAN" },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" class="checkDSThi" id="checkDSThi_' + aData.ID + '"/>';
+                    }
+                }
+            ]
         };
-        edu.system.loadToCombo_data(obj);
+        edu.system.loadToTable_data(jsonForm);
     },
 
     /*----------------------------------------------
