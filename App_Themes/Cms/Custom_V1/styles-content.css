@@ -11542,7 +11542,6 @@ table#clone {
 }
 
 .list-chekbox .aps-lable-name .title-name {
-<<<<<<< HEAD
     line-height: 30px 
 }
 /* ---------- */
@@ -11556,10 +11555,7 @@ table#clone {
 .tblmucThu_nhapHoc,.tblketQua_nhapHoc{
     min-width: 2800px !important;
 }
-=======
-    line-height: 30px
-}
-
+ 
 
 .tblLopHocPhan.table tr td:nth-last-child(2) {
     text-align: center !important;
@@ -11750,5 +11746,217 @@ table#clone {
     /* border: 1px solid #999 !important; */
     margin-top: 10px !important;
 }
+/* ------------- */
+/* Kế hoạch nhập học - Thu phí */
+.kehoach-nhaphoc-thuPhi-tab .tab-list{
+    margin: 0 auto !important;
+}
+.aps-nhaphoc-thuPhi .khnh-thuPhi-lable .images{
+    height: 44px;
+    padding-right: 10px;
+}
+.khnh-thuPhi-lable{
+    /* border-bottom: 1px solid #e1e1e1; */
+}
+.aps-nhaphoc-thuPhi .khnh-thuPhi-lable .box-title{
+    font-size:22px !important;
+   font-weight: 600 !important;
+    text-transform: uppercase;
+    line-height: 52px;
+    color:#222 !important;
+    padding: 15px 0 !important;
+}
+.kehoach-nhaphoc-thuPhi-tab ul{
+    list-style: none;
+    display: flex !important;
+    padding-left: 0px;
+    justify-content: center;
+    padding-right: 0px;
+}
 
->>>>>>> 2c69f21431cdfe91dfff0d8e6b0043269760fe2c
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li{
+    display: flex !important;
+}
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li.active .item-detail,
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li.active:hover .item-detail{
+    border: 1px solid var(--color-green);
+    color: #fff;
+     background: #4f9322;
+    background: linear-gradient( 90deg,rgba(79, 147, 34, 1) 0%,rgba(0, 128, 0, 1) 100%);
+    /* font-weight: bold; */
+}
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li.active .item-detail{
+    /* font-weight: bold; */
+}
+.kehoach-nhaphoc-thuPhi-tab ul  li.tab-item-li.active .item-detail .item-icon,
+.kehoach-nhaphoc-thuPhi-tab ul  li.tab-item-li.active:hover .item-detail .item-icon{
+    border: 1px solid var(--color-green);
+    color: #4F9322;
+    background: #fff;
+}
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li.active .item-detail .item-icon i{
+   font-weight: 700 !important; 
+}
+
+.kehoach-nhaphoc-thuPhi-tab ul  li.tab-item-li:hover .item-detail .item-icon{
+    color: #fff;
+     background: #4F9322;
+}
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li:hover .item-detail{
+    border: 1px solid var(--color-green);
+    color: #4F9322;
+     background: #fff;
+}
+
+.kehoach-nhaphoc-thuPhi-tab ul li .item-detail{
+    border: 1px solid #f1f1f1;
+    padding: 0 20px 0 0;
+     border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    font-size: 16px;
+    color: #222;
+     display: flex !important; 
+     line-height: 42px;
+     gap: 10px !important;
+     /* background: #fff; */
+     -webkit-box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .03);
+    box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .03);
+}
+
+.kehoach-nhaphoc-thuPhi-tab ul li .item-detail .item-icon{
+    display: block;
+    width: 42px !important;
+    height: 42px !important;
+    background: #e6e8e9;
+    border: 2px solid #fff;
+    color: #222;
+    font-size: 20px;
+    text-align: center;
+    line-height: 42px !important;
+    /* padding: 14px 14px 12px 14px; */
+    border-top-right-radius: 100px;
+    border-bottom-right-radius: 100px;
+    border-top-left-radius: 100px;
+    border-bottom-left-radius: 100px;
+    margin-right: 0 !important;
+}
+.kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li .arrow-right{
+    line-height: 42px;
+}
+
+.arrow{
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 15px solid #000;
+}
+.arrow-right{
+    width: 46px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.arrow-line{
+    width: 12px;
+    height: 12px;
+    border-right: 3px solid #000;
+    border-bottom: 3px solid #000;
+    transform: rotate(-45deg);
+}
+.item-search-label{
+    color: #888;
+    line-height: 38px;
+}
+.table tr:hover td .btn-outline-success{
+    background-color: #198754 !important;
+}
+.table tr:hover td .btn-outline-danger{
+    background-color: #dc3545 !important;
+}
+.table tr:hover td .btn-outline-warning{
+    background-color: #ffc107 !important;
+}
+.box-shadow-1 {    
+       -webkit-box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .03);
+    box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .03);
+}
+.aps-nhaphoc-thuPhi-content .box-header .box-title{
+    font-weight: 600 !important;
+}
+
+.aps-nhaphoc-thuPhi-content .box-header .box-title .fa-light{
+    /* font-weight: 300 !important; */
+}
+/*  */
+.item-lable{
+    color: #888;
+    font-size: 14px !important;
+}
+.item-content{
+    font-size: 14px !important;
+}
+.btnChuaHoanThanh {
+    min-width: 130px;
+}
+.aps-kienTraNhanh-avata .images{
+    width: 100%;
+    border-radius: 10px;
+}
+.aps-kienTraNhanh-content .item{
+    padding-bottom: 8px;
+}
+.aps-kienTraNhanh-trangThai .item .item-lable{
+    list-style: 38px !important;
+}
+.aps-kienTraNhanh-ttCaNhan .item .col-md-6{
+    padding-left: 0 !important;
+}
+.aps-kienTraNhanh-ttCaNhan{
+    border-right: 1px solid #f1f1f1;
+}
+.aps-kienTraNhanh-trangThai{
+    border: 1px solid #e1e1e1;
+    background: #f8f8f8 !important;
+    padding: 10px;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Chia 2 cột bằng nhau */
+    gap: 20px; /* Khoảng cách giữa 2 cột */
+
+}
+.aps-kienTraNhanh-trangThai .item{
+    padding-bottom: 0;
+    display: flex !important;
+    gap: 10px;
+}
+.aps-kienTraNhanh-trangThai .item .item-lable{
+   line-height: 38px !important;
+    width: auto !important;
+    max-width: fit-content !important;
+    padding-right: 0 !important;
+}
+.aps-kienTraNhanh-trangThai .item .item-content{
+    width: auto !important;
+    max-width: fit-content !important;
+    padding-left: 0 !important;
+    flex: 1;
+}
+.aps-kienTraNhanh-ttHocTap .item,
+.aps-kienTraNhanh-ttCaNhan .item{
+    display: flex !important;
+}
+.aps-kienTraNhanh-ttHocTap .item .item-lable{
+    width: 150px !important;
+}
+.aps-kienTraNhanh-ttCaNhan .item .item-lable{
+    width: 110px !important;
+}
+.aps-kienTraNhanh-ttHocTap .item .item-content,
+.aps-kienTraNhanh-ttCaNhan .item .item-content{
+    flex: 1;
+}
+.btnChuaThu{
+    white-space: nowrap !important; 
+}
