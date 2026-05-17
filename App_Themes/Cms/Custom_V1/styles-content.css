@@ -11750,6 +11750,8 @@ table#clone {
 /* Kế hoạch nhập học - Thu phí */
 .kehoach-nhaphoc-thuPhi-tab .tab-list{
     margin: 0 auto !important;
+        width: 100%;
+    max-width: fit-content;
 }
 .aps-nhaphoc-thuPhi .khnh-thuPhi-lable .images{
     height: 44px;
@@ -11759,12 +11761,16 @@ table#clone {
     /* border-bottom: 1px solid #e1e1e1; */
 }
 .aps-nhaphoc-thuPhi .khnh-thuPhi-lable .box-title{
-    font-size:22px !important;
-   font-weight: 600 !important;
+   font-size: 22px !important;
+    font-weight: 600 !important;
     text-transform: uppercase;
     line-height: 52px;
-    color:#222 !important;
+    color: #222 !important;
     padding: 15px 0 !important;
+    float: none !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    justify-content: center !important;
 }
 .kehoach-nhaphoc-thuPhi-tab ul{
     list-style: none;
@@ -11869,6 +11875,9 @@ table#clone {
     color: #888;
     line-height: 38px;
 }
+.table tr .btn{
+        white-space: nowrap;
+}
 .table tr:hover td .btn-outline-success{
     background-color: #198754 !important;
 }
@@ -11881,6 +11890,9 @@ table#clone {
 .box-shadow-1 {    
        -webkit-box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .03);
     box-shadow: 0 .75rem 1.5rem rgba(0, 0, 0, .03);
+}
+.aps-nhaphoc-thuPhi-content .box.box-solid{
+    height: 100%;
 }
 .aps-nhaphoc-thuPhi-content .box-header .box-title{
     font-weight: 600 !important;
@@ -11917,23 +11929,23 @@ table#clone {
     border-right: 1px solid #f1f1f1;
 }
 .aps-kienTraNhanh-trangThai{
-    border: 1px solid #e1e1e1;
+    /* border: 1px solid #e1e1e1;
     background: #f8f8f8 !important;
     padding: 10px;
     border-radius: 8px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* Chia 2 cột bằng nhau */
-    gap: 20px; /* Khoảng cách giữa 2 cột */
-
+    grid-template-columns: 1fr 1fr 1fr; 
+    gap: 20px; Khoảng cách giữa 2 cột */
 }
 .aps-kienTraNhanh-trangThai .item{
-    padding-bottom: 0;
-    display: flex !important;
-    gap: 10px;
+    padding-bottom: 10px;
+        justify-content: space-between;
+    /* display: flex !important;
+    gap: 10px; */
 }
 .aps-kienTraNhanh-trangThai .item .item-lable{
    line-height: 38px !important;
-    width: auto !important;
+    width: 168px !important;
     max-width: fit-content !important;
     padding-right: 0 !important;
 }
@@ -11951,7 +11963,7 @@ table#clone {
     width: 150px !important;
 }
 .aps-kienTraNhanh-ttCaNhan .item .item-lable{
-    width: 110px !important;
+    width: 150px !important;
 }
 .aps-kienTraNhanh-ttHocTap .item .item-content,
 .aps-kienTraNhanh-ttCaNhan .item .item-content{
@@ -11960,3 +11972,108 @@ table#clone {
 .btnChuaThu{
     white-space: nowrap !important; 
 }
+.aps-tongThanhToan-tien{
+    background-color: rgba(25, 135, 84, .15);
+    color: #198754 !important;
+    border: 1px solid #198754;
+    border-radius: 8px !important;
+    margin-top: 10px !important;
+}
+.aps-tongThanhToan-detail .item{
+    margin-bottom: 5px !important;
+}
+.aps-tongThanhToan-detail .item .item-lable{
+    line-height: 34px !important;
+}
+.aps-tongThanhToan-tien .item:last-child{
+    margin-bottom: 0 !important;
+}
+.aps-tongThanhToan-detail .item-content .form-control{
+    height: 34px !important;
+    line-height: 34px !important;
+    border: 1px solid #d2d6de;
+}
+.aps-tongThanhToan-detail .item .item-lable{
+    padding-left: 10px !important;
+}
+.aps-tongThanhToan-tien .item .item-lable{
+    color: #198754 !important;
+    padding-left: 0 !important;
+    line-height: 34px !important;
+}
+.aps-tongThanhToan-tien .item .item-content{
+    padding-right: 0 !important;
+}
+.aps-search-thuTaoPhieu .box-search .item-search:last-child{
+    padding-right: 0 !important;
+}
+/* --- */
+.aps-notes-content{
+    border-radius: 12px;    align-items: center;
+/* background-color: rgba(255, 193, 7, .1); */
+background: #fff;
+    color: #f4a14d !important;
+    border: 1px solid #ffc107;
+}
+.aps-notes-lable {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 30px;
+}
+.aps-notes-lable .images{
+    height: 30px;
+    padding-right: 10px;
+}
+.aps-note-list{
+    /* display: flex; */
+    /* width:100% ; */
+}
+.aps-note-list li{
+   width: 25%;
+    float: left;
+    position: relative;
+    list-style: none;
+     border-left: 1px solid #e9e9e9;
+     padding-left:25px;
+     padding-right: 15px;
+}
+.aps-note-list li::before{
+    width: 5px;
+    background: #0d6efd;
+    height: 5px;
+    content: "";
+    top: 9px;
+    right: 0;
+    left: 10px;
+    position: absolute;
+    border-radius: 30px;
+}
+.aps-note-list li:hover::before{
+    background: #f4a14d !important;
+}
+.aps-kienTraNhanh-ttCaNhan{
+    width: 48% !important;
+}
+   .aps-kienTraNhanh-trangThai.col-lg-4 {
+        width: 35.333333%;
+    }
+  .aps-kienTraNhanh-trangThai.col-lg-4  .item-content{
+        padding-right: 0 !important;
+    }
+
+    .aps-search-candidate .box-search .btn-outline-warning {
+    min-width: 110px;
+}
+.aps-thuPhi-item.col-lg-9{
+    width: 70% !important;
+}
+.aps-thuPhi-item.col-lg-3 {
+        width: 30% !important;
+    }
+     .aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search {
+    display: block !important;
+  }
+  .aps-search-thuTaoPhieu .form-top.box-search .item-search .btn {
+    margin-bottom: 10px;
+    margin-right: 7px;
+  }

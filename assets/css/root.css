@@ -53,3 +53,11 @@
     rgba(0, 128, 0, 1) 100%
   );
 }
+.bg-red {
+  background: #dc3545;
+  background: linear-gradient(
+    90deg,
+    rgba(220, 53, 69, 1) 0%,
+    rgb(179, 15, 10) 100%
+  ) !important;
+}
