@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kế hoạch nhập học</title>
+  <title>Kế hoạch nhập học - Thu phí</title>
   <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -356,8 +356,9 @@
             </a>
             <div class="sidebar-menu-sub collapse show" id="collapse5" data-bs-parent="#sidebar-menu">
               <div class="sidebar-menu-sub-content">
-                <a class="active" href="HTML-SV-Ke-Hoach-Nhap-Hoc-01.html" data-position="1">Kế hoạch nhập học</a>
-                <a href="HTML-SV-Ke-Hoach-Nhap-Hoc-02-ThuPhi.html" data-position="0">Quản lý dm nghề nghiệp</a>
+                <a href="HTML-SV-Ke-Hoach-Nhap-Hoc-01.html" data-position="1">Kế hoạch nhập học</a>
+                <a class="active" href="HTML-SV-Ke-Hoach-Nhap-Hoc-02-ThuPhi.html" data-position="0">Kế hoạch nhập học -
+                  Thu phí</a>
                 <a href="QuanTriNhom.html" data-position="1">Quản lý vị trí công việc</a>
                 <a href="QuanTriNhom.html" data-position="1">Quan hệ lao động</a>
                 <a href="QuanTriNhom.html" data-position="1">Phân công lao động</a>
@@ -376,7 +377,7 @@
             <p class="link">
               <a href="#">Kế hoạch nhập học</a>
               <i class="fal fa-angle-right"></i>
-              <a href="#">Kế hoạch nhập học</a>
+              <a href="#">Kế hoạch nhập học - Thu phí</a>
             </p>
           </div>
           <div class="nav-content-right">
@@ -385,214 +386,644 @@
           </div>
         </div>
       </div>
-      <div class="box-content pt-0 pl20 pr20">
-        <!-- Kế hoạch tuyển sinh -->
-        <div class="box box-solid box-shadow pd0 aps-kehoach-tuyensinh">
-          <div class="form-top box-search">
-            <div class="row">
-              <div class="col-lg-3 col-md-3 item-search pl0">
-                <div class="form-item d-flex form-add-info flex-grow-1">
-                  <div class="input-group no-icon">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Chọn Kế hoạch tuyển sinh</option>
-                      <option value="1">Kế hoạch tuyển sinh 1</option>
-                      <option value="2">Kế hoạch tuyển sinh 2</option>
-                      <option value="3">Kế hoạch tuyển sinh 3</option>
-                    </select>
-                  </div>
+      <div class="box-content aps-nhaphoc-thuPhi pt-0 pl20 pr20 pb-0">
+        <div class="box box-solid box-shadow box-header khnh-thuPhi-lable pd-20" style="display: block !important;">
+          <h3 class="box-title w100 mg-auto">
+            <img src="../assets/images/dashboad-item-6.png" class="images" /> Thu phí nhập học tại quầy
+          </h3>
+          <div class="clear"></div>
+          <div class="tab kehoach-nhaphoc-thuPhi-tab pl0 pt-0 w100 pb-20">
+            <ul class="tab-list pt-0">
+              <li class="tab-item-li active " data-tab="tab1">
+                <div class="item-detail">
+                  <span class="item-icon"><i class="fa-light fa-user-magnifying-glass"></i></span>
+                  1. Tìm thí sinh
+                </div>
+              </li>
+              <li class="tab-item-li" data-tab="tab2">
+                <div class="arrow-right"><img src="../assets/images/right-arrow.svg" /></div>
+                <div class="item-detail">
+                  <span class="item-icon"><i class="fa-light fa-display-chart-up-circle-dollar"></i></span>
+                  2. Kiểm tra nhanh
+                </div>
+              </li>
+              <li class="tab-item-li" data-tab="tab3">
+                <div class="arrow-right"><img src="../assets/images/right-arrow.svg" /></div>
+                <div class="item-detail"><span class="item-icon"><i
+                      class="fa-light fa-circle-dollar-to-slot"></i></span>
+                  3. Thu
+                  tiền & tạo phiếu</div>
+              </li>
+              <li class="tab-item-li" data-tab="tab4">
+                <div class="arrow-right"><img src="../assets/images/right-arrow.svg" /></div>
+                <div class="item-detail"><span class="item-icon"><i class="fa-light fa-file-invoice-dollar"></i></span>
+                  4. Xem
+                  lịch sử phiếu/Hủy phiếu
+                </div>
+              </li>
+              <li class="tab-item-li" data-tab="tab4">
+                <div class="arrow-right"><img src="../assets/images/right-arrow.svg" /></div>
+                <div class="item-detail"><span class="item-icon"><i
+                      class="fa-sharp fa-regular fa-clock-rotate-left"></i></span>
+                  5. Lịch sử phiếu thu/Hủy Phiếu
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="row aps-nhaphoc-thuPhi-content pd0 mt-20">
+          <!-- 1. Tìm thí sinh -->
+          <div class="col-lg-6 col-12 pl0 mb-20 aps-thuPhi-item">
+            <div class="box box-solid box-shadow aps-timThiSinh pd0 ">
+              <div class="box-header with-border text-uppercase">
+                <h3 class="box-title">
+                  <i class="fa-light fa-user-magnifying-glass"></i>1. Tìm thí sinh
+                </h3>
+                <div class="pull-right d-none">
+                  <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
               </div>
-              <div class="col-lg-3 col-md-3 item-search pl0">
-                <div class="form-item d-flex form-add-info flex-grow-1">
-                  <div class="input-group no-icon">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Chọn Đợt tuyển sinh</option>
-                      <option value="1">Đợt tuyển sinh 1</option>
-                      <option value="2">Đợt tuyển sinh 2</option>
-                      <option value="3">Đợt tuyển sinh 3</option>
-                    </select>
+              <div class="aps-search-candidate">
+                <div class="form-top box-search" style="border-radius: 0 !important;">
+                  <div class="row">
+                    <div class="col-lg-6 col-md-6 item-search pl0">
+                      <div class="item-search-label line-16">Kế hoạch kế hoạch nhập học</div>
+                      <div class="item-search-select form-item d-flex form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                          <i class="fal fa-angle-down"></i>
+                          <select class="form-select" aria-label="Default select example">
+                            <option selected="">Chọn Kế hoạch kế hoạch nhập học</option>
+                            <option value="1">Kế hoạch tuyển sinh 1</option>
+                            <option value="2">Kế hoạch tuyển sinh 2</option>
+                            <option value="3">Kế hoạch tuyển sinh 3</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 item-search pl0">
+                      <input id="txtSearch_TuKhoa" class="form-control"
+                        placeholder="Mã nhập học/ mã người học/ họ tên/ CCCD / SĐT">
+                    </div>
+
+                  </div>
+                  <div class="row mt-10">
+                    <div class="col-lg-4 col-md-4 item-search pl0 d-flex">
+                      <div class="item-search-label line-16">Trạng thái tài chính</div>
+                      <div class="item-search-select form-item d-flex form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                          <i class="fal fa-angle-down"></i>
+                          <select class="form-select" aria-label="Default select example">
+                            <option selected="">Tất cả</option>
+                            <option value="1">Kế hoạch tuyển sinh 1</option>
+                            <option value="2">Kế hoạch tuyển sinh 2</option>
+                            <option value="3">Kế hoạch tuyển sinh 3</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 item-search pl0 d-flex">
+                      <span class="item-search-label line-16">Trạng thái nhập học</span>
+                      <div class="form-item d-flex form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                          <i class="fal fa-angle-down"></i>
+                          <select class="form-select" aria-label="Default select example">
+                            <option selected="">Tất cả</option>
+                            <option value="1">Kế hoạch tuyển sinh 1</option>
+                            <option value="2">Kế hoạch tuyển sinh 2</option>
+                            <option value="3">Kế hoạch tuyển sinh 3</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 item-search pl0 d-flex gap10">
+                      <a id="btnSearch" class="btn btn-default btn-search">
+                        <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
+                      <a class="btn btn-outline-warning" href="">
+                        <i class="fa-light fa-arrows-rotate"></i>Làm mới</a>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="col-lg-3 col-md-3 item-search pl0">
-                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Thông tin người học">
-              </div>
-              <div class="col-lg-3 col-md-3 item-search pl0 d-flex">
-                <div class="left line-38 color-888">Hiệu lực:</div>
-                <div class="right form-check-list line-38 gap10 mt-2 ml-15 mr-20 d-flex">
-                  <div class="form-check">
-                    <input class="form-check-input mt-10" type="radio" name="flexRadioDefault" id="flexRadioDefault1"
-                      checked>
-                    <label class="form-check-label" for="flexRadioDefault1">
-                      1
-                    </label>
+                <div class="aps-search-candidate-detail pd20">
+                  <div class="aps-table-select scroll-table-x">
+                    <table id="tblsearch-candidate"
+                      class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                      <thead>
+                        <tr>
+                          <th class="td-fixed td-center w-50px">Stt</th>
+                          <th class="td-left">Mã nhập học</th>
+                          <th class="td-left">Họ và tên</th>
+                          <th class="td-center">CCCD</th>
+                          <th class="td-center" style="min-width: 110px">Điện thoại</th>
+                          <th class="td-center">TC tài chính</th>
+                          <th class="td-center" style="min-width: 60px">Thao tác</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="td-center td-fix">1</td>
+                          <td class="td-left">MA-KHTS-0001</td>
+                          <td class="td-left">Nguyễn Thị Bích</td>
+                          <td class="td-center">098776543323</td>
+                          <td class="td-center">098776543323</td>
+                          <td class="td-center">
+                            <a class="btn btn-soft-danger btnConNo" title="Kế hoạch đầu ra" data-bs-toggle="modal"
+                              data-bs-target="#keHoach_dauRa">Còn nợ</a>
+                          </td>
+                          <td class="td-center">
+                            <a class="btn btn-soft-primary btnChoose" title="Chọn" data-bs-toggle="modal"
+                              data-bs-target="#boTri_nhanSu">Chọn</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="td-center td-fix">1</td>
+                          <td class="td-left">MA-KHTS-0001</td>
+                          <td class="td-left">Nguyễn Thị Bích</td>
+                          <td class="td-center">098776543323</td>
+                          <td class="td-center">098776543323</td>
+                          <td class="td-center">
+                            <a class="btn btn-soft-success btnDaNop" title="Kế hoạch đầu ra" data-bs-toggle="modal"
+                              data-bs-target="#keHoach_dauRa">Đã nộp</a>
+                          </td>
+                          <td class="td-center">
+                            <a class="btn btn-soft-primary btnChoose" title="Chọn" data-bs-toggle="modal"
+                              data-bs-target="#boTri_nhanSu">Chọn</a>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="td-center td-fix">1</td>
+                          <td class="td-left">MA-KHTS-0001</td>
+                          <td class="td-left">Nguyễn Thị Bích</td>
+                          <td class="td-center">098776543323</td>
+                          <td class="td-center">098776543323</td>
+                          <td class="td-center">
+                            <a class="btn btn-soft-warning btnChuaHoanThanh" title="Kế hoạch đầu ra"
+                              data-bs-toggle="modal" data-bs-target="#keHoach_dauRa">Chưa hoàn thành</a>
+                          </td>
+                          <td class="td-center">
+                            <a class="btn btn-soft-primary btnChoose" title="Chọn" data-bs-toggle="modal"
+                              data-bs-target="#boTri_nhanSu">Chọn</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                  <div class="form-check">
-                    <input class="form-check-input mt-10" type="radio" name="flexRadioDefault" id="flexRadioDefault2">
-                    <label class="form-check-label" for="flexRadioDefault2">
-                      0
-                    </label>
-                  </div>
-                </div>
-                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i>
-                  <span class="lang" key="">Danh sách</span></a>
-              </div>
-              <div class="col-lg-1 col-md-1 item-search pl0 d-none">
-                <div class="d-flex align-items-center">
-                  <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i>
-                    <span class="lang" key="">Danh sách</span></a>
                 </div>
               </div>
             </div>
           </div>
-          <div class="box box-solid mt-15 aps-list-dangky-dongphuc">
-            <div class="box-header d-flex pt20 pl20 pr20 pb0">
-              <h3 class="box-title line-38" style="padding: 0 !important">
-                <i class="fa-light fa-list-timeline line-38"></i> Danh sách kế hoạch tuyển sinh
-                <span class="pull-right badge bg-light-blue ml-15">
-                  <span id="lblVeThang_Tong"></span>
-                </span>
-              </h3>
-              <div class="box-list-btn pull-right d-flex">
-                <a id="btnXoaVeThang" class="btn btn-danger d-none"><i class="fa fa-trash"></i>Xóa</a>
-                <a class="btn btn-success" href="" data-bs-toggle="modal" data-bs-target="#them_moi">
-                  <i class="fal fa-plus"></i>Thêm mới kế hoạch</a>
+          <!-- 2. Kiểm tra nhanh -->
+          <div class="col-lg-6 col-12 pr0 mb-20 aps-thuPhi-item">
+            <div class="box box-solid box-shadow aps-kienTraNhanh pd0">
+              <div class="box-header with-border">
+                <h3 class="box-title color-green text-uppercase">
+                  <i class="fa-light fa-display-chart-up-circle-dollar"></i> 2. Kiểm tra nhanh
+                </h3>
+                <div class="pull-right d-none">
+                  <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+              </div>
+              <div class="row aps-kienTraNhanh-content pd20">
+                <div class="col-12 col-lg-5 aps-kienTraNhanh-ttCaNhan">
+                  <div class="col-12 col-lg-6 aps-kienTraNhanh-avata mb-15 img-4x6 mg-auto">
+                    <img src="../assets/images/anh-the-4x6.jpg" class="images">
+                  </div>
+                  <div class="aps-kienTraNhanh-trangThai w100">
+                    <div class="row item">
+                      <div class="col-lg-6 col-md-6 item-lable">Trạng thái hổ sơ</div>
+                      <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-success btnConNo">Đã nôp</a>
+                      </div>
+                    </div>
+                    <div class="row item">
+                      <div class="col-lg-6 col-md-6 item-lable ">Trạng thái tài chính</div>
+                      <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-danger btnConNo">Còn nợ</a>
+                      </div>
+                    </div>
+                    <div class="row item">
+                      <div class="item-lable">Trạng thái nhập học</div>
+                      <div class="item-content"><a class="btn btn-soft-primary btnConNo">Đang xử lý</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-7 pr0 aps-kienTraNhanh-ttCaNhan">
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Mã nhập học:</div>
+                    <div class="col-lg-6 col-md-6 item-content color-blue">NH2026-00001</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Mã người học:</div>
+                    <div class="col-lg-6 col-md-6 item-content">SV2026-00001</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Họ và tên:</div>
+                    <div class="col-lg-6 col-md-6 item-content color-blue">Nguyễn Thị Bích</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Ngày sinh:</div>
+                    <div class="col-lg-6 col-md-6 item-content">12/05/2003</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">CCCD/CMND:</div>
+                    <div class="col-lg-6 col-md-6 item-content">123545659</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Điện thoại:</div>
+                    <div class="col-lg-6 col-md-6 item-content">0974745553</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable" style="min-width: 150px;">Kế hoạch nhập học:</div>
+                    <div class="col-lg-6 col-md-6 item-content">ĐHC 2026 - Đợt 1</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Hệ đào tạo:</div>
+                    <div class="col-lg-6 col-md-6 item-content">Đại học chính quy</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Khóa đào tạo:</div>
+                    <div class="col-lg-6 col-md-6 item-content">K2026</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Ngành đào tạo:</div>
+                    <div class="col-lg-6 col-md-6 item-content">Công nghệ thông tin</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Lớp dự kiến:</div>
+                    <div class="col-lg-6 col-md-6 item-content">CNTT K66A</div>
+                  </div>
+                </div>
+                <p class="text-center mt-20 fz14">
+                  <a href="#" class="color-blue">Xem thêm thông tin thí sinh <i
+                      class="fa-duotone fa-light fa-angle-down color-blue"></i></a>
+                </p>
               </div>
             </div>
-            <div class="box-body pl20 pr20 pb10 mt-10">
-              <div class="aps-table-select scroll-table-x pb-0 mb-20">
-                <table id="tblkehoachTuyenSinh"
-                  class="table table-hover table-bordered table-noborder tblkehoachTuyenSinh">
-                  <thead>
-                    <tr>
-                      <th class="td-fixed td-center w-50px">Stt</th>
-                      <th class="td-left">Mã</th>
-                      <th class="td-left">Tên</th>
-                      <th class="td-center" style="min-width: 110px">Ngày bắt đầu</th>
-                      <th class="td-center" style="min-width: 110px">Ngày kết thúc</th>
-
-                      <th class="td-center" style="min-width: 130px">Kế hoạch đầu ra</th>
-                      <th class="td-center" style="min-width: 130px">Bố trí nhân sự</th>
-                      <th class="td-center" style="min-width: 140px">Mức thu nhập học</th>
-                      <th class="td-center" style="min-width: 135px">Kết quả nhập học</th>
-
-                      <th class="td-center" style="min-width: 80px">Ngày tạo</th>
-                      <th class="td-left">Người tạo</th>
-
-                      <th class="td-center" style="min-width: 80px">Chi tiết</th>
-                      <th class="td-center td-fixed d-none">
-                        <input type="checkbox" id="chkSelectAll_VeThang" />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td class="td-center td-fix">1</td>
-                      <td class="td-left">MA-KHTS
-                      </td>
-                      <td class="td-left">Thông báo Kế hoạch nhập học khóa QH-2025-X hệ đại học Vừa làm vừa học</td>
-                      <td class="td-center">20/09/2026</td>
-                      <td class="td-center">20/11/2026</td>
-
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Kế hoạch đầu ra" data-bs-toggle="modal"
-                          data-bs-target="#keHoach_dauRa">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Bố trí nhân sự" data-bs-toggle="modal"
-                          data-bs-target="#boTri_nhanSu">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Mức thu nhập học" data-bs-toggle="modal"
-                          data-bs-target="#mucThu_nhapHoc">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Kết quả nhập học" data-bs-toggle="modal"
-                          data-bs-target="#ketQua_nhapHoc">Xem</a>
-                      </td>
-
-                      <td class="td-center">20/09/2026</td>
-                      <td class="td-left">Nguyễn Thị Bích</td>
-
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Chi tiết" data-bs-toggle="modal"
-                          data-bs-target="#chiTiet">Xem</a>
-                      </td>
-
-                    </tr>
-                    <tr>
-                      <td class="td-center td-fix">2</td>
-                      <td class="td-left">MA-KHTS
-                      </td>
-                      <td class="td-left">Thông báo Kế hoạch nhập học khóa QH-2025-X hệ đại học Vừa làm vừa học</td>
-                      <td class="td-center">20/09/2026</td>
-                      <td class="td-center">20/11/2026</td>
-
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Kế hoạch đầu ra" data-bs-toggle="modal"
-                          data-bs-target="#keHoach_dauRa">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Bố trí nhân sự" data-bs-toggle="modal"
-                          data-bs-target="#boTri_nhanSu">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Mức thu nhập học" data-bs-toggle="modal"
-                          data-bs-target="#mucThu_nhapHoc">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Kết quả nhập học" data-bs-toggle="modal"
-                          data-bs-target="#ketQua_nhapHoc">Xem</a>
-                      </td>
-
-                      <td class="td-center">20/09/2026</td>
-                      <td class="td-left">Nguyễn Thị Bích</td>
-
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Chi tiết" data-bs-toggle="modal"
-                          data-bs-target="#chiTiet">Xem</a>
-                      </td>
-
-                    </tr>
-                    <tr>
-                      <td class="td-center td-fix">3</td>
-                      <td class="td-left">MA-KHTS
-                      </td>
-                      <td class="td-left">Thông báo Kế hoạch nhập học khóa QH-2025-X hệ đại học Vừa làm vừa học</td>
-                      <td class="td-center">20/09/2026</td>
-                      <td class="td-center">20/11/2026</td>
-
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Kế hoạch đầu ra" data-bs-toggle="modal"
-                          data-bs-target="#keHoach_dauRa">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Bố trí nhân sự" data-bs-toggle="modal"
-                          data-bs-target="#boTri_nhanSu">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Mức thu nhập học" data-bs-toggle="modal"
-                          data-bs-target="#mucThu_nhapHoc">Xem</a>
-                      </td>
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Kết quả nhập học" data-bs-toggle="modal"
-                          data-bs-target="#ketQua_nhapHoc">Xem</a>
-                      </td>
-
-                      <td class="td-center">20/09/2026</td>
-                      <td class="td-left">Nguyễn Thị Bích</td>
-
-                      <td class="td-center">
-                        <a class="btn btn-default btnview" title="Chi tiết" data-bs-toggle="modal"
-                          data-bs-target="#chiTiet">Xem</a>
-                      </td>
-
-                    </tr>
-                  </tbody>
-                </table>
+          </div>
+          <!-- 3. Tìm thí sinh -->
+          <div class="col-lg-9 col-12 pl0 mb-20 aps-thuPhi-item">
+            <div class="box box-solid box-shadow aps-kiemTraNhanh pd0">
+              <div class="box-header with-border">
+                <h3 class="box-title color-red text-uppercase">
+                  <i class="fa-light fa-display-chart-up-circle-dollar"></i> 3. Thu tiền & tạo phiếu
+                </h3>
+                <div class="pull-right">
+                  <div class="note color-888" style="font-size: 13px;"><i
+                      class="fa-solid fa-circle-info color-blue bold mr-5"></i> Chọn
+                    khoản nào, tổng hợp tự cập nhật theo các dòng đang chọn</div>
+                </div>
               </div>
+              <div class="aps-kiemTraNhanh-detail pd20">
+                <p class="color-blue mb-5"> Nhập trực tiếp trên từng khoản thu</p>
+                <div class="aps-table-select scroll-table-x">
+                  <table id="tblkekiemTraNhanh" class="table table-hover table-bordered table-noborder tblkiemTraNhanh">
+                    <thead>
+                      <tr>
+                        <th class="td-fixed td-center w-50px">Chọn</th>
+                        <th class="td-left">Khoản thu</th>
+                        <th class="td-left">Nhóm khoản</th>
+                        <th class="td-center">Bắt buộc</th>
+                        <th class="td-center">Nguồn tiền</th>
+                        <th class="td-right">Phải thu</th>
+                        <th class="td-right">Đã thu</th>
+                        <th class="td-center" style="width:135px;">Miễn giảm</th>
+                        <th class="td-right" style="width:120px;">Còn lại</th>
+                        <th class="td-center" style="width:142px;">Thu lần này</th>
+                        <th class="td-center" style="width:68px;">Cho nợ</th>
+                        <th class="td-center">Trạng thái</th>
+                        <th class="td-left">Ghi chú</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="td-center td-fix"><input type="checkbox" id="chkSelectAll_ns"></td>
+                        <td class="td-left">Học phí tạm thu</td>
+                        <td class="td-left">Học phí</td>
+                        <td class="td-center"><span class="color-red">Có</span></td>
+                        <td class="td-center">Ngân sách</td>
+                        <td class="td-right">5.000.000</td>
+                        <td class="td-right">0</td>
+                        <td class="td-right">
+                          <input class="form-control w100 text-center" placeholder="0">
+                        </td>
+                        <td class="td-right">5.000.000</td>
+                        <td class="td-center"><input class="form-control w100 text-center" placeholder="0"></td>
+                        <td class="td-center td-fix"><input type="checkbox" id="chkSelectAll_ns"></td>
+                        <td class="td-center">
+                          <a class="btn btn-soft-danger btnChuaThu" title="Chọn">Chưa thu</a>
+                        </td>
+                        <td class="td-right">
+                          <input class="form-control w100" placeholder="">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="td-center td-fix"><input type="checkbox" id="chkSelectAll_ns"></td>
+                        <td class="td-left">Học phí tạm thu</td>
+                        <td class="td-left">Học phí</td>
+                        <td class="td-center"><span class="color-red">Có</span></td>
+                        <td class="td-center">Ngân sách</td>
+                        <td class="td-right">5.000.000</td>
+                        <td class="td-right">0</td>
+                        <td class="td-right">
+                          <input class="form-control w100 text-center" placeholder="0">
+                        </td>
+                        <td class="td-right">5.000.000</td>
+                        <td class="td-center"><input class="form-control w100 text-center" placeholder="0"></td>
+                        <td class="td-center td-fix"><input type="checkbox" id="chkSelectAll_ns"></td>
+                        <td class="td-center">
+                          <a class="btn btn-soft-danger btnChuaThu" title="Chọn">Chưa thu</a>
+                        </td>
+                        <td class="td-right">
+                          <input class="form-control w100" placeholder="">
+                        </td>
+                      <tr>
+                        <td class="td-center td-fix"><input type="checkbox" id="chkSelectAll_ns"></td>
+                        <td class="td-left">Học phí tạm thu</td>
+                        <td class="td-left">Học phí</td>
+                        <td class="td-center"><span class="color-222">Không</span></td>
+                        <td class="td-center">Ngân sách</td>
+                        <td class="td-right">5.000.000</td>
+                        <td class="td-right">0</td>
+                        <td class="td-right">
+                          <input class="form-control w100 text-center" placeholder="0">
+                        </td>
+                        <td class="td-right">5.000.000</td>
+                        <td class="td-center"><input class="form-control w100 text-center" placeholder="0"></td>
+                        <td class="td-center td-fix"><input type="checkbox" id="chkSelectAll_ns"></td>
+                        <td class="td-center">
+                          <a class="btn btn-soft-success btnChuaThu" title="Chọn">Đã thu</a>
+                        </td>
+                        <td class="td-right">
+                          <input class="form-control w100" placeholder="">
+                        </td>
+                      </tr>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Tổng hợp thanh toán -->
+          <div class="col-lg-3 col-12 pr0 mb-20 aps-thuPhi-item">
+            <div class="box box-solid box-shadow aps-tongThanhToan pd0">
+              <div class="box-header with-border bg-red">
+                <h3 class="box-title text-uppercase" style="color: #fff !important;">
+                  <i class="fa-light fa-circle-dollar-to-slot"></i> Tổng hợp thanh toán
+                </h3>
+                <div class="pull-right">
+                </div>
+              </div>
+              <div class="aps-tongThanhToan-detail pd20 pl10 pr10 pb-20">
+                <div class="aps-tongthu">
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable">Tổng phải thu</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right" placeholder="6.600.000">
+                    </div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable">Tổng đã thu</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right" placeholder="0">
+                    </div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable">Tổng miễn giảm</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right" placeholder="6.600.000">
+                    </div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable">Tổng còn lại</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right color-red" placeholder="6.600.000">
+                    </div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable line-38">Tổng thu lần này</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right color-blue" placeholder="6.350.000">
+                    </div>
+                  </div>
+                </div>
+                <div class="aps-tongThanhToan-tien pd10 mb-10">
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable">Số tiền khách nộp</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right" placeholder="6.400.000">
+                    </div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable line-38">Tiền thừa đã trả</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right" placeholder="50.000" disabled>
+                    </div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-5 col-md-5 item-lable line-38">Còn nợi sau thu</div>
+                    <div class="col-lg-7 col-md-7 item-content">
+                      <input class="form-control w100 text-right" placeholder="0" disabled>
+                    </div>
+                  </div>
+                </div>
+                <div class="aps-note pl10 pr10">
+                  <div class="note color-888 d-flex" style="font-size: 13px; line-height: 18px;">
+                    <i class="fa-solid fa-circle-info bold mr-5 color-blue" style="margin-top: 3px;"></i>
+                    Chỉ nhập số tiền khách nộp. Các giá trị còn lại hệ thống tự động
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Xác nhận thu và tạo phiếu -->
+          <div class="col-lg-4 col-12 pl0 mb-20 aps-thuPhi-item">
+            <div class="box box-solid box-shadow aps-thuTaoPhieu pd0 ">
+              <div class="box-header with-border text-uppercase">
+                <h3 class="box-title">
+                  <i class="fas fa-file-invoice-dollar"></i> 4. Xác nhận thu và tạo phiếu
+                </h3>
+                <div class="pull-right d-none">
+                  <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+              </div>
+              <div class="aps-search-thuTaoPhieu pb-10">
+                <div class="form-top box-search"
+                  style="border-radius: 0 !important; border: 0 !important; background: transparent !important;">
+                  <div class="row list-form">
+                    <div class="col-lg-6 col-md-6 item-search pl0">
+                      <div class="form-item d-flex form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                          <i class="fal fa-angle-down"></i>
+                          <select class="form-select" aria-label="Default select example">
+                            <option selected="">Hình thức thanh toán</option>
+                            <option value="1">Kế hoạch tuyển sinh 1</option>
+                            <option value="2">Kế hoạch tuyển sinh 2</option>
+                            <option value="3">Kế hoạch tuyển sinh 3</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 item-search pl0">
+                      <input id="txtSearch_TuKhoa" class="form-control" placeholder="Ngày thu">
+                    </div>
+                    <div class="col-lg-3 col-md-3 item-search pl0 pr0" style="padding-right: 0 !important;">
+                      <input id="txtSearch_TuKhoa" class="form-control" placeholder="Số chứng từ/Số phiếu">
+                    </div>
+                    <div class="col-lg-4 col-md-4 item-search pl0">
+                      <div class="form-item d-flex form-add-info flex-grow-1">
+                        <div class="input-group no-icon">
+                          <i class="fal fa-angle-down"></i>
+                          <select class="form-select" aria-label="Default select example">
+                            <option selected="">Người thu</option>
+                            <option value="1">Kế hoạch tuyển sinh 1</option>
+                            <option value="2">Kế hoạch tuyển sinh 2</option>
+                            <option value="3">Kế hoạch tuyển sinh 3</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-lg-8 col-md-8 item-search pl0">
+                      <input id="txtSearch_TuKhoa" class="form-control" placeholder="Ghi chú">
+                    </div>
+                  </div>
+                  <div class="row list-btn">
+                    <div class="col-lg-12 col-md-12 item-search pl0 d-flex gap10">
+                      <a id="btnSearch" class="btn btn-outline-primary btn-search">
+                        <i class="fa-solid fa-floppy-disk"></i>Lưu tạm</a>
+                      <a class="btn btn-success" href="">
+                        <i class="fa-light fa-memo-circle-check"></i>Xác nhận thu phí</a>
+                      <a class="btn btn-danger" href="">
+                        <i class="fa-solid fa-print"></i>In phiếu thu</a>
+                      <a class="btn btn-primary" href="">
+                        <i class="fa-solid fa-print"></i>In biên lai</a>
+                    </div>
+                    <div class="col-lg-12 col-md-12 note color-888 pl0 mt-5" style="margin-top: 3px;">
+                      <i class="fa-solid fa-circle-info bold mr-5 color-blue"></i>
+                      Mỗi lần xác nhận thu sẽ phát sinh 1 phiếu thu riêng.
+                    </div>
+                  </div>
+                  <div class="clear"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 5. Lịch sử phiếu thu/Hủy Phiếu -->
+          <div class="col-lg-8 col-12 pr0 mb-20 aps-thuPhi-item">
+            <div class="box box-solid box-shadow aps-lichSu-thuHuy pd0">
+              <div class="box-header with-border">
+                <h3 class="box-title color-green text-uppercase">
+                  <i class="fa-sharp fa-regular fa-clock-rotate-left"></i> 5. Lịch sử phiếu thu/Hủy Phiếu
+                </h3>
+                <div class="pull-right">
+                  <div class="note color-888" style="font-size: 13px;"><i class="fa-solid fa-circle-info"></i>
+                    Một thí sinh có thể thu nhiều lần. Mỗi lần thu tương úng 1 phiếu thu</div>
+                </div>
+              </div>
+              <div class="row aps-lichSu-thuHuy-content pd20">
+                <div class="aps-table-select scroll-table-x pd0">
+                  <table id="tbllichSuThuHuy" class="table table-hover table-bordered table-noborder tbllichSuThuHuy">
+                    <thead>
+                      <tr>
+                        <th class="td-left">Số phiếu</th>
+                        <th class="td-left">Ngày thu</th>
+                        <th class="td-right">Số tiền</th>
+                        <th class="td-left">Hình thức</th>
+                        <th class="td-center">Trạng thái</th>
+                        <th class="td-center">Người thu</th>
+                        <th class="td-center">Xem</th>
+                        <th class="td-center">In lai</th>
+                        <th class="td-center">Hủy phiếu</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="td-center td-fix">PT201213323</td>
+                        <td class="td-left">13/05/2026 10:29</td>
+                        <td class="td-right">6.350.000</td>
+                        <td class="td-left">Tiền mặt</td>
+                        <td class="td-center"><span class="btn btn-soft-success">Hoàn thành</span></td>
+                        <td class="td-left">Nguyễn Thị Bích</td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-primary btnConNo" title="Kế hoạch đầu ra" data-bs-toggle="modal"
+                            data-bs-target="#keHoach_dauRa">Xem</a>
+                        </td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-success btnInLai" title="Chọn" data-bs-toggle="modal"
+                            data-bs-target="#boTri_nhanSu">In lại</a>
+                        </td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-danger btnHuyPhieu" title="Chọn" data-bs-toggle="modal"
+                            data-bs-target="#boTri_nhanSu">Hủy phiếu</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="td-center td-fix">PT201213323</td>
+                        <td class="td-left">13/05/2026 10:29</td>
+                        <td class="td-right">6.350.000</td>
+                        <td class="td-left">Tiền mặt</td>
+                        <td class="td-center"><span class="btn btn-soft-danger">Đã hủy</span></td>
+                        <td class="td-left">Nguyễn Thị Bích</td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-primary btnConNo" title="Kế hoạch đầu ra" data-bs-toggle="modal"
+                            data-bs-target="#keHoach_dauRa">Xem</a>
+                        </td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-success btnInLai" title="Chọn" data-bs-toggle="modal"
+                            data-bs-target="#boTri_nhanSu">In lại</a>
+                        </td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-danger btnHuyPhieu" title="Chọn" data-bs-toggle="modal"
+                            data-bs-target="#boTri_nhanSu">Hủy phiếu</a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="td-center td-fix">PT201213323</td>
+                        <td class="td-left">13/05/2026 10:29</td>
+                        <td class="td-right">6.350.000</td>
+                        <td class="td-left">Tiền mặt</td>
+                        <td class="td-center"><span class="btn btn-soft-primary">Một phần</span></td>
+                        <td class="td-left">Nguyễn Thị Bích</td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-primary btnConNo" title="Kế hoạch đầu ra" data-bs-toggle="modal"
+                            data-bs-target="#keHoach_dauRa">Xem</a>
+                        </td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-success btnInLai" title="Chọn" data-bs-toggle="modal"
+                            data-bs-target="#boTri_nhanSu">In lại</a>
+                        </td>
+                        <td class="td-center">
+                          <a class="btn btn-outline-danger btnHuyPhieu" title="Chọn" data-bs-toggle="modal"
+                            data-bs-target="#boTri_nhanSu">Hủy phiếu</a>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="aps-notes mb-20">
+          <div class="aps-notes-content row pd20">
+            <div class="col-12 col-lg-2 aps-notes-lable d-flex pd0">
+              <img src="../assets/images/warning.svg" class="images"> Lưu ý nghiệp vụ
+            </div>
+            <div class="col-12 col-lg-10 aps-note-list pd0">
+              <ul>
+                <li>
+                  <a href="">Chi thu trên các khoản đã sinh cho thì sinh</a>
+                </li>
+                <li>
+                  <a href="">Tổng hợp thanh toán không sửa trực tiếp</a>
+                </li>
+                <li>
+                  <a href="">Chi thu trên các khoản đã sinh cho thì sinh</a>
+                </li>
+                <li>
+                  <a href="">Chi thu trên các khoản đã sinh cho thì sinh</a>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
@@ -2266,6 +2697,32 @@
   <script>
     $(window).on("load", function () {
       // $("#ketQua_nhapHoc").modal("show");
+    });
+  </script>
+
+  <script>
+    const buttons = document.querySelectorAll('.tab-item-li');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    buttons.forEach(button => {
+
+      button.addEventListener('click', () => {
+
+        // remove active button
+        buttons.forEach(btn => btn.classList.remove('active'));
+
+        // remove active content
+        panes.forEach(pane => pane.classList.remove('active'));
+
+        // add active current
+        button.classList.add('active');
+
+        const id = button.dataset.tab;
+
+        document.getElementById(id)
+          .classList.add('active');
+      });
+
     });
   </script>
 </body>

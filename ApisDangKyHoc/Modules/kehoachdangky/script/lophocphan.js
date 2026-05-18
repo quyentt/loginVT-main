@@ -116,6 +116,7 @@ LopHocPhan.prototype = {
         });
         $("#tblLopHocPhan").delegate('.btnSinhVien', 'click', function (e) {
             $('#myModal').modal('show');
+            me["strDSSVLopHocPhan_Id"] = this.id;
             me.getList_QuanSoTheoLop(this.id);
         });
 
@@ -243,6 +244,21 @@ LopHocPhan.prototype = {
                 }
             });
         });
+        $("#btnSave_CheDoTinhPhi").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblQuanSoLop", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn lưu dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_CheDoTinhPhi(arrChecked_Id[i]);
+                }
+            });
+        });
 
         $("#DSTrangThaiSV").delegate(".ckbDSTrangThaiSV_ALL", "click", function (e) {
 
@@ -253,6 +269,7 @@ LopHocPhan.prototype = {
         });
         edu.system.loadToCombo_DanhMucDuLieu("QLSV.TRANGTHAI", "", "", me.genList_TrangThaiSV);
         edu.system.loadToCombo_DanhMucDuLieu("KHDT.DIEM.KIEUHOC", "dropSearch_KieuHoc");
+        edu.system.loadToCombo_DanhMucDuLieu("DANGKY.NGUOIHOC.CHEDOTINHPHI", "dropCheDoTinhPhi");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.XACNHAN.KETQUA", "dropSearch_HanhDong");
         edu.system.getList_MauImport("zonebtnBaoCao_LopHocPhan", function (addKeyValue) {
             addKeyValue("strDaoTao_ThoiGianDaoTao_Id", edu.util.getValById("dropSearch_ThoiGianDaoTao"));
@@ -933,6 +950,41 @@ LopHocPhan.prototype = {
                     "mDataProp": "TENLOP"
                 },
                 {
+                    "mDataProp": "LOAILOP"
+                },
+                {
+                    "mDataProp": "SOTINCHI"
+                },
+                {
+                    "mDataProp": "THONGTINPHANBO"
+                },
+                {
+                    "mDataProp": "MAGV"
+                },
+                {
+                    "mDataProp": "CHUCDANH"
+                },
+                {
+                    "mDataProp": "TENGV" 
+                },
+                {
+                    "mDataProp": "CHUONGTRINHMOLOP"
+                },
+                {
+                    //"mDataProp": "PHIPHAINOP",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.PHIPHAINOP);
+                        //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
+                    }
+                },
+                {
+                    //"mDataProp": "PHIDANOP",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.PHIDANOP);
+                        //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
+                    }
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return edu.util.returnEmpty(aData.THOIGIANCHITIET);
                         //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
@@ -1457,7 +1509,7 @@ LopHocPhan.prototype = {
             'action': 'DKH_PhanCong_LopHP/LayDSDangKyHoc',
             'type': 'GET',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
-            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strDaoTao_LopHocPhan_Id': me.strDSSVLopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
             'pageSize': 1000000,
@@ -1500,8 +1552,8 @@ LopHocPhan.prototype = {
             //},
             aaData: data,
             colPos: {
-                center: [0, 2, 3],
-                right: [9]
+                center: [0, 1, 3, 4, 12],
+                right: [10]
             },
             aoColumns: [
                 {
@@ -1537,6 +1589,14 @@ LopHocPhan.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         return edu.util.formatCurrency(aData.TONGSOTIENDANOP);
+                    }
+                },
+                {
+                    "mDataProp": "CHEDOTINHPHI_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
                     }
                 }
             ]
@@ -2407,5 +2467,43 @@ LopHocPhan.prototype = {
             title: "Chọn hình thức học"
         };
         edu.system.loadToCombo_data(obj);
+    },
+    save_CheDoTinhPhi: function (strDangKy_SinhVien_Lop_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/AikkBS4VKC8pFSgkLwIpLhIXFSkkLg0uMQkR',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.CheDoTinhTienChoSVTheoLopHP',
+            'iM': edu.system.iM,
+            'strDangKy_SinhVien_Lop_Id': strDangKy_SinhVien_Lop_Id,
+            'strCheDoTinhPhi_Id': edu.system.getValById('dropCheDoTinhPhi'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert("Thất bại:" + data.Message, "w");
+                }
+            },
+            error: function (er) {
+
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_QuanSoTheoLop();
+                });
+            },
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
     },
 }

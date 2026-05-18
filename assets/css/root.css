@@ -2,7 +2,7 @@
   --color-main: #14375f;
   --color-bg-main: #f5f6f8;
   --color-link: #1a71e8 !important;
-  --color-link-hover:#0043a0 !important;
+  --color-link-hover: #0043a0 !important;
   /* --color-green: #63fa87; */
   --color-green: #008000;
   --color-green-hover: #007200;
@@ -28,7 +28,7 @@
   --color-nv: #d4145a;
   --color-blue: #1a71e8 !important;
   --color-yellow: #ffe600 !important;
-  --color-red: #FF0000 !important;
+  --color-red: #ff0000 !important;
   --color-red-hover: #ca0000 !important;
   --color-orange: #d54b07 !important;
   --color-green: #198754 !important;
@@ -36,4 +36,28 @@
   --color-pink: #ff0081 !important;
   --color-purple: #e300ff !important;
   --color-info: #31d2f2 !important;
+}
+.bg-blue {
+  background: #005bbd;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 91, 189, 1) 0%,
+    rgba(0, 122, 255, 1) 100%
+  );
+}
+.bg-green {
+  background: #4f9322;
+  background: linear-gradient(
+    90deg,
+    rgba(79, 147, 34, 1) 0%,
+    rgba(0, 128, 0, 1) 100%
+  );
+}
+.bg-red {
+  background: #dc3545;
+  background: linear-gradient(
+    90deg,
+    rgba(220, 53, 69, 1) 0%,
+    rgb(179, 15, 10) 100%
+  ) !important;
 }
