@@ -1588,12 +1588,13 @@ DuLieuThi.prototype = {
 
         me.loadInBatches(primary, me.BATCH_SIZE, function (idStr) {
             var obj_list = {
-                'action': 'TP_ToChucThi/LayDSThi',
-                'type': 'GET',
-                'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
-                'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
+                'action': 'XLHV_TP_ToChucThi_MH/DSA4BRIVKSgP',
+                'func': 'PKG_THI_TOCHUCTHI.LayDSThi',
+                'iM': edu.system.iM,
                 'strThi_CaThi_Id': '',
                 'strNgayThi': edu.util.getValById('txtSearch_NgayThi'),
+                'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+                'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
                 'strNgayThiBatDau': edu.util.getValById('txtSearch_NgayThi_TuNgay'),
                 'strNgayThiKetThuc': edu.util.getValById('txtSearch_NgayThi_DenNgay'),
                 'strNguoiThucHien_Id': edu.system.userId,
@@ -1601,7 +1602,7 @@ DuLieuThi.prototype = {
             obj_list[primaryKey] = idStr;
             obj_list[fixedKey] = fixedStr;
             return {
-                type: 'GET',
+                type: 'POST',
                 action: obj_list.action,
                 contentType: true,
                 data: obj_list,

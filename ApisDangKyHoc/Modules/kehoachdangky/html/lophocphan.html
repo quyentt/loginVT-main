@@ -140,7 +140,10 @@
                 </div>
 
                 <div class="box-body mt-10 pd0 pb20">
-                    <div class="aps-table-select mb-20 tblHidden mt-5 scroll-table-x">
+                    <div class="tblHidden scroll-top-mirror mt-5" style="overflow-x: auto; overflow-y: hidden;">
+                        <div style="height: 1px; min-width: 2000px;"></div>
+                    </div>
+                    <div class="aps-table-select mb-20 tblHidden scroll-table-x">
                         <table id="tblLopHocPhan"
                             class="table table-hover table-bordered mb-0 table-noborder tblLopHocPhan mr-0"
                             style="min-width: 2000px;">
@@ -170,7 +173,10 @@
                         </table>
                     </div>
                     <!-- ---------------- -->
-                    <div style="display: none" class="tblHidden aps-table-select scroll-table-x mt-20 ">
+                    <div style="display: none; overflow-x: auto; overflow-y: hidden;" class="tblHidden scroll-top-mirror mt-20">
+                        <div style="height: 1px; min-width: 2200px;"></div>
+                    </div>
+                    <div style="display: none" class="tblHidden aps-table-select scroll-table-x">
                         <table id="tblLopHocPhanChiTiet"
                             class="table table-hover table-bordered table-border tblLopHocPhanChiTiet mb-0"
                             style="min-width: 2200px;">
@@ -179,7 +185,7 @@
                                     <th rowspan="2" class="td-center">Stt</th>
                                     <th colspan="6" class="td-center" style="background: #f1f1f1;"><b>Thông tin sinh
                                             viên</b></th>
-                                    <th colspan="14" class="td-center"><b>Thông tin đăng ký</b></th>
+                                    <th colspan="15" class="td-center"><b>Thông tin đăng ký</b></th>
                                     <th rowspan="2" class="td-center td-fixed">
                                         <input type="checkbox" class="chkSystemSelectAll">
                                     </th>
@@ -202,6 +208,7 @@
                                     <th class="td-center">TK đăng ký</th>
                                     <th class="td-left">Chương trình đăng ký</th>
                                     <th class="td-right">Số tiền</th>
+                                    <th class="td-right">Đã nộp</th>
                                     <th class="td-center">Khoản phí</th>
                                     <th class="td-right">Đã chuyển kế toán</th>
                                     <th class="td-center">SV Xác nhận</th>
@@ -213,7 +220,10 @@
                         </table>
                     </div>
                     <!-- ---------------- -->
-                    <div style="display: none" class="tblHidden aps-table-select scroll-table-x mt-20">
+                    <div style="display: none; overflow-x: auto; overflow-y: hidden;" class="tblHidden scroll-top-mirror mt-20">
+                        <div style="height: 1px; min-width: 2200px;"></div>
+                    </div>
+                    <div style="display: none" class="tblHidden aps-table-select scroll-table-x">
                         <table id="tblLopHocPhanChiTiet2"
                             class="table table-hover table-bordered table-border tblLopHocPhanChiTiet2 mr-0 mb-0"
                             style="min-width: 2200px;">
@@ -493,16 +503,17 @@
                 <table id="tblQuanSoLop" class="table table-hover table-bordered mb-0 table-noborder tblQuanSoLop">
                     <thead>
                         <tr>
-                            <th class="td-fixed">Stt</th>
-                            <th class="td-left"><span class="lang" key="">Mã số</span></th>
+                            <th class="td-fixed td-center">Stt</th>
+                            <th class="td-center"><span class="lang" key="">Mã số</span></th>
                             <th class="td-left"><span class="lang" key="">Họ tên</span></th>
-                            <th class="td-left"><span class="lang" key="">Ngày sinh</span></th>
-                            <th class="td-left"><span class="lang" key="">Tình trạng</span></th>
+                            <th class="td-center"><span class="lang" key="">Ngày sinh</span></th>
+                            <th class="td-center"><span class="lang" key="">Tình trạng</span></th>
                             <th class="td-left"><span class="lang" key="">Lớp học</span></th>
                             <th class="td-left"><span class="lang" key="">Chương trình học</span></th>
                             <th class="td-left"><span class="lang" key="">Khóa học</span></th>
                             <th class="td-left"><span class="lang" key="">Khoa quản lý</span></th>
                             <th class="td-left"><span class="lang" key="">Hệ đào tạo</span></th>
+                            <th class="td-right"><span class="lang" key="">Đã nộp</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
