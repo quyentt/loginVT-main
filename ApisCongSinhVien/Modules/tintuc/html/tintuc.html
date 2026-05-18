@@ -1,4 +1,4 @@
-﻿<style>
+<style>
     #btntindaluu {
         background-color: var(--orange);
         color: white;
@@ -8,6 +8,131 @@
         max-width: unset;
         align-items: center;
         display: flex
+    }
+
+    /* ====== Hardcode thông báo ====== */
+    .hardcode-thongbao {
+        margin-bottom: 24px;
+    }
+    .hardcode-thongbao summary {
+        list-style: none;
+        cursor: pointer;
+        outline: none;
+    }
+    .hardcode-thongbao summary::-webkit-details-marker { display: none; }
+    .hardcode-thongbao summary::marker { display: none; }
+
+    .hardcode-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 18px 22px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        transition: all 0.25s ease;
+        border: 1px solid #eef2f7;
+    }
+    .hardcode-card:hover {
+        box-shadow: 0 6px 22px rgba(37, 99, 235, 0.15);
+        transform: translateY(-2px);
+        border-color: #c7d8f7;
+    }
+
+    .hardcode-icon {
+        flex-shrink: 0;
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #4f8bf9, #2563eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 22px;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .hardcode-body {
+        flex: 1;
+        min-width: 0;
+    }
+    .hardcode-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a202c;
+        line-height: 1.45;
+        margin: 0 0 8px 0;
+    }
+    .hardcode-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        font-size: 13px;
+        color: #6c757d;
+    }
+    .hardcode-meta i { margin-right: 5px; color: #2563eb; }
+
+    .hardcode-arrow {
+        flex-shrink: 0;
+        color: #94a3b8;
+        font-size: 14px;
+        transition: transform 0.25s ease, color 0.25s ease;
+    }
+    .hardcode-thongbao[open] .hardcode-arrow {
+        transform: rotate(90deg);
+        color: #2563eb;
+    }
+    .hardcode-thongbao[open] .hardcode-card {
+        border-radius: 12px 12px 0 0;
+        border-color: #2563eb;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+    }
+    .hardcode-thongbao[open] .hardcode-card:hover {
+        transform: none;
+    }
+
+    .hardcode-detail {
+        background: #fff;
+        padding: 28px 32px;
+        border-radius: 0 0 12px 12px;
+        border: 1px solid #2563eb;
+        border-top: none;
+        animation: fadeInDown 0.3s ease;
+    }
+    .hardcode-detail-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #c92a2a;
+        text-align: center;
+        text-transform: uppercase;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+    .hardcode-detail p {
+        margin-bottom: 12px;
+        line-height: 1.75;
+        color: #2d3748;
+        font-size: 14.5px;
+    }
+    .hardcode-highlight {
+        background: #fff8e1;
+        padding: 14px 18px;
+        border-left: 4px solid #f59e0b;
+        border-radius: 6px;
+        margin-top: 18px;
+        line-height: 1.7;
+        color: #5a3e00;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Ẩn empty state "Hiện tại chưa có tin tức nào" */
+    #zonetintuc > div[style*="text-align:center"] {
+        display: none !important;
     }
 </style>
 <div class="one-door study-space">
@@ -23,7 +148,7 @@
         </div>
         <div class="news-search-form">
             <div class="form-group search-input">
-                <label for="search_input" class="form-label btnSearch"><i class="fal fa-search"></i></label>
+                <label for="search_input" class="form-label btnSearchIcon"><i class="fal fa-search"></i></label>
                 <input class="form-control" id="txtSearch_TuKhoa" placeholder="Tìm kiếm thông tin">
 
             </div>
@@ -47,6 +172,29 @@
     <div class="news-page container-fluid">
         <div class="row">
             <div class="col-12 col-lg-9">
+                <details class="hardcode-thongbao" id="hardcode_thongbao">
+                    <summary>
+                        <div class="hardcode-card">
+                            <div class="hardcode-icon"><i class="fal fa-bullhorn"></i></div>
+                            <div class="hardcode-body">
+                                <div class="hardcode-title">THÔNG BÁO Về việc điều chỉnh thời hạn đăng ký học lại và hạn nộp học phí đối với các lớp học riêng, Kỳ 3 (hè) năm học 2025 - 2026</div>
+                                <div class="hardcode-meta">
+                                    <span><i class="fas fa-caret-right"></i>Phòng Quản lý đào tạo và Đảm bảo chất lượng</span>
+                                    <span><i class="fal fa-calendar-alt"></i>16/05/2026</span>
+                                </div>
+                            </div>
+                            <div class="hardcode-arrow"><i class="fas fa-chevron-right"></i></div>
+                        </div>
+                    </summary>
+                    <div class="hardcode-detail">
+                        <p class="hardcode-detail-title">THÔNG BÁO VỀ VIỆC ĐIỀU CHỈNH THỜI GIAN ĐĂNG KÝ HỌC LẠI VÀ NỘP HỌC PHÍ ĐỐI VỚI CÁC LỚP HỌC RIÊNG, KỲ 3- NĂM HỌC 2025-2026</p>
+                        <p>Kính gửi: <strong>Các bạn sinh viên,</strong></p>
+                        <p style="text-align: justify;">Do số lượng đăng ký lớp mở riêng nhiều và cần thêm thời gian rà soát sĩ số các lớp học riêng để mở lớp và tính học phí đối với các lớp học riêng, Phòng Quản lý đào tạo và Đảm bảo chất lượng thông báo đến sinh viên về việc điều chỉnh thời gian đăng ký học lại và nộp phí đối với các lớp học riêng kỳ 3 (hè) năm học 2025 - 2026 như sau:</p>
+                        <div class="hardcode-highlight">
+                            <strong>Hạn đăng ký và nộp học phí trên cổng sinh viên:</strong> Đến hết ngày <strong>22/05/2026</strong>.
+                        </div>
+                    </div>
+                </details>
                 <div class="row news-list zone-bus" id="zonetintuc">
 
                 </div>

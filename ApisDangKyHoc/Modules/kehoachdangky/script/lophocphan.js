@@ -19,6 +19,15 @@ LopHocPhan.prototype = {
         --Discription: Initial system
         -------------------------------------------*/
         edu.system.pageSize_default = 10;
+
+        $(".scroll-top-mirror").each(function () {
+            var $mirror = $(this);
+            var $bottom = $mirror.next(".scroll-table-x");
+            if (!$bottom.length) return;
+            $mirror.on("scroll", function () { $bottom.scrollLeft($mirror.scrollLeft()); });
+            $bottom.on("scroll", function () { $mirror.scrollLeft($bottom.scrollLeft()); });
+        });
+
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
         me.getList_ChuongTrinhDaoTao();
@@ -862,7 +871,7 @@ LopHocPhan.prototype = {
     getList_LopHocPhan: function () {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhan").parent().show();
+        $("#tblLopHocPhan").parent().show().prev(".scroll-top-mirror").show();
 
         //--Edit
         var obj_save = {
@@ -1042,7 +1051,7 @@ LopHocPhan.prototype = {
     getList_LopHocPhanChiTiet: function () {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhanChiTiet").parent().show();
+        $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIP',
@@ -1104,7 +1113,7 @@ LopHocPhan.prototype = {
     getList_CanBoChiTiet: function () {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhanChiTiet").parent().show();
+        $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIFLgIgLwMu',
@@ -1238,6 +1247,11 @@ LopHocPhan.prototype = {
                     }
                 },
                 {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.TONGSOTIENDANOP);
+                    }
+                },
+                {
                     "mDataProp": "TAICHINH_CACKHOANTHU_TEN"
                 },
                 {
@@ -1266,7 +1280,7 @@ LopHocPhan.prototype = {
     getList_LopHocPhanRut: function () {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhanChiTiet2").parent().show();
+        $("#tblLopHocPhanChiTiet2").parent().show().prev(".scroll-top-mirror").show();
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRITNDUFIC8mCjgJLiIP',
@@ -1538,7 +1552,8 @@ LopHocPhan.prototype = {
             //},
             aaData: data,
             colPos: {
-                center: [0, 3],
+                center: [0, 1, 3, 4, 12],
+                right: [10]
             },
             aoColumns: [
                 {
@@ -1570,6 +1585,11 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mDataProp": "DAOTAO_HEDAOTAO_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.TONGSOTIENDANOP);
+                    }
                 },
                 {
                     "mDataProp": "CHEDOTINHPHI_TEN"

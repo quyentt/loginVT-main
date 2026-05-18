@@ -200,11 +200,61 @@
                         <option id="" value=""> --Chọn học phần-- </option>
                     </select>
                 </div>
+                <!-- Bộ lọc ngày thi -->
                 <div class="col-sm-3 item-search">
-                    <select id="dropSearch_DanhSach" class="select-opt" style="width:100% !important"
-                        multiple="multiple">
-                        <option id="" value=""> --Chọn danh sách-- </option>
-                    </select>
+                    <input type="text" id="txtSearch_NgayThi" class="form-control input-datepicker"
+                        placeholder="Xem theo ngày thi" />
+                </div>
+                <div class="col-sm-3 item-search">
+                    <input type="text" id="txtSearch_NgayThi_TuNgay" class="form-control input-datepicker"
+                        placeholder="Từ ngày" />
+                </div>
+                <div class="col-sm-3 item-search">
+                    <input type="text" id="txtSearch_NgayThi_DenNgay" class="form-control input-datepicker"
+                        placeholder="Đến ngày" />
+                </div>
+                <div class="col-sm-3 item-search">
+                    <a id="btnSearch_DanhSachThi" class="btn btn-default btn-search">
+                        <i class="fa fa-search"></i> Tải danh sách thi
+                    </a>
+                </div>
+            </div>
+            <!-- Danh sách thi -->
+            <div class="box box-solid aps-list-tuibai">
+                <div class="box-header pl20 pr20">
+                    <h3 class="box-title">
+                        <i class="fa-light fa-list-timeline"></i> Danh sách thi
+                        <span class="badge bg-light-blue">
+                            <span id="lblDanhSachThi_Tong">0</span>
+                        </span>
+                    </h3>
+                    <div class="pull-right">
+                        <a id="btnCongBoDanhSachThi" class="btn btn-success">
+                            <i class="fa-light fa-laptop-file"></i> Công bố theo học phần - danh sách thi
+                        </a>
+                    </div>
+                </div>
+                <div class="box-body pd20 pt10">
+                    <div class="aps-table-select scroll-table-x">
+                        <table id="tblDanhSachThi" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center">Stt</th>
+                                    <th class="td-center">Danh sách thi</th>
+                                    <th class="td-center">Phòng thi</th>
+                                    <th class="td-center">Ngày thi</th>
+                                    <th class="td-center">Ca thi</th>
+                                    <th class="td-center">Thông tin học phần thi</th>
+                                    <th class="td-center">Hình thức thi</th>
+                                    <th class="td-center">Lớp học phần</th>
+                                    <th class="td-center td-fixed">
+                                        <input type="checkbox" id="chkSelectAll_DanhSachThi">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">
@@ -213,8 +263,6 @@
                         Đóng</a>
                     <a id="btnCongBoDotThi" class="btn btn-danger"><i class="fa-light fa-calendar-lines-pen"></i> Công
                         bố cả đợt thi</a>
-                    <a id="btnCongBoDanhSachThi" class="btn btn-success"><i class="fa-light fa-laptop-file"></i> Công bố
-                        theo học phần - danh sách thi</a>
                     <a id="btnCongBoHocPhan" class="btn btn-primary"><i class="fa-light fa-chalkboard"></i> Công bố theo
                         học phần</a>
                 </div>
