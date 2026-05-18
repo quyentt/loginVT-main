@@ -3,55 +3,6 @@
 @import "styles.css";
 @import "../../../assets/css/root.css";
 
-/* --------------- */
-.min-h-186{
-    min-height: 186px !important;
-}
-/* --------------- */
-.color-222 {
-    color: #222 !important;
-}
-
-.color-666 {
-    color: #666 !important;
-}
-
-.color-888 {
-    color: #888 !important;
-}
-
-.color-orange {
-    color: var(--color-orange) !important;
-}
-
-.color-blue {
-    color: var(--color-blue) !important;
-}
-
-.color-green {
-    color: var(--color-green) !important;
-}
-
-.color-yellow {
-    color: var(--color-yellow) !important;
-}
-
-.color-white {
-    color: #fff !important;
-}
-
-.color-red {
-    color: var(--color-red) !important;
-}
-
-.color-success {
-    color: var(--color-green) !important;
-}
-/*-----------------------*/
-.gap0 {
-    gap: 0 !important;
-}
-/*-----------------------*/
 .box-header>.box-tools {
     position: relative !important;
 }
@@ -99,13 +50,7 @@
     position: relative;
 }
 
-.content {
-    /*background: transparent none repeat scroll 0 0 !important;*/
-    /*-webkit-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
-    /*-moz-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
-    /*box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
-    border-radius: 12px !important;
-}
+
 
 /*Thu tiền mặt cho sinh viên, học sinh------------------*/
 
@@ -192,112 +137,6 @@
 
 .aps-box-table .nav-tabs-custom>.nav-tabs>li.active i {
     font-weight: 700 !important;
-}
-
-/*---------*/
-.btn {
-    padding: 9px 15px 7.6px 15px !important;
-    font-size: 14px !important;
-    border-radius: 5px !important;
-    height: 38px;
-    /* display: flex; */
-    /* position: relative; */
-    /* line-height: 15px !important; */
-}
-
-.btn .lang {
-    line-height: 15px !important;
-}
-
-.btn:hover {
-    height: 38px;
-}
-
-.btn .caret {
-    margin-top: -1px !important;
-    margin-left: 8px !important;
-}
-
-.btn .fa {
-    /* margin-bottom: 5px; */
-}
-
-.btn-primary,
-.btn-primary.btnSave {
-    background: #3380db !important;
-    border: 1px solid #3380db !important;
-    color: #fff !important;
-    height: 38px;
-}
-
-.btn.active.focus,
-.btn.focus,
-.btn:active.focus {
-    outline: 0px auto -webkit-focus-ring-color !important;
-    outline-offset: -2px;
-}
-
-.btn-primary:hover,
-.btn-primary.btnSave:hover {
-    color: #fff !important;
-    background-color: #0b5ed7 !important;
-    /*border:1px solid #0b5ed7 !important;*/
-}
-
-.btn-warning {
-    background: #ffc107 !important;
-    border: 1px solid #ffc107 !important;
-    color: #000 !important;
-    height: 38px;
-    /* line-height: 1.3; */
-}
-
-.btn-warning:hover {
-    color: #fff !important;
-    background-color: #d29f01 !important;
-    border-color: #d29f01 !important;
-}
-
-.btn-success,
-.btnAdd.btn-primary {
-    background: var(--color-green) !important;
-    border: 1px solid var(--color-green) !important;
-    color: #fff !important;
-    height: 38px;
-}
-
-.btn-success:hover,
-.btnAdd.btn-primary:hover {
-    color: #fff !important;
-    background-color: var(--color-green-hover) !important;
-    border: 1px solid var(--color-green-hover) !important;
-}
-
-/*-----*/
-.btn-secondary {
-    background: #6c757d !important;
-    border: 1px solid #6c757d !important;
-    color: #fff !important;
-    height: 38px;
-    line-height: 1.3;
-}
-
-.btn-secondary:hover {
-    color: #fff;
-    background-color: #5c636a !important;
-    border-color: #5c636a !important;
-}
-
-.btn-secondary.lblRefresh {
-    background: #f1f1f1 !important;
-    border: 1px solid #f1f1f1 !important;
-    color: #000 !important;
-}
-
-.btn-secondary.lblRefresh:hover {
-    color: #fff !important;
-    background-color: #5c636a !important;
-    border-color: #5c636a !important;
 }
 
 /*--------------------*/
@@ -424,35 +263,13 @@
     margin-left: 0 !important;
 }
 
-.btn-default,
-.btn-info {
-    height: 38px;
-}
-
-.btn-default:hover {}
-
-.btn-info:hover {
-    background: #00acd6 !important;
-    /*border:1px solid var(--color-blue) !important;*/
-    color: #fff !important;
-}
-
 
 .box-search .box-body .row {
     border-bottom: 0px solid #f1f1f1;
     margin-bottom: 10px;
 }
 
-.col-lg-12 {
-    background: transparent !important;
-}
 
-.box {
-    border-radius: 12px;
-    border-top: 0px solid #d2d6de;
-    margin-bottom: 0px;
-    box-shadow: 0 0px 0px rgba(0, 0, 0, 0) !important;
-}
 
 .content .zone-content,
 .zone-bus {
@@ -493,21 +310,6 @@
 .btnSearch:hover .lang {
     color: #fff !important;
 }
-
-.btn i {
-    padding-right: 6px;
-}
-
-.btn-add-table {
-    padding: 8px 15px 7.6px 15px !important;
-    height: 38px !important;
-    line-height: 38px !important;
-}
-
-.btn-add-table:hover {
-    line-height: 38px !important;
-}
-
 /*--------*/
 .chosse-status-student {
     margin-top: 15px;
@@ -10983,10 +10785,6 @@ table#clone {
     text-align: center;
 }
 
-.line-20 {
-    line-height: 20px !important;
-}
-
 .table.tblLuongThuNhap tfoot {
     border: 0 !important;
 }
@@ -11917,16 +11715,21 @@ table#clone {
     border-radius: 10px;
 }
 .aps-kienTraNhanh-content .item{
-    padding-bottom: 8px;
+    padding-bottom: 13px;
 }
 .aps-kienTraNhanh-trangThai .item .item-lable{
     list-style: 38px !important;
 }
-.aps-kienTraNhanh-ttCaNhan .item .col-md-6{
+.aps-kienTraNhanh-ttCaNhan .item .item-lable,
+.aps-kienTraNhanh-ttHoctap .item .item-lable,
+.aps-kienTraNhanh-trangThai .item .item-lable{
     padding-left: 0 !important;
 }
 .aps-kienTraNhanh-ttCaNhan{
-    border-right: 1px solid #f1f1f1;
+    /* border-right: 1px solid #f1f1f1; */
+}
+.aps-kienTraNhanh-ttHoctap{
+    /* border-bottom: 1px solid #e1e1e1; */
 }
 .aps-kienTraNhanh-trangThai{
     /* border: 1px solid #e1e1e1;
@@ -12052,7 +11855,7 @@ background: #fff;
     background: #f4a14d !important;
 }
 .aps-kienTraNhanh-ttCaNhan{
-    width: 48% !important;
+    /* width: 48% !important; */
 }
    .aps-kienTraNhanh-trangThai.col-lg-4 {
         width: 35.333333%;
@@ -12070,14 +11873,14 @@ background: #fff;
 .aps-thuPhi-item.col-lg-3 {
         width: 30% !important;
     }
-     .aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search {
+.aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search {
     display: block !important;
   }
-  .aps-search-thuTaoPhieu .form-top.box-search .item-search .btn {
+.aps-search-thuTaoPhieu .form-top.box-search .item-search .btn {
     margin-bottom: 10px;
     margin-right: 7px;
   }
-  .tiepnhandauvao-filter-box {
+.tiepnhandauvao-filter-box {
     border: solid 1px #e1e1e1;
     border-radius: 6px;
     padding: 15px;
@@ -12091,8 +11894,7 @@ background: #fff;
     align-items: flex-end;
     gap: 10px;
     flex: 1;
-    flex-wrap: wrap;
-  
+    flex-wrap: wrap;  
 }
 .tiepnhandauvao-filter-box .left .item{
     max-width: 160px;
@@ -12109,11 +11911,7 @@ background: #fff;
     margin: 0;
     padding: 0 !important;
 }
-.tiepnhandauvao-filter-box .item .label{
-    font-weight: 600;
-    font-size: 12px;
-    color: var(--color-blue);
-}
+
 .tiepnhandauvao-filter-box .btn-group{
     display: flex;
     gap: 10px;
@@ -12164,8 +11962,8 @@ background: #fff;
 .tiepnhandauvao-static-box .item .number{
     font-size: 30px;
     font-weight: 700;
-       color: #22a652;
-       line-height: 30px;
+    color: #22a652;
+    line-height: 30px;
 }
 .tiepnhandauvao-static-box .item .unit{
     font-size: 12px;
@@ -12237,4 +12035,29 @@ padding: 20px auto;
 .luongxuly-list .item i{
     font-weight: 700;
     font-size: 20px;
+}
+/* --box-search-new------- */
+.box-search-main .item,
+.box-search .item-search {
+    position:relative !important;
+}
+.box-search-main .item .label,
+.box-search .item-search .item-search-label{
+    font-weight: 300 !important;
+    font-size: 13px;
+    color: #999;
+    position: absolute;
+    z-index: 11;
+    background: #fff;
+    top: -11px;
+    left: 8px;
+    padding: 3px 5px;
+}
+.box-search .item-search .item-search-label{   
+    background: #f8f8f8 !important;
+}
+.img-4x6{
+    width: 140px;
+    /* height: 60px; */
+    overflow: hidden;
 }

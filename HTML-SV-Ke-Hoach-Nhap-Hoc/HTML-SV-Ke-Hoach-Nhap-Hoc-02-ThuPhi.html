@@ -447,7 +447,8 @@
                 <div class="form-top box-search" style="border-radius: 0 !important;">
                   <div class="row">
                     <div class="col-lg-6 col-md-6 item-search pl0">
-                      <div class="form-item d-flex form-add-info flex-grow-1">
+                      <div class="item-search-label line-16">Kế hoạch kế hoạch nhập học</div>
+                      <div class="item-search-select form-item d-flex form-add-info flex-grow-1">
                         <div class="input-group no-icon">
                           <i class="fal fa-angle-down"></i>
                           <select class="form-select" aria-label="Default select example">
@@ -465,14 +466,14 @@
                     </div>
 
                   </div>
-                  <div class="row">
+                  <div class="row mt-10">
                     <div class="col-lg-4 col-md-4 item-search pl0 d-flex">
-                      <!-- <span class="item-search-label mr-10">Trạng thái tài chính</span> -->
-                      <div class="form-item d-flex form-add-info flex-grow-1">
+                      <div class="item-search-label line-16">Trạng thái tài chính</div>
+                      <div class="item-search-select form-item d-flex form-add-info flex-grow-1">
                         <div class="input-group no-icon">
                           <i class="fal fa-angle-down"></i>
                           <select class="form-select" aria-label="Default select example">
-                            <option selected="">Trạng thái tài chính</option>
+                            <option selected="">Tất cả</option>
                             <option value="1">Kế hoạch tuyển sinh 1</option>
                             <option value="2">Kế hoạch tuyển sinh 2</option>
                             <option value="3">Kế hoạch tuyển sinh 3</option>
@@ -481,12 +482,12 @@
                       </div>
                     </div>
                     <div class="col-lg-4 col-md-4 item-search pl0 d-flex">
-                      <!-- <span class="item-search-label mr-10">Trạng thái nhập học</span> -->
+                      <span class="item-search-label line-16">Trạng thái nhập học</span>
                       <div class="form-item d-flex form-add-info flex-grow-1">
                         <div class="input-group no-icon">
                           <i class="fal fa-angle-down"></i>
                           <select class="form-select" aria-label="Default select example">
-                            <option selected="">Trạng thái nhập học</option>
+                            <option selected="">Tất cả</option>
                             <option value="1">Kế hoạch tuyển sinh 1</option>
                             <option value="2">Kế hoạch tuyển sinh 2</option>
                             <option value="3">Kế hoạch tuyển sinh 3</option>
@@ -582,10 +583,29 @@
                 </div>
               </div>
               <div class="row aps-kienTraNhanh-content pd20">
-                <div class="col-12 col-lg-2 aps-kienTraNhanh-avata pl0">
-                  <img src="../assets/images/anh-sv.jpg" class="images">
+                <div class="col-12 col-lg-5 aps-kienTraNhanh-ttCaNhan">
+                  <div class="col-12 col-lg-6 aps-kienTraNhanh-avata mb-15 img-4x6 mg-auto">
+                    <img src="../assets/images/anh-the-4x6.jpg" class="images">
+                  </div>
+                  <div class="aps-kienTraNhanh-trangThai w100">
+                    <div class="row item">
+                      <div class="col-lg-6 col-md-6 item-lable">Trạng thái hổ sơ</div>
+                      <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-success btnConNo">Đã nôp</a>
+                      </div>
+                    </div>
+                    <div class="row item">
+                      <div class="col-lg-6 col-md-6 item-lable ">Trạng thái tài chính</div>
+                      <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-danger btnConNo">Còn nợ</a>
+                      </div>
+                    </div>
+                    <div class="row item">
+                      <div class="item-lable">Trạng thái nhập học</div>
+                      <div class="item-content"><a class="btn btn-soft-primary btnConNo">Đang xử lý</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="col-12 col-lg-6 aps-kienTraNhanh-ttCaNhan">
+                <div class="col-12 col-lg-7 pr0 aps-kienTraNhanh-ttCaNhan">
                   <div class="row item">
                     <div class="col-lg-6 col-md-6 item-lable">Mã nhập học:</div>
                     <div class="col-lg-6 col-md-6 item-content color-blue">NH2026-00001</div>
@@ -629,22 +649,6 @@
                   <div class="row item">
                     <div class="col-lg-6 col-md-6 item-lable">Lớp dự kiến:</div>
                     <div class="col-lg-6 col-md-6 item-content">CNTT K66A</div>
-                  </div>
-                </div>
-                <div class="col-12 col-lg-4 aps-kienTraNhanh-trangThai mt-20 pr0 pl0">
-                  <div class="row item">
-                    <div class="col-lg-6 col-md-6 item-lable">Trạng thái hổ sơ</div>
-                    <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-success btnConNo">Đã nôp</a>
-                    </div>
-                  </div>
-                  <div class="row item">
-                    <div class="col-lg-6 col-md-6 item-lable ">Trạng thái tài chính</div>
-                    <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-danger btnConNo">Còn nợ</a></div>
-                  </div>
-                  <div class="row item">
-                    <div class="item-lable">Trạng thái nhập học</div>
-                    <div class="item-content"><a class="btn btn-soft-primary btnConNo">Đang xử lý</a>
-                    </div>
                   </div>
                 </div>
                 <p class="text-center mt-20 fz14">
