@@ -159,7 +159,7 @@
 .box-header>.ion,
 .box-header .box-title {
     font-size: 17px;
-    font-weight: 500 !important;
+    font-weight: 700 !important;
     /*color:var(--color-blue);*/
 }
 
@@ -11545,7 +11545,7 @@ table#clone {
 /* Kế hoạch nhập học - Thu phí */
 .kehoach-nhaphoc-thuPhi-tab .tab-list{
     margin: 0 auto !important;
-        width: 100%;
+     width: 100%;
     max-width: fit-content;
 }
 .aps-nhaphoc-thuPhi .khnh-thuPhi-lable .images{
@@ -11715,7 +11715,11 @@ table#clone {
     padding-bottom: 13px;
 }
 .aps-kienTraNhanh-trangThai .item .item-lable{
-    list-style: 38px !important;
+    list-style: 34px !important;
+}
+.aps-kienTraNhanh-trangThai .btn {
+    height: 34px !important;
+    padding-top: 7px !important;
 }
 .aps-kienTraNhanh-ttCaNhan .item .item-lable,
 .aps-kienTraNhanh-ttHoctap .item .item-lable,
@@ -11738,14 +11742,13 @@ table#clone {
     gap: 20px; Khoảng cách giữa 2 cột */
 }
 .aps-kienTraNhanh-trangThai .item{
-    padding-bottom: 10px;
+    padding-bottom: 8px;
         justify-content: space-between;
     /* display: flex !important;
     gap: 10px; */
 }
 .aps-kienTraNhanh-trangThai .item .item-lable{
-   line-height: 38px !important;
-    width: 168px !important;
+    min-width: 148px !important;
     max-width: fit-content !important;
     padding-right: 0 !important;
 }
@@ -11878,7 +11881,7 @@ background: #fff;
     margin-right: 7px;
   }
 .tiepnhandauvao-filter-box {
-    border: solid 1px #e1e1e1;
+    /* border: solid 1px #e1e1e1; */
     border-radius: 6px;
     padding: 15px;
     display: flex;
@@ -11926,35 +11929,39 @@ background: #fff;
 }
 .tiepnhandauvao-static-box .item{
     width: calc((100% - 75px) / 6);
-    border: solid 1px #e1e1e1;
+    border: 1px solid #e1e1e1;
+    /* border-image: linear-gradient(90deg, #22a652, #28a745) 1; */
     padding: 15px;
-    border-radius: 6px;
+    border-radius: 8px !important;
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 .tiepnhandauvao-static-box .item .icon{
     width: 60px;
     height: 60px;
     border-radius: 50%;
     background: #f1f5f2;
-
     display: flex;
     align-items: center;
     justify-content: center;
-       font-size: 28px;
+    font-size: 28px;
     color: #22a652;
+    font-weight: 700 !important;
+}
+.tiepnhandauvao-static-box .item .icon i{
+    font-weight: 700 !important;
 }
 
-
 .tiepnhandauvao-static-box .item .title{
-    font-weight: 600;
-    margin-bottom: 10px;
+    font-weight:600 !important;
+    font-size: 15px;
+    margin-bottom: 3px;
 }
 .tiepnhandauvao-static-box .item .meta .detail{
     display: flex;
     align-items: flex-end;
-    gap: 10px;
+    gap: 6px;
 }
 .tiepnhandauvao-static-box .item .number{
     font-size: 30px;
@@ -11964,6 +11971,7 @@ background: #fff;
 }
 .tiepnhandauvao-static-box .item .unit{
     font-size: 12px;
+    color: #888;
 }
 .tiepnhandauvao-static-box .item.item-warning .icon{
     background: #FFF0E5;
@@ -11971,9 +11979,7 @@ background: #fff;
 
 }
 .tiepnhandauvao-static-box .item.item-warning .number{
-
     color: #FF5F1F;
-
 }
 .aps-nhaphoc-thuPhi-content .box-header.box-header-has-btn{
     justify-content: space-between;
@@ -11984,9 +11990,61 @@ background: #fff;
     gap: 10px;
     text-transform: math-auto;
 }
+/* -- */
+.tiepnhandauvao-static-box .item:nth-child(1) .icon{
+    background: rgba(34,166,82,0.1) !important;
+    color: #22a652;
+}
+.tiepnhandauvao-static-box .item:nth-child(1) .number {
+    color: #22a652 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(2) .icon{
+    background: rgba(49, 103, 243, .1) !important;
+    color: #3380db !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(2) .number {
+    color: #3380db !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(3) .icon{
+    background: rgba(13, 202, 240, .1) !important;
+    color: #0dcaf0 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(3) .number {
+    color: #0dcaf0 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(4) .icon{
+    background: rgba(220, 53, 69, .1) !important;
+    color: #dc3545 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(4) .number {
+    color: #dc3545 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(4) .icon{
+    background: rgba(220, 53, 69, .1) !important;
+    color: #dc3545 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(4) .number {
+    color: #dc3545 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(5) .icon{
+    background: rgba(255, 95, 31, .1) !important;
+    color:#FF5F1F !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(5) .number {
+    color: #FF5F1F !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(6) .icon{
+    background: rgba(217, 164, 6, .1) !important;
+    color:#ffc107 !important;
+}
+.tiepnhandauvao-static-box .item:nth-child(6) .number {
+    color: #ffc107 !important;
+}
+/* --------------------------- */
 .hosodauvao-tabs .nav-tabs{
     border: none;
-    padding: 10px 20px;
+    padding: 0;
+    border-bottom: 1px solid #e1e1e1;
 }
 .hosodauvao-tabs .nav-tabs .nav-link{
     color: #222222;
@@ -12003,31 +12061,92 @@ background: #fff;
     max-width: 160px;
     transform: translateX(-50%);
     margin-left: 50%;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
+    height: auto;
+    overflow: hidden;
 }
 .aps-chitiethoso .aps-kienTraNhanh-ttCaNhan {
-    width: 50% !important;
+    /* width: 50% !important; */
 }
+.aps-chitiethoso .aps-kienTraNhanh-ttCaNhan .item .item-lable {
+    width: 115px !important;
+    min-width: 115px !important;
+}
+.aps-chitiethoso .aps-kienTraNhanh-trangThai .item-lable {
+    line-height: 34px !important;}
 .aps-kienTraNhanh-trangThai .item.item-line .item-content {
     padding-top: 10px;
 }
 .luongxuly-list{
     display: flex;
-    flex-wrap: wrap;
-    padding: 20px;
-    align-items: center;
+    /* flex-wrap: wrap; */
+    padding:0 20px 20px 20px;
+    align-items: stretch;
     justify-content: space-between;
     
 }
 .luongxuly-list .item{
-border: solid 1px #e1e1e1;
+border: solid 1px #e1e1e1;background-color: rgba(0,0,0,.008);
 display: flex;
 flex-direction: column;
 align-items: center;
-border-radius: 6px;
-padding: 20px auto;
-
-
+border-radius:10px;
+padding: 20px 10px;
+/* height: 100%; */
+margin: 0px 10px;
+color: #888;
+}
+.luongxuly-list .item:first-child{
+margin-left:0 !important;
+}
+.luongxuly-list .item:last-child{
+margin-right:0 !important;
+}
+.luongxuly-list .item i{
+font-weight: 300 !important;
+font-size: 22px;
+margin-bottom: 8px;
+}
+.luongxuly-list  .spacre{
+    color: #999;
+    display: flex;
+    align-items: center;
+}
+.luongxuly-list .item .item-content{
+    height: 100%;
+    text-align: center;
+}
+.luongxuly-list .item .title{
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 5px;
+    line-height: 20px;
+}
+.luongxuly-list .item .day-time{
+    font-size: 12px;
+    color: #888;
+}
+.luongxuly-list .item.hoanthanh {
+    background-color: rgba(25,135,84,.1);
+    /* color: #198754; */
+    border: 1px solid rgba(25,135,84,.1) !important;
+}
+.luongxuly-list .item.hoanthanh i{
+    font-weight: 700 !important;
+     color: #198754;
+}
+.luongxuly-list .item.dangXuLy {
+    background-color: rgba(13,110,253,.15);
+    color: rgba(13,110,253,1);
+    border: 1px solid rgba(13,110,253,.15) !important;
+}
+.luongxuly-list .item.dangXuLy i{
+    font-weight: 700 !important;
+}
+.luongxuly-list .item:nth-child(2) {
+    background-color: rgba(220,53,69,.15);
+    color: #dc3545;
+    border: 1 solid  #ef3463 !important;
 }
 .luongxuly-list .item i{
     font-weight: 700;
@@ -12057,4 +12176,93 @@ padding: 20px auto;
     width: 140px;
     /* height: 60px; */
     overflow: hidden;
+}
+
+/* -----Tiếp nhận đầu vào tuyển sinh------ */
+.aps-admissions .aps-admissions-lable .images{
+    height: 44px;
+    padding-right: 10px;
+}
+.aps-admissions-lable .box-title span{
+   font-size: 22px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase;
+    line-height: 24px;
+    color: var(--color-blue) !important;
+    padding: 0 !important;
+    float: none !important;
+    margin: 0 auto !important;
+    text-align: center !important;
+    justify-content: center !important;
+}
+.aps-admissions-lable .box-title {
+    width: 100%;
+    align-items: center;
+    padding: 17px !important;
+}
+.aps-admissions-lable .box-title p{
+    margin-bottom: 0 !important;
+    font-weight: 400;
+}
+.box-search-main .item .label {
+    background: #f7f7f7 !important;
+}
+.box-search-main .item .label {
+   font-weight: 300 !important;
+    font-size: 12px;
+    color: #999;
+    position: relative;
+    z-index: 11;
+    background: #fff;
+    top: 0;
+    left: 0;
+    padding: 0px 0 3px 0;
+}
+.aps-hs-dauVao .number{
+     font-weight: 400 !important;
+}
+.nghi-ngo,.hs-loi{
+    padding: 2px 6px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+/* ----- */
+.box-thaotac{
+    display: block !important;
+    width: 100% !important;
+    padding: 0 20px 20px 20px;    
+}
+.box-thaotac .box-header{
+    padding-left: 0 !important;
+}
+.thaotac-list {
+    gap: 15px !important;
+    display: flex !important;
+    width: 100%;
+    flex-wrap: wrap;
+}
+.thaotac-list .item {
+/* float: left;
+    margin-right: 10px;
+    margin-bottom: 10px; */
+}
+.thaotac-list .item .btn-soft-primary{
+    border: 1px solid  rgba(13, 110, 253, .3) !important;
+}
+.thaotac-list .item .title{
+    color: #222;
+}
+.thaotac-list .item .btn-soft-success{
+   border: 1px solid   rgba(25, 135, 84, .3) !important;
+}
+.thaotac-list .btn{
+    height: auto !important;
+    padding:10px !important;
+}
+.thaotac-list .btn .title{
+   color: #fff;
+}
+.thaotac-list .btn i{
+    font-size: 18px;
+    font-weight: 700;
 }
