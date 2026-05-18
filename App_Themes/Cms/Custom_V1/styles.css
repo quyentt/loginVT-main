@@ -725,45 +725,6 @@ thead {
   border-right: 0 !important;
 }
 
-.scroll-table-x .table.talbe-border-0 tr:last-child {
-  border-right: 0 solid #e1e1e1 !important;
-}
-
-/* width */
-.table-responsive::-webkit-scrollbar,
-.table::-webkit-scrollbar,
-.scroll-table-x::-webkit-scrollbar {
-  width: 1px !important;
-}
-
-/* Track */
-.table-responsive::-webkit-scrollbar-track,
-.table::-webkit-scrollbar-track,
-.scroll-table-x::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Handle */
-.table-responsive::-webkit-scrollbar-thumb,
-.table::-webkit-scrollbar-thumb,
-.scroll-table-x::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1) !important;
-}
-
-.table-responsive::-webkit-scrollbar-thumb,
-.table::-webkit-scrollbar-thumb,
-.scroll-table-x::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1) !important;
-  border-radius: 20px !important;
-}
-
-/* Handle on hover */
-.table-responsive::-webkit-scrollbar-thumb:hover,
-.table::-webkit-scrollbar-thumb:hover,
-.scroll-table-x::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2) !important;
-  border-radius: 20px !important;
-}
 
 .table-select2 .pull-right .simple-pagination,
 .table-select2 .compact-theme.simple-pagination {
@@ -1919,40 +1880,40 @@ thead {
 .table.talbe-border-0>tbody tr {
   border-right: 0 !important;
 }
+.scroll-table-x {
+    overflow-x: auto !important;
+}
 
 .scroll-table-x .table.talbe-border-0 tr:last-child {
   border-right: 0 solid #e1e1e1 !important;
 }
+.scroll-table-x,
+.aps-table-select.scroll-table-x {
+  overflow-y: hidden !important;
+}
 
-/* width */
+
 .table-responsive::-webkit-scrollbar,
 .table::-webkit-scrollbar,
 .scroll-table-x::-webkit-scrollbar {
   width: 1px !important;
 }
-
-/* Track */
 .table-responsive::-webkit-scrollbar-track,
 .table::-webkit-scrollbar-track,
 .scroll-table-x::-webkit-scrollbar-track {
   background: rgba(0, 0, 0, 0.1) !important;
 }
-
-/* Handle */
 .table-responsive::-webkit-scrollbar-thumb,
 .table::-webkit-scrollbar-thumb,
 .scroll-table-x::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1) !important;
 }
-
 .table-responsive::-webkit-scrollbar-thumb,
 .table::-webkit-scrollbar-thumb,
 .scroll-table-x::-webkit-scrollbar-thumb {
   background: rgba(0, 0, 0, 0.1) !important;
   border-radius: 20px !important;
 }
-
-/* Handle on hover */
 .table-responsive::-webkit-scrollbar-thumb:hover,
 .table::-webkit-scrollbar-thumb:hover,
 .scroll-table-x::-webkit-scrollbar-thumb:hover {
@@ -4743,10 +4704,7 @@ button:not(:disabled) {
   position: relative;
 }
 
-.scroll-table-x,
-.aps-table-select.scroll-table-x {
-  overflow-y: hidden !important;
-}
+
 
 .btn-outline-warning {
   color: #ffc107;

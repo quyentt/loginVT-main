@@ -5880,7 +5880,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .scroll-table-x.aps-nhaptheolop-table {
-    overflow-y: scroll !important;
+    /* overflow-y: scroll !important; */
 }
 
 .zone-bus.aps_tonghoptheongay,
@@ -11268,9 +11268,6 @@ table#clone {
     padding: 10px !important;
 }
 
-.scroll-table-x {
-    overflow-x: scroll !important;
-}
 
 /* --------------------- */
 .myModalThuTu .modal-dialog,
