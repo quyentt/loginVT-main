@@ -11712,7 +11712,7 @@ table#clone {
     border-radius: 10px;
 }
 .aps-kienTraNhanh-content .item{
-    padding-bottom: 10px;
+    padding-bottom: 3px;
 }
 .aps-kienTraNhanh-trangThai .item .item-lable{
     list-style: 34px !important;
@@ -12184,8 +12184,8 @@ margin-bottom: 8px;
     padding-right: 10px;
 }
 .aps-admissions-lable .box-title span{
-   font-size: 22px !important;
-    font-weight: 700 !important;
+    font-size: 20px !important;
+    font-weight: 800 !important;
     text-transform: uppercase;
     line-height: 24px;
     color: var(--color-blue) !important;
@@ -12302,14 +12302,18 @@ margin-bottom: 8px;
 
 }
 .box-header-has-action .role-list .item{
-        border: solid 1px #e1e1e1;
-    border-radius: 4px;
-    height: 45px;
+    border: solid 1px #e1e1e1;
+    border-radius: 8px;
+    height: 44px;
     color: #222222;
     display: flex;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 15px;
     gap: 10px;
+}
+.box-header-has-action .role-list .item:hover{
+    border: solid 1px var(--color-blue);
+    color: var(--color-blue);
 }
 .box-header-has-action .role-list .item i{
     font-size: 18px;
@@ -12336,31 +12340,31 @@ margin-bottom: 8px;
         
 }
 .data-scope-box .data-scope-list .item .icon{   
-    background: rgba(49, 103, 243, .1) ;
-    color: #3380db ;
+    background: rgba(49, 103, 243, .1);
+    color: #3380db;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     border-radius: 100%;
     flex-shrink: 0;
-    font-size: 21px;
-
+    font-size: 20px;
 }
 .data-scope-box .data-scope-list .item .meta .title{
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    line-height: 20px;
 }
 .data-scope-box .data-scope-list .item .meta p{
     margin: 0;
     color: #666666;
+    line-height: 20px;
 }
 .data-scope-box .data-scope-list .info{
     background: rgba(49, 103, 243, .1) ;
     border-radius: 6px;
     display: flex;
-
     gap: 10px;
     padding: 15px;
 }
@@ -12375,6 +12379,7 @@ margin-bottom: 8px;
 }
 .data-scope-box .data-scope-list .info p{
     margin: 0;
+    line-height: 20px;
 }
 .box-title-has-action{
     display: flex;
@@ -12383,25 +12388,11 @@ margin-bottom: 8px;
 .box-title-has-action .box-title{
     width: auto;
 }
-.box-title-has-action .lock-default{
-  background: rgba(34, 166, 82, 0.1) !important;
-    color: #22a652;
-    padding: 5px 10px;
-    border-radius: 6px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-right: 15px;
-    border: solid 1px var(--color-green);
-    height: 40px;
-}
-.box-header-has-action .lock-default i{
-    font-weight: 700;
-}
+
 .status-filter{
     display: flex;
     gap: 15px;
-    padding: 15px;
+    padding: 15px 20px 10px 20px;
 }
 .status-filter .btn-group{
     display: flex;
@@ -12423,7 +12414,7 @@ margin-bottom: 8px;
     margin-top: 5px;
 }
 .status-filter .status-filter-list .item{
-        background: rgba(34, 166, 82, 0.1) !important;
+    background: rgba(34, 166, 82, 0.1);
     color: #22a652;
     border-radius: 4px;
     padding: 5px 10px;
@@ -12432,11 +12423,11 @@ margin-bottom: 8px;
 .aps-kienTraNhanh-content .user-infomation{
     padding: 0;
     display: flex;
-    gap: 20px;
+    gap:15px;
 }
 .aps-kienTraNhanh-content .user-infomation .image{
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     overflow: hidden;
     border-radius: 100%;
     border: solid 3px #e1e1e1;
@@ -12458,9 +12449,14 @@ margin-bottom: 8px;
 
 }
 .aps-kienTraNhanh-content .user-infomation .info .item .label{
-    color: #666666;
-    margin-right: 20px;
+    color: #888;
+    line-height: 24px;
+    min-width: 90px;
+    margin-right: 5px;
     flex-shrink: 0;
+}
+.aps-kienTraNhanh-content .user-infomation .info .item .text{
+    line-height: 24px;
 }
 .aps-kienTraNhanh-content .user-infomation .info .item.user-name .text{
     font-weight: 900;
@@ -12477,7 +12473,10 @@ margin-bottom: 8px;
     margin-top: 10px;
 }
 .aps-sinhvientongquat-trangthai {
-    padding: 0 20px;
+    /* padding: 0 20px; */
+}
+.aps-kienTraNhanh-trangThai.aps-sinhvientongquat-trangthai .item .item-lable {
+    min-width: 120px !important;
 }
 .aps-sinhvientongquat-trangthai .item{
     justify-content: flex-start;
@@ -12492,27 +12491,28 @@ margin-bottom: 8px;
     gap: 8px;
     flex: 1;
     padding: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 .aps-sinhvientongquat-trangthai .item .item-content-list .item-content{
     min-width: fit-content;
 }
+.aps-sinhvientongquat-trangthai .item:last-child{
+    padding-bottom: 0 !important;
+}
 .aps-sinhvientongquat-goiyboloc {
-    padding: 0 20px;
-    margin-bottom: 20px;
   
 }
 .aps-sinhvientongquat-goiyboloc .item{
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 10px;
+    margin-bottom:5px;
 }
 .aps-sinhvientongquat-goiyboloc .item i{
     margin-top: 5px;
 }
 .aps-info-box {
     background: rgba(49, 103, 243, .1);
-    border-radius: 6px;
+    border-radius: 12px;
     display: flex;
     gap: 10px;
     padding: 15px;
@@ -12694,4 +12694,91 @@ margin-bottom: 8px;
 .box-lichSu-list ul li .user{
  color: #222;
 
+}
+/* ------aps-student-management-search */
+.aps-student-manager-search .box-search-main
+ .item .label {
+    font-weight: 300 !important;
+    font-size: 12px;
+    color: #999;
+    position: absolute;
+    z-index: 11;
+    background: #fff !important;
+    top: -9px;
+    left: 8px;
+    padding: 0px 5px 3px 5px;
+}
+.aps-student-manager-search .tiepnhandauvao-filter-box .left .item{
+    max-width: 175px;
+        margin-bottom: 5px;
+}
+.aps-student-manager-office{
+    border-right: 1px solid #f1f1f1;
+}
+.aps-student-manager-office .box-title .number-ql{
+    background: rgba(34, 166, 82, 0.1) !important;
+    color: #22a652;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 100%;
+    flex-shrink: 0;
+    font-size: 20px;
+    float: left;
+    margin-right: 10px;
+    font-weight: 800;
+}
+.aps-student-manager-office .box-title,
+.aps-department-manager .box-title {
+    line-height: 22px;
+}
+.aps-student-manager-office .box-title p,
+.aps-department-manager .box-title p {
+    font-size: 16px !important;
+    color: #888;
+}
+
+.aps-department-manager .box-title .number-ql{
+   background: rgba(220, 53, 69, .1) !important;
+    color: #dc3545 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 100%;
+    flex-shrink: 0;
+    font-size: 20px;
+    float: left;
+    margin-right: 10px;
+    font-weight: 800;
+}
+.aps-department-manager .box-title .title {
+ color: #dc3545 !important;
+}
+.box-title-has-action .lock-default{
+  background: rgba(220, 53, 69, .1) !important;
+    color: #dc3545 !important;
+    padding: 5px 10px;
+    border-radius: 6px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-right: 15px;
+    border: solid 1px #dc3545 !important;
+    height: 40px;
+}
+.box-header-has-action .lock-default i{
+    font-weight: 700;
+}
+.aps-department-manager .box-title-has-action {
+    align-items: flex-start;
+}
+.btn-e1e1e1{
+    border: 1px solid #e1e1e1 !important;
+}
+.aps-student-static .item{
+        margin-bottom:0 !important;
 }

@@ -57,6 +57,9 @@ blockquote {
 .color-blue {
   color: var(--color-blue) !important;
 }
+.color-puple,.box-title.color-puple {
+  color: var(--color-purple) !important;
+}
 
 .color-green,
 .color-green.box-title {
@@ -6920,14 +6923,39 @@ input[type="radio"] {
     -webkit-box-shadow: none;
     box-shadow: none
 }
-
 .btn-soft-primary {
-    background-color: rgba(13,110,253,.1);
+    background-color: rgba(13,110,253,.1) !important;
     white-space: nowrap;
-    color: #0d6efd !important
+    color: #0d6efd !important;
+   border:1px solid rgba(13,110,253,.1) !important;
 }
 
-.btn-soft-primary:hover ,.table tr:hover btn-soft-primary{
+.btn-soft-puple{
+    background-color: rgba(159,34,214,.1) !important;
+     border:1px solid rgba(159,34,214,.1) !important;
+    white-space: nowrap;
+    color: #9f22d6 !important
+}
+.btn-soft-puple:hover,.table tr:hover .btn-soft-puple{
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: #9f22d6 !important;
+    color: #fff !important
+}
+.btn-soft-orange{
+    background-color: rgba(255,69,0,.1) !important;
+    white-space: nowrap;
+    color: #ff4500 !important;
+    border:1px solid rgba(255,69,0,.1) !important;
+}
+.btn-soft-orange:hover,.table tr:hover .btn-soft-orange{
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    background-color: #ff4500 !important;
+    color: #fff !important
+}
+
+.btn-soft-primary:hover ,.table tr:hover .btn-soft-primary{
     -webkit-box-shadow: none;
     box-shadow: none;
     background-color: #0d6efd !important;
@@ -6935,9 +6963,10 @@ input[type="radio"] {
 }
 
 .btn-soft-secondary {
-    background-color: rgba(168,181,209,.1);
+    background-color: rgba(168,181,209,.1) !important;
     color: #a8b5d1 !important;
     white-space: nowrap;
+    border:1px solid rgba(168,181,209,.1) !important;
 }
 
 .btn-soft-secondary:hover ,.table tr:hover .btn-soft-secondary{
@@ -6948,9 +6977,10 @@ input[type="radio"] {
 }
 
 .btn-soft-success {
-    background-color: rgba(25,135,84,.1);
+    background-color: rgba(25,135,84,.1) !important;
     color: #198754;
     white-space: nowrap;
+    border:1px solid rgba(25,135,84,.1) !important;
 }
 
 .btn-soft-success:hover,.table tr:hover .btn-soft-success{
@@ -6961,9 +6991,10 @@ input[type="radio"] {
 }
 
 .btn-soft-info {
-    background-color: rgba(65,203,216,.1);
+    background-color: rgba(65,203,216,.1) !important;
     color: #41cbd8;
     white-space: nowrap;
+    border:1px solid rgba(65,203,216,.1) !important;
 }
 
 .btn-soft-info:hover,.table tr:hover .btn-soft-info{
@@ -6974,8 +7005,9 @@ input[type="radio"] {
 }
 
 .btn-soft-warning {
-    background-color: rgba(244,161,77,.1);
+    background-color: rgba(244,161,77,.1) !important;
     color: #f4a14d !important;
+    border:1px solid rgba(244,161,77,.1) !important;
     white-space: nowrap;
 }
 
@@ -6990,6 +7022,7 @@ input[type="radio"] {
     background-color: rgba(220,53,69,.1) !important;
     color: #dc3545 !important;
     border: 0 solid  #ef3463 !important;
+    border:1px solid  rgba(220,53,69,.1) !important;
     white-space: nowrap;    
 }
 
@@ -7002,7 +7035,7 @@ input[type="radio"] {
 }
 
 .btn-soft-pink {
-    background-color: rgba(253,60,151,.1);
+    background-color: rgba(253,60,151,.1) !important;
     color: #fd3c97
 }
 
@@ -7014,7 +7047,7 @@ input[type="radio"] {
 }
 
 .btn-soft-purple {
-    background-color: rgba(91,88,230,.1);
+    background-color: rgba(91,88,230,.1) !important;
     color: #5b58e6
 }
 
@@ -7026,7 +7059,7 @@ input[type="radio"] {
 }
 
 .btn-soft-blue {
-    background-color: rgba(49,103,243,.1);
+    background-color: rgba(49,103,243,.1) !important;
     color: #3167f3
 }
 
@@ -7038,7 +7071,7 @@ input[type="radio"] {
 }
 
 .btn-soft-light {
-    background-color: rgba(244,246,249,.1);
+    background-color: rgba(244,246,249,.1) !important;
     color: #f4f6f9
 }
 
@@ -7050,7 +7083,7 @@ input[type="radio"] {
 }
 
 .btn-soft-dark {
-    background-color: rgba(37,40,45,.15);
+    background-color: rgba(37,40,45,.15) !important;
     color: #25282d
 }
 
@@ -7081,4 +7114,14 @@ input[type="radio"] {
 .no-link{
   pointer-events: none; /* Không thể click vào link */
     cursor: default;  
+}
+
+.aps-student-list tr td .image {
+    width: 38px;
+    height: 38px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: solid 3px #e1e1e1;
+    flex-shrink: 0;
+    margin-right: 6px;
 }
