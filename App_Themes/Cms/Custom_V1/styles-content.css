@@ -12709,8 +12709,14 @@ margin-bottom: 8px;
     padding: 0px 5px 3px 5px;
 }
 .aps-student-manager-search .tiepnhandauvao-filter-box .left .item{
-    max-width: 175px;
-        margin-bottom: 5px;
+       max-width: 500px;
+    margin-bottom: 5px;
+    flex-grow: 1;
+    flex-basis: 175px;
+}
+.aps-student-manager-search .tiepnhandauvao-filter-box .left .item.item-search.text-item {
+    /* min-width: 236px !important; */
+    /* max-width: 236px !important; */
 }
 .aps-student-manager-office{
     border-right: 1px solid #f1f1f1;
