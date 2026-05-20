@@ -66,6 +66,9 @@ blockquote {
   color: var(--color-green) !important;
 }
 /* ---background--- */
+.bg-ff {
+  background: #fff !important;
+}
 .bg-f7 {
   background: #f7f7f7 !important;
 }
