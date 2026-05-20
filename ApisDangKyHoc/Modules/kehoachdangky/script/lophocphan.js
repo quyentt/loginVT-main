@@ -991,9 +991,10 @@ LopHocPhan.prototype = {
                     }
                 },
                 {
-                    "mDataProp": "HINHTHUCHOC_TEN",
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.HINHTHUCHOC_TEN) + ' - ' + edu.util.returnEmpty(aData.HINHTHUCHOC_MA);
+                        var ten = edu.util.returnEmpty(aData.HINHTHUCHOC_TEN);
+                        var ma = edu.util.returnEmpty(aData.HINHTHUCHOC_MA);
+                        return ma ? ten + ' - ' + ma : ten;
                     }
                 },
                 {
@@ -1196,7 +1197,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1216,13 +1219,13 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
-                    "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.HINHTHUCHOC_TEN) + ' - ' + edu.util.returnEmpty(aData.HINHTHUCHOC_MA);
-                    }
+                    "mDataProp": "TENHINHTHUCHOC"
                 },
                 {
                     "mDataProp": "SOTINCHI"
@@ -1238,12 +1241,24 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
                         return edu.util.formatCurrency(aData.SOTIEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.SOTIEN1);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.SOTIEN2);
                     }
                 },
                 {
@@ -1256,10 +1271,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.DACHUYENKETOAN ? "Đã chuyển": 0 ;
+                        return aData.DACHUYENKETOAN ? "Đã chuyển" : "Chưa chuyển";
                     }
                 },
-
                 {
                     "mDataProp": "HANHDONG_XACNHAN_TEN"
                 },
@@ -1372,7 +1386,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1392,7 +1408,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1409,7 +1427,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
 

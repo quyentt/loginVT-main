@@ -3,6 +3,32 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+
+    /* Đồng nhất style cell cho các bảng lớp học phần */
+    .tblLopHocPhan tbody td,
+    .tblLopHocPhanChiTiet tbody td,
+    .tblLopHocPhanChiTiet2 tbody td {
+        vertical-align: middle !important;
+        word-break: break-word;
+        line-height: 1.45;
+        color: #1f2d3d;
+    }
+
+    .tblLopHocPhan thead th,
+    .tblLopHocPhanChiTiet thead th,
+    .tblLopHocPhanChiTiet2 thead th {
+        vertical-align: middle !important;
+        color: #000 !important;
+        font-weight: 700 !important;
+        background-color: #e6ebf2 !important;
+    }
+
+    .tblLopHocPhan thead th b,
+    .tblLopHocPhanChiTiet thead th b,
+    .tblLopHocPhanChiTiet2 thead th b {
+        color: #000 !important;
+        font-weight: 800 !important;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-lophocphan">
@@ -192,20 +218,19 @@
                             <thead>
                                 <tr>
                                     <th rowspan="2" class="td-center">Stt</th>
-                                    <th colspan="6" class="td-center" style="background: #f1f1f1;"><b>Thông tin sinh
-                                            viên</b></th>
-                                    <th colspan="15" class="td-center"><b>Thông tin đăng ký</b></th>
+                                    <th colspan="6" class="td-center"><b>Thông tin sinh viên</b></th>
+                                    <th colspan="17" class="td-center"><b>Thông tin đăng ký</b></th>
                                     <th rowspan="2" class="td-center td-fixed">
                                         <input type="checkbox" class="chkSystemSelectAll">
                                     </th>
                                 </tr>
                                 <tr>
-                                    <th class="td-left" style="background: #f1f1f1;">Mã số</th>
-                                    <th class="td-left" style="background: #f1f1f1;">Họ đệm</th>
-                                    <th class="td-left" style="background: #f1f1f1;">Tên</th>
-                                    <th class="td-left" style="background: #f1f1f1;">Chương trình</th>
-                                    <th class="td-left" style="background: #f1f1f1;">Khóa học</th>
-                                    <th class="td-left" style="background: #f1f1f1;">Khoa quản lý</th>
+                                    <th class="td-left">Mã số</th>
+                                    <th class="td-left">Họ đệm</th>
+                                    <th class="td-left">Tên</th>
+                                    <th class="td-left">Chương trình</th>
+                                    <th class="td-left">Khóa học</th>
+                                    <th class="td-left">Khoa quản lý</th>
                                     <th class="td-left">Loại lớp</th>
                                     <th class="td-left">Mã lớp học phần</th>
                                     <th class="td-left">Tên lớp học phần</th>
@@ -217,6 +242,8 @@
                                     <th class="td-center">TK đăng ký</th>
                                     <th class="td-left">Chương trình đăng ký</th>
                                     <th class="td-right">Số tiền</th>
+                                    <th class="td-right">Số tiền 1</th>
+                                    <th class="td-right">Số tiền 2</th>
                                     <th class="td-right">Đã nộp</th>
                                     <th class="td-center">Khoản phí</th>
                                     <th class="td-right">Đã chuyển kế toán</th>
@@ -240,8 +267,7 @@
                                 <tr>
                                     <th rowspan="2" class="td-center w-50px">Stt</th>
                                     <th colspan="3" class="td-center"><b>Thông tin rút</b></th>
-                                    <th colspan="6" class="td-center" style="background: #f1f1f1;"><b>Thông tin sinh
-                                            viên</b></th>
+                                    <th colspan="6" class="td-center"><b>Thông tin sinh viên</b></th>
                                     <th colspan="9" class="td-center"><b>Thông tin đăng ký</b></th>
                                     <th rowspan="2" class="td-center td-fixed">
                                         <input type="checkbox" class="chkSystemSelectAll">
@@ -251,12 +277,12 @@
                                     <th class="td-center">Người rút</th>
                                     <th class="td-center">Thời gian rút</th>
                                     <th class="td-center">Phần trăm phí</th>
-                                    <th class="td-center" style="background: #f1f1f1;">Mã số</th>
-                                    <th class="td-center" style="background: #f1f1f1;">Họ đệm</th>
-                                    <th class="td-center" style="background: #f1f1f1;">Tên</th>
-                                    <th class="td-center" style="background: #f1f1f1;">Chương trình</th>
-                                    <th class="td-center" style="background: #f1f1f1;">Khóa học</th>
-                                    <th class="td-center" style="background: #f1f1f1;">Khoa quản lý</th>
+                                    <th class="td-center">Mã số</th>
+                                    <th class="td-center">Họ đệm</th>
+                                    <th class="td-center">Tên</th>
+                                    <th class="td-center">Chương trình</th>
+                                    <th class="td-center">Khóa học</th>
+                                    <th class="td-center">Khoa quản lý</th>
                                     <th class="td-center">Loại lớp</th>
                                     <th class="td-center">Mã lớp học phần</th>
                                     <th class="td-center">Tên lớp học phần</th>
