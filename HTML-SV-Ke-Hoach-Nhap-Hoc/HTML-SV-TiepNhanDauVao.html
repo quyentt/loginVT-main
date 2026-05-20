@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kế hoạch nhập học - Thu phí</title>
+  <title>Tiếp nhận đàu vào tuyển sinh</title>
   <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -357,9 +357,9 @@
             <div class="sidebar-menu-sub collapse show" id="collapse5" data-bs-parent="#sidebar-menu">
               <div class="sidebar-menu-sub-content">
                 <a href="HTML-SV-Ke-Hoach-Nhap-Hoc-01.html" data-position="1">Kế hoạch nhập học</a>
-                <a class="active" href="HTML-SV-Ke-Hoach-Nhap-Hoc-02-ThuPhi.html" data-position="0">Kế hoạch nhập học -
+                <a href="HTML-SV-Ke-Hoach-Nhap-Hoc-02-ThuPhi.html" data-position="0">Kế hoạch nhập học -
                   Thu phí</a>
-                <a href="QuanTriNhom.html" data-position="1">Quản lý vị trí công việc</a>
+                <a class="active" href="HTML-SV-TiepNhanDauVao.html" data-position="1">Tiếp nhận đàu vào tuyển sinh</a>
                 <a href="QuanTriNhom.html" data-position="1">Quan hệ lao động</a>
                 <a href="QuanTriNhom.html" data-position="1">Phân công lao động</a>
               </div>
@@ -377,7 +377,7 @@
             <p class="link">
               <a href="#">Kế hoạch nhập học</a>
               <i class="fal fa-angle-right"></i>
-              <a href="#">Kế hoạch nhập học - Thu phí</a>
+              <a href="#">Tiếp nhận đàu vào tuyển sinh</a>
             </p>
           </div>
           <div class="nav-content-right">
@@ -386,112 +386,115 @@
           </div>
         </div>
       </div>
-      <div class="box-content aps-nhaphoc-thuPhi pt-0 pl20 pr20 pb-0">
-        <div class="box box-solid box-shadow box-header khnh-thuPhi-lable pd-20" style="display: block !important;">
-          <h3 class="box-title w100 mg-auto">
-            <!-- <img src="../assets/images/dashboad-item-6.png" class="images" /> -->
-            Tiếp nhận đầu vào tuyển sinh
-          </h3>
-          <p class="slogan fs-12 fst-italic text-center color-66">Theo dõi, tiếp nhận và xử lý hồ sơ đầu vào từ nhiều
-            nguồn: Đăng ký trực tuyến, cán bộ đăng nhập, import file và chuyển nguồn khác.</p>
+      <div class="box-content aps-admissions pt-0 pl20 pr20 pb-0 ">
+        <div class="box box-solid box-shadow box-header aps-admissions-lable pd0">
+          <div class="box box-solid box-search">
+            <h3 class="box-title">
+              <img src="../assets/images/admissions.png" class="images" />
+              <div class="">
+                <span>Tiếp nhận đầu vào tuyển sinh</span>
+                <p class="aps-note fz14 text-left color-888">
+                  Theo dõi, tiếp nhận và xử lý hồ sơ đầu vào từ nhiều
+                  nguồn: Đăng ký trực tuyến, cán bộ đăng nhập, import file và chuyển nguồn khác.</p>
+              </div>
+            </h3>
+            <div class="tiepnhandauvao-filter-box box-search-main pt-0">
+              <div class="left">
+                <div class="item">
+                  <div class="label">Kế hoạch tuyển sinh</div>
+                  <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                    <div class="input-group no-icon" bis_skin_checked="1">
+                      <i class="fal fa-angle-down"></i>
+                      <select class="form-select" aria-label="Default select example">
+                        <option selected="">Kế hoạch tuyển sinh</option>
+                        <option value="1">Kế hoạch tuyển sinh 1</option>
+                        <option value="2">Kế hoạch tuyển sinh 2</option>
+                        <option value="3">Kế hoạch tuyển sinh 3</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="label">Đợt tuyển sinh</div>
+                  <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                    <div class="input-group no-icon" bis_skin_checked="1">
+                      <i class="fal fa-angle-down"></i>
+                      <select class="form-select" aria-label="Default select example">
+                        <option selected="">Đợt 1</option>
+                        <option value="1">Kế hoạch tuyển sinh 1</option>
+                        <option value="2">Kế hoạch tuyển sinh 2</option>
+                        <option value="3">Kế hoạch tuyển sinh 3</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="label">Đối tượng tuyển sinh</div>
+                  <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                    <div class="input-group no-icon" bis_skin_checked="1">
+                      <i class="fal fa-angle-down"></i>
+                      <select class="form-select" aria-label="Default select example">
+                        <option selected="">Tất cả</option>
+                        <option value="1">Kế hoạch tuyển sinh 1</option>
+                        <option value="2">Kế hoạch tuyển sinh 2</option>
+                        <option value="3">Kế hoạch tuyển sinh 3</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="label">Ngành/CTĐT</div>
+                  <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                    <div class="input-group no-icon" bis_skin_checked="1">
+                      <i class="fal fa-angle-down"></i>
+                      <select class="form-select" aria-label="Default select example">
+                        <option selected="">Tất cả</option>
+                        <option value="1">Kế hoạch tuyển sinh 1</option>
+                        <option value="2">Kế hoạch tuyển sinh 2</option>
+                        <option value="3">Kế hoạch tuyển sinh 3</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="item">
+                  <div class="label">Trạng thái</div>
+                  <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                    <div class="input-group no-icon" bis_skin_checked="1">
+                      <i class="fal fa-angle-down"></i>
+                      <select class="form-select" aria-label="Default select example">
+                        <option selected="">Tất cả</option>
+                        <option value="1">Kế hoạch tuyển sinh 1</option>
+                        <option value="2">Kế hoạch tuyển sinh 2</option>
+                        <option value="3">Kế hoạch tuyển sinh 3</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div class="item text-item item-search">
+                  <input id="txtSearch_TuKhoa" class="form-control" placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                </div>
+                <div class="btn-group">
+                  <a class="btn btn-primary" href="">
+                    <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
+                  </a>
+                  <a class="btn btn-outline-warning" href="">
+                    <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
+                  </a>
+                </div>
 
-          <div class="tiepnhandauvao-filter-box box-search-main">
-            <div class="left">
-              <div class="item">
-                <div class="label">Kế hoạch tuyển sinh</div>
-                <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                  <div class="input-group no-icon" bis_skin_checked="1">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Kế hoạch tuyển sinh</option>
-                      <option value="1">Kế hoạch tuyển sinh 1</option>
-                      <option value="2">Kế hoạch tuyển sinh 2</option>
-                      <option value="3">Kế hoạch tuyển sinh 3</option>
-                    </select>
-                  </div>
-                </div>
               </div>
-              <div class="item">
-                <div class="label">Đợt tuyển sinh</div>
-                <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                  <div class="input-group no-icon" bis_skin_checked="1">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Đợt 1</option>
-                      <option value="1">Kế hoạch tuyển sinh 1</option>
-                      <option value="2">Kế hoạch tuyển sinh 2</option>
-                      <option value="3">Kế hoạch tuyển sinh 3</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="label">Đối tượng tuyển sinh</div>
-                <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                  <div class="input-group no-icon" bis_skin_checked="1">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Tất cả</option>
-                      <option value="1">Kế hoạch tuyển sinh 1</option>
-                      <option value="2">Kế hoạch tuyển sinh 2</option>
-                      <option value="3">Kế hoạch tuyển sinh 3</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="label">Ngành/CTĐT</div>
-                <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                  <div class="input-group no-icon" bis_skin_checked="1">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Tất cả</option>
-                      <option value="1">Kế hoạch tuyển sinh 1</option>
-                      <option value="2">Kế hoạch tuyển sinh 2</option>
-                      <option value="3">Kế hoạch tuyển sinh 3</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="item">
-                <div class="label">Trạng thái</div>
-                <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                  <div class="input-group no-icon" bis_skin_checked="1">
-                    <i class="fal fa-angle-down"></i>
-                    <select class="form-select" aria-label="Default select example">
-                      <option selected="">Tất cả</option>
-                      <option value="1">Kế hoạch tuyển sinh 1</option>
-                      <option value="2">Kế hoạch tuyển sinh 2</option>
-                      <option value="3">Kế hoạch tuyển sinh 3</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-              <div class="item text-item item-search">
-
-                <input id="txtSearch_TuKhoa" class="form-control" placeholder="Mã hồ sơ, Họ tên, CCCD...">
-              </div>
-              <div class="btn-group">
-                <a class="btn btn-primary" href="">
-                  <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
-                </a>
-                <a class="btn btn-warning" href="">
-                  <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
+              <div class="right">
+                <a class="btn btn-outline-primary" href="">
+                  <i class="fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
                 </a>
               </div>
 
             </div>
-            <div class="right">
-              <a class="btn btn-outline-secondary" href="">
-                <i class="fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
-              </a>
-            </div>
-
           </div>
-          <div class="tiepnhandauvao-static-box">
+          <div class="tiepnhandauvao-static-box pl20 pr20">
             <div class="item">
               <div class="icon">
-                <i class=" fa-solid fa-folder"></i>
+                <i class="fa-solid fa-folder-user"></i>
               </div>
               <div class="meta">
                 <div class="title">Tổng hồ sơ</div>
@@ -565,29 +568,28 @@
           <div class="clear"></div>
 
         </div>
-        <div class="row aps-nhaphoc-thuPhi-content pd0 mt-20">
-          <!-- 1. Tìm thí sinh -->
-          <div class="col-lg-7 col-12 pl0 mb-20 aps-thuPhi-item">
-            <div class="box box-solid box-shadow aps-timThiSinh pd0 ">
-              <div class="box-header box-header-has-btn with-border text-uppercase">
+        <div class="row aps-admissions-content pd0 mt-20">
+          <!-- 1. Danh sách hồ sơ đầu vào -->
+          <div class="col-lg-7 col-12 pl0 mb-20 aps-file-item">
+            <div class="box box-solid box-shadow aps-hs-dauVao pd0 ">
+              <div class="box-header box-header-has-btn with-border min-h-186">
                 <h3 class="box-title">
-                  <i class="fa-light fa-user-magnifying-glass"></i>1. Danh sách hồ sơ đầu vào <span
-                    style="text-transform: none;">(3.230 kết quả)</span>
+                  <i class="fa-solid fa-folder-user"></i> Danh sách hồ sơ đầu vào
+                  <span style="text-transform: none;" class="number">(3.230 kết quả)</span>
                 </h3>
-                <div class="btn-group" bis_skin_checked="1">
-                  <a class="btn btn-sm btn-primary" href="">
-                    <i class="fa-solid fa-file-excel"></i><span>Xuất excel</span>
-                  </a>
-                  <a class="btn btn-warning" href="">
-                    <i class="fa-solid fa-sliders"></i><span>Tùy chỉnh cột</span>
-                  </a>
-                </div>
-                <div class="pull-right d-none">
-                  <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                <div class="pull-right">
+                  <div class="btn-group" bis_skin_checked="1">
+                    <a class="btn btn-sm btn-outline-success" href="">
+                      <i class="fa-solid fa-file-excel"></i><span>Xuất excel</span>
+                    </a>
+                    <a class="btn btn-outline-primary" href="">
+                      <i class="fa-solid fa-sliders"></i><span>Tùy chỉnh cột</span>
+                    </a>
+                  </div>
                 </div>
               </div>
               <div class="aps-search-candidate">
-                <div class="hosodauvao-tabs">
+                <div class="hosodauvao-tabs pl20 pr20 pb-20 pt10">
                   <ul class="nav nav-tabs" id="myTab" role="tablist">
                     <li class="nav-item" role="presentation">
                       <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#tatca"
@@ -595,38 +597,39 @@
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#tructuyen"
-                        type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">Đăng ký
-                        trực tuyến</button>
+                        type="button" role="tab" aria-controls="profile" aria-selected="false" tabindex="-1">
+                        Đăng ký trực tuyến</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#canbonhap"
-                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Cán bộ
-                        nhập</button>
+                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">
+                        Cán bộ nhập</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#import"
-                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Import
-                        file</button>
+                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">
+                        Import file</button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#nguonkhac"
-                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Nguồn
-                        khác</button>
+                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">
+                        Nguồn khác <span class="hs-loi bg-green color-white">58</span></button></button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#hosoloi"
-                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Hồ sơ lỗi
-                        <span class="hs-loi">58</span></button>
+                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">
+                        Hồ sơ lỗi
+                        <span class="hs-loi bg-blue color-white">58</span></button>
                     </li>
                     <li class="nav-item" role="presentation">
                       <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#trungnghingo"
-                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">Trùng nghi
-                        ngờ <span class="nghi-ngo">60</span></button>
+                        type="button" role="tab" aria-controls="contact" aria-selected="false" tabindex="-1">
+                        Trùng nghi ngờ <span class="nghi-ngo bg-red color-white">60</span></button>
                     </li>
                   </ul>
                   <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade active show" id="tatca" role="tabpanel" aria-labelledby="home-tab">
-                      <div class="aps-search-candidate-detail pd20" bis_skin_checked="1">
+                      <div class="aps-search-candidate-detail" bis_skin_checked="1">
                         <div class="aps-table-select scroll-table-x" bis_skin_checked="1">
                           <table id="tblsearch-candidate"
                             class="table table-hover table-bordered table-noborder tblsearch-candidate">
@@ -635,10 +638,17 @@
                                 <th class="td-fixed td-center w-50px">Stt</th>
                                 <th class="td-left">Mã nhập học</th>
                                 <th class="td-left">Họ và tên</th>
-                                <th class="td-center">CCCD</th>
-                                <th class="td-center" style="min-width: 110px">Điện thoại</th>
-                                <th class="td-center">TC tài chính</th>
-                                <th class="td-center" style="min-width: 60px">Thao tác</th>
+                                <th class="td-center">Đối tượng</th>
+                                <th class="td-center">Nguồn nhập</th>
+                                <th class="td-center">Nguyện vọng</th>
+
+                                <th class="td-center">Trạng thái</th>
+                                <th class="td-center">Trùng</th>
+                                <th class="td-right">Lệ phí</th>
+
+                                <th class="td-center">Ngày tiếp nhận</th>
+                                <th class="td-center">Xem</th>
+                                <th class="td-center"><input type="checkbox" id="chkSelectAll"></th>
                               </tr>
                             </thead>
                             <tbody>
@@ -646,51 +656,104 @@
                                 <td class="td-center td-fix">1</td>
                                 <td class="td-left">MA-KHTS-0001</td>
                                 <td class="td-left">Nguyễn Thị Bích</td>
-                                <td class="td-center">098776543323</td>
-                                <td class="td-center">098776543323</td>
+                                <td class="td-left">Học sinh THPT</td>
+                                <td class="td-left">Đăng ký online</td>
+                                <td class="td-left">NV1</td>
                                 <td class="td-center">
-                                  <a class="btn btn-soft-danger btnConNo" title="Kế hoạch đầu ra" data-bs-toggle="modal"
-                                    data-bs-target="#keHoach_dauRa">Còn nợ</a>
+                                  <span class="btn btn-soft-success">Hợp nợ</span>
+                                  <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
                                 </td>
                                 <td class="td-center">
-                                  <a class="btn btn-soft-primary btnChoose" title="Chọn" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Chọn</a>
+                                  <span class="btn btn-soft-success">Không trùng</span>
                                 </td>
+                                <td class="td-right color-red">500.000đ</td>
+
+                                <td class="td-center">15/05/2026</td>
+                                <td class="td-center">
+                                  <a class="btn btnview btn-outline-primary" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Xem</a>
+                                </td>
+                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
                               </tr>
                               <tr>
                                 <td class="td-center td-fix">1</td>
                                 <td class="td-left">MA-KHTS-0001</td>
                                 <td class="td-left">Nguyễn Thị Bích</td>
-                                <td class="td-center">098776543323</td>
-                                <td class="td-center">098776543323</td>
+                                <td class="td-left">Học sinh THPT</td>
+                                <td class="td-left">Đăng ký online</td>
+                                <td class="td-left">NV1</td>
                                 <td class="td-center">
-                                  <a class="btn btn-soft-success btnDaNop" title="Kế hoạch đầu ra"
-                                    data-bs-toggle="modal" data-bs-target="#keHoach_dauRa">Đã nộp</a>
+                                  <span class="btn btn-soft-warning">Chờ kiểm tra</span>
+                                  <!-- <a class="btn btn-soft-warning" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Chờ kiểm tra</a> -->
                                 </td>
                                 <td class="td-center">
-                                  <a class="btn btn-soft-primary btnChoose" title="Chọn" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Chọn</a>
+                                  <span class="btn btn-soft-success">Không trùng</span>
                                 </td>
+                                <td class="td-right color-red">500.000đ</td>
+
+                                <td class="td-center">15/05/2026</td>
+                                <td class="td-center">
+                                  <a class="btn btnview btn-outline-primary" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Xem</a>
+                                </td>
+                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
                               </tr>
+
                               <tr>
                                 <td class="td-center td-fix">1</td>
                                 <td class="td-left">MA-KHTS-0001</td>
                                 <td class="td-left">Nguyễn Thị Bích</td>
-                                <td class="td-center">098776543323</td>
-                                <td class="td-center">098776543323</td>
+                                <td class="td-left">Học sinh THPT</td>
+                                <td class="td-left">Đăng ký online</td>
+                                <td class="td-left">NV1</td>
                                 <td class="td-center">
-                                  <a class="btn btn-soft-warning btnChuaHoanThanh" title="Kế hoạch đầu ra"
-                                    data-bs-toggle="modal" data-bs-target="#keHoach_dauRa">Chưa hoàn thành</a>
+                                  <span class="btn btn-soft-danger">Cần bổ xung</span>
+                                  <!-- <a class="btn btn-soft-danger" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Cần bổ xung</a> -->
                                 </td>
                                 <td class="td-center">
-                                  <a class="btn btn-soft-primary btnChoose" title="Chọn" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Chọn</a>
+                                  <span class="btn btn-soft-warning">Nghi ngờ</span>
                                 </td>
+                                <td class="td-right color-red">-</td>
+
+                                <td class="td-center">15/05/2026</td>
+                                <td class="td-center">
+                                  <a class="btn btnview btn-outline-primary" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Xem</a>
+                                </td>
+                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
+                              </tr>
+
+                              <tr>
+                                <td class="td-center td-fix">1</td>
+                                <td class="td-left">MA-KHTS-0001</td>
+                                <td class="td-left">Nguyễn Thị Bích</td>
+                                <td class="td-left">Học sinh THPT</td>
+                                <td class="td-left">Đăng ký online</td>
+                                <td class="td-left">NV1</td>
+                                <td class="td-center">
+                                  <span class="btn btn-soft-danger">Lỗi dữ liệu</span>
+                                  <!-- <a class="btn btn-soft-danger" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Lỗi dữ liệu</a> -->
+                                </td>
+                                <td class="td-center">
+                                  <span class="btn btn-soft-warning">Nghi ngờ</span>
+                                </td>
+                                <td class="td-right color-red">-</td>
+
+                                <td class="td-center">15/05/2026</td>
+                                <td class="td-center">
+                                  <a class="btn btnview btn-outline-primary" title="Xem" data-bs-toggle="modal"
+                                    data-bs-target="#boTri_nhanSu">Xem</a>
+                                </td>
+                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
                               </tr>
                             </tbody>
                           </table>
                         </div>
-                        <div class="my-paging mt-20">
+                        <div class="my-paging mt-10">
                           <div class="my-paging_static">
                             1 đến 10 trong 1210 dữ liệu
                           </div>
@@ -748,18 +811,90 @@
             </div>
           </div>
           <!-- 2. Chi tiết hồ sơ -->
-          <div class="col-lg-5 col-12 pr0 mb-20 aps-thuPhi-item">
+          <div class="col-lg-5 col-12 pr0 mb-20 aps-thuPhi-item pr0">
             <div class="box box-solid box-shadow aps-kienTraNhanh pd0">
               <div class="box-header with-border">
-                <h3 class="box-title color-green text-uppercase">
-                  <i class="fa-light fa-display-chart-up-circle-dollar"></i> Chi tiét hồ sơ
+                <h3 class="box-title color-green">
+                  <i class="fa-solid fa-address-book"></i> Chi tiết hồ sơ
                 </h3>
                 <div class="pull-right d-none">
                   <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
               </div>
               <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20">
-
+                <div class="col-12 col-lg-5 aps-kienTraNhanh-ttCaNhan pl0 pr0">
+                  <div class="col-12 col-lg-6 aps-kienTraNhanh-avata mb-5 img-4x6 mg-auto">
+                    <img src="../assets/images/anh-the-4x6.jpg" class="images">
+                  </div>
+                  <div class="aps-kienTraNhanh-trangThai w100">
+                    <div class="row item">
+                      <div class="col-lg-6 col-md-6 item-lable">Trạng thái hổ sơ</div>
+                      <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-success btnConNo no-link">Hợp
+                          lê</a>
+                      </div>
+                    </div>
+                    <div class="row item">
+                      <div class="col-lg-6 col-md-6 item-lable ">Trạng thái trùng</div>
+                      <div class="col-lg-6 col-md-6 item-content"><a class="btn btn-soft-danger btnConNo no-link">Không
+                          trùng</a>
+                      </div>
+                    </div>
+                    <div class="row item">
+                      <div class="item-lable">Trạng thái lệ phí</div>
+                      <div class="item-content"><a class="btn btn-soft-primary btnConNo no-link">Đã thanh toán</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-7 pr0 aps-kienTraNhanh-ttCaNhan">
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Họ và tên:</div>
+                    <div class="col-lg-6 col-md-6 item-content color-blue">Nguyễn Thị Bích</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">CCCD:</div>
+                    <div class="col-lg-6 col-md-6 item-content">09049257483</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Ngày sinh:</div>
+                    <div class="col-lg-6 col-md-6 item-content color-blue">15/01/2008</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Giới tính:</div>
+                    <div class="col-lg-6 col-md-6 item-content">Nữ</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">SĐT:</div>
+                    <div class="col-lg-6 col-md-6 item-content">123545659</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Email:</div>
+                    <div class="col-lg-6 col-md-6 item-content">nguyenthibich@gmail.com</div>
+                  </div>
+                  <div class="line mb-15"></div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Kế hoạch TS:</div>
+                    <div class="col-lg-6 col-md-6 item-content">ĐHCQ 2026</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Đợt TS:</div>
+                    <div class="col-lg-6 col-md-6 item-content">Đợt 1</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Đối tượng:</div>
+                    <div class="col-lg-6 col-md-6 item-content">Học sinh THPT</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Nguồn nhập:</div>
+                    <div class="col-lg-6 col-md-6 item-content">Đăng ký obline</div>
+                  </div>
+                  <div class="row item">
+                    <div class="col-lg-6 col-md-6 item-lable">Ngành đăng ký:</div>
+                    <div class="col-lg-6 col-md-6 item-content">CNTT - K66A</div>
+                  </div>
+                </div>
+              </div>
+              <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20 d-none">
                 <div class="col-12 col-lg-6 aps-kienTraNhanh-avata aps-kienTraNhanh-ttCaNhan">
                   <img src="../assets/images/anh-sv.jpg" class="images">
                   <div class="row item">
@@ -831,46 +966,214 @@
                       class="fa-duotone fa-light fa-angle-down color-blue"></i></a>
                 </p>
               </div>
+
               <!-- luồng xử lý -->
-              <div class="box-header with-border">
-                <h3 class="box-title color-green text-uppercase">
-                  <i class="fa-light fa-display-chart-up-circle-dollar"></i> Luồng xử lý
-                </h3>
-                <div class="pull-right d-none">
-                  <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+              <div class="box-luongxuly">
+                <div class="box-header with-border luongxuly-lable"
+                  style="border-top: 1px solid #e9e9e9; border-bottom: 0 !important;border-radius: 0 !important;">
+                  <h3 class="box-title color-red">
+                    <i class="fa-sharp fa-regular fa-arrow-progress"></i> Luồng xử lý
+                  </h3>
+                  <div class="pull-right d-none">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                  </div>
+                </div>
+                <div class="luongxuly-list">
+                  <div class="item hoanthanh">
+                    <div class=" item-content">
+                      <div class="icon">
+                        <!-- icon Hoàn thành -->
+                        <i class="fa-solid fa-circle-check"></i>
+                        <!-- icon khi chưa xư lý -->
+                        <!-- <i class="fa-regular fa-file-user"></i> -->
+                      </div>
+                      <div class="title">Tiếp nhận</div>
+                      <div class="day-time">15/05/2026 11:50</div>
+                    </div>
+                  </div>
+                  <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
+                  <div class="item hoanthanh">
+                    <div class="item-content">
+                      <div class="icon">
+                        <!-- icon Hoàn thành -->
+                        <i class="fa-solid fa-circle-check"></i>
+                        <!-- icon khi chưa xư lý -->
+                        <!-- <i class="fa-regular fa-file-user"></i> -->
+                      </div>
+                      <div class="title">Kiểm tra dữ liệu</div>
+                      <div class="day-time">15/05/2026 11:50</div>
+                    </div>
+                  </div>
+                  <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
+                  <div class="item dangXuLy">
+                    <div class="item-content">
+                      <div class="icon">
+                        <!-- icon Hoàn thành -->
+                        <!-- <i class="fa-solid fa-circle-check"></i> -->
+                        <!-- icon khi đang xư lý -->
+                        <i class="fa-regular fa-file-user"></i>
+                      </div>
+                      <div class="title">Kiểm tra trùng</div>
+                      <div class="day-time">15/05/2026 11:50</div>
+                    </div>
+                  </div>
+                  <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
+                  <div class="item ">
+                    <div class="item-content">
+                      <div class="icon">
+                        <!-- icon Hoàn thành -->
+                        <!-- <i class="fa-solid fa-circle-check"></i> -->
+                        <!-- icon khi chưa xư lý -->
+                        <i class="fa-regular fa-user-check"></i>
+                      </div>
+                      <div class="title">Xác nhận hợp lệ</div>
+                      <div class="day-time">15/05/2026 11:50</div>
+                    </div>
+                  </div>
+                  <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
+                  <div class="item">
+                    <div class="item-content">
+                      <div class="icon"><i class="fa-regular fa-file-export"></i></div>
+                      <div class="title">Chuyển xét tuyển</div>
+                      <div class="day-time">Chưa thực hiện</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="luongxuly-list">
-                <div class="item">
-                  <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
-                  <div class="title">Tiếp nhận</div>
-                  <div class="status">15/05/2026 11:50</div>
+
+              <!-- Thao tác chính -->
+              <div class="box-thaotac">
+                <div class="box-header with-border thaotac-lable pl0"
+                  style="border-top: 1px solid #e9e9e9; border-bottom: 0 !important;border-radius: 0 !important;">
+                  <h3 class="box-title color-blue">
+                    <i class="fa-light fa-laptop-arrow-down"></i> Thao tác chính
+                  </h3>
+                  <div class="pull-right d-none">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                  </div>
                 </div>
-                <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
-                <div class="item">
-                  <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
-                  <div class="title">Kiểm tra dữ liệu</div>
-                  <div class="status">15/05/2026 11:50</div>
-                </div>
-                <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
-                <div class="item">
-                  <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
-                  <div class="title">Kiểm tra trùng</div>
-                  <div class="status">15/05/2026 11:50</div>
-                </div>
-                <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
-                <div class="item">
-                  <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
-                  <div class="title">Xác nhận hợp lệ</div>
-                  <div class="status">15/05/2026 11:50</div>
-                </div>
-                <div class="spacre"><i class="fa-light fa-long-arrow-right"></i></div>
-                <div class="item">
-                  <div class="icon"><i class="fa-solid fa-circle-check"></i></div>
-                  <div class="title">Chuyển xét tuyển</div>
-                  <div class="status">15/05/2026 11:50</div>
+                <div class="thaotac-list">
+                  <div class="item">
+                    <a href="#" class="btn-soft-success btn d-flex">
+                      <div class="icon mr-5">
+                        <i class="fa-regular fa-laptop-file"></i>
+                      </div>
+                      <div class="title text-left">Đăng ký trực tuyến
+                        <p>Đăng ký trên điện thoai/Máy tính</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="btn-soft-danger btn d-flex">
+                      <div class="icon mr-5">
+                        <i class="fa-light fa-user-pen"></i>
+                      </div>
+                      <div class="title text-left">Cán bộ khai nhập
+                        <p>Khai nhập các thông tin</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="btn-soft-primary btn d-flex">
+                      <div class="icon mr-5">
+                        <i class="fa-light fa-file-excel"></i>
+                      </div>
+                      <div class="title text-left">Import từ Excel
+                        <p>Các file từ Excel</p>
+                      </div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="btn-soft-info btn d-flex">
+                      <div class="icon mr-5">
+                        <i class="fa-solid fa-arrow-right-arrow-left"></i>
+                      </div>
+                      <div class="title text-left">Chuyển nguồn khác
+                        <p>Chuyển từ các nguồn khác</p>
+                      </div>
+                    </a>
+                  </div>
                 </div>
               </div>
+
+              <!-- Thao tác hồ sơ -->
+              <div class="box-thaotac box-thaotac-hoso">
+                <div class="box-header with-border thaotac-lable"
+                  style="border-top: 1px solid #e9e9e9; border-bottom: 0 !important;border-radius: 0 !important;">
+                  <h3 class="box-title color-222">
+                    <i class="fa-light fa-rectangle-history-circle-user"></i> Thao tác hồ sơ
+                  </h3>
+                  <div class="pull-right d-none">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                  </div>
+                </div>
+                <div class="thaotac-hoso-list">
+                  <div class="item">
+                    <a href="#" class="btn-outline btn d-flex">
+                      <div class="icon">
+                        <i class="fa-light fa-file-pen"></i>
+                      </div>
+                      <div class="title">Xem/Sửa hồ sơ</div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="btn-outline btn d-flex">
+                      <div class="icon">
+                        <i class="fa-light fa-user-pen"></i>
+                      </div>
+                      <div class="title">Kiểm tra trùng</div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="btn-outline btn d-flex">
+                      <div class="icon">
+                        <i class="fa-light fa-check-to-slot"></i>
+                      </div>
+                      <div class="title">Xác nhận hợp lệ</div>
+                    </a>
+                  </div>
+                  <div class="item">
+                    <a href="#" class="btn-outline btn d-flex">
+                      <div class="icon">
+                        <i class="fa-regular fa-file-export"></i>
+                      </div>
+                      <div class="title">Chuyển xét tuyển</div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Lịch sử xử lý -->
+              <div class="box-lichSu">
+                <div class="box-header with-border thaotac-lable"
+                  style="border-top: 1px solid #e9e9e9; border-bottom: 0 !important;border-radius: 0 !important;">
+                  <h3 class="box-title color-222">
+                    <i class="fa-light fa-clock-rotate-left"></i>Lịch sử xử lý (2)
+                  </h3>
+                  <div class="pull-right d-none">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                  </div>
+                </div>
+                <div class="box-lichSu-list">
+                  <ul>
+                    <li>
+                      <a href="#">
+                        <span class="day">15/08/20206 10:00</span>
+                        <span class="content-ls">Hoàn tất nhập học</span>
+                        <span class="user">Người thực hiện: Nguyễn Thị Bích</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <span class="day">15/08/20206 10:00</span>
+                        <span class="content-ls">Hoàn tất nhập học</span>
+                        <span class="user">Người thực hiện: Nguyễn Thị Bích</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
