@@ -458,7 +458,7 @@ NguoiHoc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" title="Sửa">Điểm danh</a></span>';
+                        return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" title="Sửa">Tổng hợp điểm danh</a></span>';
                     }
                 },
                 {

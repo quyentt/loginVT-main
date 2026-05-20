@@ -1,4 +1,19 @@
 ﻿<style>
+    #tblLichGiang tbody tr {
+        cursor: pointer;
+        background: #fff;
+    }
+
+    #tblLichGiang tbody tr:hover {
+        background: #ffe0d0;
+    }
+
+    #tblLichGiang tbody tr.active,
+    #tblLichGiang tbody tr.active td,
+    #tblLichGiang tbody tr.active td * {
+        background: #f26522 !important;
+        color: #fff !important;
+    }
 </style>
 <div class="one-door study-space">
     <div class="overlay"></div>
@@ -71,7 +86,7 @@
                                     <th scope="col">Mã lớp</th>
                                     <th scope="col">Tên lớp</th>
                                     <th class="text-center" scope="col">Số lượng</th>
-                                    <th class="text-center" scope="col">Điểm danh</th>
+                                    <th class="text-center" scope="col">Tổng hợp điểm danh</th>
                                     <th class="text-center" scope="col">Xác nhận điểm danh</th>
                                     <th class="text-center" scope="col">Xác nhận điểm</th>
                                     <th class="text-center" scope="col">Chi tiết</th>
