@@ -12004,7 +12004,7 @@ table#clone {
 
 .tiepnhandauvao-static-box {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 15px;
     margin-top: 20px;
     padding-bottom: 20px;
@@ -12013,9 +12013,9 @@ table#clone {
 .tiepnhandauvao-static-box .item {
     width: calc((100% - 75px) / 6);
     border: 1px solid #e1e1e1;
-    /* border-image: linear-gradient(90deg, #22a652, #28a745) 1; */
     padding: 15px;
     border-radius: 8px !important;
+    overflow: hidden;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -12601,10 +12601,10 @@ table#clone {
 
 .aps-kienTraNhanh-content .user-infomation .image {
     width: 120px;
-    height: 120px;
+    height: 160px;
     overflow: hidden;
-    border-radius: 100%;
-    border: solid 3px #e1e1e1;
+    border-radius: 10px;
+    /* border: solid 3px #e1e1e1; */
     flex-shrink: 0;
 
 }
@@ -13064,6 +13064,104 @@ table#clone {
     width: calc((100% - 142px) / 6) !important;
 }
 
+.aps-student-hoso .user-infomation .info .item .label {
+    min-width: 120px !important;
+}
+.hosoS-tabs .nav-tabs .nav-link {
+    color: #222222;
+    padding: 10px 12px;
+    border-top: 3px solid #f1f1f1;
+    border-left: 1px solid #f1f1f1;
+    border-right: 1px solid #f1f1f1;
+    margin-right: 5px;
+}
+.hosoS-tabs .nav-tabs .nav-link.active {
+    color: var(--color-blue);
+    border: none;
+    border-bottom: solid 2px #fff !important;
+    border-left: 1px solid var(--color-blue) !important;
+        border-top: solid 3px var(--color-blue) !important;
+            border-right: solid 1px var(--color-blue) !important;
+}
+.hosoS-tabs .nav-tabs .nav-link i{
+    color: #888;
+}
+.hosoS-tabs .nav-tabs .nav-link.active  i{
+    color: var(--color-blue);
+     font-weight: 700;
+}
+.box-tongQuan  {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+.box-tongQuan .box-title
+{
+    font-size: 15px;
+    padding: 10px 0px 0 0;
+    font-weight: 700;
+    margin-bottom: 0 !important;
+    border-bottom: 0;
+}
+.box-tongQuan .tiepnhandauvao-static-box {
+    margin-top: 12px;
+    padding-bottom: 10px;
+}
+.box-tongQuan .box-title i
+{
+    font-size: 16px;
+    font-weight: 700;
+    margin-right: 8px;
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item,
+.box-taichinh-hs  .tiepnhandauvao-static-box .item{
+    width: calc((100% - 10px) / 4) !important;
+    padding: 10px !important;
+    text-align: center !important;
+    display: block !important;
+    gap: 5px !important;
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .title {
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+}
+.box-tongQuan-hs .aps-student-list-static.tiepnhandauvao-static-box .item .meta .detail{
+    display: flex !important;
+    align-items: baseline;
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .number {
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 22px;
+    text-align: center;
+    padding: 5px 0;
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .unit {
+    text-align: center !important;
+}
+.box-tongQuan-hs .item .meta .detail, 
+.box-tongQuan-hs .item .meta .number {
+    text-align: center;
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item {
+    
+}
+.aps-student-hoso .box-header .pull-right .btn i {
+    font-size: 9px;
+}
+.box-tongQuan .tiepnhandauvao-static-box.aps-student-list-static.tiepnhandauvao-static-box{
+    gap: 10px !important;
+}
+
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta .detail {
+    gap: 5px;
+}
+
 /* mr 20/05 */
 .hosodauvao-tabs .nav-tabs .nav-link {
     display: flex;
@@ -13319,4 +13417,5 @@ table#clone {
     padding: 0 !important;
     height: 5px !important;
     margin: 0;
+>>>>>>> 89a1e22a3851d05450070071c78d71ed0f0301fe
 }
