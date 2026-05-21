@@ -1,10 +1,18 @@
 ﻿<style>
-    #tblLichGiang tr {
-        background: #223771;
+    #tblLichGiang tbody tr {
+        cursor: pointer;
+        background: #fff;
     }
 
-    #tblLichGiang tr.active {
-        background: #f26522;
+    #tblLichGiang tbody tr:hover {
+        background: #ffe0d0;
+    }
+
+    #tblLichGiang tbody tr.active,
+    #tblLichGiang tbody tr.active td,
+    #tblLichGiang tbody tr.active td * {
+        background: #f26522 !important;
+        color: #fff !important;
     }
 </style>
 <div class="one-door study-space">
@@ -79,7 +87,7 @@
                                 <th class="text-center" scope="col">Ngày bắt đầu</th>
                                 <th class="text-center" scope="col">Ngày kết thúc</th>
                                 <th class="text-center" scope="col">Số lượng</th>
-                                <th class="text-center" scope="col" style="min-width: 100px;">Điểm danh</th>
+                                <th class="text-center" scope="col" style="min-width: 100px;">Tổng hợp điểm danh</th>
                                 <th class="text-center" scope="col">Chi tiết</th>
                                 <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
                             </tr>

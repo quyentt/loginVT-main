@@ -393,7 +393,7 @@ TheoKhoa.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        if (!aData.DSGIANGVIENTHEOCAUTRUC) return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" name="" title="Sửa">Điểm danh</a></span>';
+                        if (!aData.DSGIANGVIENTHEOCAUTRUC) return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" name="" title="Sửa">Tổng hợp điểm danh</a></span>';
 
                         var html = "";
                         var arrGiangVien = [aData.DSGIANGVIENTHEOCAUTRUC];
