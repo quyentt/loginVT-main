@@ -458,7 +458,7 @@ NguoiHoc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" title="Sửa">Điểm danh</a></span>';
+                        return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" title="Sửa">Tổng hợp điểm danh</a></span>';
                     }
                 },
                 {
@@ -1319,11 +1319,21 @@ NguoiHoc.prototype = {
                     me.getList_SinhVien();
                 }
                 else {
-                    obj_notify = {
-                        type: "w",
-                        content: obj_save.action + " (er): " + data.Message,
+                    var msg = edu.util.returnEmpty(data.Message);
+                    if (!msg || /^[A-F0-9-]{16,}$/i.test(msg.trim())) {
+                        obj_notify = {
+                            type: "s",
+                            content: "Đã thực hiện xong",
+                        };
+                        edu.system.alertOnModal(obj_notify);
+                        me.getList_SinhVien();
+                    } else {
+                        obj_notify = {
+                            type: "w",
+                            content: msg,
+                        };
+                        edu.system.alertOnModal(obj_notify);
                     }
-                    edu.system.alertOnModal(obj_notify);
                 }
             },
             error: function (er) {

@@ -43,6 +43,119 @@
     .block-calendar ul li.active span {
         background-color: var(--orange) !important;
     }
+
+    .task-1 .task-actions {
+        display: inline-flex !important;
+        gap: 4px;
+        align-items: center;
+        flex-shrink: 0;
+        width: auto !important;
+        height: auto !important;
+        background: transparent !important;
+        border-radius: 0 !important;
+        aspect-ratio: auto !important;
+    }
+
+    .task-1 .task-actions .card-icon-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        transition: transform 0.15s ease, filter 0.15s ease;
+        cursor: pointer;
+        line-height: 1;
+        color: #fff !important;
+        border: 2px solid rgba(255, 255, 255, 0.55);
+        aspect-ratio: auto !important;
+        background-color: inherit;
+    }
+
+    .task-1 .task-actions .card-icon-btn:hover {
+        transform: translateY(-2px) scale(1.05);
+        filter: brightness(1.15);
+    }
+
+    .task-1 .task-actions .card-icon-btn i {
+        font-size: 16px;
+    }
+
+    .task-1 .task-actions .btnXemCacBuoi {
+        background: #16a34a;
+    }
+
+    .task-1 .task-actions .btnKhoiTaoDoiLich {
+        background: #dc2626;
+    }
+
+    #tblLichGiang_LG tbody tr {
+        cursor: pointer;
+        background: #fff;
+    }
+
+    #tblLichGiang_LG tbody tr:hover {
+        background: #ffe0d0;
+    }
+
+    #tblLichGiang_LG tbody tr.active,
+    #tblLichGiang_LG tbody tr.active td,
+    #tblLichGiang_LG tbody tr.active td * {
+        background: #f26522 !important;
+        color: #fff !important;
+    }
+
+    .scroll-top-mirror {
+        overflow-x: scroll;
+        overflow-y: hidden;
+        height: 14px;
+        margin-bottom: 6px;
+        border-radius: 4px;
+        background: #f1f5f9;
+    }
+    .scroll-top-mirror-inner {
+        height: 1px;
+    }
+    .scroll-top-mirror::-webkit-scrollbar {
+        height: 10px;
+        -webkit-appearance: none;
+    }
+    .scroll-top-mirror::-webkit-scrollbar-track {
+        background: #e2e8f0;
+        border-radius: 4px;
+    }
+    .scroll-top-mirror::-webkit-scrollbar-thumb {
+        background: #94a3b8;
+        border-radius: 4px;
+    }
+    .scroll-top-mirror::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+    }
+
+    .empty-data-placeholder {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 16px;
+        gap: 10px;
+        background: linear-gradient(180deg, #fafbfc 0%, #f1f3f6 100%);
+        border-radius: 6px;
+    }
+    .empty-data-placeholder i {
+        font-size: 18px;
+        color: #94a3b8;
+    }
+    .empty-data-placeholder .empty-text {
+        font-size: 13px;
+        color: #94a3b8;
+        font-style: italic;
+    }
+    .empty-data-placeholder.is-error i { color: #f59e0b; }
+    .empty-data-placeholder.is-error .empty-text { color: #d97706; }
+    .empty-data-placeholder.is-loading i { color: #3b82f6; }
 </style>
 <div class="one-door study-space">
     <div class="overlay"></div>
@@ -72,6 +185,30 @@
                 </div>
                 <div class="lich-canhan">
                     <div class="calendar-week-table">
+                        <div class="mb-15" id="zoneLopKhongCoLichChiTiet" style="display:none">
+                            <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
+                                <i class="fas fa-calendar-alt pr5 fw-bold"></i>Lớp học phần (không có lịch chi tiết)
+                            </p>
+                            <div class="scroll-top-mirror" id="scrollTop_LopKhongCoLichChiTiet">
+                                <div class="scroll-top-mirror-inner"></div>
+                            </div>
+                            <div class="aps-table-select scroll-table-x" id="scrollBox_LopKhongCoLichChiTiet">
+                            <table class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder" id="tblLopKhongCoLichChiTiet">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Mã lớp</th>
+                                        <th scope="col">Tên lớp</th>
+                                        <th scope="col">Hình thức học</th>
+                                        <th scope="col">Ngày bắt đầu</th>
+                                        <th scope="col">Ngày kết thúc</th>
+                                        <th scope="col">Ghi chú</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            </div>
+                        </div>
+
                         <div class="date-header" id="date-header">
                             <div class="date">
                                 <i class="fal fa-clock day color-66"></i>
@@ -108,27 +245,6 @@
                         </div>
                         <div class="date-body" id="datebody">
 
-                        </div>
-
-                        <div class="mt-15" id="zoneLopKhongCoLichChiTiet" style="display:none">
-                            <p class="me-auto color-dask-blue fz20 pl10" style="margin-bottom: 12px !important;">
-                                <i class="fas fa-calendar-alt pr5 fw-bold"></i>Lớp học phần (không có lịch chi tiết)
-                            </p>
-                            <div class="aps-table-select scroll-table-x">
-                            <table class="table transcrip-table tabs-scores fs-14 table-bordered table-noborder" id="tblLopKhongCoLichChiTiet">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">Mã lớp</th>
-                                        <th scope="col">Tên lớp</th>
-                                        <th scope="col">Hình thức học</th>
-                                        <th scope="col">Ngày bắt đầu</th>
-                                        <th scope="col">Ngày kết thúc</th>
-                                        <th scope="col">Ghi chú</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            </div>
                         </div>
 
                     </div>
@@ -631,6 +747,94 @@
             <div class="modal-body p-3 zoneHTSinhVien" id="zoneHTSinhVien">
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- modal Các buổi học theo thời khóa biểu (mở từ icon btnXemCacBuoi trên card buổi học) -->
+<div class="modal fade finance-modal modal-spec mymodal_CacBuoiHoc" id="mymodal_CacBuoiHoc"
+    tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-full modal-dialog-scrollable" style="max-width: unset">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal is-btn-gr">
+                    <p><i class="fa-solid fa-calendar-circle-user fw-bold mr-5"></i>Các buổi học theo thời khóa biểu
+                        <span class="color-fff">&ensp; - &ensp; <span class="lblTenHoc_LG"></span></span>
+                    </p>
+                    <div class="form-item d-flex form-add-info col-12 col-lg-2">
+                        <div class="input-group no-icon">
+                            <select class="form-select select-opt" id="dropSearch_LoaiSapXep_LG"
+                                aria-label="Default select example">
+                                <option value="ABC">Xếp theo ABC</option>
+                                <option value="LOPQUANLY">Xếp theo Lớp quản lý</option>
+                                <option value="MASO">Xếp theo Mã sinh viên</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="button-gr">
+                        <button class="btn btn-action-sync" id="btnKhoiPhucDiemDanh_LG" style="background-color:#f59e0b !important; border:1.5px solid #fff !important; color:#fff !important; margin-right:6px;">
+                            <i class="fa-solid fa-user-check fw-bold"></i>
+                            <span>Đồng bộ theo TKB</span>
+                        </button>
+                        <button class="btn btn-action-edit" id="btnDiemDanh_LG" style="background-color:#16a34a !important; border:1.5px solid #fff !important; color:#fff !important; margin-right:6px;">
+                            <i class="fal fa-edit"></i>
+                            <span>Chỉnh sửa điểm danh</span>
+                        </button>
+                        <button type="button" class="btn btn-action-close btn-dong-modal" data-bs-dismiss="modal"
+                            aria-label="Close" style="background-color:#dc2626 !important; border:1.5px solid #fff !important; color:#fff !important;">
+                            <i class="fal fa-times pr-0"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body register-wish">
+                <div class="body-content">
+                    <div class="table-content pl-0 pt-0">
+                        <div class="aps-table-select scroll-table-x">
+                            <table class="table transcrip-table tabs-scores table-bordered small-table fs-14 table-border tblNhapChuyenCan_LG"
+                                id="tblNhapChuyenCan_LG">
+                                <thead>
+                                    <tr>
+                                        <th class="text-cente w-50px" scope="col" rowspan="2">STT</th>
+                                        <th class="text-left" scope="col" rowspan="2">Mã số</th>
+                                        <th class="text-left" scope="col" rowspan="2">Họ đệm</th>
+                                        <th class="text-left" scope="col" rowspan="2">Tên</th>
+                                        <th class="text-left " scope="col" rowspan="2">Lớp quản lý</th>
+                                        <th class="text-center" scope="col" colspan="4">
+                                            <b>Kết quả đánh giá</b>
+                                        </th>
+                                        <th class="text-center" scope="col" id="lblTongHopChuyenCan_LG">
+                                            <b>Tổng hợp</b>
+                                        </th>
+                                        <th class="text-center" scope="col" id="lblThoiGianHoc_LG"></th>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-center" scope="col" rowspan="2" style="width: 60px">Tổng số tiết học</th>
+                                        <th class="text-center" scope="col" rowspan="2" style="width: 60px">Tổng số tiết có mặt</th>
+                                        <th class="text-center" scope="col" rowspan="2" style="width: 60px">Điều kiện</th>
+                                        <th class="text-center" scope="col" rowspan="2" style="width: 60px">Đã thực hiện</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="date-list">
+                        <div class="scroll-y">
+                            <table class="table fs-14" id="tblLichGiang_LG">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50px" scope="col">STT</th>
+                                        <th class="text-left" scope="col">Ngày</th>
+                                        <th class="text-left" scope="col">Thời gian</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
