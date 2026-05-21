@@ -1,5 +1,8 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 1920px) {
+  .hosodauvao-tabs .nav-tabs .nav-link {
+    flex-direction: column;
+  }
   .box-ThongTinHSSV .nav-tabs-custom > .nav-tabs > li {
     max-width: 135px;
     text-align: center;
