@@ -605,7 +605,7 @@
                         <div class="box box-solid box-shadow aps-hs-dauVao pd0 ">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-blue">
-                                    <i class="fa-solid fa-user-graduate"></i> Danh sách sinh viên <span
+                                    <i class="fa-duotone fa-solid fa-users"></i> Danh sách sinh viên <span
                                         class="numder fz14 color-888">(8.456 kết qua)</span>
                                 </h3>
                                 <div class="pull-right">
@@ -821,16 +821,18 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 2. Chi tiết hồ sơ -->
-                    <div class="col-lg-6 col-12 pr0 mb-20 aps-hoso-detail pr0 pl10">
+                    <!-- 2. Hồ sơ sinh viên-->
+                    <div class="col-lg-6 col-12 pr0 mb-20 aps-hoso-detail aps-student-hoso pr0 pl10">
                         <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-green">
-                                    <i class="fa-light fa-address-card"></i> Chi tiết sinh viên
+                                    <i class="fa-light fa-address-card"></i> Hồ sơ sinh viên
                                 </h3>
-                                <div class="pull-right d-none">
-                                    <a class="btn btn-default btnClose" href="#" title="Close"><i
-                                            class="fa fa-times"></i></a>
+                                <div class="pull-right">
+                                    <span class="btn btn-30 btn-soft-success"><i
+                                            class="fa-solid fa-circle fz14 bold"></i>
+                                        Hoạt
+                                        động</span>
                                 </div>
                             </div>
                             <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20">
@@ -841,37 +843,292 @@
                                     <div class="info">
                                         <div class="item user-name">
                                             <div class="label">Họ và tên:</div>
-                                            <div class="text">Nguyễn Thị Bích <span class="status bg-green"></span>
-                                            </div>
-
+                                            <div class="text">Nguyễn Thị Bích</div>
                                         </div>
                                         <div class="item">
                                             <div class="label">Mã SV:</div>
                                             <div class="text">123456789</div>
-
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">CCCD:</div>
+                                            <div class="text">123456789</div>
                                         </div>
                                         <div class="item">
                                             <div class="label">Ngày sinh:</div>
                                             <div class="text">11/11/2005</div>
-
                                         </div>
                                         <div class="item">
                                             <div class="label">Giới tính:</div>
                                             <div class="text">Nữ</div>
-
                                         </div>
                                         <div class="item">
                                             <div class="label">Số điện thoại:</div>
                                             <div class="text">123456789</div>
-
                                         </div>
                                         <div class="item">
                                             <div class="label">Email:</div>
                                             <div class="text">email@gmail.com</div>
-
                                         </div>
                                     </div>
+                                    <div class="info">
+                                        <div class="item">
+                                            <div class="label">Khoa:</div>
+                                            <div class="text">Công nghệ thông tin
+                                            </div>
 
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Ngành:</div>
+                                            <div class="text">Công nghệ thông tin</div>
+
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Chương trình:</div>
+                                            <div class="text">Cử nhân</div>
+
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Khóa:</div>
+                                            <div class="text">Khóa 2022</div>
+
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Lớp:</div>
+                                            <div class="text">DHTT20A</div>
+
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Cố vấn học tập:</div>
+                                            <div class="text">TS. Lê Minh Hà</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Trạng thái học tập:</div>
+                                            <div class="text"><span class="btn btn-soft-success btn-30">Hoạt động</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="hosodauvao-tabs hosoS-tabs pl20 pr20 pb-20 pt0">
+                                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" id="hosoS-tabs-1" data-bs-toggle="tab"
+                                            data-bs-target="#tatca" type="button" role="tab" aria-controls="home"
+                                            aria-selected="true">
+                                            <i class="fa-light fa-address-book mr-5"></i>Tổng quan</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="hosoS-tabs-2" data-bs-toggle="tab"
+                                            data-bs-target="#tructuyen" type="button" role="tab" aria-controls="profile"
+                                            aria-selected="false" tabindex="-1">
+                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ
+                                            sơ</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#canbonhap" type="button" role="tab" aria-controls="contact"
+                                            aria-selected="false" tabindex="-1">
+                                            <i class="fa-light fa-laptop-file mr-5"></i> Quá trình học tập</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#import" type="button" role="tab" aria-controls="contact"
+                                            aria-selected="false" tabindex="-1">
+                                            <i class="fa-sharp fa-light fa-file-certificate mr-5"></i>
+                                            Kết quả học
+                                            tập</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
+                                            aria-selected="false" tabindex="-1">
+                                            <i class="fa-light fa-circle-dollar-to-slot mr-5"></i> Tài chính</button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
+                                            aria-selected="false" tabindex="-1">
+                                            <i class="fa-light fa-hand-pointer mr-5"></i> Tương tác</button>
+                                    </li>
+
+                                </ul>
+                                <div class="tab-content" id="myTabContent">
+                                    <div class="tab-pane fade active show pt-10" id="tatca" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-1">
+                                        <div class="row box-tongQuan">
+                                            <div class="col-12 col-lg-12 box-tongQuan-hs">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-light fa-book-open-reader"></i> Tổng quan học tập
+                                                </h3>
+                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Tín chỉ tích lũy</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-blue">86</span>
+                                                                <span class="unit">TC</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">GPA</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-green">3.45</span>
+                                                                <span class="unit">100%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Số môn chưa đạt</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-puple">0</span>
+                                                                <span class="unit">Môn</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Xếp loại<img src="" alt="" sizes=""
+                                                                    srcset="">
+                                                            </div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-red">GIỎI</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12 col-lg-6 box-taichinh-hs">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-duotone fa-light fa-circle-dollar-to-slot"></i> Tài
+                                                    chính
+                                                </h3>
+                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Phải thu học ký</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-blue">12.750.000</span>
+                                                                <span class="unit">đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Đã thanh toán</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-green">8.750.000</span>
+                                                                <span class="unit">đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Còn nợ</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-red">3.999.000</span>
+                                                                <span class="unit">đ</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item item-ht">
+                                                        <div class="meta">
+                                                            <div class="title">Hạn thanh toán<img src="" alt="" sizes=""
+                                                                    srcset="">
+                                                            </div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number color-puple">25/5/2026</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12 col-lg-6 box-taichinh-hs">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-duotone fa-light fa-circle-dollar-to-slot"></i> Tài
+                                                    chính
+                                                </h3>
+                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
+                                                    <div class="item box box-shadow">
+                                                        <div class=" icon">
+                                                            <i class="fa-duotone fa-solid fa-users"></i>
+                                                        </div>
+                                                        <div class="meta">
+                                                            <div class="title">Tổng sinh viên</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number">420</span>
+                                                                <span class="unit">100% tổng số</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item box box-shadow">
+                                                        <div class="icon">
+                                                            <i class=" fa-solid fa-screen-users"></i>
+                                                        </div>
+                                                        <div class="meta">
+                                                            <div class="title">Đang học</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number">420</span>
+                                                                <span class="unit">100%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item box box-shadow">
+                                                        <div class="icon">
+                                                            <i class=" fa-solid fa-graduation-cap"></i>
+                                                        </div>
+                                                        <div class="meta">
+                                                            <div class="title">Đã tốt nghiệp</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number">420</span>
+                                                                <span class="unit">49.00%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="item box box-shadow">
+                                                        <div class="icon">
+                                                            <i class=" fa-solid fa-user-clock"></i>
+                                                        </div>
+                                                        <div class="meta">
+                                                            <div class="title">Bảo lưu/Tạm dừng</div>
+                                                            <div class="detail detail-2">
+                                                                <span class="number">420</span>
+                                                                <span class="unit">5.00%</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="tructuyen" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-2">
+                                        Hồ
+                                        sơ
+                                    </div>
+                                    <div class="tab-pane fade" id="canbonhap" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-3">
+                                        Cán bộ nhập
+                                    </div>
+                                    <div class="tab-pane fade" id="import" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-4">
+                                        Công nợ
+                                    </div>
+                                    <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-5">
+                                        Sắp tốt nghiệp
+                                    </div>
+                                    <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-6">
+                                        Sắp tốt nghiệp
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1052,8 +1309,6 @@
             </div>
         </div>
     </div>
-
-
     <!-- -------------------------- -->
     <!-- JS -->
     <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
@@ -1075,11 +1330,8 @@
     <script>
         const buttons = document.querySelectorAll('.tab-item-li');
         const panes = document.querySelectorAll('.tab-pane');
-
         buttons.forEach(button => {
-
             button.addEventListener('click', () => {
-
                 // remove active button
                 buttons.forEach(btn => btn.classList.remove('active'));
 
@@ -1088,13 +1340,10 @@
 
                 // add active current
                 button.classList.add('active');
-
                 const id = button.dataset.tab;
-
                 document.getElementById(id)
                     .classList.add('active');
             });
-
         });
     </script>
 </body>

@@ -668,15 +668,6 @@ input::placeholder {
 }
 
 
-.table td .btn,
-.table td .btn:hover,
-.table .btn {
-  padding: 0px 8px 2px 8px !important;
-  border-radius: 5px !important;
-  line-height: 28px !important;
-  height: 28px !important;
-  /* display: inline-flex !important; */
-}
 
 .table .btn:hover {
   color: #fff !important;
@@ -1821,8 +1812,8 @@ input:active,
 .table .btn {
   padding: 0px 8px 2px 8px !important;
   border-radius: 4px !important;
-  line-height: 34px !important;
-  height: 34px !important;
+  line-height: 30px !important;
+    height: 30px !important;
   /* display: inline-flex !important; */
 }
 
@@ -7127,4 +7118,10 @@ input[type="radio"] {
     border: solid 3px #e1e1e1;
     flex-shrink: 0;
     margin-right: 6px;
+}
+/* ----- */
+.btn-30.btn{
+  height: 30px !important;
+  line-height: 28px !important;
+  padding: 0px 10px 0px 10px !important;
 }
