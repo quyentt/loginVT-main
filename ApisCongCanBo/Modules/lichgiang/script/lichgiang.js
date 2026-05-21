@@ -240,6 +240,8 @@ LichGiang.prototype = {
                         me.xemCacBuoi_save_NhapChuyenCan(arrThem[i]);
                     }
                 }, 400);
+            } else {
+                edu.system.alert("Bạn chưa thay đổi gì dữ liệu.", "i");
             }
         });
 
@@ -385,7 +387,7 @@ LichGiang.prototype = {
                 
             }
             else {
-                //edu.system.alert("Không có thay đổi lưu");
+                edu.system.alert("Bạn chưa thay đổi gì dữ liệu.", "i");
             }
         });
 

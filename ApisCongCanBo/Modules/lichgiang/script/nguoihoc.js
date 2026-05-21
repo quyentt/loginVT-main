@@ -146,7 +146,7 @@ NguoiHoc.prototype = {
 
             }
             else {
-                //edu.system.alert("Không có thay đổi lưu");
+                edu.system.alert("Bạn chưa thay đổi gì dữ liệu.", "i");
             }
         });
 
