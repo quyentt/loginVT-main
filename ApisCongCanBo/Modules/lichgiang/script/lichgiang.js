@@ -876,6 +876,9 @@ LichGiang.prototype = {
             if (e.GIOBATDAU < iGioMin) iGioMin = e.GIOBATDAU;
             if (e.GIOKETTHUC > iGioMax) iGioMax = e.GIOKETTHUC;
         });
+        // Luôn hiển thị tối thiểu từ 7h đến 17h (kết thúc 18h vì loop tới iGioMax + 2)
+        if (iGioMin > 7) iGioMin = 7;
+        if (iGioMax < 17) iGioMax = 17;
         var html = '<div class="date">';
         for (var i = iGioMin; i < iGioMax + 2; i++) {
             html += '<div class="hour-row">' + i +':00</div>';
@@ -2552,7 +2555,11 @@ LichGiang.prototype = {
                     edu.system.alert("Thực hiện thành công!");
                     me.xemCacBuoi_getList_SinhVien();
                 } else {
-                    edu.system.alert(data.Message);
+                    var msg = edu.util.returnEmpty(data.Message);
+                    if (!msg || /^[A-F0-9-]{16,}$/i.test(msg.trim())) {
+                        msg = "Không có buổi điểm danh nào cần đồng bộ với TKB, hoặc bạn không có quyền thực hiện thao tác này.";
+                    }
+                    edu.system.alert(msg, "w");
                 }
             },
             error: function (er) { edu.system.alert(JSON.stringify(er), "w"); },
