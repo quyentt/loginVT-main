@@ -48,14 +48,6 @@ Import_DaNop.prototype = {
                 edu.system.alert("Vui lòng chọn mẫu import trước khi thực hiện import dữ liệu!");
                 return false;
             }
-            var arrErrRows = me.validateRows(me.dtPhaiNop);
-            if (arrErrRows.length > 0) {
-                me.genTable_Import_View(arrErrRows, "tblImport_ThatBai");
-                $("#tblImport_ThatBai_Tong").html(arrErrRows.length);
-                edu.system.switchTab("tab_4");
-                edu.system.alert("Không thể import: file có <span style='color:red'>" + arrErrRows.length + "</span> dòng thiếu dữ liệu bắt buộc. Vui lòng xem tab 4 để biết dòng nào lỗi, sửa file rồi import lại.", "w");
-                return false;
-            }
 
             var rowHienThi = "";
             rowHienThi += "Học kỳ import: <span style='color: red'>" + getNameInSelect("dropThoiGianDaoDao_DN") + "</span>";
@@ -140,23 +132,10 @@ Import_DaNop.prototype = {
                 return false;
             }
             me.dtPhaiNop = me.dtImport[strSheet];
-            console.log(me.dtPhaiNop);
-            var arrNullCols = me.getNullColumns(me.dtPhaiNop);
-            if (arrNullCols.length > 10) {
-                edu.system.alert("File đang có <span style='color:red'>" + arrNullCols.length + "</span> cột trống (" + arrNullCols.join(", ") + "). Vui lòng xóa các cột trống trong file excel rồi đọc lại để xem dữ liệu chuẩn hơn!", "w");
-            }
             me.genTable_Import_View(me.dtPhaiNop, "tblImport");
             edu.system.switchTab("tab_2");
-
-            var arrErrRows = me.validateRows(me.dtPhaiNop);
-            if (arrErrRows.length > 0) {
-                me.genTable_Import_View(arrErrRows, "tblImport_ThatBai");
-                $("#tblImport_ThatBai_Tong").html(arrErrRows.length);
-                edu.system.alert("Phát hiện <span style='color:red'>" + arrErrRows.length + "</span> dòng thiếu dữ liệu bắt buộc. Xem chi tiết ở tab '4) Kết quả import lỗi'. Vui lòng sửa file rồi đọc lại.", "w");
-            } else {
-                $("#tblImport_ThatBai_Tong").html("");
-                $("#tblImport_ThatBai tbody").html("");
-            }
+            $("#tblImport_ThatBai_Tong").html("");
+            $("#tblImport_ThatBai tbody").html("");
         });
         function getNameInSelect(strDropId) {
             var x = edu.util.getValById(strDropId);
@@ -543,54 +522,6 @@ Import_DaNop.prototype = {
             if (allEmpty) arrNullCols.push(key);
         }
         return arrNullCols;
-    },
-    validateRows: function (data) {
-        var arrErr = [];
-        if (!data || data.length === 0) return arrErr;
-
-        var requiredFields = [
-            { key: "MASINHVIEN", label: "Mã sinh viên" },
-            { key: "HOVATEN",    label: "Họ và tên" },
-            { key: "NGAYTHU",    label: "Ngày thu" },
-            { key: "HOCPHI",     label: "Số tiền (HOCPHI)", numeric: true }
-        ];
-
-        function valStr(v) {
-            return (v === null || v === undefined) ? "" : String(v).trim();
-        }
-
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i];
-            var reasons = [];
-
-            for (var j = 0; j < requiredFields.length; j++) {
-                var f = requiredFields[j];
-                var s = valStr(row[f.key]);
-                if (s === "") {
-                    reasons.push("Thiếu " + f.label);
-                    continue;
-                }
-                if (f.numeric) {
-                    var n = parseFloat(s.replace(/,/g, "").replace(/\s/g, ""));
-                    if (isNaN(n) || n <= 0) {
-                        reasons.push(f.label + " không hợp lệ (giá trị: '" + s + "')");
-                    }
-                }
-            }
-
-            if (reasons.length > 0) {
-                arrErr.push({
-                    DONG_SO:    i + 2,
-                    MASINHVIEN: valStr(row.MASINHVIEN),
-                    HOVATEN:    valStr(row.HOVATEN),
-                    NGAYTHU:    valStr(row.NGAYTHU),
-                    HOCPHI:     valStr(row.HOCPHI),
-                    NOIDUNG:    valStr(row.NOIDUNG),
-                    NOIDUNGLOI: reasons.join("; ")
-                });
-            }
-        }
-        return arrErr;
     },
     genTable_Import_View: function (data, strTable) {
         if (!data || data.length === 0) {
