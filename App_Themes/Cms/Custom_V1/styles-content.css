@@ -36,20 +36,11 @@
     color: #666;
 }
 
-/* -- Code 10/2/2025 -- */
-.box-shadow,
-.box.box-solid.box-shadow,
-.box-solid.box-shadow,
-.box.box-shadow {
-    background: #fff !important;
-    border-radius: 12px !important;
-    /*overflow: hidden !important;*/
-    -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2) !important;
-    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2) !important;
-    /*display: inline-block;*/
-    position: relative;
-}
 
+
+#divuploadtxt_ThongTinDinhKem {
+  margin-top: 9px;
+}
 
 
 /*Thu tiền mặt cho sinh viên, học sinh------------------*/
@@ -85,29 +76,9 @@
     margin-bottom: 0px !important;
 }
 
-.group-title {
-    padding: 10px 0 0 0;
-}
-
-.group-title .lang {
-    display: inline-block;
-    font-size: 18px;
-    margin: 0;
-    line-height: 1;
-    font-weight: 500;
-    color: var(--color-blue);
-}
 
 .dkmh_info_stu {
     font-size: 16PX !important;
-}
-
-.group-title i {
-    margin-right: 8px;
-    float: left;
-    font-size: 18px;
-    color: var(--color-blue);
-    font-weight: 700 !important;
 }
 
 .aps-box-table .nav-tabs-custom>.nav-tabs {
@@ -9037,28 +9008,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 /* --------------------- */
-.btn-outline-primary {
-    --bs-btn-color: #0d6efd;
-    --bs-btn-border-color: #0d6efd;
-    --bs-btn-hover-color: #fff;
-    --bs-btn-hover-bg: #0d6efd;
-    --bs-btn-hover-border-color: #0d6efd;
-    --bs-btn-focus-shadow-rgb: 13, 110, 253;
-    --bs-btn-active-color: #fff;
-    --bs-btn-active-bg: #0d6efd;
-    --bs-btn-active-border-color: #0d6efd;
-    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
-    --bs-btn-disabled-color: #0d6efd;
-    --bs-btn-disabled-bg: transparent;
-    --bs-btn-disabled-border-color: #0d6efd;
-    --bs-gradient: none;
-}
 
-.btn-outline-primary:hover {
-    color: var(--bs-btn-hover-color);
-    background-color: var(--bs-btn-hover-bg);
-    border-color: var(--bs-btn-hover-border-color);
-}
 
 .col-sm-3-4col .col-sm-3:nth-child(4) {
     padding-right: 0 !important;
@@ -12146,6 +12096,17 @@ table#clone {
 .tiepnhandauvao-static-box .item:nth-child(6) .number {
     color: #ffc107 !important;
 }
+.box-ds-phongThi {
+  padding-bottom: 40px !important;
+}
+
+.tblPhongThi .order-gr {
+  padding-left: 5px !important;
+  padding-top: 1px;
+}
+.box-KhoanThu .nav-tabs-custom>.nav-tabs>li {
+  margin-bottom: -1px !important;
+}
 
 /* --------------------------- */
 .hosodauvao-tabs .nav-tabs {
@@ -13067,34 +13028,12 @@ table#clone {
 .aps-student-hoso .user-infomation .info .item .label {
     min-width: 120px !important;
 }
-.hosoS-tabs .nav-tabs .nav-link {
-    color: #222222;
-    padding: 10px 12px;
-    border-top: 3px solid #f1f1f1;
-    border-left: 1px solid #f1f1f1;
-    border-right: 1px solid #f1f1f1;
-    margin-right: 5px;
-}
-.hosoS-tabs .nav-tabs .nav-link.active {
-    color: var(--color-blue);
-    border: none;
-    border-bottom: solid 2px #fff !important;
-    border-left: 1px solid var(--color-blue) !important;
-        border-top: solid 3px var(--color-blue) !important;
-            border-right: solid 1px var(--color-blue) !important;
-}
-.hosoS-tabs .nav-tabs .nav-link i{
-    color: #888;
-}
-.hosoS-tabs .nav-tabs .nav-link.active  i{
-    color: var(--color-blue);
-     font-weight: 700;
-}
+
 .box-tongQuan  {
     margin-left: -10px;
     margin-right: -10px;
 }
-.box-tongQuan .box-title
+.box-tongQuan .box-title,.box-thaotac-main .box-title
 {
     font-size: 15px;
     padding: 10px 0px 0 0;
@@ -13106,35 +13045,71 @@ table#clone {
     margin-top: 12px;
     padding-bottom: 10px;
 }
-.box-tongQuan .box-title i
+.box-tongQuan .box-title i,
+.box-thaotac-main .box-title i
 {
     font-size: 16px;
     font-weight: 700;
     margin-right: 8px;
 }
+
+.box-thaotac-main  .tiepnhandauvao-static-box .item {
+    display: flex !important;
+    flex-direction: column;
+     text-align: center;
+    padding: 15px 10px !important;
+}
+.box-thaotac-main  .tiepnhandauvao-static-box .item  .title {
+    font-weight: 600 !important;
+    font-size: 14px;
+    margin-bottom: 0;
+    color: #666;
+    line-height: 20px;
+}
+.box-thaotac-main  .tiepnhandauvao-static-box .item .icon {
+    background: transparent !important;
+    font-size: 30px;
+}
+.box-thaotac-main .tiepnhandauvao-static-box .item .icon {
+    width: auto;
+    height: auto;
+}
+/* --- */
 .box-tongQuan-hs .tiepnhandauvao-static-box .item,
-.box-taichinh-hs  .tiepnhandauvao-static-box .item{
+.box-tongQuan-hs .tiepnhandauvao-static-box .item,
+.box-tuongTac-ht  .tiepnhandauvao-static-box .item{
     width: calc((100% - 10px) / 4) !important;
     padding: 10px !important;
     text-align: center !important;
     display: block !important;
     gap: 5px !important;
 }
-.box-tongQuan-hs .tiepnhandauvao-static-box .item .title {
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .title,
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .title,
+.box-tuongTac-ht .tiepnhandauvao-static-box .item .title {
     font-size: 14px;
     line-height: 18px;
     text-align: center;
+     color: #666 !important;
+     font-weight: 400 !important;
 }
-.box-tongQuan-hs .aps-student-list-static.tiepnhandauvao-static-box .item .meta .detail{
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta .detail,
+.box-taichinh-hs .tiepnhandauvao-static-box .item .meta .detail,
+.box-tuongTac-ht .tiepnhandauvao-static-box .item .meta .detail
+{
     display: flex !important;
     align-items: baseline;
 }
-.box-tongQuan-hs .tiepnhandauvao-static-box .item .number {
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .number,
+.box-taichinh-hs .tiepnhandauvao-static-box .item .number  {
     font-size: 20px;
     font-weight: 700;
     line-height: 22px;
     text-align: center;
     padding: 5px 0;
+}
+.box-taichinh-hs .tiepnhandauvao-static-box .item .number  {
+    font-size: 16px !important;
 }
 .box-tongQuan-hs .tiepnhandauvao-static-box .item .unit {
     text-align: center !important;
@@ -13143,9 +13118,7 @@ table#clone {
 .box-tongQuan-hs .item .meta .number {
     text-align: center;
 }
-.box-tongQuan-hs .tiepnhandauvao-static-box .item {
-    
-}
+
 .aps-student-hoso .box-header .pull-right .btn i {
     font-size: 9px;
 }
@@ -13153,15 +13126,78 @@ table#clone {
     gap: 10px !important;
 }
 
-.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta {
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta,
+.box-tuongTac-ht .tiepnhandauvao-static-box .item .meta,
+.box-taichinh-hs .tiepnhandauvao-static-box .item .meta{
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    width: 100%;
 }
-.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta .detail {
+.box-tongQuan-hs .tiepnhandauvao-static-box .item .meta .detail,
+.box-taichinh-hs .tiepnhandauvao-static-box .item .meta .detail {
     gap: 5px;
 }
 
+.box-tongQuan-hs .tiepnhandauvao-static-box,
+.box-tongQuan-hs .tiepnhandauvao-static-box,
+.box-tuongTac-ht .tiepnhandauvao-static-box{
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
+    gap: 20px; /* Khoảng cách giữa 2 cột */
+}
+.box-tongQuan-hs .tiepnhandauvao-static-box .item,
+.box-taichinh-hs .tiepnhandauvao-static-box .item,
+.box-tuongTac-ht .tiepnhandauvao-static-box .item  {
+    width: 100% !important;
+}
+.box-taichinh-hs .tiepnhandauvao-static-box .soft-primary .number{
+    color: #0d6efd !important;
+}
+.box-taichinh-hs .tiepnhandauvao-static-box .soft-success .number{
+    color: #22a652 !important;
+}
+.box-taichinh-hs .tiepnhandauvao-static-box .soft-danger .number{
+    color: #dc3545 !important;
+}
+.box-taichinh-hs .tiepnhandauvao-static-box .soft-light .number{
+     color: #666 !important;
+}
+.box-taichinh-hs .outline-red .title,
+.box-taichinh-hs .outline-red .detail .number{
+    color: var(--color-red) !important;
+}
+.box-taichinh-hs .outline-orange .title,
+.box-taichinh-hs .outline-orange .detail .number{
+    color: var(--color-orange) !important;
+}
+.box-taichinh-hs .outline-yellow .title,
+.box-taichinh-hs .outline-yellow .detail .number{
+    color: var(--color-yellow) !important;
+}
+.box-taichinh-hs .outline-warning .title,
+.box-taichinh-hs .outline-warning .detail .number{
+    color: var(--color-warning) !important;
+}
+.box-taichinh-hs .meta .detail .text {
+    text-align: right;
+}
+.box-tongQuan .tiepnhandauvao-static-box .item .title
+ {
+    font-weight: 400 !important;
+    font-size: 14px;
+}
+ .box-tuongTac-ht .tiepnhandauvao-static-box .item,
+  .box-tongQuan-hs .tiepnhandauvao-static-box .item,
+  .box-taichinh-hs .tiepnhandauvao-static-box .item,
+  .box-tuongTac-ht  .tiepnhandauvao-static-box .item {
+    padding:6px 10px !important;
+  }
+  .box-tongQuan .box-nhacviec .tiepnhandauvao-static-box .item .title {
+    display: flex;
+    align-items: baseline;
+}
+/* -------------- */
 /* mr 20/05 */
 .hosodauvao-tabs .nav-tabs .nav-link {
     display: flex;
@@ -13417,5 +13453,4 @@ table#clone {
     padding: 0 !important;
     height: 5px !important;
     margin: 0;
->>>>>>> 89a1e22a3851d05450070071c78d71ed0f0301fe
 }

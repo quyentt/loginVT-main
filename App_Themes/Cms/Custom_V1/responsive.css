@@ -125,7 +125,16 @@
   }
 }
 
-@media (min-width: 1180px) and (max-width: 1920px) {
+@media (min-width: 1180px) and (max-width: 2000px) {
+  .box-tongQuan-hs .tiepnhandauvao-static-box,
+  .box-taichinh-hs .tiepnhandauvao-static-box,
+  .box-tuongTac-ht .tiepnhandauvao-static-box {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    gap: 10px;
+  }
+
+  /* -- */
   .aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search {
     display: block !important;
   }
@@ -5543,5 +5552,12 @@
 @media (min-width: 576px) {
   .modal-sm {
     --bs-modal-width: 300px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .login-box,
+  .register-box {
+    width: 100% !important;
   }
 }
