@@ -427,24 +427,29 @@ systemroot.prototype = {
             }
             return res;
         }
-        me["isActive"] = true;
-        //window.onfocus = function () {
-        //    me["isActive"] = true;
-        //    me.versionMainJS();
-        //    me.versionPageJS();
-        //};
-
-        window.onblur = function () {
-            me["isActive"] = false;
-        };
-
-        //checkChangeversionJS();
-        function checkChangeversionJS() {
-            setTimeout(function () {
+        
+        if (localStorage.getItem("reload") == "true") {
+            me["isActive"] = true;
+            window.onblur = function () {
+                me["isActive"] = false;
+            };
+            window.onfocus = function () {
+                me["isActive"] = true;
                 me.versionMainJS();
-                checkChangeversionJS();
-            }, 300000)
+                me.versionPageJS();
+            };
+            checkChangeversionJS();
+            function checkChangeversionJS() {
+                setTimeout(function () {
+                    me.versionMainJS();
+                    checkChangeversionJS();
+                }, 300000)
+            }
         }
+        
+
+
+        
 
         var x = jQuery.ajax({
             type: "GET",
