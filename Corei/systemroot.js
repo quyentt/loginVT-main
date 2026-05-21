@@ -227,23 +227,23 @@ systemroot.prototype = {
             edu.system.showImportChung($(this).attr("title"), $(this).attr("name"));
         });
         me["isActive"] = true;
-        window.onfocus = function () {
-            me["isActive"] = true;
-            me.versionMainJS();
-            me.versionPageJS();
-        };
+        //window.onfocus = function () {
+        //    me["isActive"] = true;
+        //    me.versionMainJS();
+        //    me.versionPageJS();
+        //};
 
         window.onblur = function () {
             me["isActive"] = false;
         };
 
-        checkChangeversionJS();
-        function checkChangeversionJS() {
-            setTimeout(function () {
-                me.versionMainJS();
-                checkChangeversionJS();
-            }, 600000)
-        }
+        //checkChangeversionJS();
+        //function checkChangeversionJS() {
+        //    setTimeout(function () {
+        //        me.versionMainJS();
+        //        checkChangeversionJS();
+        //    }, 600000)
+        //}
         $(document).delegate(".btnEdit_MauBaoCao", "click", function (e) {
             e.preventDefault();
             var strBaoCao_Id = this.id;

@@ -428,17 +428,17 @@ systemroot.prototype = {
             return res;
         }
         me["isActive"] = true;
-        window.onfocus = function () {
-            me["isActive"] = true;
-            me.versionMainJS();
-            me.versionPageJS();
-        };
+        //window.onfocus = function () {
+        //    me["isActive"] = true;
+        //    me.versionMainJS();
+        //    me.versionPageJS();
+        //};
 
         window.onblur = function () {
             me["isActive"] = false;
         };
 
-        checkChangeversionJS();
+        //checkChangeversionJS();
         function checkChangeversionJS() {
             setTimeout(function () {
                 me.versionMainJS();
