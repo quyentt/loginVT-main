@@ -1321,13 +1321,19 @@ NguoiHoc.prototype = {
                 else {
                     var msg = edu.util.returnEmpty(data.Message);
                     if (!msg || /^[A-F0-9-]{16,}$/i.test(msg.trim())) {
-                        msg = "Không có buổi điểm danh nào cần đồng bộ với TKB, hoặc bạn không có quyền thực hiện thao tác này.";
+                        obj_notify = {
+                            type: "s",
+                            content: "Đã thực hiện xong",
+                        };
+                        edu.system.alertOnModal(obj_notify);
+                        me.getList_SinhVien();
+                    } else {
+                        obj_notify = {
+                            type: "w",
+                            content: msg,
+                        };
+                        edu.system.alertOnModal(obj_notify);
                     }
-                    obj_notify = {
-                        type: "w",
-                        content: msg,
-                    }
-                    edu.system.alertOnModal(obj_notify);
                 }
             },
             error: function (er) {

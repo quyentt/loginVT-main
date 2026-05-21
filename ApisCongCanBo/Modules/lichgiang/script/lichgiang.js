@@ -2557,9 +2557,11 @@ LichGiang.prototype = {
                 } else {
                     var msg = edu.util.returnEmpty(data.Message);
                     if (!msg || /^[A-F0-9-]{16,}$/i.test(msg.trim())) {
-                        msg = "Không có buổi điểm danh nào cần đồng bộ với TKB, hoặc bạn không có quyền thực hiện thao tác này.";
+                        edu.system.alert("Đã thực hiện xong", "s");
+                        me.xemCacBuoi_getList_SinhVien();
+                    } else {
+                        edu.system.alert(msg, "w");
                     }
-                    edu.system.alert(msg, "w");
                 }
             },
             error: function (er) { edu.system.alert(JSON.stringify(er), "w"); },
