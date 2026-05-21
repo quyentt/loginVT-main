@@ -2319,10 +2319,10 @@ LichGiang.prototype = {
         $("#tblLichGiang_LG tbody").html(html);
         if (data.length > 0) $("#tblLichGiang_LG tbody tr[id='" + data[0].ID + "']").trigger("click");
     },
-    xemCacBuoi_getList_SinhVien: function () {
+    xemCacBuoi_getList_SinhVien: function (callback) {
         var me = this;
         var objLich = me.xemCacBuoi_dtLichHoc.find(function (e) { return e.ID === me.xemCacBuoi_strLichHoc_Id; });
-        if (!objLich) return;
+        if (!objLich) { if (typeof callback === "function") callback(); return; }
         var obj_list = {
             'action': 'NS_ThongTinCanBo/LayDSDangKyHoc',
             'type': 'GET',
@@ -2345,8 +2345,12 @@ LichGiang.prototype = {
                 } else {
                     edu.system.alert(data.Message, "s");
                 }
+                if (typeof callback === "function") callback();
             },
-            error: function (er) { edu.system.alert(JSON.stringify(er), "w"); },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er), "w");
+                if (typeof callback === "function") callback();
+            },
             type: 'GET',
             action: obj_list.action,
             contentType: true,
@@ -2560,14 +2564,17 @@ LichGiang.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
+                var showAfterReload = function (msg) {
+                    me.xemCacBuoi_getList_SinhVien(function () {
+                        edu.system.alert(msg, "s");
+                    });
+                };
                 if (data.Success) {
-                    edu.system.alert("Thực hiện thành công!");
-                    me.xemCacBuoi_getList_SinhVien();
+                    showAfterReload("Thực hiện thành công!");
                 } else {
                     var msg = edu.util.returnEmpty(data.Message);
                     if (!msg || /^[A-F0-9-]{16,}$/i.test(msg.trim())) {
-                        edu.system.alert("Đã thực hiện xong", "s");
-                        me.xemCacBuoi_getList_SinhVien();
+                        showAfterReload("Đã thực hiện xong");
                     } else {
                         edu.system.alert(msg, "w");
                     }
