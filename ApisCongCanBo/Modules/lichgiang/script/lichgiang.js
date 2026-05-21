@@ -876,9 +876,18 @@ LichGiang.prototype = {
             if (e.GIOBATDAU < iGioMin) iGioMin = e.GIOBATDAU;
             if (e.GIOKETTHUC > iGioMax) iGioMax = e.GIOKETTHUC;
         });
-        // Luôn hiển thị tối thiểu từ 7h đến 17h (kết thúc 18h vì loop tới iGioMax + 2)
-        if (iGioMin > 7) iGioMin = 7;
-        if (iGioMax < 17) iGioMax = 17;
+        // Khung giờ hiển thị thông minh - tránh khoảng trống lớn khi lịch chỉ có buổi chiều/tối
+        if (data.length === 0) {
+            // Không có lịch -> hiện giờ hành chính 7h-18h
+            iGioMin = 7;
+            iGioMax = 17;
+        } else if (iGioMin >= 13) {
+            // Lịch toàn buổi chiều/tối -> bắt đầu sát giờ đầu (lùi 1h) để buổi học hiện ngay đầu màn hình
+            iGioMin = iGioMin - 1;
+        } else if (iGioMin > 7) {
+            // Lịch có buổi sáng -> luôn hiển thị từ 7h sáng
+            iGioMin = 7;
+        }
         var html = '<div class="date">';
         for (var i = iGioMin; i < iGioMax + 2; i++) {
             html += '<div class="hour-row">' + i +':00</div>';
@@ -930,7 +939,7 @@ LichGiang.prototype = {
             //html += '<div class="task-date">' + e.TIETBATDAU + ' - ' + e.TIETKETTHUC + '</div>';
             //html += '</div>';
             html += '</div>';
-            html += '<div class="task-description">';
+            html += '<div class="task-description" title="Xem 1 buổi đang chọn">';
             html += e.TENLOPHOCPHAN + "<br/>" + edu.util.returnEmpty(e.TENPHONGHOC);
             html += '<div class="eval eval-gv" id="listIcon'+ e.ID +'"><div class="eval-gv-list"></div></div>';
             html += '</div>';
