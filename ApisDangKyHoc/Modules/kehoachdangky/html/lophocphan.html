@@ -29,6 +29,71 @@
         color: #000 !important;
         font-weight: 800 !important;
     }
+
+    /* Find-in-table widget (Ctrl+F-style) */
+    .aps-find-in-table-bar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 8px;
+    }
+    .find-in-table-box {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #fff;
+        border: 1px solid #d0d7e2;
+        border-radius: 4px;
+        padding: 3px 6px;
+        box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    }
+    .find-in-table-input {
+        width: 260px;
+        height: 28px;
+        padding: 2px 8px;
+        border: 1px solid #d0d7e2;
+        border-radius: 3px;
+        font-size: 13px;
+        box-shadow: none;
+        outline: none;
+    }
+    .find-in-table-input:focus {
+        border-color: #3c8dbc;
+    }
+    .find-in-table-counter {
+        min-width: 50px;
+        text-align: center;
+        color: #6c757d;
+        font-size: 12px;
+        user-select: none;
+        padding: 0 4px;
+    }
+    .find-in-table-counter.has-match { color: #1f7e34; font-weight: 600; }
+    .find-in-table-counter.no-match  { color: #c0392b; font-weight: 600; }
+    .find-in-table-btn {
+        padding: 2px 8px !important;
+        line-height: 1.2 !important;
+        height: 26px;
+        min-width: 30px;
+        margin: 0 !important;
+        border: 1px solid #d0d7e2 !important;
+        background: #f7f9fc !important;
+    }
+    .find-in-table-btn:hover { background: #e6ebf2 !important; }
+    .find-in-table-btn[disabled],
+    .find-in-table-btn.disabled { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+    /* Row highlight */
+    .tblLopHocPhan tbody tr.find-match,
+    .tblLopHocPhanChiTiet tbody tr.find-match,
+    .tblLopHocPhanChiTiet2 tbody tr.find-match {
+        background-color: #fff3cd !important;
+    }
+    .tblLopHocPhan tbody tr.find-match-current,
+    .tblLopHocPhanChiTiet tbody tr.find-match-current,
+    .tblLopHocPhanChiTiet2 tbody tr.find-match-current {
+        background-color: #ffd966 !important;
+        box-shadow: inset 3px 0 0 #f39c12;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-lophocphan">
@@ -166,6 +231,22 @@
                 </div>
 
                 <div class="box-body mt-10 pd0 pb20">
+                    <div class="aps-find-in-table-bar">
+                        <div class="find-in-table-box" id="findInTableBox" title="Tìm cụm từ trong bảng đang hiển thị">
+                            <input type="text" id="txtFindInTable" class="form-control find-in-table-input"
+                                   placeholder="Tìm cụm từ trong bảng..." autocomplete="off" />
+                            <span class="find-in-table-counter" id="lblFindInTableCounter">0/0</span>
+                            <a class="btn btn-default find-in-table-btn" id="btnFindInTablePrev" title="Trước (Shift+Enter)">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="btn btn-default find-in-table-btn" id="btnFindInTableNext" title="Sau (Enter)">
+                                <i class="fa fa-chevron-down"></i>
+                            </a>
+                            <a class="btn btn-default find-in-table-btn" id="btnFindInTableClear" title="Xóa (Esc)">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
                     <div class="tblHidden scroll-top-mirror mt-5" style="overflow-x: auto; overflow-y: hidden;">
                         <div style="height: 1px; min-width: 2000px;"></div>
                     </div>

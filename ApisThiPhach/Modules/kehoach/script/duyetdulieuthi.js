@@ -1983,8 +1983,23 @@ DuLieuThi.prototype = {
         }, false, false, false, null);
     },
     cbGenCombo_ChuongTrinhDaoTao: function (data) {
+        // Gộp các bản ghi trùng TENCHUONGTRINH thành 1 option;
+        // các ID của cùng tên được nối thành chuỗi CSV để khi filter vẫn match đủ
+        var seen = {};
+        var unique = [];
+        (data || []).forEach(function (item) {
+            var key = (item.TENCHUONGTRINH || "").trim();
+            if (!key) return;
+            if (seen[key]) {
+                seen[key].ID += "," + item.ID;
+            } else {
+                var row = { ID: item.ID, TENCHUONGTRINH: key };
+                seen[key] = row;
+                unique.push(row);
+            }
+        });
         var obj = {
-            data: data,
+            data: unique,
             renderInfor: {
                 id: "ID",
                 parentId: "",
@@ -1997,7 +2012,7 @@ DuLieuThi.prototype = {
             title: "Tất cả chương trình đào tạo",
         };
         edu.system.loadToCombo_data(obj);
-        if (data.length != 1) $("#dropSearch_ChuongTrinh_CC").val("").trigger("change");
+        if (unique.length != 1) $("#dropSearch_ChuongTrinh_CC").val("").trigger("change");
     },
     resetCombobox: function (point) {
         var x = $(point).val();
