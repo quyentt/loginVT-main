@@ -365,6 +365,12 @@ DuLieuThi.prototype = {
         $("#btnSearch_DanhSachThi").click(function () {
             me.getList_DanhSachThi();
         });
+        $('#dropSearch_TrangThaiCongBo').on('change', function () {
+            me.renderTable_DanhSachThi();
+        });
+        $('#chkChuaCongBo').on('change', function () {
+            me.renderTable_DanhSachThi();
+        });
         $("#chkSelectAll_DanhSachThi").on("click", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblDanhSachThi" });
         });
@@ -1615,10 +1621,27 @@ DuLieuThi.prototype = {
     genTable_DanhSachThi: function (data) {
         var me = this;
         me.dtDanhSachThi = data || [];
-        $("#lblDanhSachThi_Tong").html(me.dtDanhSachThi.length);
+        me.renderTable_DanhSachThi();
+    },
+    renderTable_DanhSachThi: function () {
+        var me = this;
+        var data = me.dtDanhSachThi || [];
+        var status = $("#dropSearch_TrangThaiCongBo").val();
+        var onlyUnpublished = $("#chkChuaCongBo").is(":checked");
+        if (onlyUnpublished) {
+            data = data.filter(function (x) {
+                var v = x.TRANGTHAICONGBO_TEN;
+                return v == null || (typeof v === "string" && v.trim() === "");
+            });
+        } else if (status) {
+            data = data.filter(function (x) {
+                return (x.TRANGTHAICONGBO_TEN || "") === status;
+            });
+        }
+        $("#lblDanhSachThi_Tong").html(data.length);
         var jsonForm = {
             strTable_Id: "tblDanhSachThi",
-            aaData: me.dtDanhSachThi,
+            aaData: data,
             colPos: {
                 center: [0]
             },
@@ -1630,6 +1653,9 @@ DuLieuThi.prototype = {
                 { "mDataProp": "DAOTAO_HOCPHAN_TEN" },
                 { "mDataProp": "HINHTHUCTHI_TEN" },
                 { "mDataProp": "THONGTINLOPHOCPHAN" },
+                { "mDataProp": "TRANGTHAICONGBO_TEN" },
+                { "mDataProp": "THOIGIANCONGBOLICH" },
+                { "mDataProp": "NGUOITHUCHIENCONGBOLICH" },
                 {
                     "mRender": function (nRow, aData) {
                         return '<input type="checkbox" class="checkDSThi" id="checkDSThi_' + aData.ID + '"/>';
@@ -1773,6 +1799,8 @@ DuLieuThi.prototype = {
 
     loadBtnCongBo: function (data) {
         //main_doc.KhaoThi.dtXacNhan = data;
+        this.dtTrangThaiCongBo = data;
+        this.cbGenCombo_TrangThaiCongBo(data);
         var row = "";
         row += '<div style="margin-left: auto; margin-right: auto; width: ' + ((data.length) * 90) + 'px">';
         for (var i = 0; i < data.length; i++) {
@@ -1787,6 +1815,19 @@ DuLieuThi.prototype = {
         $("#zoneBtnCongBo").html(row);
     },
 
+    cbGenCombo_TrangThaiCongBo: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "TEN",
+                parentId: "",
+                name: "TEN",
+            },
+            renderPlace: ["dropSearch_TrangThaiCongBo"],
+            title: "Tình trạng công bố"
+        };
+        edu.system.loadToCombo_data(obj);
+    },
 
     getList_ThoiGianDaoTao: function () {
         var me = this;
