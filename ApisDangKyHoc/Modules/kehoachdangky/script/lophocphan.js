@@ -97,16 +97,24 @@ LopHocPhan.prototype = {
             //me.getList_LopHocPhan();
         });
         $("#btnSearch").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_LopHocPhan();
         });
         $("#btnSearchChiTiet").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_LopHocPhanChiTiet();
         });
 
         $("#btnSearchCanBoDangKy").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_CanBoChiTiet();
         });
         $("#btnSearchChiTietRut").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_LopHocPhanRut();
         });
 
@@ -396,6 +404,24 @@ LopHocPhan.prototype = {
             arrChecked_Id.forEach(e => me.saveTaoDanhSachNhapDiem(e));
 
         });
+
+        // Find-in-table widget bindings
+        $("#txtFindInTable").on("input", function () {
+            me.runFindInTable($(this).val());
+        });
+        $("#txtFindInTable").on("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                if (e.shiftKey) me.prevFindMatch(); else me.nextFindMatch();
+            } else if (e.key === "Escape") {
+                e.preventDefault();
+                me.clearFindInTable();
+            }
+        });
+        $("#btnFindInTablePrev").click(function (e) { e.preventDefault(); me.prevFindMatch(); });
+        $("#btnFindInTableNext").click(function (e) { e.preventDefault(); me.nextFindMatch(); });
+        $("#btnFindInTableClear").click(function (e) { e.preventDefault(); me.clearFindInTable(); });
+        me.updateFindCounter();
     },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
@@ -868,22 +894,23 @@ LopHocPhan.prototype = {
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
-    getList_LopHocPhan: function () {
+    getList_LopHocPhan: function (findOverride) {
         var me = this;
         $(".tblHidden").hide();
         $("#tblLopHocPhan").parent().show().prev(".scroll-top-mirror").show();
+        findOverride = findOverride || {};
 
         //--Edit
         var obj_save = {
             'action': 'DKH_BaoCao_MH/DSA4BRINLjEJLiIRKSAvESkgLxUzIC8m',
             'func': 'pkg_dangkyhoc_baocao.LayDSLopHocPhanPhanTrang',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strTuKhoa': (findOverride.keyword != null ? findOverride.keyword : edu.util.getValById('txtSearch')),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
 
 
@@ -908,16 +935,21 @@ LopHocPhan.prototype = {
                         iPager = data.Pager;
                     }
                     me.dtLopHocPhan = dtResult;
-                    me.genTable_LopHocPhan(dtResult, iPager);
+                    if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
+                        findOverride.onSuccess(dtResult, iPager);
+                    } else {
+                        me.genTable_LopHocPhan(dtResult, iPager);
+                    }
                 }
                 else {
-                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                    if (findOverride.onError) findOverride.onError(data);
+                    else edu.system.alert(obj_save.action + " : " + data.Message, "w");
                 }
 
             },
             error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+                if (findOverride.onError) findOverride.onError(er);
+                else edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
@@ -1044,26 +1076,28 @@ LopHocPhan.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.refreshFindInTable();
     },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
-    getList_LopHocPhanChiTiet: function () {
+    getList_LopHocPhanChiTiet: function (findOverride) {
         var me = this;
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
+        findOverride = findOverride || {};
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIP',
             'func': 'pkg_dangkyhoc_thongtin2.LayDSDangKyHoc',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strTuKhoa': (findOverride.keyword != null ? findOverride.keyword : edu.util.getValById('txtSearch')),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
             'strHanhDong_XacNhan_Id': edu.system.getValById('dropSearch_HanhDong'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -1088,16 +1122,21 @@ LopHocPhan.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_LopHocPhanChiTiet(dtResult, iPager);
+                    if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
+                        findOverride.onSuccess(dtResult, iPager);
+                    } else {
+                        me.genTable_LopHocPhanChiTiet(dtResult, iPager);
+                    }
                 }
                 else {
-                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                    if (findOverride.onError) findOverride.onError(data);
+                    else edu.system.alert(obj_save.action + " : " + data.Message, "w");
                 }
 
             },
             error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+                if (findOverride.onError) findOverride.onError(er);
+                else edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
@@ -1280,32 +1319,34 @@ LopHocPhan.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
-                    } 
+                    }
                 }
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.refreshFindInTable();
     },
 
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
-    getList_LopHocPhanRut: function () {
+    getList_LopHocPhanRut: function (findOverride) {
         var me = this;
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet2").parent().show().prev(".scroll-top-mirror").show();
+        findOverride = findOverride || {};
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRITNDUFIC8mCjgJLiIP',
             'func': 'pkg_dangkyhoc_thongtin2.LayDSRutDangKyHoc',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strTuKhoa': (findOverride.keyword != null ? findOverride.keyword : edu.util.getValById('txtSearch')),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
 
 
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -1330,16 +1371,21 @@ LopHocPhan.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_LopHocPhanRut(dtResult, iPager);
+                    if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
+                        findOverride.onSuccess(dtResult, iPager);
+                    } else {
+                        me.genTable_LopHocPhanRut(dtResult, iPager);
+                    }
                 }
                 else {
-                    edu.system.alert(data.Message, "w");
+                    if (findOverride.onError) findOverride.onError(data);
+                    else edu.system.alert(data.Message, "w");
                 }
 
             },
             error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+                if (findOverride.onError) findOverride.onError(er);
+                else edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
@@ -1441,6 +1487,7 @@ LopHocPhan.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.refreshFindInTable();
     },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
@@ -2525,5 +2572,240 @@ LopHocPhan.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: Find-in-table widget (Ctrl+F-style)
+    --Fetch toàn bộ data 1 lần vào cache, sau đó filter
+    --client-side theo MỌI field (giống Ctrl+F của browser).
+    -------------------------------------------*/
+    findState: {
+        keyword: '', matches: [], currentIdx: -1,
+        active: false,
+        cache: null, cacheTableId: null, cacheLoading: false
+    },
+    _findDebounce: null,
+    FIND_FETCH_PAGE_SIZE: 100000,
+
+    getActiveFindTableId: function () {
+        var ids = ['tblLopHocPhan', 'tblLopHocPhanChiTiet', 'tblLopHocPhanChiTiet2'];
+        for (var i = 0; i < ids.length; i++) {
+            var $tbl = $('#' + ids[i]);
+            if ($tbl.length && $tbl.closest('.tblHidden').is(':visible')) {
+                return ids[i];
+            }
+        }
+        return null;
+    },
+
+    _callFindFetch: function (tableId, override) {
+        var me = this;
+        if (tableId === 'tblLopHocPhan') me.getList_LopHocPhan(override);
+        else if (tableId === 'tblLopHocPhanChiTiet') me.getList_LopHocPhanChiTiet(override);
+        else if (tableId === 'tblLopHocPhanChiTiet2') me.getList_LopHocPhanRut(override);
+    },
+
+    _renderFiltered: function (tableId, data) {
+        var me = this;
+        var iPager = data.length;
+        if (tableId === 'tblLopHocPhan') {
+            me.dtLopHocPhan = data;
+            me.genTable_LopHocPhan(data, iPager);
+        } else if (tableId === 'tblLopHocPhanChiTiet') {
+            me.genTable_LopHocPhanChiTiet(data, iPager);
+        } else if (tableId === 'tblLopHocPhanChiTiet2') {
+            me.genTable_LopHocPhanRut(data, iPager);
+        }
+    },
+
+    _recordMatchesKeyword: function (record, kwLower) {
+        if (!record) return false;
+        for (var k in record) {
+            if (!Object.prototype.hasOwnProperty.call(record, k)) continue;
+            var v = record[k];
+            if (v == null) continue;
+            if (String(v).toLowerCase().indexOf(kwLower) !== -1) return true;
+        }
+        return false;
+    },
+
+    invalidateFindCache: function () {
+        var me = this;
+        me.findState.cache = null;
+        me.findState.cacheTableId = null;
+        me.findState.cacheLoading = false;
+    },
+
+    runFindInTable: function (keyword) {
+        var me = this;
+        var kw = (keyword || '').trim();
+        me.findState.keyword = kw;
+        if (me._findDebounce) clearTimeout(me._findDebounce);
+        me._findDebounce = setTimeout(function () {
+            me._doFind();
+        }, 300);
+    },
+
+    _doFind: function () {
+        var me = this;
+        var tableId = me.getActiveFindTableId();
+        if (!tableId) { me.updateFindCounter(); return; }
+        var kw = me.findState.keyword;
+        if (!kw) {
+            if (me.findState.active) {
+                me.findState.active = false;
+                me._callFindFetch(tableId, null);
+            } else {
+                me.scanRenderedMatches();
+            }
+            return;
+        }
+        if (me.findState.cache && me.findState.cacheTableId === tableId) {
+            me._applyClientFilter(tableId, kw);
+            return;
+        }
+        if (me.findState.cacheLoading) return;
+        me._loadFindCache(tableId, function () {
+            if (me.findState.keyword) me._applyClientFilter(tableId, me.findState.keyword);
+        });
+    },
+
+    _loadFindCache: function (tableId, cb) {
+        var me = this;
+        me.findState.cacheLoading = true;
+        me.findState.cacheTableId = tableId;
+        $('#lblFindInTableCounter').text('...').removeClass('has-match no-match');
+        me._callFindFetch(tableId, {
+            keyword: '',
+            pageIndex: 1,
+            pageSize: me.FIND_FETCH_PAGE_SIZE,
+            onlyFetch: true,
+            onSuccess: function (data) {
+                me.findState.cache = data || [];
+                me.findState.cacheLoading = false;
+                cb && cb();
+            },
+            onError: function () {
+                me.findState.cache = null;
+                me.findState.cacheLoading = false;
+                me.updateFindCounter();
+            }
+        });
+    },
+
+    _applyClientFilter: function (tableId, kw) {
+        var me = this;
+        var kwLower = kw.toLowerCase();
+        var filtered = (me.findState.cache || []).filter(function (r) {
+            return me._recordMatchesKeyword(r, kwLower);
+        });
+        me.findState.active = true;
+        me._renderFiltered(tableId, filtered);
+        // scanRenderedMatches sẽ được gọi từ refreshFindInTable sau khi render
+    },
+
+    scanRenderedMatches: function () {
+        var me = this;
+        me.clearFindHighlight();
+        me.findState.matches = [];
+        me.findState.currentIdx = -1;
+        var kw = (me.findState.keyword || '').toLowerCase();
+        var tableId = me.getActiveFindTableId();
+        if (!tableId || !kw) { me.updateFindCounter(); return; }
+        $('#' + tableId + ' tbody tr').each(function () {
+            var rowText = $(this).text().toLowerCase();
+            if (rowText.indexOf(kw) !== -1) {
+                $(this).addClass('find-match');
+                me.findState.matches.push(this);
+            }
+        });
+        if (me.findState.matches.length > 0) {
+            me.gotoFindMatch(0);
+        } else {
+            me.updateFindCounter();
+        }
+    },
+
+    gotoFindMatch: function (idx) {
+        var me = this;
+        var n = me.findState.matches.length;
+        if (n === 0) {
+            me.findState.currentIdx = -1;
+            me.updateFindCounter();
+            return;
+        }
+        if (me.findState.currentIdx >= 0 && me.findState.matches[me.findState.currentIdx]) {
+            $(me.findState.matches[me.findState.currentIdx]).removeClass('find-match-current');
+        }
+        var newIdx = ((idx % n) + n) % n;
+        me.findState.currentIdx = newIdx;
+        var $tr = $(me.findState.matches[newIdx]);
+        $tr.addClass('find-match-current');
+        var el = $tr.get(0);
+        if (el && el.scrollIntoView) {
+            try { el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }); }
+            catch (e) { el.scrollIntoView(); }
+        }
+        me.updateFindCounter();
+    },
+
+    nextFindMatch: function () {
+        var me = this;
+        if (me.findState.matches.length === 0) return;
+        me.gotoFindMatch(me.findState.currentIdx + 1);
+    },
+
+    prevFindMatch: function () {
+        var me = this;
+        if (me.findState.matches.length === 0) return;
+        me.gotoFindMatch(me.findState.currentIdx - 1);
+    },
+
+    clearFindHighlight: function () {
+        $('#tblLopHocPhan tbody tr, #tblLopHocPhanChiTiet tbody tr, #tblLopHocPhanChiTiet2 tbody tr')
+            .removeClass('find-match find-match-current');
+    },
+
+    clearFindInTable: function () {
+        var me = this;
+        if (me._findDebounce) { clearTimeout(me._findDebounce); me._findDebounce = null; }
+        var wasActive = me.findState.active;
+        me.clearFindHighlight();
+        me.findState.keyword = '';
+        me.findState.matches = [];
+        me.findState.currentIdx = -1;
+        me.findState.active = false;
+        $('#txtFindInTable').val('');
+        me.updateFindCounter();
+        if (wasActive) {
+            var tableId = me.getActiveFindTableId();
+            me._callFindFetch(tableId, null);
+        }
+    },
+
+    updateFindCounter: function () {
+        var me = this;
+        var $lbl = $('#lblFindInTableCounter');
+        var n = me.findState.matches.length;
+        var cur = me.findState.currentIdx >= 0 ? (me.findState.currentIdx + 1) : 0;
+        $lbl.removeClass('has-match no-match');
+        if (!me.findState.keyword) {
+            $lbl.text('0/0');
+        } else if (n === 0) {
+            $lbl.text('0/0').addClass('no-match');
+        } else {
+            $lbl.text(cur + '/' + n).addClass('has-match');
+        }
+        var disabled = n === 0;
+        $('#btnFindInTablePrev, #btnFindInTableNext').toggleClass('disabled', disabled);
+    },
+
+    refreshFindInTable: function () {
+        var me = this;
+        if (me.findState && me.findState.keyword) {
+            me.scanRenderedMatches();
+        } else {
+            me.updateFindCounter();
+        }
     },
 }
