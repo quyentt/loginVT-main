@@ -199,18 +199,19 @@ KeHoachDangKy.prototype = {
         //edu.system.loadToList_DanhMucDuLieu("DKH.TTSV", "divTrangThaiSinhVien");
         //edu.system.loadToList_DanhMucDuLieu("DKH.CHEDODANGKY", "divCheDoDangKy");
 
-        $(document).on('show.bs.modal', '.modal', function () {
-            var zIndex = 1040 + (10 * $('.modal:visible').length);
-            $(this).css('z-index', zIndex);
-            setTimeout(function () {
-                $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
-            }, 0);
-        });
-        $(document).on('hidden.bs.modal', '.modal', function () {
-            if ($('.modal:visible').length) {
-                $(document.body).addClass('modal-open');
-            }
-        });
+        //$(document).on('show.bs.modal', '.modal', function () {
+        //    var zIndex = 1040 + (10 * $('.modal:visible').length);
+        //    $(this).css('z-index', zIndex);
+        //    setTimeout(function () {
+        //        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+        //    }, 0);
+        //});
+        //$(document).on('hidden.bs.modal', '.modal', function () {
+        //    if ($('.modal:visible').length) {
+        //        $(document.body).addClass('modal-open');
+        //    }
+        //});
+
         $("#tblKHDK").delegate('.btnThietDatXuLyLHP', 'click', function (e) {
             e.stopPropagation();
             me.strKeHoachDangKy_Id = this.id;
