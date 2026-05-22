@@ -6410,7 +6410,7 @@ systemroot.prototype = {
                     node += '<i class="' + data[j].TENANH + '""></i> <span id="mark_submenu' + data[j].ID + '">' + data[j].TENCHUCNANG + '</span>';
                 }
                 else {
-                    strDuongDanHienThi = "#" + data[j].ID;
+                    strDuongDanHienThi = "#" + (data[j].ID + me.appId).toLowerCase();
                     node += '<a onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + strDuongDanFile + "\'" + ',' + "\'" + data[j].ID + "\'" + ')" href="' + strDuongDanHienThi + '">';
                     node += '<i class="' + data[j].TENANH + '""></i> <span>' + data[j].TENCHUCNANG + '</span>';
                 }
@@ -6467,6 +6467,7 @@ systemroot.prototype = {
                     me.node_submenu += '<a href="javascript:void(0)">';
                 }
                 else {
+                    strDuongDanHienThi = "#" + (data[i].ID + me.appId).toLowerCase();
                     me.node_submenu += '<a onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + strDuongDanFile + "\'" + ',' + "\'" + data[i].ID + "\'" + ')" href="' + strDuongDanHienThi + '">';
                 }
                 me.node_submenu += '<i class="' + data[i].TENANH + '""></i> <span>' + data[i].TENCHUCNANG + '</span>';
