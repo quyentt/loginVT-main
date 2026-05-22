@@ -116,6 +116,7 @@ DuLieuThi.prototype = {
         me.getList_ThoiGianDaoTao();
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
+        me.getList_ChuongTrinhDaoTao();
         me.getList_btnCongBo();
         me.getList_KeHoach();
         me.getList_HocPhan();
@@ -308,6 +309,9 @@ DuLieuThi.prototype = {
         $('#dropSearch_ThoiGian').on('select2:select', function (e) {
             me.getList_LoaiDiem();
             me.getList_DotThi();
+        });
+        $('#dropSearch_ChuongTrinh_CC').on('select2:select', function (e) {
+            me.getList_DanhSachThi();
         });
         $('#dropSearch_ThoiGianDaoTao').on('select2:select', function (e) {
             me.getList_KeHoach();
@@ -817,7 +821,7 @@ DuLieuThi.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -1603,6 +1607,7 @@ DuLieuThi.prototype = {
                 'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
                 'strNgayThiBatDau': edu.util.getValById('txtSearch_NgayThi_TuNgay'),
                 'strNgayThiKetThuc': edu.util.getValById('txtSearch_NgayThi_DenNgay'),
+                'strDaoTao_ChuongTrinhDaoTao_Id': edu.util.getValById('dropSearch_ChuongTrinh_CC'),
                 'strNguoiThucHien_Id': edu.system.userId,
             };
             obj_list[primaryKey] = idStr;
@@ -1949,6 +1954,50 @@ DuLieuThi.prototype = {
         }
         edu.system.loadToCombo_data(obj);
         if (data.length != 1) $("#dropSearch_KhoaDaoTao").val("").trigger("change");
+    },
+    getList_ChuongTrinhDaoTao: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'DKH_PhanCong_LopHP/LayDSChuongTrinhToChuc',
+            'type': 'GET',
+            'strDaoTao_ThoiGianDaoTao_Id': '',
+            'strDaoTao_KhoaDaoTao_Id': '',
+            'strDaoTao_HeDaoTao_Id': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.cbGenCombo_ChuongTrinhDaoTao(data.Data);
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    cbGenCombo_ChuongTrinhDaoTao: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENCHUONGTRINH",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_ChuongTrinh_CC"],
+            type: "",
+            title: "Tất cả chương trình đào tạo",
+        };
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSearch_ChuongTrinh_CC").val("").trigger("change");
     },
     resetCombobox: function (point) {
         var x = $(point).val();
