@@ -11921,6 +11921,7 @@ table#clone {
     gap: 10px;
     flex: 1;
     flex-wrap: wrap;
+    justify-content: flex-end;
 }
 
 .tiepnhandauvao-filter-box .left .item {
@@ -11956,10 +11957,11 @@ table#clone {
 
 .tiepnhandauvao-static-box {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 15px;
     margin-top: 20px;
     padding-bottom: 20px;
+    justify-content: center;
 }
 
 .tiepnhandauvao-static-box .item {
@@ -13028,7 +13030,10 @@ table#clone {
 }
 
 .aps-student-list-static.tiepnhandauvao-static-box .item {
-    width: calc((100% - 142px) / 6) !important;
+    width: fit-content;
+    flex-grow: 1;
+    flex-basis: 220px;
+    max-width: 350px;
 }
 
 .aps-student-hoso .user-infomation .info .item .label {
@@ -13760,4 +13765,25 @@ table#clone {
 .aps-dongthoigian-filter .tiepnhandauvao-filter-box .left .item {
     max-width: 100%;
     flex-grow: 1;
+}
+
+.aps-swiper-tab .swiper-wrapper {
+    flex-wrap: nowrap !important;
+}
+
+.aps-swiper-tab .swiper-slide {
+    width: fit-content;
+}
+
+.aps-tab-tongquan.aps-tab-tongquan-2 .tongquanda-qhht .tongquanda-qhht-list .item .number {
+
+    margin-bottom: 10px;
+}
+
+.aps-tab-tongquan .tongquanda-qhht-list .item p {
+    color: #666666;
+}
+
+.aps-tab-tongquan .tongquanda-qhht-list .item.color-orange .number {
+    color: #FF5F1F !important;
 }
