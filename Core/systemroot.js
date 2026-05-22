@@ -740,16 +740,12 @@ systemroot.prototype = {
     */
     initMain: function (strDisplayedPath, strRootPath, strChucNang_Id) {
         var me = this;
-        console.log(strDisplayedPath)
-        console.log(strDisplayedPath)
-        console.log(strChucNang_Id)
         if (!strChucNang_Id) {
             var temp = me.dtChucNang.find(e => e.DUONGDANFILE == strRootPath);
             if (temp) strChucNang_Id = temp.ID;
             else strChucNang_Id = "";
         }
         me.strChucNang_Id = strChucNang_Id;
-        console.log(strChucNang_Id)
         var objChucNang = me.dtChucNang.find(e => e.ID === strChucNang_Id);
         if (objChucNang) {
             me.appCode = objChucNang.MAUNGDUNG
@@ -6203,7 +6199,7 @@ systemroot.prototype = {
         $("#menu_vertical").html("");
         for (var j = 0; j < data.length; j++) {
             if (data[j].CHUCNANGCHA_ID == null || data[j].CHUCNANGCHA_ID == "") {//get parents
-                strDuongDanHienThi = "#" + data[j].ID ;
+                strDuongDanHienThi = "#" + (data[j].ID + me.appId).toLowerCase();
                 strDuongDanFile = data[j].DUONGDANFILE;
                 var arrChild = data.filter(e => e.CHUCNANGCHA_ID === data[j].ID);
 
@@ -6219,7 +6215,7 @@ systemroot.prototype = {
                 if (arrChild.length) {
                     node += '<div class="sidebar-menu-sub collapse" id="collapse' + data[j].ID + '" data-bs-parent="#sidebar-menu">';
                     arrChild.forEach(e => {
-                        node += '<a id="chucnang'+ e.ID +'" onclick="edu.system.initMain(' + "\'" + e.DUONGDANHIENTHI + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + e.DUONGDANHIENTHI + '">' + e.TENCHUCNANG + '</a>';
+                        node += '<a id="chucnang' + e.ID + '" onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + e.DUONGDANHIENTHI + '">' + e.TENCHUCNANG + '</a>';
                     })
                     node += '</div>';
                 }
