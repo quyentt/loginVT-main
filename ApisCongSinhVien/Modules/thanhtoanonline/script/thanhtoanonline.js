@@ -479,6 +479,8 @@ thanhtoanonline.prototype = {
         })
         strThanhToan_DonHang_CT_Id += "#" + dTongTien + "#" + arrChecked_Id.toString();
         $("#tblThanhToan #txtSoTien" + me.strXacNhanChiTiet_Id).val(edu.util.formatCurrency(dTongTien));
+        var strTongThu = "Tổng tiền đã chọn: <span id='lblTongTienDaChon'>" + edu.util.formatCurrency(dTongTien) + "</span>";
+        $("#lbSoTienDaChon").html(strTongThu);
         me.show_TongTien("tblThanhToan");
         //--Edit
         var obj_save = {
