@@ -1,5 +1,8 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 1920px) {
+  .hosodauvao-tabs .nav-tabs .nav-link {
+    flex-direction: column;
+  }
   .box-ThongTinHSSV .nav-tabs-custom > .nav-tabs > li {
     max-width: 135px;
     text-align: center;
@@ -287,6 +290,21 @@
 }
 
 @media (max-width: 1024px) {
+  .aps-hoso-detail .box-solid {
+    margin-bottom: 0 !important;
+  }
+  .aps-file-item,
+  .aps-hoso-detail {
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .aps-hoso-detail {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
+    gap: 20px; /* Khoảng cách giữa 2 cột */
+  }
+  /* -------- */
   .aps-table-select .table.tbllichSuThuHuy,
   .table.tblsearch-candidate,
   .table.tblkiemTraNhanh {
@@ -1574,6 +1592,38 @@
 }
 
 @media (min-width: 600px) and (max-width: 1024px) {
+  .aps-department-manage .box-title-has-action.justify-content-between {
+    display: block !important;
+  }
+  .aps-department-manage .lock-default {
+    position: absolute;
+    bottom: 20px;
+    right: 0;
+  }
+  .data-scope-box .data-scope-list .item {
+    display: block !important;
+    padding: 10px !important;
+  }
+  .data-scope-box .data-scope-list .item .icon {
+    margin-bottom: 10px;
+  }
+  .aps-student-manager-office {
+    padding-left: 0 !important;
+  }
+  .aps-department-manager {
+    padding-right: 0 !important;
+  }
+  .aps-admissions-lable.box-header {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .aps-student-manager-search .tiepnhandauvao-filter-box .left .item {
+    margin-bottom: 0 !important;
+  }
+  .tiepnhandauvao-static-box .item {
+    flex-direction: column;
+  }
+  /* ---- */
   .kehoach-nhaphoc-thuPhi-tab ul li .item-detail {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
