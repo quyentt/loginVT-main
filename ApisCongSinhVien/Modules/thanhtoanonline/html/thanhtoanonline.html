@@ -8,17 +8,17 @@
         position: relative;
     }
 
-    #Maininfo .form-add-info .input-group>i.fa-credit-card {
-        left: 10px;
-        top: 11px;
-    }
+        #Maininfo .form-add-info .input-group > i.fa-credit-card {
+            left: 10px;
+            top: 11px;
+        }
 
-    #Maininfo .form-add-info .input-group>i.fa-angle-down {
-        left: auto !important;
-        right: 12px !important;
-        top: 11px;
-        pointer-events: none;
-    }
+        #Maininfo .form-add-info .input-group > i.fa-angle-down {
+            left: auto !important;
+            right: 12px !important;
+            top: 11px;
+            pointer-events: none;
+        }
 
     #Maininfo .form-add-info .form-select {
         padding-right: 40px;
@@ -34,8 +34,12 @@
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
-                <p class="link"><a href="#">Tài chính</a><i class="fal fa-angle-right"></i><a href="#">Thanh toán học
-                        phí</a></p>
+                <p class="link">
+                    <a href="#">Tài chính</a><i class="fal fa-angle-right"></i><a href="#">
+                        Thanh toán học
+                        phí
+                    </a>
+                </p>
             </div>
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
@@ -107,32 +111,37 @@
                                 <i class="fal fa-credit-card"></i>
                                 <i class="fal fa-angle-down"></i>
                                 <select class="form-select" aria-label="Default select example"
-                                    id="drpNganHang"></select>
+                                        id="drpNganHang"></select>
                             </div>
                         </div>
 
-                        <div class="btn btn-dask-blue" id="btnThucHienThanhToan"><i
-                                class="fal fa-paper-plane me-2"></i>Thực
-                            hiện thanh toán</div>
+                        <div class="btn btn-dask-blue" id="btnThucHienThanhToan">
+                            <i class="fal fa-paper-plane me-2"></i>Thực
+                            hiện thanh toán
+                        </div>
                     </div>
 
                 </div>
             </div>
             <div class="col-12 col-md-9 box-tt-thanhtoan pd20">
-                <p class="color-dask-blue fw-bold mt-3 mb-10">Thông tin thanh toán<span id="lbSoTienDaChon"
-                        style="color: red;float:right"></span></p>
+                <p class="color-dask-blue fw-bold mt-3 mb-10">
+                    Thông tin thanh toán<span id="lbSoTienDaChon"
+                                              style="color: red;float:right"></span>
+                </p>
                 <div class="aps-table-select scroll-table-x">
-                    <table
-                        class="table transcrip-table tabs-scores table-hover table-bordered table-noborder tblThanhToan"
-                        id="tblThanhToan">
+                    <table class="table transcrip-table tabs-scores table-hover table-bordered table-noborder tblThanhToan"
+                           id="tblThanhToan">
                         <thead>
                             <tr>
                                 <th class="text-center w-50px" scope="col">STT</th>
                                 <th scope="col" class="text-left">Nội dung</th>
                                 <th scope="col" class="text-center">Số tiền</th>
                                 <th scope="col" class="text-left">Ghi chú</th>
-                                <th class="text-center w-50px" scope="col"><input type="checkbox"
-                                        id="chkSelectAll_ThanhToan" name="chkSelectAll_ThanhToan"></th>
+                                <th scope="col" class="text-center">Chi tiết</th>
+                                <th class="text-center w-50px" scope="col">
+                                    <input type="checkbox"
+                                           id="chkSelectAll_ThanhToan" name="chkSelectAll_ThanhToan">
+                                </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -140,8 +149,9 @@
                     </table>
                 </div>
                 <div class="d-flex justify-content-end" id="zonebtnNopTruoc"
-                    style="display: none !important; margin-top: 10px;">
-                    <div class="btn btn-default" id="btnDelete_NopTruoc"><i class="fal fa-trash me-2"></i>Hủy nộp trước
+                     style="display: none !important; margin-top: 10px;">
+                    <div class="btn btn-default" id="btnDelete_NopTruoc">
+                        <i class="fal fa-trash me-2"></i>Hủy nộp trước
                     </div>
                     <div class="btn btn-dask-blue" id="btnAdd_NopTruoc"><i class="fal fa-plus me-2"></i>Nộp trước</div>
                 </div>
@@ -153,8 +163,9 @@
 <!-- ------------------- -->
 <div class="aps-gap-10 btn-show pd20" style="display: none !important;">
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalKhoanNopTruoc"
-        data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt;">
-        Thêm khoản Nộp trước</button>
+            data-loading-text="&lt;i class='fa fa-spinner fa-spin '&gt;&lt;/i&gt;">
+        Thêm khoản Nộp trước
+    </button>
 </div>
 <!-- ------------------ -->
 <div class="modal fade modalKhoanNopTruoc" id="modalKhoanNopTruoc">
@@ -208,6 +219,47 @@
                     <a class="btn btn-primary" id="btnSave_KhoanNopTruoc" data-bs-dismiss="modal" aria-label="Close">
                         <i class="fal fa-save mr-5"></i>
                         <span>Lưu</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal chi tiết 1-->
+<div class="modal fade finance-modal" id="modalXacNhanChiTiet" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="finance-user-info in-modal">
+                    <p><b>Danh sách <span id="lblXacNhanChiTiet"></span></b></p>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fw-bold text-dark-blue fs-16p mt-4">Số tiền đã chọn<span id="lbSoTienXacNhanChiTiet" style="color: red; float: right"></span></p>
+                <table class="table transcrip-table tabs-scores" id="tblXacNhanChiTiet">
+                    <thead>
+                        <tr>
+                            <th class="text-center" scope="col">STT</th>
+                            <th scope="col" class="text-center">Học phần</th>
+                            <th scope="col" class="text-center">Kiểu học</th>
+                            <th scope="col" class="text-center">Lớp học phần</th>
+                            <th scope="col" class="text-center">Loại khoản</th>
+                            <th scope="col" class="text-center">Số tiền</th>
+                            <th scope="col" class="text-center">Số tín</th>
+                            <th scope="col" class="text-center">Học kỳ, đợt</th>
+                            <th class="text-center" scope="col"><input type="checkbox" class="chkSelectSystemAll"></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot></tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-dask-blue" id="btnSave_XacNhanChiTiet" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fal fa-tasks me-2"></i>
+                        <span>Thanh Toán đơn chi tiết</span>
                     </a>
                 </div>
             </div>
