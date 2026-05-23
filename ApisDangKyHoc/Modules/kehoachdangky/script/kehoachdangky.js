@@ -2460,15 +2460,6 @@ KeHoachDangKy.prototype = {
         var me = this;
         data = data || {};
         var lhpId = data.DANGKY_LOPHOCPHAN_ID || "";
-        var html = "";
-        html += "<tr data-id='" + (data.ID || "") + "' data-lhp-id='" + lhpId + "'>";
-        html += "<td class='td-center'><input type='checkbox' class='chkRow_XuLyLHP' /> <span class='rowStt' style='margin-left:4px;'>" + stt + "</span></td>";
-        html += "<td><input type='text' class='form-control txtTenLop' placeholder='Tên lớp' value='" + tenLop + "' readonly /></td>";
-        html += "<td><input type='text' class='form-control txtMaLop' placeholder='Mã lớp' value='" + maLop + "' readonly /></td>";
-        html += "<td><select class='form-control dropXuLyDacThu'>" + me.genOptions_XuLyDacThu(data.XULYDACTHU_ID || data.QUYDINHLOPXULYDACTHU_ID) + "</select></td>";
-        html += "<td class='td-center'><a class='btn btn-danger btn-sm btnDeleteXuLyLHP' title='Xóa'><i class='fa fa-trash'></i></a></td>";
-        html += "</tr>";
-        $tbody.append(html);
         for (var i = 0; i < me.dtXuLyLHP_All.length; i++) {
             if (lhpId && me.dtXuLyLHP_All[i].DANGKY_LOPHOCPHAN_ID === lhpId) return;
         }
@@ -2683,15 +2674,18 @@ KeHoachDangKy.prototype = {
         }
         var arrNew = arrRow.filter(function (r) { return !r.rowId; });
         if (arrNew.length == 0) {
-            edu.system.alert("Không có dữ liệu mới cần lưu!");
-            $("#myModalXuLyLHP").modal("hide");
+            edu.system.alert("Không có dòng mới để lưu. Các dòng đã lưu trước đó không thay đổi.");
             return;
         }
+        me._saveCount = 0;
+        me._saveTotal = arrNew.length;
+        me._saveFailed = 0;
+        me._saveLastError = '';
         for (var i = 0; i < arrNew.length; i++) {
-            me.insert_XuLyLHP(arrNew[i], i == arrNew.length - 1);
+            me.insert_XuLyLHP(arrNew[i]);
         }
     },
-    insert_XuLyLHP: function (row, isLast) {
+    insert_XuLyLHP: function (row) {
         var me = this;
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4HgoJHg0uMQkxHgUgIhUpNB4ILzIP',
@@ -2706,20 +2700,32 @@ KeHoachDangKy.prototype = {
             'strChucNangHeThong_Id': edu.system.strChucNang_Id,
             'strHanhDong_Code': '',
         };
+        var onDone = function (success, message) {
+            me._saveCount++;
+            if (!success) {
+                me._saveFailed++;
+                if (message) me._saveLastError = message;
+            }
+            if (me._saveCount < me._saveTotal) return;
+            var ok = me._saveTotal - me._saveFailed;
+            if (me._saveFailed === 0) {
+                edu.system.alert("Lưu thiết đặt xử lý lớp HP thành công! (" + ok + " dòng)");
+                $("#myModalXuLyLHP").modal("hide");
+                me.getList_XuLyLHP();
+            } else if (ok === 0) {
+                edu.system.alert("Lưu thất bại " + me._saveFailed + " dòng. " + me._saveLastError);
+            } else {
+                edu.system.alert("Lưu " + ok + "/" + me._saveTotal + " dòng. " + me._saveFailed + " dòng lỗi: " + me._saveLastError);
+                me.getList_XuLyLHP();
+            }
+        };
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    if (isLast) {
-                        edu.system.alert("Lưu thiết đặt xử lý lớp HP thành công!");
-                        $("#myModalXuLyLHP").modal("hide");
-                    }
-                }
-                else {
-                    edu.system.alert(obj_save.action + ": " + data.Message);
-                }
+                if (data.Success) onDone(true);
+                else onDone(false, data.Message || '');
             },
             error: function (er) {
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er));
+                onDone(false, JSON.stringify(er));
             },
             type: "POST",
             action: obj_save.action,
