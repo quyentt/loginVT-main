@@ -1607,7 +1607,7 @@ DuLieuThi.prototype = {
                 'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
                 'strNgayThiBatDau': edu.util.getValById('txtSearch_NgayThi_TuNgay'),
                 'strNgayThiKetThuc': edu.util.getValById('txtSearch_NgayThi_DenNgay'),
-                'strDaoTao_ChuongTrinhDaoTao_Id': edu.util.getValById('dropSearch_ChuongTrinh_CC'),
+                'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_CC'),
                 'strNguoiThucHien_Id': edu.system.userId,
             };
             obj_list[primaryKey] = idStr;
@@ -1633,6 +1633,8 @@ DuLieuThi.prototype = {
         var data = me.dtDanhSachThi || [];
         var status = $("#dropSearch_TrangThaiCongBo").val();
         var onlyUnpublished = $("#chkChuaCongBo").is(":checked");
+
+
         if (onlyUnpublished) {
             data = data.filter(function (x) {
                 var v = x.TRANGTHAICONGBO_TEN;
@@ -1657,7 +1659,12 @@ DuLieuThi.prototype = {
                 { "mDataProp": "THI_CATHI_TEN" },
                 { "mDataProp": "DAOTAO_HOCPHAN_TEN" },
                 { "mDataProp": "HINHTHUCTHI_TEN" },
-                { "mDataProp": "THONGTINLOPHOCPHAN" },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<div style="max-width:240px; word-break:break-all; white-space:normal;">'
+                            + edu.util.returnEmpty(aData.THONGTINLOPHOCPHAN) + '</div>';
+                    }
+                },
                 { "mDataProp": "TRANGTHAICONGBO_TEN" },
                 { "mDataProp": "THOIGIANCONGBOLICH" },
                 { "mDataProp": "NGUOITHUCHIENCONGBOLICH" },
@@ -1669,6 +1676,24 @@ DuLieuThi.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.syncTopScroll_DanhSachThi();
+    },
+    syncTopScroll_DanhSachThi: function () {
+        var $top = $("#topScroll_tblDanhSachThi");
+        var $topInner = $("#topScrollInner_tblDanhSachThi");
+        var $wrap = $("#wrapScroll_tblDanhSachThi");
+        if (!$top.length || !$wrap.length) return;
+        var resize = function () {
+            $topInner.css("width", $wrap[0].scrollWidth + "px");
+        };
+        resize();
+        setTimeout(resize, 50);
+        if (!$top.data("synced")) {
+            $top.data("synced", true);
+            $top.on("scroll", function () { $wrap.scrollLeft($top.scrollLeft()); });
+            $wrap.on("scroll", function () { $top.scrollLeft($wrap.scrollLeft()); });
+            $(window).on("resize", resize);
+        }
     },
 
     /*----------------------------------------------
@@ -1983,20 +2008,16 @@ DuLieuThi.prototype = {
         }, false, false, false, null);
     },
     cbGenCombo_ChuongTrinhDaoTao: function (data) {
-        // Gộp các bản ghi trùng TENCHUONGTRINH thành 1 option;
-        // các ID của cùng tên được nối thành chuỗi CSV để khi filter vẫn match đủ
+        // Gộp các bản ghi trùng TENCHUONGTRINH thành 1 option, mỗi option chỉ giữ 1 ID đầu tiên.
+        // Backend tự resolve các bản ghi cùng tên/cùng chương trình gốc khi nhận ID này.
         var seen = {};
         var unique = [];
         (data || []).forEach(function (item) {
             var key = (item.TENCHUONGTRINH || "").trim();
-            if (!key) return;
-            if (seen[key]) {
-                seen[key].ID += "," + item.ID;
-            } else {
-                var row = { ID: item.ID, TENCHUONGTRINH: key };
-                seen[key] = row;
-                unique.push(row);
-            }
+            if (!key || seen[key]) return;
+            var row = { ID: item.ID, TENCHUONGTRINH: key };
+            seen[key] = row;
+            unique.push(row);
         });
         var obj = {
             data: unique,
