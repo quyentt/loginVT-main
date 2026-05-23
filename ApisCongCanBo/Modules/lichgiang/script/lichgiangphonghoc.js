@@ -373,6 +373,18 @@ LichGiang.prototype = {
         $("#modalDuyetDangKy").on("show.bs.modal", function () {
             me.openForm_DuyetDangKy();
         });
+        $("#modalDuyetDangKy").on("shown.bs.modal", function () {
+            $(document).off("focusin.modal");
+        });
+        $(document).on("select2:open", function (e) {
+            var $modal = $(e.target).closest(".modal");
+            if ($modal.length) {
+                setTimeout(function () {
+                    var input = document.querySelector(".select2-container--open .select2-search__field");
+                    if (input) input.focus();
+                }, 0);
+            }
+        });
         $(".duyet-month").delegate(".prev", "click", function () {
             me.genHtml_Month_Duyet(-1);
         });
@@ -388,7 +400,7 @@ LichGiang.prototype = {
             me.getList_DangKyTheoNgay(strNgay);
         });
         $("#dropDuyet_PhongHoc").on("select2:select change", function () {
-            me.getList_NgayCoDangKy();
+            me.markDays_HasData_Duyet();
             if (me.strDuyet_NgayDangChon) {
                 me.getList_DangKyTheoNgay(me.strDuyet_NgayDangChon);
             }
@@ -2271,13 +2283,69 @@ LichGiang.prototype = {
             : sDate(1, nMonth, nYear);
         me.strDuyet_NgayDangChon = strNgayMacDinh;
         $("#lblDuyet_NgayDaChon").html("Ngày: " + strNgayMacDinh);
-        me.getList_NgayCoDangKy(strNgayMacDinh, function () {
+        me.markDays_HasData_Duyet(function () {
             me.getList_DangKyTheoNgay(strNgayMacDinh);
         });
     },
+    _getStrNgayDauThang_Duyet: function () {
+        var nMonth = parseInt($("#duyet_thang").attr("title"));
+        var nYear = parseInt($("#duyet_nam").attr("title"));
+        var pad = function (n) { n = "" + n; return n.length == 1 ? "0" + n : n; };
+        return "01/" + pad(nMonth) + "/" + nYear;
+    },
+    markDays_HasData_Duyet: function (callback) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_MuonPhong_MH/ETMeFSojHgUgLyYKOB4RKS4vJh4GJDUeDSgyNQPP',
+            'func': 'PKG_CORE_DANGKY_MUONPHONG.Pr_Tkb_DangKy_Phong_Get_List',
+            'iM': edu.system.iM,
+            'strNguoiDangKy_Id': '',
+            'strNgaySuDung': '',
+            'strTkb_Phong_Id': edu.util.getValById('dropDuyet_PhongHoc'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.util.getValById('dropAAAA'),
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': edu.util.getValById('txtAAAA'),
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = data.Data || [];
+                    console.log("[markDays_HasData_Duyet] total rows:", dtResult.length);
+                    $(".duyet-days li").removeClass("actionclde");
+                    var daysSet = {};
+                    dtResult.forEach(function (e) {
+                        var ngay = e.NGAYSUDUNG || e.NGAYSUDUNG_HIENTHI || e.NGAY;
+                        if (ngay) daysSet[String(ngay).trim()] = true;
+                    });
+                    Object.keys(daysSet).forEach(function (ngay) {
+                        var li = $(".duyet-days li[title='" + ngay + "']");
+                        if (li.length === 0) {
+                            var d = parseInt(ngay, 10);
+                            if (!isNaN(d)) li = $(".duyet-days li.poiter[ngay='" + d + "']");
+                        }
+                        if (li.length > 0) li.addClass("actionclde");
+                    });
+                    if (typeof callback === "function") callback();
+                } else {
+                    console.warn("[markDays_HasData_Duyet] failed:", data.Message);
+                    if (typeof callback === "function") callback();
+                }
+            },
+            error: function (er) {
+                console.warn("[markDays_HasData_Duyet] error:", er);
+                if (typeof callback === "function") callback();
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
     getList_NgayCoDangKy: function (strNgay, callback) {
         var me = this;
-        if (!strNgay) strNgay = me.strDuyet_NgayDangChon;
+        if (!strNgay) strNgay = me._getStrNgayDauThang_Duyet() || me.strDuyet_NgayDangChon;
         var obj_save = {
             'action': 'DKH_MuonPhong_MH/ETMeFSojHgUqHhEeFSYeBiQ1Hg8mIDgeEiUeEjUz',
             'func': 'PKG_CORE_DANGKY_MUONPHONG.Pr_Tkb_Dk_P_Tg_Get_Ngay_Sd_Str',
