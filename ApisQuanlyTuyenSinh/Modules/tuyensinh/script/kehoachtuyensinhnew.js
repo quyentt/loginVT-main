@@ -952,11 +952,73 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_KeHoach_TuyenSinh_Create
     -- Thêm mới kế hoạch tuyển sinh
-    -- TODO: bạn gửi spec API Pr_Ts_KeHoach_TuyenSinh_Insert (hoặc tương đương) để wire vào.
     -------------------------------------------*/
     insert_KeHoachTuyenSinh: function () {
-        edu.system.alert("Chưa có API Insert cho kế hoạch tuyển sinh. Vui lòng gửi spec Pr_Ts_KeHoach_TuyenSinh_Insert (hoặc tương đương).", "w");
+        var me = main_doc.KeHoachTuyenSinhNew;
+
+        var obj_save = {
+            'action': 'TS_Core_KeHoach_MH/ETMeFTIeCiQJLiAiKR4VNDgkLxIoLykeAjMkIDUk',
+            'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_KeHoach_TuyenSinh_Create',
+            'iM': edu.system.iM,
+            'strMa': edu.system.getValById('txtKH_Ma'),
+            'strTen': edu.system.getValById('txtKH_Ten'),
+            'strLoai_TuyenSinh_Id': edu.system.getValById('ddlKH_LoaiNguonTuyenSinh'),
+            'strTs_PhuongAn_TuyenSinh_Id': edu.system.getValById('ddlKH_PhuongAnTuyenSinh'),
+            'strNam_TuyenSinh': edu.system.getValById('txtKH_NamTuyenSinh'),
+            'strNam_Hoc': edu.system.getValById('txtKH_NamHoc'),
+            'strHoc_Ky': edu.system.getValById('txtKH_HocKy'),
+            'dRequire_Account': $('#chkKH_TaoTaiKhoan').is(':checked') ? 1 : 0,
+            'dAllow_Online_Register': $('#chkKH_ChoTSTuDangKy').is(':checked') ? 1 : 0,
+            'dAllow_Direct_Input': $('#chkKH_ChoCanBoNhapHS').is(':checked') ? 1 : 0,
+            'dAllow_Import': $('#chkKH_ChoImport').is(':checked') ? 1 : 0,
+            'dAllow_Api': $('#chkKH_ChoDocApi').is(':checked') ? 1 : 0,
+            'dRequire_Approval': $('#chkKH_YeuCauCanBoDuyet').is(':checked') ? 1 : 0,
+            'dRequire_Document_Check': $('#chkKH_YeuCauKiemTraHS').is(':checked') ? 1 : 0,
+            'dRequire_Pay_Before_Intake': $('#chkKH_YeuCauThanhToan').is(':checked') ? 1 : 0,
+            'dAllow_Change_Output': $('#chkKH_ChoPhepThayDoiDauRa').is(':checked') ? 1 : 0,
+            'strHoso_Unique_Scope_Code': $('#chkKH_KiemSoatTrungHS').is(':checked') ? '1' : '',
+            'dMax_Hoso_Per_Person': edu.system.getValById('txtKH_SoHoSoToiDa'),
+            'strForm_Layout_Id': edu.system.getValById('ddlKH_MauHoSo'),
+            'strForm_Version_No': '',
+            'strOwner_Org_Id': edu.system.getValById('ddlKH_DonViQLKH'),
+            'strManage_Org_Id': edu.system.getValById('ddlKH_DonViQLHS'),
+            'strReceive_Org_Id': edu.system.getValById('ddlKH_DonViTiepNhan'),
+            'dChi_Tieu': edu.system.getValById('txtKH_ChiTieu'),
+            'strPlan_Status_Code': edu.system.getValById('ddlKH_TinhTrang'),
+            'dIs_Public': $('#chkKH_CoMoPublic').is(':checked') ? 1 : 0,
+            'dIs_Locked': $('#chkKH_CoKhoa').is(':checked') ? 1 : 0,
+            'strGhiChu': edu.system.getValById('txtKH_GhiChu'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'THEM'
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thêm mới thành công");
+                    if (edu.util.checkValue(data.Id)) {
+                        me.strKeHoachTuyenSinh_Id = data.Id;
+                    }
+                    $("#chi-tiet").modal('hide');
+                    me.getList_KeHoachTuyenSinh();
+                }
+                else {
+                    edu.system.alert("Pr_Ts_KeHoach_TuyenSinh_Create: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Pr_Ts_KeHoach_TuyenSinh_Create (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
