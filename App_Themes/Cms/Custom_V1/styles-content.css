@@ -13787,3 +13787,18 @@ table#clone {
 .aps-tab-tongquan .tongquanda-qhht-list .item.color-orange .number {
     color: #FF5F1F !important;
 }
+
+.aps-tab-tongquan.aps-tab-chungchi .tongquanda-qhht .tongquanda-qhht-list .item .icon {
+    width: auto;
+}
+
+.aps-tab-tongquan.aps-tab-chungchi .tongquanda-qhht .tongquanda-qhht-list {
+    flex-wrap: wrap;
+    gap: 5px;
+    row-gap: 20px;
+}
+
+.aps-tab-tongquan.aps-tab-chungchi .tongquanda-qhht .tongquanda-qhht-list .item {
+
+    flex-basis: 152px;
+}
