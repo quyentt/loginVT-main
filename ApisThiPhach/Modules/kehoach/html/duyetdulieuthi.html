@@ -250,7 +250,10 @@
                     </div>
                 </div>
                 <div class="box-body pd20 pt10">
-                    <div class="aps-table-select scroll-table-x">
+                    <div id="topScroll_tblDanhSachThi" class="top-scroll-x" style="overflow-x:auto; overflow-y:hidden;">
+                        <div id="topScrollInner_tblDanhSachThi" style="height:1px;"></div>
+                    </div>
+                    <div id="wrapScroll_tblDanhSachThi" class="aps-table-select scroll-table-x">
                         <table id="tblDanhSachThi" class="table table-hover table-bordered">
                             <thead>
                                 <tr>
@@ -442,7 +445,7 @@
 </div>
 
 <!-- page script -->
-<script src="modules/kehoach/script/duyetdulieuthi.js?v=1.0.0.2"></script>
+<script src="modules/kehoach/script/duyetdulieuthi.js?v=1.0.0.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DuLieuThi'] = new DuLieuThi();

@@ -126,6 +126,48 @@ KeHoachTuyenSinhNew.prototype = {
             var checked = $(this).is(':checked');
             $('#tblChuongTrinhDauRa tbody .ct-select').prop('checked', checked);
         });
+
+        // Arrow-key + Enter navigation cho 3 cột input chỉ tiêu (Excel-like grid)
+        $("#tblChuongTrinhDauRa").on('keydown', 'tbody input[type="number"]', function (e) {
+            var key = e.which || e.keyCode;
+            // 37=Left, 38=Up, 39=Right, 40=Down, 13=Enter
+            if ([37, 38, 39, 40, 13].indexOf(key) === -1) return;
+
+            var $this = $(this);
+            var $row = $this.closest('tr');
+            var $allRows = $row.parent().children('tr');
+            var rowIdx = $allRows.index($row);
+            var colInputs = ['ct-chitieu', 'ct-chitieu-toida', 'ct-chitieu-toithieu'];
+            var colIdx = -1;
+            for (var c = 0; c < colInputs.length; c++) {
+                if ($this.hasClass(colInputs[c])) { colIdx = c; break; }
+            }
+            if (colIdx === -1) return;
+
+            var newRowIdx = rowIdx;
+            var newColIdx = colIdx;
+
+            if (key === 38) {                              // Up
+                newRowIdx--;
+            } else if (key === 40 || key === 13) {         // Down / Enter
+                newRowIdx++;
+            } else if (key === 37) {                       // Left
+                newColIdx--;
+                if (newColIdx < 0) { newColIdx = colInputs.length - 1; newRowIdx--; }
+            } else if (key === 39) {                       // Right
+                newColIdx++;
+                if (newColIdx >= colInputs.length) { newColIdx = 0; newRowIdx++; }
+            }
+
+            if (newRowIdx < 0 || newRowIdx >= $allRows.length) return;
+
+            e.preventDefault();
+            var $target = $allRows.eq(newRowIdx).find('.' + colInputs[newColIdx]);
+            if ($target.length) {
+                $target.focus().select();
+            }
+        });
+
         $("#btnSaveDauRa").click(function () {
             me.save_DauRa();
         });
@@ -952,11 +994,73 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_KeHoach_TuyenSinh_Create
     -- Thêm mới kế hoạch tuyển sinh
-    -- TODO: bạn gửi spec API Pr_Ts_KeHoach_TuyenSinh_Insert (hoặc tương đương) để wire vào.
     -------------------------------------------*/
     insert_KeHoachTuyenSinh: function () {
-        edu.system.alert("Chưa có API Insert cho kế hoạch tuyển sinh. Vui lòng gửi spec Pr_Ts_KeHoach_TuyenSinh_Insert (hoặc tương đương).", "w");
+        var me = main_doc.KeHoachTuyenSinhNew;
+
+        var obj_save = {
+            'action': 'TS_Core_KeHoach_MH/ETMeFTIeCiQJLiAiKR4VNDgkLxIoLykeAjMkIDUk',
+            'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_KeHoach_TuyenSinh_Create',
+            'iM': edu.system.iM,
+            'strMa': edu.system.getValById('txtKH_Ma'),
+            'strTen': edu.system.getValById('txtKH_Ten'),
+            'strLoai_TuyenSinh_Id': edu.system.getValById('ddlKH_LoaiNguonTuyenSinh'),
+            'strTs_PhuongAn_TuyenSinh_Id': edu.system.getValById('ddlKH_PhuongAnTuyenSinh'),
+            'strNam_TuyenSinh': edu.system.getValById('txtKH_NamTuyenSinh'),
+            'strNam_Hoc': edu.system.getValById('txtKH_NamHoc'),
+            'strHoc_Ky': edu.system.getValById('txtKH_HocKy'),
+            'dRequire_Account': $('#chkKH_TaoTaiKhoan').is(':checked') ? 1 : 0,
+            'dAllow_Online_Register': $('#chkKH_ChoTSTuDangKy').is(':checked') ? 1 : 0,
+            'dAllow_Direct_Input': $('#chkKH_ChoCanBoNhapHS').is(':checked') ? 1 : 0,
+            'dAllow_Import': $('#chkKH_ChoImport').is(':checked') ? 1 : 0,
+            'dAllow_Api': $('#chkKH_ChoDocApi').is(':checked') ? 1 : 0,
+            'dRequire_Approval': $('#chkKH_YeuCauCanBoDuyet').is(':checked') ? 1 : 0,
+            'dRequire_Document_Check': $('#chkKH_YeuCauKiemTraHS').is(':checked') ? 1 : 0,
+            'dRequire_Pay_Before_Intake': $('#chkKH_YeuCauThanhToan').is(':checked') ? 1 : 0,
+            'dAllow_Change_Output': $('#chkKH_ChoPhepThayDoiDauRa').is(':checked') ? 1 : 0,
+            'strHoso_Unique_Scope_Code': $('#chkKH_KiemSoatTrungHS').is(':checked') ? '1' : '',
+            'dMax_Hoso_Per_Person': edu.system.getValById('txtKH_SoHoSoToiDa'),
+            'strForm_Layout_Id': edu.system.getValById('ddlKH_MauHoSo'),
+            'strForm_Version_No': '',
+            'strOwner_Org_Id': edu.system.getValById('ddlKH_DonViQLKH'),
+            'strManage_Org_Id': edu.system.getValById('ddlKH_DonViQLHS'),
+            'strReceive_Org_Id': edu.system.getValById('ddlKH_DonViTiepNhan'),
+            'dChi_Tieu': edu.system.getValById('txtKH_ChiTieu'),
+            'strPlan_Status_Code': edu.system.getValById('ddlKH_TinhTrang'),
+            'dIs_Public': $('#chkKH_CoMoPublic').is(':checked') ? 1 : 0,
+            'dIs_Locked': $('#chkKH_CoKhoa').is(':checked') ? 1 : 0,
+            'strGhiChu': edu.system.getValById('txtKH_GhiChu'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'THEM'
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thêm mới thành công");
+                    if (edu.util.checkValue(data.Id)) {
+                        me.strKeHoachTuyenSinh_Id = data.Id;
+                    }
+                    $("#chi-tiet").modal('hide');
+                    me.getList_KeHoachTuyenSinh();
+                }
+                else {
+                    edu.system.alert("Pr_Ts_KeHoach_TuyenSinh_Create: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Pr_Ts_KeHoach_TuyenSinh_Create (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
@@ -1471,20 +1575,24 @@ KeHoachTuyenSinhNew.prototype = {
                     me.genTable_ChuongTrinh_DR(me.dtChuongTrinh_DR);
                 }
                 else {
-                    edu.system.alert("getList_ChuongTrinh_DR: " + data.Message, "w");
+                    edu.system.alert("KHCT_ToChucChuongTrinh/LayDanhSach: " + data.Message, "w");
                 }
             },
             error: function (er) {
-                // Có thể action chưa đúng — để trống bảng
+                edu.system.alert("KHCT_ToChucChuongTrinh/LayDanhSach (ex): " + JSON.stringify(er), "w");
                 me.genTable_ChuongTrinh_DR([]);
             },
             type: 'GET',
-            action: 'KHCT_ToChucChuongTrinh/LayDanhSach',  // TODO: confirm hash
+            action: 'KHCT_ToChucChuongTrinh/LayDanhSach',
             contentType: true,
             data: {
                 'strTuKhoa': '',
-                'strDaoTao_HeDaoTao_Id': edu.system.getValById('ddlDR_HeDaoTao'),
                 'strDaoTao_KhoaDaoTao_Id': edu.system.getValById('ddlDR_KhoaDaoTao'),
+                'strDaoTao_HeDaoTao_Id': edu.system.getValById('ddlDR_HeDaoTao'),
+                'strDaoTao_N_CN_Id': '',
+                'strDaoTao_KhoaQuanLy_Id': '',
+                'strDaoTao_ToChucCT_Cha_Id': '',
+                'strNguoiThucHien_Id': '',
                 'pageIndex': 1,
                 'pageSize': 100000
             },
@@ -1494,7 +1602,8 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng chương trình với input editable
-    -- Cột data: MaChuongTrinh, TenChuongTrinh, NganhTuyenSinh_Ten, DaoTao_N_CT_Ten
+    -- Cột data API trả (UPPERCASE): MACHUONGTRINH, TENCHUONGTRINH, NGANHTUYENSINH_TEN, DAOTAO_N_CN_TEN
+    -- Tham khảo: ApisKeHoachChuongTrinh/.../chuongtrinh.js (genTable_ChuongTrinh)
     -------------------------------------------*/
     genTable_ChuongTrinh_DR: function (data) {
         var $tbody = $("#tblChuongTrinhDauRa tbody");
@@ -1512,10 +1621,10 @@ KeHoachTuyenSinhNew.prototype = {
             var ctId = d.ID || '';
             rows += '<tr data-ct-id="' + ctId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.MaChuongTrinh || '') + '</td>'
-                +  '<td class="td-left">' + (d.TenChuongTrinh || '') + '</td>'
-                +  '<td class="td-left">' + (d.NganhTuyenSinh_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DaoTao_N_CT_Ten || '') + '</td>'
+                +  '<td class="td-left">' + (d.MACHUONGTRINH || '') + '</td>'
+                +  '<td class="td-left">' + (d.TENCHUONGTRINH || '') + '</td>'
+                +  '<td class="td-left">' + (d.NGANHTUYENSINH_TEN || '') + '</td>'
+                +  '<td class="td-left">' + (d.DAOTAO_N_CN_TEN || '') + '</td>'
                 +  '<td class="td-center"><input type="number" class="form-control ct-chitieu" min="0"></td>'
                 +  '<td class="td-center"><input type="number" class="form-control ct-chitieu-toida" min="0"></td>'
                 +  '<td class="td-center"><input type="number" class="form-control ct-chitieu-toithieu" min="0"></td>'
