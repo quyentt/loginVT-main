@@ -1230,7 +1230,8 @@ LopHocPhan.prototype = {
                     }
                     if (bChuaNop) {
                         dtResult = dtResult.filter(function (r) {
-                            return (parseFloat(r.TONGSOTIENDANOP) || 0) === 0;
+                            var v = r.SOTIENDANOP != null ? r.SOTIENDANOP : r.TONGSOTIENDANOP;
+                            return (parseFloat(v) || 0) === 0;
                         });
                         iPager = dtResult.length;
                     }
@@ -1415,7 +1416,8 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.formatCurrency(aData.TONGSOTIENDANOP);
+                        var v = aData.SOTIENDANOP != null ? aData.SOTIENDANOP : aData.TONGSOTIENDANOP;
+                        return edu.util.formatCurrency(v);
                     }
                 },
                 {
@@ -2566,7 +2568,7 @@ LopHocPhan.prototype = {
             strTable_Id: "tblRutHocPhan",
             aaData: data,
             colPos: {
-                center: [0, 3],
+                center: [0, 4],
             },
             aoColumns: [
                 {
