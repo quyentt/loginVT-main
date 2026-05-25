@@ -17,7 +17,12 @@
     padding-right: 20px !important;
   }
 }
-
+@media only screen and (min-width: 2000px) {
+  .student-infos.aps-user-infos-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr !important;
+  }
+}
 @media only screen and (min-width: 2000px) {
   .aps-list-chuongtrinh .zoneBox_ChuongTrinh {
     display: grid;
@@ -114,9 +119,18 @@
 }
 
 @media (min-width: 1600px) and (max-width: 2000px) {
+  .aps-user-infos-box {
+    display: grid !important;
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
 }
 
 @media (min-width: 1280px) and (max-width: 1599px) {
+  .aps-user-infos-box {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 15px;
+  }
   .zoneBox_ChuongTrinh {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -263,6 +277,11 @@
   .zonePhanCong {
     grid-template-columns: repeat(3, 1fr) !important;
   }
+  .student-infos.aps-user-infos-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 1fr !important; /* Chia 2 cột bằng nhau */
+    gap: 15px; /* Khoảng cách giữa 2 cột */
+  }
 }
 
 @media (min-width: 1024px) and (max-width: 1280px) {
@@ -287,11 +306,46 @@
   .register-box {
     width: 100% !important;
   }
+  .student-infos.aps-user-infos-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr !important; /* Chia 2 cột bằng nhau */
+    gap: 15px; /* Khoảng cách giữa 2 cột */
+  }
 }
 
 @media (max-width: 1024px) {
+  .hosodauvao-tabs.aps-tabs-border {
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+  }
+  .hosodauvao-tabs.aps-tabs-border .aps-search-candidate-detail {
+    padding: 5px 0 !important;
+  }
+  .box-header.with-border .box-title {
+    margin-bottom: 5px !important;
+  }
+  /* -------- */
+  .box-content .box-header.aps-admissions-lable {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .box-content .box-header.aps-admissions-lable .box-title {
+    padding: 17px 0 !important;
+  }
+  .aps-admissions .aps-admissions-lable .images {
+    height: 86px;
+    padding-right: 15px;
+  }
+  .aps-admissions-lable .box-title p {
+    line-height: 20px;
+  }
+  /* ------ */
+  .aps-dongthoigian-filter .tiepnhandauvao-filter-box,
+  .aps-search-candidate-detail {
+    padding: 15px !important;
+  }
   .aps-hoso-detail .box-solid {
-    margin-bottom: 0 !important;
+    /* margin-bottom: 0 !important; */
   }
   .aps-file-item,
   .aps-hoso-detail {
@@ -299,10 +353,13 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-  .aps-hoso-detail {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
+  .aps-hoso-detail.aps-kq-hocTap {
+    display: block;
+    grid-template-columns: 1fr; /* Chia 2 cột bằng nhau */
     gap: 20px; /* Khoảng cách giữa 2 cột */
+  }
+  .aps-hoso-detail.aps-kq-hocTap .box.box-solid {
+    margin-bottom: 20px !important;
   }
   /* -------- */
   .aps-table-select .table.tbllichSuThuHuy,
@@ -1623,6 +1680,9 @@
   .tiepnhandauvao-static-box .item {
     flex-direction: column;
   }
+  .tiepnhandauvao-static-box.aps-student-list-static .item {
+    flex-direction: initial !important;
+  }
   /* ---- */
   .kehoach-nhaphoc-thuPhi-tab ul li .item-detail {
     border-top-right-radius: 12px;
@@ -2181,6 +2241,16 @@
 }
 
 @media (min-width: 600px) and (max-width: 767px) {
+  .aps-kienTraNhanh-content.aps-chitiethoso .infos .info-list {
+    display: block !important;
+    margin-bottom: 10px;
+  }
+  .aps-user-infos-box.student-infos {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
+    gap: 15px; /* Khoảng cách giữa 2 cột */
+  }
+  /* ---- */
   .aps-kienTraNhanh-trangThai .item .item-lable {
     padding-left: 0 !important;
   }
@@ -2860,6 +2930,74 @@
 }
 
 @media only screen and (max-width: 599px) {
+  .tongquanda-qhht.hs-ketquahoctap .tongquanda-qhht-list {
+    grid-template-columns: 1fr 1fr;
+    margin-top: 15px;
+  }
+  .aps-tab-tongquan.aps-tab-tongquan-2 .user-infomation {
+    display: flex !important;
+  }
+  .aps-tab-tongquan.aps-tab-tongquan-2 .aps-heDaoTao {
+    width: 100%;
+    /* flex-wrap: nowrap !important; */
+    /* display: ruby-text !important; */
+  }
+  .aps-kienTraNhanh-content.aps-chitiethoso
+    .aps-kienTraNhanh-content.aps-chitiethoso {
+    padding: 0 !important;
+  }
+  .aps-tab-tongquan.aps-tab-tongquan-2 {
+    display: block !important;
+    padding-top: 0 !important;
+  }
+  .tiepnhandauvao-static-box.aps-student-list-static {
+    /* display: grid !important; */
+    gap: 5px;
+    /* grid-template-columns: 1fr 1fr !important;  */
+  }
+  .tiepnhandauvao-filter-box .btn-group {
+    display: block !important;
+  }
+  .tiepnhandauvao-filter-box .btn-group .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .aps-kienTraNhanh-content.aps-chitiethoso {
+    display: table-row-group !important;
+  }
+  .aps-kienTraNhanh-content.aps-chitiethoso .aps-tab-tongquan {
+    padding: 0 !important;
+  }
+  .aps-gpa-char #DiemTB {
+    width: 100% !important;
+  }
+  /* ----- */
+  .aps-kienTraNhanh-content .user-infomation,
+  .aps-kienTraNhanh-content .user-infomation .infos .info-list,
+  .aps-kienTraNhanh-content.aps-chitiethoso .aps-btn-group,
+  .aps-dongthoigian-session .box-header.with-border {
+    display: block !important;
+  }
+  .aps-kienTraNhanh-content .user-infomation .infos .info-list {
+    margin-bottom: 10px;
+  }
+  .aps-kienTraNhanh-content.aps-chitiethoso {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  .aps-kienTraNhanh-content .user-infomation .image {
+    margin: 0 auto 15px auto;
+  }
+  .aps-kienTraNhanh-content.aps-chitiethoso .aps-btn-group .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .aps-search-candidate-detail .my-paging_static,
+  .aps-search-candidate-detail .my-paging_wrap,
+  .aps-search-candidate-detail .my-paging_quantity {
+    margin-bottom: 10px !important;
+  }
+  /* ------ */
   .aps-note-list li::before {
     left: -5px;
   }
@@ -2912,6 +3050,7 @@
   .aps-search-candidate-detail {
     padding: 15px !important;
   }
+
   .aps-kienTraNhanh-ttCaNhan {
     padding: 15px 0 0 0 !important;
   }
@@ -4344,7 +4483,8 @@
 }
 
 @media (max-width: 400px) {
-  .aps-add-phancong .aps-add-new .aps-form-item .btn .fa {
+  .aps-add-phancong .aps-add-new .aps-form-item .btn .fa,
+  .tiepnhandauvao-filter-box .left .item.btn-group i {
     display: none !important;
   }
 
