@@ -94,6 +94,60 @@
         background-color: #ffd966 !important;
         box-shadow: inset 3px 0 0 #f39c12;
     }
+
+    /* Nhóm checkbox lọc trong panel tìm kiếm */
+    .aps-filter-checks {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        padding: 6px 0;
+    }
+    .aps-filter-check {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        font-weight: 500;
+        color: #1f2d3d;
+        cursor: pointer;
+        line-height: 20px;
+        user-select: none;
+    }
+    .aps-filter-check input[type="checkbox"] {
+        margin: 0;
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: #3c8dbc;
+        flex: 0 0 auto;
+    }
+    .aps-filter-check:hover { color: #3c8dbc; }
+
+    /* Zone Rút học phần */
+    #zoneRutHocPhan .rut-hocphan-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+    #zoneRutHocPhan .rut-hocphan-toolbar .left { flex: 1 1 auto; min-width: 240px; }
+    #zoneRutHocPhan .rut-hocphan-toolbar .right {
+        display: flex; gap: 8px; flex: 0 0 auto;
+    }
+    #zoneRutHocPhan .rut-hocphan-toolbar input.form-control { height: 34px; }
+    #zoneRutHocPhan .rut-hocphan-bulkfill {
+        display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+        padding: 8px 12px; background: #f7f9fc;
+        border: 1px solid #e6ebf2; border-radius: 4px;
+    }
+    #zoneRutHocPhan .rut-hocphan-bulkfill .bf-label {
+        font-weight: 600; color: #1f2d3d; display: inline-flex; align-items: center; gap: 6px;
+    }
+    #zoneRutHocPhan .rut-hocphan-bulkfill .bf-input {
+        width: 130px; height: 32px;
+    }
+    #zoneRutHocPhan .rut-hocphan-bulkfill .btn { height: 32px; padding: 4px 12px; line-height: 1.4; }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-lophocphan">
@@ -154,12 +208,19 @@
                                         style="width:100% !important"></select>
                                 </div>
                             </div>
-                            <!-- Chỉ hiện các lớp chưa phân công -->
+                            <!-- Bộ lọc nhanh -->
                             <div class="row">
-                                <div class="col-sm-3 item-search  checkbox-inline user-check-print line-38"
-                                    style="padding-left: 20px">
-                                    <input style="float: left" type="checkbox" id="dChuaPhanCong" />
-                                    <span>Chỉ hiện các lớp chưa phân công</span>
+                                <div class="col-sm-3 item-search" style="padding-left: 20px;">
+                                    <div class="aps-filter-checks">
+                                        <label class="aps-filter-check" for="dChuaPhanCong">
+                                            <input type="checkbox" id="dChuaPhanCong" />
+                                            <span>Chỉ hiện các lớp chưa phân công</span>
+                                        </label>
+                                        <label class="aps-filter-check" for="dChuaNop">
+                                            <input type="checkbox" id="dChuaNop" />
+                                            <span>Chỉ hiện đăng ký chưa nộp tiền</span>
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="col-sm-3 item-search">
                                     <input id="txtSearch_TuSo" class="form-control"
@@ -172,8 +233,6 @@
                                 <div class="col-sm-3 item-search">
                                     <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                                 </div>
-
-
                             </div>
                             <!-- Xem danh sách lớp học phần-->
                             <div class="row aps-gap-10" style="margin-left: -10px !important;">
@@ -219,6 +278,8 @@
                         </span>
                     </h3>
                     <div class="box-tools pull-right right-0">
+                        <a id="btnThucHienRutHocPhan" class="btn btn-warning" style="color: #fff; background-color: #f39c12; border-color: #e08e0b;">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>Thực hiện rút học phần</a>
                         <a id="btnTaoDSNhapDiem" class="btn btn-outline-danger">
                             <i class="fa-solid fa-pen-field"></i>Tạo danh sách nhập điểm</a>
                         <a class="btn btn-outline-primary" id="btnThietLapLopRieng" href="#">
@@ -591,6 +652,75 @@
                     <a class="btn btn-default btnClose" href="#" title="Close">
                         <i class="fa fa-times-circle"></i>Đóng</a>
                 </div>
+            </div>
+        </div>
+
+        <!-- View: Thực hiện rút học phần -->
+        <div class="box box-solid zone-bus aps-rut-hocphan pt15 pl20 pr20" id="zoneRutHocPhan"
+             style="display: none">
+            <div class="box-header pd0">
+                <h3 class="box-title color-blue line-20 mt-15">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Thực hiện rút học phần
+                    <span class="pull-right badge bg-light-blue ml-15">
+                        <span id="lblRutHocPhan_Tong"></span>
+                    </span>
+                </h3>
+                <div class="box-tools pull-right right-0">
+                    <a class="btn btn-default btnCloseRutHocPhan" href="#" title="Đóng">
+                        <i class="fa fa-times"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="box-body mt-10 pd0 pb20">
+                <div class="rut-hocphan-toolbar mb-15">
+                    <div class="left">
+                        <input id="txtRutHocPhan_MoTaChung" class="form-control"
+                               placeholder="Mô tả áp dụng cho mọi dòng (ví dụ: Sinh viên rút theo đơn ngày ...)" />
+                    </div>
+                    <div class="right">
+                        <a class="btn btn-default btnCloseRutHocPhan" href="#">
+                            <i class="fa fa-times-circle"></i>Đóng
+                        </a>
+                        <a id="btnThucHien_RutHocPhan" class="btn btn-warning"
+                           style="color: #fff; background-color: #f39c12; border-color: #e08e0b;">
+                            <i class="fa-solid fa-check"></i>Thực hiện rút
+                        </a>
+                    </div>
+                </div>
+
+                <div class="rut-hocphan-bulkfill mb-10">
+                    <span class="bf-label">
+                        <i class="fa-solid fa-fill-drip"></i> Điền % Mức phí hàng loạt:
+                    </span>
+                    <input id="txtRutHocPhan_FillPhanTram" type="number" min="0" max="100" step="0.01"
+                           class="form-control bf-input" placeholder="VD: 50" />
+                    <a id="btnFillPhanTram_All" class="btn btn-default" href="#"
+                       title="Điền cho mọi dòng trong bảng">
+                        <i class="fa fa-list"></i> Áp dụng cho tất cả
+                    </a>
+                    <a id="btnFillPhanTram_Checked" class="btn btn-default" href="#"
+                       title="Chỉ điền cho các dòng đã tick">
+                        <i class="fa fa-check-double"></i> Áp dụng cho dòng đã chọn
+                    </a>
+                </div>
+
+                <table id="tblRutHocPhan"
+                       class="table table-hover table-bordered mb-0 table-noborder tblRutHocPhan">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed td-center">Stt</th>
+                            <th class="td-center">Mã số</th>
+                            <th class="td-left">Họ tên</th>
+                            <th class="td-left">Học phần</th>
+                            <th class="td-center" style="width: 150px;">% Mức phí</th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" id="chkSelectAll_RutHocPhan">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>

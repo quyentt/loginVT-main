@@ -107,6 +107,13 @@ LopHocPhan.prototype = {
             me.getList_LopHocPhanChiTiet();
         });
 
+        $("#dChuaNop").on("change", function () {
+            if (me.getActiveFindTableId() !== "tblLopHocPhanChiTiet") return;
+            me.clearFindInTable();
+            me.invalidateFindCache();
+            me.getList_LopHocPhanChiTiet();
+        });
+
         $("#btnSearchCanBoDangKy").click(function (e) {
             me.clearFindInTable();
             me.invalidateFindCache();
@@ -403,6 +410,104 @@ LopHocPhan.prototype = {
             }
             arrChecked_Id.forEach(e => me.saveTaoDanhSachNhapDiem(e));
 
+        });
+
+        $("#btnThucHienRutHocPhan").click(function (e) {
+            e.preventDefault();
+            var srcTbl = null;
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet", "checkX");
+            if (arrChecked_Id.length > 0) srcTbl = "tblLopHocPhanChiTiet";
+            else {
+                arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet2", "checkX");
+                if (arrChecked_Id.length > 0) srcTbl = "tblLopHocPhanChiTiet2";
+            }
+            if (!srcTbl) {
+                edu.system.alert("Vui lòng chọn bản ghi ở bảng 'Đăng ký chi tiết' hoặc 'Rút đăng ký'?");
+                return;
+            }
+            var arrData = srcTbl === "tblLopHocPhanChiTiet2" ? (me.dtLopHocPhanChiTiet2 || []) : (me.dtLopHocPhanChiTiet || []);
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return arrData.find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r; });
+            if (arrSelected.length == 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            me["srcTbl_RutHocPhan"] = srcTbl;
+            me["dtRutHocPhan"] = arrSelected;
+            $('#txtRutHocPhan_MoTaChung').val('');
+            $('#chkSelectAll_RutHocPhan').prop('checked', false);
+            $('#lblRutHocPhan_Tong').text(arrSelected.length);
+            edu.util.toggle_overide("zone-bus", "zoneRutHocPhan");
+            me.genTable_RutHocPhan(arrSelected);
+        });
+
+        $(".btnCloseRutHocPhan").click(function (e) {
+            e.preventDefault();
+            edu.util.toggle_overide("zone-bus", "zonebatdau");
+        });
+
+        $("#chkSelectAll_RutHocPhan").on("click", function () {
+            edu.util.checkedAll_BgRow(this, { table_id: "tblRutHocPhan" });
+        });
+
+        $("#btnFillPhanTram_All").click(function (e) {
+            e.preventDefault();
+            var raw = $('#txtRutHocPhan_FillPhanTram').val();
+            if (raw === '' || raw == null) {
+                edu.system.alert("Vui lòng nhập giá trị % cần điền.");
+                return;
+            }
+            var v = parseFloat(raw);
+            if (isNaN(v) || v < 0 || v > 100) {
+                edu.system.alert("Giá trị % phải trong khoảng 0 - 100.");
+                return;
+            }
+            $('#tblRutHocPhan tbody input[id^="txtPhanTram"]').val(v);
+        });
+
+        $("#btnFillPhanTram_Checked").click(function (e) {
+            e.preventDefault();
+            var raw = $('#txtRutHocPhan_FillPhanTram').val();
+            if (raw === '' || raw == null) {
+                edu.system.alert("Vui lòng nhập giá trị % cần điền.");
+                return;
+            }
+            var v = parseFloat(raw);
+            if (isNaN(v) || v < 0 || v > 100) {
+                edu.system.alert("Giá trị % phải trong khoảng 0 - 100.");
+                return;
+            }
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblRutHocPhan", "checkX");
+            if (arrChecked_Id.length === 0) {
+                edu.system.alert("Chưa có dòng nào được tick ở cột 'Chọn'.");
+                return;
+            }
+            arrChecked_Id.forEach(function (id) {
+                $('#txtPhanTram' + id).val(v);
+            });
+        });
+
+        $("#btnThucHien_RutHocPhan").click(function (e) {
+            e.preventDefault();
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblRutHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một dòng?");
+                return;
+            }
+            var strMoTa = $('#txtRutHocPhan_MoTaChung').val() || '';
+            edu.system.confirm("Thực hiện rút học phần cho " + arrChecked_Id.length + " dòng đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                arrChecked_Id.forEach(function (strId) {
+                    var raw = $('#txtPhanTram' + strId).val();
+                    var dPhanTram = parseFloat(raw == null || raw === '' ? '0' : raw);
+                    if (isNaN(dPhanTram)) dPhanTram = 0;
+                    me.thucHienRutHocPhan(me.srcTbl_RutHocPhan, strId, dPhanTram, strMoTa);
+                });
+                edu.util.toggle_overide("zone-bus", "zonebatdau");
+            });
         });
 
         // Find-in-table widget bindings
@@ -1087,6 +1192,7 @@ LopHocPhan.prototype = {
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
+        var bChuaNop = $('#dChuaNop').is(':checked');
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIP',
@@ -1096,8 +1202,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
-            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
+            'pageIndex': bChuaNop ? 1 : (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': bChuaNop ? 100000 : (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
             'strHanhDong_XacNhan_Id': edu.system.getValById('dropSearch_HanhDong'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -1121,6 +1227,13 @@ LopHocPhan.prototype = {
                     if (edu.util.checkValue(data.Data)) {
                         dtResult = data.Data;
                         iPager = data.Pager;
+                    }
+                    if (bChuaNop) {
+                        dtResult = dtResult.filter(function (r) {
+                            var v = r.SOTIENDANOP != null ? r.SOTIENDANOP : r.TONGSOTIENDANOP;
+                            return (parseFloat(v) || 0) === 0;
+                        });
+                        iPager = dtResult.length;
                     }
                     if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
                         findOverride.onSuccess(dtResult, iPager);
@@ -1214,6 +1327,7 @@ LopHocPhan.prototype = {
     },
     genTable_LopHocPhanChiTiet: function (data, iPager) {
         var me = this;
+        me.dtLopHocPhanChiTiet = data || [];
         var jsonForm = {
             strTable_Id: "tblLopHocPhanChiTiet",
             bPaginate: {
@@ -1302,7 +1416,8 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.formatCurrency(aData.TONGSOTIENDANOP);
+                        var v = aData.SOTIENDANOP != null ? aData.SOTIENDANOP : aData.TONGSOTIENDANOP;
+                        return edu.util.formatCurrency(v);
                     }
                 },
                 {
@@ -1400,6 +1515,7 @@ LopHocPhan.prototype = {
     },
     genTable_LopHocPhanRut: function (data, iPager) {
         var me = this;
+        me.dtLopHocPhanChiTiet2 = data || [];
         var jsonForm = {
             strTable_Id: "tblLopHocPhanChiTiet2",
             bPaginate: {
@@ -2443,6 +2559,90 @@ LopHocPhan.prototype = {
             data: obj_save,
             fakedb: [
 
+            ]
+        }, false, false, false, null);
+    },
+
+    genTable_RutHocPhan: function (data) {
+        var jsonForm = {
+            strTable_Id: "tblRutHocPhan",
+            aaData: data,
+            colPos: {
+                center: [0, 4],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + ' ' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="number" min="0" max="100" step="0.01" value="0" id="txtPhanTram' + aData.ID + '" class="form-control" style="height: 28px; padding: 2px 6px;" />';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    thucHienRutHocPhan: function (srcTbl, strId, dPhanTramTinhPhi, strMoTa) {
+        var me = this;
+        var arrData = srcTbl === "tblLopHocPhanChiTiet2" ? (me.dtLopHocPhanChiTiet2 || []) : (me.dtLopHocPhanChiTiet || []);
+        var rec = arrData.find(function (r) { return r.ID == strId; });
+        if (!rec) {
+            edu.system.alert("Không tìm thấy bản ghi: " + strId, "w");
+            return;
+        }
+        var obj_save = {
+            'action': 'DKH_RutHocPhan_MH/FSk0IgkoJC8TNDUP',
+            'func': 'PKG_DANGKYHOC_RUTHOCPHAN.ThucHienRut',
+            'iM': edu.system.iM,
+            'strDangKy_KeHoachDangKy_Id': rec.DANGKY_KEHOACHDANGKY_ID,
+            'strDaoTao_HocPhan_Id': rec.DAOTAO_HOCPHAN_ID,
+            'strQLSV_NguoiHoc_Id': rec.QLSV_NGUOIHOC_ID,
+            'strDaoTao_ThoiGianDaoTao_Id': rec.DAOTAO_THOIGIANDAOTAO_ID,
+            'dPhanTramTinhPhi': dPhanTramTinhPhi,
+            'strMoTa': strMoTa,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    if (srcTbl === "tblLopHocPhanChiTiet2") me.getList_LopHocPhanRut();
+                    else me.getList_LopHocPhanChiTiet();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
             ]
         }, false, false, false, null);
     },
