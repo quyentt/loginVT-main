@@ -107,7 +107,7 @@ LopHocPhan.prototype = {
             me.getList_LopHocPhanChiTiet();
         });
 
-        $("#dChuaNop").on("change", function () {
+        $("#dChuaNop, #dDaChuyenKeToan").on("change", function () {
             if (me.getActiveFindTableId() !== "tblLopHocPhanChiTiet") return;
             me.clearFindInTable();
             me.invalidateFindCache();
@@ -1193,6 +1193,8 @@ LopHocPhan.prototype = {
         $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
         var bChuaNop = $('#dChuaNop').is(':checked');
+        var bDaChuyenKeToan = $('#dDaChuyenKeToan').is(':checked');
+        var bClientFilter = bChuaNop || bDaChuyenKeToan;
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIP',
@@ -1202,8 +1204,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': bChuaNop ? 1 : (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
-            'pageSize': bChuaNop ? 100000 : (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
+            'pageIndex': bClientFilter ? 1 : (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': bClientFilter ? 100000 : (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
             'strHanhDong_XacNhan_Id': edu.system.getValById('dropSearch_HanhDong'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -1228,10 +1230,16 @@ LopHocPhan.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    if (bChuaNop) {
+                    if (bClientFilter) {
                         dtResult = dtResult.filter(function (r) {
-                            var v = r.SOTIENDANOP != null ? r.SOTIENDANOP : r.TONGSOTIENDANOP;
-                            return (parseFloat(v) || 0) === 0;
+                            if (bChuaNop) {
+                                var v = r.SOTIENDANOP != null ? r.SOTIENDANOP : r.TONGSOTIENDANOP;
+                                if ((parseFloat(v) || 0) !== 0) return false;
+                            }
+                            if (bDaChuyenKeToan) {
+                                if (!r.DACHUYENKETOAN || parseInt(r.DACHUYENKETOAN) === 0) return false;
+                            }
+                            return true;
                         });
                         iPager = dtResult.length;
                     }
