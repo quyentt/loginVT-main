@@ -251,11 +251,15 @@ VaiTroChucNang.prototype = {
             var arrThem = [];
             var arrDelete = [];
             var arrChecked = [];
-            var tree = $('#treesjs_ungdungchucnang_vtcn').jstree(true);
-
-            tree.get_checked(true).forEach(function (node) {
-                arrChecked.push(node.id);
-            });
+            //var tree = $('#treesjs_ungdungchucnang_vtcn').jstree(true);
+            //tree.get_checked(true).forEach(function (node) {
+            //    arrChecked.push(node.id);
+            //});
+            var x = $("#treesjs_ungdungchucnang_vtcn .jstree-anchor");
+            for (var i = 0; i < x.length; i++) {
+                var strId = x[i].id.replace(/_anchor/g, '');
+                if (x[i].classList.contains("jstree-clicked")) arrChecked.push(strId); 
+            }
             console.log(arrChecked)
             $('#treesjs_ungdungchucnang_vtcn li').each(function () {
                 if ($(this).find('.jstree-undetermined').length > 0) {
@@ -296,7 +300,7 @@ VaiTroChucNang.prototype = {
                 edu.system.alert("Khi thêm cần chọn quyền");
                 return;
             }
-            
+
             edu.system.confirm("Bạn có chắc chắn thêm " + arrThem.length + " và xóa " + arrDelete.length + " dữ liệu không?");
             $("#btnYes").click(function (e) {
                 //edu.system.alert('<div id="zoneprocessDanhMucTuKhoa"></div>');
