@@ -2,6 +2,15 @@
 @import url(./../Custom_V1/styles.css?v1);
 @import url(./../Custom_V1/styles-content.css?v1);
 @import url(./../Custom_V1/styles-responsive.css?v1);
+.fa-spin {
+    animation: fa-spin 2s infinite linear !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fa-spin {
+        animation: fa-spin 2s infinite linear !important;
+    }
+}
 /* --------------------- */
 body {
     font-family:Arial, Helvetica, sans-serif;

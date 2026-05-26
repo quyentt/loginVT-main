@@ -1825,7 +1825,7 @@ systemroot.prototype = {
         }
         row_filter += '</div>';
         $('.filter-' + strTable_Id).html(row_filter);
-        if (iPager == 1 || ) {
+        if (iPager == 1) {
             $("#" + strTable_Id + "_input").on("keyup", function () {
                 var value = edu.system.change_alias($(this).val().toLowerCase());
                 $("#" + strTable_Id + " tbody tr").filter(function () {
