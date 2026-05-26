@@ -188,11 +188,13 @@ TinTuc.prototype = {
         data.forEach(e => {
             //var strLink = edu.system.apiUrlTemp + '/congsinhvien/Pages/thread.aspx?id=' + e.ID + '&name=' + edu.system.change_alias(e.TIEUDE);
 
+            var strFallbackImg = 'assets/images/news-img.png';
+            var strDuongDan = e.DUONGDANANHHIENTHI ? edu.system.getRootPathImg(e.DUONGDANANHHIENTHI) : strFallbackImg;
+
             html += '<div class="col-12 col-md-6 pb-4 bantin" id="'+ e.ID +'" style="cursor: pointer">';
             html += '<div class="news-item box-shadow">';
             html += '<a class="image-z image">';
-            var strDuongDan = e.DUONGDANANHHIENTHI ? e.DUONGDANANHHIENTHI : '/Core/images/thongbao.jpg'
-            html += '<img src="' + edu.system.getRootPathImg(strDuongDan) + '" alt="' + e.TIEUDE + '">';
+            html += '<img src="' + strDuongDan + '" alt="" onerror="this.onerror=null;this.src=\'' + strFallbackImg + '\';">';
             html += '</a>';
             html += '<div class="news-item-right">';
             html += '<a class="title" title="">';
@@ -202,7 +204,7 @@ TinTuc.prototype = {
             html += '<a class="cate-link" href="#"><i class="fas fa-caret-right me-1"></i><span>' + edu.util.returnEmpty(e.DAOTAO_COCAUTOCHUC_TEN) + '</span></a>';
             html += '<p class="mb-0 ms4"><i class="fal fa-calendar-alt me-1"></i><span>' + edu.util.returnEmpty(e.NGAYBATDAU) + '</span></p>';
             html += '</div>';
-            html += '<div class="home-text mb-0">' + e.NOIDUNG +'</div>';
+            html += '<div class="home-text mb-0"></div>';
 
             html += '</div>';
             html += '</div>';
@@ -404,10 +406,13 @@ TinTuc.prototype = {
         data.forEach(e => {
             //var strLink = edu.system.apiUrlTemp + '/congsinhvien/Pages/thread.aspx?id=' + e.ID + '&name=' + edu.system.change_alias(e.TIEUDE);
 
+            var strFallbackImg = 'assets/images/news-img.png';
+            var strDuongDan = e.DUONGDANANHHIENTHI ? edu.system.getRootPathImg(e.DUONGDANANHHIENTHI) : strFallbackImg;
+
             html += '<div class="col-12 col-md-6 col-lg-12 bantin" id="' + e.TINTUC_BANGTIN_ID +'" style="cursor: pointer">';
             html += '<div class="news-item">';
             html += '<a href="#" class="image-z image">';
-            html += '<img src="' + edu.system.getRootPathImg(e.DUONGDANANHHIENTHI) + '" alt="">';
+            html += '<img src="' + strDuongDan + '" alt="" onerror="this.onerror=null;this.src=\'' + strFallbackImg + '\';">';
             html += '</a>';
             html += '<div class="news-item-right">';
             html += '<a>';
