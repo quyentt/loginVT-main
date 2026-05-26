@@ -13891,3 +13891,33 @@ table#clone {
     font-weight: 300;
     color: #888;
 }
+
+.aps-alert-cn-box {
+    border: solid 1px #FF5F1F;
+    background: rgba(255, 95, 31, .1);
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.aps-alert-cn-box .title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #FF5F1F;
+    margin-bottom: 10px;
+}
+
+.aps-alert-cn-box li {
+    margin-bottom: 10px;
+}
+
+.aps-hp-lyhd-box .item {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.aps-hp-lyhd-box .item i {
+    margin-top: 1px;
+    font-size: 18px;
+}
