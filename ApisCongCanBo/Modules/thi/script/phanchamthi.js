@@ -246,6 +246,27 @@ PhanChamThi.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.syncScroll_PhanChamThi();
+    },
+    syncScroll_PhanChamThi: function () {
+        var $top = $("#scrollTop_PhanChamThi");
+        var $box = $("#scrollBox_PhanChamThi");
+        if (!$top.length || !$box.length) return;
+        function doSync() {
+            var $table = $box.find("table");
+            var w = $box[0].scrollWidth;
+            if ($table.length && $table[0].scrollWidth > w) w = $table[0].scrollWidth;
+            $top.find(".scroll-top-mirror-inner").width(w);
+        }
+        doSync();
+        setTimeout(doSync, 50);
+        setTimeout(doSync, 250);
+        $top.off("scroll.sync").on("scroll.sync", function () {
+            $box.scrollLeft($(this).scrollLeft());
+        });
+        $box.off("scroll.sync").on("scroll.sync", function () {
+            $top.scrollLeft($(this).scrollLeft());
+        });
     },
 
     /*------------------------------------------
