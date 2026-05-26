@@ -10,6 +10,16 @@
         overflow-y: visible !important;
         max-height: none !important;
     }
+
+    /* Thanh scroll ngang phía trên đầu bảng */
+    .aps-lophocphan .aps-list-data .scroll-table-top-x {
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: 16px;
+    }
+    .aps-lophocphan .aps-list-data .scroll-table-top-x > div {
+        height: 1px;
+    }
 </style>
 <section class="content aps-TKGG">
     <div class="row aps-lophocphan">
@@ -110,6 +120,12 @@
                             <i class="fa-solid fa-nfc-pen"></i> Thực hiện
                             tạo dữ liệu chi tiết tính khối lượng
                         </a>
+                        <a class="btn btn-success" id="btnTinhKhoiLuong" href="#">
+                            <i class="fa-solid fa-calculator"></i> Tính khối lượng
+                        </a>
+                        <a class="btn btn-warning" id="btnXacDinhKhongTKB" href="#">
+                            <i class="fa-solid fa-calendar-xmark"></i> Xác định không tính theo TKB
+                        </a>
                         <a class="btn btn-primary" id="btnXacNhan" href="#">
                             <i class="fa-solid fa-circle-check"></i> Xác
                             nhận
@@ -119,7 +135,10 @@
                 </div>
                 <div class="box-body pd0">
                     <div id="zoneprocessXXXX1"></div>
-                    <div class="col-sm-12 scroll-table-x aps-table-select mt-15">
+                    <div class="col-sm-12 scroll-table-top-x mt-15">
+                        <div></div>
+                    </div>
+                    <div class="col-sm-12 scroll-table-x aps-table-select">
                         <table id="tblLopHocPhan" class="table table-hover table-bordered tblLopHocPhan">
                             <thead>
                                 <tr>
@@ -144,6 +163,7 @@
                                     <th class="td-center" rowspan="2">Số giờ chuẩn</th>
                                     <th class="td-center" rowspan="2">Khóa dữ liệu</th>
                                     <th class="td-center" rowspan="2">Duyệt buổi học</th>
+                                    <th class="td-center" rowspan="2">Không tính theo TKB</th>
                                     <th class="td-center" id="lblPhanLoai">Phân loại theo nhóm lớp</th>
                                     <th class="td-center td-fixed" rowspan="2">
                                         <input type="checkbox" id="chkSelectAll_LopHocPhan">
@@ -532,6 +552,40 @@
                     <i class="fa fa-times-circle"></i> Đóng
                 </button>
                 <a id="btnSave_KhoaDuLieu" class="btn btn-primary btnSave_KhoaDuLieu"><i class="fa fa-save"></i> Lưu</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Xác định không tính theo TKB -->
+<div class="modal fade modal_KhongTKB" id="modal_KhongTKB" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="width: 800px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title modal-name"><i class="fa-solid fa-calendar-xmark"></i> Xác định không tính theo TKB</h4>
+            </div>
+            <div class="modal-body pd20 pb0">
+                <div class="row">
+                    <div class="row aps-form">
+                        <div class="col-sm-12 aps-form-item">
+                            <select id="dropKhongTKB" class="select-opt" style="width:100% !important; height: 38px;">
+                                <option value="1"> Thêm (Không tính theo TKB)</option>
+                                <option value="0"> Xóa (Tính theo TKB)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle"></i> Đóng
+                </button>
+                <a id="btnSave_KhongTKB" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
             </div>
         </div>
     </div>
