@@ -47,7 +47,7 @@
                                 runat="server" />
                         </div>
                         <div class="row">
-                            <div class="col-xs-5 login-language">
+                            <div class="col-xs-5 login-language" style="display: none">
                                 <select class="form-control">
                                     <% if (dtLanguage !=null) { int c=dtLanguage.Rows.Count; if (c> 0)
                                         {
