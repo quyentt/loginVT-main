@@ -271,7 +271,13 @@ ThongKeDiemChu.prototype = {
             return;
         }
 
-        var keys = Object.keys(data[0]);
+        // Lib loadToTable_data tự render cột STT đầu tiên cho mỗi row,
+        // nên bỏ qua key trùng (STT/TT) trong data để tránh lặp.
+        var skipKeys = { "STT": true, "TT": true };
+        var keys = Object.keys(data[0]).filter(function (k) {
+            return !skipKeys[String(k).toUpperCase()];
+        });
+
         var thead = '<tr><th class="td-stt">Stt</th>';
         keys.forEach(function (k) {
             thead += '<th class="td-center">' + me.formatHeader(k) + '</th>';
@@ -279,13 +285,8 @@ ThongKeDiemChu.prototype = {
         thead += '</tr>';
         $("#" + strTable_Id + " thead").html(thead);
 
-        var aoColumns = [{
-            "mRender": function (nRow, aData, iRow) {
-                return '<span class="td-stt-text">' + ((iRow != null ? iRow : 0) + 1) + '</span>';
-            }
-        }];
-        keys.forEach(function (k) {
-            aoColumns.push({
+        var aoColumns = keys.map(function (k) {
+            return {
                 "mRender": function (nRow, aData) {
                     var v = aData[k];
                     if (v === null || v === undefined || v === "") return "";
@@ -294,7 +295,7 @@ ThongKeDiemChu.prototype = {
                     }
                     return v;
                 }
-            });
+            };
         });
 
         edu.system.loadToTable_data({
@@ -303,7 +304,7 @@ ThongKeDiemChu.prototype = {
             aoColumns: aoColumns
         });
 
-        // re-apply class td-stt cho cột STT sau khi DataTable render
+        // gắn class td-stt cho cột STT (cột đầu) sau khi render xong → sticky-left
         $("#" + strTable_Id + " tbody tr").each(function () {
             $(this).find("td:first").addClass("td-stt");
         });
