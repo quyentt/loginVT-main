@@ -242,18 +242,16 @@ KeHoachTuyenSinhNew.prototype = {
             me.save_PhanCong();
         });
 
-        // Click "Chi tiết" trên row đợt → mở form đợt ở chế độ Xem-sửa, populate data
-        $("#tblDotTuyenSinh").delegate(".btnDetailDot", "click", function () {
-            var strId = $(this).attr('data-id');
-            if (!edu.util.checkValue(strId)) return;
-            $('#them-moi-dot').modal('show');   // → show.bs.modal fires → rewrite_Dot reset form trước
-            me.strDot_Id = strId;                // → set sau khi rewrite_Dot xong
-            me.getDetail_Dot(strId);
-        });
-
-        // Khi mở modal Thêm mới đợt → reset form
-        $("#them-moi-dot").on('show.bs.modal', function () {
+        // Modal đợt: reset form rồi check trigger có data-id (Chi tiết) → fetch detail.
+        // Dùng event.relatedTarget thay vì click delegate riêng để tránh race với stacked modal.
+        $("#them-moi-dot").on('show.bs.modal', function (event) {
             me.rewrite_Dot();
+            var $btn = $(event.relatedTarget);
+            var strId = $btn.length ? $btn.attr('data-id') : '';
+            if (strId && $btn.hasClass('btnDetailDot')) {
+                me.strDot_Id = strId;
+                me.getDetail_Dot(strId);
+            }
         });
 
         $("#btnSaveDot").click(function () {
@@ -1297,7 +1295,7 @@ KeHoachTuyenSinhNew.prototype = {
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
             var sMa = d.MA || d.Ma || '';
             var sTen = d.TEN || d.Ten || '';
             var sKieuDot = d.DOT_TYPE_CODE_Ten || d.KIEUDOT_TEN || lookupTen(me.dtKieuDot, d.DOT_TYPE_CODE);
@@ -1324,7 +1322,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + sNguoiTao + '</td>'
                 +  '<td class="td-center">' + sNgayTao + '</td>'
-                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDot" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
+                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDot" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết" data-bs-toggle="modal" data-bs-target="#them-moi-dot">Chi tiết</a></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
