@@ -20,7 +20,7 @@
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
                             <select id="dropSearch_ThoiGian" class="select-opt form-select"
-                                aria-label="Default select example"></select>
+                                    aria-label="Default select example"></select>
                         </div>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
                             <select id="dropSearch_LoaiDiem" class="select-opt form-select"
-                                aria-label="Default select example"></select>
+                                    aria-label="Default select example"></select>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
                             <select id="dropSearch_HinhThuc" class="select-opt form-select"
-                                aria-label="Default select example"></select>
+                                    aria-label="Default select example"></select>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
                             <select id="dropSearch_DotThi" class="select-opt form-select"
-                                aria-label="Default select example"></select>
+                                    aria-label="Default select example"></select>
                         </div>
                     </div>
                 </div>
@@ -56,7 +56,7 @@
                     <div class="form-item d-flex  form-add-info">
                         <div class="input-group no-icon">
                             <select id="dropSearch_MonThi" class="select-opt form-select"
-                                aria-label="Default select example"></select>
+                                    aria-label="Default select example"></select>
                         </div>
                     </div>
                 </div>
@@ -79,9 +79,21 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4 col-12  d-flex mb-15 aps-gap-10">
-                    <div id="btnSearch" class="btn btn-default btn-search"><i
-                            class="fa-solid fa-magnifying-glass"></i>Tìm kiếm</div>
+                    <div id="btnSearch" class="btn btn-default btn-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>Tìm kiếm
+                    </div>
                     <div class="dropdown ms-4" id="zonebtnBaoCao_ChamThi"></div>
+                    <div class="dropdown ms-4" id="zonebtnBaoCao_ChamThi_Import">
+                        <button class="btn btn-outline-success min-w-auto dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" style="width: unset !important; min-width: 360px !important">
+                            <li>
+                                <a class="btnImportWithProce" name="IMPORTWITHPROC_PCTCT"
+                                   title="chấm thi" href="#">1. Import phân chấm thi coi thi</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
