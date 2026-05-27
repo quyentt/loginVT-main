@@ -530,10 +530,11 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng danh sách kế hoạch tuyển sinh
-    -- NOTE: tên cột (KEHOACH_MA, KEHOACH_TEN, ...) đoán theo convention.
-    --       Nếu API trả về tên khác thì chỉnh trong hàm này.
+    -- Fallback nhiều casing cho Mã/Tên + lookup DM local (dtLoaiTuyenSinh/dtPhuongAnTuyenSinh)
+    -- qua ID khi API không join sẵn _Ten.
     -------------------------------------------*/
     genTable_KeHoachTuyenSinh: function (data, iPager) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         $("#lblKeHoachTuyenSinh_Tong").html(data.length || 0);
         var $tbody = $("#tblKHtyensinh tbody");
         $tbody.html("");
@@ -543,18 +544,38 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var lookupTenById = function (arr, id) {
+            if (!id || !arr || !arr.length) return '';
+            for (var j = 0; j < arr.length; j++) {
+                if (arr[j].ID == id) return arr[j].TEN || '';
+            }
+            return '';
+        };
+        var lookupTenByMa = function (arr, ma) {
+            if (!ma || !arr || !arr.length) return '';
+            for (var j = 0; j < arr.length; j++) {
+                if (arr[j].MA == ma) return arr[j].TEN || '';
+            }
+            return ma;
+        };
+
         var iconCheck = '<i class="fa-solid fa-check color-success font-weight fz18"></i>';
         var iconX = '<i class="fa-solid fa-xmark color-red font-weight fz18"></i>';
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
+            var sMa = d.MA || d.Ma || d.KEHOACH_MA || '';
+            var sTen = d.TEN || d.Ten || d.KEHOACH_TEN || '';
+            var sLoai = d.LOAITUYENSINH_TEN || d.LOAI_TUYENSINH_TEN || d.LOAI_TUYENSINH_Ten || lookupTenById(me.dtLoaiTuyenSinh, d.LOAI_TUYENSINH_ID);
+            var sPA = d.PHUONGANTUYENSINH_TEN || d.TS_PHUONGAN_TUYENSINH_TEN || d.TS_PHUONGAN_TUYENSINH_Ten || lookupTenById(me.dtPhuongAnTuyenSinh, d.TS_PHUONGAN_TUYENSINH_ID);
+            var sTinhTrang = d.TINHTRANG_TEN || d.PLAN_STATUS_Name || d.PLAN_STATUS_TEN || lookupTenByMa(me.dtTinhTrangKeHoach, d.PLAN_STATUS_CODE);
             rows += '<tr id="row_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.KEHOACH_MA || '') + '</td>'
-                +  '<td class="td-left">' + (d.KEHOACH_TEN || '') + '</td>'
-                +  '<td class="td-left">' + (d.LOAITUYENSINH_TEN || '') + '</td>'
-                +  '<td class="td-left">' + (d.PHUONGANTUYENSINH_TEN || '') + '</td>'
+                +  '<td class="td-left">' + sMa + '</td>'
+                +  '<td class="td-left">' + sTen + '</td>'
+                +  '<td class="td-left">' + sLoai + '</td>'
+                +  '<td class="td-left">' + sPA + '</td>'
                 +  '<td class="td-center">' + (d.NAM_TUYENSINH || '') + '</td>'
                 +  '<td class="td-center">' + (d.NAM_HOC || '') + '</td>'
                 +  '<td class="td-center">' + (d.HOC_KY || '') + '</td>'
@@ -564,7 +585,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Quy định phí" data-bs-toggle="modal" data-bs-target="#quy-dinh-phi">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Mẫu khai hồ sơ" data-bs-toggle="modal" data-bs-target="#mau-khai-hs">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Kết quả đăng ký" data-bs-toggle="modal" data-bs-target="#ket-qua-dk">Xem</a></td>'
-                +  '<td class="td-left">' + (d.TINHTRANG_TEN || '') + '</td>'
+                +  '<td class="td-left">' + sTinhTrang + '</td>'
                 +  '<td class="td-center">' + (d.IS_PUBLIC == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_LOCKED == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
@@ -627,8 +648,8 @@ KeHoachTuyenSinhNew.prototype = {
         if (!data) return;
         var d = data;
 
-        edu.util.viewValById('txtKH_Ma', d.KEHOACH_MA || '');
-        edu.util.viewValById('txtKH_Ten', d.KEHOACH_TEN || '');
+        edu.util.viewValById('txtKH_Ma', d.MA || d.Ma || d.KEHOACH_MA || '');
+        edu.util.viewValById('txtKH_Ten', d.TEN || d.Ten || d.KEHOACH_TEN || '');
         edu.util.viewValById('txtKH_NamTuyenSinh', d.NAM_TUYENSINH || '');
         edu.util.viewValById('txtKH_NamHoc', d.NAM_HOC || '');
         edu.util.viewValById('txtKH_HocKy', d.HOC_KY || '');
