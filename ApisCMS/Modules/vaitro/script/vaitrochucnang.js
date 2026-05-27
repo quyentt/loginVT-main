@@ -99,9 +99,9 @@ VaiTroChucNang.prototype = {
         //    this.classList.remove("btn-primary");
         //    edu.util.toggle_overide("zone-bus-vtcn", "zone_list_vtcn");
         //}
-         /*------------------------------------------
-        --Discription: [2] Action VaiTro_ChucNang
-        -------------------------------------------*/
+        /*------------------------------------------
+       --Discription: [2] Action VaiTro_ChucNang
+       -------------------------------------------*/
         $("#tableVaiTroChucNang_VTCN").delegate(".btnDelete_VaiTroChucNang", "click", function () {
             var strChucNang_Id = this.id;
             strChucNang_Id = edu.util.cutPrefixId(/delete_vaitrochucnang/g, strChucNang_Id);
@@ -247,7 +247,7 @@ VaiTroChucNang.prototype = {
         });
         $("#btnSave_VaiTro_ChucNang").click(function () {
             if (!me.strUngDung_Id) me.strUngDung_Id = $("#dropUngDung_VTCN").val();
-            
+
             var arrThem = [];
             var arrDelete = [];
             var arrChecked = [];
@@ -258,7 +258,7 @@ VaiTroChucNang.prototype = {
             var x = $("#treesjs_ungdungchucnang_vtcn .jstree-anchor");
             for (var i = 0; i < x.length; i++) {
                 var strId = x[i].id.replace(/_anchor/g, '');
-                if (x[i].classList.contains("jstree-clicked")) arrChecked.push(strId); 
+                if (x[i].classList.contains("jstree-clicked")) arrChecked.push(strId);
             }
             console.log(arrChecked)
             $('#treesjs_ungdungchucnang_vtcn li').each(function () {
@@ -334,7 +334,7 @@ VaiTroChucNang.prototype = {
         //--Edit
         var obj_list = {
             'action': 'CMS_VaiTro/LayDanhSach',
-            
+
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",
             'pageIndex': 1,
@@ -342,7 +342,7 @@ VaiTroChucNang.prototype = {
             'dTrangThai': 1
         };
         //
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -358,17 +358,17 @@ VaiTroChucNang.prototype = {
                 else {
                     edu.system.alert("CMS_VaiTro/LayDanhSach: " + data.Message);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert("CMS_VaiTro/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: obj_list.action,
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -486,7 +486,7 @@ VaiTroChucNang.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -503,19 +503,19 @@ VaiTroChucNang.prototype = {
                     //me.getList_ChucNang();
                 }
                 else {
-                    edu.system.alert( data.Message);
+                    edu.system.alert(data.Message);
                 }
-                
+
             },
             error: function (er) {
                 edu.system.alert(JSON.stringify(er), "w");
-                
+
             },
             type: 'POST',
             action: obj_save.action,
-            
+
             contentType: true,
-            
+
             data: obj_save,
             fakedb: [
 
@@ -533,7 +533,7 @@ VaiTroChucNang.prototype = {
             'strChucNang_Id': strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -552,7 +552,7 @@ VaiTroChucNang.prototype = {
                     };
                     edu.system.afterComfirm(obj);
                 }
-                
+
             },
             error: function (er) {
                 obj = {
@@ -560,13 +560,13 @@ VaiTroChucNang.prototype = {
                     code: "w"
                 };
                 edu.system.afterComfirm(obj);
-                
+
             },
             type: 'POST',
             action: obj_save.action,
-            
+
             contentType: true,
-            
+
             data: obj_save,
             fakedb: [
 
@@ -656,18 +656,18 @@ VaiTroChucNang.prototype = {
                 }
                 else {
                     edu.system.alert(data.Message);
-                    
+
                 }
             },
             error: function (er) {
                 edu.system.alert(er);
-                
+
             },
             type: "GET",
             action: obj_list.action,
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -689,7 +689,7 @@ VaiTroChucNang.prototype = {
         };
         edu.system.loadToCombo_data(obj);
     },
-    
+
     getList_UngDungVT: function () {
         var me = this;
         var obj_save = {
@@ -737,15 +737,15 @@ VaiTroChucNang.prototype = {
     getList_ChucNang: function () {
         var me = this;
         var obj_list = {
-            'action'            : 'CMS_ChucNang/LayDanhSach',
-            'versionAPI'        : 'v1.0',
+            'action': 'CMS_ChucNang/LayDanhSach',
+            'versionAPI': 'v1.0',
             'strTuKhoa': "",
             'strChung_UngDung_Id': $("#dropUngDung_VTCN").val(),
-            'strCha_Id'         : "",
-            'pageIndex'         : 1,
-            'pageSize'          : 1000,
+            'strCha_Id': "",
+            'pageIndex': 1,
+            'pageSize': 1000,
             'strPhamViTruyCap_Id': "",
-            'dTrangThai'        : 1
+            'dTrangThai': 1
         };
         //var obj_save = {
         //    'action': 'CMS_QuanTri01_MH/DSA4BRICKTQiDyAvJhUpJC4UBRcgKBUzLgPP',
@@ -756,7 +756,7 @@ VaiTroChucNang.prototype = {
         //    'strNguoiThucHien_Id': edu.system.userId,
         //};
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -776,10 +776,10 @@ VaiTroChucNang.prototype = {
                     };
                     edu.system.alertOnModal(objNotify);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 objNotify = {
                     content: "CMS_ChucNang/LayDanhSach (er): " + er,
                     type: "w"
@@ -788,9 +788,9 @@ VaiTroChucNang.prototype = {
             },
             type: "GET",
             action: obj_list.action,
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -926,7 +926,7 @@ VaiTroChucNang.prototype = {
             var strUngDung_Id = dtResult[0].ID;
             me.strUngDung_Id = strUngDung_Id;
             me.getList_VaiTroChucNang();
-            
+
         }
     },
     /*----------------------------------------------
@@ -937,7 +937,7 @@ VaiTroChucNang.prototype = {
         var me = this;
         edu.util.objGetDataInData(strUngDung_Id, me.dtVaiTroChucNang, "CHUNG_UNGDUNG_ID", me.genTable_VaiTroChucNang);
     },
-    
+
     loadToTree_VaiTroUngDung: function (dtResult, iPager) {
         var me = this;
         if (dtResult.length > 0) {
@@ -981,7 +981,7 @@ VaiTroChucNang.prototype = {
             //$($("#treesjs_ungdungchucnang_vtcn #" + dtResult[i].ID)[0]).append('<span class="pull-right zoneChucNang"><span style="padding-right: 20px"><i class="fa fa-eye color-active poiter btnSuaQuyen" id="' + dtResult[i].ID + '"></i></span>');
         }
     },
-    
+
     loadToTreejs_data: function (obj) {
         var me = this;
         console.log("loadToTreejs_data")
@@ -1047,7 +1047,7 @@ VaiTroChucNang.prototype = {
             }
             return row;
         }
-        
+
         function configTreejs() {
             console.log("goconfig");
             //1. check
@@ -1093,7 +1093,7 @@ VaiTroChucNang.prototype = {
             }
         }
     },
-    
+
     save_QuyenCN: function (strCore_Quyen_Id) {
         var me = this;
         var obj_notify = {};
@@ -1300,7 +1300,7 @@ VaiTroChucNang.prototype = {
                     var dtReRult = data.Data;
                     me["dtSuaQuyen"] = dtReRult;
                     me.genTable_SuaQuyen(dtReRult, data.Pager);
-                    
+
                 }
                 else {
                     edu.system.alert(" : " + data.Message, "s");
@@ -1429,14 +1429,14 @@ VaiTroChucNang.prototype = {
             //Kiểm tra số dòng nếu nhỏ hơn số thứ tự dòng iThuTu thì thêm 1 dòng
             if (colspan == 0) {
                 arrHeaderId.push(objHead.ID);
-                $("#" + strTable_Id + " tbody").append('<tr><td id="' + objHead.ID +'" class="pointer btnSuaQuyen" colspan="' + (iThuTu + 1) + '">' + strTenChucNang + '</td></tr>');
+                $("#" + strTable_Id + " tbody").append('<tr><td id="' + objHead.ID + '" class="pointer btnSuaQuyen" colspan="' + (iThuTu + 1) + '">' + strTenChucNang + '</td></tr>');
                 if (iThuTu > imaxlength) imaxlength = iThuTu;
             }
             else {
                 if (colspan == 1) {
-                    $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - colspan]).prepend('<td  id="' + objHead.ID +'" class="pointer btnSuaQuyen" rowspan="' + colspan + '" name="1">' + strTenChucNang + '</td>');
+                    $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - colspan]).prepend('<td  id="' + objHead.ID + '" class="pointer btnSuaQuyen" rowspan="' + colspan + '" name="1">' + strTenChucNang + '</td>');
                 } else
-                    $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - colspan]).prepend('<td  id="' + objHead.ID +'" class="pointer btnSuaQuyen" rowspan="' + colspan + '" >' + strTenChucNang + '</td>');
+                    $($("#" + strTable_Id + " tbody tr")[arrHeaderId.length - colspan]).prepend('<td  id="' + objHead.ID + '" class="pointer btnSuaQuyen" rowspan="' + colspan + '" >' + strTenChucNang + '</td>');
             }
         }
         //Lấy số con của thằng cha trong datatable công thức
