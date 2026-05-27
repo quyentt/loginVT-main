@@ -628,11 +628,11 @@ input::placeholder {
   border-right: 1px solid #e1e1e1 !important;
 }
 
-/* .table-hover>tbody>tr:hover,
+.table-hover>tbody>tr:hover,
 .table-hover>tbody>tr:hover a {
   color: #fff !important;
   background-color: var(--color-blue) !important;
-} */
+} 
 
 .table-hover>tbody>tr:hover .btn-outline-danger.border-0 {
   background-color: transparent !important;
