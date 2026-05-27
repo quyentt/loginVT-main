@@ -20,7 +20,7 @@
         <link href="App_Themes/Plugins/pagination/simplePagination.min.css" rel="stylesheet" /><!-- editor -->
         <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
         <link href="App_Themes/Plugins/datepicker/datepicker3.min.css" rel="stylesheet" /><!-- editor -->
-        <link href="App_Themes/Cms/css/index.css?v=1" rel="stylesheet" /><!-- editor -->
+        <link href="App_Themes/Cms/css/index.css?v=2" rel="stylesheet" /><!-- editor -->
         <link href="App_Themes/Cms/css/index.min.css?v=2" rel="stylesheet" /><!-- editor -->
         <!-- custom theme v1- bich -->
         <link href="App_Themes/Custom_V1/styles.css?v=2" rel="stylesheet" />
