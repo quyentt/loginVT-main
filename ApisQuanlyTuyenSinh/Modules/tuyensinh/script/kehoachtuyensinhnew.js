@@ -82,29 +82,30 @@ KeHoachTuyenSinhNew.prototype = {
             me.rewrite_KeHoach();
         });
 
-        // Khi user click "Xem" ở cột "Các đợt tuyển sinh" → ghi nhớ KH parent để dùng khi Thêm mới đợt
-        $("#tblKHtyensinh").delegate('[data-bs-target="#dot-tuyen-sinh"]', "click", function () {
-            me.strKeHoachTuyenSinh_Id = $(this).attr('data-id');
-        });
-
-        // Auto-load danh sách đợt khi mở modal Các đợt tuyển sinh
-        $("#dot-tuyen-sinh").on('show.bs.modal', function () {
+        // Đọc data-id từ event.relatedTarget (Bootstrap 5) để tránh race với click handler riêng.
+        // Trước đây dùng delegate("click") set ID + on("show.bs.modal") load → thứ tự không đảm bảo,
+        // lần mở đầu tiên hay bị empty vì show.bs.modal fire trước.
+        $("#dot-tuyen-sinh").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            if ($btn.length && $btn.attr('data-id')) {
+                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+            }
             me.getList_DotTuyenSinh();
         });
 
-        // Khi user click "Xem" ở cột "Phân công nhân sự" → ghi nhớ KH parent + auto load
-        $("#tblKHtyensinh").delegate('[data-bs-target="#phan-cong-nhan-su"]', "click", function () {
-            me.strKeHoachTuyenSinh_Id = $(this).attr('data-id');
-        });
-        $("#phan-cong-nhan-su").on('show.bs.modal', function () {
+        $("#phan-cong-nhan-su").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            if ($btn.length && $btn.attr('data-id')) {
+                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+            }
             me.getList_PhanCongNhanSu();
         });
 
-        // Khi user click "Xem" ở cột "Kế hoạch đầu ra" → ghi nhớ KH parent + auto load
-        $("#tblKHtyensinh").delegate('[data-bs-target="#ke-hoach-dau-ra"]', "click", function () {
-            me.strKeHoachTuyenSinh_Id = $(this).attr('data-id');
-        });
-        $("#ke-hoach-dau-ra").on('show.bs.modal', function () {
+        $("#ke-hoach-dau-ra").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            if ($btn.length && $btn.attr('data-id')) {
+                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+            }
             me.getList_KeHoachDauRa();
         });
 
@@ -1269,11 +1270,12 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng đợt tuyển sinh trong modal #dot-tuyen-sinh
-    -- Cột data: Ma, Ten, DOT_TYPE_CODE_Ten, NGAY_BATDAU_DANGKY, NGAY_KETTHUC_DANGKY,
-    --           DOT_STATUS_CODE_Ten, IS_PUBLIC, IS_LOCKED, IS_ACTIVE,
-    --           NGUOITAO_TaiKhoan, NgayTao_dd_mm_yyyy_hhmmss
+    -- Fallback nhiều casing vì API có thể trả MA/TEN (uppercase) hoặc Ma/Ten (PascalCase).
+    -- Kiểu đợt + Tình trạng đợt: lookup từ cache DM local (dtKieuDot / dtTinhTrangDot)
+    -- thay vì dựa vào API join sẵn để tránh phụ thuộc tên cột _Ten.
     -------------------------------------------*/
     genTable_DotTuyenSinh: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblDotTuyenSinh tbody");
         $tbody.html("");
 
@@ -1282,29 +1284,46 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var lookupTen = function (arrDM, ma) {
+            if (!ma || !arrDM || !arrDM.length) return '';
+            for (var j = 0; j < arrDM.length; j++) {
+                if (arrDM[j].MA == ma) return arrDM[j].TEN || '';
+            }
+            return ma;
+        };
+
         var iconCheck = '<i class="fa-solid fa-check color-success font-weight fz18"></i>';
         var iconX = '<i class="fa-solid fa-xmark color-red font-weight fz18"></i>';
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var strId = d.ID || '';
+            var sMa = d.MA || d.Ma || '';
+            var sTen = d.TEN || d.Ten || '';
+            var sKieuDot = d.DOT_TYPE_CODE_Ten || d.KIEUDOT_TEN || lookupTen(me.dtKieuDot, d.DOT_TYPE_CODE);
+            var sTinhTrang = d.DOT_STATUS_CODE_Ten || d.TINHTRANG_TEN || lookupTen(me.dtTinhTrangDot, d.DOT_STATUS_CODE);
+            var sNgayBD = d.NGAY_BATDAU_DANGKY || d.Ngay_BatDau_DangKy || '';
+            var sNgayKT = d.NGAY_KETTHUC_DANGKY || d.Ngay_KetThuc_DangKy || '';
+            var sNguoiTao = d.NGUOITAO_TaiKhoan || d.NGUOITAO_TEN || d.NGUOI_TAO || d.NguoiTao || '';
+            var sNgayTao = d.NgayTao_dd_mm_yyyy_hhmmss || d.NGAY_TAO || d.NgayTao || '';
+
             rows += '<tr id="row_dot_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.Ma || '') + '</td>'
-                +  '<td class="td-left">' + (d.Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DOT_TYPE_CODE_Ten || '') + '</td>'
-                +  '<td class="td-center">' + (d.NGAY_BATDAU_DANGKY || '') + '</td>'
-                +  '<td class="td-center">' + (d.NGAY_KETTHUC_DANGKY || '') + '</td>'
+                +  '<td class="td-left">' + sMa + '</td>'
+                +  '<td class="td-left">' + sTen + '</td>'
+                +  '<td class="td-left">' + sKieuDot + '</td>'
+                +  '<td class="td-center">' + sNgayBD + '</td>'
+                +  '<td class="td-center">' + sNgayKT + '</td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Phương thức tuyển" data-bs-toggle="modal" data-bs-target="#phuong-thuc-tuyen">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Kế hoạch đầu ra" data-bs-toggle="modal" data-bs-target="#ke-hoach-dau-ra">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Mẫu khai hồ sơ" data-bs-toggle="modal" data-bs-target="#mau-khai-hs">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Kết quả đăng ký" data-bs-toggle="modal" data-bs-target="#ket-qua-dk">Xem</a></td>'
-                +  '<td class="td-left">' + (d.DOT_STATUS_CODE_Ten || '') + '</td>'
+                +  '<td class="td-left">' + sTinhTrang + '</td>'
                 +  '<td class="td-center">' + (d.IS_PUBLIC == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_LOCKED == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
-                +  '<td class="td-center">' + (d.NGUOITAO_TaiKhoan || '') + '</td>'
-                +  '<td class="td-center">' + (d.NgayTao_dd_mm_yyyy_hhmmss || '') + '</td>'
+                +  '<td class="td-center">' + sNguoiTao + '</td>'
+                +  '<td class="td-center">' + sNgayTao + '</td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDot" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
                 +  '</tr>';
         }
@@ -1915,14 +1934,11 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng kế hoạch đầu ra
-    -- Cột data: Ma, Ten, DAU_RA_TYPE_CODE_Name, STUDY_TYPE_CODE_Name,
-    --           DAOTAO_HEDAOTAO_Ten, DAOTAO_KHOADAOTAO_Ten, DAOTAO_TOCHUCCHUONGTRINH_Ten,
-    --           DAOTAO_NGANH_TS_Ten, DAOTAO_NGANH_DT_Ten,
-    --           TEN_HIENTHI, MA_HIENTHI, IS_HIGHLIGHT, THU_TU_HIENTHI,
-    --           CHI_TIEU, CHI_TIEU_TOI_DA, CHI_TIEU_TOI_THIEU, is_active,
-    --           NGUOITAO_TaiKhoan, NgayTao_dd_mm_yyyy_hhmmss
+    -- Fallback nhiều casing (MA/Ma, TEN/Ten) + lookup DM local cho Loại đầu ra & Kiểu học
+    -- (dtLoaiDauRa, dtKieuHocTap) khi API không join sẵn _Name.
     -------------------------------------------*/
     genTable_KeHoachDauRa: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblKeHoachDauRa tbody");
         $tbody.html("");
 
@@ -1931,23 +1947,44 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var lookupTen = function (arrDM, ma) {
+            if (!ma || !arrDM || !arrDM.length) return '';
+            for (var j = 0; j < arrDM.length; j++) {
+                if (arrDM[j].MA == ma) return arrDM[j].TEN || '';
+            }
+            return ma;
+        };
+
         var iconCheck = '<i class="fa-solid fa-check color-success font-weight fz18"></i>';
         var iconX = '<i class="fa-solid fa-xmark color-red font-weight fz18"></i>';
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var strId = d.ID || '';
+            var sMa = d.MA || d.Ma || '';
+            var sTen = d.TEN || d.Ten || '';
+            var sLoaiDauRa = d.DAU_RA_TYPE_CODE_Name || d.DAU_RA_TYPE_CODE_Ten || lookupTen(me.dtLoaiDauRa, d.DAU_RA_TYPE_CODE);
+            var sKieuHoc = d.STUDY_TYPE_CODE_Name || d.STUDY_TYPE_CODE_Ten || lookupTen(me.dtKieuHocTap, d.STUDY_TYPE_CODE);
+            var sHe = d.DAOTAO_HEDAOTAO_Ten || d.DAOTAO_HEDAOTAO_TEN || '';
+            var sKhoa = d.DAOTAO_KHOADAOTAO_Ten || d.DAOTAO_KHOADAOTAO_TEN || '';
+            var sCT = d.DAOTAO_TOCHUCCHUONGTRINH_Ten || d.DAOTAO_TOCHUCCHUONGTRINH_TEN || '';
+            var sNganhTS = d.DAOTAO_NGANH_TS_Ten || d.DAOTAO_NGANH_TS_TEN || '';
+            var sNganhDT = d.DAOTAO_NGANH_DT_Ten || d.DAOTAO_NGANH_DT_TEN || '';
+            var sActive = (d.is_active || d.IS_ACTIVE) == 1;
+            var sNguoiTao = d.NGUOITAO_TaiKhoan || d.NGUOITAO_TEN || d.NGUOI_TAO || d.NguoiTao || '';
+            var sNgayTao = d.NgayTao_dd_mm_yyyy_hhmmss || d.NGAY_TAO || d.NgayTao || '';
+
             rows += '<tr id="row_dr_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.Ma || '') + '</td>'
-                +  '<td class="td-left">' + (d.Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAU_RA_TYPE_CODE_Name || '') + '</td>'
-                +  '<td class="td-left">' + (d.STUDY_TYPE_CODE_Name || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_HEDAOTAO_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_KHOADAOTAO_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_TOCHUCCHUONGTRINH_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_NGANH_TS_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_NGANH_DT_Ten || '') + '</td>'
+                +  '<td class="td-left">' + sMa + '</td>'
+                +  '<td class="td-left">' + sTen + '</td>'
+                +  '<td class="td-left">' + sLoaiDauRa + '</td>'
+                +  '<td class="td-left">' + sKieuHoc + '</td>'
+                +  '<td class="td-left">' + sHe + '</td>'
+                +  '<td class="td-left">' + sKhoa + '</td>'
+                +  '<td class="td-left">' + sCT + '</td>'
+                +  '<td class="td-left">' + sNganhTS + '</td>'
+                +  '<td class="td-left">' + sNganhDT + '</td>'
                 +  '<td class="td-left">' + (d.TEN_HIENTHI || '') + '</td>'
                 +  '<td class="td-left">' + (d.MA_HIENTHI || '') + '</td>'
                 +  '<td class="td-center">' + (d.IS_HIGHLIGHT == 1 ? iconCheck : iconX) + '</td>'
@@ -1955,9 +1992,9 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + (d.CHI_TIEU || '') + '</td>'
                 +  '<td class="td-center">' + (d.CHI_TIEU_TOI_DA || '') + '</td>'
                 +  '<td class="td-center">' + (d.CHI_TIEU_TOI_THIEU || '') + '</td>'
-                +  '<td class="td-center">' + (d.is_active == 1 ? iconCheck : iconX) + '</td>'
-                +  '<td class="td-center">' + (d.NGUOITAO_TaiKhoan || '') + '</td>'
-                +  '<td class="td-center">' + (d.NgayTao_dd_mm_yyyy_hhmmss || '') + '</td>'
+                +  '<td class="td-center">' + (sActive ? iconCheck : iconX) + '</td>'
+                +  '<td class="td-center">' + sNguoiTao + '</td>'
+                +  '<td class="td-center">' + sNgayTao + '</td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDauRa" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
                 +  '</tr>';
         }
