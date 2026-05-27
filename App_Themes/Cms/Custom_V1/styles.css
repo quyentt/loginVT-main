@@ -7015,7 +7015,7 @@ input[type="radio"] {
     color: #5b58e6
 }
 
-.btn-soft-purple:hover,.table tr:hover  {
+.btn-soft-purple:hover {
     -webkit-box-shadow: none;
     box-shadow: none;
     background-color: #5b58e6 !important;
@@ -7027,7 +7027,7 @@ input[type="radio"] {
     color: #3167f3
 }
 
-.btn-soft-blue:hover,.table tr:hover {
+.btn-soft-blue:hover {
     -webkit-box-shadow: none;
     box-shadow: none;
     background-color: #3167f3 !important;
