@@ -22,6 +22,7 @@ PhanCoiThi.prototype = {
         me.getList_MonThi();
         me.getList_HinhThucThi();
         me.getList_LoaiDiem();
+        me.getList_KhoaQuanLy();
 
 
         $("#btnSearch").click(function (e) {
@@ -110,6 +111,12 @@ PhanCoiThi.prototype = {
             me.getList_MonThi();
             //me.getList_PhanCoiThi();
         });
+        $('#dropSearch_KhoaQuanLy').on('select2:select', function (e) {
+            me.getList_MonThi();
+        });
+        $('#chkChuaPhanCong').on('change', function (e) {
+            me.genTable_PhanCoiThi(me.dtPhanCoiThi, me.iPagerPhanCoiThi);
+        });
         edu.system.getList_MauImport("zonebtnBaoCao_ChamThi", function (addKeyValue) {
             var obj_save = {
                 'strTuKhoa': edu.system.getValById('txtSearch'),
@@ -151,6 +158,7 @@ PhanCoiThi.prototype = {
             'dLocKhongHoanThanhNhapDiem': edu.util.getValById('dropSearch_HoanThanhNhapDiem'),
             'strThi_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_MonThi'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strTuNgay': edu.util.getValById('txtAAAA'),
             'strDenNgay': edu.util.getValById('txtAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -161,6 +169,7 @@ PhanCoiThi.prototype = {
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me.dtPhanCoiThi = dtReRult;
+                    me.iPagerPhanCoiThi = data.Pager;
                     me.genTable_PhanCoiThi(dtReRult, data.Pager);
                 }
                 else {
@@ -187,6 +196,9 @@ PhanCoiThi.prototype = {
     -------------------------------------------*/
     genTable_PhanCoiThi: function (data, iPager) {
         var me = this;
+        if ($('#chkChuaPhanCong').is(':checked')) {
+            data = (data || []).filter(function (r) { return edu.util.returnEmpty(r.DSNHANSUCOITHI).trim() === ''; });
+        }
         $("#lblPhanCoiThi_Tong").html(iPager);
         var jsonForm = {
             strTable_Id: "tblPhanCoiThi",
@@ -301,6 +313,7 @@ PhanCoiThi.prototype = {
             'strHinhThucThi_Id': edu.util.getValById('dropSearch_HinhThuc'),
             'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
@@ -359,6 +372,7 @@ PhanCoiThi.prototype = {
             'strHinhThucThi_Id': edu.util.getValById('dropSearch_HinhThuc'),
             'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
@@ -512,6 +526,30 @@ PhanCoiThi.prototype = {
             renderPlace: ["dropSearch_HinhThuc"],
             type: "",
             title: "Chọn hình thức thi",
+        };
+        edu.system.loadToCombo_data(obj);
+    },
+    getList_KhoaQuanLy: function () {
+        var me = this;
+        var obj = {
+            strCCTC_Loai_Id: "",
+            strCCTC_Cha_Id: "",
+            iTrangThai: 1
+        };
+        edu.system.getList_CoCauToChuc(obj, "", "", me.cbGenCombo_KhoaQuanLy);
+    },
+    cbGenCombo_KhoaQuanLy: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "MA",
+                order: "unorder"
+            },
+            renderPlace: ["dropSearch_KhoaQuanLy"],
+            title: "Chọn đơn vị"
         };
         edu.system.loadToCombo_data(obj);
     },

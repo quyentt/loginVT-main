@@ -82,29 +82,30 @@ KeHoachTuyenSinhNew.prototype = {
             me.rewrite_KeHoach();
         });
 
-        // Khi user click "Xem" ở cột "Các đợt tuyển sinh" → ghi nhớ KH parent để dùng khi Thêm mới đợt
-        $("#tblKHtyensinh").delegate('[data-bs-target="#dot-tuyen-sinh"]', "click", function () {
-            me.strKeHoachTuyenSinh_Id = $(this).attr('data-id');
-        });
-
-        // Auto-load danh sách đợt khi mở modal Các đợt tuyển sinh
-        $("#dot-tuyen-sinh").on('show.bs.modal', function () {
+        // Đọc data-id từ event.relatedTarget (Bootstrap 5) để tránh race với click handler riêng.
+        // Trước đây dùng delegate("click") set ID + on("show.bs.modal") load → thứ tự không đảm bảo,
+        // lần mở đầu tiên hay bị empty vì show.bs.modal fire trước.
+        $("#dot-tuyen-sinh").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            if ($btn.length && $btn.attr('data-id')) {
+                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+            }
             me.getList_DotTuyenSinh();
         });
 
-        // Khi user click "Xem" ở cột "Phân công nhân sự" → ghi nhớ KH parent + auto load
-        $("#tblKHtyensinh").delegate('[data-bs-target="#phan-cong-nhan-su"]', "click", function () {
-            me.strKeHoachTuyenSinh_Id = $(this).attr('data-id');
-        });
-        $("#phan-cong-nhan-su").on('show.bs.modal', function () {
+        $("#phan-cong-nhan-su").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            if ($btn.length && $btn.attr('data-id')) {
+                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+            }
             me.getList_PhanCongNhanSu();
         });
 
-        // Khi user click "Xem" ở cột "Kế hoạch đầu ra" → ghi nhớ KH parent + auto load
-        $("#tblKHtyensinh").delegate('[data-bs-target="#ke-hoach-dau-ra"]', "click", function () {
-            me.strKeHoachTuyenSinh_Id = $(this).attr('data-id');
-        });
-        $("#ke-hoach-dau-ra").on('show.bs.modal', function () {
+        $("#ke-hoach-dau-ra").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            if ($btn.length && $btn.attr('data-id')) {
+                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+            }
             me.getList_KeHoachDauRa();
         });
 
@@ -186,24 +187,25 @@ KeHoachTuyenSinhNew.prototype = {
             });
         });
 
-        // Click "Chi tiết" trên row kế hoạch đầu ra → fetch detail (form modal sẽ build sau)
-        $("#tblKeHoachDauRa").delegate(".btnDetailDauRa", "click", function () {
-            var strId = $(this).attr('data-id');
-            if (!edu.util.checkValue(strId)) return;
-            if ($('#xem-sua-dau-ra').length) {
-                $('#xem-sua-dau-ra').modal('show');
+        // Modal Xem-sửa đầu ra: đọc data-id từ event.relatedTarget thay vì click delegate
+        // để tránh race với stacked modal #ke-hoach-dau-ra.
+        $("#xem-sua-dau-ra").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            var strId = $btn.length ? $btn.attr('data-id') : '';
+            if (strId) {
+                me.strDauRa_Id = strId;
+                me.getDetail_DauRa(strId);
             }
-            me.strDauRa_Id = strId;
-            me.getDetail_DauRa(strId);
         });
 
-        // Click "Chi tiết" trên row phân công nhân sự → mở modal Xem-sửa và populate
-        $("#tblPhanCongNhanSu").delegate(".btnDetailPhanCong", "click", function () {
-            var strId = $(this).attr('data-id');
-            if (!edu.util.checkValue(strId)) return;
-            $('#xem-sua-phancong').modal('show');
-            me.strPhanCong_Id = strId;
-            me.getDetail_PhanCong(strId);
+        // Modal Xem-sửa phân công: đọc data-id từ event.relatedTarget (cùng pattern Đầu ra)
+        $("#xem-sua-phancong").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            var strId = $btn.length ? $btn.attr('data-id') : '';
+            if (strId) {
+                me.strPhanCong_Id = strId;
+                me.getDetail_PhanCong(strId);
+            }
         });
 
         $("#btnUpdate_PhanCong").click(function () {
@@ -241,18 +243,16 @@ KeHoachTuyenSinhNew.prototype = {
             me.save_PhanCong();
         });
 
-        // Click "Chi tiết" trên row đợt → mở form đợt ở chế độ Xem-sửa, populate data
-        $("#tblDotTuyenSinh").delegate(".btnDetailDot", "click", function () {
-            var strId = $(this).attr('data-id');
-            if (!edu.util.checkValue(strId)) return;
-            $('#them-moi-dot').modal('show');   // → show.bs.modal fires → rewrite_Dot reset form trước
-            me.strDot_Id = strId;                // → set sau khi rewrite_Dot xong
-            me.getDetail_Dot(strId);
-        });
-
-        // Khi mở modal Thêm mới đợt → reset form
-        $("#them-moi-dot").on('show.bs.modal', function () {
+        // Modal đợt: reset form rồi check trigger có data-id (Chi tiết) → fetch detail.
+        // Dùng event.relatedTarget thay vì click delegate riêng để tránh race với stacked modal.
+        $("#them-moi-dot").on('show.bs.modal', function (event) {
             me.rewrite_Dot();
+            var $btn = $(event.relatedTarget);
+            var strId = $btn.length ? $btn.attr('data-id') : '';
+            if (strId && $btn.hasClass('btnDetailDot')) {
+                me.strDot_Id = strId;
+                me.getDetail_Dot(strId);
+            }
         });
 
         $("#btnSaveDot").click(function () {
@@ -531,10 +531,11 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng danh sách kế hoạch tuyển sinh
-    -- NOTE: tên cột (KEHOACH_MA, KEHOACH_TEN, ...) đoán theo convention.
-    --       Nếu API trả về tên khác thì chỉnh trong hàm này.
+    -- Fallback nhiều casing cho Mã/Tên + lookup DM local (dtLoaiTuyenSinh/dtPhuongAnTuyenSinh)
+    -- qua ID khi API không join sẵn _Ten.
     -------------------------------------------*/
     genTable_KeHoachTuyenSinh: function (data, iPager) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         $("#lblKeHoachTuyenSinh_Tong").html(data.length || 0);
         var $tbody = $("#tblKHtyensinh tbody");
         $tbody.html("");
@@ -544,18 +545,38 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var lookupTenById = function (arr, id) {
+            if (!id || !arr || !arr.length) return '';
+            for (var j = 0; j < arr.length; j++) {
+                if (arr[j].ID == id) return arr[j].TEN || '';
+            }
+            return '';
+        };
+        var lookupTenByMa = function (arr, ma) {
+            if (!ma || !arr || !arr.length) return '';
+            for (var j = 0; j < arr.length; j++) {
+                if (arr[j].MA == ma) return arr[j].TEN || '';
+            }
+            return ma;
+        };
+
         var iconCheck = '<i class="fa-solid fa-check color-success font-weight fz18"></i>';
         var iconX = '<i class="fa-solid fa-xmark color-red font-weight fz18"></i>';
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
+            var sMa = d.MA || d.Ma || d.KEHOACH_MA || '';
+            var sTen = d.TEN || d.Ten || d.KEHOACH_TEN || '';
+            var sLoai = d.LOAITUYENSINH_TEN || d.LOAI_TUYENSINH_TEN || d.LOAI_TUYENSINH_Ten || lookupTenById(me.dtLoaiTuyenSinh, d.LOAI_TUYENSINH_ID);
+            var sPA = d.PHUONGANTUYENSINH_TEN || d.TS_PHUONGAN_TUYENSINH_TEN || d.TS_PHUONGAN_TUYENSINH_Ten || lookupTenById(me.dtPhuongAnTuyenSinh, d.TS_PHUONGAN_TUYENSINH_ID);
+            var sTinhTrang = d.TINHTRANG_TEN || d.PLAN_STATUS_Name || d.PLAN_STATUS_TEN || lookupTenByMa(me.dtTinhTrangKeHoach, d.PLAN_STATUS_CODE);
             rows += '<tr id="row_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.KEHOACH_MA || '') + '</td>'
-                +  '<td class="td-left">' + (d.KEHOACH_TEN || '') + '</td>'
-                +  '<td class="td-left">' + (d.LOAITUYENSINH_TEN || '') + '</td>'
-                +  '<td class="td-left">' + (d.PHUONGANTUYENSINH_TEN || '') + '</td>'
+                +  '<td class="td-left">' + sMa + '</td>'
+                +  '<td class="td-left">' + sTen + '</td>'
+                +  '<td class="td-left">' + sLoai + '</td>'
+                +  '<td class="td-left">' + sPA + '</td>'
                 +  '<td class="td-center">' + (d.NAM_TUYENSINH || '') + '</td>'
                 +  '<td class="td-center">' + (d.NAM_HOC || '') + '</td>'
                 +  '<td class="td-center">' + (d.HOC_KY || '') + '</td>'
@@ -565,7 +586,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Quy định phí" data-bs-toggle="modal" data-bs-target="#quy-dinh-phi">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Mẫu khai hồ sơ" data-bs-toggle="modal" data-bs-target="#mau-khai-hs">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Kết quả đăng ký" data-bs-toggle="modal" data-bs-target="#ket-qua-dk">Xem</a></td>'
-                +  '<td class="td-left">' + (d.TINHTRANG_TEN || '') + '</td>'
+                +  '<td class="td-left">' + sTinhTrang + '</td>'
                 +  '<td class="td-center">' + (d.IS_PUBLIC == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_LOCKED == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
@@ -628,8 +649,8 @@ KeHoachTuyenSinhNew.prototype = {
         if (!data) return;
         var d = data;
 
-        edu.util.viewValById('txtKH_Ma', d.KEHOACH_MA || '');
-        edu.util.viewValById('txtKH_Ten', d.KEHOACH_TEN || '');
+        edu.util.viewValById('txtKH_Ma', d.MA || d.Ma || d.KEHOACH_MA || '');
+        edu.util.viewValById('txtKH_Ten', d.TEN || d.Ten || d.KEHOACH_TEN || '');
         edu.util.viewValById('txtKH_NamTuyenSinh', d.NAM_TUYENSINH || '');
         edu.util.viewValById('txtKH_NamHoc', d.NAM_HOC || '');
         edu.util.viewValById('txtKH_HocKy', d.HOC_KY || '');
@@ -1269,11 +1290,12 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng đợt tuyển sinh trong modal #dot-tuyen-sinh
-    -- Cột data: Ma, Ten, DOT_TYPE_CODE_Ten, NGAY_BATDAU_DANGKY, NGAY_KETTHUC_DANGKY,
-    --           DOT_STATUS_CODE_Ten, IS_PUBLIC, IS_LOCKED, IS_ACTIVE,
-    --           NGUOITAO_TaiKhoan, NgayTao_dd_mm_yyyy_hhmmss
+    -- Fallback nhiều casing vì API có thể trả MA/TEN (uppercase) hoặc Ma/Ten (PascalCase).
+    -- Kiểu đợt + Tình trạng đợt: lookup từ cache DM local (dtKieuDot / dtTinhTrangDot)
+    -- thay vì dựa vào API join sẵn để tránh phụ thuộc tên cột _Ten.
     -------------------------------------------*/
     genTable_DotTuyenSinh: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblDotTuyenSinh tbody");
         $tbody.html("");
 
@@ -1282,30 +1304,47 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var lookupTen = function (arrDM, ma) {
+            if (!ma || !arrDM || !arrDM.length) return '';
+            for (var j = 0; j < arrDM.length; j++) {
+                if (arrDM[j].MA == ma) return arrDM[j].TEN || '';
+            }
+            return ma;
+        };
+
         var iconCheck = '<i class="fa-solid fa-check color-success font-weight fz18"></i>';
         var iconX = '<i class="fa-solid fa-xmark color-red font-weight fz18"></i>';
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
+            var sMa = d.MA || d.Ma || '';
+            var sTen = d.TEN || d.Ten || '';
+            var sKieuDot = d.DOT_TYPE_CODE_Ten || d.KIEUDOT_TEN || lookupTen(me.dtKieuDot, d.DOT_TYPE_CODE);
+            var sTinhTrang = d.DOT_STATUS_CODE_Ten || d.TINHTRANG_TEN || lookupTen(me.dtTinhTrangDot, d.DOT_STATUS_CODE);
+            var sNgayBD = d.NGAY_BATDAU_DANGKY || d.Ngay_BatDau_DangKy || '';
+            var sNgayKT = d.NGAY_KETTHUC_DANGKY || d.Ngay_KetThuc_DangKy || '';
+            var sNguoiTao = d.NGUOITAO_TaiKhoan || d.NGUOITAO_TEN || d.NGUOI_TAO || d.NguoiTao || '';
+            var sNgayTao = d.NgayTao_dd_mm_yyyy_hhmmss || d.NGAY_TAO || d.NgayTao || '';
+
             rows += '<tr id="row_dot_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.Ma || '') + '</td>'
-                +  '<td class="td-left">' + (d.Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DOT_TYPE_CODE_Ten || '') + '</td>'
-                +  '<td class="td-center">' + (d.NGAY_BATDAU_DANGKY || '') + '</td>'
-                +  '<td class="td-center">' + (d.NGAY_KETTHUC_DANGKY || '') + '</td>'
+                +  '<td class="td-left">' + sMa + '</td>'
+                +  '<td class="td-left">' + sTen + '</td>'
+                +  '<td class="td-left">' + sKieuDot + '</td>'
+                +  '<td class="td-center">' + sNgayBD + '</td>'
+                +  '<td class="td-center">' + sNgayKT + '</td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Phương thức tuyển" data-bs-toggle="modal" data-bs-target="#phuong-thuc-tuyen">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Kế hoạch đầu ra" data-bs-toggle="modal" data-bs-target="#ke-hoach-dau-ra">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Mẫu khai hồ sơ" data-bs-toggle="modal" data-bs-target="#mau-khai-hs">Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btnview" data-id="' + strId + '" title="Kết quả đăng ký" data-bs-toggle="modal" data-bs-target="#ket-qua-dk">Xem</a></td>'
-                +  '<td class="td-left">' + (d.DOT_STATUS_CODE_Ten || '') + '</td>'
+                +  '<td class="td-left">' + sTinhTrang + '</td>'
                 +  '<td class="td-center">' + (d.IS_PUBLIC == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_LOCKED == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
-                +  '<td class="td-center">' + (d.NGUOITAO_TaiKhoan || '') + '</td>'
-                +  '<td class="td-center">' + (d.NgayTao_dd_mm_yyyy_hhmmss || '') + '</td>'
-                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDot" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
+                +  '<td class="td-center">' + sNguoiTao + '</td>'
+                +  '<td class="td-center">' + sNgayTao + '</td>'
+                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDot" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết" data-bs-toggle="modal" data-bs-target="#them-moi-dot">Chi tiết</a></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
@@ -1492,6 +1531,10 @@ KeHoachTuyenSinhNew.prototype = {
         $("#ddlDR_KhoaDaoTao").html('<option value="">Chọn khóa đào tạo</option>');
         $("#tblChuongTrinhDauRa tbody").html("");
         $("#chkDR_SelectAll").prop('checked', false);
+        // Reset section "Thông tin chung"
+        $('#ddlDR_New_LoaiDauRa, #ddlDR_New_KieuHocTap, #ddlDR_New_TrangThai').val('');
+        $('#chkDR_New_HighLight, #chkDR_New_AllowRegister, #chkDR_New_AllowWaitlist, #chkDR_New_AllowTransferIn, #chkDR_New_AutoIntake, #chkDR_New_AutoEnrollment, #chkDR_New_AutoClassAssign, #chkDR_New_Public').prop('checked', false);
+        $('#chkDR_New_Active').prop('checked', true);
     },
 
     /*------------------------------------------
@@ -1635,11 +1678,116 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Save kế hoạch đầu ra
-    -- TODO: bạn gửi API Insert + spec "Thông tin chung" để hoàn thiện
+    -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Ins
+    -- Lưu hàng loạt: mỗi chương trình được tick → 1 lần gọi Insert.
+    -- Thông tin chung (Loại đầu ra / Kiểu học / 7 cờ cấu hình / Trạng thái / Public / Hiệu lực)
+    -- áp chung cho tất cả các bản ghi. Chỉ tiêu/Tối đa/Tối thiểu lấy theo từng row.
     -------------------------------------------*/
     save_DauRa: function () {
-        edu.system.alert("Hàm Lưu kế hoạch đầu ra chưa có spec API + form 'Thông tin chung'. Vui lòng gửi spec để wire vào.", "w");
+        var me = main_doc.KeHoachTuyenSinhNew;
+
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            edu.system.alert("Vui lòng chọn kế hoạch tuyển sinh trước", "w");
+            return;
+        }
+
+        var arrTasks = [];
+        $("#tblChuongTrinhDauRa tbody tr").each(function () {
+            var $r = $(this);
+            if (!$r.find('.ct-select').is(':checked')) return;
+            arrTasks.push({
+                'strDaotao_ChuongTrinh_Id': $r.attr('data-ct-id') || '',
+                'dChi_Tieu': $r.find('.ct-chitieu').val() || '',
+                'dChi_Tieu_Toi_Da': $r.find('.ct-chitieu-toida').val() || '',
+                'dChi_Tieu_Toi_Thieu': $r.find('.ct-chitieu-toithieu').val() || ''
+            });
+        });
+
+        if (arrTasks.length === 0) {
+            edu.system.alert("Vui lòng tích chọn ít nhất 1 chương trình để tạo đầu ra", "w");
+            return;
+        }
+
+        var common = {
+            strDau_Ra_Type_Code: edu.system.getValById('ddlDR_New_LoaiDauRa'),
+            strStudy_Type_Code: edu.system.getValById('ddlDR_New_KieuHocTap'),
+            strOutput_Status_Code: edu.system.getValById('ddlDR_New_TrangThai'),
+            dIs_HighLight: $('#chkDR_New_HighLight').is(':checked') ? 1 : 0,
+            dIs_Allow_Register: $('#chkDR_New_AllowRegister').is(':checked') ? 1 : 0,
+            dIs_Allow_Waitlist: $('#chkDR_New_AllowWaitlist').is(':checked') ? 1 : 0,
+            dIs_Allow_Transfer_In: $('#chkDR_New_AllowTransferIn').is(':checked') ? 1 : 0,
+            dIs_Auto_Intake: $('#chkDR_New_AutoIntake').is(':checked') ? 1 : 0,
+            dIs_Auto_Enrollment: $('#chkDR_New_AutoEnrollment').is(':checked') ? 1 : 0,
+            dIs_Auto_Class_Assign: $('#chkDR_New_AutoClassAssign').is(':checked') ? 1 : 0,
+            dIs_Public: $('#chkDR_New_Public').is(':checked') ? 1 : 0,
+            dIs_Active: $('#chkDR_New_Active').is(':checked') ? 1 : 0
+        };
+
+        var done = 0, failed = 0, total = arrTasks.length;
+        var finalize = function () {
+            if (done + failed !== total) return;
+            edu.system.alert("Đã thêm " + done + "/" + total + (failed ? " (lỗi: " + failed + ")" : ""));
+            $("#them-moi-dau-ra").modal('hide');
+            me.getList_KeHoachDauRa();
+        };
+
+        arrTasks.forEach(function (task) {
+            var obj_save = {
+                'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHggvMgPP',
+                'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Ins',
+                'iM': edu.system.iM,
+                'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
+                'strTs_Kh_TuyenSinh_Dot_Id': '',
+                'strTs_Kh_Dot_PhuongThuc_Id': '',
+                'strMa': '',
+                'strTen': '',
+                'strDau_Ra_Type_Code': common.strDau_Ra_Type_Code,
+                'strStudy_Type_Code': common.strStudy_Type_Code,
+                'strDaotao_HeDaoTao_Id': '',
+                'strDaotao_KhoaDaoTao_Id': '',
+                'strDaotao_ChuongTrinh_Id': task.strDaotao_ChuongTrinh_Id,
+                'strDaotao_Nganh_Dt_Id': '',
+                'strDaotao_Nganh_Ts_Id': '',
+                'strTen_HienThi': '',
+                'strMa_HienThi': '',
+                'strMoTa_HienThi': '',
+                'dThu_Tu_HienThi': '',
+                'dIs_HighLight': common.dIs_HighLight,
+                'dChi_Tieu': task.dChi_Tieu,
+                'dChi_Tieu_Toi_Da': task.dChi_Tieu_Toi_Da,
+                'dChi_Tieu_Toi_Thieu': task.dChi_Tieu_Toi_Thieu,
+                'dIs_Allow_Register': common.dIs_Allow_Register,
+                'dIs_Allow_Waitlist': common.dIs_Allow_Waitlist,
+                'dIs_Allow_Transfer_In': common.dIs_Allow_Transfer_In,
+                'dIs_Auto_Intake': common.dIs_Auto_Intake,
+                'dIs_Auto_Enrollment': common.dIs_Auto_Enrollment,
+                'dIs_Auto_Class_Assign': common.dIs_Auto_Class_Assign,
+                'strOutput_Status_Code': common.strOutput_Status_Code,
+                'dIs_Public': common.dIs_Public,
+                'dIs_Active': common.dIs_Active,
+                'strGhiChu': '',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                'strHanhDong_Code': 'THEM'
+            };
+
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) done++; else failed++;
+                    finalize();
+                },
+                error: function () {
+                    failed++;
+                    finalize();
+                },
+                type: 'POST',
+                contentType: true,
+                action: obj_save.action,
+                data: obj_save,
+                fakedb: []
+            }, false, false, false, null);
+        });
     },
 
     /*------------------------------------------
@@ -1691,13 +1839,9 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_LoaiDauRa: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtLoaiDauRa = data || [];
-        var obj = {
-            data: me.dtLoaiDauRa,
-            renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
-            renderPlace: ['ddlDR_LoaiDauRa'],
-            title: "Chọn loại đầu ra"
-        };
-        edu.system.loadToCombo_data(obj);
+        var info = { id: "MA", parentId: "", name: "TEN", code: "MA" };
+        edu.system.loadToCombo_data({ data: me.dtLoaiDauRa, renderInfor: info, renderPlace: ['ddlDR_LoaiDauRa'], title: "Chọn loại đầu ra" });
+        edu.system.loadToCombo_data({ data: me.dtLoaiDauRa, renderInfor: info, renderPlace: ['ddlDR_New_LoaiDauRa'], title: "Chọn loại đầu ra" });
     },
 
     /*------------------------------------------
@@ -1711,13 +1855,9 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_KieuHocTap: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtKieuHocTap = data || [];
-        var obj = {
-            data: me.dtKieuHocTap,
-            renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
-            renderPlace: ['ddlDR_KieuHocTap'],
-            title: "Chọn kiểu học"
-        };
-        edu.system.loadToCombo_data(obj);
+        var info = { id: "MA", parentId: "", name: "TEN", code: "MA" };
+        edu.system.loadToCombo_data({ data: me.dtKieuHocTap, renderInfor: info, renderPlace: ['ddlDR_KieuHocTap'], title: "Chọn kiểu học" });
+        edu.system.loadToCombo_data({ data: me.dtKieuHocTap, renderInfor: info, renderPlace: ['ddlDR_New_KieuHocTap'], title: "Chọn kiểu học" });
     },
 
     /*------------------------------------------
@@ -1731,13 +1871,9 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_TrangThaiDauRa: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtTrangThaiDauRa = data || [];
-        var obj = {
-            data: me.dtTrangThaiDauRa,
-            renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
-            renderPlace: ['ddlDR_TrangThai'],
-            title: "Chọn trạng thái"
-        };
-        edu.system.loadToCombo_data(obj);
+        var info = { id: "MA", parentId: "", name: "TEN", code: "MA" };
+        edu.system.loadToCombo_data({ data: me.dtTrangThaiDauRa, renderInfor: info, renderPlace: ['ddlDR_TrangThai'], title: "Chọn trạng thái" });
+        edu.system.loadToCombo_data({ data: me.dtTrangThaiDauRa, renderInfor: info, renderPlace: ['ddlDR_New_TrangThai'], title: "Chọn trạng thái" });
     },
 
     /*------------------------------------------
@@ -1915,14 +2051,11 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Render bảng kế hoạch đầu ra
-    -- Cột data: Ma, Ten, DAU_RA_TYPE_CODE_Name, STUDY_TYPE_CODE_Name,
-    --           DAOTAO_HEDAOTAO_Ten, DAOTAO_KHOADAOTAO_Ten, DAOTAO_TOCHUCCHUONGTRINH_Ten,
-    --           DAOTAO_NGANH_TS_Ten, DAOTAO_NGANH_DT_Ten,
-    --           TEN_HIENTHI, MA_HIENTHI, IS_HIGHLIGHT, THU_TU_HIENTHI,
-    --           CHI_TIEU, CHI_TIEU_TOI_DA, CHI_TIEU_TOI_THIEU, is_active,
-    --           NGUOITAO_TaiKhoan, NgayTao_dd_mm_yyyy_hhmmss
+    -- Fallback nhiều casing (MA/Ma, TEN/Ten) + lookup DM local cho Loại đầu ra & Kiểu học
+    -- (dtLoaiDauRa, dtKieuHocTap) khi API không join sẵn _Name.
     -------------------------------------------*/
     genTable_KeHoachDauRa: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblKeHoachDauRa tbody");
         $tbody.html("");
 
@@ -1931,23 +2064,44 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        var lookupTen = function (arrDM, ma) {
+            if (!ma || !arrDM || !arrDM.length) return '';
+            for (var j = 0; j < arrDM.length; j++) {
+                if (arrDM[j].MA == ma) return arrDM[j].TEN || '';
+            }
+            return ma;
+        };
+
         var iconCheck = '<i class="fa-solid fa-check color-success font-weight fz18"></i>';
         var iconX = '<i class="fa-solid fa-xmark color-red font-weight fz18"></i>';
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
+            var sMa = d.MA || d.Ma || '';
+            var sTen = d.TEN || d.Ten || '';
+            var sLoaiDauRa = d.DAU_RA_TYPE_CODE_Name || d.DAU_RA_TYPE_CODE_Ten || lookupTen(me.dtLoaiDauRa, d.DAU_RA_TYPE_CODE);
+            var sKieuHoc = d.STUDY_TYPE_CODE_Name || d.STUDY_TYPE_CODE_Ten || lookupTen(me.dtKieuHocTap, d.STUDY_TYPE_CODE);
+            var sHe = d.DAOTAO_HEDAOTAO_Ten || d.DAOTAO_HEDAOTAO_TEN || '';
+            var sKhoa = d.DAOTAO_KHOADAOTAO_Ten || d.DAOTAO_KHOADAOTAO_TEN || '';
+            var sCT = d.DAOTAO_TOCHUCCHUONGTRINH_Ten || d.DAOTAO_TOCHUCCHUONGTRINH_TEN || '';
+            var sNganhTS = d.DAOTAO_NGANH_TS_Ten || d.DAOTAO_NGANH_TS_TEN || '';
+            var sNganhDT = d.DAOTAO_NGANH_DT_Ten || d.DAOTAO_NGANH_DT_TEN || '';
+            var sActive = (d.is_active || d.IS_ACTIVE) == 1;
+            var sNguoiTao = d.NGUOITAO_TaiKhoan || d.NGUOITAO_TEN || d.NGUOI_TAO || d.NguoiTao || '';
+            var sNgayTao = d.NgayTao_dd_mm_yyyy_hhmmss || d.NGAY_TAO || d.NgayTao || '';
+
             rows += '<tr id="row_dr_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
-                +  '<td class="td-left">' + (d.Ma || '') + '</td>'
-                +  '<td class="td-left">' + (d.Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAU_RA_TYPE_CODE_Name || '') + '</td>'
-                +  '<td class="td-left">' + (d.STUDY_TYPE_CODE_Name || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_HEDAOTAO_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_KHOADAOTAO_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_TOCHUCCHUONGTRINH_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_NGANH_TS_Ten || '') + '</td>'
-                +  '<td class="td-left">' + (d.DAOTAO_NGANH_DT_Ten || '') + '</td>'
+                +  '<td class="td-left">' + sMa + '</td>'
+                +  '<td class="td-left">' + sTen + '</td>'
+                +  '<td class="td-left">' + sLoaiDauRa + '</td>'
+                +  '<td class="td-left">' + sKieuHoc + '</td>'
+                +  '<td class="td-left">' + sHe + '</td>'
+                +  '<td class="td-left">' + sKhoa + '</td>'
+                +  '<td class="td-left">' + sCT + '</td>'
+                +  '<td class="td-left">' + sNganhTS + '</td>'
+                +  '<td class="td-left">' + sNganhDT + '</td>'
                 +  '<td class="td-left">' + (d.TEN_HIENTHI || '') + '</td>'
                 +  '<td class="td-left">' + (d.MA_HIENTHI || '') + '</td>'
                 +  '<td class="td-center">' + (d.IS_HIGHLIGHT == 1 ? iconCheck : iconX) + '</td>'
@@ -1955,10 +2109,10 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + (d.CHI_TIEU || '') + '</td>'
                 +  '<td class="td-center">' + (d.CHI_TIEU_TOI_DA || '') + '</td>'
                 +  '<td class="td-center">' + (d.CHI_TIEU_TOI_THIEU || '') + '</td>'
-                +  '<td class="td-center">' + (d.is_active == 1 ? iconCheck : iconX) + '</td>'
-                +  '<td class="td-center">' + (d.NGUOITAO_TaiKhoan || '') + '</td>'
-                +  '<td class="td-center">' + (d.NgayTao_dd_mm_yyyy_hhmmss || '') + '</td>'
-                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDauRa" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
+                +  '<td class="td-center">' + (sActive ? iconCheck : iconX) + '</td>'
+                +  '<td class="td-center">' + sNguoiTao + '</td>'
+                +  '<td class="td-center">' + sNgayTao + '</td>'
+                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDauRa" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết" data-bs-toggle="modal" data-bs-target="#xem-sua-dau-ra">Chi tiết</a></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
@@ -2193,7 +2347,7 @@ KeHoachTuyenSinhNew.prototype = {
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
             var strNhanSu = (d.FULL_NAME || '') + (d.current_employee_code ? ' - ' + d.current_employee_code : '');
             rows += '<tr id="row_pcns_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
@@ -2210,7 +2364,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + (d.is_active == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.NGUOITAO_TaiKhoan || '') + '</td>'
                 +  '<td class="td-center">' + (d.NgayTao_dd_mm_yyyy_hhmmss || '') + '</td>'
-                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailPhanCong" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
+                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailPhanCong" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết" data-bs-toggle="modal" data-bs-target="#xem-sua-phancong">Chi tiết</a></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
