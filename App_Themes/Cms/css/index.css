@@ -1,7 +1,7 @@
 ﻿@import url(./../fonts/FontAwesome.Pro.6.4.2/css/all.css);
-@import url(./../Custom_V1/styles.css);
-@import url(./../Custom_V1/styles-content.css);
-@import url(./../Custom_V1/styles-responsive.css);
+@import url(./../Custom_V1/styles.css?v=3);
+@import url(./../Custom_V1/styles-content.css?v=3);
+@import url(./../Custom_V1/styles-responsive.css?v=3);
 .fa-spin {
     animation: fa-spin 2s infinite linear !important;
 }
