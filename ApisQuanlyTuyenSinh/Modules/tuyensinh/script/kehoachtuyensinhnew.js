@@ -1530,6 +1530,10 @@ KeHoachTuyenSinhNew.prototype = {
         $("#ddlDR_KhoaDaoTao").html('<option value="">Chọn khóa đào tạo</option>');
         $("#tblChuongTrinhDauRa tbody").html("");
         $("#chkDR_SelectAll").prop('checked', false);
+        // Reset section "Thông tin chung"
+        $('#ddlDR_New_LoaiDauRa, #ddlDR_New_KieuHocTap, #ddlDR_New_TrangThai').val('');
+        $('#chkDR_New_HighLight, #chkDR_New_AllowRegister, #chkDR_New_AllowWaitlist, #chkDR_New_AllowTransferIn, #chkDR_New_AutoIntake, #chkDR_New_AutoEnrollment, #chkDR_New_AutoClassAssign, #chkDR_New_Public').prop('checked', false);
+        $('#chkDR_New_Active').prop('checked', true);
     },
 
     /*------------------------------------------
@@ -1673,11 +1677,116 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Save kế hoạch đầu ra
-    -- TODO: bạn gửi API Insert + spec "Thông tin chung" để hoàn thiện
+    -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Ins
+    -- Lưu hàng loạt: mỗi chương trình được tick → 1 lần gọi Insert.
+    -- Thông tin chung (Loại đầu ra / Kiểu học / 7 cờ cấu hình / Trạng thái / Public / Hiệu lực)
+    -- áp chung cho tất cả các bản ghi. Chỉ tiêu/Tối đa/Tối thiểu lấy theo từng row.
     -------------------------------------------*/
     save_DauRa: function () {
-        edu.system.alert("Hàm Lưu kế hoạch đầu ra chưa có spec API + form 'Thông tin chung'. Vui lòng gửi spec để wire vào.", "w");
+        var me = main_doc.KeHoachTuyenSinhNew;
+
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            edu.system.alert("Vui lòng chọn kế hoạch tuyển sinh trước", "w");
+            return;
+        }
+
+        var arrTasks = [];
+        $("#tblChuongTrinhDauRa tbody tr").each(function () {
+            var $r = $(this);
+            if (!$r.find('.ct-select').is(':checked')) return;
+            arrTasks.push({
+                'strDaotao_ChuongTrinh_Id': $r.attr('data-ct-id') || '',
+                'dChi_Tieu': $r.find('.ct-chitieu').val() || '',
+                'dChi_Tieu_Toi_Da': $r.find('.ct-chitieu-toida').val() || '',
+                'dChi_Tieu_Toi_Thieu': $r.find('.ct-chitieu-toithieu').val() || ''
+            });
+        });
+
+        if (arrTasks.length === 0) {
+            edu.system.alert("Vui lòng tích chọn ít nhất 1 chương trình để tạo đầu ra", "w");
+            return;
+        }
+
+        var common = {
+            strDau_Ra_Type_Code: edu.system.getValById('ddlDR_New_LoaiDauRa'),
+            strStudy_Type_Code: edu.system.getValById('ddlDR_New_KieuHocTap'),
+            strOutput_Status_Code: edu.system.getValById('ddlDR_New_TrangThai'),
+            dIs_HighLight: $('#chkDR_New_HighLight').is(':checked') ? 1 : 0,
+            dIs_Allow_Register: $('#chkDR_New_AllowRegister').is(':checked') ? 1 : 0,
+            dIs_Allow_Waitlist: $('#chkDR_New_AllowWaitlist').is(':checked') ? 1 : 0,
+            dIs_Allow_Transfer_In: $('#chkDR_New_AllowTransferIn').is(':checked') ? 1 : 0,
+            dIs_Auto_Intake: $('#chkDR_New_AutoIntake').is(':checked') ? 1 : 0,
+            dIs_Auto_Enrollment: $('#chkDR_New_AutoEnrollment').is(':checked') ? 1 : 0,
+            dIs_Auto_Class_Assign: $('#chkDR_New_AutoClassAssign').is(':checked') ? 1 : 0,
+            dIs_Public: $('#chkDR_New_Public').is(':checked') ? 1 : 0,
+            dIs_Active: $('#chkDR_New_Active').is(':checked') ? 1 : 0
+        };
+
+        var done = 0, failed = 0, total = arrTasks.length;
+        var finalize = function () {
+            if (done + failed !== total) return;
+            edu.system.alert("Đã thêm " + done + "/" + total + (failed ? " (lỗi: " + failed + ")" : ""));
+            $("#them-moi-dau-ra").modal('hide');
+            me.getList_KeHoachDauRa();
+        };
+
+        arrTasks.forEach(function (task) {
+            var obj_save = {
+                'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHggvMgPP',
+                'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Ins',
+                'iM': edu.system.iM,
+                'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
+                'strTs_Kh_TuyenSinh_Dot_Id': '',
+                'strTs_Kh_Dot_PhuongThuc_Id': '',
+                'strMa': '',
+                'strTen': '',
+                'strDau_Ra_Type_Code': common.strDau_Ra_Type_Code,
+                'strStudy_Type_Code': common.strStudy_Type_Code,
+                'strDaotao_HeDaoTao_Id': '',
+                'strDaotao_KhoaDaoTao_Id': '',
+                'strDaotao_ChuongTrinh_Id': task.strDaotao_ChuongTrinh_Id,
+                'strDaotao_Nganh_Dt_Id': '',
+                'strDaotao_Nganh_Ts_Id': '',
+                'strTen_HienThi': '',
+                'strMa_HienThi': '',
+                'strMoTa_HienThi': '',
+                'dThu_Tu_HienThi': '',
+                'dIs_HighLight': common.dIs_HighLight,
+                'dChi_Tieu': task.dChi_Tieu,
+                'dChi_Tieu_Toi_Da': task.dChi_Tieu_Toi_Da,
+                'dChi_Tieu_Toi_Thieu': task.dChi_Tieu_Toi_Thieu,
+                'dIs_Allow_Register': common.dIs_Allow_Register,
+                'dIs_Allow_Waitlist': common.dIs_Allow_Waitlist,
+                'dIs_Allow_Transfer_In': common.dIs_Allow_Transfer_In,
+                'dIs_Auto_Intake': common.dIs_Auto_Intake,
+                'dIs_Auto_Enrollment': common.dIs_Auto_Enrollment,
+                'dIs_Auto_Class_Assign': common.dIs_Auto_Class_Assign,
+                'strOutput_Status_Code': common.strOutput_Status_Code,
+                'dIs_Public': common.dIs_Public,
+                'dIs_Active': common.dIs_Active,
+                'strGhiChu': '',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                'strHanhDong_Code': 'THEM'
+            };
+
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) done++; else failed++;
+                    finalize();
+                },
+                error: function () {
+                    failed++;
+                    finalize();
+                },
+                type: 'POST',
+                contentType: true,
+                action: obj_save.action,
+                data: obj_save,
+                fakedb: []
+            }, false, false, false, null);
+        });
     },
 
     /*------------------------------------------
@@ -1729,13 +1838,9 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_LoaiDauRa: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtLoaiDauRa = data || [];
-        var obj = {
-            data: me.dtLoaiDauRa,
-            renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
-            renderPlace: ['ddlDR_LoaiDauRa'],
-            title: "Chọn loại đầu ra"
-        };
-        edu.system.loadToCombo_data(obj);
+        var info = { id: "MA", parentId: "", name: "TEN", code: "MA" };
+        edu.system.loadToCombo_data({ data: me.dtLoaiDauRa, renderInfor: info, renderPlace: ['ddlDR_LoaiDauRa'], title: "Chọn loại đầu ra" });
+        edu.system.loadToCombo_data({ data: me.dtLoaiDauRa, renderInfor: info, renderPlace: ['ddlDR_New_LoaiDauRa'], title: "Chọn loại đầu ra" });
     },
 
     /*------------------------------------------
@@ -1749,13 +1854,9 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_KieuHocTap: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtKieuHocTap = data || [];
-        var obj = {
-            data: me.dtKieuHocTap,
-            renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
-            renderPlace: ['ddlDR_KieuHocTap'],
-            title: "Chọn kiểu học"
-        };
-        edu.system.loadToCombo_data(obj);
+        var info = { id: "MA", parentId: "", name: "TEN", code: "MA" };
+        edu.system.loadToCombo_data({ data: me.dtKieuHocTap, renderInfor: info, renderPlace: ['ddlDR_KieuHocTap'], title: "Chọn kiểu học" });
+        edu.system.loadToCombo_data({ data: me.dtKieuHocTap, renderInfor: info, renderPlace: ['ddlDR_New_KieuHocTap'], title: "Chọn kiểu học" });
     },
 
     /*------------------------------------------
@@ -1769,13 +1870,9 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_TrangThaiDauRa: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtTrangThaiDauRa = data || [];
-        var obj = {
-            data: me.dtTrangThaiDauRa,
-            renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
-            renderPlace: ['ddlDR_TrangThai'],
-            title: "Chọn trạng thái"
-        };
-        edu.system.loadToCombo_data(obj);
+        var info = { id: "MA", parentId: "", name: "TEN", code: "MA" };
+        edu.system.loadToCombo_data({ data: me.dtTrangThaiDauRa, renderInfor: info, renderPlace: ['ddlDR_TrangThai'], title: "Chọn trạng thái" });
+        edu.system.loadToCombo_data({ data: me.dtTrangThaiDauRa, renderInfor: info, renderPlace: ['ddlDR_New_TrangThai'], title: "Chọn trạng thái" });
     },
 
     /*------------------------------------------
