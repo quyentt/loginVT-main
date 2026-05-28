@@ -223,14 +223,135 @@ KeHoachTuyenSinhNew.prototype = {
             });
         });
 
-        // Modal Thêm mới phân công nhân sự
+        // Modal Thêm mới phân công nhân sự — reset form mỗi lần mở (trừ khi reopen từ picker)
         $("#them-moi-nhansu").on('show.bs.modal', function () {
+            if (me._skipResetPhanCong) {
+                me._skipResetPhanCong = false;
+                return;
+            }
             me.rewrite_PhanCong();
         });
 
+        // Picker shared toàn hệ thống: edu.extend.genModal_NhanSu(callback) + getList_NhanSu()
+        // Pattern an toàn cho stacked modal: hide parent #them-moi-nhansu khi mở picker,
+        // show lại khi picker đóng. Tránh xung đột backdrop của Bootstrap 5 với modal-fullscreen.
         $("#btnChonNhanSu").click(function () {
-            // TODO: tích hợp shared picker chọn nhân sự (Bích/Linh/Hiệp đang trao đổi)
-            edu.system.alert("Tính năng chọn nhân sự đang được Linh/Hiệp build form chung toàn hệ thống. Khi sẵn sàng sẽ wire vào hàm me.addNhanSu_PhanCong(arrPersons).", "i");
+            // Hide parent modal trước (giữ DOM/data nguyên vẹn)
+            $('#them-moi-nhansu').modal('hide');
+
+            var pickerHandled = false;
+            edu.extend.genModal_NhanSu(function (arrChecked_Id) {
+                pickerHandled = true;  // → khỏi cần xử lý "hidden" để tránh double-show parent
+                var dt = edu.extend.dtNhanSu || [];
+                var arrPersons = [];
+                if (arrChecked_Id && arrChecked_Id.length) {
+                    // Loại ID đã có trong bảng để tránh trùng
+                    var existing = {};
+                    $("#tblNhanSuDaChon tbody tr").each(function () {
+                        existing[$(this).attr('data-person-id')] = true;
+                    });
+                    for (var i = 0; i < arrChecked_Id.length; i++) {
+                        var id = arrChecked_Id[i];
+                        if (existing[id]) continue;
+                        var ns = dt.find ? dt.find(function (e) { return e.ID == id; }) : null;
+                        if (!ns) continue;
+                        arrPersons.push({
+                            ID: ns.ID,
+                            FULL_NAME: ns.HOTEN || '',
+                            current_employee_code: ns.MASO || ''
+                        });
+                    }
+                }
+                // Reopen parent (skip rewrite để giữ table + form chung user đã khai)
+                // Append NS rows SAU khi modal show xong.
+                me._skipResetPhanCong = true;
+                setTimeout(function () {
+                    $('#them-moi-nhansu').modal('show');
+                    if (arrPersons.length) me.addNhanSu_PhanCong(arrPersons);
+                }, 200);
+            });
+            // Nếu user đóng picker mà không chọn → reopen parent, cũng skip rewrite
+            $('#modal_nhansu').one('hidden.bs.modal', function () {
+                if (!pickerHandled) {
+                    me._skipResetPhanCong = true;
+                    setTimeout(function () { $('#them-moi-nhansu').modal('show'); }, 50);
+                }
+            });
+
+            // Wire nút "Thêm từng đơn vị": chọn CCTC ở dropdown → add toàn bộ NS thuộc các đơn vị đó
+            $("#modal_nhansu").off('click.addCCTC', '#btnAdd_TungDonVi')
+                .on('click.addCCTC', '#btnAdd_TungDonVi', function () {
+                    var arrCCTC = $("#dropSearchModal_CCTC_NS").val();
+                    if (!arrCCTC || !arrCCTC.length) {
+                        edu.system.alert("Vui lòng chọn đơn vị từ dropdown trước", "w");
+                        return;
+                    }
+                    var obj_req = {
+                        action: 'NS_HoSo_V2_MH/DSA4BRIPKSAvEjQeCS4SLh43cwPP',
+                        func: 'pkg_nhansu_hoso_v2.LayDSNhanSu_HoSo_v2',
+                        iM: edu.system.iM,
+                        strTuKhoa: '',
+                        strDaoTao_CoCauToChuc_Id: arrCCTC.toString(),
+                        strChucVu_Id: '',
+                        strTinhTrangNhanSu_Id: '',
+                        dLaCanBoNgoaiTruong: 0,
+                        pageIndex: 1,
+                        pageSize: 100000,
+                        strNguoiThucHien_Id: edu.system.userId,
+                        strVaiTroDangNhap_Id: edu.system.strVaiTro_Id || '',
+                        strChucNangHeThong_Id: edu.system.strChucNang_Id || ''
+                    };
+                    edu.system.makeRequest({
+                        success: function (data) {
+                            if (!data.Success) {
+                                edu.system.alert(data.Message || "Lỗi khi lấy DS nhân sự", "w");
+                                return;
+                            }
+                            var arrNS = edu.util.checkValue(data.Data) ? data.Data : [];
+                            // Loại trùng với NS đã có trong bảng parent
+                            var existing = {};
+                            $("#tblNhanSuDaChon tbody tr").each(function () {
+                                existing[$(this).attr('data-person-id')] = true;
+                            });
+                            var arrPersons = [];
+                            for (var i = 0; i < arrNS.length; i++) {
+                                var ns = arrNS[i];
+                                if (!ns || !ns.ID || existing[ns.ID]) continue;
+                                existing[ns.ID] = true;
+                                arrPersons.push({
+                                    ID: ns.ID,
+                                    FULL_NAME: ns.HOTEN || '',
+                                    current_employee_code: ns.MASO || ''
+                                });
+                            }
+                            // Đóng picker, reopen parent
+                            pickerHandled = true;
+                            $("#modal_nhansu").modal("hide");
+                            me._skipResetPhanCong = true;
+                            setTimeout(function () {
+                                $('#them-moi-nhansu').modal('show');
+                                if (arrPersons.length) {
+                                    me.addNhanSu_PhanCong(arrPersons);
+                                    edu.system.alert("Đã thêm " + arrPersons.length + " nhân sự từ " + arrCCTC.length + " đơn vị", "s");
+                                } else {
+                                    edu.system.alert("Không có nhân sự mới (có thể đã trùng hoặc đơn vị rỗng)", "i");
+                                }
+                            }, 200);
+                        },
+                        error: function (er) {
+                            edu.system.alert("LayDSNhanSu (ex): " + JSON.stringify(er), "w");
+                        },
+                        type: 'POST',
+                        contentType: true,
+                        action: obj_req.action,
+                        data: obj_req,
+                        fakedb: []
+                    }, false, false, false, null);
+                });
+
+            // Default filter: cán bộ trong trường
+            $('#dropSearchModal_CB_NS').val('0');
+            edu.extend.getList_NhanSu();
         });
 
         // Master checkbox "Chọn all"
@@ -1366,7 +1487,8 @@ KeHoachTuyenSinhNew.prototype = {
     cbGetList_VaiTro_PhanCong: function (data, iPager) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtVaiTro_PhanCong = data || [];
-        me.genCombo_VaiTro_PhanCong('ddlXS_VaiTro', '');
+        me.genCombo_VaiTro_PhanCong('ddlXS_VaiTro', '');         // modal Xem-sửa
+        me.genCombo_VaiTro_PhanCong('ddlPC_New_VaiTro', '');     // modal Thêm mới (form chung)
     },
 
     genCombo_VaiTro_PhanCong: function (strDrop_Id, default_val) {
@@ -1387,26 +1509,23 @@ KeHoachTuyenSinhNew.prototype = {
     rewrite_PhanCong: function () {
         $("#tblNhanSuDaChon tbody").html("");
         $("#chkPC_SelectAll").prop('checked', false);
+        // Reset form chung (Section B)
+        $('#ddlPC_New_VaiTro').val('');
+        $('#txtPC_New_NgayBatDau, #txtPC_New_NgayKetThuc, #txtPC_New_GhiChu').val('');
+        $('#chkPC_New_Allowed, #chkPC_New_Active').prop('checked', true);
     },
 
     /*------------------------------------------
     -- Public method: shared picker gọi lại sau khi user chọn xong nhân sự
     -- arrPersons: [{ID, FULL_NAME, current_employee_code}, ...]
+    -- Mỗi row chỉ chứa Stt | Thông tin NS | checkbox Chọn — Vai trò/Ngày/Ghi chú
+    -- khai chung 1 lần ở Section B.
     -------------------------------------------*/
     addNhanSu_PhanCong: function (arrPersons) {
-        var me = main_doc.KeHoachTuyenSinhNew;
         if (!arrPersons || !arrPersons.length) return;
 
         var $tbody = $("#tblNhanSuDaChon tbody");
         var startIdx = $tbody.find('tr').length;
-
-        // Build option HTML cho dropdown Vai trò
-        var optsVaiTro = '<option value="">Chọn vai trò</option>';
-        for (var v = 0; v < me.dtVaiTro_PhanCong.length; v++) {
-            var dm = me.dtVaiTro_PhanCong[v];
-            optsVaiTro += '<option value="' + (dm.MA || '') + '">' + (dm.TEN || '') + '</option>';
-        }
-
         var rows = '';
         for (var i = 0; i < arrPersons.length; i++) {
             var p = arrPersons[i];
@@ -1417,16 +1536,6 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center td-fix">' + stt + '</td>'
                 +  '<td class="td-left">' + nhanSuTen + '</td>'
                 +  '<td class="td-center"><input type="checkbox" class="pc-select" checked /></td>'
-                +  '<td class="td-center td-fix">'
-                +    '<div class="custom-select"><i class="fa-light fa-chevron-down"></i>'
-                +      '<select class="form-select pc-vaitro" style="line-height: 24px !important;padding-left: 10px !important;">' + optsVaiTro + '</select>'
-                +    '</div>'
-                +  '</td>'
-                +  '<td class="td-center td-fix"><input class="form-control input-datepicker pc-ngaybatdau" placeholder="dd/mm/yyyy"></td>'
-                +  '<td class="td-center td-fix"><input class="form-control input-datepicker pc-ngayketthuc" placeholder="dd/mm/yyyy"></td>'
-                +  '<td class="td-center td-fix"><input type="checkbox" class="pc-allowed" checked /></td>'
-                +  '<td class="td-center td-fix"><input type="checkbox" class="pc-active" checked /></td>'
-                +  '<td class="td-center td-fix"><input class="form-control pc-ghichu"></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
@@ -1434,7 +1543,7 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Ns_PhanCong_Ins
-    -- Lưu phân công nhân sự (loop qua các row được "Chọn")
+    -- Form chung (Section B) khai 1 lần → áp cho mọi nhân sự được tick.
     -------------------------------------------*/
     save_PhanCong: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
@@ -1450,47 +1559,53 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
-        var arrTasks = [];
+        var arrPersonIds = [];
         $rows.each(function () {
             var $r = $(this);
             if (!$r.find('.pc-select').is(':checked')) return;
-            arrTasks.push({
-                'strPerson_Id': $r.attr('data-person-id') || '',
-                'strRole_Code': $r.find('.pc-vaitro').val() || '',
-                'strNgay_BatDau': $r.find('.pc-ngaybatdau').val() || '',
-                'strNgay_KetThuc': $r.find('.pc-ngayketthuc').val() || '',
-                'dIs_Allowed': $r.find('.pc-allowed').is(':checked') ? 1 : 0,
-                'dIs_Active': $r.find('.pc-active').is(':checked') ? 1 : 0,
-                'strGhiChu': $r.find('.pc-ghichu').val() || ''
-            });
+            var pid = $r.attr('data-person-id') || '';
+            if (pid) arrPersonIds.push(pid);
         });
 
-        if (arrTasks.length === 0) {
+        if (arrPersonIds.length === 0) {
             edu.system.alert("Không có nhân sự nào được tích chọn để lưu", "w");
             return;
         }
 
-        var done = 0;
-        var failed = 0;
-        var total = arrTasks.length;
+        var common = {
+            strRole_Code: edu.system.getValById('ddlPC_New_VaiTro'),
+            strNgay_BatDau: edu.system.getValById('txtPC_New_NgayBatDau'),
+            strNgay_KetThuc: edu.system.getValById('txtPC_New_NgayKetThuc'),
+            dIs_Allowed: $('#chkPC_New_Allowed').is(':checked') ? 1 : 0,
+            dIs_Active: $('#chkPC_New_Active').is(':checked') ? 1 : 0,
+            strGhiChu: edu.system.getValById('txtPC_New_GhiChu')
+        };
 
-        arrTasks.forEach(function (task) {
+        var done = 0, failed = 0, total = arrPersonIds.length;
+        var finalize = function () {
+            if (done + failed !== total) return;
+            edu.system.alert("Đã lưu " + done + "/" + total + (failed ? " (lỗi: " + failed + ")" : ""));
+            $("#them-moi-nhansu").modal('hide');
+            me.getList_PhanCongNhanSu();
+        };
+
+        arrPersonIds.forEach(function (personId) {
             var obj_save = {
                 'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeDzIeESkgLwIuLyYeCC8y',
                 'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Ns_PhanCong_Ins',
                 'iM': edu.system.iM,
-                'strPerson_Id': task.strPerson_Id,
+                'strPerson_Id': personId,
                 'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
                 'strTs_Kh_TuyenSinh_Dot_Id': '',
                 'strTs_Kh_Dot_PhuongThuc_Id': '',
-                'strRole_Code': task.strRole_Code,
+                'strRole_Code': common.strRole_Code,
                 'strAction_Code': '',
                 'strScope_Level_Code': '',
-                'strNgay_BatDau': task.strNgay_BatDau,
-                'strNgay_KetThuc': task.strNgay_KetThuc,
-                'dIs_Allowed': task.dIs_Allowed,
-                'dIs_Active': task.dIs_Active,
-                'strGhiChu': task.strGhiChu,
+                'strNgay_BatDau': common.strNgay_BatDau,
+                'strNgay_KetThuc': common.strNgay_KetThuc,
+                'dIs_Allowed': common.dIs_Allowed,
+                'dIs_Active': common.dIs_Active,
+                'strGhiChu': common.strGhiChu,
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
                 'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
@@ -1500,19 +1615,11 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.makeRequest({
                 success: function (data) {
                     if (data.Success) done++; else failed++;
-                    if (done + failed === total) {
-                        edu.system.alert("Đã lưu " + done + "/" + total + (failed ? " (lỗi: " + failed + ")" : ""));
-                        $("#them-moi-nhansu").modal('hide');
-                        me.getList_PhanCongNhanSu();
-                    }
+                    finalize();
                 },
-                error: function (er) {
+                error: function () {
                     failed++;
-                    if (done + failed === total) {
-                        edu.system.alert("Đã lưu " + done + "/" + total + " (lỗi: " + failed + ")");
-                        $("#them-moi-nhansu").modal('hide');
-                        me.getList_PhanCongNhanSu();
-                    }
+                    finalize();
                 },
                 type: 'POST',
                 contentType: true,
