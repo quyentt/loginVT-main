@@ -4,18 +4,18 @@
 @import "../../../assets/css/root.css";
 
 .box-header>.box-tools {
-    position: relative !important;
+    position: relative ;
 }
 
 .justify-content-end {
-    justify-content: flex-end !important;
+    justify-content: flex-end ;
 }
 
 .border-radius-0 {
-    border-top-left-radius: 0 !important;
-    border-top-right-radius: 0 !important;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+    border-top-left-radius: 0 ;
+    border-top-right-radius: 0 ;
+    border-bottom-left-radius: 0 ;
+    border-bottom-right-radius: 0 ;
 }
 
 .zoneChucNang .btnDelete_VaiTroChucNang:hover,
@@ -11980,6 +11980,7 @@ table#clone {
 
 .tiepnhandauvao-static-box .item .icon {
     width: 60px;
+    min-width: 60px;
     height: 60px;
     border-radius: 50%;
     background: #f1f5f2;
@@ -12008,10 +12009,10 @@ table#clone {
 }
 
 .tiepnhandauvao-static-box .item .number {
-    font-size: 30px;
-    font-weight: 700;
+     font-size: 26px;
+    font-weight: 600;
     color: #22a652;
-    line-height: 30px;
+    line-height: 26px;
 }
 
 .tiepnhandauvao-static-box .item .unit {
@@ -12056,7 +12057,7 @@ table#clone {
 }
 
 .tiepnhandauvao-static-box .item:nth-child(2) .number {
-    color: #3380db !important;
+    color: #3380db ;
 }
 
 .tiepnhandauvao-static-box .item:nth-child(3) .icon {
@@ -12065,7 +12066,7 @@ table#clone {
 }
 
 .tiepnhandauvao-static-box .item:nth-child(3) .number {
-    color: #0dcaf0 !important;
+    color: #0dcaf0 ;
 }
 
 .tiepnhandauvao-static-box .item:nth-child(4) .icon {
@@ -13920,4 +13921,12 @@ table#clone {
 .aps-hp-lyhd-box .item i {
     margin-top: 1px;
     font-size: 18px;
+}
+
+.no-quyetDinh {
+  display: flex; /* Kích hoạt Flexbox */
+  flex-direction: column; /* Xếp các phần tử con theo chiều dọc */
+  gap: 10px; /* Khoảng cách giữa 2 đối tượng */
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
