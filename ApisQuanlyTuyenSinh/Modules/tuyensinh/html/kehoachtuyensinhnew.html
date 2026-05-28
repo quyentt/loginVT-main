@@ -599,106 +599,110 @@
 
                     <div class="line" style="margin-top: 25px;margin-bottom: 15px;"></div>
 
-                    <!-- Section: Danh sách chương trình -->
-                    <h4 class="box-title" style="background:#fff3cd;padding:8px 12px;border-left:4px solid #ffc107;">
-                        <i class="fa-regular fa-list"></i> Danh sách chương trình
-                    </h4>
+                    <!-- 2-column layout: A (Thông tin khai chung — sticky) | B (Các đầu ra cần chọn) -->
+                    <div class="row">
+                        <!-- A: Các thông tin khai chung -->
+                        <div class="col-lg-4 pl0 pr15" style="position: sticky; top: 0; align-self: flex-start;">
+                            <h4 class="box-title" style="background:#d1ecf1;padding:8px 12px;border-left:4px solid #17a2b8;">
+                                <i class="fa-regular fa-circle-info"></i> Các thông tin khai chung
+                            </h4>
+                            <div id="zoneDR_ThongTinChung" class="mt-10">
+                                <!-- Loại đầu ra / Kiểu học -->
+                                <div class="row aps-form-item pd0">
+                                    <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Loại đầu ra tuyển sinh</div></div>
+                                    <div class="col-sm-7 aps-form-input pr0">
+                                        <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                            <select id="ddlDR_New_LoaiDauRa" class="form-select"><option value="">Chọn loại đầu ra</option></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row aps-form-item pd0">
+                                    <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Kiểu học sau khi vào học</div></div>
+                                    <div class="col-sm-7 aps-form-input pr0">
+                                        <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                            <select id="ddlDR_New_KieuHocTap" class="form-select"><option value="">Chọn kiểu học</option></select>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <div class="aps-table-select scroll-table-x pb-0 mb-20 mt-10">
-                        <table id="tblChuongTrinhDauRa" class="table table-hover table-bordered table-border">
-                            <thead>
-                                <tr>
-                                    <th class="td-fixed td-center w-50px">Stt</th>
-                                    <th class="td-left" style="min-width: 160px;">Mã chương trình</th>
-                                    <th class="td-left" style="min-width: 260px;">Tên chương trình</th>
-                                    <th class="td-left" style="min-width: 220px;">Ngành TS</th>
-                                    <th class="td-left" style="min-width: 220px;">Ngành ĐT</th>
-                                    <th class="td-center" style="width: 110px;">Chỉ tiêu</th>
-                                    <th class="td-center" style="width: 130px;">Chỉ tiêu tối đa</th>
-                                    <th class="td-center" style="width: 130px;">Chỉ tiêu tối thiểu</th>
-                                    <th class="td-center" style="width: 90px;">
-                                        <input type="checkbox" id="chkDR_SelectAll" />
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                                <!-- 7 checkbox cấu hình -->
+                                <div class="row aps-form-item pd0 list-chekbox">
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_HighLight" />
+                                        <div class="title-name ml-10">Là ngành nổi bật cần hiện lên đầu</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AllowRegister" class="mt-0" />
+                                        <div class="title-name ml-10">Cho phép đăng ký trực tuyến</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AllowWaitlist" class="mt-0" />
+                                        <div class="title-name ml-10">Cho phép đăng ký nếu hết chỉ tiêu (Đưa vào danh sách chờ)</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AllowTransferIn" class="mt-0" />
+                                        <div class="title-name ml-10">Cho phép tiếp nhận trường hợp chuyển trường không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AutoIntake" class="mt-0" />
+                                        <div class="title-name ml-10">Có tự động tạo dữ liệu chuẩn bị nhập học khi đủ điều kiện tiếp nhận không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AutoEnrollment" class="mt-0" />
+                                        <div class="title-name ml-10">Có tự động tạo hồ sơ học tập không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AutoClassAssign" class="mt-0" />
+                                        <div class="title-name ml-10">Có tự động phân lớp không</div>
+                                    </div>
+                                </div>
 
-                    <div class="line" style="margin-top: 15px;margin-bottom: 15px;"></div>
-
-                    <!-- Section: Thông tin chung cần khai cho các đầu ra -->
-                    <h4 class="box-title" style="background:#d1ecf1;padding:8px 12px;border-left:4px solid #17a2b8;">
-                        <i class="fa-regular fa-circle-info"></i> Thông tin chung cần khai cho các đầu ra
-                    </h4>
-                    <div id="zoneDR_ThongTinChung" class="mt-10">
-                        <!-- Loại đầu ra / Kiểu học -->
-                        <div class="row aps-form-item pd0">
-                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Loại đầu ra tuyển sinh</div></div>
-                            <div class="col-sm-9 aps-form-input pr0">
-                                <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
-                                    <select id="ddlDR_New_LoaiDauRa" class="form-select"><option value="">Chọn loại đầu ra</option></select>
+                                <!-- Trạng thái / Public / Hiệu lực -->
+                                <div class="row aps-form-item pd0">
+                                    <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Trạng thái của đầu ra</div></div>
+                                    <div class="col-sm-7 aps-form-input pr0">
+                                        <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                            <select id="ddlDR_New_TrangThai" class="form-select"><option value="">Chọn trạng thái</option></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row aps-form-item pd0 list-chekbox">
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_Public" />
+                                        <div class="title-name ml-10">Có cho phép public qua cổng Portal không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_Active" class="mt-0" checked />
+                                        <div class="title-name ml-10">Hiệu lực</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row aps-form-item pd0">
-                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Kiểu học sau khi vào học</div></div>
-                            <div class="col-sm-9 aps-form-input pr0">
-                                <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
-                                    <select id="ddlDR_New_KieuHocTap" class="form-select"><option value="">Chọn kiểu học</option></select>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- 7 checkbox cấu hình -->
-                        <div class="row aps-form-item pd0 list-chekbox">
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_HighLight" />
-                                <div class="title-name ml-10">Là ngành nổi bật cần hiện lên đầu</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_AllowRegister" class="mt-0" />
-                                <div class="title-name ml-10">Cho phép đăng ký trực tuyến</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_AllowWaitlist" class="mt-0" />
-                                <div class="title-name ml-10">Cho phép đăng ký nếu hết chỉ tiêu (Đưa vào danh sách chờ)</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_AllowTransferIn" class="mt-0" />
-                                <div class="title-name ml-10">Cho phép tiếp nhận trường hợp chuyển trường không</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_AutoIntake" class="mt-0" />
-                                <div class="title-name ml-10">Có tự động tạo dữ liệu chuẩn bị nhập học khi đủ điều kiện tiếp nhận không</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_AutoEnrollment" class="mt-0" />
-                                <div class="title-name ml-10">Có tự động tạo hồ sơ học tập không</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_AutoClassAssign" class="mt-0" />
-                                <div class="title-name ml-10">Có tự động phân lớp không</div>
-                            </div>
-                        </div>
-
-                        <!-- Trạng thái / Public / Hiệu lực -->
-                        <div class="row aps-form-item pd0">
-                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Trạng thái của đầu ra</div></div>
-                            <div class="col-sm-9 aps-form-input pr0">
-                                <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
-                                    <select id="ddlDR_New_TrangThai" class="form-select"><option value="">Chọn trạng thái</option></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row aps-form-item pd0 list-chekbox">
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_Public" />
-                                <div class="title-name ml-10">Có cho phép public qua cổng Portal không</div>
-                            </div>
-                            <div class="col-sm-12 aps-lable-name d-flex pl0">
-                                <input type="checkbox" id="chkDR_New_Active" class="mt-0" checked />
-                                <div class="title-name ml-10">Hiệu lực</div>
+                        <!-- B: Các đầu ra cần chọn -->
+                        <div class="col-lg-8 pl15 pr0">
+                            <h4 class="box-title" style="background:#fff3cd;padding:8px 12px;border-left:4px solid #ffc107;">
+                                <i class="fa-regular fa-list"></i> Các đầu ra cần chọn
+                            </h4>
+                            <div class="aps-table-select scroll-table-x pb-0 mb-20 mt-10">
+                                <table id="tblChuongTrinhDauRa" class="table table-hover table-bordered table-border">
+                                    <thead>
+                                        <tr>
+                                            <th class="td-fixed td-center w-50px">Stt</th>
+                                            <th class="td-left" style="min-width: 140px;">Mã chương trình</th>
+                                            <th class="td-left" style="min-width: 220px;">Tên chương trình</th>
+                                            <th class="td-left" style="min-width: 180px;">Ngành TS</th>
+                                            <th class="td-left" style="min-width: 180px;">Ngành ĐT</th>
+                                            <th class="td-center" style="width: 100px;">Chỉ tiêu</th>
+                                            <th class="td-center" style="width: 120px;">Chỉ tiêu tối đa</th>
+                                            <th class="td-center" style="width: 120px;">Chỉ tiêu tối thiểu</th>
+                                            <th class="td-center" style="width: 70px;">
+                                                <input type="checkbox" id="chkDR_SelectAll" />
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
