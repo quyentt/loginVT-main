@@ -187,24 +187,25 @@ KeHoachTuyenSinhNew.prototype = {
             });
         });
 
-        // Click "Chi tiết" trên row kế hoạch đầu ra → fetch detail (form modal sẽ build sau)
-        $("#tblKeHoachDauRa").delegate(".btnDetailDauRa", "click", function () {
-            var strId = $(this).attr('data-id');
-            if (!edu.util.checkValue(strId)) return;
-            if ($('#xem-sua-dau-ra').length) {
-                $('#xem-sua-dau-ra').modal('show');
+        // Modal Xem-sửa đầu ra: đọc data-id từ event.relatedTarget thay vì click delegate
+        // để tránh race với stacked modal #ke-hoach-dau-ra.
+        $("#xem-sua-dau-ra").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            var strId = $btn.length ? $btn.attr('data-id') : '';
+            if (strId) {
+                me.strDauRa_Id = strId;
+                me.getDetail_DauRa(strId);
             }
-            me.strDauRa_Id = strId;
-            me.getDetail_DauRa(strId);
         });
 
-        // Click "Chi tiết" trên row phân công nhân sự → mở modal Xem-sửa và populate
-        $("#tblPhanCongNhanSu").delegate(".btnDetailPhanCong", "click", function () {
-            var strId = $(this).attr('data-id');
-            if (!edu.util.checkValue(strId)) return;
-            $('#xem-sua-phancong').modal('show');
-            me.strPhanCong_Id = strId;
-            me.getDetail_PhanCong(strId);
+        // Modal Xem-sửa phân công: đọc data-id từ event.relatedTarget (cùng pattern Đầu ra)
+        $("#xem-sua-phancong").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            var strId = $btn.length ? $btn.attr('data-id') : '';
+            if (strId) {
+                me.strPhanCong_Id = strId;
+                me.getDetail_PhanCong(strId);
+            }
         });
 
         $("#btnUpdate_PhanCong").click(function () {
@@ -2076,7 +2077,7 @@ KeHoachTuyenSinhNew.prototype = {
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
             var sMa = d.MA || d.Ma || '';
             var sTen = d.TEN || d.Ten || '';
             var sLoaiDauRa = d.DAU_RA_TYPE_CODE_Name || d.DAU_RA_TYPE_CODE_Ten || lookupTen(me.dtLoaiDauRa, d.DAU_RA_TYPE_CODE);
@@ -2111,7 +2112,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + (sActive ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + sNguoiTao + '</td>'
                 +  '<td class="td-center">' + sNgayTao + '</td>'
-                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDauRa" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
+                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailDauRa" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết" data-bs-toggle="modal" data-bs-target="#xem-sua-dau-ra">Chi tiết</a></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
@@ -2346,7 +2347,7 @@ KeHoachTuyenSinhNew.prototype = {
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID || '';
+            var strId = d.ID || d.Id || d.id || '';
             var strNhanSu = (d.FULL_NAME || '') + (d.current_employee_code ? ' - ' + d.current_employee_code : '');
             rows += '<tr id="row_pcns_' + strId + '">'
                 +  '<td class="td-center td-fix">' + (i + 1) + '</td>'
@@ -2363,7 +2364,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + (d.is_active == 1 ? iconCheck : iconX) + '</td>'
                 +  '<td class="td-center">' + (d.NGUOITAO_TaiKhoan || '') + '</td>'
                 +  '<td class="td-center">' + (d.NgayTao_dd_mm_yyyy_hhmmss || '') + '</td>'
-                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailPhanCong" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết">Chi tiết</a></td>'
+                +  '<td class="td-center"><a class="btn btn-default btnview btnDetailPhanCong" data-id="' + strId + '" style="min-width: 68px !important;" title="Xem chi tiết" data-bs-toggle="modal" data-bs-target="#xem-sua-phancong">Chi tiết</a></td>'
                 +  '</tr>';
         }
         $tbody.append(rows);
