@@ -464,7 +464,7 @@ $(document).ready(function () {
   });
 
   // swipe table-----------------------------------------------------------
-  const swipeScroll = document.querySelectorAll(".table-responsive111");
+  const swipeScroll = document.querySelectorAll(".scroll-table-x");
 
   let isDown = false;
   let startX;
@@ -489,9 +489,21 @@ $(document).ready(function () {
       const walk = (x - startX) * 3; //scroll-fast
       slider.scrollLeft = scrollLeft - walk;
     });
+    // lăn chuột để cuộn ngang (chỉ khi bảng tràn ngang)
+    slider.addEventListener(
+      "wheel",
+      (e) => {
+        if (slider.scrollWidth <= slider.clientWidth) return; // không tràn -> cuộn dọc trang bình thường
+        const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+        if (!delta) return;
+        e.preventDefault();
+        slider.scrollLeft += delta;
+      },
+      { passive: false }
+    );
   });
   const chattingContent = document.querySelector(".user-chat-body");
-  chattingContent.scrollTop = chattingContent.scrollHeight;
+  if (chattingContent) chattingContent.scrollTop = chattingContent.scrollHeight;
 });
 //modal show test
 $(window).on("load", function () {

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiếp nhận đàu vào tuyển sinh</title>
+    <title>Hồ sơ sinh viên 360</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -376,9 +376,9 @@
                 <div class="d-flex justify-content-between">
                     <div class="nav-content-left">
                         <p class="link">
-                            <a href="#">Kế hoạch nhập học</a>
+                            <a href="#">Quản lý sinh viên</a>
                             <i class="fal fa-angle-right"></i>
-                            <a href="#">Quản lý sinh viên tổng quát</a>
+                            <a href="#">Hồ sơ sinh viên 360</a>
                         </p>
                     </div>
                     <div class="nav-content-right">
@@ -395,11 +395,11 @@
                                 <h3 class="box-title">
                                     <img src="../assets/images/dashboad-item-8.png" class="images" />
                                     <div class="">
-                                        <span>Quản lý sinh viên tổng quát</span>
+                                        <span>Hồ sơ sinh viên 360</span>
                                         <p class="aps-note fz14 text-left color-888">
-                                            Theo dõi toàn bộ hồ sơ, quá trình học tập, tài chính, tương tác và các thông
-                                            tin
-                                            phát sinh - trong suốt quá trình đào tạo.
+                                            Hồ sơ tổng hợp của sinh viên: định danh, thông tin cá nhân, nguồn tuyển
+                                            sinh, quan hệ học tập (QHHT), quá trình học, điểm, tài chính, tương tác và
+                                            tệp đính kèm.
                                         </p>
                                     </div>
                                 </h3>
@@ -500,6 +500,20 @@
                                                 <option value="1">Kế hoạch tuyển sinh 1</option>
                                                 <option value="2">Kế hoạch tuyển sinh 2</option>
                                                 <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Cố vấn</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">TS. Lê Thanh Hà</option>
+                                                <option value="2">ThS. Nguyễn Văn Khoa</option>
+                                                <option value="3">TS. Phạm Thị Lan</option>
                                             </select>
                                         </div>
                                     </div>
@@ -829,13 +843,25 @@
                         <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-green">
-                                    <i class="fa-light fa-address-card"></i> Hồ sơ sinh viên
+                                    <i class="fa-light fa-address-card"></i> Hồ sơ sinh viên 360
                                 </h3>
-                                <div class="pull-right">
-                                    <span class="btn btn-30 btn-soft-success"><i
-                                            class="fa-solid fa-circle fz14 bold"></i>
-                                        Hoạt
-                                        động</span>
+                                <div class="pull-right d-flex align-items-center flex-wrap gap-2">
+                                    <div class="aps-qhht-select d-flex align-items-center gap-2 mr-5">
+                                        <span class="color-888 fz13">QHHT:</span>
+                                        <div class="input-wrap">
+                                            <select class="form-select form-select-sm" style="min-width:210px">
+                                                <option selected>CNTT · Cử nhân (chính) · K2022</option>
+                                                <option>Ngôn ngữ Anh · VB2 · K2023</option>
+                                            </select>
+                                            <i class="fa-light fa-chevron-down icon-end"></i>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="btn btn-sm btn-soft-primary"><i
+                                            class="fa-light fa-pen-to-square"></i><span>Chỉnh sửa</span></a>
+                                    <a href="#" class="btn btn-sm btn-soft-secondary"><i
+                                            class="fa-light fa-print"></i><span>In hồ sơ</span></a>
+                                    <a href="#" class="btn btn-sm btn-soft-success"><i
+                                            class="fa-light fa-download"></i><span>Tải file</span></a>
                                 </div>
                             </div>
                             <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20">
@@ -918,47 +944,49 @@
                                 <ul class="nav nav-tabs" id="myTab" role="tablist">
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link active" id="hosoS-tabs-11" data-bs-toggle="tab"
-                                            data-bs-target="#tatca" type="button" role="tab" aria-controls="home"
+                                            data-bs-target="#hs-ttc" type="button" role="tab" aria-controls="home"
                                             aria-selected="true">
-                                            <i class="fa-light fa-address-book mr-5"></i>Tổng quan</button>
+                                            <i class="fa-light fa-address-book mr-5"></i>Thông tin chung</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="hosoS-tabs-22" data-bs-toggle="tab"
-                                            data-bs-target="#tructuyen" type="button" role="tab" aria-controls="profile"
+                                        <button class="nav-link" id="hosoS-tab-qhht" data-bs-toggle="tab"
+                                            data-bs-target="#tab-qhht" type="button" role="tab" aria-controls="qhht"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ
-                                            sơ</button>
+                                            <i class="fa-light fa-code-branch mr-5"></i> QHHT</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab1" data-bs-toggle="tab"
-                                            data-bs-target="#canbonhap" type="button" role="tab" aria-controls="contact"
+                                            data-bs-target="#hs-qth" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-laptop-file mr-5"></i> Quá trình học tập</button>
+                                            <i class="fa-light fa-laptop-file mr-5"></i> Quá trình học</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab2" data-bs-toggle="tab"
-                                            data-bs-target="#import" type="button" role="tab" aria-controls="contact"
+                                            data-bs-target="#hs-diem" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-sharp fa-light fa-file-certificate mr-5"></i>
-                                            Kết quả học
-                                            tập</button>
+                                            <i class="fa-sharp fa-light fa-file-certificate mr-5"></i> Điểm</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab3" data-bs-toggle="tab"
-                                            data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
-                                            aria-selected="false" tabindex="-1">
+                                            data-bs-target="#hs-taichinh" type="button" role="tab"
+                                            aria-controls="contact" aria-selected="false" tabindex="-1">
                                             <i class="fa-light fa-circle-dollar-to-slot mr-5"></i> Tài chính</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab4" data-bs-toggle="tab"
-                                            data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
-                                            aria-selected="false" tabindex="-1">
+                                            data-bs-target="#tab-tuongtac" type="button" role="tab"
+                                            aria-controls="contact" aria-selected="false" tabindex="-1">
                                             <i class="fa-light fa-hand-pointer mr-5"></i> Tương tác</button>
                                     </li>
-
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" id="hosoS-tabs-22" data-bs-toggle="tab"
+                                            data-bs-target="#hs-hoso" type="button" role="tab" aria-controls="profile"
+                                            aria-selected="false" tabindex="-1">
+                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ sơ</button>
+                                    </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade active show pt-10" id="tatca" role="tabpanel"
+                                    <div class="tab-pane fade active show pt-10" id="hs-ttc" role="tabpanel"
                                         aria-labelledby="hosoS-tabs-11">
                                         <div class="row box-tongQuan">
                                             <!-- Tổng quan học tập -->
@@ -1150,6 +1178,80 @@
                                                 </div>
 
                                             </div>
+                                            <!-- Thông tin cá nhân & liên hệ -->
+                                            <div class="col-12 col-lg-6 box-canhan-hs">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-light fa-id-card"></i> Thông tin cá nhân & liên hệ
+                                                </h3>
+                                                <div class="user-infomation aps-chitiethoso-canhan">
+                                                    <div class="info">
+                                                        <div class="item">
+                                                            <div class="label">Email:</div>
+                                                            <div class="text">bich.nguyen@gmail.com</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Số điện thoại:</div>
+                                                            <div class="text">0987 654 321</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Địa chỉ thường trú:</div>
+                                                            <div class="text">123 Lê Lợi, P. Bến Nghé, Q.1, TP.HCM</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Người thân (LH khẩn):</div>
+                                                            <div class="text">Nguyễn Văn Tâm (Bố) · 0909 111 222</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">BHYT:</div>
+                                                            <div class="text">SV4 7979 0123 4567 · HSD 31/12/2026</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">BHXH:</div>
+                                                            <div class="text">Chưa cập nhật</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-10">
+                                                    <a href="#" class="btn btn-sm btn-soft-primary"><i
+                                                            class="fa-light fa-pen-to-square"></i><span>Cập nhật hồ
+                                                            sơ</span></a>
+                                                </div>
+                                            </div>
+                                            <!-- Nguồn nhập học (tuyển sinh) -->
+                                            <div class="col-12 col-lg-6 box-tuyensinh-hs">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-light fa-folder-open"></i> Nguồn nhập học (tuyển sinh)
+                                                </h3>
+                                                <div class="user-infomation aps-chitiethoso-canhan">
+                                                    <div class="info">
+                                                        <div class="item">
+                                                            <div class="label">Kế hoạch TS:</div>
+                                                            <div class="text">Tuyển sinh đại học 2022</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Đợt tuyển sinh:</div>
+                                                            <div class="text">Đợt 1 / 2022</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Phương thức:</div>
+                                                            <div class="text">Xét điểm thi THPT</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Điểm trúng tuyển:</div>
+                                                            <div class="text">24.50</div>
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Ngày nhập học:</div>
+                                                            <div class="text">15/08/2022</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="mt-10">
+                                                    <a href="#" class="btn btn-sm btn-soft-secondary"><i
+                                                            class="fa-light fa-arrow-up-right-from-square"></i><span>Mở
+                                                            hồ sơ tuyển sinh</span></a>
+                                                </div>
+                                            </div>
 
                                         </div>
                                         <!-- Thao tác chính -->
@@ -1245,26 +1347,180 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="tructuyen" role="tabpanel"
-                                        aria-labelledby="hosoS-tabs-22">
-                                        Hồ
-                                        sơ
+                                    <!-- Tab QHHT: danh sách quan hệ học tập của sinh viên -->
+                                    <div class="tab-pane fade pt-10" id="tab-qhht" role="tabpanel"
+                                        aria-labelledby="hosoS-tab-qhht">
+                                        <h3 class="box-title color-blue mb-10">
+                                            <i class="fa-light fa-code-branch"></i> Quan hệ học tập (QHHT) của sinh viên
+                                        </h3>
+                                        <p class="color-888 fz13 mb-10">Sinh viên có thể có nhiều QHHT/ngành. Chọn QHHT
+                                            ở đầu hồ sơ để xem dữ liệu học tập, điểm, tài chính, tốt nghiệp tương ứng.
+                                        </p>
+                                        <div class="aps-table-select scroll-table-x">
+                                            <table
+                                                class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="td-left">QHHT</th>
+                                                        <th class="td-left">Ngành / CTĐT</th>
+                                                        <th class="td-center">Khóa</th>
+                                                        <th class="td-center">Loại</th>
+                                                        <th class="td-center">Bắt đầu</th>
+                                                        <th class="td-center">GPA</th>
+                                                        <th class="td-center">Trạng thái</th>
+                                                        <th class="td-center col-thaotac">Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr style="background:#eaf2ff">
+                                                        <td class="td-left">QHHT-01</td>
+                                                        <td class="td-left">Công nghệ thông tin · Cử nhân</td>
+                                                        <td class="td-center">K2022</td>
+                                                        <td class="td-center"><span class="btn btn-soft-primary">Chính</span>
+                                                        </td>
+                                                        <td class="td-center">15/08/2022</td>
+                                                        <td class="td-center">3.45</td>
+                                                        <td class="td-center"><span
+                                                                class="btn btn-soft-success">Đang học</span></td>
+                                                        <td class="td-center"><a href="#"
+                                                                class="btn btn-soft-primary">Chọn</a></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="td-left">QHHT-02</td>
+                                                        <td class="td-left">Ngôn ngữ Anh · Văn bằng 2</td>
+                                                        <td class="td-center">K2023</td>
+                                                        <td class="td-center"><span class="btn btn-soft-secondary">Phụ</span>
+                                                        </td>
+                                                        <td class="td-center">10/09/2023</td>
+                                                        <td class="td-center">3.20</td>
+                                                        <td class="td-center"><span
+                                                                class="btn btn-soft-success">Đang học</span></td>
+                                                        <td class="td-center"><a href="#"
+                                                                class="btn btn-soft-primary">Chọn</a></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                    <div class="tab-pane fade" id="canbonhap" role="tabpanel"
+                                    <div class="tab-pane fade pt-10" id="hs-qth" role="tabpanel"
                                         aria-labelledby="contact-tab1">
-                                        Cán bộ nhập
+                                        <p class="color-888"><i class="fa-light fa-laptop-file mr-5"></i> Quá trình học
+                                            tập theo QHHT đang chọn (học kỳ, lớp học phần, tiến độ tín chỉ...).</p>
                                     </div>
-                                    <div class="tab-pane fade" id="import" role="tabpanel"
+                                    <div class="tab-pane fade pt-10" id="hs-diem" role="tabpanel"
                                         aria-labelledby="contact-tab2">
-                                        Công nợ
+                                        <p class="color-888"><i class="fa-sharp fa-light fa-file-certificate mr-5"></i>
+                                            Bảng điểm chi tiết theo QHHT đang chọn (điểm thành phần, điểm môn, GPA học
+                                            kỳ).</p>
                                     </div>
-                                    <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
+                                    <div class="tab-pane fade pt-10" id="hs-taichinh" role="tabpanel"
                                         aria-labelledby="contact-tab3">
-                                        Sắp tốt nghiệp
+                                        <p class="color-888"><i class="fa-light fa-circle-dollar-to-slot mr-5"></i> Công
+                                            nợ, phải thu, đã thu và lịch sử thanh toán theo QHHT đang chọn.</p>
                                     </div>
-                                    <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
+                                    <div class="tab-pane fade pt-10" id="tab-tuongtac" role="tabpanel"
                                         aria-labelledby="contact-tab4">
-                                        Sắp tốt nghiệp
+                                        <p class="color-888"><i class="fa-light fa-hand-pointer mr-5"></i> Nhật ký tương
+                                            tác, thông báo đã gửi, phiếu hỗ trợ và lịch hẹn tư vấn của sinh viên.</p>
+                                    </div>
+                                    <!-- Tab Hồ sơ: tệp đính kèm / hồ sơ giấy tờ -->
+                                    <div class="tab-pane fade pt-10" id="hs-hoso" role="tabpanel"
+                                        aria-labelledby="hosoS-tabs-22">
+                                        <h3 class="box-title color-blue mb-10">
+                                            <i class="fa-light fa-paperclip"></i> Tệp đính kèm / Hồ sơ giấy tờ
+                                        </h3>
+                                        <div class="aps-table-select scroll-table-x">
+                                            <table
+                                                class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="td-left">Loại giấy tờ</th>
+                                                        <th class="td-left">Tên tệp</th>
+                                                        <th class="td-center">Ngày nộp</th>
+                                                        <th class="td-center">Đối chiếu</th>
+                                                        <th class="td-center col-thaotac">Thao tác</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="td-left">CCCD</td>
+                                                        <td class="td-left">cccd_nguyenthibich.pdf</td>
+                                                        <td class="td-center">15/08/2022</td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đã đối
+                                                                chiếu</span></td>
+                                                        <td class="td-center">
+                                                            <div class="d-flex gap-2 justify-content-center">
+                                                                <a href="#" class="btn btn-soft-primary" title="Xem"><i
+                                                                        class="fa-light fa-eye"></i></a>
+                                                                <a href="#" class="btn btn-soft-success" title="Tải"><i
+                                                                        class="fa-light fa-download"></i></a>
+                                                                <a href="#" class="btn btn-soft-orange"
+                                                                    title="Đối chiếu"><i
+                                                                        class="fa-light fa-list-check"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="td-left">Học bạ THPT</td>
+                                                        <td class="td-left">hocba_thpt.pdf</td>
+                                                        <td class="td-center">15/08/2022</td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đã đối
+                                                                chiếu</span></td>
+                                                        <td class="td-center">
+                                                            <div class="d-flex gap-2 justify-content-center">
+                                                                <a href="#" class="btn btn-soft-primary" title="Xem"><i
+                                                                        class="fa-light fa-eye"></i></a>
+                                                                <a href="#" class="btn btn-soft-success" title="Tải"><i
+                                                                        class="fa-light fa-download"></i></a>
+                                                                <a href="#" class="btn btn-soft-orange"
+                                                                    title="Đối chiếu"><i
+                                                                        class="fa-light fa-list-check"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="td-left">Ảnh thẻ 4x6</td>
+                                                        <td class="td-left">anh_the_4x6.jpg</td>
+                                                        <td class="td-center">15/08/2022</td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đã đối
+                                                                chiếu</span></td>
+                                                        <td class="td-center">
+                                                            <div class="d-flex gap-2 justify-content-center">
+                                                                <a href="#" class="btn btn-soft-primary" title="Xem"><i
+                                                                        class="fa-light fa-eye"></i></a>
+                                                                <a href="#" class="btn btn-soft-success" title="Tải"><i
+                                                                        class="fa-light fa-download"></i></a>
+                                                                <a href="#" class="btn btn-soft-orange"
+                                                                    title="Đối chiếu"><i
+                                                                        class="fa-light fa-list-check"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="td-left">Quyết định nhập học</td>
+                                                        <td class="td-left">qd_nhaphoc_2022.pdf</td>
+                                                        <td class="td-center">20/08/2022</td>
+                                                        <td class="td-center"><span class="btn btn-soft-orange">Chờ đối
+                                                                chiếu</span></td>
+                                                        <td class="td-center">
+                                                            <div class="d-flex gap-2 justify-content-center">
+                                                                <a href="#" class="btn btn-soft-primary" title="Xem"><i
+                                                                        class="fa-light fa-eye"></i></a>
+                                                                <a href="#" class="btn btn-soft-success" title="Tải"><i
+                                                                        class="fa-light fa-download"></i></a>
+                                                                <a href="#" class="btn btn-soft-orange"
+                                                                    title="Đối chiếu"><i
+                                                                        class="fa-light fa-list-check"></i></a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mt-10">
+                                            <a href="#" class="btn btn-sm btn-soft-primary"><i
+                                                    class="fa-light fa-upload"></i><span>Tải tệp lên</span></a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
