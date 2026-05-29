@@ -3823,9 +3823,7 @@
     border-radius: 16px;
 }
 
-.box {
-    margin-bottom: 5px
-}
+
 
 .callsuccess {
     color: green;
@@ -11959,13 +11957,12 @@ table#clone {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top: 20px;
-    padding-bottom: 20px;
+    margin-top:15px;
+    padding-bottom: 15px !important;
     justify-content: center;
 }
 
 .tiepnhandauvao-static-box .item {
-
     border: 1px solid #e1e1e1;
     padding: 15px;
     border-radius: 8px !important;
@@ -11976,6 +11973,7 @@ table#clone {
     flex-shrink: 1;
     flex-grow: 1;
     flex-basis: 205px;
+    margin-bottom:0;
 }
 
 .tiepnhandauvao-static-box .item .icon {
@@ -12603,7 +12601,7 @@ table#clone {
 .aps-kienTraNhanh-content .user-infomation .info .item .label {
     color: #888;
     line-height: 24px;
-    min-width: 90px;
+    min-width: 100px;
     margin-right: 5px;
     flex-shrink: 0;
 }
@@ -13929,4 +13927,18 @@ table#clone {
   gap: 10px; /* Khoảng cách giữa 2 đối tượng */
   padding-top: 20px;
   padding-bottom: 20px;
+}
+/* ------ */
+.aps-thaoTacNhanh a,.aps-thaoTacNhanh a:hover {
+display: flex;
+  flex-direction: column; /* Xếp đối tượng theo chiều dọc */
+  gap: 10px; /* Khoảng cách giữa 2 đối tượng */
+      height: fit-content;
+    padding: 15px !important;
+    border-radius: 10px !important;
+}
+
+.aps-thaoTacNhanh a i{
+    font-size: 34px;
+    padding-right: 0;
 }
