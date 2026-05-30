@@ -11962,7 +11962,7 @@ table#clone {
 }
 
 
-.tiepnhandauvao-static-box .item, .box-dashboard-kpi .item{
+.tiepnhandauvao-static-box .item{
     border: 1px solid #e1e1e1;
     padding: 15px;
     border-radius: 8px !important;
@@ -12089,7 +12089,7 @@ table#clone {
     color: #dc3545 !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(5) .icon, .box-dashboard-kpi  .item:nth-child(5) .icon,{
+.tiepnhandauvao-static-box .item:nth-child(5) .icon, .box-dashboard-kpi  .item:nth-child(5) .icon{
     background: rgba(255, 95, 31, .1) !important;
     color: #FF5F1F !important;
 }
