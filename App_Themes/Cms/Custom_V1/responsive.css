@@ -1719,7 +1719,8 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
-  .aps-student-manager-search .tiepnhandauvao-filter-box .left .item {
+  .aps-student-manager-search .tiepnhandauvao-filter-box .left .item,
+  .aps-student-manager-search .box-dashboard-kpi .left .item {
     margin-bottom: 0 !important;
   }
   .tiepnhandauvao-static-box .item {
@@ -5805,3 +5806,337 @@
     width: 100% !important;
   }
 }
+
+/* ================== 29/5 - Responsive bổ sung các màn QLSV (gộp từ inline) ================== */
+
+/* 29/5 - Cảnh báo & Can thiệp (HTML-QLSV-13-CanhBaoCanThiep) */
+@media (max-width: 1199.98px) {
+  .aps-student-manager .tiepnhandauvao-static-box .item {
+    flex: 1 1 calc(33.333% - 10px) !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .aps-student-manager .box-header-has-action {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .aps-student-manager .role-list {
+    flex-wrap: wrap;
+    padding-right: 0;
+  }
+
+  .aps-student-manager .data-scope-box .data-scope-list {
+    flex-wrap: wrap;
+  }
+
+  .aps-student-manager .data-scope-box .data-scope-list .item {
+    flex: 1 1 calc(50% - 15px);
+  }
+
+  .aps-student-manager .box-title-has-action {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .aps-student-manager .box-title-has-action .lock-default {
+    margin-right: 0;
+  }
+
+  .aps-student-manager .box-header .pull-right {
+    width: 100%;
+    float: none;
+  }
+
+  .aps-student-manager .box-header .pull-right .btn-group {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .aps-student-manager.pl20 {
+    padding-left: 10px !important;
+  }
+
+  .aps-student-manager.pr20 {
+    padding-right: 10px !important;
+  }
+
+  .aps-student-manager .tiepnhandauvao-static-box .item {
+    flex: 1 1 calc(50% - 8px) !important;
+  }
+
+  .aps-student-manager .data-scope-box .data-scope-list .item {
+    flex: 1 1 100%;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left .item,
+  .aps-student-manager .tiepnhandauvao-filter-box .left .item.text-item {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .aps-student-manager .box-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .aps-student-manager .box-header .pull-right .btn-group .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .aps-student-manager .my-paging {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .aps-student-manager .tiepnhandauvao-static-box .item {
+    flex: 1 1 100% !important;
+  }
+}
+
+/* 29/5 - Báo cáo thống kê (HTML-QLSV-14-BaoCaoThongKe) */
+@media (max-width: 1600px) {
+  .box-content.aps-student-list > .aps-student-list-static > .item {
+    flex: 1 1 calc(33.333% - 11px) !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 1599.98px) {
+  .box-content.aps-student-list .aps-admissions-content > [class*="col-lg-6"] {
+    flex: 0 0 100%;
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .box-content.aps-student-list .aps-hoso-detail {
+    padding-left: 0 !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .box-content.aps-student-list .box-header-has-action {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .box-content.aps-student-list .box-header .pull-right {
+    width: 100%;
+    float: none;
+  }
+
+  .box-content.aps-student-list .box-header .pull-right .btn-group {
+    flex-wrap: wrap;
+  }
+
+  .box-content.aps-student-list .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .box-content.aps-student-list .nav-tabs .nav-link {
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .box-content.aps-student-list.pl20 {
+    padding-left: 10px !important;
+  }
+
+  .box-content.aps-student-list.pr20 {
+    padding-right: 10px !important;
+  }
+
+  .box-content.aps-student-list > .aps-student-list-static > .item {
+    flex: 1 1 calc(50% - 8px) !important;
+  }
+
+  .box-content.aps-student-list .tiepnhandauvao-filter-box .left,
+  .box-content.aps-student-list .box-dashboard-kpi .left {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+
+  .box-content.aps-student-list .tiepnhandauvao-filter-box .left .item,
+  .box-content.aps-student-list .box-dashboard-kpi .left .item {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .box-content.aps-student-list
+    .tiepnhandauvao-filter-box
+    .left
+    .item.btn-group,
+  .box-content.aps-student-list .box-dashboard-kpi .left .item.btn-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .box-content.aps-student-list .box-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .box-content.aps-student-list .box-header .pull-right .btn-group .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .box-content.aps-student-list .my-paging {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .box-content.aps-student-list > .aps-student-list-static > .item {
+    flex: 1 1 100% !important;
+  }
+}
+
+/* 29/5 - KHOA Luồng chức năng (HTML-KHOA-00-LuongChucNang) */
+@media (max-width: 1199.98px) {
+  .aps-student-manager .aps-student-static .item {
+    flex: 1 1 calc(33.333% - 10px) !important;
+    min-width: 0 !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .aps-student-manager .data-scope-box .data-scope-list {
+    flex-wrap: wrap;
+  }
+
+  .aps-student-manager .data-scope-box .data-scope-list .item {
+    flex: 1 1 calc(50% - 15px);
+  }
+
+  .aps-student-manager .box-header-has-action {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .aps-student-manager .box-header .pull-right {
+    width: 100%;
+    float: none;
+  }
+
+  .aps-student-manager .box-header .pull-right .btn-group {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .aps-student-manager.pl20 {
+    padding-left: 10px !important;
+  }
+
+  .aps-student-manager.pr20 {
+    padding-right: 10px !important;
+  }
+
+  .aps-student-manager .aps-student-static .item {
+    flex: 1 1 calc(50% - 8px) !important;
+  }
+
+  .aps-student-manager .data-scope-box .data-scope-list .item,
+  .aps-student-manager .box-dashboard-kpi .data-scope-list .item {
+    flex: 1 1 100%;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left,
+  .aps-student-manager .box-dashboard-kpi .left {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 20px;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left .item,
+  .aps-student-manager .box-dashboard-kpi .left .item {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left .item.btn-item,
+  .aps-student-manager .tiepnhandauvao-filter-box .left .item.btn-group,
+  .aps-student-manager .box-dashboard-kpi .left .item.btn-item,
+  .aps-student-manager .box-dashboard-kpi .left .item.btn-group {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .aps-student-manager .box-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .aps-student-manager .box-header .pull-right .btn-group .btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .aps-student-manager .my-paging {
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .aps-student-manager .aps-student-static .item {
+    flex: 1 1 100% !important;
+  }
+}
+
+/* 29/5 - Role switcher: chỉ xuống dòng khi màn hẹp */
+@media (max-width: 575.98px) {
+  .aps-role-switcher {
+    flex-wrap: wrap;
+  }
+}
+
+/* 29/5 - Hộp thư 3 cột (HTML-QLSV-12-TuongTacInbox-2): xếp dọc khi màn hẹp */
+@media (max-width: 1199.98px) {
+  .aps-inbox {
+    flex-wrap: wrap;
+  }
+
+  .aps-inbox .aps-inbox-list,
+  .aps-inbox .aps-inbox-side,
+  .aps-inbox .aps-inbox-chat {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
+/* ================== 29/5 - end Responsive bổ sung ================== */

@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiếp nhận đàu vào tuyển sinh</title>
+    <title>Kết quả học tập / Bảng điểm</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -376,9 +376,9 @@
                 <div class="d-flex justify-content-between">
                     <div class="nav-content-left">
                         <p class="link">
-                            <a href="#">Kế hoạch nhập học</a>
+                            <a href="#">Quản lý sinh viên</a>
                             <i class="fal fa-angle-right"></i>
-                            <a href="#">Quản lý sinh viên tổng quát</a>
+                            <a href="#">Kết quả học tập / Bảng điểm</a>
                         </p>
                     </div>
                     <div class="nav-content-right">
@@ -395,11 +395,10 @@
                                 <h3 class="box-title">
                                     <img src="../assets/images/dashboad-item-8.png" class="images" />
                                     <div class="">
-                                        <span>Quản lý sinh viên tổng quát</span>
+                                        <span>Kết quả học tập / Bảng điểm</span>
                                         <p class="aps-note fz14 text-left color-888">
-                                            Theo dõi toàn bộ hồ sơ, quá trình học tập, tài chính, tương tác và các thông
-                                            tin
-                                            phát sinh - trong suốt quá trình đào tạo.
+                                            Tra cứu bảng điểm theo QHHT: GPA tích lũy/học kỳ, tín chỉ đạt/nợ, xếp loại,
+                                            điểm thành phần từng học phần, môn chưa đạt/học lại và quyết định học vụ.
                                         </p>
                                     </div>
                                 </h3>
@@ -422,8 +421,8 @@
                             <div class="left">
                                 <div class="item item-select">
                                     <div class="label">Hệ đào tạo</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Hệ đào tạo</option>
@@ -436,8 +435,8 @@
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Khóa đào tạo</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Khóa đào tạo</option>
@@ -450,8 +449,8 @@
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Khoa</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Tất cả</option>
@@ -464,8 +463,8 @@
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Chương trình</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Chương trình</option>
@@ -478,8 +477,8 @@
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Lớp</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Chương trình</option>
@@ -492,14 +491,28 @@
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Trạng thái học tập</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Tất cả</option>
                                                 <option value="1">Kế hoạch tuyển sinh 1</option>
                                                 <option value="2">Kế hoạch tuyển sinh 2</option>
                                                 <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Cố vấn</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">TS. Lê Thanh Hà</option>
+                                                <option value="2">ThS. Nguyễn Văn Khoa</option>
+                                                <option value="3">TS. Trần Mạnh Cường</option>
                                             </select>
                                         </div>
                                     </div>
@@ -540,7 +553,7 @@
                     </div>
                     <div class="item box box-shadow">
                         <div class="icon">
-                            <i class=" fa-solid fa-screen-users"></i>
+                            <i class="fa-duotone fa-solid fa-screen-users"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Đang học</div>
@@ -564,7 +577,7 @@
                     </div>
                     <div class="item box box-shadow">
                         <div class="icon">
-                            <i class=" fa-solid fa-user-clock"></i>
+                            <i class="fa-duotone fa-solid fa-user-clock"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Bảo lưu/Tạm dừng</div>
@@ -576,7 +589,7 @@
                     </div>
                     <div class="item box box-shadow box-noTC">
                         <div class="icon">
-                            <i class=" fa-solid fa-circle-dollar"></i>
+                            <i class="fa-sharp-duotone fa-solid fa-circle-dollar"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Công nợ tài chính</div>
@@ -605,7 +618,7 @@
                         <div class="box box-solid box-shadow aps-hs-dauVao pd0 ">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-blue">
-                                    <i class="fa-duotone fa-solid fa-users"></i> Danh sách sinh viên <span
+                                    <i class="fa-solid fa-user-graduate"></i> Danh sách sinh viên <span
                                         class="numder fz14 color-888">(8.456 kết qua)</span>
                                 </h3>
                                 <div class="pull-right">
@@ -626,35 +639,34 @@
                                 </div>
                             </div>
 
-                            <div class="hosodauvao-tabs aps-tabs-border pl20 pr20 pb-20 pt10">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
+                            <div class="hosodauvao-tabs aps-tabs-border pl20 pr20 pb-20 pt10 swiper aps-swiper-tab">
+                                <ul class="nav nav-tabs swiper-wrapper" id="myTab" role="tablist">
+                                    <li class="swiper-slide nav-item" role="presentation">
                                         <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
                                             data-bs-target="#tatca" type="button" role="tab" aria-controls="home"
-                                            aria-selected="true"><i class="fa-duotone fa-solid fa-users"></i>Tất
-                                            cả</button>
+                                            aria-selected="true">
+                                            <i class="fa-duotone fa-solid fa-users"></i> Tất cả</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="swiper-slide nav-item" role="presentation">
                                         <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
                                             data-bs-target="#tructuyen" type="button" role="tab" aria-controls="profile"
                                             aria-selected="false" tabindex="-1">
                                             <i class="fa-duotone fa-solid fa-chalkboard-user"></i>Đang học</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="swiper-slide nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
                                             data-bs-target="#canbonhap" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
                                             <i class="fa-duotone fa-solid fa-triangle-exclamation"></i>Cảnh báo học
                                             vụ</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="swiper-slide nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
                                             data-bs-target="#import" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i> Công
-                                            nợ</button>
+                                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i>Công nợ</button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
+                                    <li class="swiper-slide nav-item" role="presentation">
                                         <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
                                             data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
@@ -665,8 +677,8 @@
                                 <div class="tab-content" id="myTabContent">
                                     <div class="tab-pane fade active show" id="tatca" role="tabpanel"
                                         aria-labelledby="home-tab">
-                                        <div class="aps-search-candidate-detail" bis_skin_checked="1">
-                                            <div class="aps-table-select scroll-table-x" bis_skin_checked="1">
+                                        <div class="aps-search-candidate-detail">
+                                            <div class="aps-table-select scroll-table-x">
                                                 <table id="tblsearch-candidate"
                                                     class="table table-hover table-bordered table-noborder tblsearch-candidate">
                                                     <thead>
@@ -824,458 +836,526 @@
                             </div>
                         </div>
                     </div>
-                    <!-- 2. Hồ sơ sinh viên-->
-                    <div class="col-lg-6 col-12 pr0 mb-20 aps-hoso-detail aps-student-hoso pr0 pl10">
+                    <!-- 2. Chi tiết hồ sơ -->
+                    <div class="col-lg-6 col-12 pr0 mb-20 aps-hoso-detail aps-kq-hocTap pr0 pl10">
                         <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
                             <div class="box-header with-border">
-                                <h3 class="box-title color-green">
+                                <h3 class="box-title color-blue">
                                     <i class="fa-light fa-address-card"></i> Hồ sơ sinh viên
                                 </h3>
                                 <div class="pull-right">
-                                    <span class="btn btn-30 btn-soft-success"><i
-                                            class="fa-solid fa-circle fz14 bold"></i>
-                                        Hoạt
-                                        động</span>
-                                </div>
-                            </div>
-                            <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20">
-                                <div class="user-infomation">
-                                    <div class="image">
-                                        <img src="../assets/images/anh-the-4x6.jpg">
-                                    </div>
-                                    <div class="info">
-                                        <div class="item user-name">
-                                            <div class="label">Họ và tên:</div>
-                                            <div class="text">Nguyễn Thị Bích</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Mã SV:</div>
-                                            <div class="text">123456789</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">CCCD:</div>
-                                            <div class="text">123456789</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Ngày sinh:</div>
-                                            <div class="text">11/11/2005</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Giới tính:</div>
-                                            <div class="text">Nữ</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Số điện thoại:</div>
-                                            <div class="text">123456789</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Email:</div>
-                                            <div class="text">email@gmail.com</div>
-                                        </div>
-                                    </div>
-                                    <div class="info">
-                                        <div class="item">
-                                            <div class="label">Khoa:</div>
-                                            <div class="text">Công nghệ thông tin
-                                            </div>
-
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Ngành:</div>
-                                            <div class="text">Công nghệ thông tin</div>
-
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Chương trình:</div>
-                                            <div class="text">Cử nhân</div>
-
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Khóa:</div>
-                                            <div class="text">Khóa 2022</div>
-
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Lớp:</div>
-                                            <div class="text">DHTT20A</div>
-
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Cố vấn học tập:</div>
-                                            <div class="text">TS. Lê Minh Hà</div>
-                                        </div>
-                                        <div class="item">
-                                            <div class="label">Trạng thái học tập:</div>
-                                            <div class="text"><span class="btn btn-soft-success btn-30">Hoạt động</span>
-                                            </div>
-                                        </div>
+                                    <div class="btn-group">
+                                        <a class="btn btn-sm btn-outline-success" href="">
+                                            <i class="fa-solid fa-file-excel"></i><span>Excel</span>
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-danger" href="">
+                                            <i class="fa-solid fa-file-pdf"></i><span>PDF</span>
+                                        </a>
+                                        <a class="btn btn-sm btn-outline-secondary" href="">
+                                            <i class="fa-solid fa-arrow-left"></i><span>Quay lại</span>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-
-
-                            <div class="hosodauvao-tabs hosoS-tabs aps-tabs-border pl20 pr20 pb-20 pt0">
-                                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="hosoS-tabs-11" data-bs-toggle="tab"
-                                            data-bs-target="#tatca" type="button" role="tab" aria-controls="home"
+                            <div class="hosodauvao-tabs aps-tabs-border pl20 pr20 pb-20 pt10 swiper aps-swiper-tab">
+                                <ul class="nav nav-tabs swiper-wrapper" id="myTab" role="tablist">
+                                    <li class="swiper-slide nav-item" role="presentation">
+                                        <button class="nav-link active" id="home-tab" data-bs-toggle="tab"
+                                            data-bs-target="#tongquan" type="button" role="tab" aria-controls="home"
                                             aria-selected="true">
-                                            <i class="fa-light fa-address-book mr-5"></i>Tổng quan</button>
+                                            <i class="fa-duotone fa-thin fa-laptop-file"></i>
+                                            <span class="text">Tổng quan QHHT</span> </button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="hosoS-tabs-22" data-bs-toggle="tab"
-                                            data-bs-target="#tructuyen" type="button" role="tab" aria-controls="profile"
-                                            aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ
-                                            sơ</button>
+                                    <li class="swiper-slide nav-item" role="presentation">
+                                        <button class="nav-link" id="profile-tab" data-bs-toggle="tab"
+                                            data-bs-target="#quatrinhhoc" type="button" role="tab"
+                                            aria-controls="profile" aria-selected="false" tabindex="-1">
+                                            <i class="fa-duotone fa-solid fa-chalkboard-user"></i>
+                                            <span class="text"> Quá trình học<span
+                                                    class="number-tabs">1</span></span></button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="contact-tab1" data-bs-toggle="tab"
-                                            data-bs-target="#canbonhap" type="button" role="tab" aria-controls="contact"
-                                            aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-laptop-file mr-5"></i> Quá trình học tập</button>
+                                    <li class="swiper-slide nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#ketquahoctap" type="button" role="tab"
+                                            aria-controls="contact" aria-selected="false" tabindex="-1">
+                                            <i class="fa-duotone fa-solid fa-book-open-reader"></i>
+                                            <span class="text">Kết quả học tập<span
+                                                    class="number-tabs">10</span></span></button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="contact-tab2" data-bs-toggle="tab"
-                                            data-bs-target="#import" type="button" role="tab" aria-controls="contact"
+                                    <li class="swiper-slide nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#taichinh" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-sharp fa-light fa-file-certificate mr-5"></i>
-                                            Kết quả học
-                                            tập</button>
+                                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i>
+                                            <span class="text">Tài chính<span
+                                                    class="number-tabs">20</span></span></button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="contact-tab3" data-bs-toggle="tab"
-                                            data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
+                                    <li class="swiper-slide nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#tuongtac" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-circle-dollar-to-slot mr-5"></i> Tài chính</button>
+                                            <i class="fa-duotone fa-solid fa-id-card"></i>
+                                            <span class="text">Hồ sơ</span></button>
                                     </li>
-                                    <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="contact-tab4" data-bs-toggle="tab"
-                                            data-bs-target="#nguonkhac" type="button" role="tab" aria-controls="contact"
+                                    <li class="swiper-slide nav-item" role="presentation">
+                                        <button class="nav-link" id="contact-tab" data-bs-toggle="tab"
+                                            data-bs-target="#hoso" type="button" role="tab" aria-controls="contact"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-hand-pointer mr-5"></i> Tương tác</button>
+                                            <i class="fa-duotone fa-solid fa-user-graduate"></i>
+                                            <span class="text">Sắp tốt nghiệp</span></button>
                                     </li>
 
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade active show pt-10" id="tatca" role="tabpanel"
-                                        aria-labelledby="hosoS-tabs-11">
-                                        <div class="row box-tongQuan">
-                                            <!-- Tổng quan học tập -->
-                                            <div class="col-12 col-lg-6 box-tongQuan-hs">
-                                                <h3 class="box-title color-blue">
-                                                    <i class="fa-light fa-book-open-reader"></i> Tổng quan học tập
-                                                </h3>
-                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Tín chỉ tích lũy</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-blue">86</span>
-                                                                <span class="unit">TC</span>
-                                                            </div>
-                                                        </div>
+                                    <div class="tab-pane fade active show" id="tongquan" role="tabpanel"
+                                        aria-labelledby="home-tab">
+                                        <!-- Tổng quan -->
+                                        <div class="row aps-kienTraNhanh-content aps-chitiethoso ">
+                                            <div class="aps-tab-tongquan aps-tab-tongquan-2">
+                                                <div class="user-infomation">
+                                                    <div class="image">
+                                                        <img src="../assets/images/anh-the-4x6.jpg">
                                                     </div>
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">GPA</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-green">3.45</span>
-                                                                <span class="unit">100%</span>
+                                                    <div class="info">
+                                                        <div class="item user-name">
+                                                            <div class="label">Họ và tên:</div>
+                                                            <div class="text">Nguyễn Thị Bích
+                                                                <!-- <span class="status bg-green"></span> -->
                                                             </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Số môn chưa đạt</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-puple">0</span>
-                                                                <span class="unit">Môn</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Xếp loại<img src="" alt="" sizes=""
-                                                                    srcset="">
-                                                            </div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-red">GIỎI</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
 
-                                            </div>
-                                            <!-- Tài chính -->
-                                            <div class="col-12 col-lg-6 box-taichinh-hs">
-                                                <h3 class="box-title color-blue">
-                                                    <i class="fa-duotone fa-light fa-circle-dollar-to-slot"></i> Tài
-                                                    chính
-                                                </h3>
-                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
-                                                    <div class="item item-ht soft-primary no-border">
-                                                        <div class="meta">
-                                                            <div class="title color-222">Phải thu học ký</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-blue">12.750.000</span>
-                                                                <span class="unit">đ</span>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="item item-ht soft-success">
-                                                        <div class="meta">
-                                                            <div class="title color-222">Đã thanh toán</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-green">8.750.000</span>
-                                                                <span class="unit">đ</span>
-                                                            </div>
+                                                        <div class="item">
+                                                            <div class="label">Mã SV:</div>
+                                                            <div class="text">SV20220001</div>
                                                         </div>
-                                                    </div>
-                                                    <div class="item item-ht soft-danger">
-                                                        <div class="meta">
-                                                            <div class="title color-222">Còn nợ</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-red">3.999.000</span>
-                                                                <span class="unit">đ</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item item-ht soft-light">
-                                                        <div class="meta">
-                                                            <div class="title color-222">Hạn thanh toán<img src=""
-                                                                    alt="" sizes="" srcset="">
-                                                            </div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number color-66">25/5/2026</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                        <div class="item">
+                                                            <div class="label">Lớp:</div>
+                                                            <div class="text">DHTT20A</div>
 
-                                            </div>
-                                            <!-- Tương tác & hỗ trợ -->
-                                            <div class="col-12 col-lg-6 box-tuongTac-ht">
-                                                <h3 class="box-title color-su">
-                                                    <i class="fa-sharp-duotone fa-solid fa-headset"></i> Tương tác & hỗ
-                                                    trợ
-                                                </h3>
-                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Cố vấn</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="name">T.S Lê Minh Ha</span>
-                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Phiếu hỗ trợ đang mang</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number-phieu">1</span>
-                                                            </div>
+                                                        <div class="item">
+                                                            <div class="label">CTĐT:</div>
+                                                            <div class="text">Công nghệ thông tin (Cử nhân)</div>
                                                         </div>
-                                                    </div>
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Lần liên hệ gần nhất</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="dat">14/05/2026</span>
-                                                            </div>
+                                                        <div class="item">
+                                                            <div class="label">Cố vấn:</div>
+                                                            <div class="text">TS. Lê Thanh Hà</div>
                                                         </div>
-                                                    </div>
-                                                    <div class="item item-ht">
-                                                        <div class="meta">
-                                                            <div class="title">Kênh tương tác</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="email">Email</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                                        <div class="item">
+                                                            <div class="label">Ngày sinh:</div>
+                                                            <div class="text">11/11/2005</div>
 
-                                            </div>
-                                            <!-- Cảnh báo & Nhắc việc -->
-                                            <div class="col-12 col-lg-6 box-nhacviec box-taichinh-hs">
-                                                <h3 class="box-title color-red">
-                                                    <i class="fa-duotone fa-solid fa-triangle-exclamation"></i>
-                                                    Cảnh báo & Nhắc việc
-                                                </h3>
-                                                <div class="tiepnhandauvao-static-box aps-student-list-static">
-                                                    <div class="item item-ht outline-red">
-                                                        <div class="meta">
-                                                            <div class="title color-222">
+                                                        </div>
+
+                                                        <div class="item">
+                                                            <div class="label">CCCD:</div>
+                                                            <div class="text">123456789</div>
+
+                                                        </div>
+                                                        <div class="item">
+                                                            <div class="label">Email:</div>
+                                                            <div class="text">email@gmail.com</div>
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="d-flex flex-wrap gap-3 aps-heDaoTao">
+                                                    <div class="thangdiem-select">
+                                                        <span class="color-888 fz13">QHHT</span>
+                                                        <div class="form-item d-flex form-add-info flex-grow-1">
+                                                            <div class="input-group no-icon">
+                                                                <i class="fal fa-angle-down"></i>
+                                                                <select class="form-select"
+                                                                    aria-label="Default select example">
+                                                                    <option selected="">CNTT · Cử nhân (chính) ·
+                                                                        K2022</option>
+                                                                    <option value="1">Ngôn ngữ Anh · VB2 · K2023</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="thangdiem-select">
+                                                        <span class="color-888 fz13">Thang điểm</span>
+                                                        <div class="form-item d-flex form-add-info flex-grow-1">
+                                                            <div class="input-group no-icon">
+                                                                <i class="fal fa-angle-down"></i>
+                                                                <select class="form-select"
+                                                                    aria-label="Default select example">
+                                                                    <option selected="">Hệ 4.0</option>
+                                                                    <option value="1">Hệ 10</option>
+                                                                    <option value="2">Điểm chữ</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <p class="m-0 mt-10 text-right">Đang xem: Thang 4.0</p>
+                                                    </div>
+
+                                                </div>
+                                                <div class="tongquanda-qhht hs-ketquahoctap">
+                                                    <div class="tongquanda-qhht-list align-items-start">
+                                                        <div class="item color-blue">
+                                                            <div class="label">
                                                                 <i
-                                                                    class="fa-duotone fa-solid fa-circle-dollar-to-slot mr-10"></i>Còn
-                                                                nợ học phí
+                                                                    class="fa-duotone fa-solid fa-chalkboard-user color-blue"></i>
+                                                                học kỳ
                                                             </div>
-                                                            <div class="detail detail-2">
-                                                                <span class="number">12.750.000 đ</span>
-                                                                <span class="unit"><i
-                                                                        class="fa-duotone fa-light fa-angle-right"></i></span>
-                                                            </div>
+                                                            <div class="number color-blue">3.45</div>
+                                                            <p class="note-small">(Hk2- 2025 - 2026)</p>
                                                         </div>
-                                                    </div>
-                                                    <div class="item item-ht outline-orange">
-                                                        <div class="meta">
-                                                            <div class="title color-222"><i
-                                                                    class="fa-duotone fa-solid fa-books mr-10"></i>Có 1
-                                                                môn chưa đạt</div>
-                                                            <div class="detail detail-2">
-                                                                <span class="text color-66">
-                                                                    Càng cải thiện kết quả học tập</span>
-                                                                <span class="unit">
-                                                                    <i
-                                                                        class="fa-duotone fa-light fa-angle-right"></i></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="item item-ht outline-warning">
-                                                        <div class="meta">
-                                                            <div class="title color-222">
+                                                        <div class="item color-green">
+                                                            <div class="label">
                                                                 <i
-                                                                    class="fa-duotone fa-light fa-briefcase-medical mr-10"></i>Chưa
-                                                                cập nhật BHYT
+                                                                    class="fa-duotone fa-thin fa-check-to-slot mr-5 color-green"></i>GPA
+                                                                tích lũy
                                                             </div>
-                                                            <div class="detail detail-2">
-                                                                <span class="text color-66">
-                                                                    Vui lòng cập nhật thông tin</span>
-                                                                <span class="unit">
-                                                                    <i
-                                                                        class="fa-duotone fa-light fa-angle-right"></i></span>
+                                                            <div class="number color-green">3.28</div>
+                                                        </div>
+                                                        <div class="item color-green">
+                                                            <div class="label">
+                                                                <i
+                                                                    class="fa-duotone fa-solid fa-file-circle-check color-green"></i>
+                                                                Tín chỉ đạt
                                                             </div>
+                                                            <div class="number color-green">108</div>
+                                                            <p class="note-small">(81%)</p>
+
+                                                        </div>
+                                                        <div class="item color-red">
+                                                            <div class="label"><i
+                                                                    class="fa-duotone fa-solid fa-file-circle-exclamation color-red"></i>Tín
+                                                                chỉ nợ</div>
+                                                            <div class="number color-red">26</div>
+                                                            <p class="note-small">(19%)</p>
+
+                                                        </div>
+                                                        <div class="item color-purple">
+                                                            <div class="label"><i
+                                                                    class="fa-duotone fa-light fa-user-graduate color-purple"></i>Xếp
+                                                                loại</div>
+                                                            <div class="number color-purple">Giỏi</div>
+                                                        </div>
+                                                        <div class="item color-purple">
+                                                            <div class="label"><i
+                                                                    class="fa-duotone fa-light fa-file-certificate color-purple"></i>Học
+                                                                lực</div>
+                                                            <div class="number color-purple">Giỏi</div>
+                                                        </div>
+                                                        <div class="item color-orange">
+                                                            <div class="label"><i
+                                                                    class="fa-duotone fa-light fa-triangle-exclamation mr-5 color-red"></i>Cảnh
+                                                                báo học vụ</div>
+                                                            <div class="number color-red">Không</div>
+                                                            <p class="note-small">(Cập nhật: 15/05/2025)</p>
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                            </div>
-
-                                        </div>
-                                        <!-- Thao tác chính -->
-                                        <div class="box-thaotac-main mt-10 pt-10"
-                                            style="border-top: 1px solid #e9e9e9;">
-                                            <h3 class="box-title color-blue">
-                                                <i class="fa-duotone fa-regular fa-laptop-arrow-down mr-5"></i> Thao tác
-                                                chính
-                                            </h3>
-                                            <div class="tiepnhandauvao-static-box mt-10">
-                                                <a href="" class="item">
-                                                    <div class=" icon">
-                                                        <i class="fa-duotone fa-solid fa-clipboard-user"></i>
-                                                    </div>
-                                                    <div class="meta">
-                                                        <div class="title">Xem hồ sơ đầy đủ</div>
-                                                    </div>
-                                                </a>
-                                                <a href="" class="item">
-                                                    <div class="icon">
-                                                        <i class="fa-duotone fa-regular fa-chalkboard-user"></i>
-                                                    </div>
-                                                    <div class="meta">
-                                                        <div class="title">Quy trình học</div>
-
-                                                    </div>
-                                                </a>
-                                                <a href="" class="item">
-                                                    <div class="icon">
-                                                        <i class="fa-duotone fa-light fa-laptop-file"></i>
-                                                    </div>
-                                                    <div class="meta">
-                                                        <div class="title">Kết quả học tập</div>
-                                                    </div>
-                                                </a>
-                                                <a href="" class="item">
-                                                    <div class="icon">
-                                                        <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i>
-                                                    </div>
-                                                    <div class="meta">
-                                                        <div class="title">Tài chính</div>
-                                                    </div>
-                                                </a>
-
-                                                <a href="" class="item">
-                                                    <div class="icon">
-                                                        <i class="fa-duotone fa-solid fa-screen-users"></i>
-                                                    </div>
-                                                    <div class="meta">
-                                                        <div class="title">Tương tác SV</div>
-                                                    </div>
-                                                </a>
-                                                <a href="" class="item">
-                                                    <div class="icon">
-                                                        <i class="fa-duotone fa-solid fa-bell-on"></i>
-                                                    </div>
-                                                    <div class="meta">
-                                                        <div class="title">Gửi thông báo</div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <!-- Lịch sử xử lý (2) -->
-                                        <div class="box-lichSu">
-                                            <div class="box-header with-border thaotac-lable" style="border-top: 1px solid #e9e9e9; border-bottom: 0 !important;border-radius: 0 !important;
-                                                padding: 10px 0 !important;">
-                                                <h3 class="box-title color-222">
-                                                    <i class="fa-light fa-clock-rotate-left"></i>Lịch sử / Nhật ký gần
-                                                    đây
-                                                </h3>
-                                                <div class="pull-right d-none">
-                                                    <a class="btn btn-default btnClose" href="#" title="Close"><i
-                                                            class="fa fa-times"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="box-lichSu-list" style="padding-left: 5px !important;">
-                                                <ul>
-                                                    <li>
-                                                        <a href="#">
-                                                            <span class="day">15/08/20206 10:00</span>
-                                                            <span class="content-ls">Hoàn tất nhập học</span>
-                                                            <span class="user">Phòng đào tạo</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a href="#">
-                                                            <span class="day">15/08/20206 10:00</span>
-                                                            <span class="content-ls">Hoàn tất nhập học</span>
-                                                            <span class="user">Hệ thống</span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade" id="tructuyen" role="tabpanel"
-                                        aria-labelledby="hosoS-tabs-22">
-                                        Hồ
-                                        sơ
+                                    <div class="tab-pane fade" id="quatrinhhoc" role="tabpanel"
+                                        aria-labelledby="profile-tab">
+                                        quá trình học
                                     </div>
-                                    <div class="tab-pane fade" id="canbonhap" role="tabpanel"
-                                        aria-labelledby="contact-tab1">
-                                        Cán bộ nhập
+                                    <div class="tab-pane fade" id="ketquahoctap" role="tabpanel"
+                                        aria-labelledby="contact-tab">
+                                        Kết quả học tập
                                     </div>
-                                    <div class="tab-pane fade" id="import" role="tabpanel"
-                                        aria-labelledby="contact-tab2">
-                                        Công nợ
+                                    <div class="tab-pane fade" id="taichinh" role="tabpanel"
+                                        aria-labelledby="contact-tab">
+                                        Tài chính
                                     </div>
-                                    <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
-                                        aria-labelledby="contact-tab3">
-                                        Sắp tốt nghiệp
+                                    <div class="tab-pane fade" id="tuongtac" role="tabpanel"
+                                        aria-labelledby="contact-tab">
+                                        Tương tác
                                     </div>
-                                    <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
-                                        aria-labelledby="contact-tab4">
-                                        Sắp tốt nghiệp
+                                    <div class="tab-pane fade" id="hoso" role="tabpanel" aria-labelledby="contact-tab">
+                                        Hồ sơ
                                     </div>
+
                                 </div>
                             </div>
+
                         </div>
 
+                        <!-- Bảng điểm học kỳ -->
+                        <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-solid fa-file-spreadsheet mr-10"></i>
+                                    <div class="d-flex flex-wrap gap-0">Bảng điểm học kỳ
+
+                                    </div>
+                                </h3>
+                            </div>
+                            <div class="aps-search-candidate-detail pd-20">
+                                <div class="aps-table-select scroll-table-x">
+                                    <table id="tblsearch-candidate"
+                                        class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-left">Mã HP</th>
+                                                <th class="td-left">Tên học phần</th>
+                                                <th class="td-center">Nhóm</th>
+                                                <th class="td-center">Số TC</th>
+                                                <th class="td-center">Điểm QT</th>
+                                                <th class="td-center">Điểm thi</th>
+                                                <th class="td-center">Tổng kết</th>
+                                                <th class="td-center">Điểm chữ</th>
+                                                <th class="td-center">Kết quả</th>
+                                                <th class="td-center col-thaotac">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-left">IT4060</td>
+                                                <td class="td-left">Lập trình hướng đối tượng</td>
+                                                <td class="td-center">N01</td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">8.0</td>
+                                                <td class="td-center">9.0</td>
+                                                <td class="td-center">8.6</td>
+                                                <td class="td-center">A</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đạt</span></td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary"
+                                                        title="Xem thành phần điểm"><i
+                                                            class="fa-light fa-list-check"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">IT4470</td>
+                                                <td class="td-left">Cơ sở dữ liệu</td>
+                                                <td class="td-center">N02</td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">7.5</td>
+                                                <td class="td-center">8.0</td>
+                                                <td class="td-center">7.8</td>
+                                                <td class="td-center">B+</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đạt</span></td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary"
+                                                        title="Xem thành phần điểm"><i
+                                                            class="fa-light fa-list-check"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">IT3080</td>
+                                                <td class="td-left">Mạng máy tính</td>
+                                                <td class="td-center">N01</td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">6.5</td>
+                                                <td class="td-center">7.0</td>
+                                                <td class="td-center">6.8</td>
+                                                <td class="td-center">B</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đạt</span></td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary"
+                                                        title="Xem thành phần điểm"><i
+                                                            class="fa-light fa-list-check"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">MI2020</td>
+                                                <td class="td-left">Xác suất thống kê</td>
+                                                <td class="td-center">T03</td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">5.5</td>
+                                                <td class="td-center">5.0</td>
+                                                <td class="td-center">5.2</td>
+                                                <td class="td-center">C</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đạt</span></td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary"
+                                                        title="Xem thành phần điểm"><i
+                                                            class="fa-light fa-list-check"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">EN3010</td>
+                                                <td class="td-left">Tiếng Anh chuyên ngành</td>
+                                                <td class="td-center">N04</td>
+                                                <td class="td-center">2</td>
+                                                <td class="td-center">4.0</td>
+                                                <td class="td-center">3.0</td>
+                                                <td class="td-center">3.4</td>
+                                                <td class="td-center">F</td>
+                                                <td class="td-center"><span class="btn btn-soft-danger">Chưa đạt</span>
+                                                </td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary"
+                                                        title="Xem thành phần điểm"><i
+                                                            class="fa-light fa-list-check"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="note color-66 fs-12 mt10">
+                                    Ghi chú: Điểm QT là điểm quá trình
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Gpa theo học kỳ -->
+                        <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-regular fa-chart-line mr-10"></i>
+                                    <div class="d-flex flex-wrap gap-0">GPA theo học kỳ
+
+                                    </div>
+                                </h3>
+                            </div>
+                            <div class="aps-gpa-char p-20">
+                                <canvas id="DiemTB" width="100%" height="300"></canvas>
+                            </div>
+                        </div>
+                        <!-- Môn chưa đạt / học lại -->
+                        <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-red">
+                                    <i class="fa-duotone fa-solid fa-file-circle-exclamation mr-10"></i>
+                                    <div class="d-flex flex-wrap gap-0">Môn chưa đạt / học lại
+
+                                    </div>
+                                </h3>
+                            </div>
+                            <div class="aps-search-candidate-detail pd-20">
+                                <div class="aps-table-select scroll-table-x">
+                                    <table id="tblsearch-candidate"
+                                        class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-center">
+                                                    STT
+                                                </th>
+                                                <th class="td-left">Học phần</th>
+                                                <th class="td-center">Số TC</th>
+                                                <th class="td-center">Lần học</th>
+                                                <th class="td-center">Điểm cao nhất</th>
+                                                <th class="td-center">Trạng thái</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            <tr>
+                                                <td class="td-center">1</td>
+                                                <td class="td-left">
+                                                    Cấu trúc dữ liẹu và học thuật
+                                                </td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">2</td>
+                                                <td class="td-center">3.0</td>
+                                                <td class="td-center">
+                                                    <span class="btn btn-soft-danger">Chưa đạt</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-center">1</td>
+                                                <td class="td-left">
+                                                    Cấu trúc dữ liẹu và học thuật
+                                                </td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">2</td>
+                                                <td class="td-center">3.0</td>
+                                                <td class="td-center">
+                                                    <span class="btn btn-soft-danger">Chưa đạt</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-center">1</td>
+                                                <td class="td-left">
+                                                    Cấu trúc dữ liẹu và học thuật
+                                                </td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-center">2</td>
+                                                <td class="td-center">3.0</td>
+                                                <td class="td-center">
+                                                    <span class="btn btn-soft-danger">Chưa đạt</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="d-flex mt-10">
+                                    <a href="#" class="btn btn-primary">
+                                        <span>Xem tất cả(3)</span>
+                                        <i class="fa-light fa-arrow-right ms-5"></i>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Quyết định học vụ -->
+                        <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-red">
+                                    <i class="fa-duotone fa-solid fa-gavel mr-10"></i>
+                                    <div class="d-flex flex-wrap gap-0">Quyết định học vụ</div>
+                                </h3>
+                            </div>
+                            <div class="aps-search-candidate-detail pd-20">
+                                <div class="aps-table-select scroll-table-x">
+                                    <table
+                                        class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-left">Số QĐ</th>
+                                                <th class="td-left">Loại</th>
+                                                <th class="td-center">Ngày</th>
+                                                <th class="td-left">Nội dung</th>
+                                                <th class="td-center">Trạng thái</th>
+                                                <th class="td-center col-thaotac">Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-left">QĐ-1023/HV</td>
+                                                <td class="td-left"><span class="btn btn-soft-orange">Cảnh báo học
+                                                        vụ</span></td>
+                                                <td class="td-center">20/02/2024</td>
+                                                <td class="td-left">Cảnh báo mức 1 — GPA học kỳ &lt; 1.5</td>
+                                                <td class="td-center"><span class="btn btn-soft-secondary">Hết hiệu
+                                                        lực</span></td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary" title="Xem QĐ"><i
+                                                            class="fa-light fa-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">QĐ-2087/HV</td>
+                                                <td class="td-left"><span class="btn btn-soft-primary">Buộc học
+                                                        lại</span></td>
+                                                <td class="td-center">10/07/2024</td>
+                                                <td class="td-left">Học lại học phần EN3010 (Tiếng Anh CN)</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Còn hiệu
+                                                        lực</span></td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary" title="Xem QĐ"><i
+                                                            class="fa-light fa-eye"></i></a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p class="color-888 fz13 mt-10 mb-0">
+                                    <i class="fa-light fa-circle-info"></i> Liên kết: Xử lý học vụ · Cảnh báo &amp; can
+                                    thiệp.
+                                </p>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
     <!-- -------------------------- -->
     <!-- JS -->
     <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
@@ -1295,22 +1375,118 @@
     </script>
 
     <script>
-        const buttons = document.querySelectorAll('.tab-item-li');
-        const panes = document.querySelectorAll('.tab-pane');
-        buttons.forEach(button => {
-            button.addEventListener('click', () => {
-                // remove active button
-                buttons.forEach(btn => btn.classList.remove('active'));
+        var swiper = new Swiper(".aps-swiper-qhht", {
+            slidesPerView: "auto",
+            spaceBetween: 20,
+            pagination: false,
+            navigation: {
+                nextEl: ".swiper-button-next",
+                prevEl: ".swiper-button-prev",
+            },
+        });
+        var swiperTab = new Swiper(".aps-swiper-tab", {
+            slidesPerView: "auto",
+            spaceBetween: 0,
+            pagination: false,
+        });
+    </script>
+    <script>
+        const DiemTB = document.getElementById('DiemTB');
 
-                // remove active content
-                panes.forEach(pane => pane.classList.remove('active'));
+        const label = [
+            ['HK1', '2022/2023'],
+            ['HK2', '2022/2023'],
+            ['HK1', '2023/2024'],
+            ['HK2', '2023/2024'],
+            ['HK1', '2024/2025'],
+            ['HK2', '2024/2025']
+        ];
 
-                // add active current
-                button.classList.add('active');
-                const id = button.dataset.tab;
-                document.getElementById(id)
-                    .classList.add('active');
-            });
+        new Chart(DiemTB, {
+            type: 'line',
+            data: {
+                labels: label,
+                datasets: [{
+                    label: 'Điểm trung bình',
+                    data: [2.45, 2.78, 3.05, 3.18, 3.32, 3.45],
+                    borderColor: 'rgba(37, 99, 235, 1)',
+                    backgroundColor: 'rgba(37, 99, 235, .15)',
+                    pointBackgroundColor: 'rgba(37, 99, 235, 1)',
+                    pointBorderColor: '#fff',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+
+            options: {
+                maintainAspectRatio: false,
+
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 4,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                },
+
+                plugins: {
+                    title: {
+                        display: false,
+                        text: 'GPA theo học kỳ',
+                        padding: {
+                            top: 10,
+                            bottom: 10
+                        },
+                        font: {
+                            size: 20
+                        },
+                        position: 'top',
+                        align: 'center'
+                    },
+
+                    tooltip: {
+                        yAlign: 'bottom',
+                        backgroundColor: '#fff',
+                        titleColor: '#222',
+                        bodyColor: '#222',
+                        borderColor: '#cccccc',
+                        borderWidth: 1,
+                        padding: 15
+                    },
+
+                    legend: {
+                        display: false
+                    }
+                }
+            },
+
+            plugins: [{
+                id: 'valueLabel',
+                afterDatasetsDraw(chart) {
+                    const { ctx } = chart;
+
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const meta = chart.getDatasetMeta(i);
+
+                        meta.data.forEach((element, index) => {
+                            ctx.fillStyle = '#1e3a8a';
+                            ctx.font = 'bold 12px sans-serif';
+                            ctx.textAlign = 'center';
+
+                            ctx.fillText(
+                                dataset.data[index],
+                                element.x,
+                                element.y - 12
+                            );
+                        });
+                    });
+                }
+            }]
         });
     </script>
 </body>

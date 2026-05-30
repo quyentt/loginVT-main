@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiếp nhận đàu vào tuyển sinh</title>
+    <title>Hộp thư - trao đổi với sinh viên</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -387,8 +387,8 @@
                     </div>
                 </div>
             </div>
-            <div class="box-content aps-student-list aps-finance pt-0 pl20 pr20 pb-0">
-                <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
+            <div class="box-content aps-tuongTacInbox pt-0 pl20 pr20 pb-0">
+                <div class="box box-solid box-shadow pd0 mb-15">
                     <div class="row aps-kienTraNhanh-content aps-chitiethoso py-20 px-10">
                         <div class="col-12 col-lg-6">
                             <div class="user-infomation">
@@ -398,48 +398,60 @@
                                 <div class="infos">
                                     <div class=" user-name-main">
                                         <div class="text fz18 line-30 d-flex">Nguyễn Thị Bích
-                                            <span class="btn btn-30 btn-success ms-10 d-none">
+                                            <span class="btn btn-30 btn-success ms-10">
                                                 Đang học
                                         </div>
                                     </div>
                                     <div class="info-list">
                                         <div class="info">
-
                                             <div class="item">
-                                                <div class="label">Mã SV:</div>
-                                                <div class="text">123456789</div>
+                                                <div class="label bold">Mã SV:</div>
+                                                <div class="text bold">123456789</div>
                                             </div>
+                                            <div class="item">
+                                                <div class="label bold">CCCD:</div>
+                                                <div class="text bold">123456789</div>
+                                            </div>
+
                                             <div class="item">
                                                 <div class="label">Ngày sinh:</div>
-                                                <div class="text">11/11/2007</div>
+                                                <div class="text">12/03/2003</div>
                                             </div>
                                             <div class="item">
-                                                <div class="label">Lớp:</div>
-                                                <div class="text">DHSV01T</div>
+                                                <div class="label">Giới tính:</div>
+                                                <div class="text">Nam</div>
                                             </div>
                                             <div class="item">
-                                                <div class="label">Chương trình:</div>
-                                                <div class="text">Công nghệ thông tin</div>
+                                                <div class="label">SDT:</div>
+                                                <div class="text">0987.654.321</div>
                                             </div>
-
+                                            <div class="item">
+                                                <div class="label">Email:</div>
+                                                <div class="text">ngocbich85hd@gmail.com</div>
+                                            </div>
                                         </div>
                                         <div class="info">
-
                                             <div class="item">
-                                                <div class="label">Khóa:</div>
-                                                <div class="text">Khóa 2023</div>
+                                                <div class="label">Lớp:</div>
+                                                <div class="text">DHTT20A - Công Nghệ Thông Tin</div>
                                             </div>
                                             <div class="item">
                                                 <div class="label">Khoa:</div>
                                                 <div class="text">Công nghệ thông tin</div>
                                             </div>
+                                            <div class="item">
+                                                <div class="label">Khoa:</div>
+                                                <div class="text">Công nghệ thông tin</div>
+                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <div class="box box-solid box-search-ff">
+                            <div class="box box-solid box-search-ff d-none">
                                 <div class="tiepnhandauvao-filter-box box-search-main p-0 mb-20">
                                     <div class="left">
                                         <div class="d-flex flex-wrap gap-2  justify-content-end">
@@ -476,87 +488,113 @@
                                     <div class="right d-none"></div>
                                 </div>
                             </div>
-                            <div class=" aps-btn-group ms-auto">
-                                <a class="btn btn-outline-primary" href="">
-                                    <i class="fa-light fa-money-check-dollar-pen"></i>Thu tiền</span>
-                                </a>
-                                <a class="btn btn-outline-success" href="">
-                                    <i class="fa-solid fa-print"></i><span>In phiếu thu</span>
-                                </a>
-                                <a class="btn btn-outline-danger" href="">
-                                    <i class="fa-light fa-comment-dollar"></i><span>gửi nhắc nợ</span>
-                                </a>
-                                <a class="btn btn-outline-secondary" href="">
-                                    <i class="fa-solid fa-arrow-left"></i><span>Quay lại</span>
-                                </a>
+                            <div class="pull-right">
+                                <h4 class="lable-h4 text">Thao tác nhanh</h4>
+                                <div class="aps-btn-group ms-auto aps-thaoTacNhanh">
+                                    <a class="btn btn-primary" href="">
+                                        <i class="fa-duotone fa-solid fa-message-dots"></i>
+                                        Tạo tương tác mới</span>
+                                    </a>
+                                    <a class="btn btn-outline-success" href="">
+                                        <i class="fa-duotone fa-solid fa-bell-on"></i><span>Gửi thông báo</span>
+                                    </a>
+                                    <a class="btn btn-outline-danger" href="">
+                                        <i class="fa-duotone fa-solid fa-calendar-clock"></i><span>Đặt lịch hẹn</span>
+                                    </a>
+                                    <a class="btn btn-outline-secondary" href="">
+                                        <i class="fa-duotone fa-solid fa-memo-circle-info"></i><span>Ghi chú nội
+                                            bộ</span>
+                                    </a>
+                                    <a class="btn btn-outline-secondary" href="">
+                                        <i class="fa-light fa-ellipsis"></i><span>Xem thêm</span>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-
-
                 </div>
+
                 <div class="tiepnhandauvao-static-box aps-student-list-static">
+                    <!-- Tổng số tương tác -->
                     <div class="item box box-shadow">
                         <div class=" icon">
-                            <i class="fa-duotone fa-solid fa-display-chart-up-circle-dollar"></i>
+                            <i class="fa-duotone fa-solid fa-message-dots"></i>
                         </div>
                         <div class="meta">
-                            <div class="title">Tổng Phải thu</div>
+                            <div class="title">Tổng số tương tác</div>
                             <div class="detail detail-2">
-                                <span class="number">12,750,000</span>
-                                <span class="unit">(5 khoản thu)</span>
+                                <span class="number">18</span>
+                                <span class="unit">Trong 12 tháng qua</span>
                             </div>
                         </div>
                     </div>
+                    <!-- Yêu cầu đang mở -->
                     <div class="item box box-shadow">
                         <div class="icon">
-                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i>
+                            <i class="fa-duotone fa-solid fa-comments-question"></i>
                         </div>
                         <div class="meta">
-                            <div class="title">Đã thu</div>
+                            <div class="title">Yêu cầu đang mở</div>
                             <div class="detail detail-2">
-                                <span class="number">8,000,000</span>
-                                <span class="unit">68.63%</span>
+                                <span class="number">3</span>
+                                <span class="unit">Cần xử lý</span>
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class="fa-duotone fa-solid fa-money-check-dollar-pen"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Còn nợ</div>
-                            <div class="detail detail-2">
-                                <span class="number">3,955,000</span>
-                                <span class="unit">31.37%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class="fa-duotone fa-solid fa-lightbulb-dollar"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Miễn giảm/Học bổng</div>
-                            <div class="detail detail-2">
-                                <span class="number">875,000</span>
-                                <span class="unit">6.86%</span>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Lịch hẹn sắn tới -->
                     <div class="item box box-shadow">
                         <div class="icon">
                             <i class="fa-duotone fa-solid fa-calendar-clock"></i>
                         </div>
                         <div class="meta">
-                            <div class="title">Hạn thanh toán gần nhât</div>
+                            <div class="title">Lịch hẹn sắn tới</div>
                             <div class="detail detail-2">
-                                <span class="number">11/11/2026</span>
-                                <span class="unit">Còn 12 ngày</span>
+                                <span class="number">1</span>
+                                <span class="unit">Trong 7 ngày tới</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Phản hồi chậm -->
+                    <div class="item box box-shadow">
+                        <div class="icon">
+                            <i class="fa-duotone fa-solid fa-reply-clock"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Phản hồi chậm</div>
+                            <div class="detail detail-2">
+                                <span class="number">2</span>
+                                <span class="unit">Quá 48 giờ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Kênh liên hẹ ưu tiên-->
+                    <div class="item box box-shadow">
+                        <div class="icon">
+                            <i class="fa-duotone fa-solid fa-envelope-open-text"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Kênh liên hệ ưu tiên</div>
+                            <div class="detail detail-2">
+                                <span class="number">Email</span>
+                                <span class="unit">Nnguyễn Thị Bích</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cảnh báo học vụ -->
+                    <div class="item box box-shadow d-none">
+                        <div class="icon">
+                            <i class=" fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Cảnh báo học vụ</div>
+                            <div class="detail detail-2">
+                                <span class="number">1.263</span>
+                                <span class="unit">5,14%</span>
                             </div>
                         </div>
                     </div>
                 </div>
+
 
                 <div class="row aps-finance-detail pd0">
                     <!-- Danh sách khoản thu -->

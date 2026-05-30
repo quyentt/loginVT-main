@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiếp nhận đàu vào tuyển sinh</title>
+    <title>Dashboard cố vấn học tập</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -376,9 +376,9 @@
                 <div class="d-flex justify-content-between">
                     <div class="nav-content-left">
                         <p class="link">
-                            <a href="#">Kế hoạch nhập học</a>
+                            <a href="#">Cố vấn học tập</a>
                             <i class="fal fa-angle-right"></i>
-                            <a href="#">Quản lý sinh viên tổng quát</a>
+                            <a href="#">Dashboard cố vấn</a>
                         </p>
                     </div>
                     <div class="nav-content-right">
@@ -394,371 +394,227 @@
                             <h3 class="box-title">
                                 <img src="../assets/images/dashboad-item-8.png" class="images" />
                                 <div class="">
-                                    <span>Quản lý sinh viên tổng quát</span>
+                                    <span>Dashboard cố vấn học tập</span>
                                     <p class="aps-note fz14 text-left color-888">
-                                        Xem thông tin sinh viên theo vai trò và phạm vi dữ liệu được phân quyền.
+                                        Tổng quan sinh viên do cố vấn phụ trách: KPI (cảnh báo học vụ, nguy cơ rời học,
+                                        nợ tài chính, chưa ĐK học, lịch hẹn chưa xử lý), danh sách SV phụ trách — lọc
+                                        theo lớp/trạng thái/mức cảnh báo.
                                     </p>
                                 </div>
                             </h3>
-                            <div class="role-list">
-                                <p class="m-0 color-888">Vai trò hiện tại</p>
-                                <a href="#" class="item active">
-                                    <i class="fa-light da fa-building-columns"></i>
-                                    <span>Phòng quản lý sinh viên</span>
-                                </a>
-                                <a href="#" class="item">
-                                    <i class="fa-light da fa-graduation-cap"></i>
-                                    <span>Khoa/Viện</span>
-                                </a>
+                            <div class="aps-role-switcher">
+                                <span class="rs-label">Vai trò hiện tại</span>
+                                <div class="rs-seg">
+                                    <a href="#" class="rs-btn active">
+                                        <i class="fa-light fa-chalkboard-user"></i> Cố vấn học tập
+                                    </a>
+                                    <a href="#" class="rs-btn rs-sub">
+                                        TS. Trần Văn Nam <i class="fa-solid fa-lock"></i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Banner phạm vi dữ liệu -->
+                <div class="box box-solid box-shadow aps-admissions-lable mb-10"
+                    style="background:#eaf3ff !important;border:1px solid #cfe2ff !important;padding:14px 18px">
+                    <div class="d-flex" style="gap:12px">
+                        <i class="fa-solid fa-circle-info" style="color:#2f6fed;font-size:20px;margin-top:2px"></i>
+                        <div class="flex-grow-1">
+                            <p class="m-0" style="font-weight:600;color:#1c4fb3">Phạm vi dữ liệu: Bạn đang xem dữ liệu
+                                sinh viên trong Khoa CNTT theo quyền được phân công.</p>
+                            <p class="m-0 color-888">Khoa/Viện chỉ xem, quản lý dữ liệu trong phạm vi Khoa/Viện mình phụ
+                                trách.</p>
+                        </div>
+                        <a href="#" class="no-link" style="color:#98a2b3"><i class="fa-light fa-xmark"></i></a>
+                    </div>
+                </div>
+                <!-- Bộ lọc sinh viên -->
                 <div class="box box-solid box-shadow box-header aps-admissions-lable pd0">
-                    <div class="box box-solid box-search">
-                        <div class="data-scope-box">
-                            <h3 class="box-title color-blue" style="padding-bottom: 10px !important;">
-                                <i class="fa-sharp fa-thin fa-school-flag"></i> Phạm vi dữ liệu
-                            </h3>
-                            <div class="data-scope-list">
-                                <a href="#" class="item">
-                                    <div class="icon">
-                                        <i class=" fa-light fa-users-viewfinder"></i>
-                                    </div>
-                                    <div class="meta">
-                                        <div class="title">
-                                            Toàn trường
+                    <div class="box box-solid box-search-ff">
+                        <h3 class="box-title color-blue" style="padding-bottom: 10px !important;">
+                            <i class="fa-light fa-filter"></i> Bộ lọc sinh viên
+                        </h3>
+                        <div class="tiepnhandauvao-filter-box box-search-main pt-15">
+                            <div class="left">
+                                <div class="item item-select">
+                                    <div class="label">Khoa/Viện</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon" style="position:relative">
+                                            <input class="form-control" value="Khoa CNTT" disabled
+                                                style="background:#eef0f4;color:#667085;cursor:not-allowed;padding-right:32px">
+                                            <i class="fal fa-lock"
+                                                style="position:absolute !important;left:auto !important;right:12px !important;top:50% !important;transform:translateY(-50%);color:#98a2b3;pointer-events:none"></i>
                                         </div>
-                                        <p>Xem tất cả sinh viên trong toàn trường</p>
                                     </div>
-                                </a>
-                                <a href="#" class="item">
-                                    <div class="icon">
-                                        <i class=" fa-light fa-sitemap"></i>
-                                    </div>
-                                    <div class="meta">
-                                        <div class="title">
-                                            Theo khoa được phân quyền
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Hệ đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Đại học chính quy</option>
+                                                <option value="2">Vừa làm vừa học</option>
+                                            </select>
                                         </div>
-                                        <p>Xem sinh viên thuộc khoa được phân quyền</p>
                                     </div>
-                                </a>
-                                <a href="#" class="item">
-                                    <div class="icon">
-                                        <i class="fa-light fa-chalkboard-user"></i>
-                                    </div>
-                                    <div class="meta">
-                                        <div class="title">
-                                            Theo hệ/Chương trình được phân quyền
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khóa đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Khóa 2020</option>
+                                                <option value="2">Khóa 2021</option>
+                                            </select>
                                         </div>
-                                        <p>Xem sinh viên theo hệ hoặc trương trình được cấp</p>
                                     </div>
-                                </a>
-                                <a href="#" class="item">
-                                    <div class="icon">
-                                        <i class=" fa-light fa-user-tie"></i>
-                                    </div>
-                                    <div class="meta">
-                                        <div class="title">
-                                            Theo cố vấn/Lớp phụ trách
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Chương trình</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Công nghệ phần mềm</option>
+                                                <option value="2">Hệ thống thông tin</option>
+                                            </select>
                                         </div>
-                                        <p>Xem sinh viên hoặc danh sách cố vấn</p>
                                     </div>
-                                </a>
-                                <div class="info">
-                                    <i class="fa-solid fa-circle-info bold"></i>
-                                    <p>
-                                        <span>Bộ lọc sẽ mở theo phạm vi dữ liệu của người dùng</span>
-                                        <br>
-                                        Người dùng cấp khoa/viện sẽ được mặc định khóa theo cấp khoa/viện được phân
-                                        quyền
-                                    </p>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Lớp</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">D20CNPM02</option>
+                                                <option value="2">D20HTTT01</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Cố vấn học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">TS. Trần Văn Nam</option>
+                                                <option value="2">ThS. Lê Minh Hằng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Trạng thái học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Đang học</option>
+                                                <option value="2">Cảnh báo</option>
+                                                <option value="3">Tạm dừng</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-input input_TuKhoa">
+                                    <input id="txtSearch_TuKhoa" class="form-control"
+                                        placeholder="Nhập mã SV, họ tên, email, SĐT...">
+                                </div>
+                                <div class="item btn-group">
+                                    <a class="btn btn-outline-secondary btn-e1e1e1" href="">
+                                        <i class="fa-solid fa-arrows-rotate"></i><span>Đặt lại</span>
+                                    </a>
+                                    <a class="btn btn-primary" href="">
+                                        <i class="fa-solid fa-filter"></i><span>Lọc kết quả</span>
+                                    </a>
                                 </div>
                             </div>
+                            <div class="right d-none"></div>
                         </div>
                     </div>
-                    <div class="row aps-student-manager-search mt-20 pb-20">
-                        <div class="col-lg-6 col-12 aps-student-manager-office">
-                            <!-- 1  -->
-                            <h3 class="box-title color-green text-left" style="padding-top: 0 !important;">
-                                <div class="number-ql"> 1 </div>
-                                <div class="title">Dành cho phòng quản lý sinh viên <br>
-                                    <p>(có thể xem toàn trường)</p>
-                                </div>
-                            </h3>
-                            <div class="tiepnhandauvao-filter-box box-search-main pt-5">
-                                <div class="left">
-                                    <div class="item">
-                                        <div class="label">Hệ đào tạo</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Khóa đào tạo</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Khoa/Viện</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Chương trình</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Lớp</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Trạng thái học tập</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item text-item item-search">
-                                        <div class="label">Tìm kiếm</div>
-                                        <input id="txtSearch_TuKhoa" class="form-control"
-                                            placeholder="Mã hồ sơ, Họ tên, CCCD...">
-                                    </div>
-                                    <div class="item btn-item">
-                                        <a class="btn btn-default btn-search btnSearch_KHDK"><i
-                                                class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-12 aps-department-manager">
-                            <!-- 2 -->
-                            <div class="box-title-has-action justify-content-between"
-                                style="padding-top: 0 !important;">
-                                <h3 class="box-title color-green" style="padding-top: 0 !important;">
-                                    <div class="number-ql"> 2 </div>
-                                    <div class="title"> Dành cho người dùng cấp khoa viện<br>
-                                        <p>(Mặc định theo phạm vi được cấp)</p>
-                                    </div>
-                                </h3>
-                                <div class="lock-default">
-                                    <i class="fa-light fa-sitemap"></i>
-                                    <span><b>Khoa CNTT</b> - Theo phân quyền</span>
-                                </div>
-                            </div>
-                            <div class="tiepnhandauvao-filter-box box-search-main pt-5"
-                                style="padding-bottom: 0 !important;">
-                                <div class="left">
-                                    <div class="item">
-                                        <div class="label">Khóa đào tạo</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Chương trình</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Lớp</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Cố vấn học tập</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="label">Trạng thái</div>
-                                        <div class="form-item d-flex form-add-info flex-grow-1">
-                                            <div class="input-group no-icon">
-                                                <i class="fal fa-angle-down"></i>
-                                                <select class="form-select" aria-label="Default select example">
-                                                    <option selected="">Tất cả</option>
-                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item text-item item-search input_TuKhoa">
-                                        <div class="label">Tìm kiếm</div>
-                                        <input id="txtSearch_TuKhoa" class="form-control"
-                                            placeholder="Mã hồ sơ, Họ tên, CCCD...">
-                                    </div>
-                                    <div class="item btn-item">
-                                        <a class="btn btn-default btn-search btnSearch_KHDK"><i
-                                                class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="clear"></div>
                 </div>
                 <div class="tiepnhandauvao-static-box aps-student-static">
                     <div class="item box box-shadow">
-                        <div class=" icon">
-                            <i class="fa-duotone fa-solid fa-users"></i>
+                        <div class="icon" style="background:rgba(47,111,237,.12)">
+                            <i class="fa-solid fa-users" style="color:#2f6fed"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Tổng sinh viên</div>
                             <div class="detail detail-2">
-                                <span class="number">420</span>
+                                <span class="number">2.486</span>
                                 <span class="unit">100%</span>
                             </div>
                         </div>
                     </div>
                     <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class=" fa-solid fa-screen-users"></i>
+                        <div class="icon" style="background:rgba(34,160,107,.12)">
+                            <i class="fa-solid fa-graduation-cap" style="color:#22a06b"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Đang học</div>
                             <div class="detail detail-2">
-                                <span class="number">420</span>
-                                <span class="unit">100%</span>
+                                <span class="number">2.143</span>
+                                <span class="unit">86,20%</span>
                             </div>
                         </div>
                     </div>
                     <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class=" fa-solid fa-graduation-cap"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Sắp tốt nghiệp</div>
-                            <div class="detail detail-2">
-                                <span class="number">420</span>
-                                <span class="unit">49.00%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class=" fa-solid fa-user-clock"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Nguy cơ rời học</div>
-                            <div class="detail detail-2">
-                                <span class="number">420</span>
-                                <span class="unit">5.00%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class=" fa-solid fa-circle-dollar"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Nợ tài chính</div>
-                            <div class="detail detail-2">
-                                <span class="number">420</span>
-                                <span class="unit">4.00$</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class=" fa-solid fa-triangle-exclamation"></i>
+                        <div class="icon" style="background:rgba(245,166,35,.12)">
+                            <i class="fa-solid fa-triangle-exclamation" style="color:#f5a623"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Cảnh báo học vụ</div>
                             <div class="detail detail-2">
-                                <span class="number">420</span>
-                                <span class="unit">5.01%</span>
+                                <span class="number">167</span>
+                                <span class="unit">6,72%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item box box-shadow">
+                        <div class="icon" style="background:rgba(239,68,68,.12)">
+                            <i class="fa-solid fa-circle-dollar" style="color:#ef4444"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Nợ tài chính</div>
+                            <div class="detail detail-2">
+                                <span class="number">98</span>
+                                <span class="unit">3,94%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item box box-shadow">
+                        <div class="icon" style="background:rgba(124,92,219,.12)">
+                            <i class="fa-solid fa-graduation-cap" style="color:#7c5cdb"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Sắp tốt nghiệp</div>
+                            <div class="detail detail-2">
+                                <span class="number">312</span>
+                                <span class="unit">12.55%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item box box-shadow">
+                        <div class="icon" style="background:rgba(239,68,68,.12)">
+                            <i class="fa-solid fa-user-clock" style="color:#ef4444"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Nguy cơ rời học</div>
+                            <div class="detail detail-2">
+                                <span class="number">76</span>
+                                <span class="unit">3,06%</span>
                             </div>
                         </div>
                     </div>
@@ -769,7 +625,7 @@
                         <div class="box box-solid box-shadow aps-hs-dauVao pd0 ">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-blue">
-                                    <i class="fa-solid fa-user-graduate"></i> Trạng thái hiện tại
+                                    <i class="fa-solid fa-filter"></i> Trạng thái bộ lọc hiện tại
                                 </h3>
                                 <div class="pull-right">
                                     <div class="btn-group">
@@ -780,28 +636,20 @@
                                             <i class="fa-solid fa-arrows-rotate"></i><span>Đặt lại</span>
                                         </a>
                                         <a class="btn btn-outline-secondary btn-e1e1e1" href="">
-                                            <i class="fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
+                                            <i class="fa-solid fa-sliders"></i><span>Bộ lọc nâng cao</span>
                                         </a>
                                     </div>
                                 </div>
                             </div>
                             <div class="status-filter">
-                                <!-- <p class="m0">Trạng thái hiện tại</p> -->
                                 <div class="status-filter-list">
-                                    <div class="item btn-soft-primary">
-                                        Có thể xem toàn trường
-                                    </div>
-                                    <div class="item btn-soft-success">
-                                        Theo khoa được cấp quyền
-                                    </div>
-                                    <div class="item btn-soft-puple">
-                                        Theo hệ/chương trình được cấp
-                                    </div>
-                                    <div class="item btn-soft-orange">
-                                        Có thể xem toàn trường
-                                    </div>
+                                    <div class="item btn-soft-primary">Khoa: Khoa CNTT</div>
+                                    <div class="item btn-soft-success">Theo khóa đào tạo</div>
+                                    <div class="item btn-soft-puple">Theo chương trình</div>
+                                    <div class="item btn-soft-danger">Theo lớp</div>
+                                    <div class="item btn-soft-pink">Theo cố vấn</div>
+                                    <div class="item btn-soft-orange">Theo trạng thái học tập</div>
                                 </div>
-
                             </div>
                             <div class="aps-student-list px-20">
                                 <div class="aps-table-select scroll-table-x">
@@ -812,270 +660,168 @@
                                                 <th class="td-center"><input type="checkbox" id="chkSelectAll"></th>
                                                 <th class="td-left">Mã SV</th>
                                                 <th class="td-left">Họ tên</th>
-                                                <th class="td-left">Khoa viện</th>
                                                 <th class="td-left">Chương trình</th>
                                                 <th class="td-left">Lớp</th>
                                                 <th class="td-center">Trạng thái</th>
-                                                <th class="td-center">Cố vấn</th>
-                                                <th class="td-center">Cảnh cáo</th>
+                                                <th class="td-center">GPA</th>
+                                                <th class="td-right">Công nợ</th>
+                                                <th class="td-left">Cố vấn</th>
+                                                <th class="td-center">Cảnh báo</th>
                                                 <th class="td-center col-thaotac">Thao tác</th>
 
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
-                                                <td class="td-left">
-                                                    MA-KHTS-0001
-                                                </td>
+                                                <td class="td-center"><input type="checkbox"></td>
+                                                <td class="td-left">SV20220001</td>
                                                 <td class="td-left">
                                                     <div class="tt-sv d-flex align-items-center">
-                                                        <div class="image">
-                                                            <img src="../assets/images/anh-the-4x6.jpg">
-                                                        </div>Nguyễn Thị Bích
+                                                        <div class="image"><img src="../assets/images/anh-the-4x6.jpg">
+                                                        </div><a href="#" class="text-blue">Nguyễn Minh Anh</a>
                                                     </div>
                                                 </td>
-                                                <td class="td-left">Khoa CNTT</td>
-                                                <td class="td-left">Khoa học máy tính</td>
-                                                <td class="td-center">NV1</td>
-                                                <td class="td-center">
-                                                    <span class="btn btn-soft-success">Đang học</span>
-                                                    <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
-                                                </td>
-                                                <td class="td-center">
-                                                    Trần Hoàng Việt
-                                                </td>
-                                                <td class="td-center color-red"><span class="text-danger"><i
-                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span>
-                                                </td>
-
+                                                <td class="td-left">CNPM</td>
+                                                <td class="td-left">D20CNPM02</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đang học</span></td>
+                                                <td class="td-center">3.45</td>
+                                                <td class="td-right color-222">0đ</td>
+                                                <td class="td-left">TS. Trần Văn Nam</td>
+                                                <td class="td-center"><span class="text-danger"><i
+                                                            class="fa-solid fa-triangle-exclamation bold"></i> 1</span></td>
                                                 <td class="td-center">
                                                     <div class="d-flex gap-2 justify-content-center">
-                                                        <a href="#" class="btn btn-soft-primary">
-                                                            <i class="fa-light fa-eye"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-soft-success">
-                                                            <i class="fa-light fa-edit"></i>
-                                                        </a>
+                                                        <a href="#" class="btn btn-soft-primary"><i class="fa-light fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-soft-success"><i class="fa-light fa-edit"></i></a>
                                                     </div>
                                                 </td>
-
-                                            </tr>
-
-                                            <tr>
-                                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
-                                                <td class="td-left">
-                                                    MA-KHTS-0001
-                                                </td>
-                                                <td class="td-left">
-                                                    <div class="tt-sv d-flex align-items-center">
-                                                        <div class="image">
-                                                            <img src="../assets/images/anh-the-4x6.jpg">
-                                                        </div>Nguyễn Thị Bích
-                                                    </div>
-                                                </td>
-                                                <td class="td-left">Khoa CNTT</td>
-                                                <td class="td-left">Khoa học máy tính</td>
-                                                <td class="td-center">NV1</td>
-                                                <td class="td-center">
-                                                    <span class="btn btn-soft-success">Đang học</span>
-                                                    <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
-                                                </td>
-                                                <td class="td-center">
-                                                    Trần Hoàng Việt
-                                                </td>
-                                                <td class="td-center color-red"><span class="text-danger"><i
-                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span>
-                                                </td>
-
-                                                <td class="td-center">
-                                                    <div class="d-flex gap-2 justify-content-center">
-                                                        <a href="#" class="btn btn-soft-primary">
-                                                            <i class="fa-light fa-eye"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-soft-success">
-                                                            <i class="fa-light fa-edit"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-
                                             </tr>
                                             <tr>
-                                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
-                                                <td class="td-left">
-                                                    MA-KHTS-0001
-                                                </td>
+                                                <td class="td-center"><input type="checkbox"></td>
+                                                <td class="td-left">SV20220002</td>
                                                 <td class="td-left">
                                                     <div class="tt-sv d-flex align-items-center">
-                                                        <div class="image">
-                                                            <img src="../assets/images/anh-the-4x6.jpg">
-                                                        </div>Nguyễn Thị Bích
+                                                        <div class="image"><img src="../assets/images/anh-the-4x6.jpg">
+                                                        </div><a href="#" class="text-blue">Lê Hoàng Bảo</a>
                                                     </div>
                                                 </td>
-                                                <td class="td-left">Khoa CNTT</td>
-                                                <td class="td-left">Khoa học máy tính</td>
-                                                <td class="td-center">NV1</td>
-                                                <td class="td-center">
-                                                    <span class="btn btn-soft-success">Đang học</span>
-                                                    <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
-                                                </td>
-                                                <td class="td-center">
-                                                    Trần Hoàng Việt
-                                                </td>
-                                                <td class="td-center color-red"><span class="text-danger"><i
-                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span>
-                                                </td>
-
+                                                <td class="td-left">HTTT</td>
+                                                <td class="td-left">D20HTTT01</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đang học</span></td>
+                                                <td class="td-center">3.12</td>
+                                                <td class="td-right text-danger">1.250.000 đ</td>
+                                                <td class="td-left">TS. Trần Văn Nam</td>
+                                                <td class="td-center"><span class="text-danger"><i
+                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span></td>
                                                 <td class="td-center">
                                                     <div class="d-flex gap-2 justify-content-center">
-                                                        <a href="#" class="btn btn-soft-primary">
-                                                            <i class="fa-light fa-eye"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-soft-success">
-                                                            <i class="fa-light fa-edit"></i>
-                                                        </a>
+                                                        <a href="#" class="btn btn-soft-primary"><i class="fa-light fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-soft-success"><i class="fa-light fa-edit"></i></a>
                                                     </div>
                                                 </td>
-
                                             </tr>
                                             <tr>
-                                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
-                                                <td class="td-left">
-                                                    MA-KHTS-0001
-                                                </td>
+                                                <td class="td-center"><input type="checkbox"></td>
+                                                <td class="td-left">SV20220003</td>
                                                 <td class="td-left">
                                                     <div class="tt-sv d-flex align-items-center">
-                                                        <div class="image">
-                                                            <img src="../assets/images/anh-the-4x6.jpg">
-                                                        </div>Nguyễn Thị Bích
+                                                        <div class="image"><img src="../assets/images/anh-the-4x6.jpg">
+                                                        </div><a href="#" class="text-blue">Phạm Thùy Linh</a>
                                                     </div>
                                                 </td>
-                                                <td class="td-left">Khoa CNTT</td>
-                                                <td class="td-left">Khoa học máy tính</td>
-                                                <td class="td-center">NV1</td>
-                                                <td class="td-center">
-                                                    <span class="btn btn-soft-success">Đang học</span>
-                                                    <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
-                                                </td>
-                                                <td class="td-center">
-                                                    Trần Hoàng Việt
-                                                </td>
-                                                <td class="td-center color-red"><span class="text-danger"><i
-                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span>
-                                                </td>
-
+                                                <td class="td-left">ATTT</td>
+                                                <td class="td-left">D20ATTT01</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đang học</span></td>
+                                                <td class="td-center">3.78</td>
+                                                <td class="td-right color-222">0đ</td>
+                                                <td class="td-left">ThS. Lê Minh Hằng</td>
+                                                <td class="td-center"><span class="text-success"><i
+                                                            class="fa-solid fa-circle-check bold"></i> 0</span></td>
                                                 <td class="td-center">
                                                     <div class="d-flex gap-2 justify-content-center">
-                                                        <a href="#" class="btn btn-soft-primary">
-                                                            <i class="fa-light fa-eye"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-soft-success">
-                                                            <i class="fa-light fa-edit"></i>
-                                                        </a>
+                                                        <a href="#" class="btn btn-soft-primary"><i class="fa-light fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-soft-success"><i class="fa-light fa-edit"></i></a>
                                                     </div>
                                                 </td>
-
                                             </tr>
                                             <tr>
-                                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
-                                                <td class="td-left">
-                                                    MA-KHTS-0001
-                                                </td>
+                                                <td class="td-center"><input type="checkbox"></td>
+                                                <td class="td-left">SV20220004</td>
                                                 <td class="td-left">
                                                     <div class="tt-sv d-flex align-items-center">
-                                                        <div class="image">
-                                                            <img src="../assets/images/anh-the-4x6.jpg">
-                                                        </div>Nguyễn Thị Bích
+                                                        <div class="image"><img src="../assets/images/anh-the-4x6.jpg">
+                                                        </div><a href="#" class="text-blue">Trần Quốc Huy</a>
                                                     </div>
                                                 </td>
-                                                <td class="td-left">Khoa CNTT</td>
-                                                <td class="td-left">Khoa học máy tính</td>
-                                                <td class="td-center">NV1</td>
-                                                <td class="td-center">
-                                                    <span class="btn btn-soft-danger">Cảnh báo</span>
-                                                    <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
-                                                </td>
-                                                <td class="td-center">
-                                                    Trần Hoàng Việt
-                                                </td>
-                                                <td class="td-center color-red"><span class="text-danger"><i
-                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span>
-                                                </td>
-
+                                                <td class="td-left">CNPM (CLC)</td>
+                                                <td class="td-left">D20CNPMCLC</td>
+                                                <td class="td-center"><span class="btn btn-soft-orange">Cảnh báo</span></td>
+                                                <td class="td-center">2.45</td>
+                                                <td class="td-right text-danger">2.300.000 đ</td>
+                                                <td class="td-left">TS. Phạm Đức Hải</td>
+                                                <td class="td-center"><span class="text-danger"><i
+                                                            class="fa-solid fa-triangle-exclamation bold"></i> 3</span></td>
                                                 <td class="td-center">
                                                     <div class="d-flex gap-2 justify-content-center">
-                                                        <a href="#" class="btn btn-soft-primary">
-                                                            <i class="fa-light fa-eye"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-soft-success">
-                                                            <i class="fa-light fa-edit"></i>
-                                                        </a>
+                                                        <a href="#" class="btn btn-soft-primary"><i class="fa-light fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-soft-success"><i class="fa-light fa-edit"></i></a>
                                                     </div>
                                                 </td>
-
                                             </tr>
                                             <tr>
-                                                <td class="td-center"><input type="checkbox" id="chkSelectAll"></td>
-                                                <td class="td-left">
-                                                    MA-KHTS-0001
-                                                </td>
+                                                <td class="td-center"><input type="checkbox"></td>
+                                                <td class="td-left">SV20220005</td>
                                                 <td class="td-left">
                                                     <div class="tt-sv d-flex align-items-center">
-                                                        <div class="image">
-                                                            <img src="../assets/images/anh-the-4x6.jpg">
-                                                        </div>Nguyễn Thị Bích
+                                                        <div class="image"><img src="../assets/images/anh-the-4x6.jpg">
+                                                        </div><a href="#" class="text-blue">Võ Nhật Minh</a>
                                                     </div>
                                                 </td>
-                                                <td class="td-left">Khoa CNTT</td>
-                                                <td class="td-left">Khoa học máy tính</td>
-                                                <td class="td-center">NV1</td>
-                                                <td class="td-center">
-                                                    <span class="btn btn-soft-orange">Tạm dừng</span>
-                                                    <!-- <a class="btn btn-soft-success" title="Xem" data-bs-toggle="modal"
-                                    data-bs-target="#boTri_nhanSu">Hợp nợ</a> -->
-                                                </td>
-                                                <td class="td-center">
-                                                    Trần Hoàng Việt
-                                                </td>
-                                                <td class="td-center color-red"><span class="text-danger"><i
-                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span>
-                                                </td>
-
+                                                <td class="td-left">HTTT</td>
+                                                <td class="td-left">D21HTTT02</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đang học</span></td>
+                                                <td class="td-center">3.01</td>
+                                                <td class="td-right color-222">0đ</td>
+                                                <td class="td-left">TS. Trần Văn Nam</td>
+                                                <td class="td-center"><span class="text-danger"><i
+                                                            class="fa-solid fa-triangle-exclamation bold"></i> 1</span></td>
                                                 <td class="td-center">
                                                     <div class="d-flex gap-2 justify-content-center">
-                                                        <a href="#" class="btn btn-soft-primary">
-                                                            <i class="fa-light fa-eye"></i>
-                                                        </a>
-                                                        <a href="#" class="btn btn-soft-success">
-                                                            <i class="fa-light fa-edit"></i>
-                                                        </a>
+                                                        <a href="#" class="btn btn-soft-primary"><i class="fa-light fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-soft-success"><i class="fa-light fa-edit"></i></a>
                                                     </div>
                                                 </td>
-
+                                            </tr>
+                                            <tr>
+                                                <td class="td-center"><input type="checkbox"></td>
+                                                <td class="td-left">SV20220006</td>
+                                                <td class="td-left">
+                                                    <div class="tt-sv d-flex align-items-center">
+                                                        <div class="image"><img src="../assets/images/anh-the-4x6.jpg">
+                                                        </div><a href="#" class="text-blue">Đỗ Khánh Vy</a>
+                                                    </div>
+                                                </td>
+                                                <td class="td-left">Khoa học dữ liệu</td>
+                                                <td class="td-left">D21KHDL01</td>
+                                                <td class="td-center"><span class="btn btn-soft-secondary">Tạm dừng</span></td>
+                                                <td class="td-center">2.10</td>
+                                                <td class="td-right text-danger">3.050.000 đ</td>
+                                                <td class="td-left">ThS. Nguyễn Thu Hà</td>
+                                                <td class="td-center"><span class="text-danger"><i
+                                                            class="fa-solid fa-triangle-exclamation bold"></i> 2</span></td>
+                                                <td class="td-center">
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        <a href="#" class="btn btn-soft-primary"><i class="fa-light fa-eye"></i></a>
+                                                        <a href="#" class="btn btn-soft-success"><i class="fa-light fa-edit"></i></a>
+                                                    </div>
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                                 <div class="my-paging mt-10">
                                     <div class="my-paging_static color-888">
-                                        1 đến 10 trong 1210 dữ liệu
-                                    </div>
-                                    <div class="my-paging_quantity">
-                                        <span class="color-888">Hiển thị</span>
-                                        <div class="input-wrap">
-                                            <select name="" id="" class="form-select">
-                                                <option value="">10</option>
-                                                <option value="">10</option>
-                                                <option value="">10</option>
-                                                <option value="">10</option>
-                                            </select>
-                                            <i class="fa-light fa-chevron-down icon-end"></i>
-                                        </div>
+                                        Hiển thị 1 - 10 trong tổng số 2.486 sinh viên (Khoa CNTT)
                                     </div>
                                     <ul class="my-paging_wrap">
                                         <li><a href=""><i class="fa-light fa-chevron-left"></i></a></li>
@@ -1085,14 +831,20 @@
                                         <li><a href="">4</a></li>
                                         <li><a href="">5</a></li>
                                         <li><a href="">...</a></li>
-                                        <li><a href="">101</a></li>
-                                        <li><a href="">102</a></li>
-                                        <li><a href="">103</a></li>
-                                        <li><a href="">104</a></li>
-                                        <li><a href="">105</a></li>
+                                        <li><a href="">249</a></li>
                                         <li><a href=""><i class="fa-light fa-chevron-right"></i></a>
                                         </li>
                                     </ul>
+                                    <div class="my-paging_quantity">
+                                        <div class="input-wrap">
+                                            <select name="" id="" class="form-select">
+                                                <option value="">10 / trang</option>
+                                                <option value="">20 / trang</option>
+                                                <option value="">50 / trang</option>
+                                            </select>
+                                            <i class="fa-light fa-chevron-down icon-end"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1117,18 +869,18 @@
                                     <div class="info">
                                         <div class="item user-name">
                                             <div class="label">Họ và tên:</div>
-                                            <div class="text">Nguyễn Thị Bích <span class="status bg-green"></span>
+                                            <div class="text">Nguyễn Minh Anh <span class="status bg-green"></span>
                                             </div>
 
                                         </div>
                                         <div class="item">
                                             <div class="label">Mã SV:</div>
-                                            <div class="text">123456789</div>
+                                            <div class="text">SV20220001</div>
 
                                         </div>
                                         <div class="item">
                                             <div class="label">Ngày sinh:</div>
-                                            <div class="text">11/11/2005</div>
+                                            <div class="text">15/03/2004</div>
 
                                         </div>
                                         <div class="item">
@@ -1138,12 +890,12 @@
                                         </div>
                                         <div class="item">
                                             <div class="label">Số điện thoại:</div>
-                                            <div class="text">123456789</div>
+                                            <div class="text">036 987 6543</div>
 
                                         </div>
                                         <div class="item">
                                             <div class="label">Email:</div>
-                                            <div class="text">email@gmail.com</div>
+                                            <div class="text">minh.anh@abc.edu.vn</div>
 
                                         </div>
                                     </div>
@@ -1168,18 +920,17 @@
                                 <div class="aps-kienTraNhanh-trangThai w100 aps-sinhvientongquat-trangthai pd20">
                                     <div class="row item">
                                         <div class="item-lable">Vai trò hiện tại:</div>
-                                        <div class="item-content"><a class="btn btn-soft-primary btnConNo no-link">Phòng
-                                                quản lý sinh viên</a>
+                                        <div class="item-content"><a class="btn btn-soft-primary btnConNo no-link">Khoa/Viện</a>
                                         </div>
                                     </div>
                                     <div class="row item">
                                         <div class=" item-lable ">Phạm vi dữ liệu:</div>
-                                        <div class=" item-content"><a class="btn btn-soft-success btnConNo no-link">Có
-                                                thể xem toàn trường</a>
+                                        <div class=" item-content"><a class="btn btn-soft-success btnConNo no-link">Chỉ
+                                                xem trong Khoa CNTT</a>
                                         </div>
                                     </div>
                                     <div class="row item">
-                                        <div class=" item-lable ">Phạm vi dữ liệu:</div>
+                                        <div class=" item-lable ">Phạm vi áp dụng:</div>
                                         <div class="item-content-list">
                                             <div class=" item-content"><a
                                                     class="btn btn-outline-secondary btn-e1e1e1 no-link">
@@ -1187,15 +938,15 @@
                                             </div>
                                             <div class=" item-content"><a
                                                     class="btn btn-outline-secondary btn-e1e1e1 no-link">
-                                                    Hệ ĐTCQ</a>
+                                                    Hệ ĐH chính quy</a>
                                             </div>
                                             <div class=" item-content"><a
                                                     class="btn btn-outline-secondary btn-e1e1e1 no-link">
-                                                    Khóa K2022</a>
+                                                    Khóa 2020</a>
                                             </div>
                                             <div class=" item-content"><a
                                                     class="btn btn-outline-secondary btn-e1e1e1 no-link">
-                                                    Lơp HIRT202A</a>
+                                                    Lớp D20CNPM02</a>
                                             </div>
                                             <div class=" item-content"><a
                                                     class="btn btn-outline-secondary btn-e1e1e1 no-link"> +2
@@ -1210,8 +961,8 @@
                         <!-- Gợi ý bộ lọc -->
                         <div class="box box-solid box-shadow aps-filter-sv pd0 mb-15">
                             <div class="box-header with-border">
-                                <h3 class="box-title color-red">
-                                    <i class="fa-light fa-filter-list"></i> Gợi ý bộ lọc
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-light fa-circle-info"></i> Nguyên tắc lọc (gợi ý)
                                 </h3>
                                 <div class="pull-right d-none">
                                     <a class="btn btn-default btnClose" href="#" title="Close"><i
@@ -1223,20 +974,19 @@
                                     <div class="item">
                                         <i class="fa-light fa-circle-check color-green"></i>
                                         <span>
-                                            <b>Phòng QLSV:</b> Nên lọc từ hệ, khóa, khoa để bao quat toàn trường.
-                                            Nên lọc từ hệ, khóa, khoa để bao quat toàn trường.
+                                            Khoa/Viện luôn được cố định theo phạm vi được phân quyền.
                                         </span>
                                     </div>
                                     <div class="item">
                                         <i class="fa-light fa-circle-check color-green"></i>
                                         <span>
-                                            <b>Phòng QLSV:</b> Nên lọc từ hệ, khóa, khoa để bao quat toàn trường.
+                                            Bạn nên lọc tiếp theo Chương trình, Lớp, Cố vấn để quản lý hiệu quả.
                                         </span>
                                     </div>
                                     <div class="item">
                                         <i class="fa-light fa-circle-check color-green"></i>
                                         <span>
-                                            <b>Phòng QLSV:</b> Nên lọc từ hệ, khóa, khoa để bao quat toàn trường.
+                                            Ưu tiên theo dõi sinh viên có Cảnh báo học vụ, Công nợ hoặc Nguy cơ rời học.
                                         </span>
                                     </div>
 
@@ -1248,7 +998,7 @@
                         <div class="box box-solid box-shadow aps-boSung pd0 mb-15">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-puple">
-                                    <i class="fa-regular fa-check-to-slot"></i> Nên bổ sung
+                                    <i class="fa-regular fa-check-to-slot"></i> Tiện ích nên bổ sung
                                 </h3>
                                 <div class="pull-right d-none">
                                     <a class="btn btn-default btnClose" href="#" title="Close"><i
@@ -1261,41 +1011,25 @@
                                         <div class="col-6">
                                             <div class="item">
                                                 <i class="fa-light fa-square-check color-green"></i>
-                                                <span>
-                                                    Lưu bộ lọc cá nhân
-                                                </span>
+                                                <span>Lưu bộ lọc cá nhân</span>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="item">
                                                 <i class="fa-light fa-square-check color-green"></i>
-                                                <span>
-                                                    Lưu bộ lọc cá nhân
-                                                </span>
+                                                <span>Bộ lọc theo rủi ro</span>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="item">
                                                 <i class="fa-light fa-square-check color-green"></i>
-                                                <span>
-                                                    Lưu bộ lọc cá nhân
-                                                </span>
+                                                <span>Bộ lọc theo cố vấn/case manager</span>
                                             </div>
                                         </div>
                                         <div class="col-6">
                                             <div class="item">
                                                 <i class="fa-light fa-square-check color-green"></i>
-                                                <span>
-                                                    Lưu bộ lọc cá nhân
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="col-6">
-                                            <div class="item">
-                                                <i class="fa-light fa-square-check color-green"></i>
-                                                <span>
-                                                    Lưu bộ lọc cá nhân
-                                                </span>
+                                                <span>Dashboard cảnh báo sớm</span>
                                             </div>
                                         </div>
                                     </div>
@@ -1317,7 +1051,7 @@
                                 <div class="aps-info-box">
                                     <i class="fa-solid fa-circle-info bold"></i>
                                     <p class="mb-0">
-                                        Các gợi ý giúp nâng cao hiệu quả quản lý sinh viên theo hướng Student success.
+                                        Các gợi ý giúp nâng cao hiệu quả quản lý sinh viên trong Khoa CNTT.
                                     </p>
 
                                 </div>

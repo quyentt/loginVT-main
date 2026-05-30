@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiếp nhận đàu vào tuyển sinh</title>
+    <title>Tài chính / học phí / công nợ</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -376,9 +376,9 @@
                 <div class="d-flex justify-content-between">
                     <div class="nav-content-left">
                         <p class="link">
-                            <a href="#">Kế hoạch nhập học</a>
+                            <a href="#">Quản lý sinh viên</a>
                             <i class="fal fa-angle-right"></i>
-                            <a href="#">Quản lý sinh viên tổng quát</a>
+                            <a href="#">Tài chính / công nợ</a>
                         </p>
                     </div>
                     <div class="nav-content-right">
@@ -443,6 +443,18 @@
                                 <div class="tiepnhandauvao-filter-box box-search-main p-0 mb-20">
                                     <div class="left">
                                         <div class="d-flex flex-wrap gap-2  justify-content-end">
+                                            <div class="item item-select">
+                                                <div class="label">QHHT</div>
+                                                <div class="form-item d-flex form-add-info flex-grow-1">
+                                                    <div class="input-group no-icon">
+                                                        <i class="fal fa-angle-down"></i>
+                                                        <select class="form-select" aria-label="Default select example">
+                                                            <option selected="">CNTT · Cử nhân (chính) · K2022</option>
+                                                            <option value="1">Ngôn ngữ Anh · VB2 · K2023</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="item item-select">
                                                 <div class="label">Năm học</div>
                                                 <div class="form-item d-flex form-add-info flex-grow-1">
@@ -577,60 +589,76 @@
                                                 <th class="td-center">#</th>
                                                 <th class="td-left">Khoản thu</th>
                                                 <th class="td-left">Kỳ thu</th>
-                                                <th class="td-right">Số tiền phải nộp (đ)</th>
-                                                <th class="td-right">Miễn giảm/Học bổng (đ)</th>
-                                                <th class="td-right">ĐÃ thanh toán (đ)</th>
-                                                <th class="td-right">công nợ (đ)</th>
+                                                <th class="td-right">Phải nộp (đ)</th>
+                                                <th class="td-right">Miễn giảm/HB (đ)</th>
+                                                <th class="td-right">Đã thanh toán (đ)</th>
+                                                <th class="td-right">Còn nợ (đ)</th>
                                                 <th class="td-center">Hạn nộp</th>
                                                 <th class="td-center">Trạng thái</th>
-
+                                                <th class="td-center col-thaotac">Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td class="td-center">1</td>
-                                                <td class="td-left">
-                                                    Học phí tín chỉ </td>
-                                                <td class="td-left">HK II(2025 - 2026)</td>
+                                                <td class="td-left">Học phí tín chỉ</td>
+                                                <td class="td-left">HK II (2025-2026)</td>
                                                 <td class="td-right">8,550,000</td>
                                                 <td class="td-right">550,000</td>
                                                 <td class="td-right">550,000</td>
                                                 <td class="td-right"><span class="text-orange">8,000,000</span></td>
                                                 <td class="td-center">11/11/2026</td>
-                                                <td class="td-center"><span class="btn btn-soft-orange">Chưa thanh toán
-                                                        đủ</span>
+                                                <td class="td-center"><span class="btn btn-soft-orange">Chưa TT
+                                                        đủ</span></td>
+                                                <td class="td-center">
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        <a href="#" class="btn btn-soft-primary" title="Xem phiếu"><i
+                                                                class="fa-light fa-file-invoice-dollar"></i></a>
+                                                        <a href="#" class="btn btn-soft-danger" title="Gửi nhắc nợ"><i
+                                                                class="fa-light fa-comment-dollar"></i></a>
+                                                    </div>
                                                 </td>
-
                                             </tr>
                                             <tr>
-                                                <td class="td-center">1</td>
-                                                <td class="td-left">
-                                                    Học phí tín chỉ </td>
-                                                <td class="td-left">HK II(2025 - 2026)</td>
-                                                <td class="td-right">8,550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right"><span class="text-orange">8,000,000</span></td>
+                                                <td class="td-center">2</td>
+                                                <td class="td-left">Lệ phí khác</td>
+                                                <td class="td-left">HK II (2025-2026)</td>
+                                                <td class="td-right">300,000</td>
+                                                <td class="td-right">0</td>
+                                                <td class="td-right">0</td>
+                                                <td class="td-right"><span class="text-orange">300,000</span></td>
                                                 <td class="td-center">11/11/2026</td>
                                                 <td class="td-center"><span class="btn btn-soft-danger">Chưa thanh
-                                                        toán</span>
+                                                        toán</span></td>
+                                                <td class="td-center">
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        <a href="#" class="btn btn-soft-primary" title="Xem phiếu"><i
+                                                                class="fa-light fa-file-invoice-dollar"></i></a>
+                                                        <a href="#" class="btn btn-soft-danger" title="Gửi nhắc nợ"><i
+                                                                class="fa-light fa-comment-dollar"></i></a>
+                                                    </div>
                                                 </td>
-
                                             </tr>
                                             <tr>
-                                                <td class="td-center">1</td>
-                                                <td class="td-left">
-                                                    Học phí tín chỉ </td>
-                                                <td class="td-left">HK II(2025 - 2026)</td>
+                                                <td class="td-center">3</td>
+                                                <td class="td-left">Học phí tín chỉ</td>
+                                                <td class="td-left">HK I (2025-2026)</td>
                                                 <td class="td-right">8,550,000</td>
                                                 <td class="td-right">550,000</td>
-                                                <td class="td-right">550,000</td>
+                                                <td class="td-right">8,000,000</td>
                                                 <td class="td-right">0</td>
-                                                <td class="td-center">11/11/2026</td>
+                                                <td class="td-center">11/09/2025</td>
                                                 <td class="td-center"><span class="btn btn-soft-success">Đã thanh
-                                                        toán</span>
+                                                        toán</span></td>
+                                                <td class="td-center">
+                                                    <div class="d-flex gap-2 justify-content-center">
+                                                        <a href="#" class="btn btn-soft-primary" title="Xem phiếu"><i
+                                                                class="fa-light fa-file-invoice-dollar"></i></a>
+                                                        <a href="#" class="btn btn-soft-secondary disabled"
+                                                            title="Đã thanh toán"><i
+                                                                class="fa-light fa-comment-dollar"></i></a>
+                                                    </div>
                                                 </td>
-
                                             </tr>
                                         </tbody>
                                     </table>
@@ -663,21 +691,37 @@
                                                 <th class="td-left">Hình thức thanh toán</th>
                                                 <th class="td-left">Nội dung</th>
                                                 <th class="td-right">Số tiền (đ)</th>
-                                                <th class="td-right">người thu</th>
+                                                <th class="td-left">Người thu</th>
+                                                <th class="td-center col-thaotac">Thao tác</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td class="td-center">1</td>
-                                                <td class="td-center">11/11/2026 </td>
+                                                <td class="td-center">11/11/2026</td>
                                                 <td class="td-center"><span class="text-blue">PT0022256</span></td>
                                                 <td class="td-left">Chuyển khoản</td>
                                                 <td class="td-left">Thanh toán học phí đợt 2</td>
                                                 <td class="td-right">550,000</td>
                                                 <td class="td-left">Phạm Thị Thu</td>
-
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary" title="In lại biên lai"><i
+                                                            class="fa-light fa-print"></i></a>
+                                                </td>
                                             </tr>
-
+                                            <tr>
+                                                <td class="td-center">2</td>
+                                                <td class="td-center">11/09/2025</td>
+                                                <td class="td-center"><span class="text-blue">PT0019874</span></td>
+                                                <td class="td-left">Tiền mặt</td>
+                                                <td class="td-left">Thanh toán học phí HK I</td>
+                                                <td class="td-right">8,000,000</td>
+                                                <td class="td-left">Nguyễn Văn Tài</td>
+                                                <td class="td-center">
+                                                    <a href="#" class="btn btn-soft-primary" title="In lại biên lai"><i
+                                                            class="fa-light fa-print"></i></a>
+                                                </td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

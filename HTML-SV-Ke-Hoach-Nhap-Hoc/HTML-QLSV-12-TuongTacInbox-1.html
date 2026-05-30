@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tiếp nhận đàu vào tuyển sinh</title>
+    <title>Hộp thư - trao đổi với sinh viên</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
 </head>
 
@@ -378,7 +378,7 @@
                         <p class="link">
                             <a href="#">Kế hoạch nhập học</a>
                             <i class="fal fa-angle-right"></i>
-                            <a href="#">Quản lý sinh viên tổng quát</a>
+                            <a href="#">Hộp thư - trao đổi với sinh viên</a>
                         </p>
                     </div>
                     <div class="nav-content-right">
@@ -387,8 +387,9 @@
                     </div>
                 </div>
             </div>
-            <div class="box-content aps-student-list aps-finance pt-0 pl20 pr20 pb-0">
-                <div class="box box-solid box-shadow aps-kienTraNhanh pd0 mb-15">
+            <div class="box-content aps-tuongTacInbox pt-0 pl20 pr20 pb-0">
+                <!-- ============ KHỐI A: Hồ sơ sinh viên + Thao tác nhanh ============ -->
+                <div class="box box-solid box-shadow pd0 mb-15">
                     <div class="row aps-kienTraNhanh-content aps-chitiethoso py-20 px-10">
                         <div class="col-12 col-lg-6">
                             <div class="user-infomation">
@@ -397,41 +398,52 @@
                                 </div>
                                 <div class="infos">
                                     <div class=" user-name-main">
-                                        <div class="text fz18 line-30 d-flex">Nguyễn Thị Bích
-                                            <span class="btn btn-30 btn-success ms-10 d-none">
+                                        <div class="text fz18 line-30 d-flex">Nguyễn Văn An
+                                            <span class="btn btn-30 btn-success ms-10">
                                                 Đang học
+                                            </span>
                                         </div>
                                     </div>
                                     <div class="info-list">
                                         <div class="info">
-
                                             <div class="item">
-                                                <div class="label">Mã SV:</div>
-                                                <div class="text">123456789</div>
+                                                <div class="label bold">Mã SV:</div>
+                                                <div class="text bold">SV20220001</div>
                                             </div>
+                                            <div class="item">
+                                                <div class="label bold">CCCD:</div>
+                                                <div class="text bold">001203045678</div>
+                                            </div>
+
                                             <div class="item">
                                                 <div class="label">Ngày sinh:</div>
-                                                <div class="text">11/11/2007</div>
+                                                <div class="text">12/03/2003</div>
                                             </div>
                                             <div class="item">
-                                                <div class="label">Lớp:</div>
-                                                <div class="text">DHSV01T</div>
+                                                <div class="label">Giới tính:</div>
+                                                <div class="text">Nam</div>
                                             </div>
                                             <div class="item">
-                                                <div class="label">Chương trình:</div>
-                                                <div class="text">Công nghệ thông tin</div>
+                                                <div class="label">SĐT:</div>
+                                                <div class="text">0987 654 321</div>
                                             </div>
-
+                                            <div class="item">
+                                                <div class="label">Email:</div>
+                                                <div class="text">nguyenvanan@gmail.com</div>
+                                            </div>
                                         </div>
                                         <div class="info">
-
                                             <div class="item">
-                                                <div class="label">Khóa:</div>
-                                                <div class="text">Khóa 2023</div>
+                                                <div class="label">Lớp:</div>
+                                                <div class="text">DHTT20A - Công nghệ thông tin</div>
                                             </div>
                                             <div class="item">
                                                 <div class="label">Khoa:</div>
                                                 <div class="text">Công nghệ thông tin</div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="label">Khóa:</div>
+                                                <div class="text">2022</div>
                                             </div>
                                         </div>
                                     </div>
@@ -439,357 +451,395 @@
                             </div>
                         </div>
                         <div class="col-12 col-lg-6">
-                            <div class="box box-solid box-search-ff">
-                                <div class="tiepnhandauvao-filter-box box-search-main p-0 mb-20">
-                                    <div class="left">
-                                        <div class="d-flex flex-wrap gap-2  justify-content-end">
-                                            <div class="item item-select">
-                                                <div class="label">Năm học</div>
-                                                <div class="form-item d-flex form-add-info flex-grow-1">
-                                                    <div class="input-group no-icon">
-                                                        <i class="fal fa-angle-down"></i>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected="">2024 -2025</option>
-                                                            <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                            <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                            <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="item item-select">
-                                                <div class="label">Học kỳ</div>
-                                                <div class="form-item d-flex form-add-info flex-grow-1">
-                                                    <div class="input-group no-icon">
-                                                        <i class="fal fa-angle-down"></i>
-                                                        <select class="form-select" aria-label="Default select example">
-                                                            <option selected="">Tất cả</option>
-                                                            <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                            <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                            <option value="3">Kế hoạch tuyển sinh 3</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="right d-none"></div>
+                            <div class="pull-right">
+                                <h4 class="lable-h4 text">Thao tác nhanh</h4>
+                                <div class="aps-btn-group ms-auto aps-thaoTacNhanh">
+                                    <a class="btn btn-primary" href="">
+                                        <i class="fa-duotone fa-solid fa-message-dots"></i>
+                                        <span>Tạo tương tác mới</span>
+                                    </a>
+                                    <a class="btn btn-outline-success" href="">
+                                        <i class="fa-duotone fa-solid fa-paper-plane"></i><span>Gửi thông báo</span>
+                                    </a>
+                                    <a class="btn btn-outline-danger" href="">
+                                        <i class="fa-duotone fa-solid fa-calendar-clock"></i><span>Đặt lịch hẹn</span>
+                                    </a>
+                                    <a class="btn btn-outline-secondary" href="">
+                                        <i class="fa-duotone fa-solid fa-memo-circle-info"></i><span>Ghi chú nội
+                                            bộ</span>
+                                    </a>
+                                    <a class="btn btn-outline-secondary" href="">
+                                        <i class="fa-light fa-ellipsis"></i>
+                                    </a>
                                 </div>
                             </div>
-                            <div class=" aps-btn-group ms-auto">
-                                <a class="btn btn-outline-primary" href="">
-                                    <i class="fa-light fa-money-check-dollar-pen"></i>Thu tiền</span>
-                                </a>
-                                <a class="btn btn-outline-success" href="">
-                                    <i class="fa-solid fa-print"></i><span>In phiếu thu</span>
-                                </a>
-                                <a class="btn btn-outline-danger" href="">
-                                    <i class="fa-light fa-comment-dollar"></i><span>gửi nhắc nợ</span>
-                                </a>
-                                <a class="btn btn-outline-secondary" href="">
-                                    <i class="fa-solid fa-arrow-left"></i><span>Quay lại</span>
-                                </a>
-                            </div>
                         </div>
                     </div>
-
-
                 </div>
+
+                <!-- ============ KHỐI B: 5 thẻ thống kê (KPI) ============ -->
                 <div class="tiepnhandauvao-static-box aps-student-list-static">
-                    <div class="item box box-shadow">
-                        <div class=" icon">
-                            <i class="fa-duotone fa-solid fa-display-chart-up-circle-dollar"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Tổng Phải thu</div>
-                            <div class="detail detail-2">
-                                <span class="number">12,750,000</span>
-                                <span class="unit">(5 khoản thu)</span>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Tổng số tương tác -->
                     <div class="item box box-shadow">
                         <div class="icon">
-                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i>
+                            <i class="fa-duotone fa-solid fa-message-dots"></i>
                         </div>
                         <div class="meta">
-                            <div class="title">Đã thu</div>
+                            <div class="title">Tổng số tương tác</div>
                             <div class="detail detail-2">
-                                <span class="number">8,000,000</span>
-                                <span class="unit">68.63%</span>
+                                <span class="number">18</span>
+                                <span class="unit">Trong 12 tháng qua</span>
                             </div>
                         </div>
                     </div>
+                    <!-- Yêu cầu đang mở -->
                     <div class="item box box-shadow">
                         <div class="icon">
-                            <i class="fa-duotone fa-solid fa-money-check-dollar-pen"></i>
+                            <i class="fa-duotone fa-solid fa-comments-question"></i>
                         </div>
                         <div class="meta">
-                            <div class="title">Còn nợ</div>
+                            <div class="title">Yêu cầu đang mở</div>
                             <div class="detail detail-2">
-                                <span class="number">3,955,000</span>
-                                <span class="unit">31.37%</span>
+                                <span class="number">3</span>
+                                <span class="unit">Cần xử lý</span>
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
-                        <div class="icon">
-                            <i class="fa-duotone fa-solid fa-lightbulb-dollar"></i>
-                        </div>
-                        <div class="meta">
-                            <div class="title">Miễn giảm/Học bổng</div>
-                            <div class="detail detail-2">
-                                <span class="number">875,000</span>
-                                <span class="unit">6.86%</span>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Lịch hẹn sắp tới -->
                     <div class="item box box-shadow">
                         <div class="icon">
                             <i class="fa-duotone fa-solid fa-calendar-clock"></i>
                         </div>
                         <div class="meta">
-                            <div class="title">Hạn thanh toán gần nhât</div>
+                            <div class="title">Lịch hẹn sắp tới</div>
                             <div class="detail detail-2">
-                                <span class="number">11/11/2026</span>
-                                <span class="unit">Còn 12 ngày</span>
+                                <span class="number">1</span>
+                                <span class="unit">Trong 7 ngày tới</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Phản hồi chậm -->
+                    <div class="item box box-shadow">
+                        <div class="icon">
+                            <i class="fa-duotone fa-solid fa-reply-clock"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Phản hồi chậm</div>
+                            <div class="detail detail-2">
+                                <span class="number">2</span>
+                                <span class="unit">Quá 48 giờ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Kênh liên hệ ưu tiên-->
+                    <div class="item box box-shadow">
+                        <div class="icon">
+                            <i class="fa-duotone fa-solid fa-envelope-open-text"></i>
+                        </div>
+                        <div class="meta">
+                            <div class="title">Kênh liên hệ ưu tiên</div>
+                            <div class="detail detail-2">
+                                <span class="number">Email</span>
+                                <span class="unit">nguyenvanan@gmail.com</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="row aps-finance-detail pd0">
-                    <!-- Danh sách khoản thu -->
-                    <div class="col-lg-6 col-12 pl0 mb-20 aps-finance-detail-l">
-                        <div class="box box-solid box-shadow aps-ds-khoanthu">
+                <!-- ============ KHỐI C + D: Nhật ký tương tác (7) + cụm phải (5) ============ -->
+                <div class="row aps-tuongtac-detail pd0">
+                    <!-- ===== CỘT TRÁI: NHẬT KÝ TƯƠNG TÁC ===== -->
+                    <div class="col-lg-7 col-12 pl0 mb-20">
+                        <div class="box box-solid box-shadow aps-nhatky-box">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-blue">
-                                    <i class="fa-duotone fa-solid fa-sack-dollar"></i> Danh sách khoản thu
+                                    <i class="fa-duotone fa-solid fa-timeline-arrow"></i> Nhật ký tương tác
                                 </h3>
-
                             </div>
-                            <div class="aps-search-candidate-detail pd-20">
-                                <div class="aps-table-select scroll-table-x">
-                                    <table id="tblsearch-candidate"
-                                        class="table table-hover table-bordered table-noborder tblsearch-candidate">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-center">#</th>
-                                                <th class="td-left">Khoản thu</th>
-                                                <th class="td-left">Kỳ thu</th>
-                                                <th class="td-right">Số tiền phải nộp (đ)</th>
-                                                <th class="td-right">Miễn giảm/Học bổng (đ)</th>
-                                                <th class="td-right">ĐÃ thanh toán (đ)</th>
-                                                <th class="td-right">công nợ (đ)</th>
-                                                <th class="td-center">Hạn nộp</th>
-                                                <th class="td-center">Trạng thái</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="td-center">1</td>
-                                                <td class="td-left">
-                                                    Học phí tín chỉ </td>
-                                                <td class="td-left">HK II(2025 - 2026)</td>
-                                                <td class="td-right">8,550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right"><span class="text-orange">8,000,000</span></td>
-                                                <td class="td-center">11/11/2026</td>
-                                                <td class="td-center"><span class="btn btn-soft-orange">Chưa thanh toán
-                                                        đủ</span>
-                                                </td>
-
-                                            </tr>
-                                            <tr>
-                                                <td class="td-center">1</td>
-                                                <td class="td-left">
-                                                    Học phí tín chỉ </td>
-                                                <td class="td-left">HK II(2025 - 2026)</td>
-                                                <td class="td-right">8,550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right"><span class="text-orange">8,000,000</span></td>
-                                                <td class="td-center">11/11/2026</td>
-                                                <td class="td-center"><span class="btn btn-soft-danger">Chưa thanh
-                                                        toán</span>
-                                                </td>
-
-                                            </tr>
-                                            <tr>
-                                                <td class="td-center">1</td>
-                                                <td class="td-left">
-                                                    Học phí tín chỉ </td>
-                                                <td class="td-left">HK II(2025 - 2026)</td>
-                                                <td class="td-right">8,550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-right">0</td>
-                                                <td class="td-center">11/11/2026</td>
-                                                <td class="td-center"><span class="btn btn-soft-success">Đã thanh
-                                                        toán</span>
-                                                </td>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div class="pd-20">
+                                <!-- Thanh lọc -->
+                                <div class="aps-nhatky-filter">
+                                    <div class="form-item d-flex form-add-info">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Loại tương tác">
+                                                <option selected="">Tất cả loại tương tác</option>
+                                                <option value="1">Trao đổi tư vấn</option>
+                                                <option value="2">Yêu cầu học vụ</option>
+                                                <option value="3">Lịch hẹn</option>
+                                                <option value="4">Gửi thông báo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-item d-flex form-add-info">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Trạng thái">
+                                                <option selected="">Tất cả trạng thái</option>
+                                                <option value="1">Đã phản hồi</option>
+                                                <option value="2">Đang xử lý</option>
+                                                <option value="3">Đã xác nhận</option>
+                                                <option value="4">Đã gửi</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-item d-flex form-add-info">
+                                        <div class="input-group">
+                                            <i class="fal fa-calendar-days"></i>
+                                            <input type="text" class="form-control" value="01/05/2025 - 15/05/2026">
+                                        </div>
+                                    </div>
+                                    <div class="form-item d-flex form-add-info filter-grow">
+                                        <div class="input-group">
+                                            <i class="fal fa-search"></i>
+                                            <input type="text" class="form-control"
+                                                placeholder="Tìm kiếm nội dung, người thực hiện...">
+                                        </div>
+                                    </div>
+                                    <a class="btn btn-outline-secondary" href="">
+                                        <i class="fa-light fa-sliders"></i> Bộ lọc
+                                    </a>
                                 </div>
-                                <div class="note d-flex align-items-center gap-2 color-66 mt-10">
-                                    <i class="fa-light fa-circle-info"></i>
-                                    <span class="fs-12">Miễn giảm học bổng không làm giảm nghĩa vụ thanh toán nếu không
-                                        có quyết định
-                                        khác.</span>
+
+                                <!-- Timeline -->
+                                <div class="aps-nhatky-tuongtac">
+                                    <!-- 1 -->
+                                    <div class="tl-item">
+                                        <div class="tl-dot tl-blue">
+                                            <i class="fa-duotone fa-solid fa-message-dots"></i>
+                                        </div>
+                                        <div class="tl-body">
+                                            <div class="tl-head">
+                                                <span class="tl-title">Trao đổi tư vấn học tập</span>
+                                                <span class="btn btn-30 btn-soft-success">Đã phản hồi</span>
+                                                <a class="btn btn-30 btn-outline-primary tl-detail" href="">Xem chi
+                                                    tiết</a>
+                                            </div>
+                                            <div class="tl-content"><b>Nội dung:</b> Sinh viên hỏi về lộ trình học tập
+                                                và các học phần chuẩn bị cho học kỳ 6.</div>
+                                            <div class="tl-meta"><b>Người thực hiện:</b> Nguyễn Thị Thu&nbsp;&nbsp;|&nbsp;&nbsp;14/05/2026
+                                                10:15&nbsp;&nbsp;|&nbsp;&nbsp;Qua: Trực tiếp</div>
+                                        </div>
+                                    </div>
+                                    <!-- 2 -->
+                                    <div class="tl-item">
+                                        <div class="tl-dot tl-orange">
+                                            <i class="fa-duotone fa-solid fa-circle-exclamation"></i>
+                                        </div>
+                                        <div class="tl-body">
+                                            <div class="tl-head">
+                                                <span class="tl-title">Yêu cầu học vụ</span>
+                                                <span class="btn btn-30 btn-soft-orange">Đang xử lý</span>
+                                                <a class="btn btn-30 btn-outline-primary tl-detail" href="">Xem chi
+                                                    tiết</a>
+                                            </div>
+                                            <div class="tl-content"><b>Nội dung:</b> Sinh viên đề nghị xem xét đăng ký
+                                                học phần ngoài khóa vượt số tín chỉ.</div>
+                                            <div class="tl-meta"><b>Người thực hiện:</b> Nguyễn Thị Thu&nbsp;&nbsp;|&nbsp;&nbsp;13/05/2026
+                                                09:30&nbsp;&nbsp;|&nbsp;&nbsp;Qua: Hệ thống</div>
+                                        </div>
+                                    </div>
+                                    <!-- 3 -->
+                                    <div class="tl-item">
+                                        <div class="tl-dot tl-teal">
+                                            <i class="fa-duotone fa-solid fa-calendar-clock"></i>
+                                        </div>
+                                        <div class="tl-body">
+                                            <div class="tl-head">
+                                                <span class="tl-title">Lịch hẹn: Tư vấn định hướng nghề nghiệp</span>
+                                                <span class="btn btn-30 btn-soft-success">Đã xác nhận</span>
+                                                <a class="btn btn-30 btn-outline-primary tl-detail" href="">Xem chi
+                                                    tiết</a>
+                                            </div>
+                                            <div class="tl-content"><b>Thời gian:</b> Thứ Sáu, 16/05/2026 -
+                                                14:00&nbsp;&nbsp;|&nbsp;&nbsp;<b>Địa điểm:</b> Phòng Đào tạo - P.203</div>
+                                            <div class="tl-meta"><b>Người thực hiện:</b> Nguyễn Thị Thu&nbsp;&nbsp;|&nbsp;&nbsp;12/05/2026
+                                                16:45&nbsp;&nbsp;|&nbsp;&nbsp;Qua: Hệ thống</div>
+                                        </div>
+                                    </div>
+                                    <!-- 4 -->
+                                    <div class="tl-item">
+                                        <div class="tl-dot tl-purple">
+                                            <i class="fa-duotone fa-solid fa-envelope"></i>
+                                        </div>
+                                        <div class="tl-body">
+                                            <div class="tl-head">
+                                                <span class="tl-title">Gửi thông báo</span>
+                                                <span class="btn btn-30 btn-soft-secondary">Đã gửi</span>
+                                                <a class="btn btn-30 btn-outline-primary tl-detail" href="">Xem chi
+                                                    tiết</a>
+                                            </div>
+                                            <div class="tl-content"><b>Nội dung:</b> Thông báo về lịch đóng học phí học
+                                                kỳ 2/2025-2026.</div>
+                                            <div class="tl-meta"><b>Người thực hiện:</b> Hệ thống&nbsp;&nbsp;|&nbsp;&nbsp;10/05/2026
+                                                08:00&nbsp;&nbsp;|&nbsp;&nbsp;Qua: Email</div>
+                                        </div>
+                                    </div>
+                                    <!-- 5 -->
+                                    <div class="tl-item">
+                                        <div class="tl-dot tl-blue">
+                                            <i class="fa-duotone fa-solid fa-message-dots"></i>
+                                        </div>
+                                        <div class="tl-body">
+                                            <div class="tl-head">
+                                                <span class="tl-title">Phản hồi sau tư vấn</span>
+                                                <span class="btn btn-30 btn-soft-success">Đã phản hồi</span>
+                                                <a class="btn btn-30 btn-outline-primary tl-detail" href="">Xem chi
+                                                    tiết</a>
+                                            </div>
+                                            <div class="tl-content"><b>Nội dung:</b> Sinh viên phản hồi về kế hoạch học
+                                                tập và cảm ơn tư vấn.</div>
+                                            <div class="tl-meta"><b>Người thực hiện:</b> Nguyễn Văn An&nbsp;&nbsp;|&nbsp;&nbsp;08/05/2026
+                                                11:20&nbsp;&nbsp;|&nbsp;&nbsp;Qua: Hệ thống</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <!-- lịch sử thanh toán -->
-                        <div class="box box-solid box-shadow aps-ls-pay  mt-15">
-                            <div class="box-header with-border">
-                                <h3 class="box-title color-red">
-                                    <i class="fa-duotone fa-solid fa-file-invoice-dollar"></i>Lịch sử thanh toán
-                                </h3>
 
-                            </div>
-                            <div class="aps-ls-pay-table pd-20">
-                                <div class="aps-table-select scroll-table-x">
-                                    <table id="tblsearch-candidate"
-                                        class="table table-hover table-bordered table-noborder tblsearch-candidate">
-                                        <thead>
-                                            <tr>
-                                                <th class="td-center">#</th>
-                                                <th class="td-center">Ngày thanh toán</th>
-                                                <th class="td-center">Số phiếu</th>
-                                                <th class="td-left">Hình thức thanh toán</th>
-                                                <th class="td-left">Nội dung</th>
-                                                <th class="td-right">Số tiền (đ)</th>
-                                                <th class="td-right">người thu</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="td-center">1</td>
-                                                <td class="td-center">11/11/2026 </td>
-                                                <td class="td-center"><span class="text-blue">PT0022256</span></td>
-                                                <td class="td-left">Chuyển khoản</td>
-                                                <td class="td-left">Thanh toán học phí đợt 2</td>
-                                                <td class="td-right">550,000</td>
-                                                <td class="td-left">Phạm Thị Thu</td>
-
-                                            </tr>
-
-                                        </tbody>
-                                    </table>
-                                </div>
                                 <div class="note d-flex justify-content-center mt-10">
                                     <a class="btn btn-outline-primary" href="">
-                                        <span>Xem thêm</span>
+                                        <span>Xem thêm</span> <i class="fal fa-angle-down"></i>
                                     </a>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-12 pr0 mb-20 aps-keHoach-traGop pr0 pl10">
-                        <!-- Kế hoạch đóng học phí (trả góp) -->
-                        <div class="box box-solid box-shadow aps-hs-dauVao">
+                    <!-- ===== CỘT PHẢI: Yêu cầu hỗ trợ + Ghi chú nội bộ + Thông tin bổ sung ===== -->
+                    <div class="col-lg-5 col-12 pr0 mb-20 pl10">
+                        <!-- Yêu cầu hỗ trợ -->
+                        <div class="box box-solid box-shadow aps-yeucau-hotro">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-blue">
-                                    <i class="fa-duotone fa-solid fa-money-from-bracket"></i> Kế hoạch đóng học phí (trả
-                                    góp)
+                                    <i class="fa-duotone fa-solid fa-headset"></i> Yêu cầu hỗ trợ
                                 </h3>
                                 <div class="pull-right">
-                                    <div class="btn-group">
-                                        <a class="btn btn-outline-primary" href="">
-                                            <span>Chi tiết</span>
-                                        </a>
-                                    </div>
+                                    <a class="link-xemtatca" href="">Xem tất cả</a>
                                 </div>
                             </div>
-                            <div class="aps-progress-wrap d-flex align-items-center py-20 gap-3 pl20 pr20">
-                                <div class="progress flex-1" role="progressbar"
-                                    style="padding: 0 !important; margin: 0 !important; height: 20px !important;"
-                                    aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
-                                    <div class="progress-bar" style="width: 75%"></div>
-                                </div>
-                                <div class="cent">75.00%</div>
-                            </div>
-                            <div class="aps-list-kh-traGop px-20">
+                            <div class="pd-20">
                                 <div class="aps-table-select scroll-table-x">
-                                    <table id="tblsearch-candidate"
-                                        class="table table-hover table-bordered table-noborder tblsearch-candidate">
+                                    <table class="table table-hover table-bordered table-noborder">
                                         <thead>
                                             <tr>
-                                                <th class="td-center">Đợt</th>
-                                                <th class="td-center">Hạn thanh toán</th>
-                                                <th class="td-right">Số tiền (đ)</th>
-                                                <th class="td-right">Đã thanh toán (đ)</th>
-                                                <th class="td-right">Còn lại (đ)</th>
-                                                <th class="td-center">Đã thanh toán (đ)</th>
-
+                                                <th class="td-left">Mã yêu cầu</th>
+                                                <th class="td-left">Loại yêu cầu</th>
+                                                <th class="td-center">Ngày tạo</th>
+                                                <th class="td-center">Trạng thái</th>
+                                                <th class="td-center">Hạn xử lý</th>
+                                                <th class="td-center arrow-col"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="td-center">Đợt 1</td>
-                                                <td class="td-center">11/11/2026</td>
-                                                <td class="td-right">4.220.000</td>
-                                                <td class="td-right">4.220.000</td>
-                                                <td class="td-right">4.220.000</td>
-                                                <td class="td-center"><span class="btn btn-soft-success">Đã thanh
-                                                        toán</span>
-                                                </td>
-
+                                                <td class="td-left"><span class="text-blue">YC20260056</span></td>
+                                                <td class="td-left">Học vụ</td>
+                                                <td class="td-center">13/05/2026</td>
+                                                <td class="td-center"><span class="btn btn-soft-orange">Đang xử
+                                                        lý</span></td>
+                                                <td class="td-center">20/05/2026</td>
+                                                <td class="td-center arrow-col"><i class="fal fa-angle-right"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left"><span class="text-blue">YC20260041</span></td>
+                                                <td class="td-left">Tài chính</td>
+                                                <td class="td-center">10/05/2026</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đã giải
+                                                        quyết</span></td>
+                                                <td class="td-center">12/05/2026</td>
+                                                <td class="td-center arrow-col"><i class="fal fa-angle-right"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left"><span class="text-blue">YC20260028</span></td>
+                                                <td class="td-left">Học bổng</td>
+                                                <td class="td-center">02/05/2026</td>
+                                                <td class="td-center"><span class="btn btn-soft-success">Đã giải
+                                                        quyết</span></td>
+                                                <td class="td-center">05/05/2026</td>
+                                                <td class="td-center arrow-col"><i class="fal fa-angle-right"></i></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                            <div class="pt10 px-20 pb-20">
-                                <!-- Thông báo công nợ -->
-                                <div class="aps-alert-cn-box">
-                                    <div class="title">
-                                        <i class="fa-duotone fa-solid fa-triangle-exclamation"></i>
-                                        <span>Thông báo công nợ</span>
-                                    </div>
-                                    <ul>
-                                        <li>Bạn đang có 1 khoản thu quá hạn với tổng số tiền <span
-                                                class="text-red">750,000đ</span></li>
-                                        <li>Bạn đang có 1 khoản thu quá hạn với tổng số tiền </li>
-                                        <li>Bạn đang có 1 khoản thu quá hạn với tổng số tiền </li>
-                                        <li>Bạn đang có 1 khoản thu quá hạn với tổng số tiền </li>
-                                    </ul>
+                        </div>
+
+                        <!-- Ghi chú nội bộ gần đây -->
+                        <div class="box box-solid box-shadow aps-ghichu-noibo mt-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-orange">
+                                    <i class="fa-duotone fa-solid fa-memo-circle-info"></i> Ghi chú nội bộ gần đây
+                                </h3>
+                                <div class="pull-right">
+                                    <a class="link-xemtatca" href="">Xem tất cả</a>
+                                </div>
+                            </div>
+                            <div class="pd-20">
+                                <div class="aps-table-select scroll-table-x">
+                                    <table class="table table-hover table-bordered table-noborder">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-left">Nội dung ghi chú</th>
+                                                <th class="td-left">Người ghi chú</th>
+                                                <th class="td-center">Ngày ghi chú</th>
+                                                <th class="td-center arrow-col"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="td-left">Sinh viên có định hướng rõ ràng, chủ động trong học
+                                                    tập.</td>
+                                                <td class="td-left">Nguyễn Thị Thu</td>
+                                                <td class="td-center">14/05/2026 10:20</td>
+                                                <td class="td-center arrow-col"><i class="fal fa-angle-right"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">Đã hỗ trợ SV về quy trình đăng ký học phần.</td>
+                                                <td class="td-left">Nguyễn Thị Thu</td>
+                                                <td class="td-center">12/05/2026 16:50</td>
+                                                <td class="td-center arrow-col"><i class="fal fa-angle-right"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="td-left">Sinh viên quan tâm đến cơ hội thực tập tại doanh
+                                                    nghiệp.</td>
+                                                <td class="td-left">Trần Minh Hòa</td>
+                                                <td class="td-center">05/05/2026 09:15</td>
+                                                <td class="td-center arrow-col"><i class="fal fa-angle-right"></i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                        <!-- Lưu ý & hướng dẫn -->
-                        <div class="box box-solid box-shadow aps-luuY-hd">
-                            <div class="box-header with-border mt-15">
-                                <h3 class="box-title color-orange">
-                                    <i class="fa-duotone fa-solid fa-memo-circle-info"></i> Lưu ý & hướng dẫn
+
+                        <!-- Thông tin bổ sung -->
+                        <div class="box box-solid box-shadow aps-thongtin-bosung mt-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-solid fa-circle-info"></i> Thông tin bổ sung
                                 </h3>
                             </div>
-                            <div class="aps-hp-lyhd-box pd-20">
-                                <div class="item">
-                                    <a href="" class="d-flex link-text">
-                                        <i class="fa-duotone fa-solid fa-circle-check mr-10 fz12 mt-5"></i>
-                                        <span>Sinh viên có theer thanh toán tại: Quầy thy ngân, chuyển khoản ngân hàng,
-                                            ví
-                                            điện tử.</span></a>
-                                </div>
-                                <div class="item">
-                                    <a href="" class="d-flex link-text">
-                                        <i class="fa-duotone fa-solid fa-circle-check mr-10 fz12 mt-5"></i>
-                                        <span>Sinh viên có theer thanh toán tại: Quầy thy ngân, chuyển khoản ngân hàng,
-                                            ví
-                                            điện tử.</span></a>
-                                </div>
-                                <div class="item">
-                                    <a href="" class="d-flex link-text">
-                                        <i class="fa-duotone fa-solid fa-circle-check mr-10 fz12 mt-5"></i>
-                                        <span>Sinh viên có theer thanh toán tại: Quầy thy ngân, chuyển khoản ngân hàng,
-                                            ví
-                                            điện tử.</span></a>
+                            <div class="pd-20">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="item">
+                                            <div class="label">Cố vấn học tập:</div>
+                                            <div class="text">TS. Lê Minh Hòa</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Phương thức liên hệ:</div>
+                                            <div class="text">Email</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="item">
+                                            <div class="label">Ngày cập nhật gần nhất:</div>
+                                            <div class="text">14/05/2026 10:20</div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Người cập nhật:</div>
+                                            <div class="text">Nguyễn Thị Thu</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -810,22 +860,6 @@
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <script src="../assets/js/customs.js"></script>
-    <script>
-        $(window).on("load", function () {
-            // $("#ketQua_nhapHoc").modal("show");
-        });
-    </script>
-    <script>
-        var swiper = new Swiper(".aps-swiper-dongthoigian", {
-            slidesPerView: "auto",
-            spaceBetween: 0,
-            pagination: false,
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-        });
-    </script>
 </body>
 
 </html>
