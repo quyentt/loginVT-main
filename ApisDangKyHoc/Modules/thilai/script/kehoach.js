@@ -595,8 +595,12 @@ KeHoachXuLy.prototype = {
         });
         $("#tblDotThi").delegate('.deleteDotThi', 'click', function () {
             var strId = this.id;
+            if (!strId) {
+                edu.system.alert("Không lấy được ID đợt thi, vui lòng kiểm tra console.");
+                return;
+            }
             edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
-            $("#btnYes").click(function (e) {
+            $("#btnYes").off('click.delDotThi').on('click.delDotThi', function (e) {
                 $('#myModalAlert').modal('hide');
                 me.delete_DotThi(strId);
             });
@@ -4914,10 +4918,10 @@ KeHoachXuLy.prototype = {
         $("#tblDotThi tbody").html("");
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            var strId = d.ID;
-            var strTen = edu.util.returnEmpty(d.THI_DOTTHI_TEN || d.TENDOTTHI || d.TEN);
+            var strId = edu.util.returnEmpty(d.ID);
+            var strTen = edu.util.returnEmpty(d.TENDOTTHI);
             var row = '';
-            row += '<tr id="' + strId + '">';
+            row += '<tr>';
             row += '<td class="td-center">' + (i + 1) + '</td>';
             row += '<td class="td-left">' + strTen + '</td>';
             row += '<td class="td-center"><a class="deleteDotThi" id="' + strId + '" href="javascript:void(0)" style="color:red">Xóa</a></td>';
@@ -4964,9 +4968,7 @@ KeHoachXuLy.prototype = {
             },
             aoColumns: [
                 {
-                    "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.TENDOTTHI || aData.THI_DOTTHI_TEN || aData.TEN);
-                    }
+                    "mDataProp": "TENDOTTHI"
                 },
                 {
                     "mRender": function (nRow, aData) {
