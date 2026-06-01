@@ -573,6 +573,35 @@ KeHoachXuLy.prototype = {
             });
         });
 
+        $("#btnAdd_DotThi").click(function () {
+            if (!me.strKeHoachXuLy_Id) {
+                edu.system.alert("Vui lòng lưu kế hoạch trước khi thêm đợt thi");
+                return;
+            }
+            $("#myModalAddDotThi").modal("show");
+            me.getList_DotThi();
+        });
+        $("#btnSave_DotThi_Modal").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblModalDotThi", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đợt thi");
+                return;
+            }
+            edu.system.alert('<div id="zoneprocessDotThi"></div>');
+            edu.system.genHTML_Progress("zoneprocessDotThi", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                me.save_DotThi(arrChecked_Id[i]);
+            }
+        });
+        $("#tblDotThi").delegate('.deleteDotThi', 'click', function () {
+            var strId = this.id;
+            edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
+            $("#btnYes").click(function (e) {
+                $('#myModalAlert').modal('hide');
+                me.delete_DotThi(strId);
+            });
+        });
+
         me.getList_HocPhan();
         me.getList_ThanhPhanDiem();
         $('#dropKeHoachDangKy').on('select2:select', function (e) {
@@ -784,6 +813,7 @@ KeHoachXuLy.prototype = {
         $("#tbl_HeKhoa tbody").html("");
         $("#tblThoiGian tbody").html("");
         $("#tblPhamVi tbody").html("");
+        $("#tblDotThi tbody").html("");
     },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
@@ -1276,6 +1306,7 @@ KeHoachXuLy.prototype = {
         me.getList_ThoiGian();
         me.getList_HPDangKy();
         me.getList_HPKhong();
+        me.getList_DotThi_KeHoach();
         //me.arrLop = [];
         //me.arrKhoa = [];
         //me.arrChuongTrinh = [];
@@ -4845,5 +4876,169 @@ KeHoachXuLy.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
+    },
+
+    /*------------------------------------------
+    --Discription: [1] AccessDB ==> DotThi (Chọn đợt thi cho kế hoạch)
+    -------------------------------------------*/
+    getList_DotThi_KeHoach: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'DKH_DangKyThi_MonThi_Chung_MH/DSA4BRIFLjUVKSgP',
+            'func': 'PKG_DANGKYTHI_MONTHI_CHUNG.LayDSDotThi',
+            'iM': edu.system.iM,
+            'strDangKy_Thi_HP_KeHoach_Id': me.strKeHoachXuLy_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.genTable_DotThi_KeHoach(dtResult);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_DotThi_KeHoach: function (data) {
+        $("#tblDotThi tbody").html("");
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var strId = d.ID;
+            var strTen = edu.util.returnEmpty(d.THI_DOTTHI_TEN || d.TENDOTTHI || d.TEN);
+            var row = '';
+            row += '<tr id="' + strId + '">';
+            row += '<td class="td-center">' + (i + 1) + '</td>';
+            row += '<td class="td-left">' + strTen + '</td>';
+            row += '<td class="td-center"><a class="deleteDotThi" id="' + strId + '" href="javascript:void(0)" style="color:red">Xóa</a></td>';
+            row += '</tr>';
+            $("#tblDotThi tbody").append(row);
+        }
+    },
+    getList_DotThi: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'XLHV_TP_ToChucThi_MH/DSA4BRIFLjUVKSgP',
+            'func': 'PKG_THI_TOCHUCTHI.LayDSDotThi',
+            'iM': edu.system.iM,
+            'strDaoTao_ThoiGianDaoTao_Id': '',
+            'strDiem_ThanhPhanDiem_Id': '',
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.genTable_ModalDotThi(dtResult);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_ModalDotThi: function (data) {
+        var jsonForm = {
+            strTable_Id: "tblModalDotThi",
+            aaData: data,
+            colPos: {
+                center: [0, 2],
+            },
+            aoColumns: [
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.TENDOTTHI || aData.THI_DOTTHI_TEN || aData.TEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+    save_DotThi: function (strThi_DotThi_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_DangKyThi_MonThi_Chung_MH/FSkkLB4FIC8mCjgeFSkoHgkRHgoJHgUuNRUpKAPP',
+            'func': 'PKG_DANGKYTHI_MONTHI_CHUNG.Them_DangKy_Thi_HP_KH_DotThi',
+            'iM': edu.system.iM,
+            'strDangKy_Thi_HP_KeHoach_Id': me.strKeHoachXuLy_Id,
+            'strThi_DotThi_Id': strThi_DotThi_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(JSON.stringify(er));
+            },
+            type: 'POST',
+            contentType: true,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessDotThi", function () {
+                    $("#myModalAddDotThi").modal("hide");
+                    me.getList_DotThi_KeHoach();
+                });
+            },
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    delete_DotThi: function (strId) {
+        var me = this;
+        var obj = {};
+        var obj_delete = {
+            'action': 'DKH_DangKyThi_MonThi_Chung_MH/GS4gHgUgLyYKOB4VKSgeCREeCgkeBS41FSko',
+            'func': 'PKG_DANGKYTHI_MONTHI_CHUNG.Xoa_DangKy_Thi_HP_KH_DotThi',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    obj = { content: "Xóa thành công!", code: "" };
+                    edu.system.afterComfirm(obj);
+                    me.getList_DotThi_KeHoach();
+                }
+                else {
+                    obj = { content: ": " + data.Message, code: "" };
+                    edu.system.afterComfirm(obj);
+                }
+            },
+            error: function (er) {
+                edu.system.afterComfirm({ content: "(er): " + JSON.stringify(er), code: "w" });
+            },
+            type: 'POST',
+            action: obj_delete.action,
+            contentType: true,
+            data: obj_delete,
+            fakedb: []
+        }, false, false, false, null);
     },
 }
