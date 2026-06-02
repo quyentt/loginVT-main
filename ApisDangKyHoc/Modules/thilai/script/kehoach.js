@@ -581,6 +581,24 @@ KeHoachXuLy.prototype = {
             $("#myModalAddDotThi").modal("show");
             me.getList_DotThi();
         });
+        $("#btnDeleteAll_DotThi").click(function () {
+            var arrIds = $("#tblDotThi tbody .deleteDotThi").map(function () {
+                return this.id;
+            }).get().filter(Boolean);
+            if (arrIds.length === 0) {
+                edu.system.alert("Không có đợt thi nào để xóa");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc muốn xóa <strong>tất cả " + arrIds.length + "</strong> đợt thi của kế hoạch này?");
+            $("#btnYes").off('click.delAllDotThi').on('click.delAllDotThi', function (e) {
+                $('#myModalAlert').modal('hide');
+                edu.system.alert('<div id="zoneprocessDotThiAll"></div>');
+                edu.system.genHTML_Progress("zoneprocessDotThiAll", arrIds.length);
+                for (var i = 0; i < arrIds.length; i++) {
+                    me.delete_DotThi(arrIds[i]);
+                }
+            });
+        });
         $("#btnSave_DotThi_Modal").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblModalDotThi", "checkX");
             if (arrChecked_Id.length == 0) {
