@@ -4888,8 +4888,8 @@ KeHoachXuLy.prototype = {
     getList_DotThi_KeHoach: function () {
         var me = this;
         var obj_list = {
-            'action': 'DKH_DangKyThi_MonThi_Chung_MH/DSA4BRIFLjUVKSgP',
-            'func': 'PKG_DANGKYTHI_MONTHI_CHUNG.LayDSDotThi',
+            'action': 'DKH_DangKyThi_MonThi_Chung_MH/DSA4BRIFIC8mCjgeFSkoHgkRHgoJHgUuNRUpKAPP',
+            'func': 'PKG_DANGKYTHI_MONTHI_CHUNG.LayDSDangKy_Thi_HP_KH_DotThi',
             'iM': edu.system.iM,
             'strDangKy_Thi_HP_KeHoach_Id': me.strKeHoachXuLy_Id,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -4919,7 +4919,7 @@ KeHoachXuLy.prototype = {
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var strId = edu.util.returnEmpty(d.ID);
-            var strTen = edu.util.returnEmpty(d.TENDOTTHI);
+            var strTen = edu.util.returnEmpty(d.THI_DOTTHI_TEN);
             var row = '';
             row += '<tr>';
             row += '<td class="td-center">' + (i + 1) + '</td>';
@@ -4932,11 +4932,10 @@ KeHoachXuLy.prototype = {
     getList_DotThi: function () {
         var me = this;
         var obj_list = {
-            'action': 'XLHV_TP_ToChucThi_MH/DSA4BRIFLjUVKSgP',
-            'func': 'PKG_THI_TOCHUCTHI.LayDSDotThi',
+            'action': 'DKH_DangKyThi_MonThi_Chung_MH/DSA4BRIFLjUVKSgP',
+            'func': 'PKG_DANGKYTHI_MONTHI_CHUNG.LayDSDotThi',
             'iM': edu.system.iM,
-            'strDaoTao_ThoiGianDaoTao_Id': '',
-            'strDiem_ThanhPhanDiem_Id': '',
+            'strDangKy_Thi_HP_KeHoach_Id': me.strKeHoachXuLy_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({
@@ -4968,7 +4967,9 @@ KeHoachXuLy.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "TENDOTTHI"
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.THI_DOTTHI_TEN || aData.TENDOTTHI);
+                    }
                 },
                 {
                     "mRender": function (nRow, aData) {
