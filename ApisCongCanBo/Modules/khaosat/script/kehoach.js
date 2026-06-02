@@ -487,14 +487,13 @@ KeHoach.prototype = {
                 return;
             }
             var valKhoa = edu.util.getValById("dropKhoaQuanLy_TabPan");
-            if (!valKhoa || (Array.isArray(valKhoa) && valKhoa.length === 0)) {
-                edu.system.alert("Vui lòng chọn ít nhất 1 Khoa quản lý!");
-                return;
+            //--Khoa quản lý là tùy chọn: không chọn -> truyền chuỗi rỗng (BE coi như null)
+            var arrKhoa_Id = [];
+            if (valKhoa) {
+                arrKhoa_Id = Array.isArray(valKhoa)
+                    ? valKhoa.filter(Boolean)
+                    : String(valKhoa).split(',').map(s => s.trim()).filter(Boolean);
             }
-            //--Normalize Khoa IDs về chuỗi "id1,id2,id3" gửi 1 lần / phiếu
-            var arrKhoa_Id = Array.isArray(valKhoa)
-                ? valKhoa.filter(Boolean)
-                : String(valKhoa).split(',').map(s => s.trim()).filter(Boolean);
             var strKhoaQuanLy_Id = arrKhoa_Id.join(',');
             //--V3: 1 dòng = 1 call (BE tự xác định GV trong DB). Không cần lookup/split GV.
             function _go() {
