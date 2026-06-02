@@ -581,21 +581,19 @@ KeHoachXuLy.prototype = {
             $("#myModalAddDotThi").modal("show");
             me.getList_DotThi();
         });
-        $("#btnDeleteAll_DotThi").click(function () {
-            var arrIds = $("#tblDotThi tbody .deleteDotThi").map(function () {
-                return this.id;
-            }).get().filter(Boolean);
-            if (arrIds.length === 0) {
-                edu.system.alert("Không có đợt thi nào để xóa");
+        $("#btnDelete_DotThi").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblDotThi", "checkX");
+            if (arrChecked_Id.length === 0) {
+                edu.system.alert("Vui lòng chọn đợt thi cần xóa");
                 return;
             }
-            edu.system.confirm("Bạn có chắc muốn xóa <strong>tất cả " + arrIds.length + "</strong> đợt thi của kế hoạch này?");
-            $("#btnYes").off('click.delAllDotThi').on('click.delAllDotThi', function (e) {
+            edu.system.confirm("Bạn có chắc muốn xóa <strong>" + arrChecked_Id.length + "</strong> đợt thi đã chọn?");
+            $("#btnYes").off('click.delDotThiBatch').on('click.delDotThiBatch', function (e) {
                 $('#myModalAlert').modal('hide');
-                edu.system.alert('<div id="zoneprocessDotThiAll"></div>');
-                edu.system.genHTML_Progress("zoneprocessDotThiAll", arrIds.length);
-                for (var i = 0; i < arrIds.length; i++) {
-                    me.delete_DotThi(arrIds[i]);
+                edu.system.alert('<div id="zoneprocessDotThiBatch"></div>');
+                edu.system.genHTML_Progress("zoneprocessDotThiBatch", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.delete_DotThi(arrChecked_Id[i]);
                 }
             });
         });
@@ -4943,6 +4941,7 @@ KeHoachXuLy.prototype = {
             row += '<td class="td-center">' + (i + 1) + '</td>';
             row += '<td class="td-left">' + strTen + '</td>';
             row += '<td class="td-center"><a class="deleteDotThi" id="' + strId + '" href="javascript:void(0)" style="color:red">Xóa</a></td>';
+            row += '<td class="td-center"><input type="checkbox" id="checkX' + strId + '"/></td>';
             row += '</tr>';
             $("#tblDotThi tbody").append(row);
         }
