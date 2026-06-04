@@ -5640,7 +5640,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-canbo-dangky-add-item .zone-box .btn:hover {
-    margin-left: 8px !important;
     color: #3c8dee;
     border: 1px solid #3c8dee;
 }
@@ -11659,10 +11658,12 @@ table#clone {
     font-size: 14px !important;
     padding-right: 3px;
 }
-.aps-BienLaiHoaDon .aps-list-btn .btnXuat_HDDT, 
+
+.aps-BienLaiHoaDon .aps-list-btn .btnXuat_HDDT,
 .aps-BienLaiHoaDon .aps-list-btn .btnXuat_HDDT {
     margin-bottom: 0px !important;
 }
+
 .btnXuat_HDDT,
 #btnSaveHDBL {
     border: 1px solid #1a71e8 !important;
@@ -11703,17 +11704,21 @@ table#clone {
     font-weight: 400 !important;
     padding: 0 !important;
 }
+
 .aps-BienLaiHoaDon .aps-list-btn .btn {
     margin-left: 0 !important;
 }
+
 #btnClose_HDBL {
     margin-left: 10px !important;
 }
-.btnXuat_HDDT:last-child{
-       border: 1px solid #0dcaf0 !important; 
-       background: #0dcaf0 !important;
-       color: #222 !important;
+
+.btnXuat_HDDT:last-child {
+    border: 1px solid #0dcaf0 !important;
+    background: #0dcaf0 !important;
+    color: #222 !important;
 }
+
 .pr-containt .pr-table tr td {
     line-height: 38px;
 }
@@ -11729,3 +11734,9 @@ table#clone {
     margin-top: 10px !important;
 }
 
+.myModalChiTietLich.modal .modal-dialog {
+    width: 100% !important;
+}
+.myModalChiTietLich .tblLichHoc.table {
+    min-width: 1200px;
+}
