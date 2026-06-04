@@ -5419,7 +5419,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-canbo-dangky-add-item .zone-box .btn:hover {
-    margin-left: 8px !important;
     color: #3c8dee;
     border: 1px solid #3c8dee;
 }
@@ -11499,6 +11498,13 @@ table#clone {
     margin-top: 10px !important;
 }
 
+
+.myModalChiTietLich.modal .modal-dialog {
+    width: 100% !important;
+}
+.myModalChiTietLich .tblLichHoc.table {
+    min-width: 1200px;
+}
 /* ------------- */
 /* Kế hoạch nhập học - Thu phí */
 .kehoach-nhaphoc-thuPhi-tab .tab-list {
@@ -15254,4 +15260,5 @@ table#clone {
   .aps-khoa-SapTotNghiep .user-infomation .info {
     width: 100%;
   }
+>>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
 }
