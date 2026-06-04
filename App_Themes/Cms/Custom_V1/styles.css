@@ -6782,6 +6782,8 @@ input[type="radio"] {
   margin-bottom: 5px !important;
 }
 
+.table.table-bordered {}
+
 /* ---------------------- */
 .zoneEdit .aps-form .aps-form-item .aps-form-input {
   flex: inherit !important;

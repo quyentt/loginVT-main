@@ -23,7 +23,7 @@
         <link href="App_Themes/Cms/css/index.css?v=2" rel="stylesheet" /><!-- editor -->
         <link href="App_Themes/Cms/css/index.min.css?v=2" rel="stylesheet" /><!-- editor -->
         <!-- custom theme v1- bich -->
-        <link href="App_Themes/Custom_V1/styles.css?v=2" rel="stylesheet" />
+        <link href="App_Themes/Cms/Custom_V1/styles.css?v=4" rel="stylesheet" />
     </head>
     <!--sidebar-mini-expand-feature sidebar-collapse colage when pageload ==>hold-transition skin-blue fixed sidebar-mini sidebar-mini-expand-feature sidebar-collapse-->
     <!--sidebar-mini only for display left-menu, tooglle this-->
