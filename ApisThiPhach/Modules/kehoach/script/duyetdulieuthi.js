@@ -11,6 +11,7 @@ DuLieuThi.prototype = {
     strDuLieuThi_Id: '',
     dtDuLieuThi: [],
     dtXacNhan: [],
+    dtDanhSachThi: [],
     strLopHocPhan_Id: '',
     bcheck: '',
     arrChecked_Id: [],
@@ -115,6 +116,7 @@ DuLieuThi.prototype = {
         me.getList_ThoiGianDaoTao();
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
+        me.getList_ChuongTrinhDaoTao();
         me.getList_btnCongBo();
         me.getList_KeHoach();
         me.getList_HocPhan();
@@ -308,6 +310,9 @@ DuLieuThi.prototype = {
             me.getList_LoaiDiem();
             me.getList_DotThi();
         });
+        $('#dropSearch_ChuongTrinh_CC').on('select2:select', function (e) {
+            me.getList_DanhSachThi();
+        });
         $('#dropSearch_ThoiGianDaoTao').on('select2:select', function (e) {
             me.getList_KeHoach();
         });
@@ -348,8 +353,11 @@ DuLieuThi.prototype = {
         });
         $("#btnCongBoDanhSachThi").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_QLTHI_CongBoLichThi';
-            var arrChecked_Id = $("#dropSearch_DanhSach").val();
-            if (!arrChecked_Id || arrChecked_Id.length == 0) {
+            var arrChecked_Id = [];
+            $("#tblDanhSachThi tbody .checkDSThi:checked").each(function () {
+                arrChecked_Id.push(this.id.replace("checkDSThi_", ""));
+            });
+            if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn danh sách thi!");
                 return;
             }
@@ -357,6 +365,18 @@ DuLieuThi.prototype = {
             $("#modal_CongBo").modal("show");
 
             me.getList_CongBo(arrChecked_Id.toString(), "tblModal_CongBo");
+        });
+        $("#btnSearch_DanhSachThi").click(function () {
+            me.getList_DanhSachThi();
+        });
+        $('#dropSearch_TrangThaiCongBo').on('change', function () {
+            me.renderTable_DanhSachThi();
+        });
+        $('#chkChuaCongBo').on('change', function () {
+            me.renderTable_DanhSachThi();
+        });
+        $("#chkSelectAll_DanhSachThi").on("click", function () {
+            edu.util.checkedAll_BgRow(this, { table_id: "tblDanhSachThi" });
         });
         $("#btnCongBoHocPhan").click(function () {
             me.bcheck = 'TP_CongBoLichThi/Them_CongBoLichThi_HocPhan';
@@ -801,7 +821,7 @@ DuLieuThi.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -1578,41 +1598,102 @@ DuLieuThi.prototype = {
 
         me.loadInBatches(primary, me.BATCH_SIZE, function (idStr) {
             var obj_list = {
-                'action': 'TP_ToChucThi/LayDSThi',
-                'type': 'GET',
+                'action': 'XLHV_TP_ToChucThi_MH/DSA4BRIVKSgP',
+                'func': 'PKG_THI_TOCHUCTHI.LayDSThi',
+                'iM': edu.system.iM,
+                'strThi_CaThi_Id': '',
+                'strNgayThi': edu.util.getValById('txtSearch_NgayThi'),
                 'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
                 'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem_CC'),
+                'strNgayThiBatDau': edu.util.getValById('txtSearch_NgayThi_TuNgay'),
+                'strNgayThiKetThuc': edu.util.getValById('txtSearch_NgayThi_DenNgay'),
+                'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_CC'),
                 'strNguoiThucHien_Id': edu.system.userId,
             };
             obj_list[primaryKey] = idStr;
             obj_list[fixedKey] = fixedStr;
             return {
-                type: 'GET',
+                type: 'POST',
                 action: obj_list.action,
                 contentType: true,
                 data: obj_list,
                 fakedb: []
             };
         }, function (allData) {
-            me.cbGenCombo_DanhSachThi(allData);
+            me.genTable_DanhSachThi(allData);
         }, "ID");
     },
-    cbGenCombo_DanhSachThi: function (data) {
+    genTable_DanhSachThi: function (data) {
         var me = this;
-        var obj = {
-            data: data,
-            renderInfor: {
-                id: "ID",
-                parentId: "",
-                name: "MADANHSACHTHI",
-                code: "",
-                avatar: ""
+        me.dtDanhSachThi = data || [];
+        me.renderTable_DanhSachThi();
+    },
+    renderTable_DanhSachThi: function () {
+        var me = this;
+        var data = me.dtDanhSachThi || [];
+        var status = $("#dropSearch_TrangThaiCongBo").val();
+        var onlyUnpublished = $("#chkChuaCongBo").is(":checked");
+
+
+        if (onlyUnpublished) {
+            data = data.filter(function (x) {
+                var v = x.TRANGTHAICONGBO_TEN;
+                return v == null || (typeof v === "string" && v.trim() === "");
+            });
+        } else if (status) {
+            data = data.filter(function (x) {
+                return (x.TRANGTHAICONGBO_TEN || "") === status;
+            });
+        }
+        $("#lblDanhSachThi_Tong").html(data.length);
+        var jsonForm = {
+            strTable_Id: "tblDanhSachThi",
+            aaData: data,
+            colPos: {
+                center: [0]
             },
-            renderPlace: ["dropSearch_DanhSach"],
-            type: "",
-            title: "Chọn danh sách thi",
+            aoColumns: [
+                { "mDataProp": "MADANHSACHTHI" },
+                { "mDataProp": "TKB_PHONGHOC_TEN" },
+                { "mDataProp": "NGAYTHI" },
+                { "mDataProp": "THI_CATHI_TEN" },
+                { "mDataProp": "DAOTAO_HOCPHAN_TEN" },
+                { "mDataProp": "HINHTHUCTHI_TEN" },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<div style="max-width:240px; word-break:break-all; white-space:normal;">'
+                            + edu.util.returnEmpty(aData.THONGTINLOPHOCPHAN) + '</div>';
+                    }
+                },
+                { "mDataProp": "TRANGTHAICONGBO_TEN" },
+                { "mDataProp": "THOIGIANCONGBOLICH" },
+                { "mDataProp": "NGUOITHUCHIENCONGBOLICH" },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" class="checkDSThi" id="checkDSThi_' + aData.ID + '"/>';
+                    }
+                }
+            ]
         };
-        edu.system.loadToCombo_data(obj);
+        edu.system.loadToTable_data(jsonForm);
+        me.syncTopScroll_DanhSachThi();
+    },
+    syncTopScroll_DanhSachThi: function () {
+        var $top = $("#topScroll_tblDanhSachThi");
+        var $topInner = $("#topScrollInner_tblDanhSachThi");
+        var $wrap = $("#wrapScroll_tblDanhSachThi");
+        if (!$top.length || !$wrap.length) return;
+        var resize = function () {
+            $topInner.css("width", $wrap[0].scrollWidth + "px");
+        };
+        resize();
+        setTimeout(resize, 50);
+        if (!$top.data("synced")) {
+            $top.data("synced", true);
+            $top.on("scroll", function () { $wrap.scrollLeft($top.scrollLeft()); });
+            $wrap.on("scroll", function () { $top.scrollLeft($wrap.scrollLeft()); });
+            $(window).on("resize", resize);
+        }
     },
 
     /*----------------------------------------------
@@ -1748,6 +1829,8 @@ DuLieuThi.prototype = {
 
     loadBtnCongBo: function (data) {
         //main_doc.KhaoThi.dtXacNhan = data;
+        this.dtTrangThaiCongBo = data;
+        this.cbGenCombo_TrangThaiCongBo(data);
         var row = "";
         row += '<div style="margin-left: auto; margin-right: auto; width: ' + ((data.length) * 90) + 'px">';
         for (var i = 0; i < data.length; i++) {
@@ -1762,6 +1845,19 @@ DuLieuThi.prototype = {
         $("#zoneBtnCongBo").html(row);
     },
 
+    cbGenCombo_TrangThaiCongBo: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "TEN",
+                parentId: "",
+                name: "TEN",
+            },
+            renderPlace: ["dropSearch_TrangThaiCongBo"],
+            title: "Tình trạng công bố"
+        };
+        edu.system.loadToCombo_data(obj);
+    },
 
     getList_ThoiGianDaoTao: function () {
         var me = this;
@@ -1883,6 +1979,61 @@ DuLieuThi.prototype = {
         }
         edu.system.loadToCombo_data(obj);
         if (data.length != 1) $("#dropSearch_KhoaDaoTao").val("").trigger("change");
+    },
+    getList_ChuongTrinhDaoTao: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'DKH_PhanCong_LopHP/LayDSChuongTrinhToChuc',
+            'type': 'GET',
+            'strDaoTao_ThoiGianDaoTao_Id': '',
+            'strDaoTao_KhoaDaoTao_Id': '',
+            'strDaoTao_HeDaoTao_Id': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.cbGenCombo_ChuongTrinhDaoTao(data.Data);
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    cbGenCombo_ChuongTrinhDaoTao: function (data) {
+        // Gộp các bản ghi trùng TENCHUONGTRINH thành 1 option, mỗi option chỉ giữ 1 ID đầu tiên.
+        // Backend tự resolve các bản ghi cùng tên/cùng chương trình gốc khi nhận ID này.
+        var seen = {};
+        var unique = [];
+        (data || []).forEach(function (item) {
+            var key = (item.TENCHUONGTRINH || "").trim();
+            if (!key || seen[key]) return;
+            var row = { ID: item.ID, TENCHUONGTRINH: key };
+            seen[key] = row;
+            unique.push(row);
+        });
+        var obj = {
+            data: unique,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TENCHUONGTRINH",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_ChuongTrinh_CC"],
+            type: "",
+            title: "Tất cả chương trình đào tạo",
+        };
+        edu.system.loadToCombo_data(obj);
+        if (unique.length != 1) $("#dropSearch_ChuongTrinh_CC").val("").trigger("change");
     },
     resetCombobox: function (point) {
         var x = $(point).val();

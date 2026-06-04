@@ -28,6 +28,12 @@ ThamSoQuyDoiDiemApDung.prototype = {
             ////
             $("#zoneEdit").slideDown();
             me.strChuongTrinh_Id = strId;
+            me.strHocPhan_Id = '';
+            me.strNguoiHoc_Id = '';
+            edu.util.viewHTMLById("lblHocPhanDangChon", "--");
+            edu.util.viewHTMLById("lblNguoiHocDangChon", "--");
+            $("#tab_ngoai2").hide();
+            $("#tab_ngoainguoihoc").hide();
             edu.util.setOne_BgRow(strId, "tblChuongTrinh");
             me.getList_ThamSoQuyDoiDiemApDung_ChuongTrinh();
             me.getList_HocPhan_ChuongTrinh();
@@ -286,8 +292,9 @@ ThamSoQuyDoiDiemApDung.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
+                        var sMa = edu.util.returnEmpty(aData.MACHUONGTRINH);
                         var html = '';
-                        html += '<span>' + 'Chương trình: ' + edu.util.returnEmpty(aData.TENCHUONGTRINH) + "</span><br />";
+                        html += '<span>' + 'Chương trình: ' + edu.util.returnEmpty(aData.TENCHUONGTRINH) + (sMa ? " - " + sMa : "") + "</span><br />";
                         html += '<span>' + 'Khóa đào tạo: ' + edu.util.returnEmpty(aData.DAOTAO_KHOADAOTAO_TEN) + "</span><br />";
                         return html;
                     }
@@ -506,9 +513,9 @@ ThamSoQuyDoiDiemApDung.prototype = {
             //row += '<td>' + edu.util.returnEmpty(data[i].NGAYTAO_DD_MM_YYYY) + '</td>';
             //row += '<td>' + edu.util.returnEmpty(data[i].NGUOITAO_TENDAYDU) + '</td>';
             if (data[i].LADULIEUKHOITAO == '0')
-            row += '<td style="text-align: center"><a title="Xóa" class="deleteThamSoQuyDoiDiem_ChuongTrinh" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
+                row += '<td style="text-align: center"><a title="Xóa" class="deleteThamSoQuyDoiDiem_ChuongTrinh" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             else
-                row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+                row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: green">Xóa</a></td>';
             row += '</tr>';
             $("#tblThamSoQuyDoiDiemApDungChungChoChuongTrinh tbody").append(row);
             me.genCombo_ThamSoQuyDoiDiem("dropChuongTrinh_ThamSoQuyDoiThangDiem" + strThamSoQuyDoiDiem_AD_Id, data[i].DIEM_QUYDOITHANGDIEM_ID);
@@ -718,9 +725,9 @@ ThamSoQuyDoiDiemApDung.prototype = {
             //row += '<td>' + edu.util.returnEmpty(data[i].NGAYTAO_DD_MM_YYYY) + '</td>';
             //row += '<td>' + edu.util.returnEmpty(data[i].NGUOITAO_TENDAYDU) + '</td>';
             if (data[i].LADULIEUKHOITAO == '0')
-            row += '<td style="text-align: center"><a title="Xóa" class="deleteThamSoQuyDoiDiem_HocPhan" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
+                row += '<td style="text-align: center"><a title="Xóa" class="deleteThamSoQuyDoiDiem_HocPhan" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             else
-                row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+                row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: green">Xóa</a></td>';
             row += '</tr>';
             $("#tblThamSoQuyDoiDiemApDung_HocPhan tbody").append(row);
             me.genCombo_ThamSoQuyDoiDiem("dropHP_ThamSoQuyDoiThangDiem" + strThamSoQuyDoiDiem_AD_Id, data[i].DIEM_QUYDOITHANGDIEM_ID);
@@ -1106,13 +1113,18 @@ ThamSoQuyDoiDiemApDung.prototype = {
     },
     genCombo_HocPhan_ChuongTrinh: function (data) {
         var me = this;
+        me["dt_HocPhan"] = data;
         var obj = {
             data: data,
             renderInfor: {
                 id: "DAOTAO_HOCPHAN_ID",
                 parentId: "",
                 name: "DAOTAO_HOCPHAN_TEN",
-                code: ""
+                code: "DAOTAO_HOCPHAN_MA",
+                mRender: function (nRow, aData) {
+                    var sMa = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                    return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + (sMa ? " - " + sMa : "");
+                }
             },
             renderPlaces: ["zone_hocphanchuongtrinh"],
             style: "fa fa-cube color-active"
@@ -1125,6 +1137,14 @@ ThamSoQuyDoiDiemApDung.prototype = {
         $('#zone_hocphanchuongtrinh').on("select_node.jstree", function (e, data) {
             var strNameNode = data.node.id;
             me.strHocPhan_Id = strNameNode;
+            var hp = (me["dt_HocPhan"] || []).find(function (x) { return x.DAOTAO_HOCPHAN_ID == strNameNode; });
+            if (hp) {
+                var sTen = edu.util.returnEmpty(hp.DAOTAO_HOCPHAN_TEN);
+                var sMa = edu.util.returnEmpty(hp.DAOTAO_HOCPHAN_MA);
+                edu.util.viewHTMLById("lblHocPhanDangChon", sTen + (sMa ? " - " + sMa : ""));
+            } else {
+                edu.util.viewHTMLById("lblHocPhanDangChon", data.node.text || "--");
+            }
             me.getList_ThamSoQuyDoiDiem_HocPhan();
             $("#tab_ngoai2").show();
         });
@@ -1255,7 +1275,9 @@ ThamSoQuyDoiDiemApDung.prototype = {
     },
     viewEdit_ThamSoAD_ChuongTrinh: function (data) {
         var me = this;
-        edu.util.viewHTMLById("lblThamSoApDungChuongTrinh", data.TENCHUONGTRINH);
+        var sTen = edu.util.returnEmpty(data.TENCHUONGTRINH);
+        var sMa = edu.util.returnEmpty(data.MACHUONGTRINH);
+        edu.util.viewHTMLById("lblThamSoApDungChuongTrinh", sTen + (sMa ? " - " + sMa : ""));
     },
 
 
@@ -1473,7 +1495,9 @@ ThamSoQuyDoiDiemApDung.prototype = {
                 name: "DAOTAO_HOCPHAN_TEN",
                 code: "",
                 mRender: function (nRow, aData) {
-                    return edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + " - " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN)
+                    var sHoTen = (edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN)).trim();
+                    var sMaSV = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                    return sHoTen + (sMaSV ? " - " + sMaSV : "");
                 }
             },
             renderPlaces: ["zone_nguoihocchuongtrinh"],
@@ -1487,6 +1511,14 @@ ThamSoQuyDoiDiemApDung.prototype = {
         $('#zone_nguoihocchuongtrinh').on("select_node.jstree", function (e, data) {
             var strNameNode = data.node.id;
             me.strNguoiHoc_Id = strNameNode;
+            var nh = (me["dt_HS"] || []).find(function (x) { return x.QLSV_NGUOIHOC_ID == strNameNode; });
+            if (nh) {
+                var sHoTen = (edu.util.returnEmpty(nh.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(nh.QLSV_NGUOIHOC_TEN)).trim();
+                var sMaSV = edu.util.returnEmpty(nh.QLSV_NGUOIHOC_MASO);
+                edu.util.viewHTMLById("lblNguoiHocDangChon", sHoTen + (sMaSV ? " - " + sMaSV : ""));
+            } else {
+                edu.util.viewHTMLById("lblNguoiHocDangChon", data.node.text || "--");
+            }
             me.getList_ThoiGianDangKy(); $("#tblThamSoDanhGiaApDung_NguoiHoc tbody").html("");
             $("#tab_ngoainguoihoc").show();
         });
@@ -1664,9 +1696,9 @@ ThamSoQuyDoiDiemApDung.prototype = {
             //row += '<td>' + edu.util.returnEmpty(data[i].NGAYTAO_DD_MM_YYYY) + '</td>';
             //row += '<td>' + edu.util.returnEmpty(data[i].NGUOITAO_TENDAYDU) + '</td>';
             if (data[i].LADULIEUKHOITAO == '0')
-                row += '<td style="text-align: center"><a title="Xóa" class="deleteThamSoQuyDoiDiem_ChuongTrinh" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
+                row += '<td style="text-align: center"><a title="Xóa" class="deleteThamSo_NH" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
             else
-                row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)">Xóa</a></td>';
+                row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strThamSoQuyDoiDiem_AD_Id + '" href="javascript:void(0)" style="color: green">Xóa</a></td>';
             row += '</tr>';
             $("#tblThamSoDanhGiaApDung_NguoiHoc tbody").append(row);
             me.genCombo_ThamSoQuyDoiDiem("dropChuongTrinh_ThamSoQuyDoiThangDiem" + strThamSoQuyDoiDiem_AD_Id, data[i].DIEM_QUYDOITHANGDIEM_ID);

@@ -35,8 +35,8 @@
 
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_LoaiXepLich" class="select-opt">
-                                <option value="1">Xếp lịch với mọi sinh viên</option>
-                                <option value="0">Không xếp lịch với sinh viên không đủ điều kiện thi</option>
+                                <option value="0">Xếp lịch với mọi sinh viên</option>
+                                <option value="1">Không xếp lịch với sinh viên không đủ điều kiện thi</option>
                             </select>
                         </div>
                         <!--<div class="col-sm-3 item-search  checkbox-inline user-check-print line-38" style="padding-left: 20px">
@@ -201,10 +201,84 @@
                     </select>
                 </div>
                 <div class="col-sm-3 item-search">
-                    <select id="dropSearch_DanhSach" class="select-opt" style="width:100% !important"
+                    <select id="dropSearch_ChuongTrinh_CC" class="select-opt" style="width:100% !important"
                         multiple="multiple">
-                        <option id="" value=""> --Chọn danh sách-- </option>
+                        <option id="" value=""> --Chọn chương trình đào tạo-- </option>
                     </select>
+                </div>
+                <!-- Bộ lọc ngày thi -->
+                <div class="col-sm-3 item-search">
+                    <input type="text" id="txtSearch_NgayThi" class="form-control input-datepicker"
+                        placeholder="Xem theo ngày thi" />
+                </div>
+                <div class="col-sm-3 item-search">
+                    <input type="text" id="txtSearch_NgayThi_TuNgay" class="form-control input-datepicker"
+                        placeholder="Từ ngày" />
+                </div>
+                <div class="col-sm-3 item-search">
+                    <input type="text" id="txtSearch_NgayThi_DenNgay" class="form-control input-datepicker"
+                        placeholder="Đến ngày" />
+                </div>
+                <div class="col-sm-3 item-search">
+                    <select id="dropSearch_TrangThaiCongBo" class="select-opt" style="width:100% !important">
+                        <option value=""> --Tình trạng công bố-- </option>
+                    </select>
+                </div>
+                <div class="col-sm-6 item-search d-flex gap15">
+                    <a id="btnSearch_DanhSachThi" class="btn btn-default btn-search">
+                        <i class="fa fa-search"></i> Tải danh sách thi
+                    </a>
+                    <label style="margin: 0; cursor: pointer; user-select: none; font-weight: normal; display: inline-flex; align-items: center; gap: 8px; height: 34px;">
+                        <input type="checkbox" id="chkChuaCongBo" style="margin: 0; width: 18px; height: 18px; cursor: pointer;" />
+                        <span>Lọc chưa công bố</span>
+                    </label>
+                </div>
+            </div>
+            <!-- Danh sách thi -->
+            <div class="box box-solid aps-list-tuibai">
+                <div class="box-header pl20 pr20">
+                    <h3 class="box-title">
+                        <i class="fa-light fa-list-timeline"></i> Danh sách thi
+                        <span class="badge bg-light-blue">
+                            <span id="lblDanhSachThi_Tong">0</span>
+                        </span>
+                    </h3>
+                    <div class="pull-right">
+                        <a id="btnCongBoDanhSachThi" class="btn btn-success">
+                            <i class="fa-light fa-laptop-file"></i> Công bố theo học phần - danh sách thi
+                        </a>
+                    </div>
+                </div>
+                <div class="box-body pd20 pt10">
+                    <div id="topScroll_tblDanhSachThi" class="top-scroll-x" style="overflow-x:auto; overflow-y:hidden;">
+                        <div id="topScrollInner_tblDanhSachThi" style="height:1px;"></div>
+                    </div>
+                    <div id="wrapScroll_tblDanhSachThi" class="aps-table-select scroll-table-x">
+                        <table id="tblDanhSachThi" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center" rowspan="2">Stt</th>
+                                    <th class="td-center" rowspan="2">Danh sách thi</th>
+                                    <th class="td-center" rowspan="2">Phòng thi</th>
+                                    <th class="td-center" rowspan="2">Ngày thi</th>
+                                    <th class="td-center" rowspan="2">Ca thi</th>
+                                    <th class="td-center" rowspan="2">Thông tin học phần thi</th>
+                                    <th class="td-center" rowspan="2">Hình thức thi</th>
+                                    <th class="td-center" rowspan="2">Lớp học phần</th>
+                                    <th class="td-center" colspan="3">Thông tin công bố</th>
+                                    <th class="td-center td-fixed" rowspan="2">
+                                        <input type="checkbox" id="chkSelectAll_DanhSachThi">
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="td-center">Tình trạng</th>
+                                    <th class="td-center">Thời gian</th>
+                                    <th class="td-center">Người thực hiện</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="box-footer">
@@ -213,8 +287,6 @@
                         Đóng</a>
                     <a id="btnCongBoDotThi" class="btn btn-danger"><i class="fa-light fa-calendar-lines-pen"></i> Công
                         bố cả đợt thi</a>
-                    <a id="btnCongBoDanhSachThi" class="btn btn-success"><i class="fa-light fa-laptop-file"></i> Công bố
-                        theo học phần - danh sách thi</a>
                     <a id="btnCongBoHocPhan" class="btn btn-primary"><i class="fa-light fa-chalkboard"></i> Công bố theo
                         học phần</a>
                 </div>
@@ -373,7 +445,7 @@
 </div>
 
 <!-- page script -->
-<script src="modules/kehoach/script/duyetdulieuthi.js?v=1.0.0.2"></script>
+<script src="modules/kehoach/script/duyetdulieuthi.js?v=1.0.0.6"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DuLieuThi'] = new DuLieuThi();

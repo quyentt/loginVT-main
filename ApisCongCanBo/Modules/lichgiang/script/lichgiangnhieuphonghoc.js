@@ -34,6 +34,44 @@ LichGiangNhieuPhong.prototype = {
             .replace(/,\s*$/, '');           // Remove trailing comma
     },
 
+    // Phân loại buổi (sang/chieu/toi) — ưu tiên TIETBATDAU, fallback theo GIOBATDAU khi API không trả tiết
+    getSession: function(event) {
+        var tiet = event.TIETBATDAU;
+        if (tiet) {
+            if (tiet >= 1 && tiet <= 6) return 'sang';
+            if (tiet >= 7 && tiet <= 10) return 'chieu';
+            if (tiet >= 11 && tiet <= 15) return 'toi';
+        }
+        var gio = event.GIOBATDAU;
+        if (gio != null) {
+            if (gio < 12) return 'sang';
+            if (gio < 18) return 'chieu';
+            return 'toi';
+        }
+        return null;
+    },
+
+    // Ước lượng (tiết bắt đầu, tiết kết thúc) — fallback theo giờ khi API không trả TIETBATDAU/TIETKETTHUC.
+    // Quy ước: tiết 1 ~ 7h, tiết 7 ~ 13h, tiết 11 ~ 18h (mỗi tiết ~1 giờ).
+    getTietRange: function(event) {
+        var batDau = event.TIETBATDAU;
+        var ketThuc = event.TIETKETTHUC;
+        var g;
+        if (!batDau && event.GIOBATDAU != null) {
+            g = event.GIOBATDAU;
+            if (g < 12) batDau = Math.max(1, Math.min(6, g - 6));
+            else if (g < 18) batDau = Math.max(7, Math.min(10, g - 6));
+            else batDau = Math.max(11, Math.min(15, g - 7));
+        }
+        if (!ketThuc && event.GIOKETTHUC != null) {
+            g = event.GIOKETTHUC;
+            if (g <= 12) ketThuc = Math.max(1, Math.min(6, g - 6));
+            else if (g <= 18) ketThuc = Math.max(7, Math.min(10, g - 6));
+            else ketThuc = Math.max(11, Math.min(15, g - 7));
+        }
+        return { batDau: batDau, ketThuc: ketThuc };
+    },
+
     // Calculate efficiency based on selected mode
     calculateEfficiency: function(roomSchedules, totalDays) {
         var me = this;
@@ -86,11 +124,12 @@ LichGiangNhieuPhong.prototype = {
                 break;
         }
         
-        // Đếm số tiết đã sử dụng trong range
+        // Đếm số tiết đã sử dụng trong range (fallback theo giờ nếu thiếu TIETBATDAU/TIETKETTHUC)
         roomSchedules.forEach(function(schedule) {
-            if (schedule.TIETBATDAU && schedule.TIETKETTHUC) {
-                var start = Math.max(schedule.TIETBATDAU, periodRange.min);
-                var end = Math.min(schedule.TIETKETTHUC, periodRange.max);
+            var range = me.getTietRange(schedule);
+            if (range.batDau && range.ketThuc) {
+                var start = Math.max(range.batDau, periodRange.min);
+                var end = Math.min(range.ketThuc, periodRange.max);
                 if (start <= end) {
                     totalUsedPeriods += (end - start + 1);
                 }
@@ -541,15 +580,9 @@ LichGiangNhieuPhong.prototype = {
                 });
                 
                 // Phân loại theo ca
-                var sangEvents = events.filter(function(e) { 
-                    return e.TIETBATDAU && e.TIETBATDAU >= 1 && e.TIETBATDAU <= 6; 
-                });
-                var chieuEvents = events.filter(function(e) { 
-                    return e.TIETBATDAU && e.TIETBATDAU >= 7 && e.TIETBATDAU <= 10; 
-                });
-                var toiEvents = events.filter(function(e) { 
-                    return e.TIETBATDAU && e.TIETBATDAU >= 11 && e.TIETBATDAU <= 15; 
-                });
+                var sangEvents = events.filter(function(e) { return me.getSession(e) === 'sang'; });
+                var chieuEvents = events.filter(function(e) { return me.getSession(e) === 'chieu'; });
+                var toiEvents = events.filter(function(e) { return me.getSession(e) === 'toi'; });
                 
                 [sangEvents, chieuEvents, toiEvents].forEach(function(arr) {
                     arr.sort(function (a, b) {
@@ -566,7 +599,7 @@ LichGiangNhieuPhong.prototype = {
                     var uniqueId = event.ID || ('evt_' + room.ID + '_' + day.date + '_sang_' + idx);
                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                     html += '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + event.TENHOCPHAN + '" style="margin: 2px 0;">';
-                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')</div>';
+                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
                     html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
                     if (giangVien) {
                         html += '<div class="event-teacher">' + giangVien + '</div>';
@@ -582,7 +615,7 @@ LichGiangNhieuPhong.prototype = {
                     var uniqueId = event.ID || ('evt_' + room.ID + '_' + day.date + '_chieu_' + idx);
                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                     html += '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + event.TENHOCPHAN + '" style="margin: 2px 0;">';
-                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')</div>';
+                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
                     html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
                     if (giangVien) {
                         html += '<div class="event-teacher">' + giangVien + '</div>';
@@ -598,7 +631,7 @@ LichGiangNhieuPhong.prototype = {
                     var uniqueId = event.ID || ('evt_' + room.ID + '_' + day.date + '_toi_' + idx);
                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                     html += '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + event.TENHOCPHAN + '" style="margin: 2px 0;">';
-                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')</div>';
+                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
                     html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
                     if (giangVien) {
                         html += '<div class="event-teacher">' + giangVien + '</div>';
@@ -1076,15 +1109,9 @@ LichGiangNhieuPhong.prototype = {
                 }
                 
                 // Phân loại theo ca
-                var sangEvents = events.filter(function(e) { 
-                    return e.TIETBATDAU && e.TIETBATDAU >= 1 && e.TIETBATDAU <= 6; 
-                });
-                var chieuEvents = events.filter(function(e) { 
-                    return e.TIETBATDAU && e.TIETBATDAU >= 7 && e.TIETBATDAU <= 10; 
-                });
-                var toiEvents = events.filter(function(e) { 
-                    return e.TIETBATDAU && e.TIETBATDAU >= 11 && e.TIETBATDAU <= 15; 
-                });
+                var sangEvents = events.filter(function(e) { return me.getSession(e) === 'sang'; });
+                var chieuEvents = events.filter(function(e) { return me.getSession(e) === 'chieu'; });
+                var toiEvents = events.filter(function(e) { return me.getSession(e) === 'toi'; });
                 
                 // Sort theo giờ
                 [sangEvents, chieuEvents, toiEvents].forEach(function(arr) {
@@ -1103,7 +1130,7 @@ LichGiangNhieuPhong.prototype = {
                     var uniqueId = event.ID || ('evt_' + room.ID + '_' + day.date + '_sang_' + idx);
                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                     html += '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + event.TENHOCPHAN + '" style="margin: 2px 0;">';
-                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')</div>';
+                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
                     html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
                     if (giangVien) {
                         html += '<div class="event-teacher">' + giangVien + '</div>';
@@ -1119,7 +1146,7 @@ LichGiangNhieuPhong.prototype = {
                     var uniqueId = event.ID || ('evt_' + room.ID + '_' + day.date + '_chieu_' + idx);
                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                     html += '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + event.TENHOCPHAN + '" style="margin: 2px 0;">';
-                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')</div>';
+                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
                     html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
                     if (giangVien) {
                         html += '<div class="event-teacher">' + giangVien + '</div>';
@@ -1135,7 +1162,7 @@ LichGiangNhieuPhong.prototype = {
                     var uniqueId = event.ID || ('evt_' + room.ID + '_' + day.date + '_toi_' + idx);
                     var giangVien = me.cleanHtmlTags(event.THONGTINGIANGVIEN);
                     html += '<div class="schedule-event ' + colorClass + '" data-event-id="' + uniqueId + '" data-room-id="' + room.ID + '" data-date="' + day.date + '" data-lophocphan="' + event.IDLOPHOCPHAN + '" title="' + event.TENHOCPHAN + '" style="margin: 2px 0;">';
-                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')</div>';
+                    html += '<div class="event-time">' + me.returnTwo(event.GIOBATDAU) + ':' + me.returnTwo(event.PHUTBATDAU) + (event.TIETBATDAU ? ' (T' + event.TIETBATDAU + '-' + event.TIETKETTHUC + ')' : '') + '</div>';
                     html += '<div class="event-subject">' + event.TENHOCPHAN + '</div>';
                     if (giangVien) {
                         html += '<div class="event-teacher">' + giangVien + '</div>';
@@ -1205,8 +1232,9 @@ LichGiangNhieuPhong.prototype = {
                        ' - ' + me.returnTwo(objLich.GIOKETTHUC) + ':' + me.returnTwo(objLich.PHUTKETTHUC);
         $("#txtThoiGian_Detail").val(thoiGian);
         
-        // Tiết học
-        var tietHoc = 'Tiết ' + (objLich.TIETBATDAU || '?') + ' - ' + (objLich.TIETKETTHUC || '?');
+        // Tiết học (fallback theo giờ nếu API không trả TIETBATDAU/TIETKETTHUC)
+        var tietRange = me.getTietRange(objLich);
+        var tietHoc = 'Tiết ' + (tietRange.batDau || '?') + ' - ' + (tietRange.ketThuc || '?');
         $("#txtTietHoc_Detail").val(tietHoc);
         
         // Giảng viên - Remove <br> tags
@@ -1659,9 +1687,9 @@ LichGiangNhieuPhong.prototype = {
                 });
                 
                 var sessions = [
-                    { name: 'Sáng', min: 1, max: 6 },
-                    { name: 'Chiều', min: 7, max: 10 },
-                    { name: 'Tối', min: 11, max: 15 }
+                    { name: 'Sáng', key: 'sang' },
+                    { name: 'Chiều', key: 'chieu' },
+                    { name: 'Tối', key: 'toi' }
                 ];
                 
                 sessions.forEach(function(session, sessionIndex) {
@@ -1683,9 +1711,7 @@ LichGiangNhieuPhong.prototype = {
                     // Các ngày
                     arrDays.forEach(function(day) {
                         var events = roomSchedules.filter(function(item) {
-                            return item.NGAYHOC === day.date &&
-                                   item.TIETBATDAU >= session.min &&
-                                   item.TIETBATDAU <= session.max;
+                            return item.NGAYHOC === day.date && me.getSession(item) === session.key;
                         });
 
                         events.sort(function(a, b) {

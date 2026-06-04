@@ -146,7 +146,7 @@ NguoiHoc.prototype = {
 
             }
             else {
-                //edu.system.alert("Không có thay đổi lưu");
+                edu.system.alert("Bạn chưa thay đổi gì dữ liệu.", "i");
             }
         });
 
@@ -458,7 +458,7 @@ NguoiHoc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" title="Sửa">Điểm danh</a></span>';
+                        return '<span><a class="btn btn-default btnChuyenCan" id="' + aData.ID + '" title="Sửa">Tổng hợp điểm danh</a></span>';
                     }
                 },
                 {
@@ -936,7 +936,7 @@ NguoiHoc.prototype = {
     --Discription: [3] AccessDB HOC
     --ULR:  Modules
     -------------------------------------------*/
-    getList_SinhVien: function (strDanhSach_Id) {
+    getList_SinhVien: function (strDanhSach_Id, callback) {
         var me = this;
         //--Edit
         var objLich = me.dtLichHoc.find(e => e.ID === me.strLichHoc_Id);
@@ -966,11 +966,12 @@ NguoiHoc.prototype = {
                 else {
                     edu.system.alert(data.Message, "s");
                 }
-
+                if (typeof callback === "function") callback();
             },
             error: function (er) {
 
                 edu.system.alert(JSON.stringify(er), "w");
+                if (typeof callback === "function") callback();
             },
             type: 'GET',
             action: obj_list.action,
@@ -1301,29 +1302,26 @@ NguoiHoc.prototype = {
         //default
         edu.system.makeRequest({
             success: function (data) {
+                var showAfterReload = function (notifyType, notifyContent) {
+                    me.getList_SinhVien(null, function () {
+                        edu.system.alertOnModal({ type: notifyType, content: notifyContent });
+                    });
+                };
                 if (data.Success) {
                     if (!edu.util.checkValue(obj_save.strId)) {
-                        obj_notify = {
-                            type: "s",
-                            content: "Thực hiện thành công!",
-                        }
-                        edu.system.alertOnModal(obj_notify);
+                        showAfterReload("s", "Thực hiện thành công!");
                     }
                     else {
-                        obj_notify = {
-                            type: "i",
-                            content: "Cập nhật thành công!",
-                        }
-                        edu.system.alertOnModal(obj_notify);
+                        showAfterReload("i", "Cập nhật thành công!");
                     }
-                    me.getList_SinhVien();
                 }
                 else {
-                    obj_notify = {
-                        type: "w",
-                        content: obj_save.action + " (er): " + data.Message,
+                    var msg = edu.util.returnEmpty(data.Message);
+                    if (!msg || /^[A-F0-9-]{16,}$/i.test(msg.trim())) {
+                        showAfterReload("s", "Đã thực hiện xong");
+                    } else {
+                        edu.system.alertOnModal({ type: "w", content: msg });
                     }
-                    edu.system.alertOnModal(obj_notify);
                 }
             },
             error: function (er) {

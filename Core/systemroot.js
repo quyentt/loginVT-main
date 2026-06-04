@@ -427,24 +427,29 @@ systemroot.prototype = {
             }
             return res;
         }
-        me["isActive"] = true;
-        window.onfocus = function () {
+        
+        if (localStorage.getItem("reload") == "true") {
             me["isActive"] = true;
-            me.versionMainJS();
-            me.versionPageJS();
-        };
-
-        window.onblur = function () {
-            me["isActive"] = false;
-        };
-
-        checkChangeversionJS();
-        function checkChangeversionJS() {
-            setTimeout(function () {
+            window.onblur = function () {
+                me["isActive"] = false;
+            };
+            window.onfocus = function () {
+                me["isActive"] = true;
                 me.versionMainJS();
-                checkChangeversionJS();
-            }, 300000)
+                me.versionPageJS();
+            };
+            checkChangeversionJS();
+            function checkChangeversionJS() {
+                setTimeout(function () {
+                    me.versionMainJS();
+                    checkChangeversionJS();
+                }, 300000)
+            }
         }
+        
+
+
+        
 
         var x = jQuery.ajax({
             type: "GET",
@@ -6194,7 +6199,7 @@ systemroot.prototype = {
         $("#menu_vertical").html("");
         for (var j = 0; j < data.length; j++) {
             if (data[j].CHUCNANGCHA_ID == null || data[j].CHUCNANGCHA_ID == "") {//get parents
-                strDuongDanHienThi = data[j].DUONGDANHIENTHI ? data[j].DUONGDANHIENTHI: "#";
+                strDuongDanHienThi = "#" + (data[j].ID + me.appId).toLowerCase();
                 strDuongDanFile = data[j].DUONGDANFILE;
                 var arrChild = data.filter(e => e.CHUCNANGCHA_ID === data[j].ID);
 
@@ -6210,7 +6215,7 @@ systemroot.prototype = {
                 if (arrChild.length) {
                     node += '<div class="sidebar-menu-sub collapse" id="collapse' + data[j].ID + '" data-bs-parent="#sidebar-menu">';
                     arrChild.forEach(e => {
-                        node += '<a id="chucnang'+ e.ID +'" onclick="edu.system.initMain(' + "\'" + e.DUONGDANHIENTHI + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + e.DUONGDANHIENTHI + '">' + e.TENCHUCNANG + '</a>';
+                        node += '<a id="chucnang' + e.ID + '" onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + e.DUONGDANHIENTHI + '">' + e.TENCHUCNANG + '</a>';
                     })
                     node += '</div>';
                 }
@@ -7350,16 +7355,43 @@ systemroot.prototype = {
     showImportChung: function (strTenHienThi, strMaDanhMuc) {
         var me = this;
         if (strTenHienThi === undefined) strTenHienThi = "";
-        var row = "";
         var sCallback = $("a[name='" + strMaDanhMuc + "']").attr("callback");
-        row += '<div class="col-sm-12">';
-        row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Upload ' + strTenHienThi + ': </div><div class="col-sm-8"><div id="zoneImportChung"></div></div>';
+
+        var body = '';
+        body += '<div class="row g-3 align-items-center">';
+        body += '<div class="col-sm-3 fw-semibold">- Upload ' + strTenHienThi + ':</div>';
+        body += '<div class="col-sm-9"><div id="zoneImportChung"></div></div>';
         if (strMaDanhMuc != undefined && strMaDanhMuc != "") {
             var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
-            row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-8"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div>';
+            body += '<div class="col-sm-3 fw-semibold">- Mẫu ' + strTenHienThi + ':</div>';
+            body += '<div class="col-sm-9"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div>';
         }
-        row += '</div><div class="clear"></div>';
-        edu.system.alert(row);
+        body += '</div>';
+        body += '<div id="zoneImportChung_Result" class="mt-3"></div>';
+
+        var modal = '';
+        modal += '<div class="modal fade modal-alert" id="myModalImportChung" tabindex="-1" aria-hidden="true">';
+        modal += '<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl" style="max-width: 95vw;">';
+        modal += '<div class="modal-content">';
+        modal += '<div class="modal-header">';
+        modal += '<h5 class="modal-title"><i class="fa fa-cloud-upload me-2"></i>Import ' + strTenHienThi + '</h5>';
+        modal += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+        modal += '</div>';
+        modal += '<div class="modal-body" id="myModalImportChung_Body">' + body + '</div>';
+        modal += '<div class="modal-footer">';
+        modal += '<button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>';
+        modal += '</div>';
+        modal += '</div></div></div>';
+
+        $("#myModalImportChung").remove();
+        $("body").append(modal);
+        var modalEl = document.getElementById('myModalImportChung');
+        var bsModal = new bootstrap.Modal(modalEl);
+        bsModal.show();
+        modalEl.addEventListener('hidden.bs.modal', function () {
+            $("#myModalImportChung").remove();
+        });
+
         edu.system.uploadImport(["zoneImportChung"], GetDuLieuDanhMuc);
 
         function GetDuLieuDanhMuc(a, strPath) {
@@ -7414,32 +7446,33 @@ systemroot.prototype = {
                 success: function (data) {
                     if (data.Success) {
                         data = data.Data;
-                        $(".tableError").remove();
+                        $("#myModalImportChung .tableError").remove();
                         if (data.length > 0) {
                             var iThanhCong = 0;
                             var iThatBai = 0;
                             var row = '';
-                            row += '<table class="table table-hover table-bordered tableError">';
+                            row += '<table class="table table-hover table-bordered tableError w-100">';
+                            row += '<thead><tr><th colspan="2">Thành công <span class="italic color-active">' + (function () { var ok = 0; for (var k = 0; k < data.length; k++) { if (!edu.util.checkValue(data[k].VALUE)) ok++; } return ok; })() + '</span>; Thất bại: <span class="italic color-warning">' + (function () { var f = 0; for (var k = 0; k < data.length; k++) { if (edu.util.checkValue(data[k].VALUE)) f++; } return f; })() + '</span></th></tr>';
+                            row += '<tr><th style="width:40%">Dữ liệu</th><th>Lỗi</th></tr></thead>';
                             row += '<tbody>';
-                            row += '<tr>';
-                            row += '<td>Dữ liệu</td>';
-                            row += '<td>Lỗi</td>';
-                            row += '</tr>';
                             for (var i = 0; i < data.length; i++) {
-                                row += '<tr>';
                                 if (edu.util.checkValue(data[i].VALUE)) {
                                     iThatBai++;
+                                    row += '<tr>';
                                     row += '<td>' + edu.util.returnEmpty(data[i].KEY) + '</td>';
                                     row += '<td>' + edu.util.returnEmpty(data[i].VALUE) + '</td>';
+                                    row += '</tr>';
                                 } else {
                                     iThanhCong++;
                                 }
-                                row += '</tr>';
                             }
                             row += '</tbody>';
-                            row += '<thead><tr><td colspan="2">Thành công <span class="italic color-active">' + iThanhCong + '</span>; Thất bại: <span class="italic color-warning">' + iThatBai + '</span></td></tr></thead>';
                             row += '</table>';
-                            edu.system.alert(row);
+                            if ($("#myModalImportChung").length) {
+                                $("#zoneImportChung_Result").html(row);
+                            } else {
+                                edu.system.alert(row);
+                            }
                         }
                         if (sCallback != undefined && sCallback != "undefined" && sCallback != "") {
                             eval(sCallback);

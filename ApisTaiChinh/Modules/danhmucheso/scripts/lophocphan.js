@@ -761,7 +761,7 @@ LopHocPhan.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 3, 4, 5, 7, 8, 9],
+                center: [0, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13],
             },
             aoColumns: [
                 {
@@ -777,6 +777,12 @@ LopHocPhan.prototype = {
                     "mDataProp": "HINHTHUCHOC_TEN"
                 },
                 {
+                    "mDataProp": "SOTINCHI"
+                },
+                {
+                    "mDataProp": "THONGTINPHANBO"
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return edu.util.returnEmpty(aData.THOIGIANCHITIET);
                         //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
@@ -788,25 +794,10 @@ LopHocPhan.prototype = {
                     }
                 },
                 {
-                    "mRender": function (nRow, aData) {
-                        if (edu.util.checkValue(aData.GiangVien)) return aData.GiangVien;
-                        if (edu.util.checkValue(aData.GIANGVIEN_HOTEN)) return aData.GIANGVIEN_HOTEN;
-                        if (edu.util.checkValue(aData.GIANGVIEN_HODEM) || edu.util.checkValue(aData.GIANGVIEN_TEN)) {
-                            return edu.util.returnEmpty(aData.GIANGVIEN_HODEM) + " " + edu.util.returnEmpty(aData.GIANGVIEN_TEN);
-                        }
-                        // Fallback: trích tên GV từ THOIGIANCHITIET (mỗi dòng "Thu X tiet ..., <Tên GV>")
-                        var str = edu.util.returnEmpty(aData.THOIGIANCHITIET);
-                        if (!str) return "";
-                        var names = [];
-                        str.split(/<br\s*\/?>|\n/i).forEach(function (line) {
-                            var m = line.match(/tiet\s+[\d,\s]+,\s*(.+)$/i);
-                            if (m && m[1]) {
-                                var name = m[1].trim();
-                                if (names.indexOf(name) === -1) names.push(name);
-                            }
-                        });
-                        return names.join("<br/>");
-                    }
+                    "mDataProp": "CHUDANHGIANGVIEN"
+                },
+                {
+                    "mDataProp": "GIANGVIEN"
                 },
                 {
                     "mRender": function (nRow, aData) {
@@ -821,6 +812,12 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mDataProp": "SOLUONGDUKIENHOC"
+                },
+                {
+                    "mDataProp": "SOSVCHOT"
+                },
+                {
+                    "mDataProp": "DAOTAO_CHUONGTRINH"
                 },
                 {
                     "mRender": function (nRow, aData) {
@@ -843,6 +840,25 @@ LopHocPhan.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.syncTopScroll_LopHocPhan();
+    },
+    syncTopScroll_LopHocPhan: function () {
+        var $top = $("#topScroll_tblLopHocPhan");
+        var $topInner = $("#topScrollInner_tblLopHocPhan");
+        var $wrap = $("#wrapScroll_tblLopHocPhan");
+        if (!$top.length || !$wrap.length) return;
+        var resize = function () {
+            var w = $wrap[0].scrollWidth;
+            $topInner.css("width", w + "px");
+        };
+        resize();
+        setTimeout(resize, 50);
+        if (!$top.data("synced")) {
+            $top.data("synced", true);
+            $top.on("scroll", function () { $wrap.scrollLeft($top.scrollLeft()); });
+            $wrap.on("scroll", function () { $top.scrollLeft($wrap.scrollLeft()); });
+            $(window).on("resize", resize);
+        }
     },
 
     /*------------------------------------------

@@ -436,7 +436,7 @@
 
 <!-- Modal: Các đợt tuyển sinh -->
 <div class="modal fade modal_dot_tuyen_sinh" id="dot-tuyen-sinh">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
@@ -491,9 +491,15 @@
     </div>
 </div>
 
+<!-- Modal: Picker nhân sự dùng chung (edu.extend.genModal_NhanSu inject HTML vào đây) -->
+<div class="modal fade register-wish aps-modal-nhansu" id="modal_nhansu" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-1800">
+    </div>
+</div>
+
 <!-- Modal: Thêm mới nhân sự (phân công) -->
 <div class="modal fade modal_them_moi_nhan_su" id="them-moi-nhansu">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
@@ -505,39 +511,80 @@
             </div>
             <div class="modal-body aps-add-new">
                 <div class="aps-form mb-0">
-                    <div class="row aps-form-item">
-                        <div class="col-sm-12 aps-form-input pr0 pl0">
-                            <div class="aps-table-select scroll-table-x pb-0 mb-20">
-                                <table id="tblNhanSuDaChon" class="table table-hover table-bordered table-border">
-                                    <thead>
-                                        <tr>
-                                            <th class="td-fixed td-center w-50px" rowspan="2">Stt</th>
-                                            <th class="td-left" rowspan="2" style="width: 260px;">
-                                                <span class="mt-10" style="float: left;">Nhân sự</span>
-                                                <button id="btnChonNhanSu" class="btn btn-primary" type="button" style="float: right;">
-                                                    <i class="fas fa-plus mr-5"></i><span>Chọn nhân sự</span>
-                                                </button>
-                                            </th>
-                                            <th class="td-center" rowspan="2">
-                                                <input type="checkbox" id="chkPC_SelectAll" />
-                                            </th>
-                                            <th class="td-center bg-f2" colspan="6">Khai thông tin cần gán cho nhân sự chọn</th>
-                                        </tr>
-                                        <tr>
-                                            <th class="td-center bg-f2">Vai trò</th>
-                                            <th class="td-center bg-f2" style="width: 120px;">Ngày bắt đầu</th>
-                                            <th class="td-center bg-f2" style="width: 120px;">Ngày kết thúc</th>
-                                            <th class="td-center bg-f2" style="width: 130px;">Cho phép/Chặn</th>
-                                            <th class="td-center bg-f2" style="width: 120px;">Hiệu lực</th>
-                                            <th class="td-center bg-f2">Ghi chú</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
+                    <!-- Section A: Chọn nhân sự -->
+                    <h4 class="box-title" style="background:#d1ecf1;padding:8px 12px;border-left:4px solid #17a2b8;">
+                        <i class="fa-regular fa-users mr-5"></i> Chọn nhân sự
+                    </h4>
+                    <div class="d-flex justify-content-end mt-10 mb-10">
+                        <button id="btnChonNhanSu" class="btn btn-success btn-lg" type="button" style="font-weight: 600; box-shadow: 0 2px 6px rgba(40,167,69,0.35); padding: 8px 22px;">
+                            <i class="fas fa-user-plus mr-8"></i><span>Thêm nhân sự</span>
+                        </button>
+                    </div>
+                    <div class="aps-table-select scroll-table-x pb-0 mb-10 mt-10">
+                        <table id="tblNhanSuDaChon" class="table table-hover table-bordered table-border">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center w-50px">Stt</th>
+                                    <th class="td-left">Thông tin nhân sự đã chọn</th>
+                                    <th class="td-center" style="width:90px;">
+                                        <input type="checkbox" id="chkPC_SelectAll" />
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <p class="fz14 color-red mb-0">Nhân sự nào được tick <input type="checkbox" disabled checked /> mới được lưu thông tin phân công</p>
+
+                    <div class="line" style="margin-top: 20px; margin-bottom: 20px;"></div>
+
+                    <!-- Section B: Khai thông tin chung -->
+                    <h4 class="box-title" style="background:#fff3cd;padding:8px 12px;border-left:4px solid #ffc107;">
+                        <i class="fa-regular fa-circle-info"></i> Khai thông tin cần gán cho nhân sự chọn
+                    </h4>
+                    <div class="mt-15">
+                        <!-- Vai trò -->
+                        <div class="row aps-form-item pd0 align-items-center">
+                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Vai trò</div></div>
+                            <div class="col-sm-9 aps-form-input pr0">
+                                <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                    <select id="ddlPC_New_VaiTro" class="form-select"><option value="">Chọn vai trò</option></select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Ngày bắt đầu / Ngày kết thúc -->
+                        <div class="row aps-form-item align-items-center">
+                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Ngày bắt đầu</div></div>
+                            <div class="col-sm-3 aps-form-input pr0">
+                                <input id="txtPC_New_NgayBatDau" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                            <div class="col-sm-3 aps-lable-name"><div class="title-name">Ngày kết thúc</div></div>
+                            <div class="col-sm-3 aps-form-input pr0">
+                                <input id="txtPC_New_NgayKetThuc" class="form-control input-datepicker" placeholder="dd/mm/yyyy">
+                            </div>
+                        </div>
+                        <!-- Trạng thái: 2 checkbox inline -->
+                        <div class="row aps-form-item align-items-center">
+                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Trạng thái</div></div>
+                            <div class="col-sm-9 aps-form-input pr0 d-flex" style="gap: 40px;">
+                                <label class="d-flex align-items-center mb-0" style="cursor:pointer;">
+                                    <input type="checkbox" id="chkPC_New_Allowed" checked />
+                                    <span class="ml-10">Cho phép / Chặn</span>
+                                </label>
+                                <label class="d-flex align-items-center mb-0" style="cursor:pointer;">
+                                    <input type="checkbox" id="chkPC_New_Active" checked />
+                                    <span class="ml-10">Hiệu lực</span>
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Ghi chú -->
+                        <div class="row aps-form-item">
+                            <div class="col-sm-3 aps-lable-name pl0"><div class="title-name">Ghi chú</div></div>
+                            <div class="col-sm-9 aps-form-input pr0">
+                                <textarea id="txtPC_New_GhiChu" class="form-control" rows="6" style="min-height: 140px;" placeholder="Ghi chú thêm (tuỳ chọn)..."></textarea>
                             </div>
                         </div>
                     </div>
-                    <p class="fz18 color-red">Nhân sự nào được chọn <input type="checkbox" disabled checked /> mới được lưu thông tin phân công</p>
                 </div>
             </div>
             <div class="modal-footer">
@@ -559,7 +606,7 @@
 
 <!-- Modal: Thêm mới kế hoạch đầu ra -->
 <div class="modal fade modal_them_moi" id="them-moi-dau-ra">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1200">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
@@ -599,40 +646,112 @@
 
                     <div class="line" style="margin-top: 25px;margin-bottom: 15px;"></div>
 
-                    <!-- Section: Danh sách chương trình -->
-                    <h4 class="box-title" style="background:#fff3cd;padding:8px 12px;border-left:4px solid #ffc107;">
-                        <i class="fa-regular fa-list"></i> Danh sách chương trình
-                    </h4>
+                    <!-- 2-column layout: A (Thông tin khai chung — sticky) | B (Các đầu ra cần chọn) -->
+                    <div class="row">
+                        <!-- A: Các thông tin khai chung -->
+                        <div class="col-lg-4 pl0 pr15" style="position: sticky; top: 0; align-self: flex-start;">
+                            <h4 class="box-title" style="background:#d1ecf1;padding:8px 12px;border-left:4px solid #17a2b8;">
+                                <i class="fa-regular fa-circle-info"></i> Các thông tin khai chung
+                            </h4>
+                            <div id="zoneDR_ThongTinChung" class="mt-10">
+                                <!-- Loại đầu ra / Kiểu học -->
+                                <div class="row aps-form-item pd0">
+                                    <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Loại đầu ra tuyển sinh</div></div>
+                                    <div class="col-sm-7 aps-form-input pr0">
+                                        <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                            <select id="ddlDR_New_LoaiDauRa" class="form-select"><option value="">Chọn loại đầu ra</option></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row aps-form-item pd0">
+                                    <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Kiểu học sau khi vào học</div></div>
+                                    <div class="col-sm-7 aps-form-input pr0">
+                                        <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                            <select id="ddlDR_New_KieuHocTap" class="form-select"><option value="">Chọn kiểu học</option></select>
+                                        </div>
+                                    </div>
+                                </div>
 
-                    <div class="aps-table-select scroll-table-x pb-0 mb-20 mt-10">
-                        <table id="tblChuongTrinhDauRa" class="table table-hover table-bordered table-border">
-                            <thead>
-                                <tr>
-                                    <th class="td-fixed td-center w-50px">Stt</th>
-                                    <th class="td-left">Mã chương trình</th>
-                                    <th class="td-left">Tên chương trình</th>
-                                    <th class="td-left">Ngành TS</th>
-                                    <th class="td-left">Ngành ĐT</th>
-                                    <th class="td-center" style="width: 110px;">Chỉ tiêu</th>
-                                    <th class="td-center" style="width: 130px;">Chỉ tiêu tối đa</th>
-                                    <th class="td-center" style="width: 130px;">Chỉ tiêu tối thiểu</th>
-                                    <th class="td-center" style="width: 90px;">
-                                        <input type="checkbox" id="chkDR_SelectAll" />
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                                <!-- 7 checkbox cấu hình -->
+                                <div class="row aps-form-item pd0 list-chekbox">
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_HighLight" />
+                                        <div class="title-name ml-10">Là ngành nổi bật cần hiện lên đầu</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AllowRegister" class="mt-0" />
+                                        <div class="title-name ml-10">Cho phép đăng ký trực tuyến</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AllowWaitlist" class="mt-0" />
+                                        <div class="title-name ml-10">Cho phép đăng ký nếu hết chỉ tiêu (Đưa vào danh sách chờ)</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AllowTransferIn" class="mt-0" />
+                                        <div class="title-name ml-10">Cho phép tiếp nhận trường hợp chuyển trường không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AutoIntake" class="mt-0" />
+                                        <div class="title-name ml-10">Có tự động tạo dữ liệu chuẩn bị nhập học khi đủ điều kiện tiếp nhận không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AutoEnrollment" class="mt-0" />
+                                        <div class="title-name ml-10">Có tự động tạo hồ sơ học tập không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_AutoClassAssign" class="mt-0" />
+                                        <div class="title-name ml-10">Có tự động phân lớp không</div>
+                                    </div>
+                                </div>
 
-                    <div class="line" style="margin-top: 15px;margin-bottom: 15px;"></div>
+                                <!-- Trạng thái / Public / Hiệu lực -->
+                                <div class="row aps-form-item pd0">
+                                    <div class="col-sm-5 aps-lable-name pl0"><div class="title-name">Trạng thái của đầu ra</div></div>
+                                    <div class="col-sm-7 aps-form-input pr0">
+                                        <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                            <select id="ddlDR_New_TrangThai" class="form-select"><option value="">Chọn trạng thái</option></select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row aps-form-item pd0 list-chekbox">
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_Public" />
+                                        <div class="title-name ml-10">Có cho phép public qua cổng Portal không</div>
+                                    </div>
+                                    <div class="col-sm-12 aps-lable-name d-flex pl0">
+                                        <input type="checkbox" id="chkDR_New_Active" class="mt-0" checked />
+                                        <div class="title-name ml-10">Hiệu lực</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- Section: Thông tin chung cần khai cho các đầu ra -->
-                    <h4 class="box-title" style="background:#d1ecf1;padding:8px 12px;border-left:4px solid #17a2b8;">
-                        <i class="fa-regular fa-circle-info"></i> Thông tin chung cần khai cho các đầu ra
-                    </h4>
-                    <div id="zoneDR_ThongTinChung" class="mt-10">
-                        <p class="color-muted">(Bạn gửi spec các field "thông tin chung" tôi sẽ build vào đây)</p>
+                        <!-- B: Các đầu ra cần chọn -->
+                        <div class="col-lg-8 pl15 pr0">
+                            <h4 class="box-title" style="background:#fff3cd;padding:8px 12px;border-left:4px solid #ffc107;">
+                                <i class="fa-regular fa-list"></i> Các đầu ra cần chọn
+                            </h4>
+                            <div class="aps-table-select scroll-table-x pb-0 mb-20 mt-10">
+                                <table id="tblChuongTrinhDauRa" class="table table-hover table-bordered table-border">
+                                    <thead>
+                                        <tr>
+                                            <th class="td-fixed td-center w-50px">Stt</th>
+                                            <th class="td-left" style="min-width: 140px;">Mã chương trình</th>
+                                            <th class="td-left" style="min-width: 220px;">Tên chương trình</th>
+                                            <th class="td-left" style="min-width: 180px;">Ngành TS</th>
+                                            <th class="td-left" style="min-width: 180px;">Ngành ĐT</th>
+                                            <th class="td-center" style="width: 100px;">Chỉ tiêu</th>
+                                            <th class="td-center" style="width: 120px;">Chỉ tiêu tối đa</th>
+                                            <th class="td-center" style="width: 120px;">Chỉ tiêu tối thiểu</th>
+                                            <th class="td-center" style="width: 70px;">
+                                                <input type="checkbox" id="chkDR_SelectAll" />
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -816,7 +935,7 @@
 
 <!-- Modal: Kế hoạch đầu ra -->
 <div class="modal fade modal_dot_tuyen_sinh" id="ke-hoach-dau-ra">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
@@ -955,7 +1074,7 @@
 
 <!-- Modal: Phân công nhân sự -->
 <div class="modal fade modal_phan_cong_ns" id="phan-cong-nhan-su">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">

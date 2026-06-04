@@ -2,6 +2,30 @@
     .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
         margin-left: 0px;
     }
+    /* Bảng lớp học phần: cho phép cell trải rộng, không bị ép xuống dòng */
+    #tblLopHocPhan { width: auto !important; min-width: 100%; }
+    #tblLopHocPhan th,
+    #tblLopHocPhan td { white-space: nowrap; vertical-align: middle; padding: 8px 12px; }
+    /* Một số cột text dài cho phép xuống dòng theo <br> nhưng không tự wrap */
+    #tblLopHocPhan td:nth-child(3),   /* Tên lớp */
+    #tblLopHocPhan td:nth-child(8),   /* Thông tin lịch */
+    #tblLopHocPhan td:nth-child(16) { /* Chương trình mở lớp */
+        white-space: normal;
+        min-width: 180px;
+    }
+    /* Khung bảng có chiều cao giới hạn: scroll ngang dưới + dọc hiển thị ngay trong khung */
+    #wrapScroll_tblLopHocPhan {
+        max-height: 65vh;
+        overflow: auto !important;
+        border: 1px solid #e0e0e0;
+    }
+    /* Header dính khi cuộn dọc */
+    #tblLopHocPhan thead th {
+        position: sticky;
+        top: 0;
+        background: #f5f7fa;
+        z-index: 2;
+    }
 </style>
 <section class="content">
     <div class="row">
@@ -44,7 +68,7 @@
                                 <select id="dropSearch_HocPhan" class="select-opt" style="width:100% !important" multiple="multiple"></select>
                             </div>
                             <div class="col-sm-3 item-search">
-                                <select id="dropSearch_KeHoach" class="select-opt" style="width:100% !important" ></select>
+                                <select id="dropSearch_KeHoach" class="select-opt" style="width:100% !important"></select>
                             </div>
                             <div class="col-sm-6 item-search  checkbox-inline user-check-print" style="padding-left: 20px">
                                 <input style="float: left" type="checkbox" id="dChuaPhanCong" />
@@ -62,6 +86,16 @@
                             </div>
                             <div class="col-sm-3 item-search">
                                 <div class="dropdown" id="zonebtnBaoCao_LopHocPhan">
+                                </div>
+                            </div>
+                            <div class="col-sm-3 item-search">
+                                <div class="dropdown" id="zonebtnBaoCao_LopHocPhan_Import">
+                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                        <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu form-container">
+                                        <li><a class="btnImportWithProce" name="IMPORTWITHPROC_LRST" title="" href="#"> 1. Import lớp riêng số tiền</a></li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="clear"></div>
@@ -99,7 +133,10 @@
                     </div>
                 </div>
                 <div class="box-body">
-                    <div>
+                    <div id="topScroll_tblLopHocPhan" class="top-scroll-x" style="overflow-x:auto; overflow-y:hidden;">
+                        <div id="topScrollInner_tblLopHocPhan" style="height:1px;"></div>
+                    </div>
+                    <div id="wrapScroll_tblLopHocPhan" style="overflow-x:auto; overflow-y:hidden;">
                         <table id="tblLopHocPhan" class="table table-hover table-bordered">
                             <thead>
                                 <tr>
@@ -108,12 +145,17 @@
                                     <th class="td-center">Tên lớp</th>
                                     <th class="td-center">Mã học phần</th>
                                     <th class="td-center">Loại lớp</th>
+                                    <th class="td-center">Số tín chỉ</th>
+                                    <th class="td-center">Phân bổ</th>
                                     <th class="td-center">Thông tin lịch</th>
                                     <th class="td-center">Mã GV</th>
+                                    <th class="td-center">Chức danh</th>
                                     <th class="td-center">Giảng viên</th>
                                     <th class="td-center">Đã phân công</th>
                                     <th class="td-center">Số sv đã đăng ký</th>
                                     <th class="td-center">Số sv dự kiến</th>
+                                    <th class="td-center">Số sv chốt</th>
+                                    <th class="td-center">Chương trình mở lớp</th>
                                     <th class="td-center">Lớp riêng</th>
                                     <th class="td-center">Loại khoản</th>
                                     <th class="td-center">Tổng số tiền</th>

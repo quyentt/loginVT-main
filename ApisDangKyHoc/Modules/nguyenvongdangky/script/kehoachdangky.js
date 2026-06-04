@@ -105,15 +105,29 @@ KeHoach.prototype = {
             var id = edu.util.randomString(30, "");
             me.genHTML_ThongTin(id, "");
         });
-        $("#tblKieuHoc").delegate(".deleteRowButton", "click", function () {
-            var strRowId = this.id;
-            $("#tblKieuHoc tr[id='" + strRowId + "']").remove();
-        });
-        $("#tblKieuHoc").delegate(".deleteKetQua", "click", function () {
-            var strId = this.id;
-            edu.system.confirm(edu.constant.getting("NOTIFY", "CF_DELETE"));
+        $(".btnDelete_KieuHoc").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblKieuHoc", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần xóa?", "w");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
             $("#btnYes").click(function (e) {
-                me.delete_ThongTin(strId);
+                var arrServerIds = [];
+                arrChecked_Id.forEach(function (id) {
+                    if (id.length == 30) {
+                        $("#tblKieuHoc tr[id='" + id + "']").remove();
+                    } else {
+                        arrServerIds.push(id);
+                    }
+                });
+                $("#tblKieuHoc tbody tr").each(function (idx) {
+                    $(this).find("label[id^='txtStt']").text(idx + 1);
+                });
+                if (arrServerIds.length > 0) {
+                    me.delete_ThongTin(arrServerIds.join(','));
+                }
+                $("#chkSelectAll_KieuHoc").prop("checked", false);
             });
         });
 
@@ -782,19 +796,24 @@ KeHoach.prototype = {
                         code: ""
                     };
                     edu.system.afterComfirm(obj);
-                    me.genHTML_ThongTin_Data(data.Data);
+                    strIds.split(',').forEach(function (id) {
+                        $("#tblKieuHoc tr[id='" + id + "']").remove();
+                    });
+                    $("#tblKieuHoc tbody tr").each(function (idx) {
+                        $(this).find("label[id^='txtStt']").text(idx + 1);
+                    });
                 }
                 else {
                     obj = {
-                        content: "NCKH_DeTai_ThanhVien/Xoa: " + data.Message,
-                        code: ""
+                        content: obj_delete.action + ": " + data.Message,
+                        code: "w"
                     };
                     edu.system.afterComfirm(obj);
                 }
             },
             error: function (er) {
                 var obj = {
-                    content: "NCKH_DeTai_ThanhVien/Xoa (er): " + JSON.stringify(er),
+                    content: obj_delete.action + " (er): " + JSON.stringify(er),
                     code: "w"
                 };
                 edu.system.afterComfirm(obj);
@@ -824,7 +843,7 @@ KeHoach.prototype = {
             row += '<td style="text-align: center"><label id="txtStt' + strKetQua_Id + '">' + (i + 1) + '</label></td>';
             row += '<td><select id="dropKieuHoc' + strKetQua_Id + '" class="select-opt"><option value=""> --- Chọn thông tin--</option ></select ></td>';
             row += '<td><select id="dropDiem' + strKetQua_Id + '" class="select-opt"><option value=""> --- Chọn thông tin--</option ></select ></td>';
-            row += '<td style="text-align: center"><a title="Xóa" class="deleteKetQua" id="' + strKetQua_Id + '" href="javascript:void(0)" style="color: red">Xóa</a></td>';
+            row += '<td style="text-align: center"><input type="checkbox" id="checkX' + strKetQua_Id + '" /></td>';
             row += '</tr>';
             $("#tblKieuHoc tbody").append(row);
             me.genComBo_KieuHoc("dropKieuHoc" + strKetQua_Id, aData.KIEUHOC_ID);
@@ -844,7 +863,7 @@ KeHoach.prototype = {
         row += '<td style="text-align: center"><label id="txtStt' + strKetQua_Id + '">' + iViTri + '</label></td>';
         row += '<td><select id="dropKieuHoc' + strKetQua_Id + '" class="select-opt"><option value=""> --- Chọn thông tin--</option ></select ></td>';
         row += '<td><select id="dropDiem' + strKetQua_Id + '" class="select-opt"><option value=""> --- Chọn thông tin--</option ></select ></td>';
-        row += '<td style="text-align: center"><a title="Xóa dòng" class="deleteRowButton" id="' + strKetQua_Id + '" href="javascript:void(0)">Xóa dòng</a></td>';
+        row += '<td style="text-align: center"><input type="checkbox" id="checkX' + strKetQua_Id + '" /></td>';
         row += '</tr>';
         $("#tblKieuHoc tbody").append(row);
         me.genComBo_KieuHoc("dropKieuHoc" + strKetQua_Id, aData.KIEUHOC_ID);

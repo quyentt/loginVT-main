@@ -19,6 +19,15 @@ LopHocPhan.prototype = {
         --Discription: Initial system
         -------------------------------------------*/
         edu.system.pageSize_default = 10;
+
+        $(".scroll-top-mirror").each(function () {
+            var $mirror = $(this);
+            var $bottom = $mirror.next(".scroll-table-x");
+            if (!$bottom.length) return;
+            $mirror.on("scroll", function () { $bottom.scrollLeft($mirror.scrollLeft()); });
+            $bottom.on("scroll", function () { $mirror.scrollLeft($bottom.scrollLeft()); });
+        });
+
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
         me.getList_ChuongTrinhDaoTao();
@@ -88,16 +97,31 @@ LopHocPhan.prototype = {
             //me.getList_LopHocPhan();
         });
         $("#btnSearch").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_LopHocPhan();
         });
         $("#btnSearchChiTiet").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
+            me.getList_LopHocPhanChiTiet();
+        });
+
+        $("#dChuaNop, #dDaChuyenKeToan").on("change", function () {
+            if (me.getActiveFindTableId() !== "tblLopHocPhanChiTiet") return;
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_LopHocPhanChiTiet();
         });
 
         $("#btnSearchCanBoDangKy").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_CanBoChiTiet();
         });
         $("#btnSearchChiTietRut").click(function (e) {
+            me.clearFindInTable();
+            me.invalidateFindCache();
             me.getList_LopHocPhanRut();
         });
 
@@ -107,6 +131,7 @@ LopHocPhan.prototype = {
         });
         $("#tblLopHocPhan").delegate('.btnSinhVien', 'click', function (e) {
             $('#myModal').modal('show');
+            me["strDSSVLopHocPhan_Id"] = this.id;
             me.getList_QuanSoTheoLop(this.id);
         });
 
@@ -234,6 +259,21 @@ LopHocPhan.prototype = {
                 }
             });
         });
+        $("#btnSave_CheDoTinhPhi").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblQuanSoLop", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn lưu dữ liệu không?");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_CheDoTinhPhi(arrChecked_Id[i]);
+                }
+            });
+        });
 
         $("#DSTrangThaiSV").delegate(".ckbDSTrangThaiSV_ALL", "click", function (e) {
 
@@ -244,6 +284,7 @@ LopHocPhan.prototype = {
         });
         edu.system.loadToCombo_DanhMucDuLieu("QLSV.TRANGTHAI", "", "", me.genList_TrangThaiSV);
         edu.system.loadToCombo_DanhMucDuLieu("KHDT.DIEM.KIEUHOC", "dropSearch_KieuHoc");
+        edu.system.loadToCombo_DanhMucDuLieu("DANGKY.NGUOIHOC.CHEDOTINHPHI", "dropCheDoTinhPhi");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.XACNHAN.KETQUA", "dropSearch_HanhDong");
         edu.system.getList_MauImport("zonebtnBaoCao_LopHocPhan", function (addKeyValue) {
             addKeyValue("strDaoTao_ThoiGianDaoTao_Id", edu.util.getValById("dropSearch_ThoiGianDaoTao"));
@@ -370,6 +411,122 @@ LopHocPhan.prototype = {
             arrChecked_Id.forEach(e => me.saveTaoDanhSachNhapDiem(e));
 
         });
+
+        $("#btnThucHienRutHocPhan").click(function (e) {
+            e.preventDefault();
+            var srcTbl = null;
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet", "checkX");
+            if (arrChecked_Id.length > 0) srcTbl = "tblLopHocPhanChiTiet";
+            else {
+                arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet2", "checkX");
+                if (arrChecked_Id.length > 0) srcTbl = "tblLopHocPhanChiTiet2";
+            }
+            if (!srcTbl) {
+                edu.system.alert("Vui lòng chọn bản ghi ở bảng 'Đăng ký chi tiết' hoặc 'Rút đăng ký'?");
+                return;
+            }
+            var arrData = srcTbl === "tblLopHocPhanChiTiet2" ? (me.dtLopHocPhanChiTiet2 || []) : (me.dtLopHocPhanChiTiet || []);
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return arrData.find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r; });
+            if (arrSelected.length == 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            me["srcTbl_RutHocPhan"] = srcTbl;
+            me["dtRutHocPhan"] = arrSelected;
+            $('#txtRutHocPhan_MoTaChung').val('');
+            $('#chkSelectAll_RutHocPhan').prop('checked', false);
+            $('#lblRutHocPhan_Tong').text(arrSelected.length);
+            edu.util.toggle_overide("zone-bus", "zoneRutHocPhan");
+            me.genTable_RutHocPhan(arrSelected);
+        });
+
+        $(".btnCloseRutHocPhan").click(function (e) {
+            e.preventDefault();
+            edu.util.toggle_overide("zone-bus", "zonebatdau");
+        });
+
+        $("#chkSelectAll_RutHocPhan").on("click", function () {
+            edu.util.checkedAll_BgRow(this, { table_id: "tblRutHocPhan" });
+        });
+
+        $("#btnFillPhanTram_All").click(function (e) {
+            e.preventDefault();
+            var raw = $('#txtRutHocPhan_FillPhanTram').val();
+            if (raw === '' || raw == null) {
+                edu.system.alert("Vui lòng nhập giá trị % cần điền.");
+                return;
+            }
+            var v = parseFloat(raw);
+            if (isNaN(v) || v < 0 || v > 100) {
+                edu.system.alert("Giá trị % phải trong khoảng 0 - 100.");
+                return;
+            }
+            $('#tblRutHocPhan tbody input[id^="txtPhanTram"]').val(v);
+        });
+
+        $("#btnFillPhanTram_Checked").click(function (e) {
+            e.preventDefault();
+            var raw = $('#txtRutHocPhan_FillPhanTram').val();
+            if (raw === '' || raw == null) {
+                edu.system.alert("Vui lòng nhập giá trị % cần điền.");
+                return;
+            }
+            var v = parseFloat(raw);
+            if (isNaN(v) || v < 0 || v > 100) {
+                edu.system.alert("Giá trị % phải trong khoảng 0 - 100.");
+                return;
+            }
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblRutHocPhan", "checkX");
+            if (arrChecked_Id.length === 0) {
+                edu.system.alert("Chưa có dòng nào được tick ở cột 'Chọn'.");
+                return;
+            }
+            arrChecked_Id.forEach(function (id) {
+                $('#txtPhanTram' + id).val(v);
+            });
+        });
+
+        $("#btnThucHien_RutHocPhan").click(function (e) {
+            e.preventDefault();
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblRutHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một dòng?");
+                return;
+            }
+            var strMoTa = $('#txtRutHocPhan_MoTaChung').val() || '';
+            edu.system.confirm("Thực hiện rút học phần cho " + arrChecked_Id.length + " dòng đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                arrChecked_Id.forEach(function (strId) {
+                    var raw = $('#txtPhanTram' + strId).val();
+                    var dPhanTram = parseFloat(raw == null || raw === '' ? '0' : raw);
+                    if (isNaN(dPhanTram)) dPhanTram = 0;
+                    me.thucHienRutHocPhan(me.srcTbl_RutHocPhan, strId, dPhanTram, strMoTa);
+                });
+                edu.util.toggle_overide("zone-bus", "zonebatdau");
+            });
+        });
+
+        // Find-in-table widget bindings
+        $("#txtFindInTable").on("input", function () {
+            me.runFindInTable($(this).val());
+        });
+        $("#txtFindInTable").on("keydown", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                if (e.shiftKey) me.prevFindMatch(); else me.nextFindMatch();
+            } else if (e.key === "Escape") {
+                e.preventDefault();
+                me.clearFindInTable();
+            }
+        });
+        $("#btnFindInTablePrev").click(function (e) { e.preventDefault(); me.prevFindMatch(); });
+        $("#btnFindInTableNext").click(function (e) { e.preventDefault(); me.nextFindMatch(); });
+        $("#btnFindInTableClear").click(function (e) { e.preventDefault(); me.clearFindInTable(); });
+        me.updateFindCounter();
     },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
@@ -842,22 +999,23 @@ LopHocPhan.prototype = {
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
-    getList_LopHocPhan: function () {
+    getList_LopHocPhan: function (findOverride) {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhan").parent().show();
+        $("#tblLopHocPhan").parent().show().prev(".scroll-top-mirror").show();
+        findOverride = findOverride || {};
 
         //--Edit
         var obj_save = {
             'action': 'DKH_BaoCao_MH/DSA4BRINLjEJLiIRKSAvESkgLxUzIC8m',
             'func': 'pkg_dangkyhoc_baocao.LayDSLopHocPhanPhanTrang',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strTuKhoa': (findOverride.keyword != null ? findOverride.keyword : edu.util.getValById('txtSearch')),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
 
 
@@ -882,16 +1040,21 @@ LopHocPhan.prototype = {
                         iPager = data.Pager;
                     }
                     me.dtLopHocPhan = dtResult;
-                    me.genTable_LopHocPhan(dtResult, iPager);
+                    if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
+                        findOverride.onSuccess(dtResult, iPager);
+                    } else {
+                        me.genTable_LopHocPhan(dtResult, iPager);
+                    }
                 }
                 else {
-                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                    if (findOverride.onError) findOverride.onError(data);
+                    else edu.system.alert(obj_save.action + " : " + data.Message, "w");
                 }
 
             },
             error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+                if (findOverride.onError) findOverride.onError(er);
+                else edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
@@ -924,15 +1087,51 @@ LopHocPhan.prototype = {
                     "mDataProp": "TENLOP"
                 },
                 {
+                    "mDataProp": "LOAILOP"
+                },
+                {
+                    "mDataProp": "SOTINCHI"
+                },
+                {
+                    "mDataProp": "THONGTINPHANBO"
+                },
+                {
+                    "mDataProp": "MAGV"
+                },
+                {
+                    "mDataProp": "CHUCDANH"
+                },
+                {
+                    "mDataProp": "TENGV" 
+                },
+                {
+                    "mDataProp": "CHUONGTRINHMOLOP"
+                },
+                {
+                    //"mDataProp": "PHIPHAINOP",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.PHIPHAINOP);
+                        //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
+                    }
+                },
+                {
+                    //"mDataProp": "PHIDANOP",
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.PHIDANOP);
+                        //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
+                    }
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return edu.util.returnEmpty(aData.THOIGIANCHITIET);
                         //return '<p>Từ ' + edu.util.returnEmpty(aData.NGAYBATDAU) + ' đến ' + edu.util.returnEmpty(aData.NGAYKETTHUC) + '</p><p>Thứ ' + edu.util.returnEmpty(aData.THUHOC) + ', ' + edu.util.returnEmpty(aData.PHONGHOC) + '</p>';
                     }
                 },
                 {
-                    "mDataProp": "HINHTHUCHOC_TEN",
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.HINHTHUCHOC_TEN) + ' - ' + edu.util.returnEmpty(aData.HINHTHUCHOC_MA);
+                        var ten = edu.util.returnEmpty(aData.HINHTHUCHOC_TEN);
+                        var ma = edu.util.returnEmpty(aData.HINHTHUCHOC_MA);
+                        return ma ? ten + ' - ' + ma : ten;
                     }
                 },
                 {
@@ -982,26 +1181,31 @@ LopHocPhan.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.refreshFindInTable();
     },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
-    getList_LopHocPhanChiTiet: function () {
+    getList_LopHocPhanChiTiet: function (findOverride) {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhanChiTiet").parent().show();
+        $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
+        findOverride = findOverride || {};
+        var bChuaNop = $('#dChuaNop').is(':checked');
+        var bDaChuyenKeToan = $('#dDaChuyenKeToan').is(':checked');
+        var bClientFilter = bChuaNop || bDaChuyenKeToan;
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIP',
             'func': 'pkg_dangkyhoc_thongtin2.LayDSDangKyHoc',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strTuKhoa': (findOverride.keyword != null ? findOverride.keyword : edu.util.getValById('txtSearch')),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': bClientFilter ? 1 : (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': bClientFilter ? 100000 : (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
             'strHanhDong_XacNhan_Id': edu.system.getValById('dropSearch_HanhDong'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -1026,16 +1230,34 @@ LopHocPhan.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_LopHocPhanChiTiet(dtResult, iPager);
+                    if (bClientFilter) {
+                        dtResult = dtResult.filter(function (r) {
+                            if (bChuaNop) {
+                                var v = r.SOTIENDANOP != null ? r.SOTIENDANOP : r.TONGSOTIENDANOP;
+                                if ((parseFloat(v) || 0) !== 0) return false;
+                            }
+                            if (bDaChuyenKeToan) {
+                                if (!r.DACHUYENKETOAN || parseInt(r.DACHUYENKETOAN) === 0) return false;
+                            }
+                            return true;
+                        });
+                        iPager = dtResult.length;
+                    }
+                    if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
+                        findOverride.onSuccess(dtResult, iPager);
+                    } else {
+                        me.genTable_LopHocPhanChiTiet(dtResult, iPager);
+                    }
                 }
                 else {
-                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                    if (findOverride.onError) findOverride.onError(data);
+                    else edu.system.alert(obj_save.action + " : " + data.Message, "w");
                 }
 
             },
             error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+                if (findOverride.onError) findOverride.onError(er);
+                else edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
@@ -1052,7 +1274,7 @@ LopHocPhan.prototype = {
     getList_CanBoChiTiet: function () {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhanChiTiet").parent().show();
+        $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIFLgIgLwMu',
@@ -1113,6 +1335,7 @@ LopHocPhan.prototype = {
     },
     genTable_LopHocPhanChiTiet: function (data, iPager) {
         var me = this;
+        me.dtLopHocPhanChiTiet = data || [];
         var jsonForm = {
             strTable_Id: "tblLopHocPhanChiTiet",
             bPaginate: {
@@ -1135,7 +1358,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1155,13 +1380,13 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
-                    "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.HINHTHUCHOC_TEN) + ' - ' + edu.util.returnEmpty(aData.HINHTHUCHOC_MA);
-                    }
+                    "mDataProp": "TENHINHTHUCHOC"
                 },
                 {
                     "mDataProp": "SOTINCHI"
@@ -1177,7 +1402,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1186,46 +1413,63 @@ LopHocPhan.prototype = {
                     }
                 },
                 {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.SOTIEN1);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.SOTIEN2);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = aData.SOTIENDANOP != null ? aData.SOTIENDANOP : aData.TONGSOTIENDANOP;
+                        return edu.util.formatCurrency(v);
+                    }
+                },
+                {
                     "mDataProp": "TAICHINH_CACKHOANTHU_TEN"
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.DACHUYENKETOAN ? "Đã chuyển": 0 ;
+                        return aData.DACHUYENKETOAN ? "Đã chuyển" : "Chưa chuyển";
                     }
                 },
-
                 {
                     "mDataProp": "HANHDONG_XACNHAN_TEN"
                 },
                 {
                     "mRender": function (nRow, aData) {
                         return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
-                    } 
+                    }
                 }
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.refreshFindInTable();
     },
 
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
-    getList_LopHocPhanRut: function () {
+    getList_LopHocPhanRut: function (findOverride) {
         var me = this;
         $(".tblHidden").hide();
-        $("#tblLopHocPhanChiTiet2").parent().show();
+        $("#tblLopHocPhanChiTiet2").parent().show().prev(".scroll-top-mirror").show();
+        findOverride = findOverride || {};
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRITNDUFIC8mCjgJLiIP',
             'func': 'pkg_dangkyhoc_thongtin2.LayDSRutDangKyHoc',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strTuKhoa': (findOverride.keyword != null ? findOverride.keyword : edu.util.getValById('txtSearch')),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
 
 
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -1250,16 +1494,21 @@ LopHocPhan.prototype = {
                         dtResult = data.Data;
                         iPager = data.Pager;
                     }
-                    me.genTable_LopHocPhanRut(dtResult, iPager);
+                    if (findOverride.onlyFetch && typeof findOverride.onSuccess === 'function') {
+                        findOverride.onSuccess(dtResult, iPager);
+                    } else {
+                        me.genTable_LopHocPhanRut(dtResult, iPager);
+                    }
                 }
                 else {
-                    edu.system.alert(data.Message, "w");
+                    if (findOverride.onError) findOverride.onError(data);
+                    else edu.system.alert(data.Message, "w");
                 }
 
             },
             error: function (er) {
-
-                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+                if (findOverride.onError) findOverride.onError(er);
+                else edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "POST",
             action: obj_save.action,
@@ -1274,6 +1523,7 @@ LopHocPhan.prototype = {
     },
     genTable_LopHocPhanRut: function (data, iPager) {
         var me = this;
+        me.dtLopHocPhanChiTiet2 = data || [];
         var jsonForm = {
             strTable_Id: "tblLopHocPhanChiTiet2",
             bPaginate: {
@@ -1306,7 +1556,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_TOCHUCCHUONGTRINH_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1326,7 +1578,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
                 {
@@ -1343,7 +1597,9 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN) + ' (' + edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA) + ')';
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_CHUONGTRINHDK_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
                     }
                 },
 
@@ -1355,6 +1611,7 @@ LopHocPhan.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        me.refreshFindInTable();
     },
     /*------------------------------------------
     --Discription: [0] GEN HTML ==> Systemroot
@@ -1443,7 +1700,7 @@ LopHocPhan.prototype = {
             'action': 'DKH_PhanCong_LopHP/LayDSDangKyHoc',
             'type': 'GET',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
-            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strDaoTao_LopHocPhan_Id': me.strDSSVLopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
             'pageSize': 1000000,
@@ -1486,7 +1743,8 @@ LopHocPhan.prototype = {
             //},
             aaData: data,
             colPos: {
-                center: [0, 3],
+                center: [0, 1, 3, 4, 12],
+                right: [10]
             },
             aoColumns: [
                 {
@@ -1518,6 +1776,19 @@ LopHocPhan.prototype = {
                 },
                 {
                     "mDataProp": "DAOTAO_HEDAOTAO_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.TONGSOTIENDANOP);
+                    }
+                },
+                {
+                    "mDataProp": "CHEDOTINHPHI_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
                 }
             ]
         };
@@ -2300,6 +2571,90 @@ LopHocPhan.prototype = {
         }, false, false, false, null);
     },
 
+    genTable_RutHocPhan: function (data) {
+        var jsonForm = {
+            strTable_Id: "tblRutHocPhan",
+            aaData: data,
+            colPos: {
+                center: [0, 4],
+            },
+            aoColumns: [
+                {
+                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.QLSV_NGUOIHOC_HODEM) + ' ' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_TEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var ten = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        var ma = edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA);
+                        return ma ? ten + ' (' + ma + ')' : ten;
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="number" min="0" max="100" step="0.01" value="0" id="txtPhanTram' + aData.ID + '" class="form-control" style="height: 28px; padding: 2px 6px;" />';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    thucHienRutHocPhan: function (srcTbl, strId, dPhanTramTinhPhi, strMoTa) {
+        var me = this;
+        var arrData = srcTbl === "tblLopHocPhanChiTiet2" ? (me.dtLopHocPhanChiTiet2 || []) : (me.dtLopHocPhanChiTiet || []);
+        var rec = arrData.find(function (r) { return r.ID == strId; });
+        if (!rec) {
+            edu.system.alert("Không tìm thấy bản ghi: " + strId, "w");
+            return;
+        }
+        var obj_save = {
+            'action': 'DKH_RutHocPhan_MH/FSk0IgkoJC8TNDUP',
+            'func': 'PKG_DANGKYHOC_RUTHOCPHAN.ThucHienRut',
+            'iM': edu.system.iM,
+            'strDangKy_KeHoachDangKy_Id': rec.DANGKY_KEHOACHDANGKY_ID,
+            'strDaoTao_HocPhan_Id': rec.DAOTAO_HOCPHAN_ID,
+            'strQLSV_NguoiHoc_Id': rec.QLSV_NGUOIHOC_ID,
+            'strDaoTao_ThoiGianDaoTao_Id': rec.DAOTAO_THOIGIANDAOTAO_ID,
+            'dPhanTramTinhPhi': dPhanTramTinhPhi,
+            'strMoTa': strMoTa,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    if (srcTbl === "tblLopHocPhanChiTiet2") me.getList_LopHocPhanRut();
+                    else me.getList_LopHocPhanChiTiet();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
     saveTaoDanhSachNhapDiem: function (strDaoTao_LopHocPhan_Id) {
         var me = this;
         var obj_save = {
@@ -2387,5 +2742,278 @@ LopHocPhan.prototype = {
             title: "Chọn hình thức học"
         };
         edu.system.loadToCombo_data(obj);
+    },
+    save_CheDoTinhPhi: function (strDangKy_SinhVien_Lop_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/AikkBS4VKC8pFSgkLwIpLhIXFSkkLg0uMQkR',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.CheDoTinhTienChoSVTheoLopHP',
+            'iM': edu.system.iM,
+            'strDangKy_SinhVien_Lop_Id': strDangKy_SinhVien_Lop_Id,
+            'strCheDoTinhPhi_Id': edu.system.getValById('dropCheDoTinhPhi'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert("Thất bại:" + data.Message, "w");
+                }
+            },
+            error: function (er) {
+
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_QuanSoTheoLop();
+                });
+            },
+            contentType: true,
+
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: Find-in-table widget (Ctrl+F-style)
+    --Fetch toàn bộ data 1 lần vào cache, sau đó filter
+    --client-side theo MỌI field (giống Ctrl+F của browser).
+    -------------------------------------------*/
+    findState: {
+        keyword: '', matches: [], currentIdx: -1,
+        active: false,
+        cache: null, cacheTableId: null, cacheLoading: false
+    },
+    _findDebounce: null,
+    FIND_FETCH_PAGE_SIZE: 100000,
+
+    getActiveFindTableId: function () {
+        var ids = ['tblLopHocPhan', 'tblLopHocPhanChiTiet', 'tblLopHocPhanChiTiet2'];
+        for (var i = 0; i < ids.length; i++) {
+            var $tbl = $('#' + ids[i]);
+            if ($tbl.length && $tbl.closest('.tblHidden').is(':visible')) {
+                return ids[i];
+            }
+        }
+        return null;
+    },
+
+    _callFindFetch: function (tableId, override) {
+        var me = this;
+        if (tableId === 'tblLopHocPhan') me.getList_LopHocPhan(override);
+        else if (tableId === 'tblLopHocPhanChiTiet') me.getList_LopHocPhanChiTiet(override);
+        else if (tableId === 'tblLopHocPhanChiTiet2') me.getList_LopHocPhanRut(override);
+    },
+
+    _renderFiltered: function (tableId, data) {
+        var me = this;
+        var iPager = data.length;
+        if (tableId === 'tblLopHocPhan') {
+            me.dtLopHocPhan = data;
+            me.genTable_LopHocPhan(data, iPager);
+        } else if (tableId === 'tblLopHocPhanChiTiet') {
+            me.genTable_LopHocPhanChiTiet(data, iPager);
+        } else if (tableId === 'tblLopHocPhanChiTiet2') {
+            me.genTable_LopHocPhanRut(data, iPager);
+        }
+    },
+
+    _recordMatchesKeyword: function (record, kwLower) {
+        if (!record) return false;
+        for (var k in record) {
+            if (!Object.prototype.hasOwnProperty.call(record, k)) continue;
+            var v = record[k];
+            if (v == null) continue;
+            if (String(v).toLowerCase().indexOf(kwLower) !== -1) return true;
+        }
+        return false;
+    },
+
+    invalidateFindCache: function () {
+        var me = this;
+        me.findState.cache = null;
+        me.findState.cacheTableId = null;
+        me.findState.cacheLoading = false;
+    },
+
+    runFindInTable: function (keyword) {
+        var me = this;
+        var kw = (keyword || '').trim();
+        me.findState.keyword = kw;
+        if (me._findDebounce) clearTimeout(me._findDebounce);
+        me._findDebounce = setTimeout(function () {
+            me._doFind();
+        }, 300);
+    },
+
+    _doFind: function () {
+        var me = this;
+        var tableId = me.getActiveFindTableId();
+        if (!tableId) { me.updateFindCounter(); return; }
+        var kw = me.findState.keyword;
+        if (!kw) {
+            if (me.findState.active) {
+                me.findState.active = false;
+                me._callFindFetch(tableId, null);
+            } else {
+                me.scanRenderedMatches();
+            }
+            return;
+        }
+        if (me.findState.cache && me.findState.cacheTableId === tableId) {
+            me._applyClientFilter(tableId, kw);
+            return;
+        }
+        if (me.findState.cacheLoading) return;
+        me._loadFindCache(tableId, function () {
+            if (me.findState.keyword) me._applyClientFilter(tableId, me.findState.keyword);
+        });
+    },
+
+    _loadFindCache: function (tableId, cb) {
+        var me = this;
+        me.findState.cacheLoading = true;
+        me.findState.cacheTableId = tableId;
+        $('#lblFindInTableCounter').text('...').removeClass('has-match no-match');
+        me._callFindFetch(tableId, {
+            keyword: '',
+            pageIndex: 1,
+            pageSize: me.FIND_FETCH_PAGE_SIZE,
+            onlyFetch: true,
+            onSuccess: function (data) {
+                me.findState.cache = data || [];
+                me.findState.cacheLoading = false;
+                cb && cb();
+            },
+            onError: function () {
+                me.findState.cache = null;
+                me.findState.cacheLoading = false;
+                me.updateFindCounter();
+            }
+        });
+    },
+
+    _applyClientFilter: function (tableId, kw) {
+        var me = this;
+        var kwLower = kw.toLowerCase();
+        var filtered = (me.findState.cache || []).filter(function (r) {
+            return me._recordMatchesKeyword(r, kwLower);
+        });
+        me.findState.active = true;
+        me._renderFiltered(tableId, filtered);
+        // scanRenderedMatches sẽ được gọi từ refreshFindInTable sau khi render
+    },
+
+    scanRenderedMatches: function () {
+        var me = this;
+        me.clearFindHighlight();
+        me.findState.matches = [];
+        me.findState.currentIdx = -1;
+        var kw = (me.findState.keyword || '').toLowerCase();
+        var tableId = me.getActiveFindTableId();
+        if (!tableId || !kw) { me.updateFindCounter(); return; }
+        $('#' + tableId + ' tbody tr').each(function () {
+            var rowText = $(this).text().toLowerCase();
+            if (rowText.indexOf(kw) !== -1) {
+                $(this).addClass('find-match');
+                me.findState.matches.push(this);
+            }
+        });
+        if (me.findState.matches.length > 0) {
+            me.gotoFindMatch(0);
+        } else {
+            me.updateFindCounter();
+        }
+    },
+
+    gotoFindMatch: function (idx) {
+        var me = this;
+        var n = me.findState.matches.length;
+        if (n === 0) {
+            me.findState.currentIdx = -1;
+            me.updateFindCounter();
+            return;
+        }
+        if (me.findState.currentIdx >= 0 && me.findState.matches[me.findState.currentIdx]) {
+            $(me.findState.matches[me.findState.currentIdx]).removeClass('find-match-current');
+        }
+        var newIdx = ((idx % n) + n) % n;
+        me.findState.currentIdx = newIdx;
+        var $tr = $(me.findState.matches[newIdx]);
+        $tr.addClass('find-match-current');
+        var el = $tr.get(0);
+        if (el && el.scrollIntoView) {
+            try { el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }); }
+            catch (e) { el.scrollIntoView(); }
+        }
+        me.updateFindCounter();
+    },
+
+    nextFindMatch: function () {
+        var me = this;
+        if (me.findState.matches.length === 0) return;
+        me.gotoFindMatch(me.findState.currentIdx + 1);
+    },
+
+    prevFindMatch: function () {
+        var me = this;
+        if (me.findState.matches.length === 0) return;
+        me.gotoFindMatch(me.findState.currentIdx - 1);
+    },
+
+    clearFindHighlight: function () {
+        $('#tblLopHocPhan tbody tr, #tblLopHocPhanChiTiet tbody tr, #tblLopHocPhanChiTiet2 tbody tr')
+            .removeClass('find-match find-match-current');
+    },
+
+    clearFindInTable: function () {
+        var me = this;
+        if (me._findDebounce) { clearTimeout(me._findDebounce); me._findDebounce = null; }
+        var wasActive = me.findState.active;
+        me.clearFindHighlight();
+        me.findState.keyword = '';
+        me.findState.matches = [];
+        me.findState.currentIdx = -1;
+        me.findState.active = false;
+        $('#txtFindInTable').val('');
+        me.updateFindCounter();
+        if (wasActive) {
+            var tableId = me.getActiveFindTableId();
+            me._callFindFetch(tableId, null);
+        }
+    },
+
+    updateFindCounter: function () {
+        var me = this;
+        var $lbl = $('#lblFindInTableCounter');
+        var n = me.findState.matches.length;
+        var cur = me.findState.currentIdx >= 0 ? (me.findState.currentIdx + 1) : 0;
+        $lbl.removeClass('has-match no-match');
+        if (!me.findState.keyword) {
+            $lbl.text('0/0');
+        } else if (n === 0) {
+            $lbl.text('0/0').addClass('no-match');
+        } else {
+            $lbl.text(cur + '/' + n).addClass('has-match');
+        }
+        var disabled = n === 0;
+        $('#btnFindInTablePrev, #btnFindInTableNext').toggleClass('disabled', disabled);
+    },
+
+    refreshFindInTable: function () {
+        var me = this;
+        if (me.findState && me.findState.keyword) {
+            me.scanRenderedMatches();
+        } else {
+            me.updateFindCounter();
+        }
     },
 }

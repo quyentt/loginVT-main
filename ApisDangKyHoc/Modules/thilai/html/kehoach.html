@@ -289,36 +289,73 @@
                         </div>
                     </div>
 
-                    <!--Thời gian-->
-                    <div class="row aps-form col-sm-6 pr15 mt-15">
-                        <div class="box-view">
+                    <!--Cột trái: Thời gian + Chọn đợt thi-->
+                    <div class="col-sm-6 pr15 mt-15">
+                        <!--Thời gian-->
+                        <div class="row aps-form">
+                            <div class="box-view">
+                                <div class="row aps-form-item mb-0">
+                                    <p class="group-group-title-name border-bottom-0 mb-0">
+                                        <span class="badge bg-blue mt-0 mb-0">Thời gian</span>
+                                    </p>
+                                </div>
+                                <div class="row aps-form-table">
+                                    <table id="tblThoiGian"
+                                        class="tblThoiGian table table-hover table-bordered mb-10 table-noborder">
+                                        <thead>
+                                            <tr>
+                                                <th style="text-align:center;" class="w-50px">STT</th>
+                                                <th style="text-align:center;">Thời gian</th>
+                                                <th style="text-align:center;" class="w-100px">Xóa</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="row aps-form-btn">
+                                    <div class="pull-right">
+                                        <a class="btn btn-outline-primary" id="btnAddThoiGian">
+                                            <i class="fa fa-plus color-active mr-0"></i>Thêm dòng mới
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Chọn đợt thi-->
+                        <div class="row aps-form mt-15">
                             <div class="row aps-form-item mb-0">
                                 <p class="group-group-title-name border-bottom-0 mb-0">
-                                    <span class="badge bg-blue mt-0 mb-0">Thời gian</span>
+                                    <span class="badge bg-blue mt-0 mb-0">Chọn đợt thi</span>
                                 </p>
                             </div>
-                            <div class="row aps-form-table">
-                                <table id="tblThoiGian"
-                                    class="tblThoiGian table table-hover table-bordered mb-10 table-noborder">
+                            <div class="row aps-form-tabel mt-5">
+                                <table id="tblDotThi"
+                                    class="tblDotThi table table-hover table-bordered mb-10 mr-0 table-noborder">
                                     <thead>
                                         <tr>
-                                            <th style="text-align:center;" class="w-50px">STT</th>
-                                            <th style="text-align:center;">Thời gian</th>
-                                            <th style="text-align:center;" class="w-100px">Xóa</th>
+                                            <td class="td-fixed td-center w-50px">Stt</td>
+                                            <td class="td-left">Đợt thi</td>
+                                            <td class="td-center w-100px">Xóa</td>
+                                            <td class="td-center w-50px">
+                                                <input class="chkSystemSelectAll" type="checkbox" id="chkSelectAll_DotThi">
+                                            </td>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
                             </div>
-                            <div class="row aps-form-btn">
-                                <div class="pull-right">
-                                    <a class="btn btn-outline-primary" id="btnAddThoiGian">
-                                        <i class="fa fa-plus color-active mr-0"></i>Thêm dòng mới
-                                    </a>
-                                </div>
+                            <div class="row aps-form-btn d-flex justify-content-between align-items-center">
+                                <a class="btn btn-outline-danger" id="btnDelete_DotThi">
+                                    <i class="fa fa-trash color-active mr-0"></i>Xóa
+                                </a>
+                                <a class="btn btn-outline-primary" id="btnAdd_DotThi">
+                                    <i class="fa fa-plus color-active mr-0"></i>Thêm mới
+                                </a>
                             </div>
                         </div>
                     </div>
+
                     <!--Danh sách phạm vi-->
                     <div class="row aps-form col-sm-6 pl15 mt-15">
                         <div class="row aps-form-item mb-0">
@@ -1455,6 +1492,51 @@
 <div class="modal fade aps-modal-nhansu  aps-modal-lophoc" id="modal_lophoc" role="dialog"
     aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- load from js -->
+</div>
+
+<!-- Modal chọn đợt thi -->
+<div class="modal fade myModalAddDotThi" id="myModalAddDotThi" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: 80%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="box-title mt-0"><span class="myModalLabel1">
+                        <i class="fa-solid fa-plus"></i></span> Thêm mới - Chọn đợt thi
+                </h3>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="aps-table-select">
+                    <table id="tblModalDotThi"
+                        class="tblModalDotThi table table-hover table-bordered table-noborder mb-0">
+                        <thead>
+                            <tr>
+                                <th class="td-center w-50px" scope="col">Stt</th>
+                                <th class="td-left" scope="col">Đợt thi</th>
+                                <th class="td-center w-50px" scope="col">
+                                    <input class="chkSystemSelectAll" type="checkbox" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span>
+                    </button>
+                    <a class="submit btn btn-primary" id="btnSave_DotThi_Modal">
+                        <i class="fa fa-save"></i> Lưu
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- --------------------- -->

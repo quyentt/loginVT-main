@@ -9,7 +9,8 @@ function KeHoachChiTiet() { };
 KeHoachChiTiet.prototype = {
     strKeHoachChiTiet_Id: '',
     dtKeHoachChiTiet: [],
-    objHangDoi: {},
+    objHangDoi_TinhKL: {},
+    objHangDoi_TinhTien: {},
     init: function () {
         var me = this;
         me.getList_PhanLoai();
@@ -86,14 +87,14 @@ KeHoachChiTiet.prototype = {
         //    strLoaiNhiemVu: "TINHPHITUDONG"
         //}
         //edu.system.getList_HangDoi(obj_Queue, "", "", me.genHTML_HangDoi);
-        me.objHangDoi = {
+        me.objHangDoi_TinhKL = {
             strLoaiNhiemVu: "TINH_KLGD",
             strName: "TinhKhoiLuong",
             callback: function () {
                 me.getList_KeHoachChiTiet();
             }
         };
-        edu.system.createHangDoi(me.objHangDoi);
+        edu.system.createHangDoi(me.objHangDoi_TinhKL);
         /*------------------------------------------
         --Author: nnthuong
         --Discription: main action  
@@ -105,12 +106,12 @@ KeHoachChiTiet.prototype = {
             });
 
         });
-        me.objHangDoi = {
+        me.objHangDoi_TinhTien = {
             strLoaiNhiemVu: "TINHPHI_KLGD",
             strName: "TinhTien",
             callback: me.endHangDoi
         };
-        edu.system.createHangDoi(me.objHangDoi);
+        edu.system.createHangDoi(me.objHangDoi_TinhTien);
         $("#btnTaoHangDoi").click(function () {
             edu.system.confirm("Bạn có chắc chắn <span class='italic color-warning'>Thực hiện tính</span> không?");
             $("#btnYes").click(function (e) {
@@ -195,7 +196,7 @@ KeHoachChiTiet.prototype = {
                         code: "",
                     }
                     edu.system.afterComfirm(obj);
-                    edu.system.createHangDoi(me.objHangDoi);
+                    edu.system.createHangDoi(me.objHangDoi_TinhKL);
                 }
                 else {
                     var obj = {
@@ -248,7 +249,7 @@ KeHoachChiTiet.prototype = {
                         code: "",
                     }
                     edu.system.afterComfirm(obj);
-                    edu.system.createHangDoi(me.objHangDoi);
+                    edu.system.createHangDoi(me.objHangDoi_TinhTien);
                 }
                 else {
                     var obj = {
@@ -276,7 +277,7 @@ KeHoachChiTiet.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
     getList_KeHoachChiTiet: function () {
         var me = this;
         //--Edit

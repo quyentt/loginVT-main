@@ -22,6 +22,7 @@ PhanCoiThi.prototype = {
         me.getList_MonThi();
         me.getList_HinhThucThi();
         me.getList_LoaiDiem();
+        me.getList_KhoaQuanLy();
 
 
         $("#btnSearch").click(function (e) {
@@ -45,11 +46,7 @@ PhanCoiThi.prototype = {
         });
         $("#btnAddGiangVien").click(function () {
             edu.extend.genModal_NhanSu(arrChecked_Id => {
-                edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_PhanCong(arrChecked_Id[i]);
-                }
+                me.showPreview_ChonNhanSu(arrChecked_Id);
             });
             edu.extend.getList_NhanSu();
         });
@@ -110,6 +107,12 @@ PhanCoiThi.prototype = {
             me.getList_MonThi();
             //me.getList_PhanCoiThi();
         });
+        $('#dropSearch_KhoaQuanLy').on('select2:select', function (e) {
+            me.getList_MonThi();
+        });
+        $('#chkChuaPhanCong').on('change', function (e) {
+            me.genTable_PhanCoiThi(me.dtPhanCoiThi, me.iPagerPhanCoiThi);
+        });
         edu.system.getList_MauImport("zonebtnBaoCao_ChamThi", function (addKeyValue) {
             var obj_save = {
                 'strTuKhoa': edu.system.getValById('txtSearch'),
@@ -151,6 +154,7 @@ PhanCoiThi.prototype = {
             'dLocKhongHoanThanhNhapDiem': edu.util.getValById('dropSearch_HoanThanhNhapDiem'),
             'strThi_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_MonThi'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strTuNgay': edu.util.getValById('txtAAAA'),
             'strDenNgay': edu.util.getValById('txtAAAA'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -161,6 +165,7 @@ PhanCoiThi.prototype = {
                 if (data.Success) {
                     var dtReRult = data.Data;
                     me.dtPhanCoiThi = dtReRult;
+                    me.iPagerPhanCoiThi = data.Pager;
                     me.genTable_PhanCoiThi(dtReRult, data.Pager);
                 }
                 else {
@@ -187,6 +192,9 @@ PhanCoiThi.prototype = {
     -------------------------------------------*/
     genTable_PhanCoiThi: function (data, iPager) {
         var me = this;
+        if ($('#chkChuaPhanCong').is(':checked')) {
+            data = (data || []).filter(function (r) { return edu.util.returnEmpty(r.DSNHANSUCOITHI).trim() === ''; });
+        }
         $("#lblPhanCoiThi_Tong").html(iPager);
         var jsonForm = {
             strTable_Id: "tblPhanCoiThi",
@@ -301,6 +309,7 @@ PhanCoiThi.prototype = {
             'strHinhThucThi_Id': edu.util.getValById('dropSearch_HinhThuc'),
             'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
@@ -359,6 +368,7 @@ PhanCoiThi.prototype = {
             'strHinhThucThi_Id': edu.util.getValById('dropSearch_HinhThuc'),
             'strDiem_ThanhPhanDiem_Id': edu.util.getValById('dropSearch_LoaiDiem'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+            'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
 
@@ -515,6 +525,30 @@ PhanCoiThi.prototype = {
         };
         edu.system.loadToCombo_data(obj);
     },
+    getList_KhoaQuanLy: function () {
+        var me = this;
+        var obj = {
+            strCCTC_Loai_Id: "",
+            strCCTC_Cha_Id: "",
+            iTrangThai: 1
+        };
+        edu.system.getList_CoCauToChuc(obj, "", "", me.cbGenCombo_KhoaQuanLy);
+    },
+    cbGenCombo_KhoaQuanLy: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "MA",
+                order: "unorder"
+            },
+            renderPlace: ["dropSearch_KhoaQuanLy"],
+            title: "Chọn đơn vị"
+        };
+        edu.system.loadToCombo_data(obj);
+    },
 
 
     getList_PhanCong: function () {
@@ -581,6 +615,16 @@ PhanCoiThi.prototype = {
                 },
                 {
                     "mDataProp": "THONGTIN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.STT);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.SOLUONG);
+                    }
                 }
                 , {
                     "mRender": function (nRow, aData) {
@@ -594,7 +638,53 @@ PhanCoiThi.prototype = {
         /*III. Callback*/
     },
 
-    save_PhanCong: function (strGiangVien_Id) {
+    showPreview_ChonNhanSu: function (arrChecked_Id) {
+        var me = this;
+        if (!arrChecked_Id || arrChecked_Id.length === 0) {
+            edu.system.alert("Vui lòng chọn nhân sự?");
+            return;
+        }
+        var dt = edu.extend.dtNhanSu || [];
+        var html = '<div class="text-start">';
+        html += '<p class="mb-2"><b>Danh sách nhân sự sẽ phân coi thi (' + arrChecked_Id.length + ')</b></p>';
+        html += '<div class="aps-table-select" style="max-height:50vh;overflow:auto;">';
+        html += '<table class="table table-bordered mb-0">';
+        html += '<thead><tr><th class="text-center" style="width:50px">STT</th><th>Mã số</th><th>Họ tên</th><th class="text-center" style="width:100px">Thứ tự</th><th class="text-center" style="width:100px">Số lượng</th></tr></thead>';
+        html += '<tbody>';
+        for (var i = 0; i < arrChecked_Id.length; i++) {
+            var id = arrChecked_Id[i];
+            var ns = dt.find ? dt.find(function (e) { return e.ID == id; }) : null;
+            var ma = ns ? edu.util.returnEmpty(ns.MASO) : '';
+            var ten = ns ? edu.util.returnEmpty(ns.HOTEN) : '';
+            html += '<tr>';
+            html += '<td class="text-center">' + (i + 1) + '</td>';
+            html += '<td>' + ma + '</td>';
+            html += '<td>' + ten + '</td>';
+            html += '<td><input type="number" min="1" class="form-control form-control-sm txtThuTu_PCT" id="txtThuTu_' + id + '" value="" /></td>';
+            html += '<td><input type="number" min="1" class="form-control form-control-sm txtSoLuong_PCT" id="txtSoLuong_' + id + '" value="" /></td>';
+            html += '</tr>';
+        }
+        html += '</tbody></table></div>';
+        html += '</div>';
+        edu.system.confirm(html, 'q');
+        $("#btnYes").html('<i class="fas fa-save me-1"></i>Lưu');
+        $("#btnYes").click(function (e) {
+            var arrDstId = (me.strPhanCoiThi_Id || '').split(',');
+            edu.system.alert('<div id="zoneprocessXXXX"></div>');
+            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                var staffId = arrChecked_Id[i];
+                var thuTu = edu.util.returnEmpty($('#txtThuTu_' + staffId).val());
+                var soLuong = edu.util.returnEmpty($('#txtSoLuong_' + staffId).val());
+                var strDuLieu = arrDstId.map(function (dstId) {
+                    return dstId + ';' + thuTu + ';' + soLuong;
+                }).join(',');
+                me.save_PhanCong(staffId, strDuLieu);
+            }
+        });
+    },
+
+    save_PhanCong: function (strGiangVien_Id, strDuLieuOverride) {
         var me = this;
         //var aData = me.dtPhanGiangVien.find(e => e.ID == me.strPhanGiangVien_Id);
         //--Edit
@@ -602,7 +692,7 @@ PhanCoiThi.prototype = {
             'action': 'XLHV_TP_PhanCong_MH/FSkkLB4VKSgeBiggLhcoJC8eAi4oFSko',
             'func': 'pkg_thi_phancong.Them_Thi_GiaoVien_CoiThi',
             'iM': edu.system.iM,
-            'strDuLieuPhanCongCoiThi_Id': me.strPhanCoiThi_Id,
+            'strDuLieuPhanCongCoiThi_Id': strDuLieuOverride || me.strPhanCoiThi_Id,
             'strNhanSu_HoSoCanBo_v2_Id': strGiangVien_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };

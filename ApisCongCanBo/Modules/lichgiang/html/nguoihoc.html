@@ -1,10 +1,18 @@
 ﻿<style>
-    #tblLichGiang tr {
-        background: #223771;
+    #tblLichGiang tbody tr {
+        cursor: pointer;
+        background: #fff;
     }
 
-    #tblLichGiang tr.active {
-        background: #f26522;
+    #tblLichGiang tbody tr:hover {
+        background: #ffe0d0;
+    }
+
+    #tblLichGiang tbody tr.active,
+    #tblLichGiang tbody tr.active td,
+    #tblLichGiang tbody tr.active td * {
+        background: #f26522 !important;
+        color: #fff !important;
     }
 </style>
 <div class="one-door study-space">
@@ -79,7 +87,7 @@
                                 <th class="text-center" scope="col">Ngày bắt đầu</th>
                                 <th class="text-center" scope="col">Ngày kết thúc</th>
                                 <th class="text-center" scope="col">Số lượng</th>
-                                <th class="text-center" scope="col" style="min-width: 100px;">Điểm danh</th>
+                                <th class="text-center" scope="col" style="min-width: 100px;">Tổng hợp điểm danh</th>
                                 <th class="text-center" scope="col">Chi tiết</th>
                                 <th class="text-center" scope="col"><input type="checkbox" id="chkSelectAll"></th>
                             </tr>
@@ -220,16 +228,16 @@
 
                     </div>
                     <div class="button-gr">
-                        <button class="btn btn-primary btn-border-w" id="btnKhoiPhucDiemDanh">
+                        <button class="btn btn-action-sync" id="btnKhoiPhucDiemDanh" style="background-color:#f59e0b !important; border:1.5px solid #fff !important; color:#fff !important; margin-right:6px;">
                             <i class="fa-solid fa-user-check fw-bold"></i>
-                            <span>Khôi phục điểm danh</span>
+                            <span>Đồng bộ theo TKB</span>
                         </button>
-                        <button class="btn btn-primary btn-border-w ml-10" id="btnDiemDanh" style="margin-right: 20px">
+                        <button class="btn btn-action-edit" id="btnDiemDanh" style="background-color:#16a34a !important; border:1.5px solid #fff !important; color:#fff !important; margin-right:6px;">
                             <i class="fal fa-edit"></i>
-                            <span>Cập nhật</span>
+                            <span>Chỉnh sửa điểm danh</span>
                         </button>
-                        <button type="button" class="btn btn-primary btn-border-w ml-10 btn-dong-modal" data-bs-dismiss="modal"
-                            aria-label="Close">
+                        <button type="button" class="btn btn-action-close btn-dong-modal" data-bs-dismiss="modal"
+                            aria-label="Close" style="background-color:#dc2626 !important; border:1.5px solid #fff !important; color:#fff !important;">
                             <i class="fal fa-times pr-0"></i>
                         </button>
                     </div>
