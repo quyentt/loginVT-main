@@ -6215,7 +6215,7 @@ systemroot.prototype = {
                 if (arrChild.length) {
                     node += '<div class="sidebar-menu-sub collapse" id="collapse' + data[j].ID + '" data-bs-parent="#sidebar-menu">';
                     arrChild.forEach(e => {
-                        node += '<a id="chucnang' + e.ID + '" onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + e.DUONGDANHIENTHI + '">' + e.TENCHUCNANG + '</a>';
+                        node += '<a id="chucnang' + e.ID + '" onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + strDuongDanHienThi + '">' + e.TENCHUCNANG + '</a>';
                     })
                     node += '</div>';
                 }
