@@ -388,159 +388,176 @@
                 </div>
             </div>
             <div class="box-content aps-student-list aps-admissions pt-0 pl20 pr20 pb-0">
-                <div class="box box-solid box-shadow aps-student-header bg-fff box-header aps-admissions-lable pd0">
-                    <div class="box box-solid box-header aps-admissions-lable mb-10">
-                        <div class="box box-solid">
-                            <div class="box-header-has-action">
-                                <h3 class="box-title">
-                                    <img src="../assets/images/dashboad-item-8.png" class="images" />
-                                    <div class="">
-                                        <span>Hồ sơ sinh viên 360</span>
-                                        <p class="aps-note fz14 text-left color-888">
-                                            Hồ sơ tổng hợp của sinh viên: định danh, thông tin cá nhân, nguồn tuyển
-                                            sinh, quan hệ học tập (QHHT), quá trình học, điểm, tài chính, tương tác và
-                                            tệp đính kèm.
-                                        </p>
-                                    </div>
-                                </h3>
-                                <div class="role-list d-none">
-                                    <p class="m-0 color-888">Vai trò hiện tại</p>
-                                    <a href="#" class="item active">
-                                        <i class="fa-light da fa-building-columns"></i>
-                                        <span>Phòng quản lý sinh viên</span>
-                                    </a>
-                                    <a href="#" class="item">
-                                        <i class="fa-light da fa-graduation-cap"></i>
-                                        <span>Khoa/Viện</span>
-                                    </a>
+                <div class="box box-solid box-shadow box-header aps-admissions-lable mb-15">
+                    <div class="box box-solid">
+                        <div class="box-header-has-action">
+                            <h3 class="box-title">
+                                <img src="../assets/images/dashboad-item-8.png" class="images" />
+                                <div class="">
+                                    <span>Hồ sơ sinh viên 360</span>
+                                    <p class="aps-note fz14 text-left color-888">
+                                        Hồ sơ tổng hợp của sinh viên: định danh, thông tin cá nhân, nguồn tuyển
+                                        sinh, quan hệ học tập (QHHT), quá trình học, điểm, tài chính, tương tác và
+                                        tệp đính kèm.
+                                    </p>
                                 </div>
+                            </h3>
+                            <div class="role-list d-none">
+                                <p class="m-0 color-888">Vai trò hiện tại</p>
+                                <a href="#" class="item active">
+                                    <i class="fa-light da fa-building-columns"></i>
+                                    <span>Phòng quản lý sinh viên</span>
+                                </a>
+                                <a href="#" class="item">
+                                    <i class="fa-light da fa-graduation-cap"></i>
+                                    <span>Khoa/Viện</span>
+                                </a>
                             </div>
                         </div>
                     </div>
+                </div>
+                <!-- Bộ lọc sinh viên (toàn trường) -->
+                <div class="box box-solid box-shadow box-header aps-filter-sv aps-admissions-lable pd0">
                     <div class="box box-solid box-search-ff">
-                        <div class="tiepnhandauvao-filter-box box-search-main pt-15">
+                        <h3 class="box-title color-blue" style="padding-bottom: 15px !important;">
+                            <i class="fa-duotone fa-solid fa-filter-list"></i> Bộ lọc sinh viên
+                        </h3>
+                        <div class="tiepnhandauvao-filter-box box-search-main pt-0">
                             <div class="left">
                                 <div class="item item-select">
                                     <div class="label">Hệ đào tạo</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
-                                                <option selected="">Hệ đào tạo</option>
-                                                <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Đại học chính quy</option>
+                                                <option value="2">Vừa làm vừa học</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Khóa đào tạo</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
-                                                <option selected="">Khóa đào tạo</option>
-                                                <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Khóa 2022</option>
+                                                <option value="2">Khóa 2023</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-select">
-                                    <div class="label">Khoa</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="label">Khoa/Viện</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Tất cả</option>
-                                                <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                <option value="1">Khoa CNTT</option>
+                                                <option value="2">Khoa QTKD</option>
+                                                <option value="3">Khoa Điện - ĐT</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Chương trình</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
-                                                <option selected="">Chương trình</option>
-                                                <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Công nghệ phần mềm</option>
+                                                <option value="2">Hệ thống thông tin</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Lớp</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
-                                                <option selected="">Chương trình</option>
-                                                <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">DHIT220A</option>
+                                                <option value="2">DHKTPM220B</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Cố vấn học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">TS. Trần Văn Nam</option>
+                                                <option value="2">ThS. Lê Minh Hằng</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-select">
                                     <div class="label">Trạng thái học tập</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Tất cả</option>
-                                                <option value="1">Kế hoạch tuyển sinh 1</option>
-                                                <option value="2">Kế hoạch tuyển sinh 2</option>
-                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                <option value="1">Đang học</option>
+                                                <option value="2">Cảnh báo</option>
+                                                <option value="3">Bảo lưu</option>
+                                                <option value="4">Tốt nghiệp</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-select">
-                                    <div class="label">Cố vấn</div>
-                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
-                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                    <div class="label">Mức rủi ro</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1">
+                                        <div class="input-group no-icon">
                                             <i class="fal fa-angle-down"></i>
                                             <select class="form-select" aria-label="Default select example">
                                                 <option selected="">Tất cả</option>
-                                                <option value="1">TS. Lê Thanh Hà</option>
-                                                <option value="2">ThS. Nguyễn Văn Khoa</option>
-                                                <option value="3">TS. Phạm Thị Lan</option>
+                                                <option value="1">Có cảnh báo học vụ</option>
+                                                <option value="2">Có nợ tài chính</option>
+                                                <option value="3">Sắp tốt nghiệp</option>
+                                                <option value="4">Nguy cơ rời học</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="item item-input input_TuKhoa">
                                     <input id="txtSearch_TuKhoa" class="form-control"
-                                        placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                                        placeholder="Mã SV, họ tên, CCCD, email, SĐT...">
                                 </div>
                                 <div class="item btn-group">
                                     <a class="btn btn-primary" href="">
                                         <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
                                     </a>
-                                    <a class="btn btn-outline-warning" href="">
+                                    <a class="btn btn-outline-orange" href="">
                                         <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
                                     </a>
-                                    <a class="btn btn-outline-secondary btn-e1e1e1" href="">
-                                        <i class=" fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
+                                    <a class="btn btn-outline-primary" href="">
+                                        <i class="fa-solid fa-eraser"></i><span>Đặt lại</span>
+                                    </a>
+                                    <a class="btn btn-outline-primary" href="">
+                                        <i class="fa-solid fa-bookmark"></i><span>Lưu mẫu lọc</span>
                                     </a>
                                 </div>
                             </div>
                             <div class="right d-none"></div>
                         </div>
                     </div>
-                    <div class="clear"></div>
                 </div>
-                <div class="tiepnhandauvao-static-box aps-student-list-static">
-                    <div class="item box box-shadow">
+                <div class="box-dashboard-kpi tiepnhandauvao-static-box aps-student-static pd-0">
+                    <div class="item box box-shadow color-green">
                         <div class=" icon">
                             <i class="fa-duotone fa-solid fa-users"></i>
                         </div>
@@ -552,7 +569,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-blue">
                         <div class="icon">
                             <i class=" fa-solid fa-screen-users"></i>
                         </div>
@@ -564,9 +581,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-purple">
                         <div class="icon">
-                            <i class=" fa-solid fa-graduation-cap"></i>
+                            <i class=" fa-solid fa-user-graduate"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Đã tốt nghiệp</div>
@@ -576,7 +593,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-info">
                         <div class="icon">
                             <i class=" fa-solid fa-user-clock"></i>
                         </div>
@@ -588,19 +605,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow box-noTC">
+                    <div class="item box box-shadow box-noTC color-red">
                         <div class="icon">
                             <i class=" fa-solid fa-circle-dollar"></i>
                         </div>
                         <div class="meta">
                             <div class="title">Công nợ tài chính</div>
                             <div class="detail detail-2">
-                                <span class="number">3,245,000,000<u>đ</u></span>
-                                <span class="unit">212 sinh viên</span>
+                                <span class="number">33,245,000<u style="font-size: 14px;">đ</u></span>
+                                <span class="unit">212 sv</span>
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-orange">
                         <div class="icon">
                             <i class=" fa-solid fa-triangle-exclamation"></i>
                         </div>
@@ -633,7 +650,7 @@
                                         <a class="btn btn-sm btn-outline-success" href="">
                                             <i class="fa-solid fa-file-excel"></i><span>Xuất excel</span>
                                         </a>
-                                        <a class="btn btn-outline-secondary btn-e1e1e1" href="">
+                                        <a class="btn btn-outline-dark btn-e1e1e1" href="">
                                             <i class="fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
                                         </a>
                                     </div>
@@ -712,7 +729,8 @@
                                                             <td class="td-left">DHTT20A</td>
                                                             <td class="td-left">Khoa học máy tính</td>
                                                             <td class="td-center">
-                                                                <span class="btn btn-soft-primary">Đang học</span>
+                                                                <span class="btn no-border btn-soft-primary">Đang
+                                                                    học</span>
                                                             </td>
                                                             <td class="td-center">
                                                                 3.45
@@ -738,7 +756,8 @@
                                                             <td class="td-left">DHTT20A</td>
                                                             <td class="td-left">Khoa học máy tính</td>
                                                             <td class="td-center">
-                                                                <span class="btn btn-soft-orange">Cảnh báo</span>
+                                                                <span class="btn no-border btn-soft-orange">Cảnh
+                                                                    báo</span>
                                                             </td>
                                                             <td class="td-center">
                                                                 3.45
@@ -764,7 +783,8 @@
                                                             <td class="td-left">DHTT20A</td>
                                                             <td class="td-left">Khoa học máy tính</td>
                                                             <td class="td-center">
-                                                                <span class="btn btn-soft-success">Đã tốt nghiệp</span>
+                                                                <span class="btn no-border btn-soft-success">Đã tốt
+                                                                    nghiệp</span>
                                                             </td>
                                                             <td class="td-center">
                                                                 3.45
@@ -819,19 +839,32 @@
                                     </div>
                                     <div class="tab-pane fade" id="tructuyen" role="tabpanel"
                                         aria-labelledby="profile-tab">
-                                        Cảnh báo học vụ
+                                        <div class="aps-updating">
+                                            <i class="fa-duotone fa-solid fa-file-pen"></i>
+                                            Dữ liệu đang cập nhật
+                                        </div>
+
                                     </div>
                                     <div class="tab-pane fade" id="canbonhap" role="tabpanel"
                                         aria-labelledby="contact-tab">
-                                        Cán bộ nhập
+                                        <div class="aps-updating">
+                                            <i class="fa-duotone fa-solid fa-file-pen"></i>
+                                            Dữ liệu đang cập nhật
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="import" role="tabpanel"
                                         aria-labelledby="contact-tab">
-                                        Công nợ
+                                        <div class="aps-updating">
+                                            <i class="fa-duotone fa-solid fa-file-pen"></i>
+                                            Dữ liệu đang cập nhật
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="nguonkhac" role="tabpanel"
                                         aria-labelledby="contact-tab">
-                                        Sắp tốt nghiệp
+                                        <div class="aps-updating">
+                                            <i class="fa-duotone fa-solid fa-file-pen"></i>
+                                            Dữ liệu đang cập nhật
+                                        </div>
                                     </div>
 
                                 </div>
@@ -845,8 +878,8 @@
                                 <h3 class="box-title color-green">
                                     <i class="fa-light fa-address-card"></i> Hồ sơ sinh viên 360
                                 </h3>
-                                <div class="pull-right d-flex align-items-center flex-wrap gap-2">
-                                    <div class="aps-qhht-select d-flex align-items-center gap-2 mr-5">
+                                <div class="pull-right d-flex align-items-center flex-wrap">
+                                    <div class="aps-qhht-select d-flex align-items-center gap-2">
                                         <span class="color-888 fz13">QHHT:</span>
                                         <div class="input-wrap">
                                             <select class="form-select form-select-sm" style="min-width:210px">
@@ -932,7 +965,8 @@
                                         </div>
                                         <div class="item">
                                             <div class="label">Trạng thái học tập:</div>
-                                            <div class="text"><span class="btn btn-soft-success btn-30">Hoạt động</span>
+                                            <div class="text"><span class="btn no-border btn-soft-success btn-30">Hoạt
+                                                    động</span>
                                             </div>
                                         </div>
                                     </div>
@@ -982,11 +1016,12 @@
                                         <button class="nav-link" id="hosoS-tabs-22" data-bs-toggle="tab"
                                             data-bs-target="#hs-hoso" type="button" role="tab" aria-controls="profile"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ sơ</button>
+                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ
+                                            sơ</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade active show pt-10" id="hs-ttc" role="tabpanel"
+                                    <div class="tab-pane fade active show pt-0" id="hs-ttc" role="tabpanel"
                                         aria-labelledby="hosoS-tabs-11">
                                         <div class="row box-tongQuan">
                                             <!-- Tổng quan học tập -->
@@ -1348,10 +1383,11 @@
                                         </div>
                                     </div>
                                     <!-- Tab QHHT: danh sách quan hệ học tập của sinh viên -->
-                                    <div class="tab-pane fade pt-10" id="tab-qhht" role="tabpanel"
+                                    <div class="tab-pane fade" id="tab-qhht" role="tabpanel"
                                         aria-labelledby="hosoS-tab-qhht">
-                                        <h3 class="box-title color-blue mb-10">
-                                            <i class="fa-light fa-code-branch"></i> Quan hệ học tập (QHHT) của sinh viên
+                                        <h3 class="box-title color-blue mb-10 fz16">
+                                            <i class="fa-light fa-code-branch mr-5"></i> Quan hệ học tập (QHHT) của sinh
+                                            viên
                                         </h3>
                                         <p class="color-888 fz13 mb-10">Sinh viên có thể có nhiều QHHT/ngành. Chọn QHHT
                                             ở đầu hồ sơ để xem dữ liệu học tập, điểm, tài chính, tốt nghiệp tương ứng.
@@ -1376,12 +1412,13 @@
                                                         <td class="td-left">QHHT-01</td>
                                                         <td class="td-left">Công nghệ thông tin · Cử nhân</td>
                                                         <td class="td-center">K2022</td>
-                                                        <td class="td-center"><span class="btn btn-soft-primary">Chính</span>
+                                                        <td class="td-center"><span
+                                                                class="btn no-border btn-soft-primary">Chính</span>
                                                         </td>
                                                         <td class="td-center">15/08/2022</td>
                                                         <td class="td-center">3.45</td>
-                                                        <td class="td-center"><span
-                                                                class="btn btn-soft-success">Đang học</span></td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đang
+                                                                học</span></td>
                                                         <td class="td-center"><a href="#"
                                                                 class="btn btn-soft-primary">Chọn</a></td>
                                                     </tr>
@@ -1389,12 +1426,13 @@
                                                         <td class="td-left">QHHT-02</td>
                                                         <td class="td-left">Ngôn ngữ Anh · Văn bằng 2</td>
                                                         <td class="td-center">K2023</td>
-                                                        <td class="td-center"><span class="btn btn-soft-secondary">Phụ</span>
+                                                        <td class="td-center"><span
+                                                                class="btn btn-soft-secondary">Phụ</span>
                                                         </td>
                                                         <td class="td-center">10/09/2023</td>
                                                         <td class="td-center">3.20</td>
-                                                        <td class="td-center"><span
-                                                                class="btn btn-soft-success">Đang học</span></td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đang
+                                                                học</span></td>
                                                         <td class="td-center"><a href="#"
                                                                 class="btn btn-soft-primary">Chọn</a></td>
                                                     </tr>
@@ -1402,32 +1440,32 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="tab-pane fade pt-10" id="hs-qth" role="tabpanel"
+                                    <div class="tab-pane fade pt-0" id="hs-qth" role="tabpanel"
                                         aria-labelledby="contact-tab1">
                                         <p class="color-888"><i class="fa-light fa-laptop-file mr-5"></i> Quá trình học
                                             tập theo QHHT đang chọn (học kỳ, lớp học phần, tiến độ tín chỉ...).</p>
                                     </div>
-                                    <div class="tab-pane fade pt-10" id="hs-diem" role="tabpanel"
+                                    <div class="tab-pane fade pt-0" id="hs-diem" role="tabpanel"
                                         aria-labelledby="contact-tab2">
                                         <p class="color-888"><i class="fa-sharp fa-light fa-file-certificate mr-5"></i>
                                             Bảng điểm chi tiết theo QHHT đang chọn (điểm thành phần, điểm môn, GPA học
                                             kỳ).</p>
                                     </div>
-                                    <div class="tab-pane fade pt-10" id="hs-taichinh" role="tabpanel"
+                                    <div class="tab-pane fade pt-0" id="hs-taichinh" role="tabpanel"
                                         aria-labelledby="contact-tab3">
                                         <p class="color-888"><i class="fa-light fa-circle-dollar-to-slot mr-5"></i> Công
                                             nợ, phải thu, đã thu và lịch sử thanh toán theo QHHT đang chọn.</p>
                                     </div>
-                                    <div class="tab-pane fade pt-10" id="tab-tuongtac" role="tabpanel"
+                                    <div class="tab-pane fade pt-0" id="tab-tuongtac" role="tabpanel"
                                         aria-labelledby="contact-tab4">
                                         <p class="color-888"><i class="fa-light fa-hand-pointer mr-5"></i> Nhật ký tương
                                             tác, thông báo đã gửi, phiếu hỗ trợ và lịch hẹn tư vấn của sinh viên.</p>
                                     </div>
                                     <!-- Tab Hồ sơ: tệp đính kèm / hồ sơ giấy tờ -->
-                                    <div class="tab-pane fade pt-10" id="hs-hoso" role="tabpanel"
+                                    <div class="tab-pane fade pt-0" id="hs-hoso" role="tabpanel"
                                         aria-labelledby="hosoS-tabs-22">
-                                        <h3 class="box-title color-blue mb-10">
-                                            <i class="fa-light fa-paperclip"></i> Tệp đính kèm / Hồ sơ giấy tờ
+                                        <h3 class="box-title color-blue mb-10 fz16">
+                                            <i class="fa-light fa-paperclip mr-10"></i> Tệp đính kèm / Hồ sơ giấy tờ
                                         </h3>
                                         <div class="aps-table-select scroll-table-x">
                                             <table
@@ -1446,7 +1484,8 @@
                                                         <td class="td-left">CCCD</td>
                                                         <td class="td-left">cccd_nguyenthibich.pdf</td>
                                                         <td class="td-center">15/08/2022</td>
-                                                        <td class="td-center"><span class="btn btn-soft-success">Đã đối
+                                                        <td class="td-center"><span class="btn b btn-soft-success">Đã
+                                                                đối
                                                                 chiếu</span></td>
                                                         <td class="td-center">
                                                             <div class="d-flex gap-2 justify-content-center">
@@ -1464,7 +1503,8 @@
                                                         <td class="td-left">Học bạ THPT</td>
                                                         <td class="td-left">hocba_thpt.pdf</td>
                                                         <td class="td-center">15/08/2022</td>
-                                                        <td class="td-center"><span class="btn btn-soft-success">Đã đối
+                                                        <td class="td-center"><span
+                                                                class="btn no-border btn-soft-success">Đã đối
                                                                 chiếu</span></td>
                                                         <td class="td-center">
                                                             <div class="d-flex gap-2 justify-content-center">

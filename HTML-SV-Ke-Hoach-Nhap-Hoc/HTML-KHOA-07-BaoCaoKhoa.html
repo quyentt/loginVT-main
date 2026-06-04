@@ -387,13 +387,13 @@
                     </div>
                 </div>
             </div>
-            <div class="box-content aps-student-list aps-admissions pt-0 pl20 pr20 pb-0">
+            <div class="box-content aps-khoa-baoCao aps-admissions pt-0 pl20 pr20 pb-0">
                 <!-- Tiêu đề + tác vụ -->
                 <div class="box box-solid box-shadow box-header aps-admissions-lable mb-10">
                     <div class="box box-solid">
                         <div class="box-header-has-action">
-                            <h3 class="box-title">
-                                <img src="../assets/images/dashboad-item-8.png" class="images" />
+                            <h3 class="box-title" style="padding-left: 0 !important;">
+                                <img src="../assets/images/financial-statement.svg" class="images" />
                                 <div class="">
                                     <span>Báo cáo Khoa/Viện</span>
                                     <p class="aps-note fz14 text-left color-888">
@@ -408,8 +408,8 @@
                                         class="fa-solid fa-file-excel"></i><span>Xuất Excel</span></a>
                                 <a href="#" class="btn btn-outline-danger"><i
                                         class="fa-solid fa-file-pdf"></i><span>Xuất PDF</span></a>
-                                <a href="#" class="btn btn-primary"><i
-                                        class="fa-solid fa-floppy-disk"></i><span>Lưu báo cáo</span></a>
+                                <a href="#" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i><span>Lưu báo
+                                        cáo</span></a>
                             </div>
                         </div>
                     </div>
@@ -486,7 +486,7 @@
                                 <a class="btn btn-primary" href="">
                                     <i class="fa-solid fa-chart-line"></i><span>Áp dụng</span>
                                 </a>
-                                <a class="btn btn-outline-warning" href="">
+                                <a class="btn btn-outline-orange" href="">
                                     <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
                                 </a>
                             </div>
@@ -496,39 +496,39 @@
                 </div>
                 <!-- KPI tổng quan (R16) -->
                 <div class="tiepnhandauvao-static-box aps-student-list-static mb-10">
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-green">
                         <div class="icon"><i class="fa-duotone fa-solid fa-users"></i></div>
                         <div class="meta">
                             <div class="title">Tổng sinh viên</div>
-                            <div class="detail detail-2"><span class="number">24.568</span><span
-                                    class="unit">+2.1% so kỳ trước</span></div>
+                            <div class="detail detail-2"><span class="number">24.568</span><span class="unit">+2.1% so
+                                    kỳ trước</span></div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-blue">
                         <div class="icon"><i class="fa-duotone fa-solid fa-screen-users"></i></div>
                         <div class="meta">
                             <div class="title">Đang học</div>
-                            <div class="detail detail-2"><span class="number color-green">22.105</span><span
+                            <div class="detail detail-2"><span class="number ">22.105</span><span
                                     class="unit">90%</span></div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-info">
                         <div class="icon"><i class="fa-duotone fa-solid fa-graduation-cap"></i></div>
                         <div class="meta">
                             <div class="title">Tốt nghiệp</div>
-                            <div class="detail detail-2"><span class="number color-blue">1.482</span><span
-                                    class="unit">kỳ này</span></div>
+                            <div class="detail detail-2"><span class="number ">1.482</span><span class="unit">kỳ
+                                    này</span></div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-red">
                         <div class="icon"><i class="fa-duotone fa-solid fa-triangle-exclamation"></i></div>
                         <div class="meta">
                             <div class="title">Cảnh báo HV</div>
-                            <div class="detail detail-2"><span class="number color-orange">1.263</span><span
-                                    class="unit">5.1%</span></div>
+                            <div class="detail detail-2"><span class="number">1.263</span><span class="unit">5.1%</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow box-noTC">
+                    <div class="item box box-shadow box-noTC color-orange">
                         <div class="icon"><i class="fa-duotone fa-solid fa-circle-dollar"></i></div>
                         <div class="meta">
                             <div class="title">Nợ tài chính</div>
@@ -536,12 +536,12 @@
                                     SV</span></div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-purple">
                         <div class="icon"><i class="fa-duotone fa-solid fa-gauge-high"></i></div>
                         <div class="meta">
                             <div class="title">SV risk cao</div>
-                            <div class="detail detail-2"><span class="number color-red">37</span><span
-                                    class="unit">risk ≥ 80</span></div>
+                            <div class="detail detail-2"><span class="number ">37</span><span class="unit">risk
+                                    ≥ 80</span></div>
                         </div>
                     </div>
                 </div>
@@ -575,6 +575,7 @@
                                     <table class="table table-hover table-bordered table-noborder tblsearch-candidate">
                                         <thead>
                                             <tr>
+                                                <th class="td-center w-50px">STT</th>
                                                 <th class="td-left">Tình trạng</th>
                                                 <th class="td-right">Kỳ này</th>
                                                 <th class="td-right">Kỳ trước</th>
@@ -584,43 +585,58 @@
                                         </thead>
                                         <tbody>
                                             <tr>
+                                                <td class="td-center">1</td>
                                                 <td class="td-left">Đang học</td>
                                                 <td class="td-right">22.105</td>
                                                 <td class="td-right">21.640</td>
-                                                <td class="td-center text-success">▲ 2.1%</td>
+                                                <td class="td-center text-success"><i
+                                                        class="fa-solid fa-caret-up mr-2 bold"></i> 2.1%</td>
                                                 <td class="td-center"><a href="#" class="btn btn-soft-primary"><i
                                                             class="fa-light fa-up-right-from-square"></i></a></td>
                                             </tr>
                                             <tr>
+                                                <td class="td-center">1</td>
                                                 <td class="td-left">Bảo lưu</td>
                                                 <td class="td-right">412</td>
                                                 <td class="td-right">380</td>
-                                                <td class="td-center text-warning">▲ 8.4%</td>
+                                                <td class="td-center text-warning"><i
+                                                        class="fa-solid fa-caret-down mr-2 bold"></i> 8.4%</td>
                                                 <td class="td-center"><a href="#" class="btn btn-soft-primary"><i
                                                             class="fa-light fa-up-right-from-square"></i></a></td>
                                             </tr>
                                             <tr>
+                                                <td class="td-center">1</td>
                                                 <td class="td-left">Thôi học</td>
                                                 <td class="td-right">186</td>
                                                 <td class="td-right">210</td>
-                                                <td class="td-center text-success">▼ 11.4%</td>
+                                                <td class="td-center text-success"><i
+                                                        class="fa-solid fa-caret-down mr-2 bold"></i> 11.4%</td>
                                                 <td class="td-center"><a href="#" class="btn btn-soft-primary"><i
-                                                            class="fa-light fa-up-right-from-square"></i></a></td>
+                                                            class="fa-light fa-up-right-from-square  mr-2 bold"></i></a>
+                                                </td>
                                             </tr>
                                             <tr>
+                                                <td class="td-center">1</td>
                                                 <td class="td-left">Tốt nghiệp</td>
                                                 <td class="td-right">1.482</td>
                                                 <td class="td-right">1.355</td>
-                                                <td class="td-center text-success">▲ 9.4%</td>
-                                                <td class="td-center"><a href="#" class="btn btn-soft-primary"><i
-                                                            class="fa-light fa-up-right-from-square"></i></a></td>
+                                                <td class="td-center text-success"><i
+                                                        class="fa-solid fa-caret-up mr-2 bold"></i>
+                                                    9.4%</td>
+                                                <td class="td-center"><a href="#" class="btn btn-soft-primary "><i
+                                                            class="fa-light fa-up-right-from-square "></i></a>
+                                                </td>
                                             </tr>
                                             <tr>
+                                                <td class="td-center">1</td>
                                                 <td class="td-left">Chuyển ngành</td>
                                                 <td class="td-right">98</td>
                                                 <td class="td-right">112</td>
-                                                <td class="td-center text-success">▼ 12.5%</td>
-                                                <td class="td-center"><a href="#" class="btn btn-soft-primary"><i
+                                                <td class="td-center text-success"><i
+                                                        class="fa-solid fa-caret-up  mr-2 bold"></i>
+                                                    12.5%</td>
+                                                <td class="td-center"><a href="#"
+                                                        class="btn btn-soft-primary mr-2 bold"><i
                                                             class="fa-light fa-up-right-from-square"></i></a></td>
                                             </tr>
                                         </tbody>
@@ -636,7 +652,8 @@
                         <div class="box box-solid box-shadow aps-hs-dauVao pd0 h-100">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-orange">
-                                    <i class="fa-duotone fa-solid fa-triangle-exclamation"></i> Cảnh báo học vụ theo khoa
+                                    <i class="fa-duotone fa-solid fa-triangle-exclamation"></i> Cảnh báo học vụ theo
+                                    khoa
                                 </h3>
                                 <div class="pull-right"><a class="btn btn-sm btn-soft-primary" href="#"><i
                                             class="fa-light fa-magnifying-glass-plus"></i></a></div>
@@ -706,8 +723,9 @@
                                     <div class="item box box-shadow">
                                         <div class="meta">
                                             <div class="title">SLA phản hồi</div>
-                                            <div class="detail detail-2"><span class="number color-green">94%</span><span
-                                                    class="unit">đúng hạn</span></div>
+                                            <div class="detail detail-2"><span
+                                                    class="number color-green">94%</span><span class="unit">đúng
+                                                    hạn</span></div>
                                         </div>
                                     </div>
                                     <div class="item box box-shadow">

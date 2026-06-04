@@ -1,21 +1,21 @@
 /* -- Code 5/2/2025 -- */
-@import "responsive.css";
+/* @import "responsive.css";
 @import "styles.css";
-@import "../../../assets/css/root.css";
+@import "../../../assets/css/root.css"; */
 
 .box-header>.box-tools {
-    position: relative ;
+    position: relative;
 }
 
 .justify-content-end {
-    justify-content: flex-end ;
+    justify-content: flex-end;
 }
 
 .border-radius-0 {
-    border-top-left-radius: 0 ;
-    border-top-right-radius: 0 ;
-    border-bottom-left-radius: 0 ;
-    border-bottom-right-radius: 0 ;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .zoneChucNang .btnDelete_VaiTroChucNang:hover,
@@ -6522,8 +6522,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps_nhansu .item-modal .group-title {
-    padding: 0 0 20px 0;
-    !important;
+    padding: 0 0 20px 0 !important;
     font-size: 24px !important;
     font-weight: 600 !important;
     color: var(--color-blue) !important;
@@ -9954,8 +9953,8 @@ table#clone {
     align-items: center;
     flex-wrap: wrap;
     /* min-height: 38px !important; */
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
+    /* padding-top: 0 !important; */
+    /* padding-bottom: 0 !important; */
 }
 
 /* -------------- */
@@ -11903,7 +11902,8 @@ table#clone {
     margin-right: 7px;
 }
 
-.tiepnhandauvao-filter-box, .box-dashboard-kpi {
+.tiepnhandauvao-filter-box,
+.box-dashboard-kpi {
     /* border: solid 1px #e1e1e1; */
     border-radius: 6px;
     padding: 15px;
@@ -11912,57 +11912,72 @@ table#clone {
     gap: 10px;
     justify-content: space-between;
 }
-.tiepnhandauvao-static-box , .box-dashboard-kpi {
+
+.tiepnhandauvao-static-box,
+.box-dashboard-kpi {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    margin-top:15px;
+    margin-top: 15px;
     padding-bottom: 15px !important;
     justify-content: center;
 }
 
-.tiepnhandauvao-filter-box .left, .box-dashboard-kpi .left{
-    display: flex;
+.tiepnhandauvao-filter-box .left,
+.box-dashboard-kpi .left {
+    /* display: flex; */
     align-items: flex-end;
     gap: 10px;
     flex: 1;
     flex-wrap: wrap;
-    justify-content: flex-end;
+    justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
 }
 
-.tiepnhandauvao-filter-box .left .item, .box-dashboard-kpi .left .item {
+.tiepnhandauvao-filter-box .left .item,
+.box-dashboard-kpi .left .item {
     max-width: 100%;
     flex-grow: 1;
+    margin-bottom: 5px;
 }
 
-.tiepnhandauvao-filter-box .left .item.text-item, .box-dashboard-kpi .left .item.text-item  {
+.tiepnhandauvao-filter-box .left .item.text-item,
+.box-dashboard-kpi .left .item.text-item {
     flex: 1;
     max-width: 400px;
 }
 
-.tiepnhandauvao-filter-box .right, .box-dashboard-kpi  .right {
+.tiepnhandauvao-filter-box .right,
+.box-dashboard-kpi .right {
     width: fit-content;
     flex-shrink: 0;
 }
 
-.tiepnhandauvao-filter-box .item-search, .box-dashboard-kpi  .item-search {
+.tiepnhandauvao-filter-box .item-search,
+.box-dashboard-kpi .item-search {
     margin: 0;
     padding: 0 !important;
 }
 
-.tiepnhandauvao-filter-box .btn-group , .box-dashboard-kpi  .btn-group {
+.tiepnhandauvao-filter-box .btn-group,
+.box-dashboard-kpi .btn-group {
     display: flex;
     gap: 10px;
     max-width: fit-content !important;
 }
 
-.tiepnhandauvao-filter-box .btn-group .btn , .box-dashboard-kpi .btn-group .btn  {
+.tiepnhandauvao-filter-box .btn-group .btn,
+.box-dashboard-kpi .btn-group .btn {
     width: auto;
     min-width: fit-content;
 }
 
+.tiepnhandauvao-filter-box .left .item.input_TuKhoa {
+    min-width: 260px;
+}
 
-.tiepnhandauvao-static-box .item{
+.tiepnhandauvao-static-box .item {
     border: 1px solid #e1e1e1;
     padding: 15px;
     border-radius: 8px !important;
@@ -11973,10 +11988,11 @@ table#clone {
     flex-shrink: 1;
     flex-grow: 1;
     flex-basis: 205px;
-    margin-bottom:0;
+    margin-bottom: 0;
 }
 
-.tiepnhandauvao-static-box .item .icon , .box-dashboard-kpi  .item .icon {
+.tiepnhandauvao-static-box .item .icon,
+.box-dashboard-kpi .item .icon {
     width: 60px;
     min-width: 60px;
     height: 60px;
@@ -11986,49 +12002,54 @@ table#clone {
     align-items: center;
     justify-content: center;
     font-size: 28px;
-    color: #22a652;
+    /* color: #22a652; */
     font-weight: 700 !important;
 }
 
-.tiepnhandauvao-static-box .item .icon i, .box-dashboard-kpi .item .icon i {
+.tiepnhandauvao-static-box .item .icon i,
+.box-dashboard-kpi .item .icon i {
     font-weight: 700 !important;
 }
 
-.tiepnhandauvao-static-box .item .title ,
-.box-dashboard-kpi  .item .title {
+.tiepnhandauvao-static-box .item .title,
+.box-dashboard-kpi .item .title {
     font-weight: 600 !important;
     font-size: 15px;
-    margin-bottom: 3px;
+    margin-bottom: 0;
+    color: #888;
 }
 
 .tiepnhandauvao-static-box .item .meta .detail,
 .box-dashboard-kpi .item .meta .detail {
     display: flex;
-    align-items: flex-end;
+    align-items: baseline;
     gap: 6px;
 }
 
-.tiepnhandauvao-static-box .item .number, .box-dashboard-kpi{
-     font-size: 26px;
-    font-weight: 600;
-    color: #22a652;
+.tiepnhandauvao-static-box .item .number,
+.box-dashboard-kpi .item .number {
+    font-size: 24px;
+    font-weight: 700;
+    /* color: #22a652; */
     line-height: 26px;
 }
 
-.tiepnhandauvao-static-box .item .unit , .box-dashboard-kpi .item .unit{
+.tiepnhandauvao-static-box .item .unit,
+.box-dashboard-kpi .item .unit {
     font-size: 12px;
     color: #888;
+    font-weight: 300;
 }
 
-.tiepnhandauvao-static-box .item.item-warning .icon, 
-.box-dashboard-kpi  .item.item-warning .icon{
+.tiepnhandauvao-static-box .item.item-warning .icon,
+.box-dashboard-kpi .item.item-warning .icon {
     background: #FFF0E5;
     color: #FF5F1F;
 
 }
 
 .tiepnhandauvao-static-box .item.item-warning .number,
-.box-dashboard-kpi  .item.item-warning .number{
+.box-dashboard-kpi .item.item-warning .number {
     color: #FF5F1F;
 }
 
@@ -12044,69 +12065,73 @@ table#clone {
 }
 
 /* -- */
-.tiepnhandauvao-static-box .item:nth-child(1) .icon, .box-dashboard-kpi .item:nth-child(1) .icon {
+.box-dashboard-kpi .item.color-green .icon,
+.tiepnhandauvao-static-box .item.color-green .icon {
     background: rgba(34, 166, 82, 0.1) !important;
-    color: #22a652;
+    color: var(--color-green2) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(1) .number, .box-dashboard-kpi .item:nth-child(1) .number {
-    color: #22a652 !important;
+.box-dashboard-kpi .item.color-green .number,
+.box-dashboard-kpi .item.color-green .number {
+    color: var(--color-green2) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(2) .icon , .box-dashboard-kpi .item:nth-child(2) .icon{
+.box-dashboard-kpi .item.color-blue .icon,
+.tiepnhandauvao-static-box .item.color-blue .icon {
     background: rgba(49, 103, 243, .1) !important;
-    color: #3380db !important;
+    color: var(--color-blue) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(2) .number , .box-dashboard-kpi .item:nth-child(2) .number {
-    color: #3380db ;
+.box-dashboard-kpi .item.color-blue .number,
+.tiepnhandauvao-static-box .item.color-blue .number {
+    color: var(--color-blue) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(3) .icon, .box-dashboard-kpi .item:nth-child(3) .icon {
+.box-dashboard-kpi .item.color-info .icon,
+.tiepnhandauvao-static-box .item.color-info .icon {
     background: rgba(13, 202, 240, .1) !important;
-    color: #0dcaf0 !important;
+    color: var(--color-info) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(3) .number , .box-dashboard-kpi .item:nth-child(3) .number {
-    color: #0dcaf0 ;
+.box-dashboard-kpi .item.color-info .number,
+.tiepnhandauvao-static-box .item.color-info .number {
+    color: var(--color-info) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(4) .icon , .box-dashboard-kpi .item:nth-child(4) .icon{
-    background: rgba(220, 53, 69, .1) !important;
-    color: #dc3545 !important;
+.box-dashboard-kpi .item.color-purple .icon,
+.tiepnhandauvao-static-box .item.color-purple .icon {
+    background: rgba(161, 34, 216, .1) !important;
+    color: var(--color-purple) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(4) .number, .box-dashboard-kpi .item:nth-child(4) .number {
-    color: #dc3545 !important;
+.box-dashboard-kpi .item.color-purple .number,
+.tiepnhandauvao-static-box .item.color-purple .number {
+    color: var(--color-purple) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(4) .icon, .box-dashboard-kpi .item:nth-child(4) .icon {
-    background: rgba(220, 53, 69, .1) !important;
-    color: #dc3545 !important;
+.box-dashboard-kpi .item.color-red .icon,
+.tiepnhandauvao-static-box .item.color-red .icon {
+    background: rgba(255, 0, 0, .1) !important;
+    color: var(--color-red) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(4) .number , .box-dashboard-kpi .item:nth-child(4) .number {
-    color: #dc3545 !important;
+.box-dashboard-kpi .item.color-red .number,
+.tiepnhandauvao-static-box .item.color-red .number {
+    color: var(--color-red) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(5) .icon, .box-dashboard-kpi  .item:nth-child(5) .icon{
-    background: rgba(255, 95, 31, .1) !important;
-    color: #FF5F1F !important;
+.box-dashboard-kpi .item.color-orange .icon,
+.tiepnhandauvao-static-box .item.color-orange .icon {
+    background: rgba(213, 75, 7, .1) !important;
+    color: var(--color-orange) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(5) .number , .box-dashboard-kpi .item:nth-child(5) .number{
-    color: #FF5F1F !important;
+.box-dashboard-kpi .item.color-orange .number,
+.tiepnhandauvao-static-box .item.color-orange .number {
+    color: var(--color-orange) !important;
 }
 
-.tiepnhandauvao-static-box .item:nth-child(6) .icon , .box-dashboard-kpi .item:nth-child(6) .icon{
-    background: rgba(217, 164, 6, .1) !important;
-    color: #ffc107 !important;
-}
-
-.tiepnhandauvao-static-box .item:nth-child(6) .number, .box-dashboard-kpi  .item:nth-child(6) .number{
-    color: #ffc107 !important;
-}
-
+/* --- */
 .box-ds-phongThi {
     padding-bottom: 40px !important;
 }
@@ -12161,6 +12186,11 @@ table#clone {
 
 .aps-chitiethoso .aps-kienTraNhanh-trangThai .item-lable {
     line-height: 34px !important;
+}
+
+.aps-chitiethoso .aps-tab-tongquan .user-infomation {
+    flex: 1 1 auto;
+    min-width: 50% !important;
 }
 
 .aps-kienTraNhanh-trangThai .item.item-line .item-content {
@@ -12289,8 +12319,19 @@ table#clone {
 
 /* -----Tiếp nhận đầu vào tuyển sinh------ */
 .aps-admissions .aps-admissions-lable .images {
-    height: 44px;
-    padding-right: 10px;
+    height: 60px;
+    padding-right: 15px;
+}
+
+.aps-admissions .aps-admissions-lable {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.aps-admissions .aps-admissions-lable .box-title {
+    /* padding-left: 0 !important; */
 }
 
 .aps-admissions-lable .box-title span {
@@ -12315,6 +12356,7 @@ table#clone {
 .aps-admissions-lable .box-title p {
     margin-bottom: 0 !important;
     font-weight: 400;
+    line-height: 20px;
 }
 
 .box-search-main .item .label {
@@ -12403,9 +12445,6 @@ table#clone {
 
 }
 
-.tiepnhandauvao-filter-box .left .item.input_TuKhoa {
-    min-width: 260px;
-}
 
 
 
@@ -12426,7 +12465,7 @@ table#clone {
     display: flex;
     gap: 10px;
     align-items: center;
-    padding-right: 15px;
+    padding-right: 0px;
 }
 
 .box-header-has-action .role-list p {}
@@ -12565,7 +12604,7 @@ table#clone {
     background: rgba(34, 166, 82, 0.1);
     color: #22a652;
     border-radius: 4px;
-    padding: 5px 10px;
+    padding: 5px 10px 4px 10px;
 
 }
 
@@ -12854,14 +12893,14 @@ table#clone {
 
 .box-lichSu-list ul {
     list-style: none;
-    border-left: 2px solid rgba(13, 110, 253, 0.3);
+    border-left: 2px solid rgba(13, 110, 253, 0.1);
     padding-left: 0;
     margin-left: 20pz;
 }
 
 .box-lichSu-list ul li {
     position: relative;
-    padding-left: 20px;
+    padding-left: 12px;
     display: flex;
     gap: 20px;
     padding-bottom: 5px;
@@ -12870,10 +12909,10 @@ table#clone {
 .box-lichSu-list ul li::before {
     background-color: rgba(13, 110, 253, 1);
     position: absolute;
-    width: 9px;
-    height: 9px;
-    top: 6px;
-    left: -6px;
+    width: 6px;
+    height: 6px;
+    top: 10px;
+    left: -4px;
     content: "";
     border-radius: 30px;
 }
@@ -13013,9 +13052,9 @@ table#clone {
 .box-search-ff .box-search-main .item .label {
     position: absolute;
     background: #fff;
-    top: -9px;
-    left: 8px;
-    padding: 0px 5px 3px 5px;
+    top: -8px;
+    left: 10px;
+    padding: 0px 5px 3px 4px;
 }
 
 .aps-student-list-static.tiepnhandauvao-static-box .item .meta .detail,
@@ -13041,6 +13080,8 @@ table#clone {
     flex-grow: 1;
     flex-basis: 220px;
     max-width: 100%;
+    align-items: flex-start;
+    /* icon-text cung tam (cao bang nhau) */
 }
 
 .aps-student-hoso .user-infomation .info .item .label {
@@ -13054,7 +13095,7 @@ table#clone {
 
 .box-tongQuan .box-title,
 .box-thaotac-main .box-title {
-    font-size: 15px;
+    font-size: 17px;
     padding: 10px 0px 0 0;
     font-weight: 700;
     margin-bottom: 0 !important;
@@ -13078,6 +13119,7 @@ table#clone {
     flex-direction: column;
     text-align: center;
     padding: 15px 10px !important;
+    gap: 5px;
 }
 
 .box-thaotac-main .tiepnhandauvao-static-box .item .title {
@@ -13096,6 +13138,30 @@ table#clone {
 .box-thaotac-main .tiepnhandauvao-static-box .item .icon {
     width: auto;
     height: auto;
+    margin: auto;
+}
+
+.box-thaotac-main .tiepnhandauvao-static-box .item .meta {
+    width: auto;
+    height: auto;
+    margin: auto;
+}
+
+/* Hover: icon + border + text cùng đổi sang màu icon (cam) */
+.box-thaotac-main .tiepnhandauvao-static-box .item {
+    transition: border-color .2s ease, color .2s ease;
+}
+
+.box-thaotac-main .tiepnhandauvao-static-box .item:hover {
+    border-color: var(--orange);
+}
+
+.box-thaotac-main .tiepnhandauvao-static-box .item:hover .title {
+    color: var(--orange);
+}
+
+.box-thaotac-main .tiepnhandauvao-static-box .item:hover .icon i {
+    color: var(--orange);
 }
 
 /* --- */
@@ -13149,7 +13215,7 @@ table#clone {
 }
 
 .aps-student-hoso .box-header .pull-right .btn i {
-    font-size: 9px;
+    /* font-size: 9px; */
 }
 
 .box-tongQuan .tiepnhandauvao-static-box.aps-student-list-static.tiepnhandauvao-static-box {
@@ -13256,19 +13322,23 @@ table#clone {
 }
 
 .hosodauvao-tabs .nav-tabs .nav-link .number-tabs {
-    font-size: 13px;
+    font-size: 11px;
     margin-left: 5px;
     margin-top: 2px;
-    color: var(--color-blue);
+    color: #fff;
     display: flex;
     align-items: center;
     justify-content: center;
     width: auto;
+    line-height: 20px;
     height: 20px;
-    padding: 0 5px;
-    border-radius: 4px;
-    background-color: rgba(13, 110, 253, .1) !important;
-    border: 1px solid rgba(13, 110, 253, .1) !important;
+    padding: 3px 5px;
+    border-radius: 50px;
+    background-color: rgba(13, 110, 253, 1) !important;
+    border: 1px solid rgba(13, 110, 253, 1) !important;
+    position: absolute;
+    top: -11px;
+    right: 7px;
 }
 
 .hosodauvao-tabs .tab-content {
@@ -13303,6 +13373,21 @@ table#clone {
 .tongquanda-qhht.aps-hs-chungchi .tongquanda-qhht-list .item:first-child {
     width: 100% !important;
     flex-basis: 100% !important;
+}
+
+.aps-covan-hoctap-rl-r .tongquanda-qhht-list .item {
+    display: flex;
+    gap: 10px;
+    height: 100%;
+}
+
+.aps-covan-hoctap-rl-r .tongquanda-qhht-list .item .number {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.aps-covan-hoctap-rl-r .tongquanda-qhht-list .item .icon {
+    font-size: 24px;
 }
 
 .item-chungchi i {
@@ -13407,7 +13492,7 @@ table#clone {
 }
 
 .aps-tab-tongquan .tongquanda-qhht .tongquanda-qhht-list .item .number {
-    font-size: 25px;
+    font-size: 24px;
     /* height: 26px; */
     font-weight: 700;
     margin-bottom: 0 !important;
@@ -13656,7 +13741,7 @@ table#clone {
 .aps-user-infos-box .item .label .text {
     font-weight: 700;
     font-size: 16px;
-    margin: 5px 0 5px 0;
+    margin: 2px 0 2px 0;
 }
 
 .aps-user-infos-box .item .title {
@@ -13820,6 +13905,7 @@ table#clone {
 
 .aps-tab-tongquan .tongquanda-qhht-list .item p {
     color: #666666;
+    padding-left: 5px;
 }
 
 .aps-tab-tongquan .tongquanda-qhht-list .item.color-orange .number {
@@ -13926,23 +14012,30 @@ table#clone {
 }
 
 .no-quyetDinh {
-  display: flex; /* Kích hoạt Flexbox */
-  flex-direction: column; /* Xếp các phần tử con theo chiều dọc */
-  gap: 10px; /* Khoảng cách giữa 2 đối tượng */
-  padding-top: 20px;
-  padding-bottom: 20px;
+    display: flex;
+    /* Kích hoạt Flexbox */
+    flex-direction: column;
+    /* Xếp các phần tử con theo chiều dọc */
+    gap: 10px;
+    /* Khoảng cách giữa 2 đối tượng */
+    padding-top: 20px;
+    padding-bottom: 20px;
 }
+
 /* ------ */
-.aps-thaoTacNhanh a,.aps-thaoTacNhanh a:hover {
-display: flex;
-  flex-direction: column; /* Xếp đối tượng theo chiều dọc */
-  gap: 10px; /* Khoảng cách giữa 2 đối tượng */
-      height: fit-content;
+.aps-thaoTacNhanh a,
+.aps-thaoTacNhanh a:hover {
+    display: flex;
+    flex-direction: column;
+    /* Xếp đối tượng theo chiều dọc */
+    gap: 10px;
+    /* Khoảng cách giữa 2 đối tượng */
+    height: fit-content;
     padding: 15px !important;
     border-radius: 10px !important;
 }
 
-.aps-thaoTacNhanh a i{
+.aps-thaoTacNhanh a i {
     font-size: 34px;
     padding-right: 0;
 }
@@ -13988,7 +14081,7 @@ display: flex;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 15px;
+    font-size: 18px;
 }
 
 .aps-nhatky-tuongtac .tl-dot.tl-blue {
@@ -14301,10 +14394,10 @@ display: flex;
 /* 29/5 - Lịch sử gần đây: ngày = cột trái cố định; nội dung + người ghi nằm cột phải,
    khi dài tự xuống dòng TRONG cột phải (không rớt xuống dưới cột ngày) */
 .box-lichSu-list ul li a {
-    display: grid;
-    grid-template-columns: 140px 1fr;
-    column-gap: 12px;
-    row-gap: 2px;
+    display: block;
+    /* grid-template-columns: 140px 1fr; */
+    /* column-gap: 5px; */
+    /* row-gap: 2px; */
     width: 100%;
     align-items: start;
 }
@@ -14322,6 +14415,7 @@ display: flex;
 .box-lichSu-list ul li .user {
     grid-column: 2;
     grid-row: 2;
+    padding-left: 15px;
 }
 
 /* 29/5 - Khối Thông tin cá nhân / Nguồn nhập học (HTML-QLSV-03-hoso360-1):
@@ -14353,6 +14447,7 @@ display: flex;
 .aps-chitiethoso-canhan .info .item .text {
     line-height: 26px;
     flex: 1;
+    font-size: 14px;
 }
 
 /* 29/5 - Legend biểu đồ thống kê chuyên cần (HTML-QLSV-06-chuyencan-1): pill có nền tint + chấm tròn + badge số */
@@ -14454,7 +14549,7 @@ display: flex;
 
 /* 29/5 - Gộp hồ sơ SV + lưới thông tin vào 1 box (HTML-QLSV-08-XuLyHocVu-1): làm phẳng thẻ con */
 .aps-hocvu-merged .student-infos {
-    border-top: 1px solid #eef0f3;
+    /* border-top: 1px solid #eef0f3; */
     padding-top: 15px;
 }
 
@@ -14493,11 +14588,11 @@ display: flex;
 }
 
 .aps-inbox-side .aps-chitiethoso-canhan .info .item {
-    margin-bottom: 8px;
+    margin-bottom: 2px;
 }
 
 .aps-inbox-side .aps-chitiethoso-canhan .info .item .label {
-    width: 92px;
+    width: 90px;
     min-width: 92px;
     margin-right: 6px;
 }
@@ -14538,7 +14633,7 @@ display: flex;
 /* nhỏ gọn badge tag trong list */
 .aps-inbox .btn-xs {
     padding: 1px 8px !important;
-    font-size: 11px !important;
+    font-size: 13px !important;
     line-height: 18px !important;
     height: auto !important;
 }
@@ -14575,8 +14670,8 @@ display: flex;
     background: #ef4444;
     color: #fff;
     border-radius: 10px;
-    padding: 0 6px;
-    font-size: 11px;
+    padding: 3px 6px 1px 6px;
+    font-size: 12px;
 }
 
 .aps-inbox-list-body {
@@ -14643,7 +14738,7 @@ display: flex;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin: 2px 0;
+    margin: 0 0 5px 0;
 }
 
 .aps-inbox-list .conv-item.unread .c-sub {
@@ -14694,12 +14789,16 @@ display: flex;
     flex-wrap: wrap;
 }
 
+.aps-chat-head .chat-head-actions i {
+    font-size: 16px;
+}
+
 .aps-chat-body {
     flex: 1 1 auto;
     overflow-y: auto;
     max-height: 460px;
     padding: 15px 18px;
-    background: #f7f8fa;
+    background: #e9e9e9;
 }
 
 .aps-chat-body .chat-day {
@@ -14784,6 +14883,8 @@ display: flex;
     border-top: 1px solid #eef0f3;
     padding: 12px 15px;
     background: #fff;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
 }
 
 .aps-chat-composer .composer-tools {
@@ -14805,6 +14906,12 @@ display: flex;
 .aps-chat-composer .composer-left {
     display: flex;
     gap: 6px;
+}
+
+.aps-chat-composer .composer-left i {
+    font-size: 16px;
+    font-weight: 700;
+
 }
 
 /* 29/5 - Avatar trong ô tt-sv: cố định kích thước + bo tròn + border, ảnh fill 100% (theo mẫu .user-infomation .image) */
@@ -14854,8 +14961,297 @@ display: flex;
     margin-top: 15px;
     margin-right: 5px;
 }
+
 /* ================== 29/5 - end CSS bổ sung ================== */
 
 .aps-totnghiep-detail {
     align-items: start !important;
+}
+
+/* ------ */
+.aps-updating {
+    border: 1px dotted #e1e1e1;
+    border-radius: 20px;
+    padding: 50px 20px;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    color: #888;
+}
+
+.aps-updating i {
+    font-size: 36px;
+}
+
+/* Mũi tên dropdown của tất cả input select: cách phải 8px, nhỏ 12px */
+.form-select {
+    background-position: right 8px center;
+    background-size: 12px;
+}
+
+/* Mũi tên icon-end (font) của input có select: cách phải 8px, nhỏ 12px */
+.input-wrap .form-select~.icon-end {
+    right: 8px;
+    font-size: 11px;
+}
+
+.my-paging_wrap li i {
+    font-size: 12px;
+}
+
+/* Mọi nút dạng "btn btn-soft-*" (mọi màu) đều bỏ đường viền */
+.btn[class*="btn-soft-"] {
+    border-color: transparent !important;
+}
+
+/* Header hồ sơ SV (panel chi tiết, trừ hoso360): luôn 2 cột, tiêu đề trái (full ra) – nút phải, ở mọi màn hình */
+.aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 10px;
+}
+
+.aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border>.box-title {
+    margin: 0;
+    flex: 1 1 auto;
+    /* tiêu đề giãn full chiếm phần còn lại */
+}
+
+.aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border>.pull-right {
+    float: none;
+    width: auto !important;
+    /* huỷ width:100% của rule <1920px */
+    flex-shrink: 0;
+    /* nút giữ kích thước, luôn nằm bên phải */
+}
+
+.aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border>.pull-right .btn-group {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* "Tổng quan QHHT" nằm cùng hàng với thông tin cá nhân */
+.aps-tab-tongquan:has(> .tongquanda-qhht) {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+}
+
+.aps-tab-tongquan:has(> .tongquanda-qhht)>.user-infomation {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.aps-tab-tongquan:has(> .tongquanda-qhht)>.tongquanda-qhht {
+    flex: 0 0 auto;
+}
+
+
+/* Chung chi (.aps-tab-chungchi): chia 2 cot 60/40 - thong tin ca nhan | tong quan chung chi (tru 10px gap moi ben) */
+.aps-tab-tongquan.aps-tab-chungchi {
+    flex-wrap: nowrap;
+}
+
+.aps-tab-tongquan.aps-tab-chungchi>.user-infomation {
+    flex: 0 0 calc(60% - 10px) !important;
+    max-width: calc(60% - 10px);
+    min-width: 0;
+}
+
+.aps-tab-tongquan.aps-tab-chungchi>.tongquanda-qhht {
+    flex: 0 0 calc(40% - 10px) !important;
+    max-width: calc(40% - 10px);
+}
+
+/* Yeu cau tot nghiep (.aps-YC-totNghiep): tieu de tren - phu de duoi, canh trai */
+.aps-YC-totNghiep .box-header .box-title {
+    text-align: left;
+}
+
+.aps-YC-totNghiep .box-header .box-title .fz13 {
+    display: block;
+    float: none;
+    margin-left: 26px;
+    font-weight: 400 !important;
+}
+
+/* Chat composer: select "Chon mau tra loi" va textarea cung 1 hang; nut xuong hang duoi */
+.aps-chat-composer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.aps-chat-composer .composer-tools {
+    flex: 0 0 280px;
+    margin-bottom: 0;
+}
+
+.aps-chat-composer .composer-input {
+    flex: 1 1 200px;
+    margin-bottom: 0;
+}
+
+.aps-chat-composer .composer-actions {
+    flex: 1 0 100%;
+}
+
+/* Card launcher (a.item): icon trai va chu can ngang bang nhau (thay vi baseline) */
+.tiepnhandauvao-static-box a.item {
+    align-items: flex-start;
+}
+
+/* --------- */
+/* KPI .aps-student-static: icon va chu can ngang bang nhau (thay vi baseline) */
+.aps-student-static.tiepnhandauvao-static-box .item {
+    align-items: center;
+}
+
+/* ---aps-function-covan--------- */
+.aps-function-covan .item .title {
+    font-weight: 700 !important;
+    line-height: 20px !important;
+    margin-bottom: 4px;
+}
+
+.aps-function-covan .item .unit {
+    font-size: 13px;
+}
+
+.aps-function-covan .item.color-green .title {
+    color: var(--color-green);
+}
+
+.aps-function-covan .item.color-blue .title {
+    color: var(--color-blue);
+}
+
+.aps-function-covan .item.color-info .title {
+    color: var(--color-info);
+}
+
+.aps-function-covan .item.color-red .title {
+    color: var(--color-red);
+}
+
+.aps-function-covan .item.color-orange .title {
+    color: var(--color-orange);
+}
+
+.aps-chitiethoso .btn-list {
+    gap: 10px !important;
+    display: flex;
+}
+
+/* COVAN-04 (.aps-covan-hssvPhuTrach): tab cuon ngang (vuot), khong xuong hang khi man nho */
+.aps-covan-hssvPhuTrach .hosodauvao-tabs .nav-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.aps-covan-hssvPhuTrach .hosodauvao-tabs .nav-tabs>li {
+    flex-shrink: 0;
+}
+
+.aps-covan-hssvPhuTrach .hosodauvao-tabs .nav-tabs .nav-link {
+    white-space: nowrap;
+}
+
+.aps-covan-hssvPhuTrach .hosodauvao-tabs .nav-tabs::-webkit-scrollbar {
+    height: 4px;
+}
+
+.aps-covan-hssvPhuTrach .hosodauvao-tabs .nav-tabs::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+}
+
+.aps-covan-dk-hoctd .aps-dkht-5col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+
+}
+
+/* Ghim cot "Thao tac" - tang do ben & mo rong cho moi bang co th.col-thaotac (header + o nut body cung dinh ben phai khi cuon ngang) */
+.scroll-table-x {
+    overflow-x: auto;
+    position: relative;
+}
+
+.scroll-table-x table:has(th.col-thaotac) thead th.col-thaotac {
+    position: sticky;
+    right: 0;
+    z-index: 3;
+    background: #ecf4fd;
+    box-shadow: -7px 0 8px -7px rgba(16, 24, 40, .25);
+}
+
+.scroll-table-x table:has(th.col-thaotac) tbody td:last-child,
+.scroll-table-x table:has(th.col-thaotac) tfoot td:last-child {
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    background: #fff;
+    box-shadow: -7px 0 8px -7px rgba(16, 24, 40, .25);
+}
+
+.scroll-table-x table:has(th.col-thaotac) tr[style*="eaf2ff"] td:last-child {
+    background: #eaf2ff;
+}
+
+.aps-covan-hoctap-rl-r .aps-tab-tongquan {
+    flex-wrap: nowrap !important;
+}
+
+.aps-covan-hoctap-rl-r .aps-chitiethoso .aps-tab-tongquan .user-infomation {
+    min-width: 60% !important;
+}
+
+.aps-covan-hoctap-rl-r .hosodauvao-tabs .thangdiem-select {
+    width: 100%;
+}
+
+/* COVAN-06 KPI (.aps-covan-hoctap-rl-static): cac box cao bang nhau */
+.aps-covan-hoctap-rl-static.tiepnhandauvao-static-box {
+    display: grid !important;
+    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-auto-rows: 1fr;
+}
+
+.aps-covan-hoctap-rl-static.tiepnhandauvao-static-box .item {
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    margin-bottom: 0;
+}
+
+.tiepnhandauvao-filter-box.box-search-main {
+    padding-top: 22px !important;
+}
+
+.box-solid.aps-hs-dauVao {
+    padding-bottom: 10px !important;
+}
+/* KHOA-05 (.aps-khoa-SapTotNghiep): 1024-1680px - anh tren, thong tin duoi, anh can giua */
+@media (min-width: 1024px) and (max-width: 1680px) {
+  .aps-khoa-SapTotNghiep .user-infomation {
+    flex-direction: column;
+    align-items: center;
+  }
+  .aps-khoa-SapTotNghiep .user-infomation .image {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .aps-khoa-SapTotNghiep .user-infomation .info {
+    width: 100%;
+  }
 }

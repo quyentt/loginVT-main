@@ -387,12 +387,12 @@
                     </div>
                 </div>
             </div>
-            <div class="box-content aps-student-list aps-admissions pt-0 pl20 pr20 pb-0">
+            <div class="box-content aps-khoa-hsSinhVien aps-admissions pt-0 pl20 pr20 pb-0">
                 <div class="box box-solid box-shadow aps-student-header bg-fff box-header aps-admissions-lable pd0">
                     <div class="box box-solid box-header aps-admissions-lable mb-10">
                         <div class="box box-solid">
                             <div class="box-header-has-action">
-                                <h3 class="box-title">
+                                <h3 class="box-title" style="padding-left: 0 !important;">
                                     <img src="../assets/images/dashboad-item-8.png" class="images" />
                                     <div class="">
                                         <span>Hồ sơ sinh viên trong Khoa</span>
@@ -526,10 +526,10 @@
                                     <a class="btn btn-primary" href="">
                                         <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
                                     </a>
-                                    <a class="btn btn-outline-warning" href="">
+                                    <a class="btn btn-outline-orange" href="">
                                         <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
                                     </a>
-                                    <a class="btn btn-outline-secondary btn-e1e1e1" href="">
+                                    <a class="btn btn-outline-dark btn-e1e1e1" href="">
                                         <i class=" fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
                                     </a>
                                 </div>
@@ -540,8 +540,8 @@
                     <div class="clear"></div>
                 </div>
                 <div class="tiepnhandauvao-static-box aps-student-list-static">
-                    <div class="item box box-shadow">
-                        <div class=" icon">
+                    <div class="item box box-shadow color-green">
+                        <div class="icon ">
                             <i class="fa-duotone fa-solid fa-users"></i>
                         </div>
                         <div class="meta">
@@ -552,7 +552,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-blue">
                         <div class="icon">
                             <i class=" fa-solid fa-screen-users"></i>
                         </div>
@@ -564,7 +564,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-info">
                         <div class="icon">
                             <i class=" fa-solid fa-graduation-cap"></i>
                         </div>
@@ -576,7 +576,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-purple">
                         <div class="icon">
                             <i class=" fa-solid fa-user-clock"></i>
                         </div>
@@ -588,7 +588,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow box-noTC">
+                    <div class="item box box-shadow box-noTC color-red">
                         <div class="icon">
                             <i class=" fa-solid fa-circle-dollar"></i>
                         </div>
@@ -600,7 +600,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="item box box-shadow">
+                    <div class="item box box-shadow color-orange">
                         <div class="icon">
                             <i class=" fa-solid fa-triangle-exclamation"></i>
                         </div>
@@ -633,7 +633,7 @@
                                         <a class="btn btn-sm btn-outline-success" href="">
                                             <i class="fa-solid fa-file-excel"></i><span>Xuất excel</span>
                                         </a>
-                                        <a class="btn btn-outline-secondary btn-e1e1e1" href="">
+                                        <a class="btn btn-outline-dark btn-e1e1e1" href="">
                                             <i class="fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
                                         </a>
                                     </div>
@@ -845,7 +845,10 @@
                                 <h3 class="box-title color-green">
                                     <i class="fa-light fa-address-card"></i> Hồ sơ sinh viên 360
                                 </h3>
-                                <div class="pull-right d-flex align-items-center flex-wrap gap-2">
+
+                            </div>
+                            <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20">
+                                <div class="pull-left d-flex align-items-center flex-wrap gap-2 pl-0 mb-15">
                                     <div class="aps-qhht-select d-flex align-items-center gap-2 mr-5">
                                         <span class="color-888 fz13">QHHT:</span>
                                         <div class="input-wrap">
@@ -858,15 +861,13 @@
                                     </div>
                                     <a href="#" class="btn btn-sm btn-soft-primary"><i
                                             class="fa-light fa-bell"></i><span>Gửi thông báo</span></a>
-                                    <a href="#" class="btn btn-sm btn-soft-secondary"><i
+                                    <a href="#" class="btn btn-sm btn-soft-dark"><i
                                             class="fa-light fa-note-sticky"></i><span>Tạo ghi chú</span></a>
                                     <a href="#" class="btn btn-sm btn-soft-orange"><i
                                             class="fa-light fa-gavel"></i><span>Đề xuất xử lý học vụ</span></a>
                                     <a href="#" class="btn btn-sm btn-soft-success"><i
                                             class="fa-light fa-hand-holding-heart"></i><span>Đề xuất hỗ trợ</span></a>
                                 </div>
-                            </div>
-                            <div class="row aps-kienTraNhanh-content aps-chitiethoso pd20">
                                 <div class="user-infomation">
                                     <div class="image">
                                         <img src="../assets/images/anh-the-4x6.jpg">
@@ -984,11 +985,12 @@
                                         <button class="nav-link" id="hosoS-tabs-22" data-bs-toggle="tab"
                                             data-bs-target="#hs-hoso" type="button" role="tab" aria-controls="profile"
                                             aria-selected="false" tabindex="-1">
-                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ sơ</button>
+                                            <i class="fa-light fa-rectangle-history-circle-user mr-5"></i> Hồ
+                                            sơ</button>
                                     </li>
                                 </ul>
                                 <div class="tab-content" id="myTabContent">
-                                    <div class="tab-pane fade active show pt-10" id="hs-ttc" role="tabpanel"
+                                    <div class="tab-pane fade active show pt-0" id="hs-ttc" role="tabpanel"
                                         aria-labelledby="hosoS-tabs-11">
                                         <div class="row box-tongQuan">
                                             <!-- Tổng quan học tập -->
@@ -1249,7 +1251,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="mt-10">
-                                                    <a href="#" class="btn btn-sm btn-soft-secondary"><i
+                                                    <a href="#" class="btn btn-sm btn-soft-dark"><i
                                                             class="fa-light fa-arrow-up-right-from-square"></i><span>Mở
                                                             hồ sơ tuyển sinh</span></a>
                                                 </div>
@@ -1378,12 +1380,13 @@
                                                         <td class="td-left">QHHT-01</td>
                                                         <td class="td-left">Công nghệ thông tin · Cử nhân</td>
                                                         <td class="td-center">K2022</td>
-                                                        <td class="td-center"><span class="btn btn-soft-primary">Chính</span>
+                                                        <td class="td-center"><span
+                                                                class="btn btn-soft-primary">Chính</span>
                                                         </td>
                                                         <td class="td-center">15/08/2022</td>
                                                         <td class="td-center">3.45</td>
-                                                        <td class="td-center"><span
-                                                                class="btn btn-soft-success">Đang học</span></td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đang
+                                                                học</span></td>
                                                         <td class="td-center"><a href="#"
                                                                 class="btn btn-soft-primary">Chọn</a></td>
                                                     </tr>
@@ -1391,12 +1394,13 @@
                                                         <td class="td-left">QHHT-02</td>
                                                         <td class="td-left">Ngôn ngữ Anh · Văn bằng 2</td>
                                                         <td class="td-center">K2023</td>
-                                                        <td class="td-center"><span class="btn btn-soft-secondary">Phụ</span>
+                                                        <td class="td-center"><span
+                                                                class="btn btn-soft-secondary">Phụ</span>
                                                         </td>
                                                         <td class="td-center">10/09/2023</td>
                                                         <td class="td-center">3.20</td>
-                                                        <td class="td-center"><span
-                                                                class="btn btn-soft-success">Đang học</span></td>
+                                                        <td class="td-center"><span class="btn btn-soft-success">Đang
+                                                                học</span></td>
                                                         <td class="td-center"><a href="#"
                                                                 class="btn btn-soft-primary">Chọn</a></td>
                                                     </tr>

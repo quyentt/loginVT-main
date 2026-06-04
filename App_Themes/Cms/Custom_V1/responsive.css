@@ -1,28 +1,89 @@
 /* Extra small devices (phones, 600px and down) */
+/* ≤2000px: Tổng QHHT 1 hàng, 3 mục còn lại xếp dọc thành 1 cột */
+@media (max-width: 2000px) {
+  .aps-tab-tongquan .tongquanda-qhht .tongquanda-qhht-list {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .aps-tab-tongquan .tongquanda-qhht .tongquanda-qhht-list .item {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0px;
+    border: 1px solid #e1e1e1;
+    padding: 0px 10px;
+    border-radius: 5px;
+  }
+
+  .aps-tab-tongquan .tongquanda-qhht .tongquanda-qhht-list .item .number {
+    margin-left: auto;
+    min-width: 100px;
+    text-align: right;
+  }
+}
+
 @media only screen and (max-width: 1920px) {
+  .aps-sv-nguyCo-search .left {
+    grid-template-columns: repeat(4, 1fr) !important;
+    /* Chia 3 cột đều nhau */
+  }
+
+  .aps-tab-tongquan .tongquanda-qhht {
+    border-left: solid 0 #e9e9e9;
+    padding-left: 0px !important;
+  }
+
   .hosodauvao-tabs .nav-tabs .nav-link {
     flex-direction: column;
   }
-  .box-ThongTinHSSV .nav-tabs-custom > .nav-tabs > li {
+
+  .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li {
     max-width: 135px;
     text-align: center;
     height: 68px;
   }
 
-  .box-ThongTinHSSV .nav-tabs-custom > .nav-tabs > li > a {
+  .box-ThongTinHSSV .nav-tabs-custom>.nav-tabs>li>a {
     height: 66px;
   }
 
   .aps-list-chuongtrinh.box-solid {
     padding-right: 20px !important;
   }
-}
-@media only screen and (min-width: 2000px) {
-  .student-infos.aps-user-infos-box {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr !important;
+
+  /* Hồ sơ SV 360: cho hàng QHHT + nút xuống dòng và full chiều ngang */
+  .aps-kienTraNhanh>.box-header.with-border {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    row-gap: 10px;
+  }
+
+  .aps-kienTraNhanh>.box-header.with-border>.box-title {
+    flex: 1 1 100%;
+    margin: 0;
+  }
+
+  .aps-kienTraNhanh>.box-header.with-border>.pull-right {
+    float: none;
+    /* width: 100%; */
+    justify-content: flex-end;
+  }
+
+  .aps-kienTraNhanh>.box-header.with-border>.pull-right .aps-qhht-select {
+    flex: 1 1 auto;
+    margin-right: auto;
+  }
+
+  .aps-kienTraNhanh>.box-header.with-border>.pull-right .aps-qhht-select .input-wrap,
+  .aps-kienTraNhanh>.box-header.with-border>.pull-right .aps-qhht-select .form-select {
+    width: 100%;
   }
 }
+
 @media only screen and (min-width: 2000px) {
   .aps-list-chuongtrinh .zoneBox_ChuongTrinh {
     display: grid;
@@ -33,9 +94,15 @@
   .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
     width: 100% !important;
   }
+
+  .student-infos.aps-user-infos-box {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr !important;
+  }
 }
 
 @media only screen and (max-width: 1400px) {
+
   .aps-thanhtoan-naptien .col-sm-3,
   .aps-tinnhanthongthong-l .col-sm-3,
   .col-sm-3.aps-tinnhandiem-l,
@@ -58,25 +125,31 @@
 }
 
 @media only screen and (max-width: 1280px) {
+
   .aps-totnghiep-detail .col-md-7,
   .aps-totnghiep-detail .col-md-5 {
     width: 100% !important;
     padding-left: 0 !important;
   }
+
   .aps-totnghiep-detail .aps-file-item,
   .aps-totnghiep-detail .aps-admissions-content .aps-monHocLai,
   .aps-totnghiep-detail .aps-admissions-content .aps-quyetDinhhv {
     padding-left: 0 !important;
   }
+
   .aps-totnghiep-detail .aps-hs-dauVao.col-md-7 {
     margin-bottom: 15px;
   }
+
   .aps-totnghiep .tiepnhandauvao-filter-box.box-search-main .me-auto.flex-wrap {
     width: 100%;
   }
+
   .tiepnhandauvao-static-box .item .meta .detail {
     display: block !important;
   }
+
   .hold-transition.login-page,
   .register-page {
     background-attachment: fixed !important;
@@ -142,22 +215,26 @@
     display: grid !important;
     grid-template-columns: repeat(5, 1fr) !important;
   }
-}
-@media (min-width: 1600px) and (max-width: 1919px) {
+
   .tiepnhandauvao-static-box.aps-totnghiep-static {
-    grid-template-columns: repeat(5, 1fr); /* Chia 3 cột đều nhau */
+    grid-template-columns: repeat(5, 1fr);
+    /* Chia 3 cột đều nhau */
   }
 }
+
 @media (min-width: 1280px) and (max-width: 1599px) {
   .tiepnhandauvao-static-box.aps-totnghiep-static {
     display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important; /* Chia 3 cột đều nhau */
+    grid-template-columns: repeat(4, 1fr) !important;
+    /* Chia 3 cột đều nhau */
   }
+
   .aps-user-infos-box {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 15px;
   }
+
   .zoneBox_ChuongTrinh {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -170,6 +247,7 @@
 }
 
 @media (min-width: 1180px) and (max-width: 2000px) {
+
   .box-tongQuan-hs .tiepnhandauvao-static-box,
   .box-taichinh-hs .tiepnhandauvao-static-box,
   .box-tuongTac-ht .tiepnhandauvao-static-box {
@@ -182,6 +260,7 @@
   .aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search {
     display: block !important;
   }
+
   .aps-search-thuTaoPhieu .form-top.box-search .item-search .btn {
     margin-bottom: 10px;
     margin-right: 7px;
@@ -197,16 +276,19 @@
     padding: 30px 10px 10px 10px !important;
     line-height: 22px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li {
     display: flex !important;
     position: relative !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li .item-detail .item-icon {
     position: absolute;
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
   }
+
   .zone_chuongtrinhhocphan-detail {
     width: 100% !important;
   }
@@ -225,12 +307,15 @@
     width: 83% !important;
     border-right: 0px solid #f1f1f1;
   }
+
   .aps-kienTraNhanh-trangThai.col-lg-4 {
     width: 100%;
   }
+
   .aps-kienTraNhanh-trangThai .item .item-lable {
     padding-left: 0px;
   }
+
   .zone_chuongtrinhhocphan-left,
   .zone_chuongtrinhhocphan-right {
     width: 100% !important;
@@ -264,16 +349,19 @@
     padding: 30px 10px 10px 10px !important;
     line-height: 22px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li {
     display: flex !important;
     position: relative !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li .item-detail .item-icon {
     position: absolute;
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
   }
+
   .zoneBox_ChuongTrinh {
     display: grid !important;
     grid-template-columns: repeat(3, 1fr) !important;
@@ -284,7 +372,7 @@
     width: 100% !important;
   }
 
-  .zoneBox_ChuongTrinh .small-box > .small-box-footer .btn i {
+  .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn i {
     display: none !important;
   }
 }
@@ -304,10 +392,13 @@
   .zonePhanCong {
     grid-template-columns: repeat(3, 1fr) !important;
   }
+
   .student-infos.aps-user-infos-box {
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr 1fr !important; /* Chia 2 cột bằng nhau */
-    gap: 15px; /* Khoảng cách giữa 2 cột */
+    grid-template-columns: 1fr 1fr 1fr 1fr !important;
+    /* Chia 2 cột bằng nhau */
+    gap: 15px;
+    /* Khoảng cách giữa 2 cột */
   }
 }
 
@@ -329,89 +420,232 @@
 }
 
 @media (min-width: 1024px) and (max-width: 1180px) {
+
   .login-page .login-box,
   .register-box {
     width: 100% !important;
   }
+
   .student-infos.aps-user-infos-box {
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr !important; /* Chia 2 cột bằng nhau */
-    gap: 15px; /* Khoảng cách giữa 2 cột */
+    grid-template-columns: 1fr 1fr 1fr !important;
+    /* Chia 2 cột bằng nhau */
+    gap: 15px;
+    /* Khoảng cách giữa 2 cột */
   }
 }
 
 @media (max-width: 1024px) {
+  .aps-sv-nguyCo-search .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: 0 !important;
+    width: 30% !important;
+    justify-content: flex-start !important;
+  }
+
+  .aps-covan-hoctap-rl .box-header.aps-admissions-lable {
+    margin-bottom: 15px;
+  }
+
+  .aps-covan-hoctap-rl-static.tiepnhandauvao-static-box {
+    gap: 10px;
+  }
+
+  /* ------- */
+  .box-content.aps-admissions .box-header.aps-admissions-lable {
+    /* padding-left: 10px !important; */
+    /* padding-right: 10px !important; */
+  }
+
+  .box-content.aps-admissions .box-header-has-action .aps-role-switcher {
+    margin-top: 15px;
+  }
+
+  .aps-function-covan.pd-20 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .aps-student-manager .tiepnhandauvao-static-box .item,
+  .aps-student-manager .tiepnhandauvao-static-box .item .meta {
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .aps-student-manager .tiepnhandauvao-static-box .item .icon {
+    margin: auto;
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+  }
+
+  /* --------- */
+  .aps-search-candidate-detail.p-20,
+  .aps-kienTraNhanh-content.pd20,
+  .aps-user-infos-box.student-infos {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .box-content.aps-student-list .box-header .pull-right {
+    width: 100%;
+    float: none;
+    align-items: flex-end !important;
+    text-align: end !important;
+  }
+
+  .aps-student-manager .box-header .pull-right {
+    width: 100%;
+    float: none;
+    text-align: end !important;
+  }
+
+  .box-content.aps-student-list .box-header {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 10px;
+  }
+
+  /* --- */
+  .aps-student-list-static.tiepnhandauvao-static-box .item .meta .detail .text.color-66 {
+    width: 100%;
+    display: block;
+  }
+
+  .aps-student-manager-rigth {
+    padding-left: 0 !important;
+  }
+
+  .aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border {
+    align-items: flex-start;
+  }
+
+  .aps-admissions.box-content .box.box-solid .box-header {
+    padding-top: 13px !important;
+    padding-bottom: 10px !important;
+    align-items: unset;
+  }
+
+  .tiepnhandauvao-static-box .item .title,
+  .box-dashboard-kpi .item .title {
+    text-align: center;
+  }
+
+  .aps-kienTraNhanh-content .tiepnhandauvao-static-box .item .title {
+    text-align: left !important;
+  }
+
+  .box-content.aps-admissions .box-header.aps-admissions-lable .box-title {
+    padding: 15px !important;
+  }
+
+  .box-content.aps-admissions .role-list {
+    padding-right: 0;
+    padding: 0 10px 15px 10px;
+    margin-top: 0;
+  }
+
+  .aps-student-manager .box-content.aps-admissions .box-header-has-action {
+    gap: 0px;
+  }
+
+  .box-header.aps-admissions-lable .box-search-ff .box-title {
+    padding: 15px 15px 0 0px !important;
+  }
+
+  /* --------------- */
   .aps-totnghiep .aps-kienTraNhanh-content .col-12 {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
   .aps-totnghiep .aps-kienTraNhanh-content {
     padding-top: 15px !important;
     padding-bottom: 15px !important;
   }
+
   .aps-totnghiep .hosodauvao-tabs.aps-tabs-border .aps-search-candidate-detail {
     padding: 0 0 !important;
   }
+
   .aps-totnghiep .box-header.with-border .box-title {
     margin-bottom: 0 !important;
   }
+
   /* ------- */
   .hosodauvao-tabs.aps-tabs-border {
     padding-right: 15px !important;
     padding-left: 15px !important;
   }
+
   .hosodauvao-tabs.aps-tabs-border .aps-search-candidate-detail {
     padding: 5px 0 !important;
   }
+
   .box-header.with-border .box-title {
-    margin-bottom: 5px !important;
+    margin-bottom: 0 !important;
+    list-style: 38px;
   }
+
   /* -------- */
+
   .box-content .box-header.aps-admissions-lable {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
   .box-content .box-header.aps-admissions-lable .box-title {
     padding: 17px 0 !important;
   }
+
   .aps-admissions .aps-admissions-lable .images {
     height: 86px;
     padding-right: 15px;
   }
+
   .aps-admissions-lable .box-title p {
     line-height: 20px;
   }
+
   /* ------ */
   .aps-dongthoigian-filter .tiepnhandauvao-filter-box,
   .aps-search-candidate-detail {
-    padding: 15px !important;
+    padding: 10px !important;
   }
+
   .aps-hoso-detail .box-solid {
     /* margin-bottom: 0 !important; */
   }
+
   .aps-file-item,
   .aps-hoso-detail {
     width: 100% !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
   .aps-hoso-detail.aps-kq-hocTap {
     display: block;
-    grid-template-columns: 1fr; /* Chia 2 cột bằng nhau */
-    gap: 20px; /* Khoảng cách giữa 2 cột */
+    grid-template-columns: 1fr;
+    /* Chia 2 cột bằng nhau */
+    gap: 20px;
+    /* Khoảng cách giữa 2 cột */
   }
+
   .aps-hoso-detail.aps-kq-hocTap .box.box-solid {
     margin-bottom: 20px !important;
   }
+
   /* -------- */
   .aps-table-select .table.tbllichSuThuHuy,
   .table.tblsearch-candidate,
   .table.tblkiemTraNhanh {
     min-width: 1200px !important;
   }
+
   .aps-search-candidate .form-top {
     padding: 15px 15px 10px 15px !important;
   }
+
   .aps-search-candidate .box-search .item-search {
     margin-right: 0px !important;
   }
@@ -420,6 +654,7 @@
     width: 100% !important;
     padding: 0 !important;
   }
+
   /* -------- */
   .DSTrangThaiSV_LHD {
     padding-left: 0 !important;
@@ -536,9 +771,7 @@
   }
 
   .aps-KeHoachChuongTrinh .zoneDSNhanSu.form-container.box.box-solid .box-body,
-  .aps-KeHoachChuongTrinh
-    .zoneKeHoachChiTiet.form-container.box.box-solid
-    .box-body {
+  .aps-KeHoachChuongTrinh .zoneKeHoachChiTiet.form-container.box.box-solid .box-body {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
@@ -869,8 +1102,8 @@
 
   .box.box-solid .box-header,
   .box.box-solid .box-body {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 
   .box.box-solid.box-search .box-body {
@@ -921,10 +1154,14 @@
   .aps-list-hocphan .box-header,
   .aps-list-hocphan .box-body,
   .aps-list-monhoc .box-body {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
   }
 
+  /* ------ */
+  .aps-covan-hssvPhuTrach
+
+  /* ----- */
   .aps-form-item-col1 {
     display: block !important;
     margin-top: 10px !important;
@@ -1059,8 +1296,8 @@
     margin-right: 0px !important;
   }
 
-  .control-sidebar-app .tblApp .table-noborder.table > tbody > tr > td,
-  .control-sidebar-app .tblApp .table-noborder.table > tbody > tr > th {
+  .control-sidebar-app .tblApp .table-noborder.table>tbody>tr>td,
+  .control-sidebar-app .tblApp .table-noborder.table>tbody>tr>th {
     border-right: 0 solid #e9e9e9 !important;
   }
 
@@ -1135,6 +1372,7 @@
 }
 
 @media (max-width: 820px) {
+
   .modal-860.modal-dialog,
   .modal-680.modal-dialog,
   .modal-1360.modal-dialog {
@@ -1195,7 +1433,7 @@
   }
 
   /*----------------start----------------------*/
-  .box-header > .box-tools {
+  .box-header>.box-tools {
     position: relative;
     right: 10px;
     top: 0px;
@@ -1226,7 +1464,7 @@
     overflow-x: auto;
   }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs {
+  .aps-box-table .nav-tabs-custom>.nav-tabs {
     margin-left: 0 !important;
     width: 100%;
     padding-left: 0;
@@ -1238,16 +1476,16 @@
     gap: 9px;
   }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs > li.active > a {
+  .aps-box-table .nav-tabs-custom>.nav-tabs>li.active>a {
     border-radius: 6px;
   }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs > li.pull-right {
+  .aps-box-table .nav-tabs-custom>.nav-tabs>li.pull-right {
     margin-left: auto !important;
     margin-right: 0 !important;
   }
 
-  .aps-box-table .nav-tabs-custom > .nav-tabs > li.pull-right ~ li.pull-right {
+  .aps-box-table .nav-tabs-custom>.nav-tabs>li.pull-right~li.pull-right {
     margin-left: 0 !important;
   }
 
@@ -1280,11 +1518,11 @@
     width: 70% !important;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs {
     padding-right: 15px;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs {
     margin-left: 15px !important;
   }
 
@@ -1298,8 +1536,8 @@
     padding: 13px 0 11px 0 !important;
   }
 
-  .table-khoibatbuoc .aps-list-hocphan.sidebar-menu > li > a span,
-  .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu > li > a span {
+  .table-khoibatbuoc .aps-list-hocphan.sidebar-menu>li>a span,
+  .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu>li>a span {
     width: 74% !important;
   }
 
@@ -1468,45 +1706,21 @@
     min-width: 1200px !important;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-6.mb-10 {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6.mb-10 {
     width: 100%;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-4,
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-6.aps-form-lable.justify-content-end {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-4,
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6.aps-form-lable.justify-content-end {
     width: 40% !important;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-8,
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-6.aps-form-input {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-8,
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6.aps-form-input {
     width: 60% !important;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .aps-form-lable {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .aps-form-lable {
     line-height: 38px !important;
   }
 
@@ -1694,41 +1908,52 @@
   .aps-kienTraNhanh-content .user-infomation .info .item .label {
     min-width: 110px;
   }
+
   .aps-department-manage .box-title-has-action.justify-content-between {
     display: block !important;
   }
+
   .aps-department-manage .lock-default {
     position: absolute;
     bottom: 20px;
     right: 0;
   }
+
   .data-scope-box .data-scope-list .item {
     display: block !important;
     padding: 10px !important;
   }
+
   .data-scope-box .data-scope-list .item .icon {
     margin-bottom: 10px;
   }
+
   .aps-student-manager-office {
     padding-left: 0 !important;
   }
+
   .aps-department-manager {
     padding-right: 0 !important;
   }
+
   .aps-admissions-lable.box-header {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
   .aps-student-manager-search .tiepnhandauvao-filter-box .left .item,
   .aps-student-manager-search .box-dashboard-kpi .left .item {
     margin-bottom: 0 !important;
   }
+
   .tiepnhandauvao-static-box .item {
     flex-direction: column;
   }
+
   .tiepnhandauvao-static-box.aps-student-list-static .item {
     flex-direction: initial !important;
   }
+
   /* ---- */
   .kehoach-nhaphoc-thuPhi-tab ul li .item-detail {
     border-top-right-radius: 12px;
@@ -1740,36 +1965,47 @@
     padding: 30px 10px 10px 10px !important;
     line-height: 22px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li {
     display: flex !important;
     position: relative !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li .item-detail .item-icon {
     position: absolute;
     top: -20px;
     left: 50%;
     transform: translateX(-50%);
   }
+
   .aps-search-thuTaoPhieu .row.list-form {
     display: grid !important;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important; /* Chia 2 cột bằng nhau */
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr !important;
+    /* Chia 2 cột bằng nhau */
   }
+
   .aps-search-thuTaoPhieu .form-top.box-search .item-search {
     padding-left: 0 !important;
     width: 100%;
     margin-right: 0 !important;
   }
+
   .aps-tongThanhToan-detail {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
-    gap: 20px; /* Khoảng cách giữa 2 cột */
+    grid-template-columns: 1fr 1fr;
+    /* Chia 2 cột bằng nhau */
+    gap: 20px;
+    /* Khoảng cách giữa 2 cột */
   }
+
   .aps-search-candidate .form-top .row {
     display: flex !important;
   }
+
   .aps-tongThanhToan-tien {
     margin-top: 0px !important;
   }
+
   /* ----- */
   .aps-canbo-dangky .box-solid.box-search .chosse-status-student {
     grid-column: span 2 !important;
@@ -1853,42 +2089,42 @@
   }
 
   /* --------------- */
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li {
     width: 150px !important;
     text-align: center;
   }
 
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li a {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li a {
     border-bottom-right-radius: 0 !important;
     border-bottom-left-radius: 0 !important;
   }
 
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li i {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li i {
     width: 100%;
     font-size: 30px;
     margin-bottom: 7px;
   }
 
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li .fa-refresh,
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li .fa-broom-wide {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li .fa-refresh,
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li .fa-broom-wide {
     font-size: 16px !important;
     width: auto !important;
   }
 
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li .btnRefresh {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li .btnRefresh {
     margin-bottom: 10px;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs {
     padding-bottom: 0px;
   }
 
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li:last-child {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li:last-child {
     width: 120px !important;
     display: block !important;
   }
 
-  .aps-dangky .nav-tabs-custom > .nav-tabs > li:last-child a {
+  .aps-dangky .nav-tabs-custom>.nav-tabs>li:last-child a {
     border-radius: 6px !important;
     justify-content: center;
   }
@@ -1945,13 +2181,9 @@
   }
 
   .row.aps-form-item.gap10.aps-form-tuchon .col-sm-3.aps-form-input,
-  .row.aps-form-item.gap10.aps-form-tuchon
-    .col-sm-3.aps-form-input
-    .form-control,
+  .row.aps-form-item.gap10.aps-form-tuchon .col-sm-3.aps-form-input .form-control,
   .row.aps-form-item.gap10.aps-form-tuchon .col-sm-2.aps-form-input,
-  .row.aps-form-item.gap10.aps-form-tuchon
-    .col-sm-2.aps-form-input
-    .form-control {
+  .row.aps-form-item.gap10.aps-form-tuchon .col-sm-2.aps-form-input .form-control {
     width: 100% !important;
   }
 
@@ -1985,12 +2217,7 @@
     display: none;
   }
 
-  .aps-modal-nhansu.modal
-    .modal-body
-    .col-sm-3
-    .area-search
-    .inputSearch
-    .user-check-print {
+  .aps-modal-nhansu.modal .modal-body .col-sm-3 .area-search .inputSearch .user-check-print {
     width: 100% !important;
   }
 
@@ -2170,10 +2397,7 @@
     padding-top: 12px;
   }
 
-  .aps-tochucchuongtrinh-thoigiandaotao
-    .aps-list-hocky
-    .box-header
-    .bg-light-blue.badge {
+  .aps-tochucchuongtrinh-thoigiandaotao .aps-list-hocky .box-header .bg-light-blue.badge {
     margin-top: 16px !important;
   }
 
@@ -2203,31 +2427,16 @@
     margin-bottom: 0 !important;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-12,
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .col-sm-6 {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-12,
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .col-sm-6 {
     margin-bottom: 0 !important;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item::before {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item::before {
     display: none;
   }
 
-  .zone_edithocphan
-    .box-view.aps-add-new
-    .aps-form-list
-    .aps-form-item
-    .aps-form-lable {
+  .zone_edithocphan .box-view.aps-add-new .aps-form-list .aps-form-item .aps-form-lable {
     color: #666;
     line-height: 26px;
     justify-content: flex-start !important;
@@ -2287,43 +2496,75 @@
 }
 
 @media (min-width: 600px) and (max-width: 767px) {
+  .box-content.aps-admissions .box-header.aps-admissions-lable .box-title {
+    padding: 15px !important;
+  }
+
+  .tiepnhandauvao-filter-box,
+  .box-dashboard-kpi {
+    /* border: solid 1px #e1e1e1; */
+    border-radius: 6px;
+    padding: 15px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  /* ------ */
+  .aps-admissions-lable {
+    padding: 10px !important;
+  }
+
   .aps-kienTraNhanh-content.aps-chitiethoso .infos .info-list {
     display: block !important;
     margin-bottom: 10px;
   }
+
   .aps-user-infos-box.student-infos {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
-    gap: 15px; /* Khoảng cách giữa 2 cột */
+    grid-template-columns: 1fr 1fr;
+    /* Chia 2 cột bằng nhau */
+    gap: 15px;
+    /* Khoảng cách giữa 2 cột */
   }
+
   /* ---- */
   .aps-kienTraNhanh-trangThai .item .item-lable {
     padding-left: 0 !important;
   }
+
   .aps-kienTraNhanh-ttCaNhan {
     padding: 20px 0px 0 0;
     border-right: 0 solid #f1f1f1;
   }
+
   .aps-search-candidate .form-top .row {
     display: grid !important;
-    grid-template-columns: 1fr 1fr; /* Chia 2 cột bằng nhau */
+    grid-template-columns: 1fr 1fr;
+    /* Chia 2 cột bằng nhau */
     gap: 10px;
   }
+
   .aps-nhaphoc-thuPhi .khnh-thuPhi-lable .box-title {
     margin: 0 !important;
     text-align: left !important;
     justify-content: left !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab .tab-list {
     padding: 0 !important;
     margin: 0 !important;
   }
+
   .arrow-right {
     width: 20px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul {
     display: block !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li .item-detail {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
@@ -2337,17 +2578,20 @@
     font-size: 14px;
     margin-left: 15px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li {
     display: flex !important;
     position: relative !important;
     margin-bottom: 10px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li .item-detail .item-icon {
     position: absolute;
     left: -20px;
     top: 50%;
     transform: translateY(-50%);
   }
+
   .modal.modal-ds-hocphan .modal-body {
     padding-left: 0 !important;
     padding-right: 0 !important;
@@ -2417,12 +2661,7 @@
     margin-top: 30px !important;
   }
 
-  .aps-modal-nhansu.modal
-    .modal-body
-    .col-sm-3
-    .area-search
-    .inputSearch
-    .user-check-print {
+  .aps-modal-nhansu.modal .modal-body .col-sm-3 .area-search .inputSearch .user-check-print {
     width: 50% !important;
   }
 
@@ -2506,8 +2745,8 @@
     border: 0 !important;
   }
 
-  .tblInput_HocPhan_QuanHeTT.table > tr > td:first-child,
-  .table-mobi .table tfoot > tr > td:first-child {
+  .tblInput_HocPhan_QuanHeTT.table>tr>td:first-child,
+  .table-mobi .table tfoot>tr>td:first-child {
     border-left: 0 solid #e1e1e1 !important;
   }
 
@@ -2599,7 +2838,7 @@
     text-align: left !important;
   }
 
-  .zoneBox_ChuongTrinh .small-box > .small-box-footer i,
+  .zoneBox_ChuongTrinh .small-box>.small-box-footer i,
   .myModalKeThua .aps-add-new .aps-form-item.aps-gap-10::before {
     display: none;
   }
@@ -2676,7 +2915,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  #lblThongTinChuongTrinh .small-box > .inner h4 {
+  #lblThongTinChuongTrinh .small-box>.inner h4 {
     margin-top: 0px !important;
     margin-bottom: 5px !important;
   }
@@ -2876,10 +3115,6 @@
     width: 100% !important;
   }
 
-  .register-school-right,
-  .register-school-left {
-  }
-
   .tblSinhVien tr td:nth-child(8),
   .tblSinhVien tr td:nth-child(13),
   .tblSinhVien tr td:nth-child(14),
@@ -2976,53 +3211,428 @@
 }
 
 @media only screen and (max-width: 599px) {
+  .aps-khoa-SapTotNghiep .aps-admissions-lable {
+    padding: 15px 0 0 0 !important;
+    margin-bottom: 15px;
+  }
+
+  .box-content.aps-admissions .box-header.aps-admissions-lable .box-title {}
+
+  .aps-khoa-chucNang-vaitro .tiepnhandauvao-static-box {
+    padding-top: 15px !important;
+  }
+
+  .aps-khoa-chucNang-vaitro .tiepnhandauvao-static-box .aps-function-covan {
+    gap: 10px !important;
+  }
+
+  .aps-khoa-chucNang .aps-admissions-lable .box-header-has-action {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
+
+  .pl0-mobi {
+    padding-left: 0 !important;
+  }
+
+  .pr0-mobi {
+    padding-right: 0 !important;
+  }
+
+  .pd0-mobi {
+    padding: 0 !important;
+  }
+
+  .aps-tinhTrang-ht {
+    padding-right: 0 !IMPORTANT;
+  }
+
+  .aps-covan-baoCao .box-header-has-action {
+    display: grid !important;
+    gap: 10px
+  }
+
+  .aps-covan-baoCao.aps-admissions .box-header.aps-admissions-lable .box-header-has-action {
+    padding: 20px 10px 10px 10px !important;
+  }
+
+  .aps-covan-baoCao .box-search-ff {
+    padding-top: 15px !important;
+  }
+
+  .aps-covan-baoCao .box-header-has-action .pull-right.flex-nowrap {
+    display: block !important;
+  }
+
+  .aps-covan-baoCao .box-header-has-action .pull-right.flex-nowrap .btn {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+
+  /* -- */
+  .aps-covan-hoctap-rl-r .tongquanda-qhht.hs-ketquahoctap .tongquanda-qhht-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    /* Chia 3 cột đều nhau */
+
+  }
+
+  .tiepnhandauvao-static-box.aps-covan-dk-hoctd-static .item .meta .detail {
+    display: grid !important;
+    gap: 1px;
+  }
+
+  .tiepnhandauvao-static-box .item {
+    align-items: center !important;
+  }
+
+  .aps-dot-dk {
+    padding: 0 !important;
+    margin-bottom: 0px !important;
+  }
+
+  .aps-file-item {
+    margin-bottom: 15px !important;
+  }
+
+  .aps-covan-dk-hoctd .aps-student-manager-content .box-header .pull-right {
+    float: left !important;
+    margin: 0 !important;
+  }
+
+  .box-shadow.aps-covan-dk-hoctd-search {
+    margin-bottom: 15px !important;
+  }
+
+  .box-shadow.aps-covan-dk-hoctd-static .tiepnhandauvao-filter-box.box-search-main .left.aps-dkht-5col {
+    padding-top: 10px;
+  }
+
+  .box-shadow.aps-covan-dk-hoctd-static .tiepnhandauvao-filter-box.box-search-main {
+    padding: 15px 10px !important;
+  }
+
+  .aps-lichHenTuVan.box-content .aps-admissions-lable.box-header {
+    padding: 15px !important;
+    margin-bottom: 15px;
+  }
+
+  .aps-lichHenTuVan.box-content .aps-admissions-lable.box-header .box-header-has-action {
+    display: grid !important;
+    gap: 0px;
+  }
+
+  .aps-lichHenTuVan.box-content.aps-admissions .tiepnhandauvao-filter-box {
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  .aps-lichHenTuVan.box-content.aps-admissions .tiepnhandauvao-filter-box .left {
+    display: inline-flex !important;
+    margin-top: 15px;
+  }
+
+  .aps-file-item.aps-lichHenTuVan-content-l .box-header .btn-group {
+    display: block !important;
+  }
+
+  /* -------- */
+  .aps-kienTraNhanh .pd20 {
+    padding: 10px !important;
+  }
+
+  .aps-student-manager .tiepnhandauvao-static-box .item,
+  .aps-student-manager .tiepnhandauvao-static-box .item .meta {
+    text-align: left;
+    margin: 0;
+  }
+
+  .tiepnhandauvao-static-box .item .title,
+  .box-dashboard-kpi .item .title {
+    text-align: left;
+  }
+
+  .aps-finance-detail-l {
+    padding-right: 0 !important;
+    margin-top: 10px;
+  }
+
+  .box-solid.aps-kienTraNhanh .box-header {
+    display: block !important;
+  }
+
+  .box-solid.aps-hoso-detail .aps-kienTraNhanh .box-header .pull-right .btn,
+  .aps-hs-dauVao .box-header .pull-right .btn {
+    margin-left: 10px !important;
+    margin-right: 0px !important;
+  }
+
+  .box-solid.aps-hoso-detail .aps-kienTraNhanh .box-header .box-title {
+    line-height: 38px !important;
+  }
+
+  .aps-kienTraNhanh .box-header .pull-right .btn {
+    margin-top: 10px;
+  }
+
+  .aps-kienTraNhanh .box-header {
+    display: block !important;
+  }
+
+  .aps-kienTraNhanh .box-header .fz13.color-888 {
+    color: #888 !important;
+    font-size: 13px !important;
+  }
+
+  /* ------ */
+  .box-lichSu-list ul li .day {
+    min-width: 100%;
+  }
+
+  .aps-student-manager-rigth {
+    padding-left: 0 !important;
+  }
+
+  .aps-heDaoTao.cot-3 .thangdiem-select .text-left.color-red {
+    margin-top: 0px;
+  }
+
+  .aps-heDaoTao.cot-3 .thangdiem-select {
+    margin-top: 10px;
+  }
+
+  .aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border>.pull-right {
+    float: right !important;
+  }
+
+  .aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border {
+    align-items: first baseline;
+  }
+
+  .tongquanda-qhht.hs-ketquahoctap .aps-heDaoTao,
+  .aps-heDaoTao.cot-3,
+  .aps-chitiethoso .aps-tab-tongquan.aps-tab-tongquan-2 .user-infomation,
+  .aps-kienTraNhanh-content .user-infomation .info.cot-2 {
+    display: block !important;
+  }
+
+  .aps-chitiethoso .aps-tab-tongquan.aps-tab-tongquan-2 .user-infomation {
+    padding: 0 !important;
+  }
+
+  .tongquanda-qhht.hs-ketquahoctap .tongquanda-qhht-list {
+    display: block !important;
+    grid-template-columns: 100% !important;
+    /* Chia 2 cột bằng nhau */
+    gap: 10px !important;
+  }
+
+  .tongquanda-qhht.hs-ketquahoctap .tongquanda-qhht-list .item {
+    margin-bottom: 10px !important;
+  }
+
+  .tiepnhandauvao-static-box.aps-student-list-static {
+    gap: 10px !important;
+    margin-top: 15px;
+  }
+
+  /* ----- */
+  .tiepnhandauvao-static-box.aps-student-list-static {
+    padding-bottom: 10px !important;
+  }
+
+  .box-content.aps-student-list .aps-hs-dauVao .box-header {
+    flex-direction: column-reverse;
+  }
+
+  .aps-hs-dauVao .aps-search-candidate-detail .my-paging_static,
+  .aps-hs-dauVao .aps-search-candidate-detail .my-paging_quantity {
+    margin-bottom: 0px !important;
+  }
+
+  .aps-dongthoigian-session .pull-right {
+    margin-top: 8px !important;
+  }
+
+  .aps-kienTraNhanh>.box-header.with-border>.box-title {
+    flex: 1 1 100%;
+    margin: 0 !important;
+  }
+
+  .swiper-dongthoigian-item .meta {
+    padding: 0px 5px;
+  }
+
+  .aps-chart-hp {
+    padding-left: 0 !important;
+  }
+
+  .aps-dongthoigian-session .box-header .pull-right {
+    float: left !important;
+  }
+
+  .aps-search-candidate-detail .color-888.fz13 {
+    gap: 8px !important;
+  }
+
+  .aps-hs-dauVao .box-header.with-border .box-title {
+    display: block !important;
+    margin-bottom: 0 !important;
+  }
+
+  .aps-hs-dauVao .box-header.with-border .box-title span {
+    margin-left: 0px;
+    font-weight: bold;
+    color: var(--dask-blue);
+    float: left;
+  }
+
+  .aps-user-infos-box {
+    display: flex;
+    gap: 10px;
+    padding: 0 13px 15px 13px !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 15px !important;
+  }
+
+  .box-content.aps-admissions .box-header.aps-admissions-lable .box-title {
+    padding: 15px !important;
+  }
+
+  .aps-kienTraNhanh .aps-kienTraNhanh-trangThai {
+    border-top: 0 solid #e1e1e1 !important;
+    padding-top: 15px;
+    margin-top: 0 !important;
+  }
+
+  .aps-hoso-detail .aps-kienTraNhanh-content.aps-chitiethoso {
+    display: block !important;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .aps-student-manager .box-header {
+    gap: 0px !important;
+    padding: 15px 20px 10px 20px !important;
+  }
+
+  .aps-file-item .box-header .pull-right .btn,
+  .aps-hoso-detail .box-header .pull-right .btn {
+    margin-left: 0px !important;
+    margin-right: 10px !important;
+    margin-top: 10px;
+  }
+
+  .aps-hs-dauVao .aps-student-list {
+    margin-top: 10px;
+  }
+
+  .aps-hs-dauVao .aps-student-list.px-20 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .tiepnhandauvao-filter-box .left,
+  .box-dashboard-kpi .left {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
+
+  .box-content.aps-admissions .box-header.aps-admissions-lable .box-title {
+    padding: 0 10px 5px 10px !important;
+  }
+
+  .box-content.aps-admissions.aps-student-list .box-header.aps-admissions-lable .box-title {
+    padding: 0 !important;
+  }
+
+  .tiepnhandauvao-filter-box {
+    padding: 10px 1px;
+  }
+
+  .box-content.aps-admissions .tiepnhandauvao-filter-box {
+    padding: 20px 10px 0 10px !important;
+  }
+
+  .box-dashboard-kpi {
+    padding: 0px;
+  }
+
+  .tiepnhandauvao-static-box,
+  .box-dashboard-kpi {
+    gap: 10px;
+    margin-top: 0px;
+    padding-bottom: 15px !important;
+  }
+
+  /* ------- */
   .aps-totnghiep .aps-kienTraNhanh-content.aps-chitiethoso {
     width: 100% !important;
     padding: 15px !important;
     display: block !important;
   }
+
   .tongquanda-qhht.hs-ketquahoctap .tongquanda-qhht-list {
     grid-template-columns: 1fr 1fr;
     margin-top: 15px;
   }
+
   .aps-tab-tongquan.aps-tab-tongquan-2 .user-infomation {
     display: flex !important;
   }
+
   .aps-tab-tongquan.aps-tab-tongquan-2 .aps-heDaoTao {
     width: 100%;
     /* flex-wrap: nowrap !important; */
     /* display: ruby-text !important; */
   }
-  .aps-kienTraNhanh-content.aps-chitiethoso
-    .aps-kienTraNhanh-content.aps-chitiethoso {
+
+  .aps-kienTraNhanh-content.aps-chitiethoso .aps-kienTraNhanh-content.aps-chitiethoso {
     padding: 0 !important;
   }
+
   .aps-tab-tongquan.aps-tab-tongquan-2 {
     display: block !important;
     padding-top: 0 !important;
   }
+
   .tiepnhandauvao-static-box.aps-student-list-static {
     /* display: grid !important; */
     gap: 5px;
     /* grid-template-columns: 1fr 1fr !important;  */
   }
+
   .tiepnhandauvao-filter-box .btn-group {
     display: block !important;
   }
+
   .tiepnhandauvao-filter-box .btn-group .btn {
     margin-right: 10px;
     margin-bottom: 10px;
   }
+
   .aps-kienTraNhanh-content.aps-chitiethoso {
     display: table-row-group !important;
   }
+
   .aps-kienTraNhanh-content.aps-chitiethoso .aps-tab-tongquan {
     padding: 0 !important;
   }
+
   .aps-gpa-char #DiemTB {
     width: 100% !important;
   }
+
   /* ----- */
+  .aps-sinhvientongquat-goiyboloc,
+  .aps-boSung .box-lichSu-list {
+    padding: 10px !important;
+  }
+
+  .aps-info .aps-info-box {
+    padding: 15px 10px !important;
+  }
+
   .aps-kienTraNhanh-content .user-infomation,
   .aps-kienTraNhanh-content .user-infomation .infos .info-list,
   .aps-kienTraNhanh-content.aps-chitiethoso .aps-btn-group,
@@ -3033,33 +3643,49 @@
   .aps-kienTraNhanh-content .user-infomation .infos .info-list {
     margin-bottom: 10px;
   }
+
   .aps-kienTraNhanh-content.aps-chitiethoso {
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
+
   .aps-kienTraNhanh-content .user-infomation .image {
     margin: 0 auto 15px auto;
   }
+
+  .aps-covan-dk-hoctd .aps-kienTraNhanh-content .user-infomation {
+    padding-top: 15px;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+
   .aps-kienTraNhanh-content .user-infomation {
     padding-top: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
+
   .aps-kienTraNhanh-content.aps-chitiethoso .aps-btn-group .btn {
     margin-right: 10px;
     margin-bottom: 10px;
   }
+
   .aps-search-candidate-detail .my-paging_static,
   .aps-search-candidate-detail .my-paging_wrap,
   .aps-search-candidate-detail .my-paging_quantity {
     margin-bottom: 10px !important;
   }
+
   /* ------ */
   .aps-note-list li::before {
     left: -5px;
   }
+
   .aps-note-list ul {
     padding-left: 0px;
     margin-top: 10px;
   }
+
   .aps-note-list li {
     width: 100%;
     border-left: 0px solid #e9e9e9;
@@ -3067,38 +3693,48 @@
     margin-bottom: 10px;
     line-height: 20px;
   }
+
   .aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search {
     display: block !important;
   }
+
   .aps-search-thuTaoPhieu .form-top.box-search .list-btn .item-search .btn {
     margin-top: 10px;
     margin-right: 10px;
   }
+
   .aps-search-thuTaoPhieu .form-top.box-search .item-search {
     padding-right: 0 !important;
   }
+
   .aps-tongThanhToan-detail .item {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important; /* Chia 2 cột bằng nhau */
+    grid-template-columns: 1fr 1fr !important;
+    /* Chia 2 cột bằng nhau */
   }
 
   .aps-thuPhi-item .pull-right {
     margin-bottom: 0 !important;
   }
+
   .aps-kienTraNhanh-trangThai {
     border-top: 1px solid #e1e1e1;
     padding-top: 15px;
     margin-top: 15px !important;
   }
+
   .aps-kienTraNhanh-trangThai .item .item-lable {
     padding-left: 0 !important;
   }
+
   .aps-kienTraNhanh-ttCaNhan {
     border-right: 0px solid #f1f1f1;
   }
+
   .aps-kienTraNhanh-avata {
     padding-right: 0 !important;
   }
+
   .aps-kienTraNhanh-content,
   .aps-kiemTraNhanh-detail,
   .aps-lichSu-thuHuy-content,
@@ -3109,25 +3745,32 @@
   .aps-kienTraNhanh-ttCaNhan {
     padding: 15px 0 0 0 !important;
   }
+
   .aps-search-candidate .form-top .row:first-child {
     margin-bottom: 10px !important;
   }
+
   .aps-search-candidate .form-top {
     padding: 15px 15px 15px 15px !important;
   }
+
   .aps-search-candidate .box-search .item-search {
     padding-right: 0 !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab .tab-list {
     padding: 0 !important;
     margin: 0 !important;
   }
+
   .arrow-right {
     width: 20px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul {
     display: block !important;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li .item-detail {
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
@@ -3141,25 +3784,29 @@
     font-size: 14px;
     margin-left: 15px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li {
     display: flex !important;
     position: relative !important;
     margin-bottom: 10px;
   }
+
   .kehoach-nhaphoc-thuPhi-tab ul li.tab-item-li .item-detail .item-icon {
     position: absolute;
     left: -20px;
     top: 50%;
     transform: translateY(-50%);
   }
-  element.style {
-  }
+
+  element.style {}
+
   /* ----- */
   .aps-nhaphoc-thuPhi .khnh-thuPhi-lable .box-title {
     line-height: 28px;
     text-align: left !important;
     justify-content: left !important;
   }
+
   /* ------- */
   .aps-canbo-dangky-add-l .aps-info-sv {
     padding: 15px !important;
@@ -3236,11 +3883,7 @@
     padding: 10px 15px !important;
   }
 
-  .form-container.aps-add-phancong
-    .aps-form
-    .aps-form-item
-    .aps-form-input
-    .select2-container {
+  .form-container.aps-add-phancong .aps-form .aps-form-item .aps-form-input .select2-container {
     overflow: hidden;
   }
 
@@ -3332,9 +3975,7 @@
     min-width: 95px;
   }
 
-  .zone-pag-footertblQuanSoLop
-    .light-paginationtblQuanSoLop.simple-pagination
-    ul {
+  .zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop.simple-pagination ul {
     display: flex !important;
   }
 
@@ -3450,7 +4091,7 @@
     overflow-x: scroll;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs > li.active {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs>li.active {
     width: 100%;
     margin: 0 !important;
   }
@@ -3461,7 +4102,7 @@
     margin-right: 15px !important;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs > li {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs>li {
     background: #f1f1f1 !important;
     border-color: #f1f1f1 !important;
     width: 100% !important;
@@ -3469,7 +4110,7 @@
     border-radius: 6px !important;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs > li:last-child {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs>li:last-child {
     background: transparent !important;
     border-color: transparent !important;
   }
@@ -3482,7 +4123,7 @@
     overflow: scroll !important;
   }
 
-  .aps-dangky .aps-box-table .nav-tabs-custom > .nav-tabs {
+  .aps-dangky .aps-box-table .nav-tabs-custom>.nav-tabs {
     width: 100% !important;
   }
 
@@ -3648,8 +4289,8 @@
     border: 0 !important;
   }
 
-  .tblInput_HocPhan_QuanHeTT.table > tr > td:first-child,
-  .table-mobi .table tfoot > tr > td:first-child {
+  .tblInput_HocPhan_QuanHeTT.table>tr>td:first-child,
+  .table-mobi .table tfoot>tr>td:first-child {
     border-left: 0 solid #e1e1e1 !important;
   }
 
@@ -3681,22 +4322,12 @@
     padding: 13px 0 11px 0 !important;
   }
 
-  .skin-blue
-    .zoneHocPhan_Selected_KBB.sidebar-menu
-    > li.menu-open
-    > a
-    .btn-danger.btnSelectHocPhan {
+  .skin-blue .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a .btn-danger.btnSelectHocPhan {
     line-height: 34px !important;
   }
 
-  .zone_inputhocphan_khoituchondon
-    .aps-list-hocphan.sidebar-menu
-    .item-li
-    .submit.btn,
-  .zone_inputhocphan_khoituchondon
-    .zoneHocPhan_Selected_KBB.sidebar-menu
-    .item-li
-    .submit.btn {
+  .zone_inputhocphan_khoituchondon .aps-list-hocphan.sidebar-menu .item-li .submit.btn,
+  .zone_inputhocphan_khoituchondon .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
     right: 0px !important;
     line-height: 34px !important;
   }
@@ -3710,18 +4341,12 @@
     padding-right: 0 !important;
   }
 
-  .zone_inputhocphan_khoituchondon
-    .table-khoituchon
-    .inputSearch
-    .item-search.col-sm-5 {
+  .zone_inputhocphan_khoituchondon .table-khoituchon .inputSearch .item-search.col-sm-5 {
     margin-bottom: 0px;
     display: contents !important;
   }
 
-  .zone_inputhocphan_khoituchondon
-    .table-khoituchon
-    .col-sm-7.item-search
-    .form-control {
+  .zone_inputhocphan_khoituchondon .table-khoituchon .col-sm-7.item-search .form-control {
     max-width: 100% !important;
     margin-right: 0px;
     margin-bottom: 10px !important;
@@ -3806,7 +4431,7 @@
     display: inline-block !important;
   }
 
-  .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu > li.menu-open > a {
+  .table-khoibatbuoc .zoneHocPhan_Selected_KBB.sidebar-menu>li.menu-open>a {
     background: #fff !important;
   }
 
@@ -3824,7 +4449,7 @@
   }
 
   .table-khoibatbuoc .aps-list-hocphan.sidebar-menu .item-li a span,
-  .sidebar-menu.zoneHocPhan_Selected_KBB > li > a span {
+  .sidebar-menu.zoneHocPhan_Selected_KBB>li>a span {
     width: 70% !important;
     line-height: 20px;
   }
@@ -4265,9 +4890,7 @@
     max-width: 110px;
   }
 
-  .aps-KeHoachChuongTrinh
-    .aps-tochucchuongtrinh-thoigiandaotao
-    .box-solid.box-search {
+  .aps-KeHoachChuongTrinh .aps-tochucchuongtrinh-thoigiandaotao .box-solid.box-search {
     padding-bottom: 0 !important;
   }
 
@@ -4290,7 +4913,7 @@
     padding-right: 10px;
   }
 
-  .skin-blue .main-header .navbar .nav > li > .dropdown-toggle {
+  .skin-blue .main-header .navbar .nav>li>.dropdown-toggle {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
@@ -4538,6 +5161,7 @@
 }
 
 @media (max-width: 400px) {
+
   .aps-add-phancong .aps-add-new .aps-form-item .btn .fa,
   .tiepnhandauvao-filter-box .left .item.btn-group i {
     display: none !important;
@@ -4576,11 +5200,11 @@
   }
 
   /* ------------- */
-  .sidebar-menu.aps-list-hocphan > li a span {
+  .sidebar-menu.aps-list-hocphan>li a span {
     width: 70% !important;
   }
 
-  .sidebar-menu.zoneHocPhan_Selected_KBB > li > a span {
+  .sidebar-menu.zoneHocPhan_Selected_KBB>li>a span {
     width: 61% !important;
     line-height: 22px !important;
   }
@@ -4881,9 +5505,7 @@
     max-width: 110px;
   }
 
-  .aps-KeHoachChuongTrinh
-    .aps-tochucchuongtrinh-thoigiandaotao
-    .box-solid.box-search {
+  .aps-KeHoachChuongTrinh .aps-tochucchuongtrinh-thoigiandaotao .box-solid.box-search {
     padding-bottom: 0 !important;
   }
 
@@ -4906,7 +5528,7 @@
     padding-right: 10px;
   }
 
-  .skin-blue .main-header .navbar .nav > li > .dropdown-toggle {
+  .skin-blue .main-header .navbar .nav>li>.dropdown-toggle {
     padding-left: 15px !important;
     padding-right: 15px !important;
   }
@@ -5216,7 +5838,7 @@
 
   /* Large devices (laptops/desktops, 992px and up) */
 
-  #viewThanhPhan .table > thead > tr > th:first-child {
+  #viewThanhPhan .table>thead>tr>th:first-child {
     border-left: 0 solid #e1e1e1 !important;
     /* font-weight: 400; */
   }
@@ -5287,10 +5909,7 @@
     padding-top: 12px;
   }
 
-  .aps-tochucchuongtrinh-thoigiandaotao
-    .aps-list-hocky
-    .box-header
-    .bg-light-blue.badge {
+  .aps-tochucchuongtrinh-thoigiandaotao .aps-list-hocky .box-header .bg-light-blue.badge {
     margin-top: 16px !important;
   }
 
@@ -5448,8 +6067,8 @@
     padding-left: 10px !important;
   }
 
-  .aps-chiTiet-taiChinh .table > tfoot > tr > td:first-child,
-  .aps-chiTiet-taiChinh .table > tfoot > tr > td {
+  .aps-chiTiet-taiChinh .table>tfoot>tr>td:first-child,
+  .aps-chiTiet-taiChinh .table>tfoot>tr>td {
     border-left: 0px solid #d1d1d1 !important;
     border-right: 0 !important;
   }
@@ -5555,55 +6174,81 @@
     margin-bottom: 0 !important;
   }
 
-  .aps-tochucchuongtrinh-chuongtrinh
-    .box-solid.box-search
-    .item-search:nth-child(1),
-  .aps-tochucchuongtrinh-chuongtrinh
-    .box-solid.box-search
-    .item-search:nth-child(2) {
+  .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .item-search:nth-child(1),
+  .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .item-search:nth-child(2) {
     width: 100% !important;
     padding-right: 0 !important;
   }
 
-  .aps-tochucchuongtrinh-chuongtrinh
-    .box-solid.box-search
-    .col-sm-5.item-search {
+  .aps-tochucchuongtrinh-chuongtrinh .box-solid.box-search .col-sm-5.item-search {
     width: 100%;
     padding-right: 0 !important;
   }
 }
 
 @media (min-width: 600px) and (max-width: 767px) {
+  .box.box-solid.aps-admissions-lable {
+    padding: 0px !important;
+  }
+
+  .box.box-solid.aps-filter-sv {
+    padding: 20px 10px 10px 10px !important;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left,
+  .aps-student-manager .box-dashboard-kpi .left {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px !important;
+    box-sizing: border-box;
+  }
+
+  .aps-student-manager .tiepnhandauvao-filter-box .left .item:last-child,
+  .aps-student-manager .box-dashboard-kpi .left .item:last-child {
+    grid-column: 1 / -1 !important;
+    /* flex-grow: 1; */
+    width: 100%;
+  }
+
   .aps-note-list li {
     margin-bottom: 15px !important;
     width: 50% !important;
   }
+
   .aps-note-list ul {
     padding-left: 0 !important;
     padding-top: 10px !important;
   }
+
   .aps-search-thuTaoPhieu .row.list-form {
     display: grid !important;
     grid-template-columns: 1fr 1fr 1fr !important;
-    gap: 10px; /* Chia 2 cột bằng nhau */
+    gap: 10px;
+    /* Chia 2 cột bằng nhau */
   }
+
   .aps-search-thuTaoPhieu .form-top.box-search .item-search {
     margin-bottom: 0;
   }
+
   .aps-tongThanhToan-detail .item {
     display: grid !important;
-    grid-template-columns: 1fr 1fr !important; /* Chia 2 cột bằng nhau */
+    grid-template-columns: 1fr 1fr !important;
+    /* Chia 2 cột bằng nhau */
   }
+
   .aps-tongThanhToan-detail .item .item-lable,
   .aps-note {
     padding-left: 0px !important;
     padding-right: 0;
   }
+
   .aps-kiemTraNhanh .box-header .pull-right,
   .aps-lichSu-thuHuy .box-header .pull-right {
     margin-left: inherit;
     margin-top: 5px;
   }
+
   .aps-list-chuongtrinh .box-header .pull-right.box-list-btn {
     margin-top: 5px;
     float: left !important;
@@ -5713,7 +6358,7 @@
     width: 100% !important;
   }
 
-  .navbar-custom-menu > .navbar-nav > li > .dropdown-menu {
+  .navbar-custom-menu>.navbar-nav>li>.dropdown-menu {
     right: 0 !important;
     left: 0 !important;
     width: 100% !important;
@@ -5753,11 +6398,7 @@
 }
 
 @media (max-width: 380px) {
-  .form-container.zone_input_NamHoc
-    .aps-add-new
-    .col-lg-7.pr20
-    .btn-default.btnClose
-    .fa {
+  .form-container.zone_input_NamHoc .aps-add-new .col-lg-7.pr20 .btn-default.btnClose .fa {
     display: none;
   }
 
@@ -5783,7 +6424,7 @@
     padding-right: 10px !important;
   }
 
-  .zoneBox_ChuongTrinh .small-box > .small-box-footer .btn i {
+  .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn i {
     display: none !important;
   }
 }
@@ -5801,6 +6442,7 @@
 }
 
 @media screen and (max-width: 768px) {
+
   .login-box,
   .register-box {
     width: 100% !important;
@@ -5811,9 +6453,50 @@
 
 /* 29/5 - Cảnh báo & Can thiệp (HTML-QLSV-13-CanhBaoCanThiep) */
 @media (max-width: 1199.98px) {
+  .aps-khoa-tongQuan .aps-admissions-lable .box-title.color-blue {
+    padding-bottom: 12px !important;
+    padding-left: 15px !important;
+    padding-top: 15px !important;
+  }
+
+  .status-filter {
+    padding: 10px 10px 10px 10px;
+  }
+
+  .aps-student-list.px-20 {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .aps-admissions-lable .box-header-has-action {
+    display: grid !important;
+  }
+
+
+
+  .aps-khoa-tongQuan.box-content.aps-admissions .box-header.aps-admissions-lable .box-title {
+    padding: 10px !important;
+  }
+
+  .aps-khoa-tongQuan.box-content.aps-admissions .box-header.aps-admissions-lable {
+    margin-bottom: 15px;
+  }
+
   .aps-student-manager .tiepnhandauvao-static-box .item {
     flex: 1 1 calc(33.333% - 10px) !important;
     min-width: 0 !important;
+  }
+
+  .aps-admissions-lable .box-header-has-action {
+    padding: 15px;
+  }
+
+  .aps-admissions-lable .box-header-has-action .box-title {
+    padding: 0 !important;
+  }
+
+  .aps-admissions-lable .box-header-has-action .aps-role-switcher {
+    margin-top: 0 !important;
   }
 }
 
@@ -5851,6 +6534,7 @@
   .aps-student-manager .box-header .pull-right {
     width: 100%;
     float: none;
+    text-align: end !important;
   }
 
   .aps-student-manager .box-header .pull-right .btn-group {
@@ -5859,6 +6543,19 @@
 }
 
 @media (max-width: 767.98px) {
+
+  .aps-khoa-tongQuan .aps-file-item .box-header .pull-right {
+    position: relative;
+    float: left !important;
+    margin-top: 10px;
+    margin-left: 0;
+  }
+
+  .aps-khoa-tongQuan .aps-file-item .box-header .pull-right .btn {
+    margin-left: 0px !important;
+    margin-right: 10px;
+  }
+
   .aps-student-manager.pl20 {
     padding-left: 10px !important;
   }
@@ -5908,6 +6605,31 @@
 }
 
 @media (max-width: 575.98px) {
+  .aps-khoa-tongQuan.box-content.aps-admissions .box-header.aps-admissions-lable .box-title {
+    padding: 0px !important;
+  }
+
+  .aps-boSung .aps-sinhvientongquat-goiyboloc {
+    padding: 0px !important;
+  }
+
+  .aps-boSung .aps-sinhvientongquat-goiyboloc .col-6 {
+    width: 100%;
+    padding: 0px;
+  }
+
+  .aps-khoa-tongQuan .aps-file-item {
+    margin-bottom: 0px !important;
+  }
+
+  .aps-khoa-tongQuan .aps-file-item .box-header .pull-right {
+    margin-top: 0px;
+  }
+
+  .aps-khoa-tongQuan .aps-file-item .box-header .pull-right .btn-group {
+    display: block !important;
+  }
+
   .aps-student-manager .tiepnhandauvao-static-box .item {
     flex: 1 1 100% !important;
   }
@@ -5915,14 +6637,30 @@
 
 /* 29/5 - Báo cáo thống kê (HTML-QLSV-14-BaoCaoThongKe) */
 @media (max-width: 1600px) {
-  .box-content.aps-student-list > .aps-student-list-static > .item {
+  .box-content.aps-student-list>.aps-student-list-static>.item {
     flex: 1 1 calc(33.333% - 11px) !important;
     min-width: 0 !important;
   }
+
+  .aps-coVan-ht-r .aps-kienTraNhanh-content.aps-chitiethoso .user-infomation {
+    display: block !important;
+  }
+
+  .aps-coVan-ht-r .aps-kienTraNhanh-content.aps-chitiethoso .user-infomation .image {
+    margin: 0 auto 10px auto;
+  }
+
+  .aps-coVan-ht-r .aps-sinhvientongquat-goiyboloc .col-6 {
+    width: 100%;
+  }
+
+  .aps-coVan-ht-r .tiepnhandauvao-filter-box .left {
+    /* grid-template-columns: repeat(5, 1fr) !important; */
+  }
 }
 
-@media (max-width: 1599.98px) {
-  .box-content.aps-student-list .aps-admissions-content > [class*="col-lg-6"] {
+@media (max-width: 1599px) {
+  .box-content.aps-student-list .aps-admissions-content>[class*="col-lg-6"] {
     flex: 0 0 100%;
     max-width: 100%;
     width: 100%;
@@ -5930,6 +6668,11 @@
 
   .box-content.aps-student-list .aps-hoso-detail {
     padding-left: 0 !important;
+  }
+
+  .aps-student-manager .my-paging {
+    gap: 0px;
+    justify-content: center;
   }
 }
 
@@ -5941,8 +6684,8 @@
   }
 
   .box-content.aps-student-list .box-header .pull-right {
-    width: 100%;
-    float: none;
+    /* width: 100%; */
+    /* float: none; */
   }
 
   .box-content.aps-student-list .box-header .pull-right .btn-group {
@@ -5961,6 +6704,10 @@
 }
 
 @media (max-width: 767.98px) {
+  .tiepnhandauvao-filter-box .left {
+    gap: 10px !important;
+  }
+
   .box-content.aps-student-list.pl20 {
     padding-left: 10px !important;
   }
@@ -5969,7 +6716,7 @@
     padding-right: 10px !important;
   }
 
-  .box-content.aps-student-list > .aps-student-list-static > .item {
+  .box-content.aps-student-list>.aps-student-list-static>.item {
     flex: 1 1 calc(50% - 8px) !important;
   }
 
@@ -5978,7 +6725,7 @@
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
-    gap: 20px;
+    gap: 10px;
   }
 
   .box-content.aps-student-list .tiepnhandauvao-filter-box .left .item,
@@ -5988,10 +6735,7 @@
     flex: 0 0 auto;
   }
 
-  .box-content.aps-student-list
-    .tiepnhandauvao-filter-box
-    .left
-    .item.btn-group,
+  .box-content.aps-student-list .tiepnhandauvao-filter-box .left .item.btn-group,
   .box-content.aps-student-list .box-dashboard-kpi .left .item.btn-group {
     flex-direction: row;
     flex-wrap: wrap;
@@ -6016,7 +6760,7 @@
 }
 
 @media (max-width: 479.98px) {
-  .box-content.aps-student-list > .aps-student-list-static > .item {
+  .box-content.aps-student-list>.aps-student-list-static>.item {
     flex: 1 1 100% !important;
   }
 }
@@ -6139,4 +6883,554 @@
     max-width: 100%;
   }
 }
+
 /* ================== 29/5 - end Responsive bổ sung ================== */
+
+/* ===== Bộ lọc sinh viên: 2 cột (600–900px), 3 cột (900–1024px); nhóm nút luôn full hàng ===== */
+@media (min-width: 600px) and (max-width: 899.98px) {
+  .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1024px) {
+  .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1024px) {
+  .aps-khoa-canhbaoHV .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: 1 / 0 !important;
+    width: fit-content !important;
+    justify-content: flex-start !important;
+  }
+
+  .aps-khoa-canhbaoHV .tiepnhandauvao-filter-box .left .item.input_TuKhoa {
+    width: 100%;
+    justify-content: flex-end;
+    max-width: none !important;
+    grid-column: 1 / -1;
+  }
+
+  /* Nhóm nút trải hết các cột (full 1 hàng), các nút giữ kích thước auto, dồn phải */
+  .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: none !important;
+    justify-content: flex-end;
+  }
+
+  .tiepnhandauvao-filter-box .left .item.btn-group .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* ===== Bộ lọc ĐKHP (trang .aps-student-list): 4 cột từ 2000px trở xuống (1025–2000px); nhỏ hơn theo responsive 3/2/1 cột ===== */
+@media (min-width: 1025px) and (max-width: 2000px) {
+  .aps-student-list .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  /* Hàng 2: ô tìm kiếm rộng 2 cột, nhóm nút 2 cột dồn phải */
+  .aps-student-list .tiepnhandauvao-filter-box .left .item.input_TuKhoa {
+    grid-column: span 2;
+  }
+
+  .aps-student-list .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: span 2;
+    max-width: none !important;
+    justify-content: flex-start;
+    /* nút nằm sát ngay sau ô input */
+  }
+}
+
+/* Nút trong bộ lọc luôn auto theo nội dung (huỷ flex:1 1 auto của .btn-group Bootstrap) ở mọi màn hình */
+.tiepnhandauvao-filter-box .left .item.btn-group .btn {
+  flex: 0 0 auto;
+}
+
+/* Màn hình nhỏ (≤1024px): tăng khoảng cách bộ lọc lên 15px cho thoáng, không bị sát */
+@media (max-width: 1024px) {
+
+  .tiepnhandauvao-static-box,
+  .box-dashboard-kpi {
+    margin-top: 0 !important;
+  }
+
+  .tiepnhandauvao-filter-box .left {
+    gap: 5px !important;
+  }
+
+  .tiepnhandauvao-filter-box .left {
+    gap: 15px;
+  }
+
+  .tiepnhandauvao-filter-box .left .item.btn-group {
+    gap: 15px;
+  }
+}
+
+/* ===== Bộ lọc "Dòng thời gian" (.aps-dongthoigian-filter): 4 select + nút lên hết 1 hàng (1025–2000px) ===== */
+@media (min-width: 1025px) and (max-width: 2000px) {
+  .aps-student-list .aps-dongthoigian-filter .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(4, 1fr) auto !important;
+  }
+
+  .aps-student-list .aps-dongthoigian-filter .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: auto;
+    /* huỷ span 2, nút nằm cuối hàng cùng các select */
+    justify-content: flex-start;
+  }
+}
+
+/* ===== Panel ĐKHP phải: 2 card (Đợt đăng ký + Môn không ĐK được) cạnh nhau ở 768–991px; dưới 768px full box xếp dọc ===== */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .aps-student-list .aps-student-manager-content>.col-lg-4 {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .aps-student-list .aps-student-manager-content>.col-lg-4>.box.aps-kienTraNhanh {
+    flex: 1 1 0;
+    min-width: 0;
+    margin-bottom: 0 !important;
+  }
+}
+
+/* ===== KPI sinh viên: 2 cột (600–900px), 3 cột (900–1140px), 4 cột (1140–1680px); mọi box cao bằng nhau ===== */
+@media (min-width: 600px) and (max-width: 1680px) {
+  .aps-student-static {
+    display: grid !important;
+    gap: 15px;
+    grid-auto-rows: 1fr;
+    /* tất cả các hàng (và box) cao bằng nhau */
+    justify-content: stretch;
+  }
+
+  .aps-student-static .item {
+    width: auto;
+    max-width: none;
+    min-width: 0;
+    height: auto;
+    /* stretch đầy ô grid */
+  }
+}
+
+@media (min-width: 600px) and (max-width: 899.98px) {
+  .aps-student-static {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1139.98px) {
+  .aps-student-static {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 1140px) and (max-width: 1680px) {
+  .aps-student-static {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* ===== Header ho so "Ket qua hoc tap" (.aps-kq-hocTap): 2 hang - tieu de tren, nut duoi - tu 600px tro len ===== */
+@media (min-width: 600px) {
+  .aps-hoso-detail.aps-kq-hocTap:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border {
+    flex-wrap: wrap;
+  }
+
+  .aps-hoso-detail.aps-kq-hocTap:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border>.box-title {
+    flex: 1 1 100%;
+  }
+
+  .aps-hoso-detail.aps-kq-hocTap:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border>.pull-right {
+    width: 100% !important;
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+/* ===== Chung chi (xep doc <=2000px): so ve ben phai, chu "Tong chung chi" can giua chieu cao ===== */
+@media (max-width: 2000px) {
+  .tongquanda-qhht.aps-hs-chungchi .tongquanda-qhht-list .item {
+    align-items: center;
+  }
+
+  .tongquanda-qhht.aps-hs-chungchi .tongquanda-qhht-list .item>.meta {
+    margin-left: auto;
+  }
+
+  .tongquanda-qhht.aps-hs-chungchi .tongquanda-qhht-list .item.item-chungchi>.label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+
+  .tongquanda-qhht.aps-hs-chungchi .tongquanda-qhht-list .item.item-chungchi>.label>.meta {
+    margin-left: auto;
+  }
+}
+
+/* Chung chi: item "Tong chung chi" - khoang cach tren/duoi icon 5px */
+.tongquanda-qhht.aps-hs-chungchi .tongquanda-qhht-list .item.item-chungchi {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+/* Chung chi: man hinh nho (<768px) - thong tin SV 1 hang, thong tin chung chi 1 hang (xep doc) */
+@media (max-width: 767.98px) {
+  .aps-tab-tongquan.aps-tab-chungchi {
+    flex-wrap: wrap;
+  }
+
+  .aps-tab-tongquan.aps-tab-chungchi>.user-infomation,
+  .aps-tab-tongquan.aps-tab-chungchi>.tongquanda-qhht {
+    flex: 1 1 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* ===== Tot nghiep KPI (.aps-totnghiep-static): responsive cot; 1680-2000 = 6 cot; chu cao cung icon; box cao bang nhau ===== */
+@media (max-width: 2000px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    display: grid !important;
+    gap: 15px;
+    grid-auto-rows: 1fr;
+  }
+
+  .tiepnhandauvao-static-box.aps-totnghiep-static .item {
+    align-items: center;
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 1680px) and (max-width: 2000px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+}
+
+@media (min-width: 1400px) and (max-width: 1679.98px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+}
+
+@media (min-width: 1140px) and (max-width: 1399.98px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+@media (min-width: 900px) and (max-width: 1139.98px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 899.98px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .tiepnhandauvao-static-box.aps-totnghiep-static {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ===== Bo loc tot nghiep (.aps-totnghiep): 3 select + nut tren 1 hang o man rong, tu wrap khi nho ===== */
+.aps-totnghiep .tiepnhandauvao-filter-box .left {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 15px;
+}
+
+.aps-totnghiep .tiepnhandauvao-filter-box .left>.d-flex {
+  flex: 1 1 auto;
+  gap: 15px !important;
+}
+
+.aps-totnghiep .tiepnhandauvao-filter-box .left>.d-flex>.item.item-select {
+  flex: 1 1 200px;
+  max-width: none;
+}
+
+.aps-totnghiep .tiepnhandauvao-filter-box .left>.item.btn-group {
+  flex: 0 0 auto;
+  max-width: none !important;
+}
+
+/* ===== Bo loc tai chinh (.aps-finance): 3 select tren 1 hang, tu wrap khi nho ===== */
+.aps-finance .tiepnhandauvao-filter-box .left {
+  display: flex !important;
+}
+
+.aps-finance .tiepnhandauvao-filter-box .left>.d-flex {
+  flex: 1 1 auto;
+  gap: 15px !important;
+}
+
+.aps-finance .tiepnhandauvao-filter-box .left>.d-flex>.item.item-select {
+  flex: 1 1 200px;
+  max-width: none;
+}
+
+/* Bo loc tai chinh: khoang cach hang select va hang nut = 10px */
+.aps-finance .box-search-ff .tiepnhandauvao-filter-box {
+  margin-bottom: 10px !important;
+}
+
+/* Bo loc tai chinh: man hinh < 1024px - khoang cach giua cac dong select = 10px */
+@media (max-width: 1024px) {
+  .aps-finance .tiepnhandauvao-filter-box .left>.d-flex {
+    row-gap: 10px !important;
+  }
+}
+
+/* ===== Tuong tac KPI (.aps-tuongTacInbox): <1280 = 3 cot, ipad = 2 cot, dien thoai = 1 cot; box cao bang nhau ===== */
+@media (max-width: 1279.98px) {
+  .aps-tuongTacInbox .tiepnhandauvao-static-box.aps-student-list-static {
+    display: grid !important;
+    gap: 15px;
+    grid-auto-rows: 1fr;
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .aps-tuongTacInbox .tiepnhandauvao-static-box.aps-student-list-static .item {
+    width: auto;
+    max-width: none;
+    min-width: 0;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1024px) {
+  .aps-tuongTacInbox .tiepnhandauvao-static-box.aps-student-list-static {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 599.98px) {
+  .aps-tuongTacInbox .tiepnhandauvao-static-box.aps-student-list-static {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ===== Thao tac nhanh (.aps-thaoTacNhanh): box cao bang nhau; >=1280 = 5 cot, 1024-1280 = 3 cot, ipad = 2 cot, dien thoai = 1 cot ===== */
+.pull-right:has(> .aps-thaoTacNhanh) {
+  width: 100%;
+  float: none;
+}
+
+.aps-thaoTacNhanh {
+  display: grid !important;
+  gap: 10px !important;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100% !important;
+  max-width: none !important;
+}
+
+.aps-thaoTacNhanh>.btn {
+  width: auto;
+  min-width: 0;
+  height: auto;
+  margin: 0 !important;
+}
+
+@media (min-width: 1024px) and (max-width: 1279.98px) {
+  .aps-thaoTacNhanh {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 600px) and (max-width: 1023.98px) {
+  .aps-thaoTacNhanh {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 599.98px) {
+  .aps-thaoTacNhanh {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Bo loc tuong tac (.aps-tuongTacInbox): cach phai 15px trong box, top 18px */
+.aps-tuongTacInbox .box-search-ff .tiepnhandauvao-filter-box {
+  padding-top: 18px !important;
+  padding-right: 15px !important;
+}
+
+/* Bo loc tuong tac: cho cac o co lai de luoi khong tran ngang (giu 15px phai) */
+.aps-tuongTacInbox .tiepnhandauvao-filter-box .left .item,
+.aps-tuongTacInbox .tiepnhandauvao-filter-box .left .item.input_TuKhoa {
+  min-width: 0;
+}
+
+/* ===== Launcher chuc nang co van (.aps-function-covan): 5 cot, responsive 4/3/2/1; box cao bang nhau ===== */
+.aps-function-covan {
+  display: grid !important;
+  gap: 15px;
+  grid-auto-rows: 1fr;
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.aps-function-covan>.item {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  flex-basis: auto;
+  margin-bottom: 0;
+}
+
+@media (max-width: 1280px) {
+  .aps-function-covan {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .aps-function-covan {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .aps-function-covan {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .aps-function-covan {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Bo loc sinh vien (COVAN/KHOA - aps-admissions-lable, khong phai aps-filter-sv): o layout 3 cot (900-1024), nut nam cung hang voi 2 input (o cot 3) thay vi full hang */
+@media (min-width: 900px) and (max-width: 1024px) {
+  .aps-admissions-lable:not(.aps-filter-sv) .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: auto;
+    justify-content: flex-start;
+  }
+
+  .aps-sapTotNghiep-search .box-search-main .item.btn-group {
+    justify-content: flex-start !important;
+  }
+}
+
+/* ===== Bo loc sinh vien (COVAN/KHOA): 5 cot (>=1280), 4 cot (1025-1280); nho hon theo generic 3/2/1 ===== */
+@media (min-width: 1280px) {
+  .aps-admissions-lable:not(.aps-filter-sv) .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1279.98px) {
+  .aps-admissions-lable:not(.aps-filter-sv) .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1610px) {
+  .aps-covan-dk-hoctd .tiepnhandauvao-static-box.aps-covan-dk-hoctd-static {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .aps-covan-dk-hoctd .tiepnhandauvao-static-box.aps-covan-dk-hoctd-static .item {
+    align-items: center;
+  }
+}
+
+/* ===== Bo loc COVAN-02 Nhom SV nguy co (.aps-sv-nguyCo): 4 cot, o input span 2, nut span 2 (>=1025) ===== */
+@media (min-width: 1025px) {
+  .aps-sv-nguyCo .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .aps-sv-nguyCo .tiepnhandauvao-filter-box .left .item.input_TuKhoa {
+    grid-column: span 2;
+  }
+
+  .aps-sv-nguyCo .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: span 2;
+    max-width: none !important;
+    justify-content: flex-start;
+  }
+}
+
+/* COVAN-02 (.aps-sv-nguyCo): duoi 1024px, nut cung hang voi 2 input con lai */
+@media (max-width: 1024px) {
+  .aps-sv-nguyCo .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+}
+
+/* COVAN-05 filter DKHP (.aps-dkht-5col): 5 cot tren 1 hang (>=1025), nut xuong hang duoi */
+@media (min-width: 1025px) {
+  .aps-student-list .tiepnhandauvao-filter-box .left.aps-dkht-5col {
+    grid-template-columns: repeat(5, 1fr) !important;
+  }
+
+  .aps-student-list .tiepnhandauvao-filter-box .left.aps-dkht-5col .item.input_TuKhoa {
+    grid-column: auto;
+  }
+
+  .aps-student-list .tiepnhandauvao-filter-box .left.aps-dkht-5col .item.btn-group {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+    max-width: none !important;
+  }
+}
+
+
+/* COVAN-07 TuongTacSV (.aps-covan-tuongTacSV): 4 cot, input span 2, nut span 2 (>=1025); duoi 1024 nut cung hang */
+@media (min-width: 1025px) {
+  .aps-covan-tuongTacSV .tiepnhandauvao-filter-box .left {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+
+  .aps-covan-tuongTacSV .tiepnhandauvao-filter-box .left .item.input_TuKhoa {
+    grid-column: span 2;
+  }
+
+  .aps-covan-tuongTacSV .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: span 2;
+    max-width: none !important;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 1024px) {
+  .aps-covan-tuongTacSV .tiepnhandauvao-filter-box .left .item.btn-group {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+
+  .aps-khoa-canhbaoHV .box-header-has-action {
+    gap: 5px;
+  }
+}
+
+/* Mobile: tieu de box-header (.aps-hs-dauVao) can giua doc, khong sat len duong line */
+@media (max-width: 1024px) {
+  .aps-hs-dauVao>.box-header.with-border {
+    display: flex;
+    align-items: center;
+  }
+
+  .aps-hs-dauVao>.box-header.with-border>.box-title {
+    line-height: 1.6;
+  }
+}
