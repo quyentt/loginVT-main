@@ -20,3 +20,6 @@ test.js
 # System logs
 Logs/
 *.log
+
+# Video tạm (không đẩy lên git)
+assets/images/vn-11110105-6jrnm-ljyzezq9711ee9.16000081691028924.mp4

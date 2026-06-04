@@ -295,8 +295,6 @@ input:focus-visible {
   color: #fff;
 }
 
-
-
 @keyframes bowl {
   0% {
     margin-top: -3px;
@@ -1826,16 +1824,22 @@ a.other-action_item:hover {
   font-size: 14px;
   color: #222222;
   flex-wrap: wrap;
+  row-gap: 10px;
+  margin-bottom: 15px;
 }
 
 .my-paging_static {
-  margin-bottom: 15px;
+  margin-bottom: 0;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .my-paging_quantity {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  /* giữ nguyên, không bị đẩy xuống dòng */
 }
 
 .my-paging_quantity span {
@@ -1860,19 +1864,19 @@ a.other-action_item:hover {
 }
 
 .my-paging_quantity .form-select {
-  width: 60px;
+  width: 100px;
   height: 30px;
-  padding: 5px 15px 5px 10px;
+  padding: 4px 15px 5px 10px;
   background: #fff;
   margin-left: 5px;
 }
 
 .my-paging_wrap {
   list-style: none;
+  flex: 1 0 100%;
   display: flex;
   margin: 0;
   padding-left: 15px;
-  margin-bottom: 15px;
   flex-wrap: wrap;
   justify-content: end;
 }
@@ -1883,7 +1887,7 @@ a.other-action_item:hover {
   height: 30px;
   min-width: 30px;
   justify-content: center;
-  color: #222222;
+  color: #666;
   border: solid 1px var(--color-border);
   margin-left: -1px;
   background: #fff;
@@ -4485,7 +4489,6 @@ a.other-action_item:hover {
   align-items: flex-start;
   gap: 8px;
   font-size: 14px;
-
 }
 
 .dashboard-nhansuquanly .item .link:not(:last-child) {
@@ -4615,7 +4618,7 @@ a.other-action_item:hover {
 .post-list-block-list .item {
   display: flex;
   flex-direction: column;
-  gap: 2PX;
+  gap: 2px;
   border-bottom: solid 1px var(--color-border);
   padding-bottom: 15px;
 }
@@ -5194,7 +5197,7 @@ a.other-action_item:hover {
 
 .dashbord-role-funciton-item:hover .dashboard-role-function-title,
 .dashbord-role-funciton-item:hover .dashboard-role-function-desc {
-  color: #fff12d
+  color: #fff12d;
 }
 
 .dashbord-role-funciton-item:hover .dashboard-role-function-icon {
@@ -5614,12 +5617,12 @@ a.other-action_item:hover {
 
 .dashboard-role-static-pageIn-item:nth-child(4) .dashboard-role-static-count .number,
 .dashboard-role-static-pageIn-item:nth-child(4) .dashboard-role-static-icon i {
-  color: #FEB300;
+  color: #feb300;
 }
 
 .today-card .card-header a {
   font-size: 16px;
-  padding: 14PX 20px;
+  padding: 14px 20px;
 }
 
 .dashboard-notify-box {
@@ -5750,13 +5753,13 @@ a.other-action_item:hover {
 }
 
 .dashboard-role-static-icon {
-  background: #F5F6F8;
+  background: #f5f6f8;
   width: 92px;
   height: 92px;
   border-radius: 100%;
   align-items: center;
   justify-content: center;
-  color: #1A71E8;
+  color: #1a71e8;
   font-size: 48px;
   font-weight: bold !important;
   margin-right: 20px;
@@ -5774,7 +5777,6 @@ a.other-action_item:hover {
   line-height: 20px;
   letter-spacing: 0%;
   text-align: left;
-
 }
 
 .dashboard-role-static-count .number {
@@ -5793,7 +5795,6 @@ a.other-action_item:hover {
   font-size: 20px;
   font-weight: 700 !important;
   margin-left: 5px;
-
 }
 
 .dashboard-role-static-count .count-lable {
@@ -5810,8 +5811,8 @@ a.other-action_item:hover {
 
 .main-wrap .dashboard-role-page .row {
   margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-.5 * var(--bs-gutter-x));
-  margin-left: calc(-.5 * var(--bs-gutter-x));
+  margin-right: calc(-0.5 * var(--bs-gutter-x));
+  margin-left: calc(-0.5 * var(--bs-gutter-x));
 }
 
 .btn-default.btn-search,
@@ -5989,4 +5990,11 @@ a.other-action_item:hover {
 
 .fw-400 {
   font-weight: 400 !important;
+}
+
+/* Phan trang: >=1280px cho tat ca (info + hien thi + so trang) tren cung 1 hang */
+@media (min-width: 1280px) {
+  .my-paging_wrap {
+    flex: 0 1 auto;
+  }
 }
