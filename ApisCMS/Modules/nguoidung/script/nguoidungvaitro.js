@@ -293,7 +293,7 @@ NguoiDungVaiTro.prototype = {
             'func': 'PKG_CORE_QUANTRI_01.LayDSVaiTroNguoiDung',
             'iM': edu.system.iM,
             'strChucNang_Id': '',
-            'strNguoiThucHien_Id': edu.system.userId,
+            'strNguoiThucHien_Id': me.strNguoiDung_Id
         };
         //
         
