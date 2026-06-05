@@ -555,7 +555,7 @@
 
 .box-header.with-border {
     border-bottom: 1px solid #e1e1e1 !important;
-    padding: 20px 20px 15px 20px;
+        padding: 15px 20px 12px 20px;
     display: flex;
 }
 
@@ -2573,7 +2573,8 @@
 }
 
 .aps-kehoach-thuchi-add.box-view {
-    padding-top: 0 !important;
+    /* padding-top: 20px !important; */
+    padding: 20px;
 }
 
 .aps-kehoach-thuchi-add .zone-box.aps-form {
@@ -5271,7 +5272,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-tinhtrang-hocphi .box-header.with-border,
-. .form-ThongTinTachKhoan.form-container-header {
+.form-ThongTinTachKhoan.form-container-header {
     height: 68px !important;
     line-height: 68px !important;
 }
@@ -15247,18 +15248,17 @@ table#clone {
 .box-solid.aps-hs-dauVao {
     padding-bottom: 10px !important;
 }
-/* KHOA-05 (.aps-khoa-SapTotNghiep): 1024-1680px - anh tren, thong tin duoi, anh can giua */
-@media (min-width: 1024px) and (max-width: 1680px) {
-  .aps-khoa-SapTotNghiep .user-infomation {
-    flex-direction: column;
-    align-items: center;
-  }
-  .aps-khoa-SapTotNghiep .user-infomation .image {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .aps-khoa-SapTotNghiep .user-infomation .info {
-    width: 100%;
-  }
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
+.box-search-hocphan .col-12.col-md-6{
+    padding-left: 10px !important;
+    padding-right: 0 !important;
 }
+/* - */
+.box-search-hocphan .input-label-left {
+    position: relative;
+}
+/* .box-search-hocphan .input-label-left label {
+    position: absolute;
+    z-index: 11;
+    top: 10px;
+    left: 10px;
+} */

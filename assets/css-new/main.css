@@ -1677,7 +1677,7 @@
  }
 
  .input-label-left label.mt-5 {
-   margin-top: 6px !important;
+   margin-top: 6px;
  }
 
  .input-label-left .input {
@@ -3998,13 +3998,6 @@
 
  .main-wrap .modal-content .select2-container {
    padding: 0px !important;
- }
-
- .main-wrap .input-label-left label {
-   margin-right: 10px;
-   line-height: 42px !important;
-   height: 38px !important;
-   margin-top: 0 !important;
  }
 
  .main-wrap .modal-content .input-label-left .form-control {

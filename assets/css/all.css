@@ -1269,11 +1269,12 @@ a:hover {
 }
 
 .sidebar-menu-sub a.active {
-  color: var(--orange);
+  color: var(--red);
 }
 
-.sidebar-menu-sub a.active::before {
-  background-color: var(--orange);
+.sidebar-menu-sub a.active::before,
+.sidebar-menu-sub a.active::after {
+  background-color: var(--red) !important;
 }
 
 .sidebar-menu-sub a::before {

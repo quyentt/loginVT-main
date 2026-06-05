@@ -1533,19 +1533,6 @@
     padding-bottom: 15px !important;
   }
 
-  /* .zone_chuongtrinhhocphan,
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
-    .zone_inputhocphan,
-    .zone_edithocphan,
-    .zone_inputhocphan_khoibatbuoc,
-    .zone_inputhocphan_khoituchondon,
-    .zone_ketquahocphan,
-    .zone_input_dinhhuong,
-    .zoneViewHocPhan {
-        width: calc(100% - 20px) !important;
-        min-width: calc(100% - 20px);
-    } */
-
   .aps-table-select .table,
   .tblKetQua3,
   .tblKetQua2,
@@ -2192,7 +2179,6 @@
     padding-left: 0 !important;
     padding-right: 0 !important;
   }
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
 
   .form-ds-hocphan .day-begin .col-sm-1.aps-lable-name,
   .form-ds-hocphan .day-end .col-sm-1.aps-lable-name {
@@ -3476,7 +3462,6 @@
     /* Khoảng cách giữa các cột */
     margin-bottom: 0 !important;
   }
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
 }
 
 @media (min-width: 768px) and (max-width: 799px) {
@@ -3502,7 +3487,6 @@
   }
 }
 
-<<<<<<< HEAD
 @media (min-width: 600px) and (max-width:767px) {
     .zoneLopHocPhan {
         grid-template-columns: repeat(1, 1fr) !important;
@@ -4250,7 +4234,6 @@
   .box-solid.box-search .item-search {
     margin-bottom: 0 !important;
   }
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
 }
 
 @media only screen and (max-width: 600px) {
@@ -6672,11 +6655,6 @@
   .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView .small-box {
     text-align: left !important;
   }
-
-  /* .small-box-footer {
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
-        margin-top: 10px !important;
-    } */
 
   /* ----- */
   .zone_chuongtrinhhocphan,
@@ -9580,5 +9558,20 @@
 
   .aps-hs-dauVao>.box-header.with-border>.box-title {
     line-height: 1.6;
+  }
+}
+
+/* KHOA-05 (.aps-khoa-SapTotNghiep): 1024-1680px - anh tren, thong tin duoi, anh can giua */
+@media (min-width: 1024px) and (max-width: 1680px) {
+  .aps-khoa-SapTotNghiep .user-infomation {
+    flex-direction: column;
+    align-items: center;
+  }
+  .aps-khoa-SapTotNghiep .user-infomation .image {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .aps-khoa-SapTotNghiep .user-infomation .info {
+    width: 100%;
   }
 }

@@ -4024,7 +4024,7 @@ a.other-action_item:hover {
   align-items: center;
 }
 
-.user-ns img {
+.main-wrap .input-label-left label .user-ns img {
   width: 100px;
   height: 100px;
   border-radius: 100%;
@@ -4164,16 +4164,33 @@ a.other-action_item:hover {
   color: #fff !important;
 }
 
-.item-icon {
+.main-wrap .input-label-left label .sidebar-menu .item-icon {
   font-size: 18px;
+  font-weight: bold !important;
   /* width: 35px; */
-  margin-right: 12px;
+  margin-right: 10px;
   flex-shrink: 0;
   text-align: center;
-  color: #989898;
+  color: var(--color-blue);
 }
 
-.item-arrow-icon {
+.main-wrap .input-label-left label {
+      margin-top: 0 !important;
+    margin-right: 0px;
+    line-height: 10px !important;
+    height: 20px !important;
+    margin-top: 0 !important;
+    position: absolute;
+    z-index: 1;
+    top: -10px;
+    background: #fff;
+    padding: 5px;
+    font-size: 12px;
+    left: 14px;
+    width: fit-content !important;
+}
+
+.sidebar-menu .item-arrow-icon {
   margin-left: auto;
   font-size: 11px;
   padding-left: 15px;
@@ -4203,22 +4220,22 @@ a.other-action_item:hover {
 }
 
 .sidebar-menu-sub a:first-child {
-  margin-top: 8px;
+  margin-top: 5px;
 }
 
 .sidebar-menu-sub a {
   display: block;
   margin-left: 15px;
   border-left: solid 1px #989898;
-  padding-left: 25px;
+  padding-left: 15px;
   font-size: 15px;
   position: relative;
   padding-top: 6px;
   padding-bottom: 6px;
-  color: var(--color-text-3-80);
+  color: #222;
 }
 
-.sidebar-menu-sub a.active {
+.sidebar-menu-sub a::after .sidebar-menu-sub a.active {
   color: var(--color-link);
   font-weight: 700;
 }
@@ -4230,7 +4247,7 @@ a.other-action_item:hover {
 
 .sidebar-menu-sub a::before {
   content: "";
-  width: 10px;
+  width: 8px;
   height: 1px;
   background-color: #989898;
   border-radius: 100%;
@@ -4241,12 +4258,12 @@ a.other-action_item:hover {
 
 .sidebar-menu-sub a::after {
   content: "";
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   background-color: #989898;
   border-radius: 100%;
   position: absolute;
-  left: 10px;
+  left: -4px;
   top: 14px;
 }
 
@@ -4255,9 +4272,16 @@ a.other-action_item:hover {
   background-color: var(--color-link);
 }
 
-/* width */
+.sidebar-menu-sub.show {
+  background: #f1f1f1;
+  border-radius: 12px;
+  padding: 5px 0;
+  margin-top: 5px;
+  /* border-bottom-right-radius: 12px; */
+}
 
-.sidebar-menu::-webkit-scrollbar {
+/* width */
+.sidebar-menu-sub a .sidebar-menu::-webkit-scrollbar {
   width: 3px;
 }
 

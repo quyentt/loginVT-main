@@ -374,6 +374,24 @@ systemroot.prototype = {
                 me["strNguoiThucVai_Id"] = undefined;
             }
             me.setUngDung(objUngDung);
+            try {
+
+                setTimeout(function () {
+                    console.log($("#sidebar-menu").is(":visible"));
+                    console.log($("body .main-wrap").length)
+                    console.log($("body .sidebar-toggle").length)
+                    console.log(!$("body .main-wrap").first().hasClass("sidebar-toggle"))
+                    if (window.innerWidth < 1281) {
+                        console.log(1234444444);
+                        //$(".top-nav .sidebar-bars").trigger("click");
+
+                    }
+                }, 500)
+                
+
+            } catch {
+
+            }
         });
 
         $("#main-content-wrapper").delegate('.chucnang', 'click', function (e) {
@@ -6215,7 +6233,7 @@ systemroot.prototype = {
                 if (arrChild.length) {
                     node += '<div class="sidebar-menu-sub collapse" id="collapse' + data[j].ID + '" data-bs-parent="#sidebar-menu">';
                     arrChild.forEach(e => {
-                        node += '<a id="chucnang' + e.ID + '" onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + e.DUONGDANHIENTHI + '">' + e.TENCHUCNANG + '</a>';
+                        node += '<a id="chucnang' + e.ID + '" onclick="edu.system.initMain(' + "\'" + strDuongDanHienThi + "\'" + ',' + "\'" + e.DUONGDANFILE + "\'" + ',' + "\'" + e.ID + "\'" + ')" href="' + strDuongDanHienThi + '">' + e.TENCHUCNANG + '</a>';
                     })
                     node += '</div>';
                 }
