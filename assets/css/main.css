@@ -295,6 +295,8 @@ input:focus-visible {
   color: #fff;
 }
 
+
+
 @keyframes bowl {
   0% {
     margin-top: -3px;
@@ -1824,22 +1826,16 @@ a.other-action_item:hover {
   font-size: 14px;
   color: #222222;
   flex-wrap: wrap;
-  row-gap: 10px;
-  margin-bottom: 15px;
 }
 
 .my-paging_static {
-  margin-bottom: 0;
-  flex: 1 1 auto;
-  min-width: 0;
+  margin-bottom: 15px;
 }
 
 .my-paging_quantity {
   display: flex;
   align-items: center;
-  margin-bottom: 0;
-  flex: 0 0 auto;
-  /* giữ nguyên, không bị đẩy xuống dòng */
+  margin-bottom: 15px;
 }
 
 .my-paging_quantity span {
@@ -1864,19 +1860,19 @@ a.other-action_item:hover {
 }
 
 .my-paging_quantity .form-select {
-  width: 100px;
+  width: 60px;
   height: 30px;
-  padding: 4px 15px 5px 10px;
+  padding: 5px 15px 5px 10px;
   background: #fff;
   margin-left: 5px;
 }
 
 .my-paging_wrap {
   list-style: none;
-  flex: 1 0 100%;
   display: flex;
   margin: 0;
   padding-left: 15px;
+  margin-bottom: 15px;
   flex-wrap: wrap;
   justify-content: end;
 }
@@ -1887,7 +1883,7 @@ a.other-action_item:hover {
   height: 30px;
   min-width: 30px;
   justify-content: center;
-  color: #666;
+  color: #222222;
   border: solid 1px var(--color-border);
   margin-left: -1px;
   background: #fff;
@@ -4024,7 +4020,7 @@ a.other-action_item:hover {
   align-items: center;
 }
 
-.main-wrap .input-label-left label .user-ns img {
+.user-ns img {
   width: 100px;
   height: 100px;
   border-radius: 100%;
@@ -4164,33 +4160,16 @@ a.other-action_item:hover {
   color: #fff !important;
 }
 
-.main-wrap .input-label-left label .sidebar-menu .item-icon {
+.item-icon {
   font-size: 18px;
-  font-weight: bold !important;
   /* width: 35px; */
-  margin-right: 10px;
+  margin-right: 12px;
   flex-shrink: 0;
   text-align: center;
-  color: var(--color-blue);
+  color: #989898;
 }
 
-.main-wrap .input-label-left label {
-      margin-top: 0 !important;
-    margin-right: 0px;
-    line-height: 10px !important;
-    height: 20px !important;
-    margin-top: 0 !important;
-    position: absolute;
-    z-index: 1;
-    top: -10px;
-    background: #fff;
-    padding: 5px;
-    font-size: 12px;
-    left: 14px;
-    width: fit-content !important;
-}
-
-.sidebar-menu .item-arrow-icon {
+.item-arrow-icon {
   margin-left: auto;
   font-size: 11px;
   padding-left: 15px;
@@ -4220,22 +4199,22 @@ a.other-action_item:hover {
 }
 
 .sidebar-menu-sub a:first-child {
-  margin-top: 5px;
+  margin-top: 8px;
 }
 
 .sidebar-menu-sub a {
   display: block;
   margin-left: 15px;
   border-left: solid 1px #989898;
-  padding-left: 15px;
+  padding-left: 25px;
   font-size: 15px;
   position: relative;
   padding-top: 6px;
   padding-bottom: 6px;
-  color: #222;
+  color: var(--color-text-3-80);
 }
 
-.sidebar-menu-sub a::after .sidebar-menu-sub a.active {
+.sidebar-menu-sub a.active {
   color: var(--color-link);
   font-weight: 700;
 }
@@ -4247,7 +4226,7 @@ a.other-action_item:hover {
 
 .sidebar-menu-sub a::before {
   content: "";
-  width: 8px;
+  width: 10px;
   height: 1px;
   background-color: #989898;
   border-radius: 100%;
@@ -4258,12 +4237,12 @@ a.other-action_item:hover {
 
 .sidebar-menu-sub a::after {
   content: "";
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   background-color: #989898;
   border-radius: 100%;
   position: absolute;
-  left: -4px;
+  left: 10px;
   top: 14px;
 }
 
@@ -4272,16 +4251,9 @@ a.other-action_item:hover {
   background-color: var(--color-link);
 }
 
-.sidebar-menu-sub.show {
-  background: #f1f1f1;
-  border-radius: 12px;
-  padding: 5px 0;
-  margin-top: 5px;
-  /* border-bottom-right-radius: 12px; */
-}
-
 /* width */
-.sidebar-menu-sub a .sidebar-menu::-webkit-scrollbar {
+
+.sidebar-menu::-webkit-scrollbar {
   width: 3px;
 }
 
@@ -4513,6 +4485,7 @@ a.other-action_item:hover {
   align-items: flex-start;
   gap: 8px;
   font-size: 14px;
+
 }
 
 .dashboard-nhansuquanly .item .link:not(:last-child) {
@@ -4642,7 +4615,7 @@ a.other-action_item:hover {
 .post-list-block-list .item {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 2PX;
   border-bottom: solid 1px var(--color-border);
   padding-bottom: 15px;
 }
@@ -5221,7 +5194,7 @@ a.other-action_item:hover {
 
 .dashbord-role-funciton-item:hover .dashboard-role-function-title,
 .dashbord-role-funciton-item:hover .dashboard-role-function-desc {
-  color: #fff12d;
+  color: #fff12d
 }
 
 .dashbord-role-funciton-item:hover .dashboard-role-function-icon {
@@ -5641,12 +5614,12 @@ a.other-action_item:hover {
 
 .dashboard-role-static-pageIn-item:nth-child(4) .dashboard-role-static-count .number,
 .dashboard-role-static-pageIn-item:nth-child(4) .dashboard-role-static-icon i {
-  color: #feb300;
+  color: #FEB300;
 }
 
 .today-card .card-header a {
   font-size: 16px;
-  padding: 14px 20px;
+  padding: 14PX 20px;
 }
 
 .dashboard-notify-box {
@@ -5777,13 +5750,13 @@ a.other-action_item:hover {
 }
 
 .dashboard-role-static-icon {
-  background: #f5f6f8;
+  background: #F5F6F8;
   width: 92px;
   height: 92px;
   border-radius: 100%;
   align-items: center;
   justify-content: center;
-  color: #1a71e8;
+  color: #1A71E8;
   font-size: 48px;
   font-weight: bold !important;
   margin-right: 20px;
@@ -5801,6 +5774,7 @@ a.other-action_item:hover {
   line-height: 20px;
   letter-spacing: 0%;
   text-align: left;
+
 }
 
 .dashboard-role-static-count .number {
@@ -5819,6 +5793,7 @@ a.other-action_item:hover {
   font-size: 20px;
   font-weight: 700 !important;
   margin-left: 5px;
+
 }
 
 .dashboard-role-static-count .count-lable {
@@ -5835,8 +5810,8 @@ a.other-action_item:hover {
 
 .main-wrap .dashboard-role-page .row {
   margin-top: calc(-1 * var(--bs-gutter-y));
-  margin-right: calc(-0.5 * var(--bs-gutter-x));
-  margin-left: calc(-0.5 * var(--bs-gutter-x));
+  margin-right: calc(-.5 * var(--bs-gutter-x));
+  margin-left: calc(-.5 * var(--bs-gutter-x));
 }
 
 .btn-default.btn-search,
@@ -6014,11 +5989,4 @@ a.other-action_item:hover {
 
 .fw-400 {
   font-weight: 400 !important;
-}
-
-/* Phan trang: >=1280px cho tat ca (info + hien thi + so trang) tren cung 1 hang */
-@media (min-width: 1280px) {
-  .my-paging_wrap {
-    flex: 0 1 auto;
-  }
 }

@@ -93,6 +93,7 @@
   width: 0;
 }
 
+
 .day-of-week .task {
   width: 100%;
   padding: 0;
@@ -122,6 +123,7 @@
   border-radius: 12px;
   margin: 2px !important;
 }
+
 
 .date .hour-row {
   border-width: 0;
@@ -447,7 +449,7 @@
   border: #ced4da;
 }
 
-.change-calendar .form-item .input-group .form-control:disabled ~ i {
+.change-calendar .form-item .input-group .form-control:disabled~i {
   color: #222222;
 }
 
@@ -772,6 +774,7 @@
   max-width: 600px;
 }
 
+
 .top-gray-wrapper .form-group label {
   width: auto;
 }
@@ -783,6 +786,7 @@
 }
 
 @media (max-width: 1920px) {
+
   /* .day-of-week {
     min-width: 220px;
     overflow-x: none;
@@ -867,7 +871,7 @@
 }
 
 .change-calendar .input-group i {
-  color: #888;
+  color: #888 !important;
 }
 
 .tblNhapChuyenCan tr td input {
@@ -876,7 +880,7 @@
 }
 
 .table tr td:first-child {
-  color: #888;
+  color: #888 !important;
 }
 
 .tblNhapChuyenCan tr td .inputChuyenCan {
@@ -885,17 +889,14 @@
   margin-left: 5px;
 }
 
-.tblNhapChuyenCan tr td input[type="checkbox"],
-.tblNhapChuyenCan tr td input[type="radio"] {
+.tblNhapChuyenCan tr td input[type=checkbox],
+.tblNhapChuyenCan tr td input[type=radio] {
   margin: 6px 0 0 0 !important;
 }
 
 .tblNhapChuyenCan tr:hover td,
 .tblNhapChuyenCan tr:hover td:first-child,
-.table-bordered.tblNhapChuyenCan
-  tbody
-  tr:nth-child(2n + 2):hover
-  td:first-child {
+.table-bordered.tblNhapChuyenCan tbody tr:nth-child(2n+2):hover td:first-child {
   background: var(--color-blue) !important;
   color: #fff !important;
 }
