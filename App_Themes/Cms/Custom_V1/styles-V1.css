@@ -500,7 +500,7 @@ thead {
   background-color: rgba(51, 128, 219, 1) !important;
   border-bottom: 1px solid #4b96f0;
   border-top-right-radius: 30px !important;
-  width: 280px;
+  width: 300px;
 }
 
 .skin-blue .sidebar-form .btn,
@@ -550,7 +550,7 @@ thead {
 }
 
 .main-sidebar {
-  width: 280px;
+  width: 300px;
   border-top-right-radius: 30px !important;
   background: rgb(27, 67, 145);
   background: linear-gradient(
@@ -562,7 +562,7 @@ thead {
 }
 
 .main-sidebar:before {
-  width: 280px;
+  width: 300px;
   height: 1000px;
   content: "";
   position: absolute;
@@ -751,13 +751,13 @@ thead {
 
 /* -----control-sidebar-app----------- */
 .control-sidebar {
-  right: -280px;
-  width: 280px;
+  right: -300px;
+  width: 300px;
 }
 
 .control-sidebar-bg {
-  width: 280px;
-  right: -280px;
+  width: 300px;
+  right: -300px;
 }
 
 .control-sidebar-app .user-icon {
@@ -963,7 +963,7 @@ thead {
 }
 
 #changetblKHDK .select2-container--default .select2-selection--single {
-  border: 1px solid #d2d6de !important;
+  border: 1px solid #c1c1c1 !important;
   border-radius: 5px !important;
   padding: 9px 10px !important;
   height: 32px;

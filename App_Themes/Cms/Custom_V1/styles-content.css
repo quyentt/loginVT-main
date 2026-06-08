@@ -6643,30 +6643,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     color: var(--color-green) !important;
 }
 
-.select-opt {
-    height: 38px !important;
-    font-size: 14px !important;
-    line-height: 41px !important;
-    border-radius: 5px;
-    border: 1px solid #d2d6de;
-    padding: 3px 10px !important;
-    background: #fff;
-    border-radius: 5px;
-    position: relative;
-}
-
-.select-opt::before {
-    content: "\f107";
-    top: 0;
-    right: 0;
-    position: absolute;
-    font-family: "Font Awesome 5 Pro";
-    font-weight: 300;
-    font-size: 14px;
-    width: 30px;
-    height: 30px;
-}
-
 .aps-modal_nhansu .modal-body .col-sm-9 .group-title i:last-child {
     display: none;
 }
@@ -6937,12 +6913,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .modal-body-table .aps-form-item .aps-form-input .select-opt {
     width: 100% !important;
 }
-
-.aps-box-l {}
-
-.aps-box-r {}
-
-.form-container .box-footer {}
 
 .aps-table-select .simple-pagination {
     padding: 0 !important;
@@ -11737,6 +11707,12 @@ table#clone {
 .myModalChiTietLich.modal .modal-dialog {
     width: 100% !important;
 }
+
 .myModalChiTietLich .tblLichHoc.table {
     min-width: 1200px;
+}
+
+.zonePhieuDG .box.box-solid,
+.box-solid.zonePhieuDG,.box-solid.zone-bus {
+    padding: 0 !important;
 }
