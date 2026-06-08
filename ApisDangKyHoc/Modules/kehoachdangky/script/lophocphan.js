@@ -96,8 +96,8 @@ LopHocPhan.prototype = {
         $('#dropSearch_HocPhan').on('select2:select', function (e) {
             //me.getList_LopHocPhan();
         });
-        $('#loaiLopFilters').on('change', 'input[type="checkbox"]', function () {
-            if (me._suppressLoaiLopChange) return;
+        $('#dropSearch_LoaiLop').select2({ minimumResultsForSearch: Infinity });
+        $('#dropSearch_LoaiLop').on('change', function () {
             me._refilterActiveTable();
         });
         $("#btnSearch").click(function (e) {
@@ -1008,6 +1008,7 @@ LopHocPhan.prototype = {
         $(".tblHidden").hide();
         $("#tblLopHocPhan").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
+        var bLoaiLop = !!me._getSelectedLoaiLop();
 
         //--Edit
         var obj_save = {
@@ -1018,8 +1019,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
-            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : (bLoaiLop ? 1 : edu.system.pageIndex_default)),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : (bLoaiLop ? 100000 : edu.system.pageSize_default)),
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
 
 
@@ -1203,7 +1204,8 @@ LopHocPhan.prototype = {
         findOverride = findOverride || {};
         var bChuaNop = $('#dChuaNop').is(':checked');
         var bDaChuyenKeToan = $('#dDaChuyenKeToan').is(':checked');
-        var bClientFilter = bChuaNop || bDaChuyenKeToan;
+        var bLoaiLop = !!me._getSelectedLoaiLop();
+        var bClientFilter = bChuaNop || bDaChuyenKeToan || bLoaiLop;
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIP',
@@ -1284,6 +1286,7 @@ LopHocPhan.prototype = {
         var me = this;
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet").parent().show().prev(".scroll-top-mirror").show();
+        var bLoaiLop = !!me._getSelectedLoaiLop();
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRIFIC8mCjgJLiIFLgIgLwMu',
@@ -1293,8 +1296,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': edu.system.pageIndex_default,
-            'pageSize': edu.system.pageSize_default,
+            'pageIndex': bLoaiLop ? 1 : edu.system.pageIndex_default,
+            'pageSize': bLoaiLop ? 100000 : edu.system.pageSize_default,
             'strTKB_HinhThucHoc_Id': edu.system.getValById('dropSearch_HinhThucHoc'),
 
 
@@ -1473,6 +1476,7 @@ LopHocPhan.prototype = {
         $(".tblHidden").hide();
         $("#tblLopHocPhanChiTiet2").parent().show().prev(".scroll-top-mirror").show();
         findOverride = findOverride || {};
+        var bLoaiLop = !!me._getSelectedLoaiLop();
         //--Edit
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/DSA4BRITNDUFIC8mCjgJLiIP',
@@ -1482,8 +1486,8 @@ LopHocPhan.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strNguoiThucHien_Id': edu.system.userId,
-            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : edu.system.pageIndex_default),
-            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : edu.system.pageSize_default),
+            'pageIndex': (findOverride.pageIndex != null ? findOverride.pageIndex : (bLoaiLop ? 1 : edu.system.pageIndex_default)),
+            'pageSize': (findOverride.pageSize != null ? findOverride.pageSize : (bLoaiLop ? 100000 : edu.system.pageSize_default)),
 
 
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
@@ -3052,73 +3056,52 @@ LopHocPhan.prototype = {
     },
 
     _getSelectedLoaiLop: function () {
-        var vals = [];
-        $('#loaiLopFilters input[type="checkbox"]:checked').each(function () {
-            vals.push($(this).val());
-        });
-        return vals;
+        return $('#dropSearch_LoaiLop').val() || '';
+    },
+
+    _isLopRiengRecord: function (r, tableId) {
+        if (!r) return false;
+        if (tableId === 'tblLopHocPhan' && r.HOCPHITINHRIENG != null) {
+            return !!r.HOCPHITINHRIENG;
+        }
+        var field = (tableId === 'tblLopHocPhan') ? 'LOAILOP' : 'LOPRIENG';
+        var v = r[field];
+        if (v == null || v === '') return false;
+        var s = String(v).toLowerCase();
+        if (s.indexOf('rieng') !== -1) return true;
+        if (s.indexOf('riêng') !== -1) return true;
+        if (typeof s.normalize === 'function') {
+            var sNoAccent = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+            if (sNoAccent.indexOf('rieng') !== -1) return true;
+        }
+        return false;
     },
 
     _filterDataByLoaiLop: function (data, tableId) {
         var me = this;
         var sel = me._getSelectedLoaiLop();
-        if (sel.length === 0) return data || [];
-        var field = me._loaiLopFieldFor(tableId);
-        if (!field) return data || [];
+        if (!sel) return data || [];
         return (data || []).filter(function (r) {
-            var v = r[field];
-            if (v == null || v === '') return false;
-            return sel.indexOf(String(v)) !== -1;
+            var isRieng = me._isLopRiengRecord(r, tableId);
+            if (sel === 'rieng') return isRieng;
+            if (sel === 'thuong') return !isRieng;
+            return true;
         });
     },
 
     _rebuildLoaiLopOptions: function (data, tableId) {
-        var me = this;
-        var field = me._loaiLopFieldFor(tableId);
-        var $cont = $('#loaiLopFilters');
-        if (!field || $cont.length === 0) return;
-        var tableChanged = me._lastDropdownTableId !== tableId;
-        me._lastDropdownTableId = tableId;
-        var preserved = {};
-        if (!tableChanged) {
-            $cont.find('input[type="checkbox"]:checked').each(function () {
-                preserved[$(this).val()] = true;
-            });
-        }
-        var seen = {};
-        var keys = [];
-        (data || []).forEach(function (r) {
-            var v = r[field];
-            if (v == null || v === '') return;
-            var key = String(v);
-            if (seen[key]) return;
-            seen[key] = true;
-            keys.push(key);
-        });
-        keys.sort();
-        var html = '';
-        keys.forEach(function (key, idx) {
-            var id = 'chkLoaiLop_' + idx;
-            var checked = preserved[key] ? ' checked' : '';
-            var keyAttr = key.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
-            html += '<label class="aps-filter-check" for="' + id + '">'
-                  + '<input type="checkbox" id="' + id + '" value="' + keyAttr + '"' + checked + ' />'
-                  + '<span>' + key + '</span>'
-                  + '</label>';
-        });
-        me._suppressLoaiLopChange = true;
-        $cont.html(html);
-        me._suppressLoaiLopChange = false;
+        // Options are static (Tất cả / Chỉ lớp riêng / Chỉ lớp thường)
+        // No rebuild needed; kept as no-op so genTable_* calls remain valid.
     },
 
     _refilterActiveTable: function () {
         var me = this;
         var tableId = me.getActiveFindTableId();
         if (!tableId) return;
-        var rec = (me._rawByTable || {})[tableId];
-        if (!rec) return;
-        if (tableId === 'tblLopHocPhan') me.genTable_LopHocPhan(rec.data, rec.iPager);
-        else if (tableId === 'tblLopHocPhanChiTiet') me.genTable_LopHocPhanChiTiet(rec.data, rec.iPager);
-        else if (tableId === 'tblLopHocPhanChiTiet2') me.genTable_LopHocPhanRut(rec.data, rec.iPager);
+        me.clearFindInTable();
+        me.invalidateFindCache();
+        if (tableId === 'tblLopHocPhan') me.getList_LopHocPhan();
+        else if (tableId === 'tblLopHocPhanChiTiet') me.getList_LopHocPhanChiTiet();
+        else if (tableId === 'tblLopHocPhanChiTiet2') me.getList_LopHocPhanRut();
     },
 }
