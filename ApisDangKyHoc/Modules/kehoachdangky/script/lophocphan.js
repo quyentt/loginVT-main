@@ -96,6 +96,10 @@ LopHocPhan.prototype = {
         $('#dropSearch_HocPhan').on('select2:select', function (e) {
             //me.getList_LopHocPhan();
         });
+        $('#loaiLopFilters').on('change', 'input[type="checkbox"]', function () {
+            if (me._suppressLoaiLopChange) return;
+            me._refilterActiveTable();
+        });
         $("#btnSearch").click(function (e) {
             me.clearFindInTable();
             me.invalidateFindCache();
@@ -1069,13 +1073,18 @@ LopHocPhan.prototype = {
     },
     genTable_LopHocPhan: function (data, iPager) {
         var me = this;
+        me._rawByTable = me._rawByTable || {};
+        me._rawByTable['tblLopHocPhan'] = { data: data || [], iPager: iPager };
+        me._rebuildLoaiLopOptions(data || [], 'tblLopHocPhan');
+        var displayData = me._filterDataByLoaiLop(data || [], 'tblLopHocPhan');
+        var hasLoaiLop = me._getSelectedLoaiLop().length > 0;
         var jsonForm = {
             strTable_Id: "tblLopHocPhan",
             bPaginate: {
                 strFuntionName: "main_doc.LopHocPhan.getList_LopHocPhan()",
-                iDataRow: iPager
+                iDataRow: hasLoaiLop ? displayData.length : iPager
             },
-            aaData: data,
+            aaData: displayData,
             colPos: {
                 center: [0, 3, 4, 5, 6, 7],
             },
@@ -1336,13 +1345,18 @@ LopHocPhan.prototype = {
     genTable_LopHocPhanChiTiet: function (data, iPager) {
         var me = this;
         me.dtLopHocPhanChiTiet = data || [];
+        me._rawByTable = me._rawByTable || {};
+        me._rawByTable['tblLopHocPhanChiTiet'] = { data: data || [], iPager: iPager };
+        me._rebuildLoaiLopOptions(data || [], 'tblLopHocPhanChiTiet');
+        var displayData = me._filterDataByLoaiLop(data || [], 'tblLopHocPhanChiTiet');
+        var hasLoaiLop = me._getSelectedLoaiLop().length > 0;
         var jsonForm = {
             strTable_Id: "tblLopHocPhanChiTiet",
             bPaginate: {
                 strFuntionName: "main_doc.LopHocPhan.getList_LopHocPhanChiTiet()",
-                iDataRow: iPager
+                iDataRow: hasLoaiLop ? displayData.length : iPager
             },
-            aaData: data,
+            aaData: displayData,
             colPos: {
                 center: [0],
             },
@@ -1524,13 +1538,18 @@ LopHocPhan.prototype = {
     genTable_LopHocPhanRut: function (data, iPager) {
         var me = this;
         me.dtLopHocPhanChiTiet2 = data || [];
+        me._rawByTable = me._rawByTable || {};
+        me._rawByTable['tblLopHocPhanChiTiet2'] = { data: data || [], iPager: iPager };
+        me._rebuildLoaiLopOptions(data || [], 'tblLopHocPhanChiTiet2');
+        var displayData = me._filterDataByLoaiLop(data || [], 'tblLopHocPhanChiTiet2');
+        var hasLoaiLop = me._getSelectedLoaiLop().length > 0;
         var jsonForm = {
             strTable_Id: "tblLopHocPhanChiTiet2",
             bPaginate: {
                 strFuntionName: "main_doc.LopHocPhan.getList_LopHocPhanRut()",
-                iDataRow: iPager
+                iDataRow: hasLoaiLop ? displayData.length : iPager
             },
-            aaData: data,
+            aaData: displayData,
             colPos: {
                 center: [0],
             },
@@ -3015,5 +3034,91 @@ LopHocPhan.prototype = {
         } else {
             me.updateFindCounter();
         }
+    },
+
+    /*------------------------------------------
+    --Discription: Lọc theo "Loại lớp" (client-side)
+    --Dropdown multi-select build từ distinct value của
+    --LOAILOP (tblLopHocPhan) hoặc LOPRIENG (chi tiết/rút).
+    -------------------------------------------*/
+    _rawByTable: null,
+    _lastDropdownTableId: null,
+    _suppressLoaiLopChange: false,
+
+    _loaiLopFieldFor: function (tableId) {
+        if (tableId === 'tblLopHocPhan') return 'LOAILOP';
+        if (tableId === 'tblLopHocPhanChiTiet' || tableId === 'tblLopHocPhanChiTiet2') return 'LOPRIENG';
+        return null;
+    },
+
+    _getSelectedLoaiLop: function () {
+        var vals = [];
+        $('#loaiLopFilters input[type="checkbox"]:checked').each(function () {
+            vals.push($(this).val());
+        });
+        return vals;
+    },
+
+    _filterDataByLoaiLop: function (data, tableId) {
+        var me = this;
+        var sel = me._getSelectedLoaiLop();
+        if (sel.length === 0) return data || [];
+        var field = me._loaiLopFieldFor(tableId);
+        if (!field) return data || [];
+        return (data || []).filter(function (r) {
+            var v = r[field];
+            if (v == null || v === '') return false;
+            return sel.indexOf(String(v)) !== -1;
+        });
+    },
+
+    _rebuildLoaiLopOptions: function (data, tableId) {
+        var me = this;
+        var field = me._loaiLopFieldFor(tableId);
+        var $cont = $('#loaiLopFilters');
+        if (!field || $cont.length === 0) return;
+        var tableChanged = me._lastDropdownTableId !== tableId;
+        me._lastDropdownTableId = tableId;
+        var preserved = {};
+        if (!tableChanged) {
+            $cont.find('input[type="checkbox"]:checked').each(function () {
+                preserved[$(this).val()] = true;
+            });
+        }
+        var seen = {};
+        var keys = [];
+        (data || []).forEach(function (r) {
+            var v = r[field];
+            if (v == null || v === '') return;
+            var key = String(v);
+            if (seen[key]) return;
+            seen[key] = true;
+            keys.push(key);
+        });
+        keys.sort();
+        var html = '';
+        keys.forEach(function (key, idx) {
+            var id = 'chkLoaiLop_' + idx;
+            var checked = preserved[key] ? ' checked' : '';
+            var keyAttr = key.replace(/&/g, '&amp;').replace(/"/g, '&quot;');
+            html += '<label class="aps-filter-check" for="' + id + '">'
+                  + '<input type="checkbox" id="' + id + '" value="' + keyAttr + '"' + checked + ' />'
+                  + '<span>' + key + '</span>'
+                  + '</label>';
+        });
+        me._suppressLoaiLopChange = true;
+        $cont.html(html);
+        me._suppressLoaiLopChange = false;
+    },
+
+    _refilterActiveTable: function () {
+        var me = this;
+        var tableId = me.getActiveFindTableId();
+        if (!tableId) return;
+        var rec = (me._rawByTable || {})[tableId];
+        if (!rec) return;
+        if (tableId === 'tblLopHocPhan') me.genTable_LopHocPhan(rec.data, rec.iPager);
+        else if (tableId === 'tblLopHocPhanChiTiet') me.genTable_LopHocPhanChiTiet(rec.data, rec.iPager);
+        else if (tableId === 'tblLopHocPhanChiTiet2') me.genTable_LopHocPhanRut(rec.data, rec.iPager);
     },
 }
