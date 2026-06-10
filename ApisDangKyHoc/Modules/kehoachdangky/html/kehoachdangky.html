@@ -100,6 +100,575 @@
     .radio-inline input[type="radio"] {
         margin-left: 0px;
     }
+
+    /* ===== Responsive cho form Kế hoạch đăng ký (≤ 767px) ===== */
+    @media (max-width: 767px) {
+
+        /* ULTRA AGGRESSIVE: mọi col-sm-* trong #zoneEdit -> full width */
+        #zoneEdit [class*="col-sm-"],
+        #zoneEdit .row > [class*="col-sm-"],
+        #zoneEdit .aps-form-item > [class*="col-sm-"],
+        #zoneEdit .aps-form > [class*="col-sm-"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* Ép mọi .row trong #zoneEdit về block để cột con xếp dọc */
+        #zoneEdit .row,
+        #zoneEdit .row.aps-form-item,
+        #zoneEdit .row.aps-form,
+        #zoneEdit .row.td-left {
+            display: block !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+
+        /* NGOẠI LỆ: hàng ngày + giờ + phút giữ ngang bằng flex */
+        #zoneEdit .aps-form-item .d-flex.gap10 {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 8px !important;
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+        #zoneEdit .aps-form-item .d-flex.gap10 > .form-control {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+            width: auto !important;
+        }
+
+        /* NGOẠI LỆ: cụm Có/Không hai radio cùng hàng */
+        #zoneEdit .row.td-left > .radio,
+        #zoneEdit .row.td-left > .radio.checkradio {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 18px !important;
+            width: 100% !important;
+        }
+        #zoneEdit .row.td-left > .radio > [class*="col-sm-"],
+        #zoneEdit .row.td-left > .radio.checkradio > [class*="col-sm-"] {
+            width: auto !important;
+            max-width: none !important;
+            flex: 0 0 auto !important;
+        }
+
+        .aps-kehoach-dangky .box-view.aps-add-new.pd20,
+        .aps-kehoach-dangky #zoneEdit .box-body.pd0 > .col-sm-12 {
+            padding: 10px !important;
+        }
+
+        /* FALLBACK: cho phép lướt ngang nếu hàng nào vẫn còn rộng quá */
+        #zoneEdit .box-body,
+        #zoneEdit .box-view {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+        #zoneEdit .form-container,
+        #zoneEdit .box.box-solid {
+            min-width: 0 !important;
+        }
+
+        /* Ép mọi col-sm-* trong form về full width */
+        .aps-kehoach-dangky .aps-form > .col-sm-1,
+        .aps-kehoach-dangky .aps-form > .col-sm-2,
+        .aps-kehoach-dangky .aps-form > .col-sm-3,
+        .aps-kehoach-dangky .aps-form > .col-sm-4,
+        .aps-kehoach-dangky .aps-form > .col-sm-5,
+        .aps-kehoach-dangky .aps-form > .col-sm-6,
+        .aps-kehoach-dangky .aps-form > .col-sm-7,
+        .aps-kehoach-dangky .aps-form > .col-sm-8,
+        .aps-kehoach-dangky .aps-form > .col-sm-9,
+        .aps-kehoach-dangky .aps-form > .col-sm-10,
+        .aps-kehoach-dangky .aps-form > .col-sm-11,
+        .aps-kehoach-dangky .aps-form > .col-sm-12,
+        .aps-kehoach-dangky #zoneEdit .box-view > [class*="col-sm-"],
+        .aps-kehoach-dangky #zoneEdit .aps-form-item > [class*="col-sm-"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Bỏ padding trái/phải custom làm lệch khung */
+        .aps-kehoach-dangky .pr20,
+        .aps-kehoach-dangky .pl20,
+        .aps-kehoach-dangky .pl30,
+        .aps-kehoach-dangky .pr15,
+        .aps-kehoach-dangky .pL20 {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        /* Mỗi field cách nhau gọn gàng */
+        .aps-kehoach-dangky .aps-form-item {
+            margin-bottom: 10px !important;
+        }
+        .aps-kehoach-dangky .aps-form-item > [class*="col-sm-"] {
+            margin-bottom: 6px !important;
+        }
+
+        /* Label nằm TRÊN input, không căn phải nữa */
+        .aps-kehoach-dangky .aps-form-lable,
+        .aps-kehoach-dangky .aps-form-item .aps-form-lable {
+            text-align: left !important;
+            justify-content: flex-start !important;
+            white-space: normal !important;
+            line-height: 1.35 !important;
+            font-weight: 600;
+            margin-bottom: 4px !important;
+            display: block !important;
+            width: 100% !important;
+        }
+
+        /* Input/select/textarea full width */
+        .aps-kehoach-dangky .form-control,
+        .aps-kehoach-dangky .select-opt,
+        .aps-kehoach-dangky select,
+        .aps-kehoach-dangky .select2-container {
+            width: 100% !important;
+            max-width: 100% !important;
+        }
+
+        /* Hàng ngày + giờ + phút: ngày 100%, giờ/phút chia đôi */
+        .aps-kehoach-dangky .aps-form-item .d-flex.gap10 {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            gap: 8px !important;
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+        .aps-kehoach-dangky .aps-form-item .d-flex.gap10 > .form-control {
+            flex: 1 1 0 !important;
+            min-width: 0 !important;
+        }
+
+        /* Field độ rộng cố định (Nợ tối đa, Rút HP...) bỏ ép width inline */
+        .aps-kehoach-dangky #txtNoToiDa,
+        .aps-kehoach-dangky #txtSoNgayRutHP,
+        .aps-kehoach-dangky #txtNgayBDRutHP {
+            width: 100% !important;
+            margin-left: 0 !important;
+        }
+        .aps-kehoach-dangky .row.td-left .line-38.d-flex {
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+        }
+
+        /* Câu hỏi Có/Không: label 1 dòng, 2 radio nằm cùng hàng phía dưới */
+        .aps-kehoach-dangky .row.td-left > .col-sm-8,
+        .aps-kehoach-dangky .row.td-left > .col-sm-4,
+        .aps-kehoach-dangky .row.td-left > .col-sm-3 {
+            width: 100% !important;
+            flex: 0 0 100% !important;
+            margin-bottom: 4px !important;
+        }
+        .aps-kehoach-dangky .row.td-left > .radio {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 18px !important;
+            width: 100% !important;
+        }
+        .aps-kehoach-dangky .row.td-left > .radio > [class*="col-sm-"] {
+            width: auto !important;
+            flex: 0 0 auto !important;
+            padding: 0 !important;
+        }
+
+        /* Nhóm radio/checkbox dọc (Mô hình, Trạng thái SV, Kiểu ĐK…) */
+        .aps-kehoach-dangky .radio > .col-sm-12,
+        .aps-kehoach-dangky .checkbox > .col-sm-12,
+        .aps-kehoach-dangky .checkbox_TTSV > .col-sm-6,
+        .aps-kehoach-dangky .check-list > .col-sm-12,
+        .aps-kehoach-dangky .check-list > .col-sm-6 {
+            width: 100% !important;
+            flex: 0 0 100% !important;
+            padding: 4px 0 !important;
+        }
+
+        /* Badge tiêu đề nhóm: cho phép xuống dòng đẹp */
+        .aps-kehoach-dangky .group-group-title-name .badge {
+            white-space: normal !important;
+            line-height: 1.4 !important;
+            display: inline-block;
+            font-size: 13px;
+        }
+
+        /* Table xử lý LHP / DS đăng ký: cho scroll ngang */
+        .aps-kehoach-dangky .scroll-table-x,
+        .aps-kehoach-dangky .aps-table-select {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Box header (tiêu đề "Thêm mới - Kế hoạch đăng ký") */
+        #zoneEdit .box-header .box-title {
+            font-size: 15px;
+            line-height: 1.35;
+            padding-right: 40px;
+        }
+
+        /* Footer: các nút wrap thành lưới, nút Lưu full width */
+        #zoneEdit .box-footer .pull-right,
+        #zoneEdit .box-footer .pull-right.d-flex {
+            float: none !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            width: 100% !important;
+            justify-content: stretch !important;
+        }
+        #zoneEdit .box-footer .pull-right > .btn {
+            flex: 1 1 calc(50% - 6px) !important;
+            margin: 0 !important;
+            white-space: normal !important;
+            font-size: 12px !important;
+            line-height: 1.3 !important;
+            padding: 8px 6px !important;
+        }
+        #zoneEdit .box-footer .pull-right > #btnSave,
+        #zoneEdit .box-footer .pull-right > .btnSave {
+            flex: 1 1 100% !important;
+            font-size: 14px !important;
+            padding: 10px !important;
+        }
+
+        /* Bộ tìm kiếm ở danh sách KHDK */
+        #zonebatdau .box-search .item-search {
+            width: 100% !important;
+            margin-bottom: 6px;
+        }
+        #zonebatdau .box-search .btn-search {
+            width: 100%;
+            text-align: center;
+        }
+
+        /* ===== Modals: full width gần kín màn hình ===== */
+        #myModal .modal-dialog,
+        #myModal_khongdangky .modal-dialog,
+        #myModalPCNhomKiemSoat .modal-dialog,
+        #myModalPCChuongTrinh .modal-dialog,
+        #myModalPCKhoaHoc .modal-dialog,
+        #myModalXuLyLHP .modal-dialog,
+        #myModalChonLHP .modal-dialog,
+        #modal_nhansu .modal-dialog {
+            width: 96% !important;
+            max-width: 96% !important;
+            margin: 6px auto !important;
+        }
+        #myModalXuLyLHP .modal-dialog,
+        #myModalChonLHP .modal-dialog {
+            max-height: 96vh !important;
+        }
+        #myModalXuLyLHP .modal-content,
+        #myModalChonLHP .modal-content {
+            max-height: 96vh !important;
+        }
+
+        /* Modal Xử lý LHP - thanh "Áp dụng cho tất cả" */
+        #myModalXuLyLHP .modal-body > .mb-10:first-child {
+            flex-wrap: wrap !important;
+            gap: 8px !important;
+        }
+        #myModalXuLyLHP #dropBulkXuLyDacThu {
+            max-width: 100% !important;
+            flex: 1 1 100% !important;
+        }
+        #myModalXuLyLHP #btnApDungTatCa {
+            width: 100% !important;
+            text-align: center;
+        }
+        /* Thanh nút Thêm/Xóa nhiều dòng */
+        #myModalXuLyLHP .modal-body > .mb-10:nth-child(2) {
+            flex-wrap: wrap !important;
+        }
+        #myModalXuLyLHP .modal-body > .mb-10:nth-child(2) .btn {
+            flex: 1;
+        }
+
+        /* Modal Chọn LHP - thanh tìm kiếm xếp dọc */
+        #myModalChonLHP .modal-body > .col-sm-8,
+        #myModalChonLHP .modal-body > .col-sm-4 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            padding: 0 0 8px 0 !important;
+        }
+
+        /* Modal Phân công CT - 2 select xếp dọc */
+        #myModalPCChuongTrinh .aps-form > .col-sm-6 {
+            width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+            padding: 0 0 8px 0 !important;
+            margin-left: 0 !important;
+        }
+
+        /* Modal footer (Xử lý LHP / Chọn LHP) có 3 cụm: page-size, pager, nút */
+        #myModalXuLyLHP .modal-footer,
+        #myModalChonLHP .modal-footer {
+            justify-content: center !important;
+        }
+        #myModalXuLyLHP .modal-footer > div,
+        #myModalChonLHP .modal-footer > div {
+            width: 100% !important;
+            justify-content: center !important;
+        }
+
+        /* Modal Phân công footer: nút Đóng + Lưu chia đôi */
+        #myModalPCNhomKiemSoat .modal-footer .pull-right,
+        #myModalPCChuongTrinh .modal-footer .pull-right,
+        #myModalPCKhoaHoc .modal-footer .pull-right,
+        #myModal .modal-footer,
+        #myModal_khongdangky .modal-footer {
+            float: none !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 6px !important;
+            width: 100% !important;
+            justify-content: stretch !important;
+        }
+        #myModalPCNhomKiemSoat .modal-footer .pull-right > .btn,
+        #myModalPCChuongTrinh .modal-footer .pull-right > .btn,
+        #myModalPCKhoaHoc .modal-footer .pull-right > .btn {
+            flex: 1 1 calc(50% - 6px) !important;
+            margin: 0 !important;
+        }
+        #myModal .modal-footer .btn,
+        #myModal_khongdangky .modal-footer .btn {
+            width: 100% !important;
+        }
+
+        /* Bảng trong modal: ép min-width để giữ cột đầy đủ + scroll ngang */
+        #tblQuanSoLop,
+        #tblKhongDangKy,
+        #tblPCNhomKiemSoat,
+        #tblPCChuongTrinh,
+        #tblPCKhoaHoc,
+        #tblChonLHP,
+        #tblXuLyLHP {
+            min-width: 720px;
+        }
+
+        /* ===== Zone Phân quyền cán bộ ===== */
+        #zonePhanQuyen .box-body .row.box-view.pd20 {
+            padding: 10px !important;
+        }
+        #zonePhanQuyen .aps-form-table {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+        }
+        #zonePhanQuyen #tblInput_TTS_ThanhVien {
+            min-width: 720px;
+        }
+        #zonePhanQuyen .box-footer .pull-right {
+            float: none !important;
+            text-align: center !important;
+            width: 100%;
+        }
+        #zonePhanQuyen .box-footer .pull-right .btn {
+            width: 100% !important;
+        }
+        #zonePhanQuyen .row > .pull-right {
+            float: none !important;
+            text-align: center;
+            margin-top: 8px;
+        }
+        #zonePhanQuyen .btnSearchTTS_NhanSu {
+            width: 100%;
+        }
+
+        /* ===== Modal chọn nhân sự (load từ JS) ===== */
+        #modal_nhansu .modal-dialog {
+            width: 96% !important;
+            margin: 6px auto !important;
+        }
+    }
+
+    /* ===== Mobile action bar (sticky đáy màn hình) ===== */
+    .mab-wrap, .mas-wrap { display: none; }
+    @media (max-width: 767px) {
+        /* Hiện sticky bar và ẩn footer gốc khi đang ở form Thêm/Sửa */
+        .mab-wrap.is-visible {
+            display: flex !important;
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            background: #fff;
+            border-top: 1px solid #e0e3ea;
+            box-shadow: 0 -3px 14px rgba(0,0,0,0.10);
+            padding: 8px;
+            gap: 8px;
+            z-index: 1030;
+        }
+        .mab-wrap .mab-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 11px 6px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            background: #f4f6fa;
+            color: #444;
+            cursor: pointer;
+            text-decoration: none;
+            line-height: 1.2;
+        }
+        .mab-wrap .mab-btn i { font-size: 14px; }
+        .mab-wrap .mab-delete { background: #ffe5e5; color: #c0392b; border-color: #f5b1a8; }
+        .mab-wrap .mab-more { background: #fff7e0; color: #8a6a13; border-color: #ffe9a7; }
+        .mab-wrap .mab-save { background: #1976d2; color: #fff; border-color: #1976d2; }
+        .mab-wrap .mab-btn:active { transform: translateY(1px); }
+        /* Khi không có nút Xóa (mode Thêm mới) -> Thao tác + Lưu chia đôi */
+        .mab-wrap .mab-delete[hidden],
+        .mab-wrap .mab-delete.is-hidden { display: none !important; }
+
+        /* Header gọn gàng + nút × tròn nổi bật trên mobile */
+        #zoneEdit .box-header.aps-box-header {
+            position: relative !important;
+            padding: 12px 52px 12px 14px !important;
+            min-height: 52px;
+        }
+        #zoneEdit .box-header .box-title {
+            font-size: 14px !important;
+            line-height: 1.35 !important;
+            margin: 0 !important;
+            white-space: normal !important;
+            overflow-wrap: break-word;
+            display: block;
+        }
+        #zoneEdit .box-header .box-title i {
+            font-size: 14px !important;
+            margin-right: 4px;
+        }
+        #zoneEdit .box-header .box-title .myModalLabel {
+            font-weight: 600;
+        }
+        #zoneEdit .box-header .pull-right.title-note,
+        #zoneEdit .box-header .pull-right-absolute {
+            position: absolute !important;
+            right: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            margin: 0 !important;
+        }
+        #zoneEdit .box-header .btnCloseToggle {
+            background: rgba(255,255,255,0.22) !important;
+            color: #fff !important;
+            border: 1px solid rgba(255,255,255,0.55) !important;
+            padding: 0 !important;
+            border-radius: 50% !important;
+            width: 34px !important;
+            height: 34px !important;
+            min-width: 34px;
+            font-size: 13px !important;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+        }
+        #zoneEdit .box-header .btnCloseToggle i {
+            color: #fff !important;
+            margin: 0 !important;
+        }
+
+        /* Chừa khoảng trống để content không bị bar che */
+        #zoneEdit.is-active-mobile,
+        #zoneEdit:not([style*="display: none"]) {
+            padding-bottom: 76px !important;
+        }
+        /* Ẩn footer gốc trên mobile vì đã có sticky bar */
+        #zoneEdit .box-footer { display: none !important; }
+
+        /* Bottom sheet */
+        .mas-wrap.is-open { display: block !important; }
+        .mas-wrap .mas-backdrop {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.45);
+            z-index: 1040;
+            animation: masFade .2s ease;
+        }
+        .mas-wrap .mas-panel {
+            position: fixed;
+            left: 0; right: 0; bottom: 0;
+            background: #fff;
+            border-radius: 16px 16px 0 0;
+            padding: 6px 0 12px;
+            z-index: 1041;
+            max-height: 75vh;
+            overflow-y: auto;
+            animation: masSlide .25s ease;
+        }
+        .mas-wrap .mas-handle {
+            width: 42px; height: 4px;
+            background: #d0d4dd;
+            border-radius: 2px;
+            margin: 8px auto 6px;
+        }
+        .mas-wrap .mas-title {
+            text-align: center;
+            font-weight: 600;
+            color: #777;
+            font-size: 12px;
+            padding: 4px 0 8px;
+            border-bottom: 1px solid #eef0f4;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .mas-wrap .mas-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 18px;
+            color: #2c3034;
+            text-decoration: none;
+            border-bottom: 1px solid #f2f3f6;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .mas-wrap .mas-item:active { background: #f5f6fa; }
+        .mas-wrap .mas-item i {
+            width: 22px; text-align: center;
+            color: #1976d2; font-size: 16px;
+        }
+        .mas-wrap .mas-item.mas-delete i { color: #d32f2f; }
+        .mas-wrap .mas-item.mas-delete { color: #d32f2f; }
+        .mas-wrap .mas-cancel {
+            text-align: center;
+            padding: 14px;
+            color: #999;
+            font-weight: 600;
+            margin-top: 6px;
+            border-top: 6px solid #f2f3f6;
+            cursor: pointer;
+        }
+        @keyframes masSlide { from { transform: translateY(100%);} to { transform: translateY(0);} }
+        @keyframes masFade { from { opacity: 0;} to { opacity: 1;} }
+    }
+
+    /* ===== Tablet nhỏ (768–991px): co label/input về ngang nhưng gọn ===== */
+    @media (min-width: 768px) and (max-width: 991px) {
+        .aps-kehoach-dangky .aps-form-lable {
+            font-size: 13px;
+            white-space: normal;
+            line-height: 1.35;
+        }
+        #zoneEdit .box-footer .pull-right > .btn {
+            font-size: 12px;
+            padding: 6px 8px;
+        }
+    }
 </style>
 <!-- Main content -->
 <section class="content aps-dangkyhoc">
@@ -1587,6 +2156,41 @@
         </div>
     </div>
 </div>
+<!-- Sticky action bar (mobile only) -->
+<div class="mab-wrap" id="mobileActionBar_KHDK">
+    <a class="mab-btn mab-delete is-hidden" id="mabBtn_Delete">
+        <i class="fa fa-trash"></i> Xóa
+    </a>
+    <a class="mab-btn mab-more" id="mabBtn_More">
+        <i class="fa fa-ellipsis-h"></i> Thao tác
+    </a>
+    <a class="mab-btn mab-save" id="mabBtn_Save">
+        <i class="fa fa-save"></i> Lưu
+    </a>
+</div>
+
+<!-- Bottom sheet (mobile only) -->
+<div class="mas-wrap" id="mobileActionSheet_KHDK">
+    <div class="mas-backdrop"></div>
+    <div class="mas-panel">
+        <div class="mas-handle"></div>
+        <div class="mas-title">Thao tác khác</div>
+        <a class="mas-item" data-action="btnPhanCongCT">
+            <i class="fal fa-poll-people"></i> Phân công NKS (mức chương trình)
+        </a>
+        <a class="mas-item" data-action="btnPhanCongKH">
+            <i class="fal fa-user-chart"></i> Phân công NKS (mức khóa học)
+        </a>
+        <a class="mas-item" data-action="btnPhanCong">
+            <i class="fal fa-users-class"></i> Phân công theo nhóm kiểm soát
+        </a>
+        <a class="mas-item" data-action="btnChuyenDuLieu">
+            <i class="fa-light fa-database"></i> Chuyển dữ liệu TKB → ĐKH
+        </a>
+        <div class="mas-cancel" id="masBtn_Cancel">Hủy</div>
+    </div>
+</div>
+
 <!-- page script -->
 <script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.2"></script>
 <script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.8"></script>
@@ -1595,5 +2199,96 @@
     main_doc['KeHoachDangKy'] = new KeHoachDangKy();
     $(document).ready(function () {
         main_doc.KeHoachDangKy.init();
+
+        // ===== Mobile sticky action bar wiring =====
+        (function () {
+            var $bar = $("#mobileActionBar_KHDK");
+            var $sheet = $("#mobileActionSheet_KHDK");
+            var $zoneEdit = $("#zoneEdit");
+            var $btnDelMobile = $("#mabBtn_Delete");
+
+            // Không dùng :visible vì box-footer bị ẩn trên mobile -> :visible luôn false.
+            // Đọc trực tiếp inline style của nút Xóa gốc.
+            function isBtnDelShown() {
+                var el = document.getElementById("btnDelete_KeHoach");
+                return !!el && el.style.display !== "none";
+            }
+
+            function syncBar() {
+                var editVisible = $zoneEdit.is(":visible");
+                $bar.toggleClass("is-visible", editVisible);
+                if (editVisible) {
+                    $btnDelMobile.toggleClass("is-hidden", !isBtnDelShown());
+                } else {
+                    $sheet.removeClass("is-open");
+                }
+            }
+
+            // Theo dõi style của #zoneEdit để bật/tắt bar khi toggle zone
+            var zoneEl = document.getElementById("zoneEdit");
+            if (window.MutationObserver && zoneEl) {
+                new MutationObserver(syncBar).observe(zoneEl, {
+                    attributes: true, attributeFilter: ["style"]
+                });
+            }
+            // Theo dõi nút Xóa gốc (style display)
+            var delEl = document.getElementById("btnDelete_KeHoach");
+            if (window.MutationObserver && delEl) {
+                new MutationObserver(syncBar).observe(delEl, {
+                    attributes: true, attributeFilter: ["style"]
+                });
+            }
+            syncBar();
+
+            // Bind 3 nút chính ở sticky bar
+            $btnDelMobile.on("click", function (e) {
+                e.preventDefault();
+                $("#btnDelete_KeHoach").trigger("click");
+            });
+            $("#mabBtn_Save").on("click", function (e) {
+                e.preventDefault();
+                $("#btnSave").trigger("click");
+            });
+            $("#mabBtn_More").on("click", function (e) {
+                e.preventDefault();
+                $sheet.addClass("is-open");
+            });
+
+            // Just-in-time đồng bộ nút Xóa khi user mở form
+            $(document).on("click", "#tblKHDK .btnEdit", function () {
+                setTimeout(function () {
+                    $btnDelMobile.toggleClass("is-hidden", !isBtnDelShown());
+                    cleanupHeaderTitle();
+                }, 100);
+            });
+            $(document).on("click", "#btnAddnew", function () {
+                $btnDelMobile.addClass("is-hidden");
+                setTimeout(cleanupHeaderTitle, 50);
+            });
+
+            // Strip ".." prefix do systemroot.js chèn vào .myModalLabel
+            function cleanupHeaderTitle() {
+                $("#zoneEdit .box-title .myModalLabel").each(function () {
+                    var html = $(this).html();
+                    var cleaned = html.replace(/^\s*\.{2,3}\s*/, "");
+                    if (cleaned !== html) $(this).html(cleaned);
+                });
+            }
+            cleanupHeaderTitle();
+
+            // Đóng sheet
+            $sheet.on("click", ".mas-backdrop, #masBtn_Cancel", function () {
+                $sheet.removeClass("is-open");
+            });
+            // Click 1 item -> trigger nút gốc tương ứng
+            $sheet.on("click", ".mas-item", function (e) {
+                e.preventDefault();
+                var targetId = $(this).attr("data-action");
+                $sheet.removeClass("is-open");
+                if (targetId) {
+                    setTimeout(function () { $("#" + targetId).trigger("click"); }, 50);
+                }
+            });
+        })();
     });
 </script>
