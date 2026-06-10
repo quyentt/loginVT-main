@@ -11502,9 +11502,11 @@ table#clone {
 .myModalChiTietLich.modal .modal-dialog {
     width: 100% !important;
 }
+
 .myModalChiTietLich .tblLichHoc.table {
     min-width: 1200px;
 }
+
 /* ------------- */
 /* Kế hoạch nhập học - Thu phí */
 .kehoach-nhaphoc-thuPhi-tab .tab-list {
@@ -12454,12 +12456,13 @@ table#clone {
 
 
 
-/* Mr */
+/* Mr  bruce*/
 .box-header-has-action {
     display: flex;
     align-items: center;
     gap: 20px;
     justify-content: space-between;
+
 
 }
 
@@ -12733,7 +12736,7 @@ table#clone {
     font-size: 20px;
     margin-top: 5px;
     color: var(--color-blue);
-    =======margin-top: 2px;
+    margin-top: 2px;
 }
 
 .thaotac-list .btn .title {
@@ -15247,18 +15250,22 @@ table#clone {
 .box-solid.aps-hs-dauVao {
     padding-bottom: 10px !important;
 }
+
 /* KHOA-05 (.aps-khoa-SapTotNghiep): 1024-1680px - anh tren, thong tin duoi, anh can giua */
 @media (min-width: 1024px) and (max-width: 1680px) {
-  .aps-khoa-SapTotNghiep .user-infomation {
-    flex-direction: column;
-    align-items: center;
-  }
-  .aps-khoa-SapTotNghiep .user-infomation .image {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .aps-khoa-SapTotNghiep .user-infomation .info {
-    width: 100%;
-  }
->>>>>>> aa0aa4f0e1791e62a59ff8dce86c032e11c23dca
+    .aps-khoa-SapTotNghiep .user-infomation {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .aps-khoa-SapTotNghiep .user-infomation .image {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .aps-khoa-SapTotNghiep .user-infomation .info {
+        width: 100%;
+    }
+
+
 }
