@@ -1,0 +1,446 @@
+<link rel="stylesheet" href="assets/css-new/styles.css">
+<div class="one-door mt-0 aps-daqhht">
+    <div class="content-tab no-tab">
+        <div class="d-flex justify-content-between">
+            <div class="nav-content-left">
+                <p class="link">
+                    <a href="#">Kế hoạch nhập học</a><i class="fal fa-angle-right"></i><a href="#">Quản lý sinh viên tổng quát</a>
+                </p>
+            </div>
+            <div class="nav-content-right">
+                <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="function-content w-100">
+        <div class="feature-content has-tabs">
+            <div class="card today-card today-card-1 mb-40">
+                <div class="card-header">
+                    <div class="myTab-header">
+                        <div class="myTab-header-item">
+                            <a href="#" class="myTab-header-link active" data-myTab="danhsach_sinhvien">
+                                <i class="fa-solid fa-user-graduate mr-5"></i> Danh sách sinh viên
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="myTab-content">
+                        <!--  Danh sách sinh viên -->
+                        <div class="myTab-item show" id="danhsach_sinhvien">
+                            <!-- Bộ lọc -->
+                            <div class="aps-filter-daqhht mb-10">
+                                <div class="row">
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Hệ đào tạo</label>
+                                        <select id="dropHeDaoTao_CB" class="select-opt form-select w-100" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Khóa đào tạo</label>
+                                        <select id="dropKhoaDaoTao_CB" class="select-opt form-select w-100" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Khoa quản lý</label>
+                                        <select id="dropKhoaQuanLy_CB" class="select-opt form-select w-100" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Chương trình</label>
+                                        <select id="dropChuongTrinh_CB" class="select-opt form-select w-100" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Lớp</label>
+                                        <select id="dropSearch_Lop" class="select-opt form-select w-100" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Trạng thái học tập</label>
+                                        <select id="dropSearch_TrangThai" class="select-opt form-select w-100" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-12 col-sm-6 col-lg-4 col-xxl-3 mb-10">
+                                        <label class="form-label mb-1 fz14 color-888">Thông tin</label>
+                                        <input type="text" id="txtSearch_TuKhoa" class="form-control"
+                                            placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                                    </div>
+                                    <div class="col-12 mb-5 d-flex align-items-end justify-content-end gap-2 flex-wrap">
+                                        <button id="btnSearch" class="btn btn-view">
+                                            <i class="fal fa-search me-1"></i> Tìm kiếm
+                                        </button>
+                                        <button id="btnRefresh" class="btn btn-white">
+                                            <i class="fal fa-sync-alt me-1"></i> Làm mới
+                                        </button>
+                                        <button id="btnResetFilter" class="btn btn-default">
+                                            <i class="fal fa-sliders-h me-1"></i> Đặt lại bộ lọc
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Thống kê tổng quan -->
+                            <div class="row mb-15">
+                                <div class="col-6 col-md-4 col-xxl-2 mb-15">
+                                    <div class="info-box">
+                                        <div class="icon"><i class="fa-duotone fa-solid fa-users"></i></div>
+                                        <div>
+                                            <div class="name" id="lblTongSinhVien">0</div>
+                                            <div class="static">Tổng sinh viên</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-xxl-2 mb-15 modul-item-3">
+                                    <div class="info-box">
+                                        <div class="icon"><i class="fa-duotone fa-solid fa-screen-users"></i></div>
+                                        <div>
+                                            <div class="name" id="lblDangHoc">0</div>
+                                            <div class="static"><span id="lblDangHoc_PT">0%</span> · Đang học</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-xxl-2 mb-15">
+                                    <div class="info-box">
+                                        <div class="icon" style="color:#22b06a;background:rgba(34,176,106,.18)">
+                                            <i class="fa-duotone fa-solid fa-graduation-cap"></i>
+                                        </div>
+                                        <div>
+                                            <div class="name" id="lblDaTotNghiep">0</div>
+                                            <div class="static"><span id="lblDaTotNghiep_PT">0%</span> · Đã tốt nghiệp</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-xxl-2 mb-15 modul-item-2">
+                                    <div class="info-box">
+                                        <div class="icon"><i class="fa-duotone fa-solid fa-user-clock"></i></div>
+                                        <div>
+                                            <div class="name" id="lblBaoLuu">0</div>
+                                            <div class="static"><span id="lblBaoLuu_PT">0%</span> · Bảo lưu/Tạm dừng</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-xxl-2 mb-15">
+                                    <div class="info-box">
+                                        <div class="icon" style="color:#e6a700;background:rgba(230,167,0,.18)">
+                                            <i class="fa-duotone fa-solid fa-circle-dollar"></i>
+                                        </div>
+                                        <div>
+                                            <div class="name"><span id="lblCongNo">0</span><u>đ</u></div>
+                                            <div class="static" id="lblCongNo_SV">0 sinh viên</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-4 col-xxl-2 mb-15 modul-item-4">
+                                    <div class="info-box">
+                                        <div class="icon"><i class="fa-duotone fa-solid fa-triangle-exclamation"></i></div>
+                                        <div>
+                                            <div class="name" id="lblCanhBao">0</div>
+                                            <div class="static"><span id="lblCanhBao_PT">0%</span> · Cảnh báo học vụ</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab phân loại sinh viên + Hành động -->
+                            <div class="d-flex flex-wrap align-items-center justify-content-between border-bottom mb-10">
+                                <ul class="nav nav-tabs user-tb-list border-0" id="tabSinhVien" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab active" href="#" data-status="">
+                                            <i class="fa-duotone fa-solid fa-users me-1"></i> Tất cả
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab" href="#" data-status="DANGHOC">
+                                            <i class="fa-duotone fa-solid fa-chalkboard-user me-1"></i> Đang học
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab" href="#" data-status="CANHBAO">
+                                            <i class="fa-duotone fa-solid fa-triangle-exclamation me-1"></i> Cảnh báo học vụ
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab" href="#" data-status="CONGNO">
+                                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot me-1"></i> Công nợ
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab" href="#" data-status="SAPTOTNGHIEP">
+                                            <i class="fa-duotone fa-solid fa-user-graduate me-1"></i> Sắp tốt nghiệp
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="d-flex align-items-center gap-2 mb-5">
+                                    <div class="dropdown" id="zonebtnBaoCao_SinhVien"></div>
+                                </div>
+                            </div>
+
+                            <div class="table-wrap">
+                                <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                    <table class="table table-bordered tblSinhVien table-noborder" id="tblSinhVien">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center border-top-1 py-11" scope="col">STT</th>
+                                                <th class="min-w-100p border-top-1 py-11" scope="col">Mã SV</th>
+                                                <th class="min-w-150p border-top-1 py-11" scope="col">Họ và tên</th>
+                                                <th class="min-w-100p border-top-1 py-11" scope="col">Lớp</th>
+                                                <th class="min-w-150p border-top-1 py-11" scope="col">Chương trình</th>
+                                                <th class="min-w-110p text-center border-top-1 py-11" scope="col">Trạng thái</th>
+                                                <th class="min-w-60p text-center border-top-1 py-11" scope="col">GPA</th>
+                                                <th class="min-w-110p text-center border-top-1 py-11" scope="col">Công nợ</th>
+                                                <th class="min-w-150p border-top-1 py-11" scope="col">Cố vấn</th>
+                                                <th class="min-w-80p text-center border-top-1 py-11" scope="col">Thao tác</th>
+                                                <th class="text-center border-top-1 py-11" scope="col">
+                                                    <input type="checkbox" class="chkSystemSelectAll">
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ---------- Buttons (ẩn) ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_HoSoSinhVien">
+        Hồ sơ sinh viên
+    </button>
+</div>
+
+<!-- Modal: Hồ sơ chi tiết sinh viên -->
+<div class="modal fade aps-modal-hosoSV" id="modal_HoSoSinhVien" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-1800">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title"><i class="fa-light fa-address-card mr-5"></i> Hồ sơ sinh viên</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+            <div class="modal-body pd0">
+                <div class="row pd20">
+                    <!-- 1. Thông tin cá nhân + tổng quan QHHT -->
+                    <div class="col-12 col-lg-6 mb-15">
+                        <div class="box box-solid box-shadow pd0">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-green">
+                                    <i class="fa-light fa-address-card mr-5"></i> Thông tin sinh viên
+                                </h3>
+                            </div>
+                            <div class="aps-tab-tongquan pd20">
+                                <div class="user-infomation">
+                                    <div class="image">
+                                        <img id="imgSV_Avatar" src="assets/images/avatar.jpg">
+                                    </div>
+                                    <div class="info">
+                                        <div class="item user-name">
+                                            <div class="label">Họ và tên:</div>
+                                            <div class="text" id="lblSV_HoTen"></div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Lớp:</div>
+                                            <div class="text" id="lblSV_Lop"></div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Khoa:</div>
+                                            <div class="text" id="lblSV_Khoa"></div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Ngày sinh:</div>
+                                            <div class="text" id="lblSV_NgaySinh"></div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">CCCD:</div>
+                                            <div class="text" id="lblSV_CCCD"></div>
+                                        </div>
+                                        <div class="item">
+                                            <div class="label">Email:</div>
+                                            <div class="text" id="lblSV_Email"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tongquanda-qhht mt-15">
+                                    <div class="title">Tổng quan QHHT
+                                        <a href="#"><i class="fa-light fa-circle-info bold ml-5"></i></a>
+                                    </div>
+                                    <div class="tongquanda-qhht-list">
+                                        <div class="item color-red">
+                                            <div class="icon"><i class="fa-duotone fa-thin fa-laptop-file"></i></div>
+                                            <div class="label">Tổng QHHT</div>
+                                            <div class="number" id="lblTongQHHT">0</div>
+                                        </div>
+                                        <div class="item color-blue">
+                                            <div class="icon"><i class="fa-duotone fa-solid fa-chalkboard-user"></i></div>
+                                            <div class="label">Đang học</div>
+                                            <div class="number" id="lblQHHT_DangHoc">0</div>
+                                        </div>
+                                        <div class="item color-green">
+                                            <div class="icon"><i class="fa-duotone fa-solid fa-graduation-cap"></i></div>
+                                            <div class="label">Hoàn thành</div>
+                                            <div class="number" id="lblQHHT_HoanThanh">0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Danh sách QHHT + chi tiết QHHT -->
+                    <div class="col-12 col-lg-6 mb-15">
+                        <div class="box box-solid box-shadow pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-green">
+                                    <i class="fa-light fa-sitemap mr-5"></i> Danh sách QHHT / Chương trình đang theo học
+                                </h3>
+                            </div>
+                            <div class="pd20">
+                                <div id="zoneListQHHT" class="aps-list-qhht"></div>
+                            </div>
+                        </div>
+
+                        <div class="box box-solid box-shadow pd0">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-red">
+                                    <i class="fa-duotone fa-solid fa-chalkboard-user mr-5"></i>
+                                    Thông tin chi tiết QHHT: <span id="lblQHHT_Ma"></span>
+                                </h3>
+                            </div>
+                            <div class="pd20">
+                                <div class="row" id="zoneChiTietQHHT"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Tab tổng quan QHHT chi tiết -->
+                    <div class="col-12 mb-15">
+                        <div class="box box-solid box-shadow pd0">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-thin fa-laptop-file mr-5"></i> Chi tiết theo học kỳ
+                                </h3>
+                            </div>
+                            <div class="pd20">
+                                <ul class="nav nav-tabs" id="tabHoSoSV" role="tablist">
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sv_tongquan" type="button" role="tab">
+                                            <i class="fa-duotone fa-thin fa-laptop-file"></i> Tổng quan QHHT
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sv_quatrinhhoc" type="button" role="tab">
+                                            <i class="fa-duotone fa-solid fa-chalkboard-user"></i> Quá trình học
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sv_ketquahoctap" type="button" role="tab">
+                                            <i class="fa-duotone fa-solid fa-book-open-reader"></i> Kết quả học tập
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sv_taichinh" type="button" role="tab">
+                                            <i class="fa-duotone fa-solid fa-circle-dollar-to-slot"></i> Tài chính
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sv_hoso" type="button" role="tab">
+                                            <i class="fa-duotone fa-solid fa-id-card"></i> Hồ sơ
+                                        </button>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sv_saptotnghiep" type="button" role="tab">
+                                            <i class="fa-duotone fa-solid fa-user-graduate"></i> Sắp tốt nghiệp
+                                        </button>
+                                    </li>
+                                </ul>
+                                <div class="tab-content pt-15" id="tabHoSoSVContent">
+                                    <div class="tab-pane fade show active" id="sv_tongquan" role="tabpanel">
+                                        <div class="row">
+                                            <div class="col-12 col-md-6 col-lg-3 mb-10">
+                                                <div class="box box-shadow pd10">
+                                                    <div class="label color-888">Học kỳ hiện tại</div>
+                                                    <div class="tq-content fw-bold" id="lblHocKyHienTai"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-3 mb-10">
+                                                <div class="box box-shadow pd10">
+                                                    <div class="label color-888">Tín chỉ đã tích lũy</div>
+                                                    <div class="tq-content fw-bold" id="lblTinChiTichLuy"></div>
+                                                    <div class="progress mt-5" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                                        <div class="progress-bar" id="lblTinChiTichLuy_Bar" style="width: 0%"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-3 mb-10">
+                                                <div class="box box-shadow pd10">
+                                                    <div class="label color-888">GPA hiện tại</div>
+                                                    <div class="tq-content fw-bold" id="lblGPA_HienTai"></div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6 col-lg-3 mb-10">
+                                                <div class="box box-shadow pd10">
+                                                    <div class="label color-888">Xếp loại học lực</div>
+                                                    <div class="tq-content fw-bold" id="lblXepLoai"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="sv_quatrinhhoc" role="tabpanel">
+                                        <div class="table-responsive fs-14 no-swiper">
+                                            <table class="table table-bordered" id="tblQuaTrinhHoc">
+                                                <thead></thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="sv_ketquahoctap" role="tabpanel">
+                                        <div class="table-responsive fs-14 no-swiper">
+                                            <table class="table table-bordered" id="tblKetQuaHocTap">
+                                                <thead></thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="sv_taichinh" role="tabpanel">
+                                        <div class="table-responsive fs-14 no-swiper">
+                                            <table class="table table-bordered" id="tblTaiChinh">
+                                                <thead></thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="sv_hoso" role="tabpanel">
+                                        <div id="zoneHoSoSV"></div>
+                                    </div>
+                                    <div class="tab-pane fade" id="sv_saptotnghiep" role="tabpanel">
+                                        <div id="zoneSapTotNghiep"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex flex-wrap justify-content-end">
+                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-arrow-left"></i> <span>Quay lại</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- page script -->
+<script src="modules/hoatdong/script/DaQHHT.js?v=1.0.0.0"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['DaQHHT'] = new DaQHHT();
+    $(document).ready(function () {
+        main_doc.DaQHHT.init();
+    });
+</script>
