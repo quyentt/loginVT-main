@@ -374,24 +374,7 @@ systemroot.prototype = {
                 me["strNguoiThucVai_Id"] = undefined;
             }
             me.setUngDung(objUngDung);
-            try {
-
-                setTimeout(function () {
-                    console.log($("#sidebar-menu").is(":visible"));
-                    console.log($("body .main-wrap").length)
-                    console.log($("body .sidebar-toggle").length)
-                    console.log(!$("body .main-wrap").first().hasClass("sidebar-toggle"))
-                    if (window.innerWidth < 1281) {
-                        console.log(1234444444);
-                        //$(".top-nav .sidebar-bars").trigger("click");
-
-                    }
-                }, 500)
-                
-
-            } catch {
-
-            }
+            
         });
 
         $("#main-content-wrapper").delegate('.chucnang', 'click', function (e) {
@@ -4897,6 +4880,24 @@ systemroot.prototype = {
         me.rootPathReport = objUngDung.TENFILEDINHKEM;
         me.getlistByUser_ChucNang();
         sessionStorage.setItem("strChucNang", JSON.stringify(objChucNang));
+        try {
+
+            setTimeout(function () {
+                //console.log($("#sidebar-menu").is(":visible"));
+                //console.log($("body .main-wrap").length)
+                //console.log($("body .sidebar-toggle").length)
+                //console.log(!$("body .main-wrap").first().hasClass("sidebar-toggle"))
+                if (window.innerWidth < 1281) {
+                    //console.log(1234444444);
+                    $(".top-nav .sidebar-bars").trigger("click");
+
+                }
+            }, 500)
+
+
+        } catch {
+
+        }
     },
     getlistByUser_ChucNang: function () {
         var me = this;
