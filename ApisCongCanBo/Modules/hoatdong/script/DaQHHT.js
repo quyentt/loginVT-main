@@ -293,7 +293,7 @@ DaQHHT.prototype = {
                     "mRender": function (nRow, aData) {
                         var iCongNo = edu.util.returnEmpty(aData.CONGNO);
                         if (iCongNo > 0) {
-                            return '<span class="color-red">' + edu.util.formatNumber(iCongNo) + 'đ</span>';
+                            return '<span class="color-red">' + edu.util.formatCurrency(iCongNo) + 'đ</span>';
                         }
                         return '<span class="color-222">0</span>';
                     }
@@ -322,7 +322,7 @@ DaQHHT.prototype = {
         $("#lblDaTotNghiep_PT").html(edu.util.returnEmpty(oSummary.TOTNGHIEP_PT) || "0%");
         $("#lblBaoLuu").html(edu.util.returnEmpty(oSummary.BAOLUU) || 0);
         $("#lblBaoLuu_PT").html(edu.util.returnEmpty(oSummary.BAOLUU_PT) || "0%");
-        $("#lblCongNo").html((edu.util.formatNumber(oSummary.CONGNO) || 0) + '<u>đ</u>');
+        $("#lblCongNo").html((edu.util.formatCurrency(oSummary.CONGNO) || 0) + '<u>đ</u>');
         $("#lblCongNo_SV").html((edu.util.returnEmpty(oSummary.CONGNO_SV) || 0) + ' sinh viên');
         $("#lblCanhBao").html(edu.util.returnEmpty(oSummary.CANHBAO) || 0);
         $("#lblCanhBao_PT").html(edu.util.returnEmpty(oSummary.CANHBAO_PT) || "0%");
