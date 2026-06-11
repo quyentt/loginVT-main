@@ -10,13 +10,13 @@ function DanhMucDuLieu() { };
 DanhMucDuLieu.prototype = {
     objHTML_DMDL: {},
     arrValid_DMDL: [],
-    dtUngDung:[],
+    dtUngDung: [],
     dtDanhMucThuocTinh: [],
     dtDanhMucDuLieu: [],
     strDanhMucDuLieu_Id: '',
     strDanhMucTenBang_Id: '',
     iColspan: 0,
-    
+
     init: function () {
         var me = this;
         me.page_load();
@@ -69,7 +69,13 @@ DanhMucDuLieu.prototype = {
         $(document).delegate('.chkSelectOne', 'click', function () {
             edu.util.checkedOne_BgRow(this, me.objHTML_DMDL);
         });
-        
+
+        $("#btnSearch_DMDL").click(function () {
+            me.getList_DMDL();
+        });
+        $("#DropDuLieuCha_Search").on("select2:select", function () {
+            me.getList_DMDL();
+        });
         $("#txtKeyWord_DMDL").on("keyup", function () {
             var value = $(this).val().toLowerCase();
             $("#tbldata_DMDL tr").filter(function () {
@@ -82,7 +88,7 @@ DanhMucDuLieu.prototype = {
     ----------------------------------------------*/
     page_load: function () {
         var me = this;
-        
+        edu.system.page_load();
         /*------------------------------------------
         --Discription: Initial Page
         -------------------------------------------*/
@@ -114,7 +120,19 @@ DanhMucDuLieu.prototype = {
         $("#btnNotifyModal").remove();
         $("#myModalLabel").html("Thêm mới danh mục dữ liệu");
         $("#DropDuLieuCha").val("").trigger("change");
-        $("#txtMoTa").val("");
+        $("#txtThongTin8").val("");
+        $("#txtThongTin7").val("");
+        $("#txtThongTin6").val("");
+        $("#txtThongTin5").val("");
+        $("#txtThongTin4").val("");
+        $("#txtThongTin3").val("");
+        $("#txtThongTin2").val("");
+        $("#txtThongTin1").val("");
+        $("#txtHeSo3").val("");
+        $("#txtHeSo2").val("");
+        $("#txtHeSo1").val("");
+        $("#txtMa").val("");
+        $("#txtTen").val("");
         me.strDanhMucDuLieu_Id = "";
         edu.system.createModal(me.objHTML_DMDL);
     },
@@ -125,20 +143,21 @@ DanhMucDuLieu.prototype = {
     getList_DMTB: function () {
         var me = this;
         var strUngDung_Id = edu.system.appId;
-        
+
         var obj_list = {
             'action': 'CMS_DanhMucTenBang/LayDanhSach',
 
-            'strPhanCap_Id' : "",
-            'strChung_TenDanhMuc_Cha_Id'     : "",
+            'strPhanCapDanhMuc_Id': "",
+            'strChung_TenDanhMuc_Cha_Id': "",
             'strNhomDanhMuc_Id': strUngDung_Id,
-            'strTuKhoa':    "",
-            'pageIndex'     : 1,
-            'pageSize'      : 100000,
-            'dTrangThai'    : 1
+            'strTuKhoa': "",
+            'pageIndex': 1,
+            'pageSize': 100000,
+            'dTrangThai': 1,
+            'strTieuChiSapXep': edu.util.getValById('txtAAAA'),
         };
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -156,17 +175,17 @@ DanhMucDuLieu.prototype = {
                 else {
                     edu.system.alert("CMS_DanhMucTenBang.LayDanhSach: " + data.Message);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert("CMS_DanhMucTenBang.LayDanhSach (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: 'CMS_DanhMucTenBang/LayDanhSach',
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -183,7 +202,7 @@ DanhMucDuLieu.prototype = {
         var strTuKhoa = "";
         var iTrangThai = 1;
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -202,20 +221,20 @@ DanhMucDuLieu.prototype = {
                 }
                 else {
                     edu.system.alert("CMS_DanhMucThuocTinh.LayDanhSach: " + data.Message);
-                    
+
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert("CMS_DanhMucThuocTinh.LayDanhSach (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             async: false,
             action: 'CMS_DanhMucThuocTinh/LayDanhSach',
-            
+
             contentType: true,
-            
+
             data: {
                 'strTuKhoa': strTuKhoa,
                 'strCHUNG_TENDANHMUC_Id': strDanhMucTenBang_Id,
@@ -247,12 +266,14 @@ DanhMucDuLieu.prototype = {
         var strThongTin4 = "";
         var strThongTin5 = "";
         var strThongTin6 = "";
+        var strThongTin7 = "";
+        var strThongTin8 = "";
         var strMoTa = "";
         var strId = "";
         var iTrangThai = 1;
         var obj = {};
 
-        
+
         //1. get val
         for (var i = 0; i < me.dtDanhMucThuocTinh.length; i++) {
             switch (me.dtDanhMucThuocTinh[i].TENTRUONGDULIEU) {
@@ -288,6 +309,12 @@ DanhMucDuLieu.prototype = {
                     break;
                 case "ThongTin6":
                     strThongTin6 = edu.util.getValById("txtThongTin6");
+                    break;
+                case "ThongTin7":
+                    strThongTin7 = edu.util.getValById("txtThongTin7");
+                    break;
+                case "ThongTin8":
+                    strThongTin8 = edu.util.getValById("txtThongTin8");
                     break;
                 default:
             }
@@ -330,10 +357,10 @@ DanhMucDuLieu.prototype = {
                     }
                     edu.system.alertOnModal(obj);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 obj = {
                     type: "w",
                     title: "Thông báo",
@@ -342,15 +369,15 @@ DanhMucDuLieu.prototype = {
                 edu.system.alertOnModal(obj);
             },
             type: 'POST',
-            action: strId ? 'CMS_DanhMucDuLieu/CapNhat' :'CMS_DanhMucDuLieu/ThemMoi',
-            
+            action: strId ? 'CMS_DanhMucDuLieu/CapNhat' : 'CMS_DanhMucDuLieu/ThemMoi',
+
             contentType: true,
-            
+
             data: {
                 'strMa': strMa,
                 'strTen': strTen,
-                'strChung_TenDanhMuc_Cha_Id': strCha_Id,
-                'strCHUNG_TENDANHMUC_Id': strDanhMucTenBang_Id,
+                'strQuanHeCha_Id': strCha_Id,
+                'strChung_TenDanhMuc_Id': strDanhMucTenBang_Id,
                 'dHeSo1': dHeSo1,
                 'dHeSo2': dHeSo2,
                 'dHeSo3': dHeSo3,
@@ -360,6 +387,8 @@ DanhMucDuLieu.prototype = {
                 'strThongTin4': strThongTin4,
                 'strThongTin5': strThongTin5,
                 'strThongTin6': strThongTin6,
+                'strThongTin7': strThongTin7,
+                'strThongTin8': strThongTin8,
                 'strMoTa': strMoTa,
                 'strId': strId,
                 'dTrangThai': 1,
@@ -371,13 +400,13 @@ DanhMucDuLieu.prototype = {
     },
     getList_DMDL: function () {
         var me = this;
-        var strCha_Id = "";
-        var strTuKhoa = "";
+        var strCha_Id = edu.util.getValById("DropDuLieuCha_Search");
+        var strTuKhoa = edu.util.getValById("txtKeyWord_DMDL");
         var strDanhMucTenBang_Id = me.strDanhMucTenBang_Id;
         var strTenCotSapXep = "";
-        var pageIndex = 1;
-        var pageSize = 100000;
-        var iTrangThai = 1;
+        var pageIndex = edu.system.pageIndex_default;
+        var pageSize = 1000000;
+        var iTrangThai = edu.util.getValById("dropTrangThai_DMDL");
 
         edu.system.makeRequest({
             success: function (data) {
@@ -390,29 +419,96 @@ DanhMucDuLieu.prototype = {
                     }
                     me.genTable_DMDL(dtResult, iPager);
                     me.dtDanhMucDuLieu = dtResult;
+                    //if (strCha_Id == "" && strTuKhoa ==  "") me.genCombo_DMDL();
                 }
                 else {
                     edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach: " + data.Message);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: 'CMS_DanhMucDuLieu/LayDanhSach',
-            
+
             contentType: true,
-            
+
             data: {
-                'strChung_TenDanhMuc_Cha_Id': strCha_Id,
+                'strCha_Id': strCha_Id,
                 'strTuKhoa': strTuKhoa,
                 'strCHUNG_TENDANHMUC_Id': strDanhMucTenBang_Id,
                 'strTieuChiSapXep': strTenCotSapXep,
                 'pageIndex': pageIndex,
                 'pageSize': pageSize,
-                'dTrangThai': iTrangThai
+                'dTrangThai': iTrangThai,
+                'strQUANHECHA_Id': strCha_Id,
+            },
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+    },
+
+    getList_DMDL_Cha: function () {
+        var me = this;
+        var strCha_Id = "";
+        var strTuKhoa = "";
+        var strDanhMucTenBang_Id = me.strDanhMucTenBang_Id;
+        var strTenCotSapXep = "";
+        var pageIndex = 1;
+        var pageSize = 1000000;
+        var iTrangThai = 1;
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = [];
+                    var iPager = 0;
+                    if (edu.util.checkValue(data.Data)) {
+                        dtResult = data.Data;
+                        iPager = data.Pager;
+                    }
+                    me["dtDanhMucCha"] = dtResult;
+                    var obj = {
+                        data: dtResult,
+                        renderInfor: {
+                            id: "ID",
+                            parentId: "",
+                            name: "TEN",
+                            mRender: function (mRow, aData) {
+                                return aData.TEN + " - " + aData.MA;
+                            }
+                        },
+                        renderPlace: ["DropDuLieuCha_Search", "DropDuLieuCha"],
+                        title: "Chọn quan hệ cha"
+                    };
+                    edu.system.loadToCombo_data(obj);
+                }
+                else {
+                    edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach: " + data.Message);
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucDuLieu/LayDanhSach',
+
+            contentType: true,
+
+            data: {
+                'strCha_Id': strCha_Id,
+                'strTuKhoa': strTuKhoa,
+                'strCHUNG_TENDANHMUC_Id': strDanhMucTenBang_Id,
+                'strTieuChiSapXep': strTenCotSapXep,
+                'pageIndex': pageIndex,
+                'pageSize': pageSize,
+                'dTrangThai': iTrangThai,
+                'strQUANHECHA_Id': strCha_Id,
             },
             fakedb: [
 
@@ -423,7 +519,7 @@ DanhMucDuLieu.prototype = {
         var me = this;
         var strId = strDanhMucDuLieu_Id;
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -439,6 +535,11 @@ DanhMucDuLieu.prototype = {
                         $("#txtThongTin1").val(json[0].THONGTIN1);
                         $("#txtThongTin2").val(json[0].THONGTIN2);
                         $("#txtThongTin3").val(json[0].THONGTIN3);
+                        $("#txtThongTin4").val(json[0].THONGTIN4);
+                        $("#txtThongTin5").val(json[0].THONGTIN5);
+                        $("#txtThongTin6").val(json[0].THONGTIN6);
+                        $("#txtThongTin7").val(json[0].THONGTIN7);
+                        $("#txtThongTin8").val(json[0].THONGTIN8);
                         $("#txtMoTa").val(json[0].MOTA);
                         $("#DropDuLieuCha").val(json[0].QUANHECHA_ID).trigger("change");
                         me.popup();
@@ -447,17 +548,17 @@ DanhMucDuLieu.prototype = {
                 else {
                     edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach: " + data.Message);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: 'CMS_DanhMucDuLieu/LayChiTiet',
-            
+
             contentType: true,
-            
+
             data: {
                 'strId': strId
             },
@@ -484,10 +585,10 @@ DanhMucDuLieu.prototype = {
             },
             error: function (er) { },
             type: 'POST',
-            action: 'CMS_DanhMucDuLieu/CapNhatTrangThai',
-            
+            action: 'CMS_DanhMucDuLieu/ChuyenTrangThai',
+
             contentType: true,
-            
+
             data: JSON.stringify({
                 'strIds': strIds,
                 'dTrangThai': iTrangThai
@@ -501,7 +602,7 @@ DanhMucDuLieu.prototype = {
         var strIds = Ids;
         var obj = {};
 
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -521,10 +622,10 @@ DanhMucDuLieu.prototype = {
                     };
                     edu.system.afterComfirm(obj);
                 }
-                
+
             },
             error: function (er) {
-                
+
                 obj = {
                     title: "",
                     content: "CMS_DanhMucDuLieu.Xoa: " + JSON.stringify(er),
@@ -534,12 +635,13 @@ DanhMucDuLieu.prototype = {
             },
             type: 'POST',
             action: 'CMS_DanhMucDuLieu/Xoa',
-            
+
             contentType: true,
-            
+
             data: {
                 'strId': strIds,
-                'strNguoiThucHien_Id': edu.system.userId
+                'strNguoiThucHien_Id': edu.system.userId,
+                'dTrangThai': 1,
             },
             fakedb: [
             ]
@@ -563,6 +665,9 @@ DanhMucDuLieu.prototype = {
             renderPlaces: ["zone_danhmuctenbang_dmdl"]
         };
         edu.system.loadToTreejs_data(obj);
+        dtResult.forEach(aData => {
+            $($("#zone_danhmuctenbang_dmdl #" + aData.ID + " a")[0]).append(" - " + aData.MADANHMUC);
+        })
         //2. Action
         $('#zone_danhmuctenbang_dmdl').on("select_node.jstree", function (e, data) {
             var strNameNode = data.node.id;
@@ -571,6 +676,7 @@ DanhMucDuLieu.prototype = {
             $("#DropDuLieuCha_Search").val("").trigger("change");
             me.strDanhMucTenBang_Id = strNameNode;
             me.getList_DMTT(me.strDanhMucTenBang_Id);
+            me.getList_DMDL_Cha();
             //----------------------------------------------------------------------------------------------
             //1. acess data.node obj
             // get name ==> data.node.name, 
@@ -665,6 +771,12 @@ DanhMucDuLieu.prototype = {
             case "ThongTin6":
                 createTheadRow = "<th class='td-left'>" + strMoTa + "</th>";
                 break;
+            case "ThongTin7":
+                createTheadRow = "<th class='td-left'>" + strMoTa + "</th>";
+                break;
+            case "ThongTin8":
+                createTheadRow = "<th class='td-left'>" + strMoTa + "</th>";
+                break;
             default:
         }
         return createTheadRow;
@@ -686,76 +798,99 @@ DanhMucDuLieu.prototype = {
             }
             switch (me.dtDanhMucThuocTinh[i].TENTRUONGDULIEU) {
                 case "Ten":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + " (*)</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtTen' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "<span class='color-red pl10'>(*)</span></label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtTen' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "Ma":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + " (*)</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtMa' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "<span class='color-red pl10'>(*)</span></label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtMa' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "HeSo1":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtHeSo1' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtHeSo1' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "HeSo2":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtHeSo2' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtHeSo2' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "HeSo3":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtHeSo3' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtHeSo3' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin1":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin1' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin1' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin2":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin2' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin2' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin3":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin3' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin3' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin4":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin4' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin4' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin5":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin5' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin5' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 case "ThongTin6":
-                    modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
-                    modalBody += "<div style='width:80%; float:left'><input type='text' id='txtThongTin6' class='form-control'/></div></div>";
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin6' class='form-control'/></div></div>";
+                    modalBody += "<div class='clear'></div>";
+                    break;
+                case "ThongTin7":
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin7' class='form-control'/></div></div>";
+                    modalBody += "<div class='clear'></div>";
+                    break;
+                case "ThongTin8":
+                    modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>" + strMoTa + "</label></div>";
+                    modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtThongTin8' class='form-control'/></div></div>";
                     modalBody += "<div class='clear'></div>";
                     break;
                 default:
             }
         }
-        modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>Mô tả</label></div>";
-        modalBody += "<div style='width:80%; float:left'><input type='text' id='txtMoTa' class='form-control'/></div></div>";
+        modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>Mô tả</label></div>";
+        modalBody += "<div class='col-sm-9 aps-form-input'><input type='text' id='txtMoTa' class='form-control'/></div></div>";
         modalBody += "<div class='clear'></div>";
-        modalBody += "<div style='width:100%'><div style='width:20%; float:left'><label style='font-weight:normal'>Dữ liệu cha</label></div>";
-        modalBody += "<div style='width:80%; float:left'><select id='DropDuLieuCha' class='select-opt'></select></div>";
+        modalBody += "<div style='width:100%' class='row aps-form-item'><div class='col-sm-3 aps-lable-name'><label style='font-weight:normal'>Dữ liệu cha</label></div>";
+        modalBody += "<div class='col-sm-9 aps-form-input'><select id='DropDuLieuCha' class='select-opt'></select></div>";
         modalBody += "<div class='clear'></div>";
         $("#modal_body").append(modalBody);
-        
-        me.genCombo_DMDL();
+        $("#DropDuLieuCha").select2();
+        var obj = {
+            data: me.dtDanhMucCha,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                mRender: function (mRow, aData) {
+                    return aData.TEN + " - " + aData.MA;
+                }
+            },
+            renderPlace: ["DropDuLieuCha"],
+            title: "Chọn quan hệ cha"
+        };
+        edu.system.loadToCombo_data(obj);
     },
     genTable_DMDL: function (data, iPager) {
         var me = this;
-        
+
         /*II. variable temp*/
         $("#tbldata_DMDL tbody").html('');
         var tBody = "";
@@ -839,23 +974,23 @@ DanhMucDuLieu.prototype = {
             tBody = "";
         }
     },
-    genCombo_DMDL: function () {
-        var me = this;
-        var dropDuLieuCha = $("#DropDuLieuCha");
-        var dropDuLieuCha_Search = $("#DropDuLieuCha_Search");
-        dropDuLieuCha.html('');
-        dropDuLieuCha_Search.html('');
+    //genCombo_DMDL: function () {
+    //    var me = this;
+    //    var dropDuLieuCha = $("#DropDuLieuCha");
+    //    var dropDuLieuCha_Search = $("#DropDuLieuCha_Search");
+    //    dropDuLieuCha.html('');
+    //    dropDuLieuCha_Search.html('');
 
-        if (me.dtDanhMucDuLieu.length > 0) {
-            var getList = "";
-            getList += "<option value=''>-- Chọn dữ liệu cha--</option>";
-            for (var i = 0; i < me.dtDanhMucDuLieu.length; i++) {
-                getList += "<option value='" + me.dtDanhMucDuLieu[i].ID + "'>" + me.dtDanhMucDuLieu[i].TEN + "</option>";
-            }
-            dropDuLieuCha.html(getList);
-            dropDuLieuCha_Search.html(getList);
-        }
-        dropDuLieuCha.val('').trigger("change");
-        dropDuLieuCha_Search.val('').trigger("change");
-    },
+    //    var getList = "";
+    //    if (me.dtDanhMucDuLieu.length > 0) {
+    //        getList += "<option value=''>-- Chọn dữ liệu cha--</option>";
+    //        for (var i = 0; i < me.dtDanhMucDuLieu.length; i++) {
+    //            getList += "<option value='" + me.dtDanhMucDuLieu[i].ID + "'>" + me.dtDanhMucDuLieu[i].TEN + " - " + me.dtDanhMucDuLieu[i].MA + "</option>";
+    //        }
+    //        dropDuLieuCha.html(getList);
+    //        dropDuLieuCha_Search.html(getList);
+    //    }
+    //    dropDuLieuCha.val('').trigger("change");
+    //    dropDuLieuCha_Search.val('').trigger("change");
+    //},
 };

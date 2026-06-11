@@ -124,7 +124,7 @@ PhanQuyenCBNHSCB.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSHanhDongTheo',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSHanhDongTheo',
             'strUngDung_Id': edu.system.appId,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById("dropSearch_ChucNangPhanQuyen"),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -181,7 +181,7 @@ PhanQuyenCBNHSCB.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSChucNangCanPhanQuyen',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSChucNangCanPhanQuyen',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strUngDung_Id': edu.system.appId,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -239,7 +239,7 @@ PhanQuyenCBNHSCB.prototype = {
         var me = this;
         //--Edit\
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSNguoiDungTheoChucNang',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSNguoiDungTheoChucNang',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById("dropSearch_ChucNangPhanQuyen"),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -293,7 +293,7 @@ PhanQuyenCBNHSCB.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSCauTrucPhanQuyenCBNhapHS',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSCauTrucPhanQuyenCBNhapHS',
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_BoMon'),
             'strPhanQuyen_ChucNang_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyen'),
@@ -417,7 +417,7 @@ PhanQuyenCBNHSCB.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSQuyenNhanSuNhapHoSoCB',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSQuyenNhanSuNhapHoSoCB',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyen'),
             'strNguoiDung_Id': strNguoiDung_Id,
@@ -475,7 +475,7 @@ PhanQuyenCBNHSCB.prototype = {
         var strNguoiDung_Id = arrId[1];
         //--Edit
         var obj_save = {
-            'action': 'CMS_PhanQuyen_DuLieu/ThemMoi',
+            'action': 'CMS_PhanQuyenDuLieu/Them_PhanQuyen_DuLieu',
             'strId': '',
             'dHieuLuc': 1,
             'strLoaiQuyen_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyen'),
@@ -522,7 +522,7 @@ PhanQuyenCBNHSCB.prototype = {
         //--Edit
         var obj = {};
         var obj_delete = {
-            'action': 'CMS_PhanQuyen_DuLieu/Xoa',
+            'action': 'CMS_PhanQuyenDuLieu/Xoa_PhanQuyen_DuLieu1',
             'strIds': strId,
             'strNguoiThucHien_Id': edu.system.userId
         };

@@ -123,7 +123,7 @@ PhanQuyenCNTNHS.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSHanhDongTheo',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSHanhDongTheo',
             'strUngDung_Id': edu.system.appId,
             'strPhanQuyenCNTNHS_ChucNang_Id': edu.util.getValById("dropSearch_ChucNangPhanQuyen"),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -180,7 +180,7 @@ PhanQuyenCNTNHS.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSChucNangCanPhanQuyen',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSChucNangCanPhanQuyen',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strUngDung_Id': edu.system.appId,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -261,7 +261,7 @@ PhanQuyenCNTNHS.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSCauTrucPhanQuyenCNNhapHS',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSCauTrucPhanQuyenCNNhapHS',
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_BoMon'),
             'strPhanQuyen_ChucNang_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyen'),
@@ -385,7 +385,7 @@ PhanQuyenCNTNHS.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSQuyenNhanSuTuNhapHoSo',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSQuyenNhanSuTuNhapHoSo',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyen'),
             'strNguoiDung_Id': strNguoiDung_Id,
@@ -442,7 +442,7 @@ PhanQuyenCNTNHS.prototype = {
         var strNguoiDung_Id = arrId[1];
         //--Edit
         var obj_save = {
-            'action': 'CMS_PhanQuyen_DuLieu/ThemMoi',
+            'action': 'CMS_PhanQuyenDuLieu/Them_PhanQuyen_DuLieu',
             'strId': '',
             'dHieuLuc': 1,
             'strLoaiQuyen_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyen'),
@@ -489,7 +489,7 @@ PhanQuyenCNTNHS.prototype = {
         //--Edit
         var obj = {};
         var obj_delete = {
-            'action': 'CMS_PhanQuyen_DuLieu/Xoa',
+            'action': 'CMS_PhanQuyenDuLieu/Xoa_PhanQuyen_DuLieu1',
             'strIds': strId,
             'strNguoiThucHien_Id': edu.system.userId
         };

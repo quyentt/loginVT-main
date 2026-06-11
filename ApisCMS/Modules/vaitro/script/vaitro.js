@@ -95,7 +95,7 @@ VaiTro.prototype = {
             return;
         }
         var obj_save = {
-            'action'            : 'CMS_VaiTro/ThemMoi',
+            'action': 'CMS_QuanLyNguoiDung/ThemMoiVaiTro',
             'versionAPI'        : 'v1.0',
             'strMaVaiTro'             : edu.util.getValById("txtVaiTro_Ma"),
             'strTenVaiTro'            : edu.util.getValById("txtVaiTro_Ten"),
@@ -109,7 +109,7 @@ VaiTro.prototype = {
         };
         if (me.strVaiTro_Id != '')
             obj_save = {
-                'action': 'CMS_VaiTro/CapNhat',
+                'action': 'CMS_QuanLyNguoiDung/SuaVaiTro',
                 'versionAPI': 'v1.0',
                 'strMaVaiTro': edu.util.getValById("txtVaiTro_Ma"),
                 'strTenVaiTro': edu.util.getValById("txtVaiTro_Ten"),
@@ -159,7 +159,7 @@ VaiTro.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action'            : 'CMS_VaiTro/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
             'versionAPI'        : 'v1.0',
             'strLoaiVaiTro_Id'  : "",
             'strTuKhoa'         : "",
@@ -212,7 +212,7 @@ VaiTro.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action'                : 'CMS_VaiTro/Xoa',
+            'action': 'CMS_QuanLyNguoiDung/XoaVaiTro',
             'versionAPI'            : 'v1.0',
             'strIds'                 : me.strVaiTro_Id,
             'strNguoiThucHien_Id'   : edu.system.userId,

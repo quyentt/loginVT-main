@@ -333,7 +333,7 @@ VaiTroChucNang.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_VaiTro/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
 
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",
@@ -635,7 +635,7 @@ VaiTroChucNang.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         var obj_list = {
-            'action': 'CMS_UngDung/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
             'strTuKhoa': "",
             'pageIndex': 1,
             'pageSize': 10000,
@@ -737,7 +737,7 @@ VaiTroChucNang.prototype = {
     getList_ChucNang: function () {
         var me = this;
         var obj_list = {
-            'action': 'CMS_ChucNang/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachChucNang',
             'versionAPI': 'v1.0',
             'strTuKhoa': "",
             'strChung_UngDung_Id': $("#dropUngDung_VTCN").val(),
