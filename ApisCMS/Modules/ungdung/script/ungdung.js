@@ -255,8 +255,10 @@ UngDung.prototype = {
     getDetail_UD: function () {
         var me = this;
         //view data --Edit
-        var obj_detail = {
-            'action': 'CMS_UngDung/LayChiTiet',
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4FSkuLyYVKC8ULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayThongTinUngDung',
+			'iM' : edu.system.iM,
             
             'strId': me.objInput_UD.strId
         };
@@ -280,12 +282,12 @@ UngDung.prototype = {
                 
                 edu.system.alert("CMS_UngDung/LayChiTiet: " + JSON.stringify(er), "w");
             },
-            type: "GET",
-            action: obj_detail.action,
+            type: "POST",
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_detail,
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);

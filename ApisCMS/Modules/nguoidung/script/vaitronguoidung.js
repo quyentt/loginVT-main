@@ -72,9 +72,9 @@ VaiTroNguoiDung.prototype = {
     getList_VaiTro: function () {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action': 'CMS_VaiTro/LayDanhSach',
-            
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
+			'type': 'POST',
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",
             'pageIndex': 1,
@@ -103,12 +103,12 @@ VaiTroNguoiDung.prototype = {
                 
                 edu.system.alert("CMS_VaiTro/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

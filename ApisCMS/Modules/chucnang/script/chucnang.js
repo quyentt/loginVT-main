@@ -228,8 +228,8 @@ ChucNang.prototype = {
                 edu.system.alert("CMS_UngDung/LayDanhSach (ex): " + JSON.stringify(er), "w");
                 
             },
-            type: 'GET',
-            action: 'CMS_UngDung/LayDanhSach',
+            type: 'POST',
+            action: 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
             
             contentType: true,
             
@@ -272,7 +272,7 @@ ChucNang.prototype = {
         var obj_notify = {};
         //--Edit
         var obj_save = {
-            'action': 'CMS_ChucNang/ThemMoi',
+            'action': 'CMS_QuanLyNguoiDung/ThemMoiChucNang',
             
 
             'strId'                 : me.strChucNang_Id,
@@ -294,7 +294,7 @@ ChucNang.prototype = {
             'strLuuThongTinTheoNguoiDung': edu.util.getValById('txtAAAA'),
         };
         if (obj_save.strId) {
-            obj_save.action = 'CMS_ChucNang/CapNhat'
+            obj_save.action = 'CMS_QuanLyNguoiDung/SuaChucNang'
         }
         //default
         
@@ -332,8 +332,10 @@ ChucNang.prototype = {
         var me = this;
 
         //--Edit
-        var obj_list = {
-            'action'            : 'CMS_ChucNang/LayDanhSach',
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikCKTQiDyAvJgPP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachChucNang',
+			'iM' : edu.system.iM,
             'versionAPI'        : 'v1.0',
             'strTuKhoa'         : "",
             'strChung_UngDung_Id'     : edu.util.getValById("dropSearch_UngDung_CN"),
@@ -367,12 +369,12 @@ ChucNang.prototype = {
                 edu.system.alert("CMS_ChucNang/LayDanhSach (ex): " + JSON.stringify(er), "w");
                 
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
@@ -395,7 +397,7 @@ ChucNang.prototype = {
         var obj = {};
         //--Edit
         var obj_delete = {
-            'action'                : 'CMS_ChucNang/Xoa',
+            'action': 'CMS_QuanLyNguoiDung/XoaChucNang',
             'versionAPI'            : 'v1.0',
             'strIds'                 : me.strChucNang_Id,
             'strNguoiThucHien_Id'   : edu.system.userId,
@@ -534,7 +536,7 @@ ChucNang.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_VaiTro/LayDanhSachVaiTroChucNang',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTroChucNang',
             'type': 'GET',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strChucNang_Id': me.strChucNang_Id,
@@ -581,7 +583,7 @@ ChucNang.prototype = {
         var obj = {};
         //--Edit
         var obj_delete = {
-            'action': 'CMS_ChucNang/XoaChucNangCuaVaiTro',
+            'action': 'CMS_QuanLyNguoiDung/XoaChucNangCuaVaiTro',
             'versionAPI'            : 'v1.0',
              
             'strVaiTro_Id'          : "",
@@ -714,7 +716,7 @@ ChucNang.prototype = {
         var obj = {};
         //--Edit
         var obj_delete = {
-            'action': 'CMS_NguoiDungChucNang/XoaChucNangTheoNguoiDung',
+            'action': 'CMS_QuanLyNguoiDung/XoaChucNangTheoNguoiDung',
             'versionAPI'                : 'v1.0',
 
             'strUngDung_Id' : me.strChucNang_Id,

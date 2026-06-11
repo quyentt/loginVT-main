@@ -165,7 +165,7 @@ NhapTheoLop.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'D_Hoc/LayDanhSach',
+            'action': 'D_XuLyDiem/LayDSDiem_DanhSachHoc',
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_LopQuanLy'),
             'strChucNang_Id': edu.system.strChucNang_Id,//'8D42F005D1934295959197C5278F4BF9',
@@ -270,7 +270,7 @@ NhapTheoLop.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'D_ThoiGian/LayDanhSach',
+            'action': 'D_XuLyDiem/LayDSThoiGian',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'strLoaiDanhSach_Id': edu.util.getValById('dropSearch_LoaiDanhSach'),
@@ -318,7 +318,7 @@ NhapTheoLop.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'D_LopQuanLy/LayDanhSach',
+            'action': 'D_XuLyDiem/LayDSLopQuanLy',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'strLoaiDanhSach_Id': edu.util.getValById('dropSearch_LoaiDanhSach'),
@@ -366,7 +366,7 @@ NhapTheoLop.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'D_HocPhan/LayDanhSach',
+            'action': 'D_XuLyDiem/LayDSHocPhan',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_LopQuanLy'),
@@ -415,8 +415,10 @@ NhapTheoLop.prototype = {
         if (strDanhSach_Id == undefined) strDanhSach_Id = me.strDanhSachHoc_Id;
         if (!edu.util.getValById('dropSearch_KieuChuyenCan_IHD')) return;
         //--Edit
-        var obj_list = {
-            'action': 'CC_NguoiHoc_ChuyenCan/LayDanhSach',
+        var obj_save = {
+			'action': 'XLHV_CC_ThongTin_MH/DSA4BRIQDRIXHg8mNC4oCS4iHgIpNDgkLwIgLwPP',
+			'func': 'PKG_CHUYENCAN_THONGTIN.LayDSQLSV_NguoiHoc_ChuyenCan',
+			'iM' : edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtSearch_DT'),
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strKhoaQuanLy_Id': edu.util.getValCombo("dropSearch_KhoaQuanLy_IHD"),
@@ -444,19 +446,19 @@ NhapTheoLop.prototype = {
                     me.genTable_NhapChuyenCan(dtReRult, data.Pager);
                 }
                 else {
-                    edu.system.alert(obj_list + " : " + data.Message, "s");
+                    edu.system.alert( data.Message, "s");
                 }
                 
             },
             error: function (er) {
                 
-                edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert(JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
@@ -931,8 +933,10 @@ NhapTheoLop.prototype = {
     },
     getList_XacNhanSanPham: function (strSanPham_Id, strTable_Id, callback, strLoaiXacNhan) {
         var me = this;
-        var obj_list = {
-            'action': 'D_HanhDongXacNhan/LayDanhSach',
+		var obj_save = {
+			'action': 'D_Chung_MH/DSA4BRIJIC8pBS4vJhkgIg8pIC8P',
+			'func': 'PKG_DIEM_CHUNG.LayDSHanhDongXacNhan',
+			'iM' : edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strLoaiXacNhan_Id': strLoaiXacNhan,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -951,14 +955,14 @@ NhapTheoLop.prototype = {
             },
             error: function (er) {
 
-                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert( JSON.stringify(er), "w");
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
 
             contentType: true,
 
-            data: obj_list,
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);

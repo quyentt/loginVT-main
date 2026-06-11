@@ -148,8 +148,9 @@ DanhMucDuLieu.prototype = {
             pageSize = 100000;
         }
         var obj_list = {
-            'action': 'CMS_DanhMucTenBang/LayDanhSach',
-
+            'action': 'CMS_DanhMuc_MH/DSA4BSAvKRIgIikFIC8pDDQi',
+            'func': 'pkg_chung_danhmuc.LayDanhSachDanhMuc',
+            'iM': edu.system.iM,
             'strPhanCapDanhMuc_Id' : "",
             'strChung_TenDanhMuc_Cha_Id'     : "",
             'strNhomDanhMuc_Id' : strUngDung_Id,
@@ -189,8 +190,8 @@ DanhMucDuLieu.prototype = {
                 
                 edu.system.alert("CMS_DanhMucTenBang.LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: 'CMS_DanhMucTenBang/LayDanhSach',
+            type: 'POST',
+            action: obj_list.action,
             
             contentType: true,
             
@@ -239,11 +240,13 @@ DanhMucDuLieu.prototype = {
             },
             type: 'GET',
             async: false,
-            action: 'CMS_DanhMucThuocTinh/LayDanhSach',
+            action: 'CMS_DanhMuc_MH/DSA4BSAvKRIgIikVKTQuIhUoLykFIC8pDDQi',
             
             contentType: true,
             
             data: {
+                'func': 'pkg_chung_danhmuc.LayDanhSachThuocTinhDanhMuc',
+                'iM': edu.system.iM,
                 'strTuKhoa': strTuKhoa,
                 'strCHUNG_TENDANHMUC_Id': strDanhMucTenBang_Id,
                 'pageIndex': 1,
@@ -378,11 +381,12 @@ DanhMucDuLieu.prototype = {
                 edu.system.alertOnModal(obj);
             },
             type: 'POST',
-            action: strId ? 'CMS_DanhMucDuLieu/CapNhat' :'CMS_DanhMucDuLieu/ThemMoi',
+            action: strId ? 'CMS_DanhMuc_MH/EjQgBTQNKCQ0BSAvKQw0IgPP' :'CMS_DanhMuc_MH/FSkkLAU0DSgkNAUgLykMNCIP',
             
             contentType: true,
             
             data: {
+			    'iM' : edu.system.iM,
                 'strMa': strMa,
                 'strTen': strTen,
                 'strQuanHeCha_Id': strCha_Id,
@@ -462,7 +466,13 @@ DanhMucDuLieu.prototype = {
     getDetail_DMDL: function (strDanhMucDuLieu_Id) {
         var me = this;
         var strId = strDanhMucDuLieu_Id;
-
+        var obj_save = {
+			'action': 'CMS_DanhMuc_MH/DSA4FSkuLyYVKC8FNA0oJDQFDBUpJC4IJQPP',
+			'func': 'pkg_chung_danhmuc.LayThongTinDuLieuDMTheoId',
+			'iM' : edu.system.iM,
+			'strId' : strId,
+			'strTieuChiSapXep' : edu.util.getValById('txtAAAA'),
+		};
         
         edu.system.makeRequest({
             success: function (data) {
@@ -498,14 +508,12 @@ DanhMucDuLieu.prototype = {
                 
                 edu.system.alert("CMS_DanhMucDuLieu.LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: 'CMS_DanhMucDuLieu/LayChiTiet',
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: {
-                'strId': strId
-            },
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);

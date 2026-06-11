@@ -256,7 +256,7 @@ NhapChuyenCan.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'KHCT_NamNhapHoc/LayDanhSach',
+            'action': 'KHCT_ThongTin/LayDSNamNhapHoc',
             
             'strNguoiThucHien_Id' : '',
         }
@@ -444,8 +444,10 @@ NhapChuyenCan.prototype = {
     getList_NhapChuyenCan: function (strDanhSach_Id) {
         var me = main_doc.NhapChuyenCan;
         //--Edit
-        var obj_list = {
-            'action': 'CC_NguoiHoc_ChuyenCan/LayDanhSach',
+        var obj_save = {
+			'action': 'XLHV_CC_ThongTin_MH/DSA4BRIQDRIXHg8mNC4oCS4iHgIpNDgkLwIgLwPP',
+			'func': 'PKG_CHUYENCAN_THONGTIN.LayDSQLSV_NguoiHoc_ChuyenCan',
+			'iM' : edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtSearch_DT'),
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strKhoaQuanLy_Id': edu.util.getValCombo("dropSearch_KhoaQuanLy_IHD"),
@@ -473,19 +475,19 @@ NhapChuyenCan.prototype = {
                     me.genTable_NhapChuyenCan(dtReRult, data.Pager);
                 }
                 else {
-                    edu.system.alert(obj_list + " : " + data.Message, "s");
+                    edu.system.alert(data.Message, "s");
                 }
                 
             },
             error: function (er) {
                 
-                edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert( JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

@@ -183,9 +183,9 @@ DanhMucImport.prototype = {
         var obj_notify = {};
         //--Edit
         var obj_save = {
-            'action': 'CMS_DanhMucTenBang/ThemMoi',
-            
-
+			'action': 'CMS_DanhMuc_MH/FSkkLAMgLyYFIC8pDDQi',
+			'func': 'pkg_chung_danhmuc.ThemBangDanhMuc',
+			'iM' : edu.system.iM,
             'strId': "",
             'strNguoiThucHien_Id': edu.system.userId,
             'strMaDanhMuc': edu.util.getValById("txtMaHamImport"),
@@ -254,8 +254,9 @@ DanhMucImport.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'CMS_DanhMucTenBang/LayDanhSach',
-
+			'action': 'CMS_DanhMuc_MH/DSA4BSAvKRIgIikFIC8pDDQi',
+			'func': 'pkg_chung_danhmuc.LayDanhSachDanhMuc',
+			'iM' : edu.system.iM,
             'strPhanCapDanhMuc_Id' : edu.util.getValById(""),
             'strChung_TenDanhMuc_Cha_Id'     : edu.util.getValById(""),
             'strNhomDanhMuc_Id' : edu.util.getValById("dropSearch_UngDung_DMIP"),
@@ -296,7 +297,7 @@ DanhMucImport.prototype = {
                 
                 edu.system.alert("CMS_DanhMucImport.LayDanhSachHam (er): " + JSON.stringify(er), "w");
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             
             contentType: true,
@@ -319,7 +320,9 @@ DanhMucImport.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action': 'CMS_DanhMucTenBang/Xoa',
+            'action': 'CMS_DanhMuc_MH/GS4gBSAvKQw0IgPP',
+            'func': 'pkg_chung_danhmuc.XoaDanhMuc',
+            'iM' : edu.system.iM,
             'strId': Ids,
             'strNguoiThucHien_Id': edu.system.userId,
             'dTrangThai': 995,
@@ -816,68 +819,5 @@ DanhMucImport.prototype = {
             ]
         }, false, false, false, null);
     },
-
-    getList_UngDungChucNang: function (strUngDung_Id) {
-        var me = this;
-
-        //--Edit
-        var obj_list = {
-            'action': 'CMS_ChucNang/LayDanhSach',
-
-            'strTuKhoa': "",
-            'strChung_UngDung_Id': strUngDung_Id,
-            'strCha_Id': "",
-            'pageIndex': 1,
-            'pageSize': 1000,
-            'strPhamViTruyCap_Id': "",
-            'dTrangThai': 1
-        };
-
-
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    var dtResult = [];
-                    var iPager = 0;
-                    if (edu.util.checkValue(data.Data)) {
-                        dtResult = data.Data;
-                        iPager = data.Pager;
-                    }
-                    me.genComBo_ChucNang(dtResult, iPager);
-                }
-                else {
-                    edu.system.alert("CMS_ChucNang/LayDanhSach: " + data.Message);
-                }
-
-            },
-            error: function (er) {
-                edu.system.alert("CMS_ChucNang/LayDanhSach (ex): " + ex, "w");
-
-            },
-            type: "GET",
-            action: obj_list.action,
-
-            contentType: true,
-
-            data: obj_list,
-            fakedb: [
-
-            ]
-        }, false, false, false, null);
-    },
-    genComBo_ChucNang: function (data) {
-        var obj = {
-            data: data,
-            renderInfor: {
-                id: "ID",
-                parentId: "",
-                name: "TENCHUCNANG ",
-                code: "MA"
-            },
-            renderPlace: ["dropChucNang_DMIP"],
-            type: "",
-            title: "Chọn chức năng"
-        };
-        edu.system.loadToCombo_data(obj);
-    },
+    
 };

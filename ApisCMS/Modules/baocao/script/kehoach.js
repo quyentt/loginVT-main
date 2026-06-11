@@ -223,9 +223,10 @@ KeHoach.prototype = {
     getList_KeHoach: function (strDanhSach_Id) {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action': 'CMS_KeHoachBaoCao/LayDanhSach',
-            'type': 'GET',
+		var obj_save = {
+			'action': 'CMS_BaoCao_XuLy_MH/DSA4BRIVCQMCHgokCS4gIikDIC4CIC4P',
+			'func': 'pkg_thbc_xuly.LayDSTHBC_KeHoachBaoCao',
+			'iM' : edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strTrangThai_Id': edu.util.getValById('dropSeacrch_TrangThai'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -242,19 +243,19 @@ KeHoach.prototype = {
                     me.genTable_KeHoach(dtReRult, data.Pager);
                 }
                 else {
-                    edu.system.alert(obj_list + " : " + data.Message, "s");
+                    edu.system.alert( " : " + data.Message, "s");
                 }
                 
             },
             error: function (er) {
                 
-                edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
+                edu.system.alert(" (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

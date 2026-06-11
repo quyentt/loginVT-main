@@ -259,7 +259,7 @@ TongHopTheoNgay.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'KHCT_NamNhapHoc/LayDanhSach',
+            'action': 'KHCT_ThongTin/LayDSNamNhapHoc',
             
             'strNguoiThucHien_Id' : '',
         }

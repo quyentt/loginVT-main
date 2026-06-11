@@ -167,9 +167,9 @@ DanhMucExport.prototype = {
         var obj_notify = {};
         //--Edit
         var obj_save = {
-            'action': 'CMS_DanhMucTenBang/ThemMoi',
-            
-
+			'action': 'CMS_DanhMuc_MH/FSkkLAMgLyYFIC8pDDQi',
+			'func': 'pkg_chung_danhmuc.ThemBangDanhMuc',
+			'iM' : edu.system.iM,
             'strId': "",
             'strNguoiThucHien_Id': edu.system.userId,
             'strMaDanhMuc': edu.util.getValById("txtMaHamExport"),
@@ -238,8 +238,9 @@ DanhMucExport.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'CMS_DanhMucTenBang/LayDanhSach',
-
+			'action': 'CMS_DanhMuc_MH/DSA4BSAvKRIgIikFIC8pDDQi',
+			'func': 'pkg_chung_danhmuc.LayDanhSachDanhMuc',
+			'iM' : edu.system.iM,
             'strPhanCapDanhMuc_Id' : edu.util.getValById(""),
             'strChung_TenDanhMuc_Cha_Id'     : edu.util.getValById(""),
             'strNhomDanhMuc_Id' : edu.util.getValById("dropSearch_UngDung_DMEP"),
@@ -280,7 +281,7 @@ DanhMucExport.prototype = {
                 
                 edu.system.alert("CMS_DanhMucExport.LayDanhSachHam (er): " + JSON.stringify(er), "w");
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             
             contentType: true,
@@ -303,7 +304,9 @@ DanhMucExport.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action': 'CMS_DanhMucTenBang/Xoa',
+			'action': 'CMS_DanhMuc_MH/GS4gBSAvKQw0IgPP',
+			'func': 'pkg_chung_danhmuc.XoaDanhMuc',
+			'iM' : edu.system.iM,
             'strId': Ids,
             'strNguoiThucHien_Id': edu.system.userId,
             'dTrangThai': 985,

@@ -628,8 +628,9 @@ NguoiDungChucNang.prototype = {
         var me = this;
 
         //--Edit
-        var obj_list = {
-            'action': 'CMS_UngDung/LayDanhSach',
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
+			'type': 'POST',
             
 
             'strTuKhoa': "",
@@ -661,12 +662,12 @@ NguoiDungChucNang.prototype = {
                 
                 edu.system.alert("CMS_UngDung/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
@@ -692,8 +693,10 @@ NguoiDungChucNang.prototype = {
         var me = this;
 
         //--Edit
-        var obj_list = {
-            'action'        : 'CMS_ChucNang/LayDanhSach',
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikCKTQiDyAvJgPP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachChucNang',
+			'iM' : edu.system.iM,
             'versionAPI'    : 'v1.0',
             'strTuKhoa'     : "",
             'strChung_UngDung_Id' : edu.util.getValById("dropUngDung_NDCN"),
@@ -729,12 +732,12 @@ NguoiDungChucNang.prototype = {
                 edu.system.alert("CMS_ChucNang/LayDanhSach (er): " + JSON.stringify(er), "w");
                 
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

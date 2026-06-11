@@ -141,26 +141,8 @@ KhongDiemDanh.prototype = {
         });
 
         edu.system.getList_MauImport("zonebtnKDD", function (addKeyValue) {
-            //var strSoQuyetDinh = edu.util.getValById('dropSearch_QuyetDinh');
-            //if (strSoQuyetDinh) strSoQuyetDinh = $("#dropSearch_QuyetDinh option:selected").text();
-            //var obj_list = {
-            //    'action': 'TN_KetQua_CongNhan_VB/LayDanhSach',
-            //    'strTuKhoa': edu.util.getValById('txtSearch'),
-            //    'strPhanLoai_Id': edu.util.getValCombo('dropSearch_PhanLoai'),
-            //    'strDaoTao_HeDaoTao_Id': edu.util.getValCombo('dropSearch_HeDaoTao'),
-            //    'strDaoTao_KhoaDaoTao_Id': edu.util.getValCombo('dropSearch_KhoaDaoTao'),
-            //    'strDaoTao_ChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinh'),
-            //    'strDaoTao_KhoaQuanLy_Id': edu.util.getValCombo('dropSearch_KhoaQuanLy'),
-            //    'strDaoTao_LopQuanLy_Id': edu.util.getValCombo('dropSearch_Lop'),
-            //    'strNguoiDung_Id': edu.util.getValById('dropAAAA'),
-            //    'strNguoiTao_Id': edu.util.getValById('dropAAAA'),
-            //    'strSoQuyetDinh': strSoQuyetDinh,
-            //    'dDoiTuongBenNgoai': edu.util.getValById('dropSearch_DoiTuong'),
-            //    'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
-            //};
-            //for (var x in obj_list) {
-            //    addKeyValue(x, obj_list[x]);
-            //}
+            
+            
         });
     },
     /*------------------------------------------
@@ -169,6 +151,16 @@ KhongDiemDanh.prototype = {
 	-------------------------------------------*/
     getList_ThoiGianDaoTao: function () {
         var me = this;
+        var obj_save = {
+			'action': 'KHCT_ThongTin_MH/DSA4BRIFIC4VIC4eFSkuKAYoIC8FIC4VIC4P',
+			'func': 'pkg_kehoach_thongtin.LayDSDaoTao_ThoiGianDaoTao',
+			'iM' : edu.system.iM,
+			'strTuKhoa' : edu.system.getValById('txtAAAA'),
+			'strDAOTAO_NAM_Id' : edu.system.getValById('dropAAAA'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'pageIndex': 1,
+            'pageSize': 1000000
+		};
         
         edu.system.makeRequest({
             success: function (data) {
@@ -187,21 +179,15 @@ KhongDiemDanh.prototype = {
 
             },
             error: function (er) {
-                edu.system.alert("KHCT_ThoiGianDaoTao/LayDanhSach (ex): " + JSON.stringify(er), "w");
+                edu.system.alert(JSON.stringify(er), "w");
 
             },
-            type: 'GET',
-            action: 'KHCT_ThoiGianDaoTao/LayDanhSach',
+            type: 'POST',
+            action: obj_save.action,
 
             contentType: true,
 
-            data: {
-                'strTuKhoa': "",
-                'strDAOTAO_NAM_Id': "",
-                'strNguoiThucHien_Id': "",
-                'pageIndex': 1,
-                'pageSize': 1000000
-            },
+            data: obj_save,
             fakedb: [
 
             ]

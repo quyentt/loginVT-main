@@ -437,8 +437,10 @@ NguoiDung.prototype = {
     getList_NguoiDung: function () {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action'                : 'CMS_NguoiDung/LayDanhSach',
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikPJjQuKAU0LyYP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachNguoiDung',
+			'iM' : edu.system.iM,
             'versionAPI'            : 'v1.0',
 
             'strTuKhoa'             : edu.util.getValById("txtSearch_NguoiDung_TuKhoa"),
@@ -475,12 +477,12 @@ NguoiDung.prototype = {
                 
                 edu.system.alert("CMS_NguoiDung/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: POST,
             fakedb: [
 
             ]
@@ -490,9 +492,10 @@ NguoiDung.prototype = {
     getList_NguoiDung2: function () {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action': 'CMS_NguoiDung/LayDanhSach',
-            'versionAPI': 'v1.0',
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikPJjQuKAU0LyYP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachNguoiDung',
+			'iM' : edu.system.iM,
 
             'strTuKhoa': edu.util.getValById("txtSearch_NguoiDung_TuKhoa"),
             'pageIndex': edu.system.pageIndex_default,
@@ -526,12 +529,12 @@ NguoiDung.prototype = {
 
                 edu.system.alert("CMS_NguoiDung/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
 
             contentType: true,
 
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]
@@ -1092,7 +1095,7 @@ NguoiDung.prototype = {
     getList_NamNhapHoc: function () {
         var me = this;
         var obj_list = {
-            'action': 'KHCT_NamHoc/LayDanhSach',
+            'action': 'KHCT_ThongTin/LayDSDaoTao_NamHoc',
             'strNguoiThucHien_Id': '',
             'strTuKhoa': '',
             'pageIndex': 1,
