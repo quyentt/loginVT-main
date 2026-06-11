@@ -282,12 +282,6 @@ NguoiDungVaiTro.prototype = {
     getList_NguoiDungVaiTro: function () {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action': 'CMS_NguoiDungVaiTro/LayVaiTroTheoNguoiDung',
-            
-
-            'strNguoiDung_Id': me.strNguoiDung_Id
-        };
         var obj_save = {
             'action': 'CMS_QuanTri01_MH/DSA4BRIXICgVMy4PJjQuKAU0LyYP',
             'func': 'PKG_CORE_QUANTRI_01.LayDSVaiTroNguoiDung',
@@ -661,7 +655,7 @@ NguoiDungVaiTro.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_VaiTro/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
             
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",

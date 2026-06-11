@@ -549,7 +549,7 @@ NguoiDung.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action': 'CMS_VaiTro/Xoa',
+            'action': 'CMS_QuanLyNguoiDung/XoaVaiTro',
             
             'strIds': me.strVaiTro_Id,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -790,7 +790,7 @@ NguoiDung.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'SV_QuyTacSinhMa/LayDanhSachSinhVienChuaKhoiTao',
+            'action': 'SV_HoSoHocVien/LayDanhSachSinhVienChuaKhoiTao',
             'type': 'GET',
             'strTuKhoa': edu.util.getValById('txtSearch_SV_TuKhoa'),
             'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao'),

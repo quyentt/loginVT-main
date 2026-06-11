@@ -321,7 +321,7 @@ NguoiDungChucNang.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_NguoiDungChucNang/ThemMoi',
+            'action': 'CMS_QuanLyNguoiDung/ThemNguoiDungChucNang',
             
 
             'strId'                 : "",
@@ -420,7 +420,7 @@ NguoiDungChucNang.prototype = {
         var obj = {};
         //--Edit
         var obj_list = {
-            'action': 'CMS_NguoiDungChucNang/XoaChucNangTheoNguoiDung',
+            'action': 'CMS_QuanLyNguoiDung/XoaChucNangTheoNguoiDung',
             
 
             'strNguoiDung_Id': me.strNguoiDung_Id,
