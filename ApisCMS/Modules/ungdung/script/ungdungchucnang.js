@@ -45,7 +45,7 @@ UngDungChucNang.prototype = {
                 
             },
             type: 'GET',
-            action: 'CMS_UngDung/LayDanhSach',
+            action: 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
             
             contentType: true,
             
@@ -65,7 +65,7 @@ UngDungChucNang.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'CMS_ChucNang/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachChucNang',
             
             'strTuKhoa': "",
             'strChung_UngDung_Id': strUngDung_Id,

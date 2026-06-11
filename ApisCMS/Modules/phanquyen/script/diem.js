@@ -262,7 +262,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'KHCT_NamNhapHoc/LayDanhSach',
+            'action': 'KHCT_ThongTin/LayDSNamNhapHoc',
 
             'strNguoiThucHien_Id': '',
         }
@@ -451,7 +451,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSHocPhanCauTrucDiemTheoLQL',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSHocPhanCauTrucDiemTheoLQL',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_DonVi'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValCombo('dropSearch_HocKy_IHD'),
@@ -518,7 +518,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'D_ThanhPhanDiem/LayDanhSach',
+            'action': 'D_ThongTin/LayDSDiem_ThanhPhanDiem',
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strThangDiem_Id': edu.util.getValById('dropAAAA'),
             'dLaThanhPhanDiemCuoi': -1,
@@ -598,7 +598,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSHanhDongTheo',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSHanhDongTheo',
             'strUngDung_Id': edu.system.appId,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById("dropSearch_ChucNangPhanQuyenDiemLQL"),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -673,7 +673,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSChucNangCanPhanQuyen',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSChucNangCanPhanQuyen',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strUngDung_Id': edu.system.appId,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -731,7 +731,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit\
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSNguoiDungTheoChucNang',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSNguoiDungTheoChucNang',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById("dropSearch_ChucNangPhanQuyenDiemLQL"),
             'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_DonVi'),
@@ -788,7 +788,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSCauTrucDiemTheoLQL',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSCauTrucDiemTheoLQL',
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
             'strLoaiDanhSach_Id': edu.util.getValById('dropSearch_LoaiDanhSach'),
@@ -921,7 +921,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTin/LayDSQuyenDiemTheoLQL',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSQuyenDiemTheoLQL',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyenDiemLQL'),
             'strNguoiThucHien_Id': edu.system.userId,
@@ -979,7 +979,7 @@ PhanQuyenDiemLQL.prototype = {
         var strNguoiDung_Id = arrId[1];
         //--Edit
         var obj_save = {
-            'action': 'CMS_PhanQuyen_DuLieu/ThemMoi',
+            'action': 'CMS_PhanQuyenDuLieu/Them_PhanQuyen_DuLieu',
             'strId': '',
             'dHieuLuc': 1,
             'strLoaiQuyen_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyenDiemLQL'),
@@ -1029,7 +1029,7 @@ PhanQuyenDiemLQL.prototype = {
         var strToHopBoDuLieuQuyen = arrId[0].substring(9) + strHanhDong_Id;
         var strNguoiDung_Id = arrId[1];
         var obj_delete = {
-            'action': 'CMS_PhanQuyen_DuLieu/Xoa_PhanQuyen_DuLieu',
+            'action': 'CMS_PhanQuyenDuLieu/Xoa_PhanQuyen_DuLieu',
             'strLoaiQuyen_Id': edu.util.getValById('dropSearch_ChucNangPhanQuyenDiemLQL'),
             'strHanhDong_Id': strQuyen_Id,
             'strUngDung_Id': edu.system.appId,
@@ -1081,7 +1081,7 @@ PhanQuyenDiemLQL.prototype = {
         var me = this;
         //--Edit
         var obj_save = {
-            'action': 'CMS_PhanQuyen_ThongTin/TaoTuDongDSLopHocPhanLanDau',
+            'action': 'CMS_PhanQuyenDuLieu/TaoTuDongDSLopHocPhanLanDau',
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_HocKy_IHD'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_HocPhan'),
@@ -1159,7 +1159,7 @@ PhanQuyenDiemLQL.prototype = {
         //    strDaoTao_CoCauToChuc_Id = "";//edu.util.getValById("dropSearch_KhoiTao_CCTC");
         //}
         var obj_list = {
-            'action': 'CMS_PhanQuyen_ThongTinChung/LayDSNguoiDungTheoChucNang',
+            'action': 'CMS_PhanQuyenDuLieu/LayDSNguoiDungTheoChucNang',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strPhanQuyen_ChucNang_Id': edu.util.getValById("dropSearch_ChucNangPhanQuyenDiemLQL"),
             'strDaoTao_CoCauToChuc_Id': edu.util.getValById('dropSearch_DonVi'),

@@ -73,7 +73,7 @@ VaiTroNguoiDung.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_VaiTro/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
             
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",

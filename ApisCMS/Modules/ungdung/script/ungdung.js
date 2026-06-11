@@ -146,7 +146,7 @@ UngDung.prototype = {
         var obj_notify = {};
         //--Edit
         var obj_save = {
-            'action'            : 'CMS_UngDung/ThemMoi',
+            'action': 'CMS_QuanLyNguoiDung/ThemMoiUngDung',
             'versionAPI'        : 'v1.0',
             'strId'             : me.objInput_UD.strId,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -162,7 +162,7 @@ UngDung.prototype = {
             'strDuongDanSSO': edu.util.getValById(me.objInput_UD.strDuongDanSSO),
             'strDuongDanTruyCapBaoCao': edu.util.getValById('txtDuongDanBaoCao'),
         };
-        if (obj_save.strId) obj_save.action = 'CMS_UngDung/CapNhat'
+        if (obj_save.strId) obj_save.action = 'CMS_QuanLyNguoiDung/SuaUngDung'
         //default
         
         edu.system.makeRequest({
@@ -216,7 +216,7 @@ UngDung.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'CMS_UngDung/LayDanhSach',
+            'action': 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
             
 
             'strTuKhoa': edu.util.getValById(me.objInput_UD.strTuKhoa_Search),
@@ -296,7 +296,7 @@ UngDung.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action': 'CMS_UngDung/Xoa',
+            'action': 'CMS_QuanLyNguoiDung/XoaUngDung',
             
 
             'strIds': Ids,
