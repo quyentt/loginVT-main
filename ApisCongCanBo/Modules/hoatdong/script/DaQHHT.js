@@ -103,7 +103,7 @@ DaQHHT.prototype = {
             var strId = this.id;
             strId = edu.util.cutPrefixId(/viewSV_/g, strId);
             me.strSinhVien_Id = strId;
-            me.aSinhVien = me.dtSinhVien.find(e => e.ID == strId);
+            me.aSinhVien = me.dtSinhVien.find(e => (e.STUDY_ID || e.ID) == strId);
             $("#modal_HoSoSinhVien").modal("show");
             me.loadHoSo_SinhVien();
             me.getList_QHHT();
@@ -273,40 +273,66 @@ DaQHHT.prototype = {
                 center: [0, 5, 6, 7, 9, 10]
             },
             aoColumns: [
-                { "mDataProp": "SINHVIEN_MA" },
-                { "mDataProp": "SINHVIEN_TENDAYDU" },
-                { "mDataProp": "DAOTAO_LOP_TEN" },
-                { "mDataProp": "DAOTAO_CHUONGTRINH_TEN" },
                 {
                     "mRender": function (nRow, aData) {
-                        var strTT = edu.util.returnEmpty(aData.TRANGTHAI);
-                        var strTen = edu.util.returnEmpty(aData.TRANGTHAI_TEN);
+                        return edu.util.returnEmpty(aData.MA_NGUOIHOC_CHINH) || edu.util.returnEmpty(aData.MA_NGUOIHOC_PHU);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.FULL_NAME) || edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.LOPQUANLY_TEN) || edu.util.returnEmpty(aData.LOPQUANLY_MA);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.TENCHUONGTRINH) || edu.util.returnEmpty(aData.MACHUONGTRINH);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var strTT = edu.util.returnEmpty(aData.STUDY_STATUS_MA) || edu.util.returnEmpty(aData.TRANGTHAI);
+                        var strTen = edu.util.returnEmpty(aData.STUDY_STATUS_TEN) || edu.util.returnEmpty(aData.TRANGTHAI_TEN);
                         var strClass = "btn-soft-primary";
-                        if (strTT == "CANHBAO") strClass = "btn-soft-orange";
-                        else if (strTT == "TOTNGHIEP") strClass = "btn-soft-success";
-                        else if (strTT == "BAOLUU") strClass = "btn-soft-warning";
+                        if (strTT == "CANHBAO" || strTT == "CANHBAOHOCVU") strClass = "btn-soft-orange";
+                        else if (strTT == "TOTNGHIEP" || strTT == "DATOTNGHIEP") strClass = "btn-soft-success";
+                        else if (strTT == "BAOLUU" || strTT == "TAMDUNG") strClass = "btn-soft-warning";
                         return '<span class="btn ' + strClass + '">' + strTen + '</span>';
                     }
                 },
-                { "mDataProp": "GPA" },
                 {
                     "mRender": function (nRow, aData) {
-                        var iCongNo = edu.util.returnEmpty(aData.CONGNO);
+                        return edu.util.returnEmpty(aData.GPA);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var iCongNo = Number(edu.util.returnEmpty(aData.CONGNO)) || 0;
                         if (iCongNo > 0) {
                             return '<span class="color-red">' + edu.util.formatCurrency(iCongNo) + 'đ</span>';
                         }
                         return '<span class="color-222">0</span>';
                     }
                 },
-                { "mDataProp": "COVAN_TENDAYDU" },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<a class="btn btn-default btnViewSV" id="viewSV_' + aData.ID + '">Xem</a>';
+                        return edu.util.returnEmpty(aData.COVAN_TENDAYDU);
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                        var strId = aData.STUDY_ID || aData.ID;
+                        return '<a class="btn btn-default btnViewSV" id="viewSV_' + strId + '">Xem</a>';
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        var strId = aData.STUDY_ID || aData.ID;
+                        return '<input type="checkbox" id="checkX' + strId + '"/>';
                     }
                 }
             ]
@@ -334,12 +360,12 @@ DaQHHT.prototype = {
     loadHoSo_SinhVien: function () {
         var me = this;
         var aData = me.aSinhVien || {};
-        $("#imgSV_Avatar").attr("src", edu.util.returnEmpty(aData.ANHTHE) || "assets/images/avatar.jpg");
-        $("#lblSV_HoTen").html(edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU));
-        $("#lblSV_Lop").html(edu.util.returnEmpty(aData.DAOTAO_LOP_TEN));
-        $("#lblSV_Khoa").html(edu.util.returnEmpty(aData.DAOTAO_KHOAQUANLY_TEN));
-        $("#lblSV_NgaySinh").html(edu.util.returnEmpty(aData.NGAYSINH_DD_MM_YYYY));
-        $("#lblSV_CCCD").html(edu.util.returnEmpty(aData.CCCD));
+        $("#imgSV_Avatar").attr("src", edu.util.returnEmpty(aData.ANHTHE) || edu.util.returnEmpty(aData.AVATAR_URL) || "assets/images/avatar.jpg");
+        $("#lblSV_HoTen").html(edu.util.returnEmpty(aData.FULL_NAME) || edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU));
+        $("#lblSV_Lop").html(edu.util.returnEmpty(aData.LOPQUANLY_TEN) || edu.util.returnEmpty(aData.LOPQUANLY_MA));
+        $("#lblSV_Khoa").html(edu.util.returnEmpty(aData.KHOAQUANLY_TEN));
+        $("#lblSV_NgaySinh").html(edu.util.returnEmpty(aData.NGAYSINH_DD_MM_YYYY) || edu.util.returnEmpty(aData.DATE_OF_BIRTH));
+        $("#lblSV_CCCD").html(edu.util.returnEmpty(aData.DINHDANH_CHINH_SO) || edu.util.returnEmpty(aData.CCCD));
         $("#lblSV_Email").html(edu.util.returnEmpty(aData.EMAIL));
     },
 
