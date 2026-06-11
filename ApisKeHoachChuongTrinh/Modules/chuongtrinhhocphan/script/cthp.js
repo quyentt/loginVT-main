@@ -1850,12 +1850,12 @@ ChuongTrinhHocPhan.prototype = {
             success: function (data) {
                 if (data.Success) {
                     //edu.system.alert("Thêm mới thành công!");
-                    me.getList_HocPhan_BaiHoc();
                     me.rewrite_HocPhan_BaiHoc();
                 }
                 else {
                     edu.system.alert(obj_save.action + ": " + data.Message, "w");
                 }
+                me.getList_HocPhan_BaiHoc();
                 
             },
             error: function (er) {
@@ -2020,13 +2020,13 @@ ChuongTrinhHocPhan.prototype = {
             success: function (data) {
                 if (data.Success) {
                     //edu.system.alert("Thêm mới thành công!");
-                    me.getList_QuanHeTuongDuong();
                     me.rewrite_QuanHeTuongTuong();
                 }
                 else {
                     edu.system.alert(obj_save.action + ": " + data.Message, "w");
                 }
-                
+
+                me.getList_QuanHeTuongDuong();
             },
             error: function (er) {
                 edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
@@ -2203,12 +2203,12 @@ ChuongTrinhHocPhan.prototype = {
             success: function (data) {
                 if (data.Success) {
                     //edu.system.alert("Thêm mới thành công!");
-                    me.getList_QuanHeThayThe();
                     me.rewrite_QuanHeThayThe();
                 }
                 else {
                     edu.system.alert(obj_save.action + ": " + data.Message, "w");
                 }
+                me.getList_QuanHeThayThe();
                 
             },
             error: function (er) {
