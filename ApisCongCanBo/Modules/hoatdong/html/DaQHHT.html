@@ -614,6 +614,67 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- ====== 4. NEW: SECTION CHỈNH SỬA HỒ SƠ ====== -->
+                    <div class="col-12 mb-15">
+                        <div class="alert d-flex align-items-center mb-15"
+                             style="background:linear-gradient(90deg,#e8f0fe 0%,#fff 100%);border-left:4px solid #3380db;border-radius:6px;border:0;border-left:4px solid #3380db;">
+                            <i class="fa-solid fa-pen-to-square me-3" style="color:#3380db;font-size:22px;"></i>
+                            <div>
+                                <div class="fw-bold mb-1" style="color:#1d3a8a;">Chỉnh sửa thông tin hồ sơ</div>
+                                <div class="fz13 color-888">Cập nhật thông tin cơ bản, hồ sơ - chính sách và các quá trình. Mỗi mục có nút Lưu riêng.</div>
+                            </div>
+                        </div>
+
+                        <!-- 4a. Thông tin cơ bản (editable - InsertCorePerson / Update) -->
+                        <div class="box box-solid box-shadow pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-light fa-user-pen mr-5"></i> Thông tin cơ bản
+                                </h3>
+                            </div>
+                            <div class="pd20" id="zoneMdl_ThongTinCoBan"></div>
+                        </div>
+
+                        <!-- 4b. Hồ sơ - chính sách -->
+                        <div class="box box-solid box-shadow pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-green">
+                                    <i class="fa-light fa-file-shield mr-5"></i> Thông tin hồ sơ - chính sách
+                                </h3>
+                            </div>
+                            <div class="pd20" id="zoneMdl_HoSoChinhSach"></div>
+                        </div>
+
+                        <!-- 4c. Khai các quá trình -->
+                        <div class="box box-solid box-shadow pd0 mb-15">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-light fa-list-timeline mr-5"></i> Khai thông tin các quá trình
+                                </h3>
+                            </div>
+                            <div class="pd20">
+                                <ul class="nav nav-tabs" id="tabMdl_QuaTrinh" role="tablist">
+                                    <li class="nav-item" role="presentation"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#qtm_diachi" type="button"><i class="fa-solid fa-map-marker-alt me-1"></i> Địa chỉ</button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#qtm_giadinh" type="button"><i class="fa-solid fa-users me-1"></i> Gia đình</button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#qtm_tknh" type="button"><i class="fa-solid fa-university me-1"></i> Tài khoản ngân hàng</button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#qtm_hocvan" type="button"><i class="fa-solid fa-graduation-cap me-1"></i> Học vấn</button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#qtm_chungchi" type="button"><i class="fa-solid fa-certificate me-1"></i> Chứng chỉ</button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#qtm_tailieu" type="button"><i class="fa-solid fa-file-alt me-1"></i> Tài liệu</button></li>
+                                    <li class="nav-item" role="presentation"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#qtm_hocham" type="button"><i class="fa-solid fa-award me-1"></i> Học hàm</button></li>
+                                </ul>
+                                <div class="tab-content pt-15">
+                                    <div class="tab-pane fade show active" id="qtm_diachi" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai địa chỉ — chờ wire API</div></div>
+                                    <div class="tab-pane fade" id="qtm_giadinh" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai gia đình — chờ wire API</div></div>
+                                    <div class="tab-pane fade" id="qtm_tknh" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai tài khoản ngân hàng — chờ wire API</div></div>
+                                    <div class="tab-pane fade" id="qtm_hocvan" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai học vấn — chờ wire API</div></div>
+                                    <div class="tab-pane fade" id="qtm_chungchi" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai chứng chỉ — chờ wire API</div></div>
+                                    <div class="tab-pane fade" id="qtm_tailieu" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai tài liệu — chờ wire API</div></div>
+                                    <div class="tab-pane fade" id="qtm_hocham" role="tabpanel"><div class="color-888 text-center pt-20 pb-20">Phần khai học hàm — chờ wire API</div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
