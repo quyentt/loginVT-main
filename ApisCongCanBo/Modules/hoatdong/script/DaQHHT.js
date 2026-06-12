@@ -262,6 +262,7 @@ DaQHHT.prototype = {
     },
 
     genTable_SinhVien: function (data, iPager) {
+        var LEFT = 'style="display:block;text-align:left;width:100%;"';
         var jsonForm = {
             strTable_Id: "tblSinhVien",
             aaData: data,
@@ -270,29 +271,103 @@ DaQHHT.prototype = {
                 iDataRow: iPager
             },
             colPos: {
-                center: [0, 5, 6, 7, 9, 10]
+                // index theo cột table (đã tính STT là col 0)
+                left:   [1, 2, 3, 6, 7, 8, 9, 10, 11, 16],
+                center: [0, 4, 5, 12, 13, 14, 15, 17, 18]
             },
             aoColumns: [
+                // [col 1] CCCD
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.MA_NGUOIHOC_CHINH) || edu.util.returnEmpty(aData.MA_NGUOIHOC_PHU);
+                        var v = edu.util.returnEmpty(aData.DINHDANH_CHINH_SO) || edu.util.returnEmpty(aData.CCCD);
+                        return '<span ' + LEFT + '>' + v + '</span>';
                     }
                 },
+                // [col 2] Mã SV (đại diện ngành chính / phụ)
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.FULL_NAME) || edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU);
+                        var v = edu.util.returnEmpty(aData.MA_NGUOIHOC_CHINH) || edu.util.returnEmpty(aData.MA_NGUOIHOC_PHU);
+                        return '<span ' + LEFT + '>' + v + '</span>';
                     }
                 },
+                // [col 3] Họ và tên
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.LOPQUANLY_TEN) || edu.util.returnEmpty(aData.LOPQUANLY_MA);
+                        var v = edu.util.returnEmpty(aData.FULL_NAME) || edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU);
+                        return '<span ' + LEFT + '>' + v + '</span>';
                     }
                 },
+                // [col 4] Giới tính
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.TENCHUONGTRINH) || edu.util.returnEmpty(aData.MACHUONGTRINH);
+                        return edu.util.returnEmpty(aData.GIOITINH_TEN);
                     }
                 },
+                // [col 5] Ngày sinh
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.DATE_OF_BIRTH) || edu.util.returnEmpty(aData.NGAYSINH_DD_MM_YYYY);
+                    }
+                },
+                // [col 6] Dân tộc
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.DANTOC_TEN);
+                        return '<span ' + LEFT + '>' + v + '</span>';
+                    }
+                },
+                // [col 7] Tôn giáo
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.TONGIAO_TEN);
+                        return '<span ' + LEFT + '>' + v + '</span>';
+                    }
+                },
+                // [col 8] Khóa học
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.TENKHOA) || edu.util.returnEmpty(aData.MAKHOA);
+                        return '<span ' + LEFT + '>' + v + '</span>';
+                    }
+                },
+                // [col 9] Khoa quản lý
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.KHOAQUANLY_TEN) || edu.util.returnEmpty(aData.KHOAQUANLY_MA);
+                        return '<span ' + LEFT + '>' + v + '</span>';
+                    }
+                },
+                // [col 10] Lớp
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.LOPQUANLY_TEN) || edu.util.returnEmpty(aData.LOPQUANLY_MA);
+                        return '<span ' + LEFT + '>' + v + '</span>';
+                    }
+                },
+                // [col 11] Chương trình
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.TENCHUONGTRINH) || edu.util.returnEmpty(aData.MACHUONGTRINH);
+                        return '<span ' + LEFT + '>' + v + '</span>';
+                    }
+                },
+                // [col 12] Ngành chính / phụ
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.NganhChinhPhu) || edu.util.returnEmpty(aData.NGANHCHINHPHU);
+                        if (!v) {
+                            // Derive: nếu IS_PRIMARY = 1 hoặc MA_CHINH == MA_PHU -> Chính, ngược lại Phụ
+                            var isPrimary = aData.IS_PRIMARY;
+                            if (isPrimary === 1 || isPrimary === '1') v = 'Chính';
+                            else if (isPrimary === 0 || isPrimary === '0') v = 'Phụ';
+                            else if (aData.MA_NGUOIHOC_CHINH && aData.MA_NGUOIHOC_PHU
+                                && aData.MA_NGUOIHOC_CHINH === aData.MA_NGUOIHOC_PHU) v = 'Chính';
+                        }
+                        var strClass = (v === 'Chính') ? 'btn-soft-success' : (v === 'Phụ' ? 'btn-soft-primary' : '');
+                        return strClass ? '<span class="btn ' + strClass + '">' + v + '</span>' : v;
+                    }
+                },
+                // [col 13] Trạng thái
                 {
                     "mRender": function (nRow, aData) {
                         var strTT = edu.util.returnEmpty(aData.STUDY_STATUS_MA) || edu.util.returnEmpty(aData.TRANGTHAI);
@@ -304,11 +379,13 @@ DaQHHT.prototype = {
                         return '<span class="btn ' + strClass + '">' + strTen + '</span>';
                     }
                 },
+                // [col 14] GPA
                 {
                     "mRender": function (nRow, aData) {
                         return edu.util.returnEmpty(aData.GPA);
                     }
                 },
+                // [col 15] Công nợ
                 {
                     "mRender": function (nRow, aData) {
                         var iCongNo = Number(edu.util.returnEmpty(aData.CONGNO)) || 0;
@@ -318,17 +395,21 @@ DaQHHT.prototype = {
                         return '<span class="color-222">0</span>';
                     }
                 },
+                // [col 16] Cố vấn
                 {
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.COVAN_TENDAYDU);
+                        var v = edu.util.returnEmpty(aData.COVAN_TENDAYDU);
+                        return '<span ' + LEFT + '>' + v + '</span>';
                     }
                 },
+                // [col 17] Thao tác
                 {
                     "mRender": function (nRow, aData) {
                         var strId = aData.STUDY_ID || aData.ID;
                         return '<a class="btn btn-default btnViewSV" id="viewSV_' + strId + '">Xem</a>';
                     }
                 },
+                // [col 18] Checkbox
                 {
                     "mRender": function (nRow, aData) {
                         var strId = aData.STUDY_ID || aData.ID;
