@@ -165,13 +165,23 @@
                                             <i class="fa-duotone fa-solid fa-user-graduate me-1"></i> Sắp tốt nghiệp
                                         </a>
                                     </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab" href="#" data-status="KHOITAODINHDANH">
+                                            <i class="fa-duotone fa-solid fa-id-badge me-1"></i> Khởi tạo định danh mới
+                                        </a>
+                                    </li>
+                                    <li class="nav-item" role="presentation">
+                                        <a class="nav-link btnFilterTab" href="#" data-status="PHANNGANHLOPCHINH">
+                                            <i class="fa-duotone fa-solid fa-sitemap me-1"></i> Phân ngành lớp chính
+                                        </a>
+                                    </li>
                                 </ul>
                                 <div class="d-flex align-items-center gap-2 mb-5">
                                     <div class="dropdown" id="zonebtnBaoCao_SinhVien"></div>
                                 </div>
                             </div>
 
-                            <div class="table-wrap">
+                            <div class="table-wrap" id="zoneTblSinhVien">
                                 <div class="table-responsive fs-14 no-swiper aps-table-select">
                                     <table class="table table-bordered tblSinhVien table-noborder" id="tblSinhVien">
                                         <thead>
@@ -180,6 +190,8 @@
                                                 <th class="min-w-130p text-start border-top-1 py-11" scope="col">CCCD</th>
                                                 <th class="min-w-110p text-start border-top-1 py-11" scope="col">Mã SV</th>
                                                 <th class="min-w-180p text-start border-top-1 py-11" scope="col">Họ và tên</th>
+                                                <th class="min-w-110p text-center border-top-1 py-11" scope="col">Trạng thái</th>
+                                                <th class="min-w-110p text-center border-top-1 py-11" scope="col">Xem hồ sơ</th>
                                                 <th class="min-w-80p text-center border-top-1 py-11" scope="col">Giới tính</th>
                                                 <th class="min-w-110p text-center border-top-1 py-11" scope="col">Ngày sinh</th>
                                                 <th class="min-w-100p text-start border-top-1 py-11" scope="col">Dân tộc</th>
@@ -189,11 +201,9 @@
                                                 <th class="min-w-100p text-start border-top-1 py-11" scope="col">Lớp</th>
                                                 <th class="min-w-180p text-start border-top-1 py-11" scope="col">Chương trình</th>
                                                 <th class="min-w-120p text-center border-top-1 py-11" scope="col">Ngành chính/phụ</th>
-                                                <th class="min-w-110p text-center border-top-1 py-11" scope="col">Trạng thái</th>
                                                 <th class="min-w-60p text-center border-top-1 py-11" scope="col">GPA</th>
                                                 <th class="min-w-110p text-center border-top-1 py-11" scope="col">Công nợ</th>
                                                 <th class="min-w-150p text-start border-top-1 py-11" scope="col">Cố vấn</th>
-                                                <th class="min-w-80p text-center border-top-1 py-11" scope="col">Thao tác</th>
                                                 <th class="text-center border-top-1 py-11" scope="col">
                                                     <input type="checkbox" class="chkSystemSelectAll">
                                                 </th>
@@ -201,6 +211,180 @@
                                         </thead>
                                         <tbody></tbody>
                                     </table>
+                                </div>
+                            </div>
+
+                            <!-- Tab "Khởi tạo định danh mới" - layout 2 cột (5/7) -->
+                            <div id="zoneTblKhoiTaoDinhDanh" style="display:none;">
+                                <div class="row">
+                                    <!-- LEFT: Danh sách + nút Thêm mới (thu hẹp) -->
+                                    <div class="col-12 col-xl-5 mb-15">
+                                        <div class="d-flex justify-content-between align-items-center mb-10 flex-wrap gap-2">
+                                            <h4 class="fz14 mb-0 color-blue"><i class="fa-light fa-list mr-5"></i> Danh sách học viên chưa có định danh</h4>
+                                            <button type="button" class="btn btn-primary" id="btnKTDD_ThemMoi"
+                                                style="white-space:nowrap; box-shadow:0 2px 6px rgba(51,128,219,.35);">
+                                                <i class="fal fa-plus me-1"></i> Thêm mới
+                                            </button>
+                                        </div>
+                                        <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                            <table class="table table-bordered tblKhoiTaoDinhDanh table-noborder" id="tblKhoiTaoDinhDanh">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center border-top-1 py-11" scope="col">STT</th>
+                                                        <th class="min-w-110p text-start border-top-1 py-11" scope="col">CCCD</th>
+                                                        <th class="min-w-150p text-start border-top-1 py-11" scope="col">Họ và tên</th>
+                                                        <th class="min-w-100p text-start border-top-1 py-11" scope="col">Ghi chú</th>
+                                                        <th class="min-w-70p text-center border-top-1 py-11" scope="col">Chọn</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- RIGHT: Form khởi tạo định danh (mở rộng) -->
+                                    <div class="col-12 col-xl-7 mb-15">
+                                        <div class="box box-solid box-shadow pd0" style="min-height: 400px;">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-light fa-id-badge mr-5"></i>
+                                                    <span id="lblFormTitle">Khởi tạo định danh</span>
+                                                </h3>
+                                            </div>
+                                            <div class="pd20" id="zoneFormDinhDanh">
+                                                <div class="text-center color-888 pt-30 pb-30">
+                                                    <i class="fa-light fa-hand-pointer fz30 d-block mb-10"></i>
+                                                    Chọn một học viên ở bảng bên trái để xem chi tiết, hoặc bấm <b class="text-primary">Thêm mới</b> để khai hồ sơ mới
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- ===== Khai thông tin các quá trình - chỉ hiện khi có người chọn ===== -->
+                                        <div class="box box-solid box-shadow pd0 mt-15" id="boxQuaTrinh" style="display:none;">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-light fa-list-timeline mr-5"></i> Khai thông tin các quá trình
+                                                </h3>
+                                            </div>
+                                            <div class="pd20">
+                                                <ul class="nav nav-tabs" id="tabQuaTrinh" role="tablist">
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#qt_diachi" type="button" role="tab">
+                                                            <i class="fa-solid fa-map-marker-alt me-1"></i> Địa chỉ
+                                                        </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_giadinh" type="button" role="tab">
+                                                            <i class="fa-solid fa-users me-1"></i> Gia đình
+                                                        </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_tknh" type="button" role="tab">
+                                                            <i class="fa-solid fa-university me-1"></i> Tài khoản ngân hàng
+                                                        </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_hocvan" type="button" role="tab">
+                                                            <i class="fa-solid fa-graduation-cap me-1"></i> Học vấn
+                                                        </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_chungchi" type="button" role="tab">
+                                                            <i class="fa-solid fa-certificate me-1"></i> Chứng chỉ
+                                                        </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_tailieu" type="button" role="tab">
+                                                            <i class="fa-solid fa-file-alt me-1"></i> Tài liệu
+                                                        </button>
+                                                    </li>
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_hocham" type="button" role="tab">
+                                                            <i class="fa-solid fa-award me-1"></i> Học hàm
+                                                        </button>
+                                                    </li>
+                                                    <!-- Tab MỚI: chỉ có ở view sinh viên -->
+                                                    <li class="nav-item" role="presentation">
+                                                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#qt_chinhsach" type="button" role="tab">
+                                                            <i class="fa-solid fa-file-shield me-1"></i> Thông tin hồ sơ - chính sách
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                                <div class="tab-content pt-15" id="tabQuaTrinhContent">
+                                                    <div class="tab-pane fade show active" id="qt_diachi" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai địa chỉ — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_giadinh" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai gia đình — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_tknh" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai tài khoản ngân hàng — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_hocvan" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai học vấn — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_chungchi" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai chứng chỉ — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_tailieu" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai tài liệu — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_hocham" role="tabpanel">
+                                                        <div class="color-888 text-center pt-20 pb-20">Phần khai học hàm — chờ wire API</div>
+                                                    </div>
+                                                    <div class="tab-pane fade" id="qt_chinhsach" role="tabpanel">
+                                                        <div id="zoneHoSoChinhSach">
+                                                            <div class="color-888 text-center pt-20 pb-20">
+                                                                <i class="fa-light fa-file-shield fz30 d-block mb-10"></i>
+                                                                Thông tin hồ sơ - chính sách của sinh viên<br>
+                                                                <span class="fz12">(Chờ tích hợp API danh sách chính sách)</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Tab "Phân ngành lớp chính" - layout 2 cột (5/7) -->
+                            <div id="zoneTblPhanNganhLopChinh" style="display:none;">
+                                <div class="row">
+                                    <!-- LEFT: Danh sách (thu hẹp) -->
+                                    <div class="col-12 col-xl-5 mb-15">
+                                        <h4 class="fz14 mb-10 color-blue"><i class="fa-light fa-sitemap mr-5"></i> Danh sách học viên cần phân ngành lớp chính</h4>
+                                        <div class="table-responsive fs-14 no-swiper aps-table-select">
+                                            <table class="table table-bordered tblPhanNganhLopChinh table-noborder" id="tblPhanNganhLopChinh">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center border-top-1 py-11" scope="col">STT</th>
+                                                        <th class="min-w-110p text-start border-top-1 py-11" scope="col">CCCD</th>
+                                                        <th class="min-w-150p text-start border-top-1 py-11" scope="col">Họ và tên</th>
+                                                        <th class="min-w-100p text-start border-top-1 py-11" scope="col">Ghi chú</th>
+                                                        <th class="min-w-100p text-center border-top-1 py-11" scope="col">Chọn</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- RIGHT: Form phân ngành (mở rộng) -->
+                                    <div class="col-12 col-xl-7 mb-15">
+                                        <div class="box box-solid box-shadow pd0" style="min-height: 400px;">
+                                            <div class="box-header with-border">
+                                                <h3 class="box-title color-blue">
+                                                    <i class="fa-light fa-sitemap mr-5"></i>
+                                                    <span id="lblPN_FormTitle">Phân ngành lớp chính</span>
+                                                </h3>
+                                            </div>
+                                            <div class="pd20" id="zoneFormPhanNganh">
+                                                <div class="text-center color-888 pt-30 pb-30">
+                                                    <i class="fa-light fa-hand-pointer fz30 d-block mb-10"></i>
+                                                    Chọn một học viên ở bảng bên trái để khai tuyến học chính và xếp lớp
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -438,6 +622,81 @@
                         <i class="fa-solid fa-arrow-left"></i> <span>Quay lại</span>
                     </button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ============================================
+     MODAL CONFIRM TEMPLATE - dùng chung cho các xử lý quan trọng
+     Yêu cầu user xem kỹ + tick xác nhận trước khi cho phép thực hiện
+============================================ -->
+<div class="modal fade" id="modal_ConfirmFancy" tabindex="-1" aria-hidden="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content" style="border:0;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.25);">
+            <!-- Header gradient -->
+            <div class="modal-header text-white pd20"
+                 style="background:linear-gradient(135deg,#3380db 0%,#1d3a8a 100%);border-bottom:0;">
+                <div class="d-flex align-items-center w-100">
+                    <div class="me-3 d-flex align-items-center justify-content-center"
+                         style="width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.15);font-size:24px;">
+                        <i class="fa-light fa-shield-check" id="iconConfirm_Header"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <h4 class="modal-title mb-0 fw-bold fz20" id="lblConfirm_Title">Xác nhận thực hiện</h4>
+                        <div class="fz13 mt-1" style="opacity:.85;" id="lblConfirm_SubTitle">
+                            Vui lòng xem kỹ thông tin trước khi xác nhận
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body pd20" style="max-height:70vh;overflow-y:auto;">
+                <!-- Cảnh báo -->
+                <div class="alert d-flex align-items-start mb-15"
+                     style="background:#fff7e6;border-left:4px solid #ffa500;border-radius:6px;border:0;border-left:4px solid #ffa500;">
+                    <i class="fa-solid fa-triangle-exclamation me-3 mt-1" style="color:#ff8c00;font-size:22px;"></i>
+                    <div>
+                        <div class="fw-bold mb-1" style="color:#8c4a00;">Hành động này có thể không thể hoàn tác</div>
+                        <div class="fz13" style="color:#8c4a00;" id="lblConfirm_WarningText">
+                            Hãy kiểm tra kỹ tất cả thông tin bên dưới. Sau khi xác nhận, dữ liệu sẽ được ghi vào hệ thống.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Đối tượng tác động (Subject) -->
+                <div class="mb-15 pd10" id="zoneConfirm_Subject"
+                     style="background:#f0f6ff;border-left:4px solid #3380db;border-radius:6px;">
+                    <!-- Filled by JS -->
+                </div>
+
+                <!-- Chi tiết các lựa chọn -->
+                <div id="zoneConfirm_Details">
+                    <!-- Filled by JS: nhiều group, mỗi group gồm tiêu đề + bảng key-value -->
+                </div>
+
+                <!-- Checkbox an toàn -->
+                <div class="form-check mt-15 pd10"
+                     style="background:#f9f9f9;border-radius:6px;border:1px dashed #ccc;">
+                    <input type="checkbox" class="form-check-input" id="chkConfirm_Agreement">
+                    <label class="form-check-label fw-bold" for="chkConfirm_Agreement" style="cursor:pointer;">
+                        Tôi đã kiểm tra kỹ tất cả thông tin trên và đồng ý thực hiện
+                    </label>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer pd20" style="background:#fafafa;border-top:1px solid #eee;">
+                <button type="button" class="btn btn-default px-4" data-bs-dismiss="modal">
+                    <i class="fal fa-times me-1"></i> Hủy bỏ
+                </button>
+                <button type="button" class="btn btn-primary px-4" id="btnConfirm_DoIt" disabled
+                        style="min-width:160px;">
+                    <i class="fal fa-check-circle me-1"></i>
+                    <span id="lblConfirm_ActionLabel">Xác nhận thực hiện</span>
+                </button>
             </div>
         </div>
     </div>
