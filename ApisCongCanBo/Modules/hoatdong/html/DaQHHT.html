@@ -76,15 +76,42 @@
                             </div>
 
                             <!-- Filter "Ngành chính/Phụ" - CHỈ áp dụng cho thống kê (không ảnh hưởng danh sách) -->
+                            <style>
+                                /* Filter pill group cho Ngành chính/phụ */
+                                .filter-isprimary-group { display: inline-flex; background: #f0f3f7; border-radius: 8px; padding: 4px; gap: 4px; }
+                                .filter-isprimary-group .btn-check + label {
+                                    border: 0 !important; background: transparent !important;
+                                    color: #5a6c80 !important; font-weight: 500;
+                                    padding: 6px 14px !important; border-radius: 6px !important;
+                                    height: auto !important; line-height: 1.3 !important; margin: 0 !important;
+                                    transition: all .15s ease;
+                                }
+                                .filter-isprimary-group .btn-check + label:hover {
+                                    background: rgba(255,255,255,.7) !important; color: #1d3a8a !important;
+                                }
+                                /* Active: nền màu + chữ trắng */
+                                .filter-isprimary-group .btn-check:checked + label#lbl_All {
+                                    background: #3380db !important; color: #fff !important;
+                                    box-shadow: 0 2px 4px rgba(51,128,219,.3) !important;
+                                }
+                                .filter-isprimary-group .btn-check:checked + label#lbl_1 {
+                                    background: #22b06a !important; color: #fff !important;
+                                    box-shadow: 0 2px 4px rgba(34,176,106,.3) !important;
+                                }
+                                .filter-isprimary-group .btn-check:checked + label#lbl_0 {
+                                    background: #ff8c00 !important; color: #fff !important;
+                                    box-shadow: 0 2px 4px rgba(255,140,0,.3) !important;
+                                }
+                            </style>
                             <div class="d-flex flex-wrap align-items-center gap-2 mb-10">
                                 <span class="fz14 color-888"><i class="fa-light fa-filter me-1"></i> Lọc thống kê theo:</span>
-                                <div class="btn-group btn-group-sm" role="group" id="grpFilterIsPrimary">
+                                <div class="filter-isprimary-group" id="grpFilterIsPrimary">
                                     <input type="radio" class="btn-check" name="filterIsPrimary" id="rdoIsPrimary_All" value="" checked>
-                                    <label class="btn btn-outline-primary" for="rdoIsPrimary_All">Tất cả ngành</label>
+                                    <label for="rdoIsPrimary_All" id="lbl_All"><i class="fa-light fa-layer-group me-1"></i>Tất cả ngành</label>
                                     <input type="radio" class="btn-check" name="filterIsPrimary" id="rdoIsPrimary_1" value="1">
-                                    <label class="btn btn-outline-success" for="rdoIsPrimary_1"><i class="fal fa-star me-1"></i>Chính</label>
+                                    <label for="rdoIsPrimary_1" id="lbl_1"><i class="fa-light fa-star me-1"></i>Ngành chính</label>
                                     <input type="radio" class="btn-check" name="filterIsPrimary" id="rdoIsPrimary_0" value="0">
-                                    <label class="btn btn-outline-secondary" for="rdoIsPrimary_0">Phụ</label>
+                                    <label for="rdoIsPrimary_0" id="lbl_0"><i class="fa-light fa-code-branch me-1"></i>Ngành phụ</label>
                                 </div>
                                 <span class="ms-auto fz12 color-888"><i class="fa-light fa-info-circle me-1"></i>Filter này chỉ áp dụng cho phần thống kê</span>
                             </div>

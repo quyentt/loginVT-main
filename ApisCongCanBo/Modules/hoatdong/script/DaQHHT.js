@@ -199,6 +199,48 @@ DaQHHT.prototype = {
             me.delete_HoSoChinhSach();
         });
 
+        // ===== Person Process tabs (7 tabs CRUD) =====
+        // Auto-load tab khi user click vào tab
+        $(document).on("shown.bs.tab", '#tabMdl_QuaTrinh button[data-bs-toggle="tab"]', function () {
+            var targetId = $(this).attr('data-bs-target') || '';  // VD: "#qtm_diachi"
+            var entityKey = null;
+            Object.keys(me._processConfig).forEach(function (k) {
+                if ('#' + me._processConfig[k].tabZoneId === targetId) entityKey = k;
+            });
+            if (entityKey && me.strProcessPerson_Id) {
+                me.loadPersonProcessTab(entityKey);
+            }
+        });
+
+        // Click "Thêm mới"
+        $(document).on("click", ".btnAddPP", function () {
+            var entityKey = $(this).attr('data-entity');
+            me.openPersonProcessForm(entityKey, null);
+        });
+        // Click "Sửa"
+        $(document).on("click", ".btnEditPP", function () {
+            var entityKey = $(this).attr('data-entity');
+            var rowId = $(this).attr('data-id');
+            me.openPersonProcessForm(entityKey, rowId);
+        });
+        // Click "Xóa"
+        $(document).on("click", ".btnDelPP", function () {
+            var entityKey = $(this).attr('data-entity');
+            var rowId = $(this).attr('data-id');
+            me.deletePersonProcess(entityKey, rowId);
+        });
+        // Click "Hủy" (đóng form, quay về table)
+        $(document).on("click", ".btnCancelPP", function () {
+            var entityKey = $(this).attr('data-entity');
+            me.renderPersonProcessTable(entityKey, me['_dt_PP_' + entityKey] || []);
+        });
+        // Click "Lưu" form
+        $(document).on("click", ".btnSavePP", function () {
+            var entityKey = $(this).attr('data-entity');
+            var rowId = $(this).attr('data-id');
+            me.savePersonProcessForm(entityKey, rowId);
+        });
+
         // Xem chi tiết hồ sơ sinh viên (mở modal toàn diện)
         $("#tblSinhVien").delegate(".btnViewSV", "click", function () {
             var strId = this.id;
@@ -1984,6 +2026,479 @@ DaQHHT.prototype = {
         if (strPersonId) {
             me.getInfo_HoSoChinhSach_Modal(strPersonId);
         }
+
+        // Set person_id cho các tab Quá trình
+        me.strProcessPerson_Id = strPersonId || '';
+        // Auto-load tab đang active (mặc định là tab "Địa chỉ")
+        me.loadPersonProcessTab('DiaChi');
+    },
+
+    /*============================================================
+    ===== PERSON PROCESS - CRUD 7 TAB QUÁ TRÌNH (config-driven) =====
+    --Reuse cùng PKG_CORE_HOSONHANSU_06 như module nhân sự
+    --Cấu trúc: 1 config + 4 hàm generic phục vụ tất cả 7 entities
+    ============================================================*/
+    _processConfig: {
+        'DiaChi': {
+            title: 'Địa chỉ', icon: 'fa-map-marker-alt', tabZoneId: 'qtm_diachi',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4AJSUzJDIy', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Address' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4AJSUzJDIy', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Address' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4AJSUzJDIy', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Address' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4AJSUzJDIy', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Address' }
+            },
+            columns: [
+                { key: 'ADDRESS_TYPE_CODE_NAME', label: 'Loại', fallback: ['ADDRESS_TYPE_NAME', 'ADDRESS_TYPE_CODE'] },
+                { key: 'FULL_ADDRESS', label: 'Địa chỉ đầy đủ', fallback: ['ADDRESS_LINE1'] },
+                { key: 'IS_PRIMARY', label: 'Chính', center: true, render: function (v) { return v == 1 ? '<i class="fal fa-star color-yellow"></i>' : ''; } }
+            ],
+            fields: [
+                { name: 'strAddress_Type_Code', label: 'Loại địa chỉ (Code)', type: 'text', from: 'ADDRESS_TYPE_CODE', col: 6 },
+                { name: 'strAddress_Status_Code', label: 'Trạng thái (Code)', type: 'text', from: 'ADDRESS_STATUS_CODE', col: 6 },
+                { name: 'strCountry_Id', label: 'Quốc gia ID', type: 'text', from: 'COUNTRY_ID', col: 4 },
+                { name: 'strProvince_Id', label: 'Tỉnh ID', type: 'text', from: 'PROVINCE_ID', col: 4 },
+                { name: 'strWard_Id', label: 'Phường/Xã ID', type: 'text', from: 'WARD_ID', col: 4 },
+                { name: 'strAddress_Line1', label: 'Dòng 1', type: 'text', from: 'ADDRESS_LINE1', col: 6 },
+                { name: 'strAddress_Line2', label: 'Dòng 2', type: 'text', from: 'ADDRESS_LINE2', col: 6 },
+                { name: 'strFull_Address', label: 'Địa chỉ đầy đủ', type: 'text', from: 'FULL_ADDRESS', col: 12 },
+                { name: 'strPostal_Code', label: 'Mã bưu chính', type: 'text', from: 'POSTAL_CODE', col: 6 },
+                { name: 'dIs_Primary', label: 'Là địa chỉ chính', type: 'checkbox', from: 'IS_PRIMARY', col: 6 },
+                { name: 'strEffective_From', label: 'Hiệu lực từ', type: 'text', from: 'EFFECTIVE_FROM', col: 6, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_To', label: 'Hiệu lực đến', type: 'text', from: 'EFFECTIVE_TO', col: 6, placeholder: 'dd/mm/yyyy' },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        },
+        'GiaDinh': {
+            title: 'Gia đình', icon: 'fa-users', tabZoneId: 'qtm_giadinh',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4HICwoLTgP', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Family' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4HICwoLTgP', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Family' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4HICwoLTgP', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Family' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4HICwoLTgP', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Family' }
+            },
+            columns: [
+                { key: 'RELATIONSHIP_NAME', label: 'Quan hệ', fallback: ['RELATIONSHIP_CODE'] },
+                { key: 'FULL_NAME', label: 'Họ và tên' },
+                { key: 'PHONE_NUMBER', label: 'SĐT' },
+                { key: 'OCCUPATION', label: 'Nghề nghiệp' }
+            ],
+            fields: [
+                { name: 'strRelationship_Code', label: 'Mã quan hệ', type: 'text', from: 'RELATIONSHIP_CODE', col: 6 },
+                { name: 'strFull_Name', label: 'Họ và tên', type: 'text', from: 'FULL_NAME', col: 6, required: true },
+                { name: 'strGender_Code', label: 'Giới tính (Code)', type: 'text', from: 'GENDER_CODE', col: 4 },
+                { name: 'strDate_Of_Birth', label: 'Ngày sinh', type: 'text', from: 'DATE_OF_BIRTH', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strOccupation', label: 'Nghề nghiệp', type: 'text', from: 'OCCUPATION', col: 4 },
+                { name: 'strPhone_Number', label: 'Số điện thoại', type: 'text', from: 'PHONE_NUMBER', col: 6 },
+                { name: 'strEmail', label: 'Email', type: 'text', from: 'EMAIL', col: 6 },
+                { name: 'strIdentity_Number', label: 'Số CCCD', type: 'text', from: 'IDENTITY_NUMBER', col: 6 },
+                { name: 'strWorkplace', label: 'Nơi làm việc', type: 'text', from: 'WORKPLACE', col: 6 },
+                { name: 'strAddress', label: 'Địa chỉ', type: 'text', from: 'ADDRESS', col: 12 },
+                { name: 'dIs_Emergency_Contact', label: 'Liên hệ khẩn cấp', type: 'checkbox', from: 'IS_EMERGENCY_CONTACT', col: 6 },
+                { name: 'dIs_Dependent', label: 'Người phụ thuộc', type: 'checkbox', from: 'IS_DEPENDENT', col: 6 },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        },
+        'TKNH': {
+            title: 'Tài khoản ngân hàng', icon: 'fa-university', tabZoneId: 'qtm_tknh',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4DIC8qHgAiIi40LzUP', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4DIC8qHgAiIi40LzUP', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Bank_Account' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4DIC8qHgAiIi40LzUP', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Bank_Account' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4DIC8qHgAiIi40LzUP', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Bank_Account' }
+            },
+            columns: [
+                { key: 'BANK_NAME', label: 'Ngân hàng', fallback: ['BANK_CODE'] },
+                { key: 'ACCOUNT_NUMBER', label: 'Số tài khoản' },
+                { key: 'ACCOUNT_HOLDER', label: 'Chủ TK' },
+                { key: 'IS_PRIMARY', label: 'Chính', center: true, render: function (v) { return v == 1 ? '<i class="fal fa-star color-yellow"></i>' : ''; } }
+            ],
+            fields: [
+                { name: 'strBank_Code', label: 'Mã ngân hàng', type: 'text', from: 'BANK_CODE', col: 6 },
+                { name: 'strBank_Name', label: 'Tên ngân hàng', type: 'text', from: 'BANK_NAME', col: 6, required: true },
+                { name: 'strAccount_Number', label: 'Số tài khoản', type: 'text', from: 'ACCOUNT_NUMBER', col: 6, required: true },
+                { name: 'strAccount_Holder', label: 'Chủ tài khoản', type: 'text', from: 'ACCOUNT_HOLDER', col: 6 },
+                { name: 'strBranch_Name', label: 'Chi nhánh', type: 'text', from: 'BRANCH_NAME', col: 6 },
+                { name: 'strSwift_Code', label: 'SWIFT/BIC', type: 'text', from: 'SWIFT_CODE', col: 6 },
+                { name: 'strCurrency_Code', label: 'Loại tiền', type: 'text', from: 'CURRENCY_CODE', col: 4, placeholder: 'VND' },
+                { name: 'strAccount_Type_Code', label: 'Loại TK', type: 'text', from: 'ACCOUNT_TYPE_CODE', col: 4 },
+                { name: 'dIs_Primary', label: 'TK chính', type: 'checkbox', from: 'IS_PRIMARY', col: 4 },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        },
+        'HocVan': {
+            title: 'Học vấn', icon: 'fa-graduation-cap', tabZoneId: 'qtm_hocvan',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4EJTQiIDUoLi8P', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Education' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4EJTQiIDUoLi8P', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Education' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4EJTQiIDUoLi8P', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Education' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4EJTQiIDUoLi8P', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Education' }
+            },
+            columns: [
+                { key: 'EDUCATION_LEVEL_NAME', label: 'Trình độ', fallback: ['EDUCATION_LEVEL_CODE'] },
+                { key: 'SCHOOL_NAME', label: 'Trường' },
+                { key: 'MAJOR', label: 'Ngành' },
+                { key: 'GRADUATION_YEAR', label: 'Năm TN' }
+            ],
+            fields: [
+                { name: 'strEducation_Level_Code', label: 'Trình độ (Code)', type: 'text', from: 'EDUCATION_LEVEL_CODE', col: 6 },
+                { name: 'strSchool_Name', label: 'Tên trường', type: 'text', from: 'SCHOOL_NAME', col: 6, required: true },
+                { name: 'strMajor', label: 'Ngành học', type: 'text', from: 'MAJOR', col: 6 },
+                { name: 'strDegree_Type_Code', label: 'Loại bằng (Code)', type: 'text', from: 'DEGREE_TYPE_CODE', col: 6 },
+                { name: 'strGraduation_Year', label: 'Năm tốt nghiệp', type: 'text', from: 'GRADUATION_YEAR', col: 4 },
+                { name: 'strStart_Year', label: 'Năm bắt đầu', type: 'text', from: 'START_YEAR', col: 4 },
+                { name: 'strGpa', label: 'GPA', type: 'text', from: 'GPA', col: 4 },
+                { name: 'strClassification_Code', label: 'Xếp loại (Code)', type: 'text', from: 'CLASSIFICATION_CODE', col: 6 },
+                { name: 'strTraining_Form_Code', label: 'Hình thức ĐT (Code)', type: 'text', from: 'TRAINING_FORM_CODE', col: 6 },
+                { name: 'strThesis_Title', label: 'Đề tài LV/LA', type: 'text', from: 'THESIS_TITLE', col: 12 },
+                { name: 'dIs_Primary', label: 'Chính', type: 'checkbox', from: 'IS_PRIMARY', col: 6 },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        },
+        'ChungChi': {
+            title: 'Chứng chỉ', icon: 'fa-certificate', tabZoneId: 'qtm_chungchi',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4CJDM1KCcoIiA1JAPP', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Certificate' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4CJDM1KCcoIiA1JAPP', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Certificate' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4CJDM1KCcoIiA1JAPP', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Certificate' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4CJDM1KCcoIiA1JAPP', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Certificate' }
+            },
+            columns: [
+                { key: 'CERTIFICATE_NAME', label: 'Tên chứng chỉ' },
+                { key: 'CERTIFICATE_TYPE_NAME', label: 'Loại', fallback: ['CERTIFICATE_TYPE_CODE'] },
+                { key: 'ISSUE_DATE', label: 'Ngày cấp' },
+                { key: 'ISSUE_ORG', label: 'Đơn vị cấp' }
+            ],
+            fields: [
+                { name: 'strCertificate_Type_Code', label: 'Loại CC (Code)', type: 'text', from: 'CERTIFICATE_TYPE_CODE', col: 6 },
+                { name: 'strCertificate_Name', label: 'Tên chứng chỉ', type: 'text', from: 'CERTIFICATE_NAME', col: 6, required: true },
+                { name: 'strCertificate_No', label: 'Số chứng chỉ', type: 'text', from: 'CERTIFICATE_NO', col: 6 },
+                { name: 'strIssue_Org', label: 'Đơn vị cấp', type: 'text', from: 'ISSUE_ORG', col: 6 },
+                { name: 'strIssue_Date', label: 'Ngày cấp', type: 'text', from: 'ISSUE_DATE', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_From', label: 'Hiệu lực từ', type: 'text', from: 'EFFECTIVE_FROM', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_To', label: 'Hiệu lực đến', type: 'text', from: 'EFFECTIVE_TO', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strLevel_Code', label: 'Mức độ (Code)', type: 'text', from: 'LEVEL_CODE', col: 4 },
+                { name: 'strScore', label: 'Điểm', type: 'text', from: 'SCORE', col: 4 },
+                { name: 'strFile_Id', label: 'File ID', type: 'text', from: 'FILE_ID', col: 4 },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        },
+        'TaiLieu': {
+            title: 'Tài liệu', icon: 'fa-file-alt', tabZoneId: 'qtm_tailieu',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4FLiI0LCQvNQPP', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Document' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4FLiI0LCQvNQPP', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Document' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4FLiI0LCQvNQPP', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Document' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4FLiI0LCQvNQPP', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Document' }
+            },
+            columns: [
+                { key: 'DOCUMENT_TYPE_NAME', label: 'Loại', fallback: ['DOCUMENT_TYPE_CODE'] },
+                { key: 'DOCUMENT_NAME', label: 'Tên tài liệu' },
+                { key: 'DOCUMENT_NO', label: 'Số' },
+                { key: 'ISSUE_DATE', label: 'Ngày cấp' }
+            ],
+            fields: [
+                { name: 'strDocument_Type_Code', label: 'Loại TL (Code)', type: 'text', from: 'DOCUMENT_TYPE_CODE', col: 6 },
+                { name: 'strDocument_Name', label: 'Tên tài liệu', type: 'text', from: 'DOCUMENT_NAME', col: 6, required: true },
+                { name: 'strDocument_No', label: 'Số tài liệu', type: 'text', from: 'DOCUMENT_NO', col: 6 },
+                { name: 'strIssue_Org', label: 'Đơn vị cấp', type: 'text', from: 'ISSUE_ORG', col: 6 },
+                { name: 'strIssue_Date', label: 'Ngày cấp', type: 'text', from: 'ISSUE_DATE', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_From', label: 'Hiệu lực từ', type: 'text', from: 'EFFECTIVE_FROM', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_To', label: 'Hiệu lực đến', type: 'text', from: 'EFFECTIVE_TO', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strFile_Id', label: 'File ID', type: 'text', from: 'FILE_ID', col: 6 },
+                { name: 'strDescription', label: 'Mô tả', type: 'textarea', from: 'DESCRIPTION', col: 12 },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        },
+        'HocHam': {
+            title: 'Học hàm', icon: 'fa-award', tabZoneId: 'qtm_hocham',
+            ep: {
+                list: { a: 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4AIiAlJCwoIh4TIC8q', f: 'PKG_CORE_HOSONHANSU_06.Get_Person_Academic_Rank' },
+                ins:  { a: 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4AIiAlJCwoIh4TIC8q', f: 'PKG_CORE_HOSONHANSU_06.Ins_Person_Academic_Rank' },
+                upd:  { a: 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4AIiAlJCwoIh4TIC8q', f: 'PKG_CORE_HOSONHANSU_06.Upd_Person_Academic_Rank' },
+                del:  { a: 'NS_HoSoNhanSu6_MH/BSQtHhEkMzIuLx4AIiAlJCwoIh4TIC8q', f: 'PKG_CORE_HOSONHANSU_06.Del_Person_Academic_Rank' }
+            },
+            columns: [
+                { key: 'ACADEMIC_RANK_NAME', label: 'Học hàm', fallback: ['ACADEMIC_RANK_CODE'] },
+                { key: 'DECISION_NO', label: 'Số QĐ' },
+                { key: 'DECISION_DATE', label: 'Ngày QĐ' },
+                { key: 'ISSUE_ORG', label: 'Đơn vị cấp' }
+            ],
+            fields: [
+                { name: 'strAcademic_Rank_Code', label: 'Học hàm (Code)', type: 'text', from: 'ACADEMIC_RANK_CODE', col: 6 },
+                { name: 'strDecision_No', label: 'Số quyết định', type: 'text', from: 'DECISION_NO', col: 6 },
+                { name: 'strDecision_Date', label: 'Ngày QĐ', type: 'text', from: 'DECISION_DATE', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_From', label: 'Hiệu lực từ', type: 'text', from: 'EFFECTIVE_FROM', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strEffective_To', label: 'Hiệu lực đến', type: 'text', from: 'EFFECTIVE_TO', col: 4, placeholder: 'dd/mm/yyyy' },
+                { name: 'strIssue_Org', label: 'Đơn vị cấp', type: 'text', from: 'ISSUE_ORG', col: 12 },
+                { name: 'strNote', label: 'Ghi chú', type: 'textarea', from: 'NOTE', col: 12 }
+            ]
+        }
+    },
+
+    /*--- Load 1 tab quá trình: gọi API, lọc theo person_id, render table ---*/
+    loadPersonProcessTab: function (entityKey) {
+        var me = this;
+        var cfg = me._processConfig[entityKey];
+        if (!cfg) return;
+        var personId = me.strProcessPerson_Id;
+        var $zone = $('#' + cfg.tabZoneId);
+        if (!personId) {
+            $zone.html('<div class="color-888 text-center pt-20 pb-20">Chưa xác định người học</div>');
+            return;
+        }
+        $zone.html('<div class="text-center color-888 pt-20 pb-20"><i class="fa-light fa-spinner fa-spin me-1"></i> Đang tải ' + cfg.title.toLowerCase() + '...</div>');
+
+        var obj_save = {
+            'action': cfg.ep.list.a,
+            'func': cfg.ep.list.f,
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id || edu.system.chucNangHeThong_Id || '',
+            'strVaiTro_Id': '',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strPerson_Id': personId
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    $zone.html('<div class="alert alert-warning">Lỗi: ' + edu.util.returnEmpty(data.Message) + '</div>');
+                    return;
+                }
+                var rows = (data.Data || []).filter(function (r) {
+                    var okPerson = (r.PERSON_ID == personId) || !r.PERSON_ID;
+                    var okActive = (r.IS_ACTIVE === undefined) || (r.IS_ACTIVE == 1);
+                    return okPerson && okActive;
+                });
+                me['_dt_PP_' + entityKey] = rows;
+                me.renderPersonProcessTable(entityKey, rows);
+            },
+            error: function (er) {
+                $zone.html('<div class="alert alert-danger fz13">Không tải được dữ liệu: ' + JSON.stringify(er).slice(0, 200) + '</div>');
+            },
+            type: 'POST', action: obj_save.action, contentType: true, data: obj_save, fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*--- Render bảng (table view) + nút Thêm mới ---*/
+    renderPersonProcessTable: function (entityKey, rows) {
+        var me = this;
+        var cfg = me._processConfig[entityKey];
+        var html = '';
+        html += '<div class="d-flex justify-content-between align-items-center mb-10 flex-wrap gap-2">';
+        html += '  <h5 class="fz14 color-blue mb-0"><i class="fa-light ' + cfg.icon + ' me-1"></i> Danh sách ' + cfg.title + ' <span class="color-888 fz12">(' + (rows ? rows.length : 0) + ')</span></h5>';
+        html += '  <button type="button" class="btn btn-primary btn-sm btnAddPP" data-entity="' + entityKey + '" style="white-space:nowrap;">';
+        html += '    <i class="fal fa-plus me-1"></i> Thêm ' + cfg.title.toLowerCase();
+        html += '  </button>';
+        html += '</div>';
+
+        if (!rows || rows.length === 0) {
+            html += '<div class="text-center color-888 pt-15 pb-15" style="background:#fafafa;border-radius:8px;border:1px dashed #ddd;">';
+            html += '  <i class="fa-light ' + cfg.icon + ' fz24 d-block mb-2"></i>';
+            html += '  <div>Chưa có ' + cfg.title.toLowerCase() + '. Bấm <b>"Thêm ' + cfg.title.toLowerCase() + '"</b> để bắt đầu.</div>';
+            html += '</div>';
+        } else {
+            html += '<div class="table-responsive"><table class="table table-bordered table-sm fz13">';
+            html += '<thead><tr style="background:#f0f6ff;"><th class="text-center" style="width:40px;">#</th>';
+            cfg.columns.forEach(function (c) {
+                html += '<th' + (c.center ? ' class="text-center"' : '') + '>' + c.label + '</th>';
+            });
+            html += '<th class="text-center" style="width:100px;">Hành động</th></tr></thead>';
+            html += '<tbody>';
+            rows.forEach(function (r, idx) {
+                var rowId = r.ID || r.id;
+                html += '<tr>';
+                html += '<td class="text-center">' + (idx + 1) + '</td>';
+                cfg.columns.forEach(function (c) {
+                    var v = r[c.key];
+                    if ((v === undefined || v === null || v === '') && c.fallback) {
+                        for (var i = 0; i < c.fallback.length; i++) {
+                            if (r[c.fallback[i]] !== undefined && r[c.fallback[i]] !== null && r[c.fallback[i]] !== '') {
+                                v = r[c.fallback[i]];
+                                break;
+                            }
+                        }
+                    }
+                    if (c.render) v = c.render(v);
+                    html += '<td' + (c.center ? ' class="text-center"' : '') + '>' + edu.util.returnEmpty(v) + '</td>';
+                });
+                html += '<td class="text-center">';
+                html += '<button class="btn btn-default btn-sm btnEditPP me-1" data-entity="' + entityKey + '" data-id="' + rowId + '" title="Sửa"><i class="fal fa-pen"></i></button>';
+                html += '<button class="btn btn-delete btn-sm btnDelPP" data-entity="' + entityKey + '" data-id="' + rowId + '" title="Xóa"><i class="fal fa-trash"></i></button>';
+                html += '</td></tr>';
+            });
+            html += '</tbody></table></div>';
+        }
+        $('#' + cfg.tabZoneId).html(html);
+    },
+
+    /*--- Mở form Thêm/Sửa (inline) ---*/
+    openPersonProcessForm: function (entityKey, rowId) {
+        var me = this;
+        var cfg = me._processConfig[entityKey];
+        var rowData = null;
+        if (rowId) {
+            rowData = (me['_dt_PP_' + entityKey] || []).find(function (r) {
+                return (r.ID || r.id) == rowId;
+            });
+        }
+        var isEdit = !!rowData;
+
+        var html = '';
+        html += '<div class="box box-solid pd10" style="background:#fafbfd;border:1px solid #d4e3f9;border-radius:8px;">';
+        html += '  <div class="d-flex justify-content-between align-items-center mb-10">';
+        html += '    <h5 class="fz15 color-blue mb-0"><i class="fa-light ' + (isEdit ? 'fa-pen' : 'fa-plus') + ' me-1"></i> ' + (isEdit ? 'Sửa' : 'Thêm') + ' ' + cfg.title.toLowerCase() + '</h5>';
+        html += '    <button type="button" class="btn btn-default btn-sm btnCancelPP" data-entity="' + entityKey + '"><i class="fal fa-times me-1"></i> Hủy</button>';
+        html += '  </div>';
+        html += '  <div class="row">';
+        cfg.fields.forEach(function (f) {
+            var v = rowData ? edu.util.returnEmpty(rowData[f.from]) : '';
+            var inputId = 'ppfld_' + entityKey + '_' + f.name;
+            var col = f.col || 12;
+            html += '<div class="col-12 col-md-' + col + ' mb-10">';
+            html += '  <label class="form-label fz13 color-888 mb-1">' + f.label + (f.required ? ' <span class="text-danger">*</span>' : '') + '</label>';
+            if (f.type === 'textarea') {
+                html += '  <textarea class="form-control" id="' + inputId + '" rows="2">' + v + '</textarea>';
+            } else if (f.type === 'checkbox') {
+                var checked = (v == 1 || v == '1' || v === true) ? 'checked' : '';
+                html += '  <div class="form-check mt-1"><input type="checkbox" class="form-check-input" id="' + inputId + '" ' + checked + '><label class="form-check-label fz13" for="' + inputId + '">Có</label></div>';
+            } else {
+                html += '  <input type="text" class="form-control" id="' + inputId + '" value="' + v + '"' + (f.placeholder ? ' placeholder="' + f.placeholder + '"' : '') + '>';
+            }
+            html += '</div>';
+        });
+        html += '  </div>';
+        html += '  <div class="d-flex justify-content-end gap-2 mt-10">';
+        html += '    <button type="button" class="btn btn-default btnCancelPP" data-entity="' + entityKey + '">Hủy</button>';
+        html += '    <button type="button" class="btn btn-primary btnSavePP" data-entity="' + entityKey + '" data-id="' + (rowId || '') + '"><i class="fal fa-save me-1"></i> ' + (isEdit ? 'Cập nhật' : 'Lưu') + '</button>';
+        html += '  </div>';
+        html += '</div>';
+        $('#' + cfg.tabZoneId).html(html);
+    },
+
+    /*--- Lưu form (Insert/Update) ---*/
+    savePersonProcessForm: function (entityKey, rowId) {
+        var me = this;
+        var cfg = me._processConfig[entityKey];
+        var isEdit = !!rowId;
+
+        // Validate required
+        for (var i = 0; i < cfg.fields.length; i++) {
+            var f = cfg.fields[i];
+            if (f.required) {
+                var v = edu.util.getValById('ppfld_' + entityKey + '_' + f.name);
+                if (!v) {
+                    edu.system.alert('Vui lòng nhập "' + f.label + '"', 'w');
+                    return;
+                }
+            }
+        }
+
+        // Build payload
+        var obj_save = {
+            'action': isEdit ? cfg.ep.upd.a : cfg.ep.ins.a,
+            'func': isEdit ? cfg.ep.upd.f : cfg.ep.ins.f,
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id || edu.system.chucNangHeThong_Id || '',
+            'strVaiTro_Id': '',
+            'strPerson_Id': me.strProcessPerson_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dIs_Active': 1
+        };
+        if (isEdit) {
+            obj_save.Id = (rowId + '').toUpperCase();
+            obj_save.strId = (rowId + '').toUpperCase();
+        }
+        cfg.fields.forEach(function (f) {
+            var inputId = 'ppfld_' + entityKey + '_' + f.name;
+            if (f.type === 'checkbox') {
+                obj_save[f.name] = $('#' + inputId).is(':checked') ? 1 : 0;
+            } else {
+                obj_save[f.name] = edu.util.returnEmpty(edu.util.getValById(inputId));
+            }
+        });
+
+        // Confirm trước khi gọi API (dùng template hoành tráng)
+        var summaryItems = cfg.fields.filter(function (f) { return f.type !== 'checkbox'; }).map(function (f) {
+            return { label: f.label, value: obj_save[f.name] };
+        });
+        me.showFancyConfirm({
+            title: (isEdit ? 'Cập nhật' : 'Thêm mới') + ' ' + cfg.title.toLowerCase(),
+            icon: cfg.icon,
+            subject: {
+                name: (me.aSinhVien || me.aModalProfile || {}).FULL_NAME || (me.aSinhVien || me.aModalProfile || {}).HO_TEN || 'Người học',
+                extra: [{ label: 'Mã NH', value: (me.aSinhVien || me.aModalProfile || {}).MA_NGUOIHOC_CHINH || (me.aSinhVien || me.aModalProfile || {}).MA_NGUOI_HOC || '' }]
+            },
+            sections: [{
+                title: cfg.title,
+                color: isEdit ? 'green' : 'blue',
+                items: summaryItems
+            }],
+            actionLabel: (isEdit ? 'Cập nhật' : 'Thêm mới') + ' ' + cfg.title.toLowerCase(),
+            requireCheckbox: false,
+            onConfirm: function () {
+                edu.system.makeRequest({
+                    success: function (data) {
+                        if (data.Success) {
+                            edu.system.alert((isEdit ? 'Cập nhật' : 'Thêm') + ' ' + cfg.title.toLowerCase() + ' thành công', 's');
+                            me.loadPersonProcessTab(entityKey);
+                        } else {
+                            edu.system.alert(obj_save.action + ' : ' + data.Message, 's');
+                        }
+                    },
+                    error: function (er) { edu.system.alert(obj_save.action + ' (er): ' + JSON.stringify(er), 'w'); },
+                    type: 'POST', action: obj_save.action, contentType: true, data: obj_save, fakedb: []
+                }, false, false, false, null);
+            }
+        });
+    },
+
+    /*--- Xóa (soft delete) ---*/
+    deletePersonProcess: function (entityKey, rowId) {
+        var me = this;
+        var cfg = me._processConfig[entityKey];
+        var rowData = (me['_dt_PP_' + entityKey] || []).find(function (r) { return (r.ID || r.id) == rowId; });
+        var firstColValue = rowData && cfg.columns[0] ? rowData[cfg.columns[0].key] : '';
+
+        me.showFancyConfirm({
+            title: 'Xóa ' + cfg.title.toLowerCase(),
+            icon: 'fa-trash',
+            warningText: 'Bản ghi sẽ bị ẩn khỏi danh sách (soft delete). Hành động này có thể được hệ thống ghi log.',
+            subject: {
+                name: edu.util.returnEmpty(firstColValue) || 'Bản ghi #' + rowId
+            },
+            sections: [{
+                title: 'Thông tin sẽ xóa',
+                color: 'red',
+                items: [
+                    { label: 'Loại', value: cfg.title },
+                    { label: 'ID', value: rowId }
+                ]
+            }],
+            actionLabel: 'Xóa bản ghi',
+            requireCheckbox: true,
+            onConfirm: function () {
+                var obj_save = {
+                    'action': cfg.ep.del.a,
+                    'func': cfg.ep.del.f,
+                    'iM': edu.system.iM,
+                    'Id': (rowId + '').toUpperCase(),
+                    'strId': (rowId + '').toUpperCase(),
+                    'strChucNang_Id': edu.system.strChucNang_Id || '',
+                    'strVaiTro_Id': '',
+                    'strNguoiThucHien_Id': edu.system.userId
+                };
+                edu.system.makeRequest({
+                    success: function (data) {
+                        if (data.Success) {
+                            edu.system.alert('Xóa thành công', 's');
+                            me.loadPersonProcessTab(entityKey);
+                        } else edu.system.alert(obj_save.action + ' : ' + data.Message, 's');
+                    },
+                    error: function (er) { edu.system.alert(obj_save.action + ' (er): ' + JSON.stringify(er), 'w'); },
+                    type: 'POST', action: obj_save.action, contentType: true, data: obj_save, fakedb: []
+                }, false, false, false, null);
+            }
+        });
     },
 
     renderModal_ThongTinCoBan: function (aData) {
