@@ -77,6 +77,11 @@ DaQHHT.prototype = {
             me.getList_SinhVien();
         });
 
+        // Filter "Ngành chính/Phụ" cho thống kê (KHÔNG ảnh hưởng danh sách SV)
+        $(document).on("change", 'input[name="filterIsPrimary"]', function () {
+            me.getList_ThongKe();
+        });
+
         $("#btnSearch").click(function () {
             me.dispatchTab();
         });
@@ -202,8 +207,10 @@ DaQHHT.prototype = {
             me.aSinhVien = me.dtSinhVien.find(e => (e.STUDY_ID || e.ID) == strId);
             $("#modal_HoSoSinhVien").modal("show");
             me.loadHoSo_SinhVien();
-            me.getList_QHHT();
-            // Render thêm phần chỉnh sửa hồ sơ trong modal
+            // [Bộ hàm 2] Load tổng quan QHHT (mới)
+            var strPersonId = (me.aSinhVien || {}).CORE_PERSON_ID || (me.aSinhVien || {}).PERSON_ID;
+            if (strPersonId) me.getList_HoSoTongQuan(strPersonId);
+            // [Bộ hàm 1] Render thông tin để xem/sửa (đã có)
             me.renderModal_FullProfile(me.aSinhVien);
         });
 
@@ -218,13 +225,11 @@ DaQHHT.prototype = {
             me.delete_Modal_HoSoChinhSach();
         });
 
-        // Chọn QHHT trong modal
+        // Chọn QHHT trong modal -> filter chi tiết theo STUDY_ID
         $("#zoneListQHHT").delegate(".rdQHHT", "change", function () {
-            var strId = $(this).val();
-            me.strQHHT_Id = strId;
-            me.aQHHT = me.dtQHHT.find(e => e.ID == strId);
-            me.genHTML_ChiTietQHHT();
-            me.getList_TongQuanQHHT();
+            var strStudyId = $(this).val();
+            me.strQHHT_Id = strStudyId;
+            me.selectQHHT_ShowChiTiet(strStudyId);
         });
 
         edu.system.getList_MauImport("zonebtnBaoCao_SinhVien", function (addKeyValue) {
@@ -1527,6 +1532,11 @@ DaQHHT.prototype = {
             if ($sel.length === 0) return;
             $sel.find('option[value=""]').remove();
             $sel.attr('data-placeholder', placeholderText);
+
+            // Detect empty state để hiển thị message thân thiện
+            var hasData = $sel.find('option').length > 0;
+            var emptyMsg = hasData ? null : ('Chưa có dữ liệu cho "' + placeholderText.replace('Chọn ', '') + '"');
+
             if ($sel.hasClass('select2-hidden-accessible')) {
                 try { $sel.select2('destroy'); } catch (e) { }
             }
@@ -1534,7 +1544,13 @@ DaQHHT.prototype = {
                 placeholder: placeholderText,
                 width: '100%',
                 multiple: true,
-                allowClear: true
+                allowClear: true,
+                language: {
+                    noResults: function () { return emptyMsg || 'Không tìm thấy kết quả phù hợp'; },
+                    searching: function () { return 'Đang tìm...'; },
+                    inputTooShort: function () { return 'Nhập thêm để tìm...'; },
+                    errorLoading: function () { return 'Không tải được dữ liệu'; }
+                }
             });
             $sel.val(null).trigger('change.select2');
         }, 80);
@@ -1606,7 +1622,8 @@ DaQHHT.prototype = {
                     var dtReRult = data.Data;
                     me.dtSinhVien = dtReRult;
                     me.genTable_SinhVien(dtReRult, data.Pager);
-                    me.genStatic_SinhVien(data.Summary || {});
+                    // Thống kê dùng API riêng (LayThongKe_TrangThaiNguoiHoc)
+                    me.getList_ThongKe();
                 }
                 else {
                     edu.system.alert(obj_save.action + " : " + data.Message, "s");
@@ -1787,18 +1804,153 @@ DaQHHT.prototype = {
         edu.system.loadToTable_data(jsonForm);
     },
 
-    genStatic_SinhVien: function (oSummary) {
-        $("#lblTongSinhVien").html(edu.util.returnEmpty(oSummary.TONGSV) || 0);
-        $("#lblDangHoc").html(edu.util.returnEmpty(oSummary.DANGHOC) || 0);
-        $("#lblDangHoc_PT").html(edu.util.returnEmpty(oSummary.DANGHOC_PT) || "0%");
-        $("#lblDaTotNghiep").html(edu.util.returnEmpty(oSummary.TOTNGHIEP) || 0);
-        $("#lblDaTotNghiep_PT").html(edu.util.returnEmpty(oSummary.TOTNGHIEP_PT) || "0%");
-        $("#lblBaoLuu").html(edu.util.returnEmpty(oSummary.BAOLUU) || 0);
-        $("#lblBaoLuu_PT").html(edu.util.returnEmpty(oSummary.BAOLUU_PT) || "0%");
-        $("#lblCongNo").html((edu.util.formatCurrency(oSummary.CONGNO) || 0) + '<u>đ</u>');
-        $("#lblCongNo_SV").html((edu.util.returnEmpty(oSummary.CONGNO_SV) || 0) + ' sinh viên');
-        $("#lblCanhBao").html(edu.util.returnEmpty(oSummary.CANHBAO) || 0);
-        $("#lblCanhBao_PT").html(edu.util.returnEmpty(oSummary.CANHBAO_PT) || "0%");
+    /*------------------------------------------
+    --Discription: [Stats] Lấy thống kê trạng thái người học
+    --Origin: PKG_CORE_NGUOIHOC_01.LayThongKe_TrangThaiNguoiHoc
+    --Filter ParamIsPrimary lấy từ radio button "Ngành chính/Phụ"
+    -------------------------------------------*/
+    getList_ThongKe: function () {
+        var me = this;
+        var strIsPrimary = $('input[name="filterIsPrimary"]:checked').val() || '';
+
+        var obj_save = {
+            'action': 'SV_NGUOIHOC_01_MH/DSA4FSkuLyYKJB4VMyAvJhUpICgPJjQuKAkuIgPP',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayThongKe_TrangThaiNguoiHoc',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || '',
+            'strHanhDong_Code': '',
+            'strDaoTao_HeDaoTao_Id': me.getMultiVal('dropHeDaoTao_CB'),
+            'strDaoTao_KhoaDaoTao_Id': me.getMultiVal('dropKhoaDaoTao_CB'),
+            'strDaoTao_ChuongTrinh_Id': me.getMultiVal('dropChuongTrinh_CB'),
+            'strDaoTao_KhoaQuanLy_Id': me.getMultiVal('dropKhoaQuanLy_CB'),
+            'strDaoTao_LopQuanLy_Id': me.getMultiVal('dropSearch_Lop'),
+            'dIsPrimary': strIsPrimary,
+            'dBoQuaPhamVi': 0,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtThongKe = data.Data || [];
+                    me.genStatic_SinhVien(me.dtThongKe);
+                }
+                else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST", action: obj_save.action,
+            contentType: true, data: obj_save, fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: Render các thẻ thống kê
+    --1. Tổng sinh viên (sum của tất cả SoNguoi - tính client side)
+    --2. N thẻ trạng thái từ rs API
+    --3. Công nợ tài chính (placeholder cố định - gán data sau)
+    --4. Cảnh báo học vụ (placeholder cố định - gán data sau)
+    -------------------------------------------*/
+    genStatic_SinhVien: function (data) {
+        data = data || [];
+        // Sum tổng SV
+        var tongSV = 0;
+        data.forEach(function (item) {
+            tongSV += Number(item.SoNguoi || item.SONGUOI || 0) || 0;
+        });
+
+        // Helper format số
+        var fmt = function (n) {
+            n = Number(n) || 0;
+            return n.toLocaleString('vi-VN');
+        };
+
+        // Helper render 1 info-box card
+        var renderCard = function (opts) {
+            var modulClass = opts.modulClass || '';
+            var iconStyle = opts.iconStyle || '';
+            var unitHtml = opts.unit || '';
+            var html = '';
+            html += '<div class="col-6 col-md-4 col-xxl-2 mb-15 ' + modulClass + '">';
+            html += '  <div class="info-box">';
+            html += '    <div class="icon"' + (iconStyle ? ' style="' + iconStyle + '"' : '') + '>';
+            html += '      <i class="' + (opts.icon || 'fa-duotone fa-solid fa-circle') + '"></i>';
+            html += '    </div>';
+            html += '    <div>';
+            html += '      <div class="name">' + opts.name + '</div>';
+            html += '      <div class="static">' + unitHtml + '</div>';
+            html += '    </div>';
+            html += '  </div>';
+            html += '</div>';
+            return html;
+        };
+
+        // Map mã trạng thái -> icon + màu
+        // (tự đoán theo TEN nếu không có MA, fallback default)
+        var pickIconStyle = function (item) {
+            var ma = (item.MA || item.STATUS_CODE || '').toUpperCase();
+            var ten = (item.TEN || item.NAME || '').toLowerCase();
+            // Theo mã
+            if (ma === 'DANGHOC' || ten.indexOf('đang học') >= 0)
+                return { icon: 'fa-duotone fa-solid fa-screen-users', modul: 'modul-item-3' };
+            if (ma === 'TOTNGHIEP' || ma === 'DATOTNGHIEP' || ten.indexOf('tốt nghiệp') >= 0)
+                return { icon: 'fa-duotone fa-solid fa-graduation-cap', iconStyle: 'color:#22b06a;background:rgba(34,176,106,.18)' };
+            if (ma === 'BAOLUU' || ma === 'TAMDUNG' || ten.indexOf('bảo lưu') >= 0 || ten.indexOf('tạm dừng') >= 0)
+                return { icon: 'fa-duotone fa-solid fa-user-clock', modul: 'modul-item-2' };
+            if (ma === 'THOIHOC' || ten.indexOf('thôi học') >= 0 || ten.indexOf('buộc thôi') >= 0)
+                return { icon: 'fa-duotone fa-solid fa-user-xmark', modul: 'modul-item-4' };
+            if (ma === 'CANHBAO' || ten.indexOf('cảnh báo') >= 0)
+                return { icon: 'fa-duotone fa-solid fa-triangle-exclamation', modul: 'modul-item-4' };
+            // Default
+            return { icon: 'fa-duotone fa-solid fa-user-tag', iconStyle: 'color:#3380db;background:rgba(51,128,219,.18)' };
+        };
+
+        var html = '';
+
+        // Card 1: TỔNG SINH VIÊN (luôn đầu, sum client side)
+        html += renderCard({
+            icon: 'fa-duotone fa-solid fa-users',
+            name: fmt(tongSV),
+            unit: '100% tổng số'
+        });
+
+        // Cards N: từng trạng thái trong rs
+        data.forEach(function (item) {
+            var soNguoi = Number(item.SoNguoi || item.SONGUOI || 0) || 0;
+            var ten = item.TEN || item.NAME || 'Trạng thái';
+            var pt = tongSV > 0 ? ((soNguoi * 100 / tongSV).toFixed(1) + '%') : '0%';
+            var iconInfo = pickIconStyle(item);
+            html += renderCard({
+                icon: iconInfo.icon,
+                modulClass: iconInfo.modul || '',
+                iconStyle: iconInfo.iconStyle || '',
+                name: fmt(soNguoi),
+                unit: '<span>' + pt + '</span> · ' + ten
+            });
+        });
+
+        // Card cố định: CÔNG NỢ TÀI CHÍNH (placeholder, data gán sau)
+        html += renderCard({
+            icon: 'fa-duotone fa-solid fa-circle-dollar',
+            iconStyle: 'color:#e6a700;background:rgba(230,167,0,.18)',
+            name: '<span id="lblCongNo">0</span><u>đ</u>',
+            unit: '<span id="lblCongNo_SV">0 sinh viên</span>'
+        });
+
+        // Card cố định: CẢNH BÁO HỌC VỤ (placeholder, data gán sau)
+        html += renderCard({
+            icon: 'fa-duotone fa-solid fa-triangle-exclamation',
+            modulClass: 'modul-item-4',
+            name: '<span id="lblCanhBao">0</span>',
+            unit: '<span id="lblCanhBao_PT">0%</span> · Cảnh báo học vụ'
+        });
+
+        $("#zoneStatistic").html(html);
     },
 
     /*------------------------------------------
@@ -2172,35 +2324,78 @@ DaQHHT.prototype = {
     },
 
     /*------------------------------------------
-    --Discription: [3] Danh sách QHHT của sinh viên
+    --Discription: [3] Hồ sơ tổng quan QHHT (NEW: 3 blocks + 3 counts)
+    --Origin: PKG_CORE_NGUOIHOC_01.LayHoSoNguoiHoc_TongQuan
+    --Response gồm:
+    --  ParamTongQHHT / ParamSoDangHoc / ParamSoHoanThanh
+    --  rsThongTinCoBan (block 1) - thông tin cơ bản người học
+    --  rsDanhSachQHHT (block 2) - danh sách QHHT
+    --  rsChiTietQHHT (block 3) - chi tiết tất cả QHHT (filter theo study_id)
     -------------------------------------------*/
-    getList_QHHT: function () {
+    getList_HoSoTongQuan: function (strPersonId, strPersonStudyId) {
         var me = this;
         var obj_save = {
-            'action': 'KHCT_HoatDong_SinhVien_MH/DSA4BRIKCR4RKSAvFygkLi4P',
-            'func': 'PKG_KEHOACH_HOATDONG_SINHVIEN.LayDSQHHT_SinhVien',
+            'action': 'SV_NGUOIHOC_01_MH/DSA4CS4SLg8mNC4oCS4iHhUuLyYQNCAv',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayHoSoNguoiHoc_TongQuan',
             'iM': edu.system.iM,
-            'strSinhVien_Id': me.strSinhVien_Id,
+            'strCorePerson_Id': strPersonId,
+            'strCorePersonStudy_Id': strPersonStudyId || '',
             'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || '',
+            'strHanhDong_Code': '',
         };
 
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    var dtReRult = data.Data;
-                    me.dtQHHT = dtReRult;
-                    me.genHTML_DanhSachQHHT(dtReRult);
-                    // Mặc định chọn QHHT đầu tiên
-                    if (dtReRult.length > 0) {
-                        me.strQHHT_Id = dtReRult[0].ID;
-                        me.aQHHT = dtReRult[0];
-                        me.genHTML_ChiTietQHHT();
-                        me.getList_TongQuanQHHT();
-                    }
-                    me.genTongQuan_QHHT(data.Summary || {});
-                }
-                else {
+                if (!data.Success) {
                     edu.system.alert(obj_save.action + " : " + data.Message, "s");
+                    return;
+                }
+                var d = data.Data || {};
+
+                // Helper: lookup field theo nhiều tên (case-insensitive convention)
+                var pick = function (obj, keys) {
+                    for (var i = 0; i < keys.length; i++) {
+                        if (obj[keys[i]] !== undefined && obj[keys[i]] !== null) return obj[keys[i]];
+                    }
+                    return null;
+                };
+
+                // ===== 3 số tổng quan =====
+                var tongQHHT = pick(d, ['ParamTongQHHT', 'TongQHHT', 'TONGQHHT', 'TongQhht']);
+                var soDangHoc = pick(d, ['ParamSoDangHoc', 'SoDangHoc', 'SODANGHOC']);
+                var soHoanThanh = pick(d, ['ParamSoHoanThanh', 'SoHoanThanh', 'SOHOANTHANH']);
+                $("#lblTongQHHT").html(edu.util.returnEmpty(tongQHHT) || 0);
+                $("#lblQHHT_DangHoc").html(edu.util.returnEmpty(soDangHoc) || 0);
+                $("#lblQHHT_HoanThanh").html(edu.util.returnEmpty(soHoanThanh) || 0);
+
+                // ===== 3 khối rs (handle nhiều convention naming) =====
+                var thongTinCoBan = pick(d, ['rsThongTinCoBan', 'ThongTinCoBan', 'Block1', 'Data1', 'ds1']) || [];
+                var dsQHHT       = pick(d, ['rsDanhSachQHHT', 'DanhSachQHHT', 'Block2', 'Data2', 'ds2']) || [];
+                var chiTietQHHT  = pick(d, ['rsChiTietQHHT', 'ChiTietQHHT', 'Block3', 'Data3', 'ds3']) || [];
+
+                // Cache lại để filter chi tiết khi user chọn QHHT
+                me.dtQHHT = dsQHHT;
+                me.dtAllChiTietQHHT = chiTietQHHT;
+
+                // Block 1: cập nhật thông tin cơ bản
+                if (thongTinCoBan.length > 0 && me.aSinhVien) {
+                    Object.assign(me.aSinhVien, thongTinCoBan[0]);
+                    me.loadHoSo_SinhVien();
+                }
+
+                // Block 2: render danh sách QHHT
+                me.genHTML_DanhSachQHHT(dsQHHT);
+
+                // Default: hiện chi tiết của QHHT đầu tiên (radio đầu tiên đã checked)
+                if (dsQHHT.length > 0) {
+                    var firstStudyId = dsQHHT[0].STUDY_ID || dsQHHT[0].study_id || dsQHHT[0].ID;
+                    me.strQHHT_Id = firstStudyId;
+                    me.selectQHHT_ShowChiTiet(firstStudyId);
+                } else {
+                    $("#zoneChiTietQHHT").html('<div class="text-center color-888 pd20">Chưa có QHHT</div>');
+                    $("#lblQHHT_Ma").html('');
                 }
             },
             error: function (er) {
@@ -2214,6 +2409,24 @@ DaQHHT.prototype = {
         }, false, false, false, null);
     },
 
+    /*------------------------------------------
+    --Discription: User chọn 1 QHHT trong danh sách (block 2)
+    --→ filter block 3 (rsChiTietQHHT) theo study_id để hiện chi tiết tương ứng
+    -------------------------------------------*/
+    selectQHHT_ShowChiTiet: function (strStudyId) {
+        var me = this;
+        var aChiTiet = (me.dtAllChiTietQHHT || []).find(function (item) {
+            return (item.STUDY_ID || item.study_id || item.ID) == strStudyId;
+        });
+        if (aChiTiet) {
+            me.aQHHT = aChiTiet;
+            me.genHTML_ChiTietQHHT();
+        } else {
+            $("#zoneChiTietQHHT").html('<div class="text-center color-888 pd10">Không tìm thấy chi tiết QHHT cho study_id = ' + strStudyId + '</div>');
+            $("#lblQHHT_Ma").html('');
+        }
+    },
+
     genHTML_DanhSachQHHT: function (data) {
         var html = '';
         if (!data || data.length === 0) {
@@ -2222,25 +2435,35 @@ DaQHHT.prototype = {
             return;
         }
         data.forEach(function (aData, idx) {
+            var studyId = aData.STUDY_ID || aData.study_id || aData.ID;
             var strChecked = (idx === 0) ? 'checked' : '';
+            var maQHHT = edu.util.returnEmpty(aData.QHHT_MA) || edu.util.returnEmpty(aData.MA) || edu.util.returnEmpty(aData.MA_QHHT) || edu.util.returnEmpty(aData.STUDY_CODE);
+            var donVi = edu.util.returnEmpty(aData.DONVI_QUANLY_TEN) || edu.util.returnEmpty(aData.KHOAQUANLY_TEN);
+            var nganh = edu.util.returnEmpty(aData.NGANH_TEN) || edu.util.returnEmpty(aData.TENCHUONGTRINH);
+            var heDaoTao = edu.util.returnEmpty(aData.HEDAOTAO_TEN) || edu.util.returnEmpty(aData.TENHEDAOTAO);
+            var khoa = edu.util.returnEmpty(aData.KHOA) || edu.util.returnEmpty(aData.TENKHOA) || edu.util.returnEmpty(aData.NAMNHAPHOC);
+            var lop = edu.util.returnEmpty(aData.LOP_TEN) || edu.util.returnEmpty(aData.LOPQUANLY_TEN);
+            var trangThai = edu.util.returnEmpty(aData.TRANGTHAI_TEN) || edu.util.returnEmpty(aData.STUDY_STATUS_TEN);
+            var isPrimary = aData.IS_PRIMARY === 1 || aData.IS_PRIMARY === '1';
+
             html += '<div class="swiper-qhht-box mb-10">';
             html += '  <div class="radio">';
-            html += '    <input type="radio" name="rdQHHT" class="rdQHHT" id="rdQHHT_' + aData.ID + '" value="' + aData.ID + '" ' + strChecked + '>';
-            html += '    <label for="rdQHHT_' + aData.ID + '"></label>';
+            html += '    <input type="radio" name="rdQHHT" class="rdQHHT" id="rdQHHT_' + studyId + '" value="' + studyId + '" ' + strChecked + '>';
+            html += '    <label for="rdQHHT_' + studyId + '"></label>';
             html += '  </div>';
             html += '  <div class="form-content">';
             html += '    <div class="top">';
-            html += '      <div class="title">' + edu.util.returnEmpty(aData.QHHT_MA) + '</div>';
-            html += '      <div class="ct"><div class="btn btn-soft-primary no-link">' + edu.util.returnEmpty(aData.DONVI_QUANLY_TEN) + '</div></div>';
+            html += '      <div class="title">' + maQHHT + (isPrimary ? ' <i class="fal fa-star color-yellow" title="Ngành chính"></i>' : '') + '</div>';
+            html += '      <div class="ct"><div class="btn btn-soft-primary no-link">' + donVi + '</div></div>';
             html += '    </div>';
             html += '    <div class="f-content">';
-            html += '      <div class="line-text w-100"><div class="label">Ngành:</div><div class="text">' + edu.util.returnEmpty(aData.NGANH_TEN) + '</div></div>';
-            html += '      <div class="line-text w-100"><div class="label">Hệ đào tạo:</div><div class="text">' + edu.util.returnEmpty(aData.HEDAOTAO_TEN) + '</div></div>';
+            html += '      <div class="line-text w-100"><div class="label">Ngành:</div><div class="text">' + nganh + '</div></div>';
+            html += '      <div class="line-text w-100"><div class="label">Hệ đào tạo:</div><div class="text">' + heDaoTao + '</div></div>';
             html += '      <div class="d-flex justify-content-between">';
-            html += '        <div class="line-text"><div class="label">Khóa</div><div class="text">' + edu.util.returnEmpty(aData.KHOA) + '</div></div>';
-            html += '        <div class="line-text"><div class="label">Lớp</div><div class="text">' + edu.util.returnEmpty(aData.LOP_TEN) + '</div></div>';
+            html += '        <div class="line-text"><div class="label">Khóa</div><div class="text">' + khoa + '</div></div>';
+            html += '        <div class="line-text"><div class="label">Lớp</div><div class="text">' + lop + '</div></div>';
             html += '      </div>';
-            html += '      <div class="line-text"><div class="label mt-5">Trạng thái</div><div class="text"><div class="btn btn-soft-success no-link">' + edu.util.returnEmpty(aData.TRANGTHAI_TEN) + '</div></div></div>';
+            html += '      <div class="line-text"><div class="label mt-5">Trạng thái</div><div class="text"><div class="btn btn-soft-success no-link">' + trangThai + '</div></div></div>';
             html += '    </div>';
             html += '  </div>';
             html += '</div>';
@@ -2251,20 +2474,32 @@ DaQHHT.prototype = {
     genHTML_ChiTietQHHT: function () {
         var me = this;
         var aData = me.aQHHT || {};
-        $("#lblQHHT_Ma").html(edu.util.returnEmpty(aData.QHHT_MA));
+        // Helper get field theo nhiều tên fallback
+        var p = function (keys) {
+            for (var i = 0; i < keys.length; i++) {
+                var v = aData[keys[i]];
+                if (v !== undefined && v !== null && v !== '') return v;
+            }
+            return '';
+        };
+        var maQHHT = p(['QHHT_MA', 'STUDY_CODE', 'MA_QHHT', 'MA']);
+        $("#lblQHHT_Ma").html(edu.util.returnEmpty(maQHHT));
+
+        var trangThaiTen = p(['TRANGTHAI_TEN', 'STUDY_STATUS_TEN']);
         var html = '';
         var arrField = [
-            { label: 'Loại QHHT', value: aData.LOAIQHHT_TEN },
-            { label: 'Ngày bắt đầu', value: aData.NGAYBATDAU_DD_MM_YYYY },
-            { label: 'Ngành / Chương trình', value: aData.NGANH_TEN },
-            { label: 'Dự kiến tốt nghiệp', value: aData.NGAYDUKIEN_TN },
-            { label: 'Khóa', value: aData.KHOA },
-            { label: 'GPA hiện tại', value: aData.GPA },
-            { label: 'Hệ đào tạo', value: aData.HEDAOTAO_TEN },
-            { label: 'Số tín chỉ tích lũy', value: aData.SOTINCHI_TICHLUY },
-            { label: 'Lớp hiện tại', value: aData.LOP_TEN },
-            { label: 'Trạng thái', value: '<div class="btn btn-soft-success no-link">' + edu.util.returnEmpty(aData.TRANGTHAI_TEN) + '</div>' },
-            { label: 'Cố vấn học tập', value: aData.COVAN_TENDAYDU },
+            { label: 'Loại QHHT', value: p(['LOAIQHHT_TEN', 'STUDY_RELATION_TYPE_TEN', 'STUDY_KIND_TEN']) },
+            { label: 'Ngày bắt đầu', value: p(['NGAYBATDAU_DD_MM_YYYY', 'NGAY_BAT_DAU', 'START_DATE']) },
+            { label: 'Ngành / Chương trình', value: p(['NGANH_TEN', 'TENCHUONGTRINH', 'TENNGANH']) },
+            { label: 'Dự kiến tốt nghiệp', value: p(['NGAYDUKIEN_TN', 'EXPECTED_GRADUATION_DATE', 'NGAYKETTHUC']) },
+            { label: 'Khóa', value: p(['KHOA', 'TENKHOA', 'KHOA_DAOTAO']) },
+            { label: 'GPA hiện tại', value: p(['GPA', 'GPA_HIENTAI', 'CURRENT_GPA']) },
+            { label: 'Hệ đào tạo', value: p(['HEDAOTAO_TEN', 'TENHEDAOTAO']) },
+            { label: 'Số tín chỉ tích lũy', value: p(['SOTINCHI_TICHLUY', 'TIN_CHI_TICHLUY', 'TOTAL_CREDIT']) },
+            { label: 'Lớp hiện tại', value: p(['LOP_TEN', 'LOPQUANLY_TEN', 'CLASS_NAME']) },
+            { label: 'Trạng thái', value: trangThaiTen ? '<div class="btn btn-soft-success no-link">' + trangThaiTen + '</div>' : '' },
+            { label: 'Cố vấn học tập', value: p(['COVAN_TENDAYDU', 'COVAN_TEN', 'ADVISOR_NAME']) },
+            { label: 'Ngành chính/phụ', value: (aData.IS_PRIMARY == 1 || aData.IS_PRIMARY == '1') ? '<span class="btn btn-soft-success no-link"><i class="fal fa-star me-1"></i>Chính</span>' : ((aData.IS_PRIMARY == 0 || aData.IS_PRIMARY == '0') ? '<span class="btn btn-soft-primary no-link">Phụ</span>' : '') },
         ];
         arrField.forEach(function (f) {
             html += '<div class="col-12 col-md-6 mb-10">';
