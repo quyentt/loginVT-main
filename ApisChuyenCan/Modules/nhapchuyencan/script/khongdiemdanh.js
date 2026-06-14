@@ -215,7 +215,9 @@ KhongDiemDanh.prototype = {
         var obj_notify = {};
         //--Edit
         var obj_save = {
-            'action': 'CC_ThongTin/Them_QLSV_NH_TuGhiNhan_ViPham',
+            'action': 'XLHV_CC_ThongTin_MH/FSkkLB4QDRIXHg8JHhU0BikoDykgLx4XKBEpICwP',
+            'func': 'PKG_CHUYENCAN_THONGTIN.Them_QLSV_NH_TuGhiNhan_ViPham',
+            'iM': edu.system.iM,
             'type': 'POST',
             'strId': strId,
             'strQLSV_NguoiHoc_Id': aData.ID,
@@ -224,7 +226,6 @@ KhongDiemDanh.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         if (edu.util.checkValue(obj_save.strId)) {
-            obj_save.action = 'CC_ThongTin/Them_QLSV_NH_TuGhiNhan_ViPham';
             obj_save.strQLSV_NguoiHoc_Id = aData.QLSV_NGUOIHOC_ID;
         }
         //default
@@ -275,8 +276,9 @@ KhongDiemDanh.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CC_ThongTin/LayDSQLSV_NH_TuGhiNhan_ViPham',
-            'type': 'GET',
+            'action': 'XLHV_CC_ThongTin_MH/DSA4BRIQDRIXHg8JHhU0BikoDykgLx4XKBEpICwP',
+            'func': 'PKG_CHUYENCAN_THONGTIN.LayDSQLSV_NH_TuGhiNhan_ViPham',
+            'iM': edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtSearch_TuKhoa'),
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': edu.system.pageIndex_default,
@@ -300,7 +302,7 @@ KhongDiemDanh.prototype = {
                 
                 edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
+            type: 'POST',
             action: obj_list.action,
             //complete: function () {
             //    edu.system.start_Progress("zoneprocessXXXX", function () {
@@ -318,7 +320,9 @@ KhongDiemDanh.prototype = {
         var me = this;
         //--Edit
         var obj_delete = {
-            'action': 'CC_ThongTin/Xoa_QLSV_NH_TuGhiNhan_ViPham',
+            'action': 'XLHV_CC_ThongTin_MH/GS4gHhANEhceDwkeFTQGKSgPKSAvHhcoESkgLAPP',
+            'func': 'PKG_CHUYENCAN_THONGTIN.Xoa_QLSV_NH_TuGhiNhan_ViPham',
+            'iM': edu.system.iM,
             
             'strId': Ids,
             'strChucNang_Id': edu.system.strChucNang_Id,

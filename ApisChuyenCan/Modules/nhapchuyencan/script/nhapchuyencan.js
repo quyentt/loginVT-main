@@ -497,7 +497,9 @@ NhapChuyenCan.prototype = {
         var me = main_doc.NhapChuyenCan;
         //--Edit
         var obj_list = {
-            'action': 'CC_NguoiHoc_ChuyenCan/LayKetQuaChuyenCanTheoNgay',
+            'action': 'XLHV_CC_ThongTin_MH/DSA4CiQ1EDQgAik0OCQvAiAvFSkkLg8mIDgP',
+            'func': 'PKG_CHUYENCAN_THONGTIN.LayKetQuaChuyenCanTheoNgay',
+            'iM': edu.system.iM,
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNgay_Gio_Phut_Giay_Id': strNgay_ID,
             'strKieuChuyenCan_Id': edu.util.getValById('dropSearch_KieuChuyenCan_IHD'),
@@ -536,7 +538,7 @@ NhapChuyenCan.prototype = {
                 edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
                 edu.system.start_Progress("divprogessquanso", me.endGetData);
             },
-            type: 'GET',
+            type: 'POST',
             action: obj_list.action,
 
             contentType: true,
@@ -611,7 +613,9 @@ NhapChuyenCan.prototype = {
         var objSV = edu.util.objGetOneDataInData(strSV_Id, me.dtNhapChuyenCan.rs, "ID");
         var strNgay = $(point).attr("title");
         var obj_delete = {
-            'action': 'CC_NguoiHoc_ChuyenCan/Xoa_QLSV_NguoiHoc_ChuyenCan',
+            'action': 'XLHV_CC_ThongTin_MH/GS4gHhANEhceDyY0LigJLiIeAik0OCQvAiAvcAPP',
+            'func': 'PKG_CHUYENCAN_THONGTIN.Xoa_QLSV_NguoiHoc_ChuyenCan1',
+            'iM': edu.system.iM,
             'strId': '',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId,
@@ -663,7 +667,9 @@ NhapChuyenCan.prototype = {
         var me = this;
         //--Edit
         var obj_save = {
-            'action': 'CC_NguoiHoc_ChuyenCan/KhoiTao_Ngay_ChuyenCan',
+            'action': 'XLHV_CC_ThongTin_MH/CikuKBUgLh4PJiA4HgIpNDgkLwIgLwPP',
+            'func': 'PKG_CHUYENCAN_THONGTIN.KhoiTao_Ngay_ChuyenCan',
+            'iM': edu.system.iM,
             'strId': '',
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strNguoiThucHien_Id': edu.system.userId,
