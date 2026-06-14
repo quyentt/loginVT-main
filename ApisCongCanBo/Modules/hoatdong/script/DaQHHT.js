@@ -199,10 +199,20 @@ DaQHHT.prototype = {
             me.delete_HoSoChinhSach();
         });
 
-        // ===== Person Process tabs (7 tabs CRUD) =====
+        // ===== Person Process tabs (7 tabs CRUD + 1 tab Hồ sơ-chính sách) =====
         // Auto-load tab khi user click vào tab
         $(document).on("shown.bs.tab", '#tabMdl_QuaTrinh button[data-bs-toggle="tab"]', function () {
             var targetId = $(this).attr('data-bs-target') || '';  // VD: "#qtm_diachi"
+
+            // Tab "Thông tin hồ sơ - chính sách" → render lại form policy vào zone trong tab
+            if (targetId === '#qtm_hosochinhsach') {
+                if (me.aModalProfile) {
+                    me.renderModal_HoSoChinhSach_ToTab(me.aModalProfile);
+                }
+                return;
+            }
+
+            // 7 tabs còn lại: dùng generic person process CRUD
             var entityKey = null;
             Object.keys(me._processConfig).forEach(function (k) {
                 if ('#' + me._processConfig[k].tabZoneId === targetId) entityKey = k;
@@ -254,6 +264,8 @@ DaQHHT.prototype = {
             if (strPersonId) me.getList_HoSoTongQuan(strPersonId);
             // [Bộ hàm 1] Render thông tin để xem/sửa (đã có)
             me.renderModal_FullProfile(me.aSinhVien);
+            // [Bộ hàm 3] Bê block "Bảng điểm" từ cổng SV vào modal
+            me.embedDiemHoc(me.aSinhVien);
         });
 
         // Event handlers cho form chỉnh sửa trong modal (prefix Mdl_)
@@ -969,7 +981,6 @@ DaQHHT.prototype = {
     _buildViewHeader: function (aData) {
         aData = aData || {};
         var v = function (val) { return edu.util.returnEmpty(val) || '<i class="color-888">—</i>'; };
-        var avatar = edu.util.returnEmpty(aData.ANHTHE) || edu.util.returnEmpty(aData.AVATAR_URL) || 'assets/images/avatar.jpg';
         var hoTen = edu.util.returnEmpty(aData.FULL_NAME) || edu.util.returnEmpty(aData.HO_TEN) || edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU);
         var maNH = edu.util.returnEmpty(aData.MA_NGUOIHOC_CHINH) || edu.util.returnEmpty(aData.MA_NGUOIHOC_PHU) || edu.util.returnEmpty(aData.MA_NGUOI_HOC);
         var cccd = edu.util.returnEmpty(aData.DINHDANH_CHINH_SO) || edu.util.returnEmpty(aData.IDENTIFIER_NO) || edu.util.returnEmpty(aData.CCCD);
@@ -985,38 +996,30 @@ DaQHHT.prototype = {
 
         var html = '';
         html += '<div class="aps-view-header mb-15 pd10" style="background:linear-gradient(135deg,#f0f6ff 0%,#fff 100%);border:1px solid #d4e3f9;border-radius:8px;">';
-        html += '  <div class="row align-items-center">';
-        // Avatar
-        html += '    <div class="col-3 col-md-2 text-center">';
-        html += '      <img src="' + avatar + '" alt="avatar" style="width:90px;height:90px;border-radius:8px;object-fit:cover;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.15);">';
-        html += '    </div>';
-        // Info
-        html += '    <div class="col-9 col-md-10">';
-        html += '      <div class="fz18 fw-bold mb-2" style="color:#1d3a8a;"><i class="fa-light fa-user-graduate me-1"></i> ' + (hoTen || '<i class="color-888">Chưa có tên</i>') + '</div>';
-        html += '      <div class="row fz13">';
-        html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Mã NH:</span> <b>' + v(maNH) + '</b></div>';
-        html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">CCCD:</span> <b>' + v(cccd) + '</b></div>';
-        html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Ngày sinh:</span> <b>' + v(ngaySinh) + '</b></div>';
-        html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Giới tính:</span> <b>' + v(gioiTinh) + '</b></div>';
+        // Bỏ avatar, chỉ giữ thông tin - icon graduate đứng trước tên đã đủ visual
+        html += '  <div class="fz18 fw-bold mb-2" style="color:#1d3a8a;"><i class="fa-light fa-user-graduate me-2"></i>' + (hoTen || '<i class="color-888">Chưa có tên</i>') + '</div>';
+        html += '  <div class="row fz13">';
+        html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Mã NH:</span> <b>' + v(maNH) + '</b></div>';
+        html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">CCCD:</span> <b>' + v(cccd) + '</b></div>';
+        html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Ngày sinh:</span> <b>' + v(ngaySinh) + '</b></div>';
+        html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Giới tính:</span> <b>' + v(gioiTinh) + '</b></div>';
         if (lop || khoa) {
-            html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Lớp:</span> <b>' + v(lop) + '</b></div>';
-            html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Khoa quản lý:</span> <b>' + v(khoa) + '</b></div>';
+            html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Lớp:</span> <b>' + v(lop) + '</b></div>';
+            html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Khoa quản lý:</span> <b>' + v(khoa) + '</b></div>';
         }
         if (chuongTrinh || heDaoTao) {
-            html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Chương trình:</span> <b>' + v(chuongTrinh) + '</b></div>';
-            html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Hệ đào tạo:</span> <b>' + v(heDaoTao) + '</b></div>';
+            html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Chương trình:</span> <b>' + v(chuongTrinh) + '</b></div>';
+            html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Hệ đào tạo:</span> <b>' + v(heDaoTao) + '</b></div>';
         }
         if (khoaHoc) {
-            html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Khóa học:</span> <b>' + v(khoaHoc) + '</b></div>';
+            html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Khóa học:</span> <b>' + v(khoaHoc) + '</b></div>';
         }
         if (email) {
-            html += '        <div class="col-12 col-md-6 mb-1"><span class="color-888">Email:</span> <b>' + v(email) + '</b></div>';
+            html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Email:</span> <b>' + v(email) + '</b></div>';
         }
         if (trangThai) {
-            html += '        <div class="col-12 mt-2"><span class="color-888 me-2">Trạng thái:</span><span class="btn btn-soft-primary btn-sm" style="padding:2px 10px;">' + trangThai + '</span></div>';
+            html += '    <div class="col-12 mt-2"><span class="color-888 me-2">Trạng thái:</span><span class="btn btn-soft-primary btn-sm" style="padding:2px 10px;">' + trangThai + '</span></div>';
         }
-        html += '      </div>';
-        html += '    </div>';
         html += '  </div>';
         html += '</div>';
         return html;
@@ -2001,13 +2004,117 @@ DaQHHT.prototype = {
     loadHoSo_SinhVien: function () {
         var me = this;
         var aData = me.aSinhVien || {};
-        $("#imgSV_Avatar").attr("src", edu.util.returnEmpty(aData.ANHTHE) || edu.util.returnEmpty(aData.AVATAR_URL) || "assets/images/avatar.jpg");
-        $("#lblSV_HoTen").html(edu.util.returnEmpty(aData.FULL_NAME) || edu.util.returnEmpty(aData.SINHVIEN_TENDAYDU));
-        $("#lblSV_Lop").html(edu.util.returnEmpty(aData.LOPQUANLY_TEN) || edu.util.returnEmpty(aData.LOPQUANLY_MA));
-        $("#lblSV_Khoa").html(edu.util.returnEmpty(aData.KHOAQUANLY_TEN));
-        $("#lblSV_NgaySinh").html(edu.util.returnEmpty(aData.NGAYSINH_DD_MM_YYYY) || edu.util.returnEmpty(aData.DATE_OF_BIRTH));
-        $("#lblSV_CCCD").html(edu.util.returnEmpty(aData.DINHDANH_CHINH_SO) || edu.util.returnEmpty(aData.CCCD));
-        $("#lblSV_Email").html(edu.util.returnEmpty(aData.EMAIL));
+        var dash = '<span class="color-888">—</span>';
+        // Avatar: chỉ thay icon bằng ảnh thật nếu backend trả về URL hợp lệ
+        var avatarUrl = edu.util.returnEmpty(aData.ANHTHE) || edu.util.returnEmpty(aData.AVATAR_URL) || edu.util.returnEmpty(aData.PORTRAIT_URL);
+        if (avatarUrl && avatarUrl.length > 5) {
+            $("#zoneSV_Avatar").html('<img src="' + avatarUrl + '" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">');
+        } else {
+            $("#zoneSV_Avatar").html('<i class="fa-light fa-user-graduate"></i>');
+        }
+        var v = function (val) { return edu.util.returnEmpty(val) || dash; };
+        $("#lblSV_HoTen").html(v(aData.FULL_NAME || aData.SINHVIEN_TENDAYDU || aData.HO_TEN));
+        $("#lblSV_Lop").html(v(aData.LOPQUANLY_TEN || aData.LOPQUANLY_MA));
+        $("#lblSV_Khoa").html(v(aData.KHOAQUANLY_TEN));
+        $("#lblSV_NgaySinh").html(v(aData.NGAYSINH_DD_MM_YYYY || aData.DATE_OF_BIRTH || aData.NGAY_SINH));
+        $("#lblSV_CCCD").html(v(aData.DINHDANH_CHINH_SO || aData.CCCD || aData.IDENTIFIER_NO));
+        $("#lblSV_Email").html(v(aData.EMAIL));
+    },
+
+    /*------------------------------------------
+    --Discription: Bê block "Bảng điểm" từ cổng SV (modules/hoctap/html/diemhoc.html)
+    --vào section trong modal "Xem hồ sơ".
+    --Cơ chế:
+    -- 1) Set me.strSinhVien_QLSV_Id để diemhoc.js (đã sửa resolveNguoiHocId) nhận biết
+    -- 2) Fetch HTML diemhoc.html, inject vào #zoneDiemHoc_Embed
+    -- 3) Load diemhoc.js (1 lần, cache lại), gọi init() trên instance mới
+    -------------------------------------------*/
+    embedDiemHoc: function (aData) {
+        var me = this;
+        if (typeof DiemHoc !== 'function') {
+            $("#zoneDiemHoc_Embed").prepend('<div class="alert alert-warning">Class DiemHoc chưa được tải.</div>');
+            return;
+        }
+        // BƯỚC 1: Lookup QLSV_NGUOIHOC_ID từ MA_NGUOIHOC (schema cũ)
+        // Vì các API diemhoc (pkg_congthongtin_hssv_thongtin) dùng schema cũ
+        // với UUID QLSV_NGUOIHOC.ID khác CORE_PERSON_ID/STUDY_ID của schema mới
+        var maNH = (aData || {}).MA_NGUOIHOC_CHINH || (aData || {}).MA_NGUOIHOC_PHU || '';
+        if (!maNH) {
+            $("#zoneDiemHoc_Embed").prepend('<div class="alert alert-warning">Không có Mã NH để lookup QLSV_NGUOIHOC_ID</div>');
+            return;
+        }
+
+        me.lookupQLSVId(maNH, function (qlsvId, matchedRecord) {
+            if (!qlsvId) {
+                $("#zoneDiemHoc_Embed").prepend('<div class="alert alert-warning">Không tìm thấy QLSV_NGUOIHOC_ID cho mã ' + maNH + ' — SV này có thể chưa có dữ liệu trong schema cũ</div>');
+                return;
+            }
+            if (window.main_doc && main_doc.DaQHHT) {
+                main_doc.DaQHHT.strSinhVien_QLSV_Id = qlsvId;
+            }
+            console.log('[embedDiemHoc] Resolved QLSV_NGUOIHOC_ID =', qlsvId, 'cho MA =', maNH);
+
+            try {
+                if (typeof window.main_beta === 'undefined') window.main_beta = {};
+                main_beta.DiemHoc = new DiemHoc();
+                main_beta.DiemHoc.init();
+            } catch (e) {
+                console.error('[embedDiemHoc] init error:', e);
+            }
+        });
+    },
+
+    /*------------------------------------------
+    --Discription: Lookup QLSV_NGUOIHOC_ID (schema cũ) từ Mã sinh viên
+    --Origin: pkg_hosohocvien.LayDanhSachHoSoNhieuNganh
+    --(Đây là API chuẩn của hệ thống dùng để tìm SV theo mã)
+    -------------------------------------------*/
+    lookupQLSVId: function (maNH, callback) {
+        var obj_save = {
+            'action': 'SV_HoSoHocVien_MH/DSA4BSAvKRIgIikJLhIuDykoJDQPJiAvKQPP',
+            'func': 'pkg_hosohocvien.LayDanhSachHoSoNhieuNganh',
+            'iM': edu.system.iM,
+            'strTuKhoa': maNH,
+            'strNamNhapHoc': '',
+            'strKhoaQuanLy_Id': '',
+            'strHeDaoTao_Id': '',
+            'strKhoaDaoTao_Id': '',
+            'strChuongTrinh_Id': '',
+            'strLopQuanLy_Id': '',
+            'strTrangThaiNguoiHoc_Id': '',
+            'strChucNang_Id': edu.system.strChucNang_Id || '',
+            'strNguoiTao_Id': '',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'pageIndex': 1,
+            'pageSize': 5,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success && data.Data && data.Data.length > 0) {
+                    // Tìm bản ghi khớp đúng MA (ưu tiên), fallback record đầu
+                    var match = data.Data.find(function (e) {
+                        return (e.QLSV_NGUOIHOC_MASO || '').toString().trim() === maNH.toString().trim();
+                    }) || data.Data[0];
+                    console.log('[lookupQLSVId] matched record =', match);
+                    console.log('[lookupQLSVId] keys =', Object.keys(match));
+                    // Ưu tiên QLSV_NGUOIHOC_ID (schema cũ thực sự), fallback ID
+                    var qlsvId = match.QLSV_NGUOIHOC_ID || match.ID;
+                    console.log('[lookupQLSVId] chosen ID =', qlsvId,
+                        '| ID=', match.ID,
+                        '| QLSV_NGUOIHOC_ID=', match.QLSV_NGUOIHOC_ID,
+                        '| CORE_PERSON_ID=', match.CORE_PERSON_ID);
+                    callback(qlsvId, match);
+                } else {
+                    callback(null, null);
+                }
+            },
+            error: function (er) {
+                console.error('[lookupQLSVId] error:', er);
+                callback(null, null);
+            },
+            type: "POST", action: obj_save.action,
+            contentType: true, data: obj_save, fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
@@ -2284,9 +2391,9 @@ DaQHHT.prototype = {
         var me = this;
         var cfg = me._processConfig[entityKey];
         var html = '';
-        html += '<div class="d-flex justify-content-between align-items-center mb-10 flex-wrap gap-2">';
+        html += '<div class="d-flex justify-content-between align-items-center mb-10 flex-wrap gap-2" style="padding-right:8px;">';
         html += '  <h5 class="fz14 color-blue mb-0"><i class="fa-light ' + cfg.icon + ' me-1"></i> Danh sách ' + cfg.title + ' <span class="color-888 fz12">(' + (rows ? rows.length : 0) + ')</span></h5>';
-        html += '  <button type="button" class="btn btn-primary btn-sm btnAddPP" data-entity="' + entityKey + '" style="white-space:nowrap;">';
+        html += '  <button type="button" class="btn btn-primary btnAddPP" data-entity="' + entityKey + '" style="white-space:nowrap; padding:6px 14px; font-size:13px; box-shadow:0 2px 4px rgba(51,128,219,.25);">';
         html += '    <i class="fal fa-plus me-1"></i> Thêm ' + cfg.title.toLowerCase();
         html += '  </button>';
         html += '</div>';
@@ -2550,7 +2657,11 @@ DaQHHT.prototype = {
         $("#zoneMdl_ThongTinCoBan").html(html);
     },
 
-    renderModal_HoSoChinhSach: function (aData) {
+    renderModal_HoSoChinhSach_ToTab: function (aData) {
+        this.renderModal_HoSoChinhSach(aData, 'zoneMdl_HoSoChinhSach_Tab');
+    },
+
+    renderModal_HoSoChinhSach: function (aData, zoneIdOverride) {
         var me = this;
         function buildOptions(arr, selectedId, placeholder) {
             var html = '<option value="">-- ' + placeholder + ' --</option>';
@@ -2600,7 +2711,7 @@ DaQHHT.prototype = {
         html += '    <i class="fal fa-save me-1"></i> ' + (isEdit ? 'Cập nhật hồ sơ - chính sách' : 'Lưu hồ sơ - chính sách');
         html += '  </button>';
         html += '</div>';
-        $("#zoneMdl_HoSoChinhSach").html(html);
+        $("#" + (zoneIdOverride || "zoneMdl_HoSoChinhSach")).html(html);
     },
 
     getInfo_HoSoChinhSach_Modal: function (strPersonId) {
