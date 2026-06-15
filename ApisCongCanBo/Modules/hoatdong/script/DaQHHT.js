@@ -103,6 +103,20 @@ DaQHHT.prototype = {
             me.exportExcel_DSSinhVien();
         });
 
+        // Ctrl+G shortcut → xuất Excel theo dữ liệu đang hiển thị
+        // (User cần chọn "Hiển thị Tất cả" trước để export full dữ liệu match filter)
+        $(document).off('keydown.daqhht_export').on('keydown.daqhht_export', function (e) {
+            // Chỉ kích hoạt khi modal Hồ sơ KHÔNG mở (tránh xung đột) và đang ở trang DaQHHT
+            if ($("#modal_HoSoSinhVien").hasClass('show')) return;
+            if (!$("#tblSinhVien").length) return;
+            // Ctrl+G (Windows/Linux) hoặc Cmd+G (Mac)
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G' || e.which === 71)) {
+                e.preventDefault();
+                e.stopPropagation();
+                me.exportExcel_DSSinhVien();
+            }
+        });
+
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
@@ -1707,6 +1721,12 @@ DaQHHT.prototype = {
         if (!data.length) {
             edu.system.alert('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.', 'w');
             return;
+        }
+        // Nếu data > 5000 dòng → cảnh báo + xác nhận để tránh treo browser
+        if (data.length > 5000) {
+            if (!confirm('Bạn sắp xuất ' + data.length.toLocaleString('vi-VN') + ' dòng dữ liệu. Quá trình có thể mất vài giây và sử dụng nhiều RAM. Tiếp tục?')) {
+                return;
+            }
         }
         var v = edu.util.returnEmpty;
         // Map sang flat object theo đúng cột bảng đang hiển thị

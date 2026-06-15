@@ -72,6 +72,22 @@ LopHocPhan.prototype = {
         $(".btnAdd").click(function () {
             me.toggle_edit();
         });
+
+        // Xuất Excel (cùng pattern với DaQHHT) — click nút hoặc Ctrl+G
+        $("#btnXuatExcel_LopHocPhan").click(function (e) {
+            if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+            me.exportExcel_LopHocPhan();
+        });
+        $(document).off('keydown.lhp_export').on('keydown.lhp_export', function (e) {
+            // Skip nếu đang ở trong input/textarea hoặc form Edit lớp đang mở
+            if (/^(input|textarea|select)$/i.test((e.target && e.target.tagName) || '')) return;
+            if (!$("#tblLopHocPhan").length) return;
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G' || e.which === 71)) {
+                e.preventDefault();
+                e.stopPropagation();
+                me.exportExcel_LopHocPhan();
+            }
+        });
         $("#dropSearch_ThoiGianDaoTao").on("select2:select", function () {
             me.getList_HeDaoTao();
             me.getList_KhoaToChuc();
@@ -952,6 +968,74 @@ LopHocPhan.prototype = {
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
+    /*------------------------------------------
+    --Discription: Xuất Excel danh sách Lớp học phần đang hiển thị
+    --Nguồn: me.dtLopHocPhan (đã apply bộ lọc & pageSize hiện tại)
+    --Lib: XLSX (SheetJS) load lazy từ CDN trong lophocphan.html
+    -------------------------------------------*/
+    exportExcel_LopHocPhan: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
+            return;
+        }
+        var data = me.dtLopHocPhan || [];
+        if (!data.length) {
+            edu.system.alert('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.', 'w');
+            return;
+        }
+        if (data.length > 5000) {
+            if (!confirm('Bạn sắp xuất ' + data.length.toLocaleString('vi-VN') + ' dòng dữ liệu. Quá trình có thể mất vài giây và sử dụng nhiều RAM. Tiếp tục?')) {
+                return;
+            }
+        }
+        var v = edu.util.returnEmpty;
+        var rows = data.map(function (e, i) {
+            return {
+                'STT': i + 1,
+                'Mã học phần': v(e.DAOTAO_HOCPHAN_MA),
+                'Tên học phần': v(e.DAOTAO_HOCPHAN_TEN),
+                'Lớp học phần': v(e.DAOTAO_LOPHOCPHAN_TEN),
+                'Hình thức học': v(e.HINHTHUCHOC_MA),
+                'Giảng viên': v(e.GIANGVIEN),
+                'Phân bổ theo CTDT': v(e.TTPHANBOTHEOCTDT),
+                'Tổng số tiết TKB': v(e.TONGSOTIETTKBMO),
+                'Tổng tiết theo phân GV': v(e.TONGSOTIETGIANG),
+                'Tổng tiết xác nhận': v(e.TONGSOTIETGIANGXACNHAN),
+                'Năm học': v(e.NAMHOC),
+                'Học kỳ': v(e.HOCKY),
+                'Đợt': v(e.DOTHOC),
+                'Buổi bắt đầu': v(e.NGAYBATDAU),
+                'Buổi kết thúc': v(e.NGAYKETTHUC),
+                'Khóa': v(e.DAOTAO_KHOADAOTAO_TEN),
+                'Khoa quản lý chuyên môn': v(e.DAOTAO_KHOAQUANLY_TEN),
+                'Số lượng': v(e.QUYMO),
+                'Số giờ chuẩn': v(e.TONGSOGIOCHUAN),
+                'Khóa dữ liệu': (e.KHOADULIEU == '1' ? 'Khóa' : ''),
+                'Không tính theo TKB': (parseFloat(e.KHONGTINHTHEOTKB) > 0 ? 'Không tính theo TKB' : '')
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(rows);
+        var headers = Object.keys(rows[0]);
+        ws['!cols'] = headers.map(function (h) {
+            var maxLen = h.length;
+            rows.forEach(function (r) {
+                var l = String(r[h] || '').length;
+                if (l > maxLen) maxLen = l;
+            });
+            return { wch: Math.min(maxLen + 2, 40) };
+        });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Lớp học phần');
+
+        var now = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : n; };
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                    + '_' + pad(now.getHours()) + pad(now.getMinutes());
+        XLSX.writeFile(wb, 'LopHocPhan_' + stamp + '.xlsx');
+    },
+
     getList_LopHocPhan: function () {
         var me = this;
 

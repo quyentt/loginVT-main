@@ -7353,7 +7353,7 @@ systemroot.prototype = {
             if (iSoLuong > 1) {
                 row += '<select class="select-opt" id="downloadAllTable_User"><option value=""> Select table </option>' + option + '</select>';
             } else {
-                row += '<a class="btn btn-primary" id="btnDownloadAllTable" title="' + strTable_Id + '" href="#"><i class="fa fa-cloud-download"></i> Tải file</a>';
+                row += '<a class="btn btn-primary" id="btnDownloadAllTable" title="' + strTable_Id + '" href="javascript:void(0)" style="cursor:pointer;"><i class="fa fa-cloud-download"></i> Tải file</a>';
             }
             row += '</div>';
         }
@@ -7366,7 +7366,9 @@ systemroot.prototype = {
         $("#downloadAllTable_User").on("select2:select", function () {
             me.reportAllTable_User($("#downloadAllTable_User").val());
         });
-        $("#btnDownloadAllTable").click(function () {
+        $("#btnDownloadAllTable").click(function (e) {
+            // Ngăn href="#" (legacy) làm SPA điều hướng về root
+            if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
             me.reportAllTable_User(this.title);
         });
         edu.system.uploadImport(["importAllTable"], me.importAllTable_Input);
