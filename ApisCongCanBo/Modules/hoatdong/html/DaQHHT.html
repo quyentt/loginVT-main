@@ -165,6 +165,216 @@
                                 #myTabContentDiem table td.cell-wrap,
                                 #myTabContentDiem table th.cell-wrap { white-space: normal; min-width: 180px; }
 
+                                /* Cho phép cột "Tên học phần" / "Tên lớp HP" xuống dòng để không che cột phải */
+                                /* Bảng điểm theo học kỳ (#zone_bangdiem .transcrip-table): cột 3 = Tên học phần */
+                                #zone_bangdiem .transcrip-table th:nth-child(3),
+                                #zone_bangdiem .transcrip-table td:nth-child(3) {
+                                    white-space: normal !important;
+                                    min-width: 240px;
+                                    max-width: 360px;
+                                    word-break: break-word;
+                                }
+                                /* tblHocPhanChuaQua: cột 3 = Tên học phần */
+                                #tblHocPhanChuaQua th:nth-child(3),
+                                #tblHocPhanChuaQua td:nth-child(3) {
+                                    white-space: normal !important;
+                                    min-width: 240px;
+                                    max-width: 360px;
+                                    word-break: break-word;
+                                }
+                                /* tblTongHopDiemHP: cột 5 = Tên học phần */
+                                #tblTongHopDiemHP th:nth-child(5),
+                                #tblTongHopDiemHP td:nth-child(5) {
+                                    white-space: normal !important;
+                                    min-width: 220px;
+                                    max-width: 340px;
+                                    word-break: break-word;
+                                }
+                                /* tblKetQuaDangKy: cột 3 = Tên lớp HP */
+                                #tblKetQuaDangKy th:nth-child(3),
+                                #tblKetQuaDangKy td:nth-child(3) {
+                                    white-space: normal !important;
+                                    min-width: 220px;
+                                    max-width: 340px;
+                                    word-break: break-word;
+                                }
+                                /* tblLichSu: cột 7 = Tên học phần, cột 10 = Tên chương trình */
+                                #tblLichSu th:nth-child(7),
+                                #tblLichSu td:nth-child(7),
+                                #tblLichSu th:nth-child(10),
+                                #tblLichSu td:nth-child(10) {
+                                    white-space: normal !important;
+                                    min-width: 200px;
+                                    max-width: 320px;
+                                    word-break: break-word;
+                                }
+                                /* tblQuyetDinh: cột "Nội dung" (vị trí 5) */
+                                #tblQuyetDinh th:nth-child(5),
+                                #tblQuyetDinh td:nth-child(5) {
+                                    white-space: normal !important;
+                                    min-width: 240px;
+                                    max-width: 400px;
+                                    word-break: break-word;
+                                }
+
+                                /* ===== RESPONSIVE: dưới 768px, biến bảng thành dạng card =====
+                                   Áp cho toàn bộ table trong #zoneDiemHoc_Embed.
+                                   Mỗi row trở thành 1 "card", mỗi cell là 1 dòng "Label: value". */
+                                @media (max-width: 767.98px) {
+                                    /* Container không scroll ngang nữa */
+                                    #myTabContentDiem .scroll-table-x,
+                                    #myTabContentDiem .aps-table-select {
+                                        overflow-x: visible !important;
+                                    }
+                                    #myTabContentDiem .scroll-table-x > table,
+                                    #myTabContentDiem .aps-table-select > table,
+                                    #zone_bangdiem .transcrip-table {
+                                        width: 100% !important;
+                                        min-width: 0 !important;
+                                        table-layout: auto;
+                                        display: block;
+                                    }
+                                    /* Ẩn thead */
+                                    #myTabContentDiem table thead,
+                                    #zone_bangdiem .transcrip-table thead {
+                                        display: none !important;
+                                    }
+                                    /* tbody & tfoot làm block */
+                                    #myTabContentDiem table tbody,
+                                    #myTabContentDiem table tfoot,
+                                    #zone_bangdiem .transcrip-table tbody,
+                                    #zone_bangdiem .transcrip-table tfoot { display: block; width: 100%; }
+                                    /* Mỗi TR là 1 card */
+                                    #myTabContentDiem table tbody tr,
+                                    #zone_bangdiem .transcrip-table tbody tr {
+                                        display: block !important;
+                                        width: 100%;
+                                        background: #fff !important;
+                                        border: 1px solid #e3e7ec !important;
+                                        border-radius: 8px;
+                                        padding: 10px 12px;
+                                        margin-bottom: 10px;
+                                        box-shadow: 0 1px 2px rgba(0,0,0,.04);
+                                    }
+                                    /* Mỗi TD/TH là 1 dòng flex: label - value */
+                                    #myTabContentDiem table tbody td,
+                                    #myTabContentDiem table tbody th,
+                                    #zone_bangdiem .transcrip-table tbody td,
+                                    #zone_bangdiem .transcrip-table tbody th {
+                                        display: flex !important;
+                                        align-items: flex-start;
+                                        justify-content: space-between;
+                                        gap: 12px;
+                                        width: 100% !important;
+                                        max-width: 100% !important;
+                                        min-width: 0 !important;
+                                        border: 0 !important;
+                                        border-bottom: 1px dashed #f0f2f5 !important;
+                                        padding: 6px 0 !important;
+                                        text-align: right !important;
+                                        white-space: normal !important;
+                                        word-break: break-word;
+                                        font-size: 13px;
+                                    }
+                                    /* Bỏ border-bottom của cell cuối trong row */
+                                    #myTabContentDiem table tbody tr td:last-child,
+                                    #zone_bangdiem .transcrip-table tbody tr td:last-child {
+                                        border-bottom: 0 !important;
+                                    }
+                                    /* Label show-in-mobi */
+                                    #myTabContentDiem .show-in-mobi,
+                                    #zone_bangdiem .show-in-mobi {
+                                        display: inline-block !important;
+                                        font-style: normal !important;
+                                        font-weight: 500;
+                                        color: #5a6c80;
+                                        margin-right: 8px;
+                                        text-align: left;
+                                        flex-shrink: 0;
+                                    }
+                                    /* Value mong muốn align phải */
+                                    #myTabContentDiem table tbody td > span:not(.show-in-mobi),
+                                    #myTabContentDiem table tbody th > span:not(.show-in-mobi),
+                                    #zone_bangdiem .transcrip-table tbody td > span:not(.show-in-mobi),
+                                    #zone_bangdiem .transcrip-table tbody th > span:not(.show-in-mobi) {
+                                        font-weight: 500;
+                                        color: #222;
+                                        text-align: right;
+                                        flex: 1 1 auto;
+                                        min-width: 0;
+                                        word-break: break-word;
+                                    }
+                                    /* tfoot dạng card riêng */
+                                    #myTabContentDiem table tfoot tr,
+                                    #zone_bangdiem .transcrip-table tfoot tr {
+                                        display: block !important;
+                                        background: #f8fafd !important;
+                                        border: 1px solid #d4e3f9 !important;
+                                        border-radius: 8px;
+                                        padding: 8px 12px;
+                                        margin-bottom: 8px;
+                                    }
+                                    #myTabContentDiem table tfoot td,
+                                    #zone_bangdiem .transcrip-table tfoot td {
+                                        display: flex !important;
+                                        justify-content: space-between;
+                                        padding: 4px 0 !important;
+                                        border: 0 !important;
+                                        font-size: 13px;
+                                    }
+                                    /* Ẩn các cột chỉ là indicator (vd col Chi tiết toàn link "Chi tiết") khi không cần */
+                                    #myTabContentDiem table .btnXemDiemThanhPhan a,
+                                    #zone_bangdiem .btnXemDiemThanhPhan a {
+                                        padding: 4px 10px;
+                                        background: #f0f6ff;
+                                        border-radius: 6px;
+                                        text-decoration: none;
+                                    }
+                                    /* Title accordion mobile */
+                                    #zone_bangdiem .accordion-button {
+                                        font-size: 14px;
+                                        padding: 10px 12px;
+                                    }
+                                }
+
+                                /* Tablet (768-991px): font + padding nhỏ hơn để chứa nhiều cột */
+                                @media (min-width: 768px) and (max-width: 991.98px) {
+                                    #myTabContentDiem table th,
+                                    #myTabContentDiem table td {
+                                        font-size: 12px;
+                                        padding: 6px 8px;
+                                    }
+                                }
+
+                                /* ===== Tab navigation cuộn ngang trên mobile/tablet =====
+                                   Tabs "Bảng điểm | Học phần nợ | Khối kiến thức | ..." quá dài,
+                                   cho phép cuộn ngang để truy cập tab bị che bên phải. */
+                                @media (max-width: 991.98px) {
+                                    .tabs-scores .nav,
+                                    .tabs-scores .nav-tabs {
+                                        flex-wrap: nowrap !important;
+                                        overflow-x: auto !important;
+                                        overflow-y: hidden !important;
+                                        -webkit-overflow-scrolling: touch;
+                                        scrollbar-width: thin;
+                                        scrollbar-color: #8a94a0 transparent;
+                                    }
+                                    .tabs-scores .nav::-webkit-scrollbar,
+                                    .tabs-scores .nav-tabs::-webkit-scrollbar { height: 4px; }
+                                    .tabs-scores .nav::-webkit-scrollbar-thumb,
+                                    .tabs-scores .nav-tabs::-webkit-scrollbar-thumb { background: #8a94a0; border-radius: 2px; }
+                                    .tabs-scores .nav-item {
+                                        flex: 0 0 auto !important;
+                                        white-space: nowrap;
+                                    }
+                                    .tabs-scores .nav-link {
+                                        white-space: nowrap;
+                                        padding: 8px 12px !important;
+                                        font-size: 13px;
+                                    }
+                                    .tabs-scores .nav-link span { font-size: 13px; }
+                                }
+
                                 /* Scrollbar luôn hiển thị, dễ nhìn */
                                 #myTabContentDiem .scroll-table-x,
                                 #myTabContentDiem .aps-table-select { scrollbar-width: thin; scrollbar-color: #8a94a0 #eef1f5; }
@@ -908,6 +1118,65 @@
 </div>
 
 <!-- ============================================
+     MODAL CHI TIẾT ĐIỂM THÀNH PHẦN
+     Hiển thị khi click "Chi tiết" trong bảng điểm theo học kỳ.
+     Đặt ngoài #modal_HoSoSinhVien để tránh nested-modal conflict.
+============================================ -->
+<div class="modal fade" id="modal_ThanhPhan" tabindex="-1" aria-labelledby="lblModal_ThanhPhan"
+     aria-hidden="true" style="z-index:1070;">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content" style="border:0;border-radius:10px;box-shadow:0 12px 36px rgba(0,0,0,.2);">
+            <div class="modal-header" style="background:linear-gradient(135deg,#1d3a8a 0%,#3380db 100%);border-bottom:0;color:#fff;">
+                <h5 class="modal-title fw-bold" id="lblModal_ThanhPhan" style="color:#fff !important;">
+                    <i class="fa-light fa-chart-column me-2"></i>Chi tiết điểm thành phần
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="filter:brightness(0) invert(1);opacity:.9;"></button>
+            </div>
+            <div class="modal-body p-3" id="viewThanhPhan" style="overflow-x:auto;"></div>
+            <div class="modal-footer" style="border-top:1px solid #e9ecef;">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fa-light fa-xmark me-1"></i>Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    /* Nested modal stacking — modal_ThanhPhan đè lên modal_HoSoSinhVien */
+    #modal_ThanhPhan { z-index: 1070 !important; }
+    /* Backdrop của modal con cũng phải cao hơn modal cha */
+    .modal-backdrop.modal_ThanhPhan_backdrop { z-index: 1065 !important; }
+    /* Bảng bên trong modal: gọn gàng, có scroll ngang nếu cần */
+    #viewThanhPhan table { width: 100%; min-width: 100%; font-size: 13px; margin-bottom: 0; border-collapse: collapse; }
+    #viewThanhPhan table th, #viewThanhPhan table td { padding: 8px 10px; border: 1px solid #e3e7ec; text-align: center; vertical-align: middle; }
+    #viewThanhPhan table thead th { background: #1d3a8a; color: #fff; font-weight: 600; white-space: nowrap; }
+    #viewThanhPhan table tbody tr:nth-child(even) { background: #f8fafd; }
+</style>
+<script>
+    /* Khi mở modal_ThanhPhan trên nền modal_HoSoSinhVien, gán class riêng cho backdrop
+       để CSS z-index ở trên áp dụng đúng — tránh modal con bị che bởi backdrop cha. */
+    document.addEventListener('DOMContentLoaded', function () {
+        var mTP = document.getElementById('modal_ThanhPhan');
+        if (!mTP) return;
+        mTP.addEventListener('shown.bs.modal', function () {
+            // Backdrop mới nhất là của modal_ThanhPhan
+            var backdrops = document.querySelectorAll('.modal-backdrop');
+            if (backdrops.length > 0) {
+                backdrops[backdrops.length - 1].classList.add('modal_ThanhPhan_backdrop');
+            }
+            // Bảo toàn modal-open class trên body (Bootstrap clear khi close modal con)
+            document.body.classList.add('modal-open');
+        });
+        mTP.addEventListener('hidden.bs.modal', function () {
+            // Sau khi đóng modal con, modal cha vẫn mở → giữ modal-open
+            if (document.querySelector('.modal.show')) {
+                document.body.classList.add('modal-open');
+            }
+        });
+    });
+</script>
+
+<!-- ============================================
      MODAL CONFIRM TEMPLATE - dùng chung cho các xử lý quan trọng
      Yêu cầu user xem kỹ + tick xác nhận trước khi cho phép thực hiện
 ============================================ -->
@@ -1023,6 +1292,9 @@ DiemHoc.prototype = {
         //    me.popover_DiemThanhPhan(id, point);
         //});
         $("#zone_bangdiem").delegate('.btnXemDiemThanhPhan', 'click', function (e) {
+            // Ngăn <a href="#"> bên trong điều hướng về root làm văng khỏi modal
+            e.preventDefault();
+            e.stopPropagation();
             var point = this;
             var id = this.id;
             me.getList_DiemThanhPhan(id, point);
@@ -1291,7 +1563,7 @@ DiemHoc.prototype = {
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Điểm chữ:</em><span>' + edu.util.returnEmpty(e.DIEMQUYDOI_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Đánh giá:</em><span>' + edu.util.returnEmpty(e.DANHGIA_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Ghi chú:</em><span>' + edu.util.returnEmpty(e.GHICHU) + '</span></td>';
-                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '"><em class="show-in-mobi">Chi tiết:</em><a href="#">Chi tiết</a></td>';
+                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '" style="cursor:pointer;"><em class="show-in-mobi">Chi tiết:</em><a href="javascript:void(0);" style="text-decoration:none;color:#3380db;font-weight:500;">Chi tiết</a></td>';
                 htmlBangDiem += '</tr>';
             });
 

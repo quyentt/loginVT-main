@@ -1018,7 +1018,10 @@ DaQHHT.prototype = {
             html += '    <div class="col-12 col-md-6 mb-1"><span class="color-888">Email:</span> <b>' + v(email) + '</b></div>';
         }
         if (trangThai) {
-            html += '    <div class="col-12 mt-2"><span class="color-888 me-2">Trạng thái:</span><span class="btn btn-soft-primary btn-sm" style="padding:2px 10px;">' + trangThai + '</span></div>';
+            html += '    <div class="col-12 mt-2 d-flex align-items-center flex-wrap" style="gap:6px;">'
+                  +    '<span class="color-888">Trạng thái:</span>'
+                  +    '<span class="badge bg-primary-subtle text-primary fw-semibold" style="padding:4px 10px;border-radius:4px;font-size:12px;line-height:1.4;">' + trangThai + '</span>'
+                  +  '</div>';
         }
         html += '  </div>';
         html += '</div>';
