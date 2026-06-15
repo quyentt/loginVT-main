@@ -99,6 +99,10 @@ DaQHHT.prototype = {
             me.dispatchTab();
         });
 
+        $("#btnXuatExcel_DSSV").click(function () {
+            me.exportExcel_DSSinhVien();
+        });
+
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
                 e.preventDefault();
@@ -1686,6 +1690,87 @@ DaQHHT.prototype = {
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: Xuất Excel theo dữ liệu danh sách SV hiện hành
+    --Nguồn: me.dtSinhVien (đã gen từ getList_SinhVien — đã apply bộ lọc + tab)
+    --Lib: XLSX (SheetJS) load lazy từ CDN trong DaQHHT.html
+    -------------------------------------------*/
+    exportExcel_DSSinhVien: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
+            return;
+        }
+        var data = me.dtSinhVien || [];
+        if (!data.length) {
+            edu.system.alert('Không có dữ liệu để xuất. Vui lòng tìm kiếm trước.', 'w');
+            return;
+        }
+        var v = edu.util.returnEmpty;
+        // Map sang flat object theo đúng cột bảng đang hiển thị
+        var rows = data.map(function (e, i) {
+            var maSV = v(e.MA_NGUOIHOC_CHINH) || v(e.MA_NGUOIHOC_PHU);
+            var cccd = v(e.DINHDANH_CHINH_SO) || v(e.CCCD);
+            var hoTen = v(e.FULL_NAME) || v(e.SINHVIEN_TENDAYDU);
+            var trangThai = v(e.STUDY_STATUS_TEN) || v(e.TRANGTHAI_TEN);
+            var gioiTinh = v(e.GIOITINH_TEN) || v(e.GIOI_TINH_TEN);
+            var ngaySinh = v(e.NGAYSINH_DD_MM_YYYY) || v(e.NGAY_SINH) || v(e.DATE_OF_BIRTH);
+            var danToc = v(e.DANTOC_TEN) || v(e.DAN_TOC_TEN);
+            var tonGiao = v(e.TONGIAO_TEN) || v(e.TON_GIAO_TEN);
+            var khoaHoc = v(e.KHOADAOTAO_TEN) || v(e.TENKHOA);
+            var khoaQL = v(e.KHOAQUANLY_TEN);
+            var lop = v(e.LOPQUANLY_TEN) || v(e.LOPQUANLY_MA);
+            var ct = v(e.TENCHUONGTRINH) || v(e.CHUONGTRINH_TEN);
+            var isPrimary = (e.IS_PRIMARY === 1 || e.IS_PRIMARY === '1') ? 'Chính' : ((e.IS_PRIMARY === 0 || e.IS_PRIMARY === '0') ? 'Phụ' : '');
+            var gpa = v(e.GPA) || v(e.DIEM_TRUNG_BINH);
+            var congNo = v(e.CONGNO) || v(e.SO_TIEN_CONGNO) || 0;
+            var coVan = v(e.COVAN_HOTEN) || v(e.COVAN_TEN);
+            return {
+                'STT': i + 1,
+                'CCCD': cccd,
+                'Mã SV': maSV,
+                'Họ và tên': hoTen,
+                'Trạng thái': trangThai,
+                'Giới tính': gioiTinh,
+                'Ngày sinh': ngaySinh,
+                'Dân tộc': danToc,
+                'Tôn giáo': tonGiao,
+                'Khóa học': khoaHoc,
+                'Khoa quản lý': khoaQL,
+                'Lớp': lop,
+                'Chương trình': ct,
+                'Ngành chính/phụ': isPrimary,
+                'GPA': gpa,
+                'Công nợ': congNo,
+                'Cố vấn': coVan
+            };
+        });
+
+        var ws = XLSX.utils.json_to_sheet(rows);
+        // Set column width tự động dựa trên độ dài header + 2
+        var headers = Object.keys(rows[0]);
+        ws['!cols'] = headers.map(function (h) {
+            var maxLen = h.length;
+            rows.forEach(function (r) {
+                var l = String(r[h] || '').length;
+                if (l > maxLen) maxLen = l;
+            });
+            return { wch: Math.min(maxLen + 2, 40) };
+        });
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Danh sách sinh viên');
+
+        // Tên file: DSSV_<filter tag>_<yyyymmdd_hhmm>.xlsx
+        var now = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : n; };
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                    + '_' + pad(now.getHours()) + pad(now.getMinutes());
+        var tag = me.strTrangThai ? '_' + me.strTrangThai : '';
+        var fileName = 'DSSV' + tag + '_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fileName);
     },
 
     genTable_SinhVien: function (data, iPager) {

@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="assets/css-new/styles.css">
 <div class="one-door mt-0 aps-daqhht">
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
@@ -65,11 +64,14 @@
                                         <button id="btnSearch" class="btn btn-view">
                                             <i class="fal fa-search me-1"></i> Tìm kiếm
                                         </button>
-                                        <button id="btnRefresh" class="btn btn-white">
-                                            <i class="fal fa-sync-alt me-1"></i> Làm mới
+                                        <button id="btnRefresh" class="btn btn-white btn-refresh-fix">
+                                            <i class="fa-solid fa-arrows-rotate me-1"></i> Làm mới
                                         </button>
                                         <button id="btnResetFilter" class="btn btn-default">
                                             <i class="fal fa-sliders-h me-1"></i> Đặt lại bộ lọc
+                                        </button>
+                                        <button id="btnXuatExcel_DSSV" class="btn btn-success" title="Xuất danh sách theo dữ liệu đang hiển thị" style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                                            <i class="fa-solid fa-file-excel me-2" style="color:#fff;font-size:14px;"></i>Xuất Excel
                                         </button>
                                     </div>
                                 </div>
@@ -102,6 +104,27 @@
                                     background: #ff8c00 !important; color: #fff !important;
                                     box-shadow: 0 2px 4px rgba(255,140,0,.3) !important;
                                 }
+                                /* Nút Làm mới — fix hover/focus mất chữ + icon do Bootstrap btn:focus default */
+                                .btn-refresh-fix {
+                                    background: #fff !important;
+                                    border: 1px solid #d6dbe1 !important;
+                                    color: #3380db !important;
+                                    font-weight: 500;
+                                }
+                                .btn-refresh-fix i { color: #3380db !important; }
+                                .btn-refresh-fix:hover,
+                                .btn-refresh-fix:focus,
+                                .btn-refresh-fix:focus-visible,
+                                .btn-refresh-fix:active,
+                                .btn-refresh-fix.active {
+                                    background: #f0f6ff !important;
+                                    border-color: #3380db !important;
+                                    color: #1d3a8a !important;
+                                    box-shadow: 0 0 0 .2rem rgba(51,128,219,.18) !important;
+                                }
+                                .btn-refresh-fix:hover i,
+                                .btn-refresh-fix:focus i,
+                                .btn-refresh-fix:active i { color: #1d3a8a !important; }
                                 /* Tab Bảng điểm — fix tab active bị trắng (css-new không import gochoctap.css) */
                                 .tabs-scores .nav { border-bottom: 1px solid #e1e1e1; }
                                 .tabs-scores .nav-link {
@@ -128,13 +151,71 @@
                                 .tabs-scores .nav-link.active span { color: #fff !important; }
                                 .tabs-scores .box-shadow { border-top-left-radius: 0; padding: 16px; }
 
-                                /* Fix bảng trong tab Bảng điểm bị che cột phải */
-                                /* Bọc col chứa tabs (col-md-9) để overflow đúng */
+                                /* Cột phải (tabs) flex column stretch theo cột trái + có upper bound
+                                   để tab pane scroll nội bộ thay vì đẩy cả modal-body scroll */
+                                #zoneDiemHoc_Embed .row.register-school {
+                                    align-items: stretch !important;
+                                    max-height: 70vh;
+                                }
                                 #zoneDiemHoc_Embed .register-school-right,
-                                #zoneDiemHoc_Embed .col-md-9 { min-width: 0; max-width: 100%; overflow: hidden; }
-                                /* Bọc cả tab-content & các tab-pane để clip overflow đúng */
-                                #myTabContentDiem { width: 100%; max-width: 100%; overflow: hidden; }
-                                #myTabContentDiem .tab-pane { width: 100%; max-width: 100%; }
+                                #zoneDiemHoc_Embed .col-md-9 {
+                                    min-width: 0;
+                                    max-width: 100%;
+                                    max-height: 70vh;
+                                    overflow: hidden;
+                                    display: flex;
+                                    flex-direction: column;
+                                }
+                                /* Cột trái cũng scroll nội bộ nếu Điểm mới + Tổng điểm dài */
+                                #zoneDiemHoc_Embed .register-school-left,
+                                #zoneDiemHoc_Embed .col-md-3 {
+                                    max-height: 70vh;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+                                    scrollbar-width: thin;
+                                    scrollbar-color: #8a94a0 #eef1f5;
+                                }
+                                #zoneDiemHoc_Embed .register-school-left::-webkit-scrollbar,
+                                #zoneDiemHoc_Embed .col-md-3::-webkit-scrollbar { width: 6px; }
+                                #zoneDiemHoc_Embed .register-school-left::-webkit-scrollbar-thumb,
+                                #zoneDiemHoc_Embed .col-md-3::-webkit-scrollbar-thumb { background: #c1c9d2; border-radius: 3px; }
+                                /* Wrapper .tabs-scores cũng flex column để tab-content nở full */
+                                #zoneDiemHoc_Embed .tabs-scores {
+                                    display: flex;
+                                    flex-direction: column;
+                                    flex: 1 1 auto;
+                                    min-height: 0;
+                                }
+                                /* Tab content nở full chiều cao còn lại, scroll khi content vượt khung */
+                                #myTabContentDiem {
+                                    width: 100%;
+                                    max-width: 100%;
+                                    flex: 1 1 auto;
+                                    min-height: 0;
+                                    overflow: hidden;
+                                    display: flex;
+                                    flex-direction: column;
+                                }
+                                #myTabContentDiem .tab-pane {
+                                    width: 100%;
+                                    max-width: 100%;
+                                    min-height: 0 !important;
+                                }
+                                #myTabContentDiem .tab-pane.active.show {
+                                    display: flex;
+                                    flex-direction: column;
+                                    flex: 1 1 auto;
+                                    min-height: 0;
+                                    overflow-y: auto;
+                                    overflow-x: hidden;
+                                    scrollbar-width: thin;
+                                    scrollbar-color: #8a94a0 #eef1f5;
+                                }
+                                #myTabContentDiem .tab-pane.active.show > *:last-child { margin-bottom: 0 !important; }
+                                #myTabContentDiem .tab-pane.active.show::-webkit-scrollbar { width: 8px; }
+                                #myTabContentDiem .tab-pane.active.show::-webkit-scrollbar-track { background: #eef1f5; border-radius: 4px; }
+                                #myTabContentDiem .tab-pane.active.show::-webkit-scrollbar-thumb { background: #8a94a0; border-radius: 4px; }
+                                #myTabContentDiem .tab-pane.active.show::-webkit-scrollbar-thumb:hover { background: #5a6c80; }
                                 #myTabContentDiem .accordion,
                                 #myTabContentDiem .accodion-block { width: 100%; max-width: 100%; }
 
@@ -2600,7 +2681,28 @@ console.log("[Inline DiemHoc] loaded. typeof DiemHoc =", typeof DiemHoc);
     }, 500);
 })();
 </script>
-<script src="modules/hoatdong/script/DaQHHT.js?v=2026061405"></script>
+<!-- XLSX (SheetJS) — phục vụ Xuất Excel cho DSSV. Load 1 lần, idempotent. -->
+<script>
+    (function loadXLSX() {
+        if (typeof XLSX !== 'undefined') return;
+        var cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    })();
+</script>
+<script src="modules/hoatdong/script/DaQHHT.js?v=2026061406"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['DaQHHT'] = new DaQHHT();
