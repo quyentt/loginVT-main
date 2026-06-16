@@ -741,11 +741,18 @@ KeHoachMua.prototype = {
     save_KeHoachMua: function () {
         var me = main_doc.KeHoachMua;
 
+        var strId = edu.util.getValById('hidKeHoachMua_Id');
+        var isEdit = !!strId;
+
         var obj_save = {
-            'action': 'TC_DangKyMua_MH/ETMeFQIeCgkeDDQgCSAvJh4VKSQs',
-            'func': 'PKG_TAICHINH_DANGKYMUA.Pr_TC_KH_MuaHang_Them',
+            'action': isEdit
+                ? 'TC_DangKyMua_MH/ETMeFQIeCgkeDDQgCSAvJh4SNCAP'
+                : 'TC_DangKyMua_MH/ETMeFQIeCgkeDDQgCSAvJh4VKSQs',
+            'func': isEdit
+                ? 'PKG_TAICHINH_DANGKYMUA.Pr_TC_KH_MuaHang_Sua'
+                : 'PKG_TAICHINH_DANGKYMUA.Pr_TC_KH_MuaHang_Them',
             'iM': edu.system.iM,
-            'strId': edu.util.getValById('hidKeHoachMua_Id'),
+            'strId': strId,
             'strMa': edu.util.getValById('txtMaKeHoach'),
             'strTen': edu.util.getValById('txtTenKeHoach'),
             'strMoTa': edu.util.getValById('txtMoTa'),
