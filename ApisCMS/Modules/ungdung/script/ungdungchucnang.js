@@ -22,6 +22,16 @@ UngDungChucNang.prototype = {
         var me = this;
         var itrangThai = 1;
         var strTuKhoa = "";
+        var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachUngDung',
+			'iM' : edu.system.iM,
+
+            'strTuKhoa': strTuKhoa,
+            'pageIndex': 1,
+            'pageSize': 10000,
+            'dTrangThai': itrangThai
+        };
 
         
         edu.system.makeRequest({
@@ -44,17 +54,12 @@ UngDungChucNang.prototype = {
                 edu.system.alert("CMS_UngDung/LayDanhSach (ex): " + JSON.stringify(er), "w");
                 
             },
-            type: 'GET',
-            action: 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: {
-                'strTuKhoa': strTuKhoa,
-                'pageIndex': 1,
-                'pageSize': 10000,
-                'dTrangThai': itrangThai
-            },
+            data:obj_save,
             fakedb: [
 
             ]
@@ -65,8 +70,9 @@ UngDungChucNang.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachChucNang',
-            
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikCKTQiDyAvJgPP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachChucNang',
+			'iM' : edu.system.iM,
             'strTuKhoa': "",
             'strChung_UngDung_Id': strUngDung_Id,
             'strCha_Id': "",
@@ -97,7 +103,7 @@ UngDungChucNang.prototype = {
                 edu.system.alert("CMS_ChucNang/LayDanhSach (ex): " + ex, "w");
                 
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             
             contentType: true,

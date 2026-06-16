@@ -216,9 +216,9 @@ UngDung.prototype = {
 
         //--Edit
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
-            
-
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachUngDung',
+			'iM' : edu.system.iM,
             'strTuKhoa': edu.util.getValById(me.objInput_UD.strTuKhoa_Search),
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
@@ -241,7 +241,7 @@ UngDung.prototype = {
                 
                 edu.system.alert("CMS_UngDung/LayDanhSach: " + JSON.stringify(er), "w");
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             
             contentType: true,

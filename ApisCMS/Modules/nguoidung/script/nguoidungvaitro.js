@@ -282,6 +282,12 @@ NguoiDungVaiTro.prototype = {
     getList_NguoiDungVaiTro: function () {
         var me = this;
         //--Edit
+        var obj_list = {
+            'action': 'CMS_NguoiDungVaiTro/LayVaiTroTheoNguoiDung',
+            
+
+            'strNguoiDung_Id': me.strNguoiDung_Id
+        };
         var obj_save = {
             'action': 'CMS_QuanTri01_MH/DSA4BRIXICgVMy4PJjQuKAU0LyYP',
             'func': 'PKG_CORE_QUANTRI_01.LayDSVaiTroNguoiDung',
@@ -654,9 +660,11 @@ NguoiDungVaiTro.prototype = {
     getList_VaiTro: function () {
         var me = this;
         //--Edit
-        var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
-            
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikXICgVMy4P',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachVaiTro',
+			'iM' : edu.system.iM,
+			'type': 'POST',
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",
             'pageIndex': 1,
@@ -688,12 +696,12 @@ NguoiDungVaiTro.prototype = {
                 
                 edu.system.alert("CMS_VaiTro/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: obj_list.action,
+            type: 'POST',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

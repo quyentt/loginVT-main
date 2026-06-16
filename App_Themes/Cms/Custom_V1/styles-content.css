@@ -11828,6 +11828,7 @@ table#clone {
     grid-template-columns: repeat(6, 1fr);
 }
 
+
 .tiepnhandauvao-filter-box .left .item,
 .box-dashboard-kpi .left .item {
     max-width: 100%;
@@ -12186,6 +12187,8 @@ table#clone {
 .box-search .item-search {
     position: relative !important;
 }
+
+
 
 .box-search-main .item .label,
 .box-search .item-search .item-search-label {
@@ -15153,6 +15156,7 @@ table#clone {
     }
 }
 
+<<<<<<< HEAD
 /* ----------------- */
 .aps-lichsu-dangky .col-lg-12 {
     background: transparent !important;
@@ -15270,4 +15274,77 @@ table#clone {
 }
 .zone-bus.aps-add-new.add-absolue .row.aps-form.mt-25 .col-sm-6.pl20 {
     padding-right: 20px;
+=======
+}
+
+/* ----------- */
+.aps-form-data {
+    /* align-items: flex-end;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    flex: 1; */
+    /* gap: 10px; */
+    /* display: flex; */
+}
+
+.aps-form-data.row {
+    margin-left: -8px;
+    margin-right: -8px;
+}
+
+.aps-form-data .item .label {
+    color: #888;
+}
+
+.aps-form-data .item .form-control {
+    border: 1px solid #c1c1c1;
+}
+
+.aps-form-data.lableInput .item .label {
+    font-weight: 300 !important;
+    font-size: 13px;
+    color: #999;
+    position: absolute;
+    z-index: 11;
+    background: #fff;
+    top: -11px;
+    left: 8px;
+    padding: 3px 5px;
+}
+
+.aps-form-data.lableInput .item,
+.aps-form-data .item {
+    margin-bottom: 8px !important;
+    padding: 0px 8px;
+}
+
+.aps-form-data .btn-group .btn,
+.aps-form-data .item .btn {
+    flex: 0 0 auto !important;
+}
+
+.aps-form-data.label-doc .item .label {
+    margin-bottom: 3px;
+}
+
+.aps-form-data.label-ngang .item {
+    display: flex;
+    line-height: 38px;
+    padding-right: 15px;
+    justify-content: space-between;
+}
+
+.aps-form-data.label-ngang .item .label {
+    padding-right: 15px;
+    min-width: 168px;
+}
+
+.btn-group.gap10 .btn {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+.aps-form-data.label-ngang .item .form-item {
+    flex: auto;
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
 }

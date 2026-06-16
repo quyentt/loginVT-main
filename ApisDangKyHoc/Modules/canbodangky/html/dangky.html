@@ -25,25 +25,45 @@
         padding: 1px !important;
     }
 
-    .btn-white {
-        background-color: #fff;
+    .btn-white,
+    .zone-box .btn-white {
+        background-color: #fff !important;
+        color: #333 !important;
+        border: 1px solid #ddd !important;
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
         -moz-box-shadow: 1px 1px 1px 1px #ccc;
         box-shadow: 1px 1px 1px 1px #ccc;
         height: 30px;
         margin-left: 5px;
-        margin-bottom: 5px
+        margin-bottom: 5px;
     }
 
-    .zone-box .btn-primary {
-        background-color: #fff;
+    .zone-box .btn-white:hover,
+    .zone-box .btn-white:focus {
+        background-color: #f5f5f5 !important;
+        color: #333 !important;
+    }
+
+    .zone-box .btn-primary,
+    .zone-box .btnSelectInList.btn-primary {
+        background-color: #fff !important;
+        color: #333 !important;
+        border: 2px solid #007bff !important;
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
         -moz-box-shadow: 1px 1px 1px 1px #ccc;
-        /* Firefox 3.5 - 3.6 */
         box-shadow: 1px 1px 1px 1px #ccc;
         margin-left: 5px;
         margin-bottom: 5px;
         height: 30px;
+        font-weight: 600;
+    }
+
+    .zone-box .btn-primary:hover,
+    .zone-box .btn-primary:focus,
+    .zone-box .btn-primary:active {
+        background-color: #f0f7ff !important;
+        color: #333 !important;
+        border-color: #0062cc !important;
     }
 
     .zone-box {

@@ -1031,6 +1031,10 @@ thead {
   font-size: 14px !important;
   line-height: 38px !important;
   border-radius: 5px;
+<<<<<<< HEAD
+=======
+  .table
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
 }
 
 .form-dangky-sd-phong .form-control {
@@ -2924,10 +2928,13 @@ input:active,
   margin-top: 5px !important;
 }
 
+<<<<<<< HEAD
 .skin-blue .sidebar-menu .treeview-menu>li>a:active {
   background: #f4f4f4 !important;
 }
 
+=======
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
 .skin-blue .sidebar-menu>li>.treeview-menu li:first-child {
   padding-top: 10px !important;
 }
@@ -2993,7 +3000,11 @@ input:active,
 
 .skin-blue .sidebar-menu .treeview-menu>li>a:hover {
   color: var(--color-link) !important;
+<<<<<<< HEAD
   /* background: #f4f4f4 !important; */
+=======
+  background: #f4f4f4 !important;
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
 }
 
 .skin-blue .sidebar-menu .treeview-menu>li>a:hover::before,
@@ -3002,7 +3013,11 @@ input:active,
 }
 
 .skin-blue .sidebar-menu>li>.treeview-menu>li>a {
+<<<<<<< HEAD
   font-size: 14px !important;
+=======
+  font-size: 15px !important;
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
   padding: 4px 5px 4px 15px !important;
   display: flex;
   border-left: solid 1px #989898;
@@ -6672,6 +6687,53 @@ input[type="radio"] {
   color: #3380db !important;
 }
 
+<<<<<<< HEAD
 .btnDangKyHocPhan {
   min-width: 100px;
 }
+=======
+.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop.simple-pagination ul {
+  float: left !important;
+}
+
+.zone-pag-footertblQuanSoLop {
+  margin-top: 0px !important;
+}
+
+.form-ds-hocphan .aps-lable-name .group-group-title-name .badge {
+  background: #f8f8f8 !important;
+}
+
+.btnChiTietLopHocPhan {
+  min-width: 90px;
+  color: #3380db !important;
+  ;
+}
+
+.btnDangKyHocPhan {
+  min-width: 100px;
+}
+
+.btn-group .btn {
+  min-width: fit-content;
+}
+
+.column-1 {
+  display: grid !important;
+  grid-template-columns: repeat(1, 1fr) !important;
+  gap: 20px !important;
+}
+
+.column-2 {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 20px !important;
+}
+
+.column-3 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 20px !important;
+
+}
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
