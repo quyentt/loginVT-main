@@ -724,10 +724,10 @@ CanBoChucNang.prototype = {
             ]
         }, false, false, false, null);
         //--Edit
-        var obj_list = {
-            'action': 'CMS_UngDung/LayDanhSach',
-            
-
+		var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachUngDung',
+			'iM' : edu.system.iM,
             'strTuKhoa': "",
             'pageIndex': 1,
             'pageSize': 1000,
@@ -757,12 +757,12 @@ CanBoChucNang.prototype = {
                 
                 edu.system.alert("CMS_UngDung/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: "GET",
-            action: obj_list.action,
+            type: "POST",
+            action: obj_save.action,
             
             contentType: true,
             
-            data: obj_list,
+            data: obj_save,
             fakedb: [
 
             ]

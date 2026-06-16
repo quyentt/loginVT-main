@@ -206,7 +206,16 @@ ChucNang.prototype = {
     ----------------------------------------------*/
     getList_UngDung: function () {
         var me = this;
+        var obj_save = {
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachUngDung',
+			'iM' : edu.system.iM,
 
+            'strTuKhoa': "",
+            'pageIndex': 1,
+            'pageSize': 1000,
+            'dTrangThai': 1
+        };
         
         edu.system.makeRequest({
             success: function (data) {
@@ -229,16 +238,11 @@ ChucNang.prototype = {
                 
             },
             type: 'POST',
-            action: 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
+            action: obj_save.action,
             
             contentType: true,
             
-            data: {
-                'strTuKhoa': "",
-                'pageIndex': 1,
-                'pageSize': 1000,
-                'dTrangThai': 1
-            },
+            data: obj_save,
             fakedb: [
 
             ]
@@ -536,8 +540,9 @@ ChucNang.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTroChucNang',
-            'type': 'GET',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikXICgVMy4CKTQiDyAvJgPP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachVaiTroChucNang',
+			'iM' : edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strChucNang_Id': me.strChucNang_Id,
             'pageIndex': edu.system.pageIndex_default,
@@ -567,7 +572,7 @@ ChucNang.prototype = {
                 edu.system.alert("CMS_VaiTroChucNang/LayDanhSach (er): " + JSON.stringify(er), "w");
                 
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             
             contentType: true,

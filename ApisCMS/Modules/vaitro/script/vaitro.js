@@ -159,7 +159,9 @@ VaiTro.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikXICgVMy4P',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachVaiTro',
+			'iM' : edu.system.iM,
             'versionAPI'        : 'v1.0',
             'strLoaiVaiTro_Id'  : "",
             'strTuKhoa'         : "",
@@ -193,7 +195,7 @@ VaiTro.prototype = {
                 
                 edu.system.alert("CMS_VaiTro/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
+            type: 'POST',
             action: obj_list.action,
             
             contentType: true,
