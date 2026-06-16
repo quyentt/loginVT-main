@@ -3,10 +3,6 @@
 @import "styles.css";
 @import "../../../assets/css/root.css"; */
 
-.box-header>.box-tools {
-    position: relative;
-}
-
 .justify-content-end {
     justify-content: flex-end;
 }
@@ -83,7 +79,8 @@
 
 .aps-box-table .nav-tabs-custom>.nav-tabs {
     margin-left: 20px;
-    width: 98%;
+    margin-right: 20px;
+    width: auto;
     border-bottom-color: #3c8dee;
 }
 
@@ -125,30 +122,6 @@
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0) !important;
 }
 
-.box-header>.fa,
-.box-header>.glyphicon,
-.box-header>.ion,
-.box-header .box-title {
-    font-size: 17px;
-    font-weight: 700 !important;
-    /*color:var(--color-blue);*/
-}
-
-.box-header {
-    color: #222;
-    display: block;
-    padding: 10px;
-    position: relative;
-}
-
-.box-header .box-title i {
-    margin-right: 8px;
-    float: left;
-    color: var(--color-blue);
-    /* margin-top: 3px; */
-    font-weight: 700 !important;
-}
-
 .aps-detai-duan .box-header .box-title i,
 .zone_input_detai .box-header .box-title i,
 .aps-spkh-tapchiquocgia-l .box-header .box-title i,
@@ -177,71 +150,6 @@
     margin-left: 8px;
 }
 
-/*.box-header .box-title {*/
-/*    margin-top: 14px;*/
-/*}*/
-.box-search .box-header .box-title {
-    margin-top: 0px;
-}
-
-.box-search {
-    background: #f8f8f8 !important;
-    border-right: 3px solid #fff !important;
-    border-left: 3px solid #fff !important;
-    border-top: 3px solid #fff !important;
-    display: inline-block;
-    border-top-left-radius: 12px !important;
-    border-top-right-radius: 12px !important;
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-    border-bottom: 1px solid #e1e1e1 !important;
-    margin-top: 0 !important;
-}
-
-.box-search {
-    width: 100%;
-}
-
-.box-search .group-title {
-    padding-bottom: 12px;
-    padding-top: 0px;
-    padding-left: 0px;
-    padding-right: 0px;
-    /*display: none;*/
-}
-
-.zone-bus .bss-item .item-search,
-.box-search .item-search,
-.box-search .bss-item {
-    margin-bottom: 10px;
-    /*display: flex;*/
-    /*gap: 10px;*/
-    /*flex-wrap: wrap;*/
-}
-
-.box-search .bss-item {
-    padding: 0 !important;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.box-search .item-search {
-    margin-right: 0 !important;
-}
-
-.zone-bus .bss-item .item-search,
-.box-search .item-search .ml-10 {
-    margin-left: 0 !important;
-}
-
-
-.box-search .box-body .row {
-    border-bottom: 0px solid #f1f1f1;
-    margin-bottom: 10px;
-}
-
-
-
 .content .zone-content,
 .zone-bus {
     background: #fff !important;
@@ -257,44 +165,10 @@
     border-radius: 5px !important;
 }
 
-.box-search {
-    border-bottom: 1px solid #e1e1e1 !important;
-    margin-bottom: 0 !important;
-    /*border-radius: 0px !important;*/
-}
-
-.btn-default.btn-search,
-.btnSearch {
-    background: #e1e1e1 !important;
-    /*line-height: 33px;*/
-    border: 1px solid #ccc;
-}
-
-.btn-default.btn-search:hover,
-.btnSearch:hover {
-    background: var(--color-blue) !important;
-    color: #fff !important;
-    border-color: var(--color-blue) !important;
-}
-
-.btn-default.btn-search:hover .lang,
-.btnSearch:hover .lang {
-    color: #fff !important;
-}
 
 /*--------*/
 .chosse-status-student {
     margin-top: 15px;
-}
-
-.item-search #btnSearchSinhVien,
-.item-search .dropdown {
-    /* width: 48%; */
-    margin-right: 10px;
-}
-
-.item-search .dropdown .btn-info {
-    width: 100% !important;
 }
 
 .box-reg-sv .box-body {
@@ -1630,7 +1504,6 @@
 }
 
 /*-----Quản lý vai trò / Định nghĩa vai trò---*/
-.aps-vaitro {}
 
 .aps-vaitro-l .box.box-solid,
 .aps-vaitro-r .box.box-solid {
@@ -1713,19 +1586,19 @@
 
 .aps-form-input .form-control {
     color: #222 !important;
-    border: 1px solid #d2d6de !important;
+    border: 1px solid #c1c1c1 !important;
 }
 
 .aps-form-textarea .form-control {
     color: #222 !important;
-    border: 1px solid #d2d6de !important;
+    border: 1px solid #c1c1c1 !important;
     line-height: 24px !important;
     text-align: left;
 }
 
 .aps-form-input .form-control {
     color: #222 !important;
-    border: 1px solid #d2d6de !important;
+    border: 1px solid #c1c1c1 !important;
 }
 
 .form-control:focus,
@@ -2420,11 +2293,6 @@
     padding-right: 0 !important;
 }
 
-
-/*.aps-hethong-phieuthu-l .box-header .badge,*/
-/*.aps-hethong-phieuthu-l .box-header .badge{*/
-/*    margin-top: 9px;*/
-/*}*/
 .aps-hethong-phieuthu-l .box-header .box-title,
 .aps-hethong-hoadon-l .box-header .box-title {
     margin-top: 1px !important;
@@ -2722,16 +2590,39 @@
 .aps-modal-nhansu .group-title {
     font-size: 18px;
     padding-left: 0px;
-    padding-bottom: 10px;
+    padding-bottom: 0px;
+    padding-top: 15px;
     color: var(--color-blue);
     text-transform: uppercase;
     font-weight: bold;
     line-height: 20px;
 }
 
+.aps-modal-nhansu .col-sm-3 .search .btn.btn-default {
+    background-color: var(--color-blue) !important;
+    color: #fff !important;
+}
+
+.aps-modal-nhansu .col-sm-3 .search .btn.btn-default i {
+    color: #fff !important;
+}
+
+.aps-modal-nhansu .col-sm-3 .search .btn.btn-default:hover {
+    background-color: var(--color-link-hover);
+}
+
+.aps-modal-nhansu .col-sm-3 .box-body {
+    padding: 0px;
+}
+
 .aps-modal-nhansu .col-sm-9 .box-body .item-modal {
     padding-right: 0 !important;
     margin-top: 10px !important;
+    min-height: 46px;
+}
+
+.aps-modal-nhansu .box.box-solid {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0) !important;
 }
 
 .aps-modal-nhansu .col-sm-9 .box-body .item-modal .pull-right {
@@ -3052,9 +2943,7 @@
     padding: 5px 20px !important;
 }
 
-.box-search .input-group .input-group-addon:hover {
-    color: var(--color-blue) !important;
-}
+
 
 .apd-add .form-container {
     border-radius: 0 !important;
@@ -3199,12 +3088,6 @@
 
 .aps-danhmuccheso .box.box-solid.box-search .area-search .col-sm-3:nth-child(4) {
     padding-right: 0 !important;
-}
-
-.zoneTuKhoaContent {
-    /*position: absolute;*/
-    /*display: contents;*/
-    /*z-index: 99;*/
 }
 
 .zoneTuKhoaContent .zone-action .group-title {
@@ -6983,8 +6866,8 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 36px !important;
-    padding-left: 2px !important;
+    line-height: 27px !important;
+    padding-left: 10px !important;
     padding-top: 5px !important;
 }
 
@@ -7810,6 +7693,10 @@ input#tblInput_DTSV_SinhVien_input {
     justify-content: space-between;
     padding-right: 5px;
     color: #888;
+}
+
+.aps-form .aps-form-item .aps-form-lable.justify-content-end {
+    justify-content: end !important;
 }
 
 /*--------------*/
@@ -9947,15 +9834,6 @@ table#clone {
     margin-bottom: 20px !important;
 }
 
-.box-header {
-    /* display: flex; */
-    align-items: center;
-    flex-wrap: wrap;
-    /* min-height: 38px !important; */
-    /* padding-top: 0 !important; */
-    /* padding-bottom: 0 !important; */
-}
-
 /* -------------- */
 .tblHoSoKhoiTao tr td:last-child {
     width: 20px !important;
@@ -10620,6 +10498,13 @@ table#clone {
 
 .titleSearchContent {
     padding-bottom: 0px !important;
+}
+
+.titleSearchContent .lang,
+.titleSearchContent i {
+    font-size: 18px !important;
+    color: var(--color-blue) !important;
+    font-weight: 700;
 }
 
 .aps-tongtheongay .titleSearchContent {
@@ -15269,7 +15154,127 @@ table#clone {
     .aps-khoa-SapTotNghiep .user-infomation .info {
         width: 100%;
     }
+}
 
+<<<<<<< HEAD
+/* ----------------- */
+.aps-lichsu-dangky .col-lg-12 {
+    background: transparent !important;
+}
+
+/* -------- */
+.aps-noidungdaotao-hocphan .box-solid.box-search.pb0 {
+    padding-bottom: 0 !important;
+}
+
+.box-search.aps-lichsu-dangky-search .bss-item {
+    margin-bottom: 1px;
+}
+
+.box-solid.aps-list-monhoc,
+.box-solid.aps-list-hocphan,
+.box-solid.aps-list-baiHoc,
+.box-solid.aps-list-deCuongHT,
+.content .box.box-solid.mt-15,
+.aps-lichsu-dangky-ds .box-header,
+.aps-KeHoachChuongTrinh .box-solid.pd20 .box-body,
+.aps-KeHoachChuongTrinh .box-header {
+    padding: 0 !important;
+    margin-top: 0 !important;
+}
+
+.box-solid.aps-list-chuongtrinh .box-body.mt-5,
+.box-solid.aps-list-hocphan .box-body.mt-5,
+.box-solid.aps-list-monhoc .box-body.mt-5,
+.box-solid.aps-list-deCuongHT .box-body.mt-5,
+.box-solid.aps-list-baiHoc .box-body.mt-5 {
+    margin-top: 0 !important;
+}
+
+.aps-csdl-hocphan .box-header.pl0.pr0 {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.aps-KeHoachChuongTrinh .box-header .box-title {
+    margin-top: 5px !important;
+}
+
+.light-paginationtblAddHocPhanDonVi {
+    padding-right: 0 !important;
+}
+
+.select2-container .select2-selection--single {
+    /* height: 28px !important;s */
+}
+
+.box-solid.box-ketquadk,
+.box-solid.box-hocphanapphi .box-header,
+.box-solid.box-ketquadk .box-header {
+    padding-top: 0 !important;
+}
+
+.box-solid.box-hocphanapphi .box-header,
+.box-solid.box-ketquadk .box-header {
+    padding-bottom: 0 !important;
+}
+
+.zone-pag-footertblQuanSoLopelement,
+.zone-pag-footertblQuanSoLop {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between !important;
+}
+
+.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop {
+    padding-right: 0 !important;
+}
+
+.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop.simple-pagination ul {
+    float: right !important;
+}
+
+.zone-pag-footertblQuanSoLop {
+    margin-top: 10px !important;
+}
+
+.form-ds-hocphan .aps-lable-name .group-group-title-name .badge {
+    background: #f8f8f8 !important;
+}
+
+.myModaldsHocPhan .modal-body {
+    display: flow-root;
+    padding-bottom: 0 !important;
+}
+
+.find-in-table-box {
+    border: 0 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0) !important;
+}
+
+.find-in-table-box .find-in-table-btn {
+    width: 38px !important;
+    height: 38px !important;
+    text-align: center;
+    display: flex;
+}
+.find-in-table-box .find-in-table-btn i{
+    padding-right: 0 !important;
+}
+.find-in-table-input {
+    border: 1px solid #c1c1c1 !important;
+    border-radius: 5px !important;
+    font-size: 14px !important;
+}
+.zone-bus.aps-add-new.add-absolue .col-sm-12.box-view.aps-add-new {
+    padding: 20px;
+}
+.zone-bus.aps-add-new.add-absolue .col-sm-6.pr20 {
+    padding-left: 20px;
+}
+.zone-bus.aps-add-new.add-absolue .row.aps-form.mt-25 .col-sm-6.pl20 {
+    padding-right: 20px;
+=======
 }
 
 /* ----------- */
@@ -15341,4 +15346,5 @@ table#clone {
 
 .aps-form-data.label-ngang .item .form-item {
     flex: auto;
+>>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
 }

@@ -73,7 +73,9 @@ VaiTroNguoiDung.prototype = {
         var me = this;
         //--Edit
 		var obj_save = {
-			'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikXICgVMy4P',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachVaiTro',
+			'iM' : edu.system.iM,
 			'type': 'POST',
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",

@@ -333,7 +333,9 @@ VaiTroChucNang.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachVaiTro',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikXICgVMy4P',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachVaiTro',
+			'iM' : edu.system.iM,
 
             'strLoaiVaiTro_Id': "",
             'strTuKhoa': "",
@@ -344,7 +346,7 @@ VaiTroChucNang.prototype = {
         //
 
         edu.system.makeRequest({
-            success: function (data) {
+            success: function (data) { 
                 if (data.Success) {
                     var dtResult = [];
                     var iPager = 0;
@@ -364,7 +366,7 @@ VaiTroChucNang.prototype = {
 
                 edu.system.alert("CMS_VaiTro/LayDanhSach (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
+            type: 'POST',
             action: obj_list.action,
 
             contentType: true,
@@ -635,7 +637,9 @@ VaiTroChucNang.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachUngDung',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikULyYFNC8m',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachUngDung',
+			'iM' : edu.system.iM,
             'strTuKhoa': "",
             'pageIndex': 1,
             'pageSize': 10000,
@@ -663,7 +667,7 @@ VaiTroChucNang.prototype = {
                 edu.system.alert(er);
 
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
 
             contentType: true,
@@ -737,7 +741,9 @@ VaiTroChucNang.prototype = {
     getList_ChucNang: function () {
         var me = this;
         var obj_list = {
-            'action': 'CMS_QuanLyNguoiDung/LayDanhSachChucNang',
+			'action': 'CMS_QuanLyNguoiDung_MH/DSA4BSAvKRIgIikCKTQiDyAvJgPP',
+			'func': 'pkg_chung_quanlynguoidung.LayDanhSachChucNang',
+			'iM' : edu.system.iM,
             'versionAPI': 'v1.0',
             'strTuKhoa': "",
             'strChung_UngDung_Id': $("#dropUngDung_VTCN").val(),
@@ -786,7 +792,7 @@ VaiTroChucNang.prototype = {
                 };
                 edu.system.alertOnModal(objNotify);
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
 
             contentType: true,

@@ -97,7 +97,7 @@
 
     /* Nhóm checkbox lọc trong panel tìm kiếm */
     .aps-filter-checks {
-        display: flex;
+        display: block;
         flex-direction: column;
         gap: 6px;
         padding: 6px 0;
@@ -106,7 +106,7 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        margin: 0;
+        margin: 0 20px 0 0;
         font-weight: 500;
         color: #1f2d3d;
         cursor: pointer;
@@ -114,6 +114,7 @@
         user-select: none;
     }
     .aps-filter-check input[type="checkbox"] {
+        margin-top: 4px !important;
         margin: 0;
         width: 16px;
         height: 16px;
@@ -121,6 +122,9 @@
         accent-color: #3c8dbc;
         flex: 0 0 auto;
     }
+    .aps-filter-check span{
+    margin-top: 3px;
+}
     .aps-filter-check:hover { color: #3c8dbc; }
 
     /* Zone Rút học phần */
@@ -218,10 +222,7 @@
                                         <option value="thuong">Chỉ lớp thường</option>
                                     </select>
                                 </div>
-                            </div>
-                            <!-- Bộ lọc nhanh -->
-                            <div class="row">
-                                <div class="col-sm-3 item-search" style="padding-left: 20px;">
+                                <div class="col-sm-9 item-search">
                                     <div class="aps-filter-checks">
                                         <label class="aps-filter-check" for="dChuaPhanCong">
                                             <input type="checkbox" id="dChuaPhanCong" />
@@ -237,6 +238,10 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <!-- Bộ lọc nhanh -->
+                            <div class="row">
+                                
                                 <div class="col-sm-3 item-search">
                                     <input id="txtSearch_TuSo" class="form-control"
                                         placeholder="Số đã đăng ký(từ số)" />

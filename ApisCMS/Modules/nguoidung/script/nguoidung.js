@@ -482,7 +482,7 @@ NguoiDung.prototype = {
             
             contentType: true,
             
-            data: POST,
+            data: obj_save,
             fakedb: [
 
             ]
