@@ -24,6 +24,7 @@ KeHoachMua.prototype = {
         me.loadCombo_TinhTrang();
         me.loadCombo_LoaiKeHoach_Form();
         me.loadCombo_TinhTrang_Form();
+        me.loadCombo_ThoiGianDaoTao_Form();
         me.loadCombo_KhoanThu_LK();
         me.loadCombo_PhanLoai_LK();
         me.loadCombo_DonViTinh_LK();
@@ -307,6 +308,26 @@ KeHoachMua.prototype = {
             "TAICHINH.KEHOACH.MUAHANG.TINHTRANG",
             "dropTinhTrang"
         );
+    },
+
+    loadCombo_ThoiGianDaoTao_Form: function () {
+        var objList = {
+            strNam_Id: "",
+            strNguoiThucHien_Id: edu.system.userId,
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        };
+        if (typeof edu.system.getList_ThoiGianDaoTao !== "function") return;
+        edu.system.getList_ThoiGianDaoTao(objList, "", "", function (data) {
+            edu.system.loadToCombo_data({
+                data: data || [],
+                renderInfor: { id: "ID", parentId: "", name: "DAOTAO_THOIGIANDAOTAO", code: "", avatar: "" },
+                renderPlace: ["dropThoiGianDaoTao"],
+                type: "",
+                title: "--Chọn thời gian đào tạo--"
+            });
+        });
     },
 
     loadCombo_KhoanThu_LK: function () {
@@ -710,6 +731,7 @@ KeHoachMua.prototype = {
             $("#txtDenNgay").val("");
             $("#dropLoaiKeHoach").val("").trigger("change");
             $("#dropTinhTrang").val("").trigger("change");
+            $("#dropThoiGianDaoTao").val("").trigger("change");
             $('input[name="rdoChoPhepSuaSoLuong"][value="1"]').prop("checked", true);
             $('input[name="rdoChoPhepHuyTruocThanhToan"][value="1"]').prop("checked", true);
             $('input[name="rdoYeuCauThanhToanNgay"][value="0"]').prop("checked", true);
@@ -730,6 +752,7 @@ KeHoachMua.prototype = {
         $("#txtDenNgay").val(pick(item.DENNGAY, item.DenNgay, item.denngay));
         $("#dropLoaiKeHoach").val(pick(item.LOAIKEHOACH_ID, item.LOAIKEHOACH_Id, item.LoaiKeHoach_Id, item.LOAIKEHOACH_id)).trigger("change");
         $("#dropTinhTrang").val(pick(item.TINHTRANG_ID, item.TINHTRANG_Id, item.TinhTrang_Id, item.TINHTRANG_id)).trigger("change");
+        $("#dropThoiGianDaoTao").val(pick(item.DAOTAO_THOIGIANDAOTAO_ID, item.DAOTAO_THOIGIANDAOTAO_Id, item.DaoTao_ThoiGianDaoTao_Id)).trigger("change");
         var dCpSua  = pick(item.CHOPHEPSUASOLUONG, item.ChoPhepSuaSoLuong, item.chophepsuasoluong);
         var dCpHuy  = pick(item.CHOPHEPHUYTRUOCTHANHTOAN, item.ChoPhepHuyTruocThanhToan, item.chophephuytruocthanhtoan);
         var dTtNgay = pick(item.YEUCAUTHANHTOANNGAY, item.YeuCauThanhToanNgay, item.yeucauthanhtoanngay);
@@ -741,16 +764,24 @@ KeHoachMua.prototype = {
     save_KeHoachMua: function () {
         var me = main_doc.KeHoachMua;
 
+        var strId = edu.util.getValById('hidKeHoachMua_Id');
+        var isEdit = !!strId;
+
         var obj_save = {
-            'action': 'TC_DangKyMua_MH/ETMeFQIeCgkeDDQgCSAvJh4VKSQs',
-            'func': 'PKG_TAICHINH_DANGKYMUA.Pr_TC_KH_MuaHang_Them',
+            'action': isEdit
+                ? 'TC_DangKyMua_MH/ETMeFQIeCgkeDDQgCSAvJh4SNCAP'
+                : 'TC_DangKyMua_MH/ETMeFQIeCgkeDDQgCSAvJh4VKSQs',
+            'func': isEdit
+                ? 'PKG_TAICHINH_DANGKYMUA.Pr_TC_KH_MuaHang_Sua'
+                : 'PKG_TAICHINH_DANGKYMUA.Pr_TC_KH_MuaHang_Them',
             'iM': edu.system.iM,
-            'strId': edu.util.getValById('hidKeHoachMua_Id'),
+            'strId': strId,
             'strMa': edu.util.getValById('txtMaKeHoach'),
             'strTen': edu.util.getValById('txtTenKeHoach'),
             'strMoTa': edu.util.getValById('txtMoTa'),
             'strLoaiKeHoach_Id': edu.util.getValById('dropLoaiKeHoach'),
             'strTinhTrang_Id': edu.util.getValById('dropTinhTrang'),
+            'strDAOTAO_ThoiGianDaoTao_Id': edu.util.getValById('dropThoiGianDaoTao'),
             'strTuNgay': edu.util.getValById('txtTuNgay'),
             'strDenNgay': edu.util.getValById('txtDenNgay'),
             'dChoPhepHuyTruocThanhToan': $('input[name="rdoChoPhepHuyTruocThanhToan"]:checked').val() || "0",

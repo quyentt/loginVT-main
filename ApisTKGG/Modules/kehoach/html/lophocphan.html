@@ -696,28 +696,28 @@
     </div>
 </div>
 <!-- page script -->
-<!-- XLSX (SheetJS) — phục vụ Xuất Excel cho Lớp học phần. Load 1 lần, idempotent. -->
+<!-- XLSX-JS-STYLE (fork SheetJS có hỗ trợ style cell) — phục vụ Xuất Excel cho Lớp học phần. Load 1 lần, idempotent. -->
 <script>
     (function loadXLSX() {
-        if (typeof XLSX !== 'undefined') return;
+        if (typeof XLSX !== 'undefined' && XLSX.version && XLSX._styleEnabled) return;
         var cdnList = [
-            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
-            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
-            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+            'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+            'https://unpkg.com/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx-js-style/1.2.0/xlsx.bundle.js'
         ];
         var i = 0;
         function tryNext() {
             if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
             var s = document.createElement('script');
             s.src = cdnList[i]; s.crossOrigin = 'anonymous';
-            s.onload = function () { console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onload = function () { try { XLSX._styleEnabled = true; } catch (er) { } console.log('[XLSX] loaded từ', cdnList[i]); };
             s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
             document.head.appendChild(s);
         }
         tryNext();
     })();
 </script>
-<script src="modules/kehoach/script/lophocphan.js?v=1.0.0.1"></script>
+<script src="modules/kehoach/script/lophocphan.js?v=1.0.0.5"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['LopHocPhan'] = new LopHocPhan();
