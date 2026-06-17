@@ -91,8 +91,9 @@
     </div>
     <div class="header fixed-top">
       <div class="top-nav">
-        <div class="sidebar-bars">
+        <div class="sidebar-bars" style="display:flex;align-items:center;gap:8px;cursor:pointer">
           <i class="fa-light fa-bars-sort"></i>
+          <span style="color:#fff;font-weight:600;font-size:14px">Menu</span>
         </div>
         <div class="head-logo refeshlogo">
           <a href="#">
