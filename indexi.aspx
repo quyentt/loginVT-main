@@ -48,12 +48,11 @@
                         
                     </a>
                     <nav class="navbar navbar-static-top"><!-- Header Navbar: style can be found in header.less -->
-                        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button" style="display:inline-flex;align-items:center;gap:8px"> <!-- Sidebar toggle button-->
+                        <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button"> <!-- Sidebar toggle button-->
                             <span class="sr-only">Cổng cán bộ</span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
                             <span class="icon-bar"></span>
-                            <span style="color:#fff;font-weight:600;font-size:14px;margin-left:4px">Menu</span>
                         </a>
                         <div class="navbar-custom-menu">
                             <ul class="nav navbar-nav">
