@@ -427,19 +427,6 @@
     padding: 0px !important;
 }
 
-.box-header.with-border {
-    border-bottom: 1px solid #e1e1e1 !important;
-    padding: 20px 20px 15px 20px;
-    display: flex;
-}
-
-.box-header .box-title {
-    font-size: 18px !important;
-    color: var(--color-blue) !important;
-    line-height: 24px;
-    display: flex;
-}
-
 .form-container .box-header.with-border {
     height: 52px !important;
     line-height: 52px !important;
@@ -8665,19 +8652,6 @@ input#tblInput_DTSV_SinhVien_input {
     color: #888;
 }
 
-.box-header {
-    display: block;
-}
-
-.box-header .box-tools.pull-right {
-    right: 0 !important;
-    margin-right: 0 !important;
-    padding-right: 0 !important;
-}
-
-/* .aps-KeHoachChuongTrinh .box-header .box-tools.pull-right {
-    right: 19px;
-} */
 .aps-tblChuongTrinh {
     border-bottom: 1px solid #e1e1e1 !important;
     margin-bottom: 10px !important;
@@ -15156,7 +15130,6 @@ table#clone {
     }
 }
 
-<<<<<<< HEAD
 /* ----------------- */
 .aps-lichsu-dangky .col-lg-12 {
     background: transparent !important;
