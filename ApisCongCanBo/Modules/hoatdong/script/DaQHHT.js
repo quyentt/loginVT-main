@@ -1734,6 +1734,8 @@ DaQHHT.prototype = {
             var maSV = v(e.MA_NGUOIHOC_CHINH) || v(e.MA_NGUOIHOC_PHU);
             var cccd = v(e.DINHDANH_CHINH_SO) || v(e.CCCD);
             var hoTen = v(e.FULL_NAME) || v(e.SINHVIEN_TENDAYDU);
+            var sdtCaNhan = v(e.SODIENTHOAI_CANHAN) || v(e.sodienthoai_canhan) || v(e.PHONE_PERSONAL) || v(e.DIENTHOAI_CANHAN) || v(e.SODIENTHOAI);
+            var emailCaNhan = v(e.EMAIL_CANHAN) || v(e.email_canhan) || v(e.EMAIL_PERSONAL) || v(e.EMAIL);
             var trangThai = v(e.STUDY_STATUS_TEN) || v(e.TRANGTHAI_TEN);
             var gioiTinh = v(e.GIOITINH_TEN) || v(e.GIOI_TINH_TEN);
             var ngaySinh = v(e.NGAYSINH_DD_MM_YYYY) || v(e.NGAY_SINH) || v(e.DATE_OF_BIRTH);
@@ -1752,6 +1754,8 @@ DaQHHT.prototype = {
                 'CCCD': cccd,
                 'Mã SV': maSV,
                 'Họ và tên': hoTen,
+                'Điện thoại cá nhân': sdtCaNhan,
+                'Email cá nhân': emailCaNhan,
                 'Trạng thái': trangThai,
                 'Giới tính': gioiTinh,
                 'Ngày sinh': ngaySinh,
@@ -1804,12 +1808,13 @@ DaQHHT.prototype = {
             },
             colPos: {
                 // index theo cột table (đã tính STT là col 0)
-                // Sau khi reorder: 1=CCCD, 2=MãSV, 3=HọTên, 4=Trạng thái, 5=Xem hồ sơ,
-                // 6=Giới tính, 7=Ngày sinh, 8=Dân tộc, 9=Tôn giáo, 10=Khóa học,
-                // 11=Khoa quản lý, 12=Lớp, 13=Chương trình, 14=Ngành chính/phụ,
-                // 15=GPA, 16=Công nợ, 17=Cố vấn, 18=Checkbox
-                left:   [1, 2, 3, 8, 9, 10, 11, 12, 13, 17],
-                center: [0, 4, 5, 6, 7, 14, 15, 16, 18]
+                // 1=CCCD, 2=MãSV, 3=HọTên, 4=Điện thoại cá nhân, 5=Email cá nhân,
+                // 6=Trạng thái, 7=Xem hồ sơ, 8=Giới tính, 9=Ngày sinh,
+                // 10=Dân tộc, 11=Tôn giáo, 12=Khóa học, 13=Khoa quản lý,
+                // 14=Lớp, 15=Chương trình, 16=Ngành chính/phụ,
+                // 17=GPA, 18=Công nợ, 19=Cố vấn, 20=Checkbox
+                left:   [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15, 19],
+                center: [0, 6, 7, 8, 9, 16, 17, 18, 20]
             },
             aoColumns: [
                 // [col 1] CCCD
@@ -1833,7 +1838,30 @@ DaQHHT.prototype = {
                         return '<span ' + LEFT + '>' + v + '</span>';
                     }
                 },
-                // [col 4] Trạng thái — đẩy lên đầu để luôn nhìn thấy
+                // [col 4] Điện thoại cá nhân
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.SODIENTHOAI_CANHAN)
+                             || edu.util.returnEmpty(aData.sodienthoai_canhan)
+                             || edu.util.returnEmpty(aData.PHONE_PERSONAL)
+                             || edu.util.returnEmpty(aData.DIENTHOAI_CANHAN)
+                             || edu.util.returnEmpty(aData.SODIENTHOAI);
+                        if (!v) return '<span ' + LEFT + ' class="color-888">—</span>';
+                        return '<span ' + LEFT + '><a href="tel:' + v + '" style="color:#3380db;text-decoration:none;">' + v + '</a></span>';
+                    }
+                },
+                // [col 5] Email cá nhân
+                {
+                    "mRender": function (nRow, aData) {
+                        var v = edu.util.returnEmpty(aData.EMAIL_CANHAN)
+                             || edu.util.returnEmpty(aData.email_canhan)
+                             || edu.util.returnEmpty(aData.EMAIL_PERSONAL)
+                             || edu.util.returnEmpty(aData.EMAIL);
+                        if (!v) return '<span ' + LEFT + ' class="color-888">—</span>';
+                        return '<span ' + LEFT + '><a href="mailto:' + v + '" style="color:#3380db;text-decoration:none;" title="' + v + '">' + v + '</a></span>';
+                    }
+                },
+                // [col 6] Trạng thái — đẩy lên đầu để luôn nhìn thấy
                 {
                     "mRender": function (nRow, aData) {
                         var strTT = edu.util.returnEmpty(aData.STUDY_STATUS_MA) || edu.util.returnEmpty(aData.TRANGTHAI);
