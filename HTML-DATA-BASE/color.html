@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quản lý sinh viên 360 - Dashboard toàn trường</title>
+    <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+
+<body>
+    <div class="header fixed-top">
+        <div class="top-nav">
+            <div class="sidebar-bars">
+                <i class="fa-light fa-bars-sort"> </i>
+            </div>
+            <div class="head-logo">
+                <a href="../index.html">
+                    <img class="logo-icon" src="../assets/images/logo/logo-icon.png" />
+                    <img class="logo-text" src="../assets/images/logo/logo-text.png" />
+                </a>
+            </div>
+            <div class="head-search-form">
+                <div class="head-search-toggle">
+                    <i class="fal fa-search"></i>
+                </div>
+                <div class="head-search-box">
+                    <div class="form">
+                        <input type="text" class="search-imput" placeholder="Tìm kiếm thông tin" />
+                        <button class="search-btn">
+                            <i class="fal fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="main-menu">
+                <ul class="list-unstyled d-none">
+                    <li class="item">
+                        <a class="menu-link" href="../index.html">
+                            <i class="fal fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../dashboard.html">
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../modul.html">
+                            <span>Modul</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../chucnang-cuaban.html">
+                            <span>Chức năng của bạn</span>
+                        </a>
+                    </li>
+                    <li class="item">
+                        <a class="menu-link" href="../tintuc.html">
+                            <span>Tin tức</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="menu-toggle">
+                    <i class="fal fa-bars"></i>
+                </div>
+            </div>
+            <div class="account-group">
+                <div class="dropdown d-none">
+                    <div class="item" data-bs-toggle="dropdown">
+                        <i class="fal fa-circle-check"></i>
+                        <span>3</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown d-none">
+                    <div class="item message" data-bs-toggle="dropdown">
+                        <i class="fal fa-messages"></i>
+                        <span>3</span>
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+                <div class="dropdown d-none">
+                    <div class="item noti" data-bs-toggle="dropdown">
+                        <i class="fal fa-bell"></i>
+                        <span>9+</span>
+                    </div>
+                    <ul class="dropdown-menu box-notify">
+                        <li class="lable-notify d-flex justify-content-between">
+                            <h3 class="d-flex">
+                                <img src="./images/notification.svg" style="width: 26px; margin-right: 6px" />
+                                Thông báo
+                            </h3>
+                            <i class="fa-regular fa-xmark" style="margin-top: 5px"></i>
+                        </li>
+                        <li class="list-notify">
+                            <ul>
+                                <li class="chuadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <i class="fa-solid fa-circle-dollar-to-slot color-blue"></i>
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <img src="./images/money-bag.png" class="img-notify" />
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="chuadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <i class="fa-solid fa-circle-dollar-to-slot color-blue"></i>
+                                            </div>
+                                            <div class="content-notify">
+                                                <b>Tín hiệu và hệ thống</b><br />
+                                                Đã có điểm môn quá trình tín hiệu và hệ thống
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <img src="./images/newspaper.svg" class="img-notify" />
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <img src="./images/newspaper.svg" class="img-notify" />
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <img src="./images/newspaper.svg" class="img-notify" />
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <img src="./images/newspaper.svg" class="img-notify" />
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="dadoc">
+                                    <a href="#">
+                                        <div class="item-notify">
+                                            <div class="icon-notify">
+                                                <img src="./images/newspaper.svg" class="img-notify" />
+                                            </div>
+                                            <div class="content-notify">
+                                                Thông báo thay đổi lịch dảng dậy lớp ABC Phương pháp
+                                                tính và MAtLAB
+                                                <p class="date-notify">
+                                                    <i class="fa-light fa-calendar-clock"></i>16:02
+                                                    <i class="fa-solid fa-circle fw-bold"></i> Thứ ba
+                                                    20/1/2026
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <div class="dropdown">
+                    <div class="item" data-bs-toggle="dropdown">
+                        <img src="../assets/images/avatar.jpg" class="avatar" />
+                    </div>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="main-wrap">
+        <div class="left-sidebar">
+            <div class="sidebar-menu">
+                <div class="accordion" id="sidebar-menu">
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="../index.html">
+                            <i class="fa-light fa-house-window item-icon"></i>
+                            <span>Dashboads</span>
+                        </a>
+                    </div>
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse1"
+                            href="javascrip:void(0)" aria-expanded="true">
+                            <i class="fa-light fa-chalkboard-user item-icon"></i>
+                            <span>Table</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse1" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class href="#">Thông tin chung</a>
+                                <a href="#">Nhập điểm theo lớp học phần</a>
+                                <a href="#">Điểm danh theo lớp học phần</a>
+                                <a href="#">Tra cứu hồ sơ sinh viên</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item active">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse2"
+                            href="javascrip:void(0)">
+                            <i class="fa-regular fa-text item-icon"></i>
+                            <span>Header - Title - Typography</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse3"
+                            href="javascrip:void(0)">
+                            <i class="fa-solid fa-users item-icon"></i>
+                            <span>Nhân sự</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse3" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a class="" href="nhansu/nhansu-chitiet.html" data-position="0">Kế hoạch tuyển dụng</a>
+                                <a href="nhansu/nhansu-chitiet.html" data-position="1">Đề xuất tuyển dụng</a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse4"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-users-gear item-icon"></i>
+                            <span>Buttons</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+
+                    </div>
+
+                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse5"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-file-user item-icon"></i>
+                            <span>Forms</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="collapse5" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="HTML-SV-Ke-Hoach-Nhap-Hoc-01.html" data-position="1">Form control</a>
+                                <a href="HTML-SV-Ke-Hoach-Nhap-Hoc-02-ThuPhi.html" data-position="0">Select</a>
+                                <a href="QuanTriNhom.html" data-position="1">Checks & radios</a>
+                                <a href="QuanTriNhom.html" data-position="1">Input group</a>
+                                <a class="" href="HTML-Form-ChucNangHSo.html" data-position="1">Hồ sơ sinh
+                                    viên</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <!-- content -->
+            <div class="overlay"></div>
+            <div class="content-tab no-tab">
+                <div class="d-flex justify-content-between">
+                    <div class="nav-content-left">
+                        <p class="link">
+                            <a href="#">Typography</a>
+                            <i class="fal fa-angle-right"></i>
+                            <a href="#">Headings</a>
+                        </p>
+                    </div>
+                    <div class="nav-content-right">
+                        <a class="d-block text-right" href>
+                            <i class="fas fa-question-circle"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="row box-comment">
+                <div class="col-7 pl-20">
+                    <!-- Header box -->
+                    <h2 class="pl-0">Header box</h2>
+                    <div class="box box-solid box-shadow pd0 mb-20">
+                        <div class="box-header with-border">
+                            <h3 class="box-title color-blue">
+                                <i class="fa-duotone fa-solid fa-address-card"></i> Hồ sơ sinh viên
+                            </h3>
+                            <div class="pull-right d-none">
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-primary" href="">
+                                        <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                    </a>
+                                    <a class="btn btn-outline-success" href="">
+                                        <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body column-2 color-888">
+                            <div class="box-content pd-20">
+                                Nội dung ở đây
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--Tiêu đề mục -->
+                    <h4 class="pl-0">Tiêu đề mục</h4>
+                    <div class="box box-solid box-shadow pd0">
+                        <div class="box-body pd-20 column-1">
+                            <div class="box-content pd-20 box box-solid" style="display: grid !important;">
+                                <!-- box-header -->
+                                <div class="box-header pd0">
+                                    <h3 class="box-title color-blue line-38" title="Danh sách">
+                                        <i class="fa-light fa-list-timeline line-38"></i> Danh sách
+                                    </h3>
+                                    <span class="badge bg-light-blue mt-10">
+                                        <span id="lblHienThi_Tong">0</span>
+                                    </span>
+                                    <div class="pull-right" style="padding-bottom: 3px"></div>
+                                </div>
+                                <div class="line mt-20"></div>
+                                <br>
+                                <!-- Header box -->
+                                <div class="box-header pd0 w-100">
+                                    <h3 class="box-title color-blue line-20 mt-10">
+                                        <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký
+                                        <span class="pull-right badge bg-light-blue ml-10">
+                                            <span id="lblKHDK"></span>
+                                        </span>
+                                    </h3>
+                                    <div class="box-tools pull-right">
+                                        <a id="btnAddnew" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
+                                    </div>
+                                </div>
+                                <div class="line mt-20"></div>
+                                <br>
+                                <h4 class="box-title-small fz16 color-blue">
+                                    <b><i class="fa-duotone fa-solid fa-user-graduate mr-5"></i>Thông tin sinh
+                                        viên</b>
+                                </h4>
+                                <div class="line mt-20"></div>
+                                <br>
+                                <h4 class="box-title-small fz16 color-red">
+                                    <b><i class="fa-duotone fa-solid fa-users mr-5"></i>
+                                        Hóa đơn thanh toán với cơ quan</b>
+                                    <span class="color-888 pl-10">(Yêu cầu điền chính xác các thông tin sau)</span>
+                                </h4>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="col-5">
+                    <div class="box-content pt-0 pb-20 pr-10">
+                        <!-- Bộ lọc sinh viên (toàn trường) -->
+                        <div class="box box-solid box-shadow box-header pd0">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-solid fa-heading mr-5"></i>Headings
+                                </h3>
+                                <div class="pull-right d-none">
+                                    <div class="btn-group">
+                                        <a class="btn btn-outline-primary" href="">
+                                            <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                        </a>
+                                        <a class="btn btn-outline-success" href="">
+                                            <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body pd-20 column-gap-2">
+                                <div class="box-content">
+                                    <p>All HTML headings, <code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>, are
+                                        available.</p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Heading</th>
+                                                    <th>Example</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><code>&lt;h1&gt;&lt;/h1&gt;</code></td>
+                                                    <td><span class="h1">h1. Bootstrap heading</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>&lt;h2&gt;&lt;/h2&gt;</code></td>
+                                                    <td><span class="h2">h2. Bootstrap heading</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>&lt;h3&gt;&lt;/h3&gt;</code></td>
+                                                    <td><span class="h3">h3. Bootstrap heading</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>&lt;h4&gt;&lt;/h4&gt;</code></td>
+                                                    <td><span class="h4">h4. Bootstrap heading</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>&lt;h5&gt;&lt;/h5&gt;</code></td>
+                                                    <td><span class="h5">h5. Bootstrap heading</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>&lt;h6&gt;&lt;/h6&gt;</code></td>
+                                                    <td><span class="h6">h6. Bootstrap heading</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="bd-code-snippet">
+                                        <div class="highlight">
+                                            <pre class="language-html"><code is:raw="" class="language-html">
+                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>h1. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
+                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">&gt;</span></span>h2. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">&gt;</span></span>
+                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>h3. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
+                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">&gt;</span></span>h4. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">&gt;</span></span>
+                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h5</span><span class="token punctuation">&gt;</span></span>h5. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h5</span><span class="token punctuation">&gt;</span></span>
+                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h6</span><span class="token punctuation">&gt;</span></span>h6. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h6</span><span class="token punctuation">&gt;</span></span>
+                                    </code></pre>
+                                        </div>
+                                        <pre
+                                            class="language-html"><code class="language-html">
+                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h1. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h2. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h3. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h4. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h5. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h6<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h6. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span></code></pre>
+
+                                        <pre
+                                            class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Bạn có thể sử dụng thẻ đánh dấu để định dạng văn bản.<span class="token punctuation">&gt;</span></span></code>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>del</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là văn bản đã bị xóa.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>del</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>s</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là không còn chính xác nữa.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>s</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ins</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là phần bổ sung vào tài liệu.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ins</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>u</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này sẽ hiển thị dạng gạch chân.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>u</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là phần chú thích in nhỏ.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Dòng này hiển thị dạng văn bản in đậm.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>em</span><span class="token punctuation">&gt;</span></span>Dòng này hiển thị dạng văn bản in nghiêng.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>em</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span></code></pre>
+                                    </div>
+                                    <p><code>.h1</code> through <code>.h6</code> classes are also available, for when
+                                        you want
+                                        to match the font styling of a heading but cannot use the associated HTML
+                                        element.</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- -------------------------- -->
+        <!-- JS -->
+        <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
+        <script src="../assets/swiper-slide/swiper-bundle.min.js"></script>
+        <script src="../assets/js/jquery-3.7.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"
+            integrity="sha512-JPcRR8yFa8mmCsfrw4TNte1ZvF1e3+1SdGMslZvmrzDYxS69J7J49vkFL8u6u8PlPJK+H3voElBtUCzaXj+6ig=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+        <script src="../assets/js/customs.js"></script>
+        <script>
+            $(window).on("load", function () {
+                // $("#ketQua_nhapHoc").modal("show");
+            });
+        </script>
+
+        <script>
+            const buttons = document.querySelectorAll('.tab-item-li');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            buttons.forEach(button => {
+
+                button.addEventListener('click', () => {
+
+                    // remove active button
+                    buttons.forEach(btn => btn.classList.remove('active'));
+
+                    // remove active content
+                    panes.forEach(pane => pane.classList.remove('active'));
+
+                    // add active current
+                    button.classList.add('active');
+
+                    const id = button.dataset.tab;
+
+                    document.getElementById(id)
+                        .classList.add('active');
+                });
+
+            });
+        </script>
+</body>
+
+</html>
