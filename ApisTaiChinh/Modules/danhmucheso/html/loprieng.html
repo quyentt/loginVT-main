@@ -36,6 +36,7 @@
                             <span class="badge bg-light-blue">
                                 <span id="lblLopRieng_Tong"></span>
                             </span>
+                            <span id="lblLopRieng_DaChon" class="badge bg-green" style="margin-left:8px;display:none;"></span>
                         </h3>
                         <div class="pull-right">
                             <a class="btn btn-primary" id="btnSave_LopRieng" href="#"><i
@@ -72,8 +73,45 @@
         </div>
     </div>
 </section>
+
+<!-- Modal kết quả chốt/chốt lại -->
+<div class="modal fade" id="modalKetQua_LopRieng" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="width:95%;max-width:1400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span>&times;</span></button>
+                <h4 class="modal-title">
+                    <i class="fa-light fa-list-check"></i>
+                    <span id="lblKetQua_LopRieng_Title">Kết quả</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div id="zoneKetQua_LopRieng_Summary" style="margin-bottom:10px;"></div>
+                <div style="max-height:60vh;overflow:auto;">
+                    <table class="table table-bordered table-hover" id="tblKetQua_LopRieng" style="margin-bottom:0;">
+                        <thead style="background:#f4f4f4;">
+                            <tr>
+                                <th style="text-align:center;width:50px;">Stt</th>
+                                <th>Mã lớp</th>
+                                <th>Tên lớp</th>
+                                <th>Học phần</th>
+                                <th style="text-align:center;width:130px;">Kết quả</th>
+                                <th>Lý do / Ghi chú</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
-<script src="modules/danhmucheso/scripts/LopRieng.js?v=1.0.0.2"></script>
+<script src="modules/danhmucheso/scripts/LopRieng.js?v=1.0.0.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['LopRieng'] = new LopRieng();
