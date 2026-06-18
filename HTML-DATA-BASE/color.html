@@ -364,9 +364,9 @@
                 <div class="d-flex justify-content-between">
                     <div class="nav-content-left">
                         <p class="link">
-                            <a href="#">Typography</a>
+                            <a href="#">Colors</a>
                             <i class="fal fa-angle-right"></i>
-                            <a href="#">Headings</a>
+                            <a href="#">Colors</a>
                         </p>
                     </div>
                     <div class="nav-content-right">
@@ -377,12 +377,12 @@
             </div>
             <div class="row box-comment">
                 <div class="col-7 pl-20">
-                    <!-- Header box -->
-                    <h2 class="pl-0">Header box</h2>
+                    <!-- Color hệ thống -->
+                    <h3 class="pl-0">Color hệ thống</h3>
                     <div class="box box-solid box-shadow pd0 mb-20">
                         <div class="box-header with-border">
                             <h3 class="box-title color-blue">
-                                <i class="fa-duotone fa-solid fa-address-card"></i> Hồ sơ sinh viên
+                                <i class="fa-duotone fa-solid fa-eye-dropper"></i> Color hệ thống
                             </h3>
                             <div class="pull-right d-none">
                                 <div class="btn-group">
@@ -395,70 +395,460 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="box-body column-2 color-888">
+                        <div class="box-body column-1">
                             <div class="box-content pd-20">
-                                Nội dung ở đây
+                                <table class="table table-hover table-bordered table-noborder w-100">
+                                    <thead>
+                                        <tr class="bg-blue">
+                                            <th>Chức năng</th>
+                                            <th> Màu</th>
+                                            <th>Mã Hex</th>
+                                            <th>Mã RGBA</th>
+                                            <th>Khai báo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--------------------- -->
+                                        <!--Chính (Primary) -->
+                                        <tr>
+                                            <td rowspan="4" class="color-blue bold">Chính (Primary)</td>
+                                            <td><i class="fa-solid fa-circle bold color-main"></i> Color main</td>
+                                            <td>#14375f</td>
+                                            <td>20,55,95</td>
+                                            <td>color-main </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-blue"></i> Xanh da trời</td>
+                                            <td>#0d6efd</td>
+                                            <td>12,110,253</td>
+                                            <td>color-blue</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-link"></i> Màu link </td>
+                                            <td>#2563EB</td>
+                                            <td>37,99,235</td>
+                                            <td> color-link</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-link-hover"></i> Màu link hover
+                                            </td>
+                                            <td>#1D4ED8</td>
+                                            <td>29,78,216</td>
+                                            <td>color-link-hover</td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--Thành công (Success) -->
+                                        <tr>
+                                            <td rowspan="4" class="color-green bold">Thành công (Success)</td>
+                                            <td><i class="fa-solid fa-circle bold color-green"></i> Xanh lá</td>
+                                            <td>#198754</td>
+                                            <td>25,135,84</td>
+                                            <td> color-green</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-green-hover"></i> Success Hover
+                                            </td>
+                                            <td>#157347</td>
+                                            <td>25,135,84</td>
+                                            <td>color-green-hover </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-save"></i> Color save</td>
+                                            <td>#22C55E</td>
+                                            <td>25,135,84</td>
+                                            <td>color-save</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-upload"></i> Color Upload</td>
+                                            <td>#28A745</td>
+                                            <td>40,167,69</td>
+                                            <td> color-upload</td>
+                                        </tr>
+
+
+                                        <!--------------------- -->
+                                        <!--Nguy hiểm/Xóa (Danger) -->
+                                        <tr>
+                                            <td class="color-red bold" rowspan="3">Nguy hiểm/Xóa (Danger)</td>
+                                            <td class="color-red">
+                                                <i class="fa-solid fa-circle bold color-red"></i> Đỏ red
+                                            </td>
+                                            <td>#FF0000</td>
+                                            <td>255,0,0</td>
+                                            <td>color-red </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="color-red-hover">
+                                                <i class="fa-solid fa-circle bold color-red-hover"></i> Đỏ red hover
+                                            </td>
+                                            <td>#e00202</td>
+                                            <td>224,2,2</td>
+                                            <td>color-red-hover</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="color-delete">
+                                                <i class="fa-solid fa-circle bold color-delete"></i> Đỏ delete
+                                            </td>
+                                            <td>#df322b</td>
+                                            <td>223,0,43</td>
+                                            <td> color-delete</td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--Màu Cam (Orange) -->
+                                        <tr>
+                                            <td class="color-orange bold" rowspan="2">Màu Cam (Orange)</td>
+                                            <td class="color-orange">
+                                                <i class="fa-solid fa-circle bold color-red"></i> Cam (Orange)
+                                            </td>
+                                            <td>#d54b07</td>
+                                            <td>255,0,0</td>
+                                            <td>color-orange</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="color-orange-hover">
+                                                <i class="fa-solid fa-circle bold color-orange-hover"></i> Cam (Orange)
+                                                hover
+                                            </td>
+                                            <td>#ff4500</td>
+                                            <td>255,69,0</td>
+                                            <td> color-orange-hover</td>
+                                        </tr>
+
+                                        <!--------------------- -->
+                                        <!--Cảnh báo (Warning) -->
+                                        <tr>
+                                            <td class="color-warning bold">Cảnh báo (Warning) </td>
+                                            <td class="color-warning">
+                                                <i class="fa-solid fa-circle bold color-warning"></i> Vàng
+                                            </td>
+                                            <td>#ffc107</td>
+                                            <td>255,193,7</td>
+                                            <td>color-warning </td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--Thông tin (Info) -->
+                                        <tr>
+                                            <td class="color-info bold">Thông tin (Info)</td>
+                                            <td class="color-info"><i class="fa-solid fa-circle bold color-info"></i>
+                                                Xanh dương nhạt
+                                            </td>
+                                            <td>#31d2f2</td>
+                                            <td>49,210,242</td>
+                                            <td> color-info </td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--yellow -->
+                                        <tr>
+                                            <td class="color-yellow">Vàng (Yellow)</td>
+                                            <td class="color-yellow"><i
+                                                    class="fa-solid fa-circle bold color-yellow"></i> Vàng</td>
+                                            <td>#ffe600</td>
+                                            <td>108,117,125</td>
+                                            <td>color-yellow</td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--puple -->
+                                        <tr>
+                                            <td class="color-purple bold">Tím (puple)</td>
+                                            <td class="color-purple"><i
+                                                    class="fa-solid fa-circle bold color-purple"></i>
+                                                Tím</td>
+                                            <td>#e300ff</td>
+                                            <td>108,117,125</td>
+                                            <td>color-puple</td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--puple -->
+                                        <tr>
+                                            <td class="color-pink bold">Hồng (pink)</td>
+                                            <td class="color-pink"><i class="fa-solid fa-circle bold color-pink"></i>
+                                                Hồng</td>
+                                            <td>#ff0081</td>
+                                            <td>255,0,129</td>
+                                            <td>color-pink</td>
+                                        </tr>
+                                        <!--------------------- -->
+                                        <!--Khác -->
+                                        <tr>
+                                            <td class="text-secondary">Phụ (Secondary)</td>
+                                            <td class="text-secondary"><i
+                                                    class="fa-solid fa-circle bold text-secondary"></i> Xám</td>
+                                            <td>#6C757D</td>
+                                            <td>108,117,125</td>
+                                            <td> text-secondary </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td class="text-dark">Tối (Dark)</td>
+                                            <td class="text-dark"><i class="fa-solid fa-circle bold text-dark"></i> Đen
+                                                xám</td>
+                                            <td>#212529</td>
+                                            <td>#108,117,125</td>
+                                            <td> text-dark</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Sáng (Light)</td>
+                                            <td> <i class="fa-solid fa-circle bold text-light"></i> Trắng xám</td>
+                                            <td>#F8F9FA</td>
+                                            <td>248,249,250</td>
+                                            <td> text-light </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
                     </div>
 
-                    <!--Tiêu đề mục -->
-                    <h4 class="pl-0">Tiêu đề mục</h4>
-                    <div class="box box-solid box-shadow pd0">
-                        <div class="box-body pd-20 column-1">
-                            <div class="box-content pd-20 box box-solid" style="display: grid !important;">
-                                <!-- box-header -->
-                                <div class="box-header pd0">
-                                    <h3 class="box-title color-blue line-38" title="Danh sách">
-                                        <i class="fa-light fa-list-timeline line-38"></i> Danh sách
-                                    </h3>
-                                    <span class="badge bg-light-blue mt-10">
-                                        <span id="lblHienThi_Tong">0</span>
-                                    </span>
-                                    <div class="pull-right" style="padding-bottom: 3px"></div>
+                    <!-- Text color -->
+                    <div class="box box-solid box-shadow pd0 mb-20">
+                        <div class="box-header with-border">
+                            <h3 class="box-title color-blue">
+                                <i class="fa-duotone fa-solid fa-eye-dropper"></i> Color Text
+                            </h3>
+                            <div class="pull-right d-none">
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-primary" href="">
+                                        <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                    </a>
+                                    <a class="btn btn-outline-success" href="">
+                                        <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                    </a>
                                 </div>
-                                <div class="line mt-20"></div>
-                                <br>
-                                <!-- Header box -->
-                                <div class="box-header pd0 w-100">
-                                    <h3 class="box-title color-blue line-20 mt-10">
-                                        <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký
-                                        <span class="pull-right badge bg-light-blue ml-10">
-                                            <span id="lblKHDK"></span>
-                                        </span>
-                                    </h3>
-                                    <div class="box-tools pull-right">
-                                        <a id="btnAddnew" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
-                                    </div>
-                                </div>
-                                <div class="line mt-20"></div>
-                                <br>
-                                <h4 class="box-title-small fz16 color-blue">
-                                    <b><i class="fa-duotone fa-solid fa-user-graduate mr-5"></i>Thông tin sinh
-                                        viên</b>
-                                </h4>
-                                <div class="line mt-20"></div>
-                                <br>
-                                <h4 class="box-title-small fz16 color-red">
-                                    <b><i class="fa-duotone fa-solid fa-users mr-5"></i>
-                                        Hóa đơn thanh toán với cơ quan</b>
-                                    <span class="color-888 pl-10">(Yêu cầu điền chính xác các thông tin sau)</span>
-                                </h4>
-
+                            </div>
+                        </div>
+                        <div class="box-body column-1">
+                            <div class="box-content pd-20">
+                                <table class="table table-hover table-bordered table-noborder w-100">
+                                    <thead>
+                                        <tr class="bg-blue">
+                                            <th>Chức năng</th>
+                                            <th> Màu</th>
+                                            <th>Mã Hex</th>
+                                            <th>Mã RGBA</th>
+                                            <th>Khai báo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--------------------- -->
+                                        <!--Chính (Primary) -->
+                                        <tr>
+                                            <td rowspan="3" class="color-222 bold">Chính (Primary)</td>
+                                            <td><i class="fa-solid fa-circle bold color-222"></i> text main</td>
+                                            <td>#222222</td>
+                                            <td>34,34,34</td>
+                                            <td>color-222</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-666"></i> text phụ</td>
+                                            <td>#66666</td>
+                                            <td>12,110,253</td>
+                                            <td>color-666</td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-circle bold color-888"></i> Text note </td>
+                                            <td>#888888</td>
+                                            <td>37,99,235</td>
+                                            <td> color-888</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
                     </div>
+
+                    <!-- Border - line- color -->
+                    <div class="box box-solid box-shadow pd0 mb-20">
+                        <div class="box-header with-border">
+                            <h3 class="box-title color-blue">
+                                <i class="fa-duotone fa-solid fa-eye-dropper"></i> Border line color
+                            </h3>
+                            <div class="pull-right d-none">
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-primary" href="">
+                                        <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                    </a>
+                                    <a class="btn btn-outline-success" href="">
+                                        <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body column-1">
+                            <div class="box-content pd-20">
+                                <table class="table table-hover table-bordered table-noborder w-100">
+                                    <thead>
+                                        <tr class="bg-blue">
+                                            <th>Chức năng</th>
+                                            <th> Màu</th>
+                                            <th>Mã Hex</th>
+                                            <th>Mã RGBA</th>
+                                            <th>Khai báo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--------------------- -->
+                                        <!--Chính (Primary) -->
+                                        <tr>
+                                            <td class="bold">Border</td>
+                                            <td><i class="fa-solid fa-circle bold" style="color: #d1d1d1;"></i> color
+                                                border</td>
+                                            <td>#d1d1d1</td>
+                                            <td>209,209,209</td>
+                                            <td>border-color</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-green">border-green</td>
+                                            <td><i class="fa-solid fa-circle bold color-green"></i> border-green</td>
+                                            <td>#198754</td>
+                                            <td>25,135,84</td>
+                                            <td>border-green</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-blue">border-blue</td>
+                                            <td><i class="fa-solid fa-circle bold color-blue"></i> border-blue</td>
+                                            <td>#0d6efd</td>
+                                            <td>12,110,253</td>
+                                            <td>border-blue</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-red">border-red</td>
+                                            <td><i class="fa-solid fa-circle bold color-red"></i> border-red</td>
+                                            <td>#FF0000</td>
+                                            <td>255,0,0</td>
+                                            <td>border-red</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-info">border-info</td>
+                                            <td><i class="fa-solid fa-circle bold color-info"></i> border-info</td>
+                                            <td>#31d2f2</td>
+                                            <td>49,210,242</td>
+                                            <td>border-info</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Background color -->
+                    <div class="box box-solid box-shadow pd0 mb-20">
+                        <div class="box-header with-border">
+                            <h3 class="box-title color-blue">
+                                <i class="fa-duotone fa-solid fa-fill"></i> Background color
+                            </h3>
+                            <div class="pull-right d-none">
+                                <div class="btn-group">
+                                    <a class="btn btn-outline-primary" href="">
+                                        <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                    </a>
+                                    <a class="btn btn-outline-success" href="">
+                                        <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-body column-1">
+                            <div class="box-content pd-20">
+                                <table class="table table-hover table-bordered table-noborder w-100">
+                                    <thead>
+                                        <tr class="bg-blue">
+                                            <th>Chức năng</th>
+                                            <th> Màu</th>
+                                            <th>Mã Hex</th>
+                                            <th>Mã RGBA</th>
+                                            <th>Khai báo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--------------------- -->
+                                        <!--Chính (Primary) -->
+                                        <tr>
+                                            <td class="bold">Color Background Main</td>
+                                            <td><i class="fa-solid fa-circle bold" style="color: #f5f6f8;"></i>
+                                                Color Background Main</td>
+                                            <td>#f5f6f8</td>
+                                            <td>245,246,248</td>
+                                            <td class="bg-main color-222">color-bg-main</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-green">Background add</td>
+                                            <td><i class="fa-solid fa-circle bold bg-add"></i> Background add</td>
+                                            <td>#198754</td>
+                                            <td>25,135,84</td>
+                                            <td class="bg-add color-fff">bg-add</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-blue">border-blue</td>
+                                            <td><i class="fa-solid fa-circle bold color-blue"></i> border-blue</td>
+                                            <td>#0d6efd</td>
+                                            <td>12,110,253</td>
+                                            <td>border-blue</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-red">border-red</td>
+                                            <td><i class="fa-solid fa-circle bold color-red"></i> border-red</td>
+                                            <td>#FF0000</td>
+                                            <td>255,0,0</td>
+                                            <td>border-red</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="bold color-info">border-info</td>
+                                            <td><i class="fa-solid fa-circle bold color-info"></i> border-info</td>
+                                            <td>#31d2f2</td>
+                                            <td>49,210,242</td>
+                                            <td>border-info</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+
 
                 </div>
                 <div class="col-5">
+                    <!-- Color bootstrap -->
+                    <h2 class="pl-0">Color bootstrap</h2>
                     <div class="box-content pt-0 pb-20 pr-10">
-                        <!-- Bộ lọc sinh viên (toàn trường) -->
+                        <!-- Text color -->
                         <div class="box box-solid box-shadow box-header pd0">
                             <div class="box-header with-border">
                                 <h3 class="box-title color-blue">
-                                    <i class="fa-solid fa-heading mr-5"></i>Headings
+                                    <i class="fa-duotone fa-solid fa-droplet mr-5"></i> Bộ màu Bootstrap Style
+                                </h3>
+
+                            </div>
+                            <div class="box-body pd-20 column-gap-2">
+                                <div class="box-content w-100">
+                                    a:link {
+                                    color: #0D6EFD;
+                                    }
+                                    <br>
+                                    a:visited {
+                                    color: #6F42C1;
+                                    }
+                                    <br>
+                                    a:hover {
+                                    color: #0A58CA;
+                                    }
+                                    <br>
+                                    a:active {
+                                    color: #DC3545;
+                                    }
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Text color -->
+                        <div class="box box-solid box-shadow box-header pd0 mt-20">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-solid fa-droplet mr-5"></i> Text color
                                 </h3>
                                 <div class="pull-right d-none">
                                     <div class="btn-group">
@@ -472,79 +862,171 @@
                                 </div>
                             </div>
                             <div class="box-body pd-20 column-gap-2">
-                                <div class="box-content">
-                                    <p>All HTML headings, <code>&lt;h1&gt;</code> through <code>&lt;h6&gt;</code>, are
-                                        available.</p>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Heading</th>
-                                                    <th>Example</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><code>&lt;h1&gt;&lt;/h1&gt;</code></td>
-                                                    <td><span class="h1">h1. Bootstrap heading</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><code>&lt;h2&gt;&lt;/h2&gt;</code></td>
-                                                    <td><span class="h2">h2. Bootstrap heading</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><code>&lt;h3&gt;&lt;/h3&gt;</code></td>
-                                                    <td><span class="h3">h3. Bootstrap heading</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><code>&lt;h4&gt;&lt;/h4&gt;</code></td>
-                                                    <td><span class="h4">h4. Bootstrap heading</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><code>&lt;h5&gt;&lt;/h5&gt;</code></td>
-                                                    <td><span class="h5">h5. Bootstrap heading</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td><code>&lt;h6&gt;&lt;/h6&gt;</code></td>
-                                                    <td><span class="h6">h6. Bootstrap heading</span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                <div class="box-content w-100">
+                                    <div class="bd-example">
+                                        <p><a href="#" class="text-primary">Primary link</a></p>
+                                        <p><a href="#" class="text-secondary">Secondary link</a></p>
+                                        <p><a href="#" class="text-success">Success link</a></p>
+                                        <p><a href="#" class="text-danger">Danger link</a></p>
+                                        <p><a href="#" class="text-warning">Warning link</a></p>
+                                        <p><a href="#" class="text-info">Info link</a></p>
+                                        <p><a href="#" class="text-light bg-dark">Light link</a></p>
+                                        <p><a href="#" class="text-dark">Dark link</a></p>
+                                        <p><a href="#" class="text-muted">Muted link</a></p>
+                                        <p><a href="#" class="text-white bg-dark">White link</a></p>
                                     </div>
-                                    <div class="bd-code-snippet">
-                                        <div class="highlight">
-                                            <pre class="language-html"><code is:raw="" class="language-html">
-                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h1</span><span class="token punctuation">&gt;</span></span>h1. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h1</span><span class="token punctuation">&gt;</span></span>
-                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h2</span><span class="token punctuation">&gt;</span></span>h2. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h2</span><span class="token punctuation">&gt;</span></span>
-                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h3</span><span class="token punctuation">&gt;</span></span>h3. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h3</span><span class="token punctuation">&gt;</span></span>
-                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h4</span><span class="token punctuation">&gt;</span></span>h4. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h4</span><span class="token punctuation">&gt;</span></span>
-                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h5</span><span class="token punctuation">&gt;</span></span>h5. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h5</span><span class="token punctuation">&gt;</span></span>
-                                        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>h6</span><span class="token punctuation">&gt;</span></span>h6. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>h6</span><span class="token punctuation">&gt;</span></span>
-                                    </code></pre>
-                                        </div>
-                                        <pre
-                                            class="language-html"><code class="language-html">
-                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h1<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h1. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h2<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h2. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h3<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h3. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h4<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h4. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h5<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h5. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-                                    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>h6<span class="token punctuation">"</span></span><span class="token punctuation">&gt;</span></span>h6. Bootstrap heading<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span></code></pre>
 
-                                        <pre
-                                            class="language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Bạn có thể sử dụng thẻ đánh dấu để định dạng văn bản.<span class="token punctuation">&gt;</span></span></code>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>del</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là văn bản đã bị xóa.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>del</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>s</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là không còn chính xác nữa.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>s</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ins</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là phần bổ sung vào tài liệu.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ins</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>u</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này sẽ hiển thị dạng gạch chân.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>u</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>small</span><span class="token punctuation">&gt;</span></span>Dòng văn bản này được hiểu là phần chú thích in nhỏ.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>small</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>strong</span><span class="token punctuation">&gt;</span></span>Dòng này hiển thị dạng văn bản in đậm.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>strong</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>em</span><span class="token punctuation">&gt;</span></span>Dòng này hiển thị dạng văn bản in nghiêng.<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>em</span><span class="token punctuation">&gt;</span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span></code></pre>
+                                    <div class="highlight">
+                                        <pre><code class="language-html" data-lang="html"><span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-primary"</span><span class="nt">&gt;</span>Primary link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-secondary"</span><span class="nt">&gt;</span>Secondary link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-success"</span><span class="nt">&gt;</span>Success link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-danger"</span><span class="nt">&gt;</span>Danger link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-warning"</span><span class="nt">&gt;</span>Warning link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-info"</span><span class="nt">&gt;</span>Info link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-light bg-dark"</span><span class="nt">&gt;</span>Light link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-dark"</span><span class="nt">&gt;</span>Dark link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-muted"</span><span class="nt">&gt;</span>Muted link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span>
+<span class="nt">&lt;p&gt;&lt;a</span> <span class="na">href=</span><span class="s">"#"</span> <span class="na">class=</span><span class="s">"text-white bg-dark"</span><span class="nt">&gt;</span>White link<span class="nt">&lt;/a&gt;&lt;/p&gt;</span></code></pre>
                                     </div>
-                                    <p><code>.h1</code> through <code>.h6</code> classes are also available, for when
-                                        you want
-                                        to match the font styling of a heading but cannot use the associated HTML
-                                        element.</p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Link color -->
+                        <div class="box box-solid box-shadow box-header pd0 mt-20">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-solid fa-droplet mr-5"></i> Link color
+                                </h3>
+                                <div class="pull-right d-none">
+                                    <div class="btn-group">
+                                        <a class="btn btn-outline-primary" href="">
+                                            <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                        </a>
+                                        <a class="btn btn-outline-success" href="">
+                                            <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body pd-20">
+                                <div class="box-content w-100">
+                                    <div class="bd-example">
+                                        <p class="text-primary">.text-primary</p>
+                                        <p class="text-secondary">.text-secondary</p>
+                                        <p class="text-success">.text-success</p>
+                                        <p class="text-danger">.text-danger</p>
+                                        <p class="text-warning">.text-warning</p>
+                                        <p class="text-info">.text-info</p>
+                                        <p class="text-light bg-dark">.text-light</p>
+                                        <p class="text-dark">.text-dark</p>
+                                        <p class="text-muted">.text-muted</p>
+                                        <p class="text-white bg-dark">.text-white</p>
+                                    </div>
+
+                                    <div class="highlight">
+                                        <pre><code class="language-html" data-lang="html"><span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-primary"</span><span class="nt">&gt;</span>.text-primary<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-secondary"</span><span class="nt">&gt;</span>.text-secondary<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-success"</span><span class="nt">&gt;</span>.text-success<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-danger"</span><span class="nt">&gt;</span>.text-danger<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-warning"</span><span class="nt">&gt;</span>.text-warning<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-info"</span><span class="nt">&gt;</span>.text-info<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-light bg-dark"</span><span class="nt">&gt;</span>.text-light<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-dark"</span><span class="nt">&gt;</span>.text-dark<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-muted"</span><span class="nt">&gt;</span>.text-muted<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;p</span> <span class="na">class=</span><span class="s">"text-white bg-dark"</span><span class="nt">&gt;</span>.text-white<span class="nt">&lt;/p&gt;</span></code></pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Background color -->
+                        <div class="box box-solid box-shadow box-header pd0  mt-20">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-solid fa-paint-roller mr-5"></i>Background color
+                                </h3>
+                                <div class="pull-right d-none">
+                                    <div class="btn-group">
+                                        <a class="btn btn-outline-primary" href="">
+                                            <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                        </a>
+                                        <a class="btn btn-outline-success" href="">
+                                            <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body pd-20">
+                                <div class="box-content w-100">
+                                    <div class="bd-example w-100">
+                                        <div class="p-3 mb-2 bg-primary text-white">.bg-primary</div>
+                                        <div class="p-3 mb-2 bg-secondary text-white">.bg-secondary</div>
+                                        <div class="p-3 mb-2 bg-success text-white">.bg-success</div>
+                                        <div class="p-3 mb-2 bg-danger text-white">.bg-danger</div>
+                                        <div class="p-3 mb-2 bg-warning text-dark">.bg-warning</div>
+                                        <div class="p-3 mb-2 bg-info text-white">.bg-info</div>
+                                        <div class="p-3 mb-2 bg-light text-dark">.bg-light</div>
+                                        <div class="p-3 mb-2 bg-dark text-white">.bg-dark</div>
+                                        <div class="p-3 mb-2 bg-white text-dark">.bg-white</div>
+                                    </div>
+
+                                    <div class="highlight">
+                                        <pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-primary text-white"</span><span class="nt">&gt;</span>.bg-primary<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-secondary text-white"</span><span class="nt">&gt;</span>.bg-secondary<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-success text-white"</span><span class="nt">&gt;</span>.bg-success<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-danger text-white"</span><span class="nt">&gt;</span>.bg-danger<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-warning text-dark"</span><span class="nt">&gt;</span>.bg-warning<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-info text-white"</span><span class="nt">&gt;</span>.bg-info<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-light text-dark"</span><span class="nt">&gt;</span>.bg-light<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-dark text-white"</span><span class="nt">&gt;</span>.bg-dark<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-white text-dark"</span><span class="nt">&gt;</span>.bg-white<span class="nt">&lt;/div&gt;</span></code></pre>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Background gradient -->
+                        <div class="box box-solid box-shadow box-header pd0 mt-20">
+                            <div class="box-header with-border">
+                                <h3 class="box-title color-blue">
+                                    <i class="fa-duotone fa-solid fa-paint-roller mr-5"></i>Background gradient
+                                </h3>
+                                <div class="pull-right d-none">
+                                    <div class="btn-group">
+                                        <a class="btn btn-outline-primary" href="">
+                                            <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
+                                        </a>
+                                        <a class="btn btn-outline-success" href="">
+                                            <i class="fa-solid fa-file-excel"></i><span>Export</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box-body pd-20">
+                                <div class="box-content w-100">
+                                    <div class="bd-example">
+                                        <div class="p-3 mb-2 bg-gradient-primary text-white">.bg-gradient-primary</div>
+                                        <div class="p-3 mb-2 bg-gradient-secondary text-white">.bg-gradient-secondary
+                                        </div>
+                                        <div class="p-3 mb-2 bg-gradient-success text-white">.bg-gradient-success</div>
+                                        <div class="p-3 mb-2 bg-gradient-danger text-white">.bg-gradient-danger</div>
+                                        <div class="p-3 mb-2 bg-gradient-warning text-dark">.bg-gradient-warning</div>
+                                        <div class="p-3 mb-2 bg-gradient-info text-white">.bg-gradient-info</div>
+                                        <div class="p-3 mb-2 bg-gradient-light text-dark">.bg-gradient-light</div>
+                                        <div class="p-3 mb-2 bg-gradient-dark text-white">.bg-gradient-dark</div>
+                                    </div>
+
+                                    <div class="highlight">
+                                        <pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-primary text-white"</span><span class="nt">&gt;</span>.bg-gradient-primary<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-secondary text-white"</span><span class="nt">&gt;</span>.bg-gradient-secondary<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-success text-white"</span><span class="nt">&gt;</span>.bg-gradient-success<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-danger text-white"</span><span class="nt">&gt;</span>.bg-gradient-danger<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-warning text-dark"</span><span class="nt">&gt;</span>.bg-gradient-warning<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-info text-white"</span><span class="nt">&gt;</span>.bg-gradient-info<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-light text-dark"</span><span class="nt">&gt;</span>.bg-gradient-light<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"p-3 mb-2 bg-gradient-dark text-white"</span><span class="nt">&gt;</span>.bg-gradient-dark<span class="nt">&lt;/div&gt;</span></code></pre>
+                                    </div>
                                 </div>
 
                             </div>
