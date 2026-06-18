@@ -3720,7 +3720,8 @@ input:active,
   line-height: 38px !important;
 }
 
-.table .btn.btn-search:hover i {
+.table .btn.btn-search:hover i,
+.btn-info {
   color: #fff !important;
 }
 
@@ -4053,6 +4054,10 @@ input:active,
 .info-tblNguoiDung_NDVT {
   line-height: 38px;
   color: #666;
+}
+
+.btn-danger {
+  color: #fff !important;
 }
 
 .btn-danger:hover {
