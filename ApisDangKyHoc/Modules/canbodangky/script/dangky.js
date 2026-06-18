@@ -777,6 +777,7 @@ DangKy.prototype = {
         if (me.bSinhVien || me.arrSinhVien_Id.length == 0) {
             edu.system.makeRequest({
                 success: function (data) {
+                    console.log("DangKyHocTrucTiep response:", data);
                     if (data.Success) {
                         if (edu.util.checkValue(data.Id)) {
                             edu.system.alert("Đăng ký thành công!");
@@ -784,7 +785,7 @@ DangKy.prototype = {
                             me.getList_HocPhan();
                             //me.getList_TinhTrangTaiChinh();
                         } else {
-
+                            edu.system.alert(data.Message || "Đăng ký không thành công (không rõ lý do)", "w");
                         }
                     }
                     else {
@@ -823,6 +824,7 @@ DangKy.prototype = {
                 console.log(obj_Clone);
                 edu.system.makeRequest({
                     success: function (data) {
+                        console.log("DangKyHocTrucTiep (bulk) response:", { sv: e, data: data });
                         var strMessage = "";
                         if (data.Success) {
                             if (edu.util.checkValue(data.Id)) {
@@ -830,6 +832,8 @@ DangKy.prototype = {
                                 strMessage = "Đăng ký thành công!";
 
                                 //me.getList_TinhTrangTaiChinh();
+                            } else {
+                                strMessage = data.Message || "Đăng ký không thành công (không rõ lý do)";
                             }
                         }
                         else {
