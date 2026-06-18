@@ -155,9 +155,10 @@ NhapDiem.prototype = {
                 }
             });
         });
-        $(".btnTinhDiem").click(function () {
+        $(".btnTinhDiem").off('click').click(function (e) {
+            e.preventDefault();
             edu.system.confirm("Bạn có chắc chắn muốn tính lại điểm không?");
-            $("#btnYes").click(function (e) {
+            $("#btnYes").off('click').click(function (e) {
                 $("#myModalAlert #alert_content").html("Hệ thống đang kiểm tra tính xác thực dữ liệu. Vui lòng đợi! <br/> <div id='alertprogessbar'></div>");
                 $("#btnYes").hide();
                 var strTable_Id = "tblNhapDiem";
