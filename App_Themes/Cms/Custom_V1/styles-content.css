@@ -308,31 +308,6 @@
     gap: 10px;
 }
 
-.box-tools .btn {
-    margin-left: 8px !important;
-}
-
-.box-header {
-    /*  Br add  */
-    display: flex;
-    flex-wrap: wrap;
-    /*gap: 10px;*/
-}
-
-.box-header .box-title {
-    float: left;
-    /* margin-top: 8px; */
-    display: block;
-
-}
-
-.box-header .pull-right {
-    margin-left: auto;
-}
-
-.content-header {
-    margin-top: 10px !important;
-}
 
 /*----- content-wrapper kanban ----- */
 .content-wrapper.kanban {
@@ -427,10 +402,6 @@
     padding: 0px !important;
 }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> df7b5d206fe5b16bf8f9278fad6e38c7de049a8f
 .form-container .box-header.with-border {
     height: 52px !important;
     line-height: 52px !important;
@@ -5145,7 +5116,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-tinhtrang-hocphi .box-header.with-border,
-. .form-ThongTinTachKhoan.form-container-header {
+.form-ThongTinTachKhoan.form-container-header {
     height: 68px !important;
     line-height: 68px !important;
 }
@@ -6056,8 +6027,10 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-left: 0px;
 }
 
-.aps-table-list-btn .btn {
-    /*margin-top: 5px !important;*/
+.aps-table-list-btn .btn,
+.aps-table-list-btn .dropdown.ml-10 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .float-right {
@@ -7579,20 +7552,7 @@ input#tblInput_DTSV_SinhVien_input {
     width: 100% !important;
 }
 
-.box-header.with-border {
-    overflow: hidden !important;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    min-height: 52px;
-}
 
-.box-header.with-border .box-title {
-    margin-top: 0 !important;
-}
-
-.box-header.bg-blue .box-title i {
-    color: #fff;
-}
 
 .zonePrint_Select input[type=checkbox],
 .zonePrint_Select input[type=radio] {
@@ -10481,7 +10441,7 @@ table#clone {
 .titleSearchContent .lang,
 .titleSearchContent i {
     font-size: 18px !important;
-    color: var(--color-blue) !important;
+    color: var(--color-blue);
     font-weight: 700;
 }
 
@@ -15330,4 +15290,8 @@ table#clone {
 .btn-list-bootstrap .btn {
     margin-bottom: 10px;
     margin-right: 5px;
+}
+
+.color-bootstrap .p-3 {
+    padding: 10px;
 }

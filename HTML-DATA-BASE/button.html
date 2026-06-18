@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="main-menu">
-                <ul class="list-unstyled d-none">
+                <ul class="list-unstyled">
                     <li class="item">
                         <a class="menu-link" href="../index.html">
                             <i class="fal fa-home"></i>
@@ -43,24 +43,11 @@
                     </li>
                     <li class="item">
                         <a class="menu-link" href="../dashboard.html">
-                            <span>Dashboard</span>
+                            <i class="fa-solid fa-bars-sort mr-5"></i>
+                            <span>Danh mục</span>
                         </a>
                     </li>
-                    <li class="item">
-                        <a class="menu-link" href="../modul.html">
-                            <span>Modul</span>
-                        </a>
-                    </li>
-                    <li class="item">
-                        <a class="menu-link" href="../chucnang-cuaban.html">
-                            <span>Chức năng của bạn</span>
-                        </a>
-                    </li>
-                    <li class="item">
-                        <a class="menu-link" href="../tintuc.html">
-                            <span>Tin tức</span>
-                        </a>
-                    </li>
+
                 </ul>
                 <div class="menu-toggle">
                     <i class="fal fa-bars"></i>
@@ -327,7 +314,7 @@
                         <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#collapse4"
                             href="javascrip:void(0)">
                             <i class="fa-light fa-users-gear item-icon"></i>
-                            <span>Buttons</span>
+                            <span>Buttons bootstrap</span>
                             <i class="fal fa-chevron-right item-arrow-icon"></i>
                             <i class="fal fa-chevron-down item-arrow-icon down"></i>
                         </a>
@@ -382,20 +369,12 @@
                             <h3 class="box-title color-blue">
                                 Buttons
                             </h3>
-                            <div class="pull-right d-none">
-                                <div class="btn-group">
-                                    <a class="btn btn-outline-primary" href="">
-                                        <i class="fa-solid fa-bell"></i><span>Gửi thông báo</span>
-                                    </a>
-                                    <a class="btn btn-outline-success" href="">
-                                        <i class="fa-solid fa-file-excel"></i><span>Export</span>
-                                    </a>
-                                </div>
-                            </div>
+
                         </div>
                         <div class="box-body column-1 color-888">
                             <div class="box-content pd-20">
-                                <div class="pull-left">
+
+                                <div class="pull-left btn-list w-100">
                                     <a id="btnAdd_KeHoach" class="btn btnAdd btn-primary" href="#"><i
                                             class="fa fa-plus"></i> Thêm mới</a>
                                     <a class="btn btn-primary" href="#" id="btnTinhKhoiLuong">
@@ -429,54 +408,196 @@
                                             style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:1px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
                                     </a>
                                 </div>
+                                <div class="pull-left btn-list mt-15 w-100">
+                                    <a id="btnRefresh_DMDL" class="btn btn-warning">
+                                        <i class="fa fa-refresh"></i><span class="lang" key="">Tải lại</span></a>
+                                    <a id="btnDelete_DMDL" class="btn btn-danger">
+                                        <i class="fa fa-trash"></i><span class="lang" key="">Xóa</span></a>
+                                    <a id="btnAddnew_DMDL" class="btn btn-primary btnAdd">
+                                        <i class="fa fa-plus-circle"></i><span class="lang" key="">Tạo mới</span></a>
+                                </div>
+                                <div class="pull-left btn-list mt-15 w-100">
+                                    <div class="aps-table-list-btn ">
+                                        <a class="btn btn-primary ml-10 float-right mt-10" id="btnTongHopKetQua"><i
+                                                class="fa fa-calculator"></i> Tính điểm</a>
+                                        <a class="btn btn-default float-right ml-10 mt-10" id="btnXemDanhSach"><i
+                                                class="fa-light fa-address-book"></i> Xem danh sách</a>
+                                        <div class="dropdown ml-10 mt-10" style="float: right" id="zonebtnBaoCao_THKQ">
+                                            <button class="btn btn-success dropdown-toggle" type="button"
+                                                data-toggle="dropdown">
+                                                <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span
+                                                    class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu form-container" style="width: unset !important"
+                                                id="zonebtnBaoCao">
+                                                <li><a class="btnBaoCao_THKQ" name="TongHopKetQua" href="#"> 1. Tổng hợp
+                                                        kết
+                                                        quả</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                     </div>
 
-                    <!--Tiêu đề mục -->
-                    <h4 class="pl-0">Tiêu đề mục</h4>
+                    <!--Outline buttons -->
                     <div class="box box-solid box-shadow pd0">
+                        <div class="box-header with-border">
+                            <h3 class="box-title color-blue">
+                                Buttons
+                            </h3>
+                        </div>
                         <div class="box-body pd-20 column-1">
-                            <div class="box-content pd-20 box box-solid" style="display: grid !important;">
-                                <!-- box-header -->
-                                <div class="box-header pd0">
-                                    <h3 class="box-title color-blue line-38" title="Danh sách">
-                                        <i class="fa-light fa-list-timeline line-38"></i> Danh sách
-                                    </h3>
-                                    <span class="badge bg-light-blue mt-10">
-                                        <span id="lblHienThi_Tong">0</span>
-                                    </span>
-                                    <div class="pull-right" style="padding-bottom: 3px"></div>
-                                </div>
-                                <div class="line mt-20"></div>
-                                <br>
-                                <!-- Header box -->
-                                <div class="box-header pd0 w-100">
-                                    <h3 class="box-title color-blue line-20 mt-10">
-                                        <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký
-                                        <span class="pull-right badge bg-light-blue ml-10">
-                                            <span id="lblKHDK"></span>
-                                        </span>
-                                    </h3>
-                                    <div class="box-tools pull-right">
-                                        <a id="btnAddnew" class="btn btn-success"><i class="fa fa-plus"></i>Thêm mới</a>
-                                    </div>
-                                </div>
-                                <div class="line mt-20"></div>
-                                <br>
-                                <h4 class="box-title-small fz16 color-blue">
-                                    <b><i class="fa-duotone fa-solid fa-user-graduate mr-5"></i>Thông tin sinh
-                                        viên</b>
-                                </h4>
-                                <div class="line mt-20"></div>
-                                <br>
-                                <h4 class="box-title-small fz16 color-red">
-                                    <b><i class="fa-duotone fa-solid fa-users mr-5"></i>
-                                        Hóa đơn thanh toán với cơ quan</b>
-                                    <span class="color-888 pl-10">(Yêu cầu điền chính xác các thông tin sau)</span>
-                                </h4>
+                            <div class="box-content">
+                                <table data-start="94" data-end="520"
+                                    class="table table-hover table-bordered table-noborder">
+                                    <thead data-start="94" data-end="122">
+                                        <tr data-start="94" data-end="122">
+                                            <th data-start="94" data-end="106" data-col-size="sm" class="last:pe-10">
+                                                Chức năng</th>
+                                            <th data-start="106" data-end="112" data-col-size="sm" class="last:pe-10">
+                                                Màu</th>
+                                            <th data-start="112" data-end="122" data-col-size="sm" class="last:pe-10">Mã
+                                                Hex</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-start="155" data-end="520">
+                                        <tr data-start="155" data-end="204">
+                                            <td data-start="155" data-end="178" data-col-size="sm">Thành công (Success)
+                                            </td>
+                                            <td data-col-size="sm" data-start="178" data-end="191">🟢 Xanh lá</td>
+                                            <td data-col-size="sm" data-start="191" data-end="204"><code
+                                                    data-start="193" data-end="202">#28A745</code></td>
+                                        </tr>
+                                        <tr data-start="205" data-end="249">
+                                            <td data-start="205" data-end="226" data-col-size="sm">Cảnh báo (Warning)
+                                            </td>
+                                            <td data-col-size="sm" data-start="226" data-end="236">🟡 Vàng</td>
+                                            <td data-col-size="sm" data-start="236" data-end="249"><code
+                                                    data-start="238" data-end="247">#FFC107</code></td>
+                                        </tr>
+                                        <tr data-start="250" data-end="296">
+                                            <td data-start="250" data-end="275" data-col-size="sm">Nguy hiểm/Xóa
+                                                (Danger)</td>
+                                            <td data-col-size="sm" data-start="275" data-end="283">🔴 Đỏ</td>
+                                            <td data-col-size="sm" data-start="283" data-end="296"><code
+                                                    data-start="285" data-end="294">#DC3545</code></td>
+                                        </tr>
+                                        <tr data-start="297" data-end="350">
+                                            <td data-start="297" data-end="316" data-col-size="sm">Thông tin (Info)</td>
+                                            <td data-col-size="sm" data-start="316" data-end="337">🔵 Xanh dương nhạt
+                                            </td>
+                                            <td data-col-size="sm" data-start="337" data-end="350"><code
+                                                    data-start="339" data-end="348">#17A2B8</code></td>
+                                        </tr>
+                                        <tr data-start="351" data-end="398">
+                                            <td data-start="351" data-end="369" data-col-size="sm">Chính (Primary)</td>
+                                            <td data-col-size="sm" data-start="369" data-end="385">🔷 Xanh dương</td>
+                                            <td data-col-size="sm" data-start="385" data-end="398"><code
+                                                    data-start="387" data-end="396">#0D6EFD</code></td>
+                                        </tr>
+                                        <tr data-start="399" data-end="438">
+                                            <td data-start="399" data-end="417" data-col-size="sm">Phụ (Secondary)</td>
+                                            <td data-col-size="sm" data-start="417" data-end="425">⚫ Xám</td>
+                                            <td data-col-size="sm" data-start="425" data-end="438"><code
+                                                    data-start="427" data-end="436">#6C757D</code></td>
+                                        </tr>
+                                        <tr data-start="439" data-end="477">
+                                            <td data-start="439" data-end="452" data-col-size="sm">Tối (Dark)</td>
+                                            <td data-col-size="sm" data-start="452" data-end="464">⚫ Đen xám</td>
+                                            <td data-col-size="sm" data-start="464" data-end="477"><code
+                                                    data-start="466" data-end="475">#212529</code></td>
+                                        </tr>
+                                        <tr data-start="478" data-end="520">
+                                            <td data-start="478" data-end="493" data-col-size="sm">Sáng (Light)</td>
+                                            <td data-col-size="sm" data-start="493" data-end="507">⚪ Trắng xám</td>
+                                            <td data-col-size="sm" data-start="507" data-end="520"><code
+                                                    data-start="509" data-end="518">#F8F9FA</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
+                    </div>
+                    <!--Tiêu đề mục -->
+                    <div class="box box-solid box-shadow pd0 mt-20">
+                        <div class="box-header with-border">
+                            <h3 class="box-title color-blue">
+                                Buttons
+                            </h3>
+                        </div>
+                        <div class="box-body pd-20 column-1">
+                            <div class="box-content">
+                                <table data-start="94" data-end="520"
+                                    class="table table-hover table-bordered table-noborder">
+                                    <thead data-start="94" data-end="122">
+                                        <tr data-start="94" data-end="122">
+                                            <th data-start="94" data-end="106" data-col-size="sm" class="last:pe-10">
+                                                Chức năng</th>
+                                            <th data-start="106" data-end="112" data-col-size="sm" class="last:pe-10">
+                                                Màu</th>
+                                            <th data-start="112" data-end="122" data-col-size="sm" class="last:pe-10">Mã
+                                                Hex</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-start="155" data-end="520">
+                                        <tr data-start="155" data-end="204">
+                                            <td data-start="155" data-end="178" data-col-size="sm">Thành công (Success)
+                                            </td>
+                                            <td data-col-size="sm" data-start="178" data-end="191">🟢 Xanh lá</td>
+                                            <td data-col-size="sm" data-start="191" data-end="204"><code
+                                                    data-start="193" data-end="202">#28A745</code></td>
+                                        </tr>
+                                        <tr data-start="205" data-end="249">
+                                            <td data-start="205" data-end="226" data-col-size="sm">Cảnh báo (Warning)
+                                            </td>
+                                            <td data-col-size="sm" data-start="226" data-end="236">🟡 Vàng</td>
+                                            <td data-col-size="sm" data-start="236" data-end="249"><code
+                                                    data-start="238" data-end="247">#FFC107</code></td>
+                                        </tr>
+                                        <tr data-start="250" data-end="296">
+                                            <td data-start="250" data-end="275" data-col-size="sm">Nguy hiểm/Xóa
+                                                (Danger)</td>
+                                            <td data-col-size="sm" data-start="275" data-end="283">🔴 Đỏ</td>
+                                            <td data-col-size="sm" data-start="283" data-end="296"><code
+                                                    data-start="285" data-end="294">#DC3545</code></td>
+                                        </tr>
+                                        <tr data-start="297" data-end="350">
+                                            <td data-start="297" data-end="316" data-col-size="sm">Thông tin (Info)</td>
+                                            <td data-col-size="sm" data-start="316" data-end="337">🔵 Xanh dương nhạt
+                                            </td>
+                                            <td data-col-size="sm" data-start="337" data-end="350"><code
+                                                    data-start="339" data-end="348">#17A2B8</code></td>
+                                        </tr>
+                                        <tr data-start="351" data-end="398">
+                                            <td data-start="351" data-end="369" data-col-size="sm">Chính (Primary)</td>
+                                            <td data-col-size="sm" data-start="369" data-end="385">🔷 Xanh dương</td>
+                                            <td data-col-size="sm" data-start="385" data-end="398"><code
+                                                    data-start="387" data-end="396">#0D6EFD</code></td>
+                                        </tr>
+                                        <tr data-start="399" data-end="438">
+                                            <td data-start="399" data-end="417" data-col-size="sm">Phụ (Secondary)</td>
+                                            <td data-col-size="sm" data-start="417" data-end="425">⚫ Xám</td>
+                                            <td data-col-size="sm" data-start="425" data-end="438"><code
+                                                    data-start="427" data-end="436">#6C757D</code></td>
+                                        </tr>
+                                        <tr data-start="439" data-end="477">
+                                            <td data-start="439" data-end="452" data-col-size="sm">Tối (Dark)</td>
+                                            <td data-col-size="sm" data-start="452" data-end="464">⚫ Đen xám</td>
+                                            <td data-col-size="sm" data-start="464" data-end="477"><code
+                                                    data-start="466" data-end="475">#212529</code></td>
+                                        </tr>
+                                        <tr data-start="478" data-end="520">
+                                            <td data-start="478" data-end="493" data-col-size="sm">Sáng (Light)</td>
+                                            <td data-col-size="sm" data-start="493" data-end="507">⚪ Trắng xám</td>
+                                            <td data-col-size="sm" data-start="507" data-end="520"><code
+                                                    data-start="509" data-end="518">#F8F9FA</code></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 
@@ -485,6 +606,8 @@
                 </div>
                 <div class="col-5">
                     <div class="box-content pt-0 pb-20 pr-10">
+                        <!-- Header box -->
+                        <h3 class="pl-0">Buttons của Bootrap</h3>
                         <!-- Bộ lọc sinh viên (toàn trường) -->
                         <div class="box box-solid box-shadow box-header pd0">
                             <div class="box-header with-border">
