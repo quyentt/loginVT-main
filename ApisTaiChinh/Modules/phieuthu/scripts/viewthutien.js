@@ -764,18 +764,26 @@ ViewPhieuThu.prototype = {
     getList_HSSV: function () {
         var me = this;
         var obj_list = {
-            'action': 'TC_NguoiHoc_HoSo/LayDanhSach',
-            'versionAPI': 'v1.0',
+            'action': 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.util.getValById('txtTuKhoa_Search').trim(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || '',
+            'strHanhDong_Code': '',
+            'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_PT'),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_PT'),
+            'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_PT'),
+            'strDaoTao_KhoaQuanLy_Id': '',
+            'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_Lop_PT'),
+            'strStudyStatus_Ids': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HDBL').toString(),
+            'dIsPrimary': null,
+            'dChiHienHanh': 0,
+            'dBoQuaPhamVi': 0,
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
-            'strLopHoc_Id': edu.util.getValById('dropSearch_Lop_PT'),
-            'strChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_PT'),
-            'strKhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_PT'),
-            'strHeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_PT'),
-            'strTuKhoa': edu.util.getValById('txtTuKhoa_Search').trim(),
-            'strTrangThaiNguoiHoc_Id': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HDBL').toString(),
-            'strQLSV_NguoiHoc_Id': "",
-        }
+        };
 
         edu.system.beginLoading();
         edu.system.makeRequest({
@@ -796,9 +804,8 @@ ViewPhieuThu.prototype = {
                 edu.system.endLoading();
             },
             error: function (er) { edu.system.endLoading(); },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
-            versionAPI: obj_list.versionAPI,
             contentType: true,
             data: obj_list,
             fakedb: [
