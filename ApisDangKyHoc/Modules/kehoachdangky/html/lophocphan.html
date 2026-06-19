@@ -311,6 +311,9 @@
                             <i class="fa-solid fa-users-gear"></i>Thiết đặt lớp không tín phí</a>
                         <a class="btn btn-outline-secondary" id="btnThietLapKhongToChucThi" href="#">
                             <i class="fa-light fa-screen-users"></i>Thiết đặt lớp không tổ chức thi</a>
+                        <a id="btnHuyPhiTinChi" class="btn"
+                           style="color: #fff; background-color: #dc3545; border-color: #c82333;">
+                            <i class="fa-solid fa-ban"></i>Hủy phí tín chỉ</a>
                     </div>
                 </div>
 
@@ -874,6 +877,45 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
                     <span class="lang" key="">Đóng</span></button>
                 <!--<a id="btnDelete_PhamVi" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal: Hủy phí tín chỉ -->
+<div class="modal fade myModalHuyPhiTinChi" id="myModalHuyPhiTinChi" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title"><span class="myModalLabel1">
+                    <i class="fa-solid fa-ban"></i>Hủy phí tín chỉ</span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <table id="tblHuyPhiTinChi"
+                       class="table table-hover table-bordered table-noborder tblHuyPhiTinChi">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed td-center">Stt</th>
+                            <th class="td-left">Mã lớp</th>
+                            <th class="td-left">Tên lớp</th>
+                            <th class="td-left">Loại lớp</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
+                </button>
+                <a id="btnThucHien_HuyPhiTinChi" class="btn"
+                   style="color: #fff; background-color: #dc3545; border-color: #c82333;">
+                    <i class="fa-solid fa-ban"></i> Hủy phí</a>
             </div>
         </div>
     </div>

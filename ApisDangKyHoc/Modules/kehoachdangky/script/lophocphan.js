@@ -329,6 +329,40 @@ LopHocPhan.prototype = {
             });
         });
 
+        $("#btnHuyPhiTinChi").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn lớp học phần?");
+                return;
+            }
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return (me.dtLopHocPhan || []).find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r; });
+            if (arrSelected.length === 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            me["dtHuyPhiTinChi"] = arrSelected;
+            me.genTable_HuyPhiTinChi(arrSelected);
+            $('#myModalHuyPhiTinChi').modal('show');
+        });
+
+        $("#btnThucHien_HuyPhiTinChi").click(function (e) {
+            var arrLop = me.dtHuyPhiTinChi || [];
+            if (arrLop.length == 0) {
+                edu.system.alert("Không có lớp nào để hủy phí?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn hủy phí tín chỉ cho " + arrLop.length + " lớp đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrLop.length);
+                arrLop.forEach(function (rec) {
+                    me.huyPhiTinChiTheoLop(rec.ID);
+                });
+            });
+        });
+
         $("#btnSave_CheDoTinhPhi").click(function (e) {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblQuanSoLop", "checkX");
             if (arrChecked_Id.length == 0) {
@@ -2479,7 +2513,61 @@ LopHocPhan.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
+    genTable_HuyPhiTinChi: function (data) {
+        var jsonForm = {
+            strTable_Id: "tblHuyPhiTinChi",
+            aaData: data,
+            colPos: {
+                center: [0],
+            },
+            aoColumns: [
+                { "mDataProp": "MALOP" },
+                { "mDataProp": "TENLOP" },
+                { "mDataProp": "LOAILOP" }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    huyPhiTinChiTheoLop: function (strDaoTao_LopHocPhan_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/FSk0IgkoJC8JNDgRKSgVKC8CKSgVKSQuDS4x',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.ThucHienHuyPhiTinChiTheoLop',
+            'iM': edu.system.iM,
+            'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': '',
+            'strChucNangHeThong_Id': '',
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    $('#myModalHuyPhiTinChi').modal('hide');
+                    me.getList_LopHocPhan();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
     save_DonLopNhom: function (strId, strNguonDuLieu_Id) {
         var me = this;
         var aData = me.dtSinhVien.find(e => e.ID == strId)
