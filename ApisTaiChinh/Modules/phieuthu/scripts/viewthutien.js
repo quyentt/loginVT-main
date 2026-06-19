@@ -778,7 +778,7 @@ ViewPhieuThu.prototype = {
             'strDaoTao_KhoaQuanLy_Id': '',
             'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_Lop_PT'),
             'strStudyStatus_Ids': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HDBL').toString(),
-            'dIsPrimary': null,
+            'dIsPrimary': '',
             'dChiHienHanh': 0,
             'dBoQuaPhamVi': 0,
             'pageIndex': edu.system.pageIndex_default,
