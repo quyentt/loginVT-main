@@ -298,6 +298,9 @@
                         </span>
                     </h3>
                     <div class="box-tools pull-right right-0">
+                        <a id="btnThuocTinhKLGD" class="btn"
+                           style="color: #fff; background-color: #6f42c1; border-color: #5a32a3;">
+                            <i class="fa-solid fa-scale-balanced"></i>Thuộc tính phục vụ tính khối lượng</a>
                         <a id="btnThucHienRutHocPhan" class="btn btn-warning" style="color: #fff; background-color: #f39c12; border-color: #e08e0b;">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>Thực hiện rút học phần</a>
                         <a id="btnTaoDSNhapDiem" class="btn btn-outline-danger">
@@ -357,6 +360,7 @@
                                     <th class="td-left">Lớp riêng</th>
                                     <th class="td-left">Tính phí</th>
                                     <th class="td-left">Tổ chức thi</th>
+                                    <th class="td-left">Thuộc tính KLGD</th>
                                     <th class="td-left">Dồn lớp</th>
                                     <th class="td-left">Dồn nhóm lớp</th>
                                     <th class="td-center td-fixed">
@@ -870,6 +874,56 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
                     <span class="lang" key="">Đóng</span></button>
                 <!--<a id="btnDelete_PhamVi" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>-->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal: Thuộc tính phục vụ tính khối lượng -->
+<div class="modal fade myModalThuocTinhKLGD" id="myModalThuocTinhKLGD" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title"><span class="myModalLabel1">
+                    <i class="fa-solid fa-scale-balanced"></i>Thuộc tính phục vụ tính khối lượng</span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row">
+                    <div class="col-sm-4 item-search">
+                        <select id="dropPhanLoaiCachTinh" class="select-opt" style="width:100% !important">
+                            <option value="">--Chọn thuộc tính--</option>
+                        </select>
+                    </div>
+                </div>
+                <table id="tblThuocTinhKLGD"
+                       class="table table-hover table-bordered table-noborder tblThuocTinhKLGD">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed td-center">Stt</th>
+                            <th class="td-left">Mã lớp</th>
+                            <th class="td-left">Tên lớp</th>
+                            <th class="td-left">Loại lớp</th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" id="chkSelectAll_ThuocTinhKLGD">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <a id="btnDelete_ThuocTinhKLGD" class="btn btn-danger pull-left">
+                    <i class="fa fa-trash"></i> Xóa</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
+                </button>
+                <a id="btnSave_ThuocTinhKLGD" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Lưu</a>
             </div>
         </div>
     </div>
