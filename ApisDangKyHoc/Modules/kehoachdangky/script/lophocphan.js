@@ -2417,7 +2417,9 @@ LopHocPhan.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                if (!data.Success) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
                     edu.system.alert(obj_save.action + " : " + data.Message, "w");
                 }
             },
@@ -2442,8 +2444,8 @@ LopHocPhan.prototype = {
     delete_ThuocTinhKLGD: function (strDaoTao_LopHocPhan_Id, strPhanLoaiCachTinh_Id) {
         var me = this;
         var obj_save = {
-            'action': 'NS_KLGD_ThongTin_MH/GS4gHgoNBgUeESkgLw0uICgeDS4xCTEP',
-            'func': 'PKG_KLGV_V2_THONGTIN.Xoa_KLGD_PhanLoai_LopHp',
+            'action': 'NS_KLGD_ThongTin_MH/GS4gHgoNBgUeESkgLw0uICgeDS4xCTFw',
+            'func': 'PKG_KLGV_V2_THONGTIN.Xoa_KLGD_PhanLoai_LopHp1',
             'iM': edu.system.iM,
             'strDaoTao_LopHocPhan_Id': strDaoTao_LopHocPhan_Id,
             'strPhanLoaiCachTinh_Id': strPhanLoaiCachTinh_Id,
@@ -2454,7 +2456,9 @@ LopHocPhan.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                if (!data.Success) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
                     edu.system.alert(obj_save.action + " : " + data.Message, "w");
                 }
             },
