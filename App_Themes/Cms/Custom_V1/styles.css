@@ -309,23 +309,36 @@ input::placeholder {
 /* button */
 
 a.btn {
-  /* display: flex; */
   align-items: center;
   justify-content: center;
 }
 
 .btn {
   height: 38px;
-  /* min-width: 146px; */
   border-radius: 5px;
   padding-left: 15px;
   padding-right: 15px;
-  padding: 8px 15px 7.6px 15px !important;
-  font-size: 14px !important;
+  padding: 9px 15px 7.6px 15px !important;
+  font-size: 14px;
 }
 
 .btn i {
   padding-right: 5px;
+}
+.item-modal {
+    position: relative;
+}
+
+.btn-list .btn {
+    margin-bottom: 10px;    
+}
+.pull-left.btn-list .btn {
+    margin-right: 10px;
+    margin-left: 10px !important;
+}
+.pull-right.btn-list .btn {
+    margin-right: 10px;
+    margin-left: 0px !important;
 }
 
 /* -----box-header---------- */
@@ -355,7 +368,7 @@ a.btn {
   color: #222;
   display: block;
   position: relative;
-  padding: 0 !important;
+  padding: 0;
 }
 
 .box-header .box-title {
@@ -386,12 +399,15 @@ a.btn {
   top: 0 !important;
 }
 
+<<<<<<< HEAD
+=======
 .box-header.with-border {
   border-bottom: 1px solid #e1e1e1 !important;
   padding: 15px 20px 12px 20px !important;
   display: flex;
 }
 
+>>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 .box-header .box-title {
   font-size: 18px !important;
   color: var(--color-blue) !important;
@@ -3326,10 +3342,6 @@ input:active,
 }
 
 /*------box-search------------------*/
-
-/*.box-header .box-title {*/
-/*    margin-top: 14px;*/
-/*}*/
 .box-search .box-header .box-title {
   margin-top: 0px;
 }
@@ -3371,6 +3383,7 @@ input:active,
   padding: 0 !important;
   display: flex;
   flex-wrap: wrap;
+  margin-bottom: 0 !important;
 }
 
 .box-search .item-search {
@@ -3448,13 +3461,22 @@ input:active,
 .content .zone-content,
 .box-shadow,
 .zone-bus {
-  background: #fff;
+  /* background: #fff; */
   border-radius: 12px !important;
+<<<<<<< HEAD
+  /*overflow: hidden;*/
+  -webkit-box-shadow: 0 0 15px 10px rgba(130, 122, 122, 0.1);
+  box-shadow: 0 0 15px 10px rgba(130, 122, 122, 0.1);
+  /*-webkit-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
+  /*-moz-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
+  /*box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
+=======
   -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   -webkit-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   -moz-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
+>>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 }
 
 .content .box.box-solid {
@@ -3496,7 +3518,7 @@ input:active,
 .aps-table-select .select2-container--default .select2-selection--single,
 .modal-content .select2-container--default .select2-selection--single {
   border: 1px solid #c1c1c1 !important;
-  border-radius: 3px !important;
+  border-radius: 5px !important;
   padding: 7px 3px !important;
   height: 28px;
 }
@@ -4358,7 +4380,7 @@ button:not(:disabled) {
 }
 
 .btn-outline-danger {
-  --bs-btn-color: #dc3545;
+  --bs-btn-color: #dc3545 !important;
   --bs-btn-border-color: #dc3545;
   --bs-btn-hover-color: #fff;
   --bs-btn-hover-bg: #dc3545;
@@ -4373,16 +4395,19 @@ button:not(:disabled) {
   --bs-btn-disabled-border-color: #dc3545;
   --bs-gradient: none;
   border: 1px solid #dc3545 !important;
-  color: #dc3545;
+  color: #dc3545 !important;
 }
-
+.btn-outline-danger i{
+ color: #dc3545 !important;
+}
 .btn-outline-danger:hover {
   border: 1px solid #dc3545 !important;
   color: #fff !important;
   background-color: #dc3545 !important;
 }
 
-.btn-outline-danger:hover .fa-plus {
+.btn-outline-danger:hover .fa-plus,
+.btn-outline-danger:hover i{
   color: #fff !important;
 }
 
@@ -6860,5 +6885,30 @@ input[type="radio"] {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 20px !important;
+<<<<<<< HEAD
+}
+.column-4 {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+}
+.column-5 {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 20px !important;
+}
+.aps-table-list-btn .btn {
+   margin-left:0 !important ;
+}
+
+.float-right {
+    float: right !important;
+}
+
+.float-left {
+    float: left !important;
+}
+=======
 
 }
+>>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
