@@ -641,22 +641,43 @@ HoaDon.prototype = {
         var me = this;
         //--Edit
         var obj_list = {
-            'action': 'TC_NguoiHoc_HoSo/LayDanhSach',
-            'versionAPI': 'v1.0',
+            'action': 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All',
+            'iM': edu.system.iM,
+            'strTuKhoa': (edu.util.getValById('txtTuKhoa_Search') || '').toString().trim(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || '',
+            'strHanhDong_Code': '',
+            'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_HD'),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_HD'),
+            'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_HD'),
+            'strDaoTao_KhoaQuanLy_Id': '',
+            'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_Lop_HD'),
+            'strStudyStatus_Ids': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HD').toString(),
+            'dIsPrimary': '',
+            'dBoQuaPhamVi': 0,
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
-            'strLopHoc_Id': edu.util.getValById('dropSearch_Lop_HD'),
-            'strChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_HD'),
-            'strKhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_HD'),
-            'strHeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_HD'),
-            'strTuKhoa': edu.util.getValById('txtTuKhoa_Search').trim(),
-            'strTrangThaiNguoiHoc_Id': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HD').toString(),
-            'strQLSV_NguoiHoc_Id': '',
-        }
+        };
+
+        console.log('%c[xuathoadon.getList_DoiTuongThu] >>> REQUEST', 'color:#2196F3;font-weight:bold', obj_list);
+        console.log('[xuathoadon.getList_DoiTuongThu] action:', obj_list.action);
+        console.log('[xuathoadon.getList_DoiTuongThu] func  :', obj_list.func);
+        console.log('[xuathoadon.getList_DoiTuongThu] payload JSON:', JSON.stringify(obj_list, null, 2));
 
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
+                console.log('%c[xuathoadon.getList_DoiTuongThu] <<< RESPONSE', 'color:#4CAF50;font-weight:bold', data);
+                console.log('[xuathoadon.getList_DoiTuongThu] Success :', data && data.Success);
+                console.log('[xuathoadon.getList_DoiTuongThu] Message :', data && data.Message);
+                console.log('[xuathoadon.getList_DoiTuongThu] Pager   :', data && data.Pager);
+                console.log('[xuathoadon.getList_DoiTuongThu] Data.len:', data && data.Data ? data.Data.length : 0);
+                if (data && data.Data && data.Data.length > 0) {
+                    console.log('[xuathoadon.getList_DoiTuongThu] Row[0]  :', data.Data[0]);
+                    console.log('[xuathoadon.getList_DoiTuongThu] Keys[0] :', Object.keys(data.Data[0]));
+                }
                 if (data.Success) {
                     me.dt_HS = data.Data;
                     me.genTable_DoiTuongThu(data.Data, data.Pager);
@@ -667,18 +688,20 @@ HoaDon.prototype = {
                         }
                     }
                 } else {
-                    console.log(data.Message);
+                    console.error('[xuathoadon.getList_DoiTuongThu] FAIL:', data.Message);
                     edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
                 }
                 edu.system.endLoading();
             },
             error: function (er) {
+                console.error('%c[xuathoadon.getList_DoiTuongThu] !!! ERROR', 'color:#F44336;font-weight:bold', er);
+                if (er && er.responseText) console.error('[xuathoadon.getList_DoiTuongThu] responseText:', er.responseText);
+                if (er && er.status) console.error('[xuathoadon.getList_DoiTuongThu] status:', er.status, er.statusText);
                 edu.system.endLoading();
-                edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
+                edu.extend.notifyBeginLoading("Lỗi: " + (er && er.statusText ? er.statusText : 'request error'), "w");
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
-            versionAPI: obj_list.versionAPI,
             contentType: true,
             data: obj_list,
             fakedb: [
