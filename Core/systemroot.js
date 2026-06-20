@@ -6216,6 +6216,15 @@ systemroot.prototype = {
         me.arrMenu_HasChild = [];
 
         $("#menu_vertical").html("");
+
+        node += '<div class="sidebar-menu-item sidebar-menu-home">'
+              + '  <a class="sidebar-menu-header" href="javascript:void(0)" '
+              + '     onclick="$(\'.refeshlogo\').first().trigger(\'click\');return false;">'
+              + '    <i class="fa-light fa-house-window item-icon"></i>'
+              + '    <span>Trang chủ</span>'
+              + '  </a>'
+              + '</div>';
+
         for (var j = 0; j < data.length; j++) {
             if (data[j].CHUCNANGCHA_ID == null || data[j].CHUCNANGCHA_ID == "") {//get parents
                 strDuongDanHienThi = "#" + (data[j].ID + me.appId).toLowerCase();

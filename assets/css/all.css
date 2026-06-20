@@ -42,7 +42,7 @@
   --red: #ff0000;
   --color-danger: #dc3545;
   --color-link: #1a71e8 !important;
-  --color-test:var(--red);
+  --color-test: var(--red);
 }
 
 /*-----------------------*/
@@ -1089,14 +1089,6 @@ a:hover {
   display: flex;
   left: 0;
   top: 0;
-}
-
-.color-66 {
-  color: #666666 !important;
-}
-
-.color-88 {
-  color: #888888 !important;
 }
 
 .text-right-i {

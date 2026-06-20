@@ -764,22 +764,44 @@ ViewPhieuThu.prototype = {
     getList_HSSV: function () {
         var me = this;
         var obj_list = {
-            'action': 'TC_NguoiHoc_HoSo/LayDanhSach',
-            'versionAPI': 'v1.0',
+            'action': 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.util.getValById('txtTuKhoa_Search').trim(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || '',
+            'strHanhDong_Code': '',
+            'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_PT'),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_PT'),
+            'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_PT'),
+            'strDaoTao_KhoaQuanLy_Id': '',
+            'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_Lop_PT'),
+            'strStudyStatus_Ids': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HDBL').toString(),
+            'dIsPrimary': '',
+            'dChiHienHanh': 0,
+            'dBoQuaPhamVi': 0,
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
-            'strLopHoc_Id': edu.util.getValById('dropSearch_Lop_PT'),
-            'strChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_PT'),
-            'strKhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_PT'),
-            'strHeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_PT'),
-            'strTuKhoa': edu.util.getValById('txtTuKhoa_Search').trim(),
-            'strTrangThaiNguoiHoc_Id': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_HDBL').toString(),
-            'strQLSV_NguoiHoc_Id': "",
-        }
+        };
+
+        console.log('%c[getList_HSSV] >>> REQUEST', 'color:#2196F3;font-weight:bold', obj_list);
+        console.log('[getList_HSSV] action:', obj_list.action);
+        console.log('[getList_HSSV] func  :', obj_list.func);
+        console.log('[getList_HSSV] payload JSON:', JSON.stringify(obj_list, null, 2));
 
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
+                console.log('%c[getList_HSSV] <<< RESPONSE', 'color:#4CAF50;font-weight:bold', data);
+                console.log('[getList_HSSV] Success :', data && data.Success);
+                console.log('[getList_HSSV] Message :', data && data.Message);
+                console.log('[getList_HSSV] Pager   :', data && data.Pager);
+                console.log('[getList_HSSV] Data.len:', data && data.Data ? data.Data.length : 0);
+                if (data && data.Data && data.Data.length > 0) {
+                    console.log('[getList_HSSV] Row[0]  :', data.Data[0]);
+                    console.log('[getList_HSSV] Keys[0] :', Object.keys(data.Data[0]));
+                }
                 if (data.Success) {
                     me.dt_HS = data.Data;
                     me.genTable_HSSV(data.Data, data.Pager);
@@ -791,14 +813,18 @@ ViewPhieuThu.prototype = {
                     }
                 }
                 else {
-                    console.log(data.Message);
+                    console.error('[getList_HSSV] FAIL:', data.Message);
                 }
                 edu.system.endLoading();
             },
-            error: function (er) { edu.system.endLoading(); },
-            type: "GET",
+            error: function (er) {
+                console.error('%c[getList_HSSV] !!! ERROR', 'color:#F44336;font-weight:bold', er);
+                if (er && er.responseText) console.error('[getList_HSSV] responseText:', er.responseText);
+                if (er && er.status) console.error('[getList_HSSV] status:', er.status, er.statusText);
+                edu.system.endLoading();
+            },
+            type: "POST",
             action: obj_list.action,
-            versionAPI: obj_list.versionAPI,
             contentType: true,
             data: obj_list,
             fakedb: [

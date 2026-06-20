@@ -1093,15 +1093,17 @@ QuyetDinh.prototype = {
     save_SinhVien: function (strNhanSu_Id, strQLSV_QuyetDinh_Id) {
         var me = this;
         var aData = edu.util.objGetOneDataInData(strNhanSu_Id, me.arrSinhVien, "ID");
+        
         var obj_save = {
-            'action': 'SV_QuyetDinh_NguoiHoc/ThemMoi',
-
-            'strId': "",
-            'strQLSV_NguoiHoc_Id': aData.QLSV_NGUOIHOC_ID, 
+            'action': 'SV_QuyetDinh_MH/FSkkLB4QDRIXHhA0OCQ1BSgvKR4PJjQuKAkuIgPP',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.Them_QLSV_QuyetDinh_NguoiHoc',
+            'iM': edu.system.iM,
+            'strQLSV_NguoiHoc_Id': aData.QLSV_NGUOIHOC_ID,
             'strQLSV_QuyetDinh_Id': strQLSV_QuyetDinh_Id,
             'strDaoTao_LopQuanLy_Id': aData.DAOTAO_LOPQUANLY_ID,
             'strDaoTao_ToChucCT_Id': aData.DAOTAO_TOCHUCCHUONGTRINH_ID,
             'strTrangThaiNguoiHoc_Id': aData.QLSV_TRANGTHAINGUOIHOC_ID,
+            'strTrack_Id': aData.TRACK_ID,
             'strNguoiThucHien_Id': edu.system.userId,
         };
         edu.system.makeRequest({
@@ -1128,8 +1130,9 @@ QuyetDinh.prototype = {
         var me = this;
 
         var obj_delete = {
-            'action': 'SV_QuyetDinh_NguoiHoc/Xoa',
-            
+            'action': 'SV_QuyetDinh_MH/GS4gHhANEhceEDQ4JDUFKC8pHg8mNC4oCS4i',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.Xoa_QLSV_QuyetDinh_NguoiHoc',
+            'iM': edu.system.iM,
             'strIds': strIds,
             'strNguoiThucHien_Id': edu.system.userId
         };

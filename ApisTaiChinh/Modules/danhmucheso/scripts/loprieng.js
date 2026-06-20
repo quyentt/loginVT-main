@@ -10,15 +10,26 @@ function LopRieng() { };
 LopRieng.prototype = {
     strLopRieng_Id: '',
     dtLopRieng: [],
+    arrResults_LopRieng: [],
+    iTotal_LopRieng: 0,
+    iDone_LopRieng: 0,
+    strAction_LopRieng: '',
 
     init: function () {
         var me = this;
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
-        
+
         me.getList_ThoiGian();
         me.getList_KhoanThu();
+
+        // Đếm realtime số bản ghi đã tick
+        $(document).off("change.lpr", "#tblLopRieng input[type=checkbox]")
+            .on("change.lpr", "#tblLopRieng input[type=checkbox]", function () {
+                me.updateSelected_Count();
+            });
+
         $("#btnSave_LopRieng").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblLopRieng", "checkX");
             if (arrChecked_Id.length == 0) {
@@ -30,6 +41,10 @@ LopRieng.prototype = {
                 $('#myModalAlert').modal('hide');
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                me.arrResults_LopRieng = [];
+                me.iTotal_LopRieng = arrChecked_Id.length;
+                me.iDone_LopRieng = 0;
+                me.strAction_LopRieng = "Chốt";
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.save_LopRieng(arrChecked_Id[i]);
                 }
@@ -47,12 +62,16 @@ LopRieng.prototype = {
                 $('#myModalAlert').modal('hide');
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                me.arrResults_LopRieng = [];
+                me.iTotal_LopRieng = arrChecked_Id.length;
+                me.iDone_LopRieng = 0;
+                me.strAction_LopRieng = "Chốt lại";
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.saveLai_LopRieng(arrChecked_Id[i]);
                 }
             });
         });
-        
+
 
         $('#dropSearch_ThoiGian').on('select2:select', function (e) {
             me.getList_KeHoach();
@@ -282,8 +301,7 @@ LopRieng.prototype = {
     -------------------------------------------*/
     save_LopRieng: function (strDangKy_LopHocPhan_Id) {
         var me = this;
-        var obj_notify = {};
-        //--Edit
+        var objRow = me.findRow_LopRieng(strDangKy_LopHocPhan_Id);
         var obj_save = {
             'action': 'TC_LopRieng_MH/FSkkLB4FIC8mCjgeDS4xCS4iESkgLx4CKS41',
             'func': 'pkg_taichinh_loprieng.Them_DangKy_LopHocPhan_Chot',
@@ -291,30 +309,17 @@ LopRieng.prototype = {
             'strDangKy_LopHocPhan_Id': strDangKy_LopHocPhan_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        //if (obj_save.strId) {
-        //    obj_save.action = 'TC_KeToan_MH/EjQgHgARCB4KJBUuIC8eCikuIC8eCRUP';
-        //    obj_save.func = 'pkg_taichinh_ketoan.Sua_API_KeToan_Khoan_HT'
-        //}
-        //default
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-
-                    edu.system.alert("Thực hiện thành công");
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
+                me.collectResult_LopRieng(objRow, !!data.Success, data.Success ? '' : (data.Message || 'Không rõ nguyên nhân'));
             },
             error: function (er) {
-                edu.system.alertOnModal(obj_notify);
+                me.collectResult_LopRieng(objRow, false, 'Lỗi kết nối: ' + ((er && er.statusText) ? er.statusText : JSON.stringify(er)));
             },
             type: "POST",
             action: obj_save.action,
             complete: function () {
-                edu.system.start_Progress("zoneprocessXXXX", function () {
-                    me.getList_LopRieng();
-                });
+                me.onDoneOne_LopRieng();
             },
             contentType: true,
             data: obj_save,
@@ -324,7 +329,7 @@ LopRieng.prototype = {
     },
     saveLai_LopRieng: function (strDangKy_LopHocPhan_Id) {
         var me = this;
-        var obj_notify = {};
+        var objRow = me.findRow_LopRieng(strDangKy_LopHocPhan_Id);
         var obj_save = {
             'action': 'TC_LopRieng_MH/FSkkLB4FIC8mCjgeDS4xCS4iESkgLx4CKS41DSAo',
             'func': 'PKG_TAICHINH_LOPRIENG.Them_DangKy_LopHocPhan_ChotLai',
@@ -334,28 +339,97 @@ LopRieng.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    edu.system.alert("Thực hiện thành công");
-                }
-                else {
-                    edu.system.alert(data.Message);
-                }
+                me.collectResult_LopRieng(objRow, !!data.Success, data.Success ? '' : (data.Message || 'Không rõ nguyên nhân'));
             },
             error: function (er) {
-                edu.system.alertOnModal(obj_notify);
+                me.collectResult_LopRieng(objRow, false, 'Lỗi kết nối: ' + ((er && er.statusText) ? er.statusText : JSON.stringify(er)));
             },
             type: "POST",
             action: obj_save.action,
             complete: function () {
-                edu.system.start_Progress("zoneprocessXXXX", function () {
-                    me.getList_LopRieng();
-                });
+                me.onDoneOne_LopRieng();
             },
             contentType: true,
             data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+    findRow_LopRieng: function (strId) {
+        var me = this;
+        if (!me.dtLopRieng) return null;
+        for (var i = 0; i < me.dtLopRieng.length; i++) {
+            if (me.dtLopRieng[i].ID == strId) return me.dtLopRieng[i];
+        }
+        return null;
+    },
+    collectResult_LopRieng: function (objRow, bSuccess, sMessage) {
+        var me = this;
+        me.arrResults_LopRieng.push({
+            MALOP: objRow ? objRow.MALOP : '',
+            TENLOP: objRow ? objRow.TENLOP : '',
+            HOCPHAN: objRow ? (edu.util.returnEmpty(objRow.DAOTAO_HOCPHAN_TEN) + ' - ' + edu.util.returnEmpty(objRow.DAOTAO_HOCPHAN_MA)) : '',
+            KETQUA: bSuccess,
+            LYDO: sMessage || ''
+        });
+    },
+    onDoneOne_LopRieng: function () {
+        var me = this;
+        me.iDone_LopRieng++;
+        edu.system.start_Progress("zoneprocessXXXX", function () {
+            $('#myModalAlert').modal('hide');
+            setTimeout(function () {
+                me.showResults_LopRieng();
+                me.getList_LopRieng();
+            }, 300);
+        });
+    },
+    showResults_LopRieng: function () {
+        var me = this;
+        var iSuccess = 0, iFail = 0;
+        var sBody = '';
+        for (var i = 0; i < me.arrResults_LopRieng.length; i++) {
+            var item = me.arrResults_LopRieng[i];
+            if (item.KETQUA) iSuccess++; else iFail++;
+            var rowStyle = item.KETQUA ? '' : ' style="background:#fff3f3;"';
+            sBody += '<tr' + rowStyle + '>';
+            sBody += '<td style="text-align:center;">' + (i + 1) + '</td>';
+            sBody += '<td>' + edu.util.returnEmpty(item.MALOP) + '</td>';
+            sBody += '<td>' + edu.util.returnEmpty(item.TENLOP) + '</td>';
+            sBody += '<td>' + edu.util.returnEmpty(item.HOCPHAN) + '</td>';
+            sBody += '<td style="text-align:center;">';
+            sBody += item.KETQUA
+                ? '<span style="background:#28a745;color:#fff;padding:3px 10px;border-radius:3px;font-size:12px;display:inline-block;"><i class="fa fa-check"></i> Thành công</span>'
+                : '<span style="background:#dc3545;color:#fff;padding:3px 10px;border-radius:3px;font-size:12px;display:inline-block;"><i class="fa fa-times"></i> Thất bại</span>';
+            sBody += '</td>';
+            sBody += '<td>' + edu.util.returnEmpty(item.LYDO) + '</td>';
+            sBody += '</tr>';
+        }
+        var iMissing = me.iTotal_LopRieng - me.arrResults_LopRieng.length;
+
+        var sSummary = '';
+        sSummary += '<div style="padding:10px 12px;background:#f9f9f9;border-left:4px solid #3c8dbc;font-size:14px;">';
+        sSummary += '<b>Đã chọn:</b> ' + me.iTotal_LopRieng;
+        sSummary += ' &nbsp;|&nbsp; <span style="color:#28a745;"><b>Thành công:</b> ' + iSuccess + '</span>';
+        sSummary += ' &nbsp;|&nbsp; <span style="color:#dc3545;"><b>Thất bại:</b> ' + iFail + '</span>';
+        if (iMissing > 0) {
+            sSummary += ' &nbsp;|&nbsp; <span style="color:#f39c12;"><b>Chưa phản hồi:</b> ' + iMissing + '</span>';
+        }
+        sSummary += '</div>';
+
+        $("#lblKetQua_LopRieng_Title").html("Kết quả " + me.strAction_LopRieng);
+        $("#zoneKetQua_LopRieng_Summary").html(sSummary);
+        $("#tblKetQua_LopRieng tbody").html(sBody);
+        $("#modalKetQua_LopRieng").modal('show');
+    },
+    updateSelected_Count: function () {
+        var arrChecked_Id = edu.util.getArrCheckedIds("tblLopRieng", "checkX");
+        var $lbl = $("#lblLopRieng_DaChon");
+        if (arrChecked_Id.length > 0) {
+            $lbl.html('<i class="fa fa-check-square-o"></i> Đã chọn: ' + arrChecked_Id.length).show();
+        } else {
+            $lbl.html('').hide();
+        }
     },
     getList_LopRieng: function (strDanhSach_Id) {
         var me = this;
@@ -447,6 +521,7 @@ LopRieng.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
+        me.updateSelected_Count();
     },
 
 

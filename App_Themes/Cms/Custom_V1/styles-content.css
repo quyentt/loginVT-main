@@ -308,31 +308,6 @@
     gap: 10px;
 }
 
-.box-tools .btn {
-    margin-left: 8px !important;
-}
-
-.box-header {
-    /*  Br add  */
-    display: flex;
-    flex-wrap: wrap;
-    /*gap: 10px;*/
-}
-
-.box-header .box-title {
-    float: left;
-    /* margin-top: 8px; */
-    display: block;
-
-}
-
-.box-header .pull-right {
-    margin-left: auto;
-}
-
-.content-header {
-    margin-top: 10px !important;
-}
 
 /*----- content-wrapper kanban ----- */
 .content-wrapper.kanban {
@@ -5143,7 +5118,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-tinhtrang-hocphi .box-header.with-border,
-. .form-ThongTinTachKhoan.form-container-header {
+.form-ThongTinTachKhoan.form-container-header {
     height: 68px !important;
     line-height: 68px !important;
 }
@@ -6058,6 +6033,22 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-left: 0px;
 }
 
+<<<<<<< HEAD
+=======
+.aps-table-list-btn .btn,
+.aps-table-list-btn .dropdown.ml-10 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+.float-right {
+    float: right !important;
+}
+
+.float-left {
+    float: left !important;
+}
+>>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 
 .select2-container .select2-search--inline .select2-search__field {
     margin-top: 13px !important;
@@ -7570,20 +7561,7 @@ input#tblInput_DTSV_SinhVien_input {
     width: 100% !important;
 }
 
-.box-header.with-border {
-    overflow: hidden !important;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-    min-height: 52px;
-}
 
-.box-header.with-border .box-title {
-    margin-top: 0 !important;
-}
-
-.box-header.bg-blue .box-title i {
-    color: #fff;
-}
 
 .zonePrint_Select input[type=checkbox],
 .zonePrint_Select input[type=radio] {
@@ -10459,7 +10437,11 @@ table#clone {
 
 .titleSearchContent .lang,
 .titleSearchContent i {
+<<<<<<< HEAD
     font-size: 18px ;
+=======
+    font-size: 18px !important;
+>>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
     color: var(--color-blue);
     font-weight: 700;
 }
@@ -11519,10 +11501,6 @@ table#clone {
 
 .aps-nhaphoc-thuPhi-content .box-header .box-title {
     font-weight: 700 !important;
-}
-
-.aps-nhaphoc-thuPhi-content .box-header .box-title .fa-light {
-    /* font-weight: 300 !important; */
 }
 
 /*  */
@@ -15214,23 +15192,28 @@ table#clone {
     text-align: center;
     display: flex;
 }
-.find-in-table-box .find-in-table-btn i{
+
+.find-in-table-box .find-in-table-btn i {
     padding-right: 0 !important;
 }
+
 .find-in-table-input {
     border: 1px solid #c1c1c1 !important;
     border-radius: 5px !important;
     font-size: 14px !important;
 }
+
 .zone-bus.aps-add-new.add-absolue .col-sm-12.box-view.aps-add-new {
     padding: 20px;
 }
+
 .zone-bus.aps-add-new.add-absolue .col-sm-6.pr20 {
     padding-left: 20px;
 }
+
 .zone-bus.aps-add-new.add-absolue .row.aps-form.mt-25 .col-sm-6.pl20 {
     padding-right: 20px;
-=======
+    =======
 }
 
 /* ----------- */
@@ -15303,6 +15286,7 @@ table#clone {
 .aps-form-data.label-ngang .item .form-item {
     flex: auto;
 }
+<<<<<<< HEAD
 .aps-kehoach-dangky-mua .box-content.pl20.pr20{
     padding: 0 !important;
 }
@@ -15334,4 +15318,15 @@ table#clone {
 .modal.aps-add-quydoicc .aps-form-item .aps-form-lable label {
     text-align: left !important;
     padding-right: 10px;
+=======
+
+/* ---- */
+.btn-list-bootstrap .btn {
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.color-bootstrap .p-3 {
+    padding: 10px;
+>>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 }

@@ -1381,6 +1381,24 @@ systemextend.prototype = {
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
         };
+        var obj_save = {
+            'action': 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIgPP',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc',
+            'iM': edu.system.iM,
+
+            'strTuKhoa': edu.util.getValById('txtSearchModal_TuKhoa_SV'),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strDaoTao_HeDaoTao_Id': edu.system.getValById('dropSearchModal_He_SV'),
+            'strDaoTao_KhoaDaoTao_Id': edu.system.getValById('dropSearchModal_Khoa_SV'),
+            'strDaoTao_ChuongTrinh_Id': edu.system.getValById('dropSearchModal_ChuongTrinh_SV'),
+            'strDaoTao_KhoaQuanLy_Id': edu.system.getValById('dropSearchModal_KhoaQL_SV'),
+            'strDaoTao_LopQuanLy_Id': edu.system.getValById('dropSearchModal_Lop_SV'),
+            'strStudyStatus_Ids': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV').toString(),
+            'dIsPrimary': edu.system.getValById('txtAAAA'),
+            'dBoQuaPhamVi': edu.system.getValById('txtAAAA'),
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
+        };
 
         edu.system.makeRequest({
             success: function (data) {

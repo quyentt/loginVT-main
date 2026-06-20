@@ -880,7 +880,7 @@
 }
 
 .table tr td:first-child {
-  color: #888 !important;
+  color: #888;
 }
 
 .tblNhapChuyenCan tr td .inputChuyenCan {

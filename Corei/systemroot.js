@@ -6399,6 +6399,14 @@ systemroot.prototype = {
         }
 
         $("#menu_vertical").html("");
+
+        node += '<li class="sidebar-menu-home">'
+              + '  <a href="javascript:void(0)" '
+              + '     onclick="$(\'.refeshlogo\').first().trigger(\'click\');return false;">'
+              + '    <i class="fa-light fa-house-window"></i> <span>Trang chủ</span>'
+              + '  </a>'
+              + '</li>';
+
         for (var j = 0; j < data.length; j++) {
             if (data[j].CHUCNANGCHA_ID == null || data[j].CHUCNANGCHA_ID == "") {//get parents
                 strDuongDanHienThi = data[j].DUONGDANHIENTHI;

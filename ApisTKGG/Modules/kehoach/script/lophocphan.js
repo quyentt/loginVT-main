@@ -990,42 +990,147 @@ LopHocPhan.prototype = {
             }
         }
         var v = edu.util.returnEmpty;
-        var rows = data.map(function (e, i) {
-            return {
-                'STT': i + 1,
-                'Mã học phần': v(e.DAOTAO_HOCPHAN_MA),
-                'Tên học phần': v(e.DAOTAO_HOCPHAN_TEN),
-                'Lớp học phần': v(e.DAOTAO_LOPHOCPHAN_TEN),
-                'Hình thức học': v(e.HINHTHUCHOC_MA),
-                'Giảng viên': v(e.GIANGVIEN),
-                'Phân bổ theo CTDT': v(e.TTPHANBOTHEOCTDT),
-                'Tổng số tiết TKB': v(e.TONGSOTIETTKBMO),
-                'Tổng tiết theo phân GV': v(e.TONGSOTIETGIANG),
-                'Tổng tiết xác nhận': v(e.TONGSOTIETGIANGXACNHAN),
-                'Năm học': v(e.NAMHOC),
-                'Học kỳ': v(e.HOCKY),
-                'Đợt': v(e.DOTHOC),
-                'Buổi bắt đầu': v(e.NGAYBATDAU),
-                'Buổi kết thúc': v(e.NGAYKETTHUC),
-                'Khóa': v(e.DAOTAO_KHOADAOTAO_TEN),
-                'Khoa quản lý chuyên môn': v(e.DAOTAO_KHOAQUANLY_TEN),
-                'Số lượng': v(e.QUYMO),
-                'Số giờ chuẩn': v(e.TONGSOGIOCHUAN),
-                'Khóa dữ liệu': (e.KHOADULIEU == '1' ? 'Khóa' : ''),
-                'Không tính theo TKB': (parseFloat(e.KHONGTINHTHEOTKB) > 0 ? 'Không tính theo TKB' : '')
-            };
-        });
+        var dsPhanLoai = me.dtPhanLoai || [];
+        var iMissingPhanLoai = 0;
 
-        var ws = XLSX.utils.json_to_sheet(rows);
-        var headers = Object.keys(rows[0]);
-        ws['!cols'] = headers.map(function (h) {
-            var maxLen = h.length;
-            rows.forEach(function (r) {
-                var l = String(r[h] || '').length;
+        // ===== Header 2 cấp giống UI: cột tĩnh rowspan=2, "Phân loại theo nhóm lớp" colspan=N =====
+        var staticHeaders = [
+            'STT', 'Mã học phần', 'Tên học phần', 'Lớp học phần', 'Hình thức học',
+            'Giảng viên', 'Phân bổ theo CTDT', 'Tổng số tiết TKB', 'Tổng tiết theo phân GV',
+            'Tổng tiết xác nhận', 'Năm học', 'Học kỳ', 'Đợt', 'Buổi bắt đầu', 'Buổi kết thúc',
+            'Khóa', 'Khoa quản lý chuyên môn', 'Số lượng', 'Số giờ chuẩn', 'Khóa dữ liệu',
+            'Không tính theo TKB'
+        ];
+        var phanLoaiHeaders = dsPhanLoai.map(function (pl) { return pl.TEN; });
+        var nStatic = staticHeaders.length;
+        var nPL = phanLoaiHeaders.length;
+        var nCols = nStatic + nPL;
+
+        // Build 2 hàng header
+        var headerRow1 = new Array(nCols).fill('');
+        var headerRow2 = new Array(nCols).fill('');
+        for (var ih = 0; ih < nStatic; ih++) headerRow1[ih] = staticHeaders[ih];
+        if (nPL > 0) {
+            headerRow1[nStatic] = 'Phân loại theo nhóm lớp';
+            for (var jh = 0; jh < nPL; jh++) headerRow2[nStatic + jh] = phanLoaiHeaders[jh];
+        }
+
+        // Build data rows dạng array (positional)
+        var dataRows = data.map(function (e, i) {
+            var row = [
+                i + 1,
+                v(e.DAOTAO_HOCPHAN_MA),
+                v(e.DAOTAO_HOCPHAN_TEN),
+                v(e.DAOTAO_LOPHOCPHAN_TEN),
+                v(e.HINHTHUCHOC_MA),
+                v(e.GIANGVIEN),
+                v(e.TTPHANBOTHEOCTDT),
+                v(e.TONGSOTIETTKBMO),
+                v(e.TONGSOTIETGIANG),
+                v(e.TONGSOTIETGIANGXACNHAN),
+                v(e.NAMHOC),
+                v(e.HOCKY),
+                v(e.DOTHOC),
+                v(e.NGAYBATDAU),
+                v(e.NGAYKETTHUC),
+                v(e.DAOTAO_KHOADAOTAO_TEN),
+                v(e.DAOTAO_KHOAQUANLY_TEN),
+                v(e.QUYMO),
+                v(e.TONGSOGIOCHUAN),
+                (e.KHOADULIEU == '1' ? 'Khóa' : ''),
+                (parseFloat(e.KHONGTINHTHEOTKB) > 0 ? 'Không tính theo TKB' : '')
+            ];
+            dsPhanLoai.forEach(function (pl) {
+                var val = (e._PhanLoai && e._PhanLoai[pl.ID]) || '';
+                if (!val) {
+                    var $cell = $('#lbl' + e.ID + '_' + pl.ID);
+                    if ($cell.length) val = $.trim($cell.text());
+                }
+                var loaded = e._PhanLoaiLoaded && e._PhanLoaiLoaded[pl.ID];
+                if (!loaded && !val) iMissingPhanLoai++;
+                row.push(val);
+            });
+            return row;
+        });
+        if (iMissingPhanLoai > 0) {
+            if (!confirm('Có ' + iMissingPhanLoai + ' ô "Phân loại theo nhóm lớp" chưa tải xong (đang gọi API). Vẫn tiếp tục xuất Excel?')) {
+                return;
+            }
+        }
+
+        var aoa = [headerRow1, headerRow2].concat(dataRows);
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+
+        // Tính độ rộng cột (xét cả header con lẫn data)
+        var allHeaders = staticHeaders.concat(phanLoaiHeaders);
+        ws['!cols'] = allHeaders.map(function (h, idx) {
+            var maxLen = (h || '').length;
+            dataRows.forEach(function (r) {
+                var l = String(r[idx] == null ? '' : r[idx]).length;
                 if (l > maxLen) maxLen = l;
             });
             return { wch: Math.min(maxLen + 2, 40) };
         });
+
+        // Merges: cột tĩnh rowspan=2; "Phân loại theo nhóm lớp" colspan=nPL
+        var merges = [];
+        for (var im = 0; im < nStatic; im++) {
+            merges.push({ s: { r: 0, c: im }, e: { r: 1, c: im } });
+        }
+        if (nPL > 1) {
+            merges.push({ s: { r: 0, c: nStatic }, e: { r: 0, c: nStatic + nPL - 1 } });
+        } else if (nPL === 1) {
+            // Chỉ 1 phân loại → vẫn rowspan=2 cho gọn
+            merges.push({ s: { r: 0, c: nStatic }, e: { r: 1, c: nStatic } });
+        }
+        ws['!merges'] = merges;
+
+        // ===== Styling (xlsx-js-style hỗ trợ; bản Community sẽ bỏ qua không lỗi) =====
+        var headerStyle = {
+            font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11 },
+            fill: { patternType: "solid", fgColor: { rgb: "1F4E78" } },
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
+            border: {
+                top: { style: "thin", color: { rgb: "999999" } },
+                bottom: { style: "thin", color: { rgb: "999999" } },
+                left: { style: "thin", color: { rgb: "999999" } },
+                right: { style: "thin", color: { rgb: "999999" } }
+            }
+        };
+        var yellowFill = { patternType: "solid", fgColor: { rgb: "FFFF00" } };
+        var thinBorder = {
+            top: { style: "thin", color: { rgb: "CCCCCC" } },
+            bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+            left: { style: "thin", color: { rgb: "CCCCCC" } },
+            right: { style: "thin", color: { rgb: "CCCCCC" } }
+        };
+        // Style cho 2 hàng header (row 0 + row 1)
+        for (var hr = 0; hr <= 1; hr++) {
+            for (var hc = 0; hc < nCols; hc++) {
+                var addrH = XLSX.utils.encode_cell({ r: hr, c: hc });
+                if (!ws[addrH]) ws[addrH] = { v: '', t: 's' };
+                ws[addrH].s = headerStyle;
+            }
+        }
+        // Freeze 2 hàng header
+        ws['!freeze'] = { xSplit: 0, ySplit: 2 };
+        ws['!views'] = [{ state: 'frozen', ySplit: 2 }];
+        // Đặt chiều cao 2 hàng header cho dễ đọc khi wrap
+        ws['!rows'] = [{ hpt: 22 }, { hpt: 42 }];
+        // Style body, tô vàng dòng cảnh báo
+        data.forEach(function (e, i) {
+            var r = i + 2; // 2 hàng header phía trên
+            var isWarn = (e.TONGSOTIETGIANG != e.TONGSOTIETGIANGXACNHAN
+                       || e.TONGSOTIETGIANG != e.TONGSOTIETTKBMO);
+            for (var cc = 0; cc < nCols; cc++) {
+                var addr = XLSX.utils.encode_cell({ r: r, c: cc });
+                if (!ws[addr]) ws[addr] = { v: '', t: 's' };
+                var style = { border: thinBorder, alignment: { vertical: 'center', wrapText: true } };
+                if (isWarn) style.fill = yellowFill;
+                ws[addr].s = style;
+            }
+        });
+
         var wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Lớp học phần');
 
@@ -1328,10 +1433,15 @@ LopHocPhan.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    // Đánh dấu đã gọi xong (kể cả khi trả về rỗng — rỗng là dữ liệu hợp lệ)
+                    e._PhanLoaiLoaded = e._PhanLoaiLoaded || {};
+                    e._PhanLoaiLoaded[strLoaiXacNhan_Id] = true;
                     if (dtReRult.length) {
                         $('#lbl' + e.ID + '_' + strLoaiXacNhan_Id).html(dtReRult[0].HANHDONG_TEN);
+                        e._PhanLoai = e._PhanLoai || {};
+                        e._PhanLoai[strLoaiXacNhan_Id] = dtReRult[0].HANHDONG_TEN;
                     }
-                    
+
                 }
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
