@@ -3347,7 +3347,7 @@ input:active,
   border-bottom-right-radius: 0 !important;
   border-bottom: 1px solid #e1e1e1 !important;
   margin-top: 0 !important;
-  padding: 15px 17px 15px 17px !important;
+  padding: 15px 17px 8px 17px !important;
 }
 
 .box-search {
