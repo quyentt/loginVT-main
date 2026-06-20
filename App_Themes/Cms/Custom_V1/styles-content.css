@@ -509,9 +509,11 @@
 
 #zonebatdau .group-title .lang,
 #zonebatdau .group-title i {
-    font-size: 18px !important;
+    font-size: 16px !important;
 }
-
+#zonebatdau .group-title i {
+   margin-right: 5px;
+}
 .box-body .table {
     margin-right: 0;
     margin-bottom: 0;
@@ -5875,11 +5877,15 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .aps-khaibaothamsochung-list .badge.bg-light-blue {
     margin-top: 5px;
 }
-
+.aps-cauhinhhienthi-list .box-body,.box.box-solid .box-body{
+    padding: 0;
+}
 .btnHienThiNoiDung i {
     padding-top: 5px !important;
 }
-
+.aps-khaibaodiemdacbiet-list .box-body.mt-15{
+    margin-top: 5px !important;
+}
 /*--------*/
 .aps-thamso-img img {
     width: 100%;
@@ -5897,7 +5903,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .aps-tblChuongTrinh.table>tbody>tr:nth-child(2n) {
-    background-color: #f8f8f8;
+    background-color: #f1f1f1;
 }
 
 .aps-tblChuongTrinh.table>tbody>tr>td {
@@ -5930,7 +5936,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     width: 100% !important;
     color: #666;
     float: right !important;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     text-align: right;
     padding-right: 15px !important;
 }
@@ -6052,17 +6058,6 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-left: 0px;
 }
 
-.aps-table-list-btn .btn {
-    /*margin-top: 5px !important;*/
-}
-
-.float-right {
-    float: right !important;
-}
-
-.float-left {
-    float: left !important;
-}
 
 .select2-container .select2-search--inline .select2-search__field {
     margin-top: 13px !important;
@@ -8603,18 +8598,6 @@ input#tblInput_DTSV_SinhVien_input {
     line-height: 27px !important;
 }
 
-.item-modal {
-    position: relative;
-}
-
-.btn-list .btn {
-    margin-bottom: 10px;
-}
-
-.pull-right.btn-list .btn {
-    margin-right: 10px;
-    margin-left: 0px !important;
-}
 
 .list-xacnhan .btn-large {
     width: 100% !important;
@@ -10476,8 +10459,8 @@ table#clone {
 
 .titleSearchContent .lang,
 .titleSearchContent i {
-    font-size: 18px !important;
-    color: var(--color-blue) !important;
+    font-size: 18px ;
+    color: var(--color-blue);
     font-weight: 700;
 }
 
@@ -15319,5 +15302,36 @@ table#clone {
 
 .aps-form-data.label-ngang .item .form-item {
     flex: auto;
->>>>>>> 44d3ab2227e0934d303a1ab1d00f47ee406108f3
+}
+.aps-kehoach-dangky-mua .box-content.pl20.pr20{
+    padding: 0 !important;
+}
+.aps-dangKy-dongphuc{
+        -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0)  !important;
+}
+
+/* -------------- */
+.row.aps-kehoach-dangky .box-solid.box-search,.row.aps-cauhinhhienthi .box-solid.box-search,
+.zone-bus.aps-ruthocphan-search .box-solid.box-search ,.row.aps-cauhinhhienthichung .box-solid.box-search{
+    padding-bottom: 8px !important;
+}
+.box.box-solid.aps-danhmucDL-danhsach,
+.box.box-solid.aps-khaibaothamsoapdung-choose{
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+}
+
+.box.box-solid.aps-khaibaothamsoapdung-choose .box-header {
+    margin-top: 0px !important;
+}
+.aps-danhmucDL-danhsach .jstree-container-ul{
+    overflow: hidden;
+}
+.aps-khaibaothamsoapdung-l .box-search .bss-item {
+    margin-bottom: 10px !important;
+}
+.modal.aps-add-quydoicc .aps-form-item .aps-form-lable label {
+    text-align: left !important;
+    padding-right: 10px;
 }
