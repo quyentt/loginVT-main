@@ -116,22 +116,15 @@
         <div class="left-sidebar">
             <div class="sidebar-menu">
                 <div class="accordion" id="sidebar-menu">
-                    <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="../index.html">
-                            <i class="fa-light fa-house-window item-icon"></i>
-                            <span>Dashboads</span>
-                        </a>
-                    </div>
-                    <!-- siderbar menu  item -->
                     <div class="sidebar-menu-item active">
-                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse"
-                            data-bs-target="#collapseComp" href="javascrip:void(0)" aria-expanded="true">
+                        <a class="sidebar-menu-header" data-bs-toggle="collapse" data-bs-target="#sbComponents"
+                            href="javascrip:void(0)" aria-expanded="true">
                             <i class="fa-light fa-puzzle-piece item-icon"></i>
                             <span>Components</span>
                             <i class="fal fa-chevron-right item-arrow-icon"></i>
                             <i class="fal fa-chevron-down item-arrow-icon down"></i>
                         </a>
-                        <div class="sidebar-menu-sub collapse show" id="collapseComp" data-bs-parent="#sidebar-menu">
+                        <div class="sidebar-menu-sub collapse show" id="sbComponents" data-bs-parent="#sidebar-menu">
                             <div class="sidebar-menu-sub-content">
                                 <a href="#accordion">Accordion</a>
                                 <a href="#alerts">Alerts</a>
@@ -158,24 +151,154 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- siderbar menu  item -->
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="layout.html">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbUtilities"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-screwdriver-wrench item-icon"></i>
+                            <span>Utilities</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbUtilities" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="utilities.html#background">Background</a>
+                                <a href="utilities.html#borders">Borders</a>
+                                <a href="utilities.html#colors">Colors</a>
+                                <a href="utilities.html#display">Display</a>
+                                <a href="utilities.html#flex">Flex</a>
+                                <a href="utilities.html#float">Float</a>
+                                <a href="utilities.html#interactions">Interactions</a>
+                                <a href="utilities.html#link">Link</a>
+                                <a href="utilities.html#object-fit">Object fit</a>
+                                <a href="utilities.html#opacity">Opacity</a>
+                                <a href="utilities.html#overflow">Overflow</a>
+                                <a href="utilities.html#position">Position</a>
+                                <a href="utilities.html#shadows">Shadows</a>
+                                <a href="utilities.html#sizing">Sizing</a>
+                                <a href="utilities.html#spacing">Spacing</a>
+                                <a href="utilities.html#text">Text</a>
+                                <a href="utilities.html#vertical-align">Vertical align</a>
+                                <a href="utilities.html#visibility">Visibility</a>
+                                <a href="utilities.html#zindex">Z-index</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbHelpers"
+                            href="javascrip:void(0)">
+                            <i class="fa-light fa-wand-magic-sparkles item-icon"></i>
+                            <span>Helpers</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbHelpers" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="helpers.html#clearfix">Clearfix</a>
+                                <a href="helpers.html#colored-links">Colored links</a>
+                                <a href="helpers.html#ratio">Ratio</a>
+                                <a href="helpers.html#position">Position</a>
+                                <a href="helpers.html#visually-hidden">Visually hidden</a>
+                                <a href="helpers.html#stretched-link">Stretched link</a>
+                                <a href="helpers.html#text-truncation">Text truncation</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbLayout"
+                            href="javascrip:void(0)">
                             <i class="fa-light fa-table-layout item-icon"></i>
                             <span>Layout</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
                         </a>
+                        <div class="sidebar-menu-sub collapse" id="sbLayout" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="layout.html#breakpoints">Breakpoints</a>
+                                <a href="layout.html#containers">Containers</a>
+                                <a href="layout.html#grid">Grid</a>
+                                <a href="layout.html#columns">Columns</a>
+                                <a href="layout.html#gutters">Gutters</a>
+                                <a href="layout.html#utilities">Utilities</a>
+                                <a href="layout.html#zindex">Z-index</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="forms.html">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbForms"
+                            href="javascrip:void(0)">
                             <i class="fa-light fa-file-user item-icon"></i>
                             <span>Forms</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbForms" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="forms.html#overview">Overview</a>
+                                <a href="forms.html#form-control">Form control</a>
+                                <a href="forms.html#select">Select</a>
+                                <a href="forms.html#checks-radios">Checks &amp; radios</a>
+                                <a href="forms.html#input-group">Input group</a>
+                                <a href="forms.html#floating">Floating labels</a>
+                                <a href="forms.html#layout">Layout</a>
+                                <a href="forms.html#validation">Validation</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbDatTen"
+                            href="javascrip:void(0)">
+                            <i class="fa-regular fa-tags item-icon"></i>
+                            <span>Đặt tên class</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbDatTen" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="dat-ten-class.htm#dtc-bocuc">Bố cục</a>
+                                <a href="dat-ten-class.htm#dtc-header">Header &amp; Footer</a>
+                                <a href="dat-ten-class.htm#dtc-dieuhuong">Điều hướng</a>
+                                <a href="dat-ten-class.htm#dtc-nut">Nút</a>
+                                <a href="dat-ten-class.htm#dtc-bieumau">Biểu mẫu</a>
+                                <a href="dat-ten-class.htm#dtc-the">Thẻ &amp; Hộp</a>
+                                <a href="dat-ten-class.htm#dtc-bang">Bảng</a>
+                                <a href="dat-ten-class.htm#dtc-vanban">Văn bản</a>
+                                <a href="dat-ten-class.htm#dtc-thanhphan">Thành phần</a>
+                                <a href="dat-ten-class.htm#dtc-trangthai">Trạng thái</a>
+                                <a href="dat-ten-class.htm#dtc-tienich">Tiện ích</a>
+                                <a href="dat-ten-class.htm#dtc-khoangcach">Khoảng cách</a>
+                                <a href="dat-ten-class.htm#dtc-hinhanh">Hình ảnh &amp; Media</a>
+                                <a href="dat-ten-class.htm#dtc-luoi">Lưới</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="color.html">
+                            <i class="fa-light fa-palette item-icon"></i>
+                            <span>Colors</span>
                         </a>
                     </div>
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="dat-ten-class.htm">
-                            <i class="fa-regular fa-tags item-icon"></i>
-                            <span>Đặt tên class</span>
+                        <a class="sidebar-menu-header collapsed" href="button.html">
+                            <i class="fa-light fa-hand-pointer item-icon"></i>
+                            <span>Buttons</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="Typography.html">
+                            <i class="fa-light fa-font item-icon"></i>
+                            <span>Typography</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="Search.html">
+                            <i class="fa-light fa-magnifying-glass item-icon"></i>
+                            <span>Search</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="HTML-Form-ChucNangHSo.html">
+                            <i class="fa-light fa-id-card item-icon"></i>
+                            <span>Hồ sơ sinh viên</span>
                         </a>
                     </div>
                 </div>
@@ -199,9 +322,9 @@
                 </div>
             </div>
 
-            <h2 class="pl-0">Components - Thư viện thành phần (Bootstrap)</h2>
+            <h3 class="pl-20">Components - Thư viện thành phần (Bootstrap)</h3>
 
-            <div class="row box-comment">
+            <div class="row box-comment pl-10">
                 <!-- ===================== CỘT TRÁI ===================== -->
                 <div class="col-6">
 
@@ -218,8 +341,8 @@
                                     <div class="accordion" id="accDemo">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
-                                                <button class="accordion-button" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#accItem1">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#accItem1">
                                                     Mục số 1
                                                 </button>
                                             </h2>
@@ -262,7 +385,8 @@
                     <!-- Alerts -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="alerts">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-triangle-exclamation mr-5"></i>
+                            <h3 class="box-title color-blue"><i
+                                    class="fa-duotone fa-solid fa-triangle-exclamation mr-5"></i>
                                 Alerts</h3>
                         </div>
                         <div class="box-body column-1">
@@ -356,7 +480,8 @@
                                     <button class="btn btn-primary btn-sm">Small</button>
                                 </div>
                                 <span class="demo-label-code">Code</span>
-                                <pre class="code-block">&lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;
+                                <pre
+                                    class="code-block">&lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;
 &lt;button class="btn btn-outline-primary"&gt;Outline&lt;/button&gt;
 &lt;button class="btn btn-primary btn-sm"&gt;Small&lt;/button&gt;
 &lt;a class="btn btn-success"&gt;&lt;i class="fa-solid fa-check"&gt;&lt;/i&gt; &lt;span&gt;Lưu&lt;/span&gt;&lt;/a&gt;</pre>
@@ -367,7 +492,8 @@
                     <!-- Button group -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="button-group">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-grip-lines-vertical mr-5"></i>
+                            <h3 class="box-title color-blue"><i
+                                    class="fa-duotone fa-solid fa-grip-lines-vertical mr-5"></i>
                                 Button group</h3>
                         </div>
                         <div class="box-body column-1">
@@ -392,7 +518,8 @@
                     <!-- Card -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="card">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-id-card mr-5"></i> Card</h3>
+                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-id-card mr-5"></i> Card
+                            </h3>
                         </div>
                         <div class="box-body column-1">
                             <div class="box-content pd-20">
@@ -567,7 +694,8 @@
                                                 </div>
                                                 <div class="modal-body">Nội dung hộp thoại.</div>
                                                 <div class="modal-footer">
-                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                                                    <button class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">Đóng</button>
                                                     <button class="btn btn-primary">Lưu</button>
                                                 </div>
                                             </div>
@@ -590,7 +718,8 @@
                     <!-- Navs & tabs -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="navs-tabs">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-folder-tree mr-5"></i> Navs
+                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-folder-tree mr-5"></i>
+                                Navs
                                 &amp; tabs</h3>
                         </div>
                         <div class="box-body column-1">
@@ -622,7 +751,8 @@
                     <!-- Navbar -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="navbar">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-bars mr-5"></i> Navbar</h3>
+                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-bars mr-5"></i> Navbar
+                            </h3>
                         </div>
                         <div class="box-body column-1">
                             <div class="box-content pd-20">
@@ -768,7 +898,8 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
                     <!-- Toasts -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="toasts">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-bell mr-5"></i> Toasts</h3>
+                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-bell mr-5"></i> Toasts
+                            </h3>
                         </div>
                         <div class="box-body column-1">
                             <div class="box-content pd-20">
@@ -796,7 +927,8 @@ document.querySelectorAll('[data-bs-toggle="popover"]')
                     <!-- Tooltips -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="tooltips">
                         <div class="box-header with-border">
-                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-message mr-5"></i> Tooltips
+                            <h3 class="box-title color-blue"><i class="fa-duotone fa-solid fa-message mr-5"></i>
+                                Tooltips
                             </h3>
                         </div>
                         <div class="box-body column-1">
