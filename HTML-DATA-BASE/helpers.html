@@ -125,21 +125,78 @@
             <div class="sidebar-menu">
                 <div class="accordion" id="sidebar-menu">
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="../index.html">
-                            <i class="fa-light fa-house-window item-icon"></i>
-                            <span>Dashboads</span>
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbComponents" href="javascrip:void(0)">
+                            <i class="fa-light fa-puzzle-piece item-icon"></i>
+                            <span>Components</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
                         </a>
+                        <div class="sidebar-menu-sub collapse" id="sbComponents" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="components.html#accordion">Accordion</a>
+                                <a href="components.html#alerts">Alerts</a>
+                                <a href="components.html#badge">Badge</a>
+                                <a href="components.html#breadcrumb">Breadcrumb</a>
+                                <a href="components.html#buttons">Buttons</a>
+                                <a href="components.html#button-group">Button group</a>
+                                <a href="components.html#card">Card</a>
+                                <a href="components.html#carousel">Carousel</a>
+                                <a href="components.html#close">Close button</a>
+                                <a href="components.html#collapse">Collapse</a>
+                                <a href="components.html#dropdowns">Dropdowns</a>
+                                <a href="components.html#list-group">List group</a>
+                                <a href="components.html#modal">Modal</a>
+                                <a href="components.html#navs-tabs">Navs &amp; tabs</a>
+                                <a href="components.html#navbar">Navbar</a>
+                                <a href="components.html#offcanvas">Offcanvas</a>
+                                <a href="components.html#pagination">Pagination</a>
+                                <a href="components.html#popovers">Popovers</a>
+                                <a href="components.html#progress">Progress</a>
+                                <a href="components.html#spinners">Spinners</a>
+                                <a href="components.html#toasts">Toasts</a>
+                                <a href="components.html#tooltips">Tooltips</a>
+                            </div>
+                        </div>
                     </div>
-                    <!-- siderbar menu  item -->
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbUtilities" href="javascrip:void(0)">
+                            <i class="fa-light fa-screwdriver-wrench item-icon"></i>
+                            <span>Utilities</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbUtilities" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="utilities.html#background">Background</a>
+                                <a href="utilities.html#borders">Borders</a>
+                                <a href="utilities.html#colors">Colors</a>
+                                <a href="utilities.html#display">Display</a>
+                                <a href="utilities.html#flex">Flex</a>
+                                <a href="utilities.html#float">Float</a>
+                                <a href="utilities.html#interactions">Interactions</a>
+                                <a href="utilities.html#link">Link</a>
+                                <a href="utilities.html#object-fit">Object fit</a>
+                                <a href="utilities.html#opacity">Opacity</a>
+                                <a href="utilities.html#overflow">Overflow</a>
+                                <a href="utilities.html#position">Position</a>
+                                <a href="utilities.html#shadows">Shadows</a>
+                                <a href="utilities.html#sizing">Sizing</a>
+                                <a href="utilities.html#spacing">Spacing</a>
+                                <a href="utilities.html#text">Text</a>
+                                <a href="utilities.html#vertical-align">Vertical align</a>
+                                <a href="utilities.html#visibility">Visibility</a>
+                                <a href="utilities.html#zindex">Z-index</a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="sidebar-menu-item active">
-                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse"
-                            data-bs-target="#collapseHelpers" href="javascrip:void(0)" aria-expanded="true">
+                        <a class="sidebar-menu-header" data-bs-toggle="collapse" data-bs-target="#sbHelpers" href="javascrip:void(0)" aria-expanded="true">
                             <i class="fa-light fa-wand-magic-sparkles item-icon"></i>
                             <span>Helpers</span>
                             <i class="fal fa-chevron-right item-arrow-icon"></i>
                             <i class="fal fa-chevron-down item-arrow-icon down"></i>
                         </a>
-                        <div class="sidebar-menu-sub collapse show" id="collapseHelpers" data-bs-parent="#sidebar-menu">
+                        <div class="sidebar-menu-sub collapse show" id="sbHelpers" data-bs-parent="#sidebar-menu">
                             <div class="sidebar-menu-sub-content">
                                 <a href="#clearfix">Clearfix</a>
                                 <a href="#colored-links">Colored links</a>
@@ -151,30 +208,99 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- siderbar menu  item -->
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="components.html">
-                            <i class="fa-light fa-puzzle-piece item-icon"></i>
-                            <span>Components</span>
-                        </a>
-                    </div>
-                    <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="layout.html">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbLayout" href="javascrip:void(0)">
                             <i class="fa-light fa-table-layout item-icon"></i>
                             <span>Layout</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
                         </a>
+                        <div class="sidebar-menu-sub collapse" id="sbLayout" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="layout.html#breakpoints">Breakpoints</a>
+                                <a href="layout.html#containers">Containers</a>
+                                <a href="layout.html#grid">Grid</a>
+                                <a href="layout.html#columns">Columns</a>
+                                <a href="layout.html#gutters">Gutters</a>
+                                <a href="layout.html#utilities">Utilities</a>
+                                <a href="layout.html#zindex">Z-index</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="forms.html">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbForms" href="javascrip:void(0)">
                             <i class="fa-light fa-file-user item-icon"></i>
                             <span>Forms</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbForms" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="forms.html#overview">Overview</a>
+                                <a href="forms.html#form-control">Form control</a>
+                                <a href="forms.html#select">Select</a>
+                                <a href="forms.html#checks-radios">Checks &amp; radios</a>
+                                <a href="forms.html#input-group">Input group</a>
+                                <a href="forms.html#floating">Floating labels</a>
+                                <a href="forms.html#layout">Layout</a>
+                                <a href="forms.html#validation">Validation</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" data-bs-toggle="collapse" data-bs-target="#sbDatTen" href="javascrip:void(0)">
+                            <i class="fa-regular fa-tags item-icon"></i>
+                            <span>Đặt tên class</span>
+                            <i class="fal fa-chevron-right item-arrow-icon"></i>
+                            <i class="fal fa-chevron-down item-arrow-icon down"></i>
+                        </a>
+                        <div class="sidebar-menu-sub collapse" id="sbDatTen" data-bs-parent="#sidebar-menu">
+                            <div class="sidebar-menu-sub-content">
+                                <a href="dat-ten-class.htm#dtc-bocuc">Bố cục</a>
+                                <a href="dat-ten-class.htm#dtc-header">Header &amp; Footer</a>
+                                <a href="dat-ten-class.htm#dtc-dieuhuong">Điều hướng</a>
+                                <a href="dat-ten-class.htm#dtc-nut">Nút</a>
+                                <a href="dat-ten-class.htm#dtc-bieumau">Biểu mẫu</a>
+                                <a href="dat-ten-class.htm#dtc-the">Thẻ &amp; Hộp</a>
+                                <a href="dat-ten-class.htm#dtc-bang">Bảng</a>
+                                <a href="dat-ten-class.htm#dtc-vanban">Văn bản</a>
+                                <a href="dat-ten-class.htm#dtc-thanhphan">Thành phần</a>
+                                <a href="dat-ten-class.htm#dtc-trangthai">Trạng thái</a>
+                                <a href="dat-ten-class.htm#dtc-tienich">Tiện ích</a>
+                                <a href="dat-ten-class.htm#dtc-khoangcach">Khoảng cách</a>
+                                <a href="dat-ten-class.htm#dtc-hinhanh">Hình ảnh &amp; Media</a>
+                                <a href="dat-ten-class.htm#dtc-luoi">Lưới</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="color.html">
+                            <i class="fa-light fa-palette item-icon"></i>
+                            <span>Colors</span>
                         </a>
                     </div>
                     <div class="sidebar-menu-item">
-                        <a class="sidebar-menu-header collapsed" href="dat-ten-class.htm">
-                            <i class="fa-regular fa-tags item-icon"></i>
-                            <span>Đặt tên class</span>
+                        <a class="sidebar-menu-header collapsed" href="button.html">
+                            <i class="fa-light fa-hand-pointer item-icon"></i>
+                            <span>Buttons</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="Typography.html">
+                            <i class="fa-light fa-font item-icon"></i>
+                            <span>Typography</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="Search.html">
+                            <i class="fa-light fa-magnifying-glass item-icon"></i>
+                            <span>Search</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="HTML-Form-ChucNangHSo.html">
+                            <i class="fa-light fa-id-card item-icon"></i>
+                            <span>Hồ sơ sinh viên</span>
                         </a>
                     </div>
                 </div>

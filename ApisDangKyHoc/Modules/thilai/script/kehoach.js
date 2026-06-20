@@ -2714,7 +2714,7 @@ KeHoachXuLy.prototype = {
         //--Edit
         var obj = {};
         var obj_delete = {
-            'action': 'DKH_DangKyThi_MonThi_Chung/Xoa_DangKy_Thi_HP_KH_PhamVi',
+            'action': 'DKH_DangKyThi_MonThi_Chung/Xoa_DangKy_Thi_HP_KH_ThoiGian',
 
             'strId': strIds,
             'strNguoiThucHien_Id': edu.system.userId
