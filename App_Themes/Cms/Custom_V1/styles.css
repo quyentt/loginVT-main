@@ -333,14 +333,21 @@ a.btn {
     margin-bottom: 10px;    
 }
 .pull-left.btn-list .btn {
-    margin-right: 10px;
-    margin-left: 10px !important;
+    /* margin-right: 10px; */
+    /* margin-left: 10px !important; */
 }
 .pull-right.btn-list .btn {
     margin-right: 10px;
     margin-left: 0px !important;
 }
+.btn-list-bootstrap .btn {
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
 
+.color-bootstrap .p-3 {
+    padding: 10px;
+}
 /* -----box-header---------- */
 .box-header.btnGetData {
   padding: 0 !important;
@@ -399,15 +406,12 @@ a.btn {
   top: 0 !important;
 }
 
-<<<<<<< HEAD
-=======
 .box-header.with-border {
   border-bottom: 1px solid #e1e1e1 !important;
   padding: 15px 20px 12px 20px !important;
   display: flex;
 }
 
->>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 .box-header .box-title {
   font-size: 18px !important;
   color: var(--color-blue) !important;
@@ -2915,7 +2919,9 @@ input:active,
 .sidebar-menu .treeview-menu .menu-open {
   background: rgba(36, 105, 187, 1);
 }
-
+.sidebar-menu .menu-open i{
+  color: #fff;
+}
 .skin-blue .sidebar-menu .treeview-menu>li.menu-open>a {
   color: var(--color-link) !important;
   /* background: rgb(17, 94, 186) !important; */
@@ -3461,22 +3467,18 @@ input:active,
 .content .zone-content,
 .box-shadow,
 .zone-bus {
-  /* background: #fff; */
   border-radius: 12px !important;
-<<<<<<< HEAD
   /*overflow: hidden;*/
   -webkit-box-shadow: 0 0 15px 10px rgba(130, 122, 122, 0.1);
   box-shadow: 0 0 15px 10px rgba(130, 122, 122, 0.1);
   /*-webkit-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
   /*-moz-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
   /*box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
-=======
   -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   -webkit-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   -moz-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
->>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 }
 
 .content .box.box-solid {
@@ -6885,7 +6887,6 @@ input[type="radio"] {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 20px !important;
-<<<<<<< HEAD
 }
 .column-4 {
   display: grid !important;
@@ -6908,7 +6909,5 @@ input[type="radio"] {
 .float-left {
     float: left !important;
 }
-=======
 
-}
->>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
+
