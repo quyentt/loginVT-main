@@ -7,8 +7,6 @@
 /* @import "../../../assets/css/all.css"; */
 
 /*-----------------------*/
-
-/*-----------------------*/
 body {
   color: #222;
   font-size: 14px;
@@ -325,29 +323,31 @@ a.btn {
 .btn i {
   padding-right: 5px;
 }
+
 .item-modal {
-    position: relative;
+  position: relative;
 }
 
 .btn-list .btn {
-    margin-bottom: 10px;    
+  margin-bottom: 10px;
+  margin-bottom: 10px;
 }
-.pull-left.btn-list .btn {
-    /* margin-right: 10px; */
-    /* margin-left: 10px !important; */
-}
+
+
 .pull-right.btn-list .btn {
-    margin-right: 10px;
-    margin-left: 0px !important;
+  margin-right: 10px;
+  margin-left: 0px !important;
 }
+
 .btn-list-bootstrap .btn {
-    margin-bottom: 10px;
-    margin-right: 5px;
+  margin-bottom: 10px;
+  margin-right: 5px;
 }
 
 .color-bootstrap .p-3 {
-    padding: 10px;
+  padding: 10px;
 }
+
 /* -----box-header---------- */
 .box-header.btnGetData {
   padding: 0 !important;
@@ -624,12 +624,11 @@ a.btn {
   color: #fff !important
 }
 
-thead {
-  color: #222 !important;
-  /*background: #3c8dee;*/
-  background: rgba(60, 141, 238, .1) !important;
+thead,
+.table thead tr th {
+  color: var(--color-blue) !important;
+  background: rgba(60, 141, 238, 0.1) !important;
   font-weight: normal;
-  /*border:1px solid #fff !important;*/
 }
 
 .table-bordered tbody tr:nth-child(2n+2) {
@@ -1628,10 +1627,6 @@ input:active,
   padding-bottom: 12px !important;
 }
 
-.skin-blue .sidebar-form .btn,
-.skin-blue .sidebar-form input[type=text] {
-  /* background-color:#2469bb !important; */
-}
 
 .skin-blue .sidebar-form .btn {
   border-top-left-radius: 0 !important;
@@ -1757,12 +1752,7 @@ input:active,
   color: #fff !important;
 }
 
-thead {
-  color: #222 !important;
-  background: rgba(60, 141, 238, 0.1) !important;
-  font-weight: normal;
-  /*border:1px solid #fff !important;*/
-}
+
 
 .table-bordered tbody tr:nth-child(2n + 2) {
   background-color: #f8f8f8;
@@ -2799,10 +2789,6 @@ input:active,
   padding-bottom: 12px !important;
 }
 
-.skin-blue .sidebar-form .btn,
-.skin-blue .sidebar-form input[type="text"] {
-  /* background-color:#2469bb !important; */
-}
 
 .skin-blue .sidebar-form .btn {
   border-top-left-radius: 0 !important;
@@ -2919,9 +2905,11 @@ input:active,
 .sidebar-menu .treeview-menu .menu-open {
   background: rgba(36, 105, 187, 1);
 }
-.sidebar-menu .menu-open i{
+
+.sidebar-menu .menu-open i {
   color: #fff;
 }
+
 .skin-blue .sidebar-menu .treeview-menu>li.menu-open>a {
   color: var(--color-link) !important;
   /* background: rgb(17, 94, 186) !important; */
@@ -3411,10 +3399,6 @@ input:active,
   padding: 0 !important;
 }
 
-.box-body .box-view {
-  /* padding: 20px; */
-}
-
 .box-search .input-group .input-group-addon:hover {
   color: var(--color-blue) !important;
 }
@@ -3474,6 +3458,7 @@ input:active,
   /*-webkit-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
   /*-moz-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
   /*box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
+  -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   -webkit-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
@@ -4399,9 +4384,11 @@ button:not(:disabled) {
   border: 1px solid #dc3545 !important;
   color: #dc3545 !important;
 }
-.btn-outline-danger i{
- color: #dc3545 !important;
+
+.btn-outline-danger i {
+  color: #dc3545 !important;
 }
+
 .btn-outline-danger:hover {
   border: 1px solid #dc3545 !important;
   color: #fff !important;
@@ -4409,7 +4396,7 @@ button:not(:disabled) {
 }
 
 .btn-outline-danger:hover .fa-plus,
-.btn-outline-danger:hover i{
+.btn-outline-danger:hover i {
   color: #fff !important;
 }
 
@@ -5119,7 +5106,7 @@ info-tblNguoiHoc_RutTien,
 
 .number-receipt {
   font-size: 44px;
-  ffont-weight: 700 !important;
+  font-weight: 700 !important;
 }
 
 .zonePhieuThu_TCPT {
@@ -5463,8 +5450,6 @@ td:has(input[type="checkbox"]) {
 .tblChuongTrinh tr td:nth-last-child(2) {
   text-align: center !important;
 }
-
-.tblChuongTrinh tr td .btn-default.btnViewCT {}
 
 .zone-action .pull-right .aps-btn-list .btn {
   margin-left: 0 !important;
@@ -5817,8 +5802,6 @@ input[type="radio"] {
 }
 
 /* ----------- */
-.tab-Phieu .cmc-tabs {}
-
 .box-ds-phongThi {
   padding-bottom: 40px !important;
 }
@@ -6089,10 +6072,6 @@ input[type="radio"] {
   border-right: 0 solid #d1d1d1 !important;
   border-color: #fff !important;
   border: 0 !important;
-}
-
-.list-nhap-diem {
-  /* display: block !important; */
 }
 
 .table .btn.btn-add-row {
@@ -6472,8 +6451,6 @@ input[type="radio"] {
 .aps-total-receipts tr:hover td i {
   font-weight: bold !important;
 }
-
-.tenlophptkb {}
 
 .tblDSDiem tr td:nth-last-child(2) {
   text-align: center !important;
@@ -6888,26 +6865,27 @@ input[type="radio"] {
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 20px !important;
 }
+
 .column-4 {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 20px !important;
 }
+
 .column-5 {
   display: grid !important;
   grid-template-columns: repeat(5, 1fr) !important;
   gap: 20px !important;
 }
+
 .aps-table-list-btn .btn {
-   margin-left:0 !important ;
+  margin-left: 0 !important;
 }
 
 .float-right {
-    float: right !important;
+  float: right !important;
 }
 
 .float-left {
-    float: left !important;
+  float: left !important;
 }
-
-
