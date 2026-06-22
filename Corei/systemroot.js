@@ -192,7 +192,7 @@ systemroot.prototype = {
         strModal += '<div class="modal-content">';
         strModal += '<div class="modal-header">';
         strModal += '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>';
-        strModal += '<h4 class="modal-title"><span class="myModalLabel1"><i class="fa fa-plus"></i></span> <span class="lang" key="">Báo cáo</span> </h4>';
+        strModal += '<h4 class="modal-title"><span class="myModalLabel1"><i class="fa fa-plus"></i></span> <span class="lang" key=""></span> </h4>';
         strModal += '</div>';
         strModal += '<div class="modal-body" id="modal_body"></div>';
         strModal += '<div class="modal-footer">';
@@ -224,7 +224,7 @@ systemroot.prototype = {
         });
         $(document).delegate(".btnImportWithProce", "click", function (e) {
             e.preventDefault();
-            edu.system.showImportChung($(this).attr("title"), $(this).attr("name"));
+            edu.system.showImportChungV2($(this).attr("title"), $(this).attr("name"));
         });
         if (localStorage.getItem("reload") == "true") {
             me["isActive"] = true;
@@ -7782,6 +7782,178 @@ systemroot.prototype = {
                             row += '</table>';
                             edu.system.alert(row);
                         }
+                        if (sCallback != undefined && sCallback != "undefined" && sCallback != "") {
+                            eval(sCallback);
+                        }
+                    }
+                },
+                error: function (er) {
+                    edu.system.alert(JSON.stringify(er), "w");
+                },
+                type: 'POST',
+                action: obj_list.action,
+
+                contentType: true,
+
+                data: obj_list,
+                fakedb: [
+
+                ]
+            }, false, false, false, null);
+        }
+
+    },
+    showImportChungV2: function (strTenHienThi, strMaDanhMuc) {
+        var me = this;
+        if (strTenHienThi === undefined) strTenHienThi = "";
+        var row = "";
+        var sCallback = $("a[name='" + strMaDanhMuc + "']").attr("callback");
+        //row += '<div class="col-sm-12">';
+        //row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Upload ' + strTenHienThi + ': </div><div class="col-sm-8"><div id="zoneImportChung"></div></div>';
+        //row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Sheet : </div><div class="col-sm-8"><select id="dropSearch_BangA" class="select-opt"></select></div>';
+        //row += '<div class="col-sm-4" style="overflow: hidden; height: 30px"></div><div class="col-sm-8"><div class="pull-right"><a class="btn btn-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div></div>';
+        //if (strMaDanhMuc != undefined && strMaDanhMuc != "") {
+        //    var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
+        //    row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-8"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div>';
+        //}
+        //row += '</div><div class="clear"></div>';
+        ///
+        if (strMaDanhMuc != undefined && strMaDanhMuc != "") {
+            var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
+        }
+        var row = '';
+        row += '<div class="row"><div class="col-sm-2" >- Upload ' + strTenHienThi + ': </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
+        row += '<div class="row"><div class="col-sm-2" >- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
+
+
+        row += '<div class="clear">Sheet import</div>';
+        row += '<div>';
+        row += '<div style="width: 400px"><select id="dropSearch_BangA" class="select-opt"></select></div>';
+        row += '</div>';
+
+        row += '<div class="clear"></div>';
+        row += '<div class="zone-content">';
+        row += '<div class="box-header with-border">';
+        row += '<h3 class="box-title"><i class="fa fa-list-alt"></i> Danh sách</h3>';
+        row += '<div class="pull-right"><a class="btn btn-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div>';
+        row += '</div>';
+        row += '<div class="clear"></div>';
+        row += '<div class="row row-align">';
+        row += '<table id="tblBangA" class="table table-hover table-bordered">';
+        row += '<table id="tblBangB" class="table table-hover table-bordered">';
+        row += '<tbody></tbody>';
+        row += '</table>';
+        row += '</div>';
+        row += '</div>';
+        $("#modalBaoCao #modal_body").html(row);
+        $("#modalBaoCao").modal("show");
+        edu.system.uploadImport(["importToCheck"], me.getList_DataImport);
+        $('#dropSearch_BangA').on('change', function () {
+
+            //$("#tblBangA").show();
+            //$("#tblBangB").hide();
+            me.genTable_Import_View(me.dtImport[$("#dropSearch_BangA").val()], "tblBangA")
+        });
+        $("#btnThucHienImport").click(function () {
+            GetDuLieuDanhMuc()
+        });
+
+        //edu.system.alert(row);
+        //edu.system.uploadImport(["zoneImportChung"], me.getList_DataImport);
+
+        function GetDuLieuDanhMuc(a, strPath) {
+            var obj_list = {
+                'action': 'SYS_Import/SImport',
+                'strPath': edu.util.getValById("importToCheck"),
+                'strApp_Id': edu.system.appId,
+                'strMaDanhMuc': strMaDanhMuc,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strSheet': $("#dropSearch_BangA option:selected").text(),
+                'lKeyVal': []
+            };
+            if (strMaDanhMuc === undefined || strMaDanhMuc === "") {
+                ImportData(obj_list);
+            }
+            me.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        var lKeyVal = [];
+                        for (var i = 0; i < data.Data.length; i++) {
+                            if (edu.util.checkValue(data.Data[i].THONGTIN5)) {
+                                //obj_list[data.Data[i].MA] = eval(data.Data[i].THONGTIN5);
+                                lKeyVal.push({ strKey: data.Data[i].MA, strVal: eval(data.Data[i].THONGTIN5) });
+                            }
+                            if (data.Data[i].THONGTIN4 == "1") {
+                                me["strMaCotImport"] = data.Data[i].THONGTIN1
+                            }
+                        }
+                    }
+                    obj_list.lKeyVal = lKeyVal;
+                    //console.log(obj_list);
+                    ImportData(obj_list);
+
+                },
+                error: function (er) {
+                },
+                type: 'GET',
+                action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+                contentType: true,
+                data: {
+                    'strMaBangDanhMuc': strMaDanhMuc,
+                    'strTieuChiSapXep': "",
+                    'dTrangThai': 995
+                },
+                fakedb: [
+
+                ]
+            }, false, false, false, null);
+        }
+
+        function ImportData(obj_list) {
+
+            //
+
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        data = data.Data;
+                        var arrDataLoi = [];
+                        $(".tableError").remove();
+                        if (data.length > 0) {
+                            var iThanhCong = 0;
+                            var iThatBai = 0;
+                            var row = '';
+                            row += '<table class="table table-hover table-bordered tableError">';
+                            row += '<tbody>';
+                            row += '<tr>';
+                            row += '<td>Dữ liệu</td>';
+                            row += '<td>Lỗi</td>';
+                            row += '</tr>';
+                            for (var i = 0; i < data.length; i++) {
+                                row += '<tr>';
+                                if (edu.util.checkValue(data[i].VALUE)) {
+                                    iThatBai++;
+                                    row += '<td>' + edu.util.returnEmpty(data[i].KEY) + '</td>';
+                                    row += '<td>' + edu.util.returnEmpty(data[i].VALUE) + '</td>';
+                                    try {
+                                        var tempIP = me.dtImport[$("#dropSearch_BangA").val()].find(e => e[me.strMaCotImport] == data[i].KEY);
+                                        tempIP["ERROR"] = data[i].VALUE;
+                                        arrDataLoi.push(tempIP);
+                                    } catch {
+
+                                    }
+                                } else {
+                                    iThanhCong++;
+                                }
+                                row += '</tr>';
+                            }
+                            row += '</tbody>';
+                            row += '<thead><tr><td colspan="2">Thành công <span class="italic color-active">' + iThanhCong + '</span>; Thất bại: <span class="italic color-warning">' + iThatBai + '</span></td></tr></thead>';
+                            row += '</table>';
+                            edu.system.alert(row);
+                        }
+                        me.genTable_Import_View(arrDataLoi, "tblBangA")
                         if (sCallback != undefined && sCallback != "undefined" && sCallback != "") {
                             eval(sCallback);
                         }
