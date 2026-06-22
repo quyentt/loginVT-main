@@ -486,9 +486,11 @@
 #zonebatdau .group-title i {
     font-size: 16px !important;
 }
+
 #zonebatdau .group-title i {
-   margin-right: 5px;
+    margin-right: 5px;
 }
+
 .box-body .table {
     margin-right: 0;
     margin-bottom: 0;
@@ -5852,15 +5854,20 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .aps-khaibaothamsochung-list .badge.bg-light-blue {
     margin-top: 5px;
 }
-.aps-cauhinhhienthi-list .box-body,.box.box-solid .box-body{
+
+.aps-cauhinhhienthi-list .box-body,
+.box.box-solid .box-body {
     padding: 0;
 }
+
 .btnHienThiNoiDung i {
     padding-top: 5px !important;
 }
-.aps-khaibaodiemdacbiet-list .box-body.mt-15{
+
+.aps-khaibaodiemdacbiet-list .box-body.mt-15 {
     margin-top: 5px !important;
 }
+
 /*--------*/
 .aps-thamso-img img {
     width: 100%;
@@ -6033,9 +6040,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-left: 0px;
 }
 
-<<<<<<< HEAD
-=======
-.aps-table-list-btn .btn,
+<<<<<<< HEAD=======.aps-table-list-btn .btn,
 .aps-table-list-btn .dropdown.ml-10 {
     margin-left: 0 !important;
     margin-right: 0 !important;
@@ -6048,9 +6053,8 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .float-left {
     float: left !important;
 }
->>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
 
-.select2-container .select2-search--inline .select2-search__field {
+>>>>>>>74d4a47dd5502397c15dd938a0cfc44254161e1b .select2-container .select2-search--inline .select2-search__field {
     margin-top: 13px !important;
 }
 
@@ -10437,12 +10441,9 @@ table#clone {
 
 .titleSearchContent .lang,
 .titleSearchContent i {
-<<<<<<< HEAD
-    font-size: 18px ;
-=======
-    font-size: 18px !important;
->>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
-    color: var(--color-blue);
+    <<<<<<< HEAD font-size: 18px;
+    =======font-size: 18px !important;
+    >>>>>>>74d4a47dd5502397c15dd938a0cfc44254161e1b color: var(--color-blue);
     font-weight: 700;
 }
 
@@ -15286,22 +15287,26 @@ table#clone {
 .aps-form-data.label-ngang .item .form-item {
     flex: auto;
 }
-<<<<<<< HEAD
-.aps-kehoach-dangky-mua .box-content.pl20.pr20{
+
+.aps-kehoach-dangky-mua .box-content.pl20.pr20 {
     padding: 0 !important;
 }
-.aps-dangKy-dongphuc{
-        -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
-    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0)  !important;
+
+.aps-dangKy-dongphuc {
+    -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
 }
 
 /* -------------- */
-.row.aps-kehoach-dangky .box-solid.box-search,.row.aps-cauhinhhienthi .box-solid.box-search,
-.zone-bus.aps-ruthocphan-search .box-solid.box-search ,.row.aps-cauhinhhienthichung .box-solid.box-search{
+.row.aps-kehoach-dangky .box-solid.box-search,
+.row.aps-cauhinhhienthi .box-solid.box-search,
+.zone-bus.aps-ruthocphan-search .box-solid.box-search,
+.row.aps-cauhinhhienthichung .box-solid.box-search {
     padding-bottom: 8px !important;
 }
+
 .box.box-solid.aps-danhmucDL-danhsach,
-.box.box-solid.aps-khaibaothamsoapdung-choose{
+.box.box-solid.aps-khaibaothamsoapdung-choose {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
@@ -15309,24 +15314,26 @@ table#clone {
 .box.box-solid.aps-khaibaothamsoapdung-choose .box-header {
     margin-top: 0px !important;
 }
-.aps-danhmucDL-danhsach .jstree-container-ul{
+
+.aps-danhmucDL-danhsach .jstree-container-ul {
     overflow: hidden;
 }
+
 .aps-khaibaothamsoapdung-l .box-search .bss-item {
     margin-bottom: 10px !important;
 }
+
 .modal.aps-add-quydoicc .aps-form-item .aps-form-lable label {
     text-align: left !important;
     padding-right: 10px;
-=======
 
-/* ---- */
-.btn-list-bootstrap .btn {
-    margin-bottom: 10px;
-    margin-right: 5px;
-}
+    /* ---- */
+    .btn-list-bootstrap .btn {
+        margin-bottom: 10px;
+        margin-right: 5px;
+    }
 
-.color-bootstrap .p-3 {
-    padding: 10px;
->>>>>>> 74d4a47dd5502397c15dd938a0cfc44254161e1b
+    .color-bootstrap .p-3 {
+        padding: 10px;
+    }
 }
