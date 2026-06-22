@@ -725,22 +725,43 @@ ChungTu.prototype = {
     getList_DoiTuong: function () {
         var me = this;
         var obj_list = {
-            'action': 'TC_NguoiHoc_HoSo/LayDanhSach',
-            'versionAPI': 'v1.0',
+            'action': 'SV_NGUOIHOC_01_MH/DSA4BRIPJjQuKAkuIh4ALS0P',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All',
+            'iM': edu.system.iM,
+            'strTuKhoa': (edu.util.getValById('txtTuKhoa_Search') || '').toString().trim(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || '',
+            'strHanhDong_Code': '',
+            'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_CT'),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_CT'),
+            'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_CT'),
+            'strDaoTao_KhoaQuanLy_Id': '',
+            'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropSearch_Lop_CT'),
+            'strStudyStatus_Ids': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_CT').toString(),
+            'dIsPrimary': '',
+            'dBoQuaPhamVi': 0,
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
-            'strLopHoc_Id': edu.util.getValById('dropSearch_Lop_CT'),
-            'strChuongTrinh_Id': edu.util.getValById('dropSearch_ChuongTrinh_CT'),
-            'strKhoaDaoTao_Id': edu.util.getValById('dropSearch_KhoaDaoTao_CT'),
-            'strHeDaoTao_Id': edu.util.getValById('dropSearch_HeDaoTao_CT'),
-            'strTuKhoa': edu.util.getValById('txtTuKhoa_Search'),
-            'strTrangThaiNguoiHoc_Id': edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_CT').toString(),
-            'strQLSV_NguoiHoc_Id': '',
-        }
+        };
+
+        console.log('%c[chungtu.getList_DoiTuong] >>> REQUEST', 'color:#2196F3;font-weight:bold', obj_list);
+        console.log('[chungtu.getList_DoiTuong] action:', obj_list.action);
+        console.log('[chungtu.getList_DoiTuong] func  :', obj_list.func);
+        console.log('[chungtu.getList_DoiTuong] payload JSON:', JSON.stringify(obj_list, null, 2));
 
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
+                console.log('%c[chungtu.getList_DoiTuong] <<< RESPONSE', 'color:#4CAF50;font-weight:bold', data);
+                console.log('[chungtu.getList_DoiTuong] Success :', data && data.Success);
+                console.log('[chungtu.getList_DoiTuong] Message :', data && data.Message);
+                console.log('[chungtu.getList_DoiTuong] Pager   :', data && data.Pager);
+                console.log('[chungtu.getList_DoiTuong] Data.len:', data && data.Data ? data.Data.length : 0);
+                if (data && data.Data && data.Data.length > 0) {
+                    console.log('[chungtu.getList_DoiTuong] Row[0]  :', data.Data[0]);
+                    console.log('[chungtu.getList_DoiTuong] Keys[0] :', Object.keys(data.Data[0]));
+                }
                 if (data.Success) {
                     me.dt_HS = data.Data;
                     me.genTable_DoiTuong(data.Data, data.Pager);
@@ -751,14 +772,18 @@ ChungTu.prototype = {
                     }
                 }
                 else {
-                    console.log(data.Message);
+                    console.error('[chungtu.getList_DoiTuong] FAIL:', data.Message);
                 }
                 edu.system.endLoading();
             },
-            error: function (er) { edu.system.endLoading(); },
-            type: "GET",
+            error: function (er) {
+                console.error('%c[chungtu.getList_DoiTuong] !!! ERROR', 'color:#F44336;font-weight:bold', er);
+                if (er && er.responseText) console.error('[chungtu.getList_DoiTuong] responseText:', er.responseText);
+                if (er && er.status) console.error('[chungtu.getList_DoiTuong] status:', er.status, er.statusText);
+                edu.system.endLoading();
+            },
+            type: "POST",
             action: obj_list.action,
-            versionAPI: obj_list.versionAPI,
             contentType: true,
             data: obj_list,
             fakedb: [
