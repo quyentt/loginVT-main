@@ -7,8 +7,6 @@
 /* @import "../../../assets/css/all.css"; */
 
 /*-----------------------*/
-
-/*-----------------------*/
 body {
   color: #222;
   font-size: 14px;
@@ -331,29 +329,25 @@ a.btn {
 }
 
 .btn-list .btn {
-<<<<<<< HEAD
   margin-bottom: 10px;
-=======
-    margin-bottom: 10px;    
+  margin-bottom: 10px;
 }
-.pull-left.btn-list .btn {
-    /* margin-right: 10px; */
-    /* margin-left: 10px !important; */
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
-}
+
 
 .pull-right.btn-list .btn {
   margin-right: 10px;
   margin-left: 0px !important;
 }
+
 .btn-list-bootstrap .btn {
-    margin-bottom: 10px;
-    margin-right: 5px;
+  margin-bottom: 10px;
+  margin-right: 5px;
 }
 
 .color-bootstrap .p-3 {
-    padding: 10px;
+  padding: 10px;
 }
+
 /* -----box-header---------- */
 .box-header.btnGetData {
   padding: 0 !important;
@@ -412,21 +406,13 @@ a.btn {
   top: 0 !important;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD=======.box-header.with-border {
-=======
 .box-header.with-border {
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
   border-bottom: 1px solid #e1e1e1 !important;
   padding: 15px 20px 12px 20px !important;
   display: flex;
 }
 
-<<<<<<< HEAD
->>>>>>>74d4a47dd5502397c15dd938a0cfc44254161e1b .box-header .box-title {
-=======
 .box-header .box-title {
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
   font-size: 18px !important;
   color: var(--color-blue) !important;
   line-height: 24px;
@@ -1641,10 +1627,6 @@ input:active,
   padding-bottom: 12px !important;
 }
 
-.skin-blue .sidebar-form .btn,
-.skin-blue .sidebar-form input[type=text] {
-  /* background-color:#2469bb !important; */
-}
 
 .skin-blue .sidebar-form .btn {
   border-top-left-radius: 0 !important;
@@ -2807,10 +2789,6 @@ input:active,
   padding-bottom: 12px !important;
 }
 
-.skin-blue .sidebar-form .btn,
-.skin-blue .sidebar-form input[type="text"] {
-  /* background-color:#2469bb !important; */
-}
 
 .skin-blue .sidebar-form .btn {
   border-top-left-radius: 0 !important;
@@ -2927,9 +2905,11 @@ input:active,
 .sidebar-menu .treeview-menu .menu-open {
   background: rgba(36, 105, 187, 1);
 }
-.sidebar-menu .menu-open i{
+
+.sidebar-menu .menu-open i {
   color: #fff;
 }
+
 .skin-blue .sidebar-menu .treeview-menu>li.menu-open>a {
   color: var(--color-link) !important;
   /* background: rgb(17, 94, 186) !important; */
@@ -3419,10 +3399,6 @@ input:active,
   padding: 0 !important;
 }
 
-.box-body .box-view {
-  /* padding: 20px; */
-}
-
 .box-search .input-group .input-group-addon:hover {
   color: var(--color-blue) !important;
 }
@@ -3476,29 +3452,18 @@ input:active,
 .box-shadow,
 .zone-bus {
   border-radius: 12px !important;
-<<<<<<< HEAD
-  <<<<<<< HEAD
-=======
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
   /*overflow: hidden;*/
   -webkit-box-shadow: 0 0 15px 10px rgba(130, 122, 122, 0.1);
   box-shadow: 0 0 15px 10px rgba(130, 122, 122, 0.1);
   /*-webkit-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
   /*-moz-box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
   /*box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, .1);*/
-<<<<<<< HEAD
-  =======-webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
-=======
   -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
+  -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2);
   -webkit-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   -moz-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
-<<<<<<< HEAD
-  >>>>>>>74d4a47dd5502397c15dd938a0cfc44254161e1b
-=======
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
 }
 
 .content .box.box-solid {
@@ -5141,7 +5106,7 @@ info-tblNguoiHoc_RutTien,
 
 .number-receipt {
   font-size: 44px;
-  ffont-weight: 700 !important;
+  font-weight: 700 !important;
 }
 
 .zonePhieuThu_TCPT {
@@ -5485,8 +5450,6 @@ td:has(input[type="checkbox"]) {
 .tblChuongTrinh tr td:nth-last-child(2) {
   text-align: center !important;
 }
-
-.tblChuongTrinh tr td .btn-default.btnViewCT {}
 
 .zone-action .pull-right .aps-btn-list .btn {
   margin-left: 0 !important;
@@ -5839,8 +5802,6 @@ input[type="radio"] {
 }
 
 /* ----------- */
-.tab-Phieu .cmc-tabs {}
-
 .box-ds-phongThi {
   padding-bottom: 40px !important;
 }
@@ -6111,10 +6072,6 @@ input[type="radio"] {
   border-right: 0 solid #d1d1d1 !important;
   border-color: #fff !important;
   border: 0 !important;
-}
-
-.list-nhap-diem {
-  /* display: block !important; */
 }
 
 .table .btn.btn-add-row {
@@ -6494,8 +6451,6 @@ input[type="radio"] {
 .aps-total-receipts tr:hover td i {
   font-weight: bold !important;
 }
-
-.tenlophptkb {}
 
 .tblDSDiem tr td:nth-last-child(2) {
   text-align: center !important;
@@ -6909,10 +6864,6 @@ input[type="radio"] {
   display: grid !important;
   grid-template-columns: repeat(3, 1fr) !important;
   gap: 20px !important;
-<<<<<<< HEAD
-  <<<<<<< HEAD
-=======
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
 }
 
 .column-4 {
@@ -6938,12 +6889,3 @@ input[type="radio"] {
 .float-left {
   float: left !important;
 }
-
-<<<<<<< HEAD
-=======
-}
-
->>>>>>>74d4a47dd5502397c15dd938a0cfc44254161e1b
-=======
-
->>>>>>> 359a523e8bc5a167fd92bcffb0ebca5f2adcf2b5
