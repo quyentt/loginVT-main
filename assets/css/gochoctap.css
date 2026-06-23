@@ -143,7 +143,8 @@
   color: var(--orange) !important;
 }
 
-.tabs-scores .nav-link.active,.tabs-scores .nav-link.active:hover {
+.tabs-scores .nav-link.active,
+.tabs-scores .nav-link.active:hover {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
   border-color: var(--orange);
@@ -328,10 +329,6 @@
   border-top: 1px solid #cccccc !important;
 }
 
-.table tr:hover,
-.table th:hover {
-  background: #f8f8f8;
-}
 
 .table .btn.btn-default:hover,
 .table tr:hover .btn.btn-default.btnView_HocTap {
