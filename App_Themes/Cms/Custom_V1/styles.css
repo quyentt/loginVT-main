@@ -454,6 +454,10 @@ a.btn {
   margin-left: auto;
 }
 
+.box-header .pull-right.aps-btn-list .btn {
+  margin-left: 0px !important;
+}
+
 .content-header {
   margin-top: 10px !important;
 }
@@ -626,7 +630,7 @@ a.btn {
 
 thead,
 .table thead tr th {
-  color: var(--color-blue) !important;
+  color: #222 !important;
   background: rgba(60, 141, 238, 0.1) !important;
   font-weight: normal;
 }
