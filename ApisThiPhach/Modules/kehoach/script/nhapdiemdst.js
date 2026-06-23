@@ -269,8 +269,8 @@ NhapDiem.prototype = {
     getList_TuiBai: function () {
         var me = this;
         // strTrangThaiNhapDiem: '' = tất cả, '0' = chưa hoàn thành, '1' = đã hoàn thành
-        // Backend chỉ hỗ trợ lọc "chưa hoàn thành" qua dLocKhongHoanThanhNhapDiem=1,
-        // nên với "đã hoàn thành" phải lấy tất cả về rồi lọc lại theo XACNHANHOANTHANHDIEMTHI ở client.
+        // Luôn lấy toàn bộ DST rồi lọc ở client theo XACNHANHOANTHANHDIEMTHI để
+        // đảm bảo tổng = đã hoàn thành + chưa hoàn thành (filter backend cũ trả sai 0).
         var strTrangThaiNhapDiem = edu.util.getValById('dropSearch_HoanThanhNhapDiem');
         var obj_save = {
             'action': 'XLHV_TP_Chung_MH/DSA4BRIVKSgVKSQuBS41FSko',
@@ -278,7 +278,7 @@ NhapDiem.prototype = {
             'iM': edu.system.iM,
             'strTuKhoa': edu.util.getValById('txtSearch'),
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'dLocKhongHoanThanhNhapDiem': strTrangThaiNhapDiem === '0' ? '1' : '0',
+            'dLocKhongHoanThanhNhapDiem': '0',
             'strThi_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
             'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_MonThi'),
             'strTuNgay': edu.util.getValById('txtAAAA'),
@@ -289,14 +289,14 @@ NhapDiem.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //
-        $("#loading_NhapDiem").show();
         edu.system.makeRequest({
             success: function (data) {
-                $("#loading_NhapDiem").hide();
                 if (data.Success) {
                     var dtReRult = data.Data || [];
                     if (strTrangThaiNhapDiem === '1') {
                         dtReRult = dtReRult.filter(function (e) { return e.XACNHANHOANTHANHDIEMTHI == 1; });
+                    } else if (strTrangThaiNhapDiem === '0') {
+                        dtReRult = dtReRult.filter(function (e) { return e.XACNHANHOANTHANHDIEMTHI != 1; });
                     }
                     me.dtTuiBai = dtReRult;
                     me.genTable_TuiBai(dtReRult, dtReRult.length);
@@ -306,7 +306,6 @@ NhapDiem.prototype = {
                 }
             },
             error: function (er) {
-                $("#loading_NhapDiem").hide();
                 edu.system.alert(JSON.stringify(er), "w");
             },
             type: 'POST',
