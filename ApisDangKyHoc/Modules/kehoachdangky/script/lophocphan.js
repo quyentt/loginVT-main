@@ -344,6 +344,7 @@ LopHocPhan.prototype = {
             }
             me["dtCheDoTinhPhi_LopHP"] = arrSelected;
             $('#dropCheDoTinhPhi_LopHP').val('').trigger('change');
+            $('#dropKieuHoc_LopHP').val('').trigger('change');
             $('#chkSelectAll_CheDoTinhPhi_LopHP').prop('checked', false);
             me.genTable_CheDoTinhPhi_LopHP(arrSelected);
             $('#myModalCheDoTinhPhi_LopHP').modal('show');
@@ -364,12 +365,17 @@ LopHocPhan.prototype = {
                 edu.system.alert("Vui lòng chọn chế độ tính phí?");
                 return;
             }
+            var strKieuHoc = edu.util.getValById('dropKieuHoc_LopHP');
+            if (!strKieuHoc) {
+                edu.system.alert("Vui lòng chọn kiểu học?");
+                return;
+            }
             edu.system.confirm("Bạn có chắc chắn lưu chế độ tính phí cho " + arrChecked_Id.length + " lớp đã chọn?");
             $("#btnYes").click(function () {
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
                 arrChecked_Id.forEach(function (strId) {
-                    me.save_CheDoTinhPhi_LopHP(strId, strCheDo);
+                    me.save_CheDoTinhPhi_LopHP(strId, strCheDo, strKieuHoc);
                 });
             });
         });
@@ -386,7 +392,7 @@ LopHocPhan.prototype = {
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
                 arrChecked_Id.forEach(function (strId) {
                     var rec = (me.dtCheDoTinhPhi_LopHP || []).find(function (r) { return r.ID == strId; });
-                    var strRecordId = rec ? (rec.CHEDOTINHPHI_ID || rec.DANGKY_LOPHP_CHEDOPHI_ID || '') : '';
+                    var strRecordId = rec ? (rec.CHEDOTINHPHI_ID || '') : '';
                     if (!strRecordId) {
                         edu.system.start_Progress("zoneprocessXXXX");
                         return;
@@ -457,6 +463,7 @@ LopHocPhan.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("KHDT.DIEM.KIEUHOC", "dropSearch_KieuHoc");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.NGUOIHOC.CHEDOTINHPHI", "dropCheDoTinhPhi");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.NGUOIHOC.CHEDOTINHPHI", "dropCheDoTinhPhi_LopHP");
+        edu.system.loadToCombo_DanhMucDuLieu("KHDT.DIEM.KIEUHOC", "dropKieuHoc_LopHP");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.XACNHAN.KETQUA", "dropSearch_HanhDong");
         edu.system.loadToCombo_DanhMucDuLieu("KLGD.LOPHOCPHAN.PHANLOAI", "dropPhanLoaiCachTinh");
         edu.system.getList_MauImport("zonebtnBaoCao_LopHocPhan", function (addKeyValue) {
@@ -2613,7 +2620,7 @@ LopHocPhan.prototype = {
         edu.system.loadToTable_data(jsonForm);
     },
 
-    save_CheDoTinhPhi_LopHP: function (strDangKy_LopHocPhan_Id, strCheDoTinhPhi_Id) {
+    save_CheDoTinhPhi_LopHP: function (strDangKy_LopHocPhan_Id, strCheDoTinhPhi_Id, strKieuHoc_Id) {
         var me = this;
         var obj_save = {
             'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4Hg0uMQkxHgIpJAUuESkoHggvMgPP',
@@ -2622,6 +2629,7 @@ LopHocPhan.prototype = {
             'strDangKy_LopHocPhan_Id': strDangKy_LopHocPhan_Id,
             'strHieuLuc': '1',
             'strCheDoTinhPhi_Id': strCheDoTinhPhi_Id,
+            'strKieuHoc_Id': strKieuHoc_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'strVaiTroDangNhap_Id': '',
             'strChucNangHeThong_Id': '',
