@@ -273,6 +273,8 @@ PhanCongPhamVi.prototype = {
         edu.util.viewValById("txtNgayBatDau_Phut", "");
         edu.util.viewValById("txtNgayBatDau_Gio", "");
         edu.util.viewValById("txtNgayBatDau", "");
+        edu.util.viewValById("txtSiSoToiDa", "");
+        edu.util.viewValById("txtSiSoToiThieu", "");
     },
     toggle_form: function () {
         edu.util.toggle_overide("zone-bus", "zonebatdau");
@@ -345,6 +347,8 @@ PhanCongPhamVi.prototype = {
             'dGioKetThucTrongNgayCuoi': edu.util.getValById('txtNgayKetThuc_Gio'),
             'dPhutDangKyTrongNgayDau': edu.util.getValById('txtNgayBatDau_Phut'),
             'dPhutKetThucTrongNgayCuoi': edu.util.getValById('txtNgayKetThuc_Phut'),
+            'dSiSoToiDa': edu.util.getValById('txtSiSoToiDa'),
+            'dSiSoToiThieu': edu.util.getValById('txtSiSoToiThieu'),
         };
         if (obj_save.strId != "") {
             temp = me.dtPhanCongPhamVi.find(ele => ele.PHAMVIAPDUNG_ID === me.strPhanCongPhamVi_Id);
@@ -367,6 +371,8 @@ PhanCongPhamVi.prototype = {
                 'dGioKetThucTrongNgayCuoi': edu.util.getValById('txtNgayKetThuc_Gio_Edit'),
                 'dPhutDangKyTrongNgayDau': edu.util.getValById('txtNgayBatDau_Phut_Edit'),
                 'dPhutKetThucTrongNgayCuoi': edu.util.getValById('txtNgayKetThuc_Phut_Edit'),
+                'dSiSoToiDa': edu.util.getValById('txtSiSoToiDa_Edit'),
+                'dSiSoToiThieu': edu.util.getValById('txtSiSoToiThieu_Edit'),
             };
         }
         //default
@@ -534,6 +540,8 @@ PhanCongPhamVi.prototype = {
         edu.util.viewValById("txtNgayBatDau_Phut_Edit", data.PHUTDANGKYTRONGNGAYDAU);
         edu.util.viewValById("txtNgayBatDau_Gio_Edit", data.GIODANGKYTRONGNGAYDAU);
         edu.util.viewValById("txtNgayBatDau_Edit", data.NGAYBATDAU);
+        edu.util.viewValById("txtSiSoToiDa_Edit", data.SISOTOIDA);
+        edu.util.viewValById("txtSiSoToiThieu_Edit", data.SISOTOITHIEU);
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==>Systemroot

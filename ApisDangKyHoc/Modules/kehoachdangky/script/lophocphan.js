@@ -329,6 +329,73 @@ LopHocPhan.prototype = {
             });
         });
 
+        $("#btnThietLapCheDoTinhPhi").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn lớp học phần?");
+                return;
+            }
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return (me.dtLopHocPhan || []).find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r; });
+            if (arrSelected.length === 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            me["dtCheDoTinhPhi_LopHP"] = arrSelected;
+            $('#dropCheDoTinhPhi_LopHP').val('').trigger('change');
+            $('#chkSelectAll_CheDoTinhPhi_LopHP').prop('checked', false);
+            me.genTable_CheDoTinhPhi_LopHP(arrSelected);
+            $('#myModalCheDoTinhPhi_LopHP').modal('show');
+        });
+
+        $("#chkSelectAll_CheDoTinhPhi_LopHP").on("click", function () {
+            edu.util.checkedAll_BgRow(this, { table_id: "tblCheDoTinhPhi_LopHP" });
+        });
+
+        $("#btnSave_CheDoTinhPhi_LopHP").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblCheDoTinhPhi_LopHP", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một dòng?");
+                return;
+            }
+            var strCheDo = edu.util.getValById('dropCheDoTinhPhi_LopHP');
+            if (!strCheDo) {
+                edu.system.alert("Vui lòng chọn chế độ tính phí?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn lưu chế độ tính phí cho " + arrChecked_Id.length + " lớp đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                arrChecked_Id.forEach(function (strId) {
+                    me.save_CheDoTinhPhi_LopHP(strId, strCheDo);
+                });
+            });
+        });
+
+        $("#btnDelete_CheDoTinhPhi_LopHP").click(function (e) {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblCheDoTinhPhi_LopHP", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một dòng?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn xóa chế độ tính phí khỏi " + arrChecked_Id.length + " lớp đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                arrChecked_Id.forEach(function (strId) {
+                    var rec = (me.dtCheDoTinhPhi_LopHP || []).find(function (r) { return r.ID == strId; });
+                    var strRecordId = rec ? (rec.CHEDOTINHPHI_ID || rec.DANGKY_LOPHP_CHEDOPHI_ID || '') : '';
+                    if (!strRecordId) {
+                        edu.system.start_Progress("zoneprocessXXXX");
+                        return;
+                    }
+                    me.delete_CheDoTinhPhi_LopHP(strRecordId);
+                });
+            });
+        });
+
         $("#btnHuyPhiTinChi").click(function (e) {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhan", "checkX");
             if (arrChecked_Id.length == 0) {
@@ -389,6 +456,7 @@ LopHocPhan.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("QLSV.TRANGTHAI", "", "", me.genList_TrangThaiSV);
         edu.system.loadToCombo_DanhMucDuLieu("KHDT.DIEM.KIEUHOC", "dropSearch_KieuHoc");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.NGUOIHOC.CHEDOTINHPHI", "dropCheDoTinhPhi");
+        edu.system.loadToCombo_DanhMucDuLieu("DANGKY.NGUOIHOC.CHEDOTINHPHI", "dropCheDoTinhPhi_LopHP");
         edu.system.loadToCombo_DanhMucDuLieu("DANGKY.XACNHAN.KETQUA", "dropSearch_HanhDong");
         edu.system.loadToCombo_DanhMucDuLieu("KLGD.LOPHOCPHAN.PHANLOAI", "dropPhanLoaiCachTinh");
         edu.system.getList_MauImport("zonebtnBaoCao_LopHocPhan", function (addKeyValue) {
@@ -1277,6 +1345,11 @@ LopHocPhan.prototype = {
                 {
                     "mRender": function (nRow, aData) {
                         return edu.util.returnEmpty(aData.PHANLOAICACHTINH_TEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.CHEDOTINHPHI_TEN);
                     }
                 },
                 {
@@ -2504,6 +2577,110 @@ LopHocPhan.prototype = {
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
                     $('#myModalThuocTinhKLGD').modal('hide');
+                    me.getList_LopHocPhan();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    genTable_CheDoTinhPhi_LopHP: function (data) {
+        var jsonForm = {
+            strTable_Id: "tblCheDoTinhPhi_LopHP",
+            aaData: data,
+            colPos: {
+                center: [0],
+            },
+            aoColumns: [
+                { "mDataProp": "MALOP" },
+                { "mDataProp": "TENLOP" },
+                { "mDataProp": "LOAILOP" },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.returnEmpty(aData.CHEDOTINHPHI_TEN);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
+                    }
+                }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    save_CheDoTinhPhi_LopHP: function (strDangKy_LopHocPhan_Id, strCheDoTinhPhi_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4Hg0uMQkxHgIpJAUuESkoHggvMgPP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DangKy_LopHp_CheDoPhi_Ins',
+            'iM': edu.system.iM,
+            'strDangKy_LopHocPhan_Id': strDangKy_LopHocPhan_Id,
+            'strHieuLuc': '1',
+            'strCheDoTinhPhi_Id': strCheDoTinhPhi_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': '',
+            'strChucNangHeThong_Id': '',
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    $('#myModalCheDoTinhPhi_LopHP').modal('hide');
+                    me.getList_LopHocPhan();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    delete_CheDoTinhPhi_LopHP: function (strId) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/ETMeBSAvJgo4Hg0uMQkxHgIpJAUuESkoHgUkLQPP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Pr_DangKy_LopHp_CheDoPhi_Del',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': '',
+            'strChucNangHeThong_Id': '',
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    $('#myModalCheDoTinhPhi_LopHP').modal('hide');
                     me.getList_LopHocPhan();
                 });
             },

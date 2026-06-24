@@ -301,6 +301,9 @@
                         <a id="btnThuocTinhKLGD" class="btn"
                            style="color: #fff; background-color: #6f42c1; border-color: #5a32a3;">
                             <i class="fa-solid fa-scale-balanced"></i>Thuộc tính phục vụ tính khối lượng</a>
+                        <a id="btnThietLapCheDoTinhPhi" class="btn"
+                           style="color: #fff; background-color: #17a2b8; border-color: #138496;">
+                            <i class="fa-solid fa-money-check-dollar"></i>Thiết lập chế độ tính phí</a>
                         <a id="btnThucHienRutHocPhan" class="btn btn-warning" style="color: #fff; background-color: #f39c12; border-color: #e08e0b;">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>Thực hiện rút học phần</a>
                         <a id="btnTaoDSNhapDiem" class="btn btn-outline-danger">
@@ -364,6 +367,7 @@
                                     <th class="td-left">Tính phí</th>
                                     <th class="td-left">Tổ chức thi</th>
                                     <th class="td-left">Thuộc tính KLGD</th>
+                                    <th class="td-left">Chế độ tính phí</th>
                                     <th class="td-left">Dồn lớp</th>
                                     <th class="td-left">Dồn nhóm lớp</th>
                                     <th class="td-center td-fixed">
@@ -965,6 +969,57 @@
                     <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
                 </button>
                 <a id="btnSave_ThuocTinhKLGD" class="btn btn-primary">
+                    <i class="fa fa-save"></i> Lưu</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal: Thiết lập chế độ tính phí cho lớp học phần -->
+<div class="modal fade myModalCheDoTinhPhi_LopHP" id="myModalCheDoTinhPhi_LopHP" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title"><span class="myModalLabel1">
+                    <i class="fa-solid fa-money-check-dollar"></i>Thiết lập chế độ tính phí</span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row">
+                    <div class="col-sm-4 item-search">
+                        <select id="dropCheDoTinhPhi_LopHP" class="select-opt" style="width:100% !important">
+                            <option value="">--Chọn chế độ tính phí--</option>
+                        </select>
+                    </div>
+                </div>
+                <table id="tblCheDoTinhPhi_LopHP"
+                       class="table table-hover table-bordered table-noborder tblCheDoTinhPhi_LopHP">
+                    <thead>
+                        <tr>
+                            <th class="td-fixed td-center">Stt</th>
+                            <th class="td-left">Mã lớp</th>
+                            <th class="td-left">Tên lớp</th>
+                            <th class="td-left">Loại lớp</th>
+                            <th class="td-left">Chế độ hiện tại</th>
+                            <th class="td-center td-fixed">
+                                <input type="checkbox" id="chkSelectAll_CheDoTinhPhi_LopHP">
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <a id="btnDelete_CheDoTinhPhi_LopHP" class="btn btn-danger pull-left">
+                    <i class="fa fa-trash"></i> Xóa</a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
+                </button>
+                <a id="btnSave_CheDoTinhPhi_LopHP" class="btn btn-primary">
                     <i class="fa fa-save"></i> Lưu</a>
             </div>
         </div>
