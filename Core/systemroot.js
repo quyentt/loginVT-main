@@ -3531,9 +3531,19 @@ systemroot.prototype = {
                 action: 'CMS_HangDoiTuTao/XuLyNhiemVu_HangDoi',
                 complete: function () {
                     edu.system.start_Progress("probar_" + objHangDoi.strName + strHangDoi_Id, function () {
-                        $("#thanhtientrinh_" + objHangDoi.strName + strHangDoi_Id).remove();
-                        me.alert('Tổng dữ liệu: ' + iTongDuLieu + '.<br/> Thành công: <span style="color: green">' + iThanhCong + '</span>.</br> Thất bại: <span style="color: red">' + iThatBai + '</span>', "s");
                         if (typeof objHangDoi.callback == "function") objHangDoi.callback();
+                        me.alert('Tổng dữ liệu: ' + iTongDuLieu + '.</br> Tiến trình đã xử lý: <span style="color: blue">' + iThanhCong + '</span>', "s");
+                        if (iThatBai) {
+                            me.confirm('Bạn có muốn chạy lại không');
+                            $("#btnYes").click(function (e) {
+                                iThanhCong = 0;
+                                iThatBai = 0;
+                                iTongDuLieu = 0;
+                                getList_XuLyNhiemVu();
+                            });
+                        } else {
+                            $("#thanhtientrinh_" + objHangDoi.strName + strHangDoi_Id).remove();
+                        }
                     });
                 },
                 contentType: true,
