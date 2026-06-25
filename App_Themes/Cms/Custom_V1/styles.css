@@ -460,7 +460,6 @@ a.btn {
   margin-top: 10px !important;
 }
 
-<<<<<<< HEAD
 /* -----Table---------- */
 .table>tbody>tr>td,
 .table>tbody>tr>th,
@@ -770,8 +769,6 @@ thead,
   color: var(--color-blue) !important;
 }
 
-=======
->>>>>>> 7754ab50839ef8e74a1ce10b89c78f93ea121462
 /* ------------------- */
 .form-check-input {
   width: 1em !important;
