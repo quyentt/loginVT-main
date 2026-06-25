@@ -6838,8 +6838,8 @@ input#tblInput_DTSV_SinhVien_input {
 
 .aps-form-input .select2-container .select2-selection--single .select2-selection__rendered {
     padding-left: 0 !important;
-    padding-top: 5px !important;
-    line-height: 36px !important;
+    padding-top: 5px;
+    line-height: 36px;
 }
 
 .btnSearch_DiaDiem.btn-find:hover .fa-customer {
@@ -15435,6 +15435,7 @@ table#clone {
 .aps-xuatbaocao .box-body.pd20 {
     padding-top: 10px !important;
 }
+
 /* ----------------- */
 #danhsach_sinhvien .nav-tabs .nav-item.show .nav-link,
 #danhsach_sinhvien .nav-tabs .nav-link.active {
@@ -15443,19 +15444,44 @@ table#clone {
     border-color: var(--color-blue);
     border-bottom: 1px solid #fff !important;
 }
+
 #danhsach_sinhvien .nav-tabs .nav-link .me-1 {
     margin-right: 5px !important;
 }
-#danhsach_sinhvien  .nav-tabs .nav-link{
+
+#danhsach_sinhvien .nav-tabs .nav-link {
     font-weight: 300;
     color: #222;
 }
+
 #danhsach_sinhvien .border-bottom {
     border-bottom: 1px solid var(--color-blue) !important;
 }
+
 #zoneStatistic .info-box {
     height: 100%;
 }
+
 #grpFilterIsPrimary .me-1 {
     margin-right: 8px !important;
+}
+
+.search-filter-box.box-search-main {
+    gap: 10px !important;
+}
+
+.search-filter-box.box-search-main .item-select {
+    padding-bottom: 5px;
+}
+
+.box-search .search-filter-box.box-search-main .item .label {
+    background: #f8f8f8 !important;
+}
+
+.search-filter-box.box-search-main .item .label {
+    position: absolute;
+    background: #fff !important;
+    top: -8px;
+    left: 10px;
+    padding: 0px 5px 3px 4px;
 }

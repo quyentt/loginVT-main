@@ -321,7 +321,8 @@
                             <i class="fa-light fa-icons item-icon"></i>
                             <span>Icon</span>
                         </a>
-                    </div>                    <div class="sidebar-menu-item">
+                    </div>
+                    <div class="sidebar-menu-item">
                         <a class="sidebar-menu-header collapsed" href="Header - title.html">
                             <i class="fa-light fa-font item-icon"></i>
                             <span>Header - title</span>
@@ -361,20 +362,19 @@
                 </div>
             </div>
 
-
             <div class="row box-comment pl-10">
                 <!-- ===================== CỘT TRÁI ===================== -->
                 <div class="col-6">
-                    <h3>Forms - Box search</h3>
+                    <h4>Forms - Box search</h4>
                     <!-- ===== Overview ===== -->
                     <div class="box box-solid zone-bus pd0" id="search">
                         <!--Box search-->
-                        <div class="box box-solid box-search pd20 pr10 pb0">
+                        <div class="box box-solid box-search pd20 pr0 pb0">
                             <div class="box-header with-border d-none">
                                 <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
                             </div>
                             <div class="box-body pd0">
-                                <div class="bss-item">
+                                <div class="bss-item -me-10">
                                     <div class="col-sm-3 item-search">
                                         <select id="dropSearch_LoaiQuyetDinh"
                                             class="select-opt select2-hidden-accessible" tabindex="-1"
@@ -568,38 +568,6 @@
                                                             role="presentation"></b></span></span></span><span
                                                 class="dropdown-wrapper" aria-hidden="true"></span></span>
                                     </div>
-                                    <div class="col-sm-3 item-search">
-                                        <select id="dropLop_CB" class="select-opt select2-hidden-accessible"
-                                            tabindex="-1" aria-hidden="true"></select><span
-                                            class="select2 select2-container select2-container--default" dir="ltr"
-                                            style="width: 42px;"><span class="selection"><span
-                                                    class="select2-selection select2-selection--single" role="combobox"
-                                                    aria-haspopup="true" aria-expanded="false" tabindex="0"
-                                                    aria-labelledby="select2-dropLop_CB-container"><span
-                                                        class="select2-selection__rendered"
-                                                        id="select2-dropLop_CB-container"></span><span
-                                                        class="select2-selection__arrow" role="presentation"><b
-                                                            role="presentation"></b></span></span></span><span
-                                                class="dropdown-wrapper" aria-hidden="true"></span></span>
-                                    </div>
-                                    <div class="col-sm-3 item-search">
-                                        <select id="dropSearch_HocPhan" class="select-opt select2-hidden-accessible"
-                                            tabindex="-1" aria-hidden="true"></select><span
-                                            class="select2 select2-container select2-container--default" dir="ltr"
-                                            style="width: 42px;"><span class="selection"><span
-                                                    class="select2-selection select2-selection--single" role="combobox"
-                                                    aria-haspopup="true" aria-expanded="false" tabindex="0"
-                                                    aria-labelledby="select2-dropSearch_HocPhan-container"><span
-                                                        class="select2-selection__rendered"
-                                                        id="select2-dropSearch_HocPhan-container"></span><span
-                                                        class="select2-selection__arrow" role="presentation"><b
-                                                            role="presentation"></b></span></span></span><span
-                                                class="dropdown-wrapper" aria-hidden="true"></span></span>
-                                    </div>
-                                    <div class="col-sm-3 item-search">
-                                        <input id="txtSearch_TuKhoa" class="form-control"
-                                            placeholder="Nhập từ khóa tìm kiếm">
-                                    </div>
                                     <div class="col-sm-6 item-search item-search-btn">
                                         <a class="btn btn-default btn-search" id="btnSearch">
                                             <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
@@ -617,8 +585,419 @@
                                 </div>
                             </div>
                         </div>
-
+                        <div class="box-body box box-solid pd20">Nội dung</div>
+                        <div class="box-footer">Footer</div>
                     </div>
+
+                    <h4>Forms - Box search - text</h4>
+                    <!-- ===== Overview ===== -->
+                    <div class="box box-solid zone-bus pd0" id="search">
+                        <!-- ===== box-search 4 cột ===== -->
+
+                        <div class="box box-solid box-search pd20">
+                            <div class="search-filter-box box-search-main pt-15 column-4 gap10">
+                                <div class="item item-select">
+                                    <div class="label">Hệ đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Hệ đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khóa đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Khóa đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khoa</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Chương trình</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Lớp</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Trạng thái học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-input input_TuKhoa">
+                                    <input id="txtSearch_TuKhoa" class="form-control"
+                                        placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                                </div>
+                                <div class="item btn-group">
+                                    <a class="btn btn-default btn-search" href="">
+                                        <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ===== box-search 3 cột ===== -->
+                        <div class="box box-solid box-search-ff pd20">
+                            <div class="title-is-paging">
+                                <div class="group-title pl0 pt-0">
+                                    <p class="mb-0">
+                                        <i class="fa-duotone fa-solid fa-print-magnifying-glass"></i>
+                                        <span class="lang" key="">
+                                            Tìm kiếm thông tin 3 cột
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="search-filter-box box-search-main pt-15 column-3 gap10">
+                                <div class="item item-select">
+                                    <div class="label">Hệ đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Hệ đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khóa đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Khóa đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khoa</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Chương trình</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Lớp</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Trạng thái học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-input input_TuKhoa">
+                                    <input id="txtSearch_TuKhoa" class="form-control"
+                                        placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                                </div>
+                                <div class="item btn-group gap10">
+                                    <a class="btn btn-primary" href="">
+                                        <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
+                                    </a>
+                                    <a class="btn btn-outline-orange" href="">
+                                        <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-e1e1e1" href="">
+                                        <i class=" fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ===== box-search 2 cột ===== -->
+                        <div class="box box-solid box-search-ff pd20">
+                            <div class="title-is-paging">
+                                <div class="group-title pl0 pt-0">
+                                    <p class="mb-0">
+                                        <i class="fa-duotone fa-solid fa-print-magnifying-glass"></i>
+                                        <span class="lang" key="">
+                                            Tìm kiếm thông tin 2 cột
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="search-filter-box box-search-main pt-15 column-2 gap10">
+                                <div class="item item-select">
+                                    <div class="label">Hệ đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Hệ đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khóa đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Khóa đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Khoa</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Chương trình</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Lớp</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Trạng thái học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-input input_TuKhoa">
+                                    <input id="txtSearch_TuKhoa" class="form-control"
+                                        placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                                </div>
+                                <div class="item btn-group gap10">
+                                    <a class="btn btn-primary" href="">
+                                        <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
+                                    </a>
+                                    <a class="btn btn-outline-orange" href="">
+                                        <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-e1e1e1" href="">
+                                        <i class=" fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ===== box-search 1 cột ===== -->
+                        <div class="box box-solid box-search-ff pd20">
+                            <div class="title-is-paging">
+                                <div class="group-title pl0 pt-0">
+                                    <p class="mb-0">
+                                        <i class="fa-duotone fa-solid fa-print-magnifying-glass"></i>
+                                        <span class="lang" key="">
+                                            Tìm kiếm thông tin 1 cột
+                                        </span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="search-filter-box box-search-main pt-15 column-1 gap10">
+                                <div class="item item-select">
+                                    <div class="label">Hệ đào tạo</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Hệ đào tạo</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="item item-select">
+                                    <div class="label">Lớp</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Chương trình</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-select">
+                                    <div class="label">Trạng thái học tập</div>
+                                    <div class="form-item d-flex form-add-info flex-grow-1" bis_skin_checked="1">
+                                        <div class="input-group no-icon" bis_skin_checked="1">
+                                            <i class="fal fa-angle-down"></i>
+                                            <select class="form-select" aria-label="Default select example">
+                                                <option selected="">Tất cả</option>
+                                                <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                <option value="3">Kế hoạch tuyển sinh 3</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item item-input input_TuKhoa">
+                                    <input id="txtSearch_TuKhoa" class="form-control"
+                                        placeholder="Mã hồ sơ, Họ tên, CCCD...">
+                                </div>
+                                <div class="item btn-group gap10">
+                                    <a class="btn btn-primary" href="">
+                                        <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
+                                    </a>
+                                    <a class="btn btn-outline-orange" href="">
+                                        <i class="fa-solid fa-arrows-rotate"></i><span>Làm mới</span>
+                                    </a>
+                                    <a class="btn btn-outline-dark btn-e1e1e1" href="">
+                                        <i class=" fa-solid fa-sliders"></i><span>Đặt lại bộ lọc</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ===== ===== ===== -->
+                        <div class="box-body box box-solid pd20">Nội dung</div>
+                        <div class="box-footer">Footer</div>
+                    </div>
+
                     <!-- ===== Overview ===== -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="nhapLieu">
                         <div class="box-header with-border">
@@ -1259,12 +1638,12 @@
             </div>
 
         </div>
-
-        <!-- -------------------------- -->
-        <!-- JS -->
-        <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
-        <script src="../assets/js/jquery-3.7.1.min.js"></script>
-        <script src="../assets/js/customs.js"></script>
+    </div>
+    <!-- -------------------------- -->
+    <!-- JS -->
+    <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
+    <script src="../assets/js/jquery-3.7.1.min.js"></script>
+    <script src="../assets/js/customs.js"></script>
 </body>
 
 </html>

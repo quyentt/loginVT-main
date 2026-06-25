@@ -55,7 +55,7 @@ body {
 
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
   border-color: #d2d6de transparent transparent transparent !important;
-  border-width: 6px 5px 0 5px !important;
+  border-width: 5px 4px 0 5px !important;
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow {
