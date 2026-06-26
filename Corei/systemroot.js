@@ -3601,7 +3601,8 @@ systemroot.prototype = {
                     }
                     else {
                         edu.system.alert(data.Message);
-                        iThatBai += strNhiemVu_Id.length;
+                        iThanhCong += strNhiemVu_Id.length;
+                        //iThatBai += strNhiemVu_Id.length;
                     }
                 },
                 error: function (er) {
@@ -3615,7 +3616,7 @@ systemroot.prototype = {
                         //me.iGioiHanLuong = 10;
                         //
                         if (typeof objHangDoi.callback == "function") objHangDoi.callback();
-                        me.alert('Tổng dữ liệu: ' + iTongDuLieu + '.</br> Thất bại: <span style="color: red">' + iThatBai + '</span>', "s");
+                        me.alert('Tổng dữ liệu: ' + iTongDuLieu + '.</br> Tiến trình đã xử lý: <span style="color: blue">' + iThanhCong + '</span>', "s");
                         if (iThatBai) {
                             me.confirm('Bạn có muốn chạy lại không');
                             $("#btnYes").click(function (e) {
