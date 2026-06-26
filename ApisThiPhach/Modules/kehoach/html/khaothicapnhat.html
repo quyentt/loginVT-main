@@ -55,13 +55,11 @@
                             <div class="col-sm-6 item-search">
                                 <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
-                            <div class="col-sm-3 item-search">
+                            <div class="col-sm-6 item-search d-flex aps-gap-10">
                                 <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
-                            </div>
-                            <div class="col-sm-3 item-search">
+                            
                                 <div class="dropdown" id="zonebtnBaoCao_KT"></div>
-                            </div>
-                            <div class="col-sm-3 item-search">
+                           
                                 <div class="dropdown" id="zonebtnBaoCao_KT_Import">
                                     <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
                                         <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
@@ -78,23 +76,23 @@
             <div class="clear"></div>
             <!-- Danh sách -->
             <div class="box box-solid aps-list-khaothicaphat">
-                <div class="box-header pl20 mt-15 pr20">
-                    <h3 class="box-title">
-                        <i class="fa-light fa-list-timeline"></i> Danh sách
-                        <span class="pull-right badge bg-light-blue ml-15">
+                <div class="box-header">
+                    <h3 class="box-title line-38">
+                        <i class="fa-light fa-list-timeline line-38"></i> Danh sách
+                        <span class="pull-right badge bg-light-blue" style="margin-top: 7px !important;">
                             <span id="lblXacNhan_Tong"></span>
                         </span>
                     </h3>
-                    <div class="pull-right">
+                    <div class="pull-right aps-list-btn">
                         <a class="btn btn-primary" id="btnXemDieuKienThi" href="#"><i class="fa-light fa-chalkboard-user"></i> Xem không đủ dk thi</a>
                         <a class="btn btn-success" id="btnViPhamQuyChe" href="#"><i class="fa-light fa-address-book"></i> Xem vi phạm Quy chế</a>
                         <a class="btn btn-danger" id="btnCongBoLich" href="#"><i class="fa-light fa-calendar-clock"></i> Công bố lịch</a>
                         <a class="btn btn-warning" id="btnXacNhan" href="#"><i class="fa-solid fa-file-circle-check"></i> Xác nhận tình trạng</a>
                     </div>
                 </div>
-                <div class="box-body pd20 pt0">
+                <div class="box-body pd20 pt0 pl0 pr0">
                     <div class="table-select2 aps-table-select mt-10">
-                        <table id="tblXacNhan" class="table table-hover table-bordered">
+                        <table id="tblXacNhan" class="table table-hover table-noborder">
                             <thead>
                                 <tr>
                                     <th class="td-fixed td-center">Stt</th>
@@ -132,7 +130,7 @@
 </section>
 <!-- Xác nhận -->
 <div class="modal fade modal_XacNhan" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-860">
+    <div class="modal-dialog modal-860 modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -206,7 +204,7 @@
 </div>
 <!-- Công bố lịch -->
 <div class="modal fade modal_CongBo" id="modal_CongBo" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-860">
+    <div class="modal-dialog modal-860 modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -280,14 +278,14 @@
 </div>
 <!-- modal_ViPham -->
 <div class="modal fade modal_ViPham" id="modal_ViPham" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 80%">
+    <div class="modal-dialog  modal-dialog-centered modal-dialog-scrollable" style="width: 80%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title modal-name" id=""><span style="float: left"><i class="fa-light fa-address-book mr-10"></i> </span><span id="myModalLabelViPham"></span></h4>
             </div>
             <div class="modal-body">
-                <table id="tblViPham" class="table table-hover table-bordered">
+                <table id="tblViPham" class="table table-hover table-noborder">
                     <thead>
                         <tr>
                             <th class="td-fixed td-center">Stt</th>
@@ -299,7 +297,7 @@
                             <th class="td-left">Học phần</th>
                             <th class="td-left">Ngày thi</th>
                             <th class="td-left">Hình thức</th>
-                            <th class="td-left">Lý do</th>
+                            <th class="td-left" style="min-width: 55px;">Lý do</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
