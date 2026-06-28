@@ -629,7 +629,7 @@ a.btn {
 thead,
 .table thead tr th {
   color: #222 !important;
-  background: rgba(60, 141, 238, 0.1) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
   font-weight: normal;
 }
 
@@ -1375,7 +1375,14 @@ input:active,
   font-size: 1.4em;
   font-family: "Font Awesome 6 Brands";
 }
-
+.btn-warning:hover {
+    background-color: #d88005 !important;
+}
+.btn-primary:hover {
+    background-color: #286090 !important;
+    border-color: #204d74 !important;
+}
+/*-----*/
 .fa-google-plus:before {
   content: "\f0d5" !important;
 }
@@ -3723,6 +3730,7 @@ input:active,
 .modal-header .box-title i {
   color: #fff !important;
   padding-right: 8px !important;
+  margin-right: 0 !important;
 }
 
 .modal-header {
@@ -7065,7 +7073,7 @@ thead,
 
 .table-bordered>thead>tr>td,
 .table-bordered>thead>tr>th {
-  font-weight: 400 !important;
+  font-weight: 600 !important;
 }
 
 .td-center {

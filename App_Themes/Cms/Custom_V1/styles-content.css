@@ -3377,7 +3377,7 @@
     border-radius: 100px;
     line-height: 25px;
     margin-top: 0 !important;
-    margin-left: 10px;
+    margin-left: 10px !important;
 }
 
 .pull-right.bg-light-success {
@@ -15307,7 +15307,7 @@ table#clone {
     padding-bottom: 8px !important;
 }
 
-.box.box-solid.aps-danhmucDL-danhsach,
+.box.box-solid.aps-danhmucDL-danhsach,.aps-danhmucDL.box.box-solid,
 .aps-dsTrungTuyen-list .box.box-solid,
 .box.box-solid.aps-khaibaothamsoapdung-choose,
 .aps-kehoachnhahoc-list .box.box-solid,
