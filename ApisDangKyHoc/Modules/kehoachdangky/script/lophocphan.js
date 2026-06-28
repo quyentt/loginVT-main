@@ -645,9 +645,13 @@ LopHocPhan.prototype = {
             $("#btnYes").click(function () {
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrSelected.length);
-                arrSelected.forEach(function (rec) {
-                    me.tongHopCongNoSinhVien(rec.QLSV_NGUOIHOC_ID);
-                });
+                var i = 0;
+                var runNext = function () {
+                    if (i >= arrSelected.length) return;
+                    var rec = arrSelected[i++];
+                    me.tongHopCongNoSinhVien(rec.QLSV_NGUOIHOC_ID, runNext);
+                };
+                runNext();
             });
         });
 
@@ -3204,7 +3208,7 @@ LopHocPhan.prototype = {
         }, false, false, false, null);
     },
 
-    tongHopCongNoSinhVien: function (strQLSV_NguoiHoc_Id) {
+    tongHopCongNoSinhVien: function (strQLSV_NguoiHoc_Id, onDone) {
         var me = this;
         var obj_save = {
             'action': 'TC_NguoiHoc/TongHopDuNoSinhVien',
@@ -3228,6 +3232,7 @@ LopHocPhan.prototype = {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
                     me.getList_LopHocPhanChiTiet();
                 });
+                if (typeof onDone === 'function') onDone();
             },
             contentType: true,
             data: obj_save,
