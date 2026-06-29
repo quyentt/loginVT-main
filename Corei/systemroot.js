@@ -7599,7 +7599,6 @@ systemroot.prototype = {
         }
 
         function save(obj) {
-            console.log(JSON.stringify(obj));
             edu.system.makeRequest({
 
                 type: "POST",
@@ -7728,7 +7727,6 @@ systemroot.prototype = {
                         }
                     }
                     obj_list.lKeyVal = lKeyVal;
-                    //console.log(obj_list);
                     ImportData(obj_list);
 
                 },
@@ -7833,7 +7831,7 @@ systemroot.prototype = {
         row += '</div>';
 
         row += '<div class="clear"></div>';
-        row += '<div class="zone-content">';
+        row += '<div class="zone-content" id="tblChuaImport">';
         row += '<div class="box-header with-border">';
         row += '<h3 class="box-title"><i class="fa fa-list-alt"></i> Danh sách</h3>';
         row += '<div class="pull-right"><a class="btn btn-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div>';
@@ -7841,22 +7839,38 @@ systemroot.prototype = {
         row += '<div class="clear"></div>';
         row += '<div class="row row-align">';
         row += '<table id="tblBangA" class="table table-hover table-bordered">';
+        row += '<tbody></tbody>';
+        row += '</table>';
+        row += '</div>';
+        row += '</div>';
+
+        row += '<div class="clear"></div>';
+        row += '<div class="zone-content" id="tblImportLoi" style="display:none">';
+        row += '<div class="box-header with-border">';
+        row += '<h3 class="box-title"><i class="fa fa-list-alt"></i>Danh sách Lỗi</h3>';
+        row += '<div class="pull-right"><a class="btn btn-primary" id="btnDownloadAllTableLoi" title="tblBangB" href="#" ><i class="fa fa-cloud-download"></i> Tải file</a></div>';
+        row += '</div>';
+        row += '<div class="clear"></div>';
+        row += '<div class="row row-align">';
         row += '<table id="tblBangB" class="table table-hover table-bordered">';
         row += '<tbody></tbody>';
         row += '</table>';
         row += '</div>';
         row += '</div>';
+        
         $("#modalBaoCao #modal_body").html(row);
         $("#modalBaoCao").modal("show");
         edu.system.uploadImport(["importToCheck"], me.getList_DataImport);
         $('#dropSearch_BangA').on('change', function () {
-
-            //$("#tblBangA").show();
-            //$("#tblBangB").hide();
+            $("#tblChuaImport").show();
+            $("#tblImportLoi").hide();
             me.genTable_Import_View(me.dtImport[$("#dropSearch_BangA").val()], "tblBangA")
         });
         $("#btnThucHienImport").click(function () {
             GetDuLieuDanhMuc()
+        });
+        $("#btnDownloadAllTableLoi").click(function () {
+            me.reportAllTable_User(this.title);
         });
 
         //edu.system.alert(row);
@@ -7891,7 +7905,6 @@ systemroot.prototype = {
                         }
                     }
                     obj_list.lKeyVal = lKeyVal;
-                    //console.log(obj_list);
                     ImportData(obj_list);
 
                 },
@@ -7938,9 +7951,16 @@ systemroot.prototype = {
                                     row += '<td>' + edu.util.returnEmpty(data[i].KEY) + '</td>';
                                     row += '<td>' + edu.util.returnEmpty(data[i].VALUE) + '</td>';
                                     try {
-                                        var tempIP = me.dtImport[$("#dropSearch_BangA").val()].find(e => e[me.strMaCotImport] == data[i].KEY);
-                                        tempIP["ERROR"] = data[i].VALUE;
-                                        arrDataLoi.push(tempIP);
+                                        let iErr = -1;
+                                        if (data[i].KEY.indexOf(":") != -1) {
+                                            iErr = data[i].KEY.split(':')[0];
+                                            iErr = parseInt(iErr)
+                                        }
+                                        if (iErr > 0) {
+                                            var tempIP = me.dtImport[$("#dropSearch_BangA").val()][iErr - 1];
+                                            tempIP["Lỗi"] = data[i].VALUE;
+                                            arrDataLoi.push(tempIP);
+                                        }
                                     } catch {
 
                                     }
@@ -7954,7 +7974,9 @@ systemroot.prototype = {
                             row += '</table>';
                             edu.system.alert(row);
                         }
-                        me.genTable_Import_View(arrDataLoi, "tblBangA")
+                        $("#tblChuaImport").hide();
+                        $("#tblImportLoi").show();
+                        me.genTable_Import_View(arrDataLoi, "tblBangB")
                         if (sCallback != undefined && sCallback != "undefined" && sCallback != "") {
                             eval(sCallback);
                         }
@@ -9369,6 +9391,8 @@ systemroot.prototype = {
     getList_DataImport: function () {
         var me = edu.system;
 
+        $("#tblChuaImport").show();
+        $("#tblImportLoi").hide();
         //--Edit
         var obj_list = {
             'action': 'SYS_Import/getDataFormFileImport',
