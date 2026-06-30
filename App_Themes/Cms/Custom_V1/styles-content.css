@@ -15315,9 +15315,17 @@ table#clone {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
-
+.aps-list-khaothicaphat,.box-solid.aps-chandk-list{
+    padding: 20px !important;
+}
 .box.box-solid.aps-khaibaothamsoapdung-choose .box-header {
     margin-top: 0px !important;
+}
+
+.aps-lophocphan-list .box-header .box-tools a{
+    margin-left: 0px !important;
+    margin-bottom: 10px !important;
+    margin-right: 7px !important;
 }
 
 .aps-danhmucDL-danhsach .jstree-container-ul {
@@ -15484,4 +15492,19 @@ table#clone {
     top: -8px;
     left: 10px;
     padding: 0px 5px 3px 4px;
+}
+/* ------------- */
+.lblLopRieng_DaChon{
+        margin-left: 8px;
+    line-height: 31px;
+    height: 38px;
+    padding: 4px 15px;
+    border-radius: 30px;
+    font-size: 14px;
+    background: #f1f1f1 !important;
+    color: #000 !important;
+}
+
+.lblLopRieng_DaChon i {
+    margin-top: 8px;
 }
