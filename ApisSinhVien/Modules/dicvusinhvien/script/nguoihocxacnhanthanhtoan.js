@@ -51,7 +51,7 @@ NguoiHocXacNhanThanhToan.prototype = {
             'action': 'SV_XacNhan_HoSo_MH/DSA4BRIeAi4zJB4RJDMyLi8eCgkeGQ8eAzgP',
             'func': 'PKG_CORE_XACNHAN_HOSO.LayDS_Core_Person_KH_XN_By',
             'iM': edu.system.iM,
-            'strNguoiThuVai_Id': '',
+            'strNguoiThuVai_Id': edu.system.strNguoiThucVai_Id || '',
             'strNguoiThucHien_Id': edu.system.userId,
             'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
             'strChucNangHeThong_Id': edu.system.strChucNang_Id,
