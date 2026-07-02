@@ -2252,6 +2252,71 @@ KeHoach.prototype = {
         }, false, false, false, null);
     },
     
+    /*
+     * Fake progress: BE Gen phiếu là 1 API opaque, không stream tiến độ.
+     * Chạy easing 0→95% trong lúc chờ, jump 100% khi API xong.
+     * Dùng: var p = me.showFakeProgress("Đang gen phiếu..."); ...; p.finish() / p.fail(msg)
+     */
+    showFakeProgress: function (strTitle) {
+        $('#aps-fake-progress-wrap').remove();
+        var $wrap = $(
+            '<div id="aps-fake-progress-wrap" ' +
+            'style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99998;' +
+            'display:flex;align-items:center;justify-content:center;">' +
+                '<div style="width:min(520px,90vw);background:#fff;border-radius:10px;' +
+                'box-shadow:0 12px 40px rgba(0,0,0,0.25);overflow:hidden;font-size:14px">' +
+                    '<div class="aps-fp-header" style="background:#0969da;color:#fff;padding:14px 20px;' +
+                    'font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px">' +
+                        '<i class="fal fa-spinner fa-spin"></i>' +
+                        '<span class="aps-fp-title">' + (strTitle || 'Đang xử lý...') + '</span>' +
+                    '</div>' +
+                    '<div style="padding:24px 20px">' +
+                        '<div style="height:20px;background:#e6ebf2;border-radius:10px;overflow:hidden;position:relative">' +
+                            '<div class="aps-fp-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#0969da,#3b82f6);transition:width .4s ease-out"></div>' +
+                        '</div>' +
+                        '<div class="text-center mt-3" style="font-size:15px;color:#0969da;font-weight:600">' +
+                            '<span class="aps-fp-pct">0</span>%' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        ).appendTo('body');
+        var iPct = 0;
+        var bDone = false;
+        var hTimer = setInterval(function () {
+            if (bDone) return;
+            var iInc = iPct < 60 ? 3 : iPct < 85 ? 1.2 : iPct < 95 ? 0.4 : 0;
+            iPct = Math.min(95, iPct + iInc);
+            $wrap.find('.aps-fp-bar').css('width', iPct + '%');
+            $wrap.find('.aps-fp-pct').text(Math.floor(iPct));
+        }, 200);
+        return {
+            finish: function () {
+                bDone = true;
+                clearInterval(hTimer);
+                $wrap.find('.aps-fp-bar').css('width', '100%');
+                $wrap.find('.aps-fp-pct').text('100');
+                $wrap.find('.aps-fp-header').html(
+                    '<i class="fal fa-check-circle"></i><span>Hoàn tất!</span>'
+                ).css('background', '#1a7f37');
+                setTimeout(function () {
+                    $wrap.fadeOut(400, function () { $(this).remove(); });
+                }, 1200);
+            },
+            fail: function (msg) {
+                bDone = true;
+                clearInterval(hTimer);
+                $wrap.find('.aps-fp-bar').css('background', '#cf222e');
+                $wrap.find('.aps-fp-header').html(
+                    '<i class="fal fa-times-circle"></i><span>Lỗi: ' + (msg || 'Đã có lỗi xảy ra') + '</span>'
+                ).css('background', '#cf222e');
+                setTimeout(function () {
+                    $wrap.fadeOut(400, function () { $(this).remove(); });
+                }, 2500);
+            }
+        };
+    },
+
     save_GenPhieu: function () {
         var me = this;
         //--Edit
@@ -2262,29 +2327,22 @@ KeHoach.prototype = {
             'strKS_PhieuKhaoSat_Id': me.strPhieu_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-
+        var p = me.showFakeProgress("Đang gen phiếu khảo sát...");
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var strKeHoach_Id = "";
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thực hiện thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                        strKeHoach_Id = obj_save.strId
-                    }
-
+                    p.finish();
+                    edu.system.alert("Thực hiện thành công!");
                 }
                 else {
+                    p.fail(data.Message);
                     edu.system.alert(data.Message);
                 }
-
                 me.getList_KeHoach();
             },
             error: function (er) {
+                p.fail("Lỗi kết nối");
                 edu.system.alert(" (er): " + JSON.stringify(er), "w");
-
             },
             type: 'POST',
 

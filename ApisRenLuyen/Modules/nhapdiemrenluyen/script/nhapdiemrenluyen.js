@@ -19,31 +19,6 @@ NhapDiemRenLuyen.prototype = {
         --Discription: Initial system
         -------------------------------------------*/
 
-        var setEnabled = function (id, enabled) {
-            var $el = $("#" + id);
-            if ($el.length === 0) return;
-
-            // Support both form controls and <a class="btn"> (Bootstrap)
-            var tag = ($el.prop("tagName") || "").toUpperCase();
-            if (tag === "A") {
-                $el.toggleClass("disabled", !enabled);
-                $el.attr("aria-disabled", enabled ? "false" : "true");
-                return;
-            }
-
-            $el.prop("disabled", !enabled);
-            $el.toggleClass("disabled", !enabled);
-        };
-        var clearValue = function (id) {
-            var $el = $("#" + id);
-            if ($el.length === 0) return;
-            $el.val("").trigger("change");
-        };
-        var clearAndDisable = function (id) {
-            clearValue(id);
-            setEnabled(id, false);
-        };
-        
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
         me.getList_NamNhapHoc();
@@ -52,20 +27,6 @@ NhapDiemRenLuyen.prototype = {
         me.getList_DMTieuChi();
         me.getList_TrangThaiSV();
         //me.getList_NhapDiemRenLuyen();
-
-        // Lock dependent dropdowns (mở theo thứ tự)
-        // (không clear ở init để không mất giá trị default nếu có)
-        setEnabled("dropSearch_HeDaoTao", true);
-        setEnabled("dropSearch_KhoaDaoTao", false);
-        setEnabled("dropSearch_ChuongTrinhDaoTao", false);
-        setEnabled("dropSearch_LopQuanLy", false);
-        setEnabled("dropSearch_ThoiGianDaoTao", false);
-        setEnabled("dropSearch_DoiTuong", false);
-        setEnabled("dropSearch_TrangThai", false);
-        setEnabled("dropSearch_TieuChi_Cha", false);
-        setEnabled("dropSearch_TieuChi", false);
-        setEnabled("txtSearch_TuKhoa", false);
-        setEnabled("btnSearch", false);
 
         edu.system.loadToCombo_DanhMucDuLieu("DRL.DOITUONGAPDUNG", "dropSearch_DoiTuong", "", function () {
             $("#dropSearch_DoiTuong").trigger("change");
@@ -107,198 +68,39 @@ NhapDiemRenLuyen.prototype = {
             me.TongHop_NhapDiemRenLuyen();
         });
 
-        $("#btnSearch").click(function (e) {
-            if ($(this).hasClass("disabled") || $(this).attr("aria-disabled") === "true") {
-                e.preventDefault();
-                return false;
-            }
+        $("#btnSearch").click(function () {
             me.getList_NhapDiemRenLuyen();
         });
         $("#txtSearch_TuKhoa").keypress(function (e) {
             if (e.which === 13) {
-                if ($(this).prop("disabled")) {
-                    e.preventDefault();
-                    return false;
-                }
                 e.preventDefault();
                 me.getList_TieuChiXepLoai();
             }
         });
 
+        // Khi cha đổi thì reload dữ liệu con (không khóa dropdown - user chọn tự do)
         $("#dropSearch_HeDaoTao").on("select2:select", function () {
-            // Chọn hệ đào tạo xong mới mở khóa đào tạo
-            clearAndDisable("dropSearch_KhoaDaoTao");
-            clearAndDisable("dropSearch_ChuongTrinhDaoTao");
-            clearAndDisable("dropSearch_LopQuanLy");
-            setEnabled("dropSearch_KhoaDaoTao", true);
             me.getList_KhoaDaoTao();
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
         });
-        $("#dropSearch_HeDaoTao").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_HeDaoTao"))) {
-                setEnabled("dropSearch_KhoaDaoTao", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_KhoaDaoTao");
-            clearAndDisable("dropSearch_ChuongTrinhDaoTao");
-            clearAndDisable("dropSearch_LopQuanLy");
-        });
         $("#dropSearch_KhoaDaoTao").on("select2:select", function () {
-            // Chọn khóa đào tạo xong mới mở chương trình đào tạo
-            clearAndDisable("dropSearch_ChuongTrinhDaoTao");
-            clearAndDisable("dropSearch_LopQuanLy");
-            setEnabled("dropSearch_ChuongTrinhDaoTao", true);
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
         });
-        $("#dropSearch_KhoaDaoTao").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_KhoaDaoTao"))) {
-                setEnabled("dropSearch_ChuongTrinhDaoTao", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_ChuongTrinhDaoTao");
-            clearAndDisable("dropSearch_LopQuanLy");
-        });
         $("#dropSearch_ChuongTrinhDaoTao").on("select2:select", function () {
-            // Chọn chương trình đào tạo xong mới mở lớp quản lý
-            clearAndDisable("dropSearch_LopQuanLy");
-            setEnabled("dropSearch_LopQuanLy", true);
             me.getList_LopQuanLy();
         });
-        $("#dropSearch_ChuongTrinhDaoTao").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_ChuongTrinhDaoTao"))) {
-                setEnabled("dropSearch_LopQuanLy", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_LopQuanLy");
-        });
-        $("#dropSearch_TieuChi_Cha").on("select2:select", function () {
-            // Chọn tiêu chí cha xong mới mở tiêu chí con
-            clearAndDisable("dropSearch_TieuChi");
-            setEnabled("dropSearch_TieuChi", true);
-            me.getList_DMTieuChi();
-        });
-        $("#dropSearch_TieuChi_Cha").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_TieuChi_Cha"))) {
-                setEnabled("dropSearch_TieuChi", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_TieuChi");
-        });
         $("#dropSearch_NamHoc").on("select2:select", function () {
-            // Chọn năm học xong mới mở thời gian đào tạo
-            clearAndDisable("dropSearch_ThoiGianDaoTao");
-            clearAndDisable("dropSearch_DoiTuong");
-            clearAndDisable("dropSearch_TrangThai");
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-            setEnabled("dropSearch_ThoiGianDaoTao", true);
             me.getList_ThoiGianDaoTao();
         });
-        $("#dropSearch_NamHoc").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_NamHoc"))) {
-                setEnabled("dropSearch_ThoiGianDaoTao", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_ThoiGianDaoTao");
-            clearAndDisable("dropSearch_DoiTuong");
-            clearAndDisable("dropSearch_TrangThai");
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-        });
-
-        $("#dropSearch_ThoiGianDaoTao").on("select2:select", function () {
-            // Chọn thời gian đào tạo xong mới mở đối tượng
-            clearAndDisable("dropSearch_DoiTuong");
-            clearAndDisable("dropSearch_TrangThai");
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-            setEnabled("dropSearch_DoiTuong", true);
-        });
-        $("#dropSearch_ThoiGianDaoTao").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_ThoiGianDaoTao"))) {
-                setEnabled("dropSearch_DoiTuong", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_DoiTuong");
-            clearAndDisable("dropSearch_TrangThai");
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-        });
-
         $("#dropSearch_DoiTuong").on("select2:select", function () {
-            // Chọn đối tượng xong mới mở trạng thái
-            clearAndDisable("dropSearch_TrangThai");
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-            setEnabled("dropSearch_TrangThai", true);
             me.getList_TieuChi();
         });
-        $("#dropSearch_DoiTuong").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_DoiTuong"))) {
-                setEnabled("dropSearch_TrangThai", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_TrangThai");
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
+        $("#dropSearch_TieuChi_Cha").on("select2:select", function () {
+            me.getList_DMTieuChi();
         });
 
-        $("#dropSearch_TrangThai").on("select2:select", function () {
-            // Chọn trạng thái xong mới mở danh mục tiêu chí
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-            setEnabled("dropSearch_TieuChi_Cha", true);
-        });
-        $("#dropSearch_TrangThai").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_TrangThai"))) {
-                setEnabled("dropSearch_TieuChi_Cha", true);
-                return;
-            }
-
-            clearAndDisable("dropSearch_TieuChi_Cha");
-            clearAndDisable("dropSearch_TieuChi");
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-        });
-
-        $("#dropSearch_TieuChi").on("select2:select", function () {
-            // Chọn tiêu chí xong mới mở ô từ khóa + nút tìm kiếm
-            setEnabled("txtSearch_TuKhoa", true);
-            setEnabled("btnSearch", true);
-        });
-        $("#dropSearch_TieuChi").on("change", function () {
-            if (edu.util.checkValue(edu.util.getValById("dropSearch_TieuChi"))) {
-                setEnabled("txtSearch_TuKhoa", true);
-                setEnabled("btnSearch", true);
-                return;
-            }
-
-            clearAndDisable("txtSearch_TuKhoa");
-            setEnabled("btnSearch", false);
-        });
         edu.system.getList_MauImport("zonebtnDRL");
     },
     /*------------------------------------------
