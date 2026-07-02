@@ -986,7 +986,7 @@ systemextend.prototype = {
         html += '<div class="pd20 list-sv">';
         html += '<div class="title-is-paging pb-0">';
         html += '<p class="color-dask-blue fw-bold mt-3">Danh sách</p>';
-        html += '<button id="btnChonSinhVien" class="btn btn-on-paging btnChonSinhVien" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>';
+        html += '<button id="btnChonSinhVien" class="btn ms-auto" style="height:32px;padding:4px 14px;margin-left:40px !important;font-weight:500;font-size:13px;color:#0d6efd !important;background:#fff !important;border:1px solid #0d6efd !important;border-radius:6px;line-height:1.4;transition:all .15s;" onmouseover="this.style.setProperty(\'background\',\'#0d6efd\',\'important\');this.style.setProperty(\'color\',\'#fff\',\'important\');" onmouseout="this.style.setProperty(\'background\',\'#fff\',\'important\');this.style.setProperty(\'color\',\'#0d6efd\',\'important\');"><i class="fas fa-check-square me-2"></i>Chọn sinh viên</button>';
         html += '</div>';
         html += '<div class="bus-wrp box-table-sv" style="max-height: unset;border-top: solid 0px #e1e1e1">';
         html += '<table class="table transcrip-table tabs-scores h-auto tblModal_SinhVien table-bordered table-noborder" id="tblModal_SinhVien">';
