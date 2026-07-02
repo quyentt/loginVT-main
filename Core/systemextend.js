@@ -1047,12 +1047,23 @@ systemextend.prototype = {
         });
         $("#modal_sinhvien").delegate("#btnChonSinhVien", "click", function (e) {
             e.stopImmediatePropagation();
+            var $btn = $(this);
+            if ($btn.data("processing")) return;
             var arrChecked_Id = edu.util.getArrCheckedIds("tblModal_SinhVien", "checkX");
-            if (arrChecked_Id) {
-
-                callback(arrChecked_Id);
-                $("#modal_sinhvien").modal("hide");
+            if (!arrChecked_Id || arrChecked_Id.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 sinh viên!", "w");
+                return;
             }
+            $btn.data("processing", true);
+            var strLabel = $btn.html();
+            $btn.prop("disabled", true).css("opacity", "0.65").html('<i class="fal fa-spinner fa-spin me-2"></i>Đang xử lý ' + arrChecked_Id.length + ' SV...');
+            $("#btnChonSinhVien_Footer").prop("disabled", true).css("opacity", "0.65");
+            setTimeout(function () {
+                try { callback(arrChecked_Id); } catch (er) { console.error("[btnChonSinhVien] callback error:", er); }
+                $("#modal_sinhvien").modal("hide");
+                $btn.data("processing", false).prop("disabled", false).css("opacity", "").html(strLabel);
+                $("#btnChonSinhVien_Footer").prop("disabled", false).css("opacity", "");
+            }, 50);
         });
         $("#modal_sinhvien").delegate("#chkSelectAll_SinhVien", "click", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblModal_SinhVien" });

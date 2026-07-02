@@ -375,8 +375,8 @@ KeHoach.prototype = {
             me.toggle_phieu();
             me["strPhieu_Id"] = "";
             me.getList_ChuaThamGia();
-            $(".zoneAdd").show();
-            $(".zoneEdit").hide();
+            $("#zonePhieu .zoneAdd").show();
+            $("#zonePhieu .zoneEdit").hide();
             $("#tblThamGia tbody").html("");
             var data = {};
             edu.util.viewValById("txtTenPhieu", data.TENPHIEU);
@@ -419,8 +419,8 @@ KeHoach.prototype = {
             var strId = this.id;
             me.toggle_phieu();
             me["strPhieu_Id"] = strId;
-            $(".zoneAdd").hide();
-            $(".zoneEdit").show();
+            $("#zonePhieu .zoneAdd").hide();
+            $("#zonePhieu .zoneEdit").show();
             var data = me.dtPhieuKhaoSat.find(e => e.ID == strId);
             edu.util.viewValById("txtTenPhieu", data.TENPHIEU);
             edu.util.viewValById("txtMaPhieu", data.MAPHIEU);
@@ -2118,8 +2118,8 @@ KeHoach.prototype = {
                     if (!obj_save.strId) {
                         edu.system.alert("Thêm mới thành công!");
                         strKeHoach_Id = data.Id;
-                        $(".zoneAdd").hide();
-                        $(".zoneEdit").show();
+                        $("#zonePhieu .zoneAdd").hide();
+                        $("#zonePhieu .zoneEdit").show();
                     }
                     else {
                         edu.system.alert("Cập nhật thành công!");
