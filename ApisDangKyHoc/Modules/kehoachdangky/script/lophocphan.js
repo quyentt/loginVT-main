@@ -627,6 +627,82 @@ LopHocPhan.prototype = {
             edu.util.toggle_overide("zone-bus", "zonebatdau");
         });
 
+        $("#btnTongHopCongNo").click(function (e) {
+            e.preventDefault();
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một bản ghi ở danh sách chi tiết?");
+                return;
+            }
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return (me.dtLopHocPhanChiTiet || []).find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r && r.QLSV_NGUOIHOC_ID; });
+            if (arrSelected.length == 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn tổng hợp công nợ cho " + arrSelected.length + " bản ghi đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrSelected.length);
+                var i = 0;
+                var runNext = function () {
+                    if (i >= arrSelected.length) return;
+                    var rec = arrSelected[i++];
+                    me.tongHopCongNoSinhVien(rec.QLSV_NGUOIHOC_ID, runNext);
+                };
+                runNext();
+            });
+        });
+
+        $("#btnCanBangNo").click(function (e) {
+            e.preventDefault();
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một bản ghi ở danh sách chi tiết?");
+                return;
+            }
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return (me.dtLopHocPhanChiTiet || []).find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r; });
+            if (arrSelected.length == 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn cân bằng nợ cho " + arrSelected.length + " bản ghi đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrSelected.length);
+                arrSelected.forEach(function (rec) {
+                    me.canBangNo(rec);
+                });
+            });
+        });
+
+        $("#btnHuyCanBangNo").click(function (e) {
+            e.preventDefault();
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblLopHocPhanChiTiet", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn ít nhất một bản ghi ở danh sách chi tiết?");
+                return;
+            }
+            var arrSelected = arrChecked_Id
+                .map(function (id) { return (me.dtLopHocPhanChiTiet || []).find(function (r) { return r.ID == id; }); })
+                .filter(function (r) { return !!r; });
+            if (arrSelected.length == 0) {
+                edu.system.alert("Không tìm thấy dữ liệu các dòng đã chọn?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn hủy cân bằng nợ cho " + arrSelected.length + " bản ghi đã chọn?");
+            $("#btnYes").click(function () {
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrSelected.length);
+                arrSelected.forEach(function (rec) {
+                    me.huyCanBangNo(rec);
+                });
+            });
+        });
+
         $("#chkSelectAll_RutHocPhan").on("click", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblRutHocPhan" });
         });
@@ -1629,6 +1705,16 @@ LopHocPhan.prototype = {
                     "mRender": function (nRow, aData) {
                         var v = aData.SOTIENDANOP != null ? aData.SOTIENDANOP : aData.TONGSOTIENDANOP;
                         return edu.util.formatCurrency(v);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.TONGNO);
+                    }
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.TONGDU);
                     }
                 },
                 {
@@ -3113,6 +3199,121 @@ LopHocPhan.prototype = {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
                     if (srcTbl === "tblLopHocPhanChiTiet2") me.getList_LopHocPhanRut();
                     else me.getList_LopHocPhanChiTiet();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    tongHopCongNoSinhVien: function (strQLSV_NguoiHoc_Id, onDone) {
+        var me = this;
+        var obj_save = {
+            'action': 'TC_NguoiHoc/TongHopDuNoSinhVien',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Tổng hợp công nợ thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_LopHocPhanChiTiet();
+                });
+                if (typeof onDone === 'function') onDone();
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    canBangNo: function (rec) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/FSkkLB4VFR4ZICIPKSAvHhUVHgIVHhUC',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Them_TT_XacNhan_TT_CT_TC',
+            'iM': edu.system.iM,
+            'strDangKy_LopHocPhan_Id': rec.DANGKY_LOPHOCPHAN_ID,
+            'strKieuHoc_Id': rec.KIEUHOC_ID,
+            'strTaiChinh_CacKhoanThu_Id': rec.TAICHINH_CACKHOANTHU_ID,
+            'strQLSV_NguoiHoc_Id': rec.QLSV_NGUOIHOC_ID,
+            'strDaoTao_HocPhan_Id': rec.DAOTAO_HOCPHAN_ID,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': '',
+            'strChucNangHeThong_Id': '',
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Cân bằng nợ thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_LopHocPhanChiTiet();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    huyCanBangNo: function (rec) {
+        var me = this;
+        var obj_save = {
+            'action': 'DKH_ThongTin2_MH/GS4gHhUVHhkgIg8pIC8eFRUeAhUeFQIP',
+            'func': 'PKG_DANGKYHOC_THONGTIN2.Xoa_TT_XacNhan_TT_CT_TC',
+            'iM': edu.system.iM,
+            'strDangKy_LopHocPhan_Id': rec.DANGKY_LOPHOCPHAN_ID,
+            'strKieuHoc_Id': rec.KIEUHOC_ID,
+            'strTaiChinh_CacKhoanThu_Id': rec.TAICHINH_CACKHOANTHU_ID,
+            'strQLSV_NguoiHoc_Id': rec.QLSV_NGUOIHOC_ID,
+            'strDaoTao_HocPhan_Id': rec.DAOTAO_HOCPHAN_ID,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': '',
+            'strChucNangHeThong_Id': '',
+            'strHanhDong_Code': '',
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Hủy cân bằng nợ thành công", "s");
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_LopHocPhanChiTiet();
                 });
             },
             contentType: true,

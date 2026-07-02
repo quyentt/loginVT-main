@@ -3431,7 +3431,7 @@ ChuongTrinhHocPhan.prototype = {
         var me = this;
         me.strKhoiTuChonDon_Id = data[0].ID;
         edu.util.viewValById("txtHocPhan_KTCD_Ten", data[0].TEN);
-        edu.util.viewValById("dropHocPhan_KTCD_KhoiCha", data[0].DAOTAO_KHOITUCHONDON_CHA_ID);
+        edu.util.viewValById("dropHocPhan_KTCD_KhoiCha", data[0].DAOTAO_KHOITUCHON_DON_CHA_ID);
         edu.util.viewValById("txtHocPhan_KTCD_KyHieu", data[0].KYHIEU);
         edu.util.viewValById("dropHocPhan_KTCD_LoaiDonVi", data[0].LOAILUACHON_ID);
         edu.util.viewValById("txtHocPhan_KTCD_DonVi", data[0].DONVILUACHON);

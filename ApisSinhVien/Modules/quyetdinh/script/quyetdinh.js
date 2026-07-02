@@ -1048,7 +1048,8 @@ QuyetDinh.prototype = {
         edu.util.viewValById("txtQuyetDinh_NgayHieuLuc", data.NGAYHIEULUC);
         edu.util.viewValById("txtNgayHetHieuLuc", data.NGAYHETHIEULUC);
         edu.util.viewValById("txQuyetDinh_MoTa", data.NGUYENNHAN_LYDO);
-        edu.util.viewValById("dropHinhThuc", data.HINHTHUCQUYETDINH_ID);
+        me.strHinhThuc_Preselect = data.HINHTHUCQUYETDINH_ID;
+        me.getList_HinhThuc();
         edu.system.viewFiles("txtQuyetDinh_File", data.ID, "SV_Files");
         me.strQuyetDinh_Id = data.ID;
         me.getList_SinhVien();
@@ -1282,6 +1283,7 @@ QuyetDinh.prototype = {
         }, false, false, false, null);
     },
     cbGenCombo_HinhThuc: function (data) {
+        var me = main_doc.QuyetDinh;
         if (data.length === 0) $("#dropHinhThuc").parent().parent().hide();
         else $("#dropHinhThuc").parent().parent().show();
         var obj = {
@@ -1298,6 +1300,10 @@ QuyetDinh.prototype = {
             title: "Chọn hình thức",
         }
         edu.system.loadToCombo_data(obj);
+        if (me.strHinhThuc_Preselect) {
+            edu.util.viewValById("dropHinhThuc", me.strHinhThuc_Preselect);
+            me.strHinhThuc_Preselect = "";
+        }
     },
 
     getList_LoaiQuyetDinh: function () {

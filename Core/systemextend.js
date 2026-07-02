@@ -986,7 +986,7 @@ systemextend.prototype = {
         html += '<div class="pd20 list-sv">';
         html += '<div class="title-is-paging pb-0">';
         html += '<p class="color-dask-blue fw-bold mt-3">Danh sách</p>';
-        html += '<button id="btnChonSinhVien" class="btn btn-on-paging btnChonSinhVien" style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>';
+        html += '<button id="btnChonSinhVien" class="btn ms-auto" style="height:32px;padding:4px 14px;margin-left:40px !important;font-weight:500;font-size:13px;color:#0d6efd !important;background:#fff !important;border:1px solid #0d6efd !important;border-radius:6px;line-height:1.4;transition:all .15s;" onmouseover="this.style.setProperty(\'background\',\'#0d6efd\',\'important\');this.style.setProperty(\'color\',\'#fff\',\'important\');" onmouseout="this.style.setProperty(\'background\',\'#fff\',\'important\');this.style.setProperty(\'color\',\'#0d6efd\',\'important\');"><i class="fas fa-check-square me-2"></i>Chọn sinh viên</button>';
         html += '</div>';
         html += '<div class="bus-wrp box-table-sv" style="max-height: unset;border-top: solid 0px #e1e1e1">';
         html += '<table class="table transcrip-table tabs-scores h-auto tblModal_SinhVien table-bordered table-noborder" id="tblModal_SinhVien">';
@@ -1047,12 +1047,23 @@ systemextend.prototype = {
         });
         $("#modal_sinhvien").delegate("#btnChonSinhVien", "click", function (e) {
             e.stopImmediatePropagation();
+            var $btn = $(this);
+            if ($btn.data("processing")) return;
             var arrChecked_Id = edu.util.getArrCheckedIds("tblModal_SinhVien", "checkX");
-            if (arrChecked_Id) {
-
-                callback(arrChecked_Id);
-                $("#modal_sinhvien").modal("hide");
+            if (!arrChecked_Id || arrChecked_Id.length === 0) {
+                edu.system.alert("Vui lòng chọn ít nhất 1 sinh viên!", "w");
+                return;
             }
+            $btn.data("processing", true);
+            var strLabel = $btn.html();
+            $btn.prop("disabled", true).css("opacity", "0.65").html('<i class="fal fa-spinner fa-spin me-2"></i>Đang xử lý ' + arrChecked_Id.length + ' SV...');
+            $("#btnChonSinhVien_Footer").prop("disabled", true).css("opacity", "0.65");
+            setTimeout(function () {
+                try { callback(arrChecked_Id); } catch (er) { console.error("[btnChonSinhVien] callback error:", er); }
+                $("#modal_sinhvien").modal("hide");
+                $btn.data("processing", false).prop("disabled", false).css("opacity", "").html(strLabel);
+                $("#btnChonSinhVien_Footer").prop("disabled", false).css("opacity", "");
+            }, 50);
         });
         $("#modal_sinhvien").delegate("#chkSelectAll_SinhVien", "click", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblModal_SinhVien" });
@@ -1063,6 +1074,11 @@ systemextend.prototype = {
             $("#DSTrangThaiSV_MD .ckbDSTrangThaiSV").each(function () {
                 this.checked = checked_status;
             });
+        });
+        $("#modal_sinhvien").delegate(".ckbDSTrangThaiSV", "click", function () {
+            var $all = $("#DSTrangThaiSV_MD .ckbDSTrangThaiSV");
+            var iChecked = $all.filter(":checked").length;
+            $("#DSTrangThaiSV_MD .ckbDSTrangThaiSV_ALL").prop("checked", iChecked === $all.length);
         });
         $("#modal_sinhvien").delegate('#btnAdd_Khoa', 'click', function () {
             edu.extend.arrKhoa = $("#dropSearchModal_Khoa_SV").val();
@@ -1115,7 +1131,7 @@ systemextend.prototype = {
             row += '</div>';
             for (var i = 0; i < data.length; i++) {
                 row += '<div class="form-check">';
-                row += '<input id="' + data[i].ID + '" class="ckbDSTrangThaiSV form-check-input ckbDSTrangThaiSV_ALL" type="checkbox" checked="checked">';
+                row += '<input id="' + data[i].ID + '" class="ckbDSTrangThaiSV form-check-input" type="checkbox" checked="checked">';
                 row += '<label class="form-check-label" for="' + data[i].ID + '">';
                 row += data[i].TEN;
                 row += '</label>';

@@ -302,6 +302,18 @@ KeHoach.prototype = {
             var id = edu.util.randomString(30, "");
             me.genHTML_DoiTuongKhac_DoiTuong(id);
         });
+
+        $("#btnAdd_SVDangKy_PhamVi").click(function (e) {
+            e.preventDefault();
+            me.tblChon = "tblPhamVi";
+            me._openDSDangKyHocPicker("tblPhamVi");
+        });
+        $("#btnAdd_SVDangKy_DoiTuong").click(function (e) {
+            e.preventDefault();
+            me.tblChon = "tblDoiTuong";
+            me._openDSDangKyHocPicker("tblDoiTuong");
+        });
+
         $("#tblDoiTuong").delegate('.btnDeletePoiter', 'click', function () {
             var id = this.id;
             var strcheck = $(this).attr("name");
@@ -363,8 +375,8 @@ KeHoach.prototype = {
             me.toggle_phieu();
             me["strPhieu_Id"] = "";
             me.getList_ChuaThamGia();
-            $(".zoneAdd").show();
-            $(".zoneEdit").hide();
+            $("#zonePhieu .zoneAdd").show();
+            $("#zonePhieu .zoneEdit").hide();
             $("#tblThamGia tbody").html("");
             var data = {};
             edu.util.viewValById("txtTenPhieu", data.TENPHIEU);
@@ -407,8 +419,8 @@ KeHoach.prototype = {
             var strId = this.id;
             me.toggle_phieu();
             me["strPhieu_Id"] = strId;
-            $(".zoneAdd").hide();
-            $(".zoneEdit").show();
+            $("#zonePhieu .zoneAdd").hide();
+            $("#zonePhieu .zoneEdit").show();
             var data = me.dtPhieuKhaoSat.find(e => e.ID == strId);
             edu.util.viewValById("txtTenPhieu", data.TENPHIEU);
             edu.util.viewValById("txtMaPhieu", data.MAPHIEU);
@@ -673,6 +685,39 @@ KeHoach.prototype = {
     },
     toggle_ketqua: function () {
         edu.util.toggle_overide("zone-bus", "zoneKetQua");
+    },
+    _openDSDangKyHocPicker: function (tblId) {
+        var me = this;
+        if (!window.DSDangKyHocPicker) {
+            edu.system.alert("Chưa nạp được DSDangKyHocPicker.", "w");
+            return;
+        }
+        window.DSDangKyHocPicker.open({
+            multiple: true,
+            onSelect: function (arr) {
+                if (!arr || arr.length === 0) return;
+                var $tbody = $("#" + tblId + " tbody");
+                var iStt = $tbody.find("tr").length;
+                var html = "";
+                arr.forEach(function (r) {
+                    var strKey = r.QLSV_NGUOIHOC_ID || r.ID;
+                    if (!strKey) return;
+                    if ($("#" + tblId + " #rm_row" + strKey).length) return;
+                    var strTen = ((r.QLSV_NGUOIHOC_HODEM || "") + " " + (r.QLSV_NGUOIHOC_TEN || "")).trim();
+                    var strMa = r.QLSV_NGUOIHOC_MASO || "";
+                    iStt++;
+                    html += "<tr id='rm_row" + strKey + "' name='new' svid='" + (r.QLSV_NGUOIHOC_ID || "") + "'>";
+                    html += "<td class='td-center'>" + iStt + "</td>";
+                    html += "<td class='td-left' id='lblMa" + strKey + "'>" + strMa + "</td>";
+                    html += "<td class='td-left' id='lblTen" + strKey + "'>" + strTen + "</td>";
+                    html += "<td class='td-left'></td>";
+                    html += "<td class='td-left'></td>";
+                    html += "<td class='td-center'><a id='remove_nhansu" + strKey + "' class='btnDeletePoiter poiter'><i class='fa fa-trash'></i></a></td>";
+                    html += "</tr>";
+                });
+                if (html) $tbody.append(html);
+            }
+        });
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
@@ -2073,8 +2118,8 @@ KeHoach.prototype = {
                     if (!obj_save.strId) {
                         edu.system.alert("Thêm mới thành công!");
                         strKeHoach_Id = data.Id;
-                        $(".zoneAdd").hide();
-                        $(".zoneEdit").show();
+                        $("#zonePhieu .zoneAdd").hide();
+                        $("#zonePhieu .zoneEdit").show();
                     }
                     else {
                         edu.system.alert("Cập nhật thành công!");
@@ -2207,6 +2252,76 @@ KeHoach.prototype = {
         }, false, false, false, null);
     },
     
+    /*
+     * Loader trung thực: chỉ hiện spinner + thời gian đã chờ + caption đổi theo mốc.
+     * Không có bar % vì BE không stream tiến độ (opaque call).
+     * Dùng: var p = me.showElapsedLoader("Đang gen phiếu..."); ...; p.finish() / p.fail(msg)
+     */
+    showElapsedLoader: function (strTitle) {
+        $('#aps-elapsed-loader-wrap').remove();
+        var $wrap = $(
+            '<div id="aps-elapsed-loader-wrap" ' +
+            'style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:99998;' +
+            'display:flex;align-items:center;justify-content:center;">' +
+                '<div style="width:min(460px,90vw);background:#fff;border-radius:10px;' +
+                'box-shadow:0 12px 40px rgba(0,0,0,0.25);overflow:hidden;font-size:14px">' +
+                    '<div class="aps-el-header" style="background:#0969da;color:#fff;padding:14px 20px;' +
+                    'font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px">' +
+                        '<i class="fal fa-spinner fa-spin"></i>' +
+                        '<span class="aps-el-title">' + (strTitle || 'Đang xử lý...') + '</span>' +
+                    '</div>' +
+                    '<div style="padding:28px 20px;text-align:center">' +
+                        '<div class="aps-el-elapsed" style="font-size:32px;color:#0969da;font-weight:700;font-variant-numeric:tabular-nums">0s</div>' +
+                        '<div class="aps-el-note mt-2" style="font-size:13px;color:#57606a;font-style:italic">Server đang xử lý, vui lòng chờ...</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>'
+        ).appendTo('body');
+        var iStart = Date.now();
+        var bDone = false;
+        var arrMsg = [
+            { t: 0,   msg: 'Server đang xử lý, vui lòng chờ...' },
+            { t: 15,  msg: 'Đang tính toán dữ liệu, tiếp tục chờ...' },
+            { t: 30,  msg: 'Dữ liệu lớn, server vẫn đang chạy...' },
+            { t: 60,  msg: 'Vẫn đang xử lý, xin đợi thêm chút nữa...' },
+            { t: 120, msg: 'Rất tiếc phải chờ lâu, server đang gồng...' }
+        ];
+        var hTimer = setInterval(function () {
+            if (bDone) return;
+            var iElapsed = Math.floor((Date.now() - iStart) / 1000);
+            $wrap.find('.aps-el-elapsed').text(iElapsed + 's');
+            var strMsg = arrMsg[0].msg;
+            for (var i = arrMsg.length - 1; i >= 0; i--) {
+                if (iElapsed >= arrMsg[i].t) { strMsg = arrMsg[i].msg; break; }
+            }
+            $wrap.find('.aps-el-note').text(strMsg);
+        }, 500);
+        return {
+            finish: function () {
+                bDone = true;
+                clearInterval(hTimer);
+                var iElapsed = Math.floor((Date.now() - iStart) / 1000);
+                $wrap.find('.aps-el-note').text('Xong sau ' + iElapsed + 's');
+                $wrap.find('.aps-el-header').html(
+                    '<i class="fal fa-check-circle"></i><span>Hoàn tất!</span>'
+                ).css('background', '#1a7f37');
+                setTimeout(function () {
+                    $wrap.fadeOut(400, function () { $(this).remove(); });
+                }, 1000);
+            },
+            fail: function (msg) {
+                bDone = true;
+                clearInterval(hTimer);
+                $wrap.find('.aps-el-header').html(
+                    '<i class="fal fa-times-circle"></i><span>Lỗi: ' + (msg || 'Đã có lỗi xảy ra') + '</span>'
+                ).css('background', '#cf222e');
+                setTimeout(function () {
+                    $wrap.fadeOut(400, function () { $(this).remove(); });
+                }, 2500);
+            }
+        };
+    },
+
     save_GenPhieu: function () {
         var me = this;
         //--Edit
@@ -2217,29 +2332,22 @@ KeHoach.prototype = {
             'strKS_PhieuKhaoSat_Id': me.strPhieu_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-
+        var p = me.showElapsedLoader("Đang gen phiếu khảo sát...");
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var strKeHoach_Id = "";
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thực hiện thành công!");
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                        strKeHoach_Id = obj_save.strId
-                    }
-
+                    p.finish();
+                    edu.system.alert("Thực hiện thành công!");
                 }
                 else {
+                    p.fail(data.Message);
                     edu.system.alert(data.Message);
                 }
-
                 me.getList_KeHoach();
             },
             error: function (er) {
+                p.fail("Lỗi kết nối");
                 edu.system.alert(" (er): " + JSON.stringify(er), "w");
-
             },
             type: 'POST',
 
