@@ -302,6 +302,18 @@ KeHoach.prototype = {
             var id = edu.util.randomString(30, "");
             me.genHTML_DoiTuongKhac_DoiTuong(id);
         });
+
+        $("#btnAdd_SVDangKy_PhamVi").click(function (e) {
+            e.preventDefault();
+            me.tblChon = "tblPhamVi";
+            me._openDSDangKyHocPicker("tblPhamVi");
+        });
+        $("#btnAdd_SVDangKy_DoiTuong").click(function (e) {
+            e.preventDefault();
+            me.tblChon = "tblDoiTuong";
+            me._openDSDangKyHocPicker("tblDoiTuong");
+        });
+
         $("#tblDoiTuong").delegate('.btnDeletePoiter', 'click', function () {
             var id = this.id;
             var strcheck = $(this).attr("name");
@@ -673,6 +685,39 @@ KeHoach.prototype = {
     },
     toggle_ketqua: function () {
         edu.util.toggle_overide("zone-bus", "zoneKetQua");
+    },
+    _openDSDangKyHocPicker: function (tblId) {
+        var me = this;
+        if (!window.DSDangKyHocPicker) {
+            edu.system.alert("Chưa nạp được DSDangKyHocPicker.", "w");
+            return;
+        }
+        window.DSDangKyHocPicker.open({
+            multiple: true,
+            onSelect: function (arr) {
+                if (!arr || arr.length === 0) return;
+                var $tbody = $("#" + tblId + " tbody");
+                var iStt = $tbody.find("tr").length;
+                var html = "";
+                arr.forEach(function (r) {
+                    var strKey = r.QLSV_NGUOIHOC_ID || r.ID;
+                    if (!strKey) return;
+                    if ($("#" + tblId + " #rm_row" + strKey).length) return;
+                    var strTen = ((r.QLSV_NGUOIHOC_HODEM || "") + " " + (r.QLSV_NGUOIHOC_TEN || "")).trim();
+                    var strMa = r.QLSV_NGUOIHOC_MASO || "";
+                    iStt++;
+                    html += "<tr id='rm_row" + strKey + "' name='new' svid='" + (r.QLSV_NGUOIHOC_ID || "") + "'>";
+                    html += "<td class='td-center'>" + iStt + "</td>";
+                    html += "<td class='td-left' id='lblMa" + strKey + "'>" + strMa + "</td>";
+                    html += "<td class='td-left' id='lblTen" + strKey + "'>" + strTen + "</td>";
+                    html += "<td class='td-left'></td>";
+                    html += "<td class='td-left'></td>";
+                    html += "<td class='td-center'><a id='remove_nhansu" + strKey + "' class='btnDeletePoiter poiter'><i class='fa fa-trash'></i></a></td>";
+                    html += "</tr>";
+                });
+                if (html) $tbody.append(html);
+            }
+        });
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu

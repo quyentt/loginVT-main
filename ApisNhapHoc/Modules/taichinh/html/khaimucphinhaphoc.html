@@ -1,0 +1,660 @@
+<style>
+    .kmp-link-xem {
+        color: #1976d2;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+    .kmp-link-xem:hover {
+        color: #0d47a1;
+    }
+    #tbldata_HSNH thead th {
+        white-space: normal;
+        vertical-align: middle;
+        text-align: center;
+    }
+    #tbldata_HSNH td {
+        vertical-align: middle;
+    }
+</style>
+
+<!-- Main content -->
+<section class="content aps-nhaphoc">
+    <div class="aps-khaimucphi box-shadow row">
+
+        <!-- Filter -->
+        <div class="col-lg-12 aps-khaimucphi-search">
+            <div class="box box-solid box-search pd20">
+                <div class="box-body pd0">
+                    <div class="area-search">
+                        <div id="search_HSNH" class="inputSearch collapse in">
+                            <div class="col-sm-5 item-search mb-0">
+                                <select class="select-opt" id="dropKeHoachNhapHoc_HSNH">
+                                    <!-- load from khaimucphinhaphoc.js -->
+                                </select>
+                            </div>
+                            <div class="col-sm-4 item-search mb-0">
+                                <input id="txtKeyword_HSNH" class="form-control"
+                                    placeholder="Nhập từ khóa tìm kế hoạch nhập học..." />
+                            </div>
+                            <div class="col-sm-3 item-search mb-0">
+                                <a id="btnXem_HSNH" class="btn btn-default btn-search">
+                                    <i class="fa fa-eye"></i><span>&nbsp;Xem</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danh sách Nhóm định mức -->
+        <div class="col-lg-12 aps-khaimucphi-list" style="position: relative;">
+            <div class="box box-solid pt10">
+                <div class="box-body pd0">
+                    <div id="zone_list_HSNH" class="box-body pd0">
+                        <div class="pull-left">
+                            <div class="group-title pl0 mt-5">
+                                <p class="titleSearchContent">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <span>Nhóm định mức</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="pull-right d-flex">
+                            <a id="btnRefresh_HSNH" class="btn btn-warning">
+                                <i class="fa fa-refresh"></i><span>&nbsp;Tải lại</span>
+                            </a>
+                            <a id="btnAdd_NhomDinhMuc_HSNH" class="btn btn-success btnAddNew">
+                                <i class="fa fa-plus-circle"></i><span>&nbsp;Thêm nhóm</span>
+                            </a>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="aps-table-select mt-10">
+                        <table id="tbldata_HSNH"
+                            class="table table-condensed table-hover table-bordered table-noborder">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center" style="width:40px">STT</th>
+                                    <th class="td-left" style="width:100px">Mã nhóm</th>
+                                    <th class="td-left" style="width:200px">Tên nhóm</th>
+                                    <th class="td-left">Ghi chú</th>
+                                    <th class="td-center" style="width:150px">Cấu hình các khoản thu của nhóm</th>
+                                    <th class="td-center" style="width:170px">Cấu hình ngành đầu ra nhận mức theo nhóm</th>
+                                    <th class="td-center" style="width:220px">Cấu hình các trường hợp đầu vào cho từng sinh viên hoặc cho đối tượng</th>
+                                    <th class="td-center" style="width:130px">Ngày tạo</th>
+                                    <th class="td-left" style="width:150px">Người tạo</th>
+                                    <th class="td-fixed td-center" style="width:80px">Chọn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- load from khaimucphinhaphoc.js -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Modal xem cấu hình chi tiết (dùng chung cho 4 nút Xem/Chi tiết) -->
+<div class="modal fade" id="modalXem_HSNH" role="dialog" aria-labelledby="modalXem_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 90%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalXem_HSNH_Label">
+                        <a><i class="fa-solid fa-file-magnifying-glass"></i>
+                        <span id="modalXem_HSNH_Title">Chi tiết</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:20px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="row pd0">
+                    <div class="col-sm-12">
+                        <div class="italic color-666 mb-10" id="modalXem_HSNH_SubTitle"></div>
+                        <div class="aps-table-select">
+                            <table id="tbldata_XemChiTiet_HSNH"
+                                class="table table-condensed table-hover table-bordered table-noborder">
+                                <thead>
+                                    <tr>
+                                        <th class="td-center" style="width:40px">STT</th>
+                                        <!-- gen columns from khaimucphinhaphoc.js -->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- gen rows from khaimucphinhaphoc.js -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" href="#" data-dismiss="modal">
+                    <i class="fa fa-times-circle"></i> Đóng
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cấu hình các khoản thu của nhóm -->
+<div class="modal fade" id="modalKhoanThu_HSNH" role="dialog" aria-labelledby="modalKhoanThu_HSNH_Label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalKhoanThu_HSNH_Label">
+                        <a><i class="fa-solid fa-money-check-dollar"></i>
+                        <span>Cấu hình các khoản thu của nhóm</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="italic color-666 mb-10" id="lblNhomInfo_KhoanThu"></div>
+                <div class="d-flex" style="justify-content: flex-end; margin-bottom: 10px;">
+                    <a class="btn btn-success btnAddNew" id="btnAdd_KhoanThu_HSNH" href="#">
+                        <i class="fa fa-plus-circle"></i>&nbsp;Thêm mới khoản thu
+                    </a>
+                </div>
+                <div class="aps-table-select" style="overflow-x: auto;">
+                    <table id="tblKhoanThu_HSNH"
+                        class="table table-condensed table-hover table-bordered table-noborder"
+                        style="min-width: 1600px;">
+                        <thead>
+                            <tr>
+                                <th class="td-center" style="width:40px">STT</th>
+                                <th class="td-left" style="width:200px">Tên khoản thu</th>
+                                <th class="td-left" style="width:130px">Mã khoản thu</th>
+                                <th class="td-left" style="width:150px">Thuộc nhóm</th>
+                                <th class="td-right" style="width:120px">Định mức thu</th>
+                                <th class="td-center" style="width:80px">Đơn vị tính</th>
+                                <th class="td-center" style="width:160px">Bắt buộc / không bắt buộc</th>
+                                <th class="td-center" style="width:170px">Tự động sinh phải thu sau khi thu</th>
+                                <th class="td-center" style="width:100px">Thứ tự hiển thị</th>
+                                <th class="td-left" style="width:170px">Kiểu tự động sinh phải thu</th>
+                                <th class="td-center" style="width:150px">Cho phép miễn giảm</th>
+                                <th class="td-left" style="width:180px">Ghi chú</th>
+                                <th class="td-fixed td-center" style="width:80px">Chọn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- load from khaimucphinhaphoc.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" href="#" data-dismiss="modal">
+                    <i class="fa fa-times-circle"></i> Đóng
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm mới đối tượng vào nhóm đầu vào -->
+<div class="modal fade" id="modalThemDoiTuong_HSNH" role="dialog"
+    aria-labelledby="modalThemDoiTuong_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 700px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalThemDoiTuong_HSNH_Label">
+                        <a><i class="fa-solid fa-users-cog"></i>
+                        <span>Thêm mới đối tượng</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-noborder table-form-add">
+                    <tbody>
+                        <tr>
+                            <td class="aps-form-lable" style="width: 30%;">
+                                Đối tượng <span style="color:red">*</span>
+                            </td>
+                            <td class="aps-form-input">
+                                <select class="select-opt" id="dropDoiTuong_ThemDT_HSNH"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable" style="vertical-align: top !important;">Ghi chú</td>
+                            <td class="aps-form-input">
+                                <textarea class="form-control" id="txtGhiChu_ThemDT_HSNH" rows="4"
+                                    placeholder="Ghi chú..."></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex" style="gap: 8px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                    <a class="btn btn-primary" href="#" id="btnSave_ThemDoiTuong_HSNH">
+                        <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cấu hình các trường hợp đầu vào (SV / đối tượng) -->
+<div class="modal fade" id="modalDauVao_HSNH" role="dialog" aria-labelledby="modalDauVao_HSNH_Label"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalDauVao_HSNH_Label">
+                        <a><i class="fa-solid fa-users"></i>
+                        <span>Cấu hình các trường hợp đầu vào (SV / đối tượng)</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="italic color-666 mb-10" id="lblNhomInfo_DauVao"></div>
+                <div class="d-flex" style="justify-content: flex-end; gap: 8px; margin-bottom: 10px;">
+                    <a class="btn btn-warning" id="btnAdd_NguoiHoc_DauVao_HSNH" href="#">
+                        <i class="fa fa-user-plus"></i>&nbsp;Thêm mới người học
+                    </a>
+                    <a class="btn btn-warning" id="btnAdd_DoiTuong_DauVao_HSNH" href="#">
+                        <i class="fa fa-users-cog"></i>&nbsp;Thêm mới đối tượng
+                    </a>
+                </div>
+                <div class="aps-table-select" style="overflow-x: auto;">
+                    <table id="tblDauVao_HSNH"
+                        class="table table-condensed table-hover table-bordered table-noborder"
+                        style="min-width: 1200px;">
+                        <thead>
+                            <tr>
+                                <th class="td-center" style="width:40px">STT</th>
+                                <th class="td-left" style="width:120px">Mã số</th>
+                                <th class="td-left" style="width:220px">Họ tên</th>
+                                <th class="td-left" style="width:180px">Đối tượng</th>
+                                <th class="td-left" style="width:200px">Ghi chú</th>
+                                <th class="td-center" style="width:100px">Hiệu lực</th>
+                                <th class="td-center" style="width:100px">Đang dùng</th>
+                                <th class="td-fixed td-center" style="width:60px">
+                                    <input type="checkbox" id="chkSelectAll_DauVao_HSNH" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- load from khaimucphinhaphoc.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-danger" href="#" id="btnDelete_DauVao_HSNH">
+                        <i class="fa fa-trash"></i>&nbsp;Xóa mục đã chọn
+                    </a>
+                </div>
+                <div class="pull-right d-flex" style="gap: 8px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm mới ngành đầu ra vào nhóm (chọn từ danh sách kế hoạch đầu ra) -->
+<div class="modal fade" id="modalThemNganhDauRa_HSNH" role="dialog"
+    aria-labelledby="modalThemNganhDauRa_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalThemNganhDauRa_HSNH_Label">
+                        <a><i class="fa-solid fa-plus-circle"></i>
+                        <span>Thêm mới ngành đầu ra vào nhóm</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="italic color-666 mb-10" id="lblNhomInfo_ThemNganhDauRa"></div>
+                <div class="pd10" style="background: #fff59d; text-align: center; font-weight: 700;
+                    color: #b71c1c; border: 1px solid #e0d97b; padding: 6px; margin-bottom: 10px;">
+                    Danh sách các chương trình đầu ra
+                </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="txtTuKhoa_ThemNganhDauRa_HSNH"
+                            placeholder="Nhập từ khóa lọc..." />
+                    </div>
+                    <div class="col-sm-4">
+                        <a class="btn btn-default btn-search" id="btnLoc_ThemNganhDauRa_HSNH" href="#">
+                            <i class="fa fa-search"></i>&nbsp;Lọc
+                        </a>
+                    </div>
+                </div>
+                <div class="aps-table-select" style="overflow-x: auto;">
+                    <table id="tblThemNganhDauRa_HSNH"
+                        class="table table-condensed table-hover table-bordered table-noborder"
+                        style="min-width: 1400px;">
+                        <thead>
+                            <tr>
+                                <th class="td-center" style="width:40px">STT</th>
+                                <th class="td-left" style="width:120px">Hệ</th>
+                                <th class="td-left" style="width:100px">Khóa</th>
+                                <th class="td-left" style="width:200px">Ngành đào tạo</th>
+                                <th class="td-left" style="width:200px">Ngành tuyển sinh</th>
+                                <th class="td-left" style="width:180px">Khoa quản lý</th>
+                                <th class="td-left" style="width:250px">Chương trình</th>
+                                <th class="td-left" style="width:200px">Ghi chú</th>
+                                <th class="td-fixed td-center" style="width:60px">
+                                    <input type="checkbox" id="chkSelectAll_ThemNganhDauRa_HSNH" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- load from khaimucphinhaphoc.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex" style="gap: 8px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                    <a class="btn btn-primary" href="#" id="btnSave_ThemNganhDauRa_HSNH">
+                        <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cấu hình ngành đầu ra nhận mức theo nhóm -->
+<div class="modal fade" id="modalNganhDauRa_HSNH" role="dialog"
+    aria-labelledby="modalNganhDauRa_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalNganhDauRa_HSNH_Label">
+                        <a><i class="fa-solid fa-graduation-cap"></i>
+                        <span>Cấu hình ngành đầu ra nhận mức theo nhóm</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="italic color-666 mb-10" id="lblNhomInfo_NganhDauRa"></div>
+                <div class="d-flex" style="justify-content: flex-end; margin-bottom: 10px;">
+                    <a class="btn btn-success btnAddNew" id="btnAdd_NganhDauRa_HSNH" href="#">
+                        <i class="fa fa-plus-circle"></i>&nbsp;Thêm ngành
+                    </a>
+                </div>
+                <div class="aps-table-select" style="overflow-x: auto;">
+                    <table id="tblNganhDauRa_HSNH"
+                        class="table table-condensed table-hover table-bordered table-noborder"
+                        style="min-width: 1400px;">
+                        <thead>
+                            <tr>
+                                <th class="td-center" style="width:40px">STT</th>
+                                <th class="td-left" style="width:120px">Hệ</th>
+                                <th class="td-left" style="width:100px">Khóa</th>
+                                <th class="td-left" style="width:200px">Ngành đào tạo</th>
+                                <th class="td-left" style="width:200px">Ngành tuyển sinh</th>
+                                <th class="td-left" style="width:180px">Khoa quản lý</th>
+                                <th class="td-left" style="width:250px">Chương trình</th>
+                                <th class="td-left" style="width:200px">Ghi chú</th>
+                                <th class="td-fixed td-center" style="width:60px">
+                                    <input type="checkbox" id="chkSelectAll_NganhDauRa_HSNH" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- load from khaimucphinhaphoc.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left">
+                    <a class="btn btn-danger" href="#" id="btnDelete_NganhDauRa_HSNH">
+                        <i class="fa fa-trash"></i>&nbsp;Xóa mục đã chọn
+                    </a>
+                </div>
+                <div class="pull-right d-flex" style="gap: 8px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm mới / Xem-Chỉnh sửa Khoản thu -->
+<div class="modal fade" id="modalKhoanThuEdit_HSNH" role="dialog"
+    aria-labelledby="modalKhoanThuEdit_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 900px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalKhoanThuEdit_HSNH_Label">
+                        <a><i class="fa-solid fa-money-check-dollar"></i>
+                        <span id="modalKhoanThuEdit_HSNH_Title">Thêm mới khoản thu</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdId_KhoanThu_HSNH" value="" />
+                <table class="table table-noborder table-form-add">
+                    <tbody>
+                        <tr>
+                            <td class="aps-form-lable" style="width: 30%;">
+                                Chọn khoản thu cần thêm <span style="color:red">*</span>
+                            </td>
+                            <td class="aps-form-input">
+                                <select class="select-opt" id="dropKhoanThu_KhoanThu_HSNH"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Tên hiển thị</td>
+                            <td class="aps-form-input">
+                                <input type="text" class="form-control" id="txtTenHienThi_KhoanThu_HSNH"
+                                    placeholder="Nếu không khai thì hệ thống lấy theo tên khoản" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Định mức thu <span style="color:red">*</span></td>
+                            <td class="aps-form-input">
+                                <input type="number" class="form-control" id="txtDinhMuc_KhoanThu_HSNH"
+                                    placeholder="Nhập số tiền định mức" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Đơn vị tính</td>
+                            <td class="aps-form-input">
+                                <select class="select-opt" id="dropDonVi_KhoanThu_HSNH"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Bắt buộc / Không bắt buộc</td>
+                            <td class="aps-form-input">
+                                <label style="display:inline-flex;align-items:center;gap:8px;">
+                                    <input type="checkbox" id="chkBatBuoc_KhoanThu_HSNH" />
+                                    <span class="italic color-666">Bắt buộc (1) / Không bắt buộc (0)</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Tự động sinh phải thu sau khi thu</td>
+                            <td class="aps-form-input">
+                                <label style="display:inline-flex;align-items:center;gap:8px;">
+                                    <input type="checkbox" id="chkTuDongSinh_KhoanThu_HSNH" checked />
+                                    <span class="italic color-666">Có (1) / Không (0)</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Thứ tự hiển thị</td>
+                            <td class="aps-form-input">
+                                <input type="number" class="form-control" id="txtThuTu_KhoanThu_HSNH"
+                                    placeholder="Số thứ tự" value="0" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Kiểu tự động sinh phải thu</td>
+                            <td class="aps-form-input">
+                                <select class="select-opt" id="dropKieuTuDong_KhoanThu_HSNH"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Cho phép miễn giảm</td>
+                            <td class="aps-form-input">
+                                <label style="display:inline-flex;align-items:center;gap:8px;">
+                                    <input type="checkbox" id="chkChoPhepMienGiam_KhoanThu_HSNH" />
+                                    <span class="italic color-666">Cho phép (1) / Không (0)</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable" style="vertical-align: top !important;">Ghi chú</td>
+                            <td class="aps-form-input">
+                                <textarea class="form-control" id="txtGhiChu_KhoanThu_HSNH" rows="3"
+                                    placeholder="Ghi chú..."></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left" id="zoneDelete_KhoanThu_HSNH" style="display:none">
+                    <a class="btn btn-danger" href="#" id="btnDelete_KhoanThu_HSNH">
+                        <i class="fa fa-trash"></i>&nbsp;Xóa
+                    </a>
+                </div>
+                <div class="pull-right d-flex" style="gap: 8px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                    <a class="btn btn-primary" href="#" id="btnSave_KhoanThu_HSNH">
+                        <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Thêm mới / Xem-Chỉnh sửa nhóm định mức -->
+<div class="modal fade" id="modalNhom_HSNH" role="dialog" aria-labelledby="modalNhom_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-lg" style="max-width: 800px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="pull-left">
+                    <h4 class="modal-title modal-name" id="modalNhom_HSNH_Label">
+                        <a><i class="fa-solid fa-layer-group"></i>
+                        <span id="modalNhom_HSNH_Title">Thêm mới nhóm</span></a>
+                    </h4>
+                </div>
+                <button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"
+                    style="border:none;background:transparent;font-size:22px;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="hdId_Nhom_HSNH" value="" />
+                <input type="hidden" id="hdKeHoachId_Nhom_HSNH" value="" />
+                <table class="table table-noborder table-form-add">
+                    <tbody>
+                        <tr>
+                            <td class="aps-form-lable" style="width: 25%;">Mã nhóm <span style="color:red">*</span></td>
+                            <td class="aps-form-input">
+                                <input type="text" class="form-control" id="txtMa_Nhom_HSNH" placeholder="Nhập mã nhóm" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Tên nhóm <span style="color:red">*</span></td>
+                            <td class="aps-form-input">
+                                <input type="text" class="form-control" id="txtTen_Nhom_HSNH" placeholder="Nhập tên nhóm" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Số thứ tự</td>
+                            <td class="aps-form-input">
+                                <input type="number" class="form-control" id="txtPriority_Nhom_HSNH"
+                                    placeholder="Số thứ tự" value="100" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Hiệu lực</td>
+                            <td class="aps-form-input">
+                                <label style="display:inline-flex;align-items:center;gap:8px;">
+                                    <input type="checkbox" id="chkHieuLuc_Nhom_HSNH" checked />
+                                    <span class="italic color-666">Đang hiệu lực (1) / Không hiệu lực (0)</span>
+                                </label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable" style="vertical-align: top !important;">Ghi chú</td>
+                            <td class="aps-form-input">
+                                <textarea class="form-control" id="txtGhiChu_Nhom_HSNH" rows="4"
+                                    placeholder="Ghi chú..."></textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-left" id="zoneDelete_Nhom_HSNH" style="display:none">
+                    <a class="btn btn-danger" href="#" id="btnDelete_Nhom_HSNH">
+                        <i class="fa fa-trash"></i>&nbsp;Xóa
+                    </a>
+                </div>
+                <div class="pull-right d-flex" style="gap: 8px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                    <a class="btn btn-primary" href="#" id="btnSave_Nhom_HSNH">
+                        <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- page script -->
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.12"></script>
+<script type="text/javascript">
+    var main_doc = {};
+    main_doc['KhaiMucPhi'] = new KhaiMucPhi();
+    $(document).ready(function () {
+        main_doc.KhaiMucPhi.init();
+    });
+</script>
