@@ -15497,7 +15497,6 @@ table#clone {
     padding: 0px 5px 3px 4px;
 }
 
-<<<<<<< HEAD
 .aps-add-new .aps-form-input .icon-angle-down {
     font-size: 13px;
     margin-right: 10px;
@@ -16027,36 +16026,37 @@ table#clone {
         white-space: nowrap;
         padding: 0 12px;
     }
-=======
-/* ------------- */
-.lblLopRieng_DaChon {
-    margin-left: 8px;
-    line-height: 31px;
-    height: 38px;
-    padding: 4px 15px;
-    border-radius: 30px;
-    font-size: 14px;
-    background: #f1f1f1 !important;
-    color: #000 !important;
-}
 
-.lblLopRieng_DaChon i {
-    margin-top: 8px;
-}
 
-.content .aps-ds-kehoach .box-footer {
-    padding: 18px 0px 5px 0px !important;
-}
+    /* ------------- */
+    .lblLopRieng_DaChon {
+        margin-left: 8px;
+        line-height: 31px;
+        height: 38px;
+        padding: 4px 15px;
+        border-radius: 30px;
+        font-size: 14px;
+        background: #f1f1f1 !important;
+        color: #000 !important;
+    }
 
-.zone_input_NamHoc .box.box-solid>.box-header .btn.btn-default,
-.zone-bus.form-container .box-header.with-border .btn.btn-default  {
-    background-color: transparent !important;
-}
-.box-solid.aps-list-year .box-header>.box-tools {
-    position: absolute;
-    right: 0px;
-    top: 5px;
-    margin-left: auto;
-    margin-right: 20px !important;
->>>>>>> 4faaf99dd4cbbeae088adb9fcd253df81ef34829
-}
+    .lblLopRieng_DaChon i {
+        margin-top: 8px;
+    }
+
+    .content .aps-ds-kehoach .box-footer {
+        padding: 18px 0px 5px 0px !important;
+    }
+
+    .zone_input_NamHoc .box.box-solid>.box-header .btn.btn-default,
+    .zone-bus.form-container .box-header.with-border .btn.btn-default {
+        background-color: transparent !important;
+    }
+
+    .box-solid.aps-list-year .box-header>.box-tools {
+        position: absolute;
+        right: 0px;
+        top: 5px;
+        margin-left: auto;
+        margin-right: 20px !important;
+    }
