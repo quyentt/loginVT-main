@@ -224,6 +224,17 @@
 }
 
 @media (max-width: 1024px) {
+    .content .aps-ds-kehoach {
+        padding-top: 10px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
+    }
+
+    .content .aps-ds-kehoach.box.box-solid .box-header {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
     .box-reg-sv .box-body .filter-tblSinhVien {
         margin-top: 5px !important;
     }

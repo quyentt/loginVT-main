@@ -4142,7 +4142,9 @@ a.other-action_item:hover {
   margin-top: 0;
   margin-bottom: 0;
 }
-
+.sidebar-menu-item.sidebar-menu-home {
+    margin-bottom: 10px;
+}
 .sidebar-menu-header {
   position: relative;
   align-items: center;

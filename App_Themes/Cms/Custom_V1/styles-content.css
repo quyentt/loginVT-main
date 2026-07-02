@@ -15094,8 +15094,7 @@ table#clone {
 .box-solid.aps-list-deCuongHT,
 .content .box.box-solid.mt-15,
 .aps-lichsu-dangky-ds .box-header,
-.aps-KeHoachChuongTrinh .box-solid.pd20 .box-body,
-.aps-KeHoachChuongTrinh .box-header {
+.aps-KeHoachChuongTrinh .box-solid.pd20 .box-body {
     padding: 0 !important;
     margin-top: 0 !important;
 }
@@ -15307,7 +15306,8 @@ table#clone {
     padding-bottom: 8px !important;
 }
 
-.box.box-solid.aps-danhmucDL-danhsach,.aps-danhmucDL.box.box-solid,
+.box.box-solid.aps-danhmucDL-danhsach,
+.aps-danhmucDL.box.box-solid,
 .aps-dsTrungTuyen-list .box.box-solid,
 .box.box-solid.aps-khaibaothamsoapdung-choose,
 .aps-kehoachnhahoc-list .box.box-solid,
@@ -15315,14 +15315,17 @@ table#clone {
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
 }
-.aps-list-khaothicaphat,.box-solid.aps-chandk-list{
+
+.aps-list-khaothicaphat,
+.box-solid.aps-chandk-list {
     padding: 20px !important;
 }
+
 .box.box-solid.aps-khaibaothamsoapdung-choose .box-header {
     margin-top: 0px !important;
 }
 
-.aps-lophocphan-list .box-header .box-tools a{
+.aps-lophocphan-list .box-header .box-tools a {
     margin-left: 0px !important;
     margin-bottom: 10px !important;
     margin-right: 7px !important;
@@ -15493,9 +15496,10 @@ table#clone {
     left: 10px;
     padding: 0px 5px 3px 4px;
 }
+
 /* ------------- */
-.lblLopRieng_DaChon{
-        margin-left: 8px;
+.lblLopRieng_DaChon {
+    margin-left: 8px;
     line-height: 31px;
     height: 38px;
     padding: 4px 15px;
@@ -15507,4 +15511,20 @@ table#clone {
 
 .lblLopRieng_DaChon i {
     margin-top: 8px;
+}
+
+.content .aps-ds-kehoach .box-footer {
+    padding: 18px 0px 5px 0px !important;
+}
+
+.zone_input_NamHoc .box.box-solid>.box-header .btn.btn-default,
+.zone-bus.form-container .box-header.with-border .btn.btn-default  {
+    background-color: transparent !important;
+}
+.box-solid.aps-list-year .box-header>.box-tools {
+    position: absolute;
+    right: 0px;
+    top: 5px;
+    margin-left: auto;
+    margin-right: 20px !important;
 }
