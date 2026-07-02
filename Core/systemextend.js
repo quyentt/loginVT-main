@@ -1064,6 +1064,11 @@ systemextend.prototype = {
                 this.checked = checked_status;
             });
         });
+        $("#modal_sinhvien").delegate(".ckbDSTrangThaiSV", "click", function () {
+            var $all = $("#DSTrangThaiSV_MD .ckbDSTrangThaiSV");
+            var iChecked = $all.filter(":checked").length;
+            $("#DSTrangThaiSV_MD .ckbDSTrangThaiSV_ALL").prop("checked", iChecked === $all.length);
+        });
         $("#modal_sinhvien").delegate('#btnAdd_Khoa', 'click', function () {
             edu.extend.arrKhoa = $("#dropSearchModal_Khoa_SV").val();
             if (edu.extend.arrKhoa.length > 0) {
@@ -1115,7 +1120,7 @@ systemextend.prototype = {
             row += '</div>';
             for (var i = 0; i < data.length; i++) {
                 row += '<div class="form-check">';
-                row += '<input id="' + data[i].ID + '" class="ckbDSTrangThaiSV form-check-input ckbDSTrangThaiSV_ALL" type="checkbox" checked="checked">';
+                row += '<input id="' + data[i].ID + '" class="ckbDSTrangThaiSV form-check-input" type="checkbox" checked="checked">';
                 row += '<label class="form-check-label" for="' + data[i].ID + '">';
                 row += data[i].TEN;
                 row += '</label>';
