@@ -1033,7 +1033,7 @@
 
 .aps-form-item {
     display: flex;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .aps-form-input {
@@ -15484,4 +15484,535 @@ table#clone {
     top: -8px;
     left: 10px;
     padding: 0px 5px 3px 4px;
+}
+
+.aps-add-new .aps-form-input .icon-angle-down {
+    font-size: 13px;
+    margin-right: 10px;
+    margin-top: 1px !important;
+    display: block;
+    right: 0px !important;
+    left: auto;
+    position: absolute;
+}
+
+.aps-add-new .row>* {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
+
+.aps-add-new .aps-form-lable.text-right.pr15 {
+    padding-right: 15px !important;
+}
+
+.aps-add-new .aps-form-lable.text-right.pr10 {
+    padding-right: 10px !important;
+}
+
+.aps-khung {
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    position: relative;
+}
+
+.aps-khung .aps-form-lable-khung {
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    background-color: #fff;
+}
+
+.aps-sv-form {
+    --aps-sv-primary: #2563eb;
+    --aps-sv-primary-soft: #eaf1ff;
+    --aps-sv-border: #e2e8f0;
+    --aps-sv-label: #475569;
+    --aps-sv-text: #0f172a;
+    --aps-sv-radius: 5px;
+}
+
+/* ------- Bố cục: form sát trái + minh họa lấp khoảng trống phải ------- */
+.aps-sv-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 0 20px 40px;
+}
+
+/* Tỉ lệ 8 - 4 (form 8 phần, minh họa 4 phần) */
+.aps-sv-main {
+    flex: 8 1 0;
+    min-width: 0;
+}
+
+/* Cột minh họa bên phải - chiếm 4 phần */
+.aps-sv-aside {
+    flex: 4 1 0;
+    min-width: 0;
+    position: sticky;
+    top: 20px;
+    align-self: stretch;
+}
+
+.aps-sv-illus {
+    background: linear-gradient(160deg, #eaf1ff 0%, #f5f8ff 60%, #ffffff 100%);
+    border: 1px solid var(--aps-sv-border);
+    border-radius: 16px;
+    padding: 26px 24px 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px -22px rgba(15, 23, 42, .35);
+}
+
+.aps-sv-illus svg {
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+}
+
+.aps-sv-illus h3 {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 18px 0 6px;
+}
+
+.aps-sv-illus p {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0 auto;
+    max-width: 300px;
+    line-height: 1.55;
+}
+
+.aps-sv-illus .aps-sv-tips {
+    margin-top: 20px;
+    text-align: left;
+    display: grid;
+    gap: 10px;
+}
+
+.aps-sv-illus .aps-sv-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #334155;
+    background: #fff;
+    border: 1px solid var(--aps-sv-border);
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+.aps-sv-illus .aps-sv-tip i {
+    color: var(--aps-sv-primary);
+    margin-top: 2px;
+}
+
+/* Ẩn minh họa khi màn hình hẹp (form tự chiếm hết chiều ngang) */
+@media (max-width: 1200px) {
+    .aps-sv-aside {
+        display: none;
+    }
+
+    .aps-sv-main {
+        max-width: 100%;
+    }
+}
+
+.aps-sv-card {
+    background: #fff;
+    border: 1px solid var(--aps-sv-border);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px -18px rgba(15, 23, 42, .35);
+    overflow: hidden;
+}
+
+/* ------- Header gradient của thẻ ------- */
+.aps-sv-card-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 24px;
+    background: linear-gradient(120deg, #1d4ed8 0%, #2563eb 45%, #3b82f6 100%);
+    color: #fff;
+}
+
+.aps-sv-card-head .aps-sv-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, .18);
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.aps-sv-card-head h2 {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.25;
+    color: #fff;
+}
+
+.aps-sv-card-head p {
+    margin: 2px 0 0;
+    font-size: 13px;
+    opacity: .85;
+}
+
+/* ------- Thanh Tabs ------- */
+.aps-sv-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 14px 18px 0;
+    border-bottom: 1px solid var(--aps-sv-border);
+    background: #f8fafc;
+}
+
+.aps-sv-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border: none;
+    background: transparent;
+    color: var(--aps-sv-label);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px 10px 0 0;
+    border-bottom: 3px solid transparent;
+    transition: all .18s ease;
+    white-space: nowrap;
+}
+
+.aps-sv-tab i {
+    font-size: 15px;
+}
+
+.aps-sv-tab:hover {
+    color: var(--aps-sv-primary);
+    background: var(--aps-sv-primary-soft);
+}
+
+.aps-sv-tab.active {
+    color: var(--aps-sv-primary);
+    background: #fff;
+    border-bottom-color: var(--aps-sv-primary);
+}
+
+.aps-sv-tab .aps-sv-tab-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.aps-sv-tab.active .aps-sv-tab-num {
+    background: var(--aps-sv-primary);
+    color: #fff;
+}
+
+/* ------- Nội dung panel ------- */
+.aps-sv-body {
+    padding: 26px 28px;
+}
+
+.aps-sv-panel {
+    display: none;
+    animation: apsSvFade .25s ease;
+}
+
+.aps-sv-panel.active {
+    display: block;
+}
+
+@keyframes apsSvFade {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ------- Tiêu đề nhóm bên trong panel ------- */
+.aps-sv-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--aps-sv-primary);
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    margin: 6px 0 18px;
+}
+
+.aps-sv-section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, var(--aps-sv-border), transparent);
+}
+
+.aps-sv-section-title i {
+    color: var(--aps-sv-primary);
+}
+
+.aps-sv-section+.aps-sv-section {
+    margin-top: 30px;
+}
+
+/* ------- Lưới trường nhập ------- */
+.aps-sv-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 26px;
+}
+
+.aps-sv-field.aps-sv-col-full {
+    grid-column: 1 / -1;
+}
+
+.aps-sv-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--aps-sv-label);
+    margin-bottom: 7px;
+}
+
+.aps-sv-label .aps-sv-req {
+    color: #ef4444;
+    margin-left: 2px;
+}
+
+/* ------- Ô nhập (thêm mới, không sửa .form-control gốc) ------- */
+.aps-sv-form .aps-sv-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 14px;
+    font-size: 14px;
+    color: var(--aps-sv-text);
+    background: #fff;
+    border: 1px solid var(--aps-sv-border);
+    border-radius: var(--aps-sv-radius);
+    transition: border-color .15s, box-shadow .15s;
+    outline: none;
+}
+
+.aps-sv-form textarea.aps-sv-input {
+    height: auto;
+    min-height: 90px;
+    padding: 12px 14px;
+    resize: vertical;
+}
+
+.aps-sv-form .aps-sv-input::placeholder {
+    color: #94a3b8;
+}
+
+.aps-sv-form .aps-sv-input:focus {
+    border-color: var(--aps-sv-primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .14);
+}
+
+.aps-sv-form .aps-sv-input:read-only {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+/* ------- Select bọc icon ------- */
+.aps-sv-select {
+    position: relative;
+}
+
+.aps-sv-select select.aps-sv-input {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+.aps-sv-select>i {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* ------- Ô có icon phía trước (vd điện thoại) ------- */
+.aps-sv-input-icon {
+    position: relative;
+}
+
+.aps-sv-input-icon>i {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+.aps-sv-input-icon .aps-sv-input {
+    padding-left: 40px;
+}
+
+/* ------- Ô tổng điểm nổi bật ------- */
+.aps-sv-input.aps-sv-highlight {
+    background: var(--aps-sv-primary-soft);
+    border-color: #bfd4ff;
+    font-weight: 700;
+    color: var(--aps-sv-primary);
+}
+
+/* ------- Thanh hành động dính đáy ------- */
+.aps-sv-actionbar {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 15px 28px;
+    background: #fff;
+    border-top: 1px solid var(--aps-sv-border);
+    box-shadow: 0 -8px 20px -16px rgba(15, 23, 42, .4);
+}
+
+.aps-sv-actionbar .aps-sv-hint {
+    font-size: 12.5px;
+    color: #64748b;
+}
+
+.aps-sv-actionbar .aps-sv-hint .aps-sv-req {
+    color: #ef4444;
+}
+
+.aps-sv-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.aps-sv-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 42px;
+    padding: 0 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+.aps-sv-btn-ghost {
+    background: #fff;
+    border-color: var(--aps-sv-border);
+    color: #475569;
+}
+
+.aps-sv-btn-ghost:hover {
+    background: #f1f5f9;
+}
+
+.aps-sv-btn-primary {
+    background: linear-gradient(120deg, #1d4ed8, #2563eb);
+    color: #fff;
+    box-shadow: 0 8px 16px -8px rgba(37, 99, 235, .8);
+}
+
+.aps-sv-btn-primary:hover {
+    filter: brightness(1.06);
+}
+
+.aps-sv-btn-nav {
+    background: var(--aps-sv-primary-soft);
+    color: var(--aps-sv-primary);
+}
+
+.aps-sv-btn-nav:hover {
+    background: #dbe7ff;
+}
+
+/* ------- Responsive ------- */
+@media (max-width: 768px) {
+    .aps-sv-layout {
+        padding: 0 10px 40px;
+    }
+
+    .aps-sv-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .aps-sv-body {
+        padding: 20px 16px;
+    }
+
+    /* Tabs: 1 hàng ngang vuốt được, không xuống dòng */
+    .aps-sv-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 4px;
+        padding: 10px 12px 0;
+        scroll-snap-type: x proximity;
+    }
+
+    .aps-sv-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .aps-sv-tab {
+        flex: 0 0 auto;
+        padding: 10px 12px;
+        font-size: 13px;
+        scroll-snap-align: start;
+    }
+
+    /* Thanh nút: xếp lưới 2x2, mỗi nút chiếm hết ô, không co chữ */
+    .aps-sv-actionbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px 12px;
+    }
+
+    .aps-sv-actionbar .aps-sv-hint {
+        text-align: center;
+    }
+
+    .aps-sv-btns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .aps-sv-btn {
+        width: 100%;
+        justify-content: center;
+        white-space: nowrap;
+        padding: 0 12px;
+    }
 }

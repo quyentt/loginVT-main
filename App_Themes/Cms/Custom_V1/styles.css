@@ -6642,6 +6642,15 @@ input[type="radio"] {
   min-width: fit-content;
 }
 
+.btn-group-block {
+  display: block !important;
+}
+
+.btn-group-block.btn-group .btn {
+  margin-right: 6px !important;
+
+}
+
 .column-1 {
   display: grid !important;
   grid-template-columns: repeat(1, 1fr) !important;
@@ -7049,14 +7058,6 @@ input[type="radio"] {
 .table .btn:hover .lang,
 .table .btn:hover i {
   color: #fff !important
-}
-
-thead,
-.table thead tr th {
-  color: #222 !important;
-  /* background: rgba(60, 141, 238, 0.1) !important; */
-  background: #f5f6f8;
-  font-weight: normal;
 }
 
 .table-bordered tbody tr:nth-child(2n+2) {

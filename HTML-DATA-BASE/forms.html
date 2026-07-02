@@ -56,6 +56,26 @@
         .box-comment .box-content.pd-20 {
             padding: 20px;
         }
+
+        /* Chuẩn hóa khoảng cách lưới checkbox "Chọn trạng thái sinh viên" (chỉ áp trong trang demo) */
+        #DSTrangThaiSV .checkbox-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+            padding-left: 0;
+        }
+
+        #DSTrangThaiSV .checkbox-inline .form-check-input {
+            float: none !important;
+            margin: 0 8px 0 0 !important;
+            flex-shrink: 0;
+        }
+
+        #DSTrangThaiSV .checkbox-inline span,
+        #DSTrangThaiSV .checkbox-inline p {
+            margin: 0;
+            line-height: 1.2;
+        }
     </style>
 </head>
 
@@ -317,6 +337,18 @@
                         </a>
                     </div>
                     <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="tabs.html">
+                            <i class="fa-light fa-folder-tree item-icon"></i>
+                            <span>Tabs</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="tree.html">
+                            <i class="fa-light fa-sitemap item-icon"></i>
+                            <span>Danh mục tree</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
                         <a class="sidebar-menu-header collapsed" href="icon.html">
                             <i class="fa-light fa-icons item-icon"></i>
                             <span>Icon</span>
@@ -364,7 +396,7 @@
 
             <div class="row box-comment pl-10">
                 <!-- ===================== CỘT TRÁI ===================== -->
-                <div class="col-6">
+                <div class="col-7">
                     <h4>Forms - Box search</h4>
                     <!-- ===== Overview ===== -->
                     <div class="box box-solid zone-bus pd0" id="search">
@@ -587,6 +619,134 @@
                         </div>
                         <div class="box-body box box-solid pd20">Nội dung</div>
                         <div class="box-footer">Footer</div>
+                    </div>
+
+                    <h4>Forms - Chọn trạng thái sinh viên</h4>
+                    <!-- ===== Chọn trạng thái sinh viên ===== -->
+                    <div class="box box-solid zone-bus pd0" id="trang-thai-sv">
+                        <div class="box box-solid box-search pd20">
+                            <div class="group-title pb-0">
+                                <p class="titleSearchContent mb-10">
+                                    <i class="far fa-user-graduate"></i>
+                                    <span class="lang" key="">Chọn trạng thái sinh viên</span>
+                                </p>
+                            </div>
+                            <div class="area-search">
+                                <div id="DSTrangThaiSV" class="inputSearch">
+                                    <div class="row">
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input type="checkbox" class="form-check-input ckbDSTrangThaiSV_ALL"
+                                                style="float: left; margin-right: 5px" checked="checked" />
+                                            <span><b>Tất cả</b></span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Buộc thôi học" />
+                                            <span>
+                                                <p>Buộc thôi học</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Chuyển trường đến" />
+                                            <span>
+                                                <p>Chuyển trường đến</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Chuyển trường đi" />
+                                            <span>
+                                                <p>Chuyển trường đi</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Không theo dõi" />
+                                            <span>
+                                                <p>Không theo dõi</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Không xác định" />
+                                            <span>
+                                                <p>Không xác định</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Nghỉ học tạm thời" />
+                                            <span>
+                                                <p>Nghỉ học tạm thời</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Phòng ĐT không QL" />
+                                            <span>
+                                                <p>Phòng ĐT không QL</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Thôi học" />
+                                            <span>
+                                                <p>Thôi học</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Tốt nghiệp" />
+                                            <span>
+                                                <p>Tốt nghiệp</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Xóa tên" />
+                                            <span>
+                                                <p>Xóa tên</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Cảnh báo" />
+                                            <span>
+                                                <p>Cảnh báo</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Đang học" />
+                                            <span>
+                                                <p>Đang học</p>
+                                            </span>
+                                        </div>
+                                        <div class="col-lg-3 checkbox-inline user-check-print">
+                                            <input checked="checked" type="checkbox"
+                                                style="float: left; margin-right: 5px"
+                                                class="form-check-input ckbDSTrangThaiSV" title="Vi phạm kỷ luật" />
+                                            <span>
+                                                <p>Vi phạm kỷ luật</p>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <h4>Forms - Box search - text</h4>
@@ -980,7 +1140,7 @@
                                     <input id="txtSearch_TuKhoa" class="form-control"
                                         placeholder="Mã hồ sơ, Họ tên, CCCD...">
                                 </div>
-                                <div class="item btn-group gap10">
+                                <div class="item btn-group btn-group-block">
                                     <a class="btn btn-primary" href="">
                                         <i class="fa-solid fa-search"></i><span>Tìm kiếm</span>
                                     </a>
@@ -1006,14 +1166,16 @@
                             </h3>
                         </div>
                         <div class="box-body">
-                            <div class="aps-add-new mt-20">
+                            <div class="aps-add-new pd-20">
                                 <!-- 1. Noi dung bai bao -->
                                 <div class="row aps-form">
+                                    <!-- 1. Lable -->
                                     <div class="row aps-lable-name">
                                         <p class="group-group-title-name border-0 mb-0">
                                             <span class="badge bg-blue"> Thông tin kế hoạch</span>
                                         </p>
                                     </div>
+                                    <!-- 2. Row 1 -->
                                     <div class="row aps-form-item">
                                         <div class="col-sm-2 aps-form-lable">
                                             <div class="title-name">
@@ -1030,25 +1192,18 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-4 aps-form-input">
-                                            <select id="dropHieuLuc" class="select-opt select2-hidden-accessible"
-                                                tabindex="-1" aria-hidden="true">
-                                                <option value="1">Có hiệu lực</option>
-                                                <option value="0">Hết hiệu lực</option>
-                                            </select><span class="select2 select2-container select2-container--default"
-                                                dir="ltr" style="width: auto;"><span class="selection"><span
-                                                        class="select2-selection select2-selection--single"
-                                                        role="combobox" aria-haspopup="true" aria-expanded="false"
-                                                        tabindex="0"
-                                                        aria-labelledby="select2-dropHieuLuc-container"><span
-                                                            class="select2-selection__rendered"
-                                                            id="select2-dropHieuLuc-container" title="Có hiệu lực">Có
-                                                            hiệu lực</span><span class="select2-selection__arrow"
-                                                            role="presentation"><b
-                                                                role="presentation"></b></span></span></span><span
-                                                    class="dropdown-wrapper" aria-hidden="true"></span></span>
+                                            <div class="input-group no-icon" bis_skin_checked="1">
+                                                <i class="fal fa-angle-down icon-angle-down"></i>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected="">Chương trình</option>
+                                                    <option value="1">Kế hoạch tuyển sinh 1</option>
+                                                    <option value="2">Kế hoạch tuyển sinh 2</option>
+                                                    <option value="3">Kế hoạch tuyển sinh 3</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-
+                                    <!-- 3. Row 2 -->
                                     <div class="row aps-form-item">
                                         <div class="col-sm-2 aps-form-lable">
                                             <div class="title-name">
@@ -1056,213 +1211,45 @@
                                             </div>
                                         </div>
                                         <div class="col-sm-10 aps-form-input">
-                                            <!-- <input id="txtMoTa" class="form-control" /> -->
                                             <textarea id="txtMoTa" class="form-control min-h-68"></textarea>
                                         </div>
-                                        <!--<div class="col-sm-2 aps-form-lable">
-                            <div class="title-name">
-                                Hạn nộp phí<span class="title-colon">:</span>
+                                    </div>
+                                </div>
+
+                                <!--Table-->
+                                <div class="row aps-form">
+                                    <!-- 1. Lable -->
+                                    <div class="row aps-form-item mb-0 pl-0 pr-0">
+                                        <p class="group-group-title-name border-bottom-0 mb-0">
+                                            <span class="badge bg-blue mt-0 mb-0">Thời gian</span>
+                                        </p>
+                                    </div>
+                                    <div class="row aps-form-table">
+                                        <table
+                                            class="tblThoiGian table table-hover table-bordered mb-10 table-noborder">
+                                            <thead>
+                                                <tr>
+                                                    <th style="text-align:center;" class="w-50px">STT</th>
+                                                    <th style="text-align:center;">Thời gian</th>
+                                                    <th style="text-align:center;" class="w-100px">Xóa</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                    <div class="aps-form-btn d-flex justify-content-end">
+                                        <a class="btn btn-outline-danger" id="btnDelete_DotThi">
+                                            <i class="fa fa-trash color-active mr-0"></i>Xóa
+                                        </a>
+                                        <a class="btn btn-outline-primary" id="btnAdd_DotThi">
+                                            <i class="fa fa-plus color-active mr-0"></i>Thêm mới
+                                        </a>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
-                        <div class="col-sm-4 aps-form-input">
-                            <input id="txtHanNopPhi" class="form-control form-border-bottom  input-datepicker" placeholder="dd/mm/yyyy" />
-                        </div>-->
-                                    </div>
-                                </div>
-
-
-                                <!--Cột trái: Thời gian + Chọn đợt thi-->
-                                <div class="col-sm-12 pr15 mt-15">
-                                    <!--Thời gian-->
-                                    <div class="row aps-form">
-                                        <div class="box-view">
-                                            <div class="row aps-form-item mb-0">
-                                                <p class="group-group-title-name border-bottom-0 mb-0">
-                                                    <span class="badge bg-blue mt-0 mb-0">Thời gian</span>
-                                                </p>
-                                            </div>
-                                            <div class="row aps-form-table">
-                                                <table id="tblThoiGian"
-                                                    class="tblThoiGian table table-hover table-bordered mb-10 table-noborder">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="text-align:center;" class="w-50px">STT</th>
-                                                            <th style="text-align:center;">Thời gian</th>
-                                                            <th style="text-align:center;" class="w-100px">Xóa</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody></tbody>
-                                                </table>
-                                            </div>
-                                            <div class="row aps-form-btn">
-                                                <div class="pull-right">
-                                                    <a class="btn btn-outline-primary" id="btnAddThoiGian">
-                                                        <i class="fa fa-plus color-active mr-0"></i>Thêm dòng mới
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!--Chọn đợt thi-->
-                                    <div class="row aps-form mt-15">
-                                        <div class="row aps-form-item mb-0">
-                                            <p class="group-group-title-name border-bottom-0 mb-0">
-                                                <span class="badge bg-blue mt-0 mb-0">Chọn đợt thi</span>
-                                            </p>
-                                        </div>
-                                        <div class="row aps-form-tabel mt-5">
-                                            <table id="tblDotThi"
-                                                class="tblDotThi table table-hover table-bordered mb-10 mr-0 table-noborder">
-                                                <thead>
-                                                    <tr>
-                                                        <td class="td-fixed td-center w-50px">Stt</td>
-                                                        <td class="td-left">Đợt thi</td>
-                                                        <td class="td-center w-100px">Xóa</td>
-                                                        <td class="td-center w-50px">
-                                                            <input class="chkSystemSelectAll" type="checkbox"
-                                                                id="chkSelectAll_DotThi">
-                                                        </td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                        <div class="row aps-form-btn d-flex justify-content-between align-items-center">
-                                            <a class="btn btn-outline-danger" id="btnDelete_DotThi">
-                                                <i class="fa fa-trash color-active mr-0"></i>Xóa
-                                            </a>
-                                            <a class="btn btn-outline-primary" id="btnAdd_DotThi">
-                                                <i class="fa fa-plus color-active mr-0"></i>Thêm mới
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--Danh sách phạm vi-->
-                                <div class="row aps-form col-sm-6 pl15 mt-15">
-                                    <div class="row aps-form-item mb-0">
-                                        <p class="group-group-title-name border-bottom-0 mb-0">
-                                            <span class="badge bg-blue mt-0 mb-0">Danh sách phạm vi</span>
-                                        </p>
-                                    </div>
-                                    <div class="row aps-form-tabel">
-                                        <table id="tblPhamVi"
-                                            class="tblPhamVi table table-hover table-bordered mb-10 mr-0 table-noborder">
-                                            <thead>
-                                                <tr>
-                                                    <td class="td-fixed td-center w-50px">Stt</td>
-                                                    <td class="td-left">Phạm vi</td>
-                                                    <td class="td-center w-50px"><input type="checkbox"
-                                                            class="chkSystemSelectAll">
-                                                    </td>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row aps-form-btn">
-                                        <!--<div class="pull-left">
-                            <div id="ApDungChoKhoa"></div>
-                            <div id="ApDungChoChuongTrinh"></div>
-                            <div id="ApDungChoLop"></div>
-                        </div>-->
-                                        <div class="pull-right">
-                                            <div class="title-name d-flex">
-                                                <a id="btnDelete_PhamVi"
-                                                    class="btn btn-outline-danger btnDelete_PhamVi">
-                                                    <i class="fa fa-trash mr-0"></i>Xóa
-                                                </a>
-                                                <a class="btn btn-outline-primary btnSearch_PhamVi" id="">
-                                                    <i class="fa fa-plus color-active mr-0"></i>Thêm
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--Danh sách các học phần mở đăng ký-->
-                                <div class="row aps-form col-sm-6 pr15 mt-15">
-                                    <div class="row aps-form-item mb-0">
-                                        <p class="group-group-title-name border-bottom-0 mb-0">
-                                            <span class="badge bg-blue mt-0 mb-0">Danh sách các học phần mở đăng
-                                                ký</span>
-                                        </p>
-                                        <div class="pull-right"></div>
-                                    </div>
-                                    <div class="row aps-form-item mb-10">
-                                        <table id="tblHPDangKy"
-                                            class="tblHPDangKy table table-hover table-bordered mb-0 mr-0 table-noborder">
-                                            <thead>
-                                                <tr>
-                                                    <td class="td-fixed td-center">Stt</td>
-                                                    <td class="td-left">Mã học phần</td>
-                                                    <td class="td-left">Tên học phần</td>
-                                                    <td class="td-left">Số tín chỉ</td>
-                                                    <td class="td-left">Đơn vị</td>
-                                                    <td class="td-center"><input type="checkbox"
-                                                            class="chkSystemSelectAll"></td>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row aps-form-btn">
-                                        <div class="pull-right">
-                                            <div class="title-name d-flex">
-                                                <a id="btnDelete_HPDangKy" class="btn btn-outline-danger">
-                                                    <i class="fa fa-trash mr-0"></i>Xóa
-                                                </a>
-                                                <a class="btn btn-outline-primary" id="btnAdd_HPDangKy">
-                                                    <i class="fa fa-plus color-active mr-0"></i>Thêm
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Danh sách các học phần không đăng ký -->
-                                <div class="row aps-form col-sm-6 pl15 mt-15">
-                                    <div class="row aps-form-item mb-0">
-                                        <p class="group-group-title-name border-bottom-0 mb-0">
-                                            <span class="badge bg-blue mt-0 mb-0">Danh sách các học phần không đăng
-                                                ký</span>
-                                        </p>
-                                        <div class="pull-right"></div>
-                                    </div>
-                                    <div class="row aps-form-item mb-10">
-                                        <table id="tblHPKhong"
-                                            class="table table-hover table-bordered mr-0 mb-0 tblHPKhong table-noborder">
-                                            <thead>
-                                                <tr>
-                                                    <td class="td-fixed td-center">Stt</td>
-                                                    <td class="td-left">Mã học phần</td>
-                                                    <td class="td-left">Tên học phần</td>
-                                                    <td class="td-left">Số tín chỉ</td>
-                                                    <td class="td-left">Đơn vị</td>
-                                                    <td class="td-center"><input type="checkbox"
-                                                            class="chkSystemSelectAll"></td>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                        </table>
-                                    </div>
-                                    <div class="row aps-form-btn">
-                                        <div class="pull-right">
-                                            <div class="title-name d-flex">
-                                                <a id="btnDelete_HPKhong" class="btn btn-outline-danger">
-                                                    <i class="fa fa-trash mr-0"></i>Xóa
-                                                </a>
-                                                <a class="btn btn-outline-primary" id="btnAdd_HPKhong">
-                                                    <i class="fa fa-plus color-active mr-0"></i>Thêm
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="box-footer mt-25 pt20 pr20">
+                        <div class="box-footer mt-25 pt15 pr20">
                             <div class="pull-right d-flex">
                                 <a class="btn btn-default btnClose" href="#" title="Close">
                                     <i class="fa fa-times-circle"></i>Đóng
@@ -1276,7 +1263,7 @@
                 </div>
 
                 <!-- ===================== CỘT PHẢI ===================== -->
-                <div class="col-6">
+                <div class="col-5">
                     <!-- ===== Overview ===== -->
                     <div class="box box-solid box-shadow pd0 mb-20" id="overview">
                         <div class="box-header with-border">
