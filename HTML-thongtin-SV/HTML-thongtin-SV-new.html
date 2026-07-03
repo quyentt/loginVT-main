@@ -426,6 +426,9 @@
                 <button class="aps-sv-tab" data-target="aps-sv-tab-giadinh">
                   <span class="aps-sv-tab-num">5</span><i class="fa-light fa-people-roof"></i> Gia đình
                 </button>
+                <button class="aps-sv-tab" data-target="aps-sv-tab-hoadon">
+                  <span class="aps-sv-tab-num">6</span><i class="fa-light fa-file-invoice-dollar"></i> Xuất hóa đơn
+                </button>
               </div>
 
               <div class="aps-sv-body">
@@ -754,6 +757,109 @@
                       <div class="aps-sv-field aps-sv-col-full">
                         <label class="aps-sv-label">Nơi ở hiện nay</label>
                         <input class="aps-sv-input" id="txtMeNoiO" placeholder="Địa chỉ hiện tại">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ===================== TAB 6: XUẤT HÓA ĐƠN ===================== -->
+                <div class="aps-sv-panel" id="aps-sv-tab-hoadon">
+                  <div class="aps-sv-section">
+                    <div class="aps-sv-section-title"><i class="fa-light fa-file-invoice-dollar"></i> Thông tin người
+                      mua / xuất hóa đơn</div>
+                    <div class="aps-sv-grid">
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Đối tượng xuất hóa đơn</label>
+                        <div class="aps-sv-select">
+                          <i class="fa-light fa-chevron-down"></i>
+                          <select class="aps-sv-input" id="cboDoiTuongHD">
+                            <option value="1">Cá nhân</option>
+                            <option value="2">Tổ chức / Doanh nghiệp</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Họ tên người mua hàng</label>
+                        <input class="aps-sv-input" id="txtHDNguoiMua" placeholder="Người nộp tiền / người mua">
+                      </div>
+                      <div class="aps-sv-field aps-sv-col-full">
+                        <label class="aps-sv-label">Tên đơn vị / Công ty <span
+                            style="font-weight:500;color:#94a3b8">(nếu xuất cho tổ chức)</span></label>
+                        <input class="aps-sv-input" id="txtHDTenDonVi" placeholder="Tên đơn vị nhận hóa đơn">
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Mã số thuế (MST)</label>
+                        <div class="aps-sv-input-icon">
+                          <i class="fa-light fa-hashtag"></i>
+                          <input class="aps-sv-input" id="txtHDMST" placeholder="10 hoặc 13 chữ số">
+                        </div>
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Mã quan hệ ngân sách</label>
+                        <div class="aps-sv-input-icon">
+                          <i class="fa-light fa-landmark"></i>
+                          <input class="aps-sv-input" id="txtHDMaQHNS" placeholder="Mã QHNS (nếu là đơn vị NSNN)">
+                        </div>
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Số CCCD / Căn cước</label>
+                        <div class="aps-sv-input-icon">
+                          <i class="fa-light fa-address-card"></i>
+                          <input class="aps-sv-input" id="txtHDCCCD" placeholder="12 chữ số">
+                        </div>
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Số điện thoại nhận</label>
+                        <div class="aps-sv-input-icon">
+                          <i class="fa-light fa-phone"></i>
+                          <input class="aps-sv-input" id="txtHDSDT" placeholder="09xx xxx xxx">
+                        </div>
+                      </div>
+                      <div class="aps-sv-field aps-sv-col-full">
+                        <label class="aps-sv-label">Địa chỉ trên hóa đơn</label>
+                        <input class="aps-sv-input" id="txtHDDiaChi" placeholder="Địa chỉ ghi trên hóa đơn">
+                      </div>
+                      <div class="aps-sv-field aps-sv-col-full">
+                        <label class="aps-sv-label">Email nhận hóa đơn điện tử</label>
+                        <div class="aps-sv-input-icon">
+                          <i class="fa-light fa-envelope"></i>
+                          <input type="email" class="aps-sv-input" id="txtHDEmail" placeholder="email nhận HĐĐT">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="aps-sv-section">
+                    <div class="aps-sv-section-title"><i class="fa-light fa-money-check-dollar"></i> Thông tin thanh
+                      toán</div>
+                    <div class="aps-sv-grid">
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Hình thức thanh toán</label>
+                        <div class="aps-sv-select">
+                          <i class="fa-light fa-chevron-down"></i>
+                          <select class="aps-sv-input" id="cboHinhThucTT">
+                            <option value="">-- Chọn hình thức --</option>
+                            <option value="TM">Tiền mặt</option>
+                            <option value="CK">Chuyển khoản</option>
+                            <option value="TM/CK">Tiền mặt / Chuyển khoản</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Ngân hàng</label>
+                        <input class="aps-sv-input" id="txtHDNganHang" placeholder="Tên ngân hàng">
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Số tài khoản</label>
+                        <input class="aps-sv-input" id="txtHDSoTK" placeholder="Số tài khoản ngân hàng">
+                      </div>
+                      <div class="aps-sv-field">
+                        <label class="aps-sv-label">Chủ tài khoản</label>
+                        <input class="aps-sv-input" id="txtHDChuTK" placeholder="Tên chủ tài khoản">
+                      </div>
+                      <div class="aps-sv-field aps-sv-col-full">
+                        <label class="aps-sv-label">Ghi chú</label>
+                        <input class="aps-sv-input" id="txtHDGhiChu" placeholder="Ghi chú thêm cho hóa đơn (nếu có)">
                       </div>
                     </div>
                   </div>
