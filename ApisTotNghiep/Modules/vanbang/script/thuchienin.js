@@ -651,8 +651,10 @@ ThucHienIn.prototype = {
             }
             var strData = "";
             try {
+                if (aPhoi_ChiTiet.NOIDUNG.indexOf("me") != -1) console.log(aPhoi_ChiTiet.NOIDUNG)
                 strData = eval(aPhoi_ChiTiet.NOIDUNG);
             } catch (ex) {
+                console.log(ex);
                 strData = undefined;
             }
             if (strData !== null && strData !== undefined && strData !== "") {
@@ -862,6 +864,41 @@ ThucHienIn.prototype = {
             title: "Chọn mẫu bản sao"
         };
         edu.system.loadToCombo_data(obj);
+    },
+    getList_TaoQR: function (strDivId, strNoiDung, dChieuDai) {
+        var me = this;
+        console.log(strDivId)
+        //--Edit
+        var obj_list = {
+            'action': 'CTT_Token/TaoQRCode',
+            'strNoiDung': strNoiDung
+        };
+        //
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var strQRData = data.Data;
+                    $("#" + strDivId).html('<img src="data:image/png;base64, ' + strQRData + '" alt="Red dot" style="width: ' + dChieuDai +'px;" />')
+                }
+                else {
+                    edu.system.alert(obj_list + " : " + data.Message, "s");
+                }
+
+            },
+            error: function (er) {
+
+                edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+
+            contentType: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
     },
 
     save_InBang: function (strTN_KetQua_CongNhan_VB_Id) {
