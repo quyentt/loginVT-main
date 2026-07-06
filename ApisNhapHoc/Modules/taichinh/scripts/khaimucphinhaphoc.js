@@ -38,6 +38,30 @@ KhaiMucPhi.prototype = {
     page_load: function () {
         this.getList_KeHoachNhapHoc();
         this.preload_DMs();
+        this.applyPreselect_FromSession();
+    },
+
+    /*
+     * Handshake với trang 'Kế hoạch tuyển sinh (new)' bên module trungtuyen:
+     * Khi user click Xem cột 'Khai mức phí' ở đó → set sessionStorage.KHTSN_preselect_KHNH_Id
+     * rồi navigate sang đây. Ở đây poll đợi combo KHNH nạp xong → set giá trị + click Xem.
+     */
+    applyPreselect_FromSession: function () {
+        var preselectId = sessionStorage.getItem('KHTSN_preselect_KHNH_Id');
+        if (!preselectId) return;
+        sessionStorage.removeItem('KHTSN_preselect_KHNH_Id');
+        var tries = 0;
+        var timer = setInterval(function () {
+            tries++;
+            var $drop = $("#dropKeHoachNhapHoc_HSNH");
+            if ($drop.find('option[value="' + preselectId + '"]').length > 0) {
+                clearInterval(timer);
+                $drop.val(preselectId).trigger('change.select2');
+                $("#btnXem_HSNH").trigger("click");
+            } else if (tries > 25) { // ~5s
+                clearInterval(timer);
+            }
+        }, 200);
     },
 
     /* Preload 2 DM để render tên trong bảng khoản thu (API list chỉ trả mã) */
@@ -440,7 +464,7 @@ KhaiMucPhi.prototype = {
             if (id === strNhomId) strTenNhom = r.TEN_NHOM || r.TEN || '';
         });
         $("#lblNhomInfo_KhoanThu").text(
-            "Nhóm: " + (strTenNhom || strNhomId) + "  |  Mã nhóm ID: " + strNhomId
+            "Nhóm: " + (strTenNhom || strNhomId)
         );
 
         var obj_save = {
@@ -554,7 +578,7 @@ KhaiMucPhi.prototype = {
             if (id === strNhomId) strTenNhom = r.TEN_NHOM || r.TEN || '';
         });
         $("#lblNhomInfo_NganhDauRa").text(
-            "Nhóm: " + (strTenNhom || strNhomId) + "  |  Mã nhóm ID: " + strNhomId
+            "Nhóm: " + (strTenNhom || strNhomId)
         );
 
         var obj_save = {
@@ -643,7 +667,7 @@ KhaiMucPhi.prototype = {
             if (id === strNhomId) strTenNhom = r.TEN_NHOM || r.TEN || '';
         });
         $("#lblNhomInfo_DauVao").text(
-            "Nhóm: " + (strTenNhom || strNhomId) + "  |  Mã nhóm ID: " + strNhomId
+            "Nhóm: " + (strTenNhom || strNhomId)
         );
 
         var obj_save = {
@@ -1318,9 +1342,14 @@ KhaiMucPhi.prototype = {
 
     openModal_ThemNganhDauRa: function () {
         var me = this;
+        // Tìm tên nhóm cho label thân thiện hơn (thay vì lộ ID lằng ngoằng)
+        var strTenNhom = '';
+        (me.dtNhomDinhMuc || []).forEach(function (r) {
+            var id = r.ID || r.NH_CAUHINH_TC_NHOM_ID;
+            if (id === me.strNhomId_NganhDauRa) strTenNhom = r.TEN_NHOM || r.TEN || '';
+        });
         $("#lblNhomInfo_ThemNganhDauRa").text(
-            "Thêm vào nhóm ID: " + me.strNhomId_NganhDauRa +
-            "  |  Kế hoạch nhập học ID: " + me.strKeHoachId_NganhDauRa
+            "Thêm ngành vào nhóm: " + (strTenNhom || me.strNhomId_NganhDauRa)
         );
         $("#txtTuKhoa_ThemNganhDauRa_HSNH").val("");
         $("#chkSelectAll_ThemNganhDauRa_HSNH").prop("checked", false);
@@ -1472,7 +1501,7 @@ KhaiMucPhi.prototype = {
         if (!me.bLoadedCombo_DoiTuong) {
             try {
                 edu.system.loadToCombo_DanhMucDuLieu("QLSV.DOITUONG",
-                    "dropDoiTuong_ThemDT_HSNH", "-- Chọn đối tượng --");
+                    "dropDoiTuong_ThemDT_HSNH", "Chọn đối tượng");
                 me.bLoadedCombo_DoiTuong = true;
             } catch (e) { console.warn("loadToCombo_DanhMucDuLieu QLSV.DOITUONG", e); }
         }
