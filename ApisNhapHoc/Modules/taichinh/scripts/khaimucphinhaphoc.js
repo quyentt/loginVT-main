@@ -337,9 +337,17 @@ KhaiMucPhi.prototype = {
     genTable_NhomDinhMuc: function (arr) {
         var $tbody = $("#tbldata_HSNH tbody");
         $tbody.empty();
+        $("#lblTong_NhomDinhMuc").text(arr ? arr.length : 0);
 
         if (!arr || arr.length === 0) {
-            $tbody.append('<tr><td colspan="10" class="td-center italic color-666">Chưa có nhóm định mức nào.</td></tr>');
+            $tbody.append(
+                '<tr><td colspan="10">'
+                + '<div class="kmp-empty-state">'
+                + '<i class="fa-solid fa-inbox"></i>'
+                + '<p>Chưa có nhóm định mức nào — bấm <b>Thêm nhóm</b> để tạo mới</p>'
+                + '</div>'
+                + '</td></tr>'
+            );
             return;
         }
 
@@ -360,12 +368,12 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-left">' + strMa + '</td>';
             html += '<td class="td-left">' + strTen + '</td>';
             html += '<td class="td-left">' + strGhiChu + '</td>';
-            html += '<td class="td-center"><a class="kmp-link-xem lnkXemKhoanThu" ' + strDataAttrs + '>Xem</a></td>';
-            html += '<td class="td-center"><a class="kmp-link-xem lnkXemNganh" ' + strDataAttrs + '>Xem</a></td>';
-            html += '<td class="td-center"><a class="kmp-link-xem lnkXemDauVao" ' + strDataAttrs + '>Xem</a></td>';
+            html += '<td class="td-center"><a class="kmp-link-xem lnkXemKhoanThu" ' + strDataAttrs + '><i class="fa fa-eye"></i> Xem</a></td>';
+            html += '<td class="td-center"><a class="kmp-link-xem lnkXemNganh" ' + strDataAttrs + '><i class="fa fa-eye"></i> Xem</a></td>';
+            html += '<td class="td-center"><a class="kmp-link-xem lnkXemDauVao" ' + strDataAttrs + '><i class="fa fa-eye"></i> Xem</a></td>';
             html += '<td class="td-center">' + strNgayTao + '</td>';
             html += '<td class="td-left">' + strNguoiTao + '</td>';
-            html += '<td class="td-center"><a class="kmp-link-xem lnkChiTietNhom" ' + strDataAttrs + '><i class="fa fa-pencil"></i> Chi tiết</a></td>';
+            html += '<td class="td-center"><a class="kmp-link-xem lnkChiTietNhom" ' + strDataAttrs + '><i class="fa-solid fa-pen-to-square"></i> Chi tiết</a></td>';
             html += '</tr>';
         });
         $tbody.append(html);

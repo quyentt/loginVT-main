@@ -23,6 +23,7 @@ KeHoachTuyenSinhNew.prototype = {
     dtVaiTro_PhanCong: [],
     dtKeHoachDauRa: [],
     strDauRa_Id: '',
+    strDot_Id_ForDauRa: '',   // Đợt ID nếu Kế hoạch đầu ra được mở từ context Đợt tuyển sinh
     dtChiTietDauRa: null,
     dtHeDaoTao_DR: [],
     dtKhoaDaoTao_DR: [],
@@ -104,7 +105,21 @@ KeHoachTuyenSinhNew.prototype = {
         $("#ke-hoach-dau-ra").on('show.bs.modal', function (event) {
             var $btn = $(event.relatedTarget);
             if ($btn.length && $btn.attr('data-id')) {
-                me.strKeHoachTuyenSinh_Id = $btn.attr('data-id');
+                var strId = $btn.attr('data-id');
+                // Context detection: nếu nút "Xem" nằm trong modal #dot-tuyen-sinh
+                // thì data-id là Đợt ID, KH TS ID đã set từ click trước đó — không ghi đè.
+                var isDotContext = $btn.closest('#dot-tuyen-sinh').length > 0;
+                if (isDotContext) {
+                    // Mức đợt: cho phép thêm mới đầu ra
+                    me.strDot_Id_ForDauRa = strId;
+                    $("#btnAddKeHoachDauRa").removeClass('d-none');
+                } else {
+                    // Mức KH tuyển sinh: chỉ cho xem + sửa, KHÔNG cho thêm
+                    // (đầu ra phải thêm từ đợt cụ thể)
+                    me.strKeHoachTuyenSinh_Id = strId;
+                    me.strDot_Id_ForDauRa = '';
+                    $("#btnAddKeHoachDauRa").addClass('d-none');
+                }
             }
             me.getList_KeHoachDauRa();
         });
@@ -1844,7 +1859,7 @@ KeHoachTuyenSinhNew.prototype = {
                 'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Ins',
                 'iM': edu.system.iM,
                 'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
-                'strTs_Kh_TuyenSinh_Dot_Id': '',
+                'strTs_Kh_TuyenSinh_Dot_Id': me.strDot_Id_ForDauRa || '',
                 'strTs_Kh_Dot_PhuongThuc_Id': '',
                 'strMa': '',
                 'strTen': '',
@@ -2127,7 +2142,7 @@ KeHoachTuyenSinhNew.prototype = {
             'iM': edu.system.iM,
             'strTuKhoa': '',
             'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
-            'strTs_Kh_TuyenSinh_Dot_Id': '',
+            'strTs_Kh_TuyenSinh_Dot_Id': me.strDot_Id_ForDauRa || '',
             'strTs_Kh_Dot_PhuongThuc_Id': '',
             'strOutput_Status_Code': '',
             'dIs_Public': '',

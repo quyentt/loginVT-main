@@ -15,6 +15,164 @@
     #tbldata_HSNH td {
         vertical-align: middle;
     }
+    /* ============ Filter section ============ */
+    .aps-khaimucphi-search .filter-label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .aps-khaimucphi-search .item-search .form-control,
+    .aps-khaimucphi-search .item-search .select-opt,
+    .aps-khaimucphi-search .item-search .btn-search {
+        height: 38px;
+        line-height: 20px;
+    }
+    .aps-khaimucphi-search .btn-search {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    /* ============ List header (title + buttons) ============ */
+    .aps-khaimucphi-list .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0;
+        padding: 10px 14px;
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 1px solid #e2e8f0;
+        border-radius: 8px 8px 0 0;
+        border-bottom: 2px solid #cbd5e1;
+    }
+    .aps-khaimucphi-list .list-header .titleSearchContent {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 600;
+        color: #1a56db;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .aps-khaimucphi-list .list-header .btn-group-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* ============ Bảng chính Nhóm định mức đẹp hơn ============ */
+    .aps-khaimucphi-list .aps-table-select {
+        border: 1px solid #e2e8f0;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        overflow: hidden;
+    }
+    #tbldata_HSNH {
+        margin: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+        border: none;
+    }
+    #tbldata_HSNH thead th {
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-weight: 600;
+        vertical-align: middle;
+        text-align: center;
+        border-bottom: 2px solid #bfdbfe;
+        padding: 12px 8px;
+        white-space: normal;
+        font-size: 13px;
+    }
+    #tbldata_HSNH tbody td {
+        vertical-align: middle;
+        padding: 10px 8px;
+        font-size: 13px;
+    }
+    #tbldata_HSNH tbody tr:hover {
+        background: #fafbff;
+    }
+
+    /* ============ Link "Xem" / "Chi tiết" thành pill-button ============ */
+    .kmp-link-xem {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 5px 12px;
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: 4px;
+        text-decoration: none !important;
+        background: #f3f4f6;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
+        transition: all .15s;
+    }
+    .kmp-link-xem:hover {
+        background: #dbeafe;
+        color: #1e40af;
+        border-color: #93c5fd;
+    }
+    .kmp-link-xem.lnkChiTietNhom {
+        background: #2563eb;
+        color: #fff;
+        border-color: #2563eb;
+    }
+    .kmp-link-xem.lnkChiTietNhom:hover {
+        background: #1d4ed8;
+        color: #fff;
+    }
+
+    /* ============ Empty state ============ */
+    .kmp-empty-state {
+        text-align: center;
+        padding: 30px 12px;
+        color: #94a3b8;
+    }
+    .kmp-empty-state i {
+        font-size: 42px;
+        color: #cbd5e1;
+        margin-bottom: 8px;
+    }
+    .kmp-empty-state p {
+        margin: 0;
+        font-size: 13px;
+    }
+    /* Force modal full toàn màn hình cho 5 modal xem/list (đè CSS theme) */
+    #modalXem_HSNH .modal-dialog,
+    #modalKhoanThu_HSNH .modal-dialog,
+    #modalDauVao_HSNH .modal-dialog,
+    #modalThemNganhDauRa_HSNH .modal-dialog,
+    #modalNganhDauRa_HSNH .modal-dialog {
+        max-width: 100vw !important;
+        width: 100vw !important;
+        margin: 0 !important;
+        height: 100vh !important;
+        min-height: 100vh !important;
+    }
+    #modalXem_HSNH .modal-content,
+    #modalKhoanThu_HSNH .modal-content,
+    #modalDauVao_HSNH .modal-content,
+    #modalThemNganhDauRa_HSNH .modal-content,
+    #modalNganhDauRa_HSNH .modal-content {
+        height: 100vh !important;
+        min-height: 100vh !important;
+        border-radius: 0 !important;
+        border: none !important;
+    }
+    #modalXem_HSNH .modal-body,
+    #modalKhoanThu_HSNH .modal-body,
+    #modalDauVao_HSNH .modal-body,
+    #modalThemNganhDauRa_HSNH .modal-body,
+    #modalNganhDauRa_HSNH .modal-body {
+        overflow: auto;
+    }
 </style>
 
 <!-- Main content -->
@@ -26,19 +184,22 @@
             <div class="box box-solid box-search pd20">
                 <div class="box-body pd0">
                     <div class="area-search">
-                        <div id="search_HSNH" class="inputSearch collapse in">
+                        <div id="search_HSNH" class="inputSearch row">
                             <div class="col-sm-5 item-search mb-0">
+                                <label class="filter-label"><i class="fa-solid fa-clipboard-list"></i> Kế hoạch nhập học</label>
                                 <select class="select-opt" id="dropKeHoachNhapHoc_HSNH">
                                     <!-- load from khaimucphinhaphoc.js -->
                                 </select>
                             </div>
                             <div class="col-sm-4 item-search mb-0">
+                                <label class="filter-label"><i class="fa-solid fa-magnifying-glass"></i> Từ khóa</label>
                                 <input id="txtKeyword_HSNH" class="form-control"
                                     placeholder="Nhập từ khóa tìm kế hoạch nhập học..." />
                             </div>
                             <div class="col-sm-3 item-search mb-0">
-                                <a id="btnXem_HSNH" class="btn btn-default btn-search">
-                                    <i class="fa fa-eye"></i><span>&nbsp;Xem</span>
+                                <label class="filter-label">&nbsp;</label>
+                                <a id="btnXem_HSNH" class="btn btn-primary btn-search">
+                                    <i class="fa fa-eye"></i><span>Xem</span>
                                 </a>
                             </div>
                         </div>
@@ -52,40 +213,39 @@
             <div class="box box-solid pt10">
                 <div class="box-body pd0">
                     <div id="zone_list_HSNH" class="box-body pd0">
-                        <div class="pull-left">
-                            <div class="group-title pl0 mt-5">
+                        <div class="list-header">
+                            <div class="group-title">
                                 <p class="titleSearchContent">
                                     <i class="fa-solid fa-layer-group"></i>
                                     <span>Nhóm định mức</span>
+                                    <span class="badge bg-primary" id="lblTong_NhomDinhMuc">0</span>
                                 </p>
                             </div>
+                            <div class="btn-group-actions">
+                                <a id="btnRefresh_HSNH" class="btn btn-warning">
+                                    <i class="fa fa-refresh"></i>&nbsp;Tải lại
+                                </a>
+                                <a id="btnAdd_NhomDinhMuc_HSNH" class="btn btn-success btnAddNew">
+                                    <i class="fa fa-plus-circle"></i>&nbsp;Thêm nhóm
+                                </a>
+                            </div>
                         </div>
-                        <div class="pull-right d-flex">
-                            <a id="btnRefresh_HSNH" class="btn btn-warning">
-                                <i class="fa fa-refresh"></i><span>&nbsp;Tải lại</span>
-                            </a>
-                            <a id="btnAdd_NhomDinhMuc_HSNH" class="btn btn-success btnAddNew">
-                                <i class="fa fa-plus-circle"></i><span>&nbsp;Thêm nhóm</span>
-                            </a>
-                        </div>
-                        <div class="clear"></div>
                     </div>
-                    <div class="clear"></div>
-                    <div class="aps-table-select mt-10">
+                    <div class="aps-table-select">
                         <table id="tbldata_HSNH"
                             class="table table-condensed table-hover table-bordered table-noborder">
                             <thead>
                                 <tr>
-                                    <th class="td-fixed td-center" style="width:40px">STT</th>
-                                    <th class="td-left" style="width:100px">Mã nhóm</th>
+                                    <th class="td-fixed td-center" style="width:50px">STT</th>
+                                    <th class="td-left" style="width:120px">Mã nhóm</th>
                                     <th class="td-left" style="width:200px">Tên nhóm</th>
-                                    <th class="td-left">Ghi chú</th>
-                                    <th class="td-center" style="width:150px">Cấu hình các khoản thu của nhóm</th>
-                                    <th class="td-center" style="width:170px">Cấu hình ngành đầu ra nhận mức theo nhóm</th>
-                                    <th class="td-center" style="width:220px">Cấu hình các trường hợp đầu vào cho từng sinh viên hoặc cho đối tượng</th>
-                                    <th class="td-center" style="width:130px">Ngày tạo</th>
-                                    <th class="td-left" style="width:150px">Người tạo</th>
-                                    <th class="td-fixed td-center" style="width:80px">Chọn</th>
+                                    <th class="td-left" style="width:200px">Ghi chú</th>
+                                    <th class="td-center" style="width:170px">Cấu hình các khoản thu của nhóm</th>
+                                    <th class="td-center" style="width:190px">Cấu hình ngành đầu ra nhận mức theo nhóm</th>
+                                    <th class="td-center" style="width:230px">Cấu hình các trường hợp đầu vào cho từng sinh viên hoặc cho đối tượng</th>
+                                    <th class="td-center" style="width:140px">Ngày tạo</th>
+                                    <th class="td-left" style="width:160px">Người tạo</th>
+                                    <th class="td-fixed td-center" style="width:90px">Chọn</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -102,7 +262,7 @@
 
 <!-- Modal xem cấu hình chi tiết (dùng chung cho 4 nút Xem/Chi tiết) -->
 <div class="modal fade" id="modalXem_HSNH" role="dialog" aria-labelledby="modalXem_HSNH_Label" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 90%;">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="pull-left">
@@ -147,7 +307,7 @@
 <!-- Modal Cấu hình các khoản thu của nhóm -->
 <div class="modal fade" id="modalKhoanThu_HSNH" role="dialog" aria-labelledby="modalKhoanThu_HSNH_Label"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="pull-left">
@@ -256,7 +416,7 @@
 <!-- Modal Cấu hình các trường hợp đầu vào (SV / đối tượng) -->
 <div class="modal fade" id="modalDauVao_HSNH" role="dialog" aria-labelledby="modalDauVao_HSNH_Label"
     aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="pull-left">
@@ -322,7 +482,7 @@
 <!-- Modal Thêm mới ngành đầu ra vào nhóm (chọn từ danh sách kế hoạch đầu ra) -->
 <div class="modal fade" id="modalThemNganhDauRa_HSNH" role="dialog"
     aria-labelledby="modalThemNganhDauRa_HSNH_Label" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="pull-left">
@@ -394,7 +554,7 @@
 <!-- Modal Cấu hình ngành đầu ra nhận mức theo nhóm -->
 <div class="modal fade" id="modalNganhDauRa_HSNH" role="dialog"
     aria-labelledby="modalNganhDauRa_HSNH_Label" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable" style="max-width: 95%;">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="pull-left">
@@ -650,7 +810,7 @@
 </div>
 
 <!-- page script -->
-<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.12"></script>
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.18"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaiMucPhi'] = new KhaiMucPhi();
