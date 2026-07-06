@@ -13,6 +13,7 @@ KeHoachTuyenSinhNew.prototype = {
     strDot_Id: '',
     strKHNH_EditId: '',
     strKHNH_Id_ForView: '',
+    dtKHNH_EditRecord: null,   // cache record để re-apply value sau khi combo load async
     dtNS_Picker: [],       // DS nhân sự trả từ picker (raw từ API)
     dtNS_DaChon: [],       // DS nhân sự đã chọn (đã confirm từ picker, ở form thêm)
     strNS_EditId: '',      // ID phân công nhân sự đang xem-sửa
@@ -125,7 +126,7 @@ KeHoachTuyenSinhNew.prototype = {
         });
         $("#btnKhoiTao_KHDauRa").click(function () {
             if (!edu.util.checkValue(me.strKHNH_Id_ForView)) return;
-            edu.system.confirm("Khởi tạo Kế hoạch đầu ra từ Kế hoạch tuyển sinh cho kế hoạch nhập học này?");
+            edu.system.confirm("Khởi tạo Kế hoạch đầu ra từ tuyển sinh?");
             $("#btnYes").off("click.khoitaoDauRa").on("click.khoitaoDauRa", function () {
                 me.khoiTao_KHDauRa_TuTuyenSinh();
             });
@@ -286,9 +287,9 @@ KeHoachTuyenSinhNew.prototype = {
             var strId = d.ID || d.Id || d.id || '';
             var sMa = d.MA || d.MA_KEHOACH || d.Ma || '';
             var sTen = d.TEN || d.TEN_KEHOACH || d.Ten || '';
-            var sBd = d.NGAY_BATDAU || d.NGAYBATDAU || d.NGAY_BAT_DAU || '';
-            var sKt = d.NGAY_KETTHUC || d.NGAYKETTHUC || d.NGAY_KET_THUC || '';
-            var sNgayTao = d.NGAYTAO || d.NGAY_TAO || '';
+            var sBd = me._fmtDate(d.NGAY_BATDAU || d.NGAYBATDAU || d.NGAY_BAT_DAU || '');
+            var sKt = me._fmtDate(d.NGAY_KETTHUC || d.NGAYKETTHUC || d.NGAY_KET_THUC || '');
+            var sNgayTao = me._fmtDateTime(d.NGAYTAO || d.NGAY_TAO || '');
             var sNguoiTao = d.NGUOITAO_TEN || d.NGUOITAO || d.NGUOI_TAO || d.NGUOITAO_TenDayDu || '';
             rows += '<tr id="row_khnh_' + strId + '">'
                 +  '<td class="td-center">' + (i + 1) + '</td>'
@@ -423,7 +424,7 @@ KeHoachTuyenSinhNew.prototype = {
     -- Origin: PKG_CORE_NHAPHOC.LayDS_NH_KeHoach_DauRa
     -- Xem "Kế hoạch đầu ra" theo KH nhập học đang chọn
     -------------------------------------------*/
-    getList_KHDauRa: function (strKHNH_Id) {
+    getList_KHDauRa: function (strKHNH_Id, cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var obj_save = {
             'action': 'SV_Core_NhapHoc_MH/DSA4BRIeDwkeCiQJLiAiKR4FIDQTIAPP',
@@ -448,6 +449,7 @@ KeHoachTuyenSinhNew.prototype = {
                 if (data.Success) {
                     var dtResult = edu.util.checkValue(data.Data) ? data.Data : [];
                     me.genTable_KHDauRa(dtResult);
+                    if (typeof cb === 'function') cb(dtResult);
                 } else {
                     edu.system.alert("LayDS_NH_KeHoach_DauRa: " + data.Message, "w");
                 }
@@ -460,6 +462,7 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     genTable_KHDauRa: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblKHDauRa_KHTSN tbody");
         $tbody.html("");
         $("#lblTong_KHDauRa").text(data ? data.length : 0);
@@ -493,7 +496,7 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td class="td-center">' + (d.SO_DA_TAO_STUDY || 0) + '</td>'
                 + '<td class="td-left">' + (d.DAURA_STATUS_TEN || d.DAU_RA_STATUS_TEN || d.STATUS_TEN || d.DAU_RA_STATUS_CODE || '') + '</td>'
                 + '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
-                + '<td class="td-center">' + (d.NGAYTAO || d.NGAY_TAO || '') + '</td>'
+                + '<td class="td-center">' + me._fmtDateTime(d.NGAYTAO || d.NGAY_TAO || '') + '</td>'
                 + '<td class="td-left">' + (d.NGUOITAO_TEN || d.NGUOITAO || '') + '</td>'
                 + '</tr>';
         }
@@ -536,6 +539,7 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     genTable_KhaiMucPhi: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblKMP_KHTSN tbody");
         $tbody.html("");
         $("#lblTong_KMP").text(data ? data.length : 0);
@@ -551,7 +555,7 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td class="td-left">' + (d.MA_NHOM || d.MA || '') + '</td>'
                 + '<td class="td-left">' + (d.TEN_NHOM || d.TEN || '') + '</td>'
                 + '<td class="td-left">' + (d.GHICHU || d.GHI_CHU || '') + '</td>'
-                + '<td class="td-center">' + (d.NGAYTAO_DD_MM_YYYY_HHMMSS || d.NGAY_TAO || d.NGAYTAO || '') + '</td>'
+                + '<td class="td-center">' + me._fmtDateTime(d.NGAYTAO_DD_MM_YYYY_HHMMSS || d.NGAY_TAO || d.NGAYTAO || '') + '</td>'
                 + '<td class="td-left">' + (d.NGUOITAO_TENDAYDU || d.NGUOI_TAO || d.NGUOITAO || '') + '</td>'
                 + '</tr>';
         }
@@ -565,6 +569,7 @@ KeHoachTuyenSinhNew.prototype = {
     khoiTao_KHDauRa_TuTuyenSinh: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!edu.util.checkValue(me.strKHNH_Id_ForView)) return;
+        var beforeCount = parseInt($("#lblTong_KHDauRa").text(), 10) || 0;
         var obj_save = {
             'action': 'SV_Core_NhapHoc_MH/Aik0OCQvHgoJHgUgNBMgHhU0FTQ4JC8SKC8p',
             'func': 'PKG_CORE_NHAPHOC.Chuyen_KH_DauRa_TuTuyenSinh',
@@ -577,12 +582,29 @@ KeHoachTuyenSinhNew.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    edu.system.alert("Khởi tạo Kế hoạch đầu ra từ tuyển sinh thành công", "s");
-                    me.getList_KHDauRa(me.strKHNH_Id_ForView);
-                } else {
+                if (!data.Success) {
                     edu.system.alert("Chuyen_KH_DauRa_TuTuyenSinh: " + data.Message, "w");
+                    return;
                 }
+                me.getList_KHDauRa(me.strKHNH_Id_ForView, function (dt) {
+                    var afterCount = (dt && dt.length) || 0;
+                    var added = afterCount - beforeCount;
+                    if (added > 0) {
+                        edu.system.alert("Đã tạo mới " + added + " kế hoạch đầu ra từ tuyển sinh", "s");
+                    } else if (afterCount === 0) {
+                        edu.system.alert(
+                            "API chạy thành công nhưng không có bản ghi nào được tạo.\n"
+                            + "Nguyên nhân thường gặp: Kế hoạch tuyển sinh chưa khai báo Đầu ra.\n"
+                            + "Vui lòng vào màn 'Kế hoạch tuyển sinh' → khai đầu ra cho kế hoạch tương ứng, rồi thử lại.",
+                            "w"
+                        );
+                    } else {
+                        edu.system.alert(
+                            "Không có bản ghi mới được tạo — có thể tất cả đầu ra của tuyển sinh đã được copy sang trước đây.",
+                            "i"
+                        );
+                    }
+                });
             },
             error: function (er) {
                 edu.system.alert("Chuyen_KH_DauRa_TuTuyenSinh (ex): " + JSON.stringify(er), "w");
@@ -631,6 +653,7 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     genTable_NhanSu: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $("#tblNhanSu_KHTSN tbody");
         $tbody.html("");
         $("#lblTong_NhanSu").text(data ? data.length : 0);
@@ -655,15 +678,15 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td class="td-left">' + sNhanSu + '</td>'
                 + '<td class="td-left">' + (d.NH_KEHOACH_NHAPHOC_TEN || d.KHNHAPHOC_TEN || '') + '</td>'
                 + '<td class="td-left">' + (d.VAITRO_TEN || d.VAITRO_NHAPHOC_TEN || d.VAITRO_NHAPHOC_CODE || '') + '</td>'
-                + '<td class="td-center">' + (d.NGAY_BATDAU || d.NGAYBATDAU || '') + '</td>'
-                + '<td class="td-center">' + (d.NGAY_KETTHUC || d.NGAYKETTHUC || '') + '</td>'
+                + '<td class="td-center">' + me._fmtDate(d.NGAY_BATDAU || d.NGAYBATDAU || '') + '</td>'
+                + '<td class="td-center">' + me._fmtDate(d.NGAY_KETTHUC || d.NGAYKETTHUC || '') + '</td>'
                 + '<td class="td-center">' + (d.IS_PRIMARY == 1 ? iconCheck : iconX) + '</td>'
                 + '<td class="td-center">' + (d.IS_MANAGER == 1 ? iconCheck : iconX) + '</td>'
                 + '<td class="td-center">' + (d.IS_APPROVER == 1 ? iconCheck : iconX) + '</td>'
                 + '<td class="td-left">' + (d.PHANCONG_STATUS_TEN || d.PHANCONG_STATUS_CODE_TEN || d.STATUS_TEN || d.PHANCONG_STATUS_CODE || '') + '</td>'
                 + '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
                 + '<td class="td-left">' + (d.NGUOITAO_TAIKHOAN || d.NGUOITAO_TEN || d.NGUOITAO || '') + '</td>'
-                + '<td class="td-center">' + (d.NGAYTAO || d.NGAY_TAO || '') + '</td>'
+                + '<td class="td-center">' + me._fmtDateTime(d.NGAYTAO || d.NGAY_TAO || '') + '</td>'
                 + '<td class="td-center"><a class="btn btn-primary btn-view-nhansu-chitiet" data-id="' + strId + '" data-bs-toggle="modal" data-bs-target="#modal-NhanSu-ChiTiet-KHTSN"><i class="fa fa-info-circle"></i> Chi tiết</a></td>'
                 + '</tr>';
         }
@@ -769,8 +792,8 @@ KeHoachTuyenSinhNew.prototype = {
         if (sDonVi) infoHtml += '&nbsp;<span class="lbl-k">·</span>&nbsp;<span class="lbl-k">Đơn vị:</span>' + sDonVi;
         $("#lblThongTinNS_EditNS").html(infoHtml);
 
-        $("#txtNgayBD_EditNS").val(d.NGAY_BATDAU || d.NGAYBATDAU || '');
-        $("#txtNgayKT_EditNS").val(d.NGAY_KETTHUC || d.NGAYKETTHUC || '');
+        $("#txtNgayBD_EditNS").val(me._fmtDate(d.NGAY_BATDAU || d.NGAYBATDAU || ''));
+        $("#txtNgayKT_EditNS").val(me._fmtDate(d.NGAY_KETTHUC || d.NGAYKETTHUC || ''));
         $("#txtGhiChu_EditNS").val(d.GHICHU || d.GHI_CHU || '');
         me._setSelectVal('dropVaiTro_EditNS', d.VAITRO_NHAPHOC_CODE || d.VAITRO_CODE || '');
         me._setSelectVal('dropTrangThai_EditNS', d.PHANCONG_STATUS_CODE || d.STATUS_CODE || '');
@@ -917,10 +940,11 @@ KeHoachTuyenSinhNew.prototype = {
     populateForm_KHNH: function (d) {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!d) return;
+        me.dtKHNH_EditRecord = d;
         $("#txtMa_AddKHNH").val(d.MA || d.MA_KEHOACH || '');
         $("#txtTen_AddKHNH").val(d.TEN || d.TEN_KEHOACH || '');
-        $("#txtNgayBD_AddKHNH").val(d.NGAY_BATDAU || d.NGAYBATDAU || '');
-        $("#txtNgayKT_AddKHNH").val(d.NGAY_KETTHUC || d.NGAYKETTHUC || '');
+        $("#txtNgayBD_AddKHNH").val(me._fmtDate(d.NGAY_BATDAU || d.NGAYBATDAU || ''));
+        $("#txtNgayKT_AddKHNH").val(me._fmtDate(d.NGAY_KETTHUC || d.NGAYKETTHUC || ''));
         $("#txtGhiChu_AddKHNH").val(d.GHICHU || d.GHI_CHU || '');
 
         me._setSelectVal('dropLoaiKHNH_AddKHNH', d.NHAPHOC_TYPE_CODE || '');
@@ -930,44 +954,16 @@ KeHoachTuyenSinhNew.prototype = {
         me._setSelectVal('dropReceiveOrg_AddKHNH', d.RECEIVE_ORG_ID || '');
         me._setSelectVal('dropIsActive_AddKHNH', String(d.IS_ACTIVE == null ? 1 : d.IS_ACTIVE));
 
-        // Cascade KH TS → Đợt
+        // Cascade KH TS → Đợt: set KH TS, cascade handler ở init sẽ trigger getList_DotTS_ForAdd
+        // getList_DotTS_ForAdd đọc cache dtKHNH_EditRecord để set Đợt value đúng
         var sKHTS = d.TS_KEHOACH_TUYENSINH_ID || '';
-        var sDot = d.TS_KEHOACH_TS_DOT_ID || '';
         if (sKHTS) {
             me._setSelectVal('dropKeHoachTS_AddKHNH', sKHTS);
-            // load đợt theo KH TS, sau khi có dữ liệu thì set giá trị đợt
-            var origGen = me.genCombo_DonVi;   // no-op guard
-            var _oldCb = me.getList_DotTS_ForAdd;
-            // Cách đơn giản: gọi API trực tiếp rồi set value trong callback
-            var obj_save = {
-                'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeFTIeBS41HgYkNR4FMgPP',
-                'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Ts_Dot_Get_Ds',
-                'iM': edu.system.iM,
-                'strTuKhoa': '',
-                'strTs_KeHoach_TuyenSinh_Id': sKHTS,
-                'strDot_Status_Code': '',
-                'dIs_Active': 1,
-                'strNguoiThucHien_Id': edu.system.userId,
-                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
-                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
-                'strHanhDong_Code': 'XEM'
-            };
-            edu.system.makeRequest({
-                success: function (data) {
-                    if (data.Success) {
-                        var dt = edu.util.checkValue(data.Data) ? data.Data : [];
-                        edu.system.loadToCombo_data({
-                            data: dt,
-                            renderInfor: { id: "ID", parentId: "", name: "TEN", code: "" },
-                            renderPlace: ["dropDotTS_AddKHNH"],
-                            title: "Đợt tuyển sinh",
-                            default_val: sDot
-                        });
-                    }
-                },
-                error: function () {},
-                type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
-            }, false, false, false, null);
+            // Nếu cascade change event chưa fire (setVal trước init select2 chẳng hạn),
+            // gọi trực tiếp getList_DotTS_ForAdd để đảm bảo Đợt được load
+            if (!$("#dropDotTS_AddKHNH option[value]:not([value=''])").length) {
+                me.getList_DotTS_ForAdd(sKHTS);
+            }
         }
 
         // Checkbox flags
@@ -987,6 +983,53 @@ KeHoachTuyenSinhNew.prototype = {
         if (!$el.length) return;
         $el.val(val);
         try { $el.trigger('change.select2'); } catch (e) {}
+    },
+
+    /*------------------------------------------
+    -- Format ngày:
+    --   20260706102656 (YYYYMMDDHHMMSS) => 06/07/2026 10:26:56
+    --   20260706 (YYYYMMDD) => 06/07/2026
+    --   Chuỗi khác (đã format sẵn dd/mm/yyyy ...) => giữ nguyên
+    -------------------------------------------*/
+    _fmtDateTime: function (v) {
+        if (v === null || v === undefined || v === '') return '';
+        var s = String(v).trim();
+        if (/^\d{14}$/.test(s)) {
+            return s.substr(6, 2) + '/' + s.substr(4, 2) + '/' + s.substr(0, 4) + ' '
+                 + s.substr(8, 2) + ':' + s.substr(10, 2) + ':' + s.substr(12, 2);
+        }
+        if (/^\d{8}$/.test(s)) {
+            return s.substr(6, 2) + '/' + s.substr(4, 2) + '/' + s.substr(0, 4);
+        }
+        return s;
+    },
+    /*------------------------------------------
+    -- Re-apply giá trị vào các combo sau khi combo load xong async
+    -- Gọi từ cuối callback của mỗi getList combo trong form Thêm/Sửa
+    -------------------------------------------*/
+    _reapplyEditKHNH: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var d = me.dtKHNH_EditRecord;
+        if (!me.strKHNH_EditId || !d) return;
+        if (d.NHAPHOC_TYPE_CODE) me._setSelectVal('dropLoaiKHNH_AddKHNH', d.NHAPHOC_TYPE_CODE);
+        if (d.STATUS_CODE) me._setSelectVal('dropTrangThai_AddKHNH', d.STATUS_CODE);
+        if (d.OWNER_ORG_ID) me._setSelectVal('dropOwnerOrg_AddKHNH', d.OWNER_ORG_ID);
+        if (d.MANAGE_ORG_ID) me._setSelectVal('dropManageOrg_AddKHNH', d.MANAGE_ORG_ID);
+        if (d.RECEIVE_ORG_ID) me._setSelectVal('dropReceiveOrg_AddKHNH', d.RECEIVE_ORG_ID);
+        if (d.TS_KEHOACH_TUYENSINH_ID) me._setSelectVal('dropKeHoachTS_AddKHNH', d.TS_KEHOACH_TUYENSINH_ID);
+        if (d.IS_ACTIVE != null) me._setSelectVal('dropIsActive_AddKHNH', String(d.IS_ACTIVE));
+    },
+
+    _fmtDate: function (v) {
+        if (v === null || v === undefined || v === '') return '';
+        var s = String(v).trim();
+        if (/^\d{14}$/.test(s) || /^\d{8}$/.test(s)) {
+            return s.substr(6, 2) + '/' + s.substr(4, 2) + '/' + s.substr(0, 4);
+        }
+        // Nếu có thêm giờ (dd/mm/yyyy hh:mm:ss), lấy phần ngày
+        var m = s.match(/^(\d{2}\/\d{2}\/\d{4})/);
+        if (m) return m[1];
+        return s;
     },
 
     /*------------------------------------------
@@ -1015,6 +1058,8 @@ KeHoachTuyenSinhNew.prototype = {
     -- Reset form về mặc định
     -------------------------------------------*/
     rewrite_AddKHNH: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me.dtKHNH_EditRecord = null;
         $("#txtMa_AddKHNH, #txtTen_AddKHNH, #txtNgayBD_AddKHNH, #txtNgayKT_AddKHNH, #txtGhiChu_AddKHNH").val('');
         $("#dropKeHoachTS_AddKHNH").val('').trigger('change.select2');
         $("#dropDotTS_AddKHNH").html('<option value="">-- Chọn đợt tuyển sinh --</option>');
@@ -1067,6 +1112,7 @@ KeHoachTuyenSinhNew.prototype = {
                         title: "Kế hoạch tuyển sinh",
                         default_val: ''
                     });
+                    me._reapplyEditKHNH();
                 }
             },
             error: function () {},
@@ -1078,6 +1124,7 @@ KeHoachTuyenSinhNew.prototype = {
     -- Load Đợt tuyển sinh cho form Thêm mới theo KH đã chọn
     -------------------------------------------*/
     getList_DotTS_ForAdd: function (strKH_Id) {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var obj_save = {
             'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeFTIeBS41HgYkNR4FMgPP',
             'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Ts_Dot_Get_Ds',
@@ -1095,12 +1142,19 @@ KeHoachTuyenSinhNew.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dt = edu.util.checkValue(data.Data) ? data.Data : [];
+                    // Trong edit mode: dùng Đợt ID từ cache làm default_val
+                    var sDot = '';
+                    if (me.strKHNH_EditId && me.dtKHNH_EditRecord) {
+                        sDot = me.dtKHNH_EditRecord.TS_KEHOACH_TUYENSINH_DOT_ID
+                            || me.dtKHNH_EditRecord.TS_KEHOACH_TS_DOT_ID
+                            || '';
+                    }
                     edu.system.loadToCombo_data({
                         data: dt,
                         renderInfor: { id: "ID", parentId: "", name: "TEN", code: "" },
                         renderPlace: ["dropDotTS_AddKHNH"],
                         title: "Đợt tuyển sinh",
-                        default_val: ''
+                        default_val: sDot
                     });
                 }
             },
@@ -1119,6 +1173,7 @@ KeHoachTuyenSinhNew.prototype = {
             strTenCotSapXep: "",
             iTrangThai: 1
         };
+        var me = main_doc.KeHoachTuyenSinhNew;
         edu.system.getList_DanhMucDulieu(obj, "", "", function (data) {
             var dt = data || [];
             edu.system.loadToCombo_data({
@@ -1128,6 +1183,7 @@ KeHoachTuyenSinhNew.prototype = {
                 title: "Loại KH nhập học",
                 default_val: ''
             });
+            me._reapplyEditKHNH();
         });
     },
 
@@ -1141,8 +1197,22 @@ KeHoachTuyenSinhNew.prototype = {
             strTenCotSapXep: "",
             iTrangThai: 1
         };
+        var me = main_doc.KeHoachTuyenSinhNew;
         edu.system.getList_DanhMucDulieu(obj, "", "", function (data) {
             var dt = data || [];
+            if (!dt.length) {
+                // Fallback: hardcode danh sách trạng thái theo spec khi DM rỗng
+                // DRAFT/CHO_DUYET/DA_DUYET/DANG_MO/TAM_DUNG/DA_DONG/HUY
+                dt = [
+                    { MA: 'DRAFT', TEN: 'Bản nháp' },
+                    { MA: 'CHO_DUYET', TEN: 'Chờ duyệt' },
+                    { MA: 'DA_DUYET', TEN: 'Đã duyệt' },
+                    { MA: 'DANG_MO', TEN: 'Đang mở' },
+                    { MA: 'TAM_DUNG', TEN: 'Tạm dừng' },
+                    { MA: 'DA_DONG', TEN: 'Đã đóng' },
+                    { MA: 'HUY', TEN: 'Hủy' }
+                ];
+            }
             edu.system.loadToCombo_data({
                 data: dt,
                 renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
@@ -1150,6 +1220,7 @@ KeHoachTuyenSinhNew.prototype = {
                 title: "Trạng thái KH nhập học",
                 default_val: 'DRAFT'
             });
+            me._reapplyEditKHNH();
         });
     },
 
@@ -1167,6 +1238,7 @@ KeHoachTuyenSinhNew.prototype = {
                     me.genCombo_DonVi('dropOwnerOrg_AddKHNH', '');
                     me.genCombo_DonVi('dropManageOrg_AddKHNH', '');
                     me.genCombo_DonVi('dropReceiveOrg_AddKHNH', '');
+                    me._reapplyEditKHNH();
                 }
             },
             error: function () {},
