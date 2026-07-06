@@ -40,6 +40,20 @@ KhaiMucPhi.prototype = {
     bindEvent: function () {
         var me = this;
 
+        // ============ Fix stacked modal z-index (BS5 không auto adjust) ============
+        // Với các modal con (mở trên modal cha), sử dụng shown.bs.modal (sau khi hiện xong)
+        // để force z-index cao hơn parent + backdrop tương ứng.
+        $(document).off('shown.bs.modal.kmpStack').on('shown.bs.modal.kmpStack', '.modal', function () {
+            var $modals = $('.modal.show');
+            var count = $modals.length;
+            if (count <= 1) return;   // modal đầu tiên, không cần fix
+            var zIndex = 1055 + 30 * (count - 1);   // buffer lớn để chắc chắn trên parent
+            $(this)[0].style.setProperty('z-index', zIndex, 'important');
+            var $backdrops = $('.modal-backdrop');
+            // Backdrop cuối cùng là của modal con vừa mở
+            $backdrops.last()[0].style.setProperty('z-index', zIndex - 5, 'important');
+        });
+
         // Reload danh sách kế hoạch khi gõ từ khóa (debounce nhẹ)
         var tmoTuKhoa = null;
         $("#txtKeyword_HSNH").off("keyup").on("keyup", function () {
@@ -289,7 +303,7 @@ KhaiMucPhi.prototype = {
     genDropdown_KeHoach: function (arr) {
         var $drop = $("#dropKeHoachNhapHoc_HSNH");
         $drop.empty();
-        $drop.append('<option value="">-- Chọn kế hoạch nhập học --</option>');
+        $drop.append('<option value="">Chọn kế hoạch nhập học</option>');
         (arr || []).forEach(function (r) {
             var strId = r.ID || r.NH_KEHOACH_NHAPHOC_ID || '';
             var strTen = r.TEN || r.TEN_KEHOACH || r.NH_KEHOACH_NHAPHOC_TEN || '';
@@ -956,12 +970,35 @@ KhaiMucPhi.prototype = {
         var me = this;
         if (me.bLoadedCombo_KhoanThu) { if (cb) cb(); return; }
 
-        // Đơn vị tính + Kiểu tự động sinh phải thu — dùng helper danh mục có sẵn
-        try {
-            edu.system.loadToCombo_DanhMucDuLieu("TAICHINH.DVT", "dropDonVi_KhoanThu_HSNH", "Đơn vị tính");
-            edu.system.loadToCombo_DanhMucDuLieu("NHAPHOC_CAUHINH_TC.KIEUTUDONG.PHAINOP",
-                "dropKieuTuDong_KhoanThu_HSNH", "Kiểu tự động sinh phải thu");
-        } catch (e) { console.warn("loadToCombo_DanhMucDuLieu error", e); }
+        // Đơn vị tính + Kiểu tự động sinh phải thu
+        // Gọi trực tiếp getList_DanhMucDulieu + loadToCombo_data để kiểm soát placeholder,
+        // tránh loadToCombo_DanhMucDuLieu echo mã DM thô ra text placeholder.
+        edu.system.getList_DanhMucDulieu(
+            { strMaBangDanhMuc: "TAICHINH.DVT", strTenCotSapXep: "", iTrangThai: 1 },
+            "", "",
+            function (data) {
+                edu.system.loadToCombo_data({
+                    data: data || [],
+                    renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
+                    renderPlace: ["dropDonVi_KhoanThu_HSNH"],
+                    title: "Chọn đơn vị tính",
+                    default_val: ""
+                });
+            }
+        );
+        edu.system.getList_DanhMucDulieu(
+            { strMaBangDanhMuc: "NHAPHOC_CAUHINH_TC.KIEUTUDONG.PHAINOP", strTenCotSapXep: "", iTrangThai: 1 },
+            "", "",
+            function (data) {
+                edu.system.loadToCombo_data({
+                    data: data || [],
+                    renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
+                    renderPlace: ["dropKieuTuDong_KhoanThu_HSNH"],
+                    title: "Chọn kiểu tự động sinh phải thu",
+                    default_val: ""
+                });
+            }
+        );
 
         // Danh sách khoản thu (TC_KhoanThu/LayDanhSach)
         var obj_list = {
@@ -983,7 +1020,7 @@ KhaiMucPhi.prototype = {
                         renderInfor: { id: "ID", parentId: "", name: "TEN", code: "", avatar: "" },
                         renderPlace: ["dropKhoanThu_KhoanThu_HSNH"],
                         type: "",
-                        title: "-- Chọn khoản thu --"
+                        title: "Chọn khoản thu"
                     });
                     me.bLoadedCombo_KhoanThu = true;
                     if (cb) cb();
