@@ -5,6 +5,8 @@ KhaiMucPhi.prototype = {
     strKeHoachNhapHoc_Id: '',       // KH đang được xem (từ dropdown)
     dtKeHoach: [],                  // danh sách kế hoạch nhập học
     dtNhomDinhMuc: [],              // danh sách nhóm định mức của KH đang xem
+    dtDM_DonViTien: [],             // Cache DM đơn vị tính (TAICHINH.DVT)
+    dtDM_KieuTuDong: [],            // Cache DM kiểu tự động sinh phải thu
 
     // State cho modal khoản thu (dùng khi Thêm mới khoản thu cần biết đang xem nhóm nào)
     strNhomId_KhoanThu: '',
@@ -35,6 +37,22 @@ KhaiMucPhi.prototype = {
 
     page_load: function () {
         this.getList_KeHoachNhapHoc();
+        this.preload_DMs();
+    },
+
+    /* Preload 2 DM để render tên trong bảng khoản thu (API list chỉ trả mã) */
+    preload_DMs: function () {
+        var me = this;
+        edu.system.getList_DanhMucDulieu(
+            { strMaBangDanhMuc: "TAICHINH.DVT", strTenCotSapXep: "", iTrangThai: 1 },
+            "", "",
+            function (data) { me.dtDM_DonViTien = data || []; }
+        );
+        edu.system.getList_DanhMucDulieu(
+            { strMaBangDanhMuc: "NHAPHOC_CAUHINH_TC.KIEUTUDONG.PHAINOP", strTenCotSapXep: "", iTrangThai: 1 },
+            "", "",
+            function (data) { me.dtDM_KieuTuDong = data || []; }
+        );
     },
 
     bindEvent: function () {
@@ -44,14 +62,27 @@ KhaiMucPhi.prototype = {
         // Với các modal con (mở trên modal cha), sử dụng shown.bs.modal (sau khi hiện xong)
         // để force z-index cao hơn parent + backdrop tương ứng.
         $(document).off('shown.bs.modal.kmpStack').on('shown.bs.modal.kmpStack', '.modal', function () {
+            var $this = $(this);
+            var isAlert = $this.attr('id') === 'myModalAlert'
+                       || $this.hasClass('modal-alert')
+                       || $this.hasClass('modal-confirm');
             var $modals = $('.modal.show');
             var count = $modals.length;
-            if (count <= 1) return;   // modal đầu tiên, không cần fix
-            var zIndex = 1055 + 30 * (count - 1);   // buffer lớn để chắc chắn trên parent
-            $(this)[0].style.setProperty('z-index', zIndex, 'important');
+            var zIndex;
+            if (isAlert) {
+                // Alert/confirm luôn trên cùng, bất kể level
+                zIndex = 20000;
+            } else if (count <= 1) {
+                return; // modal đầu tiên, không cần fix
+            } else {
+                zIndex = 1055 + 30 * (count - 1);
+            }
+            $this[0].style.setProperty('z-index', zIndex, 'important');
             var $backdrops = $('.modal-backdrop');
-            // Backdrop cuối cùng là của modal con vừa mở
-            $backdrops.last()[0].style.setProperty('z-index', zIndex - 5, 'important');
+            var $lastBackdrop = $backdrops.last();
+            if ($lastBackdrop.length) {
+                $lastBackdrop[0].style.setProperty('z-index', zIndex - 5, 'important');
+            }
         });
 
         // Reload danh sách kế hoạch khi gõ từ khóa (debounce nhẹ)
@@ -447,6 +478,7 @@ KhaiMucPhi.prototype = {
 
     /* Render bảng khoản thu — cột đúng theo Excel */
     genTable_KhoanThu: function (arr) {
+        var me = this;
         var $tbody = $("#tblKhoanThu_HSNH tbody");
         $tbody.empty();
 
@@ -454,6 +486,15 @@ KhaiMucPhi.prototype = {
             $tbody.append('<tr><td colspan="13" class="td-center italic color-666">Chưa có khoản thu nào trong nhóm.</td></tr>');
             return;
         }
+        // Helper: lookup TEN từ cache DM theo MA
+        var lookupDM = function (dmArr, code) {
+            if (!code) return '';
+            if (!dmArr || !dmArr.length) return code;
+            for (var j = 0; j < dmArr.length; j++) {
+                if (dmArr[j].MA === code) return dmArr[j].TEN || code;
+            }
+            return code;
+        };
 
         var html = '';
         arr.forEach(function (r, i) {
@@ -462,12 +503,13 @@ KhaiMucPhi.prototype = {
             var strMa = r.KHOANTHU_MA || r.MA || '';
             var strNhomTen = r.NHOM_TEN || '';
             var strDinhMuc = r.SO_TIEN_DINH_MUC != null ? r.SO_TIEN_DINH_MUC : '';
-            var strDonVi = r.DON_VI_TIEN_MA || r.DON_VI || '';
+            // API trả DON_VI_TIEN_ID chứa mã (VD "DOT"), TEN=null → lookup từ DM
+            var strDonVi = lookupDM(me.dtDM_DonViTien, r.DON_VI_TIEN_ID || r.DON_VI_TIEN_MA);
             var iBatBuoc = Number(r.BAT_BUOC || 0);
             var iTuDongSinh = Number(r.TU_DONG_SINH_PHAITHU || 0);
             var strThuTu = r.THU_TU_HIEN_THI != null ? r.THU_TU_HIEN_THI : '';
-            var strKieuTuDong = r.kieu_tu_dong_sinh_phaithu_Ten
-                             || r.KIEU_TU_DONG_SINH_PHAITHU_TEN || '';
+            // API trả KIEU_TU_DONG_SINH_PHAITHU_ID chứa mã (VD "DINHMUC"), TEN=null → lookup từ DM
+            var strKieuTuDong = lookupDM(me.dtDM_KieuTuDong, r.KIEU_TU_DONG_SINH_PHAITHU_ID || r.KIEU_SINH_PHAITHU_ID);
             var iChoPhepMienGiam = Number(r.CHO_PHEP_MIEN_GIAM || 0);
             var strGhiChu = r.GHICHU || r.GHI_CHU || '';
 
@@ -1071,11 +1113,11 @@ KhaiMucPhi.prototype = {
                 r.TAICHINH_CACKHOANTHU_ID || r.KHOANTHU_ID || '');
             $("#txtTenHienThi_KhoanThu_HSNH").val(r.TEN_HIEN_THI || '');
             $("#txtDinhMuc_KhoanThu_HSNH").val(r.SO_TIEN_DINH_MUC != null ? r.SO_TIEN_DINH_MUC : '');
-            edu.util.viewValById("dropDonVi_KhoanThu_HSNH", r.DON_VI_TIEN_ID || '');
+            edu.util.viewValById("dropDonVi_KhoanThu_HSNH", r.DON_VI_TIEN_ID || r.DON_VI_TIEN_MA || '');
             $("#chkBatBuoc_KhoanThu_HSNH").prop("checked", Number(r.BAT_BUOC || 0) === 1);
             $("#chkTuDongSinh_KhoanThu_HSNH").prop("checked", Number(r.TU_DONG_SINH_PHAITHU || 0) === 1);
             $("#txtThuTu_KhoanThu_HSNH").val(r.THU_TU_HIEN_THI != null ? r.THU_TU_HIEN_THI : 0);
-            edu.util.viewValById("dropKieuTuDong_KhoanThu_HSNH", r.KIEU_SINH_PHAITHU_ID || '');
+            edu.util.viewValById("dropKieuTuDong_KhoanThu_HSNH", r.KIEU_TU_DONG_SINH_PHAITHU_ID || r.KIEU_SINH_PHAITHU_ID || '');
             $("#chkChoPhepMienGiam_KhoanThu_HSNH").prop("checked", Number(r.CHO_PHEP_MIEN_GIAM || 0) === 1);
             $("#txtGhiChu_KhoanThu_HSNH").val(r.GHICHU || r.GHI_CHU || '');
             $("#zoneDelete_KhoanThu_HSNH").show();
