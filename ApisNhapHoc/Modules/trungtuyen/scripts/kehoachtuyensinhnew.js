@@ -1149,11 +1149,14 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         edu.system.getList_DanhMucDulieu(obj, "", "", function (data) {
             var dt = data || [];
+            if (!dt.length) {
+                console.warn('[KHTSN] DM "NH_KEHOACH_NHAPHOC.NHAPHOC_TYPE_CODE" chưa có dữ liệu. Vui lòng khai vào bảng Danh mục.');
+            }
             edu.system.loadToCombo_data({
                 data: dt,
                 renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
                 renderPlace: ["dropLoaiKHNH_AddKHNH"],
-                title: "Loại KH nhập học",
+                title: "Chọn loại kế hoạch nhập học",
                 default_val: ''
             });
             me._reapplyEditKHNH();
