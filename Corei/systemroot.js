@@ -941,6 +941,7 @@ systemroot.prototype = {
                 var strSrc = strData.substring(iStart, strData.indexOf(">", iStart));
                 if (strSrc.indexOf('src="') != -1) {
                     strSrc = strSrc.substring(strSrc.indexOf('src="') + 5);
+                    if (strSrc.indexOf('http') != -1) continue;
                     var ivitrijs = strSrc.indexOf(".js") + 3;
                     var strVersion = strSrc.substring(ivitrijs, strSrc.indexOf('"', ivitrijs));
                     if (strVersion == "" || strVersion == undefined) {

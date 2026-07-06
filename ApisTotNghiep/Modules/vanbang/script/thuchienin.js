@@ -89,11 +89,26 @@ ThucHienIn.prototype = {
                 me.save_InBang(x[0].id.substring(6));
             }
         });
-        edu.system.localStorageDrop("dropSearch_Phoi");
-        window.onafterprint = function (e) {
-            console.log(e);
-            console.log("Printing completed...");
-        };
+        async function saveAsImage() {
+            const element = $("#zoneMotherPhoi .zoneCon")[0];
+            console.log(element);
+            const canvas = await html2canvas(element, {
+                scale: 3,
+                backgroundColor: "#ffffff"
+            });
+
+            const link = document.createElement("a");
+            link.download = "bang-in.png";
+            link.href = canvas.toDataURL("image/png");
+            console.log(link.href)
+            link.click();
+        }
+        $("#btnLuuAnh").click(function () {
+            //const element = document.getElementById("zoneMotherPhoi");
+
+            saveAsImage();
+        });
+        
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
@@ -574,7 +589,7 @@ ThucHienIn.prototype = {
                         var strMagin = dtReRult[0].MARGIN_TOP ? 'margin-top: ' + dtReRult[0].MARGIN_TOP + 'px; margin-left: ' + dtReRult[0].MARGIN_LEFT + 'px;': '';
                         if (strAnhNen != null && strAnhNen.indexOf("_") != -1) {
                             arrTemp = strAnhNen.split("_");
-
+                            $("#" + zoneMauIn).css({ width: (parseInt(arrTemp[1]) + 40) })
                             for (var i = 0; i < iMaxTrang + 1; i++) {
                                 $("#" + zoneMauIn).append('<div class="pr-containt" style="background: url(' + edu.system.getRootPathImg(strAnhNen) + ');background-repeat: no-repeat; background-size: ' + arrTemp[1] + 'px;height: ' + arrTemp[2] + 'px; ' + strMagin +'" ></div>');
                                 if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
