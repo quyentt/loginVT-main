@@ -90,17 +90,19 @@ ThucHienIn.prototype = {
             }
         });
         async function saveAsImage() {
-            const element = $("#zoneMotherPhoi .zoneCon")[0];
-            console.log(element);
+            const element = document.querySelector("#zoneMotherPhoi .zoneCon");
+
             const canvas = await html2canvas(element, {
-                scale: 3,
-                backgroundColor: "#ffffff"
+                scale: window.devicePixelRatio * 3,
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                allowTaint: false,
+                logging: false
             });
 
             const link = document.createElement("a");
             link.download = "bang-in.png";
             link.href = canvas.toDataURL("image/png");
-            console.log(link.href)
             link.click();
         }
         $("#btnLuuAnh").click(function () {
