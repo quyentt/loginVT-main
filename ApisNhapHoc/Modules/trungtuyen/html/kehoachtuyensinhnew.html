@@ -267,13 +267,13 @@
                             <div class="col-sm-3 item-search">
                                 <label class="filter-label"><i class="fa-solid fa-clipboard-list"></i> Kế hoạch tuyển sinh</label>
                                 <select class="select-opt" id="dropKeHoachTuyenSinh_KHTSN">
-                                    <option value="">-- Chọn kế hoạch tuyển sinh --</option>
+                                    <option value="">Chọn kế hoạch tuyển sinh</option>
                                 </select>
                             </div>
                             <div class="col-sm-3 item-search">
                                 <label class="filter-label"><i class="fa-solid fa-layer-group"></i> Đợt tuyển sinh</label>
                                 <select class="select-opt" id="dropDotTuyenSinh_KHTSN">
-                                    <option value="">-- Chọn đợt tuyển sinh --</option>
+                                    <option value="">Chọn đợt tuyển sinh</option>
                                 </select>
                             </div>
                             <div class="col-sm-2 item-search">
@@ -511,7 +511,7 @@
                                 <div class="col-sm-4">
                                     <label class="form-lbl">Vai trò tham gia <span class="req">*</span></label>
                                     <select class="select-opt" id="dropVaiTro_ThemNS">
-                                        <option value="">-- Chọn vai trò --</option>
+                                        <option value="">Chọn vai trò</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
@@ -541,7 +541,7 @@
                                 <div class="col-sm-4">
                                     <label class="form-lbl">Trạng thái phân công</label>
                                     <select class="select-opt" id="dropTrangThai_ThemNS">
-                                        <option value="">-- Chọn trạng thái --</option>
+                                        <option value="">Chọn trạng thái</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
@@ -669,7 +669,7 @@
                                 <div class="col-sm-4">
                                     <label class="form-lbl">Vai trò tham gia <span class="req">*</span></label>
                                     <select class="select-opt" id="dropVaiTro_EditNS">
-                                        <option value="">-- Chọn vai trò --</option>
+                                        <option value="">Chọn vai trò</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
@@ -699,7 +699,7 @@
                                 <div class="col-sm-6">
                                     <label class="form-lbl">Trạng thái phân công</label>
                                     <select class="select-opt" id="dropTrangThai_EditNS">
-                                        <option value="">-- Chọn trạng thái --</option>
+                                        <option value="">Chọn trạng thái</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
@@ -732,47 +732,6 @@
                             <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu
                         </button>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal: Khai mức phí (read-only, dùng chung API với trang 'Khai mức phí thu nhập học') -->
-    <div class="modal fade" id="modal-KhaiMucPhi-KHTSN" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-1400 modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-primary">
-                        <i class="fa-solid fa-money-check-dollar"></i>&nbsp;Khai mức phí thu nhập học
-                        <span class="badge bg-primary ms-2" id="lblTong_KMP">0</span>
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info d-flex align-items-center" style="padding:8px 12px;font-size:13px;">
-                        <i class="fa-solid fa-circle-info me-2"></i>
-                        <span>Hiển thị nhóm định mức của kế hoạch nhập học này. Để <b>chỉnh sửa</b> (thêm/sửa/xóa nhóm, cấu hình khoản thu, ngành, đầu vào) vào menu <b>"Khai mức phí thu nhập học"</b>.</span>
-                    </div>
-                    <div class="aps-table-select scroll-table-x">
-                        <table id="tblKMP_KHTSN" class="table table-bordered table-hover table-noborder">
-                            <thead>
-                                <tr>
-                                    <th class="td-center" style="width:44px">STT</th>
-                                    <th class="td-left" style="width:130px">Mã nhóm</th>
-                                    <th class="td-left" style="min-width:220px">Tên nhóm</th>
-                                    <th class="td-left" style="min-width:220px">Ghi chú</th>
-                                    <th class="td-center" style="width:130px">Ngày tạo</th>
-                                    <th class="td-left" style="width:150px">Người tạo</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">
-                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
-                    </button>
                 </div>
             </div>
         </div>
@@ -816,13 +775,13 @@
                                 <div class="col-sm-3">
                                     <label class="form-lbl">Loại KH nhập học</label>
                                     <select class="select-opt" id="dropLoaiKHNH_AddKHNH">
-                                        <option value="">-- Chọn loại --</option>
+                                        <option value="">Chọn loại kế hoạch nhập học</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="form-lbl">Trạng thái kế hoạch</label>
                                     <select class="select-opt" id="dropTrangThai_AddKHNH">
-                                        <option value="">-- Chọn trạng thái --</option>
+                                        <option value="">Chọn trạng thái</option>
                                     </select>
                                 </div>
                             </div>
@@ -835,13 +794,13 @@
                                 <div class="col-sm-6">
                                     <label class="form-lbl">Kế hoạch tuyển sinh <span class="req">*</span></label>
                                     <select class="select-opt" id="dropKeHoachTS_AddKHNH">
-                                        <option value="">-- Chọn kế hoạch tuyển sinh --</option>
+                                        <option value="">Chọn kế hoạch tuyển sinh</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-6">
                                     <label class="form-lbl">Đợt tuyển sinh <span class="req">*</span></label>
                                     <select class="select-opt" id="dropDotTS_AddKHNH">
-                                        <option value="">-- Chọn đợt tuyển sinh --</option>
+                                        <option value="">Chọn đợt tuyển sinh</option>
                                     </select>
                                 </div>
                             </div>
@@ -854,19 +813,19 @@
                                 <div class="col-sm-4">
                                     <label class="form-lbl">Đơn vị chủ trì</label>
                                     <select class="select-opt" id="dropOwnerOrg_AddKHNH">
-                                        <option value="">-- Chọn đơn vị chủ trì --</option>
+                                        <option value="">Chọn đơn vị chủ trì</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="form-lbl">Đơn vị quản lý</label>
                                     <select class="select-opt" id="dropManageOrg_AddKHNH">
-                                        <option value="">-- Chọn đơn vị quản lý --</option>
+                                        <option value="">Chọn đơn vị quản lý</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
                                     <label class="form-lbl">Đơn vị tiếp nhận</label>
                                     <select class="select-opt" id="dropReceiveOrg_AddKHNH">
-                                        <option value="">-- Chọn đơn vị tiếp nhận --</option>
+                                        <option value="">Chọn đơn vị tiếp nhận</option>
                                     </select>
                                 </div>
                             </div>
@@ -989,7 +948,7 @@
     </div>
 </section>
 <!-- page script -->
-<script src="/modules/trungtuyen/scripts/kehoachtuyensinhnew.js?v=1.0.2.8"></script>
+<script src="/modules/trungtuyen/scripts/kehoachtuyensinhnew.js?v=1.0.3.3"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

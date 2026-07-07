@@ -33,7 +33,7 @@ KeHoachTuyenSinhNew.prototype = {
         -------------------------------------------*/
         $("#dropKeHoachTuyenSinh_KHTSN").on("change", function () {
             me.strKeHoachTuyenSinh_Id = $(this).val();
-            $("#dropDotTuyenSinh_KHTSN").html('<option value="">-- Chọn đợt tuyển sinh --</option>');
+            $("#dropDotTuyenSinh_KHTSN").html('<option value="">Chọn đợt tuyển sinh</option>');
             me.dtDotTuyenSinh = [];
             if (edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
                 me.getList_DotTuyenSinh();
@@ -84,7 +84,7 @@ KeHoachTuyenSinhNew.prototype = {
         });
         $("#dropKeHoachTS_AddKHNH").on("change", function () {
             var strKH_Id = $(this).val();
-            $("#dropDotTS_AddKHNH").html('<option value="">-- Chọn đợt tuyển sinh --</option>');
+            $("#dropDotTS_AddKHNH").html('<option value="">Chọn đợt tuyển sinh</option>');
             if (edu.util.checkValue(strKH_Id)) {
                 me.getList_DotTS_ForAdd(strKH_Id);
             }
@@ -211,9 +211,31 @@ KeHoachTuyenSinhNew.prototype = {
         /*------------------------------------------
         -- Khai mức phí & Kết quả nhập học (placeholder)
         -------------------------------------------*/
-        $("#modal-KhaiMucPhi-KHTSN").on("show.bs.modal", function (event) {
-            var strId = $(event.relatedTarget).attr("data-id") || '';
-            if (strId) me.getList_KhaiMucPhi(strId);
+        // Click nút "Xem" cột Khai mức phí → navigate sang trang Khai mức phí thu nhập học
+        // (chức năng CRUD đầy đủ, có phân quyền riêng — user click từ đây phải có quyền menu đó)
+        $("#tblKHNH_KHTSN").on("click", ".btn-view-muc-phi", function (e) {
+            e.preventDefault();
+            var khnhId = $(this).attr("data-id");
+            if (!khnhId) return;
+            sessionStorage.setItem('KHTSN_preselect_KHNH_Id', khnhId);
+            // sys là biến local ở index.aspx — global là edu.system
+            var list = (edu.system && edu.system.dtChucNang) || [];
+            var target = null;
+            for (var i = 0; i < list.length; i++) {
+                var f = list[i] && list[i].DUONGDANFILE;
+                if (f && f.toLowerCase().indexOf('khaimucphinhaphoc') >= 0) {
+                    target = list[i]; break;
+                }
+            }
+            if (target && typeof edu.system.initMain === 'function') {
+                try {
+                    edu.system.initMain(target.DUONGDANHIENTHI, target.DUONGDANFILE, target.ID);
+                } catch (ex) {
+                    edu.system.alert("Không mở được trang Khai mức phí: " + ex.message, "w");
+                }
+            } else {
+                edu.system.alert("Bạn chưa được phân quyền menu 'Khai mức phí thu nhập học' — liên hệ admin để bổ sung quyền.", "w");
+            }
         });
         $("#tblKHNH_KHTSN").on("click", ".btn-view-ket-qua", function () {
             edu.system.alert("Chức năng 'Kết quả nhập học' sẽ bổ sung sau", "i");
@@ -299,7 +321,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '<td class="td-center">' + sKt + '</td>'
                 +  '<td class="td-center"><a class="btn btn-default btn-view-kh-dau-ra" data-id="' + strId + '" data-bs-toggle="modal" data-bs-target="#modal-KHDauRa-KHTSN"><i class="fa fa-eye"></i> Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btn-view-nhan-su" data-id="' + strId + '" data-bs-toggle="modal" data-bs-target="#modal-NhanSu-KHTSN"><i class="fa fa-eye"></i> Xem</a></td>'
-                +  '<td class="td-center"><a class="btn btn-default btn-view-muc-phi" data-id="' + strId + '" data-bs-toggle="modal" data-bs-target="#modal-KhaiMucPhi-KHTSN"><i class="fa fa-eye"></i> Xem</a></td>'
+                +  '<td class="td-center"><a class="btn btn-default btn-view-muc-phi" data-id="' + strId + '"><i class="fa fa-eye"></i> Xem</a></td>'
                 +  '<td class="td-center"><a class="btn btn-default btn-view-ket-qua" data-id="' + strId + '"><i class="fa fa-eye"></i> Xem</a></td>'
                 +  '<td class="td-center">' + sNgayTao + '</td>'
                 +  '<td class="td-left">' + sNguoiTao + '</td>'
@@ -498,65 +520,6 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
                 + '<td class="td-center">' + me._fmtDateTime(d.NGAYTAO || d.NGAY_TAO || '') + '</td>'
                 + '<td class="td-left">' + (d.NGUOITAO_TEN || d.NGUOITAO || '') + '</td>'
-                + '</tr>';
-        }
-        $tbody.append(rows);
-    },
-
-    /*------------------------------------------
-    -- Origin: PKG_CORE_NHAPHOC.LayDS_NhapHoc_CauHinh_TC_Nhom
-    -- Read-only view các Nhóm định mức (dùng chung endpoint với trang Khai mức phí thu nhập học)
-    -------------------------------------------*/
-    getList_KhaiMucPhi: function (strKHNH_Id) {
-        var me = main_doc.KeHoachTuyenSinhNew;
-        var obj_save = {
-            'action': 'SV_Core_NhapHoc_MH/DSA4BRIeDykgMQkuIh4CIDQJKC8pHhUCHg8pLiwP',
-            'func': 'PKG_CORE_NHAPHOC.LayDS_NhapHoc_CauHinh_TC_Nhom',
-            'iM': edu.system.iM,
-            'strNH_KeHoach_NhapHoc_Id': strKHNH_Id,
-            'strTuKhoa': '',
-            'dIs_Default': '',
-            'dIs_Active': 1,
-            'strNguoiThucHien_Id': edu.system.userId,
-            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
-            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
-            'strHanhDong_Code': 'XEM'
-        };
-        edu.system.makeRequest({
-            success: function (data) {
-                if (data.Success) {
-                    var dt = edu.util.checkValue(data.Data) ? data.Data : [];
-                    me.genTable_KhaiMucPhi(dt);
-                } else {
-                    edu.system.alert("LayDS_NhapHoc_CauHinh_TC_Nhom: " + data.Message, "w");
-                }
-            },
-            error: function (er) {
-                edu.system.alert("LayDS_NhapHoc_CauHinh_TC_Nhom (ex): " + JSON.stringify(er), "w");
-            },
-            type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
-        }, false, false, false, null);
-    },
-
-    genTable_KhaiMucPhi: function (data) {
-        var me = main_doc.KeHoachTuyenSinhNew;
-        var $tbody = $("#tblKMP_KHTSN tbody");
-        $tbody.html("");
-        $("#lblTong_KMP").text(data ? data.length : 0);
-        if (!data || data.length === 0) {
-            $tbody.append('<tr><td colspan="6" class="td-center text-muted py-3">Chưa có nhóm định mức nào — tạo từ trang <b>Khai mức phí thu nhập học</b></td></tr>');
-            return;
-        }
-        var rows = '';
-        for (var i = 0; i < data.length; i++) {
-            var d = data[i];
-            rows += '<tr>'
-                + '<td class="td-center">' + (i + 1) + '</td>'
-                + '<td class="td-left">' + (d.MA_NHOM || d.MA || '') + '</td>'
-                + '<td class="td-left">' + (d.TEN_NHOM || d.TEN || '') + '</td>'
-                + '<td class="td-left">' + (d.GHICHU || d.GHI_CHU || '') + '</td>'
-                + '<td class="td-center">' + me._fmtDateTime(d.NGAYTAO_DD_MM_YYYY_HHMMSS || d.NGAY_TAO || d.NGAYTAO || '') + '</td>'
-                + '<td class="td-left">' + (d.NGUOITAO_TENDAYDU || d.NGUOI_TAO || d.NGUOITAO || '') + '</td>'
                 + '</tr>';
         }
         $tbody.append(rows);
@@ -1062,7 +1025,7 @@ KeHoachTuyenSinhNew.prototype = {
         me.dtKHNH_EditRecord = null;
         $("#txtMa_AddKHNH, #txtTen_AddKHNH, #txtNgayBD_AddKHNH, #txtNgayKT_AddKHNH, #txtGhiChu_AddKHNH").val('');
         $("#dropKeHoachTS_AddKHNH").val('').trigger('change.select2');
-        $("#dropDotTS_AddKHNH").html('<option value="">-- Chọn đợt tuyển sinh --</option>');
+        $("#dropDotTS_AddKHNH").html('<option value="">Chọn đợt tuyển sinh</option>');
         $("#dropLoaiKHNH_AddKHNH").val('').trigger('change.select2');
         $("#dropTrangThai_AddKHNH").val('').trigger('change.select2');
         $("#dropOwnerOrg_AddKHNH, #dropManageOrg_AddKHNH, #dropReceiveOrg_AddKHNH").val('').trigger('change.select2');
@@ -1153,9 +1116,19 @@ KeHoachTuyenSinhNew.prototype = {
                         data: dt,
                         renderInfor: { id: "ID", parentId: "", name: "TEN", code: "" },
                         renderPlace: ["dropDotTS_AddKHNH"],
-                        title: "Đợt tuyển sinh",
+                        title: "Chọn đợt tuyển sinh",
                         default_val: sDot
                     });
+                    // Fallback: force set value sau khi loadToCombo_data đã build combo
+                    // (Select2 đôi khi không apply default_val do race condition)
+                    if (sDot) {
+                        setTimeout(function () {
+                            var $drop = $("#dropDotTS_AddKHNH");
+                            if ($drop.find('option[value="' + sDot + '"]').length && $drop.val() !== sDot) {
+                                $drop.val(sDot).trigger('change.select2');
+                            }
+                        }, 150);
+                    }
                 }
             },
             error: function () {},
@@ -1176,11 +1149,14 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         edu.system.getList_DanhMucDulieu(obj, "", "", function (data) {
             var dt = data || [];
+            if (!dt.length) {
+                console.warn('[KHTSN] DM "NH_KEHOACH_NHAPHOC.NHAPHOC_TYPE_CODE" chưa có dữ liệu. Vui lòng khai vào bảng Danh mục.');
+            }
             edu.system.loadToCombo_data({
                 data: dt,
                 renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
                 renderPlace: ["dropLoaiKHNH_AddKHNH"],
-                title: "Loại KH nhập học",
+                title: "Chọn loại kế hoạch nhập học",
                 default_val: ''
             });
             me._reapplyEditKHNH();
