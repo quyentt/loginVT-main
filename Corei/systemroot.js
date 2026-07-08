@@ -7984,7 +7984,10 @@ systemroot.prototype = {
                     }
                 },
                 error: function (er) {
-                    edu.system.alert(JSON.stringify(er), "w");
+                    setTimeout(function () {
+                        ImportData(obj_list);
+                    }, 1000);
+                    //edu.system.alert(JSON.stringify(er), "w");
                 },
                 type: 'POST',
                 action: obj_list.action,

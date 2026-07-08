@@ -174,10 +174,15 @@ DangKy.prototype = {
             }, 500);
         });
         $("#zoneDangKy").delegate('.btnChonHocPhan', 'click', function (e) {
+            if ($(this).hasClass('disabled')) return;
             me.toggle_chonmon();
             me.loadMonTheoNhom(this.id);
         });
         $("#zoneDangKy").delegate('.btnDangKyHocPhan', 'click', function (e) {
+            if ($(this).hasClass('disabled')) {
+                edu.system.alert("Học phần này sinh viên đã đăng ký, vui lòng chọn học phần khác.", "w");
+                return;
+            }
             var strLopHocPhan_Id = this.id;
             var strtenhocphan = $("#lblTenLop" + strLopHocPhan_Id).html(); //this.parentNode.parentNode.getElementsByClassName("tenhocphan")[0].innerHTML;
             edu.system.confirm("Bạn có chắc chắn muốn đăng ký lớp học phần: <br/> <span style='color: red'>" + strtenhocphan + "</span>?");
@@ -670,15 +675,19 @@ DangKy.prototype = {
         var row = '';
         for (var i = 0; i < data.length; i++) {
             var aData = data[i];
-            var classDangKy = '';
             var lblDangKy = 'Đăng ký';
             var lblChonThem = 'Chọn thêm ';
+            var bDaDangKy = false;
             var checkDangKy = me.arrHPDaDangKy.find(e => e === aData.DAOTAO_HOCPHAN_ID);
             if (checkDangKy && edu.util.getArrCheckedIds("tblSinhVien", "checkX").length == 1) {
-                classDangKy = '1';
+                bDaDangKy = true;
                 lblDangKy = "Đã đăng ký HP";
                 lblChonThem = 'Đủ ';
             }
+            var sDisabledStyle = 'pointer-events:none;opacity:0.65;cursor:not-allowed;';
+            var sDangKyClass = bDaDangKy ? 'btn btn-success disabled' : 'btnDangKyHocPhan btn btn-success poiter';
+            var sChonThemClass = bDaDangKy ? 'btn btn-warning disabled' : 'btnChonHocPhan btn btn-warning poiter';
+            var sDangKyStyle = bDaDangKy ? sDisabledStyle : '';
             //if (i !== 0 && i % 4 === 0) {
             //    row += '<div class="clear"></div>';
             //}
@@ -704,8 +713,8 @@ DangKy.prototype = {
             row += '<tr class="tongso-hocphan">';
             // row += '<td style=" text-align: left">Tổng số:</td>';
             row += '<td colspan="2" style=""><span>Tổng số:</span>' + edu.util.returnEmpty(aData.SOLUONGDUKIENHOC) + '</td>';
-            aData.SOLOPTHUOCCUNGNHOM == 1 ? row += '<td rowspan="2"><div id="' + aData.ID + '" class="btnDangKyHocPhan btn btn-success' + classDangKy + ' poiter" style="' + classDangKy + '" >' + lblDangKy + '</div></td>'
-                : row += '<td rowspan="2" ><div style="' + classDangKy + '" id="' + aData.ID + '" class="btnChonHocPhan btn btn-warning' + classDangKy + ' poiter">' + lblChonThem + edu.util.returnEmpty(aData.SOLOPTHUOCCUNGNHOM) + '</div></td>';
+            aData.SOLOPTHUOCCUNGNHOM == 1 ? row += '<td rowspan="2"><div id="' + aData.ID + '" class="' + sDangKyClass + '" style="' + sDangKyStyle + '">' + lblDangKy + '</div></td>'
+                : row += '<td rowspan="2" ><div id="' + aData.ID + '" class="' + sChonThemClass + '" style="' + sDangKyStyle + '">' + lblChonThem + edu.util.returnEmpty(aData.SOLOPTHUOCCUNGNHOM) + '</div></td>';
             row += '</tr>';
             row += '<tr class="dangky-hocphan">';
             // row += '<td style="text-align: left">Đã đăng ký:</td>';
