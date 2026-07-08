@@ -441,7 +441,7 @@ a.btn {
   display: flex;
   flex-wrap: wrap;
 }
-
+.sidebar-menu>li.sidebar-menu-home>a i
 .box-header .box-title {
   float: left;
   display: flex;
@@ -455,7 +455,9 @@ a.btn {
 .box-header .pull-right.aps-btn-list .btn {
   margin-left: 0px !important;
 }
+.box-header.with-border .pull-right .btn.btnClose{
 
+}
 .content-header {
   margin-top: 10px !important;
 }
@@ -2983,7 +2985,7 @@ input:active,
   color:#fff !important;
 }
 .sidebar-menu>li.sidebar-menu-home>a i {
-  color:var(--color-orange) !important;
+  color:#fff !important;
   background: transparent;
 }
 .sidebar-menu>li.sidebar-menu-home{
