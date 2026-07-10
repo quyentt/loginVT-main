@@ -9435,8 +9435,11 @@ systemroot.prototype = {
                 edu.system.endLoading();
             },
             error: function (er) {
-                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
-                edu.system.endLoading();
+                setTimeout(function () {
+                    me.getList_DataImport();
+                }, 1000);
+                //edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+                //edu.system.endLoading();
             },
             type: "GET",
             action: obj_list.action,
