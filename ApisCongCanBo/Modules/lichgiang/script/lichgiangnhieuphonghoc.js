@@ -72,60 +72,82 @@ LichGiangNhieuPhong.prototype = {
         return { batDau: batDau, ketThuc: ketThuc };
     },
 
+    // Kiểm tra ngày dd/MM/yyyy có phải Chủ nhật không
+    isSunday: function(dateStr) {
+        if (!dateStr) return false;
+        var parts = dateStr.split('/');
+        if (parts.length !== 3) return false;
+        var d = new Date(parts[2], parts[1] - 1, parts[0]);
+        return d.getDay() === 0;
+    },
+
     // Calculate efficiency based on selected mode
-    calculateEfficiency: function(roomSchedules, totalDays) {
+    // Hiệu suất tính trên 6 ngày làm việc (T2-T7), bỏ Chủ nhật khỏi cả tử & mẫu
+    calculateEfficiency: function(roomSchedules, arrDays) {
         var me = this;
         var mode = me.strEfficiencyMode;
-        
+
+        // Loại Chủ nhật khỏi mẫu số
+        var workingDays = arrDays.filter(function(d) {
+            return !me.isSunday(d.date);
+        }).length;
+
+        // Loại lịch rơi vào Chủ nhật khỏi tử số
+        var validSchedules = roomSchedules.filter(function(s) {
+            return !me.isSunday(s.NGAYHOC);
+        });
+
+        if (workingDays === 0) return 0;
+
         if (mode === 'days') {
             // Tính theo ngày: đếm số ngày có lịch
             var uniqueDays = {};
-            roomSchedules.forEach(function(schedule) {
+            validSchedules.forEach(function(schedule) {
                 if (schedule.NGAYHOC) {
                     uniqueDays[schedule.NGAYHOC] = true;
                 }
             });
             var usedDays = Object.keys(uniqueDays).length;
-            return Math.round((usedDays / totalDays) * 100);
+            return Math.round((usedDays / workingDays) * 100);
         }
-        
+
         // Tính theo tiết học
         var totalUsedPeriods = 0;
         var totalPeriods = 0;
-        
+
         // Xác định range tiết theo mode
         var periodRange = { min: 1, max: 15 };
         switch(mode) {
             case 'morning':
                 periodRange = { min: 1, max: 6 };
-                totalPeriods = totalDays * 6;
+                totalPeriods = workingDays * 6;
                 break;
             case 'afternoon':
                 periodRange = { min: 7, max: 10 };
-                totalPeriods = totalDays * 4;
+                totalPeriods = workingDays * 4;
                 break;
             case 'evening':
                 periodRange = { min: 11, max: 15 };
-                totalPeriods = totalDays * 5;
+                totalPeriods = workingDays * 5;
                 break;
             case 'morning-afternoon':
                 periodRange = { min: 1, max: 10 };
-                totalPeriods = totalDays * 10;
+                totalPeriods = workingDays * 10;
                 break;
             case 'afternoon-evening':
                 periodRange = { min: 7, max: 15 };
-                totalPeriods = totalDays * 9;
+                totalPeriods = workingDays * 9;
                 break;
             case 'all-sessions':
             case 'periods':
             default:
                 periodRange = { min: 1, max: 15 };
-                totalPeriods = totalDays * 15;
+                totalPeriods = workingDays * 15;
                 break;
         }
-        
+
         // Đếm số tiết đã sử dụng trong range (fallback theo giờ nếu thiếu TIETBATDAU/TIETKETTHUC)
-        roomSchedules.forEach(function(schedule) {
+        validSchedules.forEach(function(schedule) {
             var range = me.getTietRange(schedule);
             if (range.batDau && range.ketThuc) {
                 var start = Math.max(range.batDau, periodRange.min);
@@ -135,8 +157,8 @@ LichGiangNhieuPhong.prototype = {
                 }
             }
         });
-        
-        return Math.round((totalUsedPeriods / totalPeriods) * 100);
+
+        return totalPeriods > 0 ? Math.round((totalUsedPeriods / totalPeriods) * 100) : 0;
     },
     
     // Get efficiency label text based on mode
@@ -527,8 +549,8 @@ LichGiangNhieuPhong.prototype = {
             var roomSchedules = me.dtLichHoc.filter(function(item) {
                 return item.IDPHONGHOC === room.ID;
             });
-            
-            var efficiency = me.calculateEfficiency(roomSchedules, arrDays.length);
+
+            var efficiency = me.calculateEfficiency(roomSchedules, arrDays);
             
             // Xác định màu sắc
             var efficiencyClass = 'low';
@@ -1048,8 +1070,8 @@ LichGiangNhieuPhong.prototype = {
             var roomSchedules = data.filter(function(item) {
                 return item.IDPHONGHOC === room.ID;
             });
-            
-            var efficiency = me.calculateEfficiency(roomSchedules, arrDays.length);
+
+            var efficiency = me.calculateEfficiency(roomSchedules, arrDays);
             
             // Xác định màu sắc
             var efficiencyClass = 'low';

@@ -32,6 +32,13 @@ KeHoachTuyenSinhNew.prototype = {
     dtKieuHocTap: [],
     dtTrangThaiDauRa: [],
 
+    // Kết quả đăng ký (Import trúng tuyển)
+    strDot_Id_ForKQ: '',   // Đợt ID khi mở KQĐK từ bảng đợt (context Đợt); rỗng nếu mở từ bảng KH
+    _importCancelled: false,
+    _khaiDMLoaded: false,  // danh mục form khai đã nạp lần đầu chưa (lazy)
+    dtKQDK_HoSo: [],       // cache raw danh sách hồ sơ để filter local + export Excel
+    strSuaHoSo_Id: '',     // ID hồ sơ đang sửa qua form Khai (chế độ Sửa)
+
     init: function () {
         var me = this;
         edu.system.page_load();
@@ -420,6 +427,1368 @@ KeHoachTuyenSinhNew.prototype = {
                 me.delete_KeHoachTuyenSinh();
             });
         });
+
+        /*------------------------------------------
+        -- Modal "Kết quả đăng ký" — Import trúng tuyển + Khai trực tiếp
+        -- Context detection giống #ke-hoach-dau-ra:
+        --   - Mở từ modal #dot-tuyen-sinh → data-id là Đợt ID, giữ nguyên KH ID
+        --   - Mở từ table chính        → data-id là KH ID
+        -------------------------------------------*/
+        $("#ket-qua-dk").on('show.bs.modal', function (event) {
+            var $btn = $(event.relatedTarget);
+            me.resetKQDK_View();
+
+            // 1) Context KH/Đợt — chỉ set khi nút mang data-id (nút Xem trong row).
+            //    Nút footer modal Đợt KHÔNG có data-id → giữ nguyên context KH đã có,
+            //    reset đợt vì scope là toàn bộ KH.
+            if ($btn.length) {
+                var strId = $btn.attr('data-id');
+                if (strId) {
+                    var isDotContext = $btn.closest('#dot-tuyen-sinh').length > 0;
+                    if (isDotContext) {
+                        me.strDot_Id_ForKQ = strId;
+                    } else {
+                        me.strKeHoachTuyenSinh_Id = strId;
+                        me.strDot_Id_ForKQ = '';
+                    }
+                } else if ($btn.closest('#dot-tuyen-sinh').length > 0) {
+                    me.strDot_Id_ForKQ = '';
+                }
+            }
+
+            // 2) Chọn screen theo data-open-mode:
+            //    'import' → Import Excel
+            //    'khai'   → Form Khai trực tiếp
+            //    default  → Danh sách hồ sơ (khi bấm "Xem" từ row Kết quả đăng ký)
+            var mode = $btn.length ? $btn.attr('data-open-mode') : '';
+            $('#kqdk_list, #kqdk_import, #kqdk_khai').addClass('d-none');
+            if (mode === 'import') {
+                $('#kqdk_import').removeClass('d-none');
+            } else if (mode === 'khai') {
+                $('#kqdk_khai').removeClass('d-none');
+                me._exitSuaMode();   // ensure Thêm mới mode, banner ẩn, save btn "Lưu hồ sơ"
+                me.initKhai_DanhMuc();
+                // Nguyện vọng đầu ra phụ thuộc Đợt hiện tại → refresh mỗi lần mở
+                me._loadNguyenVongDauRa();
+            } else {
+                $('#kqdk_list').removeClass('d-none');
+                // Preload các DM cần lookup cho list (Giới tính) — chạy 1 lần
+                me._preloadDMForList();
+                me.loadKQDK_List();
+            }
+        });
+
+        // Toolbar list: search / reload / export / select all
+        $('#btnKQDK_Search').click(function () { me.filterKQDK_HoSo(); });
+        $('#txtKQDK_Search').on('keypress', function (e) {
+            if (e.which === 13) { e.preventDefault(); me.filterKQDK_HoSo(); }
+        });
+        $('#btnKQDK_Reload').click(function () {
+            $('#txtKQDK_Search').val('');
+            me.loadKQDK_List();
+        });
+        $('#btnKQDK_Export').click(function () { me.exportKQDK_Excel(); });
+        $('#chkKQDK_All').click(function () {
+            $('#tblKQDK_HoSo tbody .kqdk-sel').prop('checked', $(this).is(':checked'));
+        });
+
+        // Delegate: nút Sửa / Xóa trên từng row hồ sơ
+        $('#tblKQDK_HoSo').on('click', '.btnSuaHoSo', function () {
+            me.openSuaHoSo($(this).attr('data-id'));
+        });
+        $('#tblKQDK_HoSo').on('click', '.btnXoaHoSo', function () {
+            var id = $(this).attr('data-id');
+            if (!edu.util.checkValue(id)) return;
+            edu.system.confirm("Bạn có chắc chắn xóa hồ sơ này không?");
+            $("#btnYes").off("click").on("click", function () {
+                me.deleteHoSo_TS(id);
+            });
+        });
+
+        // Click tab bar (style aps-sv-tab): toggle class active + hiện panel tương ứng
+        $('#kqdkKhaiTabs').on('click', '.aps-sv-tab', function () {
+            var target = $(this).attr('data-target');
+            $('#kqdkKhaiTabs .aps-sv-tab').removeClass('active');
+            $(this).addClass('active');
+            $('#kqdk_khai .aps-sv-panel').removeClass('active');
+            $('#' + target).addClass('active');
+        });
+
+        // Tabs Prev/Next dựa vào class active của .aps-sv-tab
+        $("#btnKhaiPrev").click(function () {
+            var $tabs = $('#kqdkKhaiTabs .aps-sv-tab');
+            var i = $tabs.index($tabs.filter('.active'));
+            if (i > 0) $tabs.eq(i - 1).trigger('click');
+        });
+        $("#btnKhaiNext").click(function () {
+            var $tabs = $('#kqdkKhaiTabs .aps-sv-tab');
+            var i = $tabs.index($tabs.filter('.active'));
+            if (i < $tabs.length - 1) $tabs.eq(i + 1).trigger('click');
+        });
+
+        $("#btnKhaiReset").click(function () {
+            me.resetKhai_HoSo();
+        });
+        $("#btnKhaiSave").click(function () {
+            me.saveKhai_HoSo();
+        });
+
+        // Reset chế độ Sửa mỗi khi đóng modal Kết quả đăng ký (banner ẩn, nút Save về nhãn gốc)
+        $("#ket-qua-dk").on('hidden.bs.modal', function () {
+            me._exitSuaMode();
+        });
+
+        // Tự tính tổng điểm khi user nhập điểm môn/UT
+        $("#kqdk_tab_xettuyen").on('input', '.kq-diem, .kq-diem-ut', function () {
+            me.tinhTongDiem_Khai();
+        });
+
+        $("#fileImportTT").on('change', function () {
+            var f = this.files && this.files[0];
+            if (!f) {
+                $("#lblImportFileInfo").text('');
+                $("#btnStartImportTT").prop('disabled', true);
+                return;
+            }
+            $("#lblImportFileInfo").text('Đã chọn: ' + f.name + ' (' + (f.size / 1024).toFixed(1) + ' KB)');
+            $("#btnStartImportTT").prop('disabled', false);
+            $("#tblImportTT_Log tbody").html('');
+        });
+
+        $("#btnStartImportTT").click(function () {
+            me.startImport_TrungTuyen();
+        });
+        $("#btnCancelImportTT").click(function () {
+            me._importCancelled = true;
+        });
+    },
+
+    /*------------------------------------------
+    -- Reset trạng thái nội bộ modal #ket-qua-dk (Import counters, file, log).
+    -- Visibility screen do handler show.bs.modal quyết định theo data-open-mode.
+    -------------------------------------------*/
+    resetKQDK_View: function () {
+        // reset import state
+        $('#fileImportTT').val('').prop('disabled', false);
+        $('#lblImportFileInfo').text('');
+        $('#tblImportTT_Log tbody').html('');
+        $('#importProgressWrap').addClass('d-none');
+        $('#btnStartImportTT').prop('disabled', true);
+        $('#btnCancelImportTT').addClass('d-none');
+        $('#lblImportProgress').text('0 / 0');
+        $('#lblImportOK, #lblImportErr').text('0');
+        $('#importProgressBar').css('width', '0%').text('0%');
+    },
+
+    /*------------------------------------------
+    -- Import trúng tuyển: parse Excel/CSV (SheetJS) → chạy tuần tự
+    -- Origin: PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS
+    -- Guard: cần strKeHoachTuyenSinh_Id + XLSX đã load + có file
+    -------------------------------------------*/
+    startImport_TrungTuyen: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            edu.system.alert("Chưa xác định kế hoạch tuyển sinh (mở lại từ danh sách kế hoạch/đợt)", "w");
+            return;
+        }
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện đọc Excel chưa load xong, vui lòng thử lại sau 1-2 giây", "w");
+            return;
+        }
+        var el = $('#fileImportTT')[0];
+        var f = el && el.files && el.files[0];
+        if (!f) {
+            edu.system.alert("Vui lòng chọn file", "w");
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var rows = [];
+            try {
+                var wb = XLSX.read(e.target.result, { type: 'array', cellDates: true, cellNF: false });
+                var ws = wb.Sheets[wb.SheetNames[0]];
+                rows = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false });
+            } catch (ex) {
+                edu.system.alert("Không đọc được file: " + (ex && ex.message ? ex.message : ex), "w");
+                return;
+            }
+            if (!rows.length) {
+                edu.system.alert("File không có dữ liệu (hàng 1 phải là header)", "w");
+                return;
+            }
+
+            me._importCancelled = false;
+            $('#btnStartImportTT').prop('disabled', true);
+            $('#btnCancelImportTT').removeClass('d-none');
+            $('#fileImportTT').prop('disabled', true);
+            $('#importProgressWrap').removeClass('d-none');
+            $('#tblImportTT_Log tbody').html('');
+            me._runImport(rows);
+        };
+        reader.onerror = function () {
+            edu.system.alert("Lỗi đọc file", "w");
+        };
+        reader.readAsArrayBuffer(f);
+    },
+
+    /*------------------------------------------
+    -- Chạy tuần tự từng row (recursion). Đợi response mỗi row rồi mới next
+    -- → tránh overload backend + log tuần tự dễ đọc.
+    -------------------------------------------*/
+    _runImport: function (rows) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var total = rows.length, idx = 0, ok = 0, err = 0;
+        var $bar = $('#importProgressBar');
+
+        var updateProgress = function () {
+            var pct = total ? Math.round((idx / total) * 100) : 0;
+            $bar.css('width', pct + '%').text(pct + '%');
+            $('#lblImportProgress').text(idx + ' / ' + total);
+            $('#lblImportOK').text(ok);
+            $('#lblImportErr').text(err);
+        };
+
+        var finish = function () {
+            $('#btnStartImportTT').prop('disabled', false);
+            $('#btnCancelImportTT').addClass('d-none');
+            $('#fileImportTT').prop('disabled', false);
+            var kind = (err === 0 && !me._importCancelled) ? 's' : 'i';
+            edu.system.alert("Đã xử lý " + idx + "/" + total + " (OK: " + ok + ", lỗi: " + err + ")"
+                + (me._importCancelled ? " — đã dừng" : ""), kind);
+        };
+
+        var next = function () {
+            if (me._importCancelled) { finish(); return; }
+            if (idx >= total) { finish(); return; }
+            var rowNo = idx + 2; // hàng 1 là header → dữ liệu từ hàng 2
+            var row = rows[idx];
+            var payload = me._buildImportPayload(row, rowNo);
+            edu.system.makeRequest({
+                success: function (data) {
+                    idx++;
+                    if (data && data.Success) {
+                        ok++;
+                        me._appendLog(rowNo, row, 'ok', 'Thành công');
+                    } else {
+                        err++;
+                        me._appendLog(rowNo, row, 'err', (data && data.Message) || 'Lỗi không xác định');
+                    }
+                    updateProgress();
+                    next();
+                },
+                error: function (er) {
+                    idx++;
+                    err++;
+                    var msg = 'HTTP lỗi';
+                    if (er && er.statusText) msg = 'HTTP ' + (er.status || '') + ' ' + er.statusText;
+                    else if (er) { try { msg = JSON.stringify(er); } catch (e) { } }
+                    me._appendLog(rowNo, row, 'err', msg);
+                    updateProgress();
+                    next();
+                },
+                type: 'POST',
+                contentType: true,
+                action: payload.action,
+                data: payload,
+                fakedb: []
+            }, false, false, false, null);
+        };
+        updateProgress();
+        next();
+    },
+
+    /*------------------------------------------
+    -- Ghép payload gọi Them_HoSo_TS
+    -- - Base: context (KH_TS_Id, Dot_Id) + user info + hành động THEM
+    -- - File pass-through: header Excel = tên param API. Field không có trong file → ''
+    -- - dHoSo_Import_Row_No: chỉ số hàng trong file (để backend log lại)
+    -------------------------------------------*/
+    _buildImportPayload: function (row, rowNo) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var payload = {
+            'action': 'SV_Core_TS_HoSo_Import_MH/FSkkLB4JLhIuHhUS',
+            'func': 'PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'THEM',
+            // Context KH/Đợt — luôn override từ modal, không lấy từ file
+            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+            'strHoSo_KH_TS_Do_Id': me.strDot_Id_ForKQ || '',
+            'dHoSo_Import_Row_No': rowNo
+        };
+        // Các field pass-through từ file — không được ghi đè context ở trên
+        var apiFields = [
+            'strCorePerson_HoTen', 'strCorePerson_Ho', 'strCorePerson_Dem', 'strCorePerson_Ten',
+            'strCorePerson_NgaySinh', 'dCorePerson_NgayS', 'dCorePerson_ThangS', 'dCorePerson_NamS',
+            'strCorePerson_GioiTinh_Ma',
+            'strPersonProfile_DanToc_Ma', 'strPersonProfile_TonGiao_Ma', 'strPersonProfile_QuocTich_Ma',
+            'strPersonContact_DienThoai', 'strPersonContact_Email',
+            'strPersonIden_SoCCCD', 'strPersonIden_NgayCap', 'strPersonIden_NoiCap',
+            'strPersonAddr_NS_Tinh_Ma', 'strPersonAddr_NS_Xa_Ma', 'strPersonAddr_NoiSinh',
+            'strPersonAddr_HK_Tinh_Ma', 'strPersonAddr_HK_Xa_Ma', 'strPersonAddr_HK_SoNha',
+            'strPersonEdu_Tinh_Id', 'strPersonEdu_TruongMaTen', 'strPersonEdu_HocLuc', 'strPersonEdu_HanhKiem',
+            'strPersonFam_Bo_HoTen', 'dPersonFam_Bo_NamSinh', 'strPersonFam_Bo_NoiO', 'strPersonFam_Bo_SDT',
+            'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
+            'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
+            'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
+            'strNguyenVong_DauRa_Id', 'strMaNganhTrungTuyen', 'strMaCTDT',
+            'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
+            'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
+            'strKetQua_QuyetDinh_Ma', 'strIntake_IntakeCode', 'strIntake_IntakeTypeCode',
+            'strPersonInvoice_TypeLoai', 'strPersonInvoice_NguoiMua', 'strPersonInvoice_TenDonVi',
+            'strPersonInvoice_MST', 'strPersonInvoice_MaQHNS', 'strPersonInvoice_SDT',
+            'strPersonInvoice_DiaChi', 'strPersonInvoice_Email',
+            'strPersonBank_HinhThucTT', 'strPersonBank_TenNganHang', 'strPersonBank_SoTaiKhoan',
+            'strPersonBank_ChuTaiKhoan', 'strPersonBank_GhiChu',
+            'strExtra_Person_Data', 'strExtra_HoSo_Data', 'strExtra_Intake_Data'
+        ];
+        for (var i = 0; i < apiFields.length; i++) {
+            var f = apiFields[i];
+            var v = row[f];
+            payload[f] = (v === undefined || v === null) ? '' : (typeof v === 'string' ? v : String(v));
+        }
+        return payload;
+    },
+
+    /*------------------------------------------
+    -- Log 1 row vào bảng tiến trình. Dùng prepend để row mới nổi lên đầu.
+    -- Escape HTML bằng $('<div>').text().html() để tránh XSS từ file người dùng.
+    -------------------------------------------*/
+    _appendLog: function (rowNo, row, kind, msg) {
+        var icon = kind === 'ok'
+            ? '<i class="fa-solid fa-check color-success"></i>'
+            : (kind === 'cancel'
+                ? '<i class="fa-solid fa-ban" style="color:#999;"></i>'
+                : '<i class="fa-solid fa-xmark color-red"></i>');
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var maHS = row.strHoSo_MaHoSo || row.strHoSo_SoBaoDanh || '';
+        var hoTen = row.strCorePerson_HoTen || '';
+        var html = '<tr>'
+            + '<td class="td-center td-fix">' + rowNo + '</td>'
+            + '<td class="td-left">' + esc(maHS) + '</td>'
+            + '<td class="td-left">' + esc(hoTen) + '</td>'
+            + '<td class="td-center">' + icon + '</td>'
+            + '<td class="td-left">' + esc(msg) + '</td>'
+            + '</tr>';
+        $('#tblImportTT_Log tbody').prepend(html);
+    },
+
+    /*------------------------------------------
+    -- Mở form Khai (6 tab) ở chế độ SỬA — reuse #kqdk_khai để user có UX nhất quán.
+    -- Populate các field có trong cache dtKQDK_HoSo. Các field khác để trống (backend
+    -- chưa có API get_by_id trả full data — nếu có, gọi trước rồi populate đầy đủ).
+    -- API Sua_HoSo_TS chỉ update 9 field cơ bản → hiển thị banner cảnh báo.
+    -- Flag _suaMode giúp saveKhai_HoSo dispatch sang Sua_HoSo_TS thay vì Them_HoSo_TS.
+    -------------------------------------------*/
+    openSuaHoSo: function (strId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(strId)) return;
+        var pick = me._kqPick;
+        var d = null;
+        for (var i = 0; i < (me.dtKQDK_HoSo || []).length; i++) {
+            var r = me.dtKQDK_HoSo[i];
+            var rid = pick(r, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
+            if (rid === strId) { d = r; break; }
+        }
+        if (!d) {
+            edu.system.alert("Không tìm thấy hồ sơ trong cache — vui lòng Tải lại danh sách", "w");
+            return;
+        }
+
+        me.strSuaHoSo_Id = strId;
+        me._suaMode = true;
+
+        // Reset form + init DM (lazy, chỉ chạy lần đầu)
+        me.resetKhai_HoSo();
+        me.initKhai_DanhMuc();
+        me._loadNguyenVongDauRa();
+
+        // Chuyển sang screen Khai
+        $('#kqdk_list, #kqdk_import').addClass('d-none');
+        $('#kqdk_khai').removeClass('d-none');
+
+        // Hiện banner + đổi nhãn nút Save
+        $('#kqdk_khai_edit_banner').removeClass('d-none');
+        $('#btnKhaiSave').html('<i class="fa-light fa-floppy-disk"></i> Cập nhật hồ sơ');
+
+        // Format ngày sinh cho input type=date (dd/mm/yyyy → yyyy-mm-dd)
+        var ngaySinh = pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh']);
+        if (ngaySinh && /^(\d{2})\/(\d{2})\/(\d{4})/.test(ngaySinh)) {
+            var m = ngaySinh.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+            if (m) ngaySinh = m[3] + '-' + m[2] + '-' + m[1];
+        } else if (ngaySinh && /^(\d{4})-(\d{2})-(\d{2})/.test(ngaySinh)) {
+            // Đã ISO — giữ nguyên
+        }
+
+        // Populate các field có từ cache
+        $('#txtKQ_HoTen').val(pick(d, ['COREPERSON_HOTEN']));
+        $('#txtKQ_NgaySinh').val(ngaySinh);
+        $('#txtKQ_DienThoai').val(pick(d, ['PERSONCONTACT_DIENTHOAI']));
+        $('#txtKQ_Email').val(pick(d, ['PERSONCONTACT_EMAIL']));
+        $('#txtKQ_SoCCCD').val(pick(d, ['PERSONIDEN_SOCCCD']));
+        $('#txtKQ_MaHoSo').val(pick(d, ['HOSO_MAHOSO']));
+        $('#txtKQ_SBD').val(pick(d, ['HOSO_SOBAODANH']));
+        $('#txtKQ_ToHopMa').val(pick(d, ['XETTUYEN_TOHOPMON_CODE']));
+        $('#txtKQ_TongDiemXT').val(pick(d, ['XETTUYEN_DIEMTONGXT']));
+
+        // Đợi DM giới tính + Nguyện vọng đầu ra populate xong rồi set value
+        setTimeout(function () {
+            $('#ddlKQ_GioiTinh').val(pick(d, ['COREPERSON_GIOITINH_ID']));
+            $('#ddlKQ_NguyenVongDauRa').val(pick(d, ['NGUYENVONG_DAURA_ID']));
+        }, 600);
+
+        // Về tab 1
+        $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
+    },
+
+    /*------------------------------------------
+    -- Reset _suaMode + hide banner + restore save button label
+    -------------------------------------------*/
+    _exitSuaMode: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._suaMode = false;
+        me.strSuaHoSo_Id = '';
+        $('#kqdk_khai_edit_banner').addClass('d-none');
+        $('#btnKhaiSave').html('<i class="fa-solid fa-floppy-disk"></i><span> Lưu hồ sơ</span>');
+    },
+
+    /*------------------------------------------
+    -- Origin: PKG_CORE_TS_HOSO.Sua_HoSo_TS
+    -- Action: SV_Core_TS_HoSo_MH/EjQgHgkuEi4eFRIP
+    -- Đọc 9 field từ form Khai (ddlKQ_* / txtKQ_*) — các field khác trong form
+    -- chỉ hiển thị (backend không nhận qua Sua_HoSo_TS).
+    -------------------------------------------*/
+    saveSuaHoSo_Full: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(me.strSuaHoSo_Id)) {
+            edu.system.alert("Chưa xác định hồ sơ để sửa", "w");
+            return;
+        }
+        var hoTen = edu.system.getValById('txtKQ_HoTen');
+        if (!edu.util.checkValue(hoTen)) {
+            edu.system.alert("Vui lòng nhập Họ và tên", "w");
+            $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
+            $('#txtKQ_HoTen').focus();
+            return;
+        }
+        var g = function (id) { return edu.system.getValById(id) || ''; };
+
+        // Pack các field ngoài spec Sua_HoSo_TS vào Extra_Data JSON để không mất user input.
+        // Backend cần parse strExtra_Data để lấy giá trị (khi mở rộng procedure).
+        var extraObj = {
+            DanToc_Id: g('ddlKQ_DanToc'),
+            TonGiao_Id: g('ddlKQ_TonGiao'),
+            QuocTich_Id: g('ddlKQ_QuocTich'),
+            NgayCapCCCD: g('txtKQ_NgayCapCCCD'),
+            NoiCapCCCD: g('txtKQ_NoiCapCCCD'),
+            NS_Tinh_Id: g('ddlKQ_NS_Tinh'),
+            NS_Huyen_Id: g('ddlKQ_NS_Huyen'),
+            NS_Xa_Id: g('ddlKQ_NS_Xa'),
+            NoiSinh: g('txtKQ_NoiSinh'),
+            HK_Tinh_Id: g('ddlKQ_HK_Tinh'),
+            HK_Huyen_Id: g('ddlKQ_HK_Huyen'),
+            HK_Xa_Id: g('ddlKQ_HK_Xa'),
+            HK_SoNha: g('txtKQ_HK_SoNha'),
+            DoiTuong_TS_Id: g('ddlKQ_DoiTuongTS'),
+            DoiTuong_UT_Ids: g('ddlKQ_DoiTuongUT'),
+            KhuVuc_UT_Id: g('ddlKQ_KhuVucUT'),
+            MaTinh12: g('txtKQ_MaTinh12'),
+            TruongMaTen: g('txtKQ_TruongMaTen'),
+            HocLuc: g('ddlKQ_HocLuc'),
+            HanhKiem: g('ddlKQ_HanhKiem'),
+            ToHopMon_Code: g('txtKQ_ToHopMa'),
+            ToHopMon_Ten: g('txtKQ_ToHopTen'),
+            Diem1: g('txtKQ_Diem1'),
+            Diem2: g('txtKQ_Diem2'),
+            Diem3: g('txtKQ_Diem3'),
+            DiemUT: g('txtKQ_DiemUT'),
+            TongDiemMon: g('txtKQ_TongDiemMon'),
+            TongDiemXT: g('txtKQ_TongDiemXT'),
+            Bo_HoTen: g('txtKQ_Bo_HoTen'),
+            Bo_NamSinh: g('txtKQ_Bo_NamSinh'),
+            Bo_NoiO: g('txtKQ_Bo_NoiO'),
+            Bo_SDT: g('txtKQ_Bo_SDT'),
+            Me_HoTen: g('txtKQ_Me_HoTen'),
+            Me_NamSinh: g('txtKQ_Me_NamSinh'),
+            Me_NoiO: g('txtKQ_Me_NoiO'),
+            Me_SDT: g('txtKQ_Me_SDT'),
+            QD_Ma: g('txtKQ_QDMa'),
+            NguyenVong_DauRa_Id: g('ddlKQ_NguyenVongDauRa'),
+            IntakeCode: g('txtKQ_IntakeCode'),
+            IntakeTypeCode: g('txtKQ_IntakeTypeCode'),
+            HD_DoiTuong: g('ddlKQ_HD_DoiTuong'),
+            HD_NguoiMua: g('txtKQ_HD_NguoiMua'),
+            HD_TenDonVi: g('txtKQ_HD_TenDonVi'),
+            HD_MST: g('txtKQ_HD_MST'),
+            HD_MaQHNS: g('txtKQ_HD_MaQHNS'),
+            HD_SDT: g('txtKQ_HD_SDT'),
+            HD_DiaChi: g('txtKQ_HD_DiaChi'),
+            HD_Email: g('txtKQ_HD_Email'),
+            Bank_HinhThucTT: g('ddlKQ_HD_HinhThucTT'),
+            Bank_NganHang: g('txtKQ_HD_NganHang'),
+            Bank_SoTK: g('txtKQ_HD_SoTK'),
+            Bank_ChuTK: g('txtKQ_HD_ChuTK'),
+            Bank_GhiChu: g('txtKQ_HD_GhiChu')
+        };
+        // Chỉ giữ field có giá trị để giảm size payload
+        var extraFiltered = {};
+        for (var k in extraObj) {
+            if (extraObj[k]) extraFiltered[k] = extraObj[k];
+        }
+
+        var obj_save = {
+            'action': 'SV_Core_TS_HoSo_MH/EjQgHgkuEi4eFRIP',
+            'func': 'PKG_CORE_TS_HOSO.Sua_HoSo_TS',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'SUA',
+            'strHoSo_Id': me.strSuaHoSo_Id,
+            'strCorePerson_HoTen': hoTen,
+            'strCorePerson_NgaySinh': g('txtKQ_NgaySinh'),
+            'strCorePerson_GioiTinh_Id': g('ddlKQ_GioiTinh'),
+            'strPersonContact_DienThoai': g('txtKQ_DienThoai'),
+            'strPersonContact_Email': g('txtKQ_Email'),
+            'strPersonIden_SoCCCD': g('txtKQ_SoCCCD'),
+            'strHoSo_MaHoSo': g('txtKQ_MaHoSo'),
+            'strHoSo_SoBaoDanh': g('txtKQ_SBD'),
+            'strExtra_Data': JSON.stringify(extraFiltered)
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    edu.system.alert("Cập nhật hồ sơ thành công", "s");
+                    me._exitSuaMode();
+                    // Về lại screen list và refresh
+                    $('#kqdk_khai').addClass('d-none');
+                    $('#kqdk_list').removeClass('d-none');
+                    me.loadKQDK_List();
+                } else {
+                    edu.system.alert("Sua_HoSo_TS: " + ((data && data.Message) || 'Lỗi'), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Sua_HoSo_TS (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Origin: PKG_CORE_TS_HOSO.Xoa_HoSo_TS
+    -- Action: SV_Core_TS_HoSo_MH/GS4gHgkuEi4eFRIP
+    -------------------------------------------*/
+    deleteHoSo_TS: function (strId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var obj_save = {
+            'action': 'SV_Core_TS_HoSo_MH/GS4gHgkuEi4eFRIP',
+            'func': 'PKG_CORE_TS_HOSO.Xoa_HoSo_TS',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'XOA',
+            'strHoSo_Id': strId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    edu.system.alert("Xóa hồ sơ thành công", "s");
+                    me.loadKQDK_List();
+                } else {
+                    edu.system.alert("Xoa_HoSo_TS: " + ((data && data.Message) || 'Lỗi'), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Xoa_HoSo_TS (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Preload DM Giới tính vào #ddlKQ_GioiTinh (dropdown ẩn của form Khai) để list dùng lookup.
+    -- Chạy 1 lần, sau khi load xong nếu list đang hiển thị dữ liệu → re-render với TEN.
+    -------------------------------------------*/
+    _preloadDMForList: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._listDMLoaded) return;
+        me._listDMLoaded = true;
+        try {
+            var C = (window.constant && constant.setting && constant.setting.CATOR) ? constant.setting.CATOR : {};
+            var NS = C.NS || {};
+            if (!NS.GITI) return;
+            edu.system.loadToCombo_DanhMucDuLieu(NS.GITI, "ddlKQ_GioiTinh", "", function () {
+                // DM đã sẵn sàng → nếu list đang hiển thị và có data thì re-render để lookup TEN
+                if (!$('#kqdk_list').hasClass('d-none') && me.dtKQDK_HoSo && me.dtKQDK_HoSo.length) {
+                    me.renderKQDK_Table(me.dtKQDK_HoSo);
+                }
+            });
+        } catch (ex) { }
+    },
+
+    /*------------------------------------------
+    -- Origin: PKG_CORE_TS_HOSO.LayDS_HoSo_TS
+    -- Action: SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP
+    -- Backend cần nâng cấp view SQL của procedure này (join thêm Profile/Address/Edu/Family/
+    -- Invoice/Bank + DM TEN) để trả về đầy đủ 51 cột mà UI cần.
+    -------------------------------------------*/
+    loadKQDK_List: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            me.dtKQDK_HoSo = [];
+            me.renderKQDK_Table([]);
+            return;
+        }
+        var obj_save = {
+            'action': 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
+            'func': 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'XEM',
+            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+            'strHoSo_KH_Dot_PT_Id': '',
+            'strNguyenVong_DauRa_Id': '',
+            'strHoSo_KetQuaCode': '',
+            'strHoSo_TuNgay': '',
+            'strHoSo_DenNgay': ''
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    var rows = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.dtKQDK_HoSo = rows;
+                    me.renderKQDK_Table(rows);
+                } else {
+                    me.dtKQDK_HoSo = [];
+                    me.renderKQDK_Table([]);
+                    edu.system.alert("LayDS_HoSo_TS: " + ((data && data.Message) || 'Không lấy được danh sách'), "w");
+                }
+            },
+            error: function (er) {
+                me.dtKQDK_HoSo = [];
+                me.renderKQDK_Table([]);
+                edu.system.alert("LayDS_HoSo_TS (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Multi-key fallback getter — API có thể trả tên cột nhiều casing khác nhau
+    -------------------------------------------*/
+    _kqPick: function (d, keys) {
+        if (!d) return '';
+        for (var i = 0; i < keys.length; i++) {
+            var v = d[keys[i]];
+            if (v !== undefined && v !== null && v !== '') return v;
+        }
+        return '';
+    },
+
+    /*------------------------------------------
+    -- Lookup TEN theo ID từ option của 1 dropdown DM đã load (VD tra Giới tính TEN từ ID).
+    -- Fallback trả '' nếu DM chưa load hoặc ID không match.
+    -------------------------------------------*/
+    _kqLookupById: function (id, selectId) {
+        if (!id) return '';
+        var el = document.getElementById(selectId);
+        if (!el) return '';
+        for (var i = 0; i < el.options.length; i++) {
+            if (el.options[i].value === String(id)) return el.options[i].text;
+        }
+        return '';
+    },
+
+    /*------------------------------------------
+    -- Render bảng 51 cột. Escape HTML để tránh XSS.
+    -------------------------------------------*/
+    renderKQDK_Table: function (data) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $tbody = $('#tblKQDK_HoSo tbody');
+        $tbody.html('');
+        $('#lblKQDK_Total').text((data && data.length) || 0);
+        $('#chkKQDK_All').prop('checked', false);
+
+        if (!data || !data.length) {
+            $tbody.append('<tr><td class="td-center" colspan="52">Không có dữ liệu</td></tr>');
+            return;
+        }
+
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var pick = me._kqPick;
+        var rows = '';
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            // Ưu tiên HOSO_ID (API trả về) — dùng cho Sửa/Xóa
+            var id = pick(d, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
+            var arr = me._kqRowToArray(d, i + 1);
+            var tds = '';
+            tds += '<td class="td-center td-fix">' + arr[0] + '</td>';
+            tds += '<td class="td-center">' + arr[1] + '</td>';   // checkbox (raw HTML)
+            for (var j = 2; j < arr.length; j++) {
+                tds += '<td>' + esc(arr[j]) + '</td>';
+            }
+            // Cột Thao tác (raw HTML — không escape)
+            var idAttr = esc(id);
+            tds += '<td class="td-center">'
+                + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
+                + '<a class="btn btn-sm btn-danger btnXoaHoSo" data-id="' + idAttr + '" title="Xóa hồ sơ" style="padding:4px 8px;"><i class="fa fa-trash"></i></a>'
+                + '</td>';
+            rows += '<tr data-id="' + idAttr + '">' + tds + '</tr>';
+        }
+        $tbody.append(rows);
+    },
+
+    /*------------------------------------------
+    -- Map 1 record → array 51 phần tử theo thứ tự cột bảng.
+    -- Field name pattern: {MODULE}_{FIELD} viết hoa (COREPERSON_*, PERSONCONTACT_*, HOSO_*, XETTUYEN_*, ...)
+    -- Các field API chưa trả về (VD Dân tộc, Hộ khẩu, Bố/Mẹ, Trúng tuyển, Hóa đơn) → hiển thị rỗng
+    -- → cần backend mở rộng view join nếu muốn đầy đủ 51 cột.
+    -------------------------------------------*/
+    _kqRowToArray: function (d, stt) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var pick = me._kqPick;
+        // Format ngày sinh ISO "2026-07-08" → "08/07/2026"
+        var ngaySinh = pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh', 'NGAY_SINH', 'NGAYSINH']);
+        if (ngaySinh && /^\d{4}-\d{2}-\d{2}/.test(ngaySinh)) {
+            var m = ngaySinh.match(/^(\d{4})-(\d{2})-(\d{2})/);
+            if (m) ngaySinh = m[3] + '/' + m[2] + '/' + m[1];
+        }
+        // Giới tính: ưu tiên TEN từ view FULL, fallback lookup từ ID qua DM đã load
+        var giTen = pick(d, ['COREPERSON_GIOITINH_TEN', 'GIOITINH_TEN', 'CorePerson_GioiTinh_Ten']);
+        if (!giTen) {
+            var giId = pick(d, ['COREPERSON_GIOITINH_ID', 'GIOITINH_ID']);
+            giTen = me._kqLookupById(giId, 'ddlKQ_GioiTinh');
+        }
+        return [
+            stt,
+            '<input type="checkbox" class="kqdk-sel">',
+            // Basic
+            pick(d, ['COREPERSON_HOTEN', 'CorePerson_HoTen', 'HOTEN', 'FULL_NAME']),
+            ngaySinh,
+            giTen,
+            pick(d, ['PERSONPROFILE_DANTOC_TEN', 'DANTOC_TEN', 'PersonProfile_DanToc_Ten']),
+            pick(d, ['PERSONPROFILE_TONGIAO_TEN', 'TONGIAO_TEN', 'PersonProfile_TonGiao_Ten']),
+            pick(d, ['PERSONPROFILE_QUOCTICH_TEN', 'QUOCTICH_TEN', 'PersonProfile_QuocTich_Ten']),
+            pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
+            pick(d, ['PERSONCONTACT_EMAIL', 'PersonContact_Email', 'EMAIL']),
+            pick(d, ['PERSONADDR_NOISINH', 'PersonAddr_NoiSinh', 'NOISINH']),
+            // CCCD
+            pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD']),
+            pick(d, ['PERSONIDEN_NGAYCAP', 'PersonIden_NgayCap', 'NGAYCAPCCCD']),
+            pick(d, ['PERSONIDEN_NOICAP', 'PersonIden_NoiCap', 'NOICAPCCCD']),
+            // Hộ khẩu
+            pick(d, ['PERSONADDR_HK_TINH_TEN', 'HK_TINH_TEN', 'PersonAddr_HK_Tinh_Ten']),
+            pick(d, ['PERSONADDR_HK_XA_TEN', 'HK_XA_TEN', 'PersonAddr_HK_Xa_Ten']),
+            pick(d, ['PERSONADDR_HK_SONHA', 'HK_SONHA', 'PersonAddr_HK_SoNha']),
+            // Xét tuyển
+            pick(d, ['HOSO_KH_DOT_PT_TEN', 'PHUONGTHUC_TEN', 'HoSo_KH_Dot_PT_Ten']),
+            pick(d, ['HOSO_DOITUONG_TS_TEN', 'DOITUONG_TS_TEN']),
+            pick(d, ['HOSO_DOITUONG_UT_TEN', 'DOITUONG_UT_TEN']),
+            pick(d, ['HOSO_KHUVUC_UT_TEN', 'KHUVUC_UT_TEN']),
+            pick(d, ['PERSONEDU_TINH_ID', 'MATINH12']),
+            pick(d, ['PERSONEDU_MATRUONG', 'MATRUONG12']),
+            pick(d, ['PERSONEDU_TRUONGMATEN', 'TENTRUONG12']),
+            pick(d, ['PERSONEDU_HOCLUC', 'HOCLUC12', 'HOC_LUC']),
+            pick(d, ['PERSONEDU_HANHKIEM', 'HANHKIEM12', 'HANH_KIEM']),
+            pick(d, ['XETTUYEN_TOHOPMON_CODE', 'XetTuyen_TohopMon_Code', 'TOHOP_MA']),
+            pick(d, ['XETTUYEN_DIEM_MON1', 'DIEM_MON1']),
+            pick(d, ['XETTUYEN_DIEM_MON2', 'DIEM_MON2']),
+            pick(d, ['XETTUYEN_DIEM_MON3', 'DIEM_MON3']),
+            pick(d, ['XETTUYEN_DIEMUUTIEN', 'DIEM_UT', 'XetTuyen_DiemUuTien']),
+            pick(d, ['XETTUYEN_DIEMTONGXT', 'XetTuyen_DiemTongXT', 'TONG_DIEM_XT']),
+            // Bố
+            pick(d, ['PERSONFAM_BO_HOTEN', 'BO_HOTEN', 'PersonFam_Bo_HoTen']),
+            pick(d, ['PERSONFAM_BO_NAMSINH', 'BO_NAMSINH', 'PersonFam_Bo_NamSinh']),
+            pick(d, ['PERSONFAM_BO_NOIO', 'BO_NOIO', 'PersonFam_Bo_NoiO']),
+            pick(d, ['PERSONFAM_BO_SDT', 'BO_SDT', 'PersonFam_Bo_SDT']),
+            // Mẹ
+            pick(d, ['PERSONFAM_ME_HOTEN', 'ME_HOTEN', 'PersonFam_Me_HoTen']),
+            pick(d, ['PERSONFAM_ME_NAMSINH', 'ME_NAMSINH', 'PersonFam_Me_NamSinh']),
+            pick(d, ['PERSONFAM_ME_NOIO', 'ME_NOIO', 'PersonFam_Me_NoiO']),
+            pick(d, ['PERSONFAM_ME_SDT', 'ME_SDT', 'PersonFam_Me_SDT']),
+            // Trúng tuyển
+            pick(d, ['KETQUA_QUYETDINH_MA', 'SO_QD_TT', 'SoQuyetDinh']),
+            pick(d, ['KETQUA_NGAYBANHANH', 'NGAY_QD_TT', 'HOSO_NGAYKETQUA']),
+            pick(d, ['INTAKE_KHOA_TEN', 'KHOA_DT', 'KhoaDT']),
+            pick(d, ['INTAKE_NGANH_TEN', 'MA_NGANH', 'MaNganh']),
+            pick(d, ['INTAKE_LOP_MA', 'MA_LOP', 'MaLop']),
+            pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASV', 'MASO']),
+            // Hóa đơn
+            pick(d, ['PERSONINVOICE_TYPELOAI_TEN', 'HD_DOITUONG_TEN']),
+            pick(d, ['PERSONINVOICE_TENDONVI', 'HD_TEN_DONVI']),
+            pick(d, ['PERSONINVOICE_MAQHNS', 'HD_MA_QHNS']),
+            pick(d, ['PERSONINVOICE_DIACHI', 'HD_DIACHI']),
+            pick(d, ['PERSONINVOICE_MST', 'HD_MST', 'MST'])
+        ];
+    },
+
+    /*------------------------------------------
+    -- Filter local: search trên dtKQDK_HoSo (không call API lại)
+    -- Trường tìm: Họ tên, SĐT, Email, CCCD, Mã HS, SBD (chuỗi haystack)
+    -------------------------------------------*/
+    filterKQDK_HoSo: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var kw = ($('#txtKQDK_Search').val() || '').toLowerCase().trim();
+        var src = me.dtKQDK_HoSo || [];
+        if (!kw) {
+            me.renderKQDK_Table(src);
+            return;
+        }
+        var pick = me._kqPick;
+        var filtered = src.filter(function (d) {
+            var hay = [
+                pick(d, ['COREPERSON_HOTEN', 'CorePerson_HoTen', 'HOTEN']),
+                pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
+                pick(d, ['PERSONCONTACT_EMAIL', 'EMAIL']),
+                pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD']),
+                pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo', 'MA_HOSO']),
+                pick(d, ['HOSO_SOBAODANH', 'HoSo_SoBaoDanh', 'SBD']),
+                pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASO'])
+            ].join('|').toLowerCase();
+            return hay.indexOf(kw) !== -1;
+        });
+        me.renderKQDK_Table(filtered);
+    },
+
+    /*------------------------------------------
+    -- Xuất Excel bằng SheetJS (đã load qua CDN cho phần Import)
+    -- Header 2 tầng (group + column), rows từ dtKQDK_HoSo (theo filter hiện tại nếu có).
+    -------------------------------------------*/
+    exportKQDK_Excel: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại", "w");
+            return;
+        }
+        var src = me.dtKQDK_HoSo || [];
+        if (!src.length) {
+            edu.system.alert("Không có dữ liệu để xuất", "w");
+            return;
+        }
+        var headerCols = [
+            'STT', 'Họ và tên', 'Ngày sinh', 'Giới tính', 'Dân tộc', 'Tôn giáo', 'Quốc tịch', 'Điện thoại', 'Email', 'Nơi sinh',
+            'Số CCCD', 'Ngày cấp', 'Nơi cấp',
+            'HK Tỉnh/TP', 'HK Xã/Phường', 'HK Số nhà/Thôn/Xóm',
+            'Phương thức XT', 'Đối tượng TS', 'Đối tượng UT', 'Khu vực UT',
+            'Mã tỉnh L12', 'Mã trường L12', 'Tên trường L12', 'Học lực L12', 'Hạnh kiểm L12',
+            'Tổ hợp môn', 'Điểm 1', 'Điểm 2', 'Điểm 3', 'Điểm UT', 'Tổng điểm XT',
+            'Bố - Họ tên', 'Bố - Năm sinh', 'Bố - Nơi ở', 'Bố - SĐT',
+            'Mẹ - Họ tên', 'Mẹ - Năm sinh', 'Mẹ - Nơi ở', 'Mẹ - SĐT',
+            'Số QĐ TT', 'Ngày ban hành QĐ', 'Khóa ĐT', 'Mã ngành', 'Mã lớp QL', 'Mã SV',
+            'Đối tượng HĐ', 'Tên đơn vị HĐ', 'Mã QHNS', 'Địa chỉ cơ quan HĐ', 'MST'
+        ];
+        var ws_data = [headerCols];
+        for (var i = 0; i < src.length; i++) {
+            var arr = me._kqRowToArray(src[i], i + 1);
+            // Bỏ cột checkbox (index 1) khi export
+            var out = [arr[0]];
+            for (var j = 2; j < arr.length; j++) out.push(arr[j]);
+            ws_data.push(out);
+        }
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        // Auto-set column width based on header text length
+        ws['!cols'] = headerCols.map(function (h) { return { wch: Math.max(10, Math.min(30, h.length + 2)) }; });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'DS HoSo');
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var now = new Date();
+        var fname = 'DS_HoSo_TS_' + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+            + '_' + pad(now.getHours()) + pad(now.getMinutes()) + '.xlsx';
+        XLSX.writeFile(wb, fname);
+    },
+
+    /*------------------------------------------
+    -- KHAI TRỰC TIẾP HỒ SƠ — nạp danh mục cho form
+    -- Reuse các mã DM bên hồ sơ nhân sự (core_person cùng cấu trúc):
+    --   NS.GITI  → Giới tính
+    --   NS.DATO  → Dân tộc
+    --   NS.TOGI  → Tôn giáo
+    --   CHUN.CHLU→ Quốc tịch
+    -- Tỉnh/Huyện/Xã (Nơi sinh + Hộ khẩu) dùng edu.extend.genDropTinhThanh
+    --   → cascade tự động qua bảng CHUN.DMTT (cache localStorage.strTinhThanh6)
+    -- Lazy load: chỉ chạy lần đầu bấm "Khai trực tiếp".
+    -------------------------------------------*/
+    initKhai_DanhMuc: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._khaiDMLoaded) return;
+        me._khaiDMLoaded = true;
+        try {
+            var C = (window.constant && constant.setting && constant.setting.CATOR) ? constant.setting.CATOR : {};
+            var NS = C.NS || {};
+            var CH = C.CHUN || {};
+
+            // Chuẩn bị danh sách DM cần nạp — chỉ push nếu constant tồn tại (tránh gọi API với code rỗng)
+            var toLoad = [];
+            if (NS.GITI) toLoad.push([NS.GITI, "ddlKQ_GioiTinh"]);
+            if (NS.DATO) toLoad.push([NS.DATO, "ddlKQ_DanToc"]);
+            if (NS.TOGI) toLoad.push([NS.TOGI, "ddlKQ_TonGiao"]);
+            if (CH.CHLU) toLoad.push([CH.CHLU, "ddlKQ_QuocTich"]);
+            // Tab Xét tuyển — dùng string key trực tiếp (không có trong constant.setting.CATOR)
+            toLoad.push(["TS.DOITUONGDUTUYEN", "ddlKQ_DoiTuongTS"]);
+            toLoad.push(["TS.DOITUONGUUTIEN", "ddlKQ_DoiTuongUT"]);
+            toLoad.push(["TS.KHUVUCUUTIEN", "ddlKQ_KhuVucUT"]);          // TODO: verify mã DM chuẩn
+            toLoad.push(["TUYENSINH.HOCLUC", "ddlKQ_HocLuc"]);
+            toLoad.push(["TUYENSINH.HANHKIEM", "ddlKQ_HanhKiem"]);
+            // Tab Hóa đơn
+            toLoad.push(["TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong"]);     // TODO: verify mã DM chuẩn
+            toLoad.push(["MOTCUA.HINHTHUCTHANHTOAN", "ddlKQ_HD_HinhThucTT"]);
+
+            // Phương thức tuyển sinh: KHÔNG dùng dtPhuongAnTuyenSinh vì đó là bảng "Phương án" khác
+            // với "Phương thức của Đợt" (FK cần TS_KH_DOT_PHUONGTHUC.ID). Chưa có API list theo đợt
+            // → để dropdown disabled, gửi rỗng → backend nhận NULL, không vi phạm FK.
+
+            var finalize = function () {
+                // Cascading Tỉnh → Huyện → Xã (data cache localStorage.strTinhThanh6, load sync nếu có cache)
+                if (edu.extend && typeof edu.extend.genDropTinhThanh === 'function') {
+                    edu.extend.genDropTinhThanh('ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa');
+                    edu.extend.genDropTinhThanh('ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa');
+                }
+                me._bindCascadeNative();
+            };
+
+            if (toLoad.length === 0) { finalize(); return; }
+
+            // loadToCombo_DanhMucDuLieu signature: (strCode, zone_id, type, callback, title, strTenCotSapXep)
+            // Đợi tất cả 4 DM nạp xong (callback) mới finalize → tránh select2 apply lên dropdown rỗng.
+            var pending = toLoad.length;
+            var onOne = function () { if (--pending <= 0) finalize(); };
+            toLoad.forEach(function (p) {
+                edu.system.loadToCombo_DanhMucDuLieu(p[0], p[1], "", onOne);
+            });
+        } catch (ex) {
+            console.warn('[KQĐK] Nạp danh mục lỗi:', ex);
+        }
+    },
+
+    /*------------------------------------------
+    -- Re-apply select2 cho Huyện/Xã sau khi cascade (options thay đổi) + quản lý disabled state.
+    -- Logic UX: Huyện disabled cho tới khi có Tỉnh; Xã disabled cho tới khi có Huyện.
+    -- Placeholder hướng dẫn: "Vui lòng chọn Tỉnh trước" / "Vui lòng chọn Quận/Huyện trước".
+    -------------------------------------------*/
+    /*------------------------------------------
+    -- Sau khi user chọn Tỉnh/Huyện, genDropTinhThanh thay options của Huyện/Xã.
+    -- select2 wrapper cũ giữ snapshot options → cần destroy + apply lại để lấy options mới.
+    -------------------------------------------*/
+    _bindCascadeReapply: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var reapply = function (id) {
+            var $el = $('#' + id);
+            if (!$el.length) return;
+            if ($el.hasClass('select2-hidden-accessible')) {
+                try { $el.select2('destroy'); } catch (e) { }
+            }
+            me._applyKQSelect2(id);
+        };
+        $('#ddlKQ_NS_Tinh').on('change.kqrep', function () {
+            setTimeout(function () { reapply('ddlKQ_NS_Huyen'); reapply('ddlKQ_NS_Xa'); }, 80);
+        });
+        $('#ddlKQ_NS_Huyen').on('change.kqrep', function () {
+            setTimeout(function () { reapply('ddlKQ_NS_Xa'); }, 80);
+        });
+        $('#ddlKQ_HK_Tinh').on('change.kqrep', function () {
+            setTimeout(function () { reapply('ddlKQ_HK_Huyen'); reapply('ddlKQ_HK_Xa'); }, 80);
+        });
+        $('#ddlKQ_HK_Huyen').on('change.kqrep', function () {
+            setTimeout(function () { reapply('ddlKQ_HK_Xa'); }, 80);
+        });
+    },
+
+    /*------------------------------------------
+    -- Load Nguyện vọng đầu ra (list Kế hoạch đầu ra theo KH+Đợt) vào dropdown.
+    -- Origin API: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Get_Ds
+    -- Chỉ lấy các đầu ra còn hiệu lực (dIs_Active=1).
+    -- Field TS_HOSO_NGUYENVONG.TS_KEHOACH_DAU_RA_ID NOT NULL → user phải chọn 1 giá trị.
+    -------------------------------------------*/
+    _loadNguyenVongDauRa: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $sel = $('#ddlKQ_NguyenVongDauRa');
+        $sel.html('<option value="">-- Chọn nguyện vọng đầu ra --</option>');
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) return;
+        var obj_save = {
+            'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHgYkNR4FMgPP',
+            'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Get_Ds',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
+            'strTs_Kh_TuyenSinh_Dot_Id': me.strDot_Id_ForKQ || '',
+            'strTs_Kh_Dot_PhuongThuc_Id': '',
+            'strOutput_Status_Code': '',
+            'dIs_Public': '',
+            'dIs_Active': 1
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data || !data.Success) return;
+                var rows = edu.util.checkValue(data.Data) ? data.Data : [];
+                var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+                for (var i = 0; i < rows.length; i++) {
+                    var d = rows[i];
+                    var id = d.ID || d.Id || d.id || '';
+                    if (!id) continue;
+                    // Ưu tiên tên hiển thị nếu có, fallback về TEN gốc, kèm mã ngành nếu có
+                    var name = d.TEN_HIENTHI || d.TenHienThi || d.TEN || d.Ten || d.MA || '';
+                    var maCT = d.MA_CT || d.MaCT || d.MA || '';
+                    var display = name + (maCT && name !== maCT ? ' (' + maCT + ')' : '');
+                    $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
+                }
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _bindCascadeNative: function () {
+        // Chỉ enable/disable Huyện + Xã theo Tỉnh/Huyện (native <select>, không select2).
+        // genDropTinhThanh đã handle empty+populate options; ta chỉ bổ sung UX lock/unlock.
+        var lockDrop = function (id, msg) {
+            $('#' + id).empty().append('<option value="">' + msg + '</option>').prop('disabled', true);
+        };
+        var unlockDrop = function (id) {
+            $('#' + id).prop('disabled', false);
+        };
+        var bind = function (tinhId, huyenId, xaId) {
+            $('#' + tinhId).off('change.kqnat').on('change.kqnat', function () {
+                if ($(this).val()) {
+                    unlockDrop(huyenId);
+                    lockDrop(xaId, 'Vui lòng chọn Quận/Huyện trước');
+                } else {
+                    lockDrop(huyenId, 'Vui lòng chọn Tỉnh trước');
+                    lockDrop(xaId, 'Vui lòng chọn Quận/Huyện trước');
+                }
+            });
+            $('#' + huyenId).off('change.kqnat').on('change.kqnat', function () {
+                if ($(this).val()) unlockDrop(xaId);
+                else lockDrop(xaId, 'Vui lòng chọn Quận/Huyện trước');
+            });
+        };
+        bind('ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa');
+        bind('ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa');
+    },
+
+    /*------------------------------------------
+    -- Apply select2 cho các dropdown có nhiều option (Quốc tịch/Dân tộc/Tỉnh/Huyện/Xã...)
+    -- minimumResultsForSearch: 5 → dropdown < 5 items không hiện search box.
+    -- dropdownParent: neo dropdown vào modal fullscreen để không bị z-index issue.
+    -- placeholder + templateResult: ẩn option value="" khỏi dropdown list (option này chỉ
+    -- làm placeholder ở field, không nên xuất hiện như 1 item chọn được).
+    -------------------------------------------*/
+    initKhai_Select2: function () {
+        if (typeof $.fn.select2 !== 'function') return;
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var dropIds = [
+            'ddlKQ_GioiTinh', 'ddlKQ_QuocTich', 'ddlKQ_DanToc', 'ddlKQ_TonGiao',
+            'ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa',
+            'ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa',
+            'ddlKQ_KhuVucUT', 'ddlKQ_HocLuc', 'ddlKQ_HanhKiem',
+            'ddlKQ_HD_DoiTuong', 'ddlKQ_HD_HinhThucTT'
+        ];
+        for (var i = 0; i < dropIds.length; i++) {
+            me._applyKQSelect2(dropIds[i]);
+        }
+    },
+
+    /*------------------------------------------
+    -- Apply select2 cho 1 dropdown (dùng chung cho init + re-apply cascade).
+    -------------------------------------------*/
+    _applyKQSelect2: function (id) {
+        var $el = $('#' + id);
+        if (!$el.length) return;
+        if ($el.hasClass('select2-hidden-accessible')) return;
+        // Đọc text option value="" đầu tiên làm placeholder, sau đó XÓA text đó.
+        // templateResult sẽ ẩn option có text rỗng (chỉ placeholder có text rỗng, DM items luôn có text).
+        var $firstOpt = $el.find('option').filter(function () { return $(this).val() === ''; }).first();
+        var placeholder = ($firstOpt.length ? $firstOpt.text() : '') || 'Chọn';
+        if ($firstOpt.length) $firstOpt.text('');
+        $el.select2({
+            width: '100%',
+            dropdownParent: $('#ket-qua-dk'),
+            minimumResultsForSearch: 5,
+            placeholder: placeholder,
+            allowClear: false,
+            templateResult: function (state) {
+                // Ẩn item có text rỗng khỏi dropdown list (VD: placeholder option đã bị clear text).
+                // Các DM item luôn có text ("Nam", "Nữ", "Khác"...) → không bị ảnh hưởng.
+                var t = (state && state.text) ? String(state.text).trim() : '';
+                if (t === '') return null;
+                return state.text;
+            }
+        });
+        $el.closest('.aps-sv-select').addClass('select2-applied');
+    },
+
+    /*------------------------------------------
+    -- Reset toàn bộ form khai + về tab đầu
+    -------------------------------------------*/
+    resetKhai_HoSo: function () {
+        // Text/number/date inputs (list ID để tránh clear nhầm input khác trong page)
+        var arrTxt = [
+            'txtKQ_HoTen', 'txtKQ_NgaySinh', 'txtKQ_DienThoai', 'txtKQ_Email', 'txtKQ_NoiSinh',
+            'txtKQ_SoCCCD', 'txtKQ_NgayCapCCCD', 'txtKQ_NoiCapCCCD', 'txtKQ_HK_SoNha',
+            'txtKQ_MaTinh12', 'txtKQ_TruongMaTen',
+            'txtKQ_ToHopMa', 'txtKQ_ToHopTen',
+            'txtKQ_Diem1', 'txtKQ_Diem2', 'txtKQ_Diem3', 'txtKQ_DiemUT',
+            'txtKQ_TongDiemMon', 'txtKQ_TongDiemXT',
+            'txtKQ_MaHoSo', 'txtKQ_SBD', 'txtKQ_QDMa',
+            'txtKQ_IntakeCode', 'txtKQ_IntakeTypeCode',
+            'txtKQ_Bo_HoTen', 'txtKQ_Bo_NamSinh', 'txtKQ_Bo_SDT', 'txtKQ_Bo_NoiO',
+            'txtKQ_Me_HoTen', 'txtKQ_Me_NamSinh', 'txtKQ_Me_SDT', 'txtKQ_Me_NoiO',
+            'txtKQ_HD_NguoiMua', 'txtKQ_HD_TenDonVi', 'txtKQ_HD_MST', 'txtKQ_HD_MaQHNS',
+            'txtKQ_HD_SDT', 'txtKQ_HD_Email', 'txtKQ_HD_DiaChi',
+            'txtKQ_HD_NganHang', 'txtKQ_HD_SoTK', 'txtKQ_HD_ChuTK', 'txtKQ_HD_GhiChu'
+        ];
+        edu.util.resetValByArrId(arrTxt);
+        $('#ddlKQ_GioiTinh, #ddlKQ_QuocTich, #ddlKQ_DanToc, #ddlKQ_TonGiao,'
+            + '#ddlKQ_PhuongThuc, #ddlKQ_DoiTuongTS, #ddlKQ_DoiTuongUT,'
+            + '#ddlKQ_KhuVucUT, #ddlKQ_HocLuc, #ddlKQ_HanhKiem,'
+            + '#ddlKQ_NguyenVongDauRa,'
+            + '#ddlKQ_HD_DoiTuong, #ddlKQ_HD_HinhThucTT').val('');
+
+        // Cascade: clear Tỉnh + khóa lại Huyện/Xã về trạng thái ban đầu
+        $('#ddlKQ_NS_Tinh, #ddlKQ_HK_Tinh').val('').trigger('change');   // trigger change để cascade fire
+        // Về tab 1
+        $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
+    },
+
+    /*------------------------------------------
+    -- Cộng 3 điểm môn + điểm UT, đổ vào 2 ô readonly tổng
+    -------------------------------------------*/
+    tinhTongDiem_Khai: function () {
+        var parse = function (id) {
+            var v = parseFloat($('#' + id).val());
+            return isNaN(v) ? 0 : v;
+        };
+        var tongMon = parse('txtKQ_Diem1') + parse('txtKQ_Diem2') + parse('txtKQ_Diem3');
+        var tongXT = tongMon + parse('txtKQ_DiemUT');
+        $('#txtKQ_TongDiemMon').val(tongMon ? tongMon.toFixed(2) : '');
+        $('#txtKQ_TongDiemXT').val(tongXT ? tongXT.toFixed(2) : '');
+    },
+
+    /*------------------------------------------
+    -- Ghép payload rồi gọi Them_HoSo_TS cho 1 hồ sơ khai tay
+    -- Origin: PKG_CORE_TS_HOSO.Them_HoSo_TS  (KHÁC PKG_CORE_TS_HOSO_IMPORT dùng cho batch)
+    -- Action: SV_Core_TS_HoSo_MH/FSkkLB4JLhIuHhUS
+    -- 5 field DAOTAO_* (Hệ/Khóa/CT/Ngành TS/Ngành ĐT) → backend auto snapshot từ
+    -- TS_KEHOACH_DAU_RA qua ParamNguyenVong_DauRa_Id, không truyền.
+    -------------------------------------------*/
+    saveKhai_HoSo: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        // Dispatch: nếu đang ở chế độ SỬA → gọi Sua_HoSo_TS thay vì Them_HoSo_TS
+        if (me._suaMode && edu.util.checkValue(me.strSuaHoSo_Id)) {
+            me.saveSuaHoSo_Full();
+            return;
+        }
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            edu.system.alert("Chưa xác định kế hoạch tuyển sinh (mở lại từ danh sách)", "w");
+            return;
+        }
+        var hoTen = edu.system.getValById('txtKQ_HoTen');
+        if (!edu.util.checkValue(hoTen)) {
+            edu.system.alert("Vui lòng nhập Họ và tên", "w");
+            $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
+            $('#txtKQ_HoTen').focus();
+            return;
+        }
+        if (!edu.util.checkValue(edu.system.getValById('txtKQ_DienThoai'))) {
+            edu.system.alert("Vui lòng nhập Điện thoại", "w");
+            $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
+            $('#txtKQ_DienThoai').focus();
+            return;
+        }
+        if (!edu.util.checkValue(edu.system.getValById('ddlKQ_NguyenVongDauRa'))) {
+            edu.system.alert("Vui lòng chọn Nguyện vọng đầu ra (bắt buộc)", "w");
+            $('#kqdkKhaiTabs .aps-sv-tab').eq(3).trigger('click');   // tab Trúng tuyển (index 3)
+            $('#ddlKQ_NguyenVongDauRa').focus();
+            return;
+        }
+
+        // Tự tính tổng lần cuối trước khi build payload
+        me.tinhTongDiem_Khai();
+
+        var g = function (id) { return edu.system.getValById(id) || ''; };
+
+        // Tách ngày/tháng/năm sinh (input type=date trả yyyy-mm-dd)
+        var dNgayS = '', dThangS = '', dNamS = '';
+        var strNgaySinh = g('txtKQ_NgaySinh');
+        if (strNgaySinh) {
+            var m = strNgaySinh.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (m) { dNamS = parseInt(m[1], 10); dThangS = parseInt(m[2], 10); dNgayS = parseInt(m[3], 10); }
+        }
+
+        // XT_Mon_Data format: MON_MA~DIEM~SO_MON~STT~MON_TEN|... (delimited theo spec)
+        // Tách tên môn từ tổ hợp (VD "Toán, Lý, Hóa") → gán vào 3 điểm môn tương ứng
+        var tenMon = (g('txtKQ_ToHopTen') || '').split(/[,;]/);
+        var monArr = [];
+        for (var i = 0; i < 3; i++) {
+            var diem = g('txtKQ_Diem' + (i + 1));
+            var ten = (tenMon[i] || ('Mon ' + (i + 1))).trim();
+            if (!diem && !tenMon[i]) continue;
+            var ma = ten.toUpperCase().replace(/\s+/g, '_').replace(/[^A-Z0-9_]/g, '');
+            monArr.push(ma + '~' + diem + '~1~' + (i + 1) + '~' + ten);
+        }
+        var strXT_Mon_Data = monArr.join('|');
+        var toHopMa = g('txtKQ_ToHopMa');
+
+        var payload = {
+            'action': 'SV_Core_TS_HoSo_MH/FSkkLB4JLhIuHhUS',
+            'func': 'PKG_CORE_TS_HOSO.Them_HoSo_TS',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'THEM',
+
+            // Person — cá nhân
+            'strCorePerson_HoTen': hoTen,
+            'strCorePerson_Ho': '',
+            'strCorePerson_Dem': '',
+            'strCorePerson_Ten': '',
+            'strCorePerson_NgaySinh': strNgaySinh,
+            'dCorePerson_NgayS': dNgayS,
+            'dCorePerson_ThangS': dThangS,
+            'dCorePerson_NamS': dNamS,
+            'strCorePerson_GioiTinh_Id': g('ddlKQ_GioiTinh'),
+            'strMaSo': '',   // MSSV nội bộ — hệ thống tự sinh
+
+            // Profile
+            'strPersonProfile_DanToc_Id': g('ddlKQ_DanToc'),
+            'strPersonProfile_TonGiao_Id': g('ddlKQ_TonGiao'),
+            'strPersonProfile_QuocTich_Id': g('ddlKQ_QuocTich'),
+
+            // Contact
+            'strPersonContact_DienThoai': g('txtKQ_DienThoai'),
+            'strPersonContact_Email': g('txtKQ_Email'),
+
+            // Định danh
+            'strPersonIden_SoCCCD': g('txtKQ_SoCCCD'),
+            'strPersonIden_NgayCap': g('txtKQ_NgayCapCCCD'),
+            'strPersonIden_NoiCap': g('txtKQ_NoiCapCCCD'),
+
+            // Địa chỉ
+            'strPersonAddr_NS_Tinh_Id': g('ddlKQ_NS_Tinh'),
+            'strPersonAddr_NS_Xa_Id': g('ddlKQ_NS_Xa'),
+            'strPersonAddr_NoiSinh': g('txtKQ_NoiSinh'),
+            'strPersonAddr_HK_Tinh_Id': g('ddlKQ_HK_Tinh'),
+            'strPersonAddr_HK_Xa_Id': g('ddlKQ_HK_Xa'),
+            'strPersonAddr_HK_SoNha': g('txtKQ_HK_SoNha'),
+
+            // Học vấn 12
+            'strPersonEdu_Tinh_Id': g('txtKQ_MaTinh12'),
+            'strPersonEdu_TruongMaTen': g('txtKQ_TruongMaTen'),
+            'strPersonEdu_HocLuc': g('ddlKQ_HocLuc'),
+            'strPersonEdu_HanhKiem': g('ddlKQ_HanhKiem'),
+
+            // Gia đình
+            'strPersonFam_Bo_HoTen': g('txtKQ_Bo_HoTen'),
+            'dPersonFam_Bo_NamSinh': g('txtKQ_Bo_NamSinh'),
+            'strPersonFam_Bo_NoiO': g('txtKQ_Bo_NoiO'),
+            'strPersonFam_Bo_SDT': g('txtKQ_Bo_SDT'),
+            'strPersonFam_Me_HoTen': g('txtKQ_Me_HoTen'),
+            'dPersonFam_Me_NamSinh': g('txtKQ_Me_NamSinh'),
+            'strPersonFam_Me_NoiO': g('txtKQ_Me_NoiO'),
+            'strPersonFam_Me_SDT': g('txtKQ_Me_SDT'),
+
+            // Hồ sơ nguồn
+            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+            'strHoSo_KH_Dot_PT_Id': g('ddlKQ_PhuongThuc'),
+            'strHoSo_DoiTuong_TS_Id': g('ddlKQ_DoiTuongTS'),
+            'strHoSo_DoiTuong_UT_Ids': g('ddlKQ_DoiTuongUT'),
+            'strHoSo_KhuVuc_UT_Id': g('ddlKQ_KhuVucUT'),
+            'strHoSo_MaHoSo': g('txtKQ_MaHoSo'),
+            'strHoSo_SoBaoDanh': g('txtKQ_SBD'),
+            'strHoSo_Import_Batch_Id': '',
+            'dHoSo_Import_Row_No': '',
+
+            // Nguyện vọng — backend auto snapshot Hệ/Khóa/CT/NganhTS/NganhDT từ TS_KEHOACH_DAU_RA
+            'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
+
+            // Xét tuyển
+            'strXetTuyen_TohopMon_Id': toHopMa,
+            'strXetTuyen_TohopMon_Code': toHopMa,
+            'strXetTuyen_TohopMon_Ten': g('txtKQ_ToHopTen'),
+            'dXetTuyen_DiemUuTien': g('txtKQ_DiemUT'),
+            'dXetTuyen_DiemTongMon': g('txtKQ_TongDiemMon'),
+            'dXetTuyen_DiemTongXT': g('txtKQ_TongDiemXT'),
+            'strXT_Mon_Data': strXT_Mon_Data,
+
+            // Kết quả
+            'strKetQua_QuyetDinh_Id': g('txtKQ_QDMa'),
+
+            // Intake
+            'strIntake_IntakeCode': g('txtKQ_IntakeCode'),
+            'strIntake_IntakeTypeCode': g('txtKQ_IntakeTypeCode'),
+
+            // Hóa đơn
+            'strPersonInvoice_TypeLoai': g('ddlKQ_HD_DoiTuong'),
+            'strPersonInvoice_NguoiMua': g('txtKQ_HD_NguoiMua'),
+            'strPersonInvoice_TenDonVi': g('txtKQ_HD_TenDonVi'),
+            'strPersonInvoice_MST': g('txtKQ_HD_MST'),
+            'strPersonInvoice_MaQHNS': g('txtKQ_HD_MaQHNS'),
+            'strPersonInvoice_SDT': g('txtKQ_HD_SDT'),
+            'strPersonInvoice_DiaChi': g('txtKQ_HD_DiaChi'),
+            'strPersonInvoice_Email': g('txtKQ_HD_Email'),
+
+            // Ngân hàng
+            'strPersonBank_HinhThucTT': g('ddlKQ_HD_HinhThucTT'),
+            'strPersonBank_TenNganHang': g('txtKQ_HD_NganHang'),
+            'strPersonBank_SoTaiKhoan': g('txtKQ_HD_SoTK'),
+            'strPersonBank_ChuTaiKhoan': g('txtKQ_HD_ChuTK'),
+            'strPersonBank_GhiChu': g('txtKQ_HD_GhiChu'),
+
+            // Extra JSON — lưu Huyện (Nơi sinh + Hộ khẩu) vì API spec chưa có param riêng cho Huyện
+            'strExtra_Person_Data': JSON.stringify({
+                NS_Huyen_Id: g('ddlKQ_NS_Huyen'),
+                HK_Huyen_Id: g('ddlKQ_HK_Huyen')
+            }),
+            'strExtra_HoSo_Data': '',
+            'strExtra_Intake_Data': ''
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    edu.system.alert("Đã lưu hồ sơ thành công", "s");
+                    me.resetKhai_HoSo();
+                } else {
+                    edu.system.alert("Them_HoSo_TS: " + ((data && data.Message) || 'Lỗi không xác định'), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Them_HoSo_TS (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: payload.action,
+            data: payload,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
