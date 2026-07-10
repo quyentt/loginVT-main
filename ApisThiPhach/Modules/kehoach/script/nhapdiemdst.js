@@ -11,7 +11,10 @@ NhapDiem.prototype = {
     dtTuiBai: [],
     dtNhapDiem: [],
     dtThongKeKQ: [],
+    dtThongKeKQ_View: [],
     colThongKeKQ: [],
+    pageThongKeKQ: 1,
+    pageSizeThongKeKQ: 20,
     strNhapDiem_Id: '',
     strTuiBai_Id: '',
     strLoaiXacNhan: '',
@@ -264,7 +267,20 @@ NhapDiem.prototype = {
             me.getList_ThongKeKetQua();
         });
         $("#txtSearch_ThongKeKQ").on('input', function () {
-            me.filter_ThongKeKetQua($(this).val());
+            me._applyFilter_ThongKeKQ();
+        });
+        $("#ddlFilterKhoa_TKKQ").on('change', function () {
+            me._applyFilter_ThongKeKQ();
+        });
+        $("#ddlFilterCN_TKKQ").on('change', function () {
+            me._applyFilter_ThongKeKQ();
+        });
+        $("#btnClearFilter_TKKQ").click(function (e) {
+            e.preventDefault();
+            $("#txtSearch_ThongKeKQ").val('');
+            $("#ddlFilterKhoa_TKKQ").val('');
+            $("#ddlFilterCN_TKKQ").val('');
+            me._applyFilter_ThongKeKQ();
         });
         $("#btnExportExcel_ThongKeKQ").click(function (e) {
             e.preventDefault();
@@ -1338,6 +1354,20 @@ NhapDiem.prototype = {
     -------------------------------------------*/
     getList_ThongKeKetQua: function () {
         var me = this;
+        var strThoiGian = edu.util.getValById('dropSearch_ThoiGian');
+        var strDotThi = edu.util.getValById('dropSearch_DotThi');
+        var strKhoaQL = edu.util.getValById('dropSearch_KhoaQuanLy');
+        var strMonThi = edu.util.getValById('dropSearch_MonThi');
+        if (!edu.util.checkValue(strThoiGian)) {
+            edu.system.alert("Vui lòng chọn <b>Thời gian</b> trước khi thống kê!", "w");
+            return;
+        }
+        if (!edu.util.checkValue(strDotThi)
+            && !edu.util.checkValue(strKhoaQL)
+            && !edu.util.checkValue(strMonThi)) {
+            edu.system.alert("Vui lòng chọn thêm ít nhất một trong: <b>Đợt thi / Khoa quản lý / Môn thi</b> để thu hẹp phạm vi thống kê!", "w");
+            return;
+        }
         var obj_save = {
             'action': 'XLHV_TP_ThongKe_MH/FSkuLyYKJAokNRA0IAUoJCwVKSgVKSQu',
             'func': 'PKG_THI_PHACH_THONGKE.ThongKeKetQuaDiemThiTheo',
@@ -1346,10 +1376,10 @@ NhapDiem.prototype = {
             'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
             'strChucNangHeThong_Id': edu.system.strChucNang_Id,
             'strHanhDong_Code': '',
-            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
-            'strThi_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
-            'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_MonThi'),
-            'strDaoTao_KhoaQuanLyHP_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
+            'strDaoTao_ThoiGianDaoTao_Id': strThoiGian,
+            'strThi_DotThi_Id': strDotThi,
+            'strDaoTao_HocPhan_Id': strMonThi,
+            'strDaoTao_KhoaQuanLyHP_Id': strKhoaQL,
         };
         edu.system.beginLoading && edu.system.beginLoading();
         edu.system.makeRequest({
@@ -1359,6 +1389,11 @@ NhapDiem.prototype = {
                     me.dtThongKeKQ = data.Data || [];
                     edu.util.toggle_overide("zone-bus", "zoneThongKeKetQua");
                     $("#txtSearch_ThongKeKQ").val('');
+                    $("#ddlFilterKhoa_TKKQ").val('');
+                    $("#ddlFilterCN_TKKQ").val('');
+                    me.colThongKeKQ = me.dtThongKeKQ.length
+                        ? Object.keys(me.dtThongKeKQ[0]) : [];
+                    me._populateFilters_TKKQ();
                     me.genTable_ThongKeKetQua(me.dtThongKeKQ);
                 } else {
                     edu.system.alert(obj_save.action + " : " + data.Message, "s");
@@ -1377,17 +1412,31 @@ NhapDiem.prototype = {
     },
     genTable_ThongKeKetQua: function (data) {
         var me = this;
-        data = data || [];
-        $("#lblThongKeKQ_Tong").html(data.length);
+        if (data !== undefined) {
+            me.dtThongKeKQ_View = data || [];
+            me.pageThongKeKQ = 1;
+        }
+        var view = me.dtThongKeKQ_View || [];
+        var total = view.length;
+        var pageSize = parseInt(me.pageSizeThongKeKQ) || 20;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (me.pageThongKeKQ > totalPages) me.pageThongKeKQ = totalPages;
+        if (me.pageThongKeKQ < 1) me.pageThongKeKQ = 1;
+        var page = me.pageThongKeKQ;
+        var start = (page - 1) * pageSize;
+        var dataPage = view.slice(start, start + pageSize);
+
+        $("#lblThongKeKQ_Tong").html(total);
         var $thead = $("#tblThongKeKetQua thead");
         var $tbody = $("#tblThongKeKetQua tbody");
-        if (data.length === 0) {
+        if (total === 0) {
             $thead.html('<tr><th class="td-center">Không có dữ liệu</th></tr>');
             $tbody.html('');
             me.colThongKeKQ = [];
+            me._renderPagerTKKQ(0, 1, 1);
             return;
         }
-        var cols = Object.keys(data[0]);
+        var cols = Object.keys(view[0]);
         me.colThongKeKQ = cols;
         var headHtml = '<tr><th class="td-fixed td-center w-50px">Stt</th>';
         cols.forEach(function (c) {
@@ -1396,9 +1445,9 @@ NhapDiem.prototype = {
         headHtml += '</tr>';
         $thead.html(headHtml);
         var bodyHtml = '';
-        data.forEach(function (row, i) {
+        dataPage.forEach(function (row, i) {
             bodyHtml += '<tr>';
-            bodyHtml += '<td class="td-fixed td-center">' + (i + 1) + '</td>';
+            bodyHtml += '<td class="td-fixed td-center">' + (start + i + 1) + '</td>';
             cols.forEach(function (c) {
                 var v = row[c];
                 if (v === null || v === undefined) v = '';
@@ -1407,31 +1456,118 @@ NhapDiem.prototype = {
             bodyHtml += '</tr>';
         });
         $tbody.html(bodyHtml);
+        me._renderPagerTKKQ(total, page, totalPages);
     },
-    filter_ThongKeKetQua: function (keyword) {
+    _renderPagerTKKQ: function (total, page, totalPages) {
         var me = this;
-        keyword = (keyword || '').toString().trim().toLowerCase();
-        if (!keyword) {
-            me.genTable_ThongKeKetQua(me.dtThongKeKQ);
-            return;
-        }
-        var filtered = (me.dtThongKeKQ || []).filter(function (row) {
-            for (var k in row) {
-                if (!row.hasOwnProperty(k)) continue;
-                var v = row[k];
-                if (v !== null && v !== undefined
-                    && String(v).toLowerCase().indexOf(keyword) !== -1) {
-                    return true;
-                }
-            }
-            return false;
+        var pageSize = parseInt(me.pageSizeThongKeKQ) || 20;
+        var iStart = total === 0 ? 0 : (page - 1) * pageSize + 1;
+        var iEnd = Math.min(total, page * pageSize);
+        var html = '';
+        html += '<div class="d-flex" style="align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">';
+        html += '<div>Hiển thị <b>' + iStart + '-' + iEnd + '</b> / <b>' + total + '</b> bản ghi';
+        html += ' &nbsp;|&nbsp; Kích thước trang: ';
+        html += '<select id="ddlPageSize_TKKQ" class="form-control d-inline-block" style="width:80px;display:inline-block;">';
+        [10, 20, 50, 100, 200, 500].forEach(function (sz) {
+            html += '<option value="' + sz + '"' + (sz === pageSize ? ' selected' : '') + '>' + sz + '</option>';
         });
-        me.genTable_ThongKeKetQua(filtered);
+        html += '</select>';
+        html += '</div>';
+        html += '<div class="pager-btns">';
+        html += '<button type="button" class="btn btn-default btn-sm" id="btnPageFirst_TKKQ"'
+            + (page <= 1 ? ' disabled' : '') + '>&laquo;</button>';
+        html += '<button type="button" class="btn btn-default btn-sm" id="btnPagePrev_TKKQ"'
+            + (page <= 1 ? ' disabled' : '') + '>&lsaquo;</button>';
+        html += '<span style="padding:0 10px;">Trang <b>' + page + '</b> / ' + totalPages + '</span>';
+        html += '<button type="button" class="btn btn-default btn-sm" id="btnPageNext_TKKQ"'
+            + (page >= totalPages ? ' disabled' : '') + '>&rsaquo;</button>';
+        html += '<button type="button" class="btn btn-default btn-sm" id="btnPageLast_TKKQ"'
+            + (page >= totalPages ? ' disabled' : '') + '>&raquo;</button>';
+        html += '</div>';
+        html += '</div>';
+        $("#pagerThongKeKQ").html(html);
+        $("#ddlPageSize_TKKQ").off('change').on('change', function () {
+            me.pageSizeThongKeKQ = parseInt($(this).val()) || 20;
+            me.pageThongKeKQ = 1;
+            me.genTable_ThongKeKetQua();
+        });
+        $("#btnPageFirst_TKKQ").off('click').on('click', function () {
+            me.pageThongKeKQ = 1;
+            me.genTable_ThongKeKetQua();
+        });
+        $("#btnPagePrev_TKKQ").off('click').on('click', function () {
+            me.pageThongKeKQ = Math.max(1, me.pageThongKeKQ - 1);
+            me.genTable_ThongKeKetQua();
+        });
+        $("#btnPageNext_TKKQ").off('click').on('click', function () {
+            me.pageThongKeKQ = Math.min(totalPages, me.pageThongKeKQ + 1);
+            me.genTable_ThongKeKetQua();
+        });
+        $("#btnPageLast_TKKQ").off('click').on('click', function () {
+            me.pageThongKeKQ = totalPages;
+            me.genTable_ThongKeKetQua();
+        });
     },
-    export_ThongKeKetQua_Excel: function () {
+    _populateFilters_TKKQ: function () {
         var me = this;
         var data = me.dtThongKeKQ || [];
+        me._khoaFieldTKKQ = me._findFilterField_TKKQ(
+            ['KHOA_QLSV', 'KHOA_QLHP', 'KHOA', 'TEN_KHOA', 'MA_KHOA']);
+        me._cnFieldTKKQ = me._findFilterField_TKKQ(
+            ['CHUYEN_NGANH', 'CHUYENNGANH', 'CHUYEN_NGANH_TEN', 'TEN_CHUYENNGANH']);
+        me._fillDistinctSelect_TKKQ('#ddlFilterKhoa_TKKQ', data,
+            me._khoaFieldTKKQ, '-- Chọn Khoa --');
+        me._fillDistinctSelect_TKKQ('#ddlFilterCN_TKKQ', data,
+            me._cnFieldTKKQ, '-- Chọn chuyên ngành --');
+    },
+    _findFilterField_TKKQ: function (candidates) {
+        var cols = this.colThongKeKQ || [];
+        for (var i = 0; i < candidates.length; i++) {
+            if (cols.indexOf(candidates[i]) !== -1) return candidates[i];
+        }
+        return null;
+    },
+    _fillDistinctSelect_TKKQ: function (sel, data, field, placeholder) {
+        var $sel = $(sel);
+        $sel.empty().append('<option value="">' + placeholder + '</option>');
+        if (!field) { $sel.prop('disabled', true); return; }
+        $sel.prop('disabled', false);
+        var seen = {};
+        var arr = [];
+        data.forEach(function (row) {
+            var v = row[field];
+            if (v === null || v === undefined || v === '') return;
+            var key = String(v);
+            if (seen[key]) return;
+            seen[key] = true;
+            arr.push(key);
+        });
+        arr.sort(function (a, b) {
+            try { return a.localeCompare(b, 'vi'); }
+            catch (e) { return a < b ? -1 : (a > b ? 1 : 0); }
+        });
+        var $tmp = $('<div>');
+        arr.forEach(function (v) {
+            var safe = $tmp.text(v).html();
+            $sel.append('<option value="' + safe + '">' + safe + '</option>');
+        });
+    },
+    _applyFilter_ThongKeKQ: function () {
+        var me = this;
         var kw = ($("#txtSearch_ThongKeKQ").val() || '').toString().trim().toLowerCase();
+        var khoaVal = $("#ddlFilterKhoa_TKKQ").val() || '';
+        var cnVal = $("#ddlFilterCN_TKKQ").val() || '';
+        var data = me.dtThongKeKQ || [];
+        if (khoaVal && me._khoaFieldTKKQ) {
+            data = data.filter(function (r) {
+                return String(r[me._khoaFieldTKKQ] == null ? '' : r[me._khoaFieldTKKQ]) === khoaVal;
+            });
+        }
+        if (cnVal && me._cnFieldTKKQ) {
+            data = data.filter(function (r) {
+                return String(r[me._cnFieldTKKQ] == null ? '' : r[me._cnFieldTKKQ]) === cnVal;
+            });
+        }
         if (kw) {
             data = data.filter(function (row) {
                 for (var k in row) {
@@ -1443,6 +1579,13 @@ NhapDiem.prototype = {
                 return false;
             });
         }
+        me.genTable_ThongKeKetQua(data);
+    },
+    export_ThongKeKetQua_Excel: function () {
+        var me = this;
+        var data = me.dtThongKeKQ_View && me.dtThongKeKQ_View.length
+            ? me.dtThongKeKQ_View
+            : (me.dtThongKeKQ || []);
         if (data.length === 0) {
             edu.system.alert("Không có dữ liệu để xuất Excel!", "w");
             return;

@@ -3,6 +3,30 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+    #wrapScroll_tblThongKeKQ {
+        max-height: 60vh;
+        overflow: auto;
+    }
+    #tblThongKeKetQua thead th {
+        position: sticky;
+        top: 0;
+        background: #f5f7fa;
+        z-index: 2;
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
+    }
+    #tblThongKeKetQua tbody td {
+        white-space: nowrap;
+        text-align: center;
+        vertical-align: middle;
+    }
+    #pagerThongKeKQ .pager-btns .btn {
+        min-width: 34px;
+    }
+    #pagerThongKeKQ .pager-btns .btn+.btn {
+        margin-left: 4px;
+    }
 </style>
 <section class="content aps-thiphach">
     <div class="row aps-nhapdiemdst">
@@ -181,12 +205,26 @@
                 </div>
             </div>
             <div class="box-body pd20">
-                <div class="row d-flex" style="margin-bottom: 10px; align-items: center;">
-                    <div class="col-sm-4">
+                <div class="row d-flex"
+                    style="margin-bottom: 10px; align-items: center; flex-wrap: wrap; gap: 8px 0;">
+                    <div class="col-sm-3">
                         <input id="txtSearch_ThongKeKQ" class="form-control"
                             placeholder="Tìm kiếm trong kết quả..." />
                     </div>
-                    <div class="col-sm-8 text-right">
+                    <div class="col-sm-3">
+                        <select id="ddlFilterKhoa_TKKQ" class="form-control">
+                            <option value="">-- Chọn Khoa --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <select id="ddlFilterCN_TKKQ" class="form-control">
+                            <option value="">-- Chọn chuyên ngành --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 text-right d-flex" style="gap:6px;justify-content:flex-end;">
+                        <a id="btnClearFilter_TKKQ" class="btn btn-default"
+                            title="Xóa toàn bộ bộ lọc">
+                            <i class="fa fa-eraser"></i> Xóa lọc</a>
                         <a id="btnExportExcel_ThongKeKQ" class="btn btn-success">
                             <i class="fa fa-file-excel-o"></i> Xuất Excel</a>
                     </div>
@@ -199,6 +237,7 @@
                         <tbody></tbody>
                     </table>
                 </div>
+                <div id="pagerThongKeKQ" style="margin-top: 10px;"></div>
             </div>
             <div class="box-footer">
                 <div class="pull-right">
