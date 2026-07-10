@@ -10,6 +10,8 @@ function NhapDiem() { };
 NhapDiem.prototype = {
     dtTuiBai: [],
     dtNhapDiem: [],
+    dtThongKeKQ: [],
+    colThongKeKQ: [],
     strNhapDiem_Id: '',
     strTuiBai_Id: '',
     strLoaiXacNhan: '',
@@ -242,7 +244,7 @@ NhapDiem.prototype = {
         });
         $("#btnDelete_CanBoChamThi").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblCanBoChamThi", "checkX");
-            if (arrChecked_Id.length == 0) { 
+            if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng cần xóa?");
                 return;
             }
@@ -252,6 +254,21 @@ NhapDiem.prototype = {
             for (var i = 0; i < arrChecked_Id.length; i++) {
                 me.delete_CanBoChamThi(arrChecked_Id[i]);
             }
+        });
+
+        /*------------------------------------------
+        --Discription: Thống kê kết quả điểm thi
+        -------------------------------------------*/
+        $("#btnThongKeKetQua").click(function (e) {
+            e.preventDefault();
+            me.getList_ThongKeKetQua();
+        });
+        $("#txtSearch_ThongKeKQ").on('input', function () {
+            me.filter_ThongKeKetQua($(this).val());
+        });
+        $("#btnExportExcel_ThongKeKQ").click(function (e) {
+            e.preventDefault();
+            me.export_ThongKeKetQua_Excel();
         });
     },
     
@@ -1313,6 +1330,172 @@ NhapDiem.prototype = {
         //if (data && data.length) edu.system.actionRowSpanForACol(jsonForm.strTable_Id, [1])
 
         /*III. Callback*/
+    },
+
+    /*------------------------------------------
+    --Discription: Thống kê kết quả điểm thi
+    --Origin: PKG_THI_PHACH_THONGKE.ThongKeKetQuaDiemThiTheo
+    -------------------------------------------*/
+    getList_ThongKeKetQua: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'XLHV_TP_ThongKe_MH/FSkuLyYKJAokNRA0IAUoJCwVKSgVKSQu',
+            'func': 'PKG_THI_PHACH_THONGKE.ThongKeKetQuaDiemThiTheo',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGian'),
+            'strThi_DotThi_Id': edu.util.getValById('dropSearch_DotThi'),
+            'strDaoTao_HocPhan_Id': edu.util.getValById('dropSearch_MonThi'),
+            'strDaoTao_KhoaQuanLyHP_Id': edu.util.getValById('dropSearch_KhoaQuanLy'),
+        };
+        edu.system.beginLoading && edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                edu.system.endLoading && edu.system.endLoading();
+                if (data.Success) {
+                    me.dtThongKeKQ = data.Data || [];
+                    edu.util.toggle_overide("zone-bus", "zoneThongKeKetQua");
+                    $("#txtSearch_ThongKeKQ").val('');
+                    me.genTable_ThongKeKetQua(me.dtThongKeKQ);
+                } else {
+                    edu.system.alert(obj_save.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.endLoading && edu.system.endLoading();
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_ThongKeKetQua: function (data) {
+        var me = this;
+        data = data || [];
+        $("#lblThongKeKQ_Tong").html(data.length);
+        var $thead = $("#tblThongKeKetQua thead");
+        var $tbody = $("#tblThongKeKetQua tbody");
+        if (data.length === 0) {
+            $thead.html('<tr><th class="td-center">Không có dữ liệu</th></tr>');
+            $tbody.html('');
+            me.colThongKeKQ = [];
+            return;
+        }
+        var cols = Object.keys(data[0]);
+        me.colThongKeKQ = cols;
+        var headHtml = '<tr><th class="td-fixed td-center w-50px">Stt</th>';
+        cols.forEach(function (c) {
+            headHtml += '<th class="td-center">' + me._prettifyLabelTKKQ(c) + '</th>';
+        });
+        headHtml += '</tr>';
+        $thead.html(headHtml);
+        var bodyHtml = '';
+        data.forEach(function (row, i) {
+            bodyHtml += '<tr>';
+            bodyHtml += '<td class="td-fixed td-center">' + (i + 1) + '</td>';
+            cols.forEach(function (c) {
+                var v = row[c];
+                if (v === null || v === undefined) v = '';
+                bodyHtml += '<td>' + me._escapeHtmlTKKQ(v) + '</td>';
+            });
+            bodyHtml += '</tr>';
+        });
+        $tbody.html(bodyHtml);
+    },
+    filter_ThongKeKetQua: function (keyword) {
+        var me = this;
+        keyword = (keyword || '').toString().trim().toLowerCase();
+        if (!keyword) {
+            me.genTable_ThongKeKetQua(me.dtThongKeKQ);
+            return;
+        }
+        var filtered = (me.dtThongKeKQ || []).filter(function (row) {
+            for (var k in row) {
+                if (!row.hasOwnProperty(k)) continue;
+                var v = row[k];
+                if (v !== null && v !== undefined
+                    && String(v).toLowerCase().indexOf(keyword) !== -1) {
+                    return true;
+                }
+            }
+            return false;
+        });
+        me.genTable_ThongKeKetQua(filtered);
+    },
+    export_ThongKeKetQua_Excel: function () {
+        var me = this;
+        var data = me.dtThongKeKQ || [];
+        var kw = ($("#txtSearch_ThongKeKQ").val() || '').toString().trim().toLowerCase();
+        if (kw) {
+            data = data.filter(function (row) {
+                for (var k in row) {
+                    if (!row.hasOwnProperty(k)) continue;
+                    var v = row[k];
+                    if (v !== null && v !== undefined
+                        && String(v).toLowerCase().indexOf(kw) !== -1) return true;
+                }
+                return false;
+            });
+        }
+        if (data.length === 0) {
+            edu.system.alert("Không có dữ liệu để xuất Excel!", "w");
+            return;
+        }
+        var cols = Object.keys(data[0]);
+        var html = '';
+        html += '<html xmlns:o="urn:schemas-microsoft-com:office:office"';
+        html += ' xmlns:x="urn:schemas-microsoft-com:office:excel"';
+        html += ' xmlns="http://www.w3.org/TR/REC-html40">';
+        html += '<head><meta charset="utf-8"/></head><body>';
+        html += '<table border="1"><tr><th>Stt</th>';
+        cols.forEach(function (c) {
+            html += '<th>' + me._escapeHtmlTKKQ(me._prettifyLabelTKKQ(c)) + '</th>';
+        });
+        html += '</tr>';
+        data.forEach(function (row, i) {
+            html += '<tr><td>' + (i + 1) + '</td>';
+            cols.forEach(function (c) {
+                var v = row[c];
+                if (v === null || v === undefined) v = '';
+                html += '<td>' + me._escapeHtmlTKKQ(v) + '</td>';
+            });
+            html += '</tr>';
+        });
+        html += '</table></body></html>';
+        var blob = new Blob(['﻿', html], {
+            type: 'application/vnd.ms-excel;charset=utf-8'
+        });
+        var d = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : n; };
+        var stamp = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate())
+            + '_' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+        var fileName = 'ThongKeKetQuaDiemThi_' + stamp + '.xls';
+        if (navigator.msSaveBlob) {
+            navigator.msSaveBlob(blob, fileName);
+        } else {
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    },
+    _prettifyLabelTKKQ: function (key) {
+        if (!key) return '';
+        return String(key).replace(/_/g, ' ');
+    },
+    _escapeHtmlTKKQ: function (v) {
+        return String(v)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;');
     },
 
     delete_CanBoChamThi: function (strId) {

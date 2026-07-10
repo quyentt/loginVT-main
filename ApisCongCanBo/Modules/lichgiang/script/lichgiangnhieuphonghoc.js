@@ -268,18 +268,21 @@ LichGiangNhieuPhong.prototype = {
         // Search button
         $("#btnSearch").click(function () {
             var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
-            var hasFilter = $("#dropSearch_ToaNha").val() || $("#dropSearch_PhongHoc").val() || arrMulti.length > 0;
-            if (hasFilter) {
-                $(".days .active").trigger("click");
-            } else {
+            var hasFilter = $("#dropSearch_ToaNha").val() || arrMulti.length > 0;
+            if (!hasFilter) {
                 edu.system.alert("Vui lòng chọn tòa nhà hoặc phòng học");
+                return;
             }
+            if (!me.strNgayBatDau || !me.strNgayKetThuc) {
+                edu.system.alert("Vui lòng chọn tuần trên lịch");
+                return;
+            }
+            me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
         });
 
         // View all button
         $("#btnViewAll").click(function () {
             $("#dropSearch_ToaNha").val('').trigger('change');
-            $("#dropSearch_PhongHoc").val('').trigger('change');
             $("#dropSearch_PhongHocMulti").val(null).trigger('change.select2');
             $(".days .active").trigger("click");
         });
@@ -301,41 +304,10 @@ LichGiangNhieuPhong.prototype = {
             }
         });
 
-        // Room filter change
-        $("#dropSearch_PhongHoc").change(function () {
-            console.log("Phòng học filter changed to:", $(this).val());
-
-            // Đóng dropdown Select2
-            $(this).select2('close');
-
-            // Auto load data if week is selected
-            if (me.strNgayBatDau && me.strNgayKetThuc) {
-                me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
-            }
-        });
-
-        // Multi-room filter change — KHÔNG tự load, chỉ reset filter đơn để không xung đột
+        // Multi-room filter change — KHÔNG tự load, user bấm nút "Xem lịch phòng" để load
         $("#dropSearch_PhongHocMulti").change(function () {
             var selected = $(this).val() || [];
-            console.log("Đã chọn", selected.length, "phòng (chờ bấm 'Xem nhiều phòng')");
-
-            if (selected.length > 0) {
-                $("#dropSearch_PhongHoc").val('').trigger('change.select2');
-            }
-        });
-
-        // View multi-room button — chỉ load khi user bấm
-        $("#btnViewMulti").click(function () {
-            var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
-            if (arrMulti.length === 0) {
-                edu.system.alert("Vui lòng chọn ít nhất 1 phòng để xem");
-                return;
-            }
-            if (!me.strNgayBatDau || !me.strNgayKetThuc) {
-                edu.system.alert("Vui lòng chọn tuần trên lịch");
-                return;
-            }
-            me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+            console.log("Đã chọn", selected.length, "phòng (chờ bấm 'Xem lịch phòng')");
         });
 
         // Room type filter change
@@ -708,24 +680,14 @@ LichGiangNhieuPhong.prototype = {
                     // Bắt đầu từ bản gốc để filter
                     me.dtPhongHocFull = me.dtPhongHocOriginal.slice();
                     
-                    // Apply multi-room filter (ưu tiên nếu chọn nhiều phòng)
+                    // Lọc theo danh sách phòng đã chọn (1 hoặc nhiều)
                     var arrPhongHoc_Ids = $("#dropSearch_PhongHocMulti").val() || [];
                     if (arrPhongHoc_Ids.length > 0) {
-                        console.log("Lọc theo nhiều phòng:", arrPhongHoc_Ids);
+                        console.log("Lọc theo phòng:", arrPhongHoc_Ids);
                         me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
                             return arrPhongHoc_Ids.indexOf(room.ID) !== -1;
                         });
-                        console.log("Sau khi lọc nhiều phòng:", me.dtPhongHocFull.length, "phòng");
-                    } else {
-                        // Apply room filter if selected (lọc theo phòng cụ thể)
-                        var strPhongHoc_Id = $("#dropSearch_PhongHoc").val() || '';
-                        if (strPhongHoc_Id) {
-                            console.log("Lọc theo phòng ID:", strPhongHoc_Id);
-                            me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
-                                return room.ID === strPhongHoc_Id;
-                            });
-                            console.log("Sau khi lọc phòng:", me.dtPhongHocFull.length, "phòng");
-                        }
+                        console.log("Sau khi lọc:", me.dtPhongHocFull.length, "phòng");
                     }
                     
                     // Apply room type filter
@@ -888,24 +850,8 @@ LichGiangNhieuPhong.prototype = {
                     });
                     
                     me.dtPhongHocList = roomList;
-                    
-                    var obj = {
-                        data: roomList,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "TEN",
-                        },
-                        renderPlace: ["dropSearch_PhongHoc"],
-                        title: "Tìm kiếm phòng học..."
-                    };
-                    edu.system.loadToCombo_data(obj);
-                    $("#dropSearch_PhongHoc").select2({
-                        placeholder: "Tìm kiếm phòng học...",
-                        allowClear: true
-                    });
 
-                    // Load options cho multi-select chọn nhiều phòng
+                    // Load options cho ô chọn phòng (multi-select, cho phép chọn 1 hoặc nhiều)
                     me.populateMultiRoomDropdown(roomList);
                 } else {
                     console.error("API failed:", data.Message);
@@ -978,24 +924,6 @@ LichGiangNhieuPhong.prototype = {
                         return a.TEN.localeCompare(b.TEN);
                     });
                     
-                    // Update dropdown
-                    var obj = {
-                        data: roomList,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "TEN",
-                        },
-                        renderPlace: ["dropSearch_PhongHoc"],
-                        title: "Tìm kiếm phòng học..."
-                    };
-                    edu.system.loadToCombo_data(obj);
-                    $("#dropSearch_PhongHoc").val('').trigger('change'); // Reset selection
-                    $("#dropSearch_PhongHoc").select2({
-                        placeholder: "Tìm kiếm phòng học...",
-                        allowClear: true
-                    });
-
                     // Reset & reload multi-select theo tòa nhà mới
                     $("#dropSearch_PhongHocMulti").val(null);
                     me.populateMultiRoomDropdown(roomList);

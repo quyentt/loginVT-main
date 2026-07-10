@@ -66,7 +66,9 @@
                                         class="fa-light fa-circle-check"></i>Xác nhận</a>
                                 <div class="dropdown mr-0" id="zonebtnBaoCao_NhapDiem"></div>
                                 <div class="dropdown" id="zonebtnBaoCao_NhapDiem_Import"></div>
-                                <div class="dropdown" id="zonebtnBaoCao_NhapDiem_Import"></div>
+                                <a id="btnThongKeKetQua" class="btn btn-warning" href="#"
+                                    title="Thống kê kết quả điểm thi">
+                                    <i class="fa-light fa-chart-simple"></i> Thống kê kết quả</a>
                             </div>
                         </div>
                     </div>
@@ -160,6 +162,48 @@
                     <a class="btn btn-success btnXacNhanTungSinhVien" href="#" title="Close">
                         <i class="fa-solid fa-memo-circle-check"></i> Xác nhận từng bản ghi</a>
                     <a id="btnSave_TuiThi" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thống kê kết quả điểm thi -->
+        <div class="box box-solid zone-bus form-container add-absolue aps-tt-thongkekq"
+            id="zoneThongKeKetQua" style="display: none">
+            <div class="box-header with-border">
+                <h3 class="box-title">
+                    <i class="fa-light fa-chart-simple"></i> Thống kê kết quả điểm thi
+                    <span class="pull-right badge bg-light-blue ml-15">
+                        <span id="lblThongKeKQ_Tong">0</span>
+                    </span>
+                </h3>
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                </div>
+            </div>
+            <div class="box-body pd20">
+                <div class="row d-flex" style="margin-bottom: 10px; align-items: center;">
+                    <div class="col-sm-4">
+                        <input id="txtSearch_ThongKeKQ" class="form-control"
+                            placeholder="Tìm kiếm trong kết quả..." />
+                    </div>
+                    <div class="col-sm-8 text-right">
+                        <a id="btnExportExcel_ThongKeKQ" class="btn btn-success">
+                            <i class="fa fa-file-excel-o"></i> Xuất Excel</a>
+                    </div>
+                </div>
+                <div id="wrapScroll_tblThongKeKQ"
+                    class="table-select2 aps-table-select mt-0 scroll-table-x">
+                    <table id="tblThongKeKetQua"
+                        class="table table-hover table-bordered mb-0 table-noborder">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="box-footer">
+                <div class="pull-right">
+                    <a class="btn btn-default btnClose" href="#" title="Close">
+                        <i class="fa fa-times-circle"></i> Đóng</a>
                 </div>
             </div>
         </div>
