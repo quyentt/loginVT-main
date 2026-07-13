@@ -1562,6 +1562,9 @@ KeHoachXuLy.prototype = {
                     "mDataProp": "DAOTAO_HOCPHAN_TEN"
                 },
                 {
+                    "mDataProp": "THI_DOTTHI_TEN"
+                },
+                {
                     "mDataProp": "HOCTRINH"
                 },
                 {
