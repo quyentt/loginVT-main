@@ -129,6 +129,51 @@ LopHocPhan.prototype = {
             me.getList_LopHocPhanRut();
         });
 
+        $("#btnDSKhongDangKy").click(function (e) {
+            e.preventDefault();
+            var strKeHoach_Id = edu.util.getValById('dropSearch_KeHoach');
+            if (!strKeHoach_Id) {
+                edu.system.alert("Vui lòng chọn kế hoạch đăng ký?");
+                return;
+            }
+            $('#myModal_khongdangky').modal('show');
+            me.getList_KhongDangKy(strKeHoach_Id);
+        });
+        $("#btnXuatExcel_KhongDangKy").click(function (e) {
+            e.preventDefault();
+            me.exportExcel_KhongDangKy();
+        });
+
+        // Filter / paging cho modal "Danh sách không đăng ký"
+        var _debounceKDK = null;
+        $('#txtSearch_KhongDangKy').on('input', function () {
+            if (_debounceKDK) clearTimeout(_debounceKDK);
+            _debounceKDK = setTimeout(function () {
+                if (!me.dtKhongDangKy_Raw) return;
+                edu.system.pageIndex_default = 1;
+                me.render_KhongDangKy();
+            }, 250);
+        });
+        $('#dropFilter_KDK_TrangThai, #dropFilter_KDK_ChuongTrinh, #dropFilter_KDK_LopQuanLy, #dropFilter_KDK_KhoaHoc')
+            .on('change', function () {
+                if (me._suppressKDKFilter) return;
+                if (!me.dtKhongDangKy_Raw) return;
+                edu.system.pageIndex_default = 1;
+                me.render_KhongDangKy();
+            });
+        $('#btnResetFilter_KDK').click(function (e) {
+            e.preventDefault();
+            me._suppressKDKFilter = true;
+            $('#txtSearch_KhongDangKy').val('');
+            $('#dropFilter_KDK_TrangThai, #dropFilter_KDK_ChuongTrinh, #dropFilter_KDK_LopQuanLy, #dropFilter_KDK_KhoaHoc')
+                .val('').trigger('change');
+            me._suppressKDKFilter = false;
+            if (me.dtKhongDangKy_Raw) {
+                edu.system.pageIndex_default = 1;
+                me.render_KhongDangKy();
+            }
+        });
+
         $("#tblLopHocPhan").delegate('.btnDetail', 'click', function (e) {
             $('#myModalPhamVi').modal('show');
             me.getList_PhamVi(this.id);
@@ -2091,6 +2136,232 @@ LopHocPhan.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
+    },
+
+    /*------------------------------------------
+    --Discription: Danh sách không đăng ký (kế thừa từ kehoachdangky)
+    --Input: strDangKy_KeHoachDangKy_Id lấy từ dropSearch_KeHoach
+    --Cache toàn bộ data (dtKhongDangKy_Raw) để filter + paginate client-side
+    -------------------------------------------*/
+    getList_KhongDangKy: function (strId) {
+        var me = this;
+        var obj_list = {
+            'action': 'DKH_BaoCao/LayDSKhongDangKy',
+            'type': 'GET',
+            'strDangKy_KeHoachDangKy_Id': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtReRult = data.Data || [];
+                    me.dtKhongDangKy_Raw = dtReRult;
+                    me._suppressKDKFilter = true;
+                    $('#txtSearch_KhongDangKy').val('');
+                    me._populateFilters_KhongDangKy(dtReRult);
+                    me._suppressKDKFilter = false;
+                    edu.system.pageIndex_default = 1;
+                    me.render_KhongDangKy();
+                }
+                else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    _populateFilters_KhongDangKy: function (data) {
+        var makeDistinct = function (field) {
+            var set = {};
+            (data || []).forEach(function (r) {
+                var v = r[field];
+                if (v != null && v !== '') set[v] = true;
+            });
+            return Object.keys(set).sort(function (a, b) {
+                return a.localeCompare(b, 'vi');
+            }).map(function (v) { return { ID: v, TEN: v }; });
+        };
+        var pushToCombo = function (arr, place, title) {
+            edu.system.loadToCombo_data({
+                data: arr,
+                renderInfor: { id: "ID", parentId: "", name: "TEN", code: "", avatar: "" },
+                renderPlace: [place],
+                type: "",
+                title: title
+            });
+            $('#' + place).val('').trigger('change');
+        };
+        pushToCombo(makeDistinct('QLSV_TRANGTHAI_TEN'),
+                    'dropFilter_KDK_TrangThai', '-- Tất cả trạng thái --');
+        pushToCombo(makeDistinct('DAOTAO_TOCHUCCHUONGTRINH_TEN'),
+                    'dropFilter_KDK_ChuongTrinh', '-- Tất cả chương trình --');
+        pushToCombo(makeDistinct('DAOTAO_LOPQUANLY_TEN'),
+                    'dropFilter_KDK_LopQuanLy', '-- Tất cả lớp quản lý --');
+        pushToCombo(makeDistinct('DAOTAO_KHOADAOTAO_TEN'),
+                    'dropFilter_KDK_KhoaHoc', '-- Tất cả khóa học --');
+    },
+
+    _applyFilter_KhongDangKy: function () {
+        var me = this;
+        var raw = me.dtKhongDangKy_Raw || [];
+        var kw = ($('#txtSearch_KhongDangKy').val() || '').trim().toLowerCase();
+        var trangThai = $('#dropFilter_KDK_TrangThai').val() || '';
+        var chuongTrinh = $('#dropFilter_KDK_ChuongTrinh').val() || '';
+        var lopQuanLy = $('#dropFilter_KDK_LopQuanLy').val() || '';
+        var khoaHoc = $('#dropFilter_KDK_KhoaHoc').val() || '';
+
+        me.dtKhongDangKy = raw.filter(function (r) {
+            if (trangThai && (r.QLSV_TRANGTHAI_TEN || '') !== trangThai) return false;
+            if (chuongTrinh && (r.DAOTAO_TOCHUCCHUONGTRINH_TEN || '') !== chuongTrinh) return false;
+            if (lopQuanLy && (r.DAOTAO_LOPQUANLY_TEN || '') !== lopQuanLy) return false;
+            if (khoaHoc && (r.DAOTAO_KHOADAOTAO_TEN || '') !== khoaHoc) return false;
+            if (kw) {
+                var maso = String(r.QLSV_NGUOIHOC_MASO || '').toLowerCase();
+                var full = ((r.QLSV_NGUOIHOC_HODEM || '') + ' ' + (r.QLSV_NGUOIHOC_TEN || ''))
+                                .trim().toLowerCase();
+                if (maso.indexOf(kw) === -1 && full.indexOf(kw) === -1) return false;
+            }
+            return true;
+        });
+    },
+
+    render_KhongDangKy: function () {
+        var me = this;
+        me._applyFilter_KhongDangKy();
+        var data = me.dtKhongDangKy || [];
+        var pageSize = parseInt(edu.system.pageSize_default) || 10;
+        var totalRows = data.length;
+        var totalPages = Math.max(1, Math.ceil(totalRows / pageSize));
+        var pageIndex = parseInt(edu.system.pageIndex_default) || 1;
+        if (pageIndex > totalPages) pageIndex = totalPages;
+        if (pageIndex < 1) pageIndex = 1;
+        edu.system.pageIndex_default = pageIndex;
+        var start = (pageIndex - 1) * pageSize;
+        var pageData = data.slice(start, start + pageSize);
+
+        $('#lblTong_KhongDangKy').text(totalRows > 0
+            ? 'Tổng: ' + totalRows + ' bản ghi'
+            : 'Không có dữ liệu phù hợp');
+
+        var jsonForm = {
+            strTable_Id: "tblKhongDangKy",
+            bPaginate: {
+                strFuntionName: "main_doc.LopHocPhan.render_KhongDangKy()",
+                iDataRow: totalRows
+            },
+            aaData: pageData,
+            colPos: {
+                center: [0],
+                right: [5]
+            },
+            aoColumns: [
+                { "mDataProp": "QLSV_NGUOIHOC_MASO" },
+                { "mDataProp": "QLSV_NGUOIHOC_HODEM" },
+                { "mDataProp": "QLSV_NGUOIHOC_TEN" },
+                { "mDataProp": "QLSV_TRANGTHAI_TEN" },
+                {
+                    mRender: function (nRow, aData) {
+                        return edu.util.formatCurrency(aData.TONGNOPHI);
+                    }
+                },
+                { "mDataProp": "DAOTAO_TOCHUCCHUONGTRINH_TEN" },
+                { "mDataProp": "DAOTAO_LOPQUANLY_TEN" },
+                { "mDataProp": "DAOTAO_KHOADAOTAO_TEN" }
+            ]
+        };
+        edu.system.loadToTable_data(jsonForm);
+    },
+
+    exportExcel_KhongDangKy: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
+            return;
+        }
+        var data = me.dtKhongDangKy || [];
+        if (!data.length) {
+            edu.system.alert('Không có dữ liệu để xuất.', 'w');
+            return;
+        }
+        var v = edu.util.returnEmpty;
+        var headers = [
+            'STT', 'Mã số sinh viên', 'Họ đệm', 'Tên', 'Trạng thái',
+            'Nợ phí', 'Chương trình', 'Lớp quản lý', 'Khóa học'
+        ];
+        var dataRows = data.map(function (e, i) {
+            return [
+                i + 1,
+                v(e.QLSV_NGUOIHOC_MASO),
+                v(e.QLSV_NGUOIHOC_HODEM),
+                v(e.QLSV_NGUOIHOC_TEN),
+                v(e.QLSV_TRANGTHAI_TEN),
+                Number(e.TONGNOPHI) || 0,
+                v(e.DAOTAO_TOCHUCCHUONGTRINH_TEN),
+                v(e.DAOTAO_LOPQUANLY_TEN),
+                v(e.DAOTAO_KHOADAOTAO_TEN)
+            ];
+        });
+        var aoa = [headers].concat(dataRows);
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+
+        ws['!cols'] = headers.map(function (h, idx) {
+            var maxLen = (h || '').length;
+            dataRows.forEach(function (r) {
+                var l = String(r[idx] == null ? '' : r[idx]).length;
+                if (l > maxLen) maxLen = l;
+            });
+            return { wch: Math.min(maxLen + 2, 40) };
+        });
+
+        var headerStyle = {
+            font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11 },
+            fill: { patternType: "solid", fgColor: { rgb: "1F4E78" } },
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
+            border: {
+                top: { style: "thin", color: { rgb: "999999" } },
+                bottom: { style: "thin", color: { rgb: "999999" } },
+                left: { style: "thin", color: { rgb: "999999" } },
+                right: { style: "thin", color: { rgb: "999999" } }
+            }
+        };
+        var thinBorder = {
+            top: { style: "thin", color: { rgb: "CCCCCC" } },
+            bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+            left: { style: "thin", color: { rgb: "CCCCCC" } },
+            right: { style: "thin", color: { rgb: "CCCCCC" } }
+        };
+        var nCols = headers.length;
+        for (var hc = 0; hc < nCols; hc++) {
+            var addrH = XLSX.utils.encode_cell({ r: 0, c: hc });
+            if (!ws[addrH]) ws[addrH] = { v: '', t: 's' };
+            ws[addrH].s = headerStyle;
+        }
+        ws['!views'] = [{ state: 'frozen', ySplit: 1 }];
+        ws['!rows'] = [{ hpt: 26 }];
+        for (var i = 0; i < dataRows.length; i++) {
+            for (var cc = 0; cc < nCols; cc++) {
+                var addr = XLSX.utils.encode_cell({ r: i + 1, c: cc });
+                if (!ws[addr]) ws[addr] = { v: '', t: 's' };
+                ws[addr].s = { border: thinBorder, alignment: { vertical: 'center', wrapText: true } };
+            }
+        }
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Không đăng ký');
+
+        var now = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : n; };
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                    + '_' + pad(now.getHours()) + pad(now.getMinutes());
+        XLSX.writeFile(wb, 'DSKhongDangKy_' + stamp + '.xlsx');
     },
 
     /*------------------------------------------

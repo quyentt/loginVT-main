@@ -268,6 +268,9 @@
                                 <a id="btnSearchChiTietRut" class="btn btn-outline-success">
                                     <i class="fa-solid fa-user-magnifying-glass"></i><span class="lang" key="">Xem danh
                                         sách rút đăng ký</span></a>
+                                <a id="btnDSKhongDangKy" class="btn btn-outline-warning">
+                                    <i class="fa-solid fa-user-slash"></i><span class="lang" key="">Danh sách không
+                                        đăng ký</span></a>
                                 <div class="dropdown" id="zonebtnBaoCao_LopHocPhan"></div>
                             </div>
                             <div class="col-sm-12 item-search mt-20">
@@ -1045,6 +1048,115 @@
         </div>
     </div>
 </div>
+<!-- Modal: Danh sách không đăng ký (kế thừa từ kế hoạch đăng ký) -->
+<div class="modal fade myModal_khongdangky" id="myModal_khongdangky" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1360">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title line-20">
+                    <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span><span class="lang"
+                                                                                                 key="">Danh sách không đăng ký</span>
+                </h4>
+            </div>
+            <div class="modal-body" id="modal_body">
+                <div class="row aps-filter-kdk mb-10" style="padding: 0 5px;">
+                    <div class="col-sm-3 item-search">
+                        <input type="text" id="txtSearch_KhongDangKy" class="form-control"
+                               placeholder="Tìm theo mã số / họ tên..." autocomplete="off" />
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_KDK_TrangThai" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả trạng thái --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_KDK_ChuongTrinh" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả chương trình --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_KDK_LopQuanLy" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả lớp quản lý --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row aps-filter-kdk mb-10" style="padding: 0 5px; display: flex; align-items: center;">
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_KDK_KhoaHoc" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả khóa học --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-9 item-search" style="display: flex; align-items: center; gap: 10px;">
+                        <a id="btnResetFilter_KDK" class="btn btn-default" href="javascript:void(0);"
+                           title="Xóa các bộ lọc">
+                            <i class="fa-solid fa-eraser"></i> Xóa bộ lọc
+                        </a>
+                        <span id="lblTong_KhongDangKy"
+                              style="color: #6c757d; font-weight: 500;"></span>
+                    </div>
+                </div>
+                <div class="aps-table-select scroll-table-x">
+                    <table id="tblKhongDangKy"
+                           class="table table-hover table-bordered table-noborder tblKhongDangKy mb-0">
+                        <thead>
+                            <tr>
+                                <th class="td-fixed w-50px">Stt</th>
+                                <th class="td-left"><span class="lang" key="">Mã số sinh viên</span></th>
+                                <th class="td-left"><span class="lang" key="">Họ đệm</span></th>
+                                <th class="td-left"><span class="lang" key="">Tên</span></th>
+                                <th class="td-left"><span class="lang" key="">Trạng thái</span></th>
+                                <th class="td-left"><span class="lang" key="">Nợ phí</span></th>
+                                <th class="td-left"><span class="lang" key="">Chương trình</span></th>
+                                <th class="td-left"><span class="lang" key="">Lớp quản lý</span></th>
+                                <th class="td-left"><span class="lang" key="">Khóa học</span></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="notify"></div>
+            <div class="modal-footer">
+                <a class="btn btn-success" id="btnXuatExcel_KhongDangKy" href="javascript:void(0);"
+                   title="Xuất Excel danh sách không đăng ký đang hiển thị"
+                   style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                    <i class="fa-solid fa-file-excel" style="color:#fff;"></i>
+                    <span class="lang" key="">Xuất Excel</span>
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i>
+                    <span class="lang" key="">Đóng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- XLSX-JS-STYLE (fork SheetJS có hỗ trợ style cell) — phục vụ Xuất Excel DS không đăng ký. Load 1 lần, idempotent. -->
+<script>
+    (function loadXLSX_LopHocPhan() {
+        if (typeof XLSX !== 'undefined' && XLSX.version) return;
+        var cdnList = [
+            'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+            'https://unpkg.com/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx-js-style/1.2.0/xlsx.bundle.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { try { XLSX._styleEnabled = true; } catch (er) { } console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    })();
+</script>
 <!-- ----javascript---------------- -->
 <script src="modules/kehoachdangky/script/LopHocPhan.js?v=1.0.0.0"></script>
 <script type="text/javascript">
