@@ -12,11 +12,16 @@ DiemHoc.prototype = {
     strNguoiHoc_Id: '',
     resolveNguoiHocId: function () {
         // Only allow viewing another student's data when this page is embedded
-        // inside the staff timetable modal (zoneHTSinhVien/modalHTSinhVien).
+        // inside a staff modal (zoneHTSinhVien/modalHTSinhVien).
         try {
             var isEmbeddedViewer = $("#zoneHTSinhVien").length > 0 || $("#modalHTSinhVien").length > 0;
-            if (isEmbeddedViewer && window.main_doc && main_doc && main_doc.LichGiang && main_doc.LichGiang.strSinhVien_Id) {
-                return main_doc.LichGiang.strSinhVien_Id;
+            if (isEmbeddedViewer) {
+                if (window._embeddedSinhVien_Id) return window._embeddedSinhVien_Id;
+                if (window.main_doc) {
+                    for (var k in main_doc) {
+                        if (main_doc[k] && main_doc[k].strSinhVien_Id) return main_doc[k].strSinhVien_Id;
+                    }
+                }
             }
         } catch (e) {
         }

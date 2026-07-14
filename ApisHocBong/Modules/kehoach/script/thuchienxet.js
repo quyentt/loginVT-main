@@ -113,6 +113,12 @@ ThucHienXet.prototype = {
             me["strHB_KeHoach_Id"] = this.id;
             me.getList_KhongDat_HocPhan(this.id);
         });
+        $("#tblQuanSoLop, #tblDat, #tblKhongDat").delegate('.btnView_HocTap', 'click', function (e) {
+            $('#modalHTSinhVien').modal('show');
+            me["strSinhVien_Id"] = this.id;
+            window._embeddedSinhVien_Id = this.id;
+            edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/diemhoc.html', null, null, 'ApisCongSinhVien');
+        });
         me.objHangDoi = {
             strLoaiNhiemVu: "XET_HB",
             strName: "ThucHienXet",
@@ -686,7 +692,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -1774,7 +1782,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -1923,7 +1933,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",

@@ -202,6 +202,24 @@ KeHoachMua.prototype = {
             me.getList_KetQua_DangKyMua();
         });
 
+        // Tìm kiếm & lọc trong modal Kết quả đăng ký mua (client-side)
+        $(document).off("input.txtSearchKQ", "#txtSearch_KetQua").on("input.txtSearchKQ", "#txtSearch_KetQua", function () {
+            clearTimeout(me._txtSearchKQTimer);
+            me._txtSearchKQTimer = setTimeout(function () {
+                me.filter_KetQua_DangKyMua();
+            }, 300);
+        });
+        $(document).off("change.dropKQ_LK", "#dropSearch_KetQua_LoaiKhoan").on("change.dropKQ_LK", "#dropSearch_KetQua_LoaiKhoan", function () {
+            me.filter_KetQua_DangKyMua();
+        });
+        $(document).off("change.dropKQ_TT", "#dropSearch_KetQua_TinhTrang").on("change.dropKQ_TT", "#dropSearch_KetQua_TinhTrang", function () {
+            me.filter_KetQua_DangKyMua();
+        });
+        $(document).off("click.clearSearchKQ", "#btnClearSearch_KetQua").on("click.clearSearchKQ", "#btnClearSearch_KetQua", function () {
+            me.resetSearch_KetQua();
+            me.filter_KetQua_DangKyMua();
+        });
+
         $("#tblkehoach-dk-mua").off("click", ".btnChiTiet_KeHoach").on("click", ".btnChiTiet_KeHoach", function () {
             me.strKeHoachMua_Id_Selected = $(this).attr("id");
             me.getDetail_KeHoachMua();
@@ -1306,7 +1324,9 @@ KeHoachMua.prototype = {
                         iPager = data.Pager;
                     }
                     me.dtKetQua_DangKyMua = dtResult;
-                    me.genTable_KetQua_DangKyMua(dtResult, iPager);
+                    me.resetSearch_KetQua();
+                    me.buildFilterOptions_KetQua();
+                    me.genTable_KetQua_DangKyMua(dtResult, dtResult.length);
                     me.showModal("ketQua_dangKy_mua");
                 }
                 else {
@@ -1414,6 +1434,73 @@ KeHoachMua.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+    },
+
+    resetSearch_KetQua: function () {
+        $("#txtSearch_KetQua").val("");
+        $("#dropSearch_KetQua_LoaiKhoan").val("");
+        $("#dropSearch_KetQua_TinhTrang").val("");
+    },
+
+    buildFilterOptions_KetQua: function () {
+        var me = main_doc.KeHoachMua;
+        var data = me.dtKetQua_DangKyMua || [];
+        var mapLK = {};
+        var mapTT = {};
+        data.forEach(function (row) {
+            var lk = row.TEN_KHOANTHU || row.LOAIKHOAN_TEN || row.LOAIKHOAN_Ten || "";
+            var tt = row.TINHTRANGDANGKY_CODE_NAME || row.TINHTRANGDANGKY_Code_Name || row.TINHTRANGDANGKY_TEN || row.TINHTRANG_Ten || "";
+            if (lk) mapLK[lk] = true;
+            if (tt) mapTT[tt] = true;
+        });
+        var esc = function (s) { return $("<div>").text(s == null ? "" : String(s)).html(); };
+        var htmlLK = '<option value="">-- Tất cả loại khoản --</option>';
+        Object.keys(mapLK).sort().forEach(function (k) {
+            htmlLK += '<option value="' + esc(k) + '">' + esc(k) + '</option>';
+        });
+        $("#dropSearch_KetQua_LoaiKhoan").html(htmlLK);
+        var htmlTT = '<option value="">-- Tất cả tình trạng --</option>';
+        Object.keys(mapTT).sort().forEach(function (k) {
+            htmlTT += '<option value="' + esc(k) + '">' + esc(k) + '</option>';
+        });
+        $("#dropSearch_KetQua_TinhTrang").html(htmlTT);
+    },
+
+    filter_KetQua_DangKyMua: function () {
+        var me = main_doc.KeHoachMua;
+        var keyword = (edu.util.getValById('txtSearch_KetQua') || "").toString().toLowerCase().trim();
+        var lkFilter = edu.util.getValById('dropSearch_KetQua_LoaiKhoan') || "";
+        var ttFilter = edu.util.getValById('dropSearch_KetQua_TinhTrang') || "";
+        var full = me.dtKetQua_DangKyMua || [];
+        var filtered = full.filter(function (row) {
+            if (lkFilter) {
+                var lk = row.TEN_KHOANTHU || row.LOAIKHOAN_TEN || row.LOAIKHOAN_Ten || "";
+                if (lk !== lkFilter) return false;
+            }
+            if (ttFilter) {
+                var tt = row.TINHTRANGDANGKY_CODE_NAME || row.TINHTRANGDANGKY_Code_Name || row.TINHTRANGDANGKY_TEN || row.TINHTRANG_Ten || "";
+                if (tt !== ttFilter) return false;
+            }
+            if (keyword) {
+                var maso = (row.MASO || row.MaSo || "").toString().toLowerCase();
+                var hodem = (row.HODEM || row.HoDem || "").toString().toLowerCase();
+                var ten = (row.TEN || row.Ten || "").toString().toLowerCase();
+                var lk2 = (row.TEN_KHOANTHU || row.LOAIKHOAN_TEN || row.LOAIKHOAN_Ten || "").toString().toLowerCase();
+                var tt2 = (row.TINHTRANGDANGKY_CODE_NAME || row.TINHTRANGDANGKY_Code_Name || row.TINHTRANGDANGKY_TEN || row.TINHTRANG_Ten || "").toString().toLowerCase();
+                var lydo = (row.LYDOKHONGMUA || row.LyDoKhongMua || "").toString().toLowerCase();
+                var fullName = (hodem + " " + ten).trim();
+                if (maso.indexOf(keyword) === -1
+                    && fullName.indexOf(keyword) === -1
+                    && ten.indexOf(keyword) === -1
+                    && lk2.indexOf(keyword) === -1
+                    && tt2.indexOf(keyword) === -1
+                    && lydo.indexOf(keyword) === -1) {
+                    return false;
+                }
+            }
+            return true;
+        });
+        me.genTable_KetQua_DangKyMua(filtered, filtered.length);
     },
 
     delete_KeHoachMua: function () {

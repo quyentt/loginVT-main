@@ -26,11 +26,16 @@
     width: 100% !important;
     border-radius: 8px !important;
     border: 1px solid #dee2e6 !important;
+    overflow: hidden !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
   #Loaikhoan_donGia .modal-body,
   #phamViDoiTuong .modal-body,
   #ketQua_dangKy_mua .modal-body {
     overflow: auto;
+    flex: 1 1 auto;
+    min-height: 0;
   }
   /* Chip / tag cho phạm vi đã chọn */
   .pv-selected-wrap {
@@ -860,6 +865,29 @@
             </div>
           </div>
           <div class="modal-body aps-add-new">
+            <!-- Search / Filter bar -->
+            <div class="box box-solid box-search pb10" style="background:transparent !important; box-shadow:none !important; border:0 !important;">
+              <div class="box-body pd0" style="background:transparent !important;">
+                <div class="col-sm-4 item-search pl0">
+                  <input id="txtSearch_KetQua" class="form-control" placeholder="Tìm mã số, họ tên, loại khoản, lý do..." />
+                </div>
+                <div class="col-sm-3 item-search">
+                  <select id="dropSearch_KetQua_LoaiKhoan" class="form-control">
+                    <option value="">-- Tất cả loại khoản --</option>
+                  </select>
+                </div>
+                <div class="col-sm-3 item-search">
+                  <select id="dropSearch_KetQua_TinhTrang" class="form-control">
+                    <option value="">-- Tất cả tình trạng --</option>
+                  </select>
+                </div>
+                <div class="col-sm-2 item-search pr0">
+                  <a id="btnClearSearch_KetQua" href="javascript:void(0)" class="btn btn-default" style="width:100%">
+                    <i class="fa fa-times-circle"></i> Xóa lọc
+                  </a>
+                </div>
+              </div>
+            </div>
             <div class="aps-table-select scroll-table-x pb-0 mb-0" style="overflow-x:auto; width:100%;">
               <table
                 id="tblKetQua_DK_mua"
