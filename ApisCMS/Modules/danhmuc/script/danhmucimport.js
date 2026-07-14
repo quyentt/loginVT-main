@@ -192,7 +192,7 @@ DanhMucImport.prototype = {
             'strTenDanhMuc': edu.util.getValById("txtTenHamImport"),
             'strNhomDanhMuc_Id': edu.util.getValById("dropUngDung_DMIP"),
             'strMoTa': edu.util.getValById("txtSQLSoure"),
-            'dThuTu': "",
+            'dThuTu': 1,
             'dTrangThai': 995,
             'strPhanCapDanhMuc_Id': "",
             'strChung_TenDanhMuc_Cha_Id': "",
