@@ -950,7 +950,6 @@ systemroot.prototype = {
                     else {
                         var strNewSrc = me.appCode + "/" + strSrc.replace(strVersion, newVersion);
                     }
-                    console.log(strNewSrc)
                     strData = strData.replace(strSrc, strNewSrc);
                 }
                 else {
