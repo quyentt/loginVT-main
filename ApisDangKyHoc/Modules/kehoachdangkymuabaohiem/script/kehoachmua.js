@@ -98,6 +98,10 @@ KeHoachMua.prototype = {
             me.showModal("add_phamVi_doiTuong");
         });
 
+        $(document).off("shown.bs.modal.addPV", "#add_phamVi_doiTuong").on("shown.bs.modal.addPV", "#add_phamVi_doiTuong", function () {
+            me.initSelect2_PhamViModal();
+        });
+
         $(document).off("change.pvHe", "#dropPV_HeDaoTao").on("change.pvHe", "#dropPV_HeDaoTao", function () {
             me.getList_PV_KhoaDaoTao();
         });
@@ -1055,6 +1059,21 @@ KeHoachMua.prototype = {
         me.getList_PV_HocVien();
     },
 
+    initSelect2_PhamViModal: function () {
+        var $modal = $("#add_phamVi_doiTuong");
+        if (!$modal.length || typeof $.fn.select2 !== "function") return;
+        $modal.find(".select-opt").each(function () {
+            var $el = $(this);
+            if ($el.data("select2")) {
+                $el.select2("destroy");
+            }
+            $el.select2({
+                width: "100%",
+                dropdownParent: $modal.find(".modal-content")
+            });
+        });
+    },
+
     getList_PV_KhoaQuanLy: function () {
         if (typeof edu.system.getList_KhoaQuanLy !== "function") return;
         var objList = {
@@ -1164,34 +1183,67 @@ KeHoachMua.prototype = {
     },
 
     getList_PV_HocVien: function () {
-        if (typeof edu.system.getList_SinhVien !== "function") return;
-        var objList = {
-            strHeDaoTao_Id: edu.util.getValById("dropPV_HeDaoTao") || "",
-            strKhoaDaoTao_Id: edu.util.getValById("dropPV_KhoaDaoTao") || "",
-            strChuongTrinh_Id: edu.util.getValById("dropPV_ChuongTrinh") || "",
-            strLopQuanLy_Id: edu.util.getValById("dropPV_Lop") || "",
-            strTuKhoa: "",
-            pageIndex: 1,
-            pageSize: 1000000
-        };
-        edu.system.getList_SinhVien(objList, "", "", function (data) {
+        var me = main_doc.KeHoachMua;
+        var strLopQuanLy_Id = edu.util.getValById("dropPV_Lop") || "";
+        if (!strLopQuanLy_Id) {
             edu.system.loadToCombo_data({
-                data: data || [],
-                renderInfor: {
-                    id: "ID",
-                    parentId: "",
-                    name: "TEN",
-                    code: "",
-                    avatar: "",
-                    mRender: function (nRow, aData) {
-                        return (aData.MASO || "") + " - " + (aData.HODEM || "") + " " + (aData.TEN || "");
-                    }
-                },
+                data: [],
+                renderInfor: { id: "ID", parentId: "", name: "TEN", code: "", avatar: "" },
                 renderPlace: ["dropPV_HocVien"],
                 type: "",
                 title: "--Chọn người học--"
             });
-        });
+            return;
+        }
+        var objList = {
+            action: 'SV_HoSoHocVien_MH/DSA4BSAvKRIgIikJLhIu',
+            func: 'pkg_hosohocvien.LayDanhSachHoSo',
+            iM: edu.system.iM,
+            strHeDaoTao_Id: edu.util.getValById("dropPV_HeDaoTao") || "",
+            strKhoaDaoTao_Id: edu.util.getValById("dropPV_KhoaDaoTao") || "",
+            strChuongTrinh_Id: edu.util.getValById("dropPV_ChuongTrinh") || "",
+            strLopQuanLy_Id: strLopQuanLy_Id,
+            strQLSV_TrangThaiNguoiHoc_Id: "",
+            dLocTheoDuLieuImport: -1,
+            strNguoiThucHien_Id: edu.system.userId,
+            strChucNang_Id: edu.system.strChucNang_Id,
+            strTuNgay: edu.util.getValById('txtAAAA'),
+            strDenNgay: edu.util.getValById('txtAAAA'),
+            pageIndex: 1,
+            pageSize: 1000000
+        };
+        me.callApi({
+            success: function (data) {
+                var list = [];
+                if (data.Success && edu.util.checkValue(data.Data)) {
+                    list = Array.isArray(data.Data) ? data.Data : [data.Data];
+                }
+                edu.system.loadToCombo_data({
+                    data: list,
+                    renderInfor: {
+                        id: "ID",
+                        parentId: "",
+                        name: "TEN",
+                        code: "",
+                        avatar: "",
+                        mRender: function (nRow, aData) {
+                            return (aData.MASO || "") + " - " + (aData.HODEM || "") + " " + (aData.TEN || "");
+                        }
+                    },
+                    renderPlace: ["dropPV_HocVien"],
+                    type: "",
+                    title: "--Chọn người học--"
+                });
+            },
+            error: function (er) {
+                edu.system.alert("Không tải được danh sách sinh viên: " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: objList.action,
+            contentType: true,
+            data: objList,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     save_PhamVi_DoiTuong_All: function () {
