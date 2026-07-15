@@ -186,17 +186,17 @@ DongPhuc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<input class="form-control soluong text-center" id="txtSoLuong_' + aData.ID + '" value="" />';
+                        return '<input class="form-control soluong text-center" id="txtSoLuong_' + aData.ID + '" value="1" />';
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<a class="btn btn-default btnXacNhanMua btn-table" id="' + aData.ID + '" title="Xác nhận mua" data-bs-toggle="modal" data-bs-target="#them_xacnhan_mua">Xác nhận mua</a>';
+                        return '<a class="btn btn-default btnXacNhanMua btn-table text-nowrap" style="min-width: 150px;" id="' + aData.ID + '" title="Xác nhận tham gia" data-bs-toggle="modal" data-bs-target="#them_xacnhan_mua">Xác nhận tham gia</a>';
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<a class="btn btn-default btnXacNhanKhongMua btn-table" id="' + aData.ID + '" title="Xác nhận không mua" data-bs-toggle="modal" data-bs-target="#them_xacnhan_khongmua" href="">Xác nhận không mua</a>';
+                        return '<a class="btn btn-default btnXacNhanKhongMua btn-table text-nowrap" style="min-width: 170px;" id="' + aData.ID + '" title="Xác nhận không tham gia" data-bs-toggle="modal" data-bs-target="#them_xacnhan_khongmua" href="">Xác nhận không tham gia</a>';
                     }
                 }
             ]
@@ -243,7 +243,7 @@ DongPhuc.prototype = {
                 if (data.Success) {
                     if (document.activeElement) document.activeElement.blur();
                     $('#them_xacnhan_mua').modal('hide');
-                    edu.system.alert("Xác nhận mua thành công!", "s");
+                    edu.system.alert("Xác nhận tham gia thành công!", "s");
                     me.getList_DangKyMua();
                 }
                 else {
@@ -301,7 +301,7 @@ DongPhuc.prototype = {
                 if (data.Success) {
                     if (document.activeElement) document.activeElement.blur();
                     $('#them_xacnhan_khongmua').modal('hide');
-                    edu.system.alert("Xác nhận không mua thành công!", "s");
+                    edu.system.alert("Xác nhận không tham gia thành công!", "s");
                     me.getList_DangKyMua();
                 }
                 else {

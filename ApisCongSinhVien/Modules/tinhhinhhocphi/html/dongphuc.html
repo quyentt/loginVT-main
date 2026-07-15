@@ -2,10 +2,10 @@
     <div class="overlay"></div>
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
-            <div class="nav-content-left">
-                <p class="link"><a href="#">Đăng ký học</a><i class="fal fa-angle-right"></i><a href="#">Đăng
-                        ký mua đồng phục - bảo hiểm</a></p>
-            </div>
+                <div class="nav-content-left">
+                    <p class="link"><a href="#">Đăng ký học</a><i class="fal fa-angle-right"></i><a href="#">Đăng
+                        ký mua/tham gia đồng phục - bảo hiểm</a></p>
+                </div>
 
             <div class="nav-content-right">
                 <a class="d-block text-right" href=""><i class="fas fa-question-circle"></i></a>
@@ -40,9 +40,9 @@
         </div>
         <div class="container-fluid px-20">
             <div class="title-btn mb-10">
-                <p class="color-dask-blue fw-bold m-0" style="line-height: 38px;">Thông tin đăng ký mua</p>
+                <p class="color-dask-blue fw-bold m-0" style="line-height: 38px;">Thông tin đăng ký mua/tham gia</p>
                 <a class="btn btn-primary" href="" data-bs-toggle="modal" data-bs-target="#ds_dangky"><i
-                        class="fal fa-tshirt mr-5"></i> Kết quả đã đăng ký mua</a>
+                        class="fal fa-tshirt mr-5"></i> Kết quả đã đăng ký mua/tham gia</a>
             </div>
             <div class="aps-table-select scroll-table-x">
                 <table id="tblDangKyMua"
@@ -51,13 +51,13 @@
                         <tr>
                             <th class="td-fixed td-center w-50px">Stt</th>
                             <th class="td-left">Loại</th>
-                            <th class="td-right" style="width: 140px; text-align: right;">Đơn giá</th>
+                            <th class="td-right" style="width: 140px; text-align: right;">Đơn giá/Lệ phí</th>
                             <th class="td-center" style="width: 100px">Số lượng</th>
-                            <th class="td-center" style="width: 140px">
-                                Xác nhận Mua
+                            <th class="td-center text-nowrap" style="width: 170px">
+                                Xác nhận tham gia
                             </th>
-                            <th class="td-center" style="width: 180px">
-                                Xác nhận không Mua
+                            <th class="td-center text-nowrap" style="width: 190px">
+                                Xác nhận không tham gia
                             </th>
                         </tr>
                     </thead>
@@ -73,14 +73,14 @@
     <!-- end đăng ký nguyện vọng -->
 </div>
 
-<!-- modal Xác nhận mua  -->
+<!-- modal Xác nhận tham gia  -->
 <div class="modal fade modal_them_xacnhan_mua" id="them_xacnhan_mua" tabindex="-1"
     aria-labelledby="exampleModalLabel" style="display: none;" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-680 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Xác nhận mua</b></p>
+                    <p><b>Xác nhận tham gia</b></p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -88,7 +88,7 @@
                 <div class="aps-form mb-10">
                     <div class="item row d-flex">
                         <div class="col-md-12 text-88 fs-14 line-38">
-                            Bạn đã chọn mua: <b id="lblTen_XacNhanMua"></b>
+                            Bạn đã chọn tham gia: <b id="lblTen_XacNhanMua"></b>
                         </div>
                     </div>
                     <div class="item row d-flex">
@@ -111,14 +111,14 @@
     </div>
 </div>
 
-<!-- modal Xác nhận không mua  -->
+<!-- modal Xác nhận không tham gia  -->
 <div class="modal fade modal_ds_dangky" id="them_xacnhan_khongmua" tabindex="-1" aria-labelledby="exampleModalLabel"
     style="display: none;" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-680 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Xác nhận không mua</b></p>
+                    <p><b>Xác nhận không tham gia</b></p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -151,14 +151,14 @@
     </div>
 </div>
 
-<!-- modal Kết quả đã đăng ký mua -->
+<!-- modal Kết quả đã đăng ký mua/tham gia -->
 <div class="modal fade modal_them_xacnhan_khongmua" id="ds_dangky" tabindex="-1" aria-labelledby="exampleModalLabel"
     style="display: none;" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-1024 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><b>Kết quả đã đăng ký mua</b></p>
+                    <p><b>Kết quả đã đăng ký mua/tham gia</b></p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -170,12 +170,12 @@
                             <tr>
                                 <th class="td-fixed td-center w-50px">Stt</th>
                                 <th class="td-left">Loại</th>
-                                <th class="td-right" style="width: 100px; text-align: right;">Đơn giá</th>
+                                <th class="td-right" style="width: 100px; text-align: right;">Đơn giá/Lệ phí</th>
                                 <th class="td-center" style="width: 100px">Số lượng</th>
                                 <th class="td-right" style="width: 100px; text-align: right;">Tổng tiền</th>
-                                <th class="td-center" style="width: 120px">Xác nhận Mua</th>
-                                <th class="td-center" style="width: 180px">
-                                    Xác nhận không Mua
+                                <th class="td-center text-nowrap" style="width: 170px">Xác nhận tham gia</th>
+                                <th class="td-center text-nowrap" style="width: 190px">
+                                    Xác nhận không tham gia
                                 </th>
                                 <th class="td-center td-fixed">
                                     <input type="checkbox" id="chkSelectAll_KetQua" />
