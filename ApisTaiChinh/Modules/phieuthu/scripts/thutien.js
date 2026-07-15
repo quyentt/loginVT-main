@@ -5258,6 +5258,19 @@ PhieuThu.prototype = {
             $(".iNgayPTC_PT_Edit").html(edu.util.thisDay());
             $(".iThangPTC_PT_Edit").html(edu.util.thisMonth());
             $(".iNamPTC_PT_Edit").html(edu.util.thisYear());
+
+            try {
+                if (me.strNgayXuatChungTu && me.strNgayXuatChungTu.indexOf("/")) {
+                    var arrNgayThangPT = me.strNgayXuatChungTu.split("/")
+                    $(".iNgayPTC_PT_Edit").html(arrNgayThangPT[0]);
+                    $(".iThangPTC_PT_Edit").html(arrNgayThangPT[1]);
+                    $(".iNamPTC_PT_Edit").html(arrNgayThangPT[2]);
+                }
+            } catch{
+
+            }
+            
+
             $(".txtNgaySinhPTC_PT_Edit").html(edu.util.returnEmpty(data.NGAYSINH));
             $(".txtMaSoThue_PT_Edit").html(edu.util.returnEmpty(data.MASOTHUECANHAN));
             console.log(edu.util.returnEmpty(data.NOIOHIENNAY));
