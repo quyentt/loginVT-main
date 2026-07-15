@@ -14,6 +14,21 @@ DongPhuc.prototype = {
     dtKetQuaDangKy: [],
     strSelected_KhoanThu_Id: '',
 
+    getMoTaLoaiDangKy: function () {
+        var me = this;
+        var strId = edu.util.getValById('dropSearch_DotDangKy');
+        var aData = me.dtDotDangKy.find(e => e.ID == strId);
+        if (edu.util.checkValue(aData) && edu.util.checkValue(aData.MOTA)) {
+            return aData.MOTA;
+        }
+        return 'tham gia';
+    },
+
+    updateLabels_LoaiDangKy: function () {
+        var me = this;
+        $('.lbl-loai-dangky').text(me.getMoTaLoaiDangKy());
+    },
+
     init: function () {
         var me = this;
         me.strSinhVien_Id = edu.system.userId;
@@ -91,6 +106,7 @@ DongPhuc.prototype = {
                     }
                     me.dtDotDangKy = dtResult;
                     me.genCombo_DotDangKy(dtResult);
+                    me.updateLabels_LoaiDangKy();
                 }
                 else {
                     edu.system.alert(data.Message, "w");
@@ -150,6 +166,7 @@ DongPhuc.prototype = {
                         dtResult = data.Data;
                     }
                     me.dtDangKyMua = dtResult;
+                    me.updateLabels_LoaiDangKy();
                     me.genTable_DangKyMua(dtResult);
                 }
                 else {
@@ -168,6 +185,8 @@ DongPhuc.prototype = {
     },
 
     genTable_DangKyMua: function (data) {
+        var me = this;
+        var strLoai = me.getMoTaLoaiDangKy();
         var jsonForm = {
             strTable_Id: "tblDangKyMua",
             aaData: data,
@@ -191,12 +210,12 @@ DongPhuc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<a class="btn btn-default btnXacNhanMua btn-table text-nowrap" style="min-width: 150px;" id="' + aData.ID + '" title="Xác nhận tham gia" data-bs-toggle="modal" data-bs-target="#them_xacnhan_mua">Xác nhận tham gia</a>';
+                        return '<a class="btn btn-default btnXacNhanMua btn-table text-nowrap" style="min-width: 150px;" id="' + aData.ID + '" title="Xác nhận ' + strLoai + '" data-bs-toggle="modal" data-bs-target="#them_xacnhan_mua">Xác nhận ' + strLoai + '</a>';
                     }
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return '<a class="btn btn-default btnXacNhanKhongMua btn-table text-nowrap" style="min-width: 170px;" id="' + aData.ID + '" title="Xác nhận không tham gia" data-bs-toggle="modal" data-bs-target="#them_xacnhan_khongmua" href="">Xác nhận không tham gia</a>';
+                        return '<a class="btn btn-default btnXacNhanKhongMua btn-table text-nowrap" style="min-width: 170px;" id="' + aData.ID + '" title="Xác nhận không ' + strLoai + '" data-bs-toggle="modal" data-bs-target="#them_xacnhan_khongmua" href="">Xác nhận không ' + strLoai + '</a>';
                     }
                 }
             ]
@@ -213,7 +232,7 @@ DongPhuc.prototype = {
         var strId = me.strSelected_KhoanThu_Id;
         var aData = me.dtDangKyMua.find(e => e.ID == strId);
         if (!edu.util.checkValue(aData)) {
-            edu.system.alert("Vui lòng chọn loại đồng phục.", "w");
+            edu.system.alert("Vui lòng chọn dịch vụ.", "w");
             return;
         }
         var dSoLuong = edu.util.getValById('txtSoLuong_' + strId);
@@ -243,7 +262,7 @@ DongPhuc.prototype = {
                 if (data.Success) {
                     if (document.activeElement) document.activeElement.blur();
                     $('#them_xacnhan_mua').modal('hide');
-                    edu.system.alert("Xác nhận tham gia thành công!", "s");
+                    edu.system.alert("Xác nhận " + me.getMoTaLoaiDangKy() + " thành công!", "s");
                     me.getList_DangKyMua();
                 }
                 else {
@@ -270,12 +289,12 @@ DongPhuc.prototype = {
         var strId = me.strSelected_KhoanThu_Id;
         var aData = me.dtDangKyMua.find(e => e.ID == strId);
         if (!edu.util.checkValue(aData)) {
-            edu.system.alert("Vui lòng chọn loại đồng phục.", "w");
+            edu.system.alert("Vui lòng chọn dịch vụ.", "w");
             return;
         }
         var strLyDo = edu.util.getValById('txtLyDoKhongMua');
         if (!edu.util.checkValue(strLyDo)) {
-            edu.system.alert("Vui lòng nhập lý do không mua.", "w");
+            edu.system.alert("Vui lòng nhập lý do không " + me.getMoTaLoaiDangKy() + ".", "w");
             return;
         }
         var strMinhChung = edu.util.getValById('fileMinhChung');
@@ -301,7 +320,7 @@ DongPhuc.prototype = {
                 if (data.Success) {
                     if (document.activeElement) document.activeElement.blur();
                     $('#them_xacnhan_khongmua').modal('hide');
-                    edu.system.alert("Xác nhận không tham gia thành công!", "s");
+                    edu.system.alert("Xác nhận không " + me.getMoTaLoaiDangKy() + " thành công!", "s");
                     me.getList_DangKyMua();
                 }
                 else {
@@ -348,6 +367,7 @@ DongPhuc.prototype = {
                         dtResult = data.Data;
                     }
                     me.dtKetQuaDangKy = dtResult;
+                    me.updateLabels_LoaiDangKy();
                     me.genTable_KetQuaDangKy(dtResult);
                 }
                 else {

@@ -246,12 +246,16 @@ PhanCongPhamVi.prototype = {
             }
             edu.system.confirm("Bắt đầu tính toán dữ liệu cho " + arrChecked_Id.length + " phạm vi đã chọn?");
             $("#btnYes").off("click").on("click", function (e) {
-                me.dtSinhVien = [];
-                edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.getList_DSSinhVien(arrChecked_Id[i]);
-                }
+                $('#alert>#myModalAlert').modal('hide');
+                setTimeout(function () {
+                    me.dtSinhVien = [];
+                    edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                    edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                    me.startHideOverlay();
+                    for (var i = 0; i < arrChecked_Id.length; i++) {
+                        me.getList_DSSinhVien(arrChecked_Id[i]);
+                    }
+                }, 200);
             });
         });
 
@@ -262,7 +266,10 @@ PhanCongPhamVi.prototype = {
             }
             edu.system.confirm("Bạn có chắc chắn tạo dữ liệu thời khóa biểu theo lớp học phần?");
             $("#btnYes").off("click").on("click", function (e) {
-                me.save_TaoLichTuan();
+                $('#alert>#myModalAlert').modal('hide');
+                setTimeout(function () {
+                    me.save_TaoLichTuan();
+                }, 200);
             });
         });
     },
@@ -1397,6 +1404,7 @@ PhanCongPhamVi.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.stopHideOverlay();
                     var seen = {};
                     me.dtSinhVien = me.dtSinhVien.filter(function (sv) {
                         var key = sv.QLSV_NGUOIHOC_ID;
@@ -1414,10 +1422,11 @@ PhanCongPhamVi.prototype = {
                         setTimeout(function () {
                             edu.system.alert('<div id="zoneprocessXXXX1"></div>');
                             edu.system.genHTML_Progress("zoneprocessXXXX1", me.dtSinhVien.length);
+                            me.startHideOverlay();
                             for (var i = 0; i < me.dtSinhVien.length; i++) {
                                 me.save_TinhToan(me.dtSinhVien[i].QLSV_NGUOIHOC_ID);
                             }
-                        }, 100);
+                        }, 200);
                     });
                 });
             },
@@ -1455,7 +1464,8 @@ PhanCongPhamVi.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX1", function () {
-                    edu.system.alert("Tính toán dữ liệu phục vụ đăng ký học hoàn tất!");
+                    me.stopHideOverlay();
+                    edu.system.alert("Đã thực hiện xong!");
                 });
             },
             contentType: true,
@@ -1480,7 +1490,7 @@ PhanCongPhamVi.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    edu.system.alert("Tạo dữ liệu thời khóa biểu theo lớp học phần thành công!");
+                    edu.system.alert("Đã thực hiện xong!");
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -1496,5 +1506,20 @@ PhanCongPhamVi.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+
+    startHideOverlay: function () {
+        var me = this;
+        me.stopHideOverlay();
+        me._overlayHideInterval = setInterval(function () {
+            $("#overlay").hide();
+        }, 50);
+    },
+    stopHideOverlay: function () {
+        var me = this;
+        if (me._overlayHideInterval) {
+            clearInterval(me._overlayHideInterval);
+            me._overlayHideInterval = null;
+        }
     },
 }
