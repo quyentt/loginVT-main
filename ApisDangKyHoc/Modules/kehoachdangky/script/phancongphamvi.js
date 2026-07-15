@@ -246,16 +246,15 @@ PhanCongPhamVi.prototype = {
             }
             edu.system.confirm("Bắt đầu tính toán dữ liệu cho " + arrChecked_Id.length + " phạm vi đã chọn?");
             $("#btnYes").off("click").on("click", function (e) {
-                $('#alert>#myModalAlert').modal('hide');
-                setTimeout(function () {
-                    me.dtSinhVien = [];
-                    edu.system.alert('<div id="zoneprocessXXXX"></div>');
-                    edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-                    me.startHideOverlay();
-                    for (var i = 0; i < arrChecked_Id.length; i++) {
-                        me.getList_DSSinhVien(arrChecked_Id[i]);
-                    }
-                }, 200);
+                $("#alert_content").html("");
+                $("#btnYes").hide();
+                me.dtSinhVien = [];
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                me.startHideOverlay();
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.getList_DSSinhVien(arrChecked_Id[i]);
+                }
             });
         });
 
@@ -266,10 +265,10 @@ PhanCongPhamVi.prototype = {
             }
             edu.system.confirm("Bạn có chắc chắn tạo dữ liệu thời khóa biểu theo lớp học phần?");
             $("#btnYes").off("click").on("click", function (e) {
+                $("#alert_content").html("");
+                $("#btnYes").hide();
                 $('#alert>#myModalAlert').modal('hide');
-                setTimeout(function () {
-                    me.save_TaoLichTuan();
-                }, 200);
+                me.save_TaoLichTuan();
             });
         });
     },
@@ -1412,21 +1411,22 @@ PhanCongPhamVi.prototype = {
                         seen[key] = true;
                         return true;
                     });
+                    $("#alert_content").html("");
                     if (me.dtSinhVien.length == 0) {
                         edu.system.alert("Không có sinh viên nào trong phạm vi đã chọn!");
                         return;
                     }
                     edu.system.confirm("Bắt đầu tính toán dữ liệu cho " + me.dtSinhVien.length + " sinh viên?");
+                    $("#btnYes").show();
                     $("#btnYes").off("click").on("click", function (e) {
-                        $('#alert>#myModalAlert').modal('hide');
-                        setTimeout(function () {
-                            edu.system.alert('<div id="zoneprocessXXXX1"></div>');
-                            edu.system.genHTML_Progress("zoneprocessXXXX1", me.dtSinhVien.length);
-                            me.startHideOverlay();
-                            for (var i = 0; i < me.dtSinhVien.length; i++) {
-                                me.save_TinhToan(me.dtSinhVien[i].QLSV_NGUOIHOC_ID);
-                            }
-                        }, 200);
+                        $("#alert_content").html("");
+                        $("#btnYes").hide();
+                        edu.system.alert('<div id="zoneprocessXXXX1"></div>');
+                        edu.system.genHTML_Progress("zoneprocessXXXX1", me.dtSinhVien.length);
+                        me.startHideOverlay();
+                        for (var i = 0; i < me.dtSinhVien.length; i++) {
+                            me.save_TinhToan(me.dtSinhVien[i].QLSV_NGUOIHOC_ID);
+                        }
                     });
                 });
             },
@@ -1465,7 +1465,11 @@ PhanCongPhamVi.prototype = {
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX1", function () {
                     me.stopHideOverlay();
-                    edu.system.alert("Đã thực hiện xong!");
+                    $("#alert_content").html("");
+                    $('#alert>#myModalAlert').modal('hide');
+                    setTimeout(function () {
+                        edu.system.alert("Đã thực hiện xong!");
+                    }, 300);
                 });
             },
             contentType: true,
