@@ -4,8 +4,17 @@
 --Description:
 --Date of created: 13/09/2016
 --Updated by: nnthuong & tvhiep
---Date of updated: 06/06/2018 
+--Date of updated: 06/06/2018
 ----------------------------------------------*/
+// [AUTO-THU-VAI][early] Nếu tab mới mở để thủ vai SV mà URL còn hash cũ (do browser clone khi window.open) → replace URL sạch ngay, không cho bất cứ flow nào đọc hash cũ. Chạy sớm nhất khi script load.
+(function () {
+    try {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('pendingThuVaiSV') && window.location.hash) {
+            console.log('[AUTO-THU-VAI][early] có pending + hash =', window.location.hash, '→ location.replace URL sạch');
+            window.location.replace(window.location.pathname + window.location.search);
+        }
+    } catch (ex) { console.error('[AUTO-THU-VAI][early] err', ex); }
+})();
 function systemroot() { }
 systemroot.prototype = {
     userId: null,
@@ -741,6 +750,8 @@ systemroot.prototype = {
     */
     initMain: function (strDisplayedPath, strRootPath, strChucNang_Id) {
         var me = this;
+        console.log('[AUTO-THU-VAI][initMain] call — strDisplayedPath =', strDisplayedPath, '| strRootPath =', strRootPath, '| strChucNang_Id =', strChucNang_Id, '| pending =', localStorage.getItem('pendingThuVaiSV'));
+        console.trace('[AUTO-THU-VAI][initMain] stack');
         if (!strChucNang_Id) {
             var temp = me.dtChucNang.find(e => e.DUONGDANFILE == strRootPath);
             if (temp) strChucNang_Id = temp.ID;
@@ -4812,6 +4823,19 @@ systemroot.prototype = {
     */
     checkChucNang: function () {
         var me = this;
+        // [AUTO-THU-VAI] Tab mới mở để thủ vai SV: xoá sessionStorage kế thừa + xoá URL hash cũ để không có flow phụ nào đọc và mount chức năng cũ.
+        console.log('[AUTO-THU-VAI][checkChucNang] start — pending =', localStorage.getItem('pendingThuVaiSV'), '| hash =', window.location.hash);
+        try {
+            if (localStorage.getItem('pendingThuVaiSV')) {
+                console.log('[AUTO-THU-VAI][checkChucNang] có pending → clear sessionStorage + URL hash');
+                sessionStorage.removeItem('strChucNang');
+                sessionStorage.removeItem('strChucNang_Id');
+                me.appId = null; me.appCode = null; me.rootPathReport = null;
+                if (window.location.hash && window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+            }
+        } catch (ex) { console.error('[AUTO-THU-VAI][checkChucNang] clear err', ex); }
         if (!me.appId) {
             var strChucNang = sessionStorage.getItem("strChucNang");
             if (strChucNang) {
@@ -4834,6 +4858,21 @@ systemroot.prototype = {
                     if (data.Success) {
                         data = data.Data;
                         me["dtUngDung"] = data;
+                        console.log('[AUTO-THU-VAI][dtUngDung] loaded', (data || []).length, 'app(s)');
+                        // [AUTO-THU-VAI] Nếu có yêu cầu thủ vai SV đang chờ (từ click SV bên cổng cán bộ) → xử lý và dừng render dashboard bình thường
+                        try {
+                            var strPending = localStorage.getItem('pendingThuVaiSV');
+                            console.log('[AUTO-THU-VAI][dtUngDung] pendingThuVaiSV =', strPending);
+                            if (strPending) {
+                                var pending = JSON.parse(strPending);
+                                localStorage.removeItem('pendingThuVaiSV');
+                                if (pending && pending.strMSSV) {
+                                    console.log('[AUTO-THU-VAI][dtUngDung] → gọi _autoThuVaiSV, pending =', pending);
+                                    me._autoThuVaiSV(pending);
+                                    return;
+                                }
+                            }
+                        } catch (ex) { console.error('[AUTO-THU-VAI][dtUngDung] parse err', ex); }
                         var html = '';
                         var arrMau = ["#26465e", "#7aacf3", "#d36f51", "#0232b9", "#a12529", "#71b636", "#f94341", "#f6c531"];
                         data.forEach((e, index) => {
@@ -4877,6 +4916,74 @@ systemroot.prototype = {
             return true;
         }
         
+    },
+    // [AUTO-THU-VAI] Tự động thủ vai 1 SV theo MSSV rồi mở chức năng chỉ định.
+    // Được gọi khi user click 1 SV từ cổng cán bộ (module xét TN, học bổng, học vụ, ...).
+    // Input: pending = { strMSSV, strHashChucNang } — hash chức năng dạng (chucNang_Id + appId).toLowerCase()
+    _autoThuVaiSV: function (pending) {
+        var me = this;
+        console.log('[AUTO-THU-VAI][_autoThuVaiSV] start, dtUngDung =', me.dtUngDung);
+        var objSV = (me.dtUngDung || []).find(function (e) { return e.CHOPHEPTHUVAI == 1; });
+        console.log('[AUTO-THU-VAI][_autoThuVaiSV] objSV (CHOPHEPTHUVAI=1) =', objSV);
+        if (!objSV) {
+            console.warn('[AUTO-THU-VAI][_autoThuVaiSV] KHÔNG có ứng dụng nào CHOPHEPTHUVAI=1');
+            edu.system.alert("Không tìm thấy ứng dụng cho phép thủ vai sinh viên.");
+            return;
+        }
+        me["strNguoiThucVai_Id"] = edu.system.userId;
+        var strTenVaiTro = objSV.TENVAITRO || objSV.TENUNGDUNG || 'sinh viên';
+        var obj_save = {
+            'action': 'CMS_QuanTri02_MH/CigkLBUzIBUpLi8mFSgvBSgvKQUgLykP',
+            'func': 'PKG_CORE_QUANTRI_02.KiemTraThongTinDinhDanh',
+            'iM': edu.system.iM,
+            'strThongTinDinhDanh': pending.strMSSV,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': objSV.ID,
+            'strChucNangHeThong_Id': objSV.ID,
+            'strHanhDong_Code': ''
+        };
+        console.log('[AUTO-THU-VAI][_autoThuVaiSV] call KiemTraThongTinDinhDanh, MSSV =', pending.strMSSV);
+        me.makeRequest({
+            success: function (data) {
+                console.log('[AUTO-THU-VAI][KiemTraThongTinDinhDanh] response', data);
+                if (!data.Success) { edu.system.alert(data.Message || 'Không tìm được sinh viên.'); return; }
+                var rs = [];
+                if (data.Data && data.Data.rs) rs = data.Data.rs;
+                else if (Array.isArray(data.Data)) rs = data.Data;
+                console.log('[AUTO-THU-VAI][KiemTraThongTinDinhDanh] rs.length =', rs.length, rs);
+                if (!rs.length) { edu.system.alert('Không tìm thấy sinh viên có MSSV: ' + pending.strMSSV); return; }
+                var record = rs[0];
+                edu.system.userId = record.ID || record.Id || record.id;
+                edu.system.currentThuVai = {
+                    ten: record.FULLNAME || record.HOTEN || record.HoTen || record.ten || '',
+                    ma: record.NAME || record.MSSV || record.MA || record.ma || '',
+                    email: record.EMAIL || record.Email || record.email || '',
+                    tenVaiTro: strTenVaiTro
+                };
+                console.log('[AUTO-THU-VAI][_autoThuVaiSV] set userId =', edu.system.userId, '| currentThuVai =', edu.system.currentThuVai);
+                // Nếu có yêu cầu mở chức năng cụ thể → set trước vào sessionStorage để setUngDung → menu load xong sẽ tự trigger (systemroot.js:6276-6277)
+                if (pending.strHashChucNang) {
+                    var strHash = String(pending.strHashChucNang).toLowerCase();
+                    var strAppIdLower = String(objSV.ID || '').toLowerCase();
+                    var strChucNang_IdLower = strHash;
+                    if (strAppIdLower && strHash.indexOf(strAppIdLower) === 0) {
+                        strChucNang_IdLower = strHash.substring(strAppIdLower.length);
+                    } else if (strAppIdLower && strHash.length > strAppIdLower.length && strHash.substring(strHash.length - strAppIdLower.length) === strAppIdLower) {
+                        strChucNang_IdLower = strHash.substring(0, strHash.length - strAppIdLower.length);
+                    }
+                    me._pendingChucNang_IdLower = strChucNang_IdLower;
+                    console.log('[AUTO-THU-VAI][_autoThuVaiSV] _pendingChucNang_IdLower =', strChucNang_IdLower, '(strip appId', strAppIdLower, 'khỏi', strHash + ')');
+                }
+                console.log('[AUTO-THU-VAI][_autoThuVaiSV] → setUngDung objSV');
+                me.setUngDung(objSV);
+            },
+            error: function (er) { console.error('[AUTO-THU-VAI][KiemTraThongTinDinhDanh] err', er); edu.system.alert('Lỗi thủ vai: ' + JSON.stringify(er)); },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     },
     setUngDung: function (objUngDung) {
         var me = this;
@@ -6274,6 +6381,40 @@ systemroot.prototype = {
             $("#sidebar-menu").prepend(tvInfo);
         }
         var strChucNang_Id = (me.strChucNang_Id) ? me.strChucNang_Id : sessionStorage.getItem("strChucNang_Id");
+        // [AUTO-THU-VAI] Nếu có hash chức năng đang chờ (đến từ luồng thủ vai SV tự động) → tìm và mount trực tiếp bằng initMain (tránh $.trigger("click") không gọi được inline onclick).
+        if (me._pendingChucNang_IdLower) {
+            var strTargetLower = me._pendingChucNang_IdLower;
+            me._pendingChucNang_IdLower = null;
+            var arrChucNang = me.dtChucNang || [];
+            console.log('[AUTO-THU-VAI][menu-render] target chucNang_Id (lower) =', strTargetLower, '| dtChucNang.length =', arrChucNang.length);
+            var cnMatch = arrChucNang.find(function (cn) { return cn.ID && String(cn.ID).toLowerCase() === strTargetLower; });
+            console.log('[AUTO-THU-VAI][menu-render] cnMatch =', cnMatch);
+            if (cnMatch) {
+                // Nếu hash trỏ tới parent group (DUONGDANFILE = null) → tự tìm child đầu tiên có DUONGDANFILE để mount
+                if (!cnMatch.DUONGDANFILE) {
+                    var arrChild = arrChucNang.filter(function (cn) { return cn.CHUCNANGCHA_ID === cnMatch.ID && cn.DUONGDANFILE; });
+                    arrChild.sort(function (a, b) { return (parseInt(a.THUTU, 10) || 0) - (parseInt(b.THUTU, 10) || 0); });
+                    console.log('[AUTO-THU-VAI][menu-render] hash trỏ tới parent "' + cnMatch.TENCHUCNANG + '", có', arrChild.length, 'child. Dùng child đầu:', arrChild[0]);
+                    if (arrChild.length) cnMatch = arrChild[0];
+                }
+                strChucNang_Id = cnMatch.ID;
+                // Expand parent nếu chức năng con
+                if (cnMatch.CHUCNANGCHA_ID) {
+                    var elCha = document.getElementById("chucnang" + cnMatch.CHUCNANGCHA_ID);
+                    var elCollapse = document.getElementById("collapse" + cnMatch.CHUCNANGCHA_ID);
+                    if (elCha) elCha.classList.remove("collapsed");
+                    if (elCollapse) elCollapse.classList.add("show");
+                }
+                // Gọi initMain trực tiếp thay vì trigger click (inline onclick không được jQuery trigger)
+                var strDuongDanHienThi = "#" + (cnMatch.ID + me.appId).toLowerCase();
+                console.log('[AUTO-THU-VAI][menu-render] initMain(', strDuongDanHienThi, ',', cnMatch.DUONGDANFILE, ',', cnMatch.ID, ')');
+                if (cnMatch.DUONGDANFILE) {
+                    edu.system.initMain(strDuongDanHienThi, cnMatch.DUONGDANFILE, cnMatch.ID);
+                    return;
+                }
+            }
+        }
+        console.log('[AUTO-THU-VAI][menu-render] triggerChucNang_Id ->', strChucNang_Id);
         me.triggerChucNang_Id(strChucNang_Id);
         if (!sessionStorage.getItem("strChucNang_Id") && window.innerWidth < 769) {
             console.log("1234");

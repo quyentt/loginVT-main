@@ -235,19 +235,41 @@ PhanCongPhamVi.prototype = {
 
 
         $("#btnTinhToan").click(function () {
+            if (edu.util.getValById('dropSearch_KeHoach') == "") {
+                edu.system.alert("Bạn cần chọn kế hoạch trước!");
+                return;
+            }
             var arrChecked_Id = edu.util.getArrCheckedIds("zonePhanCong", "checkX");
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn đối tượng?");
                 return;
             }
-            me.dtSinhVien = [];
-            edu.system.alert('<div id="zoneprocessXXXX"></div>');
-            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
-            for (var i = 0; i < arrChecked_Id.length; i++) {
-                me.getList_DSSinhVien(arrChecked_Id[i]);
-            }
+            edu.system.confirm("Bắt đầu tính toán dữ liệu cho " + arrChecked_Id.length + " phạm vi đã chọn?");
+            $("#btnYes").off("click").on("click", function (e) {
+                $("#alert_content").html("");
+                $("#btnYes").hide();
+                me.dtSinhVien = [];
+                edu.system.alert('<div id="zoneprocessXXXX"></div>');
+                edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+                me.startHideOverlay();
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.getList_DSSinhVien(arrChecked_Id[i]);
+                }
+            });
+        });
 
-            
+        $("#btnTaoLichTuan").click(function () {
+            if (edu.util.getValById('dropSearch_KeHoach') == "") {
+                edu.system.alert("Bạn cần chọn kế hoạch trước!");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn tạo dữ liệu thời khóa biểu theo lớp học phần?");
+            $("#btnYes").off("click").on("click", function (e) {
+                $("#alert_content").html("");
+                $("#btnYes").hide();
+                $('#alert>#myModalAlert').modal('hide');
+                me.save_TaoLichTuan();
+            });
         });
     },
 
@@ -1353,7 +1375,7 @@ PhanCongPhamVi.prototype = {
             'strTuKhoa': edu.util.getValById('txtAAAA'),
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
             'strDangKy_LopHocPhan_Id': edu.util.getValById('dropAAAA'),
-            'strPhanCapApDung_Id': strId,
+            'strPhanCapApDung_Id': aData.PHANCAPAPDUNG_ID,
             'strPhamViApDung_Id': aData.PHAMVIAPDUNG_ID,
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': 1,
@@ -1381,19 +1403,31 @@ PhanCongPhamVi.prototype = {
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX", function () {
-                    edu.system.confirm("Bạn có chắc chắn thêm " + me.dtSinhVien.length + " dữ liệu không?");
-                    $("#btnYes").click(function (e) {
-                        $('#alert>#myModalAlert').modal('hide');
-                        setTimeout(function () {
-                            edu.system.alert('<div id="zoneprocessXXXX1"></div>');
-                            edu.system.genHTML_Progress("zoneprocessXXXX1", me.dtSinhVien.length);
-                            for (var i = 0; i < me.dtSinhVien.length; i++) {
-                                me.save_TinhToan(me.dtSinhVien[i].QLSV_NGUOIHOC_ID);
-                            }
-                        }, 100);
+                    me.stopHideOverlay();
+                    var seen = {};
+                    me.dtSinhVien = me.dtSinhVien.filter(function (sv) {
+                        var key = sv.QLSV_NGUOIHOC_ID;
+                        if (!key || seen[key]) return false;
+                        seen[key] = true;
+                        return true;
                     });
-                   
-                    
+                    $("#alert_content").html("");
+                    if (me.dtSinhVien.length == 0) {
+                        edu.system.alert("Không có sinh viên nào trong phạm vi đã chọn!");
+                        return;
+                    }
+                    edu.system.confirm("Bắt đầu tính toán dữ liệu cho " + me.dtSinhVien.length + " sinh viên?");
+                    $("#btnYes").show();
+                    $("#btnYes").off("click").on("click", function (e) {
+                        $("#alert_content").html("");
+                        $("#btnYes").hide();
+                        edu.system.alert('<div id="zoneprocessXXXX1"></div>');
+                        edu.system.genHTML_Progress("zoneprocessXXXX1", me.dtSinhVien.length);
+                        me.startHideOverlay();
+                        for (var i = 0; i < me.dtSinhVien.length; i++) {
+                            me.save_TinhToan(me.dtSinhVien[i].QLSV_NGUOIHOC_ID);
+                        }
+                    });
                 });
             },
             contentType: true,
@@ -1409,43 +1443,33 @@ PhanCongPhamVi.prototype = {
         //--Edit
         var obj_save = {
             'action': 'TS_DKH_Chung5_MH/FSAuBTQNKCQ0CS4iESkgLxUgLAPP',
-            'func': 'PKG_DANGKYHOC_CHUNG5.TaoDuLieuHocPhanTam',
+            'func': 'PKG_DANGKYHOC_CHUNG5.TaoDuLieuTamTheoNguoiHoc',
             'iM': edu.system.iM,
-            'strDangKy_KeHoachDangKy_Id': edu.system.getValById('dropSearch_KeHoach'),
+            'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
             'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        
         //default
 
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    var strPhanCongPhamVi_Id = "";
-
-                    if (!obj_save.strId) {
-                        edu.system.alert("Thêm mới thành công!");
-                        strPhanCongPhamVi_Id = data.Id;
-                    }
-                    else {
-                        edu.system.alert("Cập nhật thành công!");
-                        strPhanCongPhamVi_Id = obj_save.strId
-                    }
+                if (!data.Success) {
+                    console.log("TaoDuLieuTamTheoNguoiHoc lỗi (" + strQLSV_NguoiHoc_Id + "): " + data.Message);
                 }
-                else {
-                    edu.system.alert(data.Message);
-                }
-                
             },
             error: function (er) {
-                edu.system.alert(": " + JSON.stringify(er), "w");
-
+                console.log("TaoDuLieuTamTheoNguoiHoc (er): " + JSON.stringify(er));
             },
             type: 'POST',
 
             complete: function () {
                 edu.system.start_Progress("zoneprocessXXXX1", function () {
-                    //me.getList_PhanCongPhamVi();
+                    me.stopHideOverlay();
+                    $("#alert_content").html("");
+                    $('#alert>#myModalAlert').modal('hide');
+                    setTimeout(function () {
+                        edu.system.alert("Đã thực hiện xong!");
+                    }, 300);
                 });
             },
             contentType: true,
@@ -1455,5 +1479,51 @@ PhanCongPhamVi.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+
+    save_TaoLichTuan: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'TS_DKH_Chung5_MH/FSAuBTQNKCQ0DSgiKRU0IC8VICwP',
+            'func': 'PKG_DANGKYHOC_CHUNG5.TaoDuLieuLichTuanTam',
+            'iM': edu.system.iM,
+            'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropSearch_KeHoach'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Đã thực hiện xong!");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert("TaoDuLieuLichTuanTam (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    startHideOverlay: function () {
+        var me = this;
+        me.stopHideOverlay();
+        me._overlayHideInterval = setInterval(function () {
+            $("#overlay").hide();
+        }, 50);
+    },
+    stopHideOverlay: function () {
+        var me = this;
+        if (me._overlayHideInterval) {
+            clearInterval(me._overlayHideInterval);
+            me._overlayHideInterval = null;
+        }
     },
 }

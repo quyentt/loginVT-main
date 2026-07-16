@@ -8,6 +8,50 @@
         font-size: 30px !important;
         text-align: center;
     }
+
+    /* Nút X đóng form ở header - nút đỏ đặc, cover cả btnClose + btnCloseQuyetDinh */
+    .aps-thucthiquyetdinh .box-header a.btnClose,
+    .aps-thucthiquyetdinh .box-header a.btnCloseQuyetDinh {
+        background-color: #dc3545 !important;
+        border: 1px solid #dc3545 !important;
+        color: #fff !important;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1;
+        padding: 6px 14px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+        transition: all 0.15s ease-in-out;
+    }
+    .aps-thucthiquyetdinh .box-header a.btnClose:hover,
+    .aps-thucthiquyetdinh .box-header a.btnClose:focus,
+    .aps-thucthiquyetdinh .box-header a.btnCloseQuyetDinh:hover,
+    .aps-thucthiquyetdinh .box-header a.btnCloseQuyetDinh:focus {
+        background-color: #c82333 !important;
+        border-color: #bd2130 !important;
+        color: #fff !important;
+        transform: scale(1.08);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.35);
+    }
+    .aps-thucthiquyetdinh .box-header a.btnClose i,
+    .aps-thucthiquyetdinh .box-header a.btnCloseQuyetDinh i {
+        color: #fff !important;
+    }
+
+    /* Nút Chuyển lớp - làm rộng, to hơn cho nổi bật */
+    .aps-thucthiquyetdinh #btnChuyenLop {
+        min-width: 240px;
+        padding: 10px 30px;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+    .aps-thucthiquyetdinh #btnChuyenLop i {
+        margin-right: 6px;
+    }
+    .aps-thucthiquyetdinh #btnChuyenLop:hover {
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+    }
 </style>
 <section class="content aps-sinhvien">
     <div class="row aps-thucthiquyetdinh">
@@ -476,8 +520,8 @@
                     </div>
                     <div class="clear"></div>
 
+                    <!-- ẨN: Khối "Chuyển chương trình học" (giữ code để mở lại khi cần)
                     <div class="aps-form-l col-sm-6 pr15">
-                        <!-- 1. Noi dung bai bao -->
                         <div class="row aps-form" id="zoneChuyenChuongTrinh">
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name border-0 mb-0">
@@ -562,8 +606,10 @@
                                     trình</span></a>
                         </div>
                     </div>
-                    <div class="aps-form-r col-sm-6 pl15">
-                        <!-- 1. Noi dung bai bao -->
+                    -->
+
+                    <!-- ẨN: Khối "Chuyển trạng thái" - quy hết về Chuyển lớp (giữ code để mở lại khi cần)
+                    <div class="aps-form-l col-sm-6 pr15">
                         <div class="row aps-form mb-10" id="zoneChuyenTrangThai">
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name border-0 mb-0">
@@ -608,12 +654,14 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="clear"></div>
                         <div class="row pull-right">
                             <a id="btnChuyenTrangThai" class="btn btn-danger">
                                 <i class="fa-solid fa-arrow-right-arrow-left"></i><span class="lang" key="">Chuyển trạng
                                     thái</span></a>
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
             <div class="box-footer">

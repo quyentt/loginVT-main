@@ -76,6 +76,17 @@ TongHopDiem.prototype = {
         //    me.strPhamViMa = strMa;
         //});
 
+        // Override handler Import ở scope module để chèn thanh tiến trình.
+        // Bind delegate ở container gần hơn document nên sẽ chạy trước handler
+        // global tại Corei/systemroot.js:225; stopImmediatePropagation chặn tiếp global.
+        $("#zonebtnTongHopDiem_Import")
+            .off("click.THDProgress", ".btnImportWithProce")
+            .on("click.THDProgress", ".btnImportWithProce", function (e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                me.showImport_WithProgress($(this).attr("title"), $(this).attr("name"));
+            });
+
         edu.system.getList_MauImport("zonebtnBaoCao_TongHopDiem", function (addKeyValue) {
             var strDaoTao_ThoiGianDaoTao_Id = "";
             
@@ -735,5 +746,249 @@ TongHopDiem.prototype = {
             title: "Chọn khoa quản lý",
         }
         edu.system.loadToCombo_data(obj);
+    },
+
+    /*------------------------------------------
+    --Discription: Fork của edu.system.showImportChungV2 dành riêng cho trang
+    -- Tổng hợp điểm — thêm thanh tiến trình "giả lập" 0→90% trong lúc đợi
+    -- response, nhảy 100% khi có kết quả. API SImport chỉ trả về 1 response
+    -- cuối nên không có % thật; thanh chỉ để trấn an người dùng và hiển thị
+    -- thời gian đã trôi.
+    -------------------------------------------*/
+    showImport_WithProgress: function (strTenHienThi, strMaDanhMuc) {
+        var me = this;
+        if (strTenHienThi === undefined) strTenHienThi = "";
+        var sCallback = $("a[name='" + strMaDanhMuc + "']").attr("callback");
+        var url_report = "";
+        if (edu.util.checkValue(strMaDanhMuc)) {
+            url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
+        }
+
+        var row = '';
+        row += '<div class="row"><div class="col-sm-2">- Upload ' + strTenHienThi + ': </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
+        row += '<div class="row"><div class="col-sm-2">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
+        row += '<div class="clear">Sheet import</div>';
+        row += '<div><div style="width: 400px"><select id="dropSearch_BangA" class="select-opt"></select></div></div>';
+        row += '<div class="clear"></div>';
+
+        // Vùng thanh tiến trình (ẩn cho tới khi bấm "Thực hiện import")
+        row += '<div id="zoneImportProgress_THD" style="display:none; margin:12px 0;">';
+        row += '  <div class="clearfix" style="margin-bottom:4px">';
+        row += '    <span class="pull-left" id="lblImportProgress_THD"><i class="fa fa-spinner fa-spin"></i> Đang xử lý import…</span>';
+        row += '    <small class="pull-right" style="font-weight:bold;font-size:14px">Đã trôi: <span id="lblImportTime_THD">0s</span></small>';
+        row += '  </div>';
+        row += '  <div class="progress progress-sm active" style="margin-bottom:0;height:18px">';
+        row += '    <div id="barImportProgress_THD" class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%;line-height:18px;transition:width .8s ease-out;">0%</div>';
+        row += '  </div>';
+        row += '  <div class="text-muted" style="margin-top:6px;font-size:12px">File lớn có thể mất vài phút. Vui lòng không đóng cửa sổ trong khi import.</div>';
+        row += '</div>';
+
+        row += '<div class="zone-content" id="tblChuaImport">';
+        row += '  <div class="box-header with-border">';
+        row += '    <h3 class="box-title"><i class="fa fa-list-alt"></i> Danh sách</h3>';
+        row += '    <div class="pull-right"><a class="btn btn-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div>';
+        row += '  </div>';
+        row += '  <div class="clear"></div>';
+        row += '  <div class="row row-align"><table id="tblBangA" class="table table-hover table-bordered"><tbody></tbody></table></div>';
+        row += '</div>';
+
+        row += '<div class="clear"></div>';
+        row += '<div class="zone-content" id="tblImportLoi" style="display:none">';
+        row += '  <div class="box-header with-border">';
+        row += '    <h3 class="box-title"><i class="fa fa-list-alt"></i>Danh sách Lỗi</h3>';
+        row += '    <div class="pull-right"><a class="btn btn-primary" id="btnDownloadAllTableLoi" title="tblBangB" href="#"><i class="fa fa-cloud-download"></i> Tải file</a></div>';
+        row += '  </div>';
+        row += '  <div class="clear"></div>';
+        row += '  <div class="row row-align"><table id="tblBangB" class="table table-hover table-bordered"><tbody></tbody></table></div>';
+        row += '</div>';
+
+        $("#modalBaoCao #modal_body").html(row);
+        $("#modalBaoCao").modal("show");
+        edu.system.uploadImport(["importToCheck"], edu.system.getList_DataImport);
+
+        $('#dropSearch_BangA').on('change', function () {
+            $("#tblChuaImport").show();
+            $("#tblImportLoi").hide();
+            edu.system.genTable_Import_View(edu.system.dtImport[$("#dropSearch_BangA").val()], "tblBangA");
+        });
+
+        // Nếu người dùng đóng modal giữa chừng thì dọn timer
+        $("#modalBaoCao").off("hidden.bs.modal.THDProgress")
+            .on("hidden.bs.modal.THDProgress", function () {
+                me._stopImportProgress();
+            });
+
+        $("#btnThucHienImport").off("click.THD").on("click.THD", function () {
+            me._startImportProgress();
+            GetDuLieuDanhMuc();
+        });
+
+        $("#btnDownloadAllTableLoi").off("click.THD").on("click.THD", function () {
+            edu.system.reportAllTable_User(this.title);
+        });
+
+        function GetDuLieuDanhMuc() {
+            var obj_list = {
+                'action': 'SYS_Import/SImport',
+                'strPath': edu.util.getValById("importToCheck"),
+                'strApp_Id': edu.system.appId,
+                'strMaDanhMuc': strMaDanhMuc,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strSheet': $("#dropSearch_BangA option:selected").text(),
+                'lKeyVal': []
+            };
+            if (strMaDanhMuc === undefined || strMaDanhMuc === "") {
+                ImportData(obj_list);
+                return;
+            }
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        var lKeyVal = [];
+                        for (var i = 0; i < data.Data.length; i++) {
+                            if (edu.util.checkValue(data.Data[i].THONGTIN5)) {
+                                lKeyVal.push({ strKey: data.Data[i].MA, strVal: eval(data.Data[i].THONGTIN5) });
+                            }
+                            if (data.Data[i].THONGTIN4 == "1") {
+                                edu.system["strMaCotImport"] = data.Data[i].THONGTIN1;
+                            }
+                        }
+                        obj_list.lKeyVal = lKeyVal;
+                    }
+                    ImportData(obj_list);
+                },
+                error: function (er) {
+                    me._stopImportProgress();
+                    edu.system.alert(JSON.stringify(er), "w");
+                },
+                type: 'GET',
+                action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+                contentType: true,
+                data: {
+                    'strMaBangDanhMuc': strMaDanhMuc,
+                    'strTieuChiSapXep': "",
+                    'dTrangThai': 995
+                },
+                fakedb: []
+            }, false, false, false, null);
+        }
+
+        function ImportData(obj_list) {
+            edu.system.makeRequest({
+                success: function (data) {
+                    me._finishImportProgress();
+                    if (data.Success) {
+                        data = data.Data;
+                        var arrDataLoi = [];
+                        $(".tableError").remove();
+                        if (data.length > 0) {
+                            var iThanhCong = 0, iThatBai = 0;
+                            var rowErr = '';
+                            rowErr += '<table class="table table-hover table-bordered tableError">';
+                            rowErr += '<tbody>';
+                            rowErr += '<tr><td>Dữ liệu</td><td>Lỗi</td></tr>';
+                            for (var i = 0; i < data.length; i++) {
+                                rowErr += '<tr>';
+                                if (edu.util.checkValue(data[i].VALUE)) {
+                                    iThatBai++;
+                                    rowErr += '<td>' + edu.util.returnEmpty(data[i].KEY) + '</td>';
+                                    rowErr += '<td>' + edu.util.returnEmpty(data[i].VALUE) + '</td>';
+                                    try {
+                                        var iErr = -1;
+                                        if (data[i].KEY.indexOf(":") != -1) {
+                                            iErr = parseInt(data[i].KEY.split(':')[0]);
+                                        }
+                                        if (iErr > 0) {
+                                            var tempIP = edu.system.dtImport[$("#dropSearch_BangA").val()][iErr - 1];
+                                            tempIP["Lỗi"] = data[i].VALUE;
+                                            arrDataLoi.push(tempIP);
+                                        }
+                                    } catch (e) { }
+                                } else {
+                                    iThanhCong++;
+                                }
+                                rowErr += '</tr>';
+                            }
+                            rowErr += '</tbody>';
+                            rowErr += '<thead><tr><td colspan="2">Thành công <span class="italic color-active">' + iThanhCong + '</span>; Thất bại: <span class="italic color-warning">' + iThatBai + '</span></td></tr></thead>';
+                            rowErr += '</table>';
+                            edu.system.alert(rowErr);
+                        }
+                        $("#tblChuaImport").hide();
+                        $("#tblImportLoi").show();
+                        edu.system.genTable_Import_View(arrDataLoi, "tblBangB");
+                        if (sCallback != undefined && sCallback != "undefined" && sCallback != "") {
+                            eval(sCallback);
+                        }
+                    }
+                    else {
+                        edu.system.alert(edu.util.returnEmpty(data.Message), "w");
+                    }
+                },
+                error: function (er) {
+                    me._stopImportProgress();
+                    edu.system.alert(JSON.stringify(er), "w");
+                },
+                type: 'POST',
+                action: obj_list.action,
+                contentType: true,
+                data: obj_list,
+                fakedb: []
+            }, false, false, false, null);
+        }
+    },
+
+    // Timer bơm % lên dần từ 0 → 90 theo đường cong chậm dần.
+    // Đồng thời ẩn overlay chung "Đang tải dữ liệu…" (do makeRequest tự bật)
+    // để tránh chồng 2 loader — chỉ hiển thị thanh tiến trình cho gọn.
+    _startImportProgress: function () {
+        var me = this;
+        me._importProgressPct = 0;
+        me._importProgressStart = new Date().getTime();
+        $("#zoneImportProgress_THD").show();
+        $("#btnThucHienImport").addClass("disabled").css("pointer-events", "none");
+        $("#barImportProgress_THD").css("width", "0%").text("0%").attr("aria-valuenow", 0);
+        $("#lblImportProgress_THD").html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý import…');
+        $("#lblImportTime_THD").text("0s");
+        $("#overlay").hide();
+        if (me._importProgressTimer) clearInterval(me._importProgressTimer);
+        me._importProgressTimer = setInterval(function () {
+            var cur = me._importProgressPct;
+            var next = cur + Math.max(0.4, (90 - cur) * 0.06);
+            if (next > 90) next = 90;
+            me._importProgressPct = next;
+            var rounded = Math.round(next);
+            $("#barImportProgress_THD").css("width", next + "%").text(rounded + "%").attr("aria-valuenow", rounded);
+            var elapsed = Math.floor((new Date().getTime() - me._importProgressStart) / 1000);
+            $("#lblImportTime_THD").text(elapsed + "s");
+            $("#overlay").hide();
+        }, 800);
+    },
+
+    // Response về (success) — nhảy lên 100% rồi ẩn thanh
+    _finishImportProgress: function () {
+        var me = this;
+        if (me._importProgressTimer) {
+            clearInterval(me._importProgressTimer);
+            me._importProgressTimer = null;
+        }
+        $("#barImportProgress_THD").css("width", "100%").text("100%").attr("aria-valuenow", 100);
+        $("#lblImportProgress_THD").html('<i class="fa fa-check-circle" style="color:#00a65a"></i> Hoàn tất');
+        setTimeout(function () {
+            $("#zoneImportProgress_THD").fadeOut(400);
+            $("#btnThucHienImport").removeClass("disabled").css("pointer-events", "");
+        }, 700);
+    },
+
+    // Response về (error) hoặc modal đóng — dọn timer, phục hồi nút
+    _stopImportProgress: function () {
+        var me = this;
+        if (me._importProgressTimer) {
+            clearInterval(me._importProgressTimer);
+            me._importProgressTimer = null;
+        }
+        $("#zoneImportProgress_THD").hide();
+        $("#btnThucHienImport").removeClass("disabled").css("pointer-events", "");
     },
 }

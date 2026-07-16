@@ -698,8 +698,19 @@
         transform: scale(1.08);
     }
 
-    /* ===== Footer zoneEdit: cho phép wrap khi mở menu hoặc hẹp ngang ===== */
+    /* ===== Footer zoneEdit: Xóa tách trái, cụm nút còn lại dồn phải ===== */
     @media (min-width: 768px) {
+        #zoneEdit .box-footer {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        #zoneEdit .box-footer > .pull-left {
+            float: none !important;
+            margin-right: auto !important;
+        }
         #zoneEdit .box-footer .pull-right.d-flex {
             float: none !important;
             display: flex !important;
@@ -707,8 +718,9 @@
             gap: 6px !important;
             row-gap: 8px !important;
             justify-content: flex-end !important;
-            width: 100% !important;
-            max-width: 100% !important;
+            width: auto !important;
+            max-width: none !important;
+            flex: 0 1 auto !important;
         }
         #zoneEdit .box-footer .pull-right.d-flex > .btn {
             margin: 0 !important;
@@ -1037,6 +1049,18 @@
                                            value="HocNangDiem">
                                     <label for="KieuDangky_3">Dành cho học nâng điểm</label>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="row zone-box">
+                            <div class="row">
+                                <p class="group-group-title-name">
+                                    <span class="badge bg-blue">Tùy chọn lý do học lại</span>
+                                </p>
+                            </div>
+                            <div class="checkbox" id="divLyDoHocLai">
+
                             </div>
                         </div>
                     </div>
@@ -1668,11 +1692,11 @@
                 </div>
             </div>
             <div class="box-footer">
+                <a class="submit btn btn-danger btnOpenDelete pull-left" id="btnDelete_KeHoach" style="display: none">
+                    <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
+                </a>
                 <div class="pull-right d-flex">
                     <a id="btnSave" class="btn btn-primary btnSave"><i class="fal fa-save"></i>Lưu</a>
-                    <a class="submit btn btn-danger btnOpenDelete" id="btnDelete_KeHoach" style="display: none">
-                        <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
-                    </a>
                     <a class="btn btn-default btnCloseToggle" href="#" title="Close">
                         <i class="fa fa-times-circle"></i> Đóng
                     </a>
@@ -1844,6 +1868,7 @@
                                 <th class="td-left"><span class="lang" key="">Trạng thái</span></th>
                                 <th class="td-left"><span class="lang" key="">Nợ phí</span></th>
                                 <th class="td-left"><span class="lang" key="">Chương trình</span></th>
+                                <th class="td-left"><span class="lang" key="">Lớp quản lý</span></th>
                                 <th class="td-left"><span class="lang" key="">Khóa học</span></th>
                             </tr>
                         </thead>
@@ -1853,6 +1878,13 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
+                <a class="btn btn-success" id="btnXuatExcel_KhongDangKy" href="javascript:void(0);"
+                   title="Xuất Excel danh sách không đăng ký đang hiển thị (Ctrl+G)"
+                   style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                    <i class="fa-solid fa-file-excel" style="color:#fff;"></i>
+                    <span class="lang" key="">Xuất Excel</span>
+                    <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:1px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
+                </a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     <i class="fa fa-times-circle-o"></i>
                     <span class="lang" key="">Đóng</span>
@@ -2237,6 +2269,27 @@
 </div>
 
 <!-- page script -->
+<!-- XLSX-JS-STYLE (fork SheetJS có hỗ trợ style cell) — phục vụ Xuất Excel DS không đăng ký. Load 1 lần, idempotent. -->
+<script>
+    (function loadXLSX_KHDK() {
+        if (typeof XLSX !== 'undefined' && XLSX.version) return;
+        var cdnList = [
+            'https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+            'https://unpkg.com/xlsx-js-style@1.2.0/dist/xlsx.bundle.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx-js-style/1.2.0/xlsx.bundle.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { try { XLSX._styleEnabled = true; } catch (er) { } console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    })();
+</script>
 <script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.2"></script>
 <script src="modules/kehoachdangky/script/kehoachdangky.js?v=1.0.0.8"></script>
 <script type="text/javascript">

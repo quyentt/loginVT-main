@@ -461,17 +461,20 @@ KeHoachXuLy.prototype = {
                 edu.system.alert("Vui lòng chọn đối tượng?");
                 return;
             }
-            edu.system.alert('<div id="zoneprocessTinhPhi"></div>');
-            edu.system.genHTML_Progress("zoneprocessTinhPhi", arrChecked_Id.length);
+            var arrCanTinh = [];
             for (var i = 0; i < arrChecked_Id.length; i++) {
                 var aData = me.dtKetQua.find(e => e.ID == arrChecked_Id[i]);
-                if (aData) {
-                    me.tinhPhiThiTuDong(aData.QLSV_NGUOIHOC_ID, aData.ID);
-                }
+                if (aData) arrCanTinh.push(aData);
             }
-            setTimeout(function () {
-                me.getList_SinhVien();
-            }, arrChecked_Id.length * 50);
+            if (arrCanTinh.length == 0) {
+                edu.system.alert("Không có dữ liệu hợp lệ để tính phí?");
+                return;
+            }
+            edu.system.alert('<div id="zoneprocessTinhPhi"></div>');
+            edu.system.genHTML_Progress("zoneprocessTinhPhi", arrCanTinh.length);
+            arrCanTinh.forEach(function (aData) {
+                me.tinhPhiThiTuDong(aData.QLSV_NGUOIHOC_ID, aData.ID);
+            });
         });
         $("#zoneBtnXacNhan").delegate('.btnxacnhan', 'click', function () {
             var strTinhTrang = this.id;
@@ -1015,19 +1018,21 @@ KeHoachXuLy.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) {
-                    edu.system.afterComfirm({ content: "Tính phí thành công!", code: "" });
-                }
-                else {
-                    edu.system.afterComfirm({ content: "TinhPhiThiTuDong: " + data.Message, code: "" });
+                if (!data.Success) {
+                    console.warn("TinhPhiThiTuDong: " + data.Message);
                 }
             },
             error: function (er) {
-                edu.system.afterComfirm({ content: "TinhPhiThiTuDong (er): " + JSON.stringify(er), code: "w" });
+                console.warn("TinhPhiThiTuDong (er): " + JSON.stringify(er));
             },
             type: 'POST',
             contentType: true,
             action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessTinhPhi", function () {
+                    me.getList_SinhVien();
+                });
+            },
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
@@ -1555,6 +1560,9 @@ KeHoachXuLy.prototype = {
                 },
                 {
                     "mDataProp": "DAOTAO_HOCPHAN_TEN"
+                },
+                {
+                    "mDataProp": "THI_DOTTHI_TEN"
                 },
                 {
                     "mDataProp": "HOCTRINH"

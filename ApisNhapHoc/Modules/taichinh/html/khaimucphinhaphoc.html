@@ -145,9 +145,22 @@
     #modalKhoanThuEdit_HSNH {
         z-index: 1085 !important;
     }
-    /* Backdrop cuối (của modal con) */
-    body > .modal-backdrop:nth-of-type(2n) {
-        z-index: 1080 !important;
+    /* Backdrop: JS handler xử lý dynamic, không dùng nth-of-type
+       vì body có nhiều div khác → chỉ số không đoán được */
+    /* Select2 dropdown phải trên modal (đè z-index 1085 của modal con) */
+    body > .select2-container--open,
+    .select2-container--open {
+        z-index: 10500 !important;
+    }
+    /* Bootstrap Select dropdown, datepicker, tooltip khi nằm trong modal */
+    .bootstrap-datetimepicker-widget.dropdown-menu {
+        z-index: 10500 !important;
+    }
+    /* System alert / confirm modal phải TRÊN mọi modal khác (backdrop set qua JS) */
+    #myModalAlert,
+    .modal-alert,
+    .modal-confirm {
+        z-index: 20000 !important;
     }
 
     /* ============ Empty state ============ */
@@ -831,7 +844,7 @@
 </div>
 
 <!-- page script -->
-<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.24"></script>
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.32"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaiMucPhi'] = new KhaiMucPhi();

@@ -1,6 +1,5 @@
 ﻿
-<section class="content">
-
+<section class="content aps-tieuchidiem">
     <div class="row">
         <!-- /.left-content -->
         <!-- /.right-content -->
@@ -8,12 +7,12 @@
             <!-- box Notify_VBSC -->
             <div class="box box-solid zone-bus" id="zone_notify_nhapdiem">
                 <div class="box box-solid">
-                    <div class="box-header with-border">
+                    <div class="box-header with-border line-38">
                         <h3 class="box-title">
-                            <i class="fa fa-list-alt"></i> Chọn đối tượng áp dụng
+                            <i class="fa-duotone fa-solid fa-user-check mt-3"></i> Chọn đối tượng áp dụng
                         </h3>
                     </div>
-                    <div class="box-body">
+                    <div class="box-body pd20">
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="row pull-left">
@@ -28,8 +27,8 @@
                                         <a class="btn btn-primary btnAdd" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
                                     </div>
                                 </div>
-                                <div class="col-sm-12 scroll-table-x">
-                                    <table id="tblViewTieuChiDiem" class="table table-hover table-bordered"></table>
+                                <div class="col-sm-12 scroll-table-x mt-10">
+                                    <table id="tblViewTieuChiDiem" class="table table-hover table-noborder"></table>
                                 </div>
                             </div>
                         </div>
@@ -39,20 +38,20 @@
         </div>
     </div>
 </section>
+
 <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Tiêu chí điểm</h3>
                 <input type="hidden" value="" id="txtId" />
             </div>
-            <div class="modal-body" id="modal_body">
-                <div class="row zone-box">
-
+            <div class="modal-body aps-add-new" id="modal_body">
+                <div class="row aps-form">
                     <!--row 1-->
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Chọn DM tiêu chí</span></label>
                         </div>
                         <div class="col-sm-9">
@@ -60,8 +59,8 @@
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <!--row 2-->
-                    <div class="row">
+                    <!--row aps-form-item 2-->
+                    <div class="row aps-form-item">
                         <div class="col-sm-3">
                             <label style="font-weight: normal"><span class="lang" key="">Thứ tự</span></label>
                         </div>
@@ -70,66 +69,66 @@
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Tên tiêu chí</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <input type="text" id="txtTenTieuChi" class="form-control" />
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Mã tiêu chí</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <input type="text" id="txtMaTieuChi" class="form-control" />
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Mức điểm quy định</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <input type="text" id="txtMucDiem" class="form-control" />
                         </div>
                         <div class="clear"></div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Đối tượng áp dụng</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <select id="dropDoiTuongApDung" class="select-opt"></select>
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Thang điểm</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <select id="dropThangDiem" class="select-opt"></select>
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Nhóm tiêu chí</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <select id="dropNhomTieuChi" class="select-opt"></select>
                         </div>
                         <div class="clear"></div>
                     </div>
-                    <div class="row">
-                        <div class="col-sm-3">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">
                             <label style="font-weight: normal"><span class="lang" key="">Nhập trực tiếp</span></label>
                         </div>
-                        <div class="col-sm-9">
+                        <div class="col-sm-9 aps-form-input">
                             <select id="dropNhapTrucTiep" class="select-opt">
                                 <option value="1">Nhập trực tiếp</option>
                                 <option value="0">Không nhập trực tiếp</option>

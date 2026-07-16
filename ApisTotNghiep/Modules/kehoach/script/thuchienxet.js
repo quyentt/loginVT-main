@@ -333,6 +333,43 @@ ThucHienXet.prototype = {
         $('#dropSearch_KhoaHoc').on('select2:select', function () {
             me.getList_LopQuanLy();
         });
+        $("#tblQuanSoLop, #tblDat, #tblKhongDat, #tblDaCongNhan, #tblHoanXet").delegate('.btnView_HocTap', 'click', function (e) {
+            var strMSSV = $(this).data('mssv') || $(this).find('u').text();
+            console.log('[AUTO-THU-VAI][handler] click SV — MSSV =', strMSSV, '| id =', this.id);
+            if (!strMSSV) { edu.system.alert("Không lấy được mã số sinh viên."); return; }
+
+            // Backup sessionStorage tab cha vì iframe cùng origin share sessionStorage → auto-thu-vai bên trong iframe sẽ ghi đè strChucNang. Restore khi đóng modal để tab cha giữ nguyên context Xét tốt nghiệp.
+            var _bakChucNang = sessionStorage.getItem('strChucNang');
+            var _bakChucNang_Id = sessionStorage.getItem('strChucNang_Id');
+
+            try {
+                localStorage.setItem('pendingThuVaiSV', JSON.stringify({
+                    strMSSV: String(strMSSV).trim(),
+                    strHashChucNang: '41c2266e0ed749a3aeb177c3cee2167380cf9e16c2d74f46a1ece73b7c119a8f'
+                }));
+            } catch (ex) { console.error('[AUTO-THU-VAI][handler] set localStorage FAILED', ex); }
+
+            var strPath = window.location.pathname.replace(/indexi\.aspx$/i, 'index.aspx');
+            var strEntryUrl = strPath + '?_thuvai=' + Date.now();
+            console.log('[AUTO-THU-VAI][handler] set iframe src ->', strEntryUrl);
+
+            $('#lblIframeSV_title').text('Xem sinh viên: ' + strMSSV);
+            $('#frameSV').attr('src', strEntryUrl);
+            $('#modalIframeSV').modal('show');
+
+            $('#modalIframeSV').off('hidden.bs.modal.thuvai').on('hidden.bs.modal.thuvai', function () {
+                console.log('[AUTO-THU-VAI][handler] modal đóng — restore sessionStorage tab cha');
+                if (_bakChucNang !== null) sessionStorage.setItem('strChucNang', _bakChucNang);
+                else sessionStorage.removeItem('strChucNang');
+                if (_bakChucNang_Id !== null) sessionStorage.setItem('strChucNang_Id', _bakChucNang_Id);
+                else sessionStorage.removeItem('strChucNang_Id');
+                $('#frameSV').attr('src', 'about:blank');
+            });
+
+            // Cách cũ (mở tab mới) — giữ comment để mở lại khi cần:
+            // var w = window.open('about:blank', '_blank');
+            // if (w) { w.location.href = window.location.origin + strEntryUrl; }
+        });
     },
 
     rewrite: function () {
@@ -1748,7 +1785,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -1843,7 +1882,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -1977,7 +2018,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -2133,7 +2176,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -2320,7 +2365,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -2596,7 +2643,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",

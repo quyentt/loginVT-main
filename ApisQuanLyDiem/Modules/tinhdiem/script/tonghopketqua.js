@@ -36,6 +36,12 @@ TongHopKetQua.prototype = {
                 me.TaoHangDoi_TongHopKetQua_TuDong();
             });
         });
+        $("#btnXepLoaiHocTap").click(function () {
+            edu.system.confirm("Bạn có chắc chắn <span class='italic color-warning'>Xếp loại học tập</span> không?");
+            $("#btnYes").click(function (e) {
+                me.TaoHangDoi_XepLoai_TuDong();
+            });
+        });
         $("#dropKhoaQuanLy").on("select2:select", function () {
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
@@ -247,6 +253,57 @@ TongHopKetQua.prototype = {
             type: "GET",
             action: obj_save.action,
             
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    TaoHangDoi_XepLoai_TuDong: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'D_HangDoi_MH/FSAuCSAvJgUuKB4ZJDENLiAoHhU0BS4vJgPP',
+            'func': 'diem_nhiemvu_hangdoi.TaoHangDoi_XepLoai_TuDong',
+            'iM': edu.system.iM,
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo('dropTinhTrangSinhVien'),
+            'strDaoTao_HeDaoTao_Id': edu.util.getValById('dropHeDaoTao'),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValCombo('dropKhoaDaoTao'),
+            'strDaoTao_KhoaQuanLy_Id': edu.util.getValById('dropKhoaQuanLy'),
+            'strDaoTao_ChuongTrinh_Id': edu.util.getValById('dropChuongTrinhDaoTao'),
+            'strDaoTao_LopQuanLy_Id': edu.util.getValById('dropLopQuanLy'),
+            'strPhamViTongHopDiem_Id': edu.util.getValById('dropPhanViTongHop'),
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValCombo('dropPhanViTongHop_' + me.strPhamViMa),
+            'strThangDiem_Id': edu.util.getValById('dropThangDiem'),
+            'dTongHopLaiDiemThanhPhan': edu.util.getValById('dropCachTinh'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var obj = {
+                        content: "Khởi tạo dữ liệu thành công!",
+                        code: "",
+                    }
+                    edu.system.afterComfirm(obj);
+                    edu.system.createHangDoi(me.objHangDoi);
+                }
+                else {
+                    var obj = {
+                        content: "TC_HangDoi.TaoHangDoi_XepLoai_TuDong: " + data.Message,
+                        code: "w",
+                    }
+                    edu.system.afterComfirm(obj);
+                }
+            },
+            error: function (er) {
+                var obj = {
+                    content: "TC_HangDoi.TaoHangDoi_XepLoai_TuDong (er): " + JSON.stringify(er),
+                    code: "w",
+                }
+                edu.system.afterComfirm(obj);
+            },
+            type: "POST",
+            action: obj_save.action,
             contentType: true,
             data: obj_save,
             fakedb: [

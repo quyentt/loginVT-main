@@ -157,7 +157,8 @@ ThucThiQuyetDinh.prototype = {
             $("#lblLopHienTai").html(objSinhVien.DAOTAO_LOPQUANLY_TEN);
             $("#lblTrangThaiHienTai").html(objSinhVien.TRANGTHAINGUOIHOC_TEN);
             me.getList_LopHienTai(objSinhVien.QLSV_NGUOIHOC_ID);
-            me.getList_ChuongTrinhHienTai(objSinhVien.QLSV_NGUOIHOC_ID);
+            // ẨN: getList_ChuongTrinhHienTai - dành cho khối Chuyển chương trình (giữ để mở lại khi cần)
+            // me.getList_ChuongTrinhHienTai(objSinhVien.QLSV_NGUOIHOC_ID);
         });
         $("#tblInput_DTSV_SinhVien").delegate('.btnDeletePoiter', 'click', function () {
             var strSinhVien_QuyetDinh = edu.util.cutPrefixId(/remove_nhansu/g, this.id);
@@ -173,19 +174,24 @@ ThucThiQuyetDinh.prototype = {
             { "MA": "txtQuyetDinh_So", "THONGTIN1": "EM" },
         ];
         me.autoWithDiv("zoneTTQD", "zoneChuyenLop");
+        /* ẨN: autoWithDiv cho 2 khối đã ẩn (giữ để mở lại khi cần)
         me.autoWithDiv("zoneChuyenTrangThai", "zoneChuyenChuongTrinh");
+        */
         $("#btnChuyenLop").click(function () {
             edu.system.confirm("Bạn có chắc chắn muốn chuyển lớp không?", "w");
             $("#btnYes").click(function (e) {
                 me.save_ChuyenLop();
             });
         });
+        /* ẨN: handler btnChuyenChuongTrinh - khối Chuyển chương trình đã ẩn (giữ để mở lại khi cần)
         $("#btnChuyenChuongTrinh").click(function () {
             edu.system.confirm("Bạn có chắc chắn muốn chuyển chương trình không?", "w");
             $("#btnYes").click(function (e) {
                 me.save_ChuyenChuongTrinh();
             });
         });
+        */
+        /* ẨN: handler btnChuyenTrangThai - khối Chuyển trạng thái đã ẩn, quy về Chuyển lớp (giữ để mở lại khi cần)
         $("#btnChuyenTrangThai").click(function () {
             console.log(12111);
             edu.system.confirm("Bạn có chắc chắn muốn chuyển trạng thái không?", "w");
@@ -194,6 +200,7 @@ ThucThiQuyetDinh.prototype = {
                 me.save_ChuyenTrangThai();
             });
         });
+        */
         $("#btnDelete_ThucThi").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
             if (arrChecked_Id.length == 0) {
@@ -1116,6 +1123,7 @@ ThucThiQuyetDinh.prototype = {
             ]
         }, false, false, false, null);
     },
+    /* ẨN: các hàm hỗ trợ khối "Chuyển chương trình học" - giữ code để mở lại khi cần
     getList_ChuongTrinhHienTai: function (strNguoiHoc_Id) {
         var me = this;
         var obj_list = {
@@ -1200,6 +1208,8 @@ ThucThiQuyetDinh.prototype = {
             ]
         }, false, false, false, null);
     },
+    */
+    /* ẨN: save_ChuyenTrangThai - khối Chuyển trạng thái đã ẩn, quy về Chuyển lớp (giữ để mở lại khi cần)
     save_ChuyenTrangThai: function () {
         var me = this;
         var aData = edu.util.objGetOneDataInData(me.strSinhVien_QuyetDinh, me.dtSinhVien, "ID");
@@ -1237,7 +1247,7 @@ ThucThiQuyetDinh.prototype = {
             ]
         }, false, false, false, null);
     },
-
+    */
 
     getList_LoaiQuyetDinh: function () {
         var me = this;
