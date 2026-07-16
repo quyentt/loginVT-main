@@ -1,4 +1,18 @@
-﻿<section class="content aps-KeHoachChuongTrinh">
+﻿<style>
+    /* Modal Kế thừa: cho phép cuộn dọc bảng học phần và giữ header dính khi cuộn */
+    #myModalKeThua .modal-dialog { max-width: 95vw; }
+    #myModalKeThua #DSHocPhan {
+        max-height: 55vh;
+        overflow-y: auto !important;
+    }
+    #myModalKeThua #tblHocPhanKeThua thead th {
+        position: sticky;
+        top: 0;
+        background: #fff;
+        z-index: 2;
+    }
+</style>
+<section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
         <div class="zone-content zone_chuongtrinh" id="zone_chuongtrinh">
             <!-- /.Tìm kiếm -->
@@ -1459,8 +1473,8 @@
                             <!--row 1-->
                             <div class="row aps-form-item mb-0">
                                 <p class="group-group-title-name mb-0 border-0 ">
-                                    <span class="badge bg-blue mb-0"
-                                        style="color:#3380db !important;margin-bottom: 0 !important;">
+                                    <span class="badge mb-0"
+                                        style="color:#1a5fb4 !important;background:#e7f1fd;border-left:4px solid #3380db;padding:8px 14px;font-size:14px;font-weight:600;margin-bottom: 0 !important;">
                                         Thông tin chung về chương trình</span>
                                 </p>
                             </div>
@@ -1472,7 +1486,7 @@
                             <!--row 1-->
                             <div class="row aps-form-item mb-0">
                                 <p class="group-group-title-name mb-0 border-0 pb-0">
-                                    <span class="badge bg-blue" style="color:#198754 !important;">
+                                    <span class="badge" style="color:#0f5132 !important;background:#e7f5ec;border-left:4px solid #198754;padding:8px 14px;font-size:14px;font-weight:600;">
                                         Thông tin chia định hướng</span>
                                 </p>
                             </div>
@@ -1500,7 +1514,7 @@
                         <!--row 1-->
                         <div class="row aps-form-item mb-0">
                             <p class="group-group-title-name mb-0 border-0 pb-0">
-                                <span class="badge bg-blue" style="color:#FF0000 !important;">Khối bắt buộc </span>
+                                <span class="badge" style="color:#c62828 !important;background:#fdecec;border-left:4px solid #dc3545;padding:8px 14px;font-size:14px;font-weight:600;">Khối bắt buộc</span>
                             </p>
                         </div>
                         <div id="zoneprocessXXXXA"></div>
@@ -1543,7 +1557,7 @@
                         <!--row 1-->
                         <div class="row aps-form-item mb-0">
                             <p class="group-group-title-name mb-0 border-0 pb0">
-                                <span class="badge bg-blue" style="color:#0d9f0f !important;">Khối tự chọn</span>
+                                <span class="badge" style="color:#0a7a0c !important;background:#e7f5e7;border-left:4px solid #0d9f0f;padding:8px 14px;font-size:14px;font-weight:600;">Khối tự chọn</span>
                             </p>
                         </div>
                         <div id="zoneprocessXXXXB"></div>
