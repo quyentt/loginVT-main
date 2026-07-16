@@ -4,8 +4,17 @@
 --Description:
 --Date of created: 13/09/2016
 --Updated by: nnthuong & tvhiep
---Date of updated: 06/06/2018 
+--Date of updated: 06/06/2018
 ----------------------------------------------*/
+// [AUTO-THU-VAI][early] Nếu tab mới mở để thủ vai SV mà URL còn hash cũ (do browser clone khi window.open) → replace URL sạch ngay, không cho bất cứ flow nào đọc hash cũ. Chạy sớm nhất khi script load.
+(function () {
+    try {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('pendingThuVaiSV') && window.location.hash) {
+            console.log('[AUTO-THU-VAI][early] có pending + hash =', window.location.hash, '→ location.replace URL sạch');
+            window.location.replace(window.location.pathname + window.location.search);
+        }
+    } catch (ex) { console.error('[AUTO-THU-VAI][early] err', ex); }
+})();
 function systemroot() { }
 systemroot.prototype = {
     userId: null,
@@ -741,6 +750,8 @@ systemroot.prototype = {
     */
     initMain: function (strDisplayedPath, strRootPath, strChucNang_Id) {
         var me = this;
+        console.log('[AUTO-THU-VAI][initMain] call — strDisplayedPath =', strDisplayedPath, '| strRootPath =', strRootPath, '| strChucNang_Id =', strChucNang_Id, '| pending =', localStorage.getItem('pendingThuVaiSV'));
+        console.trace('[AUTO-THU-VAI][initMain] stack');
         if (!strChucNang_Id) {
             var temp = me.dtChucNang.find(e => e.DUONGDANFILE == strRootPath);
             if (temp) strChucNang_Id = temp.ID;
@@ -4812,15 +4823,17 @@ systemroot.prototype = {
     */
     checkChucNang: function () {
         var me = this;
-        // [AUTO-THU-VAI] Tab mới mở để thủ vai SV: xoá sessionStorage kế thừa từ tab cha để không tự mount chức năng cũ.
-        // Bắt buộc trước khi đọc sessionStorage.strChucNang bên dưới.
-        console.log('[AUTO-THU-VAI][checkChucNang] start — pending =', localStorage.getItem('pendingThuVaiSV'));
+        // [AUTO-THU-VAI] Tab mới mở để thủ vai SV: xoá sessionStorage kế thừa + xoá URL hash cũ để không có flow phụ nào đọc và mount chức năng cũ.
+        console.log('[AUTO-THU-VAI][checkChucNang] start — pending =', localStorage.getItem('pendingThuVaiSV'), '| hash =', window.location.hash);
         try {
             if (localStorage.getItem('pendingThuVaiSV')) {
-                console.log('[AUTO-THU-VAI][checkChucNang] có pending → clear sessionStorage.strChucNang/strChucNang_Id');
+                console.log('[AUTO-THU-VAI][checkChucNang] có pending → clear sessionStorage + URL hash');
                 sessionStorage.removeItem('strChucNang');
                 sessionStorage.removeItem('strChucNang_Id');
                 me.appId = null; me.appCode = null; me.rootPathReport = null;
+                if (window.location.hash && window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
             }
         } catch (ex) { console.error('[AUTO-THU-VAI][checkChucNang] clear err', ex); }
         if (!me.appId) {
@@ -6368,7 +6381,7 @@ systemroot.prototype = {
             $("#sidebar-menu").prepend(tvInfo);
         }
         var strChucNang_Id = (me.strChucNang_Id) ? me.strChucNang_Id : sessionStorage.getItem("strChucNang_Id");
-        // [AUTO-THU-VAI] Nếu có hash chức năng đang chờ (đến từ luồng thủ vai SV tự động) → tìm và override
+        // [AUTO-THU-VAI] Nếu có hash chức năng đang chờ (đến từ luồng thủ vai SV tự động) → tìm và mount trực tiếp bằng initMain (tránh $.trigger("click") không gọi được inline onclick).
         if (me._pendingChucNang_IdLower) {
             var strTargetLower = me._pendingChucNang_IdLower;
             me._pendingChucNang_IdLower = null;
@@ -6376,7 +6389,30 @@ systemroot.prototype = {
             console.log('[AUTO-THU-VAI][menu-render] target chucNang_Id (lower) =', strTargetLower, '| dtChucNang.length =', arrChucNang.length);
             var cnMatch = arrChucNang.find(function (cn) { return cn.ID && String(cn.ID).toLowerCase() === strTargetLower; });
             console.log('[AUTO-THU-VAI][menu-render] cnMatch =', cnMatch);
-            if (cnMatch) strChucNang_Id = cnMatch.ID;
+            if (cnMatch) {
+                // Nếu hash trỏ tới parent group (DUONGDANFILE = null) → tự tìm child đầu tiên có DUONGDANFILE để mount
+                if (!cnMatch.DUONGDANFILE) {
+                    var arrChild = arrChucNang.filter(function (cn) { return cn.CHUCNANGCHA_ID === cnMatch.ID && cn.DUONGDANFILE; });
+                    arrChild.sort(function (a, b) { return (parseInt(a.THUTU, 10) || 0) - (parseInt(b.THUTU, 10) || 0); });
+                    console.log('[AUTO-THU-VAI][menu-render] hash trỏ tới parent "' + cnMatch.TENCHUCNANG + '", có', arrChild.length, 'child. Dùng child đầu:', arrChild[0]);
+                    if (arrChild.length) cnMatch = arrChild[0];
+                }
+                strChucNang_Id = cnMatch.ID;
+                // Expand parent nếu chức năng con
+                if (cnMatch.CHUCNANGCHA_ID) {
+                    var elCha = document.getElementById("chucnang" + cnMatch.CHUCNANGCHA_ID);
+                    var elCollapse = document.getElementById("collapse" + cnMatch.CHUCNANGCHA_ID);
+                    if (elCha) elCha.classList.remove("collapsed");
+                    if (elCollapse) elCollapse.classList.add("show");
+                }
+                // Gọi initMain trực tiếp thay vì trigger click (inline onclick không được jQuery trigger)
+                var strDuongDanHienThi = "#" + (cnMatch.ID + me.appId).toLowerCase();
+                console.log('[AUTO-THU-VAI][menu-render] initMain(', strDuongDanHienThi, ',', cnMatch.DUONGDANFILE, ',', cnMatch.ID, ')');
+                if (cnMatch.DUONGDANFILE) {
+                    edu.system.initMain(strDuongDanHienThi, cnMatch.DUONGDANFILE, cnMatch.ID);
+                    return;
+                }
+            }
         }
         console.log('[AUTO-THU-VAI][menu-render] triggerChucNang_Id ->', strChucNang_Id);
         me.triggerChucNang_Id(strChucNang_Id);
