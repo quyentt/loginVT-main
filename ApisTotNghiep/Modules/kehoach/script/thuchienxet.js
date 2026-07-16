@@ -333,6 +333,29 @@ ThucHienXet.prototype = {
         $('#dropSearch_KhoaHoc').on('select2:select', function () {
             me.getList_LopQuanLy();
         });
+        $("#tblQuanSoLop, #tblDat, #tblKhongDat, #tblDaCongNhan, #tblHoanXet").delegate('.btnView_HocTap', 'click', function (e) {
+            var strMSSV = $(this).data('mssv') || $(this).find('u').text();
+            console.log('[AUTO-THU-VAI][handler] click SV — MSSV =', strMSSV, '| id =', this.id);
+            if (!strMSSV) { edu.system.alert("Không lấy được mã số sinh viên."); return; }
+            var payload = {
+                strMSSV: String(strMSSV).trim(),
+                strHashChucNang: '41c2266e0ed749a3aeb177c3cee2167380cf9e16c2d74f46a1ece73b7c119a8f'
+            };
+            try {
+                localStorage.setItem('pendingThuVaiSV', JSON.stringify(payload));
+                console.log('[AUTO-THU-VAI][handler] set localStorage.pendingThuVaiSV =', localStorage.getItem('pendingThuVaiSV'));
+            } catch (ex) { console.error('[AUTO-THU-VAI][handler] set localStorage FAILED', ex); }
+            var strEntryUrl = window.location.origin + window.location.pathname;
+            console.log('[AUTO-THU-VAI][handler] window.open ->', strEntryUrl);
+            var w = window.open(strEntryUrl, '_blank');
+            console.log('[AUTO-THU-VAI][handler] window.open returned', w);
+
+            // Cách cũ (nhúng /modules/hoctap/html/diemhoc.html) — giữ để mở lại khi cần:
+            // $('#modalHTSinhVien').modal('show');
+            // me["strSinhVien_Id"] = this.id;
+            // window._embeddedSinhVien_Id = this.id;
+            // edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/diemhoc.html', null, null, 'ApisCongSinhVien');
+        });
     },
 
     rewrite: function () {
@@ -1748,7 +1771,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -1843,7 +1868,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -1977,7 +2004,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -2133,7 +2162,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -2320,7 +2351,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
@@ -2596,7 +2629,9 @@ ThucHienXet.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HOTEN",
