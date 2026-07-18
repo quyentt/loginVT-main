@@ -9,6 +9,7 @@
 function TongHopKetQua() { };
 TongHopKetQua.prototype = {
     objHangDoi: {},
+    objHangDoi_XepLoai: {},
     strPhamViMa: '',
 
     init: function () {
@@ -26,6 +27,12 @@ TongHopKetQua.prototype = {
             callback: me.endHangDoi
         }
         edu.system.createHangDoi(me.objHangDoi);
+        me.objHangDoi_XepLoai = {
+            strLoaiNhiemVu: "TINHDIEMTUDONG_XEPLOAI",
+            strName: "TongHopKetQua_XepLoai",
+            callback: me.endHangDoi
+        }
+        edu.system.createHangDoi(me.objHangDoi_XepLoai);
         /*------------------------------------------
         --Author: 
         --Discription: main action  
@@ -285,7 +292,7 @@ TongHopKetQua.prototype = {
                         code: "",
                     }
                     edu.system.afterComfirm(obj);
-                    edu.system.createHangDoi(me.objHangDoi);
+                    edu.system.createHangDoi(me.objHangDoi_XepLoai);
                 }
                 else {
                     var obj = {

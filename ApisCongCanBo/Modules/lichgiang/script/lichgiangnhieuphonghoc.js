@@ -39,35 +39,35 @@ LichGiangNhieuPhong.prototype = {
         var tiet = event.TIETBATDAU;
         if (tiet) {
             if (tiet >= 1 && tiet <= 6) return 'sang';
-            if (tiet >= 7 && tiet <= 10) return 'chieu';
-            if (tiet >= 11 && tiet <= 15) return 'toi';
+            if (tiet >= 7 && tiet <= 12) return 'chieu';
+            if (tiet >= 13 && tiet <= 15) return 'toi';
         }
         var gio = event.GIOBATDAU;
         if (gio != null) {
-            if (gio < 12) return 'sang';
-            if (gio < 18) return 'chieu';
+            if (gio < 13) return 'sang';
+            if (gio < 19) return 'chieu';
             return 'toi';
         }
         return null;
     },
 
     // Ước lượng (tiết bắt đầu, tiết kết thúc) — fallback theo giờ khi API không trả TIETBATDAU/TIETKETTHUC.
-    // Quy ước: tiết 1 ~ 7h, tiết 7 ~ 13h, tiết 11 ~ 18h (mỗi tiết ~1 giờ).
+    // Quy ước: mỗi tiết ~1 giờ, tiết 1 ~ 7h → sáng T1-6 (7h-12h), chiều T7-12 (13h-18h), tối T13-15 (19h-21h).
     getTietRange: function(event) {
         var batDau = event.TIETBATDAU;
         var ketThuc = event.TIETKETTHUC;
         var g;
         if (!batDau && event.GIOBATDAU != null) {
             g = event.GIOBATDAU;
-            if (g < 12) batDau = Math.max(1, Math.min(6, g - 6));
-            else if (g < 18) batDau = Math.max(7, Math.min(10, g - 6));
-            else batDau = Math.max(11, Math.min(15, g - 7));
+            if (g < 13) batDau = Math.max(1, Math.min(6, g - 6));
+            else if (g < 19) batDau = Math.max(7, Math.min(12, g - 6));
+            else batDau = Math.max(13, Math.min(15, g - 6));
         }
         if (!ketThuc && event.GIOKETTHUC != null) {
             g = event.GIOKETTHUC;
             if (g <= 12) ketThuc = Math.max(1, Math.min(6, g - 6));
-            else if (g <= 18) ketThuc = Math.max(7, Math.min(10, g - 6));
-            else ketThuc = Math.max(11, Math.min(15, g - 7));
+            else if (g <= 18) ketThuc = Math.max(7, Math.min(12, g - 6));
+            else ketThuc = Math.max(13, Math.min(15, g - 6));
         }
         return { batDau: batDau, ketThuc: ketThuc };
     },
@@ -123,16 +123,16 @@ LichGiangNhieuPhong.prototype = {
                 totalPeriods = workingDays * 6;
                 break;
             case 'afternoon':
-                periodRange = { min: 7, max: 10 };
-                totalPeriods = workingDays * 4;
+                periodRange = { min: 7, max: 12 };
+                totalPeriods = workingDays * 6;
                 break;
             case 'evening':
-                periodRange = { min: 11, max: 15 };
-                totalPeriods = workingDays * 5;
+                periodRange = { min: 13, max: 15 };
+                totalPeriods = workingDays * 3;
                 break;
             case 'morning-afternoon':
-                periodRange = { min: 1, max: 10 };
-                totalPeriods = workingDays * 10;
+                periodRange = { min: 1, max: 12 };
+                totalPeriods = workingDays * 12;
                 break;
             case 'afternoon-evening':
                 periodRange = { min: 7, max: 15 };
@@ -981,11 +981,11 @@ LichGiangNhieuPhong.prototype = {
             html += '</div>';
             html += '<div class="session-label" style="border-right: 1px solid #ddd; background: #E6F3FF;">';
             html += '<div class="session-name">🌤️ CHIỀU</div>';
-            html += '<div class="session-time">Tiết 7-10</div>';
+            html += '<div class="session-time">Tiết 7-12</div>';
             html += '</div>';
             html += '<div class="session-label" style="background: #F0E6FF;">';
             html += '<div class="session-name">🌙 TỐI</div>';
-            html += '<div class="session-time">Tiết 11-15</div>';
+            html += '<div class="session-time">Tiết 13-15</div>';
             html += '</div>';
             html += '</div>';
             html += '</div>';

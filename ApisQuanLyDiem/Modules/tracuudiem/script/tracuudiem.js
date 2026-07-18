@@ -42,6 +42,7 @@ TraCuuDiem.prototype = {
             me.getList_LopQuanLy();
         });
         $("#dropKhoaQuanLy").on("select2:select", function () {
+            me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
         });
         $("#dropPhanViTongHop").on("select2:select", function () {
@@ -923,6 +924,12 @@ TraCuuDiem.prototype = {
         edu.system.loadToCombo_data(obj);
     },
     loadToCombo_ChuongTrinhDaoTao: function (data) {
+        // Ghép mã chương trình vào tên để phân biệt các khóa (TENCHUONGTRINH trùng nhau giữa các khóa)
+        for (var i = 0; i < data.length; i++) {
+            if (edu.util.checkValue(data[i].MACHUONGTRINH)) {
+                data[i].TENCHUONGTRINH = data[i].TENCHUONGTRINH + ' - ' + data[i].MACHUONGTRINH;
+            }
+        }
         var obj = {
             data: data,
             renderInfor: {
