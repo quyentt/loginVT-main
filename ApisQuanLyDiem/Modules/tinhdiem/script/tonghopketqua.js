@@ -29,7 +29,7 @@ TongHopKetQua.prototype = {
         edu.system.createHangDoi(me.objHangDoi);
         me.objHangDoi_XepLoai = {
             strLoaiNhiemVu: "TINHDIEMTUDONG_XEPLOAI",
-            strName: "TongHopKetQua_XepLoai",
+            strName: "TongHopKetQua",
             callback: me.endHangDoi
         }
         edu.system.createHangDoi(me.objHangDoi_XepLoai);

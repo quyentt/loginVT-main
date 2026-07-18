@@ -195,6 +195,8 @@
                                                 <i class="fa-light fa-book-open-cover"></i>Xem học phần của lớp</a>
                                             <a class="btn btn-danger ml-10 btn-table-38" id="btnXemBangDiem">
                                                 <i class="fa-light fa-book-open-reader"></i>Xem bảng điểm</a>
+                                            <a class="btn btn-warning ml-10 btn-table-38" id="btnThongKeHocTap">
+                                                <i class="fa-light fa-chart-column"></i>Thống kê học tập theo ngành</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -274,6 +276,34 @@
                     </div>
                 </div>
             </div>
+            <!-- box Thống kê học tập theo ngành -->
+            <div class="box box-solid form-container zone-bus" id="zone_input_ThongKeHocTap" style="display: none">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <span style="float: left">
+                                <i class="fa-light fa-chart-column"></i> Thống kê học tập theo ngành</span>
+                            <span>
+                                <a class="btn btn-success btnReportAll ml-10 pull-left" name="tblThongKeHocTap" href="#"
+                                    title="Export"> <i class="fa fa-file-excel-o"></i>Export</a>
+                            </span>
+                        </h3>
+                        <div class="pull-right">
+                            <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body pd20">
+                        <div id="divprogessThongKe"></div>
+                        <div class="clear"></div>
+                        <div class="scroll-table-x" style="overflow-x:auto;max-width:100%;">
+                            <table id="tblThongKeHocTap" class="table table-hover table-bordered">
+                                <thead class="mauthangbo" style="font-weight: bold"></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- box Edit_VBSC -->
             <div class="box box-solid form-container zone-bus" id="zone_input_TraCuuDiem" style="display: none">
                 <div class="box box-solid">
@@ -314,6 +344,52 @@
         </div>
     </div>
 </section>
+
+<!-- Modal danh sách SV theo xếp loại -->
+<div class="modal fade" id="modal_XemDSSVXepLoai" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: 95%; max-width: 1400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-light fa-users"></i>
+                    Danh sách sinh viên <span id="lblDSSVXepLoai_TieuDe"></span>
+                    <span class="badge bg-light-blue" id="lblDSSVXepLoai_Tong"></span>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="overflow-x:auto;max-height:70vh;overflow-y:auto;">
+                    <table id="tblDSSVXepLoai" class="table table-hover table-bordered">
+                        <thead class="mauthangbo" style="font-weight: bold; position: sticky; top: 0; z-index: 2;">
+                            <tr>
+                                <th class="td-center">Stt</th>
+                                <th class="td-center">Mã SV</th>
+                                <th>Họ đệm</th>
+                                <th>Tên</th>
+                                <th class="td-center">Giới tính</th>
+                                <th>Xếp loại</th>
+                                <th>Học kỳ</th>
+                                <th>Trạng thái</th>
+                                <th>Lớp quản lý</th>
+                                <th>Chương trình đào tạo</th>
+                                <th>Khóa đào tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
 <script src="modules/TraCuuDiem/script/tracuudiem.js?v=1.0.0.2"></script>
 <script src="modules/TraCuuDiem/script/bootstrap-colorselector.js"></script>
