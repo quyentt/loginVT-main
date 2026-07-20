@@ -1281,8 +1281,39 @@ PhieuThuKhac.prototype = {
     },
     getDetail_DoiTuongThu_Edit: function (strId) {
         var me = this;
+        console.log('%c[getDetail_DoiTuongThu_Edit] >>> START', 'color:#FF9800;font-weight:bold', { strId: strId, dt_HS_len: me.dt_HS && me.dt_HS.length });
+        var bFound = false;
         for (var i = 0; i < me.dt_HS.length; i++) {
             if (strId == me.dt_HS[i].ID) {
+                bFound = true;
+                var row = me.dt_HS[i];
+                console.log('[getDetail_DoiTuongThu_Edit] MATCH idx=' + i + ' row=', row);
+                console.log('[getDetail_DoiTuongThu_Edit] Field code đang đọc vs value:', {
+                    TENDOITUONG: row.TENDOITUONG,
+                    MASODOITUONG: row.MASODOITUONG,
+                    SODIENTHOAI: row.SODIENTHOAI,
+                    DIACHIEMAIL: row.DIACHIEMAIL,
+                    DIACHILIENLAC: row.DIACHILIENLAC,
+                    COQUANCONGTAC: row.COQUANCONGTAC,
+                    DIACHICOQUANCONGTAC: row.DIACHICOQUANCONGTAC,
+                    MASOTHUECANHAN: row.MASOTHUECANHAN,
+                    MASOTHUECOQUAN: row.MASOTHUECOQUAN,
+                    LAHOCVIEN_DOITUONG_ID: row.LAHOCVIEN_DOITUONG_ID,
+                    LAHOCVIEN_LOP_ID: row.LAHOCVIEN_LOP_ID,
+                    NGANHANG_THONGTINCHINHANH: row.NGANHANG_THONGTINCHINHANH,
+                    NGANHANG_THUOCNGANHANG_ID: row.NGANHANG_THUOCNGANHANG_ID,
+                    NGANHANG_SOTAIKHOAN: row.NGANHANG_SOTAIKHOAN,
+                    CCCD: row.CCCD,
+                    MAQUANHENGANSACH: row.MAQUANHENGANSACH
+                });
+                console.log('[getDetail_DoiTuongThu_Edit] Field API thực có:', {
+                    SODIENTHOAI_CANHAN: row.SODIENTHOAI_CANHAN,
+                    SODIENTHOAI_GIADINH: row.SODIENTHOAI_GIADINH,
+                    EMAIL_CANHAN: row.EMAIL_CANHAN,
+                    DINHDANH_CHINH_SO: row.DINHDANH_CHINH_SO,
+                    DINHDANH_CHINH_LOAI: row.DINHDANH_CHINH_LOAI
+                });
+
                 var strLop = me.dt_HS[i].LAHOCVIEN_LOP_ID;
                 if (!strLop) strLop = [""];else
                 if (strLop.indexOf(',') !== -1) strLop = me.dt_HS[i].LAHOCVIEN_LOP_ID.split(',');
@@ -1302,8 +1333,28 @@ PhieuThuKhac.prototype = {
                 edu.util.viewValById("txtSoTaiKhoan", me.dt_HS[i].NGANHANG_SOTAIKHOAN);
                 edu.util.viewValById("txtCCCD", me.dt_HS[i].CCCD);
                 edu.util.viewValById("txtMaQNHS", me.dt_HS[i].MAQUANHENGANSACH);
+
+                setTimeout(function () {
+                    console.log('[getDetail_DoiTuongThu_Edit] Giá trị INPUT sau khi set:', {
+                        txtHoTenDT: $('#txtHoTenDT').val(),
+                        txtMaDT: $('#txtMaDT').val(),
+                        txtSoDienThoaiDT: $('#txtSoDienThoaiDT').val(),
+                        txtEmailDT: $('#txtEmailDT').val(),
+                        txtDiaChiDT: $('#txtDiaChiDT').val(),
+                        txtCoQuanDT: $('#txtCoQuanDT').val(),
+                        txtDiaCoQuanDT: $('#txtDiaCoQuanDT').val(),
+                        txtMaSoThueDT: $('#txtMaSoThueDT').val(),
+                        txtMaSoThueCQ: $('#txtMaSoThueCQ').val(),
+                        txtChiNhanh: $('#txtChiNhanh').val(),
+                        txtSoTaiKhoan: $('#txtSoTaiKhoan').val(),
+                        txtCCCD: $('#txtCCCD').val(),
+                        txtMaQNHS: $('#txtMaQNHS').val()
+                    });
+                }, 50);
             }
         }
+        if (!bFound) console.warn('[getDetail_DoiTuongThu_Edit] KHÔNG tìm thấy row có ID = ' + strId + ' trong dt_HS');
+        console.log('%c[getDetail_DoiTuongThu_Edit] <<< END', 'color:#FF9800;font-weight:bold');
     },
     popover_HSDoiTuong: function (strHS_Id, point) {
         var me = this;

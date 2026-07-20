@@ -143,6 +143,36 @@
     .activeLien {
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
+
+    /* Fix nhóm nút HĐĐT (Xuất hóa đơn nháp, phát hành, ...) không bị co vỡ ký tự */
+    #zoneActionXuatHoaDon {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    #zoneActionXuatHoaDon .btnXuat_HDDT {
+        width: 85px !important;
+        min-width: 85px !important;
+        flex-shrink: 0 !important;
+        box-sizing: border-box;
+        padding: 4px 0;
+    }
+
+    #zoneActionXuatHoaDon .btnXuat_HDDT > a {
+        display: block !important;
+        padding: 2px 0 !important;
+    }
+
+    #zoneActionXuatHoaDon .btnXuat_HDDT .lbsymbolHD {
+        display: block !important;
+        white-space: normal;
+        word-break: keep-all;
+        line-height: 1.2;
+        padding: 0 2px;
+    }
 </style>
 <div id="MainContent">
     <!-- Main content -->

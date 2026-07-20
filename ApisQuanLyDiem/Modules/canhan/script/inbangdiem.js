@@ -106,6 +106,11 @@ InBangDiem.prototype = {
             var strId = this.id;
             $("#myModal_TichLuyTheoKhoi").modal("show");
             var data = me.dtQuyetDinh.find(e => e.ID == strId);
+            console.log('[ChungChi] === CLICK btnViewBangDiemTheoKhoi ===');
+            console.log('[ChungChi] Row selected:', data);
+            console.log('[ChungChi] QLSV_NGUOIHOC_ID:', data.QLSV_NGUOIHOC_ID);
+            console.log('[ChungChi] DAOTAO_TOCHUCCHUONGTRINH_ID:', data.DAOTAO_TOCHUCCHUONGTRINH_ID);
+            console.log('[ChungChi] DAOTAO_CHUONGTRINH_ID:', data.DAOTAO_CHUONGTRINH_ID);
             $("#lblSinhVienDiem2").html(edu.util.returnEmpty(data.QLSV_NGUOIHOC_MASO) + " - " + edu.util.returnEmpty(data.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(data.QLSV_NGUOIHOC_TEN) + " - " + edu.util.returnEmpty(data.DAOTAO_LOPQUANLY_TEN))
             me.getList_TichLuyTheoKhoi(data.QLSV_NGUOIHOC_ID, data.DAOTAO_TOCHUCCHUONGTRINH_ID);
             me.getList_HocPhanChuaQua(data.QLSV_NGUOIHOC_ID, data.DAOTAO_TOCHUCCHUONGTRINH_ID);
@@ -1366,9 +1371,22 @@ InBangDiem.prototype = {
             'strDaoTao_ChuongTrinh_Id': strDaoTao_ChuongTrinh_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
+        console.log('[ChungChi] === REQUEST ===');
+        console.log('[ChungChi] Action:', obj_list.action);
+        console.log('[ChungChi] Params:', JSON.parse(JSON.stringify(obj_list)));
 
         edu.system.makeRequest({
             success: function (data) {
+                console.log('[ChungChi] === RESPONSE ===');
+                console.log('[ChungChi] Full data:', data);
+                console.log('[ChungChi] Success:', data.Success);
+                console.log('[ChungChi] Message:', data.Message);
+                console.log('[ChungChi] Data:', data.Data);
+                console.log('[ChungChi] Data length:', data.Data ? data.Data.length : 'null/undefined');
+                if (data.Data && data.Data.length > 0) {
+                    console.log('[ChungChi] First row keys:', Object.keys(data.Data[0]));
+                    console.log('[ChungChi] First row:', data.Data[0]);
+                }
                 if (data.Success) {
                     var dtResult = data.Data;
                     me.genTable_KetQuaChungChi(dtResult);
@@ -1379,6 +1397,8 @@ InBangDiem.prototype = {
 
             },
             error: function (er) {
+                console.log('[ChungChi] === ERROR ===');
+                console.log('[ChungChi] Error:', er);
                 edu.system.alert(JSON.stringify(er), "w");
 
             },
@@ -1395,6 +1415,8 @@ InBangDiem.prototype = {
     },
     genTable_KetQuaChungChi: function (data) {
         var me = this;
+        console.log('[ChungChi] === genTable ===');
+        console.log('[ChungChi] Rows to render:', data ? data.length : 0, data);
         var jsonForm = {
             strTable_Id: "tblKetQuaChungChi",
 
