@@ -95,7 +95,9 @@ blockquote {
   color: var(--color-orange-hover) !important;
 }
 
-
+.bg-orange {
+  background-color: var(--color-orange) !important;
+}
 /* Cảnh báo (Warning) */
 .color-warning {
   color: var(--color-warning) !important;
@@ -2972,24 +2974,21 @@ input:active,
 
 .sidebar-menu>li.sidebar-menu-home>a {
   height: 44px !important;
- background:var(--color-orange) !important;
-  color:#fff !important;
-  border: 1px solid var(--color-orange) ;
-  /* color:var(--color-orange) !important; */
+ background:transparent !important;
+  color:#222 !important;
 }
 .sidebar-menu>li.sidebar-menu-home:hover>a {
-  background:var(--color-orange) !important;
+  background:var(--color-blue) !important;
   color:#fff !important;
 }
 .sidebar-menu>li.sidebar-menu-home:hover>a i {
   color:#fff !important;
 }
 .sidebar-menu>li.sidebar-menu-home>a i {
-  color:#fff !important;
+  color:var(--color-blue) !important;
   background: transparent;
 }
 .sidebar-menu>li.sidebar-menu-home{
-    margin-bottom: 10px;
     margin-top: 8px;
 }
 .sidebar-menu>li>a {
@@ -3301,6 +3300,7 @@ input:active,
   -webkit-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   -moz-box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
   box-shadow: 2px 6px 15px 0 rgba(130, 122, 122, 0.2);
+  background: #fff !important;
 }
 
 .content .box.box-solid {
@@ -7241,3 +7241,7 @@ input[type="radio"] {
 }
 
 /* ---------------------------------------- */
+.content-wrapper .box {
+    border-top: 0 solid #d2d6de !important;
+    margin-bottom: 0 !important;
+}

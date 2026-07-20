@@ -4668,12 +4668,24 @@
 }
 
 .zoneThongTinBoSung .small-box {
-    border-radius: 10px;
+    border-radius: 0px;
     /*overflow: hidden;*/
     min-height: 110px;
     margin-bottom: 0 !important;
 }
+.zoneThongTinBoSung .small-box.bg-green{
+    background-color: #4d8d41 !important;
+}
+.zoneThongTinBoSung .small-box.bg-red{
+    background-color: #dd4c3b !important;
+}
+.zoneThongTinBoSung .small-box.bg-yellow{
+    background-color: #f59c00 !important;
+    color: #fff !important;
+}
+.zoneThongTinBoSung .small-box.bg-yellow {
 
+}
 .zoneThongTinBoSung .small-box>.small-box-footer {
     position: relative;
     text-align: center;
@@ -4777,18 +4789,18 @@
 }
 
 .small-box.bg-yellow .icon i {
-    color: #222 !important;
+    /* color: #222 !important; */
 }
 
 .small-box.bg-yellow .small-box-r .small-box-footer {
-    border: 1px solid rgba(34, 34, 34, 0.2);
-    color: #222 !important;
+    /* border: 1px solid rgba(34, 34, 34, 0.2); */
+    /* color: #222 !important; */
 }
 
 .small-box.bg-yellow .small-box-r .small-box-footer:hover {
-    border: 1px solid rgba(34, 34, 34, 0.2);
-    background: #222 !important;
-    color: #ffd800 !important;
+    border: 1px solid #fff;
+    background: #fff !important;
+    color: #f59c00  !important;
 }
 
 .activeOnSearch,
@@ -15965,7 +15977,18 @@ table#clone {
 .aps-sv-btn-nav:hover {
     background: #dbe7ff;
 }
-
+.zoneBox_ToaNha{    
+    display: flex;
+    gap: 20px;
+}
+.zoneBox_ToaNha .btnView{
+    border:1px solid #e1e1e1;
+    border-radius: 12px;
+    /* padding: 15px; */
+}
+.zoneBox_ToaNha .btnView .small-box {
+    margin-bottom: 0px;
+}
 /* ------- Responsive ------- */
 @media (max-width: 768px) {
     .aps-sv-layout {
@@ -16060,3 +16083,12 @@ table#clone {
         margin-left: auto;
         margin-right: 20px !important;
     }
+}
+
+
+.aps-ThongTinHSSV .box.box-solid .box-body{
+    padding: 20px;
+}
+.nav-tabs-custom.aps-tabs-custom>.nav-tabs>li {
+    margin-bottom: -3px !important;
+}

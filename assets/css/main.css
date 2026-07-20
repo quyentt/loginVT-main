@@ -4160,11 +4160,17 @@ a.other-action_item:hover {
     background: transparent !important;
     color: #222;
 }
+.sidebar-menu-item.sidebar-menu-home .sidebar-menu-header:hover{
+    background: var(--color-blue) !important;
+    color: #fff;
+}
 .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header i{
     color: var(--color-blue);
 }
-.sidebar-menu-header:not(.collapsed):hover ,.sidebar-menu-header:not(.collapsed):hover i{
+.sidebar-menu-header:not(.collapsed):hover ,
+.sidebar-menu-header:not(.collapsed):hover i{
   color: #fff;
+  background: var(--color-blue) !important;
 }
 
 .sidebar-menu-item .sidebar-menu-header span{
