@@ -877,8 +877,9 @@ systemroot.prototype = {
     -- date:  13/11/2018
     -- Mục đích: chống cache bằng cách cộng thêm version cho file .html và file .js
     */
-    loadPage: function (self, url, params, callback) {
+    loadPage: function (self, url, params, callback, appCode) {
         var me = this;
+        if (!appCode) appCode = me.appCode;
         var selector, type, response,
             off = url.indexOf(" ");
         me["urlPage"] = url;
@@ -932,7 +933,7 @@ systemroot.prototype = {
         }
         //Cộng thêm version cho file html
         function EditUrlHtml() {
-            url = me.rootPath + "/" + me.appCode + url;
+            url = me.rootPath + "/" + appCode + url;
             var newVersion = "v=" + randomInt(4);
             if (url.indexOf('?') != -1) {
                 url += "&" + newVersion
@@ -956,10 +957,10 @@ systemroot.prototype = {
                     var ivitrijs = strSrc.indexOf(".js") + 3;
                     var strVersion = strSrc.substring(ivitrijs, strSrc.indexOf('"', ivitrijs));
                     if (strVersion == "" || strVersion == undefined) {
-                        var strNewSrc = me.appCode + "/" + strSrc.substring(0, ivitrijs) + '"';
+                        var strNewSrc = appCode + "/" + strSrc.substring(0, ivitrijs) + '"';
                     }
                     else {
-                        var strNewSrc = me.appCode + "/" + strSrc.replace(strVersion, newVersion);
+                        var strNewSrc = appCode + "/" + strSrc.replace(strVersion, newVersion);
                     }
                     strData = strData.replace(strSrc, strNewSrc);
                 }
