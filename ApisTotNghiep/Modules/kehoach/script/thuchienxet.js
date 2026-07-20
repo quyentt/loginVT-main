@@ -341,11 +341,11 @@ ThucHienXet.prototype = {
             $('#modalHTSinhVien').modal('show');
             me["strSinhVien_Id"] = this.id;
             window._embeddedSinhVien_Id = this.id;
-            // Load trang gọn xem bảng điểm (local trong ApisTotNghiep, không cross-app tới ApisCongSinhVien để tránh lỗi ORA và giới hạn quyền)
-            edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/xemdiem_sv.html', null, null, 'ApisTotNghiep');
+            // Dùng lại diemhoc.html của cổng SV (đầy đủ tab). Có warning ORA-24338 từ 1 API phụ nhưng bảng điểm/quyết định/văn bằng/... vẫn hiển thị được.
+            edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/diemhoc.html', null, null, 'ApisCongSinhVien');
 
-            // Cách cũ (nhúng full diemhoc.html của cổng SV) — giữ comment để mở lại khi cần:
-            // edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/diemhoc.html', null, null, 'ApisCongSinhVien');
+            // Cách rút gọn (trang tự tạo trong ApisTotNghiep chỉ hiển thị Bảng điểm) — giữ comment để mở lại khi backend cho quyền:
+            // edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/xemdiem_sv.html', null, null, 'ApisTotNghiep');
         });
     },
 
