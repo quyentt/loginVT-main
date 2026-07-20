@@ -460,7 +460,7 @@ DongPhuc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        if (Number(edu.util.returnEmpty(aData.TINHTRANGDANGKY_CODE_HESO1)) == 1) {
+                        if (edu.util.returnEmpty(aData.TINHTRANGDANGKY_CODE) == 'DANG_KY') {
                             return '<i class="far fa-check color-success"></i>';
                         }
                         return '';
@@ -468,7 +468,8 @@ DongPhuc.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        if (Number(edu.util.returnEmpty(aData.TINHTRANGDANGKY_CODE_HESO1)) != 1) {
+                        var code = edu.util.returnEmpty(aData.TINHTRANGDANGKY_CODE);
+                        if (code != '' && code != 'DANG_KY') {
                             return '<i class="fal fa-times color-red"></i>';
                         }
                         return '';
