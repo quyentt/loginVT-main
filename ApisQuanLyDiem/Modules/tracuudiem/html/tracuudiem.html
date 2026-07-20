@@ -177,13 +177,24 @@
                                     </td>
                                     <td class="aps-form-lable d-none" style="width:11% !important;">Thông tin tìm kiếm
                                     </td>
-                                    <td class="aps-form-input" style="width:35% !important;" colspan="2">
+                                    <td class="aps-form-input" colspan="6">
                                         <input id="txtSearch_TuKhoa" class="form-control"
                                             placeholder="Nhập mã số hoặc tên" />
                                     </td>
-                                    <td style="width:54%" colspan="3">
-                                        <div class="d-flex">
-                                            <div class="dropdown btn-table-38" id="zonebtnBaoCao_TCD">
+                                </tr>
+                                <tr class="aps-table-form-item">
+                                    <td colspan="8" class="pt10">
+                                        <div class="d-flex align-items-center">
+                                            <a class="btn btn-primary btn-table-38" id="btnSearch">
+                                                <i class="fa-light fa-book-open-cover"></i>Xem học phần của lớp</a>
+                                            <a class="btn btn-danger ml-10 btn-table-38" id="btnXemBangDiem">
+                                                <i class="fa-light fa-book-open-reader"></i>Xem bảng điểm</a>
+                                            <span class="ml-20" style="border-left:1px solid #ddd;height:28px;"></span>
+                                            <a class="btn btn-warning ml-20 btn-table-38" id="btnThongKeHocTap">
+                                                <i class="fa-light fa-chart-column"></i>Thống kê theo ngành</a>
+                                            <a class="btn btn-warning ml-10 btn-table-38" id="btnThongKeHocTapCTDT">
+                                                <i class="fa-light fa-chart-column"></i>Thống kê theo CTĐT</a>
+                                            <div class="dropdown btn-table-38 ml-auto" id="zonebtnBaoCao_TCD" style="padding-left: 30px;">
                                                 <!--<button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
                                                 <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span class="caret"></span>
                                             </button>
@@ -191,10 +202,6 @@
                                                 <li><a class="btnBaoCao_LHD" name="DeTai" href="#"> 1. Đề tài</a></li>
                                             </ul>-->
                                             </div>
-                                            <a class="btn btn-primary ml-10 btn-table-38" id="btnSearch">
-                                                <i class="fa-light fa-book-open-cover"></i>Xem học phần của lớp</a>
-                                            <a class="btn btn-danger ml-10 btn-table-38" id="btnXemBangDiem">
-                                                <i class="fa-light fa-book-open-reader"></i>Xem bảng điểm</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -274,6 +281,62 @@
                     </div>
                 </div>
             </div>
+            <!-- box Thống kê học tập theo ngành -->
+            <div class="box box-solid form-container zone-bus" id="zone_input_ThongKeHocTap" style="display: none">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <span style="float: left">
+                                <i class="fa-light fa-chart-column"></i> Thống kê học tập theo ngành</span>
+                            <span>
+                                <a class="btn btn-success btnReportAll ml-10 pull-left" name="tblThongKeHocTap" href="#"
+                                    title="Export"> <i class="fa fa-file-excel-o"></i>Export</a>
+                            </span>
+                        </h3>
+                        <div class="pull-right">
+                            <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body pd20">
+                        <div id="divprogessThongKe"></div>
+                        <div class="clear"></div>
+                        <div class="scroll-table-x" style="overflow-x:auto;max-width:100%;">
+                            <table id="tblThongKeHocTap" class="table table-hover table-bordered">
+                                <thead class="mauthangbo" style="font-weight: bold"></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- box Thống kê học tập theo CTĐT -->
+            <div class="box box-solid form-container zone-bus" id="zone_input_ThongKeHocTapCTDT" style="display: none">
+                <div class="box box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">
+                            <span style="float: left">
+                                <i class="fa-light fa-chart-column"></i> Thống kê học tập theo CTĐT</span>
+                            <span>
+                                <a class="btn btn-success btnReportAll ml-10 pull-left" name="tblThongKeHocTapCTDT" href="#"
+                                    title="Export"> <i class="fa fa-file-excel-o"></i>Export</a>
+                            </span>
+                        </h3>
+                        <div class="pull-right">
+                            <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
+                        </div>
+                    </div>
+                    <div class="box-body pd20">
+                        <div id="divprogessThongKeCTDT"></div>
+                        <div class="clear"></div>
+                        <div class="scroll-table-x" style="overflow-x:auto;max-width:100%;">
+                            <table id="tblThongKeHocTapCTDT" class="table table-hover table-bordered">
+                                <thead class="mauthangbo" style="font-weight: bold"></thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- box Edit_VBSC -->
             <div class="box box-solid form-container zone-bus" id="zone_input_TraCuuDiem" style="display: none">
                 <div class="box box-solid">
@@ -314,6 +377,52 @@
         </div>
     </div>
 </section>
+
+<!-- Modal danh sách SV theo xếp loại -->
+<div class="modal fade" id="modal_XemDSSVXepLoai" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width: 95%; max-width: 1400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa-light fa-users"></i>
+                    Danh sách sinh viên <span id="lblDSSVXepLoai_TieuDe"></span>
+                    <span class="badge bg-light-blue" id="lblDSSVXepLoai_Tong"></span>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="overflow-x:auto;max-height:70vh;overflow-y:auto;">
+                    <table id="tblDSSVXepLoai" class="table table-hover table-bordered">
+                        <thead class="mauthangbo" style="font-weight: bold; position: sticky; top: 0; z-index: 2;">
+                            <tr>
+                                <th class="td-center">Stt</th>
+                                <th class="td-center">Mã SV</th>
+                                <th>Họ đệm</th>
+                                <th>Tên</th>
+                                <th class="td-center">Giới tính</th>
+                                <th>Xếp loại</th>
+                                <th>Học kỳ</th>
+                                <th>Trạng thái</th>
+                                <th>Lớp quản lý</th>
+                                <th>Chương trình đào tạo</th>
+                                <th>Khóa đào tạo</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times"></i> Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
 <script src="modules/TraCuuDiem/script/tracuudiem.js?v=1.0.0.2"></script>
 <script src="modules/TraCuuDiem/script/bootstrap-colorselector.js"></script>

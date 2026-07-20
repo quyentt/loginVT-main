@@ -139,6 +139,74 @@
     .activeLien {
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
+
+    /* Thanh nút hành động phiếu thu / hóa đơn */
+    .aps-list-btn {
+        margin-top: 15px;
+        padding: 10px 12px;
+        background: #f8f9fa;
+        border-top: 1px solid #e5e7eb;
+        border-radius: 4px;
+    }
+
+    #zoneActionHoaDon {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+    }
+
+    #zoneActionHoaDon .aps-btn,
+    #zoneActionHoaDon > div {
+        display: inline-flex;
+        margin: 0;
+    }
+
+    #zoneActionXuatHoaDon {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+
+    #zoneActionXuatHoaDon:empty {
+        display: none;
+    }
+
+    #zoneActionHoaDon .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        height: 38px;
+        padding: 6px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        border-radius: 4px;
+        white-space: nowrap;
+    }
+
+    #zoneActionHoaDon .btn i {
+        font-size: 14px;
+        margin: 0;
+    }
+
+    /* Nút Đóng đẩy sang phải để tách khỏi nhóm hành động chính */
+    #btnClose_HDBL {
+        margin-left: auto;
+    }
+
+    /* Wrapper Liên hóa đơn */
+    #btnLienHoaDon {
+        position: relative;
+    }
+
+    #zoneLienHoaDon {
+        display: inline-flex;
+        gap: 4px;
+        margin-left: 4px;
+    }
 </style>
 <div id="MainContent">
     <!-- Main content -->
@@ -1296,28 +1364,23 @@
                             <div id="zoneActionHoaDon" class="aps-btn-in zoneActionHoaDon">
                                 <div id="zoneActionXuatHoaDon" class="aps-btn"> </div>
                                 <div id="btnHuy_HDBL" class="aps-btn">
-                                    <a class="btn btn-danger"><i class="fal fa-times"></i>Hủy chứng từ</a>
-                                    <!-- <a class="color-active bold lbsymbolHD">Hủy chứng từ</a> -->
+                                    <a class="btn btn-danger"><i class="fal fa-ban"></i> Hủy chứng từ</a>
                                 </div>
-                                <div id="btnIn_HDBL">
-                                    <a class="btn btn-primary"><i class="fal fa-times-circle"></i> In chứng từ</a>
-                                    <!-- <a class="color-active bold lbsymbolHD"></a> -->
+                                <div id="btnIn_HDBL" class="aps-btn">
+                                    <a class="btn btn-primary"><i class="fal fa-print"></i> In chứng từ</a>
                                 </div>
 
                                 <div id="btnLienHoaDon" class="aps-btn">
                                     <a title="Liên Hóa đơn" class="btn btn-success">
-                                        <i class="fa fa fa-copy fa-4x"></i> </a>
+                                        <i class="fa fa-copy"></i> Liên HĐ</a>
                                     <div id="zoneLienHoaDon"></div>
-                                    <!-- <div class="clear"></div>  -->
-
                                 </div>
                                 <div id="btnThuTien" class="aps-btn">
-                                    <a class="btn btn-danger">
-                                        <i class="fa fa-money"></i>Thu tiền - không sinh hóa đơn biên lai</a>
+                                    <a class="btn btn-warning">
+                                        <i class="fa fa-money"></i> Thu tiền (không sinh HĐ/BL)</a>
                                 </div>
                                 <div id="btnClose_HDBL" class="aps-btn">
-                                    <a class="btn btn-secondary"><i class="fal fa-times"></i> Đóng</a>
-                                    <!-- <a class="color-active bold lbsymbolHD">Đóng</a> -->
+                                    <a class="btn btn-default"><i class="fal fa-times"></i> Đóng</a>
                                 </div>
 
                             </div>

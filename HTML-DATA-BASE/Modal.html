@@ -7,6 +7,10 @@
     <title>Quản lý sinh viên 360 - Dashboard toàn trường</title>
     <link rel="stylesheet" href="../assets/css/styles.css" />
     <style>
+        .bd-example.aps-btn-list .btn {
+            margin-bottom: 10px;
+        }
+
         /* Chip hiển thị tên class */
         .cls {
             display: inline-block;
@@ -513,7 +517,8 @@
                             <i class="fa-light fa-icons item-icon"></i>
                             <span>Icon</span>
                         </a>
-                    </div>                    <div class="sidebar-menu-item">
+                    </div>
+                    <div class="sidebar-menu-item">
                         <a class="sidebar-menu-header collapsed" href="Header - title.html">
                             <i class="fa-light fa-font item-icon"></i>
                             <span>Header - title</span>
@@ -529,6 +534,12 @@
                         <a class="sidebar-menu-header collapsed" href="HTML-Form-ChucNangHSo.html">
                             <i class="fa-light fa-id-card item-icon"></i>
                             <span>Hồ sơ sinh viên</span>
+                        </a>
+                    </div>
+                    <div class="sidebar-menu-item">
+                        <a class="sidebar-menu-header collapsed" href="thong-tin-sinh-vien.html">
+                            <i class="fa-light fa-address-card item-icon"></i>
+                            <span>Thông tin sinh viên</span>
                         </a>
                     </div>
                 </div>
@@ -566,6 +577,8 @@
                                 <div class="bd-example">
                                     <button class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#modalDemo">Mở modal</button>
+                                    <a class="btn btn-primary btnAdd" href="#" data-bs-toggle="modal"
+                                        data-bs-target="#addNew"><i class="fa fa-plus"></i>Thêm mới</a>
                                     <div class="modal fade" id="modalDemo" tabindex="-1">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
@@ -580,8 +593,249 @@
                                                         <i class="fa fa-times-circle-o"></i><span class="lang"
                                                             key="">Đóng</span>
                                                     </button>
-                                                    <a class="submit btn btn-primary" id="btnSave_DMDL"><i
-                                                            class="fa fa-pencil"></i> Lưu</a>
+                                                    <a class="submit btn btn-primary" id="btnSave_DMDL">
+                                                        <i class="fa fa-save"></i> Lưu</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal fade" id="addNew" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered modal-860">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h4 class="modal-title"><span class="myModalLabel" key="">
+                                                            <i class="fa fa-plus"></i> Thêm mới</h4>
+                                                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body aps-add-new">
+                                                    <div class="row aps-form">
+                                                        <!--row 1-->
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Chọn DM tiêu
+                                                                        chí</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <select id="dropLoaiTieuChi"
+                                                                    class="select-opt select2-hidden-accessible"
+                                                                    tabindex="-1" aria-hidden="true">
+                                                                    <option value="">Chọn danh mục tiêu chí</option>
+                                                                    <option id="undefined"
+                                                                        value="9A4DEF215F8349CB86D260FBDC4791A1"
+                                                                        name="undefined"> ĐRL</option>
+                                                                    <option id="undefined"
+                                                                        value="1D6DCB7E600C43AA9833983865AAB4FB"
+                                                                        name="undefined"> ĐRL cuoi</option>
+                                                                </select><span
+                                                                    class="select2 select2-container select2-container--default"
+                                                                    dir="ltr" style="width: auto;"><span
+                                                                        class="selection"><span
+                                                                            class="select2-selection select2-selection--single"
+                                                                            role="combobox" aria-haspopup="true"
+                                                                            aria-expanded="false" tabindex="0"
+                                                                            aria-labelledby="select2-dropLoaiTieuChi-container"><span
+                                                                                class="select2-selection__rendered"
+                                                                                id="select2-dropLoaiTieuChi-container"
+                                                                                title="Chọn danh mục tiêu chí">Chọn
+                                                                                danh mục tiêu chí</span><span
+                                                                                class="select2-selection__arrow"
+                                                                                role="presentation"><b
+                                                                                    role="presentation"></b></span></span></span><span
+                                                                        class="dropdown-wrapper"
+                                                                        aria-hidden="true"></span></span>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <!--row 2-->
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Thứ tự</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <input type="text" id="txtThuTu" class="form-control">
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Tên tiêu
+                                                                        chí</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <input type="text" id="txtTenTieuChi"
+                                                                    class="form-control">
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Mã tiêu
+                                                                        chí</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <input type="text" id="txtMaTieuChi"
+                                                                    class="form-control">
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Mức điểm quy
+                                                                        định</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <input type="text" id="txtMucDiem" class="form-control">
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Đối tượng áp
+                                                                        dụng</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <select id="dropDoiTuongApDung"
+                                                                    class="select-opt select2-hidden-accessible"
+                                                                    tabindex="-1" aria-hidden="true">
+                                                                    <option value="">Chọn đối tượng áp dụng</option>
+                                                                    <option id="undefined"
+                                                                        value="8FF6B94B29C34E1E9626F445F0AD50D9"
+                                                                        name="HOCVIEN"> Học viên</option>
+                                                                </select><span
+                                                                    class="select2 select2-container select2-container--default"
+                                                                    dir="ltr" style="width: auto;"><span
+                                                                        class="selection"><span
+                                                                            class="select2-selection select2-selection--single"
+                                                                            role="combobox" aria-haspopup="true"
+                                                                            aria-expanded="false" tabindex="0"
+                                                                            aria-labelledby="select2-dropDoiTuongApDung-container"><span
+                                                                                class="select2-selection__rendered"
+                                                                                id="select2-dropDoiTuongApDung-container"
+                                                                                title="Chọn đối tượng áp dụng">Chọn
+                                                                                đối tượng áp dụng</span><span
+                                                                                class="select2-selection__arrow"
+                                                                                role="presentation"><b
+                                                                                    role="presentation"></b></span></span></span><span
+                                                                        class="dropdown-wrapper"
+                                                                        aria-hidden="true"></span></span>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Thang
+                                                                        điểm</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <select id="dropThangDiem"
+                                                                    class="select-opt select2-hidden-accessible"
+                                                                    tabindex="-1" aria-hidden="true">
+                                                                    <option value="">Chọn thang điểm</option>
+                                                                    <option id="undefined"
+                                                                        value="94DBA63BCE664B54B06E2CD519F52258"
+                                                                        name="10"> 10</option>
+                                                                    <option id="undefined"
+                                                                        value="F3EB684CCD184799845BA3759C651599"
+                                                                        name="4"> 4</option>
+                                                                    <option id="undefined"
+                                                                        value="4E7B45A2C0AB4BDBA31A24DBA5B763C2"
+                                                                        name="100"> 100</option>
+                                                                </select><span
+                                                                    class="select2 select2-container select2-container--default"
+                                                                    dir="ltr" style="width: auto;"><span
+                                                                        class="selection"><span
+                                                                            class="select2-selection select2-selection--single"
+                                                                            role="combobox" aria-haspopup="true"
+                                                                            aria-expanded="false" tabindex="0"
+                                                                            aria-labelledby="select2-dropThangDiem-container"><span
+                                                                                class="select2-selection__rendered"
+                                                                                id="select2-dropThangDiem-container"
+                                                                                title="Chọn thang điểm">Chọn thang
+                                                                                điểm</span><span
+                                                                                class="select2-selection__arrow"
+                                                                                role="presentation"><b
+                                                                                    role="presentation"></b></span></span></span><span
+                                                                        class="dropdown-wrapper"
+                                                                        aria-hidden="true"></span></span>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Nhóm tiêu
+                                                                        chí</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <select id="dropNhomTieuChi"
+                                                                    class="select-opt select2-hidden-accessible"
+                                                                    tabindex="-1" aria-hidden="true"></select><span
+                                                                    class="select2 select2-container select2-container--default"
+                                                                    dir="ltr" style="width: auto;"><span
+                                                                        class="selection"><span
+                                                                            class="select2-selection select2-selection--single"
+                                                                            role="combobox" aria-haspopup="true"
+                                                                            aria-expanded="false" tabindex="0"
+                                                                            aria-labelledby="select2-dropNhomTieuChi-container"><span
+                                                                                class="select2-selection__rendered"
+                                                                                id="select2-dropNhomTieuChi-container"></span><span
+                                                                                class="select2-selection__arrow"
+                                                                                role="presentation"><b
+                                                                                    role="presentation"></b></span></span></span><span
+                                                                        class="dropdown-wrapper"
+                                                                        aria-hidden="true"></span></span>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="row aps-form-item">
+                                                            <div class="col-sm-3 aps-form-lable">
+                                                                <label style="font-weight: normal"><span class="lang"
+                                                                        key="">Nhập trực
+                                                                        tiếp</span></label>
+                                                            </div>
+                                                            <div class="col-sm-9 aps-form-input">
+                                                                <select id="dropNhapTrucTiep"
+                                                                    class="select-opt select2-hidden-accessible"
+                                                                    tabindex="-1" aria-hidden="true">
+                                                                    <option value="1">Nhập trực tiếp</option>
+                                                                    <option value="0">Không nhập trực tiếp</option>
+                                                                </select><span
+                                                                    class="select2 select2-container select2-container--default"
+                                                                    dir="ltr" style="width: auto;"><span
+                                                                        class="selection"><span
+                                                                            class="select2-selection select2-selection--single"
+                                                                            role="combobox" aria-haspopup="true"
+                                                                            aria-expanded="false" tabindex="0"
+                                                                            aria-labelledby="select2-dropNhapTrucTiep-container"><span
+                                                                                class="select2-selection__rendered"
+                                                                                id="select2-dropNhapTrucTiep-container"
+                                                                                title="Nhập trực tiếp">Nhập trực
+                                                                                tiếp</span><span
+                                                                                class="select2-selection__arrow"
+                                                                                role="presentation"><b
+                                                                                    role="presentation"></b></span></span></span><span
+                                                                        class="dropdown-wrapper"
+                                                                        aria-hidden="true"></span></span>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                                                        <i class="fa fa-times-circle-o"></i><span class="lang"
+                                                            key="">Đóng</span>
+                                                    </button>
+                                                    <a class="submit btn btn-primary" id="btnSave_DMDL">
+                                                        <i class="fa fa-save"></i> Lưu</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -643,7 +897,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="bd-example">
+                                <div class="bd-example aps-btn-list" style="display: block !important;">
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
                                         data-bs-target="#exampleModalFullscreen">Full screen</button>
                                     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
@@ -660,18 +914,19 @@
 
                                 <!-- Full screen -->
                                 <div class="modal fade" id="exampleModalFullscreen" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-fullscreen">
+                                    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Full screen</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Full screen</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Nội dung hộp thoại toàn màn hình.</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"> <i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -679,18 +934,20 @@
 
                                 <!-- Full screen below sm -->
                                 <div class="modal fade" id="exampleModalFullscreenSm" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-fullscreen-sm-down">
+                                    <div class="modal-dialog modal-fullscreen-sm-down modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Full screen below sm</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Full screen below sm
+                                                </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Toàn màn hình khi màn hình nhỏ hơn 576px.</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"><i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -698,18 +955,20 @@
 
                                 <!-- Full screen below md -->
                                 <div class="modal fade" id="exampleModalFullscreenMd" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-fullscreen-md-down">
+                                    <div class="modal-dialog modal-fullscreen-md-down modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Full screen below md</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Full screen below md
+                                                </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Toàn màn hình khi màn hình nhỏ hơn 768px.</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"><i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -717,18 +976,20 @@
 
                                 <!-- Full screen below lg -->
                                 <div class="modal fade" id="exampleModalFullscreenLg" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-fullscreen-lg-down">
+                                    <div class="modal-dialog modal-fullscreen-lg-down modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Full screen below lg</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Full screen below lg
+                                                </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Toàn màn hình khi màn hình nhỏ hơn 992px.</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"><i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -736,18 +997,20 @@
 
                                 <!-- Full screen below xl -->
                                 <div class="modal fade" id="exampleModalFullscreenXl" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-fullscreen-xl-down">
+                                    <div class="modal-dialog modal-fullscreen-xl-down modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Full screen below xl</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Full screen below xl
+                                                </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Toàn màn hình khi màn hình nhỏ hơn 1200px.</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"><i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -755,18 +1018,20 @@
 
                                 <!-- Full screen below xxl -->
                                 <div class="modal fade" id="exampleModalFullscreenXxl" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-fullscreen-xxl-down">
+                                    <div class="modal-dialog modal-fullscreen-xxl-down modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Full screen below xxl</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Full screen below xxl
+                                                </h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Toàn màn hình khi màn hình nhỏ hơn 1400px.</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"><i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -840,15 +1105,16 @@
                                     <div class="modal-dialog modal-xl">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Extra large modal</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Extra large modal</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Nội dung hộp thoại cỡ rất lớn (modal-xl).</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"><i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -856,18 +1122,19 @@
 
                                 <!-- Large modal -->
                                 <div class="modal fade" id="exampleModalLg" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg">
+                                    <div class="modal-dialog modal-lg modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Large modal</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Large modal</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Nội dung hộp thoại cỡ lớn (modal-lg).</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"> <i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -875,18 +1142,19 @@
 
                                 <!-- Small modal -->
                                 <div class="modal fade" id="exampleModalSm" tabindex="-1" aria-hidden="true">
-                                    <div class="modal-dialog modal-sm">
+                                    <div class="modal-dialog modal-sm modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title">Small modal</h5>
+                                                <h5 class="modal-title"><i class="fa fa-plus"></i>Small modal</h5>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                     aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">Nội dung hộp thoại cỡ nhỏ (modal-sm).</div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">Đóng</button>
-                                                <button type="button" class="btn btn-primary">Lưu</button>
+                                                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i
+                                                        class="fa fa-times-circle-o"></i>Đóng</button>
+                                                <button type="button" class="btn btn-primary"> <i
+                                                        class="fa fa-save"></i>Lưu</button>
                                             </div>
                                         </div>
                                     </div>
@@ -1088,6 +1356,7 @@
         </div>
 
         <!-- -------------------------- -->
+
         <!-- JS -->
         <script src="../assets/bootstrap-5.3.2/js/bootstrap.bundle.js"></script>
         <script src="../assets/swiper-slide/swiper-bundle.min.js"></script>

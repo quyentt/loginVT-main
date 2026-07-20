@@ -754,6 +754,8 @@ ThucHienIn.prototype = {
         var htmlFont = "";
         if (me.strFont == "Bitter-VariableFont_wght") {
             htmlFont = '@font-face {font-family: "Bitter-VariableFont_wght";src: url("App_Themes/Cms/fonts/Bitter-VariableFont_wght.ttf") format("truetype");}';
+        } else {
+            htmlFont = '@font-face {font-family: "UTM HelvetIns";src: url("App_Themes/Cms/fonts/HelvetIns.ttf") format("truetype");}';
         }
 
         mywindow.document.write('<html><head><title>Print</title><style>' + htmlFont +' @media print{@page{margin:0}body{margin:0.0cm}}</style></head><body>' + content + '</body></html>');

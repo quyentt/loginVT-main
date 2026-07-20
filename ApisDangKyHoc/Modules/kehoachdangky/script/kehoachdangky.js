@@ -352,6 +352,21 @@ KeHoachDangKy.prototype = {
             me.getList_KhongDangKy(this.id);
         });
 
+        // Xuất Excel DS không đăng ký — click nút hoặc Ctrl+G khi modal đang mở
+        $("#btnXuatExcel_KhongDangKy").click(function (e) {
+            if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+            me.exportExcel_KhongDangKy();
+        });
+        $(document).off('keydown.khdk_export').on('keydown.khdk_export', function (e) {
+            if (!$('#myModal_khongdangky').hasClass('in') && !$('#myModal_khongdangky').is(':visible')) return;
+            if (/^(input|textarea|select)$/i.test((e.target && e.target.tagName) || '')) return;
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G' || e.which === 71)) {
+                e.preventDefault();
+                e.stopPropagation();
+                me.exportExcel_KhongDangKy();
+            }
+        });
+
         $("#zoneEdit").delegate(".ckbDSTrangThaiSV_ALL", "click", function (e) {
             e.stopImmediatePropagation();
             var checked_status = this.checked;
@@ -1621,6 +1636,7 @@ KeHoachDangKy.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    me.dtKhongDangKy = dtReRult;
                     me.genTable_KhongDangKy(dtReRult);
                 }
                 else {
@@ -1671,12 +1687,106 @@ KeHoachDangKy.prototype = {
                     "mDataProp": "DAOTAO_TOCHUCCHUONGTRINH_TEN"
                 },
                 {
+                    "mDataProp": "DAOTAO_LOPQUANLY_TEN"
+                },
+                {
                     "mDataProp": "DAOTAO_KHOADAOTAO_TEN"
                 }
             ]
         };
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
+    },
+
+    /*------------------------------------------
+    --Discription: Xuất Excel danh sách "Không đăng ký" đang hiển thị
+    --Nguồn: me.dtKhongDangKy (đã cache khi mở modal)
+    --Lib: XLSX-JS-STYLE load lazy từ CDN trong kehoachdangky.html
+    -------------------------------------------*/
+    exportExcel_KhongDangKy: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
+            return;
+        }
+        var data = me.dtKhongDangKy || [];
+        if (!data.length) {
+            edu.system.alert('Không có dữ liệu để xuất.', 'w');
+            return;
+        }
+        var v = edu.util.returnEmpty;
+        var headers = [
+            'STT', 'Mã số sinh viên', 'Họ đệm', 'Tên', 'Trạng thái',
+            'Nợ phí', 'Chương trình', 'Lớp quản lý', 'Khóa học'
+        ];
+        var dataRows = data.map(function (e, i) {
+            return [
+                i + 1,
+                v(e.QLSV_NGUOIHOC_MASO),
+                v(e.QLSV_NGUOIHOC_HODEM),
+                v(e.QLSV_NGUOIHOC_TEN),
+                v(e.QLSV_TRANGTHAI_TEN),
+                Number(e.TONGNOPHI) || 0,
+                v(e.DAOTAO_TOCHUCCHUONGTRINH_TEN),
+                v(e.DAOTAO_LOPQUANLY_TEN),
+                v(e.DAOTAO_KHOADAOTAO_TEN)
+            ];
+        });
+        var aoa = [headers].concat(dataRows);
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+
+        // Auto-width
+        ws['!cols'] = headers.map(function (h, idx) {
+            var maxLen = (h || '').length;
+            dataRows.forEach(function (r) {
+                var l = String(r[idx] == null ? '' : r[idx]).length;
+                if (l > maxLen) maxLen = l;
+            });
+            return { wch: Math.min(maxLen + 2, 40) };
+        });
+
+        // Styling (bản community sẽ bỏ qua không lỗi)
+        var headerStyle = {
+            font: { bold: true, color: { rgb: "FFFFFF" }, sz: 11 },
+            fill: { patternType: "solid", fgColor: { rgb: "1F4E78" } },
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
+            border: {
+                top: { style: "thin", color: { rgb: "999999" } },
+                bottom: { style: "thin", color: { rgb: "999999" } },
+                left: { style: "thin", color: { rgb: "999999" } },
+                right: { style: "thin", color: { rgb: "999999" } }
+            }
+        };
+        var thinBorder = {
+            top: { style: "thin", color: { rgb: "CCCCCC" } },
+            bottom: { style: "thin", color: { rgb: "CCCCCC" } },
+            left: { style: "thin", color: { rgb: "CCCCCC" } },
+            right: { style: "thin", color: { rgb: "CCCCCC" } }
+        };
+        var nCols = headers.length;
+        for (var hc = 0; hc < nCols; hc++) {
+            var addrH = XLSX.utils.encode_cell({ r: 0, c: hc });
+            if (!ws[addrH]) ws[addrH] = { v: '', t: 's' };
+            ws[addrH].s = headerStyle;
+        }
+        ws['!views'] = [{ state: 'frozen', ySplit: 1 }];
+        ws['!rows'] = [{ hpt: 26 }];
+        for (var i = 0; i < dataRows.length; i++) {
+            for (var cc = 0; cc < nCols; cc++) {
+                var addr = XLSX.utils.encode_cell({ r: i + 1, c: cc });
+                if (!ws[addr]) ws[addr] = { v: '', t: 's' };
+                ws[addr].s = { border: thinBorder, alignment: { vertical: 'center', wrapText: true } };
+            }
+        }
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Không đăng ký');
+
+        var now = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : n; };
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                    + '_' + pad(now.getHours()) + pad(now.getMinutes());
+        XLSX.writeFile(wb, 'DSKhongDangKy_' + stamp + '.xlsx');
     },
 
     /*------------------------------------------

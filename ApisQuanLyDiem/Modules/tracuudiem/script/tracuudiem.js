@@ -42,6 +42,7 @@ TraCuuDiem.prototype = {
             me.getList_LopQuanLy();
         });
         $("#dropKhoaQuanLy").on("select2:select", function () {
+            me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
         });
         $("#dropPhanViTongHop").on("select2:select", function () {
@@ -63,9 +64,39 @@ TraCuuDiem.prototype = {
         $("#btnXemBangDiem").click(function () {
             me.getList_ThongTinHienThiCot();
         });
+        $("#btnThongKeHocTap").click(function () {
+            me.openThongKeHocTap();
+        });
+        $("#btnThongKeHocTapCTDT").click(function () {
+            me.openThongKeHocTapCTDT();
+        });
 
         $("#zone_input_TraCuuDiem").delegate(".btnReportAll", "click", function () {
             edu.system.reportAllTable_User(this.name);
+        });
+        $("#zone_input_ThongKeHocTap").delegate(".btnReportAll", "click", function () {
+            edu.system.reportAllTable_User(this.name);
+        });
+        $("#zone_input_ThongKeHocTapCTDT").delegate(".btnReportAll", "click", function () {
+            edu.system.reportAllTable_User(this.name);
+        });
+        $("#tblThongKeHocTap").delegate(".btnXemDSSV_XepLoai", "click", function (e) {
+            e.preventDefault();
+            me.viewDSSV_XepLoai(
+                $(this).data("nid"),
+                $(this).data("kdid"),
+                $(this).data("xlid"),
+                $(this).data("tieude")
+            );
+        });
+        $("#tblThongKeHocTapCTDT").delegate(".btnXemDSSV_XepLoai_CTDT", "click", function (e) {
+            e.preventDefault();
+            me.viewDSSV_XepLoai_CTDT(
+                $(this).data("ctdtid"),
+                $(this).data("kdid"),
+                $(this).data("xlid"),
+                $(this).data("tieude")
+            );
         });
 
         edu.system.getList_MauImport("zonebtnBaoCao_TCD", function (addKeyValue) {
@@ -923,6 +954,12 @@ TraCuuDiem.prototype = {
         edu.system.loadToCombo_data(obj);
     },
     loadToCombo_ChuongTrinhDaoTao: function (data) {
+        // Ghép mã chương trình vào tên để phân biệt các khóa (TENCHUONGTRINH trùng nhau giữa các khóa)
+        for (var i = 0; i < data.length; i++) {
+            if (edu.util.checkValue(data[i].MACHUONGTRINH)) {
+                data[i].TENCHUONGTRINH = data[i].TENCHUONGTRINH + ' - ' + data[i].MACHUONGTRINH;
+            }
+        }
         var obj = {
             data: data,
             renderInfor: {
@@ -1030,6 +1067,490 @@ TraCuuDiem.prototype = {
             title: "Chọn khoa quản lý",
         }
         edu.system.loadToCombo_data(obj);
+    },
+    /*------------------------------------------
+    --Discription: [TK] Thống kê học tập theo ngành
+    -------------------------------------------*/
+    openThongKeHocTap: function () {
+        var me = this;
+        edu.util.toggle_overide("zone-bus", "zone_input_ThongKeHocTap");
+        $("#tblThongKeHocTap thead").empty();
+        $("#tblThongKeHocTap tbody").empty();
+        me.getList_XepLoaiHocTap(function () {
+            me.getList_NganhKhoaDaoTao();
+        });
+    },
+    getList_XepLoaiHocTap: function (callback) {
+        var me = this;
+        var obj_list = {
+            'action': 'SV_XepLoaiHocTap_Chung_MH/DSA4BQwZJDENLiAoCS4iFSAx',
+            'func': 'PKG_XEPLOAIHOCTAP_CHUNG.LayDMXepLoaiHocTap',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': ''
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtXepLoai = data.Data || [];
+                    if (callback) callback();
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    getList_NganhKhoaDaoTao: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'KHCT_ThongTin_MH/DSA4BRIKEh4PJiAvKR4KKS4gBSAuFSAu',
+            'func': 'PKG_KEHOACH_THONGTIN.LayDSKS_Nganh_KhoaDaoTao',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strDaoTao_HeDaoTao_Id': edu.util.getValCombo("dropHeDaoTao"),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValCombo("dropKhoaDaoTao"),
+            'strDaoTao_N_CN_Id': edu.util.getValCombo("dropChuongTrinhDaoTao"),
+            'strDaoTao_KhoaQuanLy_Id': edu.util.getValCombo("dropKhoaQuanLy"),
+            'strDaoTao_ToChucCT_Cha_Id': '',
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo("dropTinhTrangSinhVien").toString(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'pageIndex': 1,
+            'pageSize': 10000
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtNganhKhoa = data.Data || [];
+                    me.genTable_ThongKeHocTap(me.dtNganhKhoa);
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_ThongKeHocTap: function (dtNganhKhoa) {
+        var me = this;
+        var dtXepLoai = me.dtXepLoai || [];
+
+        // thead: 2 hàng, hàng 1 = STT|Ngành|Khóa|SL|xếp loại (colspan 2), hàng 2 = Sinh viên|Tỷ lệ
+        var strThead = '<tr>';
+        strThead += '<th rowspan="2" class="td-center">STT</th>';
+        strThead += '<th rowspan="2" class="td-center">Ngành học</th>';
+        strThead += '<th rowspan="2" class="td-center">Khóa học</th>';
+        strThead += '<th rowspan="2" class="td-center">Số lượng SV</th>';
+        for (var i = 0; i < dtXepLoai.length; i++) {
+            strThead += '<th colspan="2" class="td-center">' + edu.util.returnEmpty(me.getXepLoaiTen(dtXepLoai[i])) + '</th>';
+        }
+        strThead += '</tr><tr>';
+        for (var i = 0; i < dtXepLoai.length; i++) {
+            strThead += '<th class="td-center">Sinh viên</th><th class="td-center">Tỷ lệ (%)</th>';
+        }
+        strThead += '</tr>';
+        $("#tblThongKeHocTap thead").html(strThead);
+
+        // Sort theo ngành để rowspan gộp đúng
+        dtNganhKhoa.sort(function (a, b) {
+            var na = me.getNCNId(a), nb = me.getNCNId(b);
+            if (na < nb) return -1;
+            if (na > nb) return 1;
+            return 0;
+        });
+
+        // Đếm số khóa mỗi ngành để set rowspan
+        var nganhCount = {};
+        for (var i = 0; i < dtNganhKhoa.length; i++) {
+            var k = me.getNCNId(dtNganhKhoa[i]);
+            nganhCount[k] = (nganhCount[k] || 0) + 1;
+        }
+
+        var strTbody = '';
+        var seen = {};
+        var stt = 0;
+        for (var i = 0; i < dtNganhKhoa.length; i++) {
+            var row = dtNganhKhoa[i];
+            var nid = me.getNCNId(row);
+            var kdid = me.getKhoaDaoTaoId(row);
+            var tongSV = edu.util.returnZero(me.getTongSoSV(row));
+            strTbody += '<tr>';
+            if (!seen[nid]) {
+                seen[nid] = true;
+                stt++;
+                strTbody += '<td class="td-center" rowspan="' + nganhCount[nid] + '">' + stt + '</td>';
+                strTbody += '<td rowspan="' + nganhCount[nid] + '">' + edu.util.returnEmpty(me.getNCNTen(row)) + '</td>';
+            }
+            strTbody += '<td>' + edu.util.returnEmpty(me.getKhoaDaoTaoTen(row)) + '</td>';
+            strTbody += '<td class="td-center">' + tongSV + '</td>';
+            for (var j = 0; j < dtXepLoai.length; j++) {
+                var cellId = 'tk_' + nid + '_' + kdid + '_' + me.getXepLoaiId(dtXepLoai[j]);
+                strTbody += '<td class="td-center" id="' + cellId + '_SL"></td>';
+                strTbody += '<td class="td-center" id="' + cellId + '_TL"></td>';
+            }
+            strTbody += '</tr>';
+        }
+        $("#tblThongKeHocTap tbody").html(strTbody);
+
+        // Gọi count cho từng cell (N ngành-khóa × M xếp loại)
+        if (dtNganhKhoa.length === 0 || dtXepLoai.length === 0) return;
+        edu.system.genHTML_Progress("divprogessThongKe", dtNganhKhoa.length * dtXepLoai.length);
+        for (var i = 0; i < dtNganhKhoa.length; i++) {
+            for (var j = 0; j < dtXepLoai.length; j++) {
+                me.getCount_XepLoai(dtNganhKhoa[i], dtXepLoai[j]);
+            }
+        }
+    },
+    // Response field name có thể là UPPERCASE hoặc PascalCase tùy backend; hỗ trợ cả 2
+    getNCNId: function (row) { return row.DAOTAO_N_CN_ID || row.DaoTao_N_CN_Id || ''; },
+    getNCNTen: function (row) { return row.DAOTAO_N_CN_TEN || row.DaoTao_N_CN_Ten || ''; },
+    getKhoaDaoTaoId: function (row) { return row.DAOTAO_KHOADAOTAO_ID || row.DaoTao_KhoaDaoTao_Id || ''; },
+    getKhoaDaoTaoTen: function (row) { return row.DAOTAO_KHOADAOTAO_TEN || row.DaoTao_KhoaDaoTao_Ten || ''; },
+    getTongSoSV: function (row) { return row.TONGSOSV || row.TongSoSV || 0; },
+    getXepLoaiId: function (row) { return row.ID || row.Id || ''; },
+    getXepLoaiTen: function (row) { return row.TEN || row.Ten || row.TENXEPLOAI || ''; },
+    getCount_XepLoai: function (rowNK, rowXL) {
+        var me = this;
+        var nid = me.getNCNId(rowNK);
+        var kdid = me.getKhoaDaoTaoId(rowNK);
+        var xlid = me.getXepLoaiId(rowXL);
+        var tongSV = edu.util.returnZero(me.getTongSoSV(rowNK));
+        var cellId = 'tk_' + nid + '_' + kdid + '_' + xlid;
+        var tieuDe = me.getXepLoaiTen(rowXL) + ' - ' + me.getNCNTen(rowNK) + ' - ' + me.getKhoaDaoTaoTen(rowNK);
+        var obj_list = {
+            'action': 'SV_XepLoaiHocTap_BaoCao_MH/DSA4BRIeFSkuLyYKJB4ZDQkVHgokNRA0IAPP',
+            'func': 'PKG_XEPLOAIHOCTAP_BAOCAO.LayDS_ThongKe_XLHT_KetQua',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropPhanViTongHop_' + me.strPhamViMa),
+            'strXepLoai_Id': xlid,
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo("dropTinhTrangSinhVien").toString(),
+            'strDaoTao_N_CN_Id': nid,
+            'strDaoTao_KhoaDaoTao_Id': kdid
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = data.Data || [];
+                    var count = arr.length;
+                    var tyle = tongSV > 0 ? Math.round(10000 * count / tongSV) / 100 : 0;
+                    var strXem = '<a href="#" class="btnXemDSSV_XepLoai" data-nid="' + nid + '" data-kdid="' + kdid + '" data-xlid="' + xlid + '" data-tieude="' + tieuDe.replace(/"/g, '&quot;') + '">' + count + ' - Xem</a>';
+                    $("#" + cellId + "_SL").html(strXem);
+                    $("#" + cellId + "_TL").html(tyle);
+                } else {
+                    $("#" + cellId + "_SL").html('-');
+                    $("#" + cellId + "_TL").html('-');
+                }
+                edu.system.start_Progress("divprogessThongKe", function () { });
+            },
+            error: function (er) {
+                $("#" + cellId + "_SL").html('-');
+                $("#" + cellId + "_TL").html('-');
+                edu.system.start_Progress("divprogessThongKe", function () { });
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    viewDSSV_XepLoai: function (nid, kdid, xlid, tieuDe) {
+        var me = this;
+        var obj_list = {
+            'action': 'SV_XepLoaiHocTap_BaoCao_MH/DSA4BRIeFSkuLyYKJB4ZDQkVHgokNRA0IAPP',
+            'func': 'PKG_XEPLOAIHOCTAP_BAOCAO.LayDS_ThongKe_XLHT_KetQua',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropPhanViTongHop_' + me.strPhamViMa),
+            'strXepLoai_Id': xlid,
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo("dropTinhTrangSinhVien").toString(),
+            'strDaoTao_N_CN_Id': nid,
+            'strDaoTao_KhoaDaoTao_Id': kdid
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = data.Data || [];
+                    $("#lblDSSVXepLoai_TieuDe").text(tieuDe ? ' — ' + tieuDe : '');
+                    $("#lblDSSVXepLoai_Tong").text(arr.length);
+                    me.genTable_DSSVXepLoai(arr);
+                    $("#modal_XemDSSVXepLoai").modal("show");
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_DSSVXepLoai: function (data) {
+        var row = '';
+        function pick(d, keys) {
+            for (var i = 0; i < keys.length; i++) {
+                if (d[keys[i]] !== undefined && d[keys[i]] !== null) return d[keys[i]];
+            }
+            return '';
+        }
+        for (var i = 0; i < data.length; i++) {
+            var d = data[i];
+            var ct = edu.util.returnEmpty(pick(d, ['DAOTAO_CHUONGTRINH_TEN', 'DaoTao_ChuongTrinh_Ten']));
+            var ctMa = edu.util.returnEmpty(pick(d, ['DAOTAO_CHUONGTRINH_MA', 'DaoTao_ChuongTrinh_Ma']));
+            var ctFull = ct + (ctMa ? ' (' + ctMa + ')' : '');
+            row += '<tr>';
+            row += '<td class="td-center">' + (i + 1) + '</td>';
+            row += '<td class="td-center">' + edu.util.returnEmpty(pick(d, ['QLSV_NGUOIHOC_MASO', 'QLSV_NguoiHoc_MaSo'])) + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['QLSV_NGUOIHOC_HODEM', 'QLSV_NguoiHoc_HoDem'])) + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['QLSV_NGUOIHOC_TEN', 'QLSV_NguoiHoc_Ten'])) + '</td>';
+            row += '<td class="td-center">' + edu.util.returnEmpty(pick(d, ['GIOITINH_TEN', 'GioiTinh_Ten'])) + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['XEPLOAI_TEN', 'XepLoai_Ten'])) + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['THOIGIANDAOTAO_TEN', 'ThoiGianDaoTao_Ten'])) + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['TRANGTHAINGUOIHOC_TEN', 'TrangThaiNguoiHoc_Ten'])) + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['DAOTAO_LOPQUANLY_TEN', 'DaoTao_LopQuanLy_Ten'])) + '</td>';
+            row += '<td>' + ctFull + '</td>';
+            row += '<td>' + edu.util.returnEmpty(pick(d, ['DAOTAO_KHOADAOTAO_TEN', 'DaoTao_KhoaDaoTao_Ten'])) + '</td>';
+            row += '</tr>';
+        }
+        $("#tblDSSVXepLoai tbody").html(row);
+    },
+    /*------------------------------------------
+    --Discription: [TK-CTDT] Thống kê học tập theo CTĐT
+    -------------------------------------------*/
+    openThongKeHocTapCTDT: function () {
+        var me = this;
+        edu.util.toggle_overide("zone-bus", "zone_input_ThongKeHocTapCTDT");
+        $("#tblThongKeHocTapCTDT thead").empty();
+        $("#tblThongKeHocTapCTDT tbody").empty();
+        me.getList_XepLoaiHocTap(function () {
+            me.getList_CTDT_KhoaDaoTao();
+        });
+    },
+    getList_CTDT_KhoaDaoTao: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'KHCT_ThongTin_MH/DSA4BRIKEh4CFQUVHgopLiAFIC4VIC4P',
+            'func': 'PKG_KEHOACH_THONGTIN.LayDSKS_CTDT_KhoaDaoTao',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strDaoTao_HeDaoTao_Id': edu.util.getValCombo("dropHeDaoTao"),
+            'strDaoTao_KhoaDaoTao_Id': edu.util.getValCombo("dropKhoaDaoTao"),
+            'strDaoTao_N_CN_Id': edu.util.getValCombo("dropChuongTrinhDaoTao"),
+            'strDaoTao_KhoaQuanLy_Id': edu.util.getValCombo("dropKhoaQuanLy"),
+            'strDaoTao_ToChucCT_Cha_Id': '',
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo("dropTinhTrangSinhVien").toString(),
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'pageIndex': 1,
+            'pageSize': 10000
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtCTDTKhoa = data.Data || [];
+                    me.genTable_ThongKeHocTapCTDT(me.dtCTDTKhoa);
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genTable_ThongKeHocTapCTDT: function (dtCTDTKhoa) {
+        var me = this;
+        var dtXepLoai = me.dtXepLoai || [];
+
+        var strThead = '<tr>';
+        strThead += '<th rowspan="2" class="td-center">STT</th>';
+        strThead += '<th rowspan="2" class="td-center">CTĐT</th>';
+        strThead += '<th rowspan="2" class="td-center">Khóa học</th>';
+        strThead += '<th rowspan="2" class="td-center">Số lượng SV</th>';
+        for (var i = 0; i < dtXepLoai.length; i++) {
+            strThead += '<th colspan="2" class="td-center">' + edu.util.returnEmpty(me.getXepLoaiTen(dtXepLoai[i])) + '</th>';
+        }
+        strThead += '</tr><tr>';
+        for (var i = 0; i < dtXepLoai.length; i++) {
+            strThead += '<th class="td-center">Sinh viên</th><th class="td-center">Tỷ lệ (%)</th>';
+        }
+        strThead += '</tr>';
+        $("#tblThongKeHocTapCTDT thead").html(strThead);
+
+        dtCTDTKhoa.sort(function (a, b) {
+            var ca = me.getCTDTId(a), cb = me.getCTDTId(b);
+            if (ca < cb) return -1;
+            if (ca > cb) return 1;
+            return 0;
+        });
+
+        var ctdtCount = {};
+        for (var i = 0; i < dtCTDTKhoa.length; i++) {
+            var k = me.getCTDTId(dtCTDTKhoa[i]);
+            ctdtCount[k] = (ctdtCount[k] || 0) + 1;
+        }
+
+        var strTbody = '';
+        var seen = {};
+        var stt = 0;
+        for (var i = 0; i < dtCTDTKhoa.length; i++) {
+            var row = dtCTDTKhoa[i];
+            var ctdtid = me.getCTDTId(row);
+            var kdid = me.getKhoaDaoTaoId(row);
+            var tongSV = edu.util.returnZero(me.getTongSoSV(row));
+            var ctdtMa = me.getCTDTMa(row);
+            var ctdtTen = me.getCTDTTen(row);
+            var ctdtFull = edu.util.returnEmpty(ctdtTen) + (ctdtMa ? '(' + ctdtMa + ')' : '');
+            strTbody += '<tr>';
+            if (!seen[ctdtid]) {
+                seen[ctdtid] = true;
+                stt++;
+                strTbody += '<td class="td-center" rowspan="' + ctdtCount[ctdtid] + '">' + stt + '</td>';
+                strTbody += '<td rowspan="' + ctdtCount[ctdtid] + '">' + ctdtFull + '</td>';
+            }
+            strTbody += '<td>' + edu.util.returnEmpty(me.getKhoaDaoTaoTen(row)) + '</td>';
+            strTbody += '<td class="td-center">' + tongSV + '</td>';
+            for (var j = 0; j < dtXepLoai.length; j++) {
+                var cellId = 'tkctdt_' + ctdtid + '_' + kdid + '_' + me.getXepLoaiId(dtXepLoai[j]);
+                strTbody += '<td class="td-center" id="' + cellId + '_SL"></td>';
+                strTbody += '<td class="td-center" id="' + cellId + '_TL"></td>';
+            }
+            strTbody += '</tr>';
+        }
+        $("#tblThongKeHocTapCTDT tbody").html(strTbody);
+
+        if (dtCTDTKhoa.length === 0 || dtXepLoai.length === 0) return;
+        edu.system.genHTML_Progress("divprogessThongKeCTDT", dtCTDTKhoa.length * dtXepLoai.length);
+        for (var i = 0; i < dtCTDTKhoa.length; i++) {
+            for (var j = 0; j < dtXepLoai.length; j++) {
+                me.getCount_XepLoai_CTDT(dtCTDTKhoa[i], dtXepLoai[j]);
+            }
+        }
+    },
+    getCTDTId: function (row) { return row.DAOTAO_CHUONGTRINH_ID || row.DaoTao_ChuongTrinh_Id || row.ID || row.Id || ''; },
+    getCTDTTen: function (row) { return row.TENCHUONGTRINH || row.DAOTAO_CHUONGTRINH_TEN || row.DaoTao_ChuongTrinh_Ten || ''; },
+    getCTDTMa: function (row) { return row.MACHUONGTRINH || row.DAOTAO_CHUONGTRINH_MA || row.DaoTao_ChuongTrinh_Ma || ''; },
+    getCount_XepLoai_CTDT: function (rowCK, rowXL) {
+        var me = this;
+        var ctdtid = me.getCTDTId(rowCK);
+        var kdid = me.getKhoaDaoTaoId(rowCK);
+        var xlid = me.getXepLoaiId(rowXL);
+        var tongSV = edu.util.returnZero(me.getTongSoSV(rowCK));
+        var cellId = 'tkctdt_' + ctdtid + '_' + kdid + '_' + xlid;
+        var ctdtTen = me.getCTDTTen(rowCK);
+        var ctdtMa = me.getCTDTMa(rowCK);
+        var ctdtFull = ctdtTen + (ctdtMa ? '(' + ctdtMa + ')' : '');
+        var tieuDe = me.getXepLoaiTen(rowXL) + ' - ' + ctdtFull + ' - ' + me.getKhoaDaoTaoTen(rowCK);
+        var obj_list = {
+            'action': 'SV_XepLoaiHocTap_BaoCao_MH/DSA4BRIeFSkuLyYKJB4ZDQkVHgIVBRUeCiQ1EDQg',
+            'func': 'PKG_XEPLOAIHOCTAP_BAOCAO.LayDS_ThongKe_XLHT_CTDT_KetQua',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropPhanViTongHop_' + me.strPhamViMa),
+            'strXepLoai_Id': xlid,
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo("dropTinhTrangSinhVien").toString(),
+            'strDaoTao_ChuongTrinh_Id': ctdtid,
+            'strDaoTao_KhoaDaoTao_Id': kdid
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = data.Data || [];
+                    var count = arr.length;
+                    var tyle = tongSV > 0 ? Math.round(10000 * count / tongSV) / 100 : 0;
+                    var strXem = '<a href="#" class="btnXemDSSV_XepLoai_CTDT" data-ctdtid="' + ctdtid + '" data-kdid="' + kdid + '" data-xlid="' + xlid + '" data-tieude="' + tieuDe.replace(/"/g, '&quot;') + '">' + count + ' - Xem</a>';
+                    $("#" + cellId + "_SL").html(strXem);
+                    $("#" + cellId + "_TL").html(tyle);
+                } else {
+                    $("#" + cellId + "_SL").html('-');
+                    $("#" + cellId + "_TL").html('-');
+                }
+                edu.system.start_Progress("divprogessThongKeCTDT", function () { });
+            },
+            error: function (er) {
+                $("#" + cellId + "_SL").html('-');
+                $("#" + cellId + "_TL").html('-');
+                edu.system.start_Progress("divprogessThongKeCTDT", function () { });
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    viewDSSV_XepLoai_CTDT: function (ctdtid, kdid, xlid, tieuDe) {
+        var me = this;
+        var obj_list = {
+            'action': 'SV_XepLoaiHocTap_BaoCao_MH/DSA4BRIeFSkuLyYKJB4ZDQkVHgIVBRUeCiQ1EDQg',
+            'func': 'PKG_XEPLOAIHOCTAP_BAOCAO.LayDS_ThongKe_XLHT_CTDT_KetQua',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id,
+            'strHanhDong_Code': '',
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropPhanViTongHop_' + me.strPhamViMa),
+            'strXepLoai_Id': xlid,
+            'strTrangThaiNguoiHoc_Id': edu.util.getValCombo("dropTinhTrangSinhVien").toString(),
+            'strDaoTao_ChuongTrinh_Id': ctdtid,
+            'strDaoTao_KhoaDaoTao_Id': kdid
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = data.Data || [];
+                    $("#lblDSSVXepLoai_TieuDe").text(tieuDe ? ' — ' + tieuDe : '');
+                    $("#lblDSSVXepLoai_Tong").text(arr.length);
+                    me.genTable_DSSVXepLoai(arr);
+                    $("#modal_XemDSSVXepLoai").modal("show");
+                } else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
     },
     reportAllTable: function (strTable_Id) {
 

@@ -97,14 +97,8 @@ TinTuc.prototype = {
             if (edu.util.checkValue(strId)) {
                 var data = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0];
                 me.strTinTuc_Id = data.ID;
-                me.tinTucData = data; // Lưu data tin tức
-                // Load bộ lọc
-                me.getList_HeDaoTao_PV();
-                me.getList_KhoaDaoTao_PV();
-                me.getList_ChuongTrinhDaoTao_PV();
-                me.getList_LopQuanLy_PV();
-                // Tự động load danh sách sinh viên
-                me.getList_SinhVien_PhamVi(1);
+                me.tinTucData = data;
+                me.getList_SinhVien();
             }
             else {
                 edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
@@ -494,9 +488,9 @@ TinTuc.prototype = {
         me.arrNhanSu_Id = [];
         me.arrLop = [];
         me.arrKhoa = [];
+        me.arrHe = [];
         me.arrChuongTrinh = [];
-        $("#tblSinhVien_PhamVi tbody").html('<tr><td colspan="9" class="text-center">Vui lòng chọn bộ lọc và click "Tìm kiếm"</td></tr>');
-        $("#lblSinhVien_Tong").html("0");
+        $("#tblInput_DTSV_SinhVien tbody").html("");
         edu.util.toggle_overide("zone-bus", "zonePhamVi");
     },
     /*------------------------------------------

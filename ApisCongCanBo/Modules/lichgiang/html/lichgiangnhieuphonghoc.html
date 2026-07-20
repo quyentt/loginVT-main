@@ -1849,10 +1849,6 @@
                         <select class="form-select" id="dropSearch_ToaNha" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="">Tất cả tòa nhà</option>
                         </select>
-                        <select class="form-select" id="dropSearch_PhongHoc"
-                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
-                            <option value="">Tìm kiếm phòng học...</option>
-                        </select>
                         <select class="form-select" id="dropSearch_PhongHocMulti" multiple="multiple"
                             style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                         </select>
@@ -1866,18 +1862,15 @@
                             <option value="days">Tính theo ngày sử dụng (mặc định)</option>
                             <option value="periods">Tính theo tiết học</option>
                             <option value="morning">Tính theo buổi sáng (T1-6)</option>
-                            <option value="afternoon">Tính theo buổi chiều (T7-10)</option>
-                            <option value="evening">Tính theo buổi tối (T11-15)</option>
-                            <option value="morning-afternoon">Tính theo sáng + chiều (T1-10)</option>
+                            <option value="afternoon">Tính theo buổi chiều (T7-12)</option>
+                            <option value="evening">Tính theo buổi tối (T13-15)</option>
+                            <option value="morning-afternoon">Tính theo sáng + chiều (T1-12)</option>
                             <option value="afternoon-evening">Tính theo chiều + tối (T7-15)</option>
                             <option value="all-sessions">Tính theo cả 3 buổi (T1-15)</option>
                         </select>
                         <div class="search-bar-controls-buttons">
                             <button class="btn btn-primary" id="btnSearch">
                                 <i class="fa-solid fa-search"></i> Xem lịch phòng
-                            </button>
-                            <button class="btn btn-info text-white" id="btnViewMulti">
-                                <i class="fa-solid fa-layer-group"></i> Xem nhiều phòng
                             </button>
                             <button class="btn btn-outline-secondary" id="btnViewAll">
                                 <i class="fa-solid fa-th-list"></i> Xem tất cả lịch phòng

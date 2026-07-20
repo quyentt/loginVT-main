@@ -4673,19 +4673,22 @@
     min-height: 110px;
     margin-bottom: 0 !important;
 }
-.zoneThongTinBoSung .small-box.bg-green{
+
+.zoneThongTinBoSung .small-box.bg-green {
     background-color: #4d8d41 !important;
 }
-.zoneThongTinBoSung .small-box.bg-red{
+
+.zoneThongTinBoSung .small-box.bg-red {
     background-color: #dd4c3b !important;
 }
-.zoneThongTinBoSung .small-box.bg-yellow{
+
+.zoneThongTinBoSung .small-box.bg-yellow {
     background-color: #f59c00 !important;
     color: #fff !important;
 }
-.zoneThongTinBoSung .small-box.bg-yellow {
 
-}
+.zoneThongTinBoSung .small-box.bg-yellow {}
+
 .zoneThongTinBoSung .small-box>.small-box-footer {
     position: relative;
     text-align: center;
@@ -4800,7 +4803,7 @@
 .small-box.bg-yellow .small-box-r .small-box-footer:hover {
     border: 1px solid #fff;
     background: #fff !important;
-    color: #f59c00  !important;
+    color: #f59c00 !important;
 }
 
 .activeOnSearch,
@@ -6840,8 +6843,8 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 6px !important;
-    right: 10px !important;
+    top: 7px !important;
+    right: 0px !important;
 }
 
 .aps-ds-hoso .aps-table-select .simple-pagination {
@@ -15977,18 +15980,34 @@ table#clone {
 .aps-sv-btn-nav:hover {
     background: #dbe7ff;
 }
-.zoneBox_ToaNha{    
+
+.zoneBox_ToaNha {
     display: flex;
     gap: 20px;
 }
-.zoneBox_ToaNha .btnView{
-    border:1px solid #e1e1e1;
+
+.zoneBox_ToaNha .btnView {
+    border: 1px solid #e1e1e1;
     border-radius: 12px;
     /* padding: 15px; */
 }
+
 .zoneBox_ToaNha .btnView .small-box {
     margin-bottom: 0px;
 }
+
+.aps-form .aps-form-item .aps-form-input .selection .select2-selection__rendered {
+    line-height: 27px !important;
+    padding-left: 0px !important;
+    padding-top: 2px !important;
+}
+
+.aps-form .aps-form-item .aps-form-input .selection .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 7px !important;
+    right: 0px !important;
+}
+
+>>>>>>>8ef33e5b814789dc3c99279905f21facbba48f65
 /* ------- Responsive ------- */
 @media (max-width: 768px) {
     .aps-sv-layout {
@@ -16086,9 +16105,16 @@ table#clone {
 }
 
 
-.aps-ThongTinHSSV .box.box-solid .box-body{
+.aps-ThongTinHSSV .box.box-solid .box-body {
     padding: 20px;
 }
+
 .nav-tabs-custom.aps-tabs-custom>.nav-tabs>li {
     margin-bottom: -3px !important;
+}
+
+.select2-selection__rendered {
+    line-height: 27px !important;
+    padding-left: 0px !important;
+    padding-top: 2px !important;
 }

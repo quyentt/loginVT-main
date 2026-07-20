@@ -39,93 +39,115 @@ LichGiangNhieuPhong.prototype = {
         var tiet = event.TIETBATDAU;
         if (tiet) {
             if (tiet >= 1 && tiet <= 6) return 'sang';
-            if (tiet >= 7 && tiet <= 10) return 'chieu';
-            if (tiet >= 11 && tiet <= 15) return 'toi';
+            if (tiet >= 7 && tiet <= 12) return 'chieu';
+            if (tiet >= 13 && tiet <= 15) return 'toi';
         }
         var gio = event.GIOBATDAU;
         if (gio != null) {
-            if (gio < 12) return 'sang';
-            if (gio < 18) return 'chieu';
+            if (gio < 13) return 'sang';
+            if (gio < 19) return 'chieu';
             return 'toi';
         }
         return null;
     },
 
     // Ước lượng (tiết bắt đầu, tiết kết thúc) — fallback theo giờ khi API không trả TIETBATDAU/TIETKETTHUC.
-    // Quy ước: tiết 1 ~ 7h, tiết 7 ~ 13h, tiết 11 ~ 18h (mỗi tiết ~1 giờ).
+    // Quy ước: mỗi tiết ~1 giờ, tiết 1 ~ 7h → sáng T1-6 (7h-12h), chiều T7-12 (13h-18h), tối T13-15 (19h-21h).
     getTietRange: function(event) {
         var batDau = event.TIETBATDAU;
         var ketThuc = event.TIETKETTHUC;
         var g;
         if (!batDau && event.GIOBATDAU != null) {
             g = event.GIOBATDAU;
-            if (g < 12) batDau = Math.max(1, Math.min(6, g - 6));
-            else if (g < 18) batDau = Math.max(7, Math.min(10, g - 6));
-            else batDau = Math.max(11, Math.min(15, g - 7));
+            if (g < 13) batDau = Math.max(1, Math.min(6, g - 6));
+            else if (g < 19) batDau = Math.max(7, Math.min(12, g - 6));
+            else batDau = Math.max(13, Math.min(15, g - 6));
         }
         if (!ketThuc && event.GIOKETTHUC != null) {
             g = event.GIOKETTHUC;
             if (g <= 12) ketThuc = Math.max(1, Math.min(6, g - 6));
-            else if (g <= 18) ketThuc = Math.max(7, Math.min(10, g - 6));
-            else ketThuc = Math.max(11, Math.min(15, g - 7));
+            else if (g <= 18) ketThuc = Math.max(7, Math.min(12, g - 6));
+            else ketThuc = Math.max(13, Math.min(15, g - 6));
         }
         return { batDau: batDau, ketThuc: ketThuc };
     },
 
+    // Kiểm tra ngày dd/MM/yyyy có phải Chủ nhật không
+    isSunday: function(dateStr) {
+        if (!dateStr) return false;
+        var parts = dateStr.split('/');
+        if (parts.length !== 3) return false;
+        var d = new Date(parts[2], parts[1] - 1, parts[0]);
+        return d.getDay() === 0;
+    },
+
     // Calculate efficiency based on selected mode
-    calculateEfficiency: function(roomSchedules, totalDays) {
+    // Hiệu suất tính trên 6 ngày làm việc (T2-T7), bỏ Chủ nhật khỏi cả tử & mẫu
+    calculateEfficiency: function(roomSchedules, arrDays) {
         var me = this;
         var mode = me.strEfficiencyMode;
-        
+
+        // Loại Chủ nhật khỏi mẫu số
+        var workingDays = arrDays.filter(function(d) {
+            return !me.isSunday(d.date);
+        }).length;
+
+        // Loại lịch rơi vào Chủ nhật khỏi tử số
+        var validSchedules = roomSchedules.filter(function(s) {
+            return !me.isSunday(s.NGAYHOC);
+        });
+
+        if (workingDays === 0) return 0;
+
         if (mode === 'days') {
             // Tính theo ngày: đếm số ngày có lịch
             var uniqueDays = {};
-            roomSchedules.forEach(function(schedule) {
+            validSchedules.forEach(function(schedule) {
                 if (schedule.NGAYHOC) {
                     uniqueDays[schedule.NGAYHOC] = true;
                 }
             });
             var usedDays = Object.keys(uniqueDays).length;
-            return Math.round((usedDays / totalDays) * 100);
+            return Math.round((usedDays / workingDays) * 100);
         }
-        
+
         // Tính theo tiết học
         var totalUsedPeriods = 0;
         var totalPeriods = 0;
-        
+
         // Xác định range tiết theo mode
         var periodRange = { min: 1, max: 15 };
         switch(mode) {
             case 'morning':
                 periodRange = { min: 1, max: 6 };
-                totalPeriods = totalDays * 6;
+                totalPeriods = workingDays * 6;
                 break;
             case 'afternoon':
-                periodRange = { min: 7, max: 10 };
-                totalPeriods = totalDays * 4;
+                periodRange = { min: 7, max: 12 };
+                totalPeriods = workingDays * 6;
                 break;
             case 'evening':
-                periodRange = { min: 11, max: 15 };
-                totalPeriods = totalDays * 5;
+                periodRange = { min: 13, max: 15 };
+                totalPeriods = workingDays * 3;
                 break;
             case 'morning-afternoon':
-                periodRange = { min: 1, max: 10 };
-                totalPeriods = totalDays * 10;
+                periodRange = { min: 1, max: 12 };
+                totalPeriods = workingDays * 12;
                 break;
             case 'afternoon-evening':
                 periodRange = { min: 7, max: 15 };
-                totalPeriods = totalDays * 9;
+                totalPeriods = workingDays * 9;
                 break;
             case 'all-sessions':
             case 'periods':
             default:
                 periodRange = { min: 1, max: 15 };
-                totalPeriods = totalDays * 15;
+                totalPeriods = workingDays * 15;
                 break;
         }
-        
+
         // Đếm số tiết đã sử dụng trong range (fallback theo giờ nếu thiếu TIETBATDAU/TIETKETTHUC)
-        roomSchedules.forEach(function(schedule) {
+        validSchedules.forEach(function(schedule) {
             var range = me.getTietRange(schedule);
             if (range.batDau && range.ketThuc) {
                 var start = Math.max(range.batDau, periodRange.min);
@@ -135,8 +157,8 @@ LichGiangNhieuPhong.prototype = {
                 }
             }
         });
-        
-        return Math.round((totalUsedPeriods / totalPeriods) * 100);
+
+        return totalPeriods > 0 ? Math.round((totalUsedPeriods / totalPeriods) * 100) : 0;
     },
     
     // Get efficiency label text based on mode
@@ -246,18 +268,21 @@ LichGiangNhieuPhong.prototype = {
         // Search button
         $("#btnSearch").click(function () {
             var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
-            var hasFilter = $("#dropSearch_ToaNha").val() || $("#dropSearch_PhongHoc").val() || arrMulti.length > 0;
-            if (hasFilter) {
-                $(".days .active").trigger("click");
-            } else {
+            var hasFilter = $("#dropSearch_ToaNha").val() || arrMulti.length > 0;
+            if (!hasFilter) {
                 edu.system.alert("Vui lòng chọn tòa nhà hoặc phòng học");
+                return;
             }
+            if (!me.strNgayBatDau || !me.strNgayKetThuc) {
+                edu.system.alert("Vui lòng chọn tuần trên lịch");
+                return;
+            }
+            me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
         });
 
         // View all button
         $("#btnViewAll").click(function () {
             $("#dropSearch_ToaNha").val('').trigger('change');
-            $("#dropSearch_PhongHoc").val('').trigger('change');
             $("#dropSearch_PhongHocMulti").val(null).trigger('change.select2');
             $(".days .active").trigger("click");
         });
@@ -279,41 +304,10 @@ LichGiangNhieuPhong.prototype = {
             }
         });
 
-        // Room filter change
-        $("#dropSearch_PhongHoc").change(function () {
-            console.log("Phòng học filter changed to:", $(this).val());
-
-            // Đóng dropdown Select2
-            $(this).select2('close');
-
-            // Auto load data if week is selected
-            if (me.strNgayBatDau && me.strNgayKetThuc) {
-                me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
-            }
-        });
-
-        // Multi-room filter change — KHÔNG tự load, chỉ reset filter đơn để không xung đột
+        // Multi-room filter change — KHÔNG tự load, user bấm nút "Xem lịch phòng" để load
         $("#dropSearch_PhongHocMulti").change(function () {
             var selected = $(this).val() || [];
-            console.log("Đã chọn", selected.length, "phòng (chờ bấm 'Xem nhiều phòng')");
-
-            if (selected.length > 0) {
-                $("#dropSearch_PhongHoc").val('').trigger('change.select2');
-            }
-        });
-
-        // View multi-room button — chỉ load khi user bấm
-        $("#btnViewMulti").click(function () {
-            var arrMulti = $("#dropSearch_PhongHocMulti").val() || [];
-            if (arrMulti.length === 0) {
-                edu.system.alert("Vui lòng chọn ít nhất 1 phòng để xem");
-                return;
-            }
-            if (!me.strNgayBatDau || !me.strNgayKetThuc) {
-                edu.system.alert("Vui lòng chọn tuần trên lịch");
-                return;
-            }
-            me.getList_TuanHienTai(me.strNgayBatDau, me.strNgayKetThuc, me.strNgayBatDau);
+            console.log("Đã chọn", selected.length, "phòng (chờ bấm 'Xem lịch phòng')");
         });
 
         // Room type filter change
@@ -527,8 +521,8 @@ LichGiangNhieuPhong.prototype = {
             var roomSchedules = me.dtLichHoc.filter(function(item) {
                 return item.IDPHONGHOC === room.ID;
             });
-            
-            var efficiency = me.calculateEfficiency(roomSchedules, arrDays.length);
+
+            var efficiency = me.calculateEfficiency(roomSchedules, arrDays);
             
             // Xác định màu sắc
             var efficiencyClass = 'low';
@@ -686,24 +680,14 @@ LichGiangNhieuPhong.prototype = {
                     // Bắt đầu từ bản gốc để filter
                     me.dtPhongHocFull = me.dtPhongHocOriginal.slice();
                     
-                    // Apply multi-room filter (ưu tiên nếu chọn nhiều phòng)
+                    // Lọc theo danh sách phòng đã chọn (1 hoặc nhiều)
                     var arrPhongHoc_Ids = $("#dropSearch_PhongHocMulti").val() || [];
                     if (arrPhongHoc_Ids.length > 0) {
-                        console.log("Lọc theo nhiều phòng:", arrPhongHoc_Ids);
+                        console.log("Lọc theo phòng:", arrPhongHoc_Ids);
                         me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
                             return arrPhongHoc_Ids.indexOf(room.ID) !== -1;
                         });
-                        console.log("Sau khi lọc nhiều phòng:", me.dtPhongHocFull.length, "phòng");
-                    } else {
-                        // Apply room filter if selected (lọc theo phòng cụ thể)
-                        var strPhongHoc_Id = $("#dropSearch_PhongHoc").val() || '';
-                        if (strPhongHoc_Id) {
-                            console.log("Lọc theo phòng ID:", strPhongHoc_Id);
-                            me.dtPhongHocFull = me.dtPhongHocFull.filter(function(room) {
-                                return room.ID === strPhongHoc_Id;
-                            });
-                            console.log("Sau khi lọc phòng:", me.dtPhongHocFull.length, "phòng");
-                        }
+                        console.log("Sau khi lọc:", me.dtPhongHocFull.length, "phòng");
                     }
                     
                     // Apply room type filter
@@ -866,24 +850,8 @@ LichGiangNhieuPhong.prototype = {
                     });
                     
                     me.dtPhongHocList = roomList;
-                    
-                    var obj = {
-                        data: roomList,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "TEN",
-                        },
-                        renderPlace: ["dropSearch_PhongHoc"],
-                        title: "Tìm kiếm phòng học..."
-                    };
-                    edu.system.loadToCombo_data(obj);
-                    $("#dropSearch_PhongHoc").select2({
-                        placeholder: "Tìm kiếm phòng học...",
-                        allowClear: true
-                    });
 
-                    // Load options cho multi-select chọn nhiều phòng
+                    // Load options cho ô chọn phòng (multi-select, cho phép chọn 1 hoặc nhiều)
                     me.populateMultiRoomDropdown(roomList);
                 } else {
                     console.error("API failed:", data.Message);
@@ -956,24 +924,6 @@ LichGiangNhieuPhong.prototype = {
                         return a.TEN.localeCompare(b.TEN);
                     });
                     
-                    // Update dropdown
-                    var obj = {
-                        data: roomList,
-                        renderInfor: {
-                            id: "ID",
-                            parentId: "",
-                            name: "TEN",
-                        },
-                        renderPlace: ["dropSearch_PhongHoc"],
-                        title: "Tìm kiếm phòng học..."
-                    };
-                    edu.system.loadToCombo_data(obj);
-                    $("#dropSearch_PhongHoc").val('').trigger('change'); // Reset selection
-                    $("#dropSearch_PhongHoc").select2({
-                        placeholder: "Tìm kiếm phòng học...",
-                        allowClear: true
-                    });
-
                     // Reset & reload multi-select theo tòa nhà mới
                     $("#dropSearch_PhongHocMulti").val(null);
                     me.populateMultiRoomDropdown(roomList);
@@ -1031,11 +981,11 @@ LichGiangNhieuPhong.prototype = {
             html += '</div>';
             html += '<div class="session-label" style="border-right: 1px solid #ddd; background: #E6F3FF;">';
             html += '<div class="session-name">🌤️ CHIỀU</div>';
-            html += '<div class="session-time">Tiết 7-10</div>';
+            html += '<div class="session-time">Tiết 7-12</div>';
             html += '</div>';
             html += '<div class="session-label" style="background: #F0E6FF;">';
             html += '<div class="session-name">🌙 TỐI</div>';
-            html += '<div class="session-time">Tiết 11-15</div>';
+            html += '<div class="session-time">Tiết 13-15</div>';
             html += '</div>';
             html += '</div>';
             html += '</div>';
@@ -1048,8 +998,8 @@ LichGiangNhieuPhong.prototype = {
             var roomSchedules = data.filter(function(item) {
                 return item.IDPHONGHOC === room.ID;
             });
-            
-            var efficiency = me.calculateEfficiency(roomSchedules, arrDays.length);
+
+            var efficiency = me.calculateEfficiency(roomSchedules, arrDays);
             
             // Xác định màu sắc
             var efficiencyClass = 'low';

@@ -138,6 +138,12 @@ KeHoachXuLy.prototype = {
             me.strKeHoachXuLy_Id = strId;
             me.getList_PhanCong();
         });
+        $("#tblKetQuaXuLy, #tblDSXet, #tblInput_DTSV_SinhVien").delegate('.btnView_HocTap', 'click', function (e) {
+            $('#modalHTSinhVien').modal('show');
+            me["strSinhVien_Id"] = this.id;
+            window._embeddedSinhVien_Id = this.id;
+            edu.system.loadPage($("#zoneHTSinhVien"), '/modules/hoctap/html/diemhoc.html', null, null, 'ApisCongSinhVien');
+        });
         $("#btnXoaKetQuaXuLy").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblKetQuaXuLy", "checkX");
             if (arrChecked_Id.length == 0) {
@@ -846,7 +852,7 @@ KeHoachXuLy.prototype = {
             html += "<tr id='rm_row" + data[i].QLSV_NGUOIHOC_ID + "'>";
             html += "<td class='td-center'>" + (i + 1) + "</td>";
             html += "<td class='td-center'><img class='table-img' src='" + edu.system.getRootPathImg(data[i].ANH) + "'></td>";
-            html += "<td class='td-left'><span>" + data[i].QLSV_NGUOIHOC_MASO + "</span></td>";
+            html += "<td class='td-left'><div class='btn btn-default min-w-auto btnView_HocTap' id='" + data[i].QLSV_NGUOIHOC_ID + "'><u>" + edu.util.returnEmpty(data[i].QLSV_NGUOIHOC_MASO) + "</u></div></td>";
             html += "<td class='td-left'><span>" + data[i].QLSV_NGUOIHOC_HODEM + " " + data[i].QLSV_NGUOIHOC_TEN + "</span></td>";
             html += "<td class='td-left'><span>" + data[i].DAOTAO_LOPQUANLY_TEN + "</span></td>";
             html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].DAOTAO_CHUONGTRINH_TEN) + "</span></td>";
@@ -890,7 +896,7 @@ KeHoachXuLy.prototype = {
         html += "<tr id='rm_row" + aData.ID + "' name='new'>";
         html += "<td class='td-center'>" + me.arrSinhVien_Id.length + "</td>";
         html += "<td class='td-center'><img class='table-img' src='" + edu.system.getRootPathImg(aData.ANH) + "'></td>";
-        html += "<td class='td-left'><span>" + aData.QLSV_NGUOIHOC_MASO + "</span></td>";
+        html += "<td class='td-left'><div class='btn btn-default min-w-auto btnView_HocTap' id='" + aData.QLSV_NGUOIHOC_ID + "'><u>" + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + "</u></div></td>";
         html += "<td class='td-left'><span>" + aData.QLSV_NGUOIHOC_HODEM + " " + aData.QLSV_NGUOIHOC_TEN + "</span></td>";
         html += "<td class='td-left'><span>" + aData.DAOTAO_LOPQUANLY_TEN + "</span></td>";
         html += "<td class='td-left'><span>" + aData.DAOTAO_CHUONGTRINH_TEN + "</span></td>";
@@ -1985,7 +1991,9 @@ KeHoachXuLy.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HODEM",
@@ -2175,7 +2183,9 @@ KeHoachXuLy.prototype = {
             },
             aoColumns: [
                 {
-                    "mDataProp": "QLSV_NGUOIHOC_MASO"
+                    "mRender": function (nRow, aData) {
+                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                    }
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_HODEM",

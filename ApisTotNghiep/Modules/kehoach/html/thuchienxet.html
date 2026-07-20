@@ -388,6 +388,20 @@
     </div>
 </div>
 
+<!-- Modal xem chi tiết học tập sinh viên (chỉ nhúng /modules/hoctap/html/diemhoc.html — không cho phép thao tác toàn cổng SV vì bảo mật). Fullscreen để che modal Danh sách đối tượng xét đứng sau. -->
+<div class="modal fade" id="modalHTSinhVien" tabindex="-1" role="dialog" aria-labelledby="modalHTSinhVienLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 100vw; max-width: 100vw; height: 100vh; margin: 0; padding: 0">
+        <div class="modal-content" style="height: 100vh; border-radius: 0; border: 0">
+            <div class="modal-header" style="padding: 8px 16px; background: #2b6cb0; color: #fff">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 32px; line-height: 1; opacity: .9; color: #fff; text-shadow: none"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modalHTSinhVienLabel" style="margin: 0; color: #fff"><i class="fa-solid fa-user-graduate"></i> <span id="lblHTSinhVien">Thông tin sinh viên</span></h4>
+            </div>
+            <div class="modal-body" style="padding: 12px; height: calc(100vh - 50px); overflow: auto" id="zoneHTSinhVien">
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
 <script src="modules/kehoach/script/thuchienxet.js?v=1.0.0.0"></script>
 <script type="text/javascript">

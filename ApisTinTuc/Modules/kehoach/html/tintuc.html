@@ -199,87 +199,45 @@
             </div>
         </div>
 
-        <!-- Phạm vi áp dụng - Chọn sinh viên gửi email-->
+        <!-- Phạm vi áp dụng - Danh sách phạm vi hiển thị tin tức -->
         <div class="box box-solid zone-bus form-container add-absolue aps-phamvi" id="zonePhamVi" style="display: none">
             <div class="box-header with-border">
-                <h3 class="box-title"><span class="myModalLabel1"><i class="fa fa-envelope"></i> </span> Gửi email thông báo tin tức</h3>
+                <h3 class="box-title"><span class="myModalLabel1"><i class="fa fa-users"></i> </span> Phạm vi áp dụng</h3>
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
             </div>
             <div class="box-body">
                 <div class="col-sm-12 box-view aps-add-new pd20">
-                    <!-- Bộ lọc tìm kiếm sinh viên -->
                     <div class="row aps-form">
-                        <div class="row aps-lable">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue">Bộ lọc tìm kiếm sinh viên</span>
-                            </p>
-                        </div>
                         <div class="row">
-                            <div class="col-sm-3 item-search">
-                                <select id="dropSearch_HeDaoTao_PV" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <select id="dropSearch_KhoaDaoTao_PV" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <select id="dropSearch_ChuongTrinh_PV" class="select-opt" multiple="multiple"></select>
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <select id="dropSearch_Lop_PV" class="select-opt" multiple="multiple"></select>
-                            </div>
-                        </div>
-                        <div class="row mt-10">
-                            <div class="col-sm-3 item-search">
-                                <input type="text" id="txtSearch_SinhVien_PV" class="form-control" placeholder="Nhập mã SV, họ tên...">
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <a id="btnSearch_SinhVien_PV" class="btn btn-primary"><i class="fa fa-search"></i> Tìm kiếm</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Danh sách sinh viên -->
-                    <div class="row aps-form mt-20">
-                        <div class="row aps-lable">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-green">Danh sách sinh viên</span>
-                                <span class="pull-right badge bg-light-blue ml-15">
-                                    <span id="lblSinhVien_Tong">0</span> sinh viên
-                                </span>
-                            </p>
-                        </div>
-                        <!-- Các nút thao tác -->
-                        <div class="row mb-10">
-                            <div class="col-sm-12">
-                                <a id="btnImportExcel_SinhVien" class="btn btn-info"><i class="fa fa-file-excel-o"></i> Import Excel để chọn sinh viên</a>
-                                <a id="btnSendEmail_Selected" class="btn btn-success pull-right"><i class="fa fa-envelope"></i> Gửi Email cho sinh viên đã chọn</a>
+                            <div class="col-sm-12 mb-10">
+                                <h4 style="margin: 0 0 10px 0; color: #3c8dbc; font-weight: 600;">
+                                    <i class="fa fa-list"></i> Danh sách phạm vi áp dụng
+                                </h4>
                             </div>
                         </div>
                         <div class="row">
-                            <table id="tblSinhVien_PhamVi" class="table table-hover table-bordered mr-0 mb-10">
+                            <table id="tblInput_DTSV_SinhVien" class="table table-hover table-bordered mr-0 mb-10">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed td-center">Stt</th>
-                                        <th class="td-center">Mã SV</th>
-                                        <th class="td-center">Họ tên</th>
-                                        <th class="td-center">Email</th>
-                                        <th class="td-center">Lớp</th>
-                                        <th class="td-center">Khóa</th>
-                                        <th class="td-center">Hệ</th>
-                                        <th class="td-center">Trạng thái</th>
-                                        <th class="td-center td-fixed">
-                                            <input type="checkbox" id="chkSelectAll_SinhVien">
-                                        </th>
+                                        <th class="td-center">Phân cấp áp dụng</th>
+                                        <th class="td-center">Tên phạm vi</th>
+                                        <th class="td-center">Trạng thái sinh viên áp dụng</th>
+                                        <th class="td-center">Ngày tạo</th>
+                                        <th class="td-fixed td-center">Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td colspan="9" class="text-center">Vui lòng chọn bộ lọc và click "Tìm kiếm" để tải danh sách sinh viên</td>
-                                    </tr>
+                                    <!-- load from js -->
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="row mt-10">
+                            <div class="col-sm-12 text-right">
+                                <a class="btn btn-primary btnSearchDTSV_SinhVien" href="#"><i class="fa fa-plus"></i> Thêm thành viên</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -287,6 +245,7 @@
             <div class="box-footer">
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times-circle"></i> Đóng</a>
+                    <a id="btnSave_PhamVi" class="btn btn-primary"><i class="fa fa-save"></i> Lưu</a>
                 </div>
             </div>
         </div>
@@ -303,10 +262,12 @@
                 <div class="col-sm-12 box-view aps-add-new pd20">
                     <!-- Thông tin tin tức -->
                     <div class="row aps-form">
-                        <div class="row aps-lable">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue">Thông tin tin tức</span>
-                            </p>
+                        <div class="row">
+                            <div class="col-sm-12 mb-10">
+                                <h4 style="margin: 0 0 10px 0; color: #3c8dbc; font-weight: 600;">
+                                    <i class="fa fa-info-circle"></i> Thông tin tin tức
+                                </h4>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
@@ -318,13 +279,15 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Bộ lọc sinh viên -->
                     <div class="row aps-form mt-20">
-                        <div class="row aps-lable">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-green">Chọn đối tượng nhận email</span>
-                            </p>
+                        <div class="row">
+                            <div class="col-sm-12 mb-10">
+                                <h4 style="margin: 0 0 10px 0; color: #00a65a; font-weight: 600;">
+                                    <i class="fa fa-filter"></i> Chọn đối tượng nhận email
+                                </h4>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-3 item-search">
@@ -352,13 +315,15 @@
                     
                     <!-- Danh sách sinh viên -->
                     <div class="row aps-form mt-20">
-                        <div class="row aps-lable">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-orange">Danh sách sinh viên</span>
-                                <span class="pull-right badge bg-light-blue ml-15">
-                                    Đã chọn: <span id="lblSoLuongSinhVien">0</span> sinh viên
-                                </span>
-                            </p>
+                        <div class="row">
+                            <div class="col-sm-12 mb-10">
+                                <h4 style="margin: 0 0 10px 0; color: #f39c12; font-weight: 600;">
+                                    <i class="fa fa-users"></i> Danh sách sinh viên
+                                    <span class="pull-right" style="font-size: 14px; color: #3c8dbc; font-weight: normal;">
+                                        Đã chọn: <strong id="lblSoLuongSinhVien">0</strong> sinh viên
+                                    </span>
+                                </h4>
+                            </div>
                         </div>
                         <!-- Các nút thao tác -->
                         <div class="row mb-10">
