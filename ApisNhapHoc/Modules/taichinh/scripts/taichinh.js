@@ -1555,7 +1555,10 @@ ThuTien.prototype = {
             $("#btnHuyHoaDon").hide();
             $("#zoneActionXuatHoaDon").html(me.strHDDT);
             if (document.getElementById('btnSaveHD') == undefined) {
-                $("#zoneActionHoaDon").prepend('<div id="btnSaveHD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Lưu hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất Hóa đơn</a></div>');
+                //--- OLD: nút dọc 85px + fa-4x, chồng lên btnCloseHoaDon khi zoneActionHoaDon position:fixed (ẩn, không xóa) ---
+                //$("#zoneActionHoaDon").prepend('<div id="btnSaveHD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Lưu hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất Hóa đơn</a></div>');
+                //--- NEW: nút ngang gọn, dùng chung class .btnXuat_HDDT + id override background ---
+                $("#zoneActionHoaDon").prepend('<div id="btnSaveHD" class="btnXuat_HDDT"><a title="Lưu hóa đơn" class="btn"><i class="fa fa-save"></i> <span class="lbsymbolHD">Xuất Hóa đơn</span></a></div>');
 
                 $("#btnSaveHD").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
@@ -1661,7 +1664,10 @@ ThuTien.prototype = {
         var me = main_doc.ThuTien;
         var row = '';
         for (var i = 0; i < data.length; i++) {
-            row += '<div class="btnXuat_HDDT" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            //--- OLD: nút dọc 85px + icon fa-4x, gây stack dọc + tràn text (ẩn, không xóa) ---
+            //row += '<div class="btnXuat_HDDT" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            //--- NEW: nút ngang gọn theo CSS .btnXuat_HDDT (height 38px, width auto) ---
+            row += '<div class="btnXuat_HDDT" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '"><a title="' + data[i].TEN + '" class="btn"><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + '"></i> <span class="lbsymbolHD">' + data[i].TEN + '</span></a></div>';
         }
         me.strHDDT = row;
     },

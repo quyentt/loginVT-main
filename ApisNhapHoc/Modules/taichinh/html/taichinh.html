@@ -63,6 +63,21 @@
     .activeLien {
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
+
+    /* Fix layout khối xuất hóa đơn: nút HDDT xếp ngang, cách nhau 8px */
+    #zoneActionXuatHoaDon {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-right: 10px;
+    }
+
+    /* #btnSaveHD dùng chung style .btnXuat_HDDT nhưng đổi màu xanh dương để phân biệt */
+    #btnSaveHD {
+        background: #1a71e8 !important;
+        border-color: #1a71e8 !important;
+    }
 </style>
 <!-- Main content -->
 <section class="content aps-nhapHoc">
