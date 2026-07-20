@@ -1014,6 +1014,14 @@ PhieuThuKhac.prototype = {
                     console.log('[thutienkhac.getList_HSSV] Keys[0] :', Object.keys(data.Data[0]));
                 }
                 if (data.Success) {
+                    if (data.Data && data.Data.length) {
+                        for (var i = 0; i < data.Data.length; i++) {
+                            var r = data.Data[i];
+                            r.ID = r.ID || r.QLSV_NGUOIHOC_ID || r.PERSON_ID || '';
+                            r.TENDOITUONG = r.TENDOITUONG || r.FULL_NAME || r.QLSV_NGUOIHOC_TEN || r.TEN || '';
+                            r.MASODOITUONG = r.MASODOITUONG || r.MASO || r.MA_NGUOIHOC_CHINH || r.QLSV_NGUOIHOC_MASO || '';
+                        }
+                    }
                     me.dt_HS = data.Data;
                     me.genTable_HSSV(data.Data, data.Pager);
                     if (edu.util.checkValue(data.Data)) {

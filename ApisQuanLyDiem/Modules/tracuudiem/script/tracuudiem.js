@@ -1460,8 +1460,8 @@ TraCuuDiem.prototype = {
         }
     },
     getCTDTId: function (row) { return row.DAOTAO_CHUONGTRINH_ID || row.DaoTao_ChuongTrinh_Id || row.ID || row.Id || ''; },
-    getCTDTTen: function (row) { return row.DAOTAO_CHUONGTRINH_TEN || row.DaoTao_ChuongTrinh_Ten || ''; },
-    getCTDTMa: function (row) { return row.DAOTAO_CHUONGTRINH_MA || row.DaoTao_ChuongTrinh_Ma || ''; },
+    getCTDTTen: function (row) { return row.TENCHUONGTRINH || row.DAOTAO_CHUONGTRINH_TEN || row.DaoTao_ChuongTrinh_Ten || ''; },
+    getCTDTMa: function (row) { return row.MACHUONGTRINH || row.DAOTAO_CHUONGTRINH_MA || row.DaoTao_ChuongTrinh_Ma || ''; },
     getCount_XepLoai_CTDT: function (rowCK, rowXL) {
         var me = this;
         var ctdtid = me.getCTDTId(rowCK);
