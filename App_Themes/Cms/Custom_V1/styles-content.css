@@ -4535,13 +4535,14 @@
     line-height: 32px;
     margin-left: -20px;
     margin-right: 20px;
-    background-color: var(--color-green) !important;
+    background-color: #4d8d41 !important;
     font-size: 24px;
     padding-right: 15px;
 }
 
 #txtTinhTrang {
     font-size: 16px !important;
+    background-color: #4d8d41 !important;
     padding: 8px 15px;
     margin-right: 10px;
     margin-top: -2px;
@@ -9609,8 +9610,8 @@ input#tblInput_DTSV_SinhVien_input {
 
 .btn-success,
 .btnAdd.btn-primary {
-    background: #198754 !important;
-    border: 1px solid #198754 !important;
+    background: #4d8d41  !important;
+    border: 1px solid #4d8d41 !important;
     color: #fff !important;
     height: 38px;
 }
