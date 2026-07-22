@@ -87,6 +87,7 @@
                     <div class="box-tools pull-right right-0">
                         <a class="btn btn-default" id="btnThucHienIn" href="#"><i class="fa fa-print"></i> In lần lượt</a>
                         <a class="btn btn-default" id="btnLuuAnh" href="#"><i class="fa fa-print"></i> Tải file ảnh</a>
+                        <a class="btn btn-warning" id="btnCheDoTest" href="#"><i class="fa fa-flask"></i> Chế độ test</a>
 
                     </div>
                 </div>
@@ -119,6 +120,29 @@
                             <tbody>
                                 <!-- load from js -->
                             </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div id="zoneTestPhoi" class="box box-solid mb-10" style="display:none">
+                    <div class="box-header with-border">
+                        <h4 class="box-title"><i class="fa fa-flask"></i> Chế độ test — Nhập giá trị thử nghiệm cho các thuộc tính trên phôi</h4>
+                        <div class="box-tools pull-right">
+                            <a class="btn btn-danger btn-sm" id="btnResetTestPhoi" href="#"><i class="fa fa-eraser"></i> Xóa tất cả</a>
+                        </div>
+                    </div>
+                    <div class="box-body pd10">
+                        <table id="tblTestPhoi" class="table table-hover table-bordered mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="td-center" style="width:60px">Stt</th>
+                                    <th style="width:28%">Biểu thức NOIDUNG</th>
+                                    <th style="width:22%">Giá trị mẫu (bản ghi đầu)</th>
+                                    <th style="width:30%">Giá trị test</th>
+                                    <th class="td-center" style="width:80px">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
                         </table>
                     </div>
                 </div>

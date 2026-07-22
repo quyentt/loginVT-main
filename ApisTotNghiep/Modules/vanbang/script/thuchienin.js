@@ -19,6 +19,7 @@ ThucHienIn.prototype = {
     arrChuongTrinh: [],
     arrPrint: [],
     strFont : '',
+    dtPhoi_current: [],
 
     init: function () {
         var me = this;
@@ -113,7 +114,29 @@ ThucHienIn.prototype = {
 
             saveAsImage();
         });
-        
+
+        $("#btnCheDoTest").off('click').on('click', function () {
+            me.toggleCheDoTest();
+        });
+        $("#btnResetTestPhoi").off('click').on('click', function () {
+            me.resetTestValues();
+        });
+        $("#tblTestPhoi tbody").off('blur change', '.inputTestPhoi').on('blur change', '.inputTestPhoi', function () {
+            me.setTestValue($(this).data('field-id'), this.value);
+            me.getList_ThucHienIn();
+        });
+        $("#tblTestPhoi tbody").off('click', '.btnClearOne').on('click', '.btnClearOne', function () {
+            var strId = $(this).data('field-id');
+            me.setTestValue(strId, "");
+            $('.inputTestPhoi[data-field-id="' + strId + '"]').val("");
+            me.getList_ThucHienIn();
+        });
+
+        // Khôi phục trạng thái toggle từ lần trước
+        if (me.isCheDoTestOn()) {
+            $("#zoneTestPhoi").show();
+            $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
+        }
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
@@ -617,8 +640,10 @@ ThucHienIn.prototype = {
                             $("#" + zoneMauIn + " .pr-containt:eq(" + edu.util.returnZero(dtReRult[i].TRANG) + ")").append(html);
 
                         }
+                        me.dtPhoi_current = dtReRult;
+                        me.renderPanelTest(dtReRult, (dataIn && dataIn.length > 0) ? dataIn[0] : null);
                         if (typeof callback === "function") {
-                            callback(dtReRult); 
+                            callback(dtReRult);
                         } else {
                             me.genData_Phoi(zoneMauIn, dataIn, dtReRult);
                         }
@@ -663,6 +688,7 @@ ThucHienIn.prototype = {
         var me = this;
         var khoangcach = 30;
         if (dataPhoi.length > 0 && dataPhoi[0].KHOGIAY != null) khoangcach = dataPhoi[0].KHOGIAY;
+        var bTest = me.isCheDoTestOn();
         var arrCotBang = [];
         for (var i = 0; i < dataPhoi.length; i++) {
             var aPhoi_ChiTiet = dataPhoi[i];
@@ -671,12 +697,17 @@ ThucHienIn.prototype = {
                 continue;
             }
             var strData = "";
-            try {
-                if (aPhoi_ChiTiet.NOIDUNG.indexOf("me") != -1) console.log(aPhoi_ChiTiet.NOIDUNG)
-                strData = eval(aPhoi_ChiTiet.NOIDUNG);
-            } catch (ex) {
-                console.log(ex);
-                strData = undefined;
+            var strOverride = bTest ? me.getTestValue(aPhoi_ChiTiet.ID) : null;
+            if (strOverride !== null && strOverride !== "") {
+                strData = strOverride;
+            } else {
+                try {
+                    if (aPhoi_ChiTiet.NOIDUNG.indexOf("me") != -1) console.log(aPhoi_ChiTiet.NOIDUNG)
+                    strData = eval(aPhoi_ChiTiet.NOIDUNG);
+                } catch (ex) {
+                    console.log(ex);
+                    strData = undefined;
+                }
             }
             if (strData !== null && strData !== undefined && strData !== "") {
                 $("#" + zoneMauIn + " #" + aPhoi_ChiTiet.ID).html(strData);
@@ -1008,5 +1039,107 @@ ThucHienIn.prototype = {
             title: "Chọn kế hoạch",
         };
         edu.system.loadToCombo_data(obj);
+    },
+
+    /*------------------------------------------
+    --Chế độ test: nhập giá trị thử nghiệm cho các thuộc tính trên phôi
+    --Lưu localStorage theo user (không phụ thuộc server)
+    -------------------------------------------*/
+    _getUserKey: function () {
+        return edu.system.userId || "anon";
+    },
+    _getEnabledKey: function () {
+        return "TEST_PHOI_ENABLED_" + this._getUserKey();
+    },
+    _getFieldKey: function (strFieldId) {
+        return "TEST_PHOI_" + this._getUserKey() + "_" + strFieldId;
+    },
+    isCheDoTestOn: function () {
+        try { return localStorage.getItem(this._getEnabledKey()) === "1"; } catch (e) { return false; }
+    },
+    setCheDoTest: function (bOn) {
+        try { localStorage.setItem(this._getEnabledKey(), bOn ? "1" : "0"); } catch (e) {}
+    },
+    getTestValue: function (strFieldId) {
+        try { return localStorage.getItem(this._getFieldKey(strFieldId)); } catch (e) { return null; }
+    },
+    setTestValue: function (strFieldId, strValue) {
+        try {
+            if (strValue === null || strValue === undefined || strValue === "") {
+                localStorage.removeItem(this._getFieldKey(strFieldId));
+            } else {
+                localStorage.setItem(this._getFieldKey(strFieldId), strValue);
+            }
+        } catch (e) {}
+    },
+    resetTestValues: function () {
+        var me = this;
+        var arr = me.dtPhoi_current || [];
+        for (var i = 0; i < arr.length; i++) me.setTestValue(arr[i].ID, "");
+        $("#tblTestPhoi .inputTestPhoi").val("");
+        me.getList_ThucHienIn();
+    },
+    toggleCheDoTest: function () {
+        var me = this;
+        var bOn = !me.isCheDoTestOn();
+        me.setCheDoTest(bOn);
+        if (bOn) {
+            $("#zoneTestPhoi").show();
+            $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
+        } else {
+            $("#zoneTestPhoi").hide();
+            $("#btnCheDoTest").addClass("btn-warning").removeClass("btn-success");
+        }
+        me.getList_ThucHienIn();
+    },
+    renderPanelTest: function (dataPhoi, aDataSample) {
+        var me = this;
+        var $tbody = $("#tblTestPhoi tbody");
+        $tbody.empty();
+        var escapeHtml = function (s) { return $('<div>').text(s == null ? "" : String(s)).html(); };
+        for (var i = 0; i < dataPhoi.length; i++) {
+            var f = dataPhoi[i];
+            var strSaved = edu.util.returnEmpty(me.getTestValue(f.ID));
+            var strNoiDung = escapeHtml(f.NOIDUNG || "");
+
+            // Tính giá trị mẫu bằng eval NOIDUNG trên bản ghi đầu tiên
+            var strSample = "";
+            var strSampleCls = "text-muted";
+            if (aDataSample && f.NOIDUNG) {
+                if (f.NOIDUNG.includes("[x].")) {
+                    strSample = "(template lặp – bỏ qua)";
+                } else if (/^\s*me\./.test(f.NOIDUNG)) {
+                    strSample = "(gọi hàm – bỏ qua)";
+                } else {
+                    try {
+                        var aData = aDataSample;
+                        var v = eval(f.NOIDUNG);
+                        if (v === null || v === undefined) {
+                            strSample = "(null)";
+                        } else if (typeof v === "string" || typeof v === "number") {
+                            strSample = String(v);
+                            strSampleCls = "";
+                        } else {
+                            strSample = "(" + (typeof v) + ")";
+                        }
+                    } catch (ex) {
+                        strSample = "(lỗi: " + ex.message + ")";
+                        strSampleCls = "text-danger";
+                    }
+                }
+            }
+            var strSampleEsc = escapeHtml(strSample);
+            var strPlaceholder = (strSample && strSampleCls === "") ? ("VD: " + strSample.substring(0, 60)) : "Nhập giá trị test...";
+
+            var html = "";
+            html += '<tr>';
+            html += '<td class="td-center">' + (i + 1) + '</td>';
+            html += '<td><code style="font-size:12px">' + strNoiDung + '</code></td>';
+            html += '<td class="' + strSampleCls + '" style="max-width:280px;word-break:break-word" title="' + strSampleEsc.replace(/"/g, '&quot;') + '">' + strSampleEsc + '</td>';
+            html += '<td><input type="text" class="form-control inputTestPhoi" data-field-id="' + f.ID + '" value="' + strSaved.replace(/"/g, '&quot;') + '" placeholder="' + strPlaceholder.replace(/"/g, '&quot;') + '" /></td>';
+            html += '<td class="td-center"><a class="btn btn-danger btn-sm btnClearOne" data-field-id="' + f.ID + '" href="#"><i class="fa fa-times"></i></a></td>';
+            html += '</tr>';
+            $tbody.append(html);
+        }
     },
 }
