@@ -898,7 +898,7 @@ QuanLyThongTin.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0,4, 5, 6, 7, 8, 9],
+                center: [0, 4, 5, 6, 7, 8, 9, 10, 11],
             },
             aoColumns: [
                 {
@@ -934,6 +934,12 @@ QuanLyThongTin.prototype = {
                 },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_NGANHNGHE"
+                },
+                {
+                    "mDataProp": "DAOTAO_LOPQUANLY_TEN"
+                },
+                {
+                    "mDataProp": "DAOTAO_KHOAQUANLY_TEN"
                 },
                 {
                     "mDataProp": "SOHIEUBANG"
