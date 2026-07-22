@@ -71,7 +71,10 @@ ThucHienIn.prototype = {
         $('#dropSearch_ChuongTrinh').on('select2:select', function (e) {
             me.getList_LopQuanLy();
         });
-        
+        $('#dropSearch_PhanLoai').on('select2:select', function (e) {
+            me.getList_KeHoachXuLy();
+        });
+
         $("#btnThucHienIn").click(function () {
             //var arrChecked_Id = edu.util.getArrCheckedIds("tblThucHienIn", "checkX");
             //if (arrChecked_Id.length == 0) {
@@ -137,6 +140,7 @@ ThucHienIn.prototype = {
             'strPhoi_MauPhoiIn_BanSao_Id': edu.util.getValById('dropMauPhoi_BanSao'),
             'dDoiTuongBenNgoai': edu.util.getValById('dropSearch_DoiTuong'),
             'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
+            'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoach'),
         };
         //
         edu.system.makeRequest({
@@ -957,5 +961,52 @@ ThucHienIn.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+    getList_KeHoachXuLy: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TN_ThongTin/LayDSTN_KeHoach',
+            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strPhanLoai_Id': edu.util.getValById('dropSearch_PhanLoai'),
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
+            'strNguoiDung_Id': edu.util.getValById('dropAAAA'),
+            'strNguoiTao_Id': edu.util.getValById('dropAAAA'),
+            'pageIndex': 1,
+            'pageSize': 1000000,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.cbGenCombo_KeHoachXuLy(data.Data);
+                }
+                else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    cbGenCombo_KeHoachXuLy: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_KeHoach"],
+            type: "",
+            title: "Chọn kế hoạch",
+        };
+        edu.system.loadToCombo_data(obj);
     },
 }

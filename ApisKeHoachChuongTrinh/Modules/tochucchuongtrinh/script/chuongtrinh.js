@@ -182,6 +182,7 @@ ChuongTrinh.prototype = {
             edu.system.loadToCombo_data(obj);
         });
         edu.system.loadToCombo_DanhMucDuLieu("KHCT.LOAICHUONGTRINH", "drop_LoaiChuongTrinh");
+        edu.system.loadToCombo_DanhMucDuLieu("DAOTAO.CHUONGTRINH.TRINHDO", "dropCT_TrinhDo");
 
         $("#btnAdd_KeThua").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblChuongTrinh", "checkOne");
@@ -248,7 +249,8 @@ ChuongTrinh.prototype = {
         edu.util.viewValById("txtCT_MoTa", "");
         edu.util.viewValById("dropCT_KhoaQuanLy", "");
         edu.util.viewValById("dropCT_CoSoDaoTao", "");
-        
+        edu.util.viewValById("dropCT_TrinhDo", "");
+
     },
 
     save_ChuongTrinh: function () {
@@ -273,10 +275,11 @@ ChuongTrinh.prototype = {
             'strMoTa': edu.util.getValById("txtCT_MoTa"),
             'strTenChuongTrinhTA': edu.util.getValById("txtCT_TenTA"),
             'strDaoTao_CoSoDaoTao_Id': edu.system.getValById('dropCT_CoSoDaoTao'),
+            'strTrinhDo_Id': edu.util.getValById("dropCT_TrinhDo"),
             'strNguoiThucHien_Id': edu.system.userId
         };
         //default
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -333,10 +336,11 @@ ChuongTrinh.prototype = {
             'strMoTa': edu.util.getValById("txtCT_MoTa"),
             'strTenChuongTrinhTA': edu.util.getValById("txtCT_TenTA"),
             'strDaoTao_CoSoDaoTao_Id': edu.system.getValById('dropCT_CoSoDaoTao'),
+            'strTrinhDo_Id': edu.util.getValById("dropCT_TrinhDo"),
             'strNguoiThucHien_Id': edu.system.userId
         };
         //default
-        
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -611,6 +615,7 @@ ChuongTrinh.prototype = {
         edu.util.viewValById("txtCT_MoTa", data.MOTA);
         edu.util.viewValById("drop_LoaiChuongTrinh", data.LOAICHUONGTRINH_ID);
         edu.util.viewValById("dropCT_CoSoDaoTao", data.COSODAOTAO_ID);
+        edu.util.viewValById("dropCT_TrinhDo", data.TrinhDo_Id);
         //$("#dropCT_ChuongTrinhCha").val(data[0].CHUCNANGCHA_ID).trigger("change");
     },
     viewEdit_ChuongTrinh: function (data) {
