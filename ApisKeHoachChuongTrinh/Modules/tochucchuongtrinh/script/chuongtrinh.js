@@ -615,7 +615,7 @@ ChuongTrinh.prototype = {
         edu.util.viewValById("txtCT_MoTa", data.MOTA);
         edu.util.viewValById("drop_LoaiChuongTrinh", data.LOAICHUONGTRINH_ID);
         edu.util.viewValById("dropCT_CoSoDaoTao", data.COSODAOTAO_ID);
-        edu.util.viewValById("dropCT_TrinhDo", data.TrinhDo_Id);
+        edu.util.viewValById("dropCT_TrinhDo", data.TrinhDo_Id || data.TRINHDO_ID || "");
         //$("#dropCT_ChuongTrinhCha").val(data[0].CHUCNANGCHA_ID).trigger("change");
     },
     viewEdit_ChuongTrinh: function (data) {
