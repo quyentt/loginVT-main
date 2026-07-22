@@ -3,6 +3,21 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+    .aps-kehoach .aps-section-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2c3e50;
+        padding: 6px 0;
+        margin-bottom: 12px;
+        border-bottom: 2px solid #3c8dbc;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .aps-kehoach .aps-section-title i {
+        margin-right: 8px;
+        color: #3c8dbc;
+        font-size: 15px;
+    }
 </style>
 <section class="content aps-TotNghiep">
     <div class="row aps-kehoach">
@@ -99,8 +114,8 @@
                     <!-- 1. Thông tin kế hoạch -->
                     <div class="row aps-form">
                         <div class="row aps-lable-name">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue" style="color:#3380db !important"> Thông tin kế hoạch</span>
+                            <p class="group-group-title-name aps-section-title border-0 mb-5">
+                                <i class="fa fa-info-circle"></i><span>Thông tin kế hoạch</span>
                             </p>
                         </div>
                         <!--row 2-->
@@ -146,22 +161,34 @@
                                     <option value="0">Không cho sinh viên đăng ký</option>
                                 </select>
                             </div>
-                            <div class="col-sm-6">
-                                <div style="width:100%">
+                            <div class="col-sm-2 aps-form-lable pr15 text-right"></div>
+                            <div class="col-sm-4 aps-form-input">
+                                <div style="width:100%; padding-top: 7px;">
                                     <input type="checkbox" value="" id="chkCoTinhLaiDiemTKHP">
-                                    <label for="chkCoTinhLaiDiemTKHP">
-                                        Cho phép tính lại điểm tổng kết học phần khi xét
+                                    <label for="chkCoTinhLaiDiemTKHP" style="font-weight: normal; margin-left: 4px;">
+                                        Cho phép tính lại điểm TKHP khi xét
                                     </label>
                                 </div>
                             </div>
 
                         </div>
+                        <!--row 6: Quy tắc sinh số hiệu / số vào sổ (chỉ dùng khi Sửa)-->
+                        <div class="row aps-form-item" id="rowQuyTacSinh">
+                            <div class="col-sm-2 aps-form-lable">Quy tắc sinh số hiệu</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <select id="dropQuyTacSinhSoHieu" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-2 aps-form-lable pr15 text-right">Quy tắc sinh số vào sổ</div>
+                            <div class="col-sm-4 aps-form-input">
+                                <select id="dropQuyTacSinhSoVaoSo" class="select-opt"></select>
+                            </div>
+                        </div>
                     </div>
                     <!-- 2.  Học phần -->
                     <div class="row aps-form mt-15">
                         <div class="row">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue" style="color:#198754 !important">Học phần</span>
+                            <p class="group-group-title-name aps-section-title border-0 mb-5">
+                                <i class="fa fa-book"></i><span>Học phần</span>
                             </p>
                         </div>
                         <div class="row">
@@ -196,8 +223,8 @@
                     <!--3.Cán bộ phân công xét-->
                     <div class="row aps-form mt-20">
                         <div class="row">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue" style="color:#FF0000 !important">Cán bộ phân công xét</span>
+                            <p class="group-group-title-name aps-section-title border-0 mb-5">
+                                <i class="fa fa-user-tie"></i><span>Cán bộ phân công xét</span>
                             </p>
                         </div>
                         <div class="row">
@@ -225,11 +252,8 @@
                     <!--4.Danh sách học sinh - sinh viên xét duyệt-->
                     <div class="row aps-form mt-15 btnOpenDelete">
                         <div class="row">
-                            <p class="group-group-title-name border-0 mb-5">
-                                <span class="badge bg-blue" style="color:#d54b07 !important">
-                                    Danh sách học sinh - sinh
-                                    viên xét duyệt
-                                </span>
+                            <p class="group-group-title-name aps-section-title border-0 mb-5">
+                                <i class="fa fa-users"></i><span>Danh sách học sinh - sinh viên xét duyệt</span>
                             </p>
                         </div>
                         <div class="row">
