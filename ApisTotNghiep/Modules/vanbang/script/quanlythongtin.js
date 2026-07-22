@@ -43,6 +43,7 @@ QuanLyThongTin.prototype = {
         me.getList_MauPhoiIn();
         me.getList_MauPhoiInBanSao();
         me.getList_XepLoai();
+        edu.system.loadToCombo_DanhMucDuLieu("TN.THONGTINVANBANG.SAPXEP", "dropSearch_TieuChiSapXep", "", "", "Chọn tiêu chí sắp xếp");
 
         $("#btnSearch").click(function (e) {
             me.getList_QuanLyThongTin();
@@ -544,6 +545,7 @@ QuanLyThongTin.prototype = {
             'strPhoi_MauPhoiIn_Id': edu.util.getValById('dropAAAA'),
             'strPhoi_MauPhoiIn_BanSao_Id': edu.util.getValById('dropAAAA'),
             'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoach'),
+            'strTieuChiSapXep': edu.util.getValById('dropSearch_TieuChiSapXep'),
             'strNguoiThucHien_Id': edu.system.userId,
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
