@@ -116,20 +116,38 @@ QuanLyThongTin.prototype = {
             });
         });
 
-        $("#btnSinhQuyetDinh").click(function () {
+        $("#btnSinhQuyetDinh").off('click').on('click', function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblQuanLyThongTin", "checkX");
             if (arrChecked_Id.length == 0) {
-                edu.system.alert("Vui lòng chọn đối tượng cần lưu?");
+                edu.system.alert("Vui lòng chọn đối tượng cần tạo QĐ?");
                 return;
             }
-            edu.system.confirm("Bạn có chắc chắn lưu dữ liệu không?");
-            $("#btnYes").click(function (e) {
-                edu.system.alert('<div id="zoneprocessQuanLyThongTin"></div>');
-                edu.system.genHTML_Progress("zoneprocessQuanLyThongTin", arrChecked_Id.length);
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_SinhQuyetDinh(arrChecked_Id[i]);
-                }
-            });
+            // Reset form và mở modal
+            edu.util.viewValById("txtSinhQD_SoQD", "");
+            edu.util.viewValById("txtSinhQD_NgayQD", "");
+            edu.util.viewValById("txtSinhQD_NgayHieuLuc", "");
+            edu.util.viewValById("txtSinhQD_NoiDung", "");
+            $("#modal_SinhQuyetDinh").modal("show");
+            if (typeof edu.system.pickerdate === "function") edu.system.pickerdate();
+        });
+        $("#btnSave_SinhQuyetDinh").off('click').on('click', function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblQuanLyThongTin", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng!");
+                return;
+            }
+            var objForm = {
+                strSoQD: edu.util.getValById('txtSinhQD_SoQD'),
+                strNgayQD: edu.util.getValById('txtSinhQD_NgayQD'),
+                strNgayHieuLuc: edu.util.getValById('txtSinhQD_NgayHieuLuc'),
+                strNoiDung: edu.util.getValById('txtSinhQD_NoiDung')
+            };
+            $("#modal_SinhQuyetDinh").modal('hide');
+            edu.system.alert('<div id="zoneprocessQuanLyThongTin"></div>');
+            edu.system.genHTML_Progress("zoneprocessQuanLyThongTin", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                me.save_SinhQuyetDinh(arrChecked_Id[i], objForm);
+            }
         });
         $("#tblQuanLyThongTin").delegate(".btnEdit", "click", function () {
             var strId = this.id;
@@ -842,22 +860,24 @@ QuanLyThongTin.prototype = {
             ]
         }, false, false, false, null);
     },
-    save_SinhQuyetDinh: function (strTN_KetQua_CongNhan_VB_Id) {
+    save_SinhQuyetDinh: function (strTN_KetQua_CongNhan_VB_Id, objForm) {
         var me = this;
-        //--Edit
+        objForm = objForm || {};
         var obj_save = {
-            'action': 'TN_KetQua_CongNhan_VB/SinhQuyetDinh',
-            'type': 'GET',
+            'action': 'TN_VanBang_ChungChi_MH/EigvKRA0OCQ1BSgvKQPP',
+            'func': 'PKG_VANBANG_CHUNGCHI.SinhQuyetDinh',
+            'iM': edu.system.iM,
             'strTN_KetQua_CongNhan_VB_Id': strTN_KetQua_CongNhan_VB_Id,
+            'strSoQD': edu.util.returnEmpty(objForm.strSoQD),
+            'strNgayQD': edu.util.returnEmpty(objForm.strNgayQD),
+            'strNgayHieuLuc': edu.util.returnEmpty(objForm.strNgayHieuLuc),
+            'strNoiDung': edu.util.returnEmpty(objForm.strNoiDung),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        //default
-
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-
-                    edu.system.alert("Thực hiện thành công thành công!");
+                    edu.system.alert("Thực hiện thành công!");
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -865,10 +885,8 @@ QuanLyThongTin.prototype = {
             },
             error: function (er) {
                 edu.system.alert(" (er): " + JSON.stringify(er), "w");
-
             },
-            type: 'GET',
-
+            type: 'POST',
             contentType: true,
             complete: function () {
                 edu.system.start_Progress("zoneprocessQuanLyThongTin", function () {
