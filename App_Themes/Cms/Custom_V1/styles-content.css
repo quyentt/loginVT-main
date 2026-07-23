@@ -6869,8 +6869,8 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .modal-content .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: 7px !important;
-    right: 0px !important;
+    top: 6px !important;
+    right: 5px !important;
 }
 
 .aps-ds-hoso .aps-table-select .simple-pagination {
@@ -16177,4 +16177,16 @@ table#clone {
 .box-view.aps-kehoach-thuchi-add .aps-form .aps-form-item .aps-form-input .selection .select2-selection__rendered {
     padding-left: 0px !important;
     padding-top: 3px !important;
+}
+.aps-taichinh-l .box-header .bg-light-blue.badge {
+    position: absolute;
+    right: 0;
+    top: 2px;
+}
+.aps-table-select .aps-hienthi-input .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px !important;
+}
+.aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow{
+    top: 1px !important;
+    right: 3px !important;
 }

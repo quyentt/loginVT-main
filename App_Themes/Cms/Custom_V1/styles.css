@@ -3344,7 +3344,7 @@ input:active,
 .modal-content .select2-container--default .select2-selection--single {
   border: 1px solid #c1c1c1 !important;
   border-radius: 5px !important;
-  padding: 7px 3px !important;
+  padding: 9px 10px !important;
   height: 28px;
 }
 
@@ -3356,10 +3356,9 @@ input:active,
 .change-tblDSDiem .select2-container--default .select2-selection--single .select2-selection__arrow,
 .change-tblThamSoDanhGiaKetQua .select2-container--default .select2-selection--single .select2-selection__arrow,
 .change-tblThamSoQuyDoiThangDiem .select2-container--default .select2-selection--single .select2-selection__arrow,
-.aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow,
 .modal-content .select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 1px !important;
-  right: 8px !important;
+  top: 7px !important;
+    right: 7px !important;
 }
 
 #changetblKHDK .select2-container,
