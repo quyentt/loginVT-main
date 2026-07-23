@@ -4984,6 +4984,7 @@ info-tblNguoiHoc_RutTien,
 .form-control-textarea {
   border: 1px solid #d2d6de !important;
   border-radius: 5px;
+  padding: 10px;
 }
 
 .aps-capnhathoso-content .aps-form {
@@ -5434,7 +5435,7 @@ input[type="radio"] {
 }
 
 .modal-content .aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 4px !important;
+  top: 1px !important;
   right: 3px !important;
 }
 
