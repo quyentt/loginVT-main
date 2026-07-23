@@ -381,9 +381,9 @@ a.btn {
 .box-header .box-title {
   font-size: 18px !important;
   color: var(--color-blue) !important;
-  line-height: 24px;
   display: flex;
   padding: 0 !important;
+  line-height: 24px;
 }
 
 .box-header .box-title i {
@@ -391,6 +391,7 @@ a.btn {
   float: left;
   color: var(--color-blue);
   font-weight: 700 !important;
+  line-height: 24px;
 }
 
 .box-header.with-border {
