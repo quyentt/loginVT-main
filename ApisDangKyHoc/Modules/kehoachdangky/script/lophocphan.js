@@ -1507,7 +1507,7 @@ LopHocPhan.prototype = {
                         return edu.util.returnEmpty(aData.CHEDOTINHPHI_TEN);
                     }
                 },
-                /* Ẩn theo yêu cầu (dùng cho tra cứu):
+                /* Ẩn theo yêu cầu (dùng cho tra cứu):*/
                 {
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnDonLop" id="' + aData.ID + '" name="' + aData.TENLOP  +'" title="Dồn lớp">Dồn lớp</a></span>';
@@ -1518,7 +1518,7 @@ LopHocPhan.prototype = {
                         return '<span><a class="btn btn-default btnDonNhomLop" id="' + aData.ID + '" name="' + aData.TENLOP + '" title="Dồn">Dồn nhóm</a></span>';
                     }
                 },
-                */
+                /* */
                 {
                     "mRender": function (nRow, aData) {
                         return '<input type="checkbox" id="checkX' + aData.ID + '"/>';

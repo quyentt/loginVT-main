@@ -95,6 +95,7 @@ QuanLyThongTin.prototype = {
             $("#btnYes").click(function (e) {
                 edu.system.alert('<div id="zoneprocessQuanLyThongTin"></div>');
                 edu.system.genHTML_Progress("zoneprocessQuanLyThongTin", arrChecked_Id.length);
+                edu.system.iGioiHanLuong = 1;
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.save_SinhTuDongSoHieu(arrChecked_Id[i]);
                 }
@@ -110,6 +111,7 @@ QuanLyThongTin.prototype = {
             $("#btnYes").click(function (e) {
                 edu.system.alert('<div id="zoneprocessQuanLyThongTin"></div>');
                 edu.system.genHTML_Progress("zoneprocessQuanLyThongTin", arrChecked_Id.length);
+                edu.system.iGioiHanLuong = 1;
                 for (var i = 0; i < arrChecked_Id.length; i++) {
                     me.save_SinhSoVaoSo(arrChecked_Id[i]);
                 }
@@ -809,10 +811,11 @@ QuanLyThongTin.prototype = {
             contentType: true,
             complete: function () {
                 edu.system.start_Progress("zoneprocessQuanLyThongTin", function () {
+                    edu.system.iGioiHanLuong = 10;
                     me.getList_QuanLyThongTin();
                 });
             },
-            async: false,
+            //async: false,
             action: obj_save.action,
             data: obj_save,
             fakedb: [
@@ -830,7 +833,8 @@ QuanLyThongTin.prototype = {
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //default
-
+        //console.log(obj_save);
+        //return;
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -850,10 +854,11 @@ QuanLyThongTin.prototype = {
             contentType: true,
             complete: function () {
                 edu.system.start_Progress("zoneprocessQuanLyThongTin", function () {
+                    edu.system.iGioiHanLuong = 10;
                     me.getList_QuanLyThongTin();
                 });
             },
-            async: false,
+            //async: false,
             action: obj_save.action,
             data: obj_save,
             fakedb: [

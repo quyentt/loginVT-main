@@ -18,7 +18,7 @@ ThucHienIn.prototype = {
     arrKhoa: [],
     arrChuongTrinh: [],
     arrPrint: [],
-    strFont : '',
+    strFont: '',
     dtPhoi_current: [],
     dtLastData: [],
     strLastZone: '',
@@ -143,156 +143,14 @@ ThucHienIn.prototype = {
             me._reBuildPhoi();
         });
 
-        me._bindDragPhoi();
+        //me._bindDragPhoi();
 
         // Khôi phục trạng thái toggle từ lần trước
-        if (me.isCheDoTestOn()) {
-            $("body").addClass("che-do-test");
-            $("#zoneTestPhoi").show();
-            $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
-        }
-        $("#btnDuLieuTest").click(function (e) {
-            me.genTable_ThucHienIn([{
-                "ID": "7122321B68F74B82B80A46145B1C0554",
-                "TONGNOPHI": "0",
-                "NGAYTAO": "20260609101021",
-                "NGAYTAO_DD_MM_YYYY": "09/06/2026",
-                "NGAYTAO_DD_MM_YYYY_HHMMSS": "09/06/2026  10:10:21",
-                "NGUOITAO_ID": "4038E6FD0FFA4D339FA991E740348F01",
-                "NGUOITAO_TAIKHOAN": "01",
-                "NGUOITAO_TENDAYDU": "Kadara H. Azz ",
-                "QLSV_NGUOIHOC_ID": "011800F4A4AA423589E183B9D0D99A2E",
-                "DAOTAO_KHOAQUANLY_TEN": "Khoa Công nghệ thông tin",
-                "DAOTAO_TOCHUCCHUONGTRINH_ID": "BAEB92642FA943928669CEDC41183A68",
-                "CTDT_TEN": "Công nghệ thông tin",
-                "CTDT_SOTCQD": null,
-                "CTDT_SOTCQD_TV": null,
-                "DAOTAO_LOPQUANLY_ID": "9F4C57BE3A0840D69FB95773BF020938",
-                "DAOTAO_LOPQUANLY_TEN": "DCCNTT11.10.1",
-                "THOIGIANBATDAU_LOP": null,
-                "NGAYBD_LOP": null,
-                "THANGBD_LOP": null,
-                "NAMBD_LOP": null,
-                "THOIGIANKETTHUC_LOP": null,
-                "NGAYKT_LOP": null,
-                "THANGKT_LOP": null,
-                "NAMKT_LOP": null,
-                "PHANLOAI_ID": "38972CC879ED4247815B9CC6AA661BDC",
-                "XEPLOAI_ID": "627532FA12A845DB812553CF8E9B883F",
-                "NGUONDULIEU_ID": null,
-                "NGAYTAO_YYYYMMDDHH24MISSFF3": "20260609101021915",
-                "SOQUYETDINH": null,
-                "NGAYQUYETDINH": null,
-                "NGAYQUYETDINH_NGAY": null,
-                "NGAYQUYETDINH_THANG": null,
-                "NGAYQUYETDINH_NAM": null,
-                "NGAYVAOSOCAPBANG": null,
-                "SOHIEUBANG": "TEST911",
-                "SOVAOSOCAPBANG": "XX/2026/TEST911",
-                "SOVAOSOGOC": "XX/2026/TEST911",
-                "THONGTINDASUDUNG": null,
-                "SOHIEUBANG_ID": null,
-                "SOVAOSOCAPBANG_ID": null,
-                "NGAYKYBANG": null,
-                "NGAY_TA": "2 September 1945",
-                "NGAYKYBANG_NGAY": null,
-                "NKB_NG": null,
-                "NGAY": "02",
-                "NGAYKYBANG_THANG": null,
-                "NKB_TT": null,
-                "THANG": "09",
-                "NGAYKYBANG_NAM": null,
-                "NKB_NN": null,
-                "NAM": "1945",
-                "NGAYVAOSOCAPBANG1": null,
-                "NGAYHETHONG": "2026-06-09T10:10:21",
-                "QLSV_NGUOIHOC_HODEM": "Bùi Thị",
-                "QLSV_NGUOIHOC_TEN": "Huyền",
-                "QLSV_NGUOIHOC_HOVATEN": "Nguyễn Thị B",
-                "QLSV_NGUOIHOC_MASO": "20200453",
-                "QLSV_NGUOIHOC_HODEM_TA": "BUI THI",
-                "QLSV_NGUOIHOC_TEN_TA": "HUYEN",
-                "QLSV_NGUOIHOC_HOVATEN_TA": "NGUYEN THI B",
-                "QLSV_NGUOIHOC_NGAYSINH": "26",
-                "QLSV_NGUOIHOC_THANGSINH": "09",
-                "QLSV_NGUOIHOC_NAMSINH": "2002",
-                "QLSV_NGUOIHOC_NAMSINH_TA": "2002",
-                "QLSV_NGUOIHOC_THANGSINH_TA": "9",
-                "QLSV_NGUOIHOC_NGAYSINH_TA": "26",
-                "NGAYSINHDAYDU": "26/09/2002",
-                "NGAYSINHDAYDU_TA": "26 September 2002",
-                "QLSV_NGUOIHOC_GIOITINH": "NAM",
-                "QLSV_NGUOIHOC_GIOITINH_TA": null,
-                "QLSV_NGUOIHOC_XEPLOAI_TA": "Very Good",
-                "QLSV_NGUOIHOC_XEPLOAI": "Giỏi",
-                "QLSV_NGUOIHOC_NOISINH": null,
-                "QLSV_NGUOIHOC_NOISINH_TA": null,
-                "QLSV_NGUOIHOC_DANTOC": null,
-                "QLSV_NGUOIHOC_DANTOC_TA": null,
-                "QLSV_NGUOIHOC_NGANHNGHE": "CÔNG NGHỆ THÔNG TIN",
-                "NGANH": "CÔNG NGHỆ THÔNG TIN",
-                "QLSV_NGUOIHOC_NGANHNGHE_TA": "INFORMATION TECHNOLOGY",
-                "NGANH_TA": "INFORMATION TECHNOLOGY",
-                "ANH": null,
-                "KETQUAXACNHAN_TEN": null,
-                "KETQUAXACNHAN_THONGTIN1": null,
-                "KETQUAXACNHAN_THONGTIN2": null,
-                "KETQUAXACNHAN_NOIDUNG": null,
-                "PHOI_ID": null,
-                "PHOI_TEN": null,
-                "PHOI_MA": null,
-                "SOLANIN": 0.0,
-                "QLSV_NGUOIHOC_ONGBA": null,
-                "O": "Bà",
-                "QLSV_NGUOIHOC_ONGBA_TA": null,
-                "M": "Mrs",
-                "NGUOIKY": "TS. Đinh Văn Thành",
-                "NGAYKYBANG_TA": null,
-                "THONGTIN1": null,
-                "THONGTIN2": null,
-                "THONGTIN3": null,
-                "TINH_TA": "Hanoi,",
-                "SOHUU_TA": "Given under the seal of",
-                "TRUONG_TA": "PHENIKAA UNIVERSITY",
-                "PHOI_NGUOIHOC_NHAPTRUCTIEP_ID": null,
-                "PHOI_NGUOIHOC_NHAP_BANSAO_ID": null,
-                "SOVAOSOCAPBANSAO": null,
-                "NGAYCAPBANGOC": null,
-                "DIEMHOCPHAN1": null,
-                "DIEMHOCPHAN2": null,
-                "THONGTINHOIDONGTHICHUNGCHI": null,
-                "GCN_DTLT_DONVICONGTAC": null,
-                "GCN_DTLT_HOATDONGTHAMDU_TEN": null,
-                "GCN_DTLT_NGAYHOATDONG": null,
-                "GCN_DTLT_SOLUONG": null,
-                "GCN_DTLT_SOLUONG_CHU": " ",
-                "GCN_DTLT_TIEUDEHOATDONG": "Công nghệ thông tin",
-                "GCN_DTLT_NOIDUNGHOATDONG": null,
-                "GCN_DTLT_NGAY": null,
-                "GCN_DTLT_THANG": null,
-                "GCN_DTLT_NAM": null,
-                "CC_NN_NGONNGU_TA": null,
-                "CC_NN_NGONNGU_TV": null,
-                "CC_NN_BAC_TA": null,
-                "CC_NN_BAC_TV": null,
-                "CC_NN_NGAYTHI": null,
-                "CC_NN_NGAYTHI_TA": null,
-                "CC_NN_DIEMTHI": null,
-                "CC_NN_OVERALL_SCORE": null,
-                "CC_NN_LISTENING": null,
-                "CC_NN_NGHE": null,
-                "CC_NN_READING": null,
-                "CC_NN_DOC": null,
-                "CC_NN_WRITING": null,
-                "CC_NN_VIET": null,
-                "CC_NN_SPEAKING": null,
-                "CC_NN_NOI": null,
-                "CC_NN_NGAYTHANG": null,
-                "CC_NN_NGAYTHANG_TA": null,
-                "CC_NN_SOQD": null,
-                "CC_NN_SOVAOSOCAPCC": "ĐH/2026/KS0003"
-            }], 1);
-        });
+        //if (me.isCheDoTestOn()) {
+        //    $("body").addClass("che-do-test");
+        //    $("#zoneTestPhoi").show();
+        //    $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
+        //}
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
@@ -334,12 +192,12 @@ ThucHienIn.prototype = {
                 }
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: obj_list.action,
-            
+
             contentType: true,
             data: obj_list,
             fakedb: [
@@ -768,25 +626,25 @@ ThucHienIn.prototype = {
                         for (var i = 0; i < dtReRult.length; i++) {
                             if (dtReRult[i].TRANG > iMaxTrang) iMaxTrang = dtReRult[i].TRANG;
                         }
-                        var strhead = '<style>.phoi{font-family:"' + dtReRult[0].FONT + '";position:absolute;cursor: pointer; font-size: ' + dtReRult[0].COCHU+ 'px}</style>';
+                        var strhead = '<style>.phoi{font-family:"' + dtReRult[0].FONT + '";position:absolute;cursor: pointer; font-size: ' + dtReRult[0].COCHU + 'px}</style>';
                         $("#" + zoneMauIn).html(strhead);
                         var strAnhNen = dtReRult[0].DUONGDANFILE;
-                        var strMagin = dtReRult[0].MARGIN_TOP ? 'margin-top: ' + dtReRult[0].MARGIN_TOP + 'px; margin-left: ' + dtReRult[0].MARGIN_LEFT + 'px;': '';
+                        var strMagin = dtReRult[0].MARGIN_TOP ? 'margin-top: ' + dtReRult[0].MARGIN_TOP + 'px; margin-left: ' + dtReRult[0].MARGIN_LEFT + 'px;' : '';
                         if (strAnhNen != null && strAnhNen.indexOf("_") != -1) {
                             arrTemp = strAnhNen.split("_");
                             $("#" + zoneMauIn).css({ width: (parseInt(arrTemp[1]) + 40) })
                             for (var i = 0; i < iMaxTrang + 1; i++) {
-                                $("#" + zoneMauIn).append('<div class="pr-containt" style="background: url(' + edu.system.getRootPathImg(strAnhNen) + ');background-repeat: no-repeat; background-size: ' + arrTemp[1] + 'px;height: ' + arrTemp[2] + 'px; ' + strMagin +'" ></div>');
+                                $("#" + zoneMauIn).append('<div class="pr-containt" style="background: url(' + edu.system.getRootPathImg(strAnhNen) + ');background-repeat: no-repeat; background-size: ' + arrTemp[1] + 'px;height: ' + arrTemp[2] + 'px; ' + strMagin + '" ></div>');
                                 if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
                             }
                         } else {
 
                             for (var i = 0; i < iMaxTrang + 1; i++) {
-                                $("#" + zoneMauIn).append('<div class="pr-containt" style="' + strMagin +'"></div>');
+                                $("#" + zoneMauIn).append('<div class="pr-containt" style="' + strMagin + '"></div>');
                                 if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
                             }
                         }
-                        
+
                         for (var i = 0; i < dtReRult.length; i++) {
                             var strFontSize = "";
                             if (dtReRult[i].FONTSIZE) strFontSize = ' font-size: ' + dtReRult[i].FONTSIZE + 'px;'
@@ -964,7 +822,7 @@ ThucHienIn.prototype = {
             htmlFont = '@font-face {font-family: "UTM HelvetIns";src: url("App_Themes/Cms/fonts/HelvetIns.ttf") format("truetype");}';
         }
 
-        mywindow.document.write('<html><head><title>Print</title><style>' + htmlFont +' @media print{@page{margin:0}body{margin:0.0cm}}</style></head><body>' + content + '</body></html>');
+        mywindow.document.write('<html><head><title>Print</title><style>' + htmlFont + ' @media print{@page{margin:0}body{margin:0.0cm}}</style></head><body>' + content + '</body></html>');
 
         mywindow.document.close();
         mywindow.focus();
@@ -1023,7 +881,7 @@ ThucHienIn.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
     genCombo_MauPhoiIn: function (data) {
         var me = this;
         var obj = {
@@ -1040,7 +898,7 @@ ThucHienIn.prototype = {
         edu.system.loadToCombo_data(obj);
         me.getList_ThucHienIn();
     },
-    
+
     getList_MauPhoiInBanSao: function () {
         var me = this;
         //--Edit
@@ -1104,7 +962,7 @@ ThucHienIn.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var strQRData = data.Data;
-                    $("#" + strDivId).html('<img src="data:image/png;base64, ' + strQRData + '" alt="Red dot" style="width: ' + dChieuDai +'px;" />')
+                    $("#" + strDivId).html('<img src="data:image/png;base64, ' + strQRData + '" alt="Red dot" style="width: ' + dChieuDai + 'px;" />')
                 }
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
@@ -1232,7 +1090,7 @@ ThucHienIn.prototype = {
         try { return localStorage.getItem(this._getEnabledKey()) === "1"; } catch (e) { return false; }
     },
     setCheDoTest: function (bOn) {
-        try { localStorage.setItem(this._getEnabledKey(), bOn ? "1" : "0"); } catch (e) {}
+        try { localStorage.setItem(this._getEnabledKey(), bOn ? "1" : "0"); } catch (e) { }
     },
     getTestValue: function (strFieldId) {
         try { return localStorage.getItem(this._getFieldKey(strFieldId)); } catch (e) { return null; }
@@ -1244,7 +1102,7 @@ ThucHienIn.prototype = {
             } else {
                 localStorage.setItem(this._getFieldKey(strFieldId), strValue);
             }
-        } catch (e) {}
+        } catch (e) { }
     },
     getTestPos: function (strFieldId) {
         try {
@@ -1259,7 +1117,7 @@ ThucHienIn.prototype = {
         try {
             if (!pos) localStorage.removeItem(this._getPosKey(strFieldId));
             else localStorage.setItem(this._getPosKey(strFieldId), JSON.stringify(pos));
-        } catch (e) {}
+        } catch (e) { }
     },
     resetTestValues: function () {
         var me = this;
