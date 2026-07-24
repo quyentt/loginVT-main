@@ -4535,12 +4535,13 @@
     line-height: 32px;
     margin-left: -20px;
     margin-right: 20px;
-    background-color: var(--color-green) !important;
+    background-color: #4d8d41 !important;
     font-size: 24px;
     padding-right: 15px;
 }
 
 #txtTinhTrang {
+    background-color: #4d8d41 !important;
     font-size: 16px !important;
     padding: 8px 15px;
     margin-right: 10px;
@@ -4579,10 +4580,12 @@
     font-size: 30px;
     margin-bottom: 8px;
 }
+
 .nav-tabs-custom.aps-tabs-custom>.nav-tabs>li>a {
     font-size: 15px;
     padding: 12px 5px 10px 5px !important;
 }
+
 .aps-tabs-custom>.nav-tabs>li>a {
     background: transparent;
     margin: 0;
@@ -4707,10 +4710,12 @@
     border-radius: 5px;
     font-size: 14px;
 }
-.zoneThongTinBoSung  .small-box-r {
+
+.zoneThongTinBoSung .small-box-r {
     position: absolute;
     left: 15px;
 }
+
 .zoneThongTinBoSung .small-box .icon {
     top: 15px;
     right: 15px !important;
@@ -16014,7 +16019,6 @@ table#clone {
     right: 0px !important;
 }
 
->>>>>>>8ef33e5b814789dc3c99279905f21facbba48f65
 /* ------- Responsive ------- */
 @media (max-width: 768px) {
     .aps-sv-layout {
