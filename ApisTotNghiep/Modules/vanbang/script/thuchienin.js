@@ -18,7 +18,10 @@ ThucHienIn.prototype = {
     arrKhoa: [],
     arrChuongTrinh: [],
     arrPrint: [],
-    strFont : '',
+    strFont: '',
+    dtPhoi_current: [],
+    dtLastData: [],
+    strLastZone: '',
 
     init: function () {
         var me = this;
@@ -71,7 +74,10 @@ ThucHienIn.prototype = {
         $('#dropSearch_ChuongTrinh').on('select2:select', function (e) {
             me.getList_LopQuanLy();
         });
-        
+        $('#dropSearch_PhanLoai').on('select2:select', function (e) {
+            me.getList_KeHoachXuLy();
+        });
+
         $("#btnThucHienIn").click(function () {
             //var arrChecked_Id = edu.util.getArrCheckedIds("tblThucHienIn", "checkX");
             //if (arrChecked_Id.length == 0) {
@@ -110,7 +116,41 @@ ThucHienIn.prototype = {
 
             saveAsImage();
         });
-        
+
+        $("#btnCheDoTest").off('click').on('click', function () {
+            me.toggleCheDoTest();
+        });
+        $("#btnResetTestPhoi").off('click').on('click', function () {
+            me.resetTestValues();
+        });
+        $("#btnResetToaDo").off('click').on('click', function () {
+            me.resetAllPos();
+        });
+        $("#chkChiHienKyHieu").off('change').on('change', function () {
+            me._reRenderPhoi();
+        });
+        $("#tblTestPhoi tbody").off('blur change', '.inputTestPhoi').on('blur change', '.inputTestPhoi', function () {
+            me.setTestValue($(this).data('field-id'), this.value);
+            me._reRenderPhoi();
+        });
+        $("#tblTestPhoi tbody").off('click', '.btnClearOne').on('click', '.btnClearOne', function () {
+            var strId = $(this).data('field-id');
+            me.setTestValue(strId, "");
+            me.setTestPos(strId, null);
+            $('.inputTestPhoi[data-field-id="' + strId + '"]').val("");
+            $('.tdPos[data-field-id="' + strId + '"]').text("(mặc định)");
+            me.renderPanelTest(me.dtPhoi_current, (me.dtLastData && me.dtLastData.length > 0) ? me.dtLastData[0] : null);
+            me._reBuildPhoi();
+        });
+
+        //me._bindDragPhoi();
+
+        // Khôi phục trạng thái toggle từ lần trước
+        //if (me.isCheDoTestOn()) {
+        //    $("body").addClass("che-do-test");
+        //    $("#zoneTestPhoi").show();
+        //    $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
+        //}
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
@@ -137,6 +177,7 @@ ThucHienIn.prototype = {
             'strPhoi_MauPhoiIn_BanSao_Id': edu.util.getValById('dropMauPhoi_BanSao'),
             'dDoiTuongBenNgoai': edu.util.getValById('dropSearch_DoiTuong'),
             'strTinhTrangXacNhan_Id': edu.util.getValById('dropAAAA'),
+            'strTN_KeHoach_Id': edu.util.getValById('dropSearch_KeHoach'),
         };
         //
         edu.system.makeRequest({
@@ -151,12 +192,12 @@ ThucHienIn.prototype = {
                 }
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
             },
             type: 'GET',
             action: obj_list.action,
-            
+
             contentType: true,
             data: obj_list,
             fakedb: [
@@ -585,36 +626,46 @@ ThucHienIn.prototype = {
                         for (var i = 0; i < dtReRult.length; i++) {
                             if (dtReRult[i].TRANG > iMaxTrang) iMaxTrang = dtReRult[i].TRANG;
                         }
-                        var strhead = '<style>.phoi{font-family:"' + dtReRult[0].FONT + '";position:absolute;cursor: pointer; font-size: ' + dtReRult[0].COCHU+ 'px}</style>';
+                        var strhead = '<style>.phoi{font-family:"' + dtReRult[0].FONT + '";position:absolute;cursor: pointer; font-size: ' + dtReRult[0].COCHU + 'px}</style>';
                         $("#" + zoneMauIn).html(strhead);
                         var strAnhNen = dtReRult[0].DUONGDANFILE;
-                        var strMagin = dtReRult[0].MARGIN_TOP ? 'margin-top: ' + dtReRult[0].MARGIN_TOP + 'px; margin-left: ' + dtReRult[0].MARGIN_LEFT + 'px;': '';
+                        var strMagin = dtReRult[0].MARGIN_TOP ? 'margin-top: ' + dtReRult[0].MARGIN_TOP + 'px; margin-left: ' + dtReRult[0].MARGIN_LEFT + 'px;' : '';
                         if (strAnhNen != null && strAnhNen.indexOf("_") != -1) {
                             arrTemp = strAnhNen.split("_");
                             $("#" + zoneMauIn).css({ width: (parseInt(arrTemp[1]) + 40) })
                             for (var i = 0; i < iMaxTrang + 1; i++) {
-                                $("#" + zoneMauIn).append('<div class="pr-containt" style="background: url(' + edu.system.getRootPathImg(strAnhNen) + ');background-repeat: no-repeat; background-size: ' + arrTemp[1] + 'px;height: ' + arrTemp[2] + 'px; ' + strMagin +'" ></div>');
+                                $("#" + zoneMauIn).append('<div class="pr-containt" style="background: url(' + edu.system.getRootPathImg(strAnhNen) + ');background-repeat: no-repeat; background-size: ' + arrTemp[1] + 'px;height: ' + arrTemp[2] + 'px; ' + strMagin + '" ></div>');
                                 if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
                             }
                         } else {
 
                             for (var i = 0; i < iMaxTrang + 1; i++) {
-                                $("#" + zoneMauIn).append('<div class="pr-containt" style="' + strMagin +'"></div>');
+                                $("#" + zoneMauIn).append('<div class="pr-containt" style="' + strMagin + '"></div>');
                                 if (i < iMaxTrang) $("#" + zoneMauIn).append('<p style="page-break-before: always;">&nbsp;</p>');
                             }
                         }
-                        
+
                         for (var i = 0; i < dtReRult.length; i++) {
                             var strFontSize = "";
                             if (dtReRult[i].FONTSIZE) strFontSize = ' font-size: ' + dtReRult[i].FONTSIZE + 'px;'
 
                             if (dtReRult[i].DORONGPHANTUCANLE) strFontSize += 'width: ' + dtReRult[i].DORONGPHANTUCANLE + 'px;';
-                            var html = '<span id="' + dtReRult[i].ID + '" class="phoi" style="margin-top: ' + dtReRult[i].LETREN + 'px; ' + strFontSize + ' margin-left: ' + dtReRult[i].LETRAI + 'px; ' + edu.util.returnEmpty(dtReRult[i].DINHDANG) + '; ' + edu.util.returnEmpty(dtReRult[i].LEPHAI) + edu.util.returnEmpty(dtReRult[i].CANLE_TRAI_PHAI_GIUA) + '"></span>';
+                            // Áp dụng override tọa độ từ localStorage nếu có
+                            var iTop = dtReRult[i].LETREN;
+                            var iLeft = dtReRult[i].LETRAI;
+                            var posOverride = me.getTestPos(dtReRult[i].ID);
+                            if (posOverride) {
+                                iTop = posOverride.top;
+                                iLeft = posOverride.left;
+                            }
+                            var html = '<span id="' + dtReRult[i].ID + '" data-stt="' + (i + 1) + '" class="phoi" style="margin-top: ' + iTop + 'px; ' + strFontSize + ' margin-left: ' + iLeft + 'px; ' + edu.util.returnEmpty(dtReRult[i].DINHDANG) + '; ' + edu.util.returnEmpty(dtReRult[i].LEPHAI) + edu.util.returnEmpty(dtReRult[i].CANLE_TRAI_PHAI_GIUA) + '"></span>';
                             $("#" + zoneMauIn + " .pr-containt:eq(" + edu.util.returnZero(dtReRult[i].TRANG) + ")").append(html);
 
                         }
+                        me.dtPhoi_current = dtReRult;
+                        me.renderPanelTest(dtReRult, (dataIn && dataIn.length > 0) ? dataIn[0] : null);
                         if (typeof callback === "function") {
-                            callback(dtReRult); 
+                            callback(dtReRult);
                         } else {
                             me.genData_Phoi(zoneMauIn, dataIn, dtReRult);
                         }
@@ -641,6 +692,8 @@ ThucHienIn.prototype = {
     },
     genData_Phoi: function (zoneMauIn, dataIn, dataPhoi) {
         var me = this;
+        me.dtLastData = dataIn;
+        me.strLastZone = zoneMauIn;
         var pointMauIn = $("#" + zoneMauIn);
         var htmlPhoi = pointMauIn.html();
         pointMauIn.html("");
@@ -659,6 +712,8 @@ ThucHienIn.prototype = {
         var me = this;
         var khoangcach = 30;
         if (dataPhoi.length > 0 && dataPhoi[0].KHOGIAY != null) khoangcach = dataPhoi[0].KHOGIAY;
+        var bTest = me.isCheDoTestOn();
+        var bOnlyKyHieu = bTest && $("#chkChiHienKyHieu").is(":checked");
         var arrCotBang = [];
         for (var i = 0; i < dataPhoi.length; i++) {
             var aPhoi_ChiTiet = dataPhoi[i];
@@ -667,15 +722,24 @@ ThucHienIn.prototype = {
                 continue;
             }
             var strData = "";
-            try {
-                if (aPhoi_ChiTiet.NOIDUNG.indexOf("me") != -1) console.log(aPhoi_ChiTiet.NOIDUNG)
-                strData = eval(aPhoi_ChiTiet.NOIDUNG);
-            } catch (ex) {
-                console.log(ex);
-                strData = undefined;
+            if (bOnlyKyHieu) {
+                strData = "(" + (i + 1) + ")";
+            } else {
+                var strOverride = bTest ? me.getTestValue(aPhoi_ChiTiet.ID) : null;
+                if (strOverride !== null && strOverride !== "") {
+                    strData = strOverride;
+                } else {
+                    try {
+                        if (aPhoi_ChiTiet.NOIDUNG.indexOf("me") != -1) console.log(aPhoi_ChiTiet.NOIDUNG)
+                        strData = eval(aPhoi_ChiTiet.NOIDUNG);
+                    } catch (ex) {
+                        console.log(ex);
+                        strData = undefined;
+                    }
+                }
             }
             if (strData !== null && strData !== undefined && strData !== "") {
-                $("#" + zoneMauIn + " #" + aPhoi_ChiTiet.ID).html(strData);
+                $("#" + zoneMauIn + " [id='" + aPhoi_ChiTiet.ID + "']").html(strData);
             }
         }
         for (var i = 0; i < arrCotBang.length; i++) {
@@ -758,7 +822,7 @@ ThucHienIn.prototype = {
             htmlFont = '@font-face {font-family: "UTM HelvetIns";src: url("App_Themes/Cms/fonts/HelvetIns.ttf") format("truetype");}';
         }
 
-        mywindow.document.write('<html><head><title>Print</title><style>' + htmlFont +' @media print{@page{margin:0}body{margin:0.0cm}}</style></head><body>' + content + '</body></html>');
+        mywindow.document.write('<html><head><title>Print</title><style>' + htmlFont + ' @media print{@page{margin:0}body{margin:0.0cm}}</style></head><body>' + content + '</body></html>');
 
         mywindow.document.close();
         mywindow.focus();
@@ -817,7 +881,7 @@ ThucHienIn.prototype = {
             ]
         }, false, false, false, null);
     },
-    
+
     genCombo_MauPhoiIn: function (data) {
         var me = this;
         var obj = {
@@ -834,7 +898,7 @@ ThucHienIn.prototype = {
         edu.system.loadToCombo_data(obj);
         me.getList_ThucHienIn();
     },
-    
+
     getList_MauPhoiInBanSao: function () {
         var me = this;
         //--Edit
@@ -898,7 +962,7 @@ ThucHienIn.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var strQRData = data.Data;
-                    $("#" + strDivId).html('<img src="data:image/png;base64, ' + strQRData + '" alt="Red dot" style="width: ' + dChieuDai +'px;" />')
+                    $("#" + strDivId).html('<img src="data:image/png;base64, ' + strQRData + '" alt="Red dot" style="width: ' + dChieuDai + 'px;" />')
                 }
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
@@ -957,5 +1021,239 @@ ThucHienIn.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+    getList_KeHoachXuLy: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TN_ThongTin/LayDSTN_KeHoach',
+            'strTuKhoa': edu.util.getValById('txtSearch'),
+            'strPhanLoai_Id': edu.util.getValById('dropSearch_PhanLoai'),
+            'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('dropSearch_ThoiGianDaoTao'),
+            'strNguoiDung_Id': edu.util.getValById('dropAAAA'),
+            'strNguoiTao_Id': edu.util.getValById('dropAAAA'),
+            'pageIndex': 1,
+            'pageSize': 1000000,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.cbGenCombo_KeHoachXuLy(data.Data);
+                }
+                else {
+                    edu.system.alert(obj_list.action + " : " + data.Message, "s");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    cbGenCombo_KeHoachXuLy: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropSearch_KeHoach"],
+            type: "",
+            title: "Chọn kế hoạch",
+        };
+        edu.system.loadToCombo_data(obj);
+    },
+
+    /*------------------------------------------
+    --Chế độ test: nhập giá trị + căn tọa độ các ô trên phôi.
+    --Lưu localStorage theo user, không phụ thuộc server.
+    -------------------------------------------*/
+    _getUserKey: function () {
+        return edu.system.userId || "anon";
+    },
+    _getEnabledKey: function () {
+        return "TEST_PHOI_ENABLED_" + this._getUserKey();
+    },
+    _getFieldKey: function (strFieldId) {
+        return "TEST_PHOI_" + this._getUserKey() + "_" + strFieldId;
+    },
+    _getPosKey: function (strFieldId) {
+        return "TEST_PHOI_POS_" + this._getUserKey() + "_" + strFieldId;
+    },
+    isCheDoTestOn: function () {
+        try { return localStorage.getItem(this._getEnabledKey()) === "1"; } catch (e) { return false; }
+    },
+    setCheDoTest: function (bOn) {
+        try { localStorage.setItem(this._getEnabledKey(), bOn ? "1" : "0"); } catch (e) { }
+    },
+    getTestValue: function (strFieldId) {
+        try { return localStorage.getItem(this._getFieldKey(strFieldId)); } catch (e) { return null; }
+    },
+    setTestValue: function (strFieldId, strValue) {
+        try {
+            if (strValue === null || strValue === undefined || strValue === "") {
+                localStorage.removeItem(this._getFieldKey(strFieldId));
+            } else {
+                localStorage.setItem(this._getFieldKey(strFieldId), strValue);
+            }
+        } catch (e) { }
+    },
+    getTestPos: function (strFieldId) {
+        try {
+            var s = localStorage.getItem(this._getPosKey(strFieldId));
+            if (!s) return null;
+            var o = JSON.parse(s);
+            if (typeof o.top === "number" && typeof o.left === "number") return o;
+            return null;
+        } catch (e) { return null; }
+    },
+    setTestPos: function (strFieldId, pos) {
+        try {
+            if (!pos) localStorage.removeItem(this._getPosKey(strFieldId));
+            else localStorage.setItem(this._getPosKey(strFieldId), JSON.stringify(pos));
+        } catch (e) { }
+    },
+    resetTestValues: function () {
+        var me = this;
+        var arr = me.dtPhoi_current || [];
+        for (var i = 0; i < arr.length; i++) me.setTestValue(arr[i].ID, "");
+        $("#tblTestPhoi .inputTestPhoi").val("");
+        me._reRenderPhoi();
+    },
+    resetAllPos: function () {
+        var me = this;
+        var arr = me.dtPhoi_current || [];
+        for (var i = 0; i < arr.length; i++) me.setTestPos(arr[i].ID, null);
+        me._reBuildPhoi();
+        me.renderPanelTest(arr, (me.dtLastData && me.dtLastData.length > 0) ? me.dtLastData[0] : null);
+    },
+    toggleCheDoTest: function () {
+        var me = this;
+        var bOn = !me.isCheDoTestOn();
+        me.setCheDoTest(bOn);
+        if (bOn) {
+            $("body").addClass("che-do-test");
+            $("#zoneTestPhoi").show();
+            $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
+        } else {
+            $("body").removeClass("che-do-test");
+            $("#zoneTestPhoi").hide();
+            $("#btnCheDoTest").addClass("btn-warning").removeClass("btn-success");
+        }
+        // Chỉ re-render phôi hiện có, không fetch API lại
+        me._reRenderPhoi();
+    },
+    // Chỉ re-điền nội dung các ô .phoi (không dựng lại khung phôi)
+    _reRenderPhoi: function () {
+        var me = this;
+        if (!me.dtPhoi_current || me.dtPhoi_current.length === 0) return;
+        if (!me.dtLastData || me.dtLastData.length === 0) return;
+        for (var i = 0; i < me.dtLastData.length; i++) {
+            me.genData_ChiTiet("zoneIn" + me.dtLastData[i].ID, me.dtLastData[i], me.dtPhoi_current);
+        }
+    },
+    // Dựng lại toàn bộ khung phôi từ đầu (cần khi tọa độ thay đổi)
+    _reBuildPhoi: function () {
+        var me = this;
+        if (!me.dtLastData || me.dtLastData.length === 0) return;
+        var strPhoi = edu.util.getValById("dropSearch_Phoi") != "" ? edu.util.getValById("dropSearch_Phoi") : edu.util.getValById("dropMauPhoi_BanSao");
+        me.getList_NoiDungTheoMa(strPhoi, "zoneMotherPhoi", me.dtLastData);
+    },
+    _bindDragPhoi: function () {
+        var me = this;
+        var $doc = $(document);
+        var drag = { active: false, $el: null, fieldId: "", startX: 0, startY: 0, origTop: 0, origLeft: 0 };
+        $doc.off('mousedown.phoiDrag').on('mousedown.phoiDrag', '.phoi', function (e) {
+            if (!me.isCheDoTestOn()) return;
+            drag.active = true;
+            drag.$el = $(this);
+            drag.fieldId = drag.$el.attr('id');
+            drag.startX = e.pageX;
+            drag.startY = e.pageY;
+            drag.origTop = parseFloat(drag.$el.css('margin-top')) || 0;
+            drag.origLeft = parseFloat(drag.$el.css('margin-left')) || 0;
+            drag.$el.addClass('dragging');
+            e.preventDefault();
+        });
+        $doc.off('mousemove.phoiDrag').on('mousemove.phoiDrag', function (e) {
+            if (!drag.active || !drag.$el) return;
+            var newTop = drag.origTop + (e.pageY - drag.startY);
+            var newLeft = drag.origLeft + (e.pageX - drag.startX);
+            // Áp dụng lên tất cả các zoneCon (mỗi bản ghi 1 clone cùng id)
+            $('[id="' + drag.fieldId + '"]').css({
+                'margin-top': newTop + 'px',
+                'margin-left': newLeft + 'px'
+            });
+        });
+        $doc.off('mouseup.phoiDrag').on('mouseup.phoiDrag', function () {
+            if (!drag.active || !drag.$el) return;
+            var top = parseFloat(drag.$el.css('margin-top')) || 0;
+            var left = parseFloat(drag.$el.css('margin-left')) || 0;
+            me.setTestPos(drag.fieldId, { top: top, left: left });
+            $('.tdPos[data-field-id="' + drag.fieldId + '"]').text('T:' + Math.round(top) + ' L:' + Math.round(left));
+            drag.$el.removeClass('dragging');
+            drag.active = false;
+            drag.$el = null;
+        });
+    },
+    renderPanelTest: function (dataPhoi, aDataSample) {
+        var me = this;
+        var $tbody = $("#tblTestPhoi tbody");
+        $tbody.empty();
+        var escapeHtml = function (s) { return $('<div>').text(s == null ? "" : String(s)).html(); };
+        for (var i = 0; i < dataPhoi.length; i++) {
+            var f = dataPhoi[i];
+            var strSaved = edu.util.returnEmpty(me.getTestValue(f.ID));
+            var strNoiDungRaw = f.NOIDUNG || "";
+            // Rút gọn biểu thức: bỏ prefix "aData." cho dễ đọc
+            var strNoiDungShort = strNoiDungRaw.replace(/aData\./g, '');
+            var strNoiDung = escapeHtml(strNoiDungShort);
+
+            // Giá trị mẫu — eval NOIDUNG trên bản ghi đầu tiên
+            var strSample = "";
+            var strSampleCls = "text-muted";
+            if (aDataSample && strNoiDungRaw) {
+                if (strNoiDungRaw.includes("[x].")) {
+                    strSample = "(template lặp)";
+                } else if (/^\s*me\./.test(strNoiDungRaw)) {
+                    strSample = "(gọi hàm)";
+                } else {
+                    try {
+                        var aData = aDataSample;
+                        var v = eval(strNoiDungRaw);
+                        if (v === null || v === undefined) strSample = "(null)";
+                        else if (typeof v === "string" || typeof v === "number") { strSample = String(v); strSampleCls = ""; }
+                        else strSample = "(" + (typeof v) + ")";
+                    } catch (ex) {
+                        strSample = "(lỗi: " + ex.message + ")";
+                        strSampleCls = "text-danger";
+                    }
+                }
+            }
+            var strSampleEsc = escapeHtml(strSample);
+            var strPlaceholder = (strSample && strSampleCls === "") ? ("VD: " + strSample.substring(0, 50)) : "Nhập giá trị test...";
+
+            // Tọa độ hiện tại — ưu tiên override, fallback về giá trị mặc định trong DB
+            var pos = me.getTestPos(f.ID);
+            var strPos = pos ? ('T:' + Math.round(pos.top) + ' L:' + Math.round(pos.left)) : '(mặc định)';
+
+            var html = "";
+            html += '<tr>';
+            html += '<td class="td-center">' + (i + 1) + '</td>';
+            html += '<td class="td-center kyhieu">(' + (i + 1) + ')</td>';
+            html += '<td><code style="font-size:12px">' + strNoiDung + '</code></td>';
+            html += '<td class="' + strSampleCls + '" style="max-width:240px;word-break:break-word" title="' + strSampleEsc.replace(/"/g, '&quot;') + '">' + strSampleEsc + '</td>';
+            html += '<td><input type="text" class="form-control inputTestPhoi" data-field-id="' + f.ID + '" value="' + strSaved.replace(/"/g, '&quot;') + '" placeholder="' + strPlaceholder.replace(/"/g, '&quot;') + '" /></td>';
+            html += '<td class="td-center tdPos" data-field-id="' + f.ID + '">' + strPos + '</td>';
+            html += '<td class="td-center"><a class="btn btn-danger btn-sm btnClearOne" data-field-id="' + f.ID + '" href="#" title="Xóa giá trị test & tọa độ ô này"><i class="fa fa-times"></i></a></td>';
+            html += '</tr>';
+            $tbody.append(html);
+        }
     },
 }

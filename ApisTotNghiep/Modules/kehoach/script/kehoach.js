@@ -28,6 +28,8 @@ KeHoachXuLy.prototype = {
         me.getList_KeHoachXuLy();
         me.getList_DMHocPhan();
         me.getList_PhanLoai();
+        me.getList_QuyTacSinhSoHieu();
+        me.getList_QuyTacSinhSoVaoSo();
         edu.extend.genBoLoc_HeKhoa("_KT");
         edu.system.loadToCombo_DanhMucDuLieu("DIEM.THANGDIEM", "dropSearch_ThangDiem_ChuanBi");
         edu.system.loadToCombo_DanhMucDuLieu("TN.KHOA.MO.DULIEU", "", "", data => {
@@ -533,6 +535,9 @@ KeHoachXuLy.prototype = {
         edu.util.viewValById("txtTuNgay", "");
         edu.util.viewValById("txtDenNgay", "");
         edu.util.viewValById("dropHieuLuc", 1);
+        edu.util.viewValById("dropQuyTacSinhSoHieu", "");
+        edu.util.viewValById("dropQuyTacSinhSoVaoSo", "");
+        $("#rowQuyTacSinh").hide();
         $("#tblInput_DTSV_SinhVien tbody").html("");
         $("#tblInputDanhSachNhanSu tbody").html("");
     },
@@ -651,6 +656,8 @@ KeHoachXuLy.prototype = {
         if (obj_save.strId) {
             obj_save.action = 'TN_ThongTin_MH/EjQgHhUPHgokCS4gIikP';
             obj_save.func = 'pkg_totnghiep_thongtin.Sua_TN_KeHoach';
+            obj_save.strTN_QuyTacSinhSoHieu_Ad_Id = edu.util.getValById('dropQuyTacSinhSoHieu');
+            obj_save.strTN_QuyTacSinhSoVSo_Ad_Id = edu.util.getValById('dropQuyTacSinhSoVaoSo');
         }
         //default
         
@@ -1102,6 +1109,92 @@ KeHoachXuLy.prototype = {
         }
         edu.system.loadToCombo_data(obj);
     },
+    getList_QuyTacSinhSoHieu: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TN_VanBang_ChungChi_Chung_MH/DSA4BRIVDx4QNDgVICISKC8pHhIuCSgkNB4AJQPP',
+            'func': 'PKG_VANBANG_CHUNGCHI_CHUNG.LayDSTN_QuyTacSinh_SoHieu_Ad',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.cbGenCombo_QuyTacSinhSoHieu(data.Data);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    cbGenCombo_QuyTacSinhSoHieu: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropQuyTacSinhSoHieu"],
+            type: "",
+            title: "--Chọn quy tắc sinh số hiệu--",
+        }
+        edu.system.loadToCombo_data(obj);
+    },
+    getList_QuyTacSinhSoVaoSo: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TN_VanBang_ChungChi_Chung_MH/DSA4BRIVDx4QNDgVICISKC8pHhIuFyAuEi4eACUP',
+            'func': 'PKG_VANBANG_CHUNGCHI_CHUNG.LayDSTN_QuyTacSinh_SoVaoSo_Ad',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.cbGenCombo_QuyTacSinhSoVaoSo(data.Data);
+                }
+                else {
+                    edu.system.alert(obj_list.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_list.action,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    cbGenCombo_QuyTacSinhSoVaoSo: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropQuyTacSinhSoVaoSo"],
+            type: "",
+            title: "--Chọn quy tắc sinh số vào sổ--",
+        }
+        edu.system.loadToCombo_data(obj);
+    },
     viewEdit_KeHoachXuLy: function (data) {
         var me = this;
         //View - Thong tin
@@ -1113,6 +1206,9 @@ KeHoachXuLy.prototype = {
         edu.util.viewValById("txtDenNgay", data.NGAYKETTHUC);
         edu.util.viewValById("dropHieuLuc", data.MOCHONGUOIHOCDANGKY);
         $("#chkCoTinhLaiDiemTKHP").prop("checked", data.COTINHLAIDIEMTKHP);
+        edu.util.viewValById("dropQuyTacSinhSoHieu", data.PHOI_TN_QUYTACSINHSOHIEU_AD_ID);
+        edu.util.viewValById("dropQuyTacSinhSoVaoSo", data.PHOI_TN_QUYTACSINHSOVSO_AD_ID);
+        $("#rowQuyTacSinh").show();
         me.strKeHoachXuLy_Id = data.ID;
 
         me.arrLop = [];

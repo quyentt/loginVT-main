@@ -382,9 +382,9 @@ a.btn {
 .box-header .box-title {
   font-size: 18px !important;
   color: var(--color-blue) !important;
-  line-height: 24px;
   display: flex;
   padding: 0 !important;
+  line-height: 24px;
 }
 
 .box-header .box-title i {
@@ -392,6 +392,7 @@ a.btn {
   float: left;
   color: var(--color-blue);
   font-weight: 700 !important;
+  line-height: 24px;
 }
 
 .box-header.with-border {
@@ -3352,7 +3353,7 @@ input:active,
 .modal-content .select2-container--default .select2-selection--single {
   border: 1px solid #c1c1c1 !important;
   border-radius: 5px !important;
-  padding: 7px 3px !important;
+  padding: 9px 10px !important;
   height: 28px;
 }
 
@@ -3364,10 +3365,9 @@ input:active,
 .change-tblDSDiem .select2-container--default .select2-selection--single .select2-selection__arrow,
 .change-tblThamSoDanhGiaKetQua .select2-container--default .select2-selection--single .select2-selection__arrow,
 .change-tblThamSoQuyDoiThangDiem .select2-container--default .select2-selection--single .select2-selection__arrow,
-.aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow,
 .modal-content .select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 1px !important;
-  right: 8px !important;
+  top: 7px !important;
+    right: 7px !important;
 }
 
 #changetblKHDK .select2-container,
@@ -4993,6 +4993,7 @@ info-tblNguoiHoc_RutTien,
 .form-control-textarea {
   border: 1px solid #d2d6de !important;
   border-radius: 5px;
+  padding: 10px;
 }
 
 .aps-capnhathoso-content .aps-form {
@@ -5443,7 +5444,7 @@ input[type="radio"] {
 }
 
 .modal-content .aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 4px !important;
+  top: 1px !important;
   right: 3px !important;
 }
 

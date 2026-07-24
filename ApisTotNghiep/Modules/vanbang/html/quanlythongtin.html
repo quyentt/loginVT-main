@@ -47,7 +47,9 @@
                             <div class="col-sm-3 item-search">
                                 <select id="dropSearch_PhanLoai" class="select-opt"></select>
                             </div>
-
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_KeHoach" class="select-opt"></select>
+                            </div>
                             <div class="col-sm-3 item-search">
                                 <select id="dropSearch_DoiTuong" class="select-opt">
                                     <option id="" value="-1"> Tất cả đối tượng </option>
@@ -59,7 +61,10 @@
                                 <select id="dropSearch_QuyetDinh" class="select-opt"></select>
                             </div>
                             <div class="clear"></div>
-                            <div class="col-sm-6 item-search">
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_TieuChiSapXep" class="select-opt"></select>
+                            </div>
+                            <div class="col-sm-3 item-search">
                                 <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-6 item-search d-flex gap15">
@@ -93,7 +98,7 @@
                         </span>
                     </h3>
                     <div class="pull-right right-0">
-                        <a class="btn btn-outline-primary" id="btnSinhQuyetDinh" href="#"><i class="fal fa-user-cog"></i> Chuyển trạng thái</a>
+                        <a class="btn btn-outline-primary" id="btnSinhQuyetDinh" href="#"><i class="fal fa-user-cog"></i> Tạo QĐ / Chuyển trạng thái TN</a>
                         <a class="btn btn-outline-secondary" id="btnSinhSoHieu" href="#"><i class="fal fa-poll-people"></i> Sinh tự động số hiệu</a>
                         <a class="btn btn-outline-success" id="btnSinhSoVaoSo" href="#"><i class="fal fa-book-reader"></i> Sinh tự động số vào sổ</a>
                         <a class="btn btn-outline-danger" id="btnQuanLyThongTin" href="#"><i class="fal fa-check-circle"></i> Xác nhận</a>
@@ -114,6 +119,8 @@
                                     <th class="td-center"><span class="lang" key="">Dân tộc</span></th>
                                     <th class="td-center"><span class="lang" key="">Nơi sinh</span></th>
                                     <th class="td-center"><span class="lang" key="">Ngành nghề</span></th>
+                                    <th class="td-center"><span class="lang" key="">Lớp</span></th>
+                                    <th class="td-center"><span class="lang" key="">Khoa quản lý</span></th>
                                     <th class="td-center"><span class="lang" key="">Số hiệu bằng</span></th>
                                     <th class="td-center"><span class="lang" key="">Số vào sổ cấp bằng</span></th>
                                     <th class="td-center"><span class="lang" key="">Số quyết định</span></th>
@@ -505,6 +512,51 @@
             <div id="notify"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel"><i class="fa fa-times-circle"></i> Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Tạo QĐ / Chuyển trạng thái TN -->
+<div class="modal fade" id="modal_SinhQuyetDinh" role="dialog" aria-labelledby="lblSinhQuyetDinh" aria-hidden="true">
+    <div class="modal-dialog" style="width: 720px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="lblSinhQuyetDinh"><i class="fal fa-file-signature"></i> Tạo QĐ / Chuyển trạng thái TN</h4>
+            </div>
+            <div class="modal-body">
+                <div class="aps-add-new pd10">
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">Số QĐ</div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtSinhQD_SoQD" class="form-control" placeholder="Nhập số quyết định" />
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">Ngày QĐ</div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtSinhQD_NgayQD" class="form-control datepicker" placeholder="dd/mm/yyyy" />
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">Ngày hiệu lực</div>
+                        <div class="col-sm-9 aps-form-input">
+                            <input type="text" id="txtSinhQD_NgayHieuLuc" class="form-control datepicker" placeholder="dd/mm/yyyy" />
+                        </div>
+                    </div>
+                    <div class="row aps-form-item">
+                        <div class="col-sm-3 aps-form-lable">Nội dung</div>
+                        <div class="col-sm-9 aps-form-input">
+                            <textarea id="txtSinhQD_NoiDung" class="form-control" rows="3" placeholder="Nội dung quyết định"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div id="notify"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i> Đóng</button>
+                <a class="btn btn-primary" id="btnSave_SinhQuyetDinh" href="#"><i class="fa fa-save"></i> Lưu</a>
             </div>
         </div>
     </div>

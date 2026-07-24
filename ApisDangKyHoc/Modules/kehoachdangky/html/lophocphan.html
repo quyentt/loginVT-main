@@ -380,10 +380,10 @@
                                     <th class="td-left">Tổ chức thi</th>
                                     <th class="td-left">Thuộc tính KLGD</th>
                                     <th class="td-left">Chế độ tính phí</th>
-                                    <!-- Ẩn theo yêu cầu (dùng cho tra cứu):
+                                    <!-- Ẩn theo yêu cầu (dùng cho tra cứu):-->
                                     <th class="td-left">Dồn lớp</th>
                                     <th class="td-left">Dồn nhóm lớp</th>
-                                    -->
+                                    <!-- -->
                                     <th class="td-center td-fixed">
                                         <input type="checkbox" id="chkSelectAll_LopHocPhan">
                                     </th>
@@ -806,6 +806,52 @@
                         </a>
                     </div>
                     -->
+                </div>
+                <!-- Bộ lọc danh sách sinh viên trong lớp -->
+                <div class="row aps-filter-qslop mb-10" style="padding: 0 5px;">
+                    <div class="col-sm-3 item-search">
+                        <input type="text" id="txtSearch_QuanSoLop" class="form-control"
+                               placeholder="Tìm theo mã số / họ tên..." autocomplete="off" />
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_QSL_TrangThai" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả tình trạng --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_QSL_ChuongTrinh" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả chương trình --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_QSL_LopHoc" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả lớp học --</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row aps-filter-qslop mb-10" style="padding: 0 5px; display: flex; align-items: center;">
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_QSL_KhoaHoc" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả khóa học --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_QSL_KhoaQuanLy" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả khoa quản lý --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search">
+                        <select id="dropFilter_QSL_HeDaoTao" class="select-opt" style="width:100% !important">
+                            <option value="">-- Tất cả hệ đào tạo --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3 item-search" style="display: flex; align-items: center; gap: 10px;">
+                        <a id="btnResetFilter_QuanSoLop" class="btn btn-default" href="javascript:void(0);"
+                           title="Xóa các bộ lọc">
+                            <i class="fa-solid fa-eraser"></i> Xóa bộ lọc
+                        </a>
+                        <span id="lblTong_QuanSoLop" style="color: #6c757d; font-weight: 500;"></span>
+                    </div>
                 </div>
                 <table id="tblQuanSoLop" class="table table-hover table-bordered mb-0 table-noborder tblQuanSoLop">
                     <thead>

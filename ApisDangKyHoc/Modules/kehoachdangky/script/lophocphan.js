@@ -174,6 +174,33 @@ LopHocPhan.prototype = {
             }
         });
 
+        // Filter cho modal "Danh sách sinh viên" (tblQuanSoLop)
+        var _debounceQSL = null;
+        $('#txtSearch_QuanSoLop').on('input', function () {
+            if (_debounceQSL) clearTimeout(_debounceQSL);
+            _debounceQSL = setTimeout(function () {
+                if (!me.dtQuanSoLop_Raw) return;
+                me.render_QuanSoLop();
+            }, 250);
+        });
+        $('#dropFilter_QSL_TrangThai, #dropFilter_QSL_ChuongTrinh, #dropFilter_QSL_LopHoc, #dropFilter_QSL_KhoaHoc, #dropFilter_QSL_KhoaQuanLy, #dropFilter_QSL_HeDaoTao')
+            .on('change', function () {
+                if (me._suppressQSLFilter) return;
+                if (!me.dtQuanSoLop_Raw) return;
+                me.render_QuanSoLop();
+            });
+        $('#btnResetFilter_QuanSoLop').click(function (e) {
+            e.preventDefault();
+            me._suppressQSLFilter = true;
+            $('#txtSearch_QuanSoLop').val('');
+            $('#dropFilter_QSL_TrangThai, #dropFilter_QSL_ChuongTrinh, #dropFilter_QSL_LopHoc, #dropFilter_QSL_KhoaHoc, #dropFilter_QSL_KhoaQuanLy, #dropFilter_QSL_HeDaoTao')
+                .val('').trigger('change');
+            me._suppressQSLFilter = false;
+            if (me.dtQuanSoLop_Raw) {
+                me.render_QuanSoLop();
+            }
+        });
+
         $("#tblLopHocPhan").delegate('.btnDetail', 'click', function (e) {
             $('#myModalPhamVi').modal('show');
             me.getList_PhamVi(this.id);
@@ -1480,7 +1507,7 @@ LopHocPhan.prototype = {
                         return edu.util.returnEmpty(aData.CHEDOTINHPHI_TEN);
                     }
                 },
-                /* Ẩn theo yêu cầu (dùng cho tra cứu):
+                /* Ẩn theo yêu cầu (dùng cho tra cứu):*/
                 {
                     "mRender": function (nRow, aData) {
                         return '<span><a class="btn btn-default btnDonLop" id="' + aData.ID + '" name="' + aData.TENLOP  +'" title="Dồn lớp">Dồn lớp</a></span>';
@@ -1491,7 +1518,7 @@ LopHocPhan.prototype = {
                         return '<span><a class="btn btn-default btnDonNhomLop" id="' + aData.ID + '" name="' + aData.TENLOP + '" title="Dồn">Dồn nhóm</a></span>';
                     }
                 },
-                */
+                /* */
                 {
                     "mRender": function (nRow, aData) {
                         return '<input type="checkbox" id="checkX' + aData.ID + '"/>';
@@ -2052,8 +2079,13 @@ LopHocPhan.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var dtReRult = data.Data;
-                    me.genTable_QuanSoTheoLop(dtReRult, data.Pager);
+                    var dtReRult = data.Data || [];
+                    me.dtQuanSoLop_Raw = dtReRult;
+                    me._suppressQSLFilter = true;
+                    $('#txtSearch_QuanSoLop').val('');
+                    me._populateFilters_QuanSoLop(dtReRult);
+                    me._suppressQSLFilter = false;
+                    me.render_QuanSoLop();
                 }
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
@@ -2073,6 +2105,76 @@ LopHocPhan.prototype = {
 
             ]
         }, false, false, false, null);
+    },
+    _populateFilters_QuanSoLop: function (data) {
+        var makeDistinct = function (field) {
+            var set = {};
+            (data || []).forEach(function (r) {
+                var v = r[field];
+                if (v != null && v !== '') set[v] = true;
+            });
+            return Object.keys(set).sort(function (a, b) {
+                return a.localeCompare(b, 'vi');
+            }).map(function (v) { return { ID: v, TEN: v }; });
+        };
+        var pushToCombo = function (arr, place, title) {
+            edu.system.loadToCombo_data({
+                data: arr,
+                renderInfor: { id: "ID", parentId: "", name: "TEN", code: "", avatar: "" },
+                renderPlace: [place],
+                type: "",
+                title: title
+            });
+            $('#' + place).val('').trigger('change');
+        };
+        pushToCombo(makeDistinct('QLSV_TRANGTHAINGUOIHOC_TEN'),
+                    'dropFilter_QSL_TrangThai', '-- Tất cả tình trạng --');
+        pushToCombo(makeDistinct('DAOTAO_CHUONGTRINH_TEN'),
+                    'dropFilter_QSL_ChuongTrinh', '-- Tất cả chương trình --');
+        pushToCombo(makeDistinct('DAOTAO_LOPQUANLY_TEN'),
+                    'dropFilter_QSL_LopHoc', '-- Tất cả lớp học --');
+        pushToCombo(makeDistinct('DAOTAO_KHOADAOTAO_TEN'),
+                    'dropFilter_QSL_KhoaHoc', '-- Tất cả khóa học --');
+        pushToCombo(makeDistinct('KHOAQUANLY_TEN'),
+                    'dropFilter_QSL_KhoaQuanLy', '-- Tất cả khoa quản lý --');
+        pushToCombo(makeDistinct('DAOTAO_HEDAOTAO_TEN'),
+                    'dropFilter_QSL_HeDaoTao', '-- Tất cả hệ đào tạo --');
+    },
+    _applyFilter_QuanSoLop: function () {
+        var me = this;
+        var raw = me.dtQuanSoLop_Raw || [];
+        var kw = ($('#txtSearch_QuanSoLop').val() || '').trim().toLowerCase();
+        var trangThai = $('#dropFilter_QSL_TrangThai').val() || '';
+        var chuongTrinh = $('#dropFilter_QSL_ChuongTrinh').val() || '';
+        var lopHoc = $('#dropFilter_QSL_LopHoc').val() || '';
+        var khoaHoc = $('#dropFilter_QSL_KhoaHoc').val() || '';
+        var khoaQuanLy = $('#dropFilter_QSL_KhoaQuanLy').val() || '';
+        var heDaoTao = $('#dropFilter_QSL_HeDaoTao').val() || '';
+
+        me.dtQuanSoLop = raw.filter(function (r) {
+            if (trangThai && (r.QLSV_TRANGTHAINGUOIHOC_TEN || '') !== trangThai) return false;
+            if (chuongTrinh && (r.DAOTAO_CHUONGTRINH_TEN || '') !== chuongTrinh) return false;
+            if (lopHoc && (r.DAOTAO_LOPQUANLY_TEN || '') !== lopHoc) return false;
+            if (khoaHoc && (r.DAOTAO_KHOADAOTAO_TEN || '') !== khoaHoc) return false;
+            if (khoaQuanLy && (r.KHOAQUANLY_TEN || '') !== khoaQuanLy) return false;
+            if (heDaoTao && (r.DAOTAO_HEDAOTAO_TEN || '') !== heDaoTao) return false;
+            if (kw) {
+                var maso = String(r.QLSV_NGUOIHOC_MASO || '').toLowerCase();
+                var full = ((r.QLSV_NGUOIHOC_HODEM || '') + ' ' + (r.QLSV_NGUOIHOC_TEN || ''))
+                                .trim().toLowerCase();
+                if (maso.indexOf(kw) === -1 && full.indexOf(kw) === -1) return false;
+            }
+            return true;
+        });
+    },
+    render_QuanSoLop: function () {
+        var me = this;
+        me._applyFilter_QuanSoLop();
+        var data = me.dtQuanSoLop || [];
+        $('#lblTong_QuanSoLop').text(data.length > 0
+            ? 'Tổng: ' + data.length + ' bản ghi'
+            : 'Không có dữ liệu phù hợp');
+        me.genTable_QuanSoTheoLop(data);
     },
     genTable_QuanSoTheoLop: function (data, iPager) {
         var me = this;

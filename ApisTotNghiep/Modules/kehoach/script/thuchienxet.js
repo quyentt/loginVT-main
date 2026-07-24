@@ -254,9 +254,9 @@ ThucHienXet.prototype = {
             callback: me.endHangDoi
         };
         edu.system.createHangDoi(me.objHangDoi);
-        $("#btnTaoHangDoi").click(function () {
+        $("#btnTaoHangDoi").off('click').on('click', function () {
             edu.system.confirm("Bạn có chắc chắn <span class='italic color-warning'>Thực hiện xét</span> không?");
-            $("#btnYes").click(function (e) {
+            $("#btnYes").off('click').one('click', function (e) {
                 me.TaoHangDoi();
             });
 
