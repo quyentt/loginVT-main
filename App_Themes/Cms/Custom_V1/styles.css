@@ -7246,3 +7246,9 @@ input[type="radio"] {
     border-top: 0 solid #d2d6de !important;
     margin-bottom: 0 !important;
 }
+/* ---------------------------------------- */
+.btn-soft-primary {
+  border: 1px solid rgba(13, 110, 253, .3) !important;
+  background: rgba(34, 166, 82, 0.1) !important;
+  color: var(--color-green2) !important;
+}

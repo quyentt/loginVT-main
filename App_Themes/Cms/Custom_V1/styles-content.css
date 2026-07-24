@@ -12261,12 +12261,6 @@ table#clone {
     flex-wrap: wrap;
 }
 
-.thaotac-list .item {
-    /* float: left;
-    margin-right: 10px;
-    margin-bottom: 10px; */
-}
-
 .thaotac-list .item .btn-soft-primary {
     border: 1px solid rgba(13, 110, 253, .3) !important;
 }
@@ -12286,10 +12280,6 @@ table#clone {
     border-radius: 10px !important;
 }
 
-.thaotac-list .btn i {
-    /* color: #fff !important; */
-}
-
 .thaotac-list .btn.btn-info i,
 .thaotac-list .btn.btn-info .title {
     color: #222 !important;
@@ -12298,9 +12288,7 @@ table#clone {
 .thaotac-list .btn i {
     font-size: 30px;
     font-weight: 700;
-
 }
-
 
 
 

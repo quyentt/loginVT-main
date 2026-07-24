@@ -211,21 +211,7 @@
             cursor: move;
             font-size: 12px;
         }
-/*   TAOCAUHOANCHINH  */
-/* === STYLE CÂU 1: TAOCAUHOANCHINH === */
-/* ============================
-   STYLE CHO CÂU 1 - TẠO CÂU HOÀN CHỈNH
-   ============================ */
-/* ===========================================
-   STYLE CHO CÂU 1 - TẠO CÂU HOÀN CHỈNH (MULTI DROP ZONE)
-   =========================================== */
-/* =============================================
-   STYLE CÂU 1 - TẠO CÂU HOÀN CHỈNH
-   ============================================= */
-/* =====================================
-   STYLE CÂU 1 - TẠO CÂU HOÀN CHỈNH
-   (giống hệt drop-zone của Câu 2)
-   ===================================== */
+
 
 .answer-line {
     display: flex;
