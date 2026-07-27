@@ -826,8 +826,8 @@ SinhVienNoTien.prototype = {
             },
             "aoColumns": [
                 {
-                    "mRender": function (nRow, aData, iDataIndex) {
-                        return '<input type="checkbox" class="ckbGuiEmail_NT" data-idx="' + iDataIndex + '" />';
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" class="ckbGuiEmail_NT" data-idx="' + nRow + '" />';
                     }
                 },
                 {
