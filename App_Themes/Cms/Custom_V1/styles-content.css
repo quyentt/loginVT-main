@@ -2564,7 +2564,7 @@
     line-height: 38px;
 }
 
-.aps-modal-nhansu .group-title i{
+.aps-modal-nhansu .group-title i {
     font-weight: bold;
 }
 
@@ -16160,22 +16160,70 @@ table#clone {
     height: 34px;
     padding: 12px 25px 24px 12px;
 }
-.aps-kehoach-thuchi-add .zone-box.aps-form .txtMota_KHTC{
+
+.aps-kehoach-thuchi-add .zone-box.aps-form .txtMota_KHTC {
     height: 86px !important;
 }
+
 .box-view.aps-kehoach-thuchi-add .aps-form .aps-form-item .aps-form-input .selection .select2-selection__rendered {
     padding-left: 0px !important;
     padding-top: 3px !important;
 }
+
 .aps-taichinh-l .box-header .bg-light-blue.badge {
     position: absolute;
     right: 0;
     top: 2px;
 }
+
 .aps-table-select .aps-hienthi-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 24px !important;
 }
-.aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow{
+
+.aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 1px !important;
     right: 3px !important;
+}
+
+/* ---------------- */
+.item-search-btn .btn.btn-outline-primary {
+    background: rgba(13, 110, 253, 0.1) !important;
+    color: var(--color-blue) !important;
+    border: 1px solid rgba(13, 110, 253, 1) !important;
+    font-weight: 600;
+}
+
+.item-search-btn .btn.btn-outline-primary:hover {
+    background: rgba(13, 110, 253, 1) !important;
+    color: #fff !important;
+}
+/* --- */
+.item-search-btn .btn.btn-outline-success {
+    background: rgba(34, 166, 82, 0.1) !important;
+    color: var(--color-green) !important;
+    border: 1px solid rgba(34, 166, 82, 1) !important;
+    font-weight: 600;
+}
+
+.item-search-btn .btn.btn-outline-success:hover {
+    background: rgba(34, 166, 82, 1) !important;
+    color: #fff !important;
+}
+/* --- */
+.item-search-btn .btn.btn-outline-secondary {
+    background: rgba(108, 117, 125, 0.1) !important;
+    color: var(--color-secondary) !important;
+    border: 1px solid rgba(108, 117, 125, 1) !important;
+    font-weight: 600;
+}
+
+.item-search-btn .btn.btn-outline-secondary:hover {
+    background: rgba(108, 117, 125, 1) !important;
+    color: #fff !important;
+}
+.aps-lable-name.text-right.pr15{
+    padding-right: 15px !important;
+}
+.tblDanhMucNganHang tr td:nth-child(4){
+    text-align: center;
 }
