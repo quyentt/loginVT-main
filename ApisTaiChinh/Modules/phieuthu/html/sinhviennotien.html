@@ -302,19 +302,15 @@
                 <div class="row aps-add-new pd20">
                     <div class="row aps-form mb-0">
                         <div class="row aps-form-item">
-                            <div class="col-sm-2 aps-lable-name">
+                            <div class="col-sm-12">
                                 <label style="font-weight: bold">Tiêu đề <span style="color:red">*</span></label>
-                            </div>
-                            <div class="col-sm-10 aps-form-input">
-                                <input type="text" id="txtTieuDeEmail_NT" class="form-control" placeholder="VD: [THÔNG BÁO] Nhắc nộp học phí" value="[THÔNG BÁO] Nhắc nộp các khoản phí còn nợ" />
+                                <textarea id="txtTieuDeEmail_NT" class="form-control" rows="3" style="resize: vertical; min-height: 70px;" placeholder="VD: [THÔNG BÁO] Nhắc nộp học phí">[THÔNG BÁO] Nhắc nộp các khoản phí còn nợ</textarea>
                             </div>
                             <div class="clear"></div>
                         </div>
                         <div class="row aps-form-item">
-                            <div class="col-sm-2 aps-lable-name">
+                            <div class="col-sm-12">
                                 <label style="font-weight: bold">Nội dung</label>
-                            </div>
-                            <div class="col-sm-10 aps-form-input">
                                 <div class="alert alert-info pd10" style="margin-bottom: 0">
                                     <i class="fa fa-info-circle"></i>
                                     Nội dung email sẽ được hệ thống <b>tự sinh</b> theo từng sinh viên: bao gồm <b>Họ tên, Mã SV, Lớp, Học kỳ, Khoản thu, Số tiền còn nợ</b>.
@@ -348,6 +344,7 @@
                                                 <th class="td-left">Lớp</th>
                                                 <th class="td-left">Email</th>
                                                 <th class="td-left">Khoản thu</th>
+                                                <th class="td-left" style="min-width: 320px;">Nội dung email</th>
                                                 <th class="td-right">Số tiền</th>
                                                 <th class="td-center">Trạng thái</th>
                                             </tr>
@@ -381,7 +378,7 @@
     </div>
 </div>
 
-<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.23"></script>
+<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.25"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['SinhVienNoTien'] = new SinhVienNoTien();

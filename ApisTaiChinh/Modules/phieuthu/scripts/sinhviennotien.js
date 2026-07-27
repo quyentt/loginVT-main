@@ -1067,6 +1067,7 @@ SinhVienNoTien.prototype = {
                 + '<td>' + (d.LOP || '') + '</td>'
                 + '<td>' + (email || '<i class="text-muted">(chưa có)</i>') + '</td>'
                 + '<td>' + (d.TAICHINH_CACKHOANTHU_TEN || '') + '</td>'
+                + '<td style="font-size:12px; line-height:1.4;">' + me.createEmailPreview_Text(d) + '</td>'
                 + '<td class="td-right">' + edu.util.formatCurrency(d.SOTIEN || 0) + '</td>'
                 + '<td class="td-center">' + strTrangThai + '</td>'
                 + '</tr>');
@@ -1107,6 +1108,14 @@ SinhVienNoTien.prototype = {
         html += btn(iTotalPage, '<i class="fa fa-angle-double-right"></i>', iCur === iTotalPage);
         html += '</div>';
         $("#zonePagination_GuiEmail_NT").html(html);
+    },
+    createEmailPreview_Text: function (aData) {
+        var strTen = (aData.HOTENNGUOIHOC || '');
+        var strMaSV = (aData.MASONGUOIHOC || '');
+        var strHocKy = (aData.DAOTAO_THOIGIANDAOTAO || '');
+        var strKhoanThu = (aData.TAICHINH_CACKHOANTHU_TEN || '');
+        var strSoTien = edu.util.formatCurrency(aData.SOTIEN || 0);
+        return 'Kính gửi <b>' + strTen + '</b> (MSSV: ' + strMaSV + '). Bạn hiện đang còn nợ khoản <b>' + strKhoanThu + '</b> học kỳ ' + strHocKy + ': <b style="color:#c0392b">' + strSoTien + ' đ</b>. Đề nghị hoàn tất nghĩa vụ nộp phí sớm nhất.';
     },
     createEmailTemplate_BaoNo: function (aData) {
         var strTen = (aData.HOTENNGUOIHOC || '');
@@ -1151,7 +1160,7 @@ SinhVienNoTien.prototype = {
     },
     send_Email_BaoNo: function () {
         var me = this;
-        var strTieuDe = $("#txtTieuDeEmail_NT").val();
+        var strTieuDe = ($("#txtTieuDeEmail_NT").val() || '').replace(/\s*[\r\n]+\s*/g, ' ').trim();
         if (!edu.util.checkValue(strTieuDe)) {
             edu.system.alert('Vui lòng nhập tiêu đề email!', 'w');
             return;
