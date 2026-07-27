@@ -18,6 +18,36 @@
         color: #3c8dbc;
         font-size: 15px;
     }
+    /* Floating footer cho form Sửa/Thêm kế hoạch: nút Đóng + Lưu luôn hiện
+       ở góc phải dưới viewport, dù danh sách sinh viên dài hàng nghìn dòng */
+    #zoneEdit .box-footer {
+        position: fixed;
+        bottom: 20px;
+        right: 25px;
+        left: auto;
+        width: fit-content;
+        max-width: fit-content;
+        background: #fff;
+        border: 1px solid #d2d6de;
+        border-radius: 8px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+        padding: 8px 12px;
+        margin: 0;
+        z-index: 1050;
+    }
+    #zoneEdit .box-footer .pull-right {
+        float: none !important;
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+    }
+    #zoneEdit .box-footer .btn {
+        margin: 0;
+    }
+    /* Chừa khoảng trống cuối form để nội dung không bị floating footer che */
+    #zoneEdit > .box-body {
+        padding-bottom: 80px;
+    }
 </style>
 <section class="content aps-TotNghiep">
     <div class="row aps-kehoach">
