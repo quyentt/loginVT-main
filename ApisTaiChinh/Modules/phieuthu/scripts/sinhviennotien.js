@@ -39,11 +39,13 @@ SinhVienNoTien.prototype = {
 
         $("#btnSearch_NT").click(function (e) {
             e.stopImmediatePropagation();
+            me.bSelectAllPages = false;
             me.getList_KhoanThu_ChuaXuat(edu.util.getValById('txtSearch_NT'));
         });
         $("#txtSearch_NT").keypress(function (e) {
             if (e.which === 13) {
                 e.stopImmediatePropagation();
+                me.bSelectAllPages = false;
                 me.getList_KhoanThu_ChuaXuat(edu.util.getValById('txtSearch_NT'));
             }
         });
@@ -106,6 +108,29 @@ SinhVienNoTien.prototype = {
             $("#tbldata_KhoanThu_ChuaXuat_NT input").each(function () {
                 this.checked = checked_status;
             });
+        });
+        $("#MainContent").delegate("#chkSelectAll_GuiEmail_NT", "click", function (e) {
+            e.stopImmediatePropagation();
+            var checked_status = this.checked;
+            me.bSelectAllPages = checked_status;
+            $("#tbldata_KhoanThu_ChuaXuat_NT tbody .ckbGuiEmail_NT").each(function () {
+                this.checked = checked_status;
+            });
+        });
+        $("#MainContent").delegate(".ckbGuiEmail_NT", "click", function (e) {
+            e.stopImmediatePropagation();
+            if (!this.checked) {
+                me.bSelectAllPages = false;
+                $("#chkSelectAll_GuiEmail_NT").prop('checked', false);
+            }
+        });
+        $("#btnGuiEmail_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            me.openModal_GuiEmail();
+        });
+        $("#btnConfirmGuiEmail_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            me.send_Email_BaoNo();
         });
 
         //Xuất báo cáo//Xuất báo cáo
@@ -770,6 +795,7 @@ SinhVienNoTien.prototype = {
     },
     genTable_KhoanThu_ChuaXuat: function (data, iPager) {
         var me = this;
+        me.dtNoTien = data || [];
         var strTable_Id = "tbldata_KhoanThu_ChuaXuat_NT";
         var jsonForm = {
             strTable_Id: strTable_Id,
@@ -779,13 +805,17 @@ SinhVienNoTien.prototype = {
                 iDataRow: iPager,
             },
             colPos: {
-                left: [1],
-                center: [0, 4],
-                right: [7]
+                left: [2],
+                center: [0, 1, 5],
+                right: [8]
             },
             "aoColumns": [
                 {
-                    //"mDataProp": "MASONGUOIHOC",
+                    "mRender": function (nRow, aData, iDataIndex) {
+                        return '<input type="checkbox" class="ckbGuiEmail_NT" data-idx="' + iDataIndex + '" />';
+                    }
+                },
+                {
                     "mRender": function (nRow, aData) {
                         return '<span name="' + aData.QLSV_NGUOIHOC_ID + '">' + aData.MASONGUOIHOC + '</span>';
                     }
@@ -812,23 +842,259 @@ SinhVienNoTien.prototype = {
         };
         edu.system.loadToTable_data(jsonForm);
         if (data !== undefined && data.length > 0) {
-            edu.system.insertSumAfterTable(strTable_Id, [7]);
-            $("#" + strTable_Id + " tfoot tr td:eq(7)").attr("style", "text-align: right;");
+            var rowsSwap = document.getElementById(strTable_Id).getElementsByTagName('tbody')[0].rows;
+            var iPageIndex = (iPager && iPager.pageIndex) ? iPager.pageIndex : (edu.system.pageIndex_default || 1);
+            var iPageSize = (iPager && iPager.pageSize) ? iPager.pageSize : (edu.system.pageSize_default || 10);
+            var iSttStart = (iPageIndex - 1) * iPageSize;
+            for (var iSw = 0; iSw < rowsSwap.length; iSw++) {
+                if (rowsSwap[iSw].cells.length >= 2) {
+                    var checkboxHtml = rowsSwap[iSw].cells[1].innerHTML;
+                    rowsSwap[iSw].cells[0].innerHTML = checkboxHtml;
+                    rowsSwap[iSw].cells[1].innerHTML = (iSttStart + iSw + 1);
+                }
+            }
+            if (me.bSelectAllPages) {
+                $("#chkSelectAll_GuiEmail_NT").prop("checked", true);
+                $("#tbldata_KhoanThu_ChuaXuat_NT tbody .ckbGuiEmail_NT").prop('checked', true);
+            } else {
+                $("#chkSelectAll_GuiEmail_NT").prop("checked", false);
+            }
+            edu.system.insertSumAfterTable(strTable_Id, [8]);
+            $("#" + strTable_Id + " tfoot tr td:eq(8)").attr("style", "text-align: right;");
             var x = document.getElementById(strTable_Id).getElementsByTagName('tbody')[0].rows;
             for (var i = 0; i < x.length; i++) {
-                //$(x[i]).attr("name", x[i].id);
                 x[i].id = '';
             }
             edu.system.collageInTable({
                 strTable_Id: strTable_Id,
                 iBatDau: 1,
                 iKetThuc: 1,
-                arrStr: [2, 3, 4, 5, 6],
-                arrFloat: [7],
+                arrStr: [3, 4, 5, 6, 7],
+                arrFloat: [8],
             });
         } else {
+            $("#chkSelectAll_GuiEmail_NT").prop("checked", false);
             $("#" + strTable_Id + " tfoot").html('');
         }
+    },
+    /*------------------------------------------
+    --Discription: [2] Gửi Email báo nợ
+    -------------------------------------------*/
+    getEmail_NguoiHoc: function (aData) {
+        return aData.TTLL_EMAILCANHAN || aData.EMAIL_CANHAN || aData.EMAIL || aData.DIACHIEMAIL || aData.EMAILCANHAN || '';
+    },
+    validateEmail: function (email) {
+        if (!email) return false;
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    },
+    openModal_GuiEmail: function () {
+        var me = this;
+        if (me.bSelectAllPages) {
+            me.getAll_KhoanThu_ForEmail(function (arrAll) {
+                if (!arrAll || arrAll.length === 0) {
+                    edu.system.alert('Không có sinh viên nào khớp bộ lọc!', 'w');
+                    return;
+                }
+                me.arrEmailQueue = arrAll;
+                me.genPreview_GuiEmail(arrAll);
+                $("#zonePercent_GuiEmail_NT").html('');
+                $("#myModalGuiEmail_NT").modal('show');
+            });
+            return;
+        }
+        var arrSelected = [];
+        $("#tbldata_KhoanThu_ChuaXuat_NT tbody .ckbGuiEmail_NT:checked").each(function () {
+            var idx = parseInt($(this).attr('data-idx'));
+            if (!isNaN(idx) && me.dtNoTien && me.dtNoTien[idx]) {
+                arrSelected.push(me.dtNoTien[idx]);
+            }
+        });
+        if (arrSelected.length === 0) {
+            edu.system.alert('Vui lòng chọn ít nhất 1 sinh viên để gửi email!', 'w');
+            return;
+        }
+        me.arrEmailQueue = arrSelected;
+        me.genPreview_GuiEmail(arrSelected);
+        $("#zonePercent_GuiEmail_NT").html('');
+        $("#myModalGuiEmail_NT").modal('show');
+    },
+    getAll_KhoanThu_ForEmail: function (callback) {
+        var me = this;
+        var strLoaiKhoanThu = edu.extend.getCheckedCheckBoxByClassName('ckbLKT_NT').toString();
+        var strTrangThaiNguoiHoc_Id = edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_LHD').toString();
+        if (strLoaiKhoanThu === '') {
+            edu.system.alert('Vui lòng chọn khoản thu!', 'w');
+            callback([]);
+            return;
+        }
+        var obj_list = {
+            'action': 'TC_NguoiHoc/LayDSNguoiHocConNoTien',
+            'versionAPI': 'v1.0',
+            'pageIndex': 1,
+            'pageSize': 1000000,
+            'strTrangThaiNguoiHoc_Id': strTrangThaiNguoiHoc_Id,
+            'strTAICHINH_CacKhoanThu_Ids': strLoaiKhoanThu,
+            'strTaiChinh_KhoanKhac_Ids': edu.util.getValById('dropAAAA'),
+            'strTuNgay': edu.util.getValById('txtSearch_TuNgay_NT'),
+            'strDenNgay': edu.util.getValById('txtSearch_DenNgay_NT'),
+            'strHeDaoTao_Id': edu.util.getValById("dropSearch_HeDaoTao_NT"),
+            'strKhoaDaoTao_Id': edu.util.getValById("dropSearch_KhoaDaoTao_NT"),
+            'strChuongTrinh_Id': edu.util.getValById("dropSearch_ChuongTrinh_NT"),
+            'strLopQuanLy_Id': edu.util.getValById("dropSearch_Lop_NT"),
+            'strTuKhoa': edu.util.getValById("txtSearch_NT"),
+            'strNguoiDung_Id': edu.util.getValById("dropSearch_NguoiThu_NT"),
+            'strNamNhapHoc': edu.util.getValCombo('dropSearch_NamNhapHoc_IHD'),
+            'strKhoaQuanLy_Id': edu.util.getValCombo('dropSearch_KhoaQuanLy_IHD'),
+        };
+        edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                edu.system.endLoading();
+                if (data.Success) {
+                    callback(data.Data || []);
+                } else {
+                    edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
+                    callback([]);
+                }
+            },
+            error: function (er) {
+                edu.system.endLoading();
+                edu.extend.notifyBeginLoading("Lỗi: " + JSON.stringify(er), "w");
+                callback([]);
+            },
+            type: "POST",
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+    genPreview_GuiEmail: function (arrData) {
+        var me = this;
+        var row = '';
+        var iSoLuongGui = 0;
+        for (var i = 0; i < arrData.length; i++) {
+            var d = arrData[i];
+            var email = me.getEmail_NguoiHoc(d);
+            var isValid = me.validateEmail(email);
+            var strTrangThai = isValid
+                ? '<span class="label label-success">Sẵn sàng</span>'
+                : '<span class="label label-danger" title="Thiếu email hoặc email không hợp lệ">Thiếu email</span>';
+            if (isValid) iSoLuongGui++;
+            row += '<tr>';
+            row += '<td class="td-center">' + (i + 1) + '</td>';
+            row += '<td>' + (d.MASONGUOIHOC || '') + '</td>';
+            row += '<td>' + (d.HOTENNGUOIHOC || '') + '</td>';
+            row += '<td>' + (d.LOP || '') + '</td>';
+            row += '<td>' + (email || '<i class="text-muted">(chưa có)</i>') + '</td>';
+            row += '<td>' + (d.TAICHINH_CACKHOANTHU_TEN || '') + '</td>';
+            row += '<td class="td-right">' + edu.util.formatCurrency(d.SOTIEN || 0) + '</td>';
+            row += '<td class="td-center">' + strTrangThai + '</td>';
+            row += '</tr>';
+        }
+        $("#tblPreviewGuiEmail_NT tbody").html(row);
+        $("#lblSoLuongGuiEmail_NT").text(iSoLuongGui + '/' + arrData.length);
+    },
+    createEmailTemplate_BaoNo: function (aData) {
+        var strTen = (aData.HOTENNGUOIHOC || '');
+        var strMaSV = (aData.MASONGUOIHOC || '');
+        var strLop = (aData.LOP || '');
+        var strHocKy = (aData.DAOTAO_THOIGIANDAOTAO || '');
+        var strKhoanThu = (aData.TAICHINH_CACKHOANTHU_TEN || '');
+        var strSoTien = edu.util.formatCurrency(aData.SOTIEN || 0);
+
+        var html = '';
+        html += '<html><head><style>';
+        html += 'body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }';
+        html += '.email-container { max-width: 640px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; }';
+        html += '.email-header { background-color: #c0392b; color: white; padding: 15px; text-align: center; }';
+        html += '.email-body { padding: 20px; background-color: #f9f9f9; }';
+        html += '.tbl-no { width: 100%; border-collapse: collapse; margin-top: 10px; }';
+        html += '.tbl-no th, .tbl-no td { border: 1px solid #ccc; padding: 8px; }';
+        html += '.tbl-no th { background: #eee; }';
+        html += '.money { color: #c0392b; font-weight: bold; }';
+        html += '.email-footer { padding: 15px; text-align: center; font-size: 12px; color: #666; }';
+        html += '</style></head><body>';
+        html += '<div class="email-container">';
+        html += '<div class="email-header"><h2>THÔNG BÁO NHẮC NỘP HỌC PHÍ</h2></div>';
+        html += '<div class="email-body">';
+        html += '<p>Kính gửi: <strong>' + strTen + '</strong></p>';
+        html += '<p>Mã sinh viên: <strong>' + strMaSV + '</strong> — Lớp: <strong>' + strLop + '</strong></p>';
+        html += '<p>Nhà trường xin thông báo, hiện tại bạn đang còn nợ khoản phí sau:</p>';
+        html += '<table class="tbl-no">';
+        html += '<tr><th>Học kỳ</th><th>Khoản thu</th><th>Số tiền còn nợ</th></tr>';
+        html += '<tr><td>' + strHocKy + '</td><td>' + strKhoanThu + '</td><td class="money" style="text-align:right">' + strSoTien + ' đ</td></tr>';
+        html += '</table>';
+        html += '<p style="margin-top:15px">Đề nghị bạn hoàn tất nghĩa vụ nộp phí trong thời gian sớm nhất để đảm bảo quyền lợi học tập.</p>';
+        html += '<p>Trân trọng.</p>';
+        html += '</div>';
+        html += '<div class="email-footer">';
+        html += '<p>Email này được gửi tự động từ hệ thống quản lý tài chính.</p>';
+        html += '<p>Vui lòng không trả lời email này.</p>';
+        html += '</div>';
+        html += '</div>';
+        html += '</body></html>';
+        return html;
+    },
+    send_Email_BaoNo: function () {
+        var me = this;
+        var strTieuDe = $("#txtTieuDeEmail_NT").val();
+        if (!edu.util.checkValue(strTieuDe)) {
+            edu.system.alert('Vui lòng nhập tiêu đề email!', 'w');
+            return;
+        }
+        var arrQueue = me.arrEmailQueue || [];
+        var arrValid = [];
+        for (var i = 0; i < arrQueue.length; i++) {
+            var email = me.getEmail_NguoiHoc(arrQueue[i]);
+            if (me.validateEmail(email)) {
+                arrQueue[i].__EMAIL_GUI = email;
+                arrValid.push(arrQueue[i]);
+            }
+        }
+        if (arrValid.length === 0) {
+            edu.system.alert('Không có sinh viên nào có email hợp lệ để gửi!', 'w');
+            return;
+        }
+        edu.system.genHTML_Progress("zonePercent_GuiEmail_NT", arrValid.length);
+        $("#btnConfirmGuiEmail_NT").prop('disabled', true);
+        for (var j = 0; j < arrValid.length; j++) {
+            me.sendEmail_One(arrValid[j], strTieuDe, j === arrValid.length - 1);
+        }
+    },
+    sendEmail_One: function (aData, strTieuDe, bLast) {
+        var me = this;
+        var strBody = me.createEmailTemplate_BaoNo(aData);
+        var obj_list = {
+            'action': 'CMS_NguoiDung/SendEmail',
+            'mailTo': aData.__EMAIL_GUI,
+            'mailSubject': strTieuDe,
+            'strBody': strBody,
+            'arrFileDinhKem': [],
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) console.log('Gửi email lỗi: ' + data.Message);
+            },
+            error: function (er) {
+                console.log('Gửi email lỗi (er): ' + JSON.stringify(er));
+            },
+            complete: function () {
+                edu.system.start_Progress("zonePercent_GuiEmail_NT");
+                if (bLast) {
+                    $("#btnConfirmGuiEmail_NT").prop('disabled', false);
+                    edu.system.alert('Đã hoàn tất gửi email!');
+                }
+            },
+            type: "POST",
+            action: obj_list.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------

@@ -194,6 +194,10 @@
                                     <i class="fa-solid fa-circle-dollar-to-slot"></i>
                                     <span class="lang" key="">Tổng hợp dữ liệu</span>
                                 </a>
+                                <a id="btnGuiEmail_NT" class="btn btn-primary ml-10" title="Gửi email báo nợ cho các sinh viên đã chọn">
+                                    <i class="fa fa-envelope"></i>
+                                    <span class="lang" key="">Gửi Email</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -252,6 +256,7 @@
                                         <table id="tbldata_KhoanThu_ChuaXuat_NT" class="table table-hover tbldata_KhoanThu_ChuaXuat_NT table-noborder">
                                             <thead>
                                                 <tr>
+                                                    <th class="td-center"><input type="checkbox" id="chkSelectAll_GuiEmail_NT" title="Chọn tất cả"/></th>
                                                     <th class="td-fixed td-center">Stt</th>
                                                     <th class="td-left"><span class="lang" key="">Mã số</span></th>
                                                     <th class="td-left"><span class="lang" key="">Họ tên</span></th>
@@ -264,7 +269,7 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="7" class="td-center">Hãy ấn nút tìm kiếm để tải danh
+                                                    <td colspan="9" class="td-center">Hãy ấn nút tìm kiếm để tải danh
                                                         sách</td>
                                                 </tr>
                                             </tbody>
@@ -284,7 +289,86 @@
 
 <!-- page script -->
 <div id="DSPhieuRut" style="display:none" class="DSPhieuRut"></div>
-<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.6"></script>
+
+<!-- Modal Gửi Email báo nợ -->
+<div class="modal fade" id="myModalGuiEmail_NT" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-1140">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h3 class="box-title"><i class="fa fa-envelope"></i> Gửi Email báo nợ học phí</h3>
+            </div>
+            <div class="modal-body pd0">
+                <div class="row aps-add-new pd20">
+                    <div class="row aps-form mb-0">
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-lable-name">
+                                <label style="font-weight: bold">Tiêu đề <span style="color:red">*</span></label>
+                            </div>
+                            <div class="col-sm-10 aps-form-input">
+                                <input type="text" id="txtTieuDeEmail_NT" class="form-control" placeholder="VD: [THÔNG BÁO] Nhắc nộp học phí" value="[THÔNG BÁO] Nhắc nộp các khoản phí còn nợ" />
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-2 aps-lable-name">
+                                <label style="font-weight: bold">Nội dung</label>
+                            </div>
+                            <div class="col-sm-10 aps-form-input">
+                                <div class="alert alert-info pd10" style="margin-bottom: 0">
+                                    <i class="fa fa-info-circle"></i>
+                                    Nội dung email sẽ được hệ thống <b>tự sinh</b> theo từng sinh viên: bao gồm <b>Họ tên, Mã SV, Lớp, Học kỳ, Khoản thu, Số tiền còn nợ</b>.
+                                    <br/><i>(Sau này sẽ hỗ trợ nội dung dạng công thức — người dùng chỉ cần gõ tiêu đề.)</i>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-12">
+                                <label style="font-weight: bold">Danh sách sinh viên sẽ gửi (<span id="lblSoLuongGuiEmail_NT">0</span>)</label>
+                                <div class="zone-content-table scroll-table-x" style="max-height: 300px; overflow-y: auto">
+                                    <table id="tblPreviewGuiEmail_NT" class="table table-hover table-bordered mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="td-center">Stt</th>
+                                                <th class="td-left">Mã SV</th>
+                                                <th class="td-left">Họ tên</th>
+                                                <th class="td-left">Lớp</th>
+                                                <th class="td-left">Email</th>
+                                                <th class="td-left">Khoản thu</th>
+                                                <th class="td-right">Số tiền</th>
+                                                <th class="td-center">Trạng thái</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="row aps-form-item">
+                            <div class="col-sm-12">
+                                <div id="zonePercent_GuiEmail_NT"></div>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between w-100">
+                    <div></div>
+                    <div>
+                        <a class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Đóng</a>
+                        <a id="btnConfirmGuiEmail_NT" class="btn btn-success"><i class="fa fa-envelope"></i> Gửi Email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.11"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['SinhVienNoTien'] = new SinhVienNoTien();
