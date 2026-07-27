@@ -143,14 +143,14 @@ ThucHienIn.prototype = {
             me._reBuildPhoi();
         });
 
-        //me._bindDragPhoi();
+        me._bindDragPhoi();
 
         // Khôi phục trạng thái toggle từ lần trước
-        //if (me.isCheDoTestOn()) {
-        //    $("body").addClass("che-do-test");
-        //    $("#zoneTestPhoi").show();
-        //    $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
-        //}
+        if (me.isCheDoTestOn()) {
+            $("body").addClass("che-do-test");
+            $("#zoneTestPhoi").show();
+            $("#btnCheDoTest").addClass("btn-success").removeClass("btn-warning");
+        }
     },
     /*------------------------------------------
     --Discription: [1] ACCESS DB ==> KhoanThu
