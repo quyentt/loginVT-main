@@ -292,7 +292,7 @@
 
 <!-- Modal Gửi Email báo nợ -->
 <div class="modal fade" id="myModalGuiEmail_NT" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-1140">
+    <div class="modal-dialog modal-1800" style="width: 95%; max-width: 1800px; margin: 2vh auto;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
@@ -325,8 +325,20 @@
                         </div>
                         <div class="row aps-form-item">
                             <div class="col-sm-12">
-                                <label style="font-weight: bold">Danh sách sinh viên sẽ gửi (<span id="lblSoLuongGuiEmail_NT">0</span>)</label>
-                                <div class="zone-content-table scroll-table-x" style="max-height: 300px; overflow-y: auto">
+                                <div class="d-flex align-items-center" style="margin-bottom: 5px; gap: 10px; flex-wrap: wrap;">
+                                    <label style="font-weight: bold; margin: 0">Danh sách sinh viên sẽ gửi (<span id="lblSoLuongGuiEmail_NT">0</span>)</label>
+                                    <div style="margin-left:auto">
+                                        <label style="font-weight: normal; margin: 0">Hiển thị</label>
+                                        <select id="dropPageSize_GuiEmail_NT" class="form-control" style="display:inline-block; width:auto; margin: 0 5px;">
+                                            <option value="50">50</option>
+                                            <option value="100" selected>100</option>
+                                            <option value="200">200</option>
+                                            <option value="500">500</option>
+                                        </select>
+                                        <label style="font-weight: normal; margin: 0">/trang</label>
+                                    </div>
+                                </div>
+                                <div style="max-height: 55vh; overflow-y: auto; overflow-x: auto; border: 1px solid #ddd;">
                                     <table id="tblPreviewGuiEmail_NT" class="table table-hover table-bordered mb-0">
                                         <thead>
                                             <tr>
@@ -343,6 +355,7 @@
                                         <tbody></tbody>
                                     </table>
                                 </div>
+                                <div id="zonePagination_GuiEmail_NT" class="d-flex justify-content-between align-items-center" style="margin-top: 8px; flex-wrap: wrap; gap: 10px;"></div>
                             </div>
                             <div class="clear"></div>
                         </div>
@@ -368,7 +381,7 @@
     </div>
 </div>
 
-<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.11"></script>
+<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.22"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['SinhVienNoTien'] = new SinhVienNoTien();
