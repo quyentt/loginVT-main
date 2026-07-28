@@ -290,6 +290,36 @@
 <!-- page script -->
 <div id="DSPhieuRut" style="display:none" class="DSPhieuRut"></div>
 
+<!-- Modal chọn phạm vi gửi email -->
+<div class="modal fade" id="myModalChonPhamVi_NT" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 520px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h3 class="box-title"><i class="fa fa-question-circle"></i> Chọn phạm vi gửi Email</h3>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px">Bạn muốn gửi email báo nợ cho:</p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a id="btnPhamVi_DaChon_NT" class="btn btn-primary" style="text-align: left; padding: 12px;">
+                        <i class="fa fa-check-square"></i>
+                        <b>Chỉ các sinh viên đã tick chọn</b>
+                        (<span id="lblSoLuongDaChon_NT">0</span> SV trên trang này)
+                    </a>
+                    <a id="btnPhamVi_TatCa_NT" class="btn btn-success" style="text-align: left; padding: 12px;">
+                        <i class="fa fa-list"></i>
+                        <b>Toàn bộ sinh viên khớp bộ lọc</b>
+                        (tất cả các trang)
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Gửi Email báo nợ -->
 <div class="modal fade" id="myModalGuiEmail_NT" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-1800" style="width: 95%; max-width: 1800px; margin: 2vh auto;">
@@ -378,7 +408,7 @@
     </div>
 </div>
 
-<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.26"></script>
+<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.32"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['SinhVienNoTien'] = new SinhVienNoTien();
