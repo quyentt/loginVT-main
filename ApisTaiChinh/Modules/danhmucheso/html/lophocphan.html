@@ -17,7 +17,7 @@
     #wrapScroll_tblLopHocPhan {
         max-height: 65vh;
         overflow: auto !important;
-        border: 1px solid #e0e0e0;
+        /* border: 1px solid #e0e0e0; */
     }
     /* Header dính khi cuộn dọc */
     #tblLopHocPhan thead th {
@@ -27,12 +27,13 @@
         z-index: 2;
     }
 </style>
-<section class="content">
-    <div class="row">
+<section class="content aps-taichinh">
+    <div class="row aps-lophocphan">
         <div class="zone-bus" id="zonebatdau">
-            <div class="box box-solid">
+             <!--Search zone-->
+            <div class="box box-solid box-search pd20 pb10">
                 <div class="box-body">
-                    <div class="group-title">
+                    <div class="group-title d-none">
                         <p class="titleSearchContent" data-toggle="collapse" data-target="#search">
                             <i class="fa fa-window-restore">
                             </i> <span class="lang" key="">Tìm kiếm</span>
@@ -70,10 +71,11 @@
                             <div class="col-sm-3 item-search">
                                 <select id="dropSearch_KeHoach" class="select-opt" style="width:100% !important"></select>
                             </div>
-                            <div class="col-sm-6 item-search  checkbox-inline user-check-print" style="padding-left: 20px">
+                            <div class="col-sm-3 item-search  checkbox-inline user-check-print" style="padding-left: 20px">
                                 <input style="float: left" type="checkbox" id="dChuaPhanCong" />
-                                <span><b>Chỉ hiện các lớp chưa phân công</b></span>
+                                <span class="line-38">Chỉ hiện các lớp chưa phân công</span>
                             </div>
+                            <div class="clear"></div>
                             <div class="col-sm-3 item-search">
                                 <input id="txtSearch_TuSo" class="form-control" placeholder="Số đã đăng ký(từ số)" />
                             </div>
@@ -81,25 +83,23 @@
                             <div class="col-sm-3 item-search">
                                 <input id="txtSearch_DenSo" class="form-control" placeholder="Số đã đăng ký(đến số)" />
                             </div>
-                            <div class="col-sm-3 item-search">
-                                <a id="btnSearch" class="btn btn-default"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <div class="dropdown" id="zonebtnBaoCao_LopHocPhan">
-                                </div>
-                            </div>
-                            <div class="col-sm-3 item-search">
+                            <div class="col-sm-6 item-search aps-list-btn">
+                                <a id="btnSearch" class="btn btn-default btn-search" style="margin-left: 0 !important;"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                                
                                 <div class="dropdown" id="zonebtnBaoCao_LopHocPhan_Import">
-                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown" style="margin-left: 0 !important;">
                                         <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu form-container">
                                         <li><a class="btnImportWithProce" name="IMPORTWITHPROC_LRST" title="" href="#"> 1. Import lớp riêng số tiền</a></li>
                                     </ul>
                                 </div>
+                                <div class="dropdown" id="zonebtnBaoCao_LopHocPhan"> </div>                          
+                               
                             </div>
+
                             <div class="clear"></div>
-                            <div class="col-sm-12 item-search">
+                            <div class="col-sm-12 item-search mt-10">
                                 <div class="group-title">
                                     <p class="titleSearchContent">
                                         <i class="fa fa-window-restore">
@@ -116,27 +116,28 @@
                 </div>
             </div>
             <div class="clear"></div>
-            <div class="box box-solid">
-                <div class="box-header with-border">
+
+            <div class="box box-solid pd20">
+                <div class="box-header">
                     <h3 class="box-title">
-                        <i class="fa fa-building"></i> Danh sách
+                        <i class="fa-light fa-list-timeline"></i>Danh sách
                         <span class="pull-right badge bg-light-blue">
                             <span id="lblLopHocPhan_Tong"></span>
                         </span>
                     </h3>
                     <div class="box-tools pull-right">
-                        <div class="col-sm-6 item-search" style="min-width: 220px">
+                        <div class="col-sm-6 item-search" style="min-width: 300px">
                             <select id="dropKhoanThu" class="select-opt" style="width:100% !important"></select>
                         </div>
                         <!--<a class="btn btn-primary" id="btnThietLapLopRieng" href="#"><i class="fa fa-paper-plane"></i> Thiết lập lớp riêng</a>-->
-                        <a class="btn btn-primary" id="btnSave_Tinh" href="#"><i class="fa fa-paper-plane"></i> Lưu</a>
+                        <a class="btn btn-primary" id="btnSave_Tinh" href="#" style="margin-left: 0 !important;"><i class="fa fa-save"></i> Lưu</a>
                     </div>
                 </div>
                 <div class="box-body">
                     <div id="topScroll_tblLopHocPhan" class="top-scroll-x" style="overflow-x:auto; overflow-y:hidden;">
                         <div id="topScrollInner_tblLopHocPhan" style="height:1px;"></div>
                     </div>
-                    <div id="wrapScroll_tblLopHocPhan" style="overflow-x:auto; overflow-y:hidden;">
+                    <div id="wrapScroll_tblLopHocPhan" style="overflow-x:auto; overflow-y:hidden;" class="aps-table-select">
                         <table id="tblLopHocPhan" class="table table-hover table-bordered">
                             <thead>
                                 <tr>

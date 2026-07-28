@@ -1536,7 +1536,7 @@
 }
 
 .aps-form .group-title-name {
-    border-bottom: 1px solid #e1e1e1;
+    border-bottom:0 solid #e1e1e1;
     margin-bottom: 10px;
     font-weight: bold;
 }
@@ -2767,9 +2767,9 @@
 }
 
 /*----*/
-.aps-nienChe-mucphi-detail .box.box-solid {
+/* .aps-nienChe-mucphi-detail .box.box-solid {
     padding: 15px 20px 15px 20px !important;
-}
+} */
 
 .aps-nienChe-mucphi-detail .zone-content,
 .aps-detail .zone-content,
@@ -11050,7 +11050,9 @@ table#clone {
     text-align: left !important;
 }
 
-#myModalAlert .modal-dialog {
+#myModalAlert .modal-dialog,
+.modal.fade .modal-dialog
+{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -16197,6 +16199,7 @@ table#clone {
     background: rgba(13, 110, 253, 1) !important;
     color: #fff !important;
 }
+
 /* --- */
 .item-search-btn .btn.btn-outline-success {
     background: rgba(34, 166, 82, 0.1) !important;
@@ -16209,6 +16212,7 @@ table#clone {
     background: rgba(34, 166, 82, 1) !important;
     color: #fff !important;
 }
+
 /* --- */
 .item-search-btn .btn.btn-outline-secondary {
     background: rgba(108, 117, 125, 0.1) !important;
@@ -16221,9 +16225,61 @@ table#clone {
     background: rgba(108, 117, 125, 1) !important;
     color: #fff !important;
 }
-.aps-lable-name.text-right.pr15{
+
+.aps-lable-name.text-right.pr15 {
     padding-right: 15px !important;
 }
-.tblDanhMucNganHang tr td:nth-child(4){
+
+.tblDanhMucNganHang tr td:nth-child(4) {
     text-align: center;
+}
+.aps-philop-detail .box.box-solid {
+    padding-top: 0 !important;
+}
+.box.box-solid .zoneMainContent {
+    /* padding:16px 20px 20px 20px; */
+}
+
+.zoneMainContent .zone-action .group-title p,
+.zone-bus .zone-action .group-title p,.zone-action .group-title p  {
+    font-size: 18px !important;
+    color: var(--color-blue) !important;
+    line-height: 38px;
+    font-weight: 700 !important;
+}
+.zoneMainContent .zone-action .group-title p i,
+.zone-bus .zone-action .group-title p i,.zone-action .group-title p i{
+    font-weight: 700 !important;
+    padding-right: 3px;
+}
+
+.aps-modal-hocphansotien .modal-content{
+
+}
+/* #main-content-wrapper .content.aps-danhmuccheso{
+    display: grid;
+     margin-left: 20px;   
+} */
+.content.aps-danhmuccheso .box-search.box-solid.box {
+    padding: 15px 17px 15px 17px !important;
+}
+
+.aps-table-tinhhocphi.table.aps-form tr,
+.aps-table-tinhhocphi.table.aps-form td{
+    border: 0 !important;
+}
+.aps-table-tinhhocphi.table.aps-form thead tr:last-child {
+    border-bottom: 0 solid #d1d1d1 !important;
+}
+.aps-quytrinh .pull-right.mb-20{
+    margin-bottom: 10px !important;
+}
+.aps-quytrinh .pull-right .btn {
+    margin-left: 8px !important;
+}
+.aps-table-tinhhocphi.table tr td.td-right {
+    /* padding-top: 0px !important; */
+}
+.zone-tinhhocphi-tab .nav-tabs-custom>.nav-tabs>li {
+    margin-bottom: -3px !important;
 }

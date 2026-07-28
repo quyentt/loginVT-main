@@ -7970,7 +7970,7 @@ systemroot.prototype = {
 
         row += '<div class="clear">Sheet import</div>';
         row += '<div>';
-        row += '<div style="width: 400px"><select id="dropSearch_BangA" class="select-opt"></select></div>';
+        row += '<div style="width: 400px;margin-top:5px"><select id="dropSearch_BangA" class="select-opt"></select></div>';
         row += '</div>';
 
         row += '<div class="clear"></div>';
@@ -7991,7 +7991,7 @@ systemroot.prototype = {
         row += '<div class="zone-content" id="tblImportLoi" style="display:none">';
         row += '<div class="box-header with-border">';
         row += '<h3 class="box-title"><i class="fa fa-list-alt"></i>Danh sách Lỗi</h3>';
-        row += '<div class="pull-right"><a class="btn btn-primary" id="btnDownloadAllTableLoi" title="tblBangB" href="#" ><i class="fa fa-cloud-download"></i> Tải file</a></div>';
+        row += '<div class="pull-right"><a class="btn btn-primary" id="btnDownloadAllTableLoi" title="tblBangB" href="#" ><i class="fa-duotone fa-solid fa-download"></i> Tải file</a></div>';
         row += '</div>';
         row += '<div class="clear"></div>';
         row += '<div class="row row-align">';

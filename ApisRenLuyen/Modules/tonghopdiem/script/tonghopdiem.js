@@ -768,7 +768,7 @@ TongHopDiem.prototype = {
         row += '<div class="row"><div class="col-sm-2">- Upload ' + strTenHienThi + ': </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
         row += '<div class="row"><div class="col-sm-2">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
         row += '<div class="clear">Sheet import</div>';
-        row += '<div><div style="width: 400px"><select id="dropSearch_BangA" class="select-opt"></select></div></div>';
+        row += '<div><div style="width: 400px;margin-top:5px"><select id="dropSearch_BangA" class="select-opt"></select></div></div>';
         row += '<div class="clear"></div>';
 
         // Vùng thanh tiến trình (ẩn cho tới khi bấm "Thực hiện import")
