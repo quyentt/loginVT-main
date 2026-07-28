@@ -3269,7 +3269,7 @@ input:active,
 }
 
 .box.box-solid>.box-header .btn.btn-default {
-  background-color: #e9e9e9 !important;
+  background-color:transparent !important;
   border-color: #e9e9e9 !important;
 }
 
@@ -7252,17 +7252,6 @@ input[type="radio"] {
 
 /* ---------------------------------------- */
 .content-wrapper .box {
-<<<<<<< HEAD
-    border-top: 0 solid #d2d6de !important;
-    margin-bottom: 0 !important;
-}
-/* ---------------------------------------- */
-.btn-soft-primary {
-  border: 1px solid rgba(13, 110, 253, .3) !important;
-  background: rgba(34, 166, 82, 0.1) !important;
-  color: var(--color-green2) !important;
-}
-=======
   border-top: 0 solid #d2d6de !important;
   margin-bottom: 0 !important;
 }
@@ -7386,4 +7375,27 @@ input[type="radio"] {
 .btn-soft-warning:hover .lang {
   color: #fff !important;
 }
->>>>>>> 210c28d810c8de5096cb5a2b5f5f9a72aed81435
+
+/* --btn-soft-secondary-- */
+.btn-soft-secondary {
+  background: rgba(108, 117, 125, 0.1) !important;
+  color: var(--color-warning) !important;
+  border: 1px solid rgba(108, 117, 125, 1) !important;
+}
+
+.btn-soft-secondary:hover {
+  background: rgba(108, 117, 125, 1) !important;
+  color: #fff !important;
+}
+
+.border-secondary {
+  border: 1px solid rgba(108, 117, 125, 1) !important;
+}
+
+.btn-soft-secondary .lang {
+  color: var(--color-save) !important;
+}
+
+.btn-soft-secondary:hover .lang {
+  color: #fff !important;
+}
