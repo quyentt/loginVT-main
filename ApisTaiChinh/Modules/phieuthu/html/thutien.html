@@ -83,8 +83,15 @@
         margin-bottom: 0px !important;
     }
 
-    #zoneBienLaiHoaDon {
-        padding-left: 20%
+    /* Override global styles-content.css: .aps-BienLaiHoaDon vốn là inline-block + nền #f1f1f1.
+       - Đổi nền sang trắng liền mạch với tờ biên lai
+       - display: block + width 100% để thanh nút bên dưới có đủ không gian ngang
+       - KHÔNG dùng !important cho display để không đè lên inline style="display: none" ban đầu
+         (JS slideDown() sẽ tự set display: block khi cần hiển thị) */
+    #zoneBienLaiHoaDon.aps-BienLaiHoaDon {
+        background: #fff !important;
+        display: block;
+        width: 100% !important;
     }
 
     .btnChiTietKhoanThu,
@@ -140,21 +147,35 @@
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
 
-    /* Thanh nút hành động phiếu thu / hóa đơn */
-    .aps-list-btn {
-        margin-top: 15px;
-        padding: 10px 12px;
-        background: #f8f9fa;
-        border-top: 1px solid #e5e7eb;
-        border-radius: 4px;
+    /* Thanh nút hành động phiếu thu / hóa đơn.
+       Global styles-content.css có .aps-BienLaiHoaDon .aps-list-btn { background: #f1f1f1 !important; padding: 20px }
+       — override bằng selector cùng specificity + !important để đổi nền sang trắng và có đường phân cách mảnh.
+       Thêm clear:both + width 100% để nếu template biên lai (server-side) có float, thanh nút vẫn xuống dòng full width. */
+    .aps-BienLaiHoaDon .aps-list-btn {
+        background: #fff !important;
+        padding: 12px 20px !important;
+        border-top: 1px solid #e5e7eb !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        width: 100% !important;
+        clear: both !important;
+        float: none !important;
+        position: static !important;
+        box-sizing: border-box !important;
     }
 
+    /* Force full-width flex layout — dùng !important để trung hòa inline style
+       "float:left; margin-left: 3px" hoặc "position: fixed" cũ có thể còn từ JS cached (changeWidthPrint) */
     #zoneActionHoaDon {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
-        width: 100%;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        float: none !important;
+        position: static !important;
+        margin: 0 !important;
+        right: auto !important;
     }
 
     #zoneActionHoaDon .aps-btn,
@@ -192,9 +213,80 @@
         margin: 0;
     }
 
-    /* Nút Đóng đẩy sang phải để tách khỏi nhóm hành động chính */
-    #btnClose_HDBL {
-        margin-left: auto;
+    /* Đồng bộ tông màu nút — dịu lại, tránh cụm đỏ+xanh+vàng chọi mắt.
+       Semantic vẫn giữ: đỏ = destructive, xanh = primary, teal = phụ, xám = đóng. */
+    #zoneActionHoaDon .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-primary {
+        background-color: #3b7ddd;
+        border-color: #3b7ddd;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-primary:hover {
+        background-color: #2e6bc4;
+        border-color: #2e6bc4;
+        color: #fff;
+    }
+
+    /* Nút "Thu tiền (không sinh HĐ/BL)" đổi từ vàng btn-warning sang teal — bớt chói, hài hòa với xanh chủ đạo */
+    #zoneActionHoaDon #btnThuTien .btn {
+        background-color: #17a2b8 !important;
+        border-color: #17a2b8 !important;
+        color: #fff !important;
+    }
+
+    #zoneActionHoaDon #btnThuTien .btn:hover {
+        background-color: #138496 !important;
+        border-color: #117a8b !important;
+        color: #fff !important;
+    }
+
+    #zoneActionHoaDon .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        color: #fff;
+    }
+
+    /* Nút Đóng — outline nhẹ để không tranh chú ý với các nút hành động */
+    #zoneActionHoaDon #btnClose_HDBL .btn {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        color: #495057;
+    }
+
+    #zoneActionHoaDon #btnClose_HDBL .btn:hover {
+        background-color: #f1f3f5;
+        border-color: #adb5bd;
+        color: #212529;
+    }
+
+    /* Nút Hủy (destructive) đẩy sang trái, tách hẳn khỏi nhóm hành động an toàn để tránh click nhầm.
+       Dùng !important vì rule #zoneActionHoaDon .aps-btn { margin: 0 } phía trên có specificity cao hơn. */
+    #zoneActionHoaDon #btnHuy_HDBL {
+        order: -1;
+        margin-right: auto !important;
+    }
+
+    /* Nút Đóng nằm cuối cùng bên phải, có khoảng cách rõ với nhóm nút hành động */
+    #zoneActionHoaDon #btnClose_HDBL {
+        margin-left: 16px !important;
     }
 
     /* Wrapper Liên hóa đơn */
@@ -206,6 +298,185 @@
         display: inline-flex;
         gap: 4px;
         margin-left: 4px;
+    }
+
+    /* =============================================================
+       DASHBOARD "TÌNH HÌNH HỌC PHÍ" — nền trắng, chữ đen đậm, icon frame màu tone
+       - Card nền TRẮNG thuần, chữ số ĐEN in đậm (dễ đọc)
+       - Icon 44px trong khung bo tròn NỀN TONE MÀU + icon đậm cùng tone → dùng để phân loại card
+       - Border trái 3px màu tone làm accent phân biệt nhóm (green/red/aqua/yellow)
+       - Nút "Chi tiết →" pill outline xám
+       - Scope trong #zoneThongTinBoSungTab1
+       ============================================================= */
+    #zoneThongTinBoSungTab1 .box.box-solid,
+    #zoneThongTinBoSungTab1 .box.box-solid > .box-body {
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 12px !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box {
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 14px !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+        box-shadow: none !important;
+        min-height: 108px !important;
+        margin: 0 !important;
+        background: #fff !important;
+        border: 1px solid #e5e7eb !important;
+        border-left-width: 3px !important;
+        color: #111827 !important;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    }
+
+    /* Border-left accent tone — phân loại nhóm card */
+    #zoneThongTinBoSungTab1 .small-box.bg-green { border-left-color: #10b981 !important; }
+    #zoneThongTinBoSungTab1 .small-box.bg-red { border-left-color: #ef4444 !important; }
+    #zoneThongTinBoSungTab1 .small-box.bg-aqua { border-left-color: #06b6d4 !important; }
+    #zoneThongTinBoSungTab1 .small-box.bg-yellow { border-left-color: #f59e0b !important; }
+
+    /* Icon frame — khung bo tròn NỀN TONE MÀU + icon ĐẬM cùng tone */
+    #zoneThongTinBoSungTab1 .small-box .icon {
+        position: static !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        border-radius: 10px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex-shrink: 0 !important;
+        opacity: 1 !important;
+        overflow: hidden;
+    }
+
+    /* CRITICAL: reset position của <i> — AdminLTE set position:absolute + top/right/font-size:90px làm icon bay ra khỏi khung */
+    #zoneThongTinBoSungTab1 .small-box .icon i {
+        position: static !important;
+        top: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        left: auto !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: inline-block !important;
+    }
+
+    /* Màu icon frame + icon theo tone (background nhạt + icon đậm) */
+    #zoneThongTinBoSungTab1 .small-box.bg-green .icon {
+        background: #d1fae5 !important;
+    }
+    #zoneThongTinBoSungTab1 .small-box.bg-green .icon i {
+        color: #059669 !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box.bg-red .icon {
+        background: #fee2e2 !important;
+    }
+    #zoneThongTinBoSungTab1 .small-box.bg-red .icon i {
+        color: #dc2626 !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box.bg-aqua .icon {
+        background: #cffafe !important;
+    }
+    #zoneThongTinBoSungTab1 .small-box.bg-aqua .icon i {
+        color: #0891b2 !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box.bg-yellow .icon {
+        background: #fef3c7 !important;
+    }
+    #zoneThongTinBoSungTab1 .small-box.bg-yellow .icon i {
+        color: #d97706 !important;
+    }
+
+    /* Cột nội dung bên phải */
+    #zoneThongTinBoSungTab1 .small-box .small-box-r {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+        flex: 1 1 auto !important;
+        min-width: 0;
+    }
+
+    /* Số tiền — ĐEN đậm, dễ đọc */
+    #zoneThongTinBoSungTab1 .small-box .inner h4 {
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        margin: 0 !important;
+        color: #111827 !important;
+        line-height: 1.15 !important;
+    }
+
+    /* Label mô tả — ĐEN in đậm cho dễ đọc */
+    #zoneThongTinBoSungTab1 .small-box .inner p {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        margin: 2px 0 0 !important;
+        color: #111827 !important;
+        line-height: 1.3;
+    }
+
+    /* Nút "Chi tiết →" — pill outline xám nhạt */
+    #zoneThongTinBoSungTab1 .small-box .small-box-footer {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 4px;
+        align-self: flex-start;
+        padding: 3px 12px !important;
+        background: #fff !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 999px !important;
+        color: #4b5563 !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        text-decoration: none !important;
+        margin-top: 6px !important;
+        line-height: 1.4;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box .small-box-footer:hover {
+        background: #f9fafb !important;
+        border-color: #9ca3af !important;
+        color: #111827 !important;
+        text-decoration: none !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box .small-box-footer i {
+        font-size: 11px !important;
+    }
+
+    /* Tab titles ("Tình hình học phí" / "Khoản nợ chung" / …) — ĐEN in đậm */
+    .aps-tabs-custom > .nav-tabs > li > a,
+    .aps-tabs-custom > .nav-tabs > li.tablinks > a {
+        color: #111827 !important;
+        font-weight: 700 !important;
+    }
+
+    .aps-tabs-custom > .nav-tabs > li:hover > a,
+    .aps-tabs-custom > .nav-tabs > li:focus > a {
+        color: #000 !important;
+    }
+
+    /* Tab active giữ nền xanh + chữ trắng như hiện tại */
+    .aps-tabs-custom > .nav-tabs > li.active > a,
+    .aps-tabs-custom > .nav-tabs > li.active > a:hover,
+    .aps-tabs-custom > .nav-tabs > li.active > a:focus {
+        color: #fff !important;
+        font-weight: 700 !important;
     }
 </style>
 <div id="MainContent">
@@ -518,8 +789,7 @@
                                                         <!-- small box -->
                                                         <div class="box box-solid">
                                                             <div class="box-body">
-                                                                <div class="small-box bg-aqua poiter btnDetail_DuRiengCacKhoan d-flex"
-                                                                    style="background-color: #00c0ef !important;">
+                                                                <div class="small-box bg-aqua poiter btnDetail_DuRiengCacKhoan d-flex">
                                                                     <div class="icon">
                                                                         <i class="fa-thin fa-square-dollar"></i>
                                                                     </div>
@@ -542,8 +812,7 @@
                                                         <!-- small box -->
                                                         <div class="box box-solid">
                                                             <div class="box-body">
-                                                                <div class="small-box bg-aqua poiter btnDetail_DuChungCacKhoan d-flex"
-                                                                    style="background-color: #00c0ef !important;">
+                                                                <div class="small-box bg-aqua poiter btnDetail_DuChungCacKhoan d-flex">
                                                                     <div class="icon">
                                                                         <i class="fa-thin fa-circle-dollar-to-slot"></i>
                                                                     </div>
@@ -2288,7 +2557,7 @@
     </div>
 </div>
 <!-- page script -->
-<script src="modules/phieuthu/scripts/thutien.js?v=1.0.0.14"></script>
+<script src="modules/phieuthu/scripts/thutien.js?v=1.0.0.16"></script>
 <script src="modules/phieuthu/scripts/n2vi.min.js"></script>
 <script src="modules/hoadon/scripts/qrcode.min.js"></script>
 <!--<script src="modules/phieuthu/scripts/misa_kyso.js"></script>
