@@ -10271,7 +10271,7 @@ table#clone {
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
     font-size: 14px !important;
-    height: 38px !important;
+    height: 30px !important;
 }
 
 .info-user .pcard i ,.box-TinhTrang .pcard i {
@@ -10279,9 +10279,13 @@ table#clone {
     text-align: center;
     font-size: 16px !important;
 }
-.info-user .pcard .lang {
+.info-user .pcard .lang,.info-user .pcard .lang {
     margin-left: 5px !important;
     font-size: 14px !important;
+    color: #888 !important;
+}
+.info-user-detail{
+    padding:10px 20px 20px 20px !important;
 }
 
 .form-container-header-bg {
