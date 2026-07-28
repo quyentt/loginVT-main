@@ -132,6 +132,21 @@ SinhVienNoTien.prototype = {
             e.stopImmediatePropagation();
             me.send_Email_BaoNo();
         });
+        $(document).delegate(".btnPrevPagePreview_NT", "click", function (e) {
+            e.stopImmediatePropagation();
+            if ($(this).prop('disabled')) return;
+            var iPage = parseInt($(this).attr('data-page'), 10);
+            if (!isNaN(iPage)) {
+                me.iCurrentPagePreview = iPage;
+                me.renderPreviewPage();
+            }
+        });
+        $(document).delegate("#dropPageSize_GuiEmail_NT", "change", function (e) {
+            e.stopImmediatePropagation();
+            me.iPageSizePreview = parseInt(this.value, 10) || 100;
+            me.iCurrentPagePreview = 1;
+            me.renderPreviewPage();
+        });
 
         //Xuất báo cáo//Xuất báo cáo
         edu.system.getList_MauImport("zonebtnBaoCao_SVNT", function (addKeyValue) {
@@ -811,8 +826,8 @@ SinhVienNoTien.prototype = {
             },
             "aoColumns": [
                 {
-                    "mRender": function (nRow, aData, iDataIndex) {
-                        return '<input type="checkbox" class="ckbGuiEmail_NT" data-idx="' + iDataIndex + '" />';
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" class="ckbGuiEmail_NT" data-idx="' + nRow + '" />';
                     }
                 },
                 {
@@ -881,7 +896,11 @@ SinhVienNoTien.prototype = {
     --Discription: [2] Gửi Email báo nợ
     -------------------------------------------*/
     getEmail_NguoiHoc: function (aData) {
-        return aData.TTLL_EMAILCANHAN || aData.EMAIL_CANHAN || aData.EMAIL || aData.DIACHIEMAIL || aData.EMAILCANHAN || '';
+        var email = aData.TTLL_EMAILCANHAN || aData.EMAIL_CANHAN || aData.EMAIL || aData.DIACHIEMAIL || aData.EMAILCANHAN || '';
+        if (!email && aData.MASONGUOIHOC) {
+            email = aData.MASONGUOIHOC + '@eaut.edu.vn';
+        }
+        return email;
     },
     validateEmail: function (email) {
         if (!email) return false;
@@ -890,17 +909,20 @@ SinhVienNoTien.prototype = {
     },
     openModal_GuiEmail: function () {
         var me = this;
+        function afterFetchDebt(arrAll) {
+            if (!arrAll || arrAll.length === 0) {
+                edu.system.alert('Không có sinh viên nào khớp bộ lọc!', 'w');
+                return;
+            }
+            $("#myModalAlert").modal("hide");
+            $("#hideOverlay_NT").remove();
+            me.arrEmailQueue = arrAll;
+            me.genPreview_GuiEmail(arrAll);
+            $("#zonePercent_GuiEmail_NT").html('');
+            $("#myModalGuiEmail_NT").modal('show');
+        }
         if (me.bSelectAllPages) {
-            me.getAll_KhoanThu_ForEmail(function (arrAll) {
-                if (!arrAll || arrAll.length === 0) {
-                    edu.system.alert('Không có sinh viên nào khớp bộ lọc!', 'w');
-                    return;
-                }
-                me.arrEmailQueue = arrAll;
-                me.genPreview_GuiEmail(arrAll);
-                $("#zonePercent_GuiEmail_NT").html('');
-                $("#myModalGuiEmail_NT").modal('show');
-            });
+            me.getAll_KhoanThu_ForEmail(afterFetchDebt);
             return;
         }
         var arrSelected = [];
@@ -914,10 +936,7 @@ SinhVienNoTien.prototype = {
             edu.system.alert('Vui lòng chọn ít nhất 1 sinh viên để gửi email!', 'w');
             return;
         }
-        me.arrEmailQueue = arrSelected;
-        me.genPreview_GuiEmail(arrSelected);
-        $("#zonePercent_GuiEmail_NT").html('');
-        $("#myModalGuiEmail_NT").modal('show');
+        afterFetchDebt(arrSelected);
     },
     getAll_KhoanThu_ForEmail: function (callback) {
         var me = this;
@@ -928,74 +947,175 @@ SinhVienNoTien.prototype = {
             callback([]);
             return;
         }
-        var obj_list = {
-            'action': 'TC_NguoiHoc/LayDSNguoiHocConNoTien',
-            'versionAPI': 'v1.0',
-            'pageIndex': 1,
-            'pageSize': 1000000,
-            'strTrangThaiNguoiHoc_Id': strTrangThaiNguoiHoc_Id,
-            'strTAICHINH_CacKhoanThu_Ids': strLoaiKhoanThu,
-            'strTaiChinh_KhoanKhac_Ids': edu.util.getValById('dropAAAA'),
-            'strTuNgay': edu.util.getValById('txtSearch_TuNgay_NT'),
-            'strDenNgay': edu.util.getValById('txtSearch_DenNgay_NT'),
-            'strHeDaoTao_Id': edu.util.getValById("dropSearch_HeDaoTao_NT"),
-            'strKhoaDaoTao_Id': edu.util.getValById("dropSearch_KhoaDaoTao_NT"),
-            'strChuongTrinh_Id': edu.util.getValById("dropSearch_ChuongTrinh_NT"),
-            'strLopQuanLy_Id': edu.util.getValById("dropSearch_Lop_NT"),
-            'strTuKhoa': edu.util.getValById("txtSearch_NT"),
-            'strNguoiDung_Id': edu.util.getValById("dropSearch_NguoiThu_NT"),
-            'strNamNhapHoc': edu.util.getValCombo('dropSearch_NamNhapHoc_IHD'),
-            'strKhoaQuanLy_Id': edu.util.getValCombo('dropSearch_KhoaQuanLy_IHD'),
-        };
-        edu.system.beginLoading();
-        edu.system.makeRequest({
-            success: function (data) {
-                edu.system.endLoading();
-                if (data.Success) {
-                    callback(data.Data || []);
-                } else {
-                    edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
+        var CHUNK_SIZE = 1000;
+        var arrAll = [];
+        var iTotalPage = 1;
+        var iTotalRow = 0;
+        if ($("#hideOverlay_NT").length === 0) {
+            $("head").append('<style id="hideOverlay_NT">#overlay{display:none !important;}</style>');
+        }
+
+        function buildParams(pageIndex) {
+            return {
+                'action': 'TC_NguoiHoc/LayDSNguoiHocConNoTien',
+                'versionAPI': 'v1.0',
+                'pageIndex': pageIndex,
+                'pageSize': CHUNK_SIZE,
+                'strTrangThaiNguoiHoc_Id': strTrangThaiNguoiHoc_Id,
+                'strTAICHINH_CacKhoanThu_Ids': strLoaiKhoanThu,
+                'strTaiChinh_KhoanKhac_Ids': edu.util.getValById('dropAAAA'),
+                'strTuNgay': edu.util.getValById('txtSearch_TuNgay_NT'),
+                'strDenNgay': edu.util.getValById('txtSearch_DenNgay_NT'),
+                'strHeDaoTao_Id': edu.util.getValById("dropSearch_HeDaoTao_NT"),
+                'strKhoaDaoTao_Id': edu.util.getValById("dropSearch_KhoaDaoTao_NT"),
+                'strChuongTrinh_Id': edu.util.getValById("dropSearch_ChuongTrinh_NT"),
+                'strLopQuanLy_Id': edu.util.getValById("dropSearch_Lop_NT"),
+                'strTuKhoa': edu.util.getValById("txtSearch_NT"),
+                'strNguoiDung_Id': edu.util.getValById("dropSearch_NguoiThu_NT"),
+                'strNamNhapHoc': edu.util.getValCombo('dropSearch_NamNhapHoc_IHD'),
+                'strKhoaQuanLy_Id': edu.util.getValCombo('dropSearch_KhoaQuanLy_IHD'),
+            };
+        }
+        function closeProgress() {
+            $("#myModalAlert").modal("hide");
+            $("#hideOverlay_NT").remove();
+        }
+        function fetchChunk(pageIndex) {
+            var obj_list = buildParams(pageIndex);
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (!data.Success) {
+                        closeProgress();
+                        edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
+                        callback([]);
+                        return;
+                    }
+                    if (data.Data && data.Data.length > 0) {
+                        arrAll = arrAll.concat(data.Data);
+                    }
+                    if (pageIndex === 1) {
+                        var pgRaw = data.Pager;
+                        var iParsed = parseInt(pgRaw, 10);
+                        if (!isNaN(iParsed) && iParsed > 0) {
+                            iTotalRow = iParsed;
+                        } else if (pgRaw && typeof pgRaw === 'object') {
+                            iTotalRow = parseInt(pgRaw.iTotalRow || pgRaw.TotalRow || pgRaw.total || pgRaw.iTotalRecord || pgRaw.TOTAL || pgRaw.TongSo || 0, 10) || arrAll.length;
+                        } else {
+                            iTotalRow = arrAll.length;
+                        }
+                        iTotalPage = Math.max(1, Math.ceil(iTotalRow / CHUNK_SIZE));
+                        edu.system.alert('<div style="text-align:left"><div id="zoneUnifiedProgress_NT_label" style="margin-bottom:8px"><i class="fa fa-download"></i> Đang tải danh sách sinh viên nợ tiền (<b>' + iTotalRow.toLocaleString('vi-VN') + '</b>)...</div><div id="zoneUnifiedProgress_NT_bar"></div></div>');
+                        edu.system.genHTML_Progress("zoneUnifiedProgress_NT_bar", iTotalPage);
+                    }
+                    edu.system.start_Progress("zoneUnifiedProgress_NT_bar");
+                    if (pageIndex < iTotalPage && data.Data && data.Data.length > 0) {
+                        fetchChunk(pageIndex + 1);
+                    } else {
+                        setTimeout(function () {
+                            callback(arrAll);
+                        }, 300);
+                    }
+                },
+                error: function (er) {
+                    closeProgress();
+                    edu.extend.notifyBeginLoading("Lỗi: " + JSON.stringify(er), "w");
                     callback([]);
-                }
-            },
-            error: function (er) {
-                edu.system.endLoading();
-                edu.extend.notifyBeginLoading("Lỗi: " + JSON.stringify(er), "w");
-                callback([]);
-            },
-            type: "POST",
-            action: obj_list.action,
-            versionAPI: obj_list.versionAPI,
-            contentType: true,
-            data: obj_list,
-            fakedb: []
-        }, false, false, false, null);
+                },
+                type: "POST",
+                action: obj_list.action,
+                versionAPI: obj_list.versionAPI,
+                contentType: true,
+                data: obj_list,
+                fakedb: []
+            }, false, false, false, null);
+        }
+        fetchChunk(1);
     },
     genPreview_GuiEmail: function (arrData) {
         var me = this;
-        var row = '';
+        me.arrPreviewData = arrData || [];
         var iSoLuongGui = 0;
-        for (var i = 0; i < arrData.length; i++) {
+        for (var i = 0; i < me.arrPreviewData.length; i++) {
+            if (me.validateEmail(me.getEmail_NguoiHoc(me.arrPreviewData[i]))) iSoLuongGui++;
+        }
+        $("#lblSoLuongGuiEmail_NT").text(iSoLuongGui + '/' + me.arrPreviewData.length);
+        me.iCurrentPagePreview = 1;
+        me.iPageSizePreview = parseInt($("#dropPageSize_GuiEmail_NT").val(), 10) || 100;
+        me.renderPreviewPage();
+    },
+    renderPreviewPage: function () {
+        var me = this;
+        var arrData = me.arrPreviewData || [];
+        var iPageSize = me.iPageSizePreview || 100;
+        var iTotalPage = Math.max(1, Math.ceil(arrData.length / iPageSize));
+        if (me.iCurrentPagePreview > iTotalPage) me.iCurrentPagePreview = iTotalPage;
+        if (me.iCurrentPagePreview < 1) me.iCurrentPagePreview = 1;
+        var iStart = (me.iCurrentPagePreview - 1) * iPageSize;
+        var iEnd = Math.min(iStart + iPageSize, arrData.length);
+        var arrBuf = [];
+        for (var i = iStart; i < iEnd; i++) {
             var d = arrData[i];
             var email = me.getEmail_NguoiHoc(d);
             var isValid = me.validateEmail(email);
             var strTrangThai = isValid
                 ? '<span class="label label-success">Sẵn sàng</span>'
                 : '<span class="label label-danger" title="Thiếu email hoặc email không hợp lệ">Thiếu email</span>';
-            if (isValid) iSoLuongGui++;
-            row += '<tr>';
-            row += '<td class="td-center">' + (i + 1) + '</td>';
-            row += '<td>' + (d.MASONGUOIHOC || '') + '</td>';
-            row += '<td>' + (d.HOTENNGUOIHOC || '') + '</td>';
-            row += '<td>' + (d.LOP || '') + '</td>';
-            row += '<td>' + (email || '<i class="text-muted">(chưa có)</i>') + '</td>';
-            row += '<td>' + (d.TAICHINH_CACKHOANTHU_TEN || '') + '</td>';
-            row += '<td class="td-right">' + edu.util.formatCurrency(d.SOTIEN || 0) + '</td>';
-            row += '<td class="td-center">' + strTrangThai + '</td>';
-            row += '</tr>';
+            arrBuf.push('<tr>'
+                + '<td class="td-center">' + (i + 1) + '</td>'
+                + '<td>' + (d.MASONGUOIHOC || '') + '</td>'
+                + '<td>' + (d.HOTENNGUOIHOC || '') + '</td>'
+                + '<td>' + (d.LOP || '') + '</td>'
+                + '<td>' + (email || '<i class="text-muted">(chưa có)</i>') + '</td>'
+                + '<td>' + (d.TAICHINH_CACKHOANTHU_TEN || '') + '</td>'
+                + '<td style="font-size:12px; line-height:1.4;">' + me.createEmailPreview_Text(d) + '</td>'
+                + '<td class="td-right">' + edu.util.formatCurrency(d.SOTIEN || 0) + '</td>'
+                + '<td class="td-center">' + strTrangThai + '</td>'
+                + '</tr>');
         }
-        $("#tblPreviewGuiEmail_NT tbody").html(row);
-        $("#lblSoLuongGuiEmail_NT").text(iSoLuongGui + '/' + arrData.length);
+        $("#tblPreviewGuiEmail_NT tbody").html(arrBuf.join(''));
+        me.renderPreviewPagination(iTotalPage, arrData.length, iStart, iEnd);
+    },
+    renderPreviewPagination: function (iTotalPage, iTotalRow, iStart, iEnd) {
+        var me = this;
+        var iCur = me.iCurrentPagePreview;
+        function btn(page, label, disabled, active) {
+            var cls = 'btn btn-default btn-sm';
+            if (active) cls += ' btn-primary';
+            if (disabled) cls += ' disabled';
+            return '<button class="' + cls + ' btnPrevPagePreview_NT" data-page="' + page + '"' + (disabled ? ' disabled' : '') + '>' + label + '</button>';
+        }
+        var html = '<div><i>' + (iTotalRow === 0 ? '0' : (iStart + 1) + ' đến ' + iEnd) + ' trong ' + iTotalRow.toLocaleString('vi-VN') + ' sinh viên</i></div>';
+        html += '<div style="display:flex; gap:4px; align-items:center; flex-wrap:wrap">';
+        html += btn(1, '<i class="fa fa-angle-double-left"></i>', iCur === 1);
+        html += btn(iCur - 1, '<i class="fa fa-angle-left"></i>', iCur === 1);
+        var iRange = 2;
+        var pages = [];
+        for (var p = 1; p <= iTotalPage; p++) {
+            if (p === 1 || p === iTotalPage || (p >= iCur - iRange && p <= iCur + iRange)) {
+                pages.push(p);
+            } else if (pages[pages.length - 1] !== '...') {
+                pages.push('...');
+            }
+        }
+        for (var k = 0; k < pages.length; k++) {
+            if (pages[k] === '...') {
+                html += '<span style="padding:0 4px">...</span>';
+            } else {
+                html += btn(pages[k], String(pages[k]), false, pages[k] === iCur);
+            }
+        }
+        html += btn(iCur + 1, '<i class="fa fa-angle-right"></i>', iCur === iTotalPage);
+        html += btn(iTotalPage, '<i class="fa fa-angle-double-right"></i>', iCur === iTotalPage);
+        html += '</div>';
+        $("#zonePagination_GuiEmail_NT").html(html);
+    },
+    createEmailPreview_Text: function (aData) {
+        var strTen = (aData.HOTENNGUOIHOC || '');
+        var strMaSV = (aData.MASONGUOIHOC || '');
+        var strHocKy = (aData.DAOTAO_THOIGIANDAOTAO || '');
+        var strKhoanThu = (aData.TAICHINH_CACKHOANTHU_TEN || '');
+        var strSoTien = edu.util.formatCurrency(aData.SOTIEN || 0);
+        return 'Kính gửi <b>' + strTen + '</b> (MSSV: ' + strMaSV + '). Bạn hiện đang còn nợ khoản <b>' + strKhoanThu + '</b> học kỳ ' + strHocKy + ': <b style="color:#c0392b">' + strSoTien + ' đ</b>. Đề nghị hoàn tất nghĩa vụ nộp phí sớm nhất.';
     },
     createEmailTemplate_BaoNo: function (aData) {
         var strTen = (aData.HOTENNGUOIHOC || '');
@@ -1040,7 +1160,7 @@ SinhVienNoTien.prototype = {
     },
     send_Email_BaoNo: function () {
         var me = this;
-        var strTieuDe = $("#txtTieuDeEmail_NT").val();
+        var strTieuDe = ($("#txtTieuDeEmail_NT").val() || '').replace(/\s*[\r\n]+\s*/g, ' ').trim();
         if (!edu.util.checkValue(strTieuDe)) {
             edu.system.alert('Vui lòng nhập tiêu đề email!', 'w');
             return;
