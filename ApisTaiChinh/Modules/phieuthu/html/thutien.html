@@ -83,8 +83,13 @@
         margin-bottom: 0px !important;
     }
 
-    #zoneBienLaiHoaDon {
-        padding-left: 20%
+    /* Override global styles-content.css: .aps-BienLaiHoaDon vốn là inline-block + nền #f1f1f1.
+       - Đổi nền sang trắng liền mạch với tờ biên lai
+       - Ép display: block + width 100% để thanh nút bên dưới có đủ không gian ngang, không bị stack dọc */
+    #zoneBienLaiHoaDon.aps-BienLaiHoaDon {
+        background: #fff !important;
+        display: block !important;
+        width: 100% !important;
     }
 
     .btnChiTietKhoanThu,
@@ -140,21 +145,35 @@
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
 
-    /* Thanh nút hành động phiếu thu / hóa đơn */
-    .aps-list-btn {
-        margin-top: 15px;
-        padding: 10px 12px;
-        background: #f8f9fa;
-        border-top: 1px solid #e5e7eb;
-        border-radius: 4px;
+    /* Thanh nút hành động phiếu thu / hóa đơn.
+       Global styles-content.css có .aps-BienLaiHoaDon .aps-list-btn { background: #f1f1f1 !important; padding: 20px }
+       — override bằng selector cùng specificity + !important để đổi nền sang trắng và có đường phân cách mảnh.
+       Thêm clear:both + width 100% để nếu template biên lai (server-side) có float, thanh nút vẫn xuống dòng full width. */
+    .aps-BienLaiHoaDon .aps-list-btn {
+        background: #fff !important;
+        padding: 12px 20px !important;
+        border-top: 1px solid #e5e7eb !important;
+        border-radius: 0 !important;
+        display: flex !important;
+        width: 100% !important;
+        clear: both !important;
+        float: none !important;
+        position: static !important;
+        box-sizing: border-box !important;
     }
 
+    /* Force full-width flex layout — dùng !important để trung hòa inline style
+       "float:left; margin-left: 3px" hoặc "position: fixed" cũ có thể còn từ JS cached (changeWidthPrint) */
     #zoneActionHoaDon {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: 8px;
-        width: 100%;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        float: none !important;
+        position: static !important;
+        margin: 0 !important;
+        right: auto !important;
     }
 
     #zoneActionHoaDon .aps-btn,
@@ -192,9 +211,80 @@
         margin: 0;
     }
 
-    /* Nút Đóng đẩy sang phải để tách khỏi nhóm hành động chính */
-    #btnClose_HDBL {
-        margin-left: auto;
+    /* Đồng bộ tông màu nút — dịu lại, tránh cụm đỏ+xanh+vàng chọi mắt.
+       Semantic vẫn giữ: đỏ = destructive, xanh = primary, teal = phụ, xám = đóng. */
+    #zoneActionHoaDon .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-primary {
+        background-color: #3b7ddd;
+        border-color: #3b7ddd;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-primary:hover {
+        background-color: #2e6bc4;
+        border-color: #2e6bc4;
+        color: #fff;
+    }
+
+    /* Nút "Thu tiền (không sinh HĐ/BL)" đổi từ vàng btn-warning sang teal — bớt chói, hài hòa với xanh chủ đạo */
+    #zoneActionHoaDon #btnThuTien .btn {
+        background-color: #17a2b8 !important;
+        border-color: #17a2b8 !important;
+        color: #fff !important;
+    }
+
+    #zoneActionHoaDon #btnThuTien .btn:hover {
+        background-color: #138496 !important;
+        border-color: #117a8b !important;
+        color: #fff !important;
+    }
+
+    #zoneActionHoaDon .btn-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+    }
+
+    #zoneActionHoaDon .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+        color: #fff;
+    }
+
+    /* Nút Đóng — outline nhẹ để không tranh chú ý với các nút hành động */
+    #zoneActionHoaDon #btnClose_HDBL .btn {
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        color: #495057;
+    }
+
+    #zoneActionHoaDon #btnClose_HDBL .btn:hover {
+        background-color: #f1f3f5;
+        border-color: #adb5bd;
+        color: #212529;
+    }
+
+    /* Nút Hủy (destructive) đẩy sang trái, tách hẳn khỏi nhóm hành động an toàn để tránh click nhầm.
+       Dùng !important vì rule #zoneActionHoaDon .aps-btn { margin: 0 } phía trên có specificity cao hơn. */
+    #zoneActionHoaDon #btnHuy_HDBL {
+        order: -1;
+        margin-right: auto !important;
+    }
+
+    /* Nút Đóng nằm cuối cùng bên phải, có khoảng cách rõ với nhóm nút hành động */
+    #zoneActionHoaDon #btnClose_HDBL {
+        margin-left: 16px !important;
     }
 
     /* Wrapper Liên hóa đơn */
@@ -2288,7 +2378,7 @@
     </div>
 </div>
 <!-- page script -->
-<script src="modules/phieuthu/scripts/thutien.js?v=1.0.0.14"></script>
+<script src="modules/phieuthu/scripts/thutien.js?v=1.0.0.16"></script>
 <script src="modules/phieuthu/scripts/n2vi.min.js"></script>
 <script src="modules/hoadon/scripts/qrcode.min.js"></script>
 <!--<script src="modules/phieuthu/scripts/misa_kyso.js"></script>

@@ -1178,17 +1178,38 @@ SinhVienNoTien.prototype = {
             edu.system.alert('Không có sinh viên nào có email hợp lệ để gửi!', 'w');
             return;
         }
-        edu.system.genHTML_Progress("zonePercent_GuiEmail_NT", arrValid.length);
+        me.iSendSuccess = 0;
+        me.iSendFailed = 0;
+        me.arrSendFailedLog = [];
         $("#btnConfirmGuiEmail_NT").prop('disabled', true);
-        for (var j = 0; j < arrValid.length; j++) {
-            me.sendEmail_One(arrValid[j], strTieuDe, j === arrValid.length - 1);
-        }
+        $("#zonePercent_GuiEmail_NT").html('<div id="zoneSendProgressWrap_NT" style="text-align:left"><div id="lblSendProgress_NT" style="margin-bottom:6px"><i class="fa fa-paper-plane"></i> Đang gửi email... (0/' + arrValid.length + ')</div><div id="zoneSendBar_NT"></div></div>');
+        edu.system.genHTML_Progress("zoneSendBar_NT", arrValid.length);
+        console.log('[GuiEmail][Send] Bắt đầu gửi ' + arrValid.length + ' email tuần tự...');
+        me.sendEmail_Sequential(arrValid, 0, strTieuDe);
     },
-    sendEmail_One: function (aData, strTieuDe, bLast) {
+    sendEmail_Sequential: function (arrValid, index, strTieuDe) {
         var me = this;
+        if (index >= arrValid.length) {
+            $("#btnConfirmGuiEmail_NT").prop('disabled', false);
+            var strMsg = '<b>Kết quả gửi email:</b><br/>'
+                + '<span style="color:green">✓ Thành công: ' + me.iSendSuccess + '</span><br/>'
+                + '<span style="color:red">✗ Thất bại: ' + me.iSendFailed + '</span>';
+            if (me.arrSendFailedLog.length > 0) {
+                strMsg += '<br/><br/><b>Chi tiết lỗi (tối đa 5):</b><br/>';
+                for (var k = 0; k < Math.min(5, me.arrSendFailedLog.length); k++) {
+                    strMsg += '- ' + me.arrSendFailedLog[k] + '<br/>';
+                }
+            }
+            console.log('[GuiEmail][Send] Hoàn tất. Success=' + me.iSendSuccess + ' Failed=' + me.iSendFailed);
+            console.log('[GuiEmail][Send] Failed details:', me.arrSendFailedLog);
+            edu.system.alert(strMsg);
+            return;
+        }
+        var aData = arrValid[index];
         var strBody = me.createEmailTemplate_BaoNo(aData);
         var obj_list = {
             'action': 'CMS_NguoiDung/SendEmail',
+            'type': 'POST',
             'mailTo': aData.__EMAIL_GUI,
             'mailSubject': strTieuDe,
             'strBody': strBody,
@@ -1196,17 +1217,26 @@ SinhVienNoTien.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                if (!data.Success) console.log('Gửi email lỗi: ' + data.Message);
+                if (data && data.Success) {
+                    me.iSendSuccess++;
+                    console.log('[GuiEmail][Send] ✓ ' + aData.__EMAIL_GUI);
+                } else {
+                    me.iSendFailed++;
+                    var strErr = (data && data.Message) ? data.Message : 'Không xác định';
+                    me.arrSendFailedLog.push(aData.__EMAIL_GUI + ' → ' + strErr);
+                    console.log('[GuiEmail][Send] ✗ ' + aData.__EMAIL_GUI + ' | ' + strErr, data);
+                }
             },
             error: function (er) {
-                console.log('Gửi email lỗi (er): ' + JSON.stringify(er));
+                me.iSendFailed++;
+                me.arrSendFailedLog.push(aData.__EMAIL_GUI + ' → (network) ' + JSON.stringify(er));
+                console.log('[GuiEmail][Send] ✗ ' + aData.__EMAIL_GUI + ' | network error', er);
             },
             complete: function () {
-                edu.system.start_Progress("zonePercent_GuiEmail_NT");
-                if (bLast) {
-                    $("#btnConfirmGuiEmail_NT").prop('disabled', false);
-                    edu.system.alert('Đã hoàn tất gửi email!');
-                }
+                var iDone = me.iSendSuccess + me.iSendFailed;
+                $("#lblSendProgress_NT").html('<i class="fa fa-paper-plane"></i> Đang gửi email... (' + iDone + '/' + arrValid.length + ') · ✓ ' + me.iSendSuccess + ' · ✗ ' + me.iSendFailed);
+                edu.system.start_Progress("zoneSendBar_NT");
+                me.sendEmail_Sequential(arrValid, index + 1, strTieuDe);
             },
             type: "POST",
             action: obj_list.action,

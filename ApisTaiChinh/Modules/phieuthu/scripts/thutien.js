@@ -6001,14 +6001,23 @@ PhieuThu.prototype = {
             lMauInPhieuThu = 1250;
         }
         var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
-        if (lMainPrint > lMauInPhieuThu) {
-            document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
-            document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
-        }
-        else {
-            document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = "20px";
-            document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
-        }
+        // COMMENT: đoạn set inline style dưới đây ép #zoneActionHoaDon thành float:left / position:fixed
+        // gây bug thanh nút hành động co hẹp ~200px và các nút stack dọc.
+        // Việc căn giữa phiếu + bố cục thanh nút đã được xử lý bằng CSS flex trong thutien.html.
+        // Giữ code để mở lại nếu cần rollback.
+        // if (lMainPrint > lMauInPhieuThu) {
+        //     document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
+        //     document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
+        // }
+        // else {
+        //     document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = "20px";
+        //     document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
+        // }
+        // Defensive: xóa mọi inline style cũ còn sót (nếu 1 nhánh code khác từng set float/position)
+        var elActionHoaDon = document.getElementById('zoneActionHoaDon');
+        if (elActionHoaDon) elActionHoaDon.removeAttribute('style');
+        var elBienLai = document.getElementById('zoneBienLaiHoaDon');
+        if (elBienLai) elBienLai.style.paddingLeft = '';
         edu.extend.genChonLien("MauInPhieuThu", "zoneLienHoaDon");
     },
     /*------------------------------------------
