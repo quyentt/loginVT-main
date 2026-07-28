@@ -85,10 +85,12 @@
 
     /* Override global styles-content.css: .aps-BienLaiHoaDon vốn là inline-block + nền #f1f1f1.
        - Đổi nền sang trắng liền mạch với tờ biên lai
-       - Ép display: block + width 100% để thanh nút bên dưới có đủ không gian ngang, không bị stack dọc */
+       - display: block + width 100% để thanh nút bên dưới có đủ không gian ngang
+       - KHÔNG dùng !important cho display để không đè lên inline style="display: none" ban đầu
+         (JS slideDown() sẽ tự set display: block khi cần hiển thị) */
     #zoneBienLaiHoaDon.aps-BienLaiHoaDon {
         background: #fff !important;
-        display: block !important;
+        display: block;
         width: 100% !important;
     }
 
