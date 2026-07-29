@@ -1017,7 +1017,6 @@ PhieuThuKhac.prototype = {
                     if (data.Data && data.Data.length) {
                         for (var i = 0; i < data.Data.length; i++) {
                             var r = data.Data[i];
-                            r.ID = r.ID || r.QLSV_NGUOIHOC_ID || r.PERSON_ID || '';
                             r.TENDOITUONG = r.TENDOITUONG || r.FULL_NAME || r.QLSV_NGUOIHOC_TEN || r.TEN || '';
                             r.MASODOITUONG = r.MASODOITUONG || r.MASO || r.MA_NGUOIHOC_CHINH || r.QLSV_NGUOIHOC_MASO || '';
                         }
@@ -4436,22 +4435,9 @@ PhieuThuKhac.prototype = {
         return iCountCheck;
     },
     changeWidthPrint: function () {
-        //Thay đổi vùng in
-        var lMauInPhieuThu = document.getElementById("MauInPhieuThu").offsetWidth;
-        console.log(lMauInPhieuThu);
-        if (lMauInPhieuThu > 700) lMauInPhieuThu += 240;
-        else {
-            lMauInPhieuThu = 1250;
-        }
-        var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
-        if (lMainPrint > lMauInPhieuThu) {
-            document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
-            document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
-        }
-        else {
-            document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = "20px";
-            document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
-        }
+        // Preview đã được center bằng CSS (.preview-area).
+        // Action bar đã sticky ở đáy - không cần position:fixed nữa.
+        document.getElementById('zoneBienLaiHoaDon').style.paddingLeft = "20px";
         edu.extend.genChonLien("MauInPhieuThu", "zoneLienHoaDon");
     },
 
