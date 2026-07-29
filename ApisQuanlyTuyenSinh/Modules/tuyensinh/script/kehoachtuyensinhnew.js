@@ -534,6 +534,11 @@ KeHoachTuyenSinhNew.prototype = {
             me.saveKhai_HoSo();
         });
 
+        // Cascade: chọn Nguyện vọng đầu ra → load Lớp dự kiến theo Đầu ra đó
+        $("#ddlKQ_NguyenVongDauRa").off('change.lopdukien').on('change.lopdukien', function () {
+            me._loadLopDuKien($(this).val());
+        });
+
         // Reset chế độ Sửa mỗi khi đóng modal Kết quả đăng ký (banner ẩn, nút Save về nhãn gốc)
         $("#ket-qua-dk").on('hidden.bs.modal', function () {
             me._exitSuaMode();
@@ -1537,6 +1542,62 @@ KeHoachTuyenSinhNew.prototype = {
         }, false, false, false, null);
     },
 
+    /*------------------------------------------
+    -- Load Lớp quản lý dự kiến theo Nguyện vọng đầu ra (cascade).
+    -- Origin API: PKG_CORE_TS_KEHOACH.LayDS_LopQuanLy_TheoDauRa
+    -- strDauRa_Id = giá trị đang chọn ở #ddlKQ_NguyenVongDauRa.
+    -------------------------------------------*/
+    _loadLopDuKien: function (strDauRa_Id) {
+        var $sel = $('#ddlKQ_LopDuKien');
+        if (!edu.util.checkValue(strDauRa_Id)) {
+            $sel.html('<option value="">-- Chọn nguyện vọng đầu ra trước --</option>')
+                .prop('disabled', true).val('');
+            return;
+        }
+        $sel.html('<option value="">-- Chọn lớp dự kiến --</option>').prop('disabled', false);
+        var obj_save = {
+            'action': 'TS_CORE_KEHOACH_MH/DSA4BRIeDS4xEDQgLw04HhUpJC4FIDQTIAPP',
+            'func': 'PKG_CORE_TS_KEHOACH.LayDS_LopQuanLy_TheoDauRa',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strDauRa_Id': strDauRa_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'XEM'
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data || !data.Success) return;
+                var rows = edu.util.checkValue(data.Data) ? data.Data : [];
+                var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+                var pick = function () {
+                    for (var k = 0; k < arguments.length; k++) {
+                        var v = arguments[k];
+                        if (v != null && String(v).trim() !== '') return String(v).trim();
+                    }
+                    return '';
+                };
+                for (var i = 0; i < rows.length; i++) {
+                    var d = rows[i];
+                    var id = pick(d.ID, d.Id, d.id);
+                    if (!id) continue;
+                    var name = pick(d.TEN, d.Ten, d.LOPQUANLY_TEN, d.LOP_QUANLY_TEN, d.TEN_LOP);
+                    var ma = pick(d.MA, d.Ma, d.LOPQUANLY_MA, d.LOP_QUANLY_MA, d.MA_LOP);
+                    var display = name || ma || ('[Lớp ' + (i + 1) + ']');
+                    if (name && ma && ma !== name) display += ' (' + ma + ')';
+                    $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
+                }
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
     _bindCascadeNative: function () {
         // Chỉ enable/disable Huyện + Xã theo Tỉnh/Huyện (native <select>, không select2).
         // genDropTinhThanh đã handle empty+populate options; ta chỉ bổ sung UX lock/unlock.
@@ -1642,6 +1703,10 @@ KeHoachTuyenSinhNew.prototype = {
             + '#ddlKQ_KhuVucUT, #ddlKQ_HocLuc, #ddlKQ_HanhKiem,'
             + '#ddlKQ_NguyenVongDauRa,'
             + '#ddlKQ_HD_DoiTuong, #ddlKQ_HD_HinhThucTT').val('');
+
+        // Lớp dự kiến: reset về placeholder disabled (chờ chọn NV đầu ra)
+        $('#ddlKQ_LopDuKien').html('<option value="">-- Chọn nguyện vọng đầu ra trước --</option>')
+            .prop('disabled', true).val('');
 
         // Cascade: clear Tỉnh + khóa lại Huyện/Xã về trạng thái ban đầu
         $('#ddlKQ_NS_Tinh, #ddlKQ_HK_Tinh').val('').trigger('change');   // trigger change để cascade fire
@@ -1801,6 +1866,7 @@ KeHoachTuyenSinhNew.prototype = {
 
             // Nguyện vọng — backend auto snapshot Hệ/Khóa/CT/NganhTS/NganhDT từ TS_KEHOACH_DAU_RA
             'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
+            'strDaoTao_LopQuanLy_Id_DK': g('ddlKQ_LopDuKien'),
 
             // Xét tuyển
             'strXetTuyen_TohopMon_Id': toHopMa,
