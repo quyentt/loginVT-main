@@ -502,6 +502,23 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div id="paging_NSDaChon_ThemNS" class="d-flex justify-content-between align-items-center mt-2 flex-wrap" style="gap:10px; display:none;">
+                                <div class="text-muted small">
+                                    Trang <b><span id="pgCur_NSDaChon">1</span>/<span id="pgTotal_NSDaChon">1</span></b>
+                                    &nbsp;·&nbsp; Tổng: <b><span id="pgSum_NSDaChon">0</span></b>
+                                    &nbsp;·&nbsp; Đã tick: <b><span id="pgChecked_NSDaChon">0</span></b>
+                                </div>
+                                <div class="d-flex align-items-center" style="gap:8px;">
+                                    <label class="small text-muted mb-0">Hiển thị</label>
+                                    <select id="pgSize_NSDaChon" class="form-select form-select-sm" style="width:auto;">
+                                        <option value="10">10</option>
+                                        <option value="20" selected>20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <ul id="pgList_NSDaChon" class="pagination pagination-sm m-0"></ul>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Section 2: Thông tin gán chung -->

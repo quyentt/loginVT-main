@@ -1630,6 +1630,7 @@
                     </div>
 
                     <div class="d-flex align-items-center mb-15 flex-wrap" style="gap:12px;">
+                        <button id="btnDownloadMauTT" class="btn btn-success" title="Tải file Excel mẫu với đầy đủ tên cột và 1 dòng dữ liệu ví dụ"><i class="fa-solid fa-file-arrow-down"></i>&nbsp;<span>Tải file mẫu</span></button>
                         <input type="file" id="fileImportTT" accept=".xlsx,.xls,.csv" class="form-control" style="max-width: 420px;" />
                         <button id="btnStartImportTT" class="btn btn-primary" disabled><i class="fas fa-play"></i><span>Bắt đầu nhập</span></button>
                         <button id="btnCancelImportTT" class="btn btn-danger d-none"><i class="fas fa-stop"></i><span>Dừng</span></button>
@@ -1829,10 +1830,10 @@
                                     <div class="aps-sv-section-title"><i class="fa-light fa-clipboard-list-check"></i> Thông tin xét tuyển</div>
                                     <div class="aps-sv-grid">
                                         <div class="aps-sv-field">
-                                            <label class="aps-sv-label">Phương thức tuyển sinh <span style="font-weight:500;color:#94a3b8">(chưa có API list phương thức theo đợt)</span></label>
+                                            <label class="aps-sv-label">Phương thức tuyển sinh</label>
                                             <div class="aps-sv-select">
                                                 <i class="fa-light fa-chevron-down"></i>
-                                                <select class="aps-sv-input" id="ddlKQ_PhuongThuc" disabled><option value="">Chưa có API phương thức theo đợt — bỏ trống</option></select>
+                                                <select class="aps-sv-input" id="ddlKQ_PhuongThuc"><option value="">-- Chọn phương thức tuyển sinh --</option></select>
                                             </div>
                                         </div>
                                         <div class="aps-sv-field">
@@ -1955,6 +1956,17 @@
                                             <div style="margin-top:6px;font-size:12px;color:#94a3b8;line-height:1.5;">
                                                 <i class="fa-light fa-circle-info"></i>
                                                 Danh sách load từ Kế hoạch đầu ra của KH tuyển sinh (và Đợt nếu có). Hệ / Khóa / Chương trình / Ngành TT / Ngành ĐT sẽ auto snapshot từ đầu ra được chọn.
+                                            </div>
+                                        </div>
+                                        <div class="aps-sv-field aps-sv-col-full">
+                                            <label class="aps-sv-label">Lớp dự kiến đầu ra</label>
+                                            <div class="aps-sv-select">
+                                                <i class="fa-light fa-chevron-down"></i>
+                                                <select class="aps-sv-input" id="ddlKQ_LopDuKien" disabled><option value="">-- Chọn nguyện vọng đầu ra trước --</option></select>
+                                            </div>
+                                            <div style="margin-top:6px;font-size:12px;color:#94a3b8;line-height:1.5;">
+                                                <i class="fa-light fa-circle-info"></i>
+                                                Danh sách lớp quản lý load theo Nguyện vọng đầu ra đã chọn.
                                             </div>
                                         </div>
                                         <div class="aps-sv-field">
@@ -2081,10 +2093,10 @@
                                     <div class="aps-sv-section-title"><i class="fa-light fa-money-check-dollar"></i> Thông tin thanh toán</div>
                                     <div class="aps-sv-grid">
                                         <div class="aps-sv-field">
-                                            <label class="aps-sv-label">Hình thức thanh toán</label>
+                                            <label class="aps-sv-label">Loại tài khoản ngân hàng</label>
                                             <div class="aps-sv-select">
                                                 <i class="fa-light fa-chevron-down"></i>
-                                                <select class="aps-sv-input" id="ddlKQ_HD_HinhThucTT"><option value="">-- Chọn hình thức thanh toán --</option></select>
+                                                <select class="aps-sv-input" id="ddlKQ_HD_HinhThucTT"><option value="">-- Chọn loại tài khoản --</option></select>
                                             </div>
                                         </div>
                                         <div class="aps-sv-field">

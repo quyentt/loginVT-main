@@ -666,6 +666,7 @@ TinhTrangQuanSo.prototype = {
         me.dtTrangThaiMoRong.forEach(e => {
             html += '<th class="td-center">' + e.TEN + '</th>';
         });
+        html += '<th class="td-center"><b>Tổng số</b></th>';
         html += '</tr>';
         if (strcheck != false) $("#tblViewCauTrucQuanSo thead").html(html);
     },
@@ -679,6 +680,7 @@ TinhTrangQuanSo.prototype = {
             me.dtTrangThaiMoRong.forEach(e => {
                 $(x[i]).append('<td style="text-align: center" class="count' + e.ID + ' btnDetail poiter" title="Xem chi tiết quân số trong lớp" id="lblQuanSo' + me.arrHead_Id[i] + '_' + e.ID + '"></td>');
             });
+            $(x[i]).append('<td style="text-align: center; font-weight: bold" class="lblTongCongDong" id="lblTongCong_' + me.arrHead_Id[i] + '"></td>');
         }
         for (var i = 0; i < me.arrHead_Id.length; i++) {
             me.getData_CauTrucQuanSo(me.arrHead_Id[i]);
@@ -744,17 +746,41 @@ TinhTrangQuanSo.prototype = {
     },
     endGetQuanSo: function () {
         var me = main_doc.TinhTrangQuanSo;
+        for (var i = 0; i < me.arrHead_Id.length; i++) {
+            var iTongDong = 0;
+            for (var j = 0; j < me.arrTrangThai_Id.length; j++) {
+                var iValue = parseInt($("#lblQuanSo" + me.arrHead_Id[i] + "_" + me.arrTrangThai_Id[j]).html());
+                if (!isNaN(iValue)) iTongDong += iValue;
+            }
+            me.dtTrangThaiMoRong.forEach(e => {
+                var iValue = parseInt($("#lblQuanSo" + me.arrHead_Id[i] + "_" + e.ID).html());
+                if (!isNaN(iValue)) iTongDong += iValue;
+            });
+            $("#lblTongCong_" + me.arrHead_Id[i]).html(iTongDong);
+        }
         $("#tblViewCauTrucQuanSo tfoot").html('<tr><th style="text-align: center" colspan="' + (me.iMaxLength + 1) + '">Tổng số</th></tr>');
+        var iTongToanBang = 0;
         for (var i = 0; i < me.arrTrangThai_Id.length; i++) {
             var idemSoLuong = 0;
             var arrClass = $("#tblViewCauTrucQuanSo tbody").find(".count" + me.arrTrangThai_Id[i]);
             for (var j = 0; j < arrClass.length; j++) {
-                var temp = arrClass[j].innerHTML;
-                if (temp != '' && parseInt(temp) != NaN)
-                    idemSoLuong += parseInt(temp);
+                var iValue = parseInt(arrClass[j].innerHTML);
+                if (!isNaN(iValue)) idemSoLuong += iValue;
             }
+            iTongToanBang += idemSoLuong;
             $("#tblViewCauTrucQuanSo tfoot tr").append('<th style="text-align: center">' + idemSoLuong + '</th>');
         }
+        me.dtTrangThaiMoRong.forEach(e => {
+            var idemSoLuong = 0;
+            var arrClass = $("#tblViewCauTrucQuanSo tbody").find(".count" + e.ID);
+            for (var j = 0; j < arrClass.length; j++) {
+                var iValue = parseInt(arrClass[j].innerHTML);
+                if (!isNaN(iValue)) idemSoLuong += iValue;
+            }
+            iTongToanBang += idemSoLuong;
+            $("#tblViewCauTrucQuanSo tfoot tr").append('<th style="text-align: center">' + idemSoLuong + '</th>');
+        });
+        $("#tblViewCauTrucQuanSo tfoot tr").append('<th style="text-align: center">' + iTongToanBang + '</th>');
     },
     report: function (strLoaiBaoCao) {
         var me = this;
