@@ -592,12 +592,12 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonIden_SoCCCD', 'strPersonIden_NgayCap', 'strPersonIden_NoiCap',
             'strPersonAddr_NS_Tinh_Ma', 'strPersonAddr_NS_Xa_Ma', 'strPersonAddr_NoiSinh',
             'strPersonAddr_HK_Tinh_Ma', 'strPersonAddr_HK_Xa_Ma', 'strPersonAddr_HK_SoNha',
-            'strPersonEdu_Tinh_Id', 'strPersonEdu_TruongMaTen', 'strPersonEdu_HocLuc', 'strPersonEdu_HanhKiem',
+            'strPersonEdu_Tinh_Ma', 'strPersonEdu_TruongMaTen', 'strPersonEdu_HocLuc', 'strPersonEdu_HanhKiem',
             'strPersonFam_Bo_HoTen', 'dPersonFam_Bo_NamSinh', 'strPersonFam_Bo_NoiO', 'strPersonFam_Bo_SDT',
             'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
             'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
             'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
-            'strNguyenVong_DauRa_Id', 'strMaNganhTrungTuyen', 'strMaCTDT',
+            'strDaoTao_LopQuanLy_DuKien', 'strMaNganhTrungTuyen', 'strMaCTDT',
             'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
             'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
             'strKetQua_QuyetDinh_Ma', 'strIntake_IntakeCode', 'strIntake_IntakeTypeCode',
@@ -622,7 +622,7 @@ KeHoachTuyenSinhNew.prototype = {
             strPersonIden_NoiCap: 'Cục CS QLHC về TTXH',
             strPersonAddr_NS_Tinh_Ma: '01', strPersonAddr_NS_Xa_Ma: '00004', strPersonAddr_NoiSinh: 'Hà Nội',
             strPersonAddr_HK_Tinh_Ma: '01', strPersonAddr_HK_Xa_Ma: '00004', strPersonAddr_HK_SoNha: 'Số 1, ngõ 12, phố ABC',
-            strPersonEdu_Tinh_Id: '', strPersonEdu_TruongMaTen: '01001-THPT Chuyên Hà Nội - Amsterdam',
+            strPersonEdu_Tinh_Ma: '', strPersonEdu_TruongMaTen: '01001-THPT Chuyên Hà Nội - Amsterdam',
             strPersonEdu_HocLuc: 'GIOI', strPersonEdu_HanhKiem: 'TOT',
             strPersonFam_Bo_HoTen: 'Nguyễn Văn B', dPersonFam_Bo_NamSinh: 1978,
             strPersonFam_Bo_NoiO: 'Hà Nội', strPersonFam_Bo_SDT: '0912345600',
@@ -631,7 +631,7 @@ KeHoachTuyenSinhNew.prototype = {
             strHoSo_KH_Dot_PT_Ma: 'PT01', strHoSo_DoiTuong_TS_Ma: '', strHoSo_DoiTuong_UT_Mas: '',
             strHoSo_KhuVuc_UT_Ma: 'KV3',
             strHoSo_MaHoSo: 'HS2026-0001', strHoSo_SoBaoDanh: 'HN2500001', strHoSo_Import_Batch_Ma: 'BATCH_2026_D1',
-            strNguyenVong_DauRa_Id: '', strMaNganhTrungTuyen: '7480201', strMaCTDT: 'CTDT001',
+            strDaoTao_LopQuanLy_DuKien: '', strMaNganhTrungTuyen: '7480201', strMaCTDT: 'CTDT001',
             strXetTuyen_TohopMon_Ma: 'A00', strXetTuyen_TohopMon_Code: 'A00', strXetTuyen_TohopMon_Ten: 'Toán, Vật lý, Hóa học',
             dXetTuyen_DiemUuTien: 0.25, dXetTuyen_DiemTongMon: 24.5, dXetTuyen_DiemTongXT: 24.75,
             strXT_Mon_Data: '{"Toan":8.5,"Ly":8.0,"Hoa":8.0}',
@@ -829,12 +829,12 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonIden_SoCCCD', 'strPersonIden_NgayCap', 'strPersonIden_NoiCap',
             'strPersonAddr_NS_Tinh_Ma', 'strPersonAddr_NS_Xa_Ma', 'strPersonAddr_NoiSinh',
             'strPersonAddr_HK_Tinh_Ma', 'strPersonAddr_HK_Xa_Ma', 'strPersonAddr_HK_SoNha',
-            'strPersonEdu_Tinh_Id', 'strPersonEdu_TruongMaTen', 'strPersonEdu_HocLuc', 'strPersonEdu_HanhKiem',
+            'strPersonEdu_Tinh_Ma', 'strPersonEdu_TruongMaTen', 'strPersonEdu_HocLuc', 'strPersonEdu_HanhKiem',
             'strPersonFam_Bo_HoTen', 'dPersonFam_Bo_NamSinh', 'strPersonFam_Bo_NoiO', 'strPersonFam_Bo_SDT',
             'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
             'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
             'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
-            'strNguyenVong_DauRa_Id', 'strMaNganhTrungTuyen', 'strMaCTDT',
+            'strDaoTao_LopQuanLy_DuKien', 'strMaNganhTrungTuyen', 'strMaCTDT',
             'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
             'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
             'strKetQua_QuyetDinh_Ma', 'strIntake_IntakeCode', 'strIntake_IntakeTypeCode',
@@ -1164,7 +1164,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
             'strHoSo_KH_Dot_PT_Id': '',
-            'strNguyenVong_DauRa_Id': '',
+            'strDaoTao_LopQuanLy_DuKien': '',
             'strHoSo_KetQuaCode': '',
             'strHoSo_TuNgay': '',
             'strHoSo_DenNgay': ''
@@ -1931,7 +1931,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonAddr_HK_SoNha': g('txtKQ_HK_SoNha'),
 
             // Học vấn 12
-            'strPersonEdu_Tinh_Id': g('txtKQ_MaTinh12'),
+            'strPersonEdu_Tinh_Ma': g('txtKQ_MaTinh12'),
             'strPersonEdu_TruongMaTen': g('txtKQ_TruongMaTen'),
             'strPersonEdu_HocLuc': g('ddlKQ_HocLuc'),
             'strPersonEdu_HanhKiem': g('ddlKQ_HanhKiem'),
@@ -1958,9 +1958,8 @@ KeHoachTuyenSinhNew.prototype = {
             'strHoSo_Import_Batch_Id': '',
             'dHoSo_Import_Row_No': '',
 
-            // Nguyện vọng — backend auto snapshot Hệ/Khóa/CT/NganhTS/NganhDT từ TS_KEHOACH_DAU_RA
-            'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
-            'strDaoTao_LopQuanLy_Id_DK': g('ddlKQ_LopDuKien'),
+            // Lớp quản lý dự kiến — backend auto snapshot Hệ/Khóa/CT/NganhTS/NganhDT từ TS_KEHOACH_DAU_RA
+            'strDaoTao_LopQuanLy_DuKien': g('ddlKQ_LopDuKien'),
 
             // Xét tuyển
             'strXetTuyen_TohopMon_Id': toHopMa,

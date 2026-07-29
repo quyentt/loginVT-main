@@ -853,11 +853,8 @@ KeHoachTuyenSinhNew.prototype = {
     update_NhanSu: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!edu.util.checkValue(me.strNS_EditId)) return;
+        // Không validate Vai trò — form optional theo yêu cầu
         var sVaiTro = edu.system.getValById('dropVaiTro_EditNS');
-        if (!edu.util.checkValue(sVaiTro)) {
-            edu.system.alert("Vui lòng chọn Vai trò tham gia", "w");
-            return;
-        }
         var rec = me.dtNS_EditRecord || {};
         var obj_save = {
             'action': 'SV_Core_NhapHoc_MH/EjQgHg8JHgokCS4gIikeDykgLxI0',
@@ -1780,11 +1777,9 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Vui lòng tích chọn ít nhất một nhân sự để lưu", "w");
             return;
         }
+        // Section "Thông tin gán chung" tất cả optional — không validate.
+        // Vai trò rỗng → gửi '' để backend tự xử lý (nếu có default).
         var sVaiTro = edu.system.getValById('dropVaiTro_ThemNS');
-        if (!edu.util.checkValue(sVaiTro)) {
-            edu.system.alert("Vui lòng chọn Vai trò tham gia", "w");
-            return;
-        }
         var commonData = {
             'strVaiTro_NhapHoc_Code': sVaiTro,
             'strNgay_BatDau': edu.system.getValById('txtNgayBD_ThemNS'),
