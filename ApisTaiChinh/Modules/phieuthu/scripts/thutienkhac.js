@@ -3473,6 +3473,7 @@ PhieuThuKhac.prototype = {
                         edu.extend.notifyBeginLoading('Thực hiện thu tiền thành công', 'notifications_PhieuThu');
                     }
                     else {
+                        edu.system.alert("Lỗi: " + d.Message, "w");
                         edu.extend.notifyBeginLoading(data.Message);
                     }
                     edu.system.endLoading();
