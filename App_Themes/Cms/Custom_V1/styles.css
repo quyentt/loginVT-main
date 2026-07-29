@@ -3248,7 +3248,9 @@ input:active,
   border-bottom: 1px solid #e1e1e1 !important;
   margin-bottom: 0 !important;
 }
-
+.box-search .aps-list-btn .btn:first-child{
+  margin-left: 0 !important;
+}
 .btn-default.btn-search,
 .btnSearch {
   background: #e1e1e1 !important;
@@ -4884,7 +4886,7 @@ info-tblNguoiHoc_RutTien,
 }
 
 .box-KhoanThu .nav-tabs-custom>.nav-tabs>li {
-  margin-bottom: -1px !important;
+  margin-bottom: -3px !important;
 }
 
 #zonebtnBaoCao_RT,
@@ -7294,7 +7296,9 @@ input[type="radio"] {
 .border-primary {
   border: 1px solid rgba(13, 110, 253, 1) !important;
 }
-
+.btn-soft-primary i {
+  font-weight: bold !important;
+}
 .btn-soft-primary .lang {
   color: var(--color-blue) !important;
 }
@@ -7309,7 +7313,9 @@ input[type="radio"] {
   color: var(--color-danger) !important;
   border: 1px solid rgba(220, 53, 69, 1) !important;
 }
-
+.btn-soft-danger i {
+  font-weight: bold !important;
+}
 .btn-soft-danger:hover {
   background: rgba(220, 53, 69, 1) !important;
   color: #fff !important;
@@ -7320,7 +7326,7 @@ input[type="radio"] {
 }
 
 .btn-soft-danger .lang {
-  color: var(--color-blue) !important;
+  color: var(--color-danger) !important;
 }
 
 .btn-soft-danger:hover .lang {
@@ -7350,7 +7356,9 @@ input[type="radio"] {
 .btn-soft-info:hover .lang {
   color: #fff !important;
 }
-
+.btn-soft-info i {
+  font-weight: bold !important;
+}
 
 /* --btn-soft-info-- */
 .btn-soft-warning {
@@ -7374,6 +7382,9 @@ input[type="radio"] {
 
 .btn-soft-warning:hover .lang {
   color: #fff !important;
+}
+.btn-soft-warning i {
+  font-weight: bold !important;
 }
 
 /* --btn-soft-secondary-- */
@@ -7399,3 +7410,186 @@ input[type="radio"] {
 .btn-soft-secondary:hover .lang {
   color: #fff !important;
 }
+.btn-soft-secondary i {
+  font-weight: bold !important;
+}
+/* ------------- */
+.small-box {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 15px !important;
+  padding: 15px !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  min-height: 108px !important;
+  margin: 0 !important;
+  background: #fff !important;
+  border: 1px solid #e5e7eb !important;
+  border-left-width: 3px !important;
+  color: #111827 !important;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.small-box .icon {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  float: none !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  max-width: 44px !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+  opacity: 1 !important;
+  overflow: hidden;
+  margin: 0 !important;
+}
+.small-box .icon i{
+  font-size: 20px;
+  font-weight: 700 !important;
+}
+
+.small-box .small-box-r {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  flex: 1 1 auto !important;
+  min-width: 0;
+  position: static !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  bottom: auto !important;
+  padding-top: 0 !important;
+}
+.small-box-r .inner {
+  padding-bottom: 10px !important;
+}
+.small-box .small-box-footer {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 4px;
+  align-self: flex-start;
+  padding: 3px 12px !important;
+  background: #fff !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 999px !important;
+  color: #4b5563 !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  margin-top:0 !important;
+  line-height: 1.4;
+}
+.small-box-r .inner p{
+  color: #666;
+}
+.small-box-r .small-box-footer {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 4px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.small-box-r .small-box-footer i {
+  margin-left: 5px;
+}
+
+.small-box-r .inner {
+  padding-bottom: 0 !important
+}
+.small-box-r .inner h5{
+  margin-bottom: 5px !important;
+}
+.small-box-r .inner p{
+  font-size: 14px !important;
+}
+.small-box-r .inner p{
+  padding-bottom: 0 !important;
+  margin-bottom: 10px !important;
+}
+.small-box:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+.small-box.bg-red .small-box-r .small-box-footer:hover {
+  border: 1px solid #fff;
+  background: #fff !important;
+  color: red !important;
+}
+
+.small-box.bg-red .small-box-r .small-box-footer:hover i {
+  color: red !important;
+}
+
+.small-box.bg-aqua .small-box-r .small-box-footer:hover {
+  border: 1px solid #fff;
+  background: #fff !important;
+  color: #00c0efed !important;
+}
+
+.small-box.bg-aqua .small-box-r .small-box-footer:hover i {
+  color: #00c0ef !important;
+}
+/*--bg-green-set----*/
+.bg-green-set.small-box{
+  border-left-color: var(--color-green) !important;
+  border-left-width: 3px !important;
+}
+.bg-green-set .icon {
+  background: rgb(25, 135, 84,0.1) !important;
+}
+.bg-green-set .icon i {
+  color: rgb(25, 135, 84,1) !important;
+}
+.bg-green-set .small-box-r .small-box-footer:hover,
+.bg-green-set .small-box-r a:hover,
+.small-box.bg-green .small-box-r a:hover {
+  border: 1px solid rgb(25, 135, 84,1) !important;
+  background: var(--color-green)  !important;
+  color: #fff !important;
+}
+
+/*--bg-blue-set----*/
+.bg-blue-set{
+  border-left-color: var(--color-blue) !important;
+}
+.bg-blue-set .icon {
+  background: rgb(13, 110, 253,0.1) !important;
+}
+.bg-blue-set .icon i {
+  color: var(--color-blue) !important;
+}
+.bg-blue-set .small-box-r .small-box-footer:hover,
+.bg-blue-set .small-box-r a:hover,
+.small-box.bg-blue .small-box-r a:hover {
+  border: 1px solid var(--color-blue) !important;
+  background: var(--color-blue)!important;
+  color:#fff  !important;
+}
+/*--bg-danger-set----*/
+.bg-danger-set{
+  border-left-color: var(--color-danger) !important;
+}
+.bg-danger-set .icon {
+  background: rgb(220, 53, 69,0.1) !important;
+}
+.bg-danger-set .icon i {
+  color: var(--color-danger) !important;
+}
+.bg-danger-set .small-box-r .small-box-footer:hover,
+.bg-danger-set .small-box-r a:hover,
+.small-box.bg-red .small-box-r a:hover {
+  border: 1px solid var(--color-danger) !important;
+  background: #fff !important;
+  color: var(--color-danger) !important;
+}
+/*  */
