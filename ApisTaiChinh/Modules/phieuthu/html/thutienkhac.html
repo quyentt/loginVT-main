@@ -144,147 +144,164 @@
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
 
-    /* ===== Zone Biên lai / Hóa đơn: layout preview + action bar ===== */
+    /* ===== Zone Biên lai / Hóa đơn: 2 dock trái/phải + preview giữa ===== */
+    #zoneBienLaiHoaDon {
+        padding-left: 120px !important;
+        padding-right: 120px !important;
+        position: relative;
+    }
+
     #zoneBienLaiHoaDon .aps-all-btn {
         display: block !important;
-        text-align: left;
+        text-align: center;
     }
 
+    /* Preview ở giữa */
     #zoneBienLaiHoaDon .preview-area {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 15px;
+        text-align: center;
+        padding-top: 10px;
     }
 
-    #zoneBienLaiHoaDon .preview-area > .preview-inner {
+    #zoneBienLaiHoaDon .preview-options {
+        text-align: right;
+        margin-bottom: 8px;
+        padding: 0;
+    }
+
+    #zoneBienLaiHoaDon .preview-options label {
+        font-weight: normal;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        cursor: pointer;
+        margin: 0;
+        font-size: 13px;
+    }
+
+    #zoneBienLaiHoaDon .preview-options input[type="checkbox"] {
+        margin: 0 !important;
+    }
+
+    #MauInPhieuThu {
         display: inline-block;
+        text-align: left;
         max-width: 100%;
     }
 
-    /* Action bar sticky đáy trang */
-    #zoneBienLaiHoaDon .action-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-        padding: 10px 15px;
-        background: #fff;
-        border-top: 1px solid #e5e5e5;
-        position: sticky;
-        bottom: 0;
-        z-index: 10;
-        box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.06);
-    }
-
-    #zoneBienLaiHoaDon .action-left,
-    #zoneBienLaiHoaDon .action-right {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    /* Checkbox "Không hiển thị số lượng và đơn giá" */
-    #zoneBienLaiHoaDon .user-check-print {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        margin: 0 !important;
-        padding: 0 8px;
-        white-space: nowrap;
-    }
-
-    #zoneBienLaiHoaDon .user-check-print input[type="checkbox"] {
-        margin: 0 !important;
-        float: none !important;
-    }
-
-    #zoneBienLaiHoaDon .user-check-print span {
-        white-space: nowrap;
-        font-size: 13px;
-    }
-
-    /* Nhóm nút Liên hóa đơn */
-    #zoneBienLaiHoaDon #btnLienHoaDon {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    #zoneBienLaiHoaDon #btnLienHoaDon .lbsymbolHD {
-        font-size: 13px;
-        line-height: 1;
-    }
-
-    /* Nhóm nút HĐĐT (dynamic) - xếp ngang, icon vừa phải */
-    #zoneActionXuatHoaDon {
-        display: inline-flex !important;
-        flex-direction: row !important;
-        align-items: center;
-        gap: 6px;
-        margin: 0;
-    }
-
-    #zoneActionXuatHoaDon .btnXuat_HDDT {
-        display: inline-flex !important;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: auto !important;
-        min-width: 72px !important;
-        padding: 4px 8px !important;
-        border: 1px solid #e5e5e5 !important;
-        border-radius: 4px;
-        background: #fff;
-        box-sizing: border-box;
-    }
-
-    #zoneActionXuatHoaDon .btnXuat_HDDT > a {
-        display: block !important;
-        padding: 0 !important;
-        line-height: 1;
-    }
-
-    #zoneActionXuatHoaDon .btnXuat_HDDT .lbsymbolHD {
-        display: block !important;
-        white-space: nowrap;
-        line-height: 1.2;
-        padding: 2px 0 0;
-        font-size: 12px;
-    }
-
-    /* Nút Save biên lai/hóa đơn được JS prepend vào #zoneActionHoaDon */
+    /* Hai dock cố định 2 bên */
+    #zoneActionXuatHoaDon,
     #zoneActionHoaDon {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    #btnSaveHDBL {
-        display: inline-flex !important;
+        position: fixed;
+        top: 110px;
+        width: 100px;
+        z-index: 100;
+        display: flex !important;
         flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        width: auto !important;
-        min-width: 72px !important;
-        padding: 4px 8px !important;
-        border: 1px solid #e5e5e5 !important;
-        border-radius: 4px !important;
+        gap: 10px;
+        max-height: calc(100vh - 130px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        padding: 4px;
+    }
+
+    #zoneActionXuatHoaDon {
+        left: 5px;
+    }
+
+    #zoneActionHoaDon {
+        right: 5px;
+    }
+
+    /* Card style dùng chung cho cả nút HĐĐT (dynamic) và nút cố định bên phải */
+    #zoneActionXuatHoaDon .btnXuat_HDDT,
+    #zoneActionHoaDon > a,
+    #zoneActionHoaDon > div,
+    #btnSaveHDBL {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 10px 4px !important;
         background: #fff !important;
-        box-sizing: border-box;
+        border: 1px solid #e5e5e5 !important;
+        border-radius: 6px !important;
+        text-align: center !important;
+        cursor: pointer;
+        width: 92px !important;
+        min-width: 92px !important;
+        min-height: 82px !important;
+        box-sizing: border-box !important;
+        text-decoration: none !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+        color: #333 !important;
+        font-size: 12px !important;
     }
 
-    #btnSaveHDBL > a {
-        padding: 0 !important;
-        line-height: 1;
-    }
-
-    /* Ép icon fa-4x động (từ JS) về kích cỡ vừa với action bar */
-    #zoneActionXuatHoaDon .fa-4x,
+    /* Chuẩn hoá icon: gộp cả fa-4x động thành 26px */
+    #zoneActionXuatHoaDon .btnXuat_HDDT i,
+    #zoneActionHoaDon > a > i,
+    #zoneActionHoaDon > div > a > i,
     #zoneActionHoaDon .fa-4x,
+    #zoneActionXuatHoaDon .fa-4x,
+    #btnSaveHDBL i,
     #btnSaveHDBL .fa-4x {
-        font-size: 1.6em !important;
+        display: block !important;
+        font-size: 26px !important;
+        margin-bottom: 6px !important;
+        line-height: 1 !important;
+    }
+
+    /* Nhãn nút */
+    #zoneActionXuatHoaDon .lbsymbolHD,
+    #zoneActionHoaDon .lbsymbolHD,
+    #btnSaveHDBL .lbsymbolHD {
+        display: block !important;
+        font-size: 12px !important;
+        line-height: 1.2 !important;
+        white-space: normal !important;
+        padding: 0 !important;
+        color: #333 !important;
+        font-weight: 600;
+    }
+
+    /* Màu icon theo ngữ nghĩa nút */
+    #btnClose_HDBL i { color: #6c757d !important; }
+    #btnHuy_HDBL i,
+    #btnThuTien i { color: #dc3545 !important; }
+    #btnIn_HDBL i,
+    #btnLienHoaDon i { color: #0d6efd !important; }
+
+    /* Nút Liên: bọc cả <a> trong ngoài, gỡ padding thừa của .btn */
+    #btnLienHoaDon > a,
+    #btnLienHoaDon > a.btn {
+        all: unset;
+        display: contents;
+    }
+
+    #btnLienHoaDon #zoneLienHoaDon {
+        display: none;
+    }
+
+    /* Responsive: màn hẹp thì dock trở về flow ngang phía dưới */
+    @media (max-width: 1100px) {
+
+        #zoneActionXuatHoaDon,
+        #zoneActionHoaDon {
+            position: static;
+            width: 100%;
+            flex-direction: row;
+            flex-wrap: wrap;
+            max-height: none;
+            overflow: visible;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        #zoneBienLaiHoaDon {
+            padding-left: 15px !important;
+            padding-right: 15px !important;
+        }
     }
 </style>
 <div id="MainContent">
@@ -1369,47 +1386,47 @@
                         </div>
                     </div>
 
-                    <!-- Vùng preview chứng từ -->
+                    <!-- LEFT dock: JS render các nút HĐĐT (Xuất hóa đơn, Lưu chưa phát hành, Xem bản nháp, HĐĐT...) -->
+                    <div id="zoneActionXuatHoaDon"></div>
+
+                    <!-- Center: preview chứng từ + checkbox tuỳ chọn -->
                     <div class="preview-area">
-                        <div class="preview-inner">
-                            <div id="MauInPhieuThu"></div>
+                        <div class="preview-options">
+                            <label for="checkSoLuong">
+                                <input type="checkbox" id="checkSoLuong">
+                                Không hiển thị số lượng và đơn giá
+                            </label>
                         </div>
+                        <div id="MauInPhieuThu"></div>
                     </div>
 
-                    <!-- Thanh action: destructive trái, nhóm chính phải -->
-                    <div class="action-bar">
-                        <div class="action-left">
-                            <a class="btn btn-danger" id="btnHuy_HDBL"><i class="fa fa-trash-o"></i> Hủy <span
-                                    class="lbLoaiChungTu">Biên Lai</span></a>
+                    <!-- RIGHT dock: nút cố định (JS prepend #btnSaveHDBL "Xuất biên lai" khi ở chế độ ghi) -->
+                    <div id="zoneActionHoaDon">
+                        <a id="btnClose_HDBL" title="Đóng">
+                            <i class="fa fa-times"></i>
+                            <span class="lbsymbolHD">Đóng</span>
+                        </a>
+
+                        <a id="btnIn_HDBL" title="In">
+                            <i class="fa fa-print"></i>
+                            <span class="lbsymbolHD">In <span class="lbLoaiChungTu">Biên Lai</span></span>
+                        </a>
+
+                        <div id="btnLienHoaDon" title="Liên hóa đơn">
+                            <a><i class="fa fa-copy"></i></a>
+                            <div id="zoneLienHoaDon"></div>
+                            <span class="lbsymbolHD">Liên</span>
                         </div>
 
-                        <div class="action-right">
-                            <div class="checkbox-inline user-check-print">
-                                <input type="checkbox" id="checkSoLuong">
-                                <span for="checkSoLuong">Không hiển thị số lượng và đơn giá</span>
-                            </div>
+                        <a id="btnThuTien" title="Thu tiền - không sinh hóa đơn biên lai">
+                            <i class="fa fa-money"></i>
+                            <span class="lbsymbolHD">Thu tiền không sinh HĐBL</span>
+                        </a>
 
-                            <a class="btn btn-primary" id="btnIn_HDBL"><i class="fa fa-print"></i> In <span
-                                    class="lbLoaiChungTu">Biên Lai</span></a>
-
-                            <div id="btnLienHoaDon">
-                                <a title="Liên Hóa đơn" class="btn btn-primary"><i class="fa fa fa-copy"></i></a>
-                                <div id="zoneLienHoaDon"></div>
-                                <a class="color-active bold lbsymbolHD">Liên</a>
-                            </div>
-
-                            <!-- JS prepend #btnSaveHDBL vào đây khi ở chế độ xuất -->
-                            <div id="zoneActionHoaDon"></div>
-
-                            <!-- JS render các nút HĐĐT vào đây -->
-                            <div id="zoneActionXuatHoaDon"></div>
-
-                            <a class="btn btn-danger" id="btnThuTien" title="Thu tiền - không sinh hóa đơn biên lai"><i
-                                    class="fa fa-money"></i> Thu tiền không sinh HĐBL</a>
-
-                            <a class="btn btn-outline-danger" id="btnClose_HDBL" style="background: #fff;"><i
-                                    class="fa fa-times"></i> Đóng</a>
-                        </div>
+                        <a id="btnHuy_HDBL" title="Hủy chứng từ">
+                            <i class="fa fa-trash-o"></i>
+                            <span class="lbsymbolHD">Hủy <span class="lbLoaiChungTu">Biên Lai</span></span>
+                        </a>
                     </div>
                 </div>
             </div>
