@@ -849,9 +849,11 @@ PhieuThuKhac.prototype = {
     genHTML_HDDT: function (data) {
         var me = this;
         me["dtNutHDDT"] = data;
+        var defaultIcons = ['fa fa-file-text-o', 'fa fa-cloud-upload', 'fa fa-file-o', 'fa fa-paper-plane', 'fa fa-share-square-o'];
         var row = '';
         for (var i = 0; i < data.length; i++) {
-            row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            var iconClass = data[i].THONGTIN1 && data[i].THONGTIN1.trim() ? data[i].THONGTIN1 : defaultIcons[i % defaultIcons.length];
+            row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + iconClass + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
         }
         me.strHDDT = row;
     },
