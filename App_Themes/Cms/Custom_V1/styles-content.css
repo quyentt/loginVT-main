@@ -3736,7 +3736,7 @@
 .box-KhoanThu .nav-tabs-custom>.nav-tabs>li.active>a,
 .box-KhoanThu .nav-tabs-custom>.nav-tabs>li.active:hover>a {
     background-color: var(--color-green) !important;
-    color: #fff;
+    color: #fff !important;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     border-right: 0 !important;
@@ -4691,26 +4691,174 @@
 }
 
 .zoneThongTinBoSung .small-box {
-    border-radius: 0px;
-    /*overflow: hidden;*/
-    min-height: 110px;
-    margin-bottom: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    min-height: 108px !important;
+    margin: 0 !important;
+    background: #fff !important;
+    border: 1px solid #e5e7eb !important;
+    border-left-width: 3px !important;
+    color: #111827 !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .zoneThongTinBoSung .small-box.bg-green {
-    background-color: #4d8d41 !important;
+    /* background-color: #4d8d41 !important; */
 }
 
 .zoneThongTinBoSung .small-box.bg-red {
-    background-color: #dd4c3b !important;
+    /* background-color: #dd4c3b !important; */
 }
 
 .zoneThongTinBoSung .small-box.bg-yellow {
-    background-color: #f59c00 !important;
+    /* background-color: #f59c00 !important; */
     color: #fff !important;
 }
+.zoneThongTinBoSung .small-box .icon {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    float: none !important;
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    max-width: 44px !important;
+    border-radius: 10px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    opacity: 1 !important;
+    overflow: hidden;
+    margin: 0 !important;
+}
+.zoneThongTinBoSung .small-box .icon i {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    bottom: auto !important;
+    left: auto !important;
+    font-size: 22px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: inline-block !important;
+    opacity: 1 !important;
+}
+.zoneThongTinBoSung .small-box .small-box-r {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    flex: 1 1 auto !important;
+    min-width: 0;
+    position: static !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    padding-top: 0 !important;
+}
+.zoneThongTinBoSung .small-box .inner h4 {
+    font-size: 22px !important;
+    font-weight: 700 !important;
+    margin: 0 !important;
+    color: #111827 !important;
+    line-height: 1.15 !important;
+}
+.zoneThongTinBoSung .small-box .inner p {
+    font-size: 13px !important;
+    /* font-weight: 700 !important; */
+    margin: 2px 0 0 !important;
+    color: #666 !important;
+    line-height: 1.3;
+}
+.zoneThongTinBoSung .small-box .small-box-footer {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    align-self: flex-start;
+    padding: 5px 12px 2px 12px !important;
+    background: #fff !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 999px !important;
+    color: #4b5563 !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    text-decoration: none !important;
+    margin-top: 6px !important;
+    line-height: 1.4;
+}
 
-.zoneThongTinBoSung .small-box.bg-yellow {}
+.zoneThongTinBoSung .small-box .small-box-footer i {
+    font-size: 11px !important;
+    color: #4b5563 !important;
+    margin-top: -3px;
+}
+/* --- */
+.zoneThongTinBoSung .small-box.bg-green .icon {
+    background: #d1fae5 !important;
+}
+.zoneThongTinBoSung .small-box.bg-green .icon i {
+    color: #059669 !important;
+}
+/* --- */
+.zoneThongTinBoSung .small-box.bg-red {
+    border-left-color: #ef4444 !important;
+}
+.zoneThongTinBoSung .small-box.bg-red .icon {
+    background: #fee2e2 !important;
+}
+.zoneThongTinBoSung .small-box.bg-red .icon i {
+    color: #dc2626 !important;
+}
+/* --- */
+.zoneThongTinBoSung .small-box.bg-aqua {
+    border-left-color: #06b6d4 !important;
+}
+.zoneThongTinBoSung .small-box.bg-aqua .icon {
+    background: #cffafe !important;
+}
+.zoneThongTinBoSung .small-box.bg-aqua .icon i {
+    color: #0891b2 !important;
+}
+/* --- */
+.zoneThongTinBoSung .small-box.bg-yellow {
+    border-left-color: #f59e0b !important;
+}
+.zoneThongTinBoSung .small-box.bg-yellow .icon {
+    background: #fef3c7 !important;
+}
+.zoneThongTinBoSung .small-box.bg-yellow .icon i {
+    color: #d97706 !important;
+}
+/* ========= */
+.zoneThongTinBoSung .small-box {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 14px !important;
+    padding: 16px !important;
+    border-radius: 12px !important;
+    box-shadow: none !important;
+    min-height: 108px !important;
+    margin: 0 !important;
+    background: #fff !important;
+    border: 1px solid #e5e7eb !important;
+    border-left-width: 3px !important;
+    color: #111827 !important;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.zoneThongTinBoSung .small-box.bg-green {
+    border-left-color: #10b981 !important;
+}
+/*  */
 
 .zoneThongTinBoSung .small-box>.small-box-footer {
     position: relative;
@@ -4733,16 +4881,6 @@
     left: 15px;
 }
 
-.zoneThongTinBoSung .small-box .icon {
-    top: 15px;
-    right: 15px !important;
-    bottom: 8px;
-    margin-bottom: 8px;
-    z-index: 0;
-    position: absolute !important;
-    width: 46px;
-    float: left;
-}
 
 .zoneThongTinBoSung .small-box .icon {
     color: rgba(255, 255, 255, 1) !important;
@@ -4752,48 +4890,6 @@
     font-weight: 700 !important;
 }
 
-.small-box-r .small-box-footer {
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 5px 10px;
-    color: #fff;
-    border-radius: 4px;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-.small-box-r .small-box-footer i {
-    margin-left: 5px;
-}
-
-.small-box-r .inner {
-    padding-bottom: 10px !important
-}
-
-.small-box.bg-green .small-box-r .small-box-footer:hover {
-    border: 1px solid #fff;
-    background: #fff !important;
-    color: #4e8d42 !important;
-}
-
-.small-box.bg-red .small-box-r .small-box-footer:hover {
-    border: 1px solid #fff;
-    background: #fff !important;
-    color: red !important;
-}
-
-.small-box.bg-red .small-box-r .small-box-footer:hover i {
-    color: red !important;
-}
-
-.small-box.bg-aqua .small-box-r .small-box-footer:hover {
-    border: 1px solid #fff;
-    background: #fff !important;
-    color: #00c0efed !important;
-}
-
-.small-box.bg-aqua .small-box-r .small-box-footer:hover i {
-    color: #00c0ef !important;
-}
 
 .zoneThongTinBoSung h4 {
     margin-bottom: 0 !important;
@@ -4803,17 +4899,17 @@
     padding-top: 5px;
 }
 
-.zoneThongTinBoSung .small-box .icon i,
+/* .zoneThongTinBoSung .small-box .icon i,
 .zoneThongTinBoSung .small-box .icon {
     font-size: 46px !important;
     opacity: 0.3;
     color: #000 !important;
-}
+} */
 
-.zoneThongTinBoSung .small-box .icon i.fa-money-from-bracket,
+/* .zoneThongTinBoSung .small-box .icon i.fa-money-from-bracket,
 .zoneThongTinBoSung .small-box .icon i.fa-hands-holding-dollar {
     font-size: 40px !important;
-}
+} */
 
 .fa-arrow-circle-right:before,
 .fa-circle-arrow-right:before {
@@ -14875,9 +14971,6 @@ table#clone {
 }
 
 /* Mọi nút dạng "btn btn-soft-*" (mọi màu) đều bỏ đường viền */
-.btn[class*="btn-soft-"] {
-    border-color: transparent !important;
-}
 
 /* Header hồ sơ SV (panel chi tiết, trừ hoso360): luôn 2 cột, tiêu đề trái (full ra) – nút phải, ở mọi màn hình */
 .aps-hoso-detail:not(.aps-student-hoso) .aps-kienTraNhanh>.box-header.with-border {
@@ -16419,4 +16512,26 @@ table#clone {
     border-color: transparent !important;
     padding: 2px 0 0 15px !important;
     color: #fff;
+}
+
+/* ------ */
+.box-filter{
+    display: block;
+    padding: 20px !important;
+}
+.box {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0) !important;
+}
+.box.box-solid.box-warning>.box-header{
+    display: block;
+}
+.zonePreView .box-header .box-tools.pull-right{
+    position: absolute;
+}
+.zonePreView  .box-xacnhan{
+    margin: 20px !important;
+}
+
+.box-warning .btnXuat_HDDT{
+    padding: 0px 15px 7.6px 15px !important;
 }
