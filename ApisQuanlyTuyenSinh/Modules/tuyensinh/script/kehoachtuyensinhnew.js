@@ -1355,7 +1355,7 @@ KeHoachTuyenSinhNew.prototype = {
             toLoad.push(["TUYENSINH.HANHKIEM", "ddlKQ_HanhKiem"]);
             // Tab Hóa đơn
             toLoad.push(["TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong"]);     // TODO: verify mã DM chuẩn
-            toLoad.push(["MOTCUA.HINHTHUCTHANHTOAN", "ddlKQ_HD_HinhThucTT"]);
+            toLoad.push(["PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT"]);
 
             // Phương thức tuyển sinh: KHÔNG dùng dtPhuongAnTuyenSinh vì đó là bảng "Phương án" khác
             // với "Phương thức của Đợt" (FK cần TS_KH_DOT_PHUONGTHUC.ID). Chưa có API list theo đợt
