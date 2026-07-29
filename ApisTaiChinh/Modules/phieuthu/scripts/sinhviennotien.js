@@ -126,7 +126,17 @@ SinhVienNoTien.prototype = {
         });
         $("#btnGuiEmail_NT").click(function (e) {
             e.stopImmediatePropagation();
-            me.openModal_GuiEmail();
+            me.openModal_ChonPhamVi();
+        });
+        $("#btnPhamVi_DaChon_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            $("#myModalChonPhamVi_NT").modal('hide');
+            me.openModal_GuiEmail('daChon');
+        });
+        $("#btnPhamVi_TatCa_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            $("#myModalChonPhamVi_NT").modal('hide');
+            me.openModal_GuiEmail('tatCa');
         });
         $("#btnConfirmGuiEmail_NT").click(function (e) {
             e.stopImmediatePropagation();
@@ -896,18 +906,25 @@ SinhVienNoTien.prototype = {
     --Discription: [2] Gửi Email báo nợ
     -------------------------------------------*/
     getEmail_NguoiHoc: function (aData) {
-        var email = aData.TTLL_EMAILCANHAN || aData.EMAIL_CANHAN || aData.EMAIL || aData.DIACHIEMAIL || aData.EMAILCANHAN || '';
-        if (!email && aData.MASONGUOIHOC) {
-            email = aData.MASONGUOIHOC + '@eaut.edu.vn';
-        }
-        return email;
+        return aData.EMAIL || aData.Email || aData.TTLL_EMAILCANHAN || '';
     },
     validateEmail: function (email) {
         if (!email) return false;
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     },
-    openModal_GuiEmail: function () {
+    openModal_ChonPhamVi: function () {
+        var me = this;
+        var iSoLuongDaChon = $("#tbldata_KhoanThu_ChuaXuat_NT tbody .ckbGuiEmail_NT:checked").length;
+        $("#lblSoLuongDaChon_NT").text(iSoLuongDaChon);
+        if (iSoLuongDaChon === 0) {
+            $("#btnPhamVi_DaChon_NT").addClass('disabled').css('opacity', '0.5').css('pointer-events', 'none');
+        } else {
+            $("#btnPhamVi_DaChon_NT").removeClass('disabled').css('opacity', '').css('pointer-events', '');
+        }
+        $("#myModalChonPhamVi_NT").modal('show');
+    },
+    openModal_GuiEmail: function (strMode) {
         var me = this;
         function afterFetchDebt(arrAll) {
             if (!arrAll || arrAll.length === 0) {
@@ -921,7 +938,7 @@ SinhVienNoTien.prototype = {
             $("#zonePercent_GuiEmail_NT").html('');
             $("#myModalGuiEmail_NT").modal('show');
         }
-        if (me.bSelectAllPages) {
+        if (strMode === 'tatCa') {
             me.getAll_KhoanThu_ForEmail(afterFetchDebt);
             return;
         }
@@ -951,9 +968,6 @@ SinhVienNoTien.prototype = {
         var arrAll = [];
         var iTotalPage = 1;
         var iTotalRow = 0;
-        if ($("#hideOverlay_NT").length === 0) {
-            $("head").append('<style id="hideOverlay_NT">#overlay{display:none !important;}</style>');
-        }
 
         function buildParams(pageIndex) {
             return {
@@ -1006,6 +1020,9 @@ SinhVienNoTien.prototype = {
                         iTotalPage = Math.max(1, Math.ceil(iTotalRow / CHUNK_SIZE));
                         edu.system.alert('<div style="text-align:left"><div id="zoneUnifiedProgress_NT_label" style="margin-bottom:8px"><i class="fa fa-download"></i> Đang tải danh sách sinh viên nợ tiền (<b>' + iTotalRow.toLocaleString('vi-VN') + '</b>)...</div><div id="zoneUnifiedProgress_NT_bar"></div></div>');
                         edu.system.genHTML_Progress("zoneUnifiedProgress_NT_bar", iTotalPage);
+                        if ($("#hideOverlay_NT").length === 0) {
+                            $("head").append('<style id="hideOverlay_NT">#overlay{display:none !important;}</style>');
+                        }
                     }
                     edu.system.start_Progress("zoneUnifiedProgress_NT_bar");
                     if (pageIndex < iTotalPage && data.Data && data.Data.length > 0) {
@@ -1115,7 +1132,7 @@ SinhVienNoTien.prototype = {
         var strHocKy = (aData.DAOTAO_THOIGIANDAOTAO || '');
         var strKhoanThu = (aData.TAICHINH_CACKHOANTHU_TEN || '');
         var strSoTien = edu.util.formatCurrency(aData.SOTIEN || 0);
-        return 'Kính gửi <b>' + strTen + '</b> (MSSV: ' + strMaSV + '). Bạn hiện đang còn nợ khoản <b>' + strKhoanThu + '</b> học kỳ ' + strHocKy + ': <b style="color:#c0392b">' + strSoTien + ' đ</b>. Đề nghị hoàn tất nghĩa vụ nộp phí sớm nhất.';
+        return 'Kính gửi <b>' + strTen + '</b> (MSSV: ' + strMaSV + '). Bạn hiện đang còn nợ khoản <b>' + strKhoanThu + '</b> học kỳ ' + strHocKy + ': <b style="color:#c0392b">' + strSoTien + ' đ</b>. Đề nghị hoàn tất nghĩa vụ nộp phí.';
     },
     createEmailTemplate_BaoNo: function (aData) {
         var strTen = (aData.HOTENNGUOIHOC || '');
@@ -1147,7 +1164,7 @@ SinhVienNoTien.prototype = {
         html += '<tr><th>Học kỳ</th><th>Khoản thu</th><th>Số tiền còn nợ</th></tr>';
         html += '<tr><td>' + strHocKy + '</td><td>' + strKhoanThu + '</td><td class="money" style="text-align:right">' + strSoTien + ' đ</td></tr>';
         html += '</table>';
-        html += '<p style="margin-top:15px">Đề nghị bạn hoàn tất nghĩa vụ nộp phí trong thời gian sớm nhất để đảm bảo quyền lợi học tập.</p>';
+        html += '<p style="margin-top:15px">Đề nghị bạn hoàn tất nghĩa vụ nộp phí để đảm bảo quyền lợi học tập.</p>';
         html += '<p>Trân trọng.</p>';
         html += '</div>';
         html += '<div class="email-footer">';

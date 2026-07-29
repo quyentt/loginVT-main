@@ -1444,14 +1444,34 @@ KeHoachTuyenSinhNew.prototype = {
                 if (!data || !data.Success) return;
                 var rows = edu.util.checkValue(data.Data) ? data.Data : [];
                 var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+                // Pick giá trị đầu tiên không null / rỗng
+                var pick = function () {
+                    for (var k = 0; k < arguments.length; k++) {
+                        var v = arguments[k];
+                        if (v != null && String(v).trim() !== '') return String(v).trim();
+                    }
+                    return '';
+                };
                 for (var i = 0; i < rows.length; i++) {
                     var d = rows[i];
                     var id = d.ID || d.Id || d.id || '';
                     if (!id) continue;
-                    // Ưu tiên tên hiển thị nếu có, fallback về TEN gốc, kèm mã ngành nếu có
-                    var name = d.TEN_HIENTHI || d.TenHienThi || d.TEN || d.Ten || d.MA || '';
-                    var maCT = d.MA_CT || d.MaCT || d.MA || '';
-                    var display = name + (maCT && name !== maCT ? ' (' + maCT + ')' : '');
+                    var name = pick(d.TEN_HIENTHI, d.TenHienThi, d.TEN, d.Ten);
+                    var ma = pick(d.MA_HIENTHI, d.MA_CT, d.MaCT, d.MA, d.Ma);
+                    var display;
+                    if (name) {
+                        display = name + (ma && ma !== name ? ' (' + ma + ')' : '');
+                    } else {
+                        // Fallback: dựng từ Ngành TS + Hệ + Khóa khi TEN/MA đều null
+                        var nganh = pick(d.DAOTAO_NGANH_TS_TEN, d.DAOTAO_NGANH_DT_TEN, d.DAOTAO_TOCHUCCHUONGTRINH_TEN);
+                        var he = pick(d.DAOTAO_HEDAOTAO_TEN);
+                        var khoa = pick(d.DAOTAO_KHOADAOTAO_TEN);
+                        var extra = [];
+                        if (he) extra.push(he);
+                        if (khoa) extra.push(khoa);
+                        display = nganh || '[Đầu ra ' + (i + 1) + ']';
+                        if (extra.length) display += ' — ' + extra.join(' · ');
+                    }
                     $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
                 }
             },
