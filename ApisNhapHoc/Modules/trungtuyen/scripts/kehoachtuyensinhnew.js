@@ -15,13 +15,48 @@ KeHoachTuyenSinhNew.prototype = {
     strKHNH_Id_ForView: '',
     dtKHNH_EditRecord: null,   // cache record để re-apply value sau khi combo load async
     dtNS_Picker: [],       // DS nhân sự trả từ picker (raw từ API)
-    dtNS_DaChon: [],       // DS nhân sự đã chọn (đã confirm từ picker, ở form thêm)
+    dtNS_DaChon: [],       // DS nhân sự đã chọn (đã confirm từ picker, ở form thêm) — mỗi item có flag _checked
+    _nsDaChon_page: 1,     // Trang hiện tại của bảng NS đã chọn
+    _nsDaChon_pageSize: 20,// Số dòng mỗi trang
     strNS_EditId: '',      // ID phân công nhân sự đang xem-sửa
     dtNS_EditRecord: null, // Bản ghi phân công đang xem-sửa (để giữ strDonVi_Id...)
 
     init: function () {
         var me = this;
         edu.system.page_load();
+
+        // ============ Fix stacked modal z-index (BS5 không auto adjust) ============
+        // Copy pattern từ khaimucphinhaphoc.js:85-110 (đã prove chạy tốt).
+        // Modal con mở trên modal cha → force z-index cao hơn + backdrop tương ứng
+        // Alert/confirm luôn trên cùng (z=20000)
+        $(document).off('shown.bs.modal.KHTSN').on('shown.bs.modal.KHTSN', '.modal', function () {
+            var $this = $(this);
+            var isAlert = $this.attr('id') === 'myModalAlert'
+                       || $this.hasClass('modal-alert')
+                       || $this.hasClass('modal-confirm');
+            var $modals = $('.modal.show');
+            var count = $modals.length;
+            var zIndex;
+            if (isAlert) {
+                zIndex = 20000;
+            } else if (count <= 1) {
+                return;
+            } else {
+                zIndex = 1055 + 30 * (count - 1);
+            }
+            $this[0].style.setProperty('z-index', zIndex, 'important');
+            var $backdrops = $('.modal-backdrop');
+            var $lastBackdrop = $backdrops.last();
+            if ($lastBackdrop.length) {
+                $lastBackdrop[0].style.setProperty('z-index', zIndex - 5, 'important');
+            }
+        });
+        // Khi 1 modal con đóng: re-add class 'modal-open' nếu còn modal cha đang show
+        $(document).off('hidden.bs.modal.KHTSN').on('hidden.bs.modal.KHTSN', '.modal', function () {
+            if ($('.modal.show').length) {
+                $('body').addClass('modal-open');
+            }
+        });
 
         /*------------------------------------------
         -- Load combo Kế hoạch tuyển sinh
@@ -133,7 +168,10 @@ KeHoachTuyenSinhNew.prototype = {
         });
         $("#modal-NhanSu-KHTSN").on("show.bs.modal", function (event) {
             var strId = $(event.relatedTarget).attr("data-id") || '';
-            if (strId) me.getList_NhanSu(strId);
+            if (strId) {
+                me.strKHNH_Id_ForView = strId;
+                me.getList_NhanSu(strId);
+            }
         });
         $("#modal-NhanSu-ChiTiet-KHTSN").on("show.bs.modal", function (event) {
             var strId = $(event.relatedTarget).attr("data-id") || '';
@@ -167,8 +205,11 @@ KeHoachTuyenSinhNew.prototype = {
 
         /*------------------------------------------
         -- Modal Thêm mới NS
+        -- RESET chỉ khi user CHỦ ĐỘNG click "Thêm mới nhân sự" (btnAdd_NhanSu).
+        -- edu.system.alert dùng BS4 jQuery API trộn BS5 khiến show/hidden.bs.modal
+        -- fire spurious → nếu reset trong modal event sẽ mất dtNS_DaChon.
         -------------------------------------------*/
-        $("#modal-ThemNS-KHTSN").on("show.bs.modal", function () {
+        $("#btnAdd_NhanSu").on("click", function () {
             me.rewrite_ThemNS();
             me.loadCombos_ThemNS();
         });
@@ -178,13 +219,39 @@ KeHoachTuyenSinhNew.prototype = {
         $("#btnSave_ThemNS").click(function () {
             me.save_ThemNhanSu();
         });
+        // Header checkbox: toggle ALL items across all pages (không chỉ trang hiện tại)
         $("#chkAll_NSDaChon").on("change", function () {
             var checked = $(this).is(":checked");
-            $("#tblNSDaChon_ThemNS tbody .chk-ns-row").prop("checked", checked);
+            (me.dtNS_DaChon || []).forEach(function (x) { x._checked = checked; });
+            me.genTable_NSDaChon();
         });
+        // Row checkbox: update _checked trong model
+        $("#tblNSDaChon_ThemNS").on("change", ".chk-ns-row", function () {
+            var id = $(this).attr("data-id");
+            var checked = $(this).is(":checked");
+            var ns = (me.dtNS_DaChon || []).filter(function (x) { return x.ID === id; })[0];
+            if (ns) ns._checked = checked;
+            $("#pgChecked_NSDaChon").text((me.dtNS_DaChon || []).filter(function (x) { return x._checked !== false; }).length);
+            me._syncHeaderChk_NSDaChon();
+        });
+        // Xóa 1 dòng khỏi model + re-render (giữ page hợp lệ)
         $("#tblNSDaChon_ThemNS").on("click", ".btn-remove-ns", function () {
             var id = $(this).attr("data-id");
             me.dtNS_DaChon = me.dtNS_DaChon.filter(function (x) { return x.ID !== id; });
+            me.genTable_NSDaChon();
+        });
+        // Pagination: click số trang
+        $("#paging_NSDaChon_ThemNS").on("click", ".page-link", function (e) {
+            e.preventDefault();
+            var target = parseInt($(this).attr("data-page"), 10);
+            if (isNaN(target)) return;
+            me._nsDaChon_page = target;
+            me.genTable_NSDaChon();
+        });
+        // Đổi page size
+        $("#pgSize_NSDaChon").on("change", function () {
+            me._nsDaChon_pageSize = parseInt($(this).val(), 10) || 20;
+            me._nsDaChon_page = 1;
             me.genTable_NSDaChon();
         });
 
@@ -705,30 +772,42 @@ KeHoachTuyenSinhNew.prototype = {
     -- Reuse chung 2 danh mục với form Thêm mới
     -------------------------------------------*/
     loadCombos_EditNS: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
         edu.system.getList_DanhMucDulieu(
             { strMaBangDanhMuc: "NH_KEHOACH_NHANSU.VAITRO_NHAPHOC_CODE", strTenCotSapXep: "", iTrangThai: 1 },
             "", "",
             function (data) {
+                var dt = data || [];
+                if (!dt.length) dt = me._fallback_VaiTroNS();
                 edu.system.loadToCombo_data({
-                    data: data || [],
+                    data: dt,
                     renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
                     renderPlace: ["dropVaiTro_EditNS"],
                     title: "Vai trò tham gia",
                     default_val: ''
                 });
+                // Re-apply value sau khi combo load xong (edit mode)
+                if (me.dtNS_EditRecord) {
+                    me._setSelectVal('dropVaiTro_EditNS', me.dtNS_EditRecord.VAITRO_NHAPHOC_CODE || me.dtNS_EditRecord.VAITRO_CODE || '');
+                }
             }
         );
         edu.system.getList_DanhMucDulieu(
             { strMaBangDanhMuc: "NH_KEHOACH_NHANSU.PHANCONG_STATUS_CODE", strTenCotSapXep: "", iTrangThai: 1 },
             "", "",
             function (data) {
+                var dt = data || [];
+                if (!dt.length) dt = me._fallback_TrangThaiPhanCong();
                 edu.system.loadToCombo_data({
-                    data: data || [],
+                    data: dt,
                     renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
                     renderPlace: ["dropTrangThai_EditNS"],
                     title: "Trạng thái phân công",
                     default_val: ''
                 });
+                if (me.dtNS_EditRecord) {
+                    me._setSelectVal('dropTrangThai_EditNS', me.dtNS_EditRecord.PHANCONG_STATUS_CODE || me.dtNS_EditRecord.STATUS_CODE || '');
+                }
             }
         );
     },
@@ -851,9 +930,15 @@ KeHoachTuyenSinhNew.prototype = {
 
     _closeEditNS_ReloadList: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var modalEl = document.getElementById('modal-NhanSu-ChiTiet-KHTSN');
-        var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.hide();
+        // Dùng jQuery API để match với edu.system.alert. Re-show modal cha NhanSu
+        // vì BS5 5.3.2 quirk auto-hide parent khi mở child.
+        var $edit = $('#modal-NhanSu-ChiTiet-KHTSN');
+        $edit.one('hidden.bs.modal', function () {
+            var $nhansu = $('#modal-NhanSu-KHTSN');
+            if (!$nhansu.hasClass('show')) $nhansu.modal('show');
+            $('body').addClass('modal-open');
+        });
+        $edit.modal('hide');
         me.strNS_EditId = '';
         me.dtNS_EditRecord = null;
         if (edu.util.checkValue(me.strKHNH_Id_ForView)) {
@@ -1296,9 +1381,8 @@ KeHoachTuyenSinhNew.prototype = {
 
     _closeFormModal_ReloadList: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var modalEl = document.getElementById('modal-Them-KHTSN');
-        var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.hide();
+        // Top-level modal, không có parent để re-show
+        $('#modal-Them-KHTSN').modal('hide');
         me.strKHNH_EditId = '';
         me.getList_KeHoachNhapHoc();
     },
@@ -1364,6 +1448,8 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         me.dtNS_DaChon = [];
         me.dtNS_Picker = [];
+        me._nsDaChon_page = 1;
+        me._nsDaChon_pageSize = parseInt($("#pgSize_NSDaChon").val(), 10) || 20;
         me.genTable_NSDaChon();
         $("#txtNgayBD_ThemNS, #txtNgayKT_ThemNS, #txtGhiChu_ThemNS").val('');
         me._setSelectVal('dropVaiTro_ThemNS', '');
@@ -1378,8 +1464,10 @@ KeHoachTuyenSinhNew.prototype = {
             { strMaBangDanhMuc: "NH_KEHOACH_NHANSU.VAITRO_NHAPHOC_CODE", strTenCotSapXep: "", iTrangThai: 1 },
             "", "",
             function (data) {
+                var dt = data || [];
+                if (!dt.length) dt = me._fallback_VaiTroNS();
                 edu.system.loadToCombo_data({
-                    data: data || [],
+                    data: dt,
                     renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
                     renderPlace: ["dropVaiTro_ThemNS"],
                     title: "Vai trò tham gia",
@@ -1391,8 +1479,10 @@ KeHoachTuyenSinhNew.prototype = {
             { strMaBangDanhMuc: "NH_KEHOACH_NHANSU.PHANCONG_STATUS_CODE", strTenCotSapXep: "", iTrangThai: 1 },
             "", "",
             function (data) {
+                var dt = data || [];
+                if (!dt.length) dt = me._fallback_TrangThaiPhanCong();
                 edu.system.loadToCombo_data({
-                    data: data || [],
+                    data: dt,
                     renderInfor: { id: "MA", parentId: "", name: "TEN", code: "MA" },
                     renderPlace: ["dropTrangThai_ThemNS"],
                     title: "Trạng thái phân công",
@@ -1402,34 +1492,117 @@ KeHoachTuyenSinhNew.prototype = {
         );
     },
 
+    // Fallback khi bảng danh mục NH_KEHOACH_NHANSU.VAITRO_NHAPHOC_CODE chưa được khai
+    _fallback_VaiTroNS: function () {
+        return [
+            { MA: 'CHU_TICH',    TEN: 'Chủ tịch hội đồng' },
+            { MA: 'PHO_CHU_TICH',TEN: 'Phó chủ tịch hội đồng' },
+            { MA: 'THU_KY',      TEN: 'Thư ký' },
+            { MA: 'UY_VIEN',     TEN: 'Ủy viên' },
+            { MA: 'CAN_BO_TN',   TEN: 'Cán bộ tiếp nhận' },
+            { MA: 'CAN_BO_HT',   TEN: 'Cán bộ hỗ trợ' }
+        ];
+    },
+    // Fallback khi bảng danh mục NH_KEHOACH_NHANSU.PHANCONG_STATUS_CODE chưa được khai
+    _fallback_TrangThaiPhanCong: function () {
+        return [
+            { MA: 'CHUA_BAT_DAU', TEN: 'Chưa bắt đầu' },
+            { MA: 'DANG_LAM',     TEN: 'Đang làm' },
+            { MA: 'HOAN_THANH',   TEN: 'Hoàn thành' },
+            { MA: 'TAM_DUNG',     TEN: 'Tạm dừng' },
+            { MA: 'HUY',          TEN: 'Hủy' }
+        ];
+    },
+
     /*------------------------------------------
-    -- Render bảng "Nhân sự đã chọn" trong form Thêm mới NS
+    -- Render bảng "Nhân sự đã chọn" trong form Thêm mới NS (có phân trang client-side)
+    -- Nguồn dữ liệu: me.dtNS_DaChon; mỗi item có flag _checked (default true).
+    -- Save iterate qua model (không phải DOM) → không mất row ở trang khác.
     -------------------------------------------*/
     genTable_NSDaChon: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         var arr = me.dtNS_DaChon || [];
-        $("#lblCount_NSDaChon").text(arr.length);
         var $tbody = $("#tblNSDaChon_ThemNS tbody");
+        var $paging = $("#paging_NSDaChon_ThemNS");
         $tbody.html("");
+        $("#lblCount_NSDaChon").text(arr.length);
+
         if (arr.length === 0) {
             $tbody.append('<tr><td colspan="5" class="td-center text-muted py-3">Chưa chọn nhân sự — bấm "Chọn nhân sự"</td></tr>');
+            $paging.hide();
+            me._syncHeaderChk_NSDaChon();
             return;
         }
+
+        var pageSize = me._nsDaChon_pageSize || 20;
+        var totalPages = Math.max(1, Math.ceil(arr.length / pageSize));
+        if (!me._nsDaChon_page || me._nsDaChon_page > totalPages) me._nsDaChon_page = totalPages;
+        if (me._nsDaChon_page < 1) me._nsDaChon_page = 1;
+        var page = me._nsDaChon_page;
+        var startIdx = (page - 1) * pageSize;
+        var endIdx = Math.min(startIdx + pageSize, arr.length);
+
         var rows = '';
-        for (var i = 0; i < arr.length; i++) {
+        for (var i = startIdx; i < endIdx; i++) {
             var ns = arr[i];
             var sTen = ns.HOTEN || ns.PERSON_TEN || '';
             var sMa = ns.MASO || ns.PERSON_MA || '';
             var sDonVi = ns.DONVI_TEN || ns.DAOTAO_COCAUTOCHUC_TEN || '';
+            var checked = ns._checked !== false;
             rows += '<tr data-person-id="' + ns.ID + '">'
                 + '<td class="td-center">' + (i + 1) + '</td>'
                 + '<td class="td-left">' + sTen + (sMa ? ' <span class="text-muted">(' + sMa + ')</span>' : '') + '</td>'
                 + '<td class="td-left">' + sDonVi + '</td>'
-                + '<td class="td-center"><input type="checkbox" class="chk-ns-row" data-id="' + ns.ID + '" checked /></td>'
+                + '<td class="td-center"><input type="checkbox" class="chk-ns-row" data-id="' + ns.ID + '"' + (checked ? ' checked' : '') + ' /></td>'
                 + '<td class="td-center"><a class="btn btn-sm btn-danger btn-remove-ns" data-id="' + ns.ID + '"><i class="fa fa-trash"></i></a></td>'
                 + '</tr>';
         }
         $tbody.append(rows);
+
+        $("#pgCur_NSDaChon").text(page);
+        $("#pgTotal_NSDaChon").text(totalPages);
+        $("#pgSum_NSDaChon").text(arr.length);
+        $("#pgChecked_NSDaChon").text(arr.filter(function (x) { return x._checked !== false; }).length);
+        $paging.css('display', 'flex');
+        me._renderPagingBtns_NSDaChon(page, totalPages);
+        me._syncHeaderChk_NSDaChon();
+    },
+
+    // Render các nút phân trang « ‹ 1 2 3 ... N › »
+    _renderPagingBtns_NSDaChon: function (page, totalPages) {
+        var $ul = $("#pgList_NSDaChon");
+        $ul.html('');
+        var add = function (label, target, disabled, active) {
+            var cls = 'page-item';
+            if (disabled) cls += ' disabled';
+            if (active) cls += ' active';
+            $ul.append('<li class="' + cls + '"><a class="page-link" href="javascript:;" data-page="' + target + '">' + label + '</a></li>');
+        };
+        add('«', 1, page === 1, false);
+        add('‹', Math.max(1, page - 1), page === 1, false);
+        var winSize = 5;
+        var startP = Math.max(1, page - Math.floor(winSize / 2));
+        var endP = Math.min(totalPages, startP + winSize - 1);
+        startP = Math.max(1, endP - winSize + 1);
+        for (var p = startP; p <= endP; p++) {
+            add(String(p), p, false, p === page);
+        }
+        add('›', Math.min(totalPages, page + 1), page === totalPages, false);
+        add('»', totalPages, page === totalPages, false);
+    },
+
+    // Đồng bộ header checkbox (all / none / indeterminate) theo state model
+    _syncHeaderChk_NSDaChon: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var arr = me.dtNS_DaChon || [];
+        var $chk = $("#chkAll_NSDaChon");
+        if (arr.length === 0) {
+            $chk.prop('checked', true).prop('indeterminate', false);
+            return;
+        }
+        var checkedCount = arr.filter(function (x) { return x._checked !== false; }).length;
+        $chk.prop('checked', checkedCount === arr.length);
+        $chk.prop('indeterminate', checkedCount > 0 && checkedCount < arr.length);
     },
 
     /*==========================================================
@@ -1568,16 +1741,26 @@ KeHoachTuyenSinhNew.prototype = {
                 HOTEN: ns.HOTEN || '',
                 MASO: ns.MASO || '',
                 DONVI_ID: ns.DAOTAO_COCAUTOCHUC_ID || ns.DONVI_ID || '',
-                DONVI_TEN: ns.DAOTAO_COCAUTOCHUC_TEN || ns.DONVI_TEN || ''
+                DONVI_TEN: ns.DAOTAO_COCAUTOCHUC_TEN || ns.DONVI_TEN || '',
+                _checked: true
             });
             added++;
         });
         me.genTable_NSDaChon();
-        // Đóng modal picker
-        var modalEl = document.getElementById('modal-PickNS-KHTSN');
-        var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-        modal.hide();
-        edu.system.alert("Đã thêm " + added + " nhân sự vào danh sách", "s");
+        // BS5 5.3.2 quirk: mở picker qua data-bs-toggle từ ThemNS → BS5 auto-hide ThemNS.
+        // Khi đóng picker, BS5 không tự re-show ThemNS → cần chủ động show lại.
+        // Cả 2 modal đều dùng jQuery API để match với edu.system.alert (systemroot dùng $.modal).
+        var $picker = $('#modal-PickNS-KHTSN');
+        $picker.one('hidden.bs.modal', function () {
+            // Re-show ThemNS nếu bị auto-hide, rồi mới show alert
+            var $them = $('#modal-ThemNS-KHTSN');
+            if (!$them.hasClass('show')) {
+                $them.modal('show');
+            }
+            $('body').addClass('modal-open');
+            edu.system.alert("Đã thêm " + added + " nhân sự vào danh sách", "s");
+        });
+        $picker.modal('hide');
     },
 
     /*------------------------------------------
@@ -1590,16 +1773,9 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa xác định Kế hoạch nhập học", "w");
             return;
         }
-        // Chỉ lưu nhân sự có row-check tick
-        var arr = [];
-        $("#tblNSDaChon_ThemNS tbody tr").each(function () {
-            var id = $(this).attr('data-person-id');
-            if (!id) return;
-            var checked = $(this).find('.chk-ns-row').is(':checked');
-            if (!checked) return;
-            var ns = me.dtNS_DaChon.filter(function (x) { return x.ID === id; })[0];
-            if (ns) arr.push(ns);
-        });
+        // Lưu tất cả nhân sự có _checked !== false (đọc từ MODEL, không DOM
+        // → không mất row ở trang khác khi có phân trang)
+        var arr = (me.dtNS_DaChon || []).filter(function (x) { return x._checked !== false; });
         if (arr.length === 0) {
             edu.system.alert("Vui lòng tích chọn ít nhất một nhân sự để lưu", "w");
             return;
@@ -1631,9 +1807,14 @@ KeHoachTuyenSinhNew.prototype = {
                 if (failed.length) msg += ". Lỗi: " + failed.join('; ');
                 edu.system.alert(msg, failed.length ? "w" : "s");
                 if (success > 0) {
-                    var modalEl = document.getElementById('modal-ThemNS-KHTSN');
-                    var modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-                    modal.hide();
+                    // Đóng ThemNS + re-show NhanSu (parent) do BS5 5.3.2 quirk
+                    var $them = $('#modal-ThemNS-KHTSN');
+                    $them.one('hidden.bs.modal', function () {
+                        var $nhansu = $('#modal-NhanSu-KHTSN');
+                        if (!$nhansu.hasClass('show')) $nhansu.modal('show');
+                        $('body').addClass('modal-open');
+                    });
+                    $them.modal('hide');
                     me.getList_NhanSu(me.strKHNH_Id_ForView);
                 }
                 return;
