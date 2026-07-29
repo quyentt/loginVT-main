@@ -107,9 +107,10 @@
 
     .inputsotien {
         text-align: right;
-        font-size: 20px;
+        font-size:14px;
         padding-right: 10px;
         border: 1px #f1f1f1 solid;
+
     }
 
     .inputnoidung {
@@ -117,6 +118,7 @@
         border: 1px #f1f1f1 solid;
         height: 32px;
         width: 100%;
+        font-size: 14px !important;
     }
 
     @media only screen and (max-width: 1600px) {
@@ -140,7 +142,7 @@
     <section class="content aps-xuathoadon">
         <div class="row aps-xuathoadon-in">
             <!-- /.left-content -->
-            <div class="col-sm-3 aps-xuathoadon-l" id="zoneTimKiemSinhVien">
+            <div class="col-sm-3 aps-box-left aps-xuathoadon-l" id="zoneTimKiemSinhVien">
                 <div class="box box-solid box-shadow pd0">
                     <div class="box-body pd0">
                         <!-- /.search -->
@@ -204,8 +206,8 @@
                         <div class="zoneInfomation_MainContent  box-nguoidung pd0">
                             <div class="box">
                                 <!-- /.box-body -->
-                                <div class="box-footer aps-nguoidung-table pd0" style="padding-bottom: 0 !important;">
-                                    <table id="tbldata_HSSV" class="table tbldata_HSSV mb-10">
+                                <div class="aps-nguoidung-table pd0" style="padding-bottom: 0 !important;">
+                                    <table id="tbldata_HSSV" class="table tbldata_HSSV mb-10 table-bordered">
                                         <tbody class="poiter"></tbody>
                                     </table>
                                 </div>
@@ -230,7 +232,7 @@
                         </div>
                         <div class="clear"></div>
                          <div class="aps-tab-pane aps-xuathoadon-tab">
-                            <div class="nav-tabs-custom mt-20">
+                            <div class="nav-tabs-custom mt-0">
                             <ul class="nav nav-tabs" style="font-weight: bold">
                                 <li class="tablinks active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">
                                     <i class="fa-light fa-money-check-dollar-pen"></i> Các khoản đã nộp</a></li>
@@ -245,7 +247,7 @@
                                         </div>
                                         <div class="clear"></div>
                                         <div class="zone-content-xuathoadon scroll-table-x mt-10">
-                                            <table id="tbldata_HoaDon" class="table table-hover table-bordered tablecenter">
+                                            <table id="tbldata_HoaDon" class="table table-hover table-bordered tablecenter table-noborder">
                                                 <thead>
                                                     <tr>
                                                         <th style="width:40px">Stt</th>
@@ -274,7 +276,7 @@
                                             <a id="btnAddnewHoaDonQuaBank" class="btn btn-primary btnVietPhieu"><i class="fa fa-inbox"></i> <span class="lang" key="">Xuất hóa đơn</span></a>
                                         </div>
                                         <div class="clear"></div>
-                                        <div class="zone-content scroll-table-x">
+                                        <div class="scroll-table-x">
                                             <table id="tbldata_HoaDon_QuaBank" class="table table-hover table-bordered tablecenter">
                                                 <thead>
                                                     <tr>
@@ -298,9 +300,9 @@
                                     </div>
                                 </div>
                                 <div class="tab-pane" id="tab_1_2">
-                                    <div class="row row-tab row-align">
-                                        <div class="zone-content scroll-table-x">
-                                            <table id="tbldata_HDDaXuat" class="table table-hover table-bordered tablecenter">
+                                    <div class="row row-tab row-align pd0">
+                                        <div class="scroll-table-x">
+                                            <table id="tbldata_HDDaXuat" class="table table-hover table-bordered tablecenter table-noborder">
                                                 <thead>
                                                     <tr>
                                                         <th style="width:40px">Stt</th>
@@ -328,7 +330,7 @@
                     </div>
                 </div>
 
-                <div class="box box-solid box-shadow aps-tinhtrang-hocphi pd0">
+                <div class="box box-solid box-shadow aps-tinhtrang-hocphi pd0 mt-20">
                      <div class="box-header with-border pd20">
                         <h1 class="box-title"><i class="fa-light fa-display-chart-up-circle-dollar"></i> Tình trạng học phí</h1>
                          <div class="box-tools pull-right pl20">

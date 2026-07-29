@@ -924,11 +924,11 @@ ChungTu.prototype = {
         }
         if (data == null || data == undefined) data = me.dt_HS;
         var row = "";
-        row += '<div style="width: 680px" class="info-user">';
-        row += '<div style="width: 200px; float: left">';
-        row += '<img style="margin: 0 auto; display: block" src="' + edu.system.getRootPathImg(data.ANH) + '">';
+        row += '<div style="width:668px" class="info-user">';
+        row += '<div style="width: 168px; float: left" class="user-img">';
+        row += '<img style="margin: 0 auto; display: block;width: 100%" src="' + edu.system.getRootPathImg(data.ANH) + '">';
         row += '</div>';
-        row += '<div style="width: 480px; float: left; padding-left: 20px; margin-top: -7px">';
+        row += '<div style="width: 480px; float: left; padding-left: 20px; margin-top: -7px" class="info-user-detail">';
         row += '<p class="pcard"><i class="fa-solid fa-laptop-binary colorcard"></i> <span class="lang" key="">Mã</span>: ' + edu.util.checkEmpty(data.MASO) + '</p>';
         row += '<p class="pcard"><i class="fa-solid fa-circle-user colorcard"></i> <span class="lang" key="">Tên</span>: ' + edu.util.checkEmpty(data.HODEM) + " " + edu.util.checkEmpty(data.TEN) + '</p>';
         row += '<p class="pcard"><i class="fa fa-birthday-cake colorcard"></i> <span class="lang" key="">Ngày sinh</span>: ' + edu.util.checkEmpty(data.NGAYSINH_NGAY) + '/' + edu.util.checkEmpty(data.NGAYSINH_THANG) + '/' + edu.util.checkEmpty(data.NGAYSINH_NAM) + '</p>';
