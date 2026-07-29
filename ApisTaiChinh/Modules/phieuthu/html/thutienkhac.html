@@ -144,34 +144,147 @@
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
 
-    /* Fix nhóm nút HĐĐT (Xuất hóa đơn nháp, phát hành, ...) không bị co vỡ ký tự */
-    #zoneActionXuatHoaDon {
+    /* ===== Zone Biên lai / Hóa đơn: layout preview + action bar ===== */
+    #zoneBienLaiHoaDon .aps-all-btn {
+        display: block !important;
+        text-align: left;
+    }
+
+    #zoneBienLaiHoaDon .preview-area {
         display: flex;
-        flex-direction: column;
-        flex-wrap: nowrap;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    #zoneBienLaiHoaDon .preview-area > .preview-inner {
+        display: inline-block;
+        max-width: 100%;
+    }
+
+    /* Action bar sticky đáy trang */
+    #zoneBienLaiHoaDon .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px 15px;
+        background: #fff;
+        border-top: 1px solid #e5e5e5;
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+        box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    #zoneBienLaiHoaDon .action-left,
+    #zoneBienLaiHoaDon .action-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    /* Checkbox "Không hiển thị số lượng và đơn giá" */
+    #zoneBienLaiHoaDon .user-check-print {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0 !important;
+        padding: 0 8px;
+        white-space: nowrap;
+    }
+
+    #zoneBienLaiHoaDon .user-check-print input[type="checkbox"] {
+        margin: 0 !important;
+        float: none !important;
+    }
+
+    #zoneBienLaiHoaDon .user-check-print span {
+        white-space: nowrap;
+        font-size: 13px;
+    }
+
+    /* Nhóm nút Liên hóa đơn */
+    #zoneBienLaiHoaDon #btnLienHoaDon {
+        display: inline-flex;
+        align-items: center;
         gap: 4px;
-        flex-shrink: 0;
+    }
+
+    #zoneBienLaiHoaDon #btnLienHoaDon .lbsymbolHD {
+        font-size: 13px;
+        line-height: 1;
+    }
+
+    /* Nhóm nút HĐĐT (dynamic) - xếp ngang, icon vừa phải */
+    #zoneActionXuatHoaDon {
+        display: inline-flex !important;
+        flex-direction: row !important;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
     }
 
     #zoneActionXuatHoaDon .btnXuat_HDDT {
-        width: 85px !important;
-        min-width: 85px !important;
-        flex-shrink: 0 !important;
+        display: inline-flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto !important;
+        min-width: 72px !important;
+        padding: 4px 8px !important;
+        border: 1px solid #e5e5e5 !important;
+        border-radius: 4px;
+        background: #fff;
         box-sizing: border-box;
-        padding: 4px 0;
     }
 
     #zoneActionXuatHoaDon .btnXuat_HDDT > a {
         display: block !important;
-        padding: 2px 0 !important;
+        padding: 0 !important;
+        line-height: 1;
     }
 
     #zoneActionXuatHoaDon .btnXuat_HDDT .lbsymbolHD {
         display: block !important;
-        white-space: normal;
-        word-break: keep-all;
+        white-space: nowrap;
         line-height: 1.2;
-        padding: 0 2px;
+        padding: 2px 0 0;
+        font-size: 12px;
+    }
+
+    /* Nút Save biên lai/hóa đơn được JS prepend vào #zoneActionHoaDon */
+    #zoneActionHoaDon {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    #btnSaveHDBL {
+        display: inline-flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto !important;
+        min-width: 72px !important;
+        padding: 4px 8px !important;
+        border: 1px solid #e5e5e5 !important;
+        border-radius: 4px !important;
+        background: #fff !important;
+        box-sizing: border-box;
+    }
+
+    #btnSaveHDBL > a {
+        padding: 0 !important;
+        line-height: 1;
+    }
+
+    /* Ép icon fa-4x động (từ JS) về kích cỡ vừa với action bar */
+    #zoneActionXuatHoaDon .fa-4x,
+    #zoneActionHoaDon .fa-4x,
+    #btnSaveHDBL .fa-4x {
+        font-size: 1.6em !important;
     }
 </style>
 <div id="MainContent">
@@ -1240,7 +1353,7 @@
             </div>
             <!-- Sửa đối tượng thu -->
             <div id="zoneBienLaiHoaDon" class="col-sm-9 beforeActive pl20" style="width: 100%; display: none">
-                <div class="aps-all-btn text-center mt-20" style="justify-content: center;">
+                <div class="aps-all-btn mt-20">
                     <div class="nH">
                         <div class="b8 UC" aria-live="assertive" aria-atomic="true" style="text-align: left"
                             role="alert">
@@ -1256,41 +1369,47 @@
                         </div>
                     </div>
 
-                    <div style="float:left;" class="d-flex">
-                        <div style="margin:0 20px 20px 20px">
+                    <!-- Vùng preview chứng từ -->
+                    <div class="preview-area">
+                        <div class="preview-inner">
                             <div id="MauInPhieuThu"></div>
-                        </div>
-                        <div class="checkbox-inline user-check-print mt-10 mr-20">
-                            <input style="float: left; margin-right: 5px;margin-top: 4px;" type="checkbox"
-                                id="checkSoLuong">
-                            <span for="checkSoLuong">Không hiển thị số lượng và đơn giá</span>
                         </div>
                     </div>
 
-                    <div id="zoneActionXuatHoaDon" style="float:left; margin-right: 3px;"> </div>
-
-                    <!-- Đóng -->
-                    <a class="btn btn-outline-danger" id="btnClose_HDBL" style="background: #fff;"><i
-                            class="fa fa-times"></i>Đóng</a>
-                    <a class="btn btn-danger" id="btnHuy_HDBL"><i class="fa fa-trash-o"></i>Hủy <span
-                            class="lbLoaiChungTu">Biên
-                            Lai</span></a>
-
-                    <div id="zoneActionHoaDon" style="float:left; margin-left: 3px">
-                        <!-- In Biên Lai -->
-                        <a class="btn btn-primary" id="btnIn_HDBL"><i class="fa fa-print"></i>In <span
-                                class="lbLoaiChungTu">Biên Lai</span></a>
-
-                        <!-- Liên -->
-                        <div id="btnLienHoaDon">
-                            <a title="Liên Hóa đơn" class="btn btn-primary"><i class="fa fa fa-copy"></i></a>
-                            <div id="zoneLienHoaDon"></div>
-                            <div class="clear"></div>
-                            <a class="color-active bold lbsymbolHD">Liên </a>
+                    <!-- Thanh action: destructive trái, nhóm chính phải -->
+                    <div class="action-bar">
+                        <div class="action-left">
+                            <a class="btn btn-danger" id="btnHuy_HDBL"><i class="fa fa-trash-o"></i> Hủy <span
+                                    class="lbLoaiChungTu">Biên Lai</span></a>
                         </div>
 
-                        <a class="btn btn-danger" id="btnThuTien"><i class="fa fa-money"></i>Thu
-                            tiền - không sinh hóa đơn biên lai</a>
+                        <div class="action-right">
+                            <div class="checkbox-inline user-check-print">
+                                <input type="checkbox" id="checkSoLuong">
+                                <span for="checkSoLuong">Không hiển thị số lượng và đơn giá</span>
+                            </div>
+
+                            <a class="btn btn-primary" id="btnIn_HDBL"><i class="fa fa-print"></i> In <span
+                                    class="lbLoaiChungTu">Biên Lai</span></a>
+
+                            <div id="btnLienHoaDon">
+                                <a title="Liên Hóa đơn" class="btn btn-primary"><i class="fa fa fa-copy"></i></a>
+                                <div id="zoneLienHoaDon"></div>
+                                <a class="color-active bold lbsymbolHD">Liên</a>
+                            </div>
+
+                            <!-- JS prepend #btnSaveHDBL vào đây khi ở chế độ xuất -->
+                            <div id="zoneActionHoaDon"></div>
+
+                            <!-- JS render các nút HĐĐT vào đây -->
+                            <div id="zoneActionXuatHoaDon"></div>
+
+                            <a class="btn btn-danger" id="btnThuTien" title="Thu tiền - không sinh hóa đơn biên lai"><i
+                                    class="fa fa-money"></i> Thu tiền không sinh HĐBL</a>
+
+                            <a class="btn btn-outline-danger" id="btnClose_HDBL" style="background: #fff;"><i
+                                    class="fa fa-times"></i> Đóng</a>
+                        </div>
                     </div>
                 </div>
             </div>
