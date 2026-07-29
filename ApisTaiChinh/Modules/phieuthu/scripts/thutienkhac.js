@@ -3307,6 +3307,7 @@ PhieuThuKhac.prototype = {
                         edu.extend.notifyBeginLoading('Thực hiện thu tiền thành công', 'notifications_PhieuThu');
                     }
                     else {
+                        edu.system.alert("Lỗi: " + d.Message, "w");
                         edu.extend.notifyBeginLoading(data.Message);
                     }
                     edu.system.endLoading();
@@ -3473,7 +3474,7 @@ PhieuThuKhac.prototype = {
                         edu.extend.notifyBeginLoading('Thực hiện thu tiền thành công', 'notifications_PhieuThu');
                     }
                     else {
-                        edu.system.alert("Lỗi: " + d.Message, "w");
+                        edu.system.alert("Lỗi: " + data.Message, "w");
                         edu.extend.notifyBeginLoading(data.Message);
                     }
                     edu.system.endLoading();
@@ -3632,6 +3633,7 @@ PhieuThuKhac.prototype = {
                             obj_save.strTaiChinh_CacKhoanThu_Ids = strIDS;
                             saveHDDT(obj_save);
                         } else {
+                            edu.system.alert("Lỗi: " + d.Message, "w");
                             informSaveSuccess(data.Message);
                         }
                     }
