@@ -468,8 +468,9 @@ KeHoachTuyenSinhNew.prototype = {
                 $('#kqdk_khai').removeClass('d-none');
                 me._exitSuaMode();   // ensure Thêm mới mode, banner ẩn, save btn "Lưu hồ sơ"
                 me.initKhai_DanhMuc();
-                // Nguyện vọng đầu ra phụ thuộc Đợt hiện tại → refresh mỗi lần mở
+                // Nguyện vọng đầu ra + Phương thức tuyển sinh đều phụ thuộc KH+Đợt → refresh mỗi lần mở
                 me._loadNguyenVongDauRa();
+                me._loadPhuongThucTuyenSinh();
             } else {
                 $('#kqdk_list').removeClass('d-none');
                 // Preload các DM cần lookup cho list (Giới tính) — chạy 1 lần
@@ -1472,6 +1473,58 @@ KeHoachTuyenSinhNew.prototype = {
                         display = nganh || '[Đầu ra ' + (i + 1) + ']';
                         if (extra.length) display += ' — ' + extra.join(' · ');
                     }
+                    $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
+                }
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Load Phương thức tuyển sinh theo KH + Đợt vào dropdown.
+    -- Origin API: PKG_CORE_TS_KEHOACH.LayDS_PhuongThucTuyenSinh
+    -------------------------------------------*/
+    _loadPhuongThucTuyenSinh: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $sel = $('#ddlKQ_PhuongThuc');
+        $sel.html('<option value="">-- Chọn phương thức tuyển sinh --</option>');
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) return;
+        var obj_save = {
+            'action': 'TS_CORE_KEHOACH_MH/DSA4BRIeESk0Li8mFSk0IhU0OCQvEigvKQPP',
+            'func': 'PKG_CORE_TS_KEHOACH.LayDS_PhuongThucTuyenSinh',
+            'iM': edu.system.iM,
+            'strKeHoach_Id': me.strKeHoachTuyenSinh_Id,
+            'strDot_Id': me.strDot_Id_ForKQ || '',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'XEM'
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data || !data.Success) return;
+                var rows = edu.util.checkValue(data.Data) ? data.Data : [];
+                var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+                var pick = function () {
+                    for (var k = 0; k < arguments.length; k++) {
+                        var v = arguments[k];
+                        if (v != null && String(v).trim() !== '') return String(v).trim();
+                    }
+                    return '';
+                };
+                for (var i = 0; i < rows.length; i++) {
+                    var d = rows[i];
+                    var id = pick(d.ID, d.Id, d.id);
+                    if (!id) continue;
+                    var name = pick(d.TEN, d.Ten, d.PHUONGTHUC_TEN, d.PHUONG_THUC_TEN);
+                    var ma = pick(d.MA, d.Ma, d.PHUONGTHUC_MA, d.PHUONG_THUC_MA);
+                    var display = name || ma || ('[Phương thức ' + (i + 1) + ']');
+                    if (name && ma && ma !== name) display += ' (' + ma + ')';
                     $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
                 }
             },
