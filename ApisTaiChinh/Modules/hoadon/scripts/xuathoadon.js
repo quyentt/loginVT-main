@@ -740,8 +740,8 @@ HoaDon.prototype = {
                 "mRender": function (nRow, aData) {
                     var strNhanSu_Avatar = edu.system.getRootPathImg(aData.ANH);
 
-                    var html = '<span id="sl_hoten' + aData.ID + '">' + edu.util.checkEmpty(aData.HODEM) + " " + edu.util.checkEmpty(aData.TEN) + '</span><br />';
-                    html += '<span id="sl_ma' + aData.ID + '">' + edu.util.checkEmpty(aData.MASO) + '</span>'
+                    var html = '<span id="sl_hoten' + aData.ID + '" class="sl_hoten bold">' + edu.util.checkEmpty(aData.HODEM) + " " + edu.util.checkEmpty(aData.TEN) + '</span><br />';
+                    html += '<span id="sl_ma' + aData.ID + '" class="italic sl_ma">' + edu.util.checkEmpty(aData.MASO) + '</span>'
 
                     var hienthi = '<span style="padding-right: 5px !important; float: left"><img src="' + strNhanSu_Avatar + '" class= "table-img" id="sl_hinhanh' + aData.ID + '" /></span>';
                     hienthi += html;
@@ -788,17 +788,17 @@ HoaDon.prototype = {
         }
         if (data == null || data == undefined) data = me.dt_HS;
         var row = "";
-        row += '<div style="width: 550px">';
-        row += '<div style="width: 200px; float: left">';
-        row += '<img style="margin: 0 auto; display: block" src="' + edu.system.getRootPathImg(data.ANH) + '">';
+        row += '<div style="width:668px" class="info-user">';
+        row += '<div style="width: 168px; float: left" class="user-img">';
+        row += '<img style="margin: 0 auto; display: block;width: 100%" src="' + edu.system.getRootPathImg(data.ANH) + '">';
         row += '</div>';
-        row += '<div style="width: 330px; float: left; padding-left: 3px; margin-top: -7px">';
-        row += '<p class="pcard"><i class="fa fa-credit-card-alt colorcard"></i> <span class="lang" key="">Mã</span>: ' + edu.util.checkEmpty(data.MASO) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-users colorcard"></i> <span class="lang" key="">Tên</span>: ' + edu.util.checkEmpty(data.HODEM) + " " + edu.util.checkEmpty(data.TEN) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-birthday-cake colorcard"></i> <span class="lang" key="">Ngày sinh</span>: ' + edu.util.checkEmpty(data.NGAYSINH_NGAY) + '/' + edu.util.checkEmpty(data.NGAYSINH_THANG) + '/' + edu.util.checkEmpty(data.NGAYSINH_NAM) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-snowflake-o colorcard"></i> <span class="lang" key="">Lớp</span>: ' + edu.util.checkEmpty(data.DAOTAO_LOPQUANLY_N1_TEN) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-sitemap colorcard"></i> <span class="lang" key="">Ngành</span>: ' + edu.util.checkEmpty(data.NGANHHOC_N1_TEN) + '</p>';
-        row += '<p class="pcard"><i class="fa fa-envelope-o colorcard"></i> <span class="lang" key="">Địa chỉ</span>: ' + edu.util.checkEmpty(data.TTLL_KHICANBAOTINCHOAI_ODAU) + '</p>';
+        row += '<div style="width: 480px; float: left; padding-left: 20px; margin-top: -7px" class="info-user-detail">';
+        row += '<p class="pcard"><i class="fa-solid fa-laptop-binary colorcard"></i> <span class="lang" key="">Mã</span>: ' + edu.util.checkEmpty(data.MASO) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-circle-user colorcard"></i> <span class="lang" key="">Tên</span>: ' + edu.util.checkEmpty(data.HODEM) + " " + edu.util.checkEmpty(data.TEN) + '</p>';
+        row += '<p class="pcard"><i class="fa fa-birthday-cake colorcard"></i><span class="lang" key="">Ngày sinh</span>: ' + edu.util.checkEmpty(data.NGAYSINH_NGAY) + '/' + edu.util.checkEmpty(data.NGAYSINH_THANG) + '/' + edu.util.checkEmpty(data.NGAYSINH_NAM) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-screen-users colorcard"></i> <span class="lang" key="">Lớp</span>: ' + edu.util.checkEmpty(data.DAOTAO_LOPQUANLY_N1_TEN) + '</p>';
+        row += '<p class="pcard"><i class="fa-brands fa-leanpub colorcard"></i> <span class="lang" key="">Ngành</span>: ' + edu.util.checkEmpty(data.NGANHHOC_N1_TEN) + '</p>';
+        row += '<p class="pcard"><i class="fa-solid fa-location-dot colorcard"></i> <span class="lang" key="">Địa chỉ</span>: ' + edu.util.checkEmpty(data.TTLL_KHICANBAOTINCHOAI_ODAU) + '</p>';
         row += '<p class="pcard"><i class="fa fa-phone colorcard"></i> <span class="lang" key="">Số điện thoại</span>: ' + edu.util.checkEmpty(data.TTLL_DIENTHOAICANHAN) + '</p>';
         row += '</div>';
         row += '</div>';
@@ -829,7 +829,7 @@ HoaDon.prototype = {
         //
         var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
         var strTrangThai_Ma = data.TRANGTHAINGUOIHOC_N1_MA;
-        var strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-success"><i class="fa fa-snowflake-o"></i> ' + strTrangThai_Ten + '</span>';
+        var strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-success"><i class="fa fa-graduation-cap"></i> ' + strTrangThai_Ten + '</span>';
         switch (strTrangThai_Ma) {
             case "CHUYENTRUONGDI":
                 strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-danger"><i class="fa fa-sign-out"></i> ' + strTrangThai_Ten + '</span>';

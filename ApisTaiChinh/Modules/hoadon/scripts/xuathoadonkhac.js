@@ -800,7 +800,7 @@ HoaDonKhac.prototype = {
         //
         var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
         var strTrangThai_Ma = data.TRANGTHAINGUOIHOC_N1_MA;
-        var strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-success"><i class="fa fa-snowflake-o"></i> ' + strTrangThai_Ten + '</span>';
+        var strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-success"><i class="fa fa-graduation-cap"></i> ' + strTrangThai_Ten + '</span>';
         switch (strTrangThai_Ma) {
             case "CHUYENTRUONGDI":
                 strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-danger"><i class="fa fa-sign-out"></i> ' + strTrangThai_Ten + '</span>';
