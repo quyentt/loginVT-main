@@ -3,8 +3,8 @@
         overflow: unset;
     }
 
-    .checkbox-inline + .checkbox-inline,
-    .radio-inline + .radio-inline {
+    .checkbox-inline+.checkbox-inline,
+    .radio-inline+.radio-inline {
         margin-left: 0px;
     }
 
@@ -64,7 +64,7 @@
         font-weight: bold;
     }
 
-    dropdown-menu > li > a:hover {
+    dropdown-menu>li>a:hover {
         background-color: gray !important;
     }
 
@@ -81,9 +81,9 @@
         width: 99%
     }
 
-        .box-mini:hover {
-            background: #eaeaea;
-        }
+    .box-mini:hover {
+        background: #eaeaea;
+    }
 
     .popover {
         max-width: 100%;
@@ -121,31 +121,31 @@
                         <!-- Bộ tìm kiếm -->
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_HeDaoTao_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple">
+                                multiple="multiple">
                                 <option id="" value=""> --Chọn hệ đào tạo-- </option>
                             </select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_KhoaDaoTao_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple">
+                                multiple="multiple">
                                 <option id="" value=""> --Chọn khóa đào tạo-- </option>
                             </select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_ChuongTrinh_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple">
+                                multiple="multiple">
                                 <option id="" value=""> --Chọn chương trình-- </option>
                             </select>
                         </div>
                         <div class="col-sm-3 item-search pr10">
                             <select id="dropSearch_Lop_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple">
+                                multiple="multiple">
                                 <option id="" value=""> --Chọn lớp-- </option>
                             </select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_HocKy_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple">
+                                multiple="multiple">
                                 <option id="" value=""> --Chọn học kỳ-- </option>
                             </select>
                         </div>
@@ -162,25 +162,25 @@
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_NguoiThu_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple">
+                                multiple="multiple">
                                 <option id="" value=""> --Chọn người thu-- </option>
                             </select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_NamNhapHoc_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple"></select>
+                                multiple="multiple"></select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_KhoaQuanLy_IHD" class="select-opt" style="width:100% !important"
-                                    multiple="multiple"></select>
+                                multiple="multiple"></select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <input id="txtSearch_TuNgay_IHD" class="form-control input-datepicker"
-                                   placeholder="Từ ngày dd/mm/yyyy" />
+                                placeholder="Từ ngày dd/mm/yyyy" />
                         </div>
                         <div class="col-sm-3 item-search">
                             <input id="txtSearch_DenNgay_IHD" class="form-control input-datepicker"
-                                   placeholder="Đến ngày dd/mm/yyyy" />
+                                placeholder="Đến ngày dd/mm/yyyy" />
                         </div>
                         <div class="col-sm-3 item-search">
                             <input id="txtSearch_TuSo_IHD" class="form-control" placeholder="Từ số" />
@@ -191,11 +191,11 @@
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_PhanLoai" class="select-opt" style="width:100% !important"
-                                    multiple="multiple"></select>
+                                multiple="multiple"></select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_HinhThucThu" class="select-opt" style="width:100% !important"
-                                    multiple="multiple"></select>
+                                multiple="multiple"></select>
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_PhanLoaiCSDT" class="select-opt" style="width:100% !important">
@@ -216,42 +216,43 @@
                         </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_NganhHoc" class="select-opt" style="width:100% !important"
-                                    multiple="multiple"></select>
+                                multiple="multiple"></select>
                         </div>
                         <div class="clearfix"></div>
                         <div class="col-sm-6 item-search">
                             <input id="txtSearch_DT" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                         </div>
                         <div class="col-sm-3 item-search">
-                            <a id="btnSearch" class="btn btn-default">
-                                <i class="fa fa-search"></i> <span class="lang"
-                                                                   key="">Tìm kiếm</span>
+                            <a id="btnSearch" class="btn btn-default btn-search">
+                                <i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span>
                             </a>
                         </div>
                         <div class="clearfix"></div>
                         <div class="col-sm-6 item-search d-flex">
-                            <a id="btnAddNamBaoCao" class="btn btn-outline-primary mr-10">
+                            <a id="btnAddNamBaoCao" class="btn btn-soft-primary mr-10">
                                 <i class="fal fa-usd-circle"></i> <span class="lang" key="">
                                     Cấu hình năm tài
                                     chính
                                 </span>
                             </a>
-                            <a id="btnViewBaoCao" class="btn btn-outline-success mr-10">
+                            <a id="btnViewBaoCao" class="btn btn-soft-success mr-10">
                                 <i class="fal fa-file-invoice-dollar"></i> <span class="lang" key="">
                                     Xem báo cáo đã
                                     thực hiện
                                 </span>
                             </a>
-                            <a id="btnXoaNamBaoCao" class="btn btn-outline-danger mr-10">
+                            <a id="btnXoaNamBaoCao" class="btn btn-soft-danger mr-10">
                                 <i class="fa fa-trash"></i> Xóa
                                 năm tài chính
                             </a>
                         </div>
                         <div class="col-sm-6 item-search d-flex">
-                            <div class="dropdown" id="zonebtnBaoCao_TC" style="width: auto !important;"></div>
-                            <div class="dropdown" id="zonebtnBaoCao_TC_Import" style="width: auto !important;">
+                            <div class="dropdown zonebtnBaoCao_TC" id="zonebtnBaoCao_TC"
+                                style="width: auto !important;"></div>
+                            <div class="dropdown zonebtnBaoCao_TC_Import" id="zonebtnBaoCao_TC_Import"
+                                style="width: auto !important;">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                    <i class="fa fa-cloud-upload"></i> Import <span class="caret"></span>
+                                    <i class="fa-regular fa-file-import"></i> Import <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu form-container">
                                     <li>
@@ -279,7 +280,7 @@
                                 <span class="lang" key="">Chọn khoản thu cần xuất hóa đơn</span>
                             </p>
                         </div>
-                        <div class="area-search">
+                        <div class="area-search mt-10">
                             <div id="DSKhoanThu" style="padding-left: 25px;" class="inputSearch collapse in">
                                 <div id="zoneLoaiKhoanPhi"></div>
                             </div>
@@ -296,9 +297,9 @@
                                 <span class="lang color-red" key="">Chọn trạng thái sinh viên</span>
                             </p>
                         </div>
-                        <div class="area-search">
+                        <div class="area-search mt-10">
                             <div style="padding-left: 25px" id="DSTrangThaiSV_LHD" style="padding-left: 25px"
-                                 class="inputSearch collapse in">
+                                class="inputSearch collapse in">
                             </div>
                         </div>
                     </div>
@@ -321,7 +322,7 @@
                         <li class=""><a href="#tab_ketnoiketoan" data-toggle="tab">3. Kết nối kế toán</a></li>
                     </ul>
                     <div class="tab-content mt-20">
-                        <!-- Danh sách khoản thu công nợ -->
+                        <!-- Kết quả đã nộp< -->
                         <div class="tab-pane active" id="tab_tongthu">
                             <div class="row row-tab row-align">
                                 <div class="zone-content-baocao scroll-table-x">
@@ -361,7 +362,7 @@
                                     </table>
                                 </div>
                                 <div class="zone-content-baocao scroll-table-x mt-5">
-                                    <table class="table table-hover table-noborder" style="border: 0 !important;"> 
+                                    <table class="table table-hover table-noborder" style="border: 0 !important;">
                                         <tfoot>
                                             <tr>
                                                 <td style="font-weight: bold;border: 0 !important;">Tổng tiền: </td>
@@ -373,15 +374,18 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- 2. Kết quả phải nộp -->
                         <div class="tab-pane" id="tab_phainop">
                             <div class="row">
                                 <div class="pull-right">
-                                    <a id="btnDelete_KetQuaPhaiNop" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                                    <a id="btnDelete_KetQuaPhaiNop" class="btn btn-default"><i class="fa fa-trash"></i>
+                                        Xóa</a>
                                 </div>
                             </div>
                             <div class="row row-tab row-align">
                                 <div class="zone-content-baocao scroll-table-x">
-                                    <table id="tblKetQuaPhaiNop" class="table table-hover tblKetQuaPhaiNop mb-0 table-bordered table-noborder">
+                                    <table id="tblKetQuaPhaiNop"
+                                        class="table table-hover tblKetQuaPhaiNop mb-0 table-bordered table-noborder">
                                         <thead>
                                             <tr>
                                                 <th class="td-fixed">Stt</th>
@@ -421,7 +425,7 @@
                                     <table class="table table-hover border-0 table-noborder">
                                         <tfoot>
                                             <tr>
-                                                 <td style="font-weight: bold; border: 0 !important;">Tổng tiền: </td>
+                                                <td style="font-weight: bold; border: 0 !important;">Tổng tiền: </td>
                                                 <td style="font-weight: bold; text-align: left" id="lblTongTien2"></td>
                                                 <td>Bằng chữ: <i id="lblTongTienBangChu2"></i></td>
                                             </tr>
@@ -431,7 +435,7 @@
 
                             </div>
                         </div>
-
+                        <!-- 3. Kết nối kế toán -->
                         <div class="tab-pane" id="tab_ketnoiketoan">
                             <div class="row row-tab row-align">
                                 <div class="area-search">
@@ -442,7 +446,7 @@
                                         </div>
                                         <div class="col col-sm-3 item-search">
                                             <input id="txtSearch_DatTenBangDuLieu" class="form-control"
-                                                   placeholder="Đặt tên bảng dữ liệu" />
+                                                placeholder="Đặt tên bảng dữ liệu" />
                                         </div>
                                         <div class="col col-sm-6 item-search aps-list-btn">
                                             <a id="btnTaoDuLieu" class="btn btn-success">
@@ -467,17 +471,18 @@
                                             </a>
                                         </div>
                                         <div class="col-sm-12 item-search aps-list-btn">
-                                            <a id="btnDeleteBangDuLieu" class="btn btn-default pl0 ml0"
-                                               style="margin-left: 0 !important;">
-                                                <i class="fa fa-trash"></i> <span class="lang" key="">Xóa bảng dữ liệu</span>
+                                            <a id="btnDeleteBangDuLieu" class="btn btn-soft-danger ml0"
+                                                style="margin-left: 0 !important;">
+                                                <i class="fa fa-trash"></i> <span class="lang" key="">Xóa bảng dữ
+                                                    liệu</span>
                                             </a>
-                                            <a id="btnTaoChungTu" class="btn btn-success">
+                                            <a id="btnTaoChungTu" class="btn btn-soft-success">
                                                 <i class="fal fa-file-medical"></i> <span class="lang" key="">
                                                     Tạo chứng
                                                     từ
                                                 </span>
                                             </a>
-                                            <a id="btnXoaDuLieuChungTu" class="btn btn-default">
+                                            <a id="btnXoaDuLieuChungTu" class="btn btn-soft-danger">
                                                 <i class="fa fa-trash"></i> <span class="lang" key="">
                                                     Xóa dữ liệu chứng
                                                     từ
@@ -500,7 +505,8 @@
                                 </div>
                                 <div class="clear"></div>
                                 <div class="zone-content-baocao scroll-table-x mt-10">
-                                    <table id="tblBangDuLieuKetNoi" class="table table-hover tblBangDuLieuKetNoi mb-0 table-bordered table-noborder">
+                                    <table id="tblBangDuLieuKetNoi"
+                                        class="table table-hover tblBangDuLieuKetNoi mb-0 table-bordered table-noborder">
                                         <thead>
                                             <tr>
                                                 <th class="td-fixed">Stt</th>
@@ -525,7 +531,7 @@
 
 <!--Năm tài chính-->
 <div class="modal fade myModalNamTaiChinh" id="myModalNamTaiChinh" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog" style="width:860px">
         <div class="modal-content">
             <div class="modal-header">
@@ -591,7 +597,7 @@
 </div>
 <!--Xem báo cáo đã thực hiện-->
 <div class="modal fade myModalKetQua" id="myModalKetQua" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
@@ -635,8 +641,7 @@
                                 </span>
                             </th>
                             <th class="td-center td-fixed" rowspan="2">
-                                <input class="chkSystemSelectAll" type="checkbox"
-                                       id="chkSelectAll">
+                                <input class="chkSystemSelectAll" type="checkbox" id="chkSelectAll">
                             </th>
                         </tr>
                         <tr>
@@ -677,7 +682,7 @@
 </div>
 
 <div class="modal fade modal_XacNhan" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog" style="width: 800px">
         <div class="modal-content">
             <div class="modal-header">
@@ -687,8 +692,7 @@
                 <h4 class="modal-title modal-name" id="myModalLabel">
                     <span style="float: left">
                         <i class="fa fa-wrench"></i> Đăng ký:
-                    </span><span id="txtTenSanPham"
-                                 class="lblLichHoc_HP"></span>
+                    </span><span id="txtTenSanPham" class="lblLichHoc_HP"></span>
                 </h4>
             </div>
             <div class="modal-body">
@@ -718,22 +722,19 @@
                             <div style="margin-left: auto; margin-right: auto; width: 270px">
                                 <div id="btnClose_HDBL" class="btn-large">
                                     <a class="btn">
-                                        <i style="color: #337ab7"
-                                           class="fa fa-angle-double-down fa-4x"></i>
+                                        <i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i>
                                     </a>
                                     <a class="color-active bold lbsymbolHD">Đóng</a>
                                 </div>
                                 <div id="btnClose_HDBL" class="btn-large">
                                     <a class="btn">
-                                        <i style="color: #337ab7"
-                                           class="fa fa-angle-double-down fa-4x"></i>
+                                        <i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i>
                                     </a>
                                     <a class="color-active bold lbsymbolHD">Đóng</a>
                                 </div>
                                 <div id="btnClose_HDBL" class="btn-large">
                                     <a class="btn">
-                                        <i style="color: #337ab7"
-                                           class="fa fa-angle-double-down fa-4x"></i>
+                                        <i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i>
                                     </a>
                                     <a class="color-active bold lbsymbolHD">Đóng</a>
                                 </div>
@@ -809,8 +810,7 @@
                                 <th style="text-align:center;">Tên chương trình</th>
                                 <th style="text-align:center;">Ký hiệu</th>
                                 <th style="text-align:center;width: 40px">
-                                    <input type="checkbox"
-                                           class="chkSystemSelectAll">
+                                    <input type="checkbox" class="chkSystemSelectAll">
                                 </th>
                             </tr>
                         </thead>
@@ -835,8 +835,7 @@
                 </button>
                 <a id="btnDelete_MaKhachHang" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
                 <a class="submit btn btn-primary" id="btnSave_MaKhachHang">
-                    <i class="fal fa-save"></i><span class="lang"
-                                                     key="">Lưu</span>
+                    <i class="fal fa-save"></i><span class="lang" key="">Lưu</span>
                 </a>
             </div>
         </div>
@@ -844,7 +843,7 @@
 </div>
 <!--Them Mã khách hàng-->
 <div class="modal fade myModalHeKhoaMaKhachHang" id="myModalHeKhoaMaKhachHang" role="dialog"
-     aria-labelledby="myModalLabel" aria-hidden="true">
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -896,8 +895,10 @@
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thiết lập báo cáo chạy tự động</h3>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thiết lập báo cáo
+                    chạy tự động</h3>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -919,7 +920,8 @@
                                 <th style="text-align:center;">Thông số báo cáo</th>
                                 <th style="text-align:center;">Đặt lịch tự động</th>
                                 <th style="text-align:center;">Xem kết quả</th>
-                                <th style="text-align:center;width: 40px"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                <th style="text-align:center;width: 40px"><input type="checkbox"
+                                        class="chkSystemSelectAll"></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -930,7 +932,8 @@
             <div id="notify"></div>
             <div class="modal-footer">
                 <a id="btnDelete_LichTuDong" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                    <span class="lang" key="">Đóng</span></button>
             </div>
         </div>
     </div>
@@ -939,8 +942,10 @@
     <div class="modal-dialog" style="width: 1200px; overflow: hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thông số báo cáo</h3>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thông số báo cáo
+                </h3>
             </div>
             <div class="modal-body">
                 <div class="row">
@@ -960,7 +965,8 @@
                                 <th style="text-align:center;">Dữ liệu</th>
                                 <th style="text-align:center;">Ngày tạo</th>
                                 <th style="text-align:center;">Người tạo</th>
-                                <th style="text-align:center;width: 40px"><input type="checkbox" class="chkSystemSelectAll"></th>
+                                <th style="text-align:center;width: 40px"><input type="checkbox"
+                                        class="chkSystemSelectAll"></th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -970,7 +976,8 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                    <span class="lang" key="">Đóng</span></button>
             </div>
         </div>
     </div>
