@@ -5423,6 +5423,7 @@ systemextend.prototype = {
             $(".dataNoiDungThu2_" + strIDMoRong).html(strNoiDung2);
 
             function loaddata(dtKhoanThu) {
+                console.log('[HOCPHAN_V2]', dtKhoanThu[0] && dtKhoanThu[0].HOCPHANTEXT, '| checkValue =', dtKhoanThu[0] && edu.util.checkValue(dtKhoanThu[0].HOCPHANTEXT));
                 function cell(item) {
                     if (!item) return '';
                     var s = '<td class="no-padding" style="margin-top: 2px"><span>- ' + item.TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(item.SOTIENDATHU) + ')</span>';
