@@ -16552,3 +16552,24 @@ table#clone {
 .zoneXuatThanhCong .box-body{
     padding: 20px !important;
 }
+/* ---------------- */
+.aps-baocao .row.box-select{
+    padding: 20px !important;
+    margin-top: 20px !important;
+    display: flex;
+}
+.zonebtnBaoCao_TC .fa-file-excel-o {
+    margin-top: 2px;
+    padding-right: 8px;
+}
+.zonebtnBaoCao_TC .btn .caret {
+    margin-left: 8px;
+    margin-top: 7px;
+}
+.zonebtnBaoCao_TC_Import .btn .caret {
+    margin-left: 5px;
+    margin-top: -3px;
+}
+.aps-list-btn .btn{
+    margin-left: 0 !important;
+}
