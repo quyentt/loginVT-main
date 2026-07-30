@@ -503,26 +503,30 @@ PhieuThu.prototype = {
         });
         //tab2
         $(".btnDetail_NoChungCacKhoan_Tab2").click(function () {
-            me.tabActive = 2;
+            me.tabActive = 1;
+            $('a[href="#tab_1"]').tab('show');
             me.showHide_Box("zoneThongTinBoSung", "zoneKhoan_ChiTiet");
             me.getList_NoChungCacKhoan();
         });
         //tab3
         $(".btnDetail_NoRiengTungKhoan_Tab3").click(function () {
-            me.tabActive = 3;
+            me.tabActive = 1;
+            $('a[href="#tab_1"]').tab('show');
             me.showHide_Box("zoneThongTinBoSung", "zoneKhoan_ChiTiet");
             me.getList_NoRiengTungKhoan();
         });
         //tab4
         $(".btnDetail_DuRiengCacKhoan_Tab4").click(function () {
-            me.tabActive = 4;
+            me.tabActive = 1;
+            $('a[href="#tab_1"]').tab('show');
             me.showHide_Box("zoneThongTinBoSung", "zoneKhoan_ChiTiet");
             me.getList_DuChungCacKhoan();
 
         });
         //tab5
         $(".btnDetail_DuChungCacKhoan_Tab5").click(function () {
-            me.tabActive = 5;
+            me.tabActive = 1;
+            $('a[href="#tab_1"]').tab('show');
             me.showHide_Box("zoneThongTinBoSung", "zoneKhoan_ChiTiet");
             me.getList_DuRiengCacKhoan();
         });

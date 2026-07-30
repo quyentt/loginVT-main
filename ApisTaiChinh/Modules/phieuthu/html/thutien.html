@@ -317,6 +317,12 @@
         padding: 0 !important;
     }
 
+    /* Khi jQuery slideUp set inline display:none, cần override !important của display:grid ở trên */
+    #zoneThongTinBoSungTab1[style*="display: none"],
+    #zoneThongTinBoSungTab1[style*="display:none"] {
+        display: none !important;
+    }
+
     /* Mọi cột trong tab1 = 1 grid cell, bỏ Bootstrap col width */
     #zoneThongTinBoSungTab1 > [class*="col-"] {
         width: auto !important;
@@ -1035,6 +1041,77 @@
                                                     <!-- ./col -->
                                                     <div class="clear"></div>
                                                 </div>
+                                                <div class="box-content zoneThongTinBoSung border-bottom" id="zoneKhoan_ChiTiet"
+                                                    style="display: none">
+                                                    <div class="form-container">
+                                                        <div class="form-container-header form-container-header-bg">
+                                                            <div class="pull-left">
+                                                                <h4 class="color-blue fz20"><i class="fa-solid fa-list"></i> Danh sách
+                                                                    <span id="lblLoaiKhoanThu"></span>
+                                                                </h4>
+                                                            </div>
+                                                            <div class="pull-right">
+                                                                <a class="btn btn-default pointer btnClose"><i
+                                                                        class="fa fa-times-circle"></i></a>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="form-container-body" style="padding-top: 10px !important;">
+                                                            <div class="table-responsive aps-table-select">
+                                                                <div class="scroll-table-x">
+                                                                    <table id="tblChiTietKhoan"
+                                                                        class="table mb-0 tblChiTietKhoan table-bordered table-noborder">
+                                                                        <thead>
+                                                                            <!--Load from js-->
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            <!--Load from js-->
+                                                                        </tbody>
+                                                                        <tfoot>
+                                                                            <!--Load from js-->
+                                                                        </tfoot>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                        <div class="form-container-footer">
+                                                            <div class="col-sm-12">
+                                                                <div class="pull-right">
+                                                                    <a class="btn btn-default pointer btnClose"><i
+                                                                            class="fa fa-times-circle"></i> Đóng</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="box-content zoneThongTinBoSung border-bottom" id="zoneXemThongTinAll"
+                                                    style="display: none">
+                                                    <div class="form-container">
+                                                        <div class="form-container-header">
+                                                            <div class="pull-left">
+                                                                <h4 class="color-active" style="padding:15px"><i
+                                                                        class="fa fa-info-circle"></i> Danh sách</h4>
+                                                            </div>
+                                                            <div class="pull-right">
+                                                                <a class="btn btn-default pointer btnClose"><i
+                                                                        class="fa fa-times-circle"></i></a>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+
+                                                        <div class="form-container-footer">
+                                                            <div class="col-sm-12">
+                                                                <div class="pull-right">
+                                                                    <a class="btn btn-default pointer btnClose"><i
+                                                                            class="fa fa-times-circle"></i> Đóng</a>
+                                                                </div>
+                                                            </div>
+                                                            <div class="clear"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <!--Khoản nợ chung-->
@@ -1596,77 +1673,6 @@
                                     </div>
                                 </div>
 
-                                <div class="box-content zoneThongTinBoSung border-bottom" id="zoneKhoan_ChiTiet"
-                                    style="display: none">
-                                    <div class="form-container">
-                                        <div class="form-container-header form-container-header-bg">
-                                            <div class="pull-left">
-                                                <h4 class="color-blue fz20"><i class="fa-solid fa-list"></i> Danh sách
-                                                    <span id="lblLoaiKhoanThu"></span>
-                                                </h4>
-                                            </div>
-                                            <div class="pull-right">
-                                                <a class="btn btn-default pointer btnClose"><i
-                                                        class="fa fa-times-circle"></i></a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                        <div class="form-container-body" style="padding-top: 10px !important;">
-                                            <div class="table-responsive aps-table-select">
-                                                <div class="scroll-table-x">
-                                                    <table id="tblChiTietKhoan"
-                                                        class="table mb-0 tblChiTietKhoan table-bordered table-noborder">
-                                                        <thead>
-                                                            <!--Load from js-->
-                                                        </thead>
-                                                        <tbody>
-                                                            <!--Load from js-->
-                                                        </tbody>
-                                                        <tfoot>
-                                                            <!--Load from js-->
-                                                        </tfoot>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                        <div class="form-container-footer">
-                                            <div class="col-sm-12">
-                                                <div class="pull-right">
-                                                    <a class="btn btn-default pointer btnClose"><i
-                                                            class="fa fa-times-circle"></i> Đóng</a>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="box-content zoneThongTinBoSung border-bottom" id="zoneXemThongTinAll"
-                                    style="display: none">
-                                    <div class="form-container">
-                                        <div class="form-container-header">
-                                            <div class="pull-left">
-                                                <h4 class="color-active" style="padding:15px"><i
-                                                        class="fa fa-info-circle"></i> Danh sách</h4>
-                                            </div>
-                                            <div class="pull-right">
-                                                <a class="btn btn-default pointer btnClose"><i
-                                                        class="fa fa-times-circle"></i></a>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-
-                                        <div class="form-container-footer">
-                                            <div class="col-sm-12">
-                                                <div class="pull-right">
-                                                    <a class="btn btn-default pointer btnClose"><i
-                                                            class="fa fa-times-circle"></i> Đóng</a>
-                                                </div>
-                                            </div>
-                                            <div class="clear"></div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>

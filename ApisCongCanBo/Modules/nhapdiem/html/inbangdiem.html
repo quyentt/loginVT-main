@@ -242,12 +242,30 @@
                 <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-users"></i> Danh sách sinh viên</p>
                 <span class="bg-dask-blue text-white px-2 rounded-20px ms-2 fs-13 fw-bold aps-tong"
                     id="lblSinhVien_Tong" style="margin-top: 12px !important;"></span>
+                <div class="form-check d-flex align-items-center ms-3" style="margin-top: 10px;">
+                    <input class="form-check-input pointer" type="checkbox" id="chkFilterCongNo"
+                        style="margin-top: 0; margin-right: 6px;">
+                    <label class="form-check-label pointer" for="chkFilterCongNo"
+                        style="font-weight: 600; color: #d9534f;" title="Lọc ra các SV có Tài chính > 0 trong trang đang xem">
+                        <i class="fa-solid fa-filter mr-5"></i>Chỉ SV còn nợ tài chính
+                    </label>
+                </div>
                 <div class="ms-auto aps-gap-10 aps-btn-list">
                     <div class="btn btn-success" id="btnTongHopDuLieu">
                         <i class="fa-solid fa-book-open-reader"></i>Tổng hợp dữ liệu học tập
                     </div>
                     <div id="btnSearchSinhVienNoMon" class="btn btn-primary">
                         <i class="fa-solid fa-chalkboard-user"></i>Danh sách còn nợ môn
+                    </div>
+                    <div id="btnXuatExcel_DSSV" class="btn btn-success"
+                        title="Xuất danh sách theo dữ liệu đang hiển thị (Ctrl+G). Đổi 'Hiển thị' sang số lớn hơn để xuất nhiều dòng hơn."
+                        style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                        <i class="fa-solid fa-file-excel mr-5" style="color:#fff;"></i>Xuất Excel
+                        <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:1px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
+                    </div>
+                    <div id="btnGuiEmail_IBD" class="btn btn-primary"
+                        title="Gửi email kết quả học tập / báo công nợ cho các SV đã tick chọn (hoặc toàn bộ SV đang hiển thị).">
+                        <i class="fa-solid fa-envelope mr-5"></i>Gửi Email
                     </div>
                 </div>
             </div>
@@ -1364,8 +1382,132 @@
         </div>
     </div>
 </div>
+<!-- Modal chọn phạm vi gửi email (In bảng điểm) -->
+<div class="modal fade" id="myModalChonPhamVi_IBD" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 520px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa-solid fa-circle-question mr-5"></i> Chọn phạm vi gửi Email</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px">Bạn muốn gửi email cho:</p>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a id="btnPhamVi_DaChon_IBD" class="btn btn-primary" style="text-align: left; padding: 12px;">
+                        <i class="fa-solid fa-check-square mr-5"></i>
+                        <b>Chỉ các sinh viên đã tick chọn</b>
+                        (<span id="lblSoLuongDaChon_IBD">0</span> SV trên trang này)
+                    </a>
+                    <a id="btnPhamVi_TatCa_IBD" class="btn btn-success" style="text-align: left; padding: 12px;">
+                        <i class="fa-solid fa-list mr-5"></i>
+                        <b>Toàn bộ sinh viên đang hiển thị</b>
+                        (<span id="lblSoLuongTatCa_IBD">0</span> SV theo bộ lọc hiện tại)
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-bs-dismiss="modal"><i class="fa-solid fa-xmark mr-5"></i> Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Gửi Email báo kết quả học tập / công nợ (In bảng điểm) -->
+<div class="modal fade" id="myModalGuiEmail_IBD" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 95%; max-width: 1600px; margin: 2vh auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fa-solid fa-envelope mr-5"></i> Gửi Email kết quả học tập / báo công nợ</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row aps-form-item mb-3">
+                    <div class="col-sm-12">
+                        <label style="font-weight: bold">Tiêu đề <span style="color:red">*</span></label>
+                        <textarea id="txtTieuDeEmail_IBD" class="form-control" rows="2" style="resize: vertical; min-height: 60px;"
+                            placeholder="VD: [THÔNG BÁO] Kết quả học tập học kỳ 1 năm học 2026-2027">[THÔNG BÁO] Kết quả học tập và tình hình tài chính</textarea>
+                        <small class="text-muted"><i class="fa-solid fa-circle-info"></i> Nội dung email tự sinh cho từng SV gồm: <b>Họ tên, MSSV, Lớp, ĐTBTL, Số TCTL, Trạng thái</b> và <b>Công nợ tài chính</b> (nếu có).</small>
+                    </div>
+                </div>
+                <div class="row aps-form-item">
+                    <div class="col-sm-12">
+                        <div class="d-flex align-items-center" style="margin-bottom: 5px; gap: 10px; flex-wrap: wrap;">
+                            <label style="font-weight: bold; margin: 0">Danh sách sinh viên sẽ gửi (<span id="lblSoLuongGuiEmail_IBD">0</span>)</label>
+                            <div style="margin-left:auto">
+                                <label style="font-weight: normal; margin: 0">Hiển thị</label>
+                                <select id="dropPageSize_GuiEmail_IBD" class="form-select" style="display:inline-block; width:auto; margin: 0 5px;">
+                                    <option value="50">50</option>
+                                    <option value="100" selected>100</option>
+                                    <option value="200">200</option>
+                                    <option value="500">500</option>
+                                </select>
+                                <label style="font-weight: normal; margin: 0">/trang</label>
+                            </div>
+                        </div>
+                        <div style="max-height: 55vh; overflow-y: auto; overflow-x: auto; border: 1px solid #ddd;">
+                            <table id="tblPreviewGuiEmail_IBD" class="table table-hover table-bordered mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">STT</th>
+                                        <th class="text-left">Mã SV</th>
+                                        <th class="text-left">Họ tên</th>
+                                        <th class="text-left">Lớp</th>
+                                        <th class="text-left">Email</th>
+                                        <th class="text-center">ĐTBTL H4</th>
+                                        <th class="text-center">Số TCTL</th>
+                                        <th class="text-right">Công nợ</th>
+                                        <th class="text-left" style="min-width: 300px;">Nội dung email</th>
+                                        <th class="text-center">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div id="zonePagination_GuiEmail_IBD" class="d-flex justify-content-between align-items-center" style="margin-top: 8px; flex-wrap: wrap; gap: 10px;"></div>
+                    </div>
+                </div>
+                <div class="row aps-form-item mt-2">
+                    <div class="col-sm-12">
+                        <div id="zonePercent_GuiEmail_IBD"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="d-flex justify-content-between w-100">
+                    <div></div>
+                    <div>
+                        <a class="btn btn-default" data-bs-dismiss="modal"><i class="fa-solid fa-xmark mr-5"></i> Đóng</a>
+                        <a id="btnConfirmGuiEmail_IBD" class="btn btn-success"><i class="fa-solid fa-paper-plane mr-5"></i> Gửi Email</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- ---------Script------- -->
-<script src="modules/nhapdiem/script/inbangdiem.js?v=1.0.0.2"></script>
+<!-- XLSX (SheetJS) - phục vụ Xuất Excel DSSV. Load 1 lần, idempotent. -->
+<script>
+    (function loadXLSX_InBangDiem() {
+        if (typeof XLSX !== 'undefined') return;
+        var cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    })();
+</script>
+<script src="modules/nhapdiem/script/inbangdiem.js?v=1.0.0.4"></script>
 <script src="modules/nhapdiem/script/chuongtrinhhoc.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};

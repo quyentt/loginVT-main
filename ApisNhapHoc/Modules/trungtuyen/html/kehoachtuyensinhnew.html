@@ -239,6 +239,10 @@
     .aps-KHTSNew-list .btn-view-nhan-su:hover { background: #f0fdf4; color: #15803d; border-color: #86efac; }
     .aps-KHTSNew-list .btn-view-muc-phi:hover { background: #fef3c7; color: #b45309; border-color: #fcd34d; }
     .aps-KHTSNew-list .btn-view-ket-qua:hover { background: #fce7f3; color: #be185d; border-color: #f9a8d4; }
+    /* Select2 dropdown phải nổi trên modal chồng (BS5 z-index tối đa ~1200) */
+    .select2-container--open {
+        z-index: 20001 !important;
+    }
     /* Empty state */
     .aps-KHTSNew-list .empty-state {
         text-align: center;
@@ -352,7 +356,7 @@
     </div>
 
     <!-- Modal: Kế hoạch đầu ra -->
-    <div class="modal fade" id="modal-KHDauRa-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-KHDauRa-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1800 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -408,7 +412,7 @@
     </div>
 
     <!-- Modal: Bố trí nhân sự -->
-    <div class="modal fade" id="modal-NhanSu-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-NhanSu-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1800 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -461,7 +465,7 @@
     </div>
 
     <!-- Modal: Thêm mới phân công nhân sự (nested trong Bố trí nhân sự) -->
-    <div class="modal fade" id="modal-ThemNS-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-ThemNS-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1400 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -596,7 +600,7 @@
     </div>
 
     <!-- Modal: Picker chọn nhân sự (nested trong Thêm mới NS) -->
-    <div class="modal fade" id="modal-PickNS-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-PickNS-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1400 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -655,7 +659,7 @@
     </div>
 
     <!-- Modal: Xem - sửa phân công nhân sự (nested trong Bố trí nhân sự) -->
-    <div class="modal fade" id="modal-NhanSu-ChiTiet-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-NhanSu-ChiTiet-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1140 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -755,7 +759,7 @@
     </div>
 
     <!-- Modal: Thêm mới kế hoạch nhập học -->
-    <div class="modal fade" id="modal-Them-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-Them-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1400 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -941,7 +945,7 @@
     </div>
 
     <!-- Modal: Chi tiết kế hoạch nhập học -->
-    <div class="modal fade" id="modal-ChiTiet-KHTSN" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="modal-ChiTiet-KHTSN" tabindex="-1" aria-hidden="true" data-bs-focus="false">
         <div class="modal-dialog modal-1140 modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -965,7 +969,7 @@
     </div>
 </section>
 <!-- page script -->
-<script src="/modules/trungtuyen/scripts/kehoachtuyensinhnew.js?v=1.0.3.3"></script>
+<script src="/modules/trungtuyen/scripts/kehoachtuyensinhnew.js?v=1.0.3.4"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

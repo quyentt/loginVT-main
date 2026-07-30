@@ -4647,47 +4647,29 @@ systemextend.prototype = {
             $(".dataNoiDungThu2_" + strIDMoRong).html(strNoiDung2);
 
             function loaddata(dtKhoanThu) {
-                var row = '';
-                row += '<table class="pr-table pr-table-unbordered">';
-                row += '<tbody>';
-                //
-                if (dtKhoanThu.length <= 4) {
-                    var irowlength = Math.ceil(dtKhoanThu.length / 2);
-                    for (var i = 0; i < irowlength; i++) {
-                        row += '<tr>'
-                        row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU) + ')</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU) + ')</span></td>';
-                        row += '</tr>';
+                console.log('[HOCPHAN_V2]', dtKhoanThu[0] && dtKhoanThu[0].HOCPHANTEXT, '| checkValue =', dtKhoanThu[0] && edu.util.checkValue(dtKhoanThu[0].HOCPHANTEXT));
+                function cell(item) {
+                    if (!item) return '';
+                    var s = '<td class="no-padding" style="margin-top: 2px"><span>- ' + item.TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(item.SOTIENDATHU) + ')</span>';
+                    if (edu.util.checkValue(item.HOCPHANTEXT)) {
+                        s += '<br><span style="font-style:italic;color:#555;padding-left:10px;">' + item.HOCPHANTEXT + '</span>';
                     }
-                    row += '</tbody>';
-                    return row;
+                    s += '</td>';
+                    return s;
                 }
-                //
-                if (dtKhoanThu.length <= 9) {
-                    var irowlength = Math.ceil(dtKhoanThu.length / 3);
-                    for (var i = 0; i < irowlength; i++) {
-                        row += '<tr>'
-                        row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU) + ')</span></td>';
-                        if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU) + ')</span></td>';
-                        if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU) + ')</span></td>';
-                        row += '</tr>';
-                    }
-                    row += '</tbody>'
-                    return row;
-                }
-                //
-                var irowlength = Math.ceil(dtKhoanThu.length / 4);
+                var row = '<table class="pr-table pr-table-unbordered"><tbody>';
+                var cols = dtKhoanThu.length <= 4 ? 2 : (dtKhoanThu.length <= 9 ? 3 : 4);
+                var irowlength = Math.ceil(dtKhoanThu.length / cols);
                 for (var i = 0; i < irowlength; i++) {
-                    row += '<tr>'
-                    row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i].SOTIENDATHU) + ')</span></td>';
-                    if ((i + irowlength) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i + irowlength].SOTIENDATHU) + ')</span></td>';
-                    if ((i + irowlength * 2) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 2].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 2].SOTIENDATHU) + ')</span></td>';
-                    if ((i + irowlength * 3) < dtKhoanThu.length) row += '<td class="no-padding" style="margin-top: 2px"><span>- ' + dtKhoanThu[i + irowlength * 3].TAICHINH_CACKHOANTHU_TEN + ' (' + edu.util.formatCurrency(dtKhoanThu[i + irowlength * 3].SOTIENDATHU) + ')</span></td>';
+                    row += '<tr>';
+                    for (var c = 0; c < cols; c++) {
+                        var idx = i + irowlength * c;
+                        if (idx < dtKhoanThu.length) row += cell(dtKhoanThu[idx]);
+                    }
                     row += '</tr>';
                 }
                 row += '</tbody>';
                 return row;
-
             }
         }
 
