@@ -597,6 +597,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
             'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
             'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
+            'strNguyenVong_DauRa_Id', 'strDaoTao_LopQuanLy_Id_DK',
             'strDaoTao_LopQuanLy_DuKien', 'strMaNganhTrungTuyen', 'strMaCTDT',
             'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
             'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
@@ -631,6 +632,7 @@ KeHoachTuyenSinhNew.prototype = {
             strHoSo_KH_Dot_PT_Ma: 'PT01', strHoSo_DoiTuong_TS_Ma: '', strHoSo_DoiTuong_UT_Mas: '',
             strHoSo_KhuVuc_UT_Ma: 'KV3',
             strHoSo_MaHoSo: 'HS2026-0001', strHoSo_SoBaoDanh: 'HN2500001', strHoSo_Import_Batch_Ma: 'BATCH_2026_D1',
+            strNguyenVong_DauRa_Id: '', strDaoTao_LopQuanLy_Id_DK: '',
             strDaoTao_LopQuanLy_DuKien: '', strMaNganhTrungTuyen: '7480201', strMaCTDT: 'CTDT001',
             strXetTuyen_TohopMon_Ma: 'A00', strXetTuyen_TohopMon_Code: 'A00', strXetTuyen_TohopMon_Ten: 'Toán, Vật lý, Hóa học',
             dXetTuyen_DiemUuTien: 0.25, dXetTuyen_DiemTongMon: 24.5, dXetTuyen_DiemTongXT: 24.75,
@@ -816,7 +818,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strHanhDong_Code': 'THEM',
             // Context KH/Đợt — luôn override từ modal, không lấy từ file
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-            'strHoSo_KH_TS_Do_Id': me.strDot_Id_ForKQ || '',
+            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
             'dHoSo_Import_Row_No': rowNo
         };
         // Các field pass-through từ file — không được ghi đè context ở trên
@@ -834,6 +836,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
             'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
             'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
+            'strNguyenVong_DauRa_Id', 'strDaoTao_LopQuanLy_Id_DK',
             'strDaoTao_LopQuanLy_DuKien', 'strMaNganhTrungTuyen', 'strMaCTDT',
             'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
             'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
@@ -1448,8 +1451,8 @@ KeHoachTuyenSinhNew.prototype = {
             if (CH.CHLU) toLoad.push([CH.CHLU, "ddlKQ_QuocTich"]);
             // Tab Xét tuyển — dùng string key trực tiếp (không có trong constant.setting.CATOR)
             toLoad.push(["TS.DOITUONGDUTUYEN", "ddlKQ_DoiTuongTS"]);
-            toLoad.push(["TS.DOITUONGUUTIEN", "ddlKQ_DoiTuongUT"]);
-            toLoad.push(["TS.KHUVUCUUTIEN", "ddlKQ_KhuVucUT"]);          // TODO: verify mã DM chuẩn
+            toLoad.push(["QLSV.DOITUONG", "ddlKQ_DoiTuongUT"]);
+            toLoad.push(["QLSV.KHUVUC", "ddlKQ_KhuVucUT"]);
             toLoad.push(["TUYENSINH.HOCLUC", "ddlKQ_HocLuc"]);
             toLoad.push(["TUYENSINH.HANHKIEM", "ddlKQ_HanhKiem"]);
             // Tab Hóa đơn
@@ -3123,7 +3126,10 @@ KeHoachTuyenSinhNew.prototype = {
     -- Reset form Thêm mới phân công nhân sự
     -------------------------------------------*/
     rewrite_PhanCong: function () {
-        $("#tblNhanSuDaChon tbody").html("");
+        $("#tblNhanSuDaChon tbody").html(
+            '<tr><td colspan="3" class="td-center text-muted" style="padding:16px 8px;">Chưa chọn nhân sự — bấm "Chọn nhân sự"</td></tr>'
+        );
+        $("#lblCountPC_NSDaChon").text(0);
         $("#chkPC_SelectAll").prop('checked', false);
         // Reset form chung (Section B)
         $('#ddlPC_New_VaiTro').val('');
@@ -3141,7 +3147,11 @@ KeHoachTuyenSinhNew.prototype = {
         if (!arrPersons || !arrPersons.length) return;
 
         var $tbody = $("#tblNhanSuDaChon tbody");
-        var startIdx = $tbody.find('tr').length;
+        // Xoá row placeholder (nếu còn) trước khi append real rows
+        $tbody.find('tr').filter(function () {
+            return $(this).find('td[colspan]').length > 0;
+        }).remove();
+        var startIdx = $tbody.find('tr[data-person-id]').length;
         var rows = '';
         for (var i = 0; i < arrPersons.length; i++) {
             var p = arrPersons[i];
@@ -3155,6 +3165,7 @@ KeHoachTuyenSinhNew.prototype = {
                 +  '</tr>';
         }
         $tbody.append(rows);
+        $("#lblCountPC_NSDaChon").text($tbody.find('tr[data-person-id]').length);
     },
 
     /*------------------------------------------
