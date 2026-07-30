@@ -528,6 +528,21 @@
         </div>
     </div>
 </section>
+<div class="aps-all-btn" style="display: none !important;">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalNamTaiChinh">Khoản đã
+        nộp</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalKetQua">Xem báo
+        cáo</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_XacNhan">Xac nhan</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalMaKhachHang">Mã khách
+        hàng</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalHeKhoaMaKhachHang">Mã khách
+        hàng Khac</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalLichBaoCao">Thiết lập
+        báo cáo chạy tự động</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalThongSoBaoCao">Thông số báo
+        cáo</button>
+</div>
 
 <!--Năm tài chính-->
 <div class="modal fade myModalNamTaiChinh" id="myModalNamTaiChinh" role="dialog" aria-labelledby="myModalLabel"
@@ -538,14 +553,15 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fal fa-usd-circle"></i> Năm tài chính</h3>
+                <h3 class="box-title"><span class="myModalLabel" style="padding-right: 0 !important;"> <i
+                            class="fal fa-usd-circle"></i> Năm tài chính</h3>
             </div>
             <div class="modal-body pd0" id="modal_body">
                 <div class="row box-search">
                     <div class="col-sm-3 aps-form-lable text-left pl10" style="text-align: left !important;">
                         <label style="font-weight: normal"><span class="lang" key="">Năm tài chính</span></label>
                     </div>
-                    <div class="col-sm-9 aps-form-input pr10">
+                    <div class="col-sm-9 aps-form-input pr0">
                         <input type="text" id="txtNamBaoCao" class="form-control" />
                     </div>
                     <div class="clear"></div>
@@ -555,28 +571,29 @@
                         <a id="btnXoaNamBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
                     </div>-->
                     <div class="pull-right">
-                        <a class="btn btn-primary" id="btnSaveNamBaoCao"><i class="fal fa-save"></i> Lưu năm báo cáo</a>
+
                     </div>
                 </div>
                 <div class="row mt-10 aps-table-taichinh pl20 pr20">
-                    <table id="tblNamTaiChinh" class="table table-hover table-bordered">
+                    <table id="tblNamTaiChinh" class="table table-hover table-bordered table-noborder">
                         <thead>
                             <tr>
                                 <th style="text-align:center; width: 40px">STT</th>
                                 <th style="text-align:center;">Năm tài chính</th>
                                 <th style="text-align:center;">Năm</th>
                                 <th style="text-align:center;">Tháng</th>
-                                <th style="text-align:center;width: 40px">Xóa</th>
+                                <th style="text-align:center;width: 80px">Xóa</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                <div class="row mt-10">
-                    <div class="pull-right">
-                        <a class="btn btn-success" id="btnThemNamTaiChinh">
-                            <i class="fa-light fa-diagram-next"></i> Thêm
-                            dòng mới
+                <div class="row mt-10" style="padding-right: 20px !important;">
+                    <div class="pull-right aps-list-btn">
+                        <a class="btn btn-soft-primary" id="btnSaveNamBaoCao"><i class="fal fa-save"></i> Lưu năm báo
+                            cáo</a>
+                        <a class="btn btn-soft-success" id="btnThemNamTaiChinh">
+                            <i class="fa-light fa-plus"></i>Thêm dòng mới
                         </a>
                     </div>
                 </div>
@@ -584,17 +601,21 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span>
-                </button>
-                <a class="submit btn btn-primary" id="btnSave_NamTaiChinh">
-                    <i class="fa fa-check-circle"></i><span class="lang" key="">Lưu</span>
-                </a>
+                <div class="pull-left"></div>
+                <div class="pull-right aps-list-btn">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span>
+                    </button>
+                    <a class="submit btn btn-primary" id="btnSave_NamTaiChinh">
+                        <i class="fal fa-save"></i><span class="lang" key="">Lưu</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <!--Xem báo cáo đã thực hiện-->
 <div class="modal fade myModalKetQua" id="myModalKetQua" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
@@ -605,24 +626,24 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
                 <h4 class="modal-title">
-                    <span class="myModalLabel1">
-                        <i class="fa-light fa-table pr5"></i> Danh
-                        sách
+                    <span class="myModalLabel1" style="padding-right: 0 !important;">
+                        <i class="fa-solid fa-file-chart-column"></i> Danh sách
                     </span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="row pl0">
-                    <div class="pull-left mr-20">
+                    <div class="pull-left mr-10">
                         <div class="group-title-name">
-                            <a class="btn btn-default btnXacNhan_BaoCaoDaLuu" id="">
-                                <i class="fa fa-paper-plane"></i>
+                            <a class="btn btn-soft-success btnXacNhan_BaoCaoDaLuu" id="">
+                                <i class="fa-duotone fa-solid fa-circle-check"></i>
                                 Xác nhận dữ liệu
                             </a>
                         </div>
                     </div>
-                    <div class="col-sm-3 item-search">
-                        <select id="dropSearch_CanBoXuatBC" class="select-opt" style="width:100% !important"></select>
+                    <div class="col-sm-3 item-search mb-0" style="margin-top: 1px;">
+                        <select id="dropSearch_CanBoXuatBC" class="select-opt form-control"
+                            style="width:100% !important"></select>
                     </div>
                 </div>
                 <table id="tblBaoCaoDaLuu" class="table table-hover table-bordered mt-10 tblBaoCaoDaLuu">
@@ -665,22 +686,27 @@
                 <div class="row mt-10 pr0">
                     <div class="pull-right">
                         <div class="group-title-name">
-                            <a class="btn btn-default btnDelete_BaoCaoDaLuu" id=""><i class="fa fa-trash"></i> Xóa</a>
+                            <a class="btn btn-soft-danger btnDelete_BaoCaoDaLuu" id=""><i class="fa fa-trash"></i>
+                                Xóa</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div id="notify"></div>
             <div class="modal-footer pr20">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span>
-                </button>
+                <div class="pull-left"></div>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<!--modal_XacNhan-->
 <div class="modal fade modal_XacNhan" id="modal_XacNhan" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" style="width: 800px">
@@ -691,7 +717,7 @@
                 </button>
                 <h4 class="modal-title modal-name" id="myModalLabel">
                     <span style="float: left">
-                        <i class="fa fa-wrench"></i> Đăng ký:
+                        <i class="fa-solid fa-circle-check"></i> Đăng ký:
                     </span><span id="txtTenSanPham" class="lblLichHoc_HP"></span>
                 </h4>
             </div>
@@ -777,6 +803,8 @@
         </div>
     </div>
 </div>
+
+
 <!--Mã khách hàng-->
 <div class="modal fade" id="myModalMaKhachHang" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 1200px">
@@ -786,8 +814,8 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
                 <h3 class="box-title">
-                    <span class="myModalLabel"> <i class="fal fa-users bold mr-10"></i></span> Mã
-                    khách hàng
+                    <span class="myModalLabel">
+                        <i class="fa-duotone fa-solid fa-users"></i></span>Mã khách hàng
                 </h3>
             </div>
             <div class="modal-body">
@@ -800,28 +828,29 @@
                     </div>-->
                 </div>
                 <div class="row pl0 pr0">
-                    <table id="tblMaKhachHang" class="table table-hover table-bordered tblMaKhachHang ">
-                        <thead>
-                            <tr>
-                                <th style="text-align:center; width: 40px">STT</th>
-                                <th style="text-align:center;">Mã khóa</th>
-                                <th style="text-align:center;">Tên khóa</th>
-                                <th style="text-align:center;">Mã chương trình</th>
-                                <th style="text-align:center;">Tên chương trình</th>
-                                <th style="text-align:center;">Ký hiệu</th>
-                                <th style="text-align:center;width: 40px">
-                                    <input type="checkbox" class="chkSystemSelectAll">
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <div class="aps-table-select scroll-table-x">
+                        <table id="tblMaKhachHang" class="table table-hover table-bordered tblMaKhachHang table-noborder">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; width: 40px">STT</th>
+                                    <th style="text-align:left;">Mã khóa</th>
+                                    <th style="text-align:left;">Tên khóa</th>
+                                    <th style="text-align:left;">Mã chương trình</th>
+                                    <th style="text-align:left;">Tên chương trình</th>
+                                    <th style="text-align:center;">Ký hiệu</th>
+                                    <th style="text-align:center;width: 40px">
+                                        <input type="checkbox" class="chkSystemSelectAll">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="row pl0 pr0">
                     <div class="pull-right pt10">
-                        <a class="btn btn-success" id="btnAdd_MaKhachHang">
-                            <i class="fa fa-plus color-white"></i> Thêm
-                            mới
+                        <a class="btn btn-soft-success" id="btnAdd_MaKhachHang">
+                            <i class="fa fa-plus"></i> Thêm mới
                         </a>
                     </div>
                 </div>
@@ -829,18 +858,25 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span>
-                </button>
-                <a id="btnDelete_MaKhachHang" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
-                <a class="submit btn btn-primary" id="btnSave_MaKhachHang">
-                    <i class="fal fa-save"></i><span class="lang" key="">Lưu</span>
-                </a>
+                <div class="pull-left aps-list-btn">
+                    <a id="btnDelete_MaKhachHang" class="btn btn-danger"><i class="fa fa-trash"></i> Xóa</a>
+                </div>
+                <div class="pull-right aps-list-btn">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span>
+                    </button>
+
+                    <a class="submit btn btn-primary" id="btnSave_MaKhachHang">
+                        <i class="fal fa-save"></i><span class="lang" key="">Lưu</span>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
 <!--Them Mã khách hàng-->
 <div class="modal fade myModalHeKhoaMaKhachHang" id="myModalHeKhoaMaKhachHang" role="dialog"
     aria-labelledby="myModalLabel" aria-hidden="true">
@@ -851,8 +887,8 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
                 <h3 class="box-title">
-                    <span class="myModalLabel"> <i class="fal fa-users bold mr-10"></i></span> Mã
-                    khách hàng
+                    <span class="myModalLabel pr0" style="padding-right: 0 !important;"> 
+                        <i class="fa-duotone fa-solid fa-users"></i></span> Mã khách hàng
                 </h3>
             </div>
             <div class="modal-body" id="modal_body">
@@ -867,7 +903,7 @@
                     <div class="clear"></div>
                 </div>
                 <!--row 2-->
-                <div class="row mt-10 pd0 aps-form">
+                <div class="row pd0 aps-form">
                     <div class="col-sm-3  aps-form-lable">
                         <label style="font-weight: normal"><span class="lang" key="">Khóa đào tạo</span></label>
                     </div>
@@ -891,17 +927,20 @@
         </div>
     </div>
 </div>
+
+<!-- Thiết lập báo cáo chạy tự động -->
 <div class="modal fade" id="myModalLichBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thiết lập báo cáo
+                <h3 class="box-title"><span class="myModalLabel1" style="padding-right: 0 !important;">
+                        <i class="fa-sharp-duotone fa-solid fa-file-chart-column"></i></span> Thiết lập báo cáo
                     chạy tự động</h3>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row pd0">
                     <!--<div class="pull-left">
                         <a id="btnXoaNamBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
                     </div>-->
@@ -909,46 +948,56 @@
                         <a class="btn btn-default" id="btnSaveNamBaoCao"><i class="fa fa-paper-plane"></i> Lưu năm báo cáo</a>
                     </div>-->
                 </div>
-                <div class="row">
-                    <table id="tblLichBaoCao" class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th style="text-align:center; width: 40px">STT</th>
-                                <th style="text-align:center;">Người tạo</th>
-                                <th style="text-align:center;">Ngày tạo</th>
-                                <th style="text-align:center;">Loại báo cáo</th>
-                                <th style="text-align:center;">Thông số báo cáo</th>
-                                <th style="text-align:center;">Đặt lịch tự động</th>
-                                <th style="text-align:center;">Xem kết quả</th>
-                                <th style="text-align:center;width: 40px"><input type="checkbox"
-                                        class="chkSystemSelectAll"></th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                <div class="row pd0">
+                    <div class="aps-table-select scroll-table-x">
+                        <table id="tblLichBaoCao" class="table table-hover table-bordered table-noborder">
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center; width: 40px">STT</th>
+                                    <th style="text-align:center;">Người tạo</th>
+                                    <th style="text-align:center;">Ngày tạo</th>
+                                    <th style="text-align:center;">Loại báo cáo</th>
+                                    <th style="text-align:center;">Thông số báo cáo</th>
+                                    <th style="text-align:center;">Đặt lịch tự động</th>
+                                    <th style="text-align:center;">Xem kết quả</th>
+                                    <th style="text-align:center;width: 40px"><input type="checkbox"
+                                            class="chkSystemSelectAll"></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <a id="btnDelete_LichTuDong" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
+                <div class="pull-left aps-list-btn"><a id="btnDelete_LichTuDong" class="btn btn-danger"><i
+                            class="fa fa-trash"></i>
+                        Xóa</a></div>
+                <div class="pull-right aps-list-btn">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span></button>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Thông số báo cáo -->
 <div class="modal fade" id="myModalThongSoBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 1200px; overflow: hidden">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel1"> <i class="fa fa-pencil"></i></span> Thông số báo cáo
+                <h3 class="box-title"><span class="myModalLabel1" style="padding-right: 0 !important;"> 
+                    <i class="fa-regular fa-file-chart-pie"></i></span> Thông số báo cáo
                 </h3>
             </div>
             <div class="modal-body">
-                <div class="row">
+                <div class="row pd0">
                     <!--<div class="pull-left">
                         <a id="btnXoaNamBaoCao" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
                     </div>-->
@@ -956,8 +1005,8 @@
                         <a class="btn btn-default" id="btnSaveNamBaoCao"><i class="fa fa-paper-plane"></i> Lưu năm báo cáo</a>
                     </div>-->
                 </div>
-                <div class="row">
-                    <table id="tblThongSoBaoCao" class="table table-hover table-bordered">
+                <div class="row pd0">
+                    <table id="tblThongSoBaoCao" class="table table-hover table-bordered  table-noborder">
                         <thead>
                             <tr>
                                 <th style="text-align:center; width: 40px">STT</th>
@@ -976,8 +1025,12 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
+                <div class="pull-left aps-list-btn"></div>
+                <div class="pull-right aps-list-btn">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
+                            class="fa fa-times-circle-o"></i>
+                        <span class="lang" key="">Đóng</span></button>
+                </div>
             </div>
         </div>
     </div>

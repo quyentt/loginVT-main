@@ -2629,13 +2629,13 @@ PhieuThu.prototype = {
         $("#" + $table + " tfoot").html('');
         thead += '<tr>';
         thead += '<th class="td-center td-fixed">Stt</th>';
-        thead += '<th class="td-center">Học kỳ</th>';
+        thead += '<th class="td-left">Học kỳ</th>';
         thead += '<th class="td-center">Đợt</th>';
         thead += '<th class="td-left">Loại khoản</th>';
         thead += '<th class="td-left">Nội dung</th>';
         thead += '<th class="td-right">Số tiền</th>';
-        thead += '<th class="td-center">Ngày tạo</th>';
-        thead += '<th class="td-center">Người tạo</th>';
+        thead += '<th class="td-left">Ngày tạo</th>';
+        thead += '<th class="td-left">Người tạo</th>';
         thead += '<th class="td-center">Chi tiết</th>';
         thead += '<th class="td-center td-fixed">Sửa</th>';
         thead += '</tr>';
