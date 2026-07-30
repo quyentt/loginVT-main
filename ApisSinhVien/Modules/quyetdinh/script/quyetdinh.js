@@ -425,6 +425,97 @@ QuyetDinh.prototype = {
             }
             $("#modalAddHocKy").modal("show");
         });
+        $("#btnChonTrangThaiChuyen").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn sinh viên?");
+                return;
+            }
+            me.cbGenCombo_TrangThaiChuyen(me.dtTrangThai);
+            $("#modalChonTrangThai").modal("show");
+        });
+        $("#btnSave_TrangThaiChuyen").click(function () {
+            var strTrangThai_Id = edu.util.getValById("dropTrangThaiChuyen");
+            if (!edu.util.checkValue(strTrangThai_Id)) {
+                edu.system.alert("Vui lòng chọn trạng thái?");
+                return;
+            }
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn sinh viên?");
+                return;
+            }
+            $("#modalChonTrangThai").modal("hide");
+            edu.system.alert('<div id="zoneprocessXXXX"></div>');
+            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                me.capNhat_TrangThai_QD_NH(arrChecked_Id[i], strTrangThai_Id);
+            }
+        });
+        $("#btnChonLopChuyen").click(function () {
+            me.openModalChonLop("N1");
+        });
+        $("#btnChonLopN2Chuyen").click(function () {
+            me.openModalChonLop("N2");
+        });
+        $('#dropChuyen_HeDaoTao').on('select2:select', function (e) {
+            me.getList_KhoaDaoTao_Chuyen();
+            me.getList_ChuongTrinh_Chuyen();
+            me.getList_LopQuanLy_Chuyen();
+        });
+        $('#dropChuyen_KhoaDaoTao').on('select2:select', function (e) {
+            me.getList_ChuongTrinh_Chuyen();
+            me.getList_LopQuanLy_Chuyen();
+        });
+        $('#dropChuyen_ChuongTrinh').on('select2:select', function (e) {
+            me.getList_LopQuanLy_Chuyen();
+        });
+        $("#btnSave_LopChuyen").click(function () {
+            var strLop_Id = edu.util.getValById("dropChuyen_Lop");
+            if (!edu.util.checkValue(strLop_Id)) {
+                edu.system.alert("Vui lòng chọn lớp?");
+                return;
+            }
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn sinh viên?");
+                return;
+            }
+            $("#modalChonLop").modal("hide");
+            edu.system.alert('<div id="zoneprocessXXXX"></div>');
+            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+            var fnSave = (me.chuyenLopMode === "N2") ? me.capNhat_LopQuanLy_N2_QD_NH : me.capNhat_LopQuanLy_QD_NH;
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                fnSave.call(me, arrChecked_Id[i], strLop_Id);
+            }
+        });
+        $("#btnNhapPhanTramPhi").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn sinh viên?");
+                return;
+            }
+            $("#txtPhanTramTinhPhi").val("");
+            $("#modalNhapPhanTramPhi").modal("show");
+        });
+        $("#btnSave_PhanTramPhi").click(function () {
+            var strPhanTram = $.trim($("#txtPhanTramTinhPhi").val());
+            if (strPhanTram === "" || isNaN(strPhanTram)) {
+                edu.system.alert("Vui lòng nhập số phần trăm hợp lệ?");
+                return;
+            }
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn sinh viên?");
+                return;
+            }
+            $("#modalNhapPhanTramPhi").modal("hide");
+            edu.system.alert('<div id="zoneprocessXXXX"></div>');
+            edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
+            for (var i = 0; i < arrChecked_Id.length; i++) {
+                me.capNhat_PhanTramPhi_QD_NH(arrChecked_Id[i], strPhanTram);
+            }
+        });
         $("#btnSave_AddHocKy").click(function (e) {
             var arrHocKy = $("#dropAddHocKy").val();
             if (arrHocKy.length) {
@@ -2381,6 +2472,263 @@ QuyetDinh.prototype = {
             },
             contentType: true,
 
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+
+    cbGenCombo_TrangThaiChuyen: function (data) {
+        var obj = {
+            data: data || [],
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["dropTrangThaiChuyen"],
+            type: "",
+            title: "Chọn trạng thái",
+        };
+        edu.system.loadToCombo_data(obj);
+        $("#dropTrangThaiChuyen").val("").trigger("change");
+    },
+    getList_HeDaoTao_Chuyen: function () {
+        var me = this;
+        var objList = {
+            strHinhThucDaoTao_Id: "",
+            strBacDaoTao_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        };
+        edu.system.getList_HeDaoTao(objList, "", "", me.cbGenCombo_HeDaoTao_Chuyen);
+    },
+    cbGenCombo_HeDaoTao_Chuyen: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "TENHEDAOTAO", code: "", avatar: "" },
+            renderPlace: ["dropChuyen_HeDaoTao"],
+            type: "",
+            title: "Tất cả hệ đào tạo",
+        };
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropChuyen_HeDaoTao").val("").trigger("change");
+    },
+    getList_KhoaDaoTao_Chuyen: function () {
+        var me = this;
+        var objList = {
+            strHeDaoTao_Id: edu.util.getValById("dropChuyen_HeDaoTao"),
+            strCoSoDaoTao_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        };
+        edu.system.getList_KhoaDaoTao(objList, "", "", me.cbGenCombo_KhoaDaoTao_Chuyen);
+    },
+    cbGenCombo_KhoaDaoTao_Chuyen: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "TENKHOA", code: "", avatar: "" },
+            renderPlace: ["dropChuyen_KhoaDaoTao"],
+            type: "",
+            title: "Tất cả khóa đào tạo",
+        };
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropChuyen_KhoaDaoTao").val("").trigger("change");
+    },
+    getList_ChuongTrinh_Chuyen: function () {
+        var me = this;
+        var objList = {
+            strKhoaDaoTao_Id: edu.util.getValById("dropChuyen_KhoaDaoTao"),
+            strN_CN_LOP_Id: "",
+            strKhoaQuanLy_Id: "",
+            strToChucCT_Cha_Id: "",
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        };
+        edu.system.getList_ChuongTrinhDaoTao(objList, "", "", me.cbGenCombo_ChuongTrinh_Chuyen);
+    },
+    cbGenCombo_ChuongTrinh_Chuyen: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "TENCHUONGTRINH", code: "", avatar: "" },
+            renderPlace: ["dropChuyen_ChuongTrinh"],
+            type: "",
+            title: "Tất cả chương trình đào tạo",
+        };
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropChuyen_ChuongTrinh").val("").trigger("change");
+    },
+    getList_LopQuanLy_Chuyen: function () {
+        var me = this;
+        var objList = {
+            strCoSoDaoTao_Id: "",
+            strDaoTao_HeDaoTao_Id: edu.util.getValById("dropChuyen_HeDaoTao"),
+            strKhoaDaoTao_Id: edu.util.getValById("dropChuyen_KhoaDaoTao"),
+            strNganh_Id: "",
+            strLoaiLop_Id: "",
+            strToChucCT_Id: edu.util.getValById("dropChuyen_ChuongTrinh"),
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 1000000
+        };
+        edu.system.getList_LopQuanLy(objList, "", "", me.cbGenCombo_LopQuanLy_Chuyen);
+    },
+    cbGenCombo_LopQuanLy_Chuyen: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: { id: "ID", parentId: "", name: "TEN", code: "", avatar: "" },
+            renderPlace: ["dropChuyen_Lop"],
+            type: "",
+            title: "Chọn lớp",
+        };
+        edu.system.loadToCombo_data(obj);
+        $("#dropChuyen_Lop").val("").trigger("change");
+    },
+    openModalChonLop: function (mode) {
+        var me = this;
+        var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+        if (arrChecked_Id.length == 0) {
+            edu.system.alert("Vui lòng chọn sinh viên?");
+            return;
+        }
+        me.chuyenLopMode = mode;
+        $("#lblChonLopMode").text(mode === "N2" ? "Chọn lớp ngành 2" : "Chọn lớp cần chuyển");
+        me.getList_HeDaoTao_Chuyen();
+        me.getList_KhoaDaoTao_Chuyen();
+        me.getList_ChuongTrinh_Chuyen();
+        me.getList_LopQuanLy_Chuyen();
+        $("#modalChonLop").modal("show");
+    },
+    capNhat_LopQuanLy_QD_NH: function (strQLSV_QD_NguoiHoc_Id, strDaoTao_LopQuanLy_Moi_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_QuyetDinh_MH/AiAxDykgNR4NLjEQNCAvDTgeEAUeDwkP',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.CapNhat_LopQuanLy_QD_NH',
+            'iM': edu.system.iM,
+            'strQLSV_QD_NguoiHoc_Id': strQLSV_QD_NguoiHoc_Id,
+            'strDaoTao_LopQuanLy_Moi_Id': strDaoTao_LopQuanLy_Moi_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_SinhVien();
+                });
+            },
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    capNhat_LopQuanLy_N2_QD_NH: function (strQLSV_QD_NguoiHoc_Id, strDaoTao_LopQuanLy_N2_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_QuyetDinh_MH/AiAxDykgNR4NLjEQNCAvDTgeD3MeEAUeDwkP',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.CapNhat_LopQuanLy_N2_QD_NH',
+            'iM': edu.system.iM,
+            'strQLSV_QD_NguoiHoc_Id': strQLSV_QD_NguoiHoc_Id,
+            'strDaoTao_LopQuanLy_N2_Id': strDaoTao_LopQuanLy_N2_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_SinhVien();
+                });
+            },
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    capNhat_PhanTramPhi_QD_NH: function (strQLSV_QD_NguoiHoc_Id, dPhamTramTinhPhi) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_QuyetDinh_MH/AiAxDykgNR4RKSAvFTMgLBEpKB4QBR4PCQPP',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.CapNhat_PhanTramPhi_QD_NH',
+            'iM': edu.system.iM,
+            'strQLSV_QD_NguoiHoc_Id': strQLSV_QD_NguoiHoc_Id,
+            'dPhamTramTinhPhi': dPhamTramTinhPhi,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_SinhVien();
+                });
+            },
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    capNhat_TrangThai_QD_NH: function (strQLSV_QD_NguoiHoc_Id, strTrangThaiNguoiHoc_Moi_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_QuyetDinh_MH/AiAxDykgNR4VMyAvJhUpICgeEAUeDwkP',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.CapNhat_TrangThai_QD_NH',
+            'iM': edu.system.iM,
+            'strQLSV_QD_NguoiHoc_Id': strQLSV_QD_NguoiHoc_Id,
+            'strTrangThaiNguoiHoc_Moi_Id': strTrangThaiNguoiHoc_Moi_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_SinhVien();
+                });
+            },
+            contentType: true,
             action: obj_save.action,
             data: obj_save,
             fakedb: [
