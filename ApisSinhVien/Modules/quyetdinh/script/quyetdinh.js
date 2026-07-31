@@ -1284,6 +1284,10 @@ QuyetDinh.prototype = {
             html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].NHOMLOP_TEN) + "</span></td>";
             html += "<td class='td-left'><span>" + data[i].DAOTAO_TOCHUCCHUONGTRINH_TEN + "</span></td>";
             html += "<td class='td-left'><span>" + data[i].DAOTAO_KHOADAOTAO_TEN + "</span></td>";
+            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].TRANGTHAINGUOIHOC_MOI_TEN) + "</span></td>";
+            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].DAOTAO_LOPQUANLY_MOI_TEN) + "</span></td>";
+            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].PHAMTRAMTINHPHI) + "</span></td>";
+            html += "<td class='td-left'><span>" + edu.util.returnEmpty(data[i].DAOTAO_LOPQUANLY_N2_TEN) + "</span></td>";
             html += '<td class="td-left"><span><a class="btn btn-default btnHocKy" id="' + data[i].QLSV_NGUOIHOC_ID + '" title="Chi tiết">' + edu.util.returnEmpty(data[i].DSKETQUANHIEUKY) + '</a></span></td>';
             html += "<td class='td-center'><input type='checkbox' id='checkX" + data[i].ID + "'/></td>";
             html += "</tr>";
@@ -1330,6 +1334,10 @@ QuyetDinh.prototype = {
         html += "<td class='td-left'><span>" + aData.DAOTAO_CHUONGTRINH_TEN + "</span></td>";
         html += "<td class='td-left'><span>" + aData.DAOTAO_KHOADAOTAO_TEN + "</span></td>";
         html += "<td class='td-left'></td>";
+        html += "<td class='td-left'></td>";
+        html += "<td class='td-left'></td>";
+        html += "<td class='td-left'></td>";
+        html += "<td class='td-left'></td>";
         html += "<td class='td-center'><a id='remove_nhansu" + strNhanSu_Id + "' class='btnDeletePoiter poiter'><i class='fa fa-trash'></i></a></td>";
         html += "</tr>";
         //4. fill into tblNhanSu
@@ -1342,7 +1350,7 @@ QuyetDinh.prototype = {
         edu.util.arrExcludeVal(me.arrSinhVien_Id, strNhanSu_Id);
         if (me.arrSinhVien_Id.length === 0) {
             $("#tblInput_DTSV_SinhVien tbody").html("");
-            $("#tblInput_DTSV_SinhVien tbody").html('<tr><td colspan="6">Không tìm thấy dữ liệu!</td></tr>');
+            $("#tblInput_DTSV_SinhVien tbody").html('<tr><td colspan="14">Không tìm thấy dữ liệu!</td></tr>');
         }
     },
 
