@@ -216,6 +216,21 @@ ThucThiQuyetDinh.prototype = {
                 }
             });
         });
+        $("#btnThucThi_DanhSach").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkTT");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn sinh viên cần thực thi?");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn thực thi cho " + arrChecked_Id.length + " sinh viên đã chọn?", "w");
+            $("#btnYes").click(function (e) {
+                edu.system.alert('<div id="zoneprocessTT"></div>');
+                edu.system.genHTML_Progress("zoneprocessTT", arrChecked_Id.length);
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    me.save_ThucThi_MH(arrChecked_Id[i]);
+                }
+            });
+        });
     },
     rewrite: function () {
         //reset id
@@ -904,6 +919,45 @@ ThucThiQuyetDinh.prototype = {
             ]
         }, false, false, false, null);
     },
+    save_ThucThi_MH: function (strId) {
+        var me = this;
+        var aData = edu.util.objGetOneDataInData(strId, me.dtSinhVien, "ID");
+        if (!aData) return;
+        var obj_save = {
+            'action': 'SV_QuyetDinh_MH/FSkkLB4QDRIXHhA0OCQ1BSgvKR4VKTQiFSko',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.Them_QLSV_QuyetDinh_ThucThi',
+            'iM': edu.system.iM,
+
+            'strQLSV_NguoiHoc_Id': aData.QLSV_NGUOIHOC_ID,
+            'strQLSV_QuyetDinh_Id': me.strQuyetDinh_Id,
+            'strDaoTao_LopQuanLy_Id': aData.DAOTAO_LOPQUANLY_ID,
+            'strDaoTao_ToChucCT_Id': aData.DAOTAO_TOCHUCCHUONGTRINH_ID,
+            'strTrangThaiNguoiHoc_Id': aData.QLSV_TRANGTHAINGUOIHOC_ID,
+            'strTrack_Id': edu.util.returnEmpty(aData.TRACK_ID),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessTT", function () {
+                    me.getList_SinhVien();
+                });
+            },
+            contentType: true,
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
     genTable_SinhVien: function (data) {
         var me = this;
         //3. create html
@@ -974,11 +1028,12 @@ ThucThiQuyetDinh.prototype = {
             if (data[i].QLSV_QUYETDINH_THUCTHI_ID == null) {
                 html += "<td class='td-center'><a id='remove_nhansu" + data[i].ID + "' class='btnThucThi poiter'><i class='fa fa-cutlery'></i></a></td>";
                 html += "<td></td>";
+                html += '<td class="td-center"><input type="checkbox" id="checkTT' + data[i].ID + '"/></td>';
             } else {
                 html += "<td></td>";
                 html += "<td class='td-center'><a id='remove_nhansu" + data[i].QLSV_QUYETDINH_THUCTHI_ID + "' class='btnDeletePoiter poiter'><i class='fa fa-trash'></i></a></td>";
+                html += '<td class="td-center"><input type="checkbox" id="checkX' + data[i].QLSV_QUYETDINH_THUCTHI_ID + '"/></td>';
             }
-            html += '<td><input type="checkbox" id="checkX' + data[i].QLSV_QUYETDINH_THUCTHI_ID + '"/></td>';
             html += "</tr>";
             //4. fill into tblNhanSu
             $("#tblInput_DTSV_SinhVien tbody").append(html);
