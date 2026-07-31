@@ -58,6 +58,22 @@ NhapDiem.prototype = {
         $("[id$=chkSelectAll_TuiThi]").on("click", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblTuiThi" });
         });
+        $("#tblNhapDiem").delegate('.btn-toggle-lophp', 'click', function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            var $btn = $(this);
+            var $wrap = $btn.closest('.cell-lophp-wrap');
+            var expanded = $btn.attr('data-expanded') === '1';
+            if (expanded) {
+                $wrap.find('.lophp-short').show();
+                $wrap.find('.lophp-full').hide();
+                $btn.attr('data-expanded', '0').html('<i class="fal fa-angle-down"></i> Xem thêm');
+            } else {
+                $wrap.find('.lophp-short').hide();
+                $wrap.find('.lophp-full').show();
+                $btn.attr('data-expanded', '1').html('<i class="fal fa-angle-up"></i> Thu gọn');
+            }
+        });
         $("#tblNhapDiem").delegate('.btnEdit', 'click', function (e) {
             var strId = this.id;
             me.toggle_edit();
@@ -314,7 +330,19 @@ NhapDiem.prototype = {
                 {
                     "mDataP": "TEN",
                     "mRender": function (nRow, aData) {
-                        return '<span><a class=" btnEdit" style="text-decoration: underline;font-style: italic; color: green; cursor: pointer" id="' + aData.ID + '" title="Chi tiết">' + edu.util.returnEmpty(aData.THONGTINLOPHOCPHAN) + '</a></span>';
+                        var strLopHP = edu.util.returnEmpty(aData.THONGTINLOPHOCPHAN);
+                        var maxLen = 80;
+                        if (strLopHP.length <= maxLen) {
+                            return '<span><a class=" btnEdit" style="text-decoration: underline;font-style: italic; color: green; cursor: pointer" id="' + aData.ID + '" title="Chi tiết">' + strLopHP + '</a></span>';
+                        }
+                        var shortText = strLopHP.substring(0, maxLen) + '...';
+                        return '<div class="cell-lophp-wrap">' +
+                            '<a class="btnEdit" style="text-decoration: underline;font-style: italic; color: green; cursor: pointer" id="' + aData.ID + '" title="' + strLopHP.replace(/"/g, '&quot;') + '">' +
+                                '<span class="lophp-short">' + shortText + '</span>' +
+                                '<span class="lophp-full" style="display:none">' + strLopHP + '</span>' +
+                            '</a>' +
+                            ' <a class="btn-toggle-lophp" style="color:#0d6efd;cursor:pointer;font-size:12px;white-space:nowrap;margin-left:5px" data-expanded="0"><i class="fal fa-angle-down"></i> Xem thêm</a>' +
+                        '</div>';
                     }
                 },
                 {
