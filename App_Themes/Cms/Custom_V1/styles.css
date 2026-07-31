@@ -245,7 +245,9 @@ input::placeholder {
 .w-50px {
   width: 50px !important;
 }
-
+.w50px{
+  max-width: 50px !important;
+}
 .w-80px {
   width: 80px !important;
 }
@@ -6009,7 +6011,7 @@ input[type="radio"] {
 
 .main-label,
 .aps-lable {
-  color: #888 !important;
+  color: #222 !important;
 }
 
 .btnClose_none {
@@ -6465,7 +6467,6 @@ input[type="radio"] {
 #zoneChiTietKhoanPhaiNopRieng_XemThongTinAll tr th:nth-child(2),
 #zoneChiTietKhoanPhaiNopRieng_XemThongTinAll tr th:nth-child(5),
 #tblChiTietKhoanDuocMien_XemThongTinAll tr th:nth-child(2),
-#tblChiTietKhoanDaRut_XemThongTinAll tr th:nth-child(2),
 #tblChiTietKhoanThuaRieng_XemThongTinAll tr th:nth-child(2),
 #pkg_dangkyhoc_tructiep.KhongDangKyViNgayHocCuoiCung tr th:nth-child(2),
 #tblChiTietKhoanThuaChung_XemThongTinAll tr th:nth-child(2) {
@@ -6479,7 +6480,6 @@ input[type="radio"] {
 #tblChiTietKhoanPhaiNopChung_XemThongTinAll tr td:nth-child(3),
 #tblChiTietKhoanPhaiNopRieng_XemThongTinAll tr td:nth-child(3),
 #tblChiTietKhoanDuocMien_XemThongTinAll tr td:nth-child(3),
-#tblChiTietKhoanDaRut_XemThongTinAll tr td:nth-child(3),
 #tblChiTietKhoanThuaRieng_XemThongTinAll tr td:nth-child(3),
 #pkg_dangkyhoc_tructiep.KhongDangKyViNgayHocCuoiCung tr td:nth-child(3),
 #tblChiTietKhoanThuaChung_XemThongTinAll tr td:nth-child(3),
@@ -6492,10 +6492,7 @@ input[type="radio"] {
   text-align: center !important;
 }
 
-#tblChiTietKhoanDaRut_XemThongTinAll tr td:last-child,
-#tblChiTietKhoanThuaRieng_XemThongTinAll tr td:last-child,
-#LayGiaTriCauHinh tr td:last-child,
-#tblChiTietKhoanThuaChung_XemThongTinAll tr td:last-child {
+#LayGiaTriCauHinh tr td:last-child {
   text-align: right !important;
 }
 

@@ -2635,7 +2635,7 @@ PhieuThu.prototype = {
         thead += '<th class="td-left">Nội dung</th>';
         thead += '<th class="td-right">Số tiền</th>';
         thead += '<th class="td-left">Ngày tạo</th>';
-        thead += '<th class="td-left">Người tạo</th>';
+        thead += '<th class="td-center">Người tạo</th>';
         thead += '<th class="td-center">Chi tiết</th>';
         thead += '<th class="td-center td-fixed">Sửa</th>';
         thead += '</tr>';

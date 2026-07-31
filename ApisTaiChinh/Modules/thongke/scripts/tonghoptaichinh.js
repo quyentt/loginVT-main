@@ -328,11 +328,11 @@ TongHopTaiChinh.prototype = {
         $("#zone_tonghop").html('');
         html += '<div class="col-md-3 col-sm-6 col-xs-12">';
         html += '<div class="info-box">';
-        html += '<span class="info-box-icon round bg-green"><i class="fa fa-credit-card"></i></span>';
+        html += '<span class="info-box-icon round bg-green"><i class="fa-solid fa-display-chart-up-circle-dollar"></i></span>';
         html += '<div class="info-box-content">';
         html += '<span class="info-box-text">TỔNG DOANH THU</span>';
         html += '<span class="info-box-number">' + dTongDoanhThu + '</span>';
-        html += '<span>';
+        html += '<span class="info-box-link">';
         html += '<a id="detail_TongDoanhThu" href="#" title="Chi tiết theo khoản"><i class="fa fa-arrow-circle-o-right "></i> Chi tiết</a> | ';
         html += '<a id="detail_TongDoanhThu_User" href="#" title="Chi tiết theo đối tượng"><i class="fa fa-user-circle"></i> Chi tiết</a>';
         html += '</span>';
@@ -342,11 +342,11 @@ TongHopTaiChinh.prototype = {
 
         html += '<div class="col-md-3 col-sm-6 col-xs-12">';
         html += '<div class="info-box">';
-        html += '<span class="info-box-icon round bg-green"><i class="fa fa-archive fa-box"></i></span>';
+        html += '<span class="info-box-icon round bg-blue"><i class="fa-solid fa-sack-dollar"></i></span>';
         html += '<div class="info-box-content">';
         html += '<span class="info-box-text">TỔNG PHẢI NỘP</span>';
         html += '<span class="info-box-number">' + dTongPhaiNop + '</span>';
-        html += '<span>';
+        html += '<span class="info-box-link">';
         html += '<a id="detail_TongPhaiNop" href="#" title="Chi tiết theo khoản"><i class="fa fa-arrow-circle-o-right "></i> Chi tiết</a> | ';
         html += '<a id="detail_TongPhaiNop_User" href="#" title="Chi tiết theo đối tượng"><i class="fa fa-user-circle"></i> Chi tiết</a>';
         html += '</span>';
@@ -356,11 +356,11 @@ TongHopTaiChinh.prototype = {
 
         html += '<div class="col-md-3 col-sm-6 col-xs-12">';
         html += '<div class="info-box">';
-        html += '<span class="info-box-icon round bg-green"><i class="fa fa-opencart fa-box"></i></span>';
+        html += '<span class="info-box-icon round bg-red"><i class="fa-solid fa-circle-dollar-to-slot"></i></span>';
         html += '<div class="info-box-content">';
         html += '<span class="info-box-text">TỔNG MIỄN</span>';
         html += '<span class="info-box-number">' + dTongMien + '</span>';
-        html += '<span>';
+        html += '<span class="info-box-link">';
         html += '<a id="detail_TongMien" href="#" title="Chi tiết theo khoản"><i class="fa fa-arrow-circle-o-right "></i> Chi tiết</a> | ';
         html += '<a id="detail_TongMien_User" href="#" title="Chi tiết theo đối tượng"><i class="fa fa-user-circle"></i> Chi tiết</a>';
         html += '</span>';
@@ -370,11 +370,11 @@ TongHopTaiChinh.prototype = {
 
         html += '<div class="col-md-3 col-sm-6 col-xs-12">';
         html += '<div class="info-box">';
-        html += '<span class="info-box-icon round bg-green"><i class="fa fa-suitcase fa-box"></i></span>';
+        html += '<span class="info-box-icon round bg-puple"><i class="fa-duotone fa-regular fa-money-simple-from-bracket"></i></span>';
         html += '<div class="info-box-content">';
         html += '<span class="info-box-text">TỔNG RÚT</span>';
         html += '<span class="info-box-number">' + dTongRut + '</span>';
-        html += '<span>';
+        html += '<span class="info-box-link">';
         html += '<a id="detail_TongRut" href="#" title="Chi tiết theo khoản"><i class="fa fa-arrow-circle-o-right "></i> Chi tiết</a> | ';
         html += '<a id="detail_TongRut_User" href="#" title="Chi tiết theo đối tượng"><i class="fa fa-user-circle"></i> Chi tiết</a>';
         html += '</span>';
@@ -402,7 +402,7 @@ TongHopTaiChinh.prototype = {
         //2. gen html
         $("#zone_tong_du_no").html('');
         html += '<i class="fa fa-balance-scale ' + color + '"></i>';
-        html += '<span>';
+        html += '<span class="info-box-link">';
         html += '<span class="' + color + '">' + dTongDu_No + '</span>';
         html += ' <a href="#" id="detail_Tong_Du_No" title="Chi tiết theo khoản"> <i class="fa fa-arrow-circle-o-right "></i></a>'
         html += ' | <a href="#" id="detail_Tong_Du_No_User" title="Chi tiết theo đối tượng"><i class="fa fa-user-circle"></i></a>'

@@ -1227,7 +1227,7 @@ HoaDonKhac.prototype = {
         var strHienThi = "Chưa xác định";
         if (edu.util.floatValid(dNoCo)) {
             if (dNoCo > 0) strHienThi = '<p style="color: #00c0ef"><i class="fa fa-bitbucket"></i> <span class="lang" key="">Tổng dư</span>: ' + edu.util.formatCurrency(dNoCo) + '</p>';
-            if (dNoCo < 0) strHienThi = '<p style="color: #dd4b39"><i class="fa fa-cubes"></i> <span class="lang" key="">Tổng nợ</span>: ' + edu.util.formatCurrency(dNoCo) + '</p>';
+            if (dNoCo < 0) strHienThi = '<p class="color-red"><i class="fa fa-cubes"></i> <span class="lang" key="">Tổng nợ</span>: ' + edu.util.formatCurrency(dNoCo) + '</p>';
             if (dNoCo == 0) strHienThi = '<p style="color: green"><i class="fa fa-empire"></i> <span class="lang" key="">Đã hoàn thành</span></p>';
         }
         $(".noco-hoadon").html(strHienThi);

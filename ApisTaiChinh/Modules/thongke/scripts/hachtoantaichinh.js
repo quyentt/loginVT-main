@@ -521,9 +521,9 @@ HachToanTaiChinh.prototype = {
         $("#tbldataChiTiet tbody").html('');
         //1. gen thead
         thead += '<tr>';
-        thead += '<th class="td-fixed  td-center">Stt</th>';
+        thead += '<th class="td-fixed  td-center w50px">Stt</th>';
         thead += '<th class="td-left">Khoản</th>';
-        thead += '<th class="td-right">Số tiền</th>';
+        thead += '<th class="td-center">Số tiền</th>';
         thead += '<th class="td-fixed td-center">Chi tiết</th>';
         thead += '</tr>';
         $("#tbldataChiTiet thead").html(thead);
@@ -532,7 +532,7 @@ HachToanTaiChinh.prototype = {
             tbody += '<tr>';
             tbody += '<td class="td-center">' + (i + 1) + '</td>';
             tbody += '<td class="td-left">' + edu.util.returnEmpty(data[i].TEN) + '</td>';
-            tbody += '<td class="td-right color-danger">' + edu.util.formatCurrency(edu.util.returnZero(data[i][strThongTin])) + '</td>';
+            tbody += '<td class="td-center color-danger">' + edu.util.formatCurrency(edu.util.returnZero(data[i][strThongTin])) + '</td>';
             tbody += '<td class="td-center"><a class="btn btn-default btn-circle"><i class="fa fa-info-circle color-active"></i><a></td>';
             tbody += '</tr>';
         }

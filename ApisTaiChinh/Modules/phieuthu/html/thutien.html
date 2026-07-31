@@ -179,7 +179,7 @@
     }
 
     #zoneActionHoaDon .aps-btn,
-    #zoneActionHoaDon > div {
+    #zoneActionHoaDon>div {
         display: inline-flex;
         margin: 0;
     }
@@ -324,7 +324,7 @@
     }
 
     /* Mọi cột trong tab1 = 1 grid cell, bỏ Bootstrap col width */
-    #zoneThongTinBoSungTab1 > [class*="col-"] {
+    #zoneThongTinBoSungTab1>[class*="col-"] {
         width: auto !important;
         max-width: none !important;
         flex: initial !important;
@@ -333,7 +333,7 @@
     }
 
     /* Div "clear" không cần trong grid — ẩn để không chiếm cell */
-    #zoneThongTinBoSungTab1 > .clear {
+    #zoneThongTinBoSungTab1>.clear {
         display: none !important;
     }
 
@@ -356,7 +356,7 @@
     }
 
     #zoneThongTinBoSungTab1 .box.box-solid,
-    #zoneThongTinBoSungTab1 .box.box-solid > .box-body {
+    #zoneThongTinBoSungTab1 .box.box-solid>.box-body {
         background: transparent !important;
         box-shadow: none !important;
         border: none !important;
@@ -388,10 +388,21 @@
     }
 
     /* Border-left accent tone — phân loại nhóm card */
-    #zoneThongTinBoSungTab1 .small-box.bg-green { border-left-color: #10b981 !important; }
-    #zoneThongTinBoSungTab1 .small-box.bg-red { border-left-color: #ef4444 !important; }
-    #zoneThongTinBoSungTab1 .small-box.bg-aqua { border-left-color: #06b6d4 !important; }
-    #zoneThongTinBoSungTab1 .small-box.bg-yellow { border-left-color: #f59e0b !important; }
+    #zoneThongTinBoSungTab1 .small-box.bg-green {
+        border-left-color: #10b981 !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box.bg-red {
+        border-left-color: #ef4444 !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box.bg-aqua {
+        border-left-color: #06b6d4 !important;
+    }
+
+    #zoneThongTinBoSungTab1 .small-box.bg-yellow {
+        border-left-color: #f59e0b !important;
+    }
 
     /* Icon frame — khung bo tròn NỀN TONE MÀU + icon ĐẬM cùng tone.
        FIX: global có .zoneThongTinBoSung .small-box .icon { position:absolute; float:left; opacity:0.3 }
@@ -437,6 +448,7 @@
     #zoneThongTinBoSungTab1 .small-box.bg-green .icon {
         background: #d1fae5 !important;
     }
+
     #zoneThongTinBoSungTab1 .small-box.bg-green .icon i {
         color: #059669 !important;
     }
@@ -444,6 +456,7 @@
     #zoneThongTinBoSungTab1 .small-box.bg-red .icon {
         background: #fee2e2 !important;
     }
+
     #zoneThongTinBoSungTab1 .small-box.bg-red .icon i {
         color: #dc2626 !important;
     }
@@ -451,6 +464,7 @@
     #zoneThongTinBoSungTab1 .small-box.bg-aqua .icon {
         background: #cffafe !important;
     }
+
     #zoneThongTinBoSungTab1 .small-box.bg-aqua .icon i {
         color: #0891b2 !important;
     }
@@ -458,6 +472,7 @@
     #zoneThongTinBoSungTab1 .small-box.bg-yellow .icon {
         background: #fef3c7 !important;
     }
+
     #zoneThongTinBoSungTab1 .small-box.bg-yellow .icon i {
         color: #d97706 !important;
     }
@@ -527,21 +542,21 @@
     }
 
     /* Tab titles ("Tình hình học phí" / "Khoản nợ chung" / …) — ĐEN in đậm */
-    .aps-tabs-custom > .nav-tabs > li > a,
-    .aps-tabs-custom > .nav-tabs > li.tablinks > a {
+    .aps-tabs-custom>.nav-tabs>li>a,
+    .aps-tabs-custom>.nav-tabs>li.tablinks>a {
         color: #111827 !important;
         font-weight: 700 !important;
     }
 
-    .aps-tabs-custom > .nav-tabs > li:hover > a,
-    .aps-tabs-custom > .nav-tabs > li:focus > a {
+    .aps-tabs-custom>.nav-tabs>li:hover>a,
+    .aps-tabs-custom>.nav-tabs>li:focus>a {
         color: #000 !important;
     }
 
     /* Tab active giữ nền xanh + chữ trắng như hiện tại */
-    .aps-tabs-custom > .nav-tabs > li.active > a,
-    .aps-tabs-custom > .nav-tabs > li.active > a:hover,
-    .aps-tabs-custom > .nav-tabs > li.active > a:focus {
+    .aps-tabs-custom>.nav-tabs>li.active>a,
+    .aps-tabs-custom>.nav-tabs>li.active>a:hover,
+    .aps-tabs-custom>.nav-tabs>li.active>a:focus {
         color: #fff !important;
         font-weight: 700 !important;
     }
@@ -856,7 +871,8 @@
                                                         <!-- small box -->
                                                         <div class="box box-solid">
                                                             <div class="box-body">
-                                                                <div class="small-box bg-aqua poiter btnDetail_DuRiengCacKhoan d-flex">
+                                                                <div
+                                                                    class="small-box bg-aqua poiter btnDetail_DuRiengCacKhoan d-flex">
                                                                     <div class="icon">
                                                                         <i class="fa-thin fa-square-dollar"></i>
                                                                     </div>
@@ -879,7 +895,8 @@
                                                         <!-- small box -->
                                                         <div class="box box-solid">
                                                             <div class="box-body">
-                                                                <div class="small-box bg-aqua poiter btnDetail_DuChungCacKhoan d-flex">
+                                                                <div
+                                                                    class="small-box bg-aqua poiter btnDetail_DuChungCacKhoan d-flex">
                                                                     <div class="icon">
                                                                         <i class="fa-thin fa-circle-dollar-to-slot"></i>
                                                                     </div>
@@ -1041,12 +1058,15 @@
                                                     <!-- ./col -->
                                                     <div class="clear"></div>
                                                 </div>
-                                                <div class="box-content zoneThongTinBoSung border-bottom" id="zoneKhoan_ChiTiet"
-                                                    style="display: none">
+                                                <div class="box-content zoneThongTinBoSung border-bottom"
+                                                    id="zoneKhoan_ChiTiet" style="display: none">
                                                     <div class="form-container">
-                                                        <div class="form-container-header form-container-header-bg fz18" style="padding: 0 !important;height: 34px !important; border-bottom: 0 !important;">
+                                                        <div class="form-container-header form-container-header-bg fz18"
+                                                            style="padding: 0 !important;height: 34px !important; border-bottom: 0 !important;">
                                                             <div class="pull-left">
-                                                                <h4 class="color-blue fz18"><i class="fa-solid fa-circle-dollar-to-slot"></i> Danh sách
+                                                                <h4 class="color-blue fz18"><i
+                                                                        class="fa-solid fa-circle-dollar-to-slot"></i>
+                                                                    Danh sách
                                                                     <span id="lblLoaiKhoanThu"></span>
                                                                 </h4>
                                                             </div>
@@ -1056,11 +1076,12 @@
                                                             </div>
                                                             <div class="clear"></div>
                                                         </div>
-                                                        <div class="form-container-body" style="padding-top: 10px !important;">
+                                                        <div class="form-container-body"
+                                                            style="padding-top: 5px !important;">
                                                             <div class="table-responsive aps-table-select">
                                                                 <div class="scroll-table-x">
                                                                     <table id="tblChiTietKhoan"
-                                                                        class="table mb-0 tblChiTietKhoan table-bordered table-noborder">
+                                                                        class="table table-hover mb-0 tblChiTietKhoan table-bordered table-noborder">
                                                                         <thead>
                                                                             <!--Load from js-->
                                                                         </thead>
@@ -1086,8 +1107,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="box-content zoneThongTinBoSung border-bottom" id="zoneXemThongTinAll"
-                                                    style="display: none">
+                                                <div class="box-content zoneThongTinBoSung border-bottom"
+                                                    id="zoneXemThongTinAll" style="display: none">
                                                     <div class="form-container">
                                                         <div class="form-container-header">
                                                             <div class="pull-left">
@@ -1743,8 +1764,8 @@
         miễn</button>
     <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModalChiTietKhoanThu">Chi tiết
         khoản</button>
-    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalXemThongTinAll">Chi tiết
-        khoản</button>
+    <button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModalXemThongTinAll">Xem thông
+        tin</button>
 </div>
 <!-- Khoản đã nộp -->
 <div class="modal fade myModalKhoanDaNop" id="myModalKhoanDaNop" role="dialog" aria-labelledby="myModalLabel"
@@ -1758,7 +1779,7 @@
                         <i class="fa-thin fa-circle-dollar"></i></span>Khoản đã nộp</h3>
             </div>
             <div class="modal-body pd0">
-                <div class="row aps-add-new pd20">
+                <div class="row aps-add-new pd0 mt-20 pl10">
                     <div class="row aps-form mb-0">
                         <!-- Row 1 -->
                         <div class="row aps-form-item">
@@ -2438,6 +2459,7 @@
     </div>
 
 </div>
+
 <!-- Xem thông tin -->
 <div class="modal fade myModalXemThongTinAll" id="myModalXemThongTinAll" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
@@ -2448,98 +2470,112 @@
                         class="sr-only">Close</span></button>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="row">
+                <div class="row box-XemThongTinAll">
                     <div class="form-container-body pt0 col-sm-6"
                         style="padding-top: 0 !important; padding-bottom: 0 !important">
-                        <!-- ------------- -->
-                        <h4 class="color-fff btn btn-default pointer btn-primary"
-                            id="btnShowHidetblChiTietKhoanPhaiNop_XemThongTinAll" style="padding:5px">Phải nộp
-                        </h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanPhaiNop_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanPhaiNop_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <!-- Phải nộp------------- -->
+                        <h4 class="color-blue" id="btnShowHidetblChiTietKhoanPhaiNop_XemThongTinAll">Phải nộp </h4>
+                        <div class="table-responsive table table-hover table-border mt-5"
+                            id="zoneChiTietKhoanPhaiNop_XemThongTinAll">
+                            <table id="tblChiTietKhoanPhaiNop_XemThongTinAll" class="table table-hover table-border">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="clear"></div>
-                        <!-- ------------- -->
-                        <h4 class="color-fff btn btn-default pointer btn-primary"
-                            id="btnShowHideChiTietKhoanPhaiNopChung_XemThongTinAll" style="padding:5px">Phải nộp
-                            chung</h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanPhaiNopChung_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanPhaiNopChung_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <!-- Phải nộp chung--------- -->
+                        <h4 class="color-red" id="btnShowHideChiTietKhoanPhaiNopChung_XemThongTinAll">Phải nộp chung
+                        </h4>
+                        <div class="table-responsive mt-5"
+                            id="zoneChiTietKhoanPhaiNopChung_XemThongTinAll">
+                            <table id="tblChiTietKhoanPhaiNopChung_XemThongTinAll"
+                                class="table table-hover table-border">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="clear"></div>
 
-                        <h4 class="color-fff btn btn-default pointer btn-primary"
-                            id="btnShowHideChiTietKhoanPhaiNopRieng_XemThongTinAll" style="padding:5px">Phải nộp
+                        <!-- Phải nộp riêng--------- -->
+                        <h4 class="color-dask-blue" id="btnShowHideChiTietKhoanPhaiNopRieng_XemThongTinAll">Phải nộp
                             riêng</h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanPhaiNopRieng_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanPhaiNopRieng_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <div class="table-responsive mt-5"
+                            id="zoneChiTietKhoanPhaiNopRieng_XemThongTinAll">
+                            <table id="tblChiTietKhoanPhaiNopRieng_XemThongTinAll"
+                                class="table table-hover table-border ">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="clear"></div>
                     </div>
 
                     <div class="form-container-body pt0 col-sm-6"
                         style="padding-top: 0 !important; padding-bottom: 0 !important;">
-                        <h4 class="color-fff btn btn-default pointer btn-success"
-                            id="btnShowHideChiTietKhoanDaNop_XemThongTinAll" style="padding:5px">Đã nộp</h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanDaNop_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanDaNop_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
+
+                        <!-- Đã nộp--------- -->
+                        <h4 class="color-success" id="btnShowHideChiTietKhoanDaNop_XemThongTinAll">Đã nộp</h4>
+                        <div class="table-responsive mt-5" id="zoneChiTietKhoanDaNop_XemThongTinAll">
+                            <table id="tblChiTietKhoanDaNop_XemThongTinAll" class="table table-hover table-border">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="clear"></div>
 
-                        <h4 class="color-fff btn btn-default pointer btn-success"
-                            id="btnShowHideChiTietKhoanDuocMien_XemThongTinAll" style="padding:5px">Được miễn
+                        <!-- Được miễn--------- -->
+                        <h4 class="color-red" id="btnShowHideChiTietKhoanDuocMien_XemThongTinAll">Được miễn
                         </h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanDuocMien_XemThongTinAll">
+                        <div class="table-responsive mt-5"
+                            id="zoneChiTietKhoanDuocMien_XemThongTinAll">
+                            <table id="tblChiTietKhoanDuocMien_XemThongTinAll" class="table table-hover table-border">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <!-- Đã rút--------- -->
+                        <h4 class="color-blue" id="btnShowHideChiTietKhoanDaRut_XemThongTinAll">Đã
+                            rút</h4>
+                        <div class="table-responsive mt-5" id="zoneChiTietKhoanDaRut_XemThongTinAll">
                             <div>
-                                <table id="tblChiTietKhoanDuocMien_XemThongTinAll" class="table">
+                                <table id="tblChiTietKhoanDaRut_XemThongTinAll" class="table table-hover table-border ">
                                     <thead>
                                         <!--Load from js-->
                                     </thead>
@@ -2554,60 +2590,40 @@
                         </div>
                         <div class="clear"></div>
 
-                        <h4 class="color-fff btn btn-default pointer btn-success"
-                            id="btnShowHideChiTietKhoanDaRut_XemThongTinAll" style="padding:5px">Đã rút</h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanDaRut_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanDaRut_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <!-- Thừa chung--------- -->
+                        <h4 class="color-orange" id="btnShowHideKhoanThuaChung_XemThongTinAll">Thừa
+                            chung</h4>
+                        <div class="table-responsive mt-5"
+                            id="zoneChiTietKhoanThuaChung_XemThongTinAll">
+                            <table id="tblChiTietKhoanThuaChung_XemThongTinAll" class="table table-hover table-border">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="clear"></div>
 
-                        <h4 class="color-fff btn btn-default pointer btn-success"
-                            id="btnShowHideKhoanThuaChung_XemThongTinAll" style="padding:5px">Thừa chung</h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanThuaChung_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanThuaChung_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-
-                        <h4 class="color-fff btn btn-default pointer btn-success"
-                            id="btnShowHideKhoanThuaRieng_XemThongTinAll" style="padding:5px">Thừa riêng</h4>
-                        <div class="table-responsive mt-10" id="zoneChiTietKhoanThuaRieng_XemThongTinAll">
-                            <div>
-                                <table id="tblChiTietKhoanThuaRieng_XemThongTinAll" class="table">
-                                    <thead>
-                                        <!--Load from js-->
-                                    </thead>
-                                    <tbody>
-                                        <!--Load from js-->
-                                    </tbody>
-                                    <tfoot>
-                                        <!--Load from js-->
-                                    </tfoot>
-                                </table>
-                            </div>
+                        <!-- Thừa riêng--------- -->
+                        <h4 class="color-purple" id="btnShowHideKhoanThuaRieng_XemThongTinAll">Thừa riêng</h4>
+                        <div class="table-responsive mt-5"
+                            id="zoneChiTietKhoanThuaRieng_XemThongTinAll">
+                            <table id="tblChiTietKhoanThuaRieng_XemThongTinAll" class="table table-hover table-border">
+                                <thead>
+                                    <!--Load from js-->
+                                </thead>
+                                <tbody>
+                                    <!--Load from js-->
+                                </tbody>
+                                <tfoot>
+                                    <!--Load from js-->
+                                </tfoot>
+                            </table>
                         </div>
                         <div class="clear"></div>
                     </div>
