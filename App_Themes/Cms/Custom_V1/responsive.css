@@ -16,11 +16,11 @@
 }
 
 @media only screen and (min-width:2000px) {
-    .aps-list-chuongtrinh .zoneBox_ChuongTrinh {
+    /* .aps-list-chuongtrinh .zoneBox_ChuongTrinh {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px !important;
-    }
+    } */
 
     .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
         width: 100% !important;
@@ -28,7 +28,10 @@
 }
 
 @media only screen and (max-width: 1400px) {
-
+   
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 32.3% !important;
+    }
     .aps-thanhtoan-naptien .col-sm-3,
     .aps-tinnhanthongthong-l .col-sm-3,
     .col-sm-3.aps-tinnhandiem-l,
@@ -112,15 +115,19 @@
     }
 }
 
-@media (min-width: 1600px) and (max-width: 2000px) {}
-
-@media (min-width: 1280px) and (max-width: 1599px) {
-    .zoneBox_ChuongTrinh {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important;
-        gap: 20px;
+@media (min-width: 1600px) and (max-width: 2000px) {  
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 23.8% !important;
     }
 
+}
+
+@media (min-width: 1280px) and (max-width: 1599px) {
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 32.3% !important;
+    }
+
+   
     .zoneBox_ChuongTrinh .col-sm-3.btnView {
         width: 100% !important;
     }
@@ -165,11 +172,14 @@
 }
 
 @media (min-width: 1025px) and (max-width: 1180px) {
-    .zoneBox_ChuongTrinh {
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 48.3% !important;
+    }
+    /* .zoneBox_ChuongTrinh {
         display: grid !important;
         grid-template-columns: repeat(3, 1fr) !important;
         gap: 20px;
-    }
+    } */
 
     .zoneBox_ChuongTrinh .col-sm-3.btnView {
         width: 100% !important;
@@ -195,16 +205,16 @@
     .zonePhanCong {
         grid-template-columns: repeat(3, 1fr) !important;
     }
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 48.3% !important;
+    }
 }
 
 @media (min-width: 1024px) and (max-width: 1280px) {
-
-    .zone_notify_HocPhan .box.box-solid.box-search .box-body {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 48.3% !important;
     }
-
+  
     .zone_notify_HocPhan .box-search .item-search {
         padding-right: 0px !important;
     }
@@ -224,6 +234,9 @@
 }
 
 @media (max-width: 1024px) {
+    .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
+        width: 48.3% !important;
+    }
     .content .aps-ds-kehoach {
         padding-top: 10px !important;
         padding-left: 10px !important;
@@ -1455,11 +1468,11 @@
         gap: 10px;
     }
 
-    .zoneBox_ChuongTrinh {
+    /* .zoneBox_ChuongTrinh {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
         gap: 10px !important;
-    }
+    } */
 
     .aps-list-chuongtrinh.box.box-solid {
         padding: 20px 15px !important;
@@ -2330,11 +2343,11 @@
         gap: 10px;
     }
 
-    .zoneBox_ChuongTrinh {
+    /* .zoneBox_ChuongTrinh {
         display: grid !important;
         grid-template-columns: 1fr 1fr !important;
         gap: 10px !important;
-    }
+    } */
 
     .aps-list-chuongtrinh.box.box-solid {
         padding: 20px 15px !important;

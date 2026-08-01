@@ -11,7 +11,7 @@
 
   /* Thành công (Success) */
   /* Mã màu bootstrap */
-  --color-green: #1a8754 !important;
+  --color-green: rgb(26, 135, 84) !important;
   --color-green1: #0a6139 !important;
   --color-green-hover: #157347;
   --color-save: #22C55E;

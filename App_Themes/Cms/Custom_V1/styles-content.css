@@ -4095,7 +4095,8 @@
     padding: 25px !important;
 }
 
-.light-paginationtbldataChiTiet.simple-pagination,.light-paginationtbldata_TongHopTheoKhoan.simple-pagination,
+.light-paginationtbldataChiTiet.simple-pagination,
+.light-paginationtbldata_TongHopTheoKhoan.simple-pagination,
 .light-paginationtbldataChiTiet {
     padding: 0 0 12px 0 !important;
 }
@@ -8299,6 +8300,12 @@ input#tblInput_DTSV_SinhVien_input {
     margin-top: -5px !important;
 }
 
+.aps-list-chuongtrinh.box.box-solid {
+    border-radius: 0 !important;
+    border-bottom-left-radius: 12px !important;
+    border-bottom-right-radius: 12px !important;
+}
+
 .zoneBox_ChuongTrinh {
     display: flex;
     flex-wrap: wrap;
@@ -8308,18 +8315,18 @@ input#tblInput_DTSV_SinhVien_input {
 .zoneBox_ChuongTrinh .btnView {
     /*padding-bottom: 5px;*/
     padding-left: 0px !important;
-    width: 23.9% !important;
-
+    /* width: 25% !important; */
 }
 
 .zoneBox_ChuongTrinh .btnView .small-box {
     border-radius: 8px !important;
+    padding: 0 !important;
     border: 1px solid #e1e1e1 !important;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0) !important;
     /*min-height: 330px;*/
     height: 100%;
-    display: flex;
-    flex-direction: column;
+    display: block !important;
+    /* flex-direction: column; */
     background: #fff;
 }
 
@@ -8360,7 +8367,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .zoneBox_ChuongTrinh .small-box>.inner {
-    padding: 10px 12px !important;
+    padding: 10px 12px 75px 12px !important;
 }
 
 .zoneBox_ChuongTrinh .small-box .inner h4 {
@@ -8371,12 +8378,8 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .zoneBox_ChuongTrinh .small-box p {
-    font-size: 15px;
+    font-size: 14px;
     color: #666;
-}
-
-.zoneBox_ChuongTrinh .small-box .icon {
-    display: none;
 }
 
 .zoneBox_ChuongTrinh .small-box-footer {
@@ -8384,10 +8387,14 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .zoneBox_ChuongTrinh .small-box>.small-box-footer {
-    background: rgba(0, 0, 0, 0);
-    text-decoration: none;
-    border-top: 1px solid #e1e1e1;
-    padding: 10px 0;
+    background: #f6f7f8 !important;
+    border-top: 1px solid #e1e1e1 !important;
+    border-right: 0 !important;
+    border-left: 0 !important;
+    border-bottom: 0 !important;
+    padding: 10px !important;
+    border-radius: 0 5px 5px 0 !important;
+    width: 100%;
 }
 
 .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn {
@@ -8403,6 +8410,11 @@ input#tblInput_DTSV_SinhVien_input {
 .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn.btnViewCT {
     background-color: var(--color-blue) !important;
     color: #fff !important;
+}
+
+.small-box-footer.aps-list-btn {
+    position: absolute;
+    bottom: 0;
 }
 
 .table-sum tr:last-child {
@@ -8501,7 +8513,7 @@ input#tblInput_DTSV_SinhVien_input {
 
 .aps-list-hocphan.sidebar-menu li a,
 .zoneHocPhan_Selected_KBB.sidebar-menu li a {
-    padding: 13px 12px 11px 10px !important;
+    padding: 13px 12px 11px 0px !important;
 }
 
 .aps-list-hocphan.sidebar-menu .item-li a i {
@@ -8530,6 +8542,10 @@ input#tblInput_DTSV_SinhVien_input {
     background: #fff !important;
     color: var(--color-green) !important;
     border-radius: 0px;
+}
+
+.skin-blue .aps-list-hocphan.sidebar-menu>li:hover>a i {
+    color: var(--color-green) !important;
 }
 
 .aps-list-hocphan .aps-list-hocphan.sidebar-menu>li.active>a,
@@ -8564,12 +8580,24 @@ input#tblInput_DTSV_SinhVien_input {
 .table-khoituchon .sidebar-menu {
     padding: 0 !important;
 }
-
+.table-khoituchon{
+    position: relative !important;
+}
 .table.table-khoibatbuoc tr:last-child,
 .table.table-khoituchon tr:last-child {
     border-right: 0 solid #d1d1d1 !important;
 }
-
+.table-khoituchon .table-khoituchon-right .box.box-solid {
+    background-color: #fff !important;
+    margin-top: -2px !important;
+    /* position: absolute !important; */
+    /* top: 0 !important; */
+}
+.zone_inputhocphan_khoituchondon .table-khoituchon .table-khoituchon-right{
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+}
 .table-khoibatbuoc tr:hover .btn.btn-outline-primary {
     color: #0d6efd !important;
 }
@@ -8622,11 +8650,12 @@ input#tblInput_DTSV_SinhVien_input {
 .aps-list-hocphan.sidebar-menu .item-li a i.fa-circle-check,
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li a i.fa-circle-check {
     margin-right: 8px !important;
+    color: var(--color-blue);
 }
 
 .zoneHocPhan_Selected_KBB.sidebar-menu .item-li .submit.btn {
     position: absolute;
-    top: 10px;
+    top: 8px;
     right: 10px;
     height: 30px;
     padding-top: 0px !important;
@@ -8646,15 +8675,11 @@ input#tblInput_DTSV_SinhVien_input {
 
 .zone_chuongtrinhhocphan .box-header.bg-green {
     height: 52px;
-    line-height: 52px;
+    line-height: 28px;
 }
 
 .zone_chuongtrinhhocphan .box-header.bg-greenr .pull-right .btn {
-    margin-top: -17px !important;
-}
-
-.zone_chuongtrinhhocphan .box-header.bg-green .pull-right .btn {
-    margin-top: -18px;
+    margin-top: 0 !important;
 }
 
 .zone_chuongtrinhhocphan-left .box-title.color-blue {
@@ -8662,9 +8687,6 @@ input#tblInput_DTSV_SinhVien_input {
     margin-bottom: 12px;
 }
 
-.zone_chuongtrinhhocphan-right .box-header {
-    margin-top: 20px;
-}
 
 .zone_chuongtrinhhocphan-right .box-header .pull-right {
     margin-top: -5px;
@@ -10335,7 +10357,7 @@ table#clone {
 .aps-form-item .select2-container--default .select2-selection--single .select2-selection__arrow,
 .aps-form-input .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 6px !important;
-    right: 12px !important;
+    right: 6px !important;
 }
 
 /* -------------- */
@@ -11204,7 +11226,9 @@ table#clone {
 .zoneViewHocPhan {
     z-index: 99;
 }
-
+.zoneViewHocPhan .box-header{
+    height: 52px;
+}
 .tblViewKhoiBatBuoc tfoot tr td,
 .tblViewKhoiTuChon tfoot tr td,
 .tblViewKhoiBatBuoc tr td:nth-child(6),
@@ -11249,7 +11273,7 @@ table#clone {
     display: grid;
     grid-template-columns: 50% 50%;
     gap: 20px;
-    padding-right: 20px;
+    padding-right: 20px !important;
 }
 
 #zonepercentInDS {
@@ -16664,7 +16688,7 @@ table#clone {
 }
 
 .table tr td .select2-container--default .select2-selection--single .select2-selection__rendered {
-    line-height: 34px !important;
+    line-height: 28px !important;
 }
 
 /* --- */
@@ -16726,17 +16750,19 @@ table#clone {
 .tblChiTietKhoan tbody tr td:nth-child(3) {
     text-align: right !important;
 }
-.aps-tinhhinh-thuchi .box-header .group-title p{
+
+.aps-tinhhinh-thuchi .box-header .group-title p {
     font-size: 18px !important;
     color: var(--color-blue) !important;
     font-weight: 700 !important;
 }
+
 /* ============ */
 .zone-pag-headertbldataChiTiet .light-paginationtbldataChiTiet.simple-pagination {
     padding: 0 0 10px 0 !important;
 }
 
-.zone-pag-headertbldataChiTiet .light-paginationtbldataChiTiet.simple-pagination li:first-child ,
+.zone-pag-headertbldataChiTiet .light-paginationtbldataChiTiet.simple-pagination li:first-child,
 .filter-tbldata_TongHopTheoKhoan .light-paginationtbldata_TongHopTheoKhoan li:first-child {
     border-left: 1px solid #e1e1e1 !important;
 }
@@ -16744,16 +16770,19 @@ table#clone {
 .zone-pag-footertbldataChiTiet .light-paginationtbldataChiTiet.simple-pagination {
     padding: 0 0 5px 0 !important;
 }
+
 .aps-tonghoptaichinh .aps-search .aps-lable .btn-search {
     background: transparent !important;
     color: var(--color-blue) !important;
     border: 0 solid var(--color-blue) !important;
 }
+
 .aps-tonghoptaichinh .aps-search .aps-lable .btn-search:hover {
     background: var(--color-blue) !important;
     color: #fff !important;
     border: 0 solid var(--color-blue) !important;
 }
+
 /* ?-------------- */
 .info-box-icon {
     height: 86px !important;
@@ -16816,33 +16845,39 @@ table#clone {
 
 /* ------- */
 .aps-theodoicongno-detail .aps-theodoicongno-tab,
-.aps-theodoicongno-detail  .aps-theodoicongno-progress{
+.aps-theodoicongno-detail .aps-theodoicongno-progress {
     padding: 20px !important;
 }
+
 .aps-theodoicongno-tab_nochung tr td.td-fix,
 .aps-theodoicongno-tab_norieng tr td.td-fix,
 .aps-theodoicongno-tab_duchung tr td.td-fix,
-.aps-theodoicongno-tab_durieng  tr td.td-fix{
+.aps-theodoicongno-tab_durieng tr td.td-fix {
     display: block !important;
     height: 60px !important;
     line-height: 40px;
 }
-.box-search .inputSearch .content_search{
+
+.box-search .inputSearch .content_search {
     display: contents;
 }
+
 .aps-theodoicongno-tab .aps-list-btn .btn-soft-primary.btn-default.btnDelete {
     background: rgba(13, 110, 253, 0.1) !important;
     color: var(--color-blue) !important;
     border: 1px solid rgba(13, 110, 253, 1) !important;
 }
+
 .zonedetail_tdcn .form-container-header {
     padding: 0px 20px 12px 0px !important;
     /* background: #f1f1f1 !important; */
 }
-.zonedetail_tdcn .form-container-header  .color-active {
+
+.zonedetail_tdcn .form-container-header .color-active {
     padding: 7px 20px !important;
     color: #fff !important;
 }
+
 .zonedetail_tdcn .form-container-header .pull-right .btn-default {
     background-color: transparent;
     border-color: #e9e9e9;
@@ -16850,25 +16885,131 @@ table#clone {
     border-width: 0;
     padding: 17px 15px 7.6px 10px !important;
 }
+
 .zonedetail_tdcn .row-tab {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.tblDetail_TDCN.table>tfoot>tr>th:first-child{
+
+.tblDetail_TDCN.table>tfoot>tr>th:first-child {
     border-left: 0 solid #d1d1d1 !important;
     text-align: left !important;
-    
+
 }
-.tblDetail_TDCN.table>tfoot>tr>th:last-child{
+
+.tblDetail_TDCN.table>tfoot>tr>th:last-child {
     border-right: 0 solid #d1d1d1 !important;
-    border-right: 0 !important ;
+    border-right: 0 !important;
     content: var(--color-red) !important;
 }
-.tblDetail_TDCN.table>tfoot>tr>th{
+
+.tblDetail_TDCN.table>tfoot>tr>th {
     border-left: 0 solid #d1d1d1 !important;
-    border-right: 0 !important ;
+    border-right: 0 !important;
     content: var(--color-red) !important;
 }
+
 .zonedetail_tdcn .row-align {
     padding-top: 10px;
+}
+
+/* ----- */
+#txtSearch_TuKhoa_SelectedHocPhan_KBB {
+    padding: 0 12px !important;
+}
+
+.aps-list-hocphan,
+.zoneHocPhan_Selected_KBB {
+    /* border-left: 1px solid #e1e1e1; */
+    /* border-right: 1px solid #e1e1e1;
+     border-bottom: 1px solid #e1e1e1; */
+    padding: 0px;
+}
+.sidebar-menu.zoneHocPhan_Selected_KBB {
+    padding: 5px 0;
+}
+.zoneHocPhan_Selected_KBB .item-li.menu-open i {
+    color: var(--color-red) !important;
+}
+.zoneHocPhan_Selected_KBB .item-li:hover i {
+    color: var(--color-red) !important;
+}
+.aps-list-hocphan.sidebar-menu>li,
+.zoneHocPhan_Selected_KBB.sidebar-menu>li {
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.aps-list-hocphan.sidebar-menu>li a,
+.zoneHocPhan_Selected_KBB.sidebar-menu>li a {
+    padding-left: 15px !important;
+    padding-bottom: 10px !important;
+}
+
+.zoneHocPhan_Selected_KBB.sidebar-menu>li:hover .btnSelectHocPhan i {
+    color: #fff !important;
+}
+.table-khoibatbuoc .box-header .box-title {
+    font-size: 17px;
+    font-weight: 400 !important;
+}
+.table-khoibatbuoc .sidebar-menu{
+    padding: 5px 0 !important;
+}
+
+.zone_edithocphan .table tr td .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 20px !important;
+}
+.border-r-0{
+    border-right: 0 !important;
+}
+.zone_edithocphan .aps-form-table tr td:first-child{
+    border-left: 1px solid #d1d1d1 !important;
+}
+.zone_edithocphan .table tr:hover .btn.poiter,
+.zone_edithocphan .table tr:hover .btn.poiter i,
+.zone_edithocphan .table .btn.poiter:hover,
+.zone_edithocphan .table .btn.poiter:hover i{
+    /* color: var(--color-green) !important; */
+}
+.zone_edithocphan .table .btn.poiter:hover i,.zone_edithocphan .table tr:hover .btn.poiter,
+.zone_edithocphan .table tr:hover .btn.poiter i{
+    color: #fff !important;
+}
+.scroll-table-y{
+    overflow-y: scroll;
+}
+
+.zone_edithocphan .aps-phanbo-hp .table tr td .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 30px !important;
+}
+
+.aps-modal-nhansu .col-sm-9 .zone-pag-headertblModal_SinhVien .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 24px;
+}
+.aps-modal-nhansu .col-sm-9 .zone-pag-headertblModal_SinhVien .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 1px !important;
+    right: 5px !important;
+}
+.aps-modal-nhansu .col-sm-9 .zone-pag-headertblModal_SinhVien .simple-pagination li:first-child {
+    border-left: 1px solid #e1e1e1 !important;
+}
+.zoneHocPhan_Selected_KBB.sidebar-menu>li a{
+    text-align: left;
+}
+.zoneHocPhan_Selected_KBB.sidebar-menu>li{
+    position: relative;
+}
+.zone_inputhocphan_khoituchondon .checkbox-inline.user-check-print {
+    margin-left: 0px !important;
+    position: absolute;
+    left: 0 !important;
+    display: none !important;
+}
+.zone_inputhocphan_khoituchondon .checkbox-inline.user-check-print .radio input[type=radio], .radio-inline input[type=radio] {
+    position: absolute;
+    margin-top: 4px\9;
+    margin-left: 0px;
+}
+.zone_chuongtrinhhocphan-left .tblHocPhan tr td:nth-child(6){
+    text-align: center !important;
 }

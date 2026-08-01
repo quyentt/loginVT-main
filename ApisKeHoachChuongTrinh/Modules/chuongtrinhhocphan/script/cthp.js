@@ -1128,7 +1128,7 @@ ChuongTrinhHocPhan.prototype = {
         $("#zoneBox_ChuongTrinh").html(html);
         //
         for (var i = 0; i < data.length; i++) {
-            html += '<div class="col-sm-3 col-xs-6 btnView" id="view_' + data[i].ID + '" style="padding-left: 6px">';
+            html += '<div class="col-sm-3 col-xs-6 aps-chuongtrinh btnView" id="view_' + data[i].ID + '" style="padding-left: 6px">';
             html += '<div class="small-box">';
             html += '<div class="inner">';
             html += '<h4>' + edu.util.returnEmpty(data[i].TENCHUONGTRINH) + '</h4>';
@@ -1137,14 +1137,14 @@ ChuongTrinhHocPhan.prototype = {
             html += '<p>Ngành: ' + edu.util.returnEmpty(data[i].DAOTAO_N_CN_TEN) + '</p>';
             html += '<p>Khoa quản lý: ' + edu.util.returnEmpty(data[i].DAOTAO_KHOAQUANLY_TEN) + ' </p>';
             html += '</div>';
+            html += '<div class="small-box-footer aps-list-btn">';
             html += '<div class="icon">';
-            html += '<i class="fa fa-building cl-rosybrown"></i>';
+            html += '<i class="fa-solid fa-memo-circle-info color-blue"></i>';
             html += '</div>';
-            html += '<div class="small-box-footer">';
-            html += '<a id="edit_' + data[i].ID + '" class="btn btn-default poiter btnEdit"><i class="fa-solid fa-pen-field"></i>Cập nhật CTDT</a>';
-            html += '<a id="viewCT_' + data[i].ID + '" class="btn btn-default poiter btnViewCT" style="margin-left: 5px"><i class="fa-solid fa-eye"></i>Xem CTDT</a>';
+            html += '<a id="edit_' + data[i].ID + '" class="btn btn-default poiter btn-soft-success"><i class="fa-solid fa-pen-field"></i>Cập nhật CTDT</a>';
+            html += '<a id="viewCT_' + data[i].ID + '" class="btn btn-default poiter btn-soft-primary" style="margin-left: 5px"><i class="fa-solid fa-eye"></i>Xem CTDT</a>';
             html += '</div>';
-            html += '</div>';
+            html += '</div >';
             html += '</div >';
         }
         //
