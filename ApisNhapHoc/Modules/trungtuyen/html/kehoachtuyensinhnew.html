@@ -367,18 +367,25 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="d-flex justify-content-end mb-2" style="gap:8px;">
+                    <div class="d-flex justify-content-end mb-2" style="gap:10px;">
                         <button type="button" class="btn btn-warning" id="btnReload_KHDauRa">
                             <i class="fa fa-refresh"></i>&nbsp;Xem lại danh sách
                         </button>
                         <button type="button" class="btn btn-success" id="btnKhoiTao_KHDauRa">
                             <i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp;Khởi tạo từ tuyển sinh
                         </button>
+                        <button type="button" class="btn btn-primary" id="btnYeuCauXacNhanCoSo_KHDauRa"
+                                title="Cập nhật cờ 'yêu cầu xác nhận cơ sở đào tạo' theo các dòng đã tick">
+                            <i class="fa-solid fa-user-check"></i>&nbsp;Yêu cầu xác nhận CSĐT
+                        </button>
                     </div>
                     <div class="aps-table-select scroll-table-x">
                         <table id="tblKHDauRa_KHTSN" class="table table-bordered table-hover table-noborder">
                             <thead>
                                 <tr>
+                                    <th class="td-center" style="width:44px">
+                                        <input type="checkbox" id="chkAll_KHDauRa" title="Chọn tất cả" />
+                                    </th>
                                     <th class="td-center" style="width:44px">STT</th>
                                     <th class="td-left" style="min-width:110px">Mã</th>
                                     <th class="td-left" style="min-width:180px">Tên</th>
@@ -392,6 +399,7 @@
                                     <th class="td-center" style="width:90px" title="Số lượng hồ sơ đã nhập">Đã nhập</th>
                                     <th class="td-center" style="width:90px" title="Số lượng thí sinh/người học đã xác nhận nhập học">Đã XN</th>
                                     <th class="td-center" style="width:100px" title="Số lượng người học đã được tạo quá trình học">Đã tạo QT</th>
+                                    <th class="td-center" style="width:170px" title="Yêu cầu thí sinh xác nhận Cơ sở đào tạo cho đầu ra này">Xác nhận CSĐT</th>
                                     <th class="td-left" style="width:120px">Trạng thái</th>
                                     <th class="td-center" style="width:70px">Hiệu lực</th>
                                     <th class="td-center" style="width:130px">Ngày tạo</th>
@@ -969,7 +977,7 @@
     </div>
 </section>
 <!-- page script -->
-<script src="/modules/trungtuyen/scripts/kehoachtuyensinhnew.js?v=1.0.3.4"></script>
+<script src="/modules/trungtuyen/scripts/kehoachtuyensinhnew.js?v=1.0.3.5"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

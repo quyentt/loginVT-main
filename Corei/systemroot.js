@@ -7964,20 +7964,21 @@ systemroot.prototype = {
             var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
         }
         var row = '';
-        row += '<div class="row"><div class="col-sm-2" >- Upload ' + strTenHienThi + ': </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
-        row += '<div class="row"><div class="col-sm-2" >- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
-
-
+        row += '<div class="box-upload-file col-sm-6">';
+        row += '<div class="row"><div class="col-sm-3" ><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Upload ' + strTenHienThi + ' </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
+        row += '<div class="row"><div class="col-sm-3" ><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Mẫu ' + strTenHienThi + ' </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
+        row += '</div>';
+        row += '<div class="box-import-sheet col-sm-6">';
         row += '<div class="clear">Sheet import</div>';
         row += '<div>';
-        row += '<div style="width: 400px;margin-top:5px"><select id="dropSearch_BangA" class="select-opt"></select></div>';
+        row += '<div style="width: 400px;margin-top:5px" class="form-select-2"><select id="dropSearch_BangA" class="select-opt select2"></select></div>';
         row += '</div>';
-
+        row += '</div>';
         row += '<div class="clear"></div>';
         row += '<div class="zone-content" id="tblChuaImport">';
         row += '<div class="box-header with-border">';
         row += '<h3 class="box-title"><i class="fa fa-list-alt"></i> Danh sách</h3>';
-        row += '<div class="pull-right"><a class="btn btn-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div>';
+        row += '<div class="pull-right"><a class="btn btn-soft-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div>';
         row += '</div>';
         row += '<div class="clear"></div>';
         row += '<div class="row row-align">';

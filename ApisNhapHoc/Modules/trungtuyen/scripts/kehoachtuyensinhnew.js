@@ -166,6 +166,38 @@ KeHoachTuyenSinhNew.prototype = {
                 me.khoiTao_KHDauRa_TuTuyenSinh();
             });
         });
+
+        /*------------------------------------------
+        -- Bulk update "Yêu cầu xác nhận CSĐT" cho các đầu ra
+        -- Header checkbox toggle all + row checkbox sync header
+        -- Nút áp cờ theo state hiện tại (tick=1, không=0) cho MỌI dòng
+        -------------------------------------------*/
+        $("#chkAll_KHDauRa").on("change", function () {
+            var checked = $(this).is(":checked");
+            $("#tblKHDauRa_KHTSN tbody .chk-daura-row").prop('checked', checked);
+            $(this).prop('indeterminate', false);
+        });
+        $("#tblKHDauRa_KHTSN").on("change", ".chk-daura-row", function () {
+            me._syncHeaderChk_KHDauRa();
+        });
+        $("#btnYeuCauXacNhanCoSo_KHDauRa").click(function () {
+            var $rows = $("#tblKHDauRa_KHTSN tbody tr[data-id]");
+            if ($rows.length === 0) {
+                edu.system.alert("Không có dữ liệu để cập nhật", "w");
+                return;
+            }
+            var soTick = $("#tblKHDauRa_KHTSN tbody .chk-daura-row:checked").length;
+            var soTong = $rows.length;
+            edu.system.confirm(
+                "Sẽ cập nhật 'Yêu cầu xác nhận CSĐT' cho " + soTong + " đầu ra:\n"
+                + "- " + soTick + " dòng đã tick → gán = 1\n"
+                + "- " + (soTong - soTick) + " dòng chưa tick → gán = 0\n"
+                + "Tiếp tục?"
+            );
+            $("#btnYes").off("click.updXNCoSo").on("click.updXNCoSo", function () {
+                me.capNhat_XacNhanCoSo_Bulk();
+            });
+        });
         $("#modal-NhanSu-KHTSN").on("show.bs.modal", function (event) {
             var strId = $(event.relatedTarget).attr("data-id") || '';
             if (strId) {
@@ -555,8 +587,9 @@ KeHoachTuyenSinhNew.prototype = {
         var $tbody = $("#tblKHDauRa_KHTSN tbody");
         $tbody.html("");
         $("#lblTong_KHDauRa").text(data ? data.length : 0);
+        $("#chkAll_KHDauRa").prop('checked', false).prop('indeterminate', false);
         if (!data || data.length === 0) {
-            $tbody.append('<tr><td colspan="17" class="td-center text-muted py-3">Không có dữ liệu — bấm "Khởi tạo từ tuyển sinh" để tạo từ Kế hoạch tuyển sinh</td></tr>');
+            $tbody.append('<tr><td colspan="19" class="td-center text-muted py-3">Không có dữ liệu — bấm "Khởi tạo từ tuyển sinh" để tạo từ Kế hoạch tuyển sinh</td></tr>');
             return;
         }
         var iconCheck = '<i class="fa-solid fa-check text-success"></i>';
@@ -569,7 +602,16 @@ KeHoachTuyenSinhNew.prototype = {
         var rows = '';
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
-            rows += '<tr>'
+            var strId = d.ID || d.Id || d.id || '';
+            var iXacNhanCoSo = Number(d.REQUIRE_XACNHAN_COSO || 0);
+            var strXacNhanText = iXacNhanCoSo === 1
+                ? '<span class="badge bg-primary">Yêu cầu xác nhận CSĐT</span>'
+                : '';
+            rows += '<tr data-id="' + strId + '">'
+                + '<td class="td-center">'
+                +   '<input type="checkbox" class="chk-daura-row" data-id="' + strId + '"'
+                +     (iXacNhanCoSo === 1 ? ' checked' : '') + ' />'
+                + '</td>'
                 + '<td class="td-center">' + (i + 1) + '</td>'
                 + '<td class="td-left">' + (d.MA_DAU_RA || d.MA || '') + '</td>'
                 + '<td class="td-left">' + (d.TEN_DAU_RA || d.TEN || '') + '</td>'
@@ -583,6 +625,7 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td class="td-center">' + (d.SO_DA_GAN || 0) + '</td>'
                 + '<td class="td-center">' + (d.SO_DA_XACNHAN || 0) + '</td>'
                 + '<td class="td-center">' + (d.SO_DA_TAO_STUDY || 0) + '</td>'
+                + '<td class="td-center">' + strXacNhanText + '</td>'
                 + '<td class="td-left">' + (d.DAURA_STATUS_TEN || d.DAU_RA_STATUS_TEN || d.STATUS_TEN || d.DAU_RA_STATUS_CODE || '') + '</td>'
                 + '<td class="td-center">' + (d.IS_ACTIVE == 1 ? iconCheck : iconX) + '</td>'
                 + '<td class="td-center">' + me._fmtDateTime(d.NGAYTAO || d.NGAY_TAO || '') + '</td>'
@@ -590,6 +633,21 @@ KeHoachTuyenSinhNew.prototype = {
                 + '</tr>';
         }
         $tbody.append(rows);
+        me._syncHeaderChk_KHDauRa();
+    },
+
+    /* Đồng bộ header checkbox theo state các row checkbox */
+    _syncHeaderChk_KHDauRa: function () {
+        var $chks = $("#tblKHDauRa_KHTSN tbody .chk-daura-row");
+        var total = $chks.length;
+        if (total === 0) {
+            $("#chkAll_KHDauRa").prop('checked', false).prop('indeterminate', false);
+            return;
+        }
+        var checked = $chks.filter(':checked').length;
+        $("#chkAll_KHDauRa")
+            .prop('checked', checked === total)
+            .prop('indeterminate', checked > 0 && checked < total);
     },
 
     /*------------------------------------------
@@ -641,6 +699,66 @@ KeHoachTuyenSinhNew.prototype = {
             },
             type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Origin: PKG_CORE_NHAPHOC.Sua_KeHoachDauRa_XacNhanCoSo
+    -- Duyệt tuần tự từng dòng, tick → gán 1, không tick → gán 0
+    -- Sequential (giữ thứ tự log + tránh spam backend nếu KH có nhiều đầu ra)
+    -------------------------------------------*/
+    capNhat_XacNhanCoSo_Bulk: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $rows = $("#tblKHDauRa_KHTSN tbody tr[data-id]");
+        var arr = [];
+        $rows.each(function () {
+            var strId = $(this).attr('data-id');
+            var checked = $(this).find('.chk-daura-row').is(':checked');
+            if (strId) arr.push({ id: strId, val: checked ? 1 : 0 });
+        });
+        if (arr.length === 0) return;
+
+        var idx = 0, ok = 0, fail = 0;
+        var failMsgs = [];
+        var doNext = function () {
+            if (idx >= arr.length) {
+                var msg = "Đã cập nhật " + ok + "/" + arr.length + " đầu ra";
+                if (fail > 0) {
+                    msg += ". Lỗi: " + fail + " dòng";
+                    console.warn("Sua_KeHoachDauRa_XacNhanCoSo — chi tiết lỗi:", failMsgs);
+                }
+                edu.system.alert(msg, fail > 0 ? "w" : "s");
+                if (edu.util.checkValue(me.strKHNH_Id_ForView)) {
+                    me.getList_KHDauRa(me.strKHNH_Id_ForView);
+                }
+                return;
+            }
+            var item = arr[idx++];
+            var obj_save = {
+                'action': 'SV_CORE_NhapHoc_MH/EjQgHgokCS4gIikFIDQTIB4ZICIPKSAvAi4SLgPP',
+                'func': 'PKG_CORE_NHAPHOC.Sua_KeHoachDauRa_XacNhanCoSo',
+                'iM': edu.system.iM,
+                'strNh_KeHoach_Dau_Ra_Id': item.id,
+                'dGiaTri': item.val,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                'strHanhDong_Code': 'SUA'
+            };
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) ok++;
+                    else { fail++; failMsgs.push(item.id + ': ' + (data.Message || '')); }
+                    doNext();
+                },
+                error: function (er) {
+                    fail++;
+                    failMsgs.push(item.id + ': ex ' + JSON.stringify(er));
+                    doNext();
+                },
+                type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
+            }, false, false, false, null);
+        };
+        doNext();
     },
 
     /*------------------------------------------
