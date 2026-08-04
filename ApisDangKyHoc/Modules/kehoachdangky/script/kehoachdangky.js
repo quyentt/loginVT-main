@@ -2476,11 +2476,11 @@ KeHoachDangKy.prototype = {
             var maLop = row.MALOP;
             var laLopRieng = row.LALOPRIENG == 1;
             var already = existingIds[id];
-            var chk = '<input type="checkbox" class="chkChonLHP" style="width:18px; height:18px; cursor:pointer;"'
+            var chk = '<input type="checkbox" class="chkChonLHP" style="width:15px; height:15px; cursor:pointer;"'
                 + (already ? ' checked' : '') + ' />';
             var badgeRieng = laLopRieng
-                ? '<span class="badge" style="background:#198754; color:#fff; padding:3px 10px; border-radius:10px;">Có</span>'
-                : '<span class="badge" style="background:#6c757d; color:#fff; padding:3px 10px; border-radius:10px;">Không</span>';
+                ? '<span class="badge" style="background:#3380db; color:#fff;font-weight:400; padding:4px 10px; border-radius:10px;">Có</span>'
+                : '<span class="badge" style="background:#e1e1e1; color:#222;font-weight:400; padding:4px 10px; border-radius:10px;">Không</span>';
             html += "<tr data-id='" + id + "' data-tenlop='" + String(tenLop).replace(/'/g, "&#39;") + "' data-malop='" + String(maLop).replace(/'/g, "&#39;") + "'" + (already ? " class='row-selected'" : "") + ">";
             html += "<td class='td-center'>" + (i + 1) + "</td>";
             html += "<td class='td-left'>" + tenLop + "</td>";
