@@ -262,8 +262,9 @@ PhieuThu.prototype = {
             var strKhoanThu_Id = this.id.replace(/lblDinhDanh/g, '');;
             var strMaDinhDanh = $(this).attr("name");
             var strSoTien = $(this).attr("sotien").replace(/,/g, '');;
-            var strNoiDung = $(this).attr("noidung");
-            edu.system.alert('<img style="margin-left: 40px" src="https://api.vietqr.io/image/970418-' + strMaDinhDanh + '-JIzXIaG.jpg?accountName=LU%20A%20TUAN&amount=' + strSoTien + '&addInfo=' + strNoiDung + '"');
+            var strNoiDung = edu.system.change_alias($(this).attr("noidung"));
+            console.log('https://api.vietqr.io/image/970418-' + strMaDinhDanh + '-JIzXIaG.jpg?accountName=LU%20A%20TUAN&amount=' + strSoTien + '&addInfo=' + strNoiDung + '"');
+            me.alert('<img style="margin-left: 40px" src="https://api.vietqr.io/image/970418-' + strMaDinhDanh + '-JIzXIaG.jpg?accountName=LU%20A%20TUAN&amount=' + strSoTien + '&addInfo=' + strNoiDung + '"');
         });
         $("#btnCreateQR_KhoanNoChung_BLHD").click(function (e) {
             var arrChecked_Id = [];
@@ -283,7 +284,7 @@ PhieuThu.prototype = {
             var strMaDinhDanh = $("#lblDinhDanh" + strKhoanThu_Id).html();
             var strSoTien = $("#txtTongTien" + strKhoanThu_Id).val().replace(/,/g, '');
             var strNoiDung = $("#txtNoiDungHD" + strKhoanThu_Id).val();
-            edu.system.alert('<img style="margin-left: 40px" src="https://api.vietqr.io/image/970418-' + strMaDinhDanh + '-JIzXIaG.jpg?accountName=LU%20A%20TUAN&amount=' + strSoTien + '&addInfo=' + strNoiDung +'"');
+            me.alert('<img style="margin-left: 40px" src="https://api.vietqr.io/image/970418-' + strMaDinhDanh + '-JIzXIaG.jpg?accountName=LU%20A%20TUAN&amount=' + strSoTien + '&addInfo=' + strNoiDung +'"');
         });
         //Khi thay đổi giá trị tiền trong hóa đơn thì sẽ cập nhật lại thông tin tổng tiền hiển thị lại tổng tiền
         $("#tbldata_KhoanNoChung_HDBL").delegate(".inputsotien,.inputsoluong", "keyup", function (e) {
@@ -868,6 +869,94 @@ PhieuThu.prototype = {
             else
             me.save_KhoanDaRut();
         });
+    },
+    alert: function (content, code, title) {
+        var me = edu.system;
+        var alert = "";
+        if (content === null || content === undefined) return;
+        main();
+        function main() {
+            if (!title) {
+                switch (code) {
+                    case "w":
+                        title = '<i class="fa fa-exclamation-triangle fa-notify fa-warning"> ' + edu.constant.getting("LABLE", "CODE_W") + '</i>';
+                        genBox_Alert();
+                        break;
+                    case "h":
+                        title = '<i class="fa fa-question-circle fa-notify fa-help"> ' + edu.constant.getting("LABLE", "CODE_H") + '</i>';
+                        genBox_Alert();
+                        break;
+                    default:
+                        title = '<i class="fa fa-info-circle fa-default"> ' + edu.constant.getting("LABLE", "CODE_I") + '</i>';
+                        genBox_Alert();
+                        break;
+                }
+            } else {
+                title = '<i class="fa fa-info-circle fa-default"> ' + title + '</i>';
+            }
+        }
+        function genBox_Alert() {
+            if (!me.flag_alert) {
+
+                alert += '<div id="myModalAlert" class="modal fade modal-alert" role="dialog" style=""><div class="modal-dialog">';
+                alert += '<div class="modal-content"><div class="modal-header">';
+                alert += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
+                alert += '<h4 class="modal-title">' + title + '</h4>';
+                alert += ' </div>';
+                alert += '<div class="modal-body" id="alert_content">';
+                alert += '</div>';
+                alert += '<div class="modal-footer">';
+                alert += '<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i> ' + edu.constant.getting("BUTTON", "CLOSE") + '</button>';
+                alert += '</div>';
+                alert += '</div>';
+
+                $("#alert").html(alert);
+                $('#alert>#myModalAlert').modal('show');
+                genContent_Alert();
+                me.flag_alert = true;
+
+                $("#btnYes").hide();
+
+                $('#myModalAlert').on('hidden.bs.modal', function () {
+                    $("#myModalAlert").remove();
+                    me.flag_alert = false;
+                    me.arrcheckcontent = [];
+                    me.arrStt = [];
+                });
+
+            }
+            else {
+                genContent_Alert();
+            }
+        }
+        function genContent_Alert() {
+            var strhtmlcontent = change_alias(content);
+            var iThuTu = me.arrcheckcontent.indexOf(strhtmlcontent);
+            if (iThuTu == -1) {
+                $('#myModalAlert #alert_content').append('<p>' + content + ' <span id="' + strhtmlcontent + '"></span></p>');
+                me.arrcheckcontent.push(strhtmlcontent);
+                me.arrStt.push(1);
+            } else {
+                var iSoLuong = me.arrStt[iThuTu] + 1;
+                me.arrStt[iThuTu] = iSoLuong;
+                $("#" + strhtmlcontent).html("(" + iSoLuong + ")");
+            }
+        }
+        function change_alias(alias) {
+            var str = alias;
+            str = str.toLowerCase();
+            str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g, "a");
+            str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g, "e");
+            str = str.replace(/ì|í|ị|ỉ|ĩ/g, "i");
+            str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g, "o");
+            str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g, "u");
+            str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g, "y");
+            str = str.replace(/đ/g, "d");
+            str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g, "");
+            str = str.replace(/ + /g, "");
+            str = str.replace(/ /g, "");
+            return str;
+        }
     },
     /*------------------------------------------
     --Discription: [0] Common
