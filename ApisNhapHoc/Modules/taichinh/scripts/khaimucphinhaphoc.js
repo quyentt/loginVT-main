@@ -27,6 +27,12 @@ KhaiMucPhi.prototype = {
     dtDauVao: [],
     bLoadedCombo_DoiTuong: false,   // flag đã load combo QLSV.DOITUONG chưa
 
+    // State cho modal "Mức phí đã gán cho thí sinh" (server-side pagination)
+    _pageIndex_MucPhiDaGan: 1,
+    _pageSize_MucPhiDaGan: 50,
+    _total_MucPhiDaGan: 0,
+    dtMucPhiDaGan: [],
+
     /* --------- INIT --------- */
     init: function () {
         var me = this;
@@ -140,6 +146,71 @@ KhaiMucPhi.prototype = {
                 return;
             }
             me.openModal_Nhom_Add();
+        });
+
+        // Nút "Tạo mức phí nhập học cho kế hoạch"
+        // Luồng: lấy DS thí sinh của KH → duyệt tuần tự Gen_TaiChinh_PhaiNop_Intake
+        $("#btnGenMucPhi_HSNH").off("click").on("click", function () {
+            if (!me.strKeHoachNhapHoc_Id) {
+                edu.system.alert("Vui lòng chọn kế hoạch nhập học và bấm Xem trước.", "w");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn muốn tạo mức phí nhập học cho toàn bộ thí sinh của kế hoạch này?");
+            $("#btnYes").off("click.genMucPhi").on("click.genMucPhi", function () {
+                me.taoMucPhi_ChoKeHoach();
+            });
+        });
+
+        // Nút "Xem mức phí đã gán cho thí sinh"
+        $("#btnXemMucPhiDaGan_HSNH").off("click").on("click", function () {
+            if (!me.strKeHoachNhapHoc_Id) {
+                edu.system.alert("Vui lòng chọn kế hoạch nhập học và bấm Xem trước.", "w");
+                return;
+            }
+            me.openModal_MucPhiDaGan();
+        });
+
+        // Filter modal Mức phí đã gán (nút + Enter + đổi page size)
+        $("#btnLoc_MucPhiDaGan_HSNH").off("click").on("click", function () {
+            me._pageIndex_MucPhiDaGan = 1;
+            me.getList_MucPhiDaGan();
+        });
+        $("#txtTuKhoa_MucPhiDaGan_HSNH").off("keypress").on("keypress", function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                me._pageIndex_MucPhiDaGan = 1;
+                me.getList_MucPhiDaGan();
+            }
+        });
+        $("#dropDaNhapHoc_MucPhiDaGan_HSNH").off("change").on("change", function () {
+            me._pageIndex_MucPhiDaGan = 1;
+            me.getList_MucPhiDaGan();
+        });
+        $("#pgSize_MucPhiDaGan").off("change").on("change", function () {
+            me._pageSize_MucPhiDaGan = parseInt($(this).val(), 10) || 50;
+            me._pageIndex_MucPhiDaGan = 1;
+            me.getList_MucPhiDaGan();
+        });
+        $("#paging_MucPhiDaGan_HSNH").off("click", ".page-link").on("click", ".page-link", function (e) {
+            e.preventDefault();
+            var t = parseInt($(this).attr("data-page"), 10);
+            if (isNaN(t) || t < 1) return;
+            me._pageIndex_MucPhiDaGan = t;
+            me.getList_MucPhiDaGan();
+        });
+
+        // Nút Sửa cột Tổng phí → mở modal chi tiết PhaiNop
+        $("#tblMucPhiDaGan_HSNH").off("click", ".btnSua_MucPhi_Row").on("click", ".btnSua_MucPhi_Row", function () {
+            var strIntakeId = $(this).attr("data-id");
+            var strHoTen = $(this).attr("data-hoten") || '';
+            var strMa = $(this).attr("data-ma") || '';
+            me.xem_ChiTiet_PhaiNop(strIntakeId, strHoTen, strMa);
+        });
+
+        // Chọn tất cả checkbox
+        $("#chkSelectAll_MucPhiDaGan_HSNH").off("change").on("change", function () {
+            var bCheck = $(this).is(":checked");
+            $("#tblMucPhiDaGan_HSNH tbody input.chkMucPhiDaGan_Row").prop("checked", bCheck);
         });
 
         // Nút Lưu trong modal nhóm
@@ -1547,5 +1618,448 @@ KhaiMucPhi.prototype = {
             contentType: true,
             data: obj_save
         }, false, false, false, null);
+    },
+
+    /* =================================================================
+       TẠO MỨC PHÍ NHẬP HỌC CHO KẾ HOẠCH
+       Bước 1: LayDSQLSV_NguoiHoc_TTTS — lấy toàn bộ thí sinh của KH
+       Bước 2: Duyệt tuần tự → Gen_TaiChinh_PhaiNop_Intake cho từng bản ghi
+       ================================================================= */
+
+    taoMucPhi_ChoKeHoach: function () {
+        var me = this;
+        me._openModalProgress_GenMucPhi();
+        me._setStatus_GenMucPhi("Đang tải danh sách thí sinh...");
+        me._load_DSNguoiHoc_ForGen(function (arr) {
+            if (!arr || arr.length === 0) {
+                me._setStatus_GenMucPhi("Không có thí sinh nào để xử lý.");
+                me._enableClose_GenMucPhi();
+                return;
+            }
+            me._gen_MucPhi_Sequential(arr);
+        });
+    },
+
+    /* Load all — dùng pageSize lớn để lấy 1 phát toàn bộ */
+    _load_DSNguoiHoc_ForGen: function (callback) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIQDRIXHg8mNC4oCS4iHhUVFRIP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSQLSV_NguoiHoc_TTTS',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dDaNhapHoc': 0,
+            'pageIndex': 1,
+            'pageSize': 100000
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    callback(arr);
+                } else {
+                    me._setStatus_GenMucPhi("Lỗi tải danh sách: " + (data.Message || ''));
+                    me._enableClose_GenMucPhi();
+                }
+            },
+            error: function (er) {
+                me._setStatus_GenMucPhi("Lỗi tải danh sách (ex): " + JSON.stringify(er));
+                me._enableClose_GenMucPhi();
+            },
+            type: 'POST',
+            action: obj_save.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /* Duyệt tuần tự — mỗi bản ghi call Gen_TaiChinh_PhaiNop_Intake
+       Sequential (không parallel) để tránh quá tải backend + giữ thứ tự log */
+    _gen_MucPhi_Sequential: function (arr) {
+        var me = this;
+        var iTotal = arr.length;
+        var iOk = 0, iFail = 0, iIdx = 0;
+        $("#lblTotal_GenMucPhi_HSNH").text(iTotal);
+        me._setStatus_GenMucPhi("Đang xử lý 0/" + iTotal + "...");
+
+        var doNext = function () {
+            if (iIdx >= iTotal) {
+                me._setStatus_GenMucPhi("Hoàn tất: " + iOk + " thành công, " + iFail + " lỗi (tổng " + iTotal + ")");
+                me._updateBar_GenMucPhi(100);
+                me._enableClose_GenMucPhi();
+                return;
+            }
+            var row = arr[iIdx];
+            var strPersonIntakeId = row.ID || row.CORE_PERSON_INTAKE_ID || row.Core_Person_Intake_Id || '';
+            var strHoTen = ((row.HODEM || '') + ' ' + (row.TEN || '')).trim()
+                        || row.HOTEN || row.HO_TEN || row.SOBAODANH || strPersonIntakeId;
+
+            if (!strPersonIntakeId) {
+                iFail++;
+                me._appendLog_GenMucPhi((iIdx + 1) + '. ' + strHoTen + ' — bỏ qua: không có ID', true);
+                iIdx++;
+                me._updateProgress_GenMucPhi(iIdx, iTotal, iOk, iFail);
+                doNext();
+                return;
+            }
+
+            var obj_save = {
+                'action': 'SV_CORE_NhapHoc_ThuTien_MH/BiQvHhUgKAIpKC8pHhEpICgPLjEeCC81ICok',
+                'func': 'PKG_CORE_NhapHoc_ThuTien.Gen_TaiChinh_PhaiNop_Intake',
+                'iM': edu.system.iM,
+                'strCore_Person_Intake_Id': strPersonIntakeId,
+                'dChayThu': 0,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strChucNangThucHien_Id': edu.system.strChucNang_Id || ''
+            };
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        iOk++;
+                        me._appendLog_GenMucPhi((iIdx + 1) + '. ' + strHoTen + ' — OK' + (data.Message ? ': ' + data.Message : ''), false);
+                    } else {
+                        iFail++;
+                        me._appendLog_GenMucPhi((iIdx + 1) + '. ' + strHoTen + ' — LỖI: ' + (data.Message || ''), true);
+                    }
+                    iIdx++;
+                    me._updateProgress_GenMucPhi(iIdx, iTotal, iOk, iFail);
+                    doNext();
+                },
+                error: function (er) {
+                    iFail++;
+                    me._appendLog_GenMucPhi((iIdx + 1) + '. ' + strHoTen + ' — EX: ' + JSON.stringify(er), true);
+                    iIdx++;
+                    me._updateProgress_GenMucPhi(iIdx, iTotal, iOk, iFail);
+                    doNext();
+                },
+                type: 'POST',
+                action: obj_save.action,
+                contentType: true,
+                data: obj_save
+            }, false, false, false, null);
+        };
+        doNext();
+    },
+
+    /* ---- Progress modal helpers ---- */
+    _openModalProgress_GenMucPhi: function () {
+        // Reset UI
+        $("#lblTotal_GenMucPhi_HSNH").text('0');
+        $("#lblOk_GenMucPhi_HSNH").text('0');
+        $("#lblFail_GenMucPhi_HSNH").text('0');
+        $("#zoneLog_GenMucPhi_HSNH").empty().hide();
+        this._updateBar_GenMucPhi(0);
+        // Disable close controls trong khi chạy
+        $("#btnCloseX_GenMucPhi_HSNH").prop('disabled', true);
+        $("#btnDong_GenMucPhi_HSNH").css({ 'pointer-events': 'none', 'opacity': '0.5' });
+        $("#modalGenMucPhi_HSNH").modal("show");
+    },
+
+    _setStatus_GenMucPhi: function (msg) {
+        $("#lblStatus_GenMucPhi_HSNH").text(msg);
+    },
+
+    _updateProgress_GenMucPhi: function (iDone, iTotal, iOk, iFail) {
+        var pct = iTotal > 0 ? Math.round(iDone * 100 / iTotal) : 0;
+        this._updateBar_GenMucPhi(pct);
+        $("#lblOk_GenMucPhi_HSNH").text(iOk);
+        $("#lblFail_GenMucPhi_HSNH").text(iFail);
+        this._setStatus_GenMucPhi("Đang xử lý " + iDone + "/" + iTotal + "...");
+    },
+
+    _updateBar_GenMucPhi: function (pct) {
+        var $bar = $("#barGenMucPhi_HSNH");
+        $bar.css('width', pct + '%').text(pct + '%');
+    },
+
+    _appendLog_GenMucPhi: function (msg, isError) {
+        var $zone = $("#zoneLog_GenMucPhi_HSNH");
+        if (!$zone.is(':visible')) $zone.show();
+        var color = isError ? '#b91c1c' : '#475569';
+        var esc = String(msg).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        $zone.append('<div style="color:' + color + '; padding:2px 0;">' + esc + '</div>');
+        $zone.scrollTop($zone[0].scrollHeight);
+    },
+
+    _enableClose_GenMucPhi: function () {
+        $("#btnCloseX_GenMucPhi_HSNH").prop('disabled', false);
+        $("#btnDong_GenMucPhi_HSNH").css({ 'pointer-events': 'auto', 'opacity': '1' });
+        // Dừng animation của progress-bar khi hoàn tất
+        $("#barGenMucPhi_HSNH").removeClass('progress-bar-animated');
+        // Reload bảng nhóm định mức để user thấy dữ liệu mới (nếu có ảnh hưởng)
+        if (this.strKeHoachNhapHoc_Id) this.getList_NhomDinhMuc();
+    },
+
+    /* =================================================================
+       XEM MỨC PHÍ ĐÃ GÁN CHO THÍ SINH
+       PKG_CORE_NhapHoc_ThuTien.LayDSMucPhiDaGanNhapHoc
+       ================================================================= */
+
+    openModal_MucPhiDaGan: function () {
+        var me = this;
+        // Reset filter mỗi lần mở
+        $("#txtTuKhoa_MucPhiDaGan_HSNH").val('');
+        $("#dropDaNhapHoc_MucPhiDaGan_HSNH").val('0');
+        me._pageIndex_MucPhiDaGan = 1;
+        me._pageSize_MucPhiDaGan = parseInt($("#pgSize_MucPhiDaGan").val(), 10) || 50;
+        $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false);
+        $("#modalMucPhiDaGan_HSNH").modal("show");
+        me.getList_MucPhiDaGan();
+    },
+
+    getList_MucPhiDaGan: function () {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIMNCIRKSgFIAYgLw8pIDEJLiIP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSMucPhiDaGanNhapHoc',
+            'iM': edu.system.iM,
+            'strTuKhoa': edu.util.getValById('txtTuKhoa_MucPhiDaGan_HSNH') || '',
+            'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dDaNhapHoc': parseInt($("#dropDaNhapHoc_MucPhiDaGan_HSNH").val(), 10) || 0,
+            'pageIndex': me._pageIndex_MucPhiDaGan || 1,
+            'pageSize': me._pageSize_MucPhiDaGan || 50
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtMucPhiDaGan = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me._total_MucPhiDaGan = parseInt(data.Pager, 10) || me.dtMucPhiDaGan.length;
+                    me.genTable_MucPhiDaGan(me.dtMucPhiDaGan);
+                    me._renderPaging_MucPhiDaGan();
+                } else {
+                    edu.system.alert(data.Message || "LayDSMucPhiDaGanNhapHoc: lỗi", "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("LayDSMucPhiDaGanNhapHoc (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /* Render bảng — tolerant về field name (viết hoa / gạch dưới đều nhận) */
+    genTable_MucPhiDaGan: function (arr) {
+        var me = this;
+        var $tbody = $("#tblMucPhiDaGan_HSNH tbody");
+        $tbody.empty();
+        $("#lblTong_MucPhiDaGan_HSNH").text(me._total_MucPhiDaGan || 0);
+        $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false);
+
+        if (!arr || arr.length === 0) {
+            $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không tìm thấy dữ liệu</td></tr>');
+            return;
+        }
+
+        // Helper get first non-empty
+        var pick = function (row) {
+            for (var i = 1; i < arguments.length; i++) {
+                var k = arguments[i];
+                if (row[k] != null && row[k] !== '') return row[k];
+            }
+            return '';
+        };
+        var fmtNum = function (v) {
+            if (v === '' || v == null || isNaN(v)) return v || '';
+            return Number(v).toLocaleString('vi-VN');
+        };
+        var esc = function (v) {
+            return String(v == null ? '' : v).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
+
+        var stt_start = ((me._pageIndex_MucPhiDaGan || 1) - 1) * (me._pageSize_MucPhiDaGan || 50);
+        var html = '';
+        arr.forEach(function (r, i) {
+            var strId = pick(r, 'ID', 'CORE_PERSON_INTAKE_ID', 'Core_Person_Intake_Id');
+            var strCCCD = pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD');
+            var strMa = pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO');
+            var strHoTen = pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN');
+            var strGioiTinh = pick(r, 'GENDER_TEN', 'Gender_Ten', 'GIOITINH_TEN');
+            var strNgaySinh = pick(r, 'DATE_OF_BIRTH', 'Date_Of_Birth', 'NGAYSINH');
+            var strNganh = pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS');
+            var strTenCT = pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH');
+            var strMaCT = pick(r, 'MACHUONGTRINH', 'MaChuongTrinh', 'MA_CHUONGTRINH');
+            var strCT = strTenCT + (strMaCT ? ' (' + strMaCT + ')' : '');
+            var strLop = pick(r, 'LOPQUANLY_TEN', 'LopQuanLy_Ten', 'LOP_QUANLY_TEN');
+            var strThongTin = pick(r, 'THONGTINMUCPHI', 'ThongTinMucPhi', 'THONG_TIN_MUC_PHI');
+            var strTong = pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI');
+            var strGhiChu = pick(r, 'GHICHU', 'GhiChu', 'GHI_CHU');
+
+            var dataAttrs = 'data-id="' + esc(strId)
+                          + '" data-hoten="' + esc(strHoTen)
+                          + '" data-ma="' + esc(strMa) + '"';
+
+            html += '<tr data-id="' + esc(strId) + '">';
+            html += '<td class="td-center">' + (stt_start + i + 1) + '</td>';
+            html += '<td class="td-left">' + esc(strCCCD) + '</td>';
+            html += '<td class="td-left">' + esc(strMa) + '</td>';
+            html += '<td class="td-left">' + esc(strHoTen) + '</td>';
+            html += '<td class="td-center">' + esc(strGioiTinh) + '</td>';
+            html += '<td class="td-center">' + esc(strNgaySinh) + '</td>';
+            html += '<td class="td-left">' + esc(strNganh) + '</td>';
+            html += '<td class="td-left">' + esc(strCT) + '</td>';
+            html += '<td class="td-left">' + esc(strLop) + '</td>';
+            html += '<td class="td-left">' + esc(strThongTin) + '</td>';
+            html += '<td class="td-right">'
+                +    '<span style="font-weight:600;">' + esc(fmtNum(strTong)) + '</span>'
+                +    '&nbsp;&nbsp;<a class="kmp-link-xem btnSua_MucPhi_Row" ' + dataAttrs + '>'
+                +      '<i class="fa fa-pencil"></i> Sửa'
+                +    '</a>'
+                + '</td>';
+            html += '<td class="td-left">' + esc(strGhiChu) + '</td>';
+            html += '<td class="td-center"><input type="checkbox" class="chkMucPhiDaGan_Row" data-id="' + esc(strId) + '" /></td>';
+            html += '</tr>';
+        });
+        $tbody.append(html);
+    },
+
+    /* Server-side pagination — render nút phân trang */
+    _renderPaging_MucPhiDaGan: function () {
+        var me = this;
+        var total = me._total_MucPhiDaGan || 0;
+        var pageSize = me._pageSize_MucPhiDaGan || 50;
+        var page = me._pageIndex_MucPhiDaGan || 1;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        if (page > totalPages) { page = totalPages; me._pageIndex_MucPhiDaGan = page; }
+
+        $("#pgCur_MucPhiDaGan").text(page);
+        $("#pgTotal_MucPhiDaGan").text(totalPages);
+        $("#pgSum_MucPhiDaGan").text(total);
+        $("#paging_MucPhiDaGan_HSNH").attr('style', 'gap:10px; display:flex;');
+
+        var $ul = $("#pgList_MucPhiDaGan");
+        $ul.empty();
+        var add = function (label, target, disabled, active) {
+            var cls = 'page-item';
+            if (disabled) cls += ' disabled';
+            if (active) cls += ' active';
+            $ul.append('<li class="' + cls + '"><a class="page-link" href="javascript:;" data-page="' + target + '">' + label + '</a></li>');
+        };
+        add('«', 1, page === 1, false);
+        add('‹', Math.max(1, page - 1), page === 1, false);
+        var winSize = 5;
+        var startP = Math.max(1, page - Math.floor(winSize / 2));
+        var endP = Math.min(totalPages, startP + winSize - 1);
+        startP = Math.max(1, endP - winSize + 1);
+        for (var p = startP; p <= endP; p++) add(String(p), p, false, p === page);
+        add('›', Math.min(totalPages, page + 1), page === totalPages, false);
+        add('»', totalPages, page === totalPages, false);
+    },
+
+    /* =================================================================
+       CHI TIẾT các khoản phải nộp của 1 thí sinh (khi bấm "Sửa" trên Tổng phí)
+       PKG_CORE_NhapHoc_ThuTien.LayDS_PhaiNop_TheoIntake
+       ================================================================= */
+
+    xem_ChiTiet_PhaiNop: function (strIntakeId, strHoTen, strMa) {
+        var me = this;
+        if (!strIntakeId) { edu.system.alert("Không xác định được thí sinh.", "w"); return; }
+        var lbl = strHoTen || '';
+        if (strMa) lbl += (lbl ? ' — ' : '') + 'Mã: ' + strMa;
+        $("#lblSVInfo_PhaiNop_HSNH").text(lbl);
+        $("#tblPhaiNop_ChiTiet_HSNH tbody").html(
+            '<tr><td colspan="8" class="td-center italic color-666 py-3">Đang tải...</td></tr>'
+        );
+        $("#modalPhaiNop_ChiTiet_HSNH").modal("show");
+
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIeESkgKA8uMR4VKSQuCC81ICok',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDS_PhaiNop_TheoIntake',
+            'iM': edu.system.iM,
+            'strCore_Person_Intake_Id': strIntakeId,
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.genTable_PhaiNop_ChiTiet(arr);
+                } else {
+                    edu.system.alert(data.Message || "LayDS_PhaiNop_TheoIntake: lỗi", "w");
+                    $("#tblPhaiNop_ChiTiet_HSNH tbody").html(
+                        '<tr><td colspan="8" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>'
+                    );
+                }
+            },
+            error: function (er) {
+                edu.system.alert("LayDS_PhaiNop_TheoIntake (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save
+        }, false, false, false, null);
+    },
+
+    genTable_PhaiNop_ChiTiet: function (arr) {
+        var me = this;
+        var $tbody = $("#tblPhaiNop_ChiTiet_HSNH tbody");
+        $tbody.empty();
+        if (!arr || arr.length === 0) {
+            $tbody.append('<tr><td colspan="8" class="td-center italic color-666 py-3">Chưa có khoản phải nộp nào</td></tr>');
+            return;
+        }
+        var pick = function (row) {
+            for (var i = 1; i < arguments.length; i++) {
+                var k = arguments[i];
+                if (row[k] != null && row[k] !== '') return row[k];
+            }
+            return '';
+        };
+        var fmtNum = function (v) {
+            if (v === '' || v == null || isNaN(v)) return v || '';
+            return Number(v).toLocaleString('vi-VN');
+        };
+        var esc = function (v) {
+            return String(v == null ? '' : v).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
+
+        // Lookup đơn vị tính từ cache DM (dtDM_DonViTien) nếu chỉ trả về MA
+        var lookupDM = function (code) {
+            if (!code) return '';
+            var dmArr = me.dtDM_DonViTien || [];
+            for (var j = 0; j < dmArr.length; j++) {
+                if (dmArr[j].MA === code) return dmArr[j].TEN || code;
+            }
+            return code;
+        };
+
+        var html = '';
+        arr.forEach(function (r, i) {
+            var strTen = pick(r, 'TEN_KHOAN', 'KHOAN_TEN', 'KHOANTHU_TEN', 'TEN_HIEN_THI', 'TEN');
+            var strMa = pick(r, 'MA_KHOAN', 'KHOAN_MA', 'KHOANTHU_MA', 'MA');
+            var vPhaiNop = pick(r, 'SO_TIEN_PHAI_NOP', 'SO_TIEN_PHAINOP', 'PHAI_NOP', 'SO_TIEN', 'SO_TIEN_DINH_MUC');
+            var vDaNop = pick(r, 'SO_TIEN_DA_NOP', 'DA_NOP', 'SO_DA_NOP');
+            var vConLai = pick(r, 'SO_TIEN_CON_NOP', 'CON_PHAI_NOP', 'SO_CON_NOP', 'CON_LAI');
+            if ((vConLai === '' || vConLai == null) && vPhaiNop !== '' && vDaNop !== '') {
+                var n1 = Number(vPhaiNop) || 0;
+                var n2 = Number(vDaNop) || 0;
+                vConLai = n1 - n2;
+            }
+            var strDVMa = pick(r, 'DON_VI_TIEN_MA', 'DON_VI_TIEN_ID', 'DVT_MA', 'DVT');
+            var strDV = lookupDM(strDVMa) || pick(r, 'DON_VI_TIEN_TEN', 'DVT_TEN') || strDVMa;
+            var strGhiChu = pick(r, 'GHICHU', 'GHI_CHU');
+
+            html += '<tr>';
+            html += '<td class="td-center">' + (i + 1) + '</td>';
+            html += '<td class="td-left">' + esc(strTen) + '</td>';
+            html += '<td class="td-left">' + esc(strMa) + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(vPhaiNop)) + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(vDaNop)) + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(vConLai)) + '</td>';
+            html += '<td class="td-center">' + esc(strDV) + '</td>';
+            html += '<td class="td-left">' + esc(strGhiChu) + '</td>';
+            html += '</tr>';
+        });
+        $tbody.append(html);
     }
 };
