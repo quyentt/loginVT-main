@@ -39,14 +39,14 @@
         user-select: none;
     }
 
-        /* Hide the browser's default radio button */
-        .container input {
-            position: absolute;
-            opacity: 0;
-            cursor: pointer;
-            height: 0;
-            width: 0;
-        }
+    /* Hide the browser's default radio button */
+    .container input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
 
     /* Create a custom radio button */
     .checkmark {
@@ -60,12 +60,12 @@
     }
 
     /* On mouse-over, add a grey background color */
-    .container:hover input ~ .checkmark {
+    .container:hover input~.checkmark {
         background-color: #ccc;
     }
 
     /* When the radio button is checked, add a blue background */
-    .container input:checked ~ .checkmark {
+    .container input:checked~.checkmark {
         background-color: #2196F3;
     }
 
@@ -77,7 +77,7 @@
     }
 
     /* Show the indicator (dot/circle) when checked */
-    .container input:checked ~ .checkmark:after {
+    .container input:checked~.checkmark:after {
         display: block;
     }
 
@@ -106,9 +106,9 @@
 
         /* ULTRA AGGRESSIVE: mọi col-sm-* trong #zoneEdit -> full width */
         #zoneEdit [class*="col-sm-"],
-        #zoneEdit .row > [class*="col-sm-"],
-        #zoneEdit .aps-form-item > [class*="col-sm-"],
-        #zoneEdit .aps-form > [class*="col-sm-"] {
+        #zoneEdit .row>[class*="col-sm-"],
+        #zoneEdit .aps-form-item>[class*="col-sm-"],
+        #zoneEdit .aps-form>[class*="col-sm-"] {
             width: 100% !important;
             max-width: 100% !important;
             flex: 0 0 100% !important;
@@ -137,30 +137,32 @@
             width: 100% !important;
             margin-left: 0 !important;
         }
-        #zoneEdit .aps-form-item .d-flex.gap10 > .form-control {
+
+        #zoneEdit .aps-form-item .d-flex.gap10>.form-control {
             flex: 1 1 0 !important;
             min-width: 0 !important;
             width: auto !important;
         }
 
         /* NGOẠI LỆ: cụm Có/Không hai radio cùng hàng */
-        #zoneEdit .row.td-left > .radio,
-        #zoneEdit .row.td-left > .radio.checkradio {
+        #zoneEdit .row.td-left>.radio,
+        #zoneEdit .row.td-left>.radio.checkradio {
             display: flex !important;
             flex-direction: row !important;
             flex-wrap: wrap !important;
             gap: 18px !important;
             width: 100% !important;
         }
-        #zoneEdit .row.td-left > .radio > [class*="col-sm-"],
-        #zoneEdit .row.td-left > .radio.checkradio > [class*="col-sm-"] {
+
+        #zoneEdit .row.td-left>.radio>[class*="col-sm-"],
+        #zoneEdit .row.td-left>.radio.checkradio>[class*="col-sm-"] {
             width: auto !important;
             max-width: none !important;
             flex: 0 0 auto !important;
         }
 
         .aps-kehoach-dangky .box-view.aps-add-new.pd20,
-        .aps-kehoach-dangky #zoneEdit .box-body.pd0 > .col-sm-12 {
+        .aps-kehoach-dangky #zoneEdit .box-body.pd0>.col-sm-12 {
             padding: 10px !important;
         }
 
@@ -170,26 +172,27 @@
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch;
         }
+
         #zoneEdit .form-container,
         #zoneEdit .box.box-solid {
             min-width: 0 !important;
         }
 
         /* Ép mọi col-sm-* trong form về full width */
-        .aps-kehoach-dangky .aps-form > .col-sm-1,
-        .aps-kehoach-dangky .aps-form > .col-sm-2,
-        .aps-kehoach-dangky .aps-form > .col-sm-3,
-        .aps-kehoach-dangky .aps-form > .col-sm-4,
-        .aps-kehoach-dangky .aps-form > .col-sm-5,
-        .aps-kehoach-dangky .aps-form > .col-sm-6,
-        .aps-kehoach-dangky .aps-form > .col-sm-7,
-        .aps-kehoach-dangky .aps-form > .col-sm-8,
-        .aps-kehoach-dangky .aps-form > .col-sm-9,
-        .aps-kehoach-dangky .aps-form > .col-sm-10,
-        .aps-kehoach-dangky .aps-form > .col-sm-11,
-        .aps-kehoach-dangky .aps-form > .col-sm-12,
-        .aps-kehoach-dangky #zoneEdit .box-view > [class*="col-sm-"],
-        .aps-kehoach-dangky #zoneEdit .aps-form-item > [class*="col-sm-"] {
+        .aps-kehoach-dangky .aps-form>.col-sm-1,
+        .aps-kehoach-dangky .aps-form>.col-sm-2,
+        .aps-kehoach-dangky .aps-form>.col-sm-3,
+        .aps-kehoach-dangky .aps-form>.col-sm-4,
+        .aps-kehoach-dangky .aps-form>.col-sm-5,
+        .aps-kehoach-dangky .aps-form>.col-sm-6,
+        .aps-kehoach-dangky .aps-form>.col-sm-7,
+        .aps-kehoach-dangky .aps-form>.col-sm-8,
+        .aps-kehoach-dangky .aps-form>.col-sm-9,
+        .aps-kehoach-dangky .aps-form>.col-sm-10,
+        .aps-kehoach-dangky .aps-form>.col-sm-11,
+        .aps-kehoach-dangky .aps-form>.col-sm-12,
+        .aps-kehoach-dangky #zoneEdit .box-view>[class*="col-sm-"],
+        .aps-kehoach-dangky #zoneEdit .aps-form-item>[class*="col-sm-"] {
             width: 100% !important;
             max-width: 100% !important;
             flex: 0 0 100% !important;
@@ -212,7 +215,8 @@
         .aps-kehoach-dangky .aps-form-item {
             margin-bottom: 10px !important;
         }
-        .aps-kehoach-dangky .aps-form-item > [class*="col-sm-"] {
+
+        .aps-kehoach-dangky .aps-form-item>[class*="col-sm-"] {
             margin-bottom: 6px !important;
         }
 
@@ -246,7 +250,8 @@
             margin-left: 0 !important;
             width: 100% !important;
         }
-        .aps-kehoach-dangky .aps-form-item .d-flex.gap10 > .form-control {
+
+        .aps-kehoach-dangky .aps-form-item .d-flex.gap10>.form-control {
             flex: 1 1 0 !important;
             min-width: 0 !important;
         }
@@ -258,38 +263,41 @@
             width: 100% !important;
             margin-left: 0 !important;
         }
+
         .aps-kehoach-dangky .row.td-left .line-38.d-flex {
             flex-wrap: wrap !important;
             gap: 6px !important;
         }
 
         /* Câu hỏi Có/Không: label 1 dòng, 2 radio nằm cùng hàng phía dưới */
-        .aps-kehoach-dangky .row.td-left > .col-sm-8,
-        .aps-kehoach-dangky .row.td-left > .col-sm-4,
-        .aps-kehoach-dangky .row.td-left > .col-sm-3 {
+        .aps-kehoach-dangky .row.td-left>.col-sm-8,
+        .aps-kehoach-dangky .row.td-left>.col-sm-4,
+        .aps-kehoach-dangky .row.td-left>.col-sm-3 {
             width: 100% !important;
             flex: 0 0 100% !important;
             margin-bottom: 4px !important;
         }
-        .aps-kehoach-dangky .row.td-left > .radio {
+
+        .aps-kehoach-dangky .row.td-left>.radio {
             display: flex !important;
             flex-direction: row !important;
             flex-wrap: wrap !important;
             gap: 18px !important;
             width: 100% !important;
         }
-        .aps-kehoach-dangky .row.td-left > .radio > [class*="col-sm-"] {
+
+        .aps-kehoach-dangky .row.td-left>.radio>[class*="col-sm-"] {
             width: auto !important;
             flex: 0 0 auto !important;
             padding: 0 !important;
         }
 
         /* Nhóm radio/checkbox dọc (Mô hình, Trạng thái SV, Kiểu ĐK…) */
-        .aps-kehoach-dangky .radio > .col-sm-12,
-        .aps-kehoach-dangky .checkbox > .col-sm-12,
-        .aps-kehoach-dangky .checkbox_TTSV > .col-sm-6,
-        .aps-kehoach-dangky .check-list > .col-sm-12,
-        .aps-kehoach-dangky .check-list > .col-sm-6 {
+        .aps-kehoach-dangky .radio>.col-sm-12,
+        .aps-kehoach-dangky .checkbox>.col-sm-12,
+        .aps-kehoach-dangky .checkbox_TTSV>.col-sm-6,
+        .aps-kehoach-dangky .check-list>.col-sm-12,
+        .aps-kehoach-dangky .check-list>.col-sm-6 {
             width: 100% !important;
             flex: 0 0 100% !important;
             padding: 4px 0 !important;
@@ -327,7 +335,8 @@
             width: 100% !important;
             justify-content: stretch !important;
         }
-        #zoneEdit .box-footer .pull-right > .btn {
+
+        #zoneEdit .box-footer .pull-right>.btn {
             flex: 1 1 calc(50% - 6px) !important;
             margin: 0 !important;
             white-space: normal !important;
@@ -335,8 +344,9 @@
             line-height: 1.3 !important;
             padding: 8px 6px !important;
         }
-        #zoneEdit .box-footer .pull-right > #btnSave,
-        #zoneEdit .box-footer .pull-right > .btnSave {
+
+        #zoneEdit .box-footer .pull-right>#btnSave,
+        #zoneEdit .box-footer .pull-right>.btnSave {
             flex: 1 1 100% !important;
             font-size: 14px !important;
             padding: 10px !important;
@@ -347,6 +357,7 @@
             width: 100% !important;
             margin-bottom: 6px;
         }
+
         #zonebatdau .box-search .btn-search {
             width: 100%;
             text-align: center;
@@ -365,39 +376,45 @@
             max-width: 96% !important;
             margin: 6px auto !important;
         }
+
         #myModalXuLyLHP .modal-dialog,
         #myModalChonLHP .modal-dialog {
             max-height: 96vh !important;
         }
+
         #myModalXuLyLHP .modal-content,
         #myModalChonLHP .modal-content {
             max-height: 96vh !important;
         }
 
         /* Modal Xử lý LHP - thanh "Áp dụng cho tất cả" */
-        #myModalXuLyLHP .modal-body > .mb-10:first-child {
+        #myModalXuLyLHP .modal-body>.mb-10:first-child {
             flex-wrap: wrap !important;
             gap: 8px !important;
         }
+
         #myModalXuLyLHP #dropBulkXuLyDacThu {
             max-width: 100% !important;
             flex: 1 1 100% !important;
         }
+
         #myModalXuLyLHP #btnApDungTatCa {
             width: 100% !important;
             text-align: center;
         }
+
         /* Thanh nút Thêm/Xóa nhiều dòng */
-        #myModalXuLyLHP .modal-body > .mb-10:nth-child(2) {
+        #myModalXuLyLHP .modal-body>.mb-10:nth-child(2) {
             flex-wrap: wrap !important;
         }
-        #myModalXuLyLHP .modal-body > .mb-10:nth-child(2) .btn {
+
+        #myModalXuLyLHP .modal-body>.mb-10:nth-child(2) .btn {
             flex: 1;
         }
 
         /* Modal Chọn LHP - thanh tìm kiếm xếp dọc */
-        #myModalChonLHP .modal-body > .col-sm-8,
-        #myModalChonLHP .modal-body > .col-sm-4 {
+        #myModalChonLHP .modal-body>.col-sm-8,
+        #myModalChonLHP .modal-body>.col-sm-4 {
             width: 100% !important;
             max-width: 100% !important;
             flex: 0 0 100% !important;
@@ -405,7 +422,7 @@
         }
 
         /* Modal Phân công CT - 2 select xếp dọc */
-        #myModalPCChuongTrinh .aps-form > .col-sm-6 {
+        #myModalPCChuongTrinh .aps-form>.col-sm-6 {
             width: 100% !important;
             max-width: 100% !important;
             flex: 0 0 100% !important;
@@ -418,8 +435,9 @@
         #myModalChonLHP .modal-footer {
             justify-content: center !important;
         }
-        #myModalXuLyLHP .modal-footer > div,
-        #myModalChonLHP .modal-footer > div {
+
+        #myModalXuLyLHP .modal-footer>div,
+        #myModalChonLHP .modal-footer>div {
             width: 100% !important;
             justify-content: center !important;
         }
@@ -437,12 +455,14 @@
             width: 100% !important;
             justify-content: stretch !important;
         }
-        #myModalPCNhomKiemSoat .modal-footer .pull-right > .btn,
-        #myModalPCChuongTrinh .modal-footer .pull-right > .btn,
-        #myModalPCKhoaHoc .modal-footer .pull-right > .btn {
+
+        #myModalPCNhomKiemSoat .modal-footer .pull-right>.btn,
+        #myModalPCChuongTrinh .modal-footer .pull-right>.btn,
+        #myModalPCKhoaHoc .modal-footer .pull-right>.btn {
             flex: 1 1 calc(50% - 6px) !important;
             margin: 0 !important;
         }
+
         #myModal .modal-footer .btn,
         #myModal_khongdangky .modal-footer .btn {
             width: 100% !important;
@@ -463,26 +483,32 @@
         #zonePhanQuyen .box-body .row.box-view.pd20 {
             padding: 10px !important;
         }
+
         #zonePhanQuyen .aps-form-table {
             overflow-x: auto !important;
             -webkit-overflow-scrolling: touch;
         }
+
         #zonePhanQuyen #tblInput_TTS_ThanhVien {
             min-width: 720px;
         }
+
         #zonePhanQuyen .box-footer .pull-right {
             float: none !important;
             text-align: center !important;
             width: 100%;
         }
+
         #zonePhanQuyen .box-footer .pull-right .btn {
             width: 100% !important;
         }
-        #zonePhanQuyen .row > .pull-right {
+
+        #zonePhanQuyen .row>.pull-right {
             float: none !important;
             text-align: center;
             margin-top: 8px;
         }
+
         #zonePhanQuyen .btnSearchTTS_NhanSu {
             width: 100%;
         }
@@ -495,20 +521,28 @@
     }
 
     /* ===== Mobile action bar (sticky đáy màn hình) ===== */
-    .mab-wrap, .mas-wrap { display: none; }
+    .mab-wrap,
+    .mas-wrap {
+        display: none;
+    }
+
     @media (max-width: 767px) {
+
         /* Hiện sticky bar và ẩn footer gốc khi đang ở form Thêm/Sửa */
         .mab-wrap.is-visible {
             display: flex !important;
             position: fixed;
-            left: 0; right: 0; bottom: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: #fff;
             border-top: 1px solid #e0e3ea;
-            box-shadow: 0 -3px 14px rgba(0,0,0,0.10);
+            box-shadow: 0 -3px 14px rgba(0, 0, 0, 0.10);
             padding: 8px;
             gap: 8px;
             z-index: 1030;
         }
+
         .mab-wrap .mab-btn {
             flex: 1;
             display: flex;
@@ -526,14 +560,38 @@
             text-decoration: none;
             line-height: 1.2;
         }
-        .mab-wrap .mab-btn i { font-size: 14px; }
-        .mab-wrap .mab-delete { background: #ffe5e5; color: #c0392b; border-color: #f5b1a8; }
-        .mab-wrap .mab-more { background: #fff7e0; color: #8a6a13; border-color: #ffe9a7; }
-        .mab-wrap .mab-save { background: #1976d2; color: #fff; border-color: #1976d2; }
-        .mab-wrap .mab-btn:active { transform: translateY(1px); }
+
+        .mab-wrap .mab-btn i {
+            font-size: 14px;
+        }
+
+        .mab-wrap .mab-delete {
+            background: #ffe5e5;
+            color: #c0392b;
+            border-color: #f5b1a8;
+        }
+
+        .mab-wrap .mab-more {
+            background: #fff7e0;
+            color: #8a6a13;
+            border-color: #ffe9a7;
+        }
+
+        .mab-wrap .mab-save {
+            background: #1976d2;
+            color: #fff;
+            border-color: #1976d2;
+        }
+
+        .mab-wrap .mab-btn:active {
+            transform: translateY(1px);
+        }
+
         /* Khi không có nút Xóa (mode Thêm mới) -> Thao tác + Lưu chia đôi */
         .mab-wrap .mab-delete[hidden],
-        .mab-wrap .mab-delete.is-hidden { display: none !important; }
+        .mab-wrap .mab-delete.is-hidden {
+            display: none !important;
+        }
 
         /* Header gọn gàng + nút × tròn nổi bật trên mobile */
         #zoneEdit .box-header.aps-box-header {
@@ -541,6 +599,7 @@
             padding: 12px 52px 12px 14px !important;
             min-height: 52px;
         }
+
         #zoneEdit .box-header .box-title {
             font-size: 14px !important;
             line-height: 1.35 !important;
@@ -549,13 +608,16 @@
             overflow-wrap: break-word;
             display: block;
         }
+
         #zoneEdit .box-header .box-title i {
             font-size: 14px !important;
             margin-right: 4px;
         }
+
         #zoneEdit .box-header .box-title .myModalLabel {
             font-weight: 600;
         }
+
         #zoneEdit .box-header .pull-right.title-note,
         #zoneEdit .box-header .pull-right-absolute {
             position: absolute !important;
@@ -564,10 +626,11 @@
             transform: translateY(-50%) !important;
             margin: 0 !important;
         }
+
         #zoneEdit .box-header .btnCloseToggle {
-            background: rgba(255,255,255,0.22) !important;
+            background: rgba(255, 255, 255, 0.22) !important;
             color: #fff !important;
-            border: 1px solid rgba(255,255,255,0.55) !important;
+            border: 1px solid rgba(255, 255, 255, 0.55) !important;
             padding: 0 !important;
             border-radius: 50% !important;
             width: 34px !important;
@@ -578,6 +641,7 @@
             align-items: center;
             justify-content: center;
         }
+
         #zoneEdit .box-header .btnCloseToggle i {
             color: #fff !important;
             margin: 0 !important;
@@ -588,20 +652,30 @@
         #zoneEdit:not([style*="display: none"]) {
             padding-bottom: 76px !important;
         }
+
         /* Ẩn footer gốc trên mobile vì đã có sticky bar */
-        #zoneEdit .box-footer { display: none !important; }
+        #zoneEdit .box-footer {
+            display: none !important;
+        }
 
         /* Bottom sheet */
-        .mas-wrap.is-open { display: block !important; }
+        .mas-wrap.is-open {
+            display: block !important;
+        }
+
         .mas-wrap .mas-backdrop {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.45);
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
             z-index: 1040;
             animation: masFade .2s ease;
         }
+
         .mas-wrap .mas-panel {
             position: fixed;
-            left: 0; right: 0; bottom: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: #fff;
             border-radius: 16px 16px 0 0;
             padding: 6px 0 12px;
@@ -610,12 +684,15 @@
             overflow-y: auto;
             animation: masSlide .25s ease;
         }
+
         .mas-wrap .mas-handle {
-            width: 42px; height: 4px;
+            width: 42px;
+            height: 4px;
             background: #d0d4dd;
             border-radius: 2px;
             margin: 8px auto 6px;
         }
+
         .mas-wrap .mas-title {
             text-align: center;
             font-weight: 600;
@@ -626,6 +703,7 @@
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
+
         .mas-wrap .mas-item {
             display: flex;
             align-items: center;
@@ -637,13 +715,26 @@
             font-size: 14px;
             font-weight: 500;
         }
-        .mas-wrap .mas-item:active { background: #f5f6fa; }
-        .mas-wrap .mas-item i {
-            width: 22px; text-align: center;
-            color: #1976d2; font-size: 16px;
+
+        .mas-wrap .mas-item:active {
+            background: #f5f6fa;
         }
-        .mas-wrap .mas-item.mas-delete i { color: #d32f2f; }
-        .mas-wrap .mas-item.mas-delete { color: #d32f2f; }
+
+        .mas-wrap .mas-item i {
+            width: 22px;
+            text-align: center;
+            color: #1976d2;
+            font-size: 16px;
+        }
+
+        .mas-wrap .mas-item.mas-delete i {
+            color: #d32f2f;
+        }
+
+        .mas-wrap .mas-item.mas-delete {
+            color: #d32f2f;
+        }
+
         .mas-wrap .mas-cancel {
             text-align: center;
             padding: 14px;
@@ -653,8 +744,26 @@
             border-top: 6px solid #f2f3f6;
             cursor: pointer;
         }
-        @keyframes masSlide { from { transform: translateY(100%);} to { transform: translateY(0);} }
-        @keyframes masFade { from { opacity: 0;} to { opacity: 1;} }
+
+        @keyframes masSlide {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes masFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
     }
 
     /* ===== Tablet nhỏ (768–991px): co label/input về ngang nhưng gọn ===== */
@@ -664,7 +773,8 @@
             white-space: normal;
             line-height: 1.35;
         }
-        #zoneEdit .box-footer .pull-right > .btn {
+
+        #zoneEdit .box-footer .pull-right>.btn {
             font-size: 12px;
             padding: 6px 8px;
         }
@@ -673,9 +783,9 @@
     /* ===== Nút X (Đóng) trên header xanh: cho dễ nhìn ===== */
     #zoneEdit .box-header .btnCloseToggle,
     #zonePhanQuyen .box-header .btnCloseToggle {
-        background: rgba(255, 255, 255, 0.22) !important;
-        color: #fff !important;
-        border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+        background: rgba(255, 255, 255, 0) !important;
+        color: #fff;
+        border: 0 solid rgba(255, 255, 255, 0.7) !important;
         border-radius: 50% !important;
         width: 32px !important;
         height: 32px !important;
@@ -687,15 +797,18 @@
         font-size: 14px !important;
         transition: background 0.15s, transform 0.15s;
     }
+
     #zoneEdit .box-header .btnCloseToggle i,
     #zonePhanQuyen .box-header .btnCloseToggle i {
         color: #fff !important;
         margin: 0 !important;
     }
+
     #zoneEdit .box-header .btnCloseToggle:hover,
     #zonePhanQuyen .box-header .btnCloseToggle:hover {
-        background: rgba(255, 255, 255, 0.4) !important;
-        transform: scale(1.08);
+        background: rgba(255, 255, 255, 0) !important;
+        color: #fbff00 !important;
+        border: 0 solid rgba(255, 255, 255, 0.7) !important;
     }
 
     /* ===== Footer zoneEdit: Xóa tách trái, cụm nút còn lại dồn phải ===== */
@@ -707,10 +820,12 @@
             align-items: center !important;
             gap: 10px !important;
         }
-        #zoneEdit .box-footer > .pull-left {
+
+        #zoneEdit .box-footer>.pull-left {
             float: none !important;
             margin-right: auto !important;
         }
+
         #zoneEdit .box-footer .pull-right.d-flex {
             float: none !important;
             display: flex !important;
@@ -722,7 +837,8 @@
             max-width: none !important;
             flex: 0 1 auto !important;
         }
-        #zoneEdit .box-footer .pull-right.d-flex > .btn {
+
+        #zoneEdit .box-footer .pull-right.d-flex>.btn {
             margin: 0 !important;
         }
     }
@@ -754,7 +870,7 @@
             <div class="box box-solid pd20 pt10 aps-ds-kehoach-dangky">
                 <div class="box-header pd0">
                     <h3 class="box-title color-blue line-20 mt-10">
-                        <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký 
+                        <i class="far fa-clipboard-list-check"></i> Danh sách kế hoạch đăng ký
                         <span class="pull-right badge bg-light-blue ml-10">
                             <span id="lblKHDK"></span>
                         </span>
@@ -771,8 +887,8 @@
                                     <th rowspan="2" class="td-fixed td-center w-50px">Stt</th>
                                     <th rowspan="2" class="td-fixed td-center">Xem</th>
                                     <th rowspan="2" class="td-center">Mã kế hoạch</th>
-                                    <th rowspan="2" class="td-center">Tên kế hoạch</th>
-                                    <th rowspan="2" class="td-center">Thiết đặt thêm xử lý lớp HP</th>
+                                    <th rowspan="2" class="td-left">Tên kế hoạch</th>
+                                    <th rowspan="2" class="td-center">Thiết đặt thêm<br> xử lý lớp HP</th>
                                     <th colspan="3" class="td-center">Thời gian bắt đầu</th>
                                     <th colspan="3" class="td-center">Thời gian kết thúc</th>
                                     <th rowspan="2" class="td-center">Chế độ đăng ký</th>
@@ -781,16 +897,16 @@
                                     <th rowspan="2" class="td-fixed td-center">Phân quyền cán bộ</th>
                                 </tr>
                                 <tr>
-                                    <th class="td-center">Ngày</th>
-                                    <th class="td-center">Giờ</th>
-                                    <th class="td-center">Phút</th>
-                                    <th class="td-center">Ngày</th>
-                                    <th class="td-center">Giờ</th>
-                                    <th class="td-center">Phút</th>
-                                    <th class="td-center">Tổng số SV</th>
-                                    <th class="td-center">Số SV đã đăng ký</th>
-                                    <th class="td-center">Số SV không đăng ký</th>
-                                    <th class="td-center">Tỷ lệ</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Ngày</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Giờ</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Phút</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Ngày</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Giờ</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Phút</th>
+                                    <th class="td-right" style="font-weight: 400 !important;">Tổng số SV</th>
+                                    <th class="td-right" style="font-weight: 400 !important;">Số SV đã đăng ký</th>
+                                    <th class="td-right" style="font-weight: 400 !important;">Số SV ko đăng ký</th>
+                                    <th class="td-center" style="font-weight: 400 !important;">Tỷ lệ</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -803,11 +919,11 @@
         </div>
     </div>
     <!-- 2. Add/Edit CoCauToChuc -->
-    <div class="zone-content aps-add-new" id="zoneEdit" style="display: none">
+    <div class="zone-content aps-add-new aps-add-keHoach" id="zoneEdit" style="display: none">
         <div class="box box-solid form-container">
             <div class="box-header with-border aps-box-header ">
                 <h3 class="box-title line-20">
-                    <span class="myModalLabel"><i class="fa-light fa-plus"></i> Thêm mới - </span> Kế hoạch đăng ký
+                    <span class="myModalLabel pr10"><i class="fa-light fa-plus"></i> Thêm mới - </span> Kế hoạch đăng ký
                 </h3>
                 <div class="pull-right title-note pull-right-absolute mr-20">
                     <a class="btn btn-default btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
@@ -818,7 +934,7 @@
                     <div class="box box-solid pd0">
                         <div class="row aps-form">
                             <!--Thong tin co ban-->
-                            <div class="col-sm-9 pr20">
+                            <div class="col-sm-9" style="padding-right: 20px !important;">
                                 <div class="row aps-form">
                                     <!--row 1-->
                                     <div class="row aps-lable-name">
@@ -834,14 +950,14 @@
                                         <div class="col-sm-2 aps-form-lable">Tên kế hoạch</div>
                                         <div class="col-sm-4 aps-form-input">
                                             <input id="txtTenKeHoach" class="form-control"
-                                                   placeholder="Nhập tên kế hoạch" />
+                                                placeholder="Nhập tên kế hoạch" />
                                         </div>
-                                        <div class="col-sm-2 aps-form-lable justify-content-end pr15">
+                                        <div class="col-sm-2 aps-form-lable text-right pr10">
                                             Mã kế hoạch<span class="title-colon"></span>
                                         </div>
                                         <div class="col-sm-4 aps-form-input">
                                             <input id="txtMaKeHoach" class="form-control"
-                                                   placeholder="Nhập mã kế hoạch" />
+                                                placeholder="Nhập mã kế hoạch" />
                                         </div>
                                     </div>
                                     <!--row 3-->
@@ -911,7 +1027,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-1 aps-form-lable justify-content-end pr15">
+                                    <div class="col-sm-1 aps-form-lable text-right pr10">
                                         Học kỳ<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
@@ -920,7 +1036,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-1 aps-form-lable justify-content-end pr15">
+                                    <div class="col-sm-1 aps-form-lable text-right pr10">
                                         Đợt học<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
@@ -929,7 +1045,7 @@
                                         </select>
                                     </div>
 
-                                    <div class="col-sm-1 aps-form-lable justify-content-end pr15">
+                                    <div class="col-sm-1 aps-form-lable text-right pr10">
                                         Phân loại đợt<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
@@ -945,18 +1061,18 @@
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
                                         <input type="text" id="txtBD_Ngay" placeholder="dd/mm/yyyy"
-                                               class="form-control input-datepicker" />
+                                            class="form-control input-datepicker" />
                                     </div>
                                     <div class="col-sm-3 ml-10 aps-form-input d-flex gap10">
                                         <input type="text" id="txtBD_Gio" placeholder="Giờ" class="form-control" />
                                         <input type="text" id="txtBD_Phut" placeholder="Phút" class="form-control" />
                                     </div>
-                                    <div class="col-sm-1 aps-form-lable  justify-content-end pr15">
+                                    <div class="col-sm-1 aps-form-lable  text-right pr10">
                                         Ngày kết thúc<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-2 aps-form-input">
                                         <input type="text" id="txtKT_Ngay" placeholder="dd/mm/yyyy"
-                                               class="form-control input-datepicker" />
+                                            class="form-control input-datepicker" />
                                     </div>
                                     <div class="col-sm-3 aps-form-input  d-flex gap10 ml-10">
                                         <input type="text" id="txtKT_Gio" placeholder="Giờ" class="form-control" />
@@ -1046,7 +1162,7 @@
                                 </div>
                                 <div class="col-sm-12">
                                     <input id="KieuDangky_3" type="checkbox" name="check_KieuDangKy"
-                                           value="HocNangDiem">
+                                        value="HocNangDiem">
                                     <label for="KieuDangky_3">Dành cho học nâng điểm</label>
                                 </div>
                             </div>
@@ -1201,7 +1317,7 @@
                             <div class="row td-left">
                                 <div class="col-sm-12 line-38 d-flex">
                                     Số nợ tối đa cho phép : <span class="title-colon"></span> <input type="text"
-                                                                                                     id="txtNoToiDa" class="form-control ml-10" style="width: 150px" />
+                                        id="txtNoToiDa" class="form-control ml-10" style="width: 150px" />
                                 </div>
                             </div>
                         </div>
@@ -1259,7 +1375,7 @@
                                 <div class="col-sm-12 line-38 d-flex gap15">
                                     Ngày bắt đầu tính mốc rút học phần: <span class="title-colon"></span>
                                     <input type="text" id="txtNgayBDRutHP" style="width: 168px"
-                                           class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
+                                        class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                                 </div>
                             </div>
                             <div class="col-sm-8"></div>
@@ -1292,13 +1408,12 @@
                                             <label for="TCTD_0"> Không</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 line-38">
-                                        Số tối đa N1<span class="title-colon"></span>
+                                    <div class="col-sm-1 line-38 text-right pr10"> Số tối đa N1<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="text" id="txtSoTCToiDa" class="form-control" />
                                     </div>
-                                    <div class="col-sm-1 line-38 pl20">
+                                    <div class="col-sm-1 line-38 pl20 text-right pr10">
                                         Số tối đa N2<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-1 ">
@@ -1321,13 +1436,13 @@
                                             <label for="TCTT_0"> Không</label>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 line-38">
+                                    <div class="col-sm-1 line-38 text-right pr10">
                                         Số tối thiểu N1<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-1">
                                         <input type="text" id="txtSoTCToiThieu" class="form-control" />
                                     </div>
-                                    <div class="col-sm-1 line-38 pl20">
+                                    <div class="col-sm-1 line-38 text-right pr10">
                                         Số tối thiểu N2<span class="title-colon"></span>
                                     </div>
                                     <div class="col-sm-1">
@@ -1613,7 +1728,7 @@
                                 <div class="col-sm-2">
                                     <input type="text" id="txtNgayBatDauXN" class="form-control" />
                                 </div>
-                                <div class="col-sm-4 line-38 text-right pr15">
+                                <div class="col-sm-4 line-38 text-right pr15" style="padding-right: 10px !important;">
                                     Ngày kết thúc cho phép sv xác nhận đăng ký
                                 </div>
                                 <div class="col-sm-2">
@@ -1692,26 +1807,30 @@
                 </div>
             </div>
             <div class="box-footer">
-                <a class="submit btn btn-danger btnOpenDelete pull-left" id="btnDelete_KeHoach" style="display: none">
-                    <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
-                </a>
-                <div class="pull-right d-flex">
-                    <a id="btnSave" class="btn btn-primary btnSave"><i class="fal fa-save"></i>Lưu</a>
+                <div class="pull-left d-flex">
+                    <a class="submit btn btn-soft-danger btnOpenDelete pull-left" id="btnDelete_KeHoach"
+                        style="display: none;margin-left: 0 !important;">
+                        <i class="fa fa-trash"></i> <span class="lang" key="">Xóa</span>
+                    </a>
+                </div>
+
+                <div class="pull-right d-flex aps-list-btn" style="margin-top: -10px;">
                     <a class="btn btn-default btnCloseToggle" href="#" title="Close">
                         <i class="fa fa-times-circle"></i> Đóng
                     </a>
-                    <a id="btnPhanCongCT" class="btn btn-warning">
+                    <a id="btnPhanCongCT" class="btn btn-soft-warning">
                         <i class="fal fa-poll-people"></i>Phân công theo nhóm kiểm soát(mức chương trình)
                     </a>
-                    <a id="btnPhanCongKH" class="btn btn-danger">
+                    <a id="btnPhanCongKH" class="btn btn-soft-danger">
                         <i class="fal fa-user-chart"></i>Phân công theo nhóm kiểm soát(mức khóa học)
                     </a>
-                    <a id="btnPhanCong" class="btn btn-success">
+                    <a id="btnPhanCong" class="btn btn-soft-success">
                         <i class="fal fa-users-class"></i>Phân công theo nhóm kiểm soát
                     </a>
-                    <a id="btnChuyenDuLieu" class="btn btn-secondary">
+                    <a id="btnChuyenDuLieu" class="btn btn-soft-primary">
                         <i class="fa-light fa-database"></i>Chuyển dữ liệu từ TKB sang ĐKH
                     </a>
+                    <a id="btnSave" class="btn btn-primary btnSave"><i class="fal fa-save"></i>Lưu</a>
                 </div>
             </div>
         </div>
@@ -1731,7 +1850,7 @@
                 </div>
             </div>
             <div class="box-body">
-                <div class="row box-view aps-add-new pd10">
+                <div class="row box-view aps-add-new pd20">
                     <div class="row aps-form">
                         <!--row 1-->
                         <div class="row">
@@ -1758,8 +1877,8 @@
                         </div>
                         <div class="row">
                             <div class="pull-right">
-                                <a class="btn btn-outline-primary btnSearchTTS_NhanSu" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm thành viên
+                                <a class="btn btn-soft-primary btnSearchTTS_NhanSu" id="">
+                                    <i class="fa fa-plus"></i> Thêm thành viên
                                 </a>
                             </div>
                         </div>
@@ -1797,7 +1916,7 @@
 <!-- ---------- -->
 <!-- Danh sách đăng ký -->
 <div class="modal fade myModal modal-ds-dangky" id="myModal" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
@@ -1806,7 +1925,7 @@
                 </button>
                 <h4 class="modal-title line-20">
                     <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span><span class="lang"
-                                                                                                 key="">Danh sách đăng ký</span>
+                        key="">Danh sách đăng ký</span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
@@ -1843,7 +1962,7 @@
 
 <!-- Danh sách không đăng ký -->
 <div class="modal fade myModal_khongdangky" id="myModal_khongdangky" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1360">
         <div class="modal-content">
             <div class="modal-header">
@@ -1852,13 +1971,13 @@
                 </button>
                 <h4 class="modal-title line-20">
                     <span class="myModalLabel2"><i class="fa-light fa-user-pen"></i></span><span class="lang"
-                                                                                                 key="">Danh sách không đăng ký</span>
+                        key="">Danh sách không đăng ký</span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="aps-table-select scroll-table-x">
                     <table id="tblKhongDangKy"
-                           class="table table-hover table-bordered table-noborder tblKhongDangKy mb-0">
+                        class="table table-hover table-bordered table-noborder tblKhongDangKy mb-0">
                         <thead>
                             <tr>
                                 <th class="td-fixed w-50px">Stt</th>
@@ -1879,11 +1998,12 @@
             <div id="notify"></div>
             <div class="modal-footer">
                 <a class="btn btn-success" id="btnXuatExcel_KhongDangKy" href="javascript:void(0);"
-                   title="Xuất Excel danh sách không đăng ký đang hiển thị (Ctrl+G)"
-                   style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                    title="Xuất Excel danh sách không đăng ký đang hiển thị (Ctrl+G)"
+                    style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
                     <i class="fa-solid fa-file-excel" style="color:#fff;"></i>
                     <span class="lang" key="">Xuất Excel</span>
-                    <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:1px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
+                    <kbd
+                        style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:1px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
                 </a>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     <i class="fa fa-times-circle-o"></i>
@@ -1896,7 +2016,7 @@
 
 <!-- Phân công theo nhóm kiểm soát -->
 <div class="modal fade myModalPCNhomKiemSoat" id="myModalPCNhomKiemSoat" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-680 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -1904,7 +2024,8 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
                 <h4 class="modal-title">
-                    <span class="myModalLabel2"><i class="fal fa-users-class"></i></span><span class="lang" key="">Phân công theo nhóm kiểm soát</span>
+                    <span class="myModalLabel2"><i class="fal fa-users-class"></i></span><span class="lang" key="">Phân
+                        công theo nhóm kiểm soát</span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
@@ -1918,7 +2039,7 @@
                         <div class="clear"></div>
                         <div class="aps-table-select mt-15 scroll-table-x">
                             <table id="tblPCNhomKiemSoat"
-                                   class="table table-hover table-bordered table-noborder tblPCNhomKiemSoat">
+                                class="table table-hover table-bordered table-noborder tblPCNhomKiemSoat">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed w-50px">Stt</th>
@@ -1952,7 +2073,7 @@
 
 <!-- Phân công theo nhóm kiểm soát(mức chương trình) -->
 <div class="modal fade myModalPCChuongTrinh" id="myModalPCChuongTrinh" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-860 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -1969,20 +2090,20 @@
                     <div class="aps-form">
                         <div class="col-sm-6 item-search aps-form-input pr-0" style="padding-right: 5px !important;">
                             <select id="dropSearch_HeDaoTao_PCChuongTrinh" class="select-opt"
-                                    style="width:100% !important">
+                                style="width:100% !important">
                                 <option id="" value=""> --Chọn hệ đào tạo-- </option>
                             </select>
                         </div>
                         <div class="col-sm-6 item-search aps-form-input pr-0 pl5" style="padding-right: 0 !important;">
                             <select id="dropSearch_KhoaDaoTao_PCChuongTrinh" class="select-opt"
-                                    style="width:100% !important">
+                                style="width:100% !important">
                                 <option id="" value=""> --Chọn khóa đào tạo-- </option>
                             </select>
                         </div>
                         <div class="clear"></div>
                         <div class="aps-table-select mt-15  scroll-table-x">
                             <table id="tblPCChuongTrinh"
-                                   class="table table-hover table-bordered tblPCChuongTrinh table-noborder mb-0">
+                                class="table table-hover table-bordered tblPCChuongTrinh table-noborder mb-0">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed w-50px">Stt</th>
@@ -2016,7 +2137,7 @@
 
 <!-- Phân công theo nhóm kiểm soát(mức khóa học) -->
 <div class="modal fade myModalPCKhoaHoc" id="myModalPCKhoaHoc" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-860 modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
@@ -2039,7 +2160,7 @@
                         <div class="clear"></div>
                         <div class="aps-table-select mt-15 scroll-table-x">
                             <table id="tblPCKhoaHoc"
-                                   class="table table-hover table-bordered table-noborder tblPCKhoaHoc">
+                                class="table table-hover table-bordered table-noborder tblPCKhoaHoc">
                                 <thead>
                                     <tr>
                                         <th class="td-fixed w-50px">Stt</th>
@@ -2072,14 +2193,14 @@
 </div>
 
 <div class="modal fade aps-modal-nhansu" id="modal_nhansu" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <!-- load from js -->
 </div>
 
 
 <!-- Thiết đặt thêm xử lý lớp HP -->
 <div class="modal fade myModalXuLyLHP" id="myModalXuLyLHP" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 80%; max-height:90vh;">
         <div class="modal-content" style="max-height:90vh; display:flex; flex-direction:column;">
             <div class="modal-header">
@@ -2087,33 +2208,34 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
                 <h4 class="modal-title line-20">
-                    <span class="myModalLabel2"><i class="fa-light fa-cog"></i></span>
+                    <span class="myModalLabel2"><i class="fa-light fa-cog pr-0"></i></span>
                     <span class="lang" key="">Thiết đặt thêm xử lý lớp HP</span>
                 </h4>
             </div>
 
             <div class="modal-body" id="modal_body" style="overflow-y:auto; flex:1 1 auto;">
-                <div class="mb-10"
-                     style="display:flex; align-items:center; gap:10px; padding:10px; background:#f4f8fb; border:1px solid #dde6ee; border-radius:6px;">
-                    <span style="font-weight:600;">Áp dụng cho tất cả:</span>
-                    <select id="dropBulkXuLyDacThu" class="form-control" style="flex:1; max-width:480px;">
-                        <option value="">-- Chọn xử lý đặc thù --</option>
-                    </select>
-                    <a id="btnApDungTatCa" class="btn btn-primary btn-sm">
-                        <i class="fa fa-magic"></i> Áp dụng
-                    </a>
-                </div>
 
-                <div class="mb-10" style="display:flex; justify-content:flex-end; gap:6px;">
-                    <a class="btn btn-danger btn-sm" id="btnDeleteSelected_XuLyLHP">
-                        <i class="fa fa-trash"></i> Xóa các dòng đã chọn
-                    </a>
-                    <a class="btn btn-success btn-sm" id="btnAddXuLyLHP">
-                        <i class="fa fa-plus"></i> Thêm lớp
-                    </a>
+                <div class="box-filter mb-10" style="display:flex;">
+                    <div class="pull-left form-select-2" style="display:flex; gap:10px;">
+                        <span style="font-weight:400;min-width: 130px;">Áp dụng cho tất cả</span>
+                        <select id="dropBulkXuLyDacThu" class="form-control select-opt" style="flex:1; min-width:360px !important;">
+                            <option value="">-- Chọn xử lý đặc thù --</option>
+                        </select>
+                        <a id="btnApDungTatCa" class="btn btn-soft-primary btn-sm">
+                            <i class="fa-solid fa-circle-check"></i> Áp dụng
+                        </a>
+                    </div>
+                    <div class="pull-right aps-list-btn">
+                        <a class="btn btn-soft-danger" id="btnDeleteSelected_XuLyLHP">
+                            <i class="fa fa-trash"></i> Xóa các dòng đã chọn
+                        </a>
+                        <a class="btn btn-soft-success" id="btnAddXuLyLHP">
+                            <i class="fa fa-plus"></i> Thêm lớp
+                        </a>
+                    </div>
                 </div>
                 <div class="aps-table-select scroll-table-x">
-                    <table id="tblXuLyLHP" class="table table-hover table-bordered mb-0 tblXuLyLHP">
+                    <table id="tblXuLyLHP" class="table table-hover table-bordered table-noborder mb-0 tblXuLyLHP">
                         <thead>
                             <tr>
                                 <th class="td-fixed td-center w-50px">
@@ -2131,27 +2253,31 @@
                 </div>
             </div>
             <div id="notify"></div>
-            <div class="modal-footer"
-                 style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span>Hiển thị</span>
-                    <select id="dropPageSize_XuLyLHP" class="form-control" style="width:80px; display:inline-block;">
-                        <option value="20" selected>20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                        <option value="200">200</option>
-                    </select>
-                    <span>dữ liệu</span>
-                    <span id="lblPageInfo_XuLyLHP" class="ml-10"></span>
+            <div class="modal-footer">
+                <div class="pull-left" style="display:flex; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="color-888">Hiển thị</span>
+                        <select id="dropPageSize_XuLyLHP" class="form-control"
+                            style="width:80px; display:inline-block;">
+                            <option value="20" selected>20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                        </select>
+                        <span class="color-888">dữ liệu</span>
+                        <span id="lblPageInfo_XuLyLHP" class="ml-10"></span>
+                    </div>
                 </div>
-                <div id="pager_XuLyLHP" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
-                <div style="display:flex; gap:6px;">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
-                    </button>
-                    <a class="submit btn btn-primary" id="btnSave_XuLyLHP">
-                        <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
-                    </a>
+                <div class="pull-right aps-list-btn">
+                    <div id="pager_XuLyLHP" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
+                    <div style="display:flex; gap:6px;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
+                        </button>
+                        <a class="submit btn btn-primary" id="btnSave_XuLyLHP">
+                            <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2161,7 +2287,7 @@
 
 <!-- Chọn lớp học phần để thêm vào xử lý đặc thù -->
 <div class="modal fade myModalChonLHP" id="myModalChonLHP" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-1360">
         <div class="modal-content">
             <div class="modal-header">
@@ -2169,24 +2295,24 @@
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
                 <h4 class="modal-title line-20">
-                    <span class="myModalLabel2"><i class="fa-light fa-search"></i></span>
+                    <span class="myModalLabel2"><i class="fa-solid fa-screen-users"></i></span>
                     <span class="lang" key="">Chọn lớp học phần</span>
                 </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="col-sm-8 pd0 mb-10" style="padding-right:10px;">
+                <div class="col-sm-8 mb-10 pr10">
                     <input id="txtSearch_ChonLHP" class="form-control" placeholder="Tìm theo tên / mã lớp..." />
                 </div>
-                <div class="col-sm-4 pd0 mb-10" style="padding-left:5px;">
-                    <select id="dropLaLopRieng" class="form-control">
+                <div class="col-sm-4 mb-10 form-select-2">
+                    <select id="dropLaLopRieng" class="form-control select-opt">
                         <option value="">Tất cả lớp</option>
                         <option value="1">Chỉ lớp riêng</option>
                         <option value="0">Không phải lớp riêng</option>
                     </select>
                 </div>
                 <div class="clear"></div>
-                <div class="aps-table-select mt-10 scroll-table-x">
-                    <table id="tblChonLHP" class="table table-hover table-bordered mb-0 tblChonLHP">
+                <div class="aps-table-select scroll-table-x">
+                    <table id="tblChonLHP" class="table table-hover table-noborder table-bordered mb-0 tblChonLHP">
                         <thead>
                             <tr>
                                 <th class="td-fixed td-center w-50px">STT</th>
@@ -2195,8 +2321,8 @@
                                 <th class="td-center w-90px">Lớp riêng</th>
                                 <th class="td-center td-fixed w-80px">
                                     <input type="checkbox" id="chkSelectAll_ChonLHP"
-                                           title="Chọn tất cả kết quả đang lọc"
-                                           style="width:18px; height:18px; cursor:pointer;" />
+                                        title="Chọn tất cả kết quả đang lọc"
+                                        style="width:15px; height:15px; cursor:pointer;" />
                                 </th>
                             </tr>
                         </thead>
@@ -2207,21 +2333,23 @@
                 </div>
             </div>
             <div id="notify"></div>
-            <div class="modal-footer"
-                 style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                <div style="display:flex; align-items:center; gap:8px;">
-                    <span>Hiển thị</span>
-                    <select id="dropPageSize_ChonLHP" class="form-control" style="width:80px; display:inline-block;">
-                        <option value="10" selected>10</option>
-                        <option value="20">20</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    <span>dữ liệu</span>
-                    <span id="lblPageInfo_ChonLHP" class="ml-10"></span>
+            <div class="modal-footer">
+                <div class="pull-left form-select-2 d-flex">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span>Hiển thị</span>
+                        <select id="dropPageSize_ChonLHP" class="form-control"
+                            style="width:80px; display:inline-block;">
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <span>dữ liệu</span>
+                        <span id="lblPageInfo_ChonLHP" class="ml-10"></span>
+                    </div>
+                    <div id="pager_ChonLHP" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
                 </div>
-                <div id="pager_ChonLHP" style="display:flex; gap:4px; flex-wrap:wrap; align-items:center;"></div>
-                <div style="display:flex; gap:6px;">
+                <div class="pull-right" style="display:flex;">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
                         <i class="fa fa-times-circle-o"></i><span class="lang" key="">Đóng</span>
                     </button>
