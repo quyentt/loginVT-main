@@ -172,13 +172,14 @@
                                 <input id="txtSearch_DenNgay_NT" class="form-control input-datepicker"
                                     placeholder="Đến ngày dd/mm/yyyy" />
                             </div>
-                            <div class="col-sm-3 item-search">
+                            <div class="col-sm-5 item-search">
                                 <input id="txtSearch_NT" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
-                            <div class="col-sm-3 item-search d-flex">
+                            <div class="clear"></div>
+                            <div class="col-sm-12 item-search d-flex flex-wrap" style="gap: 10px; margin-top: 10px;">
                                 <a id="btnSearch_NT" class="btn btn-default btn-search"><i class="fa fa-search"></i>
                                     <span class="lang" key="">Tìm kiếm</span></a>
-                                <div class="dropdown ml-10" id="zonebtnBaoCao_SVNT">
+                                <div class="dropdown" id="zonebtnBaoCao_SVNT">
                                     <a class="btn btn-success dropdown-toggle" data-toggle="dropdown">
                                         <i class="fa fa fa-file-excel-o"></i> Xuất báo cáo <span class="caret"></span>
                                     </a>
@@ -190,13 +191,17 @@
 
                                     </ul>
                                 </div>
-                                <a id="btnSearch_TongHopDuLieu" class="btn btn-danger">
+                                <a id="btnSearch_TongHopDuLieu" class="btn btn-warning">
                                     <i class="fa-solid fa-circle-dollar-to-slot"></i>
                                     <span class="lang" key="">Tổng hợp dữ liệu</span>
                                 </a>
-                                <a id="btnGuiEmail_NT" class="btn btn-primary ml-10" title="Gửi email báo nợ cho các sinh viên đã chọn">
+                                <a id="btnGuiEmail_NT" class="btn btn-primary" title="Gửi email báo nợ cho các sinh viên đã chọn">
                                     <i class="fa fa-envelope"></i>
                                     <span class="lang" key="">Gửi Email</span>
+                                </a>
+                                <a id="btnXoaNo_NT" class="btn btn-danger" title="Xóa nợ (Không hạch toán công nợ) cho các bản ghi đã chọn">
+                                    <i class="fa fa-trash"></i>
+                                    <span class="lang" key="">Xóa nợ</span>
                                 </a>
                             </div>
                         </div>
@@ -291,30 +296,212 @@
 <div id="DSPhieuRut" style="display:none" class="DSPhieuRut"></div>
 
 <!-- Modal chọn phạm vi gửi email -->
-<div class="modal fade" id="myModalChonPhamVi_NT" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" style="max-width: 520px;">
+<div class="modal fade scope-modal" id="myModalChonPhamVi_NT" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 560px; margin-top: 8vh;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
-                <h3 class="box-title"><i class="fa fa-question-circle"></i> Chọn phạm vi gửi Email</h3>
+                <div class="scope-title-wrap">
+                    <div class="scope-icon-round primary"><i class="fa fa-envelope"></i></div>
+                    <div>
+                        <h4 class="scope-title">Chọn phạm vi gửi Email</h4>
+                        <div class="scope-subtitle">Nhắc nộp học phí cho sinh viên còn nợ</div>
+                    </div>
+                </div>
             </div>
             <div class="modal-body">
-                <p style="margin-bottom: 15px">Bạn muốn gửi email báo nợ cho:</p>
+                <div class="scope-info">
+                    <i class="fa fa-info-circle" style="margin-right: 6px;"></i>
+                    Email sẽ được gửi <b>tự động</b> đến địa chỉ email của từng sinh viên trong danh sách.
+                </div>
+                <div class="scope-label">Bạn muốn gửi email cho</div>
                 <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <a id="btnPhamVi_DaChon_NT" class="btn btn-primary" style="text-align: left; padding: 12px;">
-                        <i class="fa fa-check-square"></i>
-                        <b>Chỉ các sinh viên đã tick chọn</b>
-                        (<span id="lblSoLuongDaChon_NT">0</span> SV trên trang này)
+                    <a id="btnPhamVi_DaChon_NT" class="scope-option primary">
+                        <div class="scope-opt-icon primary"><i class="fa fa-check-square"></i></div>
+                        <div class="scope-opt-body">
+                            <div class="scope-opt-title">Chỉ sinh viên đã tick chọn</div>
+                            <div class="scope-opt-desc"><span id="lblSoLuongDaChon_NT">0</span> SV trên trang này</div>
+                        </div>
+                        <i class="fa fa-angle-right scope-opt-arrow"></i>
                     </a>
-                    <a id="btnPhamVi_TatCa_NT" class="btn btn-success" style="text-align: left; padding: 12px;">
-                        <i class="fa fa-list"></i>
-                        <b>Toàn bộ sinh viên khớp bộ lọc</b>
-                        (tất cả các trang)
+                    <a id="btnPhamVi_TatCa_NT" class="scope-option success">
+                        <div class="scope-opt-icon success"><i class="fa fa-list"></i></div>
+                        <div class="scope-opt-body">
+                            <div class="scope-opt-title">Toàn bộ sinh viên khớp bộ lọc</div>
+                            <div class="scope-opt-desc">Tất cả các trang</div>
+                        </div>
+                        <i class="fa fa-angle-right scope-opt-arrow"></i>
                     </a>
                 </div>
             </div>
             <div class="modal-footer">
-                <a class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i> Hủy</a>
+                <a class="btn-scope-huy" data-dismiss="modal"><i class="fa fa-times"></i> Hủy</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ========== Shared style cho các modal chọn phạm vi ========== -->
+<style>
+    .scope-modal .modal-content {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+        overflow: hidden;
+    }
+    .scope-modal .modal-header {
+        background: #fff !important;
+        border-bottom: 1px solid #f0f0f0;
+        padding: 20px 24px !important;
+    }
+    .scope-modal .modal-header .close {
+        opacity: 0.5;
+        font-size: 24px;
+        margin-top: 4px;
+    }
+    .scope-modal .modal-header .close:hover { opacity: 1; }
+    .scope-modal .scope-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .scope-modal .scope-icon-round {
+        width: 46px; height: 46px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .scope-modal .scope-icon-round i { font-size: 20px; }
+    .scope-modal .scope-icon-round.primary { background: #dbeafe; }
+    .scope-modal .scope-icon-round.primary i { color: #2563eb; }
+    .scope-modal .scope-icon-round.danger { background: #fee2e2; }
+    .scope-modal .scope-icon-round.danger i { color: #dc2626; }
+    .scope-modal .scope-title { margin: 0; font-weight: 600; color: #1f2937; font-size: 17px; }
+    .scope-modal .scope-subtitle { font-size: 12px; color: #6b7280; margin-top: 2px; }
+    .scope-modal .modal-body { padding: 20px 24px !important; }
+    .scope-modal .scope-warn {
+        background: #fef2f2;
+        border-left: 3px solid #dc2626;
+        padding: 12px 14px;
+        border-radius: 4px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: #7f1d1d;
+        line-height: 1.5;
+    }
+    .scope-modal .scope-info {
+        background: #eff6ff;
+        border-left: 3px solid #2563eb;
+        padding: 12px 14px;
+        border-radius: 4px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        color: #1e3a8a;
+        line-height: 1.5;
+    }
+    .scope-modal .scope-label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .scope-modal .scope-option {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 16px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        text-decoration: none !important;
+        color: inherit !important;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        background: #fff;
+    }
+    .scope-modal .scope-option:not(.disabled):hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+    .scope-modal .scope-option.primary:not(.disabled):hover { border-color: #2563eb; background: #eff6ff; }
+    .scope-modal .scope-option.warning:not(.disabled):hover { border-color: #f59e0b; background: #fffbeb; }
+    .scope-modal .scope-option.success:not(.disabled):hover { border-color: #16a34a; background: #f0fdf4; }
+    .scope-modal .scope-option.danger:not(.disabled):hover { border-color: #dc2626; background: #fef2f2; }
+    .scope-modal .scope-opt-icon {
+        width: 42px; height: 42px;
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .scope-modal .scope-opt-icon.primary { background: #dbeafe; color: #2563eb; }
+    .scope-modal .scope-opt-icon.warning { background: #fef3c7; color: #d97706; }
+    .scope-modal .scope-opt-icon.success { background: #dcfce7; color: #16a34a; }
+    .scope-modal .scope-opt-icon.danger { background: #fecaca; color: #dc2626; }
+    .scope-modal .scope-opt-icon i { font-size: 18px; }
+    .scope-modal .scope-opt-body { flex: 1; min-width: 0; }
+    .scope-modal .scope-opt-title { font-weight: 600; color: #1f2937; font-size: 14px; }
+    .scope-modal .scope-opt-desc { font-size: 12px; color: #6b7280; margin-top: 3px; }
+    .scope-modal .scope-opt-arrow { color: #9ca3af; font-size: 18px; }
+    .scope-modal .modal-footer {
+        border-top: 1px solid #f0f0f0;
+        padding: 14px 24px !important;
+        background: #fafafa;
+    }
+    .scope-modal .btn-scope-huy {
+        padding: 7px 20px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+        color: #4b5563;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+    }
+    .scope-modal .btn-scope-huy:hover { background: #f9fafb; border-color: #9ca3af; color: #4b5563; text-decoration: none; }
+</style>
+
+<!-- Modal chọn phạm vi Xóa nợ -->
+<div class="modal fade scope-modal" id="myModalChonPhamVi_XoaNo_NT" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" style="max-width: 560px; margin-top: 8vh;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <div class="scope-title-wrap">
+                    <div class="scope-icon-round danger"><i class="fa fa-trash"></i></div>
+                    <div>
+                        <h4 class="scope-title">Chọn phạm vi Xóa nợ</h4>
+                        <div class="scope-subtitle">Không hạch toán công nợ</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="scope-warn">
+                    <i class="fa fa-exclamation-triangle" style="margin-right: 6px;"></i>
+                    Thao tác này <b>không thể hoàn tác</b>. Vui lòng kiểm tra kỹ trước khi xác nhận.
+                </div>
+                <div class="scope-label">Chọn phạm vi thực hiện</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <a id="btnPhamVi_DaChon_XoaNo_NT" class="scope-option warning">
+                        <div class="scope-opt-icon warning"><i class="fa fa-check-square"></i></div>
+                        <div class="scope-opt-body">
+                            <div class="scope-opt-title">Chỉ bản ghi đã tick chọn</div>
+                            <div class="scope-opt-desc"><span id="lblSoLuongDaChon_XoaNo_NT">0</span> bản ghi trên trang này</div>
+                        </div>
+                        <i class="fa fa-angle-right scope-opt-arrow"></i>
+                    </a>
+                    <a id="btnPhamVi_TatCa_XoaNo_NT" class="scope-option danger">
+                        <div class="scope-opt-icon danger"><i class="fa fa-list"></i></div>
+                        <div class="scope-opt-body">
+                            <div class="scope-opt-title">Toàn bộ bản ghi khớp bộ lọc</div>
+                            <div class="scope-opt-desc">Tất cả các trang — sẽ hỏi xác nhận lại</div>
+                        </div>
+                        <i class="fa fa-angle-right scope-opt-arrow"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="btn-scope-huy" data-dismiss="modal"><i class="fa fa-times"></i> Hủy</a>
             </div>
         </div>
     </div>
@@ -409,7 +596,7 @@
     </div>
 </div>
 
-<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.32"></script>
+<script src="modules/phieuthu/scripts/sinhviennotien.js?v=1.0.0.38"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['SinhVienNoTien'] = new SinhVienNoTien();

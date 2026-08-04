@@ -142,6 +142,20 @@ SinhVienNoTien.prototype = {
             e.stopImmediatePropagation();
             me.send_Email_BaoNo();
         });
+        $("#btnXoaNo_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            me.openModal_ChonPhamVi_XoaNo();
+        });
+        $("#btnPhamVi_DaChon_XoaNo_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            $("#myModalChonPhamVi_XoaNo_NT").modal('hide');
+            me.startXoaNo('daChon');
+        });
+        $("#btnPhamVi_TatCa_XoaNo_NT").click(function (e) {
+            e.stopImmediatePropagation();
+            $("#myModalChonPhamVi_XoaNo_NT").modal('hide');
+            me.startXoaNo('tatCa');
+        });
         $(document).delegate(".btnPrevPagePreview_NT", "click", function (e) {
             e.stopImmediatePropagation();
             if ($(this).prop('disabled')) return;
@@ -1254,6 +1268,146 @@ SinhVienNoTien.prototype = {
                 $("#lblSendProgress_NT").html('<i class="fa fa-paper-plane"></i> Đang gửi email... (' + iDone + '/' + arrValid.length + ') · ✓ ' + me.iSendSuccess + ' · ✗ ' + me.iSendFailed);
                 edu.system.start_Progress("zoneSendBar_NT");
                 me.sendEmail_Sequential(arrValid, index + 1, strTieuDe);
+            },
+            type: "POST",
+            action: obj_list.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: [3] Xóa nợ (Không hạch toán công nợ)
+    -------------------------------------------*/
+    openModal_ChonPhamVi_XoaNo: function () {
+        var me = this;
+        var iSoLuongDaChon = $("#tbldata_KhoanThu_ChuaXuat_NT tbody .ckbGuiEmail_NT:checked").length;
+        $("#lblSoLuongDaChon_XoaNo_NT").text(iSoLuongDaChon);
+        if (iSoLuongDaChon === 0) {
+            $("#btnPhamVi_DaChon_XoaNo_NT").addClass('disabled').css('opacity', '0.5').css('pointer-events', 'none');
+        } else {
+            $("#btnPhamVi_DaChon_XoaNo_NT").removeClass('disabled').css('opacity', '').css('pointer-events', '');
+        }
+        $("#myModalChonPhamVi_XoaNo_NT").modal('show');
+    },
+    startXoaNo: function (strMode) {
+        var me = this;
+        function afterFetch(arrAll) {
+            $("#myModalAlert").modal("hide");
+            $("#hideOverlay_NT").remove();
+            if (!arrAll || arrAll.length === 0) {
+                setTimeout(function () {
+                    edu.system.alert('Không có bản ghi nào khớp bộ lọc!', 'w');
+                }, 400);
+                return;
+            }
+            setTimeout(function () {
+                me.confirm_XoaNo(arrAll, strMode);
+            }, 400);
+        }
+        if (strMode === 'tatCa') {
+            me.getAll_KhoanThu_ForEmail(afterFetch);
+            return;
+        }
+        var arrSelected = [];
+        $("#tbldata_KhoanThu_ChuaXuat_NT tbody .ckbGuiEmail_NT:checked").each(function () {
+            var idx = parseInt($(this).attr('data-idx'));
+            if (!isNaN(idx) && me.dtNoTien && me.dtNoTien[idx]) {
+                arrSelected.push(me.dtNoTien[idx]);
+            }
+        });
+        if (arrSelected.length === 0) {
+            edu.system.alert('Vui lòng chọn ít nhất 1 bản ghi để xóa nợ!', 'w');
+            return;
+        }
+        me.confirm_XoaNo(arrSelected, strMode);
+    },
+    confirm_XoaNo: function (arrSelected, strMode) {
+        var me = this;
+        if (!arrSelected || arrSelected.length === 0) {
+            edu.system.alert('Không có bản ghi nào để xóa nợ!', 'w');
+            return;
+        }
+        var strCanhBaoToanBo = '';
+        if (strMode === 'tatCa') {
+            strCanhBaoToanBo = '<div class="alert alert-danger" style="margin: 10px 0; text-align: left"><i class="fa fa-exclamation-triangle"></i> <b>XÁC NHẬN LẠI:</b> Bạn đang xóa nợ <b>TOÀN BỘ ' + arrSelected.length + ' bản ghi</b> khớp bộ lọc (tất cả các trang).</div>';
+        }
+        edu.system.confirm(strCanhBaoToanBo + 'Bạn có chắc chắn muốn <b>xóa nợ</b> cho <b>' + arrSelected.length + '</b> bản ghi không? <br/><span style="color:#c0392b">Thao tác này không thể hoàn tác.</span>');
+        $("#btnYes").off('click.xoaNo').on('click.xoaNo', function (e) {
+            e.stopImmediatePropagation();
+            $("#btnYes").hide();
+            $('#myModalAlert #alert_content').html('<div id="lblXoaNoProgress_NT" style="margin-bottom:6px; text-align:left"><i class="fa fa-trash"></i> Đang xóa nợ... (0/' + arrSelected.length + ')</div><div id="zoneXoaNoBar_NT"></div>');
+            edu.system.genHTML_Progress("zoneXoaNoBar_NT", arrSelected.length);
+            me.iXoaNoSuccess = 0;
+            me.iXoaNoFailed = 0;
+            me.arrXoaNoFailedLog = [];
+            console.log('[XoaNo] Bắt đầu xóa nợ ' + arrSelected.length + ' bản ghi... (mode=' + strMode + ')');
+            me.xoaNo_Sequential(arrSelected, 0);
+        });
+    },
+    xoaNo_Sequential: function (arrSelected, index) {
+        var me = this;
+        if (index >= arrSelected.length) {
+            var strMsg = '<div style="text-align:left"><b>Kết quả xóa nợ:</b><br/>'
+                + '<span style="color:green">✓ Thành công: ' + me.iXoaNoSuccess + '</span><br/>'
+                + '<span style="color:red">✗ Thất bại: ' + me.iXoaNoFailed + '</span>';
+            if (me.arrXoaNoFailedLog.length > 0) {
+                strMsg += '<br/><br/><b>Chi tiết lỗi (tối đa 5):</b><br/>';
+                for (var k = 0; k < Math.min(5, me.arrXoaNoFailedLog.length); k++) {
+                    strMsg += '- ' + me.arrXoaNoFailedLog[k] + '<br/>';
+                }
+            }
+            strMsg += '</div>';
+            console.log('[XoaNo] Hoàn tất. Success=' + me.iXoaNoSuccess + ' Failed=' + me.iXoaNoFailed);
+            console.log('[XoaNo] Failed details:', me.arrXoaNoFailedLog);
+            edu.system.alert(strMsg);
+            me.bSelectAllPages = false;
+            me.getList_KhoanThu_ChuaXuat(edu.util.getValById('txtSearch_NT'));
+            return;
+        }
+        var aData = arrSelected[index];
+        var strId = aData.ID || aData.TAICHINH_TONGHOPNOCHUNG_ID || '';
+        var strLabel = (aData.MASONGUOIHOC || '') + ' - ' + (aData.HOTENNGUOIHOC || '') + ' [' + (aData.TAICHINH_CACKHOANTHU_TEN || '') + ']';
+        if (!strId) {
+            me.iXoaNoFailed++;
+            me.arrXoaNoFailedLog.push(strLabel + ' → thiếu Id bản ghi');
+            var iDone = me.iXoaNoSuccess + me.iXoaNoFailed;
+            $("#lblXoaNoProgress_NT").html('<i class="fa fa-trash"></i> Đang xóa nợ... (' + iDone + '/' + arrSelected.length + ') · ✓ ' + me.iXoaNoSuccess + ' · ✗ ' + me.iXoaNoFailed);
+            edu.system.start_Progress("zoneXoaNoBar_NT");
+            me.xoaNo_Sequential(arrSelected, index + 1);
+            return;
+        }
+        var obj_list = {
+            'action': 'TC_NGUOIHOC2_MH/FSk0IgkoJC8KKS4vJgkgIikVLiAvAi4vJg8u',
+            'func': 'PKG_TAICHINH_NGUOIHOC2.ThucHienKhongHachToanCongNo',
+            'iM': edu.system.iM,
+            'strId': strId,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    me.iXoaNoSuccess++;
+                    console.log('[XoaNo] ✓ ' + strLabel);
+                } else {
+                    me.iXoaNoFailed++;
+                    var strErr = (data && data.Message) ? data.Message : 'Không xác định';
+                    me.arrXoaNoFailedLog.push(strLabel + ' → ' + strErr);
+                    console.log('[XoaNo] ✗ ' + strLabel + ' | ' + strErr, data);
+                }
+            },
+            error: function (er) {
+                me.iXoaNoFailed++;
+                me.arrXoaNoFailedLog.push(strLabel + ' → (network) ' + JSON.stringify(er));
+                console.log('[XoaNo] ✗ ' + strLabel + ' | network error', er);
+            },
+            complete: function () {
+                var iDone = me.iXoaNoSuccess + me.iXoaNoFailed;
+                $("#lblXoaNoProgress_NT").html('<i class="fa fa-trash"></i> Đang xóa nợ... (' + iDone + '/' + arrSelected.length + ') · ✓ ' + me.iXoaNoSuccess + ' · ✗ ' + me.iXoaNoFailed);
+                edu.system.start_Progress("zoneXoaNoBar_NT");
+                me.xoaNo_Sequential(arrSelected, index + 1);
             },
             type: "POST",
             action: obj_list.action,
