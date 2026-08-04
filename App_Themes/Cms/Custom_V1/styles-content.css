@@ -17078,3 +17078,18 @@ table#clone {
     top: 4px;
     right: 0px;
 }
+/* ------------- */
+.aps-hocphan-darut .tblRutHocPhan tr td:nth-child(8){
+    text-align: left !important;
+     
+}
+
+.tbllichSuXN tbody tr:first-child td{
+    background: var(--color-blue) !important;
+    color:#fff;
+}
+.tbllichSuXN tbody tr td,.tbllichSuXN tbody tr,
+.tbllichSuXN.table-bordered tbody tr:nth-child(2n+2),.tbllichSuXN.table-bordered tbody tr:nth-child(2n+2) td {
+    background: #f8f8f8 ;
+    color:#222;
+}
