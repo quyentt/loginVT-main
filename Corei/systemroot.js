@@ -7221,8 +7221,8 @@ systemroot.prototype = {
                         var strValue = "";
                         var cellrowspan = cell.rowSpan;
                         if (cellrowspan > 1) cellrowspan = cellrowspan - iRowMinus;
-                        var arrImg = $(point).find(".upload-img");
-                        var arrFile = $(point).find(".upload-file");
+                        var arrImg = $(cell).find(".upload-img");
+                        var arrFile = $(cell).find(".upload-file");
                         for (var k = 0; k < arrImg.length; k++) {
                             strValue += ";" + $(arrImg[k]).attr("src");
                         }
