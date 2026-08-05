@@ -61,7 +61,15 @@ NhapDiem.prototype = {
         -------------------------------------------*/
         $(".btnClose").click(function (e) {
             e.preventDefault();
-            me.toggle_notify();
+            if ($("#zone_input_nhapdiem").is(":visible") && me.hasUnsavedDiem()) {
+                edu.system.confirm("Có điểm chưa lưu. Bạn có chắc chắn muốn đóng và bỏ qua thay đổi không?");
+                $("#btnYes").off('click').click(function () {
+                    $("#myModalAlert").modal("hide");
+                    me.toggle_notify();
+                });
+            } else {
+                me.toggle_notify();
+            }
         });
         $("#btnSearch").click(function () {
             me.getList_Hoc();
@@ -398,6 +406,16 @@ NhapDiem.prototype = {
             $("nav .sidebar-toggle").trigger("click");
         }
         $(window).scrollTop(0);
+    },
+    hasUnsavedDiem: function () {
+        var arrElement = $("#tblNhapDiem").find("tbody").find("tr").find("td").find("input");
+        for (var i = 0; i < arrElement.length; i++) {
+            if ($(arrElement[i]).attr("type") == "checkbox") continue;
+            var original = $(arrElement[i]).attr("name");
+            if (original == undefined) original = "";
+            if (arrElement[i].value != original) return true;
+        }
+        return false;
     },
     toggle_detail: function (strDanhSach_Id) {
         var me = this;
