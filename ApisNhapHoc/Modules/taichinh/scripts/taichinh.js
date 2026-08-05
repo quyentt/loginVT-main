@@ -381,10 +381,27 @@ ThuTien.prototype = {
 
             'strChucNang_Id': edu.system.strChucNang_Id
         };
+        console.log('[DBG-ThuTien] >>> save_ThuTien payload:', obj_save);
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
+                console.log('[DBG-ThuTien] <<< save_ThuTien response:', data);
                 if (data.Success) {
+                    var arrMessage = edu.util.convertStrToArr(data.Message, ",");
+                    var strPhieu_Id = arrMessage[0];
+                    var strPhieu_So = arrMessage[1];
+                    // --- TẠM ẨN validate (đang debug UI) — bật lại khi backend đã fix SP trả đúng phieu_id ---
+                    // if (!edu.util.checkValue(strPhieu_Id)) {
+                    //     console.warn('[DBG-ThuTien] SP trả Success=true nhưng KHÔNG có phieu_id. Message="' + data.Message + '"');
+                    //     edu.system.alert(
+                    //         "Không tạo được phiếu thu (backend trả rỗng). " +
+                    //         "Nguyên nhân thường gặp: Kế hoạch nhập học chưa gán 'Mô hình áp dụng phiếu thu', " +
+                    //         "hoặc sinh viên chưa được phân lớp/đủ điều kiện nhập học.",
+                    //         "w");
+                    //     $("#btnSave_ThuTien").show();
+                    //     edu.system.endLoading();
+                    //     return;
+                    // }
                     //1. delete search text box value
                     edu.util.viewValById("txtTimKiem_ThuTien", "");
                     //2.
@@ -395,10 +412,8 @@ ThuTien.prototype = {
                             me.getList_KhoanNhapHoc(me.strNguoiHoc_Id, resolve, reject);
                         }).then(function () {
                             //3. Thu tien thanh cong --> load phieu in
-                            var arrMessage = edu.util.convertStrToArr(data.Message, ",");
-                            var strPhieu_Id = arrMessage[0];
                             me.strPhieuThu_Id = strPhieu_Id;
-                            var strPhieu_So = arrMessage[1];
+                            console.log('[DBG-ThuTien] phieu created:', { id: strPhieu_Id, so: strPhieu_So });
                             me.showHide_Box("zone-box", "zoneList_PhieuDaThu");
                             me.showHide_Box("zone-action", "zoneAction_Phieu");
                             me.showHide_Box("zone-bus", "zoneInput_ThuTien");
@@ -407,6 +422,7 @@ ThuTien.prototype = {
                     });
                 }
                 else {
+                    console.warn('[DBG-ThuTien] save_ThuTien FAILED:', data.Message);
                     var obj = {
                         content: "NH_NguoiHoc_ThongTinTuyenSinh.ThuTien: " + data.Message,
                         code: "w",
@@ -648,16 +664,26 @@ ThuTien.prototype = {
     },
     getDetail_NguoiHoc_PhieuThu: function (strPhieuThu_Id) {
         var me = this;
-        
+        console.log('[DBG-ThuTien] >>> getDetail_NguoiHoc_PhieuThu strPhieuThu_Id=', strPhieuThu_Id, 'strNguoiHoc_Id=', me.strNguoiHoc_Id);
         edu.system.makeRequest({
             success: function (data) {
+                console.log('[DBG-ThuTien] <<< LayChiTiet response:', data);
                 if (data.Success) {
                     console.log(4444)
                     me.dtNguoiHoc_Print = data.Data[0];
-                    me.getList_KhoanDaThu_Rut(strPhieuThu_Id);                    
+                    console.log('[DBG-ThuTien] dtNguoiHoc_Print keys config:', {
+                        MAUIN_MASO: data.Data[0] && data.Data[0].MAUIN_MASO,
+                        MOHINHAPDUNGPHIEUTHU_ID: data.Data[0] && data.Data[0].MOHINHAPDUNGPHIEUTHU_ID,
+                        MOHINHAPDUNGPHIEUTHU_MA: data.Data[0] && data.Data[0].MOHINHAPDUNGPHIEUTHU_MA,
+                        DAOTAO_LOPQUANLY_TEN: data.Data[0] && data.Data[0].DAOTAO_LOPQUANLY_TEN,
+                        DAOTAO_NGANHNHAPHOC: data.Data[0] && data.Data[0].DAOTAO_NGANHNHAPHOC,
+                        DANHAPHOC: data.Data[0] && data.Data[0].DANHAPHOC
+                    });
+                    me.getList_KhoanDaThu_Rut(strPhieuThu_Id);
                     edu.util.viewHTMLById("lblNganhLop_ThuTien", data.Data[0].DAOTAO_LOPQUANLY_TEN);
                 }
                 else {
+                    console.warn('[DBG-ThuTien] LayChiTiet FAILED:', data.Message);
                     edu.system.alert(data.Message, "w");
                 }
             },
@@ -678,12 +704,16 @@ ThuTien.prototype = {
     getList_KhoanDaThu_Rut: function (strPhieuThu_Id, strLoaiPhieu) {
         var me = this;
         var strPhieuThu_Rut_Id = strPhieuThu_Id;
-
+        console.log('[DBG-ThuTien] >>> getList_KhoanDaThu_Rut strPhieuThu_Id=', strPhieuThu_Id, 'strLoaiPhieu=', strLoaiPhieu);
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
+                console.log('[DBG-ThuTien] <<< LayDSKhoanDaThuNhapHoc response:', data);
                 if (data.Success) {
                     if (edu.util.checkValue(data.Data)) {
+                        console.log('[DBG-ThuTien] Khoan da thu records=', data.Data.length,
+                            'MAUIN_MASO[0]=', data.Data[0] && data.Data[0].MAUIN_MASO,
+                            'SOCHUNGTU[0]=', data.Data[0] && data.Data[0].SOCHUNGTU);
                         switch (strLoaiPhieu) {
                             case "PHIEU_SUA":
                                 me.genFormEdit_PhieuDaThu(data.Data);
@@ -1092,7 +1122,15 @@ ThuTien.prototype = {
         var me = this;
 
         var dataPhieuIn = me.dtNguoiHoc_Print;
+        console.log('[DBG-ThuTien] >>> genDetail_PhieuThu data.length=', data && data.length,
+            'dataPhieuIn?', !!dataPhieuIn,
+            '#print_hoadon exists?', document.getElementById('print_hoadon') !== null);
         if (data.length > 0 && dataPhieuIn != undefined) {
+            console.log('[DBG-ThuTien] MAUIN_MASO from khoản đã thu:', data[0].MAUIN_MASO);
+            if (!data[0].MAUIN_MASO) {
+                console.warn('[DBG-ThuTien] ⚠️  MAUIN_MASO rỗng → template không load được, #print_hoadon sẽ trống. ' +
+                    'Cần cấu hình Mô hình áp dụng phiếu thu cho Kế hoạch nhập học này.');
+            }
             console.log(data[0].MAUIN_MASO);
             if (data[0].MAUIN_MASO && data[0].MAUIN_MASO.indexOf("BAOCAO_") == 0) {
                 console.log(1111111111);
@@ -1115,7 +1153,16 @@ ThuTien.prototype = {
         dataPhieuIn["MAUIN_MASO"] = data[0].MAUIN_MASO;
         console.log(dataPhieuIn.DAOTAO_LOPQUANLY_TEN);
         console.log(dataPhieuIn);
+        console.log('[DBG-ThuTien] >>> gọi genData_PhieuThu với MAUIN_MASO=', dataPhieuIn["MAUIN_MASO"],
+            '| innerHTML #print_hoadon (trước load)=', $("#print_hoadon").html().length, 'ký tự');
+        setTimeout(function () {
+            console.log('[DBG-ThuTien] +500ms  innerHTML #print_hoadon =', $("#print_hoadon").html().length, 'ký tự');
+        }, 500);
+        setTimeout(function () {
+            console.log('[DBG-ThuTien] +2000ms innerHTML #print_hoadon =', $("#print_hoadon").html().length, 'ký tự');
+        }, 2000);
         edu.extend.genData_PhieuThu(data, [dataPhieuIn], "print_hoadon", "", objKhoanThu => {
+            console.log('[DBG-ThuTien] ✓ callback genData_PhieuThu fired với objKhoanThu=', objKhoanThu);
             var strMauIn_MaSo = data[0].MAUIN_MASO;
             var strIDMoRong = objKhoanThu.CHUNGTU_ID;
             var strDiaChi = dataPhieuIn.HOKHAU_TINHTHANH_TEN;
