@@ -4420,8 +4420,25 @@ KeHoachTuyenSinhNew.prototype = {
             // Load combo Đợt theo KH đang mở (Đối tượng không cần cho proc Them_HoSo_TS,
             // user tự map cột API vào strHoSo_DoiTuong_TS_Id nếu có)
             me.docAPI_LoadDotCombo();
-            // Load Cơ sở đào tạo (dùng chung DM KHCT.COSODAOTAO với form Lớp quản lý)
-            edu.system.loadToCombo_DanhMucDuLieu("KHCT.COSODAOTAO", "ddlDocAPI_CoSoDaoTao");
+            // Load Cơ sở đào tạo — populate manual (tránh timing issue của loadToCombo_DanhMucDuLieu)
+            edu.system.getList_DanhMucDulieu({
+                strMaBangDanhMuc: 'KHCT.COSODAOTAO',
+                strTenCotSapXep: '',
+                iTrangThai: 1
+            }, '', '', function (data) {
+                var arr = Array.isArray(data) ? data : [];
+                console.log('%c[docAPI] CSDT loaded:', 'color:#059669;font-weight:bold', {
+                    count: arr.length, sample: arr[0]
+                });
+                var $sel = $('#ddlDocAPI_CoSoDaoTao');
+                $sel.empty().append('<option value="">-- Chọn cơ sở đào tạo --</option>');
+                arr.forEach(function (d) {
+                    var id = d.ID || d.Id || d.id || '';
+                    var ma = d.MA || d.Ma || '';
+                    var ten = d.TEN || d.Ten || ma;
+                    if (id) $sel.append('<option value="' + id + '">' + ten + (ma && ma !== ten ? ' [' + ma + ']' : '') + '</option>');
+                });
+            });
         });
 
         $("#ddlDocAPI_Preset").on('change', function () {
@@ -4915,10 +4932,7 @@ KeHoachTuyenSinhNew.prototype = {
         if (!strDotId) {
             edu.system.alert("Chưa chọn Đợt tuyển sinh", "w"); return;
         }
-        var strCoSoId = $('#ddlDocAPI_CoSoDaoTao').val() || '';
-        if (!strCoSoId) {
-            edu.system.alert("Chưa chọn Cơ sở đào tạo", "w"); return;
-        }
+        var strCoSoId = $('#ddlDocAPI_CoSoDaoTao').val() || '';   // không bắt buộc
         var mappedCols = Object.keys(me._docAPI_Mapping).filter(function (c) { return me._docAPI_Mapping[c]; });
         if (!mappedCols.length) {
             edu.system.alert("Chưa mapping cột nào — vào bước 2 để chọn param tương ứng", "w"); return;

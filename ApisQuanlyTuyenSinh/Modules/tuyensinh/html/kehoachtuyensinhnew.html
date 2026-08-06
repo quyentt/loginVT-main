@@ -2214,7 +2214,7 @@
                     </div>
                     <div class="row g-3 mt-5">
                         <div class="col-sm-4">
-                            <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Cơ sở đào tạo <span style="color:#dc2626">*</span></label>
+                            <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Cơ sở đào tạo</label>
                             <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
                                 <select id="ddlDocAPI_CoSoDaoTao" class="form-select"><option value="">-- Chọn cơ sở đào tạo --</option></select>
                             </div>
@@ -2223,14 +2223,14 @@
                             <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Từ khóa lọc (mã HS/SBD)</label>
                             <input id="txtDocAPI_Keyword" class="form-control" placeholder="Ví dụ: HS2026-0001 (bỏ trống = lấy tất cả)">
                         </div>
-                        <div class="col-sm-4 d-flex align-items-end" style="gap:10px;">
-                            <button id="btnDocAPI_Fetch" class="btn btn-primary" type="button">
-                                <i class="fa-solid fa-plug"></i>&nbsp;<span>Kết nối & Tải cấu trúc</span>
+                        <div class="col-sm-4 d-flex align-items-end">
+                            <button id="btnDocAPI_Fetch" class="btn btn-primary" type="button" style="white-space:nowrap;">
+                                <i class="fa-solid fa-plug"></i>&nbsp;<span>Kết nối &amp; Tải</span>
                             </button>
-                            <span id="lblDocAPI_FetchInfo" class="fz13" style="color:#475569;"></span>
                         </div>
                     </div>
-                    <div id="docAPI_PresetHint" class="fz12 mt-10" style="color:#64748b;"></div>
+                    <div id="lblDocAPI_FetchInfo" class="fz13 mt-10" style="color:#475569;"></div>
+                    <div id="docAPI_PresetHint" class="fz12 mt-5" style="color:#64748b;"></div>
                 </div>
 
                 <!-- Step 2: Mapping columns -->
@@ -2365,7 +2365,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.50"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.53"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
