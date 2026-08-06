@@ -482,6 +482,9 @@
                     <button class="btn btn-danger d-none">
                         <i class="fa fa-trash"></i><span>Xóa</span>
                     </button>
+                    <button id="btnDocTuAPI_FromDot" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#doc-api-tuyensinh">
+                        <i class="fa-solid fa-cloud-arrow-down"></i><span> Đọc từ API</span>
+                    </button>
                     <button id="btnImportTT_FromDot" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ket-qua-dk" data-open-mode="import">
                         <i class="fa-regular fa-file-import"></i><span> Import trúng tuyển</span>
                     </button>
@@ -1624,13 +1627,16 @@
                     </div>
 
                     <div class="alert alert-info fz14 mb-15" style="background:#d1ecf1;border-left:4px solid #17a2b8;padding:10px 14px;">
-                        <b>Cấu trúc file Excel/CSV:</b> sheet đầu tiên, hàng 1 là header. Tên cột đặt đúng tên param API, ví dụ:
+                        <b>Cấu trúc file Excel/CSV:</b> sheet đầu tiên, hàng 1 là header. Tên cột đặt đúng tên param của
+                        <code>PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS</code>, ví dụ:
                         <code>strCorePerson_HoTen</code>, <code>strCorePerson_NgaySinh</code>, <code>strCorePerson_GioiTinh_Ma</code>,
-                        <code>strPersonIden_SoCCCD</code>, <code>strPersonContact_DienThoai</code>, <code>strHoSo_MaHoSo</code>,
-                        <code>strHoSo_SoBaoDanh</code>, <code>strNguyenVong_DauRa_Id</code>, <code>strDaoTao_LopQuanLy_Id_DK</code>,
-                        <code>strMaNganhTrungTuyen</code>, <code>strMaCTDT</code>,
-                        <code>dXetTuyen_DiemTongXT</code>, <code>strKetQua_QuyetDinh_Ma</code>...
+                        <code>strPersonProfile_DanToc_Ma</code>, <code>strPersonIden_SoCCCD</code>, <code>strPersonContact_DienThoai</code>,
+                        <code>strHoSo_MaHoSo</code>, <code>strHoSo_SoBaoDanh</code>, <code>strHoSo_DoiTuong_TS_Ma</code>,
+                        <code>strHoSo_KH_Dot_PT_Ma</code>, <code>strMaNganhTrungTuyen</code>, <code>strMaCTDT</code>,
+                        <code>strXetTuyen_TohopMon_Ma</code>, <code>dXetTuyen_DiemTongXT</code>, <code>strKetQua_QuyetDinh_Ma</code>...
                         Từ hàng 2 trở đi mỗi hàng là 1 hồ sơ trúng tuyển.
+                        Các field <code>_Ma</code>/<code>_Mas</code> user có thể gõ <b>Mã hoặc Tên</b>, BE tự tra cứu ra ID.
+                        Kế hoạch tuyển sinh, Đợt, Cơ sở đào tạo lấy từ form (không cần trong file).
                     </div>
 
                     <div class="d-flex align-items-center mb-15 flex-wrap" style="gap:12px;">
@@ -1973,6 +1979,17 @@
                                                 Danh sách lớp quản lý load theo Nguyện vọng đầu ra đã chọn.
                                             </div>
                                         </div>
+                                        <div class="aps-sv-field aps-sv-col-full">
+                                            <label class="aps-sv-label">Cơ sở đào tạo</label>
+                                            <div class="aps-sv-select">
+                                                <i class="fa-light fa-chevron-down"></i>
+                                                <select class="aps-sv-input" id="ddlKQ_CoSoDaoTao"><option value="">-- Chọn cơ sở đào tạo --</option></select>
+                                            </div>
+                                            <div style="margin-top:6px;font-size:12px;color:#94a3b8;line-height:1.5;">
+                                                <i class="fa-light fa-circle-info"></i>
+                                                Cơ sở đào tạo của hồ sơ (dùng chung DM <code>KHCT.COSODAOTAO</code> với form Lớp quản lý).
+                                            </div>
+                                        </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Mã đợt nhập học (intake)</label>
                                             <input class="aps-sv-input" id="txtKQ_IntakeCode" placeholder="Intake code">
@@ -2142,6 +2159,178 @@
     </div>
 </div>
 
+<!-- Modal: Đọc dữ liệu từ nguồn API (mapping API columns ↔ trường thông tin, lưu localStorage) -->
+<div class="modal fade modal_dot_tuyen_sinh" id="doc-api-tuyensinh" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-100 modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-header-wrap">
+                    <div class="title">
+                        <i class="fa-solid fa-cloud-arrow-down"></i> Đọc dữ liệu từ nguồn API
+                    </div>
+                    <button type="button" class="btn-close-custom" data-bs-dismiss="modal" aria-label="Đóng">
+                        <i class="fa-light fa-xmark"></i>
+                        <span>Đóng</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body" style="background:#f8fafc;">
+
+                <!-- Step 1: Chọn nguồn API + kết nối -->
+                <div style="border:1px solid #e5e7eb; border-radius:6px; padding:14px 16px; margin-bottom:14px; background:#fff;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:14px; font-weight:700; color:#1e40af;">
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:#1e40af; color:#fff; font-size:12px;">1</span>
+                        <span>Chọn nguồn API và tải cấu trúc</span>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Nguồn API <span style="color:#dc2626">*</span></label>
+                            <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlDocAPI_Preset" class="form-select"><option value="">-- Chọn nguồn --</option></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Đợt tuyển sinh <span style="color:#dc2626">*</span></label>
+                            <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlDocAPI_Dot" class="form-select"><option value="">-- Chọn đợt --</option></select>
+                            </div>
+                        </div>
+                        <!-- Đối tượng dự tuyển: ẩn vì proc Them_HoSo_TS nhận strHoSo_DoiTuong_TS_Id qua mapping cột API,
+                             không cần combo chung cho toàn batch. Giữ input hidden để không vỡ code JS đọc val(). -->
+                        <input type="hidden" id="ddlDocAPI_DoiTuong" value="">
+                        <div class="col-sm-4"></div>
+                    </div>
+                    <div class="row g-3 mt-5">
+                        <div class="col-sm-4">
+                            <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Cơ sở đào tạo <span style="color:#dc2626">*</span></label>
+                            <div class="custom-select"><i class="fa-light fa-chevron-down"></i>
+                                <select id="ddlDocAPI_CoSoDaoTao" class="form-select"><option value="">-- Chọn cơ sở đào tạo --</option></select>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label style="display:block; font-size:12px; font-weight:600; color:#475569; margin-bottom:4px;">Từ khóa lọc (mã HS/SBD)</label>
+                            <input id="txtDocAPI_Keyword" class="form-control" placeholder="Ví dụ: HS2026-0001 (bỏ trống = lấy tất cả)">
+                        </div>
+                        <div class="col-sm-4 d-flex align-items-end" style="gap:10px;">
+                            <button id="btnDocAPI_Fetch" class="btn btn-primary" type="button">
+                                <i class="fa-solid fa-plug"></i>&nbsp;<span>Kết nối & Tải cấu trúc</span>
+                            </button>
+                            <span id="lblDocAPI_FetchInfo" class="fz13" style="color:#475569;"></span>
+                        </div>
+                    </div>
+                    <div id="docAPI_PresetHint" class="fz12 mt-10" style="color:#64748b;"></div>
+                </div>
+
+                <!-- Step 2: Mapping columns -->
+                <div id="docAPI_MapWrap" class="d-none" style="border:1px solid #e5e7eb; border-radius:6px; padding:14px 16px; margin-bottom:14px; background:#fff;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:14px; font-weight:700; color:#1e40af; flex-wrap:wrap;">
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:#1e40af; color:#fff; font-size:12px;">2</span>
+                        <span>Ánh xạ cột API &rarr; Trường thông tin</span>
+                        <span class="badge bg-primary" id="lblDocAPI_ApiColCount" style="margin-left:4px;">0</span>
+                        <span style="color:#64748b; font-weight:500;">cột API</span>
+                        <span class="badge bg-info" id="lblDocAPI_TargetColCount" style="margin-left:4px;">0</span>
+                        <span style="color:#64748b; font-weight:500;">trường thông tin của KH</span>
+
+                        <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap;">
+                            <div class="d-flex align-items-center" style="gap:6px;">
+                                <label style="font-size:12px; font-weight:600; color:#475569; margin:0;">Cột định danh HS (mã):</label>
+                                <select id="ddlDocAPI_KeyCol" class="form-select form-select-sm" style="min-width:180px;"></select>
+                            </div>
+                            <button id="btnDocAPI_AutoMap" class="btn btn-info btn-sm" type="button" title="Tự động ghép theo tên gần đúng">
+                                <i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp;Auto-map
+                            </button>
+                            <button id="btnDocAPI_ClearMap" class="btn btn-default btn-sm" type="button" title="Đặt mọi cột về Bỏ qua">
+                                <i class="fa-regular fa-eraser"></i>&nbsp;Xóa mapping
+                            </button>
+                            <button id="btnDocAPI_SaveMap" class="btn btn-success btn-sm" type="button" title="Lưu cấu hình mapping vào trình duyệt">
+                                <i class="fa-solid fa-floppy-disk"></i>&nbsp;Lưu cấu hình
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="aps-table-select scroll-table-x">
+                        <table id="tblDocAPI_Mapping" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-fixed td-center" style="width:50px;">STT</th>
+                                    <th class="td-left" style="min-width:180px;">Cột từ API</th>
+                                    <th class="td-left" style="min-width:180px;">Giá trị mẫu (record đầu)</th>
+                                    <th class="td-left" style="min-width:280px;">&rarr; Trường thông tin của hồ sơ</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <div class="fz12 mt-10" style="color:#64748b;">
+                        <i class="fa-regular fa-circle-info"></i>
+                        Cột nào để "<b>-- Bỏ qua --</b>" sẽ không được import. Import chạy qua <code>PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS</code>
+                        (giống Import Excel) — data ghi vào bảng chuẩn hóa, hiển thị ở bảng "Kết quả đăng ký".
+                        Các target field <code>_Ma</code>/<code>_Mas</code> nhận giá trị dạng <b>Mã hoặc Tên</b> — BE tự tra cứu ra ID.
+                        Cấu hình mapping lưu theo <b>Kế hoạch tuyển sinh</b> + <b>Nguồn API</b>, lần sau mở lên tự khôi phục.
+                    </div>
+                </div>
+
+                <!-- Step 3: Preview + Import -->
+                <div id="docAPI_ImportWrap" class="d-none" style="border:1px solid #e5e7eb; border-radius:6px; padding:14px 16px; margin-bottom:14px; background:#fff;">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px; font-size:14px; font-weight:700; color:#1e40af; flex-wrap:wrap;">
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; background:#1e40af; color:#fff; font-size:12px;">3</span>
+                        <span>Chọn hồ sơ và Import</span>
+                        <span class="badge bg-primary" id="lblDocAPI_RowCount" style="margin-left:4px;">0</span>
+                        <span style="color:#64748b; font-weight:500;">bản ghi từ API</span>
+
+                        <div style="margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <input type="checkbox" id="chkDocAPI_ChoPhepSua">
+                                <label for="chkDocAPI_ChoPhepSua" style="font-size:12px; color:#475569; margin:0;">Cho phép cập nhật lại dữ liệu nếu hồ sơ đã duyệt</label>
+                            </div>
+                            <button id="btnDocAPI_StartImport" class="btn btn-primary" type="button">
+                                <i class="fa-solid fa-play"></i>&nbsp;Bắt đầu Import
+                            </button>
+                            <button id="btnDocAPI_CancelImport" class="btn btn-danger d-none" type="button">
+                                <i class="fa-solid fa-stop"></i>&nbsp;Dừng
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="docAPI_ProgressWrap" class="d-none mb-15">
+                        <div class="d-flex justify-content-between fz14 mb-5">
+                            <span><b>Tiến trình:</b> <span id="lblDocAPI_Progress">0 / 0</span></span>
+                            <span>Thành công: <b class="color-success" id="lblDocAPI_OK">0</b> — Lỗi: <b class="color-red" id="lblDocAPI_Err">0</b></span>
+                        </div>
+                        <div class="progress" style="height:18px; background:#eee; border-radius:4px; overflow:hidden;">
+                            <div id="docAPI_ProgressBar" role="progressbar" style="width:0%; height:100%; background:#17a2b8; color:#fff; text-align:center; line-height:18px; font-size:12px; transition:width .2s;">0%</div>
+                        </div>
+                    </div>
+
+                    <div class="aps-table-select scroll-table-x">
+                        <table id="tblDocAPI_Preview" class="table table-hover table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="td-center" style="width:50px;"><input type="checkbox" id="chkDocAPI_SelectAll"></th>
+                                    <th class="td-fixed td-center" style="width:50px;">STT</th>
+                                    <th class="td-left" style="min-width:140px;">Mã hồ sơ (từ API)</th>
+                                    <th class="td-left">Preview các trường sẽ import (theo mapping)</th>
+                                    <th class="td-center" style="width:120px;">Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex" style="gap:10px;">
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+                        <i class="fa-regular fa-circle-xmark"></i><span> Đóng</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
 <!-- SheetJS (đọc/ghi Excel) — load 1 lần, idempotent — phục vụ Import dữ liệu trúng tuyển -->
 <script>
@@ -2164,7 +2353,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.34"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.47"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

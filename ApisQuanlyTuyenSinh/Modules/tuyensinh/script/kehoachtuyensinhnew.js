@@ -570,6 +570,9 @@ KeHoachTuyenSinhNew.prototype = {
         $("#btnDownloadMauTT").click(function () {
             me.downloadMauImport_TrungTuyen();
         });
+
+        // Đọc dữ liệu từ nguồn API (mapping cột API ↔ trường thông tin, lưu localStorage)
+        me.initDocAPI_Bindings();
     },
 
     /*------------------------------------------
@@ -582,11 +585,13 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
             return;
         }
-        // Header: khớp danh sách apiFields ở _buildPayload_ImportTT
+        // Header: khớp danh sách apiFields ở _buildImportPayload (signature PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS).
+        // Convention: field từ file dùng _Ma/_Mas (BE tự tra cứu ID), user gõ Mã hoặc Tên đều được.
+        // Context (KH/Đợt/Cơ sở) không cho file ghi đè — chọn ở modal khi bấm Import.
         var headers = [
             'strCorePerson_HoTen', 'strCorePerson_Ho', 'strCorePerson_Dem', 'strCorePerson_Ten',
             'strCorePerson_NgaySinh', 'dCorePerson_NgayS', 'dCorePerson_ThangS', 'dCorePerson_NamS',
-            'strCorePerson_GioiTinh_Ma',
+            'strCorePerson_GioiTinh_Ma', 'strMaSo', 'strDaoTao_LopQuanLy_DuKien',
             'strPersonProfile_DanToc_Ma', 'strPersonProfile_TonGiao_Ma', 'strPersonProfile_QuocTich_Ma',
             'strPersonContact_DienThoai', 'strPersonContact_Email',
             'strPersonIden_SoCCCD', 'strPersonIden_NgayCap', 'strPersonIden_NoiCap',
@@ -597,8 +602,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
             'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
             'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
-            'strNguyenVong_DauRa_Id', 'strDaoTao_LopQuanLy_Id_DK',
-            'strDaoTao_LopQuanLy_DuKien', 'strMaNganhTrungTuyen', 'strMaCTDT',
+            'strMaNganhTrungTuyen', 'strMaCTDT',
             'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
             'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
             'strKetQua_QuyetDinh_Ma', 'strIntake_IntakeCode', 'strIntake_IntakeTypeCode',
@@ -609,38 +613,45 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonBank_ChuTaiKhoan', 'strPersonBank_GhiChu',
             'strExtra_Person_Data', 'strExtra_HoSo_Data', 'strExtra_Intake_Data'
         ];
-        // Dòng ví dụ (map theo cùng thứ tự với headers)
+        // Dòng ví dụ — dùng VD sếp cung cấp ở signature Toad (mã theo convention BE Import).
         var sample = {
             strCorePerson_HoTen: 'Nguyễn Văn A',
             strCorePerson_Ho: 'Nguyễn', strCorePerson_Dem: 'Văn', strCorePerson_Ten: 'A',
-            strCorePerson_NgaySinh: '15/08/2007',
-            dCorePerson_NgayS: 15, dCorePerson_ThangS: 8, dCorePerson_NamS: 2007,
-            strCorePerson_GioiTinh_Ma: 'NAM',
-            strPersonProfile_DanToc_Ma: '01', strPersonProfile_TonGiao_Ma: '00', strPersonProfile_QuocTich_Ma: 'VN',
-            strPersonContact_DienThoai: '0912345678', strPersonContact_Email: 'nguyenvana@example.com',
-            strPersonIden_SoCCCD: '001207000123',
-            strPersonIden_NgayCap: '10/03/2022',
-            strPersonIden_NoiCap: 'Cục CS QLHC về TTXH',
-            strPersonAddr_NS_Tinh_Ma: '01', strPersonAddr_NS_Xa_Ma: '00004', strPersonAddr_NoiSinh: 'Hà Nội',
-            strPersonAddr_HK_Tinh_Ma: '01', strPersonAddr_HK_Xa_Ma: '00004', strPersonAddr_HK_SoNha: 'Số 1, ngõ 12, phố ABC',
-            strPersonEdu_Tinh_Ma: '', strPersonEdu_TruongMaTen: '01001-THPT Chuyên Hà Nội - Amsterdam',
+            strCorePerson_NgaySinh: '15/03/2007',
+            dCorePerson_NgayS: 15, dCorePerson_ThangS: 3, dCorePerson_NamS: 2007,
+            strCorePerson_GioiTinh_Ma: 'GENDER_NAM_ID', strMaSo: '',
+            strDaoTao_LopQuanLy_DuKien: '',
+            strPersonProfile_DanToc_Ma: 'DT_KINH_ID', strPersonProfile_TonGiao_Ma: 'TG_KHONG_ID',
+            strPersonProfile_QuocTich_Ma: 'QT_VN_ID',
+            strPersonContact_DienThoai: '0912345678', strPersonContact_Email: 'nva@example.com',
+            strPersonIden_SoCCCD: '012345678901',
+            strPersonIden_NgayCap: '01/01/2022',
+            strPersonIden_NoiCap: 'Cục Cảnh sát QLHC về TTXH',
+            strPersonAddr_NS_Tinh_Ma: 'Hà Nội', strPersonAddr_NS_Xa_Ma: 'Hà Nội', strPersonAddr_NoiSinh: 'Hà Nội',
+            strPersonAddr_HK_Tinh_Ma: 'TINH_HN_ID', strPersonAddr_HK_Xa_Ma: 'XA_XX_ID',
+            strPersonAddr_HK_SoNha: 'Số 12, Ngõ 45, Thôn Đông',
+            strPersonEdu_Tinh_Ma: 'TINH_HN_ID', strPersonEdu_TruongMaTen: '12345 - THPT Chu Văn An',
             strPersonEdu_HocLuc: 'GIOI', strPersonEdu_HanhKiem: 'TOT',
-            strPersonFam_Bo_HoTen: 'Nguyễn Văn B', dPersonFam_Bo_NamSinh: 1978,
-            strPersonFam_Bo_NoiO: 'Hà Nội', strPersonFam_Bo_SDT: '0912345600',
-            strPersonFam_Me_HoTen: 'Trần Thị C', dPersonFam_Me_NamSinh: 1980,
-            strPersonFam_Me_NoiO: 'Hà Nội', strPersonFam_Me_SDT: '0912345611',
-            strHoSo_KH_Dot_PT_Ma: 'PT01', strHoSo_DoiTuong_TS_Ma: '', strHoSo_DoiTuong_UT_Mas: '',
-            strHoSo_KhuVuc_UT_Ma: 'KV3',
-            strHoSo_MaHoSo: 'HS2026-0001', strHoSo_SoBaoDanh: 'HN2500001', strHoSo_Import_Batch_Ma: 'BATCH_2026_D1',
-            strNguyenVong_DauRa_Id: '', strDaoTao_LopQuanLy_Id_DK: '',
-            strDaoTao_LopQuanLy_DuKien: '', strMaNganhTrungTuyen: '7480201', strMaCTDT: 'CTDT001',
-            strXetTuyen_TohopMon_Ma: 'A00', strXetTuyen_TohopMon_Code: 'A00', strXetTuyen_TohopMon_Ten: 'Toán, Vật lý, Hóa học',
-            dXetTuyen_DiemUuTien: 0.25, dXetTuyen_DiemTongMon: 24.5, dXetTuyen_DiemTongXT: 24.75,
-            strXT_Mon_Data: '{"Toan":8.5,"Ly":8.0,"Hoa":8.0}',
-            strKetQua_QuyetDinh_Ma: 'QD001-2026', strIntake_IntakeCode: 'K68', strIntake_IntakeTypeCode: 'CQ',
+            strPersonFam_Bo_HoTen: 'Nguyễn Văn B', dPersonFam_Bo_NamSinh: 1975,
+            strPersonFam_Bo_NoiO: 'Hà Nội', strPersonFam_Bo_SDT: '0912111111',
+            strPersonFam_Me_HoTen: 'Trần Thị C', dPersonFam_Me_NamSinh: 1978,
+            strPersonFam_Me_NoiO: 'Hà Nội', strPersonFam_Me_SDT: '0913222222',
+            strHoSo_KH_Dot_PT_Ma: 'PT_DIEM_THI_ID',
+            strHoSo_DoiTuong_TS_Ma: 'DT_DUTHI_THUONG_ID',
+            strHoSo_DoiTuong_UT_Mas: 'UT_06_ID',
+            strHoSo_KhuVuc_UT_Ma: 'KV1_ID',
+            strHoSo_MaHoSo: 'TS2026001234', strHoSo_SoBaoDanh: 'SBD001234',
+            strHoSo_Import_Batch_Ma: 'BATCH_20260901_001',
+            strMaNganhTrungTuyen: '', strMaCTDT: '',
+            strXetTuyen_TohopMon_Ma: 'TOHOP_A00_ID',
+            strXetTuyen_TohopMon_Code: 'A00', strXetTuyen_TohopMon_Ten: 'Toán - Lý - Hóa',
+            dXetTuyen_DiemUuTien: 1.0, dXetTuyen_DiemTongMon: 24.5, dXetTuyen_DiemTongXT: 25.5,
+            strXT_Mon_Data: 'TOAN~8.0~1~1~Toan|LY~7.5~1~2~Vat ly|HOA~9.0~1~3~Hoa hoc',
+            strKetQua_QuyetDinh_Ma: 'QD_TRUNGTUYEN_2026_ID',
+            strIntake_IntakeCode: 'TS2026_D1_CQ', strIntake_IntakeTypeCode: 'CHINHQUY',
             strPersonInvoice_TypeLoai: 'CN', strPersonInvoice_NguoiMua: 'Nguyễn Văn A', strPersonInvoice_TenDonVi: '',
             strPersonInvoice_MST: '', strPersonInvoice_MaQHNS: '', strPersonInvoice_SDT: '0912345678',
-            strPersonInvoice_DiaChi: 'Hà Nội', strPersonInvoice_Email: 'nguyenvana@example.com',
+            strPersonInvoice_DiaChi: 'Hà Nội', strPersonInvoice_Email: 'nva@example.com',
             strPersonBank_HinhThucTT: 'CK', strPersonBank_TenNganHang: 'Vietcombank',
             strPersonBank_SoTaiKhoan: '1012345678', strPersonBank_ChuTaiKhoan: 'Nguyễn Văn A',
             strPersonBank_GhiChu: '',
@@ -806,8 +817,16 @@ KeHoachTuyenSinhNew.prototype = {
     -- - File pass-through: header Excel = tên param API. Field không có trong file → ''
     -- - dHoSo_Import_Row_No: chỉ số hàng trong file (để backend log lại)
     -------------------------------------------*/
-    _buildImportPayload: function (row, rowNo) {
+    _buildImportPayload: function (row, rowNo, ctx) {
         var me = main_doc.KeHoachTuyenSinhNew;
+        ctx = ctx || {};
+        // ⚠ Signature khớp 100% với PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS (khác với PKG_CORE_TS_HOSO
+        // dùng cho form Khai trực tiếp). Convention:
+        //   - Field lấy TỪ FILE (user điền tên/mã): dùng hậu tố _Ma / _Mas — BE tự tra cứu ra ID
+        //   - Field CONTEXT lấy từ FORM (dropdown chọn): dùng hậu tố _Id — BE lấy trực tiếp
+        //     (KH_TS_Id, KH_TS_Dot_Id — luôn override từ modal)
+        //   - Không có strNguyenVong_DauRa_Id ở IMPORT (bị comment); thay bằng strMaNganhTrungTuyen + strMaCTDT
+        // ctx.KH / ctx.Dot / ctx.CoSo: override context (dùng khi call từ "Đọc từ API")
         var payload = {
             'action': 'SV_Core_TS_HoSo_Import_MH/FSkkLB4JLhIuHhUS',
             'func': 'PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS',
@@ -816,16 +835,20 @@ KeHoachTuyenSinhNew.prototype = {
             'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
             'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
             'strHanhDong_Code': 'THEM',
-            // Context KH/Đợt — luôn override từ modal, không lấy từ file
-            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
-            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+            // Context (lấy từ form/dropdown → dùng _Id)
+            'strHoSo_KH_TS_Id': ctx.KH || me.strKeHoachTuyenSinh_Id || '',
+            'strHoSo_KH_TS_Dot_Id': ctx.Dot || me.strDot_Id_ForKQ || '',
+            // Cơ sở đào tạo — IMPORT convention: KHÔNG có _Id (ParamDaoTao_CoSoDaoTao)
+            'strDaoTao_CoSoDaoTao': ctx.CoSo || '',
             'dHoSo_Import_Row_No': rowNo
         };
-        // Các field pass-through từ file — không được ghi đè context ở trên
+        // Các field pass-through từ file — tên khớp param IMPORT proc (dùng _Ma / _Mas).
+        // KHÔNG include: strHoSo_KH_TS_Id, strHoSo_KH_TS_Dot_Id, strDaoTao_CoSoDaoTao, dHoSo_Import_Row_No
+        // (đã set ở context, không cho file ghi đè).
         var apiFields = [
             'strCorePerson_HoTen', 'strCorePerson_Ho', 'strCorePerson_Dem', 'strCorePerson_Ten',
             'strCorePerson_NgaySinh', 'dCorePerson_NgayS', 'dCorePerson_ThangS', 'dCorePerson_NamS',
-            'strCorePerson_GioiTinh_Ma',
+            'strCorePerson_GioiTinh_Ma', 'strMaSo', 'strDaoTao_LopQuanLy_DuKien',
             'strPersonProfile_DanToc_Ma', 'strPersonProfile_TonGiao_Ma', 'strPersonProfile_QuocTich_Ma',
             'strPersonContact_DienThoai', 'strPersonContact_Email',
             'strPersonIden_SoCCCD', 'strPersonIden_NgayCap', 'strPersonIden_NoiCap',
@@ -836,8 +859,8 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonFam_Me_HoTen', 'dPersonFam_Me_NamSinh', 'strPersonFam_Me_NoiO', 'strPersonFam_Me_SDT',
             'strHoSo_KH_Dot_PT_Ma', 'strHoSo_DoiTuong_TS_Ma', 'strHoSo_DoiTuong_UT_Mas', 'strHoSo_KhuVuc_UT_Ma',
             'strHoSo_MaHoSo', 'strHoSo_SoBaoDanh', 'strHoSo_Import_Batch_Ma',
-            'strNguyenVong_DauRa_Id', 'strDaoTao_LopQuanLy_Id_DK',
-            'strDaoTao_LopQuanLy_DuKien', 'strMaNganhTrungTuyen', 'strMaCTDT',
+            // 2 field IMPORT-only (thay cho strNguyenVong_DauRa_Id đã bị comment ở IMPORT proc):
+            'strMaNganhTrungTuyen', 'strMaCTDT',
             'strXetTuyen_TohopMon_Ma', 'strXetTuyen_TohopMon_Code', 'strXetTuyen_TohopMon_Ten',
             'dXetTuyen_DiemUuTien', 'dXetTuyen_DiemTongMon', 'dXetTuyen_DiemTongXT', 'strXT_Mon_Data',
             'strKetQua_QuyetDinh_Ma', 'strIntake_IntakeCode', 'strIntake_IntakeTypeCode',
@@ -848,10 +871,20 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonBank_ChuTaiKhoan', 'strPersonBank_GhiChu',
             'strExtra_Person_Data', 'strExtra_HoSo_Data', 'strExtra_Intake_Data'
         ];
+        // Convention: prefix 'd' → Oracle NUMBER, phải gửi null (không phải '') khi rỗng
+        // để tránh PLS-00306 "wrong number or types of arguments".
         for (var i = 0; i < apiFields.length; i++) {
             var f = apiFields[i];
             var v = row[f];
-            payload[f] = (v === undefined || v === null) ? '' : (typeof v === 'string' ? v : String(v));
+            var isNumParam = f.charAt(0) === 'd';
+            if (v === undefined || v === null || v === '') {
+                payload[f] = isNumParam ? null : '';
+            } else if (isNumParam) {
+                var n = Number(v);
+                payload[f] = isNaN(n) ? null : n;
+            } else {
+                payload[f] = typeof v === 'string' ? v : String(v);
+            }
         }
         return payload;
     },
@@ -937,10 +970,11 @@ KeHoachTuyenSinhNew.prototype = {
         $('#txtKQ_ToHopMa').val(pick(d, ['XETTUYEN_TOHOPMON_CODE']));
         $('#txtKQ_TongDiemXT').val(pick(d, ['XETTUYEN_DIEMTONGXT']));
 
-        // Đợi DM giới tính + Nguyện vọng đầu ra populate xong rồi set value
+        // Đợi DM giới tính + Nguyện vọng đầu ra + CSDT populate xong rồi set value
         setTimeout(function () {
             $('#ddlKQ_GioiTinh').val(pick(d, ['COREPERSON_GIOITINH_ID']));
             $('#ddlKQ_NguyenVongDauRa').val(pick(d, ['NGUYENVONG_DAURA_ID']));
+            $('#ddlKQ_CoSoDaoTao').val(pick(d, ['DAOTAO_COSODAOTAO_ID', 'COSODAOTAO_ID']));
         }, 600);
 
         // Về tab 1
@@ -1020,6 +1054,7 @@ KeHoachTuyenSinhNew.prototype = {
             Me_SDT: g('txtKQ_Me_SDT'),
             QD_Ma: g('txtKQ_QDMa'),
             NguyenVong_DauRa_Id: g('ddlKQ_NguyenVongDauRa'),
+            DaoTao_CoSoDaoTao_Id: g('ddlKQ_CoSoDaoTao'),
             IntakeCode: g('txtKQ_IntakeCode'),
             IntakeTypeCode: g('txtKQ_IntakeTypeCode'),
             HD_DoiTuong: g('ddlKQ_HD_DoiTuong'),
@@ -1172,9 +1207,19 @@ KeHoachTuyenSinhNew.prototype = {
             'strHoSo_TuNgay': '',
             'strHoSo_DenNgay': ''
         };
+        // === DEBUG LOG: filter params khi load list ===
+        console.log('%c[loadKQDK] REQUEST', 'color:#7c3aed;font-weight:bold', {
+            KH_TS_Id: obj_save.strHoSo_KH_TS_Id,
+            Dot_Id: obj_save.strHoSo_KH_TS_Dot_Id
+        });
 
         edu.system.makeRequest({
             success: function (data) {
+                console.log('%c[loadKQDK] RESPONSE', 'color:#059669;font-weight:bold', {
+                    success: data && data.Success,
+                    count: (data && data.Data && data.Data.length) || 0,
+                    message: data && data.Message
+                });
                 if (data && data.Success) {
                     var rows = edu.util.checkValue(data.Data) ? data.Data : [];
                     me.dtKQDK_HoSo = rows;
@@ -1455,6 +1500,8 @@ KeHoachTuyenSinhNew.prototype = {
             toLoad.push(["QLSV.KHUVUC", "ddlKQ_KhuVucUT"]);
             toLoad.push(["TUYENSINH.HOCLUC", "ddlKQ_HocLuc"]);
             toLoad.push(["TUYENSINH.HANHKIEM", "ddlKQ_HanhKiem"]);
+            // Tab Trúng tuyển — Cơ sở đào tạo (dùng chung DM với form Lớp quản lý)
+            toLoad.push(["KHCT.COSODAOTAO", "ddlKQ_CoSoDaoTao"]);
             // Tab Hóa đơn
             toLoad.push(["TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong"]);     // TODO: verify mã DM chuẩn
             toLoad.push(["PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT"]);
@@ -1798,7 +1845,7 @@ KeHoachTuyenSinhNew.prototype = {
         $('#ddlKQ_GioiTinh, #ddlKQ_QuocTich, #ddlKQ_DanToc, #ddlKQ_TonGiao,'
             + '#ddlKQ_PhuongThuc, #ddlKQ_DoiTuongTS, #ddlKQ_DoiTuongUT,'
             + '#ddlKQ_KhuVucUT, #ddlKQ_HocLuc, #ddlKQ_HanhKiem,'
-            + '#ddlKQ_NguyenVongDauRa,'
+            + '#ddlKQ_NguyenVongDauRa, #ddlKQ_CoSoDaoTao,'
             + '#ddlKQ_HD_DoiTuong, #ddlKQ_HD_HinhThucTT').val('');
 
         // Lớp dự kiến: reset về placeholder disabled (chờ chọn NV đầu ra)
@@ -1829,8 +1876,8 @@ KeHoachTuyenSinhNew.prototype = {
     -- Ghép payload rồi gọi Them_HoSo_TS cho 1 hồ sơ khai tay
     -- Origin: PKG_CORE_TS_HOSO.Them_HoSo_TS  (KHÁC PKG_CORE_TS_HOSO_IMPORT dùng cho batch)
     -- Action: SV_Core_TS_HoSo_MH/FSkkLB4JLhIuHhUS
-    -- 5 field DAOTAO_* (Hệ/Khóa/CT/Ngành TS/Ngành ĐT) → backend auto snapshot từ
-    -- TS_KEHOACH_DAU_RA qua ParamNguyenVong_DauRa_Id, không truyền.
+    -- Convention _Id cho tất cả field (chọn từ dropdown). Bắt buộc gửi strNguyenVong_DauRa_Id
+    -- để BE snapshot 5 field DAOTAO_* (Hệ/Khóa/CT/Ngành TS/Ngành ĐT) từ TS_KEHOACH_DAU_RA.
     -------------------------------------------*/
     saveKhai_HoSo: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
@@ -1933,8 +1980,8 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonAddr_HK_Xa_Id': g('ddlKQ_HK_Xa'),
             'strPersonAddr_HK_SoNha': g('txtKQ_HK_SoNha'),
 
-            // Học vấn 12
-            'strPersonEdu_Tinh_Ma': g('txtKQ_MaTinh12'),
+            // Học vấn 12 — proc HoSo dùng _Id (khớp signature PKG_CORE_TS_HOSO)
+            'strPersonEdu_Tinh_Id': g('txtKQ_MaTinh12'),
             'strPersonEdu_TruongMaTen': g('txtKQ_TruongMaTen'),
             'strPersonEdu_HocLuc': g('ddlKQ_HocLuc'),
             'strPersonEdu_HanhKiem': g('ddlKQ_HanhKiem'),
@@ -1961,8 +2008,14 @@ KeHoachTuyenSinhNew.prototype = {
             'strHoSo_Import_Batch_Id': '',
             'dHoSo_Import_Row_No': '',
 
-            // Lớp quản lý dự kiến — backend auto snapshot Hệ/Khóa/CT/NganhTS/NganhDT từ TS_KEHOACH_DAU_RA
-            'strDaoTao_LopQuanLy_DuKien': g('ddlKQ_LopDuKien'),
+            // Cơ sở đào tạo — param "new" của Them_HoSo_TS (proc Oracle đã có, comment C# chưa update)
+            'strDaoTao_CoSoDaoTao_Id': g('ddlKQ_CoSoDaoTao'),
+
+            // Nguyện vọng đầu ra — BẮT BUỘC trong signature, BE dùng để snapshot Hệ/Khóa/CT/NganhTS/NganhDT
+            'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
+
+            // Lớp quản lý dự kiến — signature HoSo KHÔNG có (chỉ IMPORT proc có), đóng gói vào Extra_HoSo_Data
+            // để không mất user input; BE parse nếu cần
 
             // Xét tuyển
             'strXetTuyen_TohopMon_Id': toHopMa,
@@ -1997,12 +2050,14 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonBank_ChuTaiKhoan': g('txtKQ_HD_ChuTK'),
             'strPersonBank_GhiChu': g('txtKQ_HD_GhiChu'),
 
-            // Extra JSON — lưu Huyện (Nơi sinh + Hộ khẩu) vì API spec chưa có param riêng cho Huyện
+            // Extra JSON — lưu các field ngoài signature để không mất user input
             'strExtra_Person_Data': JSON.stringify({
                 NS_Huyen_Id: g('ddlKQ_NS_Huyen'),
                 HK_Huyen_Id: g('ddlKQ_HK_Huyen')
             }),
-            'strExtra_HoSo_Data': '',
+            'strExtra_HoSo_Data': JSON.stringify({
+                DaoTao_LopQuanLy_DuKien: g('ddlKQ_LopDuKien')  // signature chính chưa có, dồn vào extra
+            }),
             'strExtra_Intake_Data': ''
         };
 
@@ -4143,5 +4198,822 @@ KeHoachTuyenSinhNew.prototype = {
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
+    },
+
+    /*==============================================
+    == Đọc dữ liệu từ nguồn API (modal #doc-api-tuyensinh)
+    == - Preset 3 nguồn: CMC, UHD, Phenikaa (hardcode client-side như quanlyhosomorong cũ)
+    == - Tải cấu trúc API → list cột từ record đầu
+    == - Load trường thông tin của KH (TS_DuLieu/LayDSCauHienThiHoSo) làm target
+    == - User mapping cột API → target; auto-map fuzzy; lưu localStorage
+    == - Import: loop record × field mapped, gọi pkg_TuyenSinh_Import.Import_TS_HoSo_DuLieu_API
+    ==============================================*/
+    _docAPI_Presets: [
+        {
+            id: 'CMC',
+            ten: 'CMC (Nhap hoc)',
+            host: 'https://crm.cmcu.edu.vn/api/resource/Nhaphoc?fields=["*"]&limit_page_length=5000000',
+            loaiXacThuc: 'Authorization',
+            // Frappe/ERPNext: "Authorization: token <api_key>:<api_secret>"
+            token: 'token 62e39c71e027e21:edca5904211fb8c',
+            keyCol_default: 'mssv',
+            filterFmt: '&filters=[["mssv","=","{kw}"]]',
+            responseUnwrap: 'data'   // JSON.parse(data.Data).data
+        },
+        {
+            id: 'UHD',
+            ten: 'UHD (User admitted)',
+            host: 'https://tuyensinh.uhd.edu.vn/api/admission/user-registration/user-admitted',
+            loaiXacThuc: 'Authorization',
+            token: 'Bearer HaiDuong@2025',
+            keyCol_default: 'userId',
+            filterFmt: '',
+            responseUnwrap: 'data'
+        },
+        {
+            id: 'PHENIKAA',
+            ten: 'Phenikaa (HRM profiles)',
+            host: 'https://hrm.phenikaa-uni.edu.vn/hrm/api/v1/profiles/apis?page=1&pageSize=100000&username=apis&password=ewdjkl213kSD22k3%40k41JDa',
+            loaiXacThuc: '',
+            token: '',
+            keyCol_default: '',
+            filterFmt: '',
+            responseUnwrap: 'data.listProfile'   // JSON.parse(data.Data).data.listProfile
+        }
+    ],
+    _docAPI_ApiCols: [],       // list tên cột API (keys record đầu)
+    _docAPI_ApiData: [],       // raw records từ API
+    _docAPI_TargetCols: [],    // list {ma, ten} — hiện là 77 param của Them_HoSo_TS
+    _docAPI_Mapping: {},       // {apiCol: paramName của Them_HoSo_TS}
+    _docAPI_KeyCol: '',        // API col dùng làm mã hồ sơ (chỉ để hiển thị preview)
+    _docAPI_ImportCancelled: false,
+    _docAPI_CurrentPresetId: '',
+    _docAPI_DoiTuong: [],      // (deprecated) cache list Đối tượng — không dùng nữa với proc mới
+
+    /*------------------------------------------
+    -- 77 param của PKG_CORE_TS_HOSO.Them_HoSo_TS làm target mapping cố định.
+    -- Import qua "Đọc từ API" giờ ghi thẳng vào bảng chuẩn hóa (giống Import Excel).
+    -------------------------------------------*/
+    _docAPI_TargetParams: [
+        { ma: 'strCorePerson_HoTen', ten: 'Họ và tên (đầy đủ)' },
+        { ma: 'strCorePerson_Ho', ten: 'Họ' },
+        { ma: 'strCorePerson_Dem', ten: 'Đệm' },
+        { ma: 'strCorePerson_Ten', ten: 'Tên' },
+        { ma: 'strCorePerson_NgaySinh', ten: 'Ngày sinh (dd/mm/yyyy)' },
+        { ma: 'dCorePerson_NgayS', ten: 'Ngày sinh - ngày (số)' },
+        { ma: 'dCorePerson_ThangS', ten: 'Ngày sinh - tháng (số)' },
+        { ma: 'dCorePerson_NamS', ten: 'Ngày sinh - năm (số)' },
+        { ma: 'strCorePerson_GioiTinh_Ma', ten: 'Giới tính (Mã/Tên)' },
+        { ma: 'strMaSo', ten: 'Mã số (MSSV nội bộ)' },
+        { ma: 'strDaoTao_LopQuanLy_DuKien', ten: 'Lớp quản lý dự kiến' },
+        { ma: 'strPersonProfile_DanToc_Ma', ten: 'Dân tộc (Mã/Tên)' },
+        { ma: 'strPersonProfile_TonGiao_Ma', ten: 'Tôn giáo (Mã/Tên)' },
+        { ma: 'strPersonProfile_QuocTich_Ma', ten: 'Quốc tịch (Mã/Tên)' },
+        { ma: 'strPersonContact_DienThoai', ten: 'Điện thoại' },
+        { ma: 'strPersonContact_Email', ten: 'Email' },
+        { ma: 'strPersonIden_SoCCCD', ten: 'Số CCCD' },
+        { ma: 'strPersonIden_NgayCap', ten: 'Ngày cấp CCCD' },
+        { ma: 'strPersonIden_NoiCap', ten: 'Nơi cấp CCCD' },
+        { ma: 'strPersonAddr_NS_Tinh_Ma', ten: 'Nơi sinh - Tỉnh (Mã/Tên)' },
+        { ma: 'strPersonAddr_NS_Xa_Ma', ten: 'Nơi sinh - Xã (Mã/Tên)' },
+        { ma: 'strPersonAddr_NoiSinh', ten: 'Nơi sinh (text)' },
+        { ma: 'strPersonAddr_HK_Tinh_Ma', ten: 'Hộ khẩu - Tỉnh (Mã/Tên)' },
+        { ma: 'strPersonAddr_HK_Xa_Ma', ten: 'Hộ khẩu - Xã (Mã/Tên)' },
+        { ma: 'strPersonAddr_HK_SoNha', ten: 'Hộ khẩu - Số nhà/Thôn/Xóm' },
+        { ma: 'strPersonEdu_Tinh_Ma', ten: 'Tỉnh lớp 12 (Mã/Tên)' },
+        { ma: 'strPersonEdu_TruongMaTen', ten: 'Trường lớp 12 (Mã-Tên)' },
+        { ma: 'strPersonEdu_HocLuc', ten: 'Học lực lớp 12' },
+        { ma: 'strPersonEdu_HanhKiem', ten: 'Hạnh kiểm lớp 12' },
+        { ma: 'strPersonFam_Bo_HoTen', ten: 'Bố - Họ tên' },
+        { ma: 'dPersonFam_Bo_NamSinh', ten: 'Bố - Năm sinh' },
+        { ma: 'strPersonFam_Bo_NoiO', ten: 'Bố - Nơi ở' },
+        { ma: 'strPersonFam_Bo_SDT', ten: 'Bố - SĐT' },
+        { ma: 'strPersonFam_Me_HoTen', ten: 'Mẹ - Họ tên' },
+        { ma: 'dPersonFam_Me_NamSinh', ten: 'Mẹ - Năm sinh' },
+        { ma: 'strPersonFam_Me_NoiO', ten: 'Mẹ - Nơi ở' },
+        { ma: 'strPersonFam_Me_SDT', ten: 'Mẹ - SĐT' },
+        { ma: 'strHoSo_KH_Dot_PT_Ma', ten: 'Phương thức tuyển sinh (Mã/Tên)' },
+        { ma: 'strHoSo_DoiTuong_TS_Ma', ten: 'Đối tượng tuyển sinh (Mã/Tên)' },
+        { ma: 'strHoSo_DoiTuong_UT_Mas', ten: 'Đối tượng ưu tiên (Mã, có thể nhiều)' },
+        { ma: 'strHoSo_KhuVuc_UT_Ma', ten: 'Khu vực ưu tiên (Mã/Tên)' },
+        { ma: 'strHoSo_MaHoSo', ten: 'Mã hồ sơ' },
+        { ma: 'strHoSo_SoBaoDanh', ten: 'Số báo danh' },
+        { ma: 'strHoSo_Import_Batch_Ma', ten: 'Import Batch (Mã)' },
+        { ma: 'strMaNganhTrungTuyen', ten: 'Mã ngành trúng tuyển' },
+        { ma: 'strMaCTDT', ten: 'Mã CTĐT (nếu ngành TT không duy nhất)' },
+        { ma: 'strXetTuyen_TohopMon_Ma', ten: 'Tổ hợp môn (Mã/Tên)' },
+        { ma: 'strXetTuyen_TohopMon_Code', ten: 'Tổ hợp môn (code)' },
+        { ma: 'strXetTuyen_TohopMon_Ten', ten: 'Tổ hợp môn (tên)' },
+        { ma: 'dXetTuyen_DiemUuTien', ten: 'Điểm ưu tiên' },
+        { ma: 'dXetTuyen_DiemTongMon', ten: 'Điểm tổng môn' },
+        { ma: 'dXetTuyen_DiemTongXT', ten: 'Điểm tổng xét tuyển' },
+        { ma: 'strXT_Mon_Data', ten: 'XT Môn Data (JSON)' },
+        { ma: 'strKetQua_QuyetDinh_Ma', ten: 'Quyết định trúng tuyển (Mã)' },
+        { ma: 'strIntake_IntakeCode', ten: 'Intake code' },
+        { ma: 'strIntake_IntakeTypeCode', ten: 'Intake type code' },
+        { ma: 'strPersonInvoice_TypeLoai', ten: 'Hóa đơn - Loại' },
+        { ma: 'strPersonInvoice_NguoiMua', ten: 'Hóa đơn - Người mua' },
+        { ma: 'strPersonInvoice_TenDonVi', ten: 'Hóa đơn - Tên đơn vị' },
+        { ma: 'strPersonInvoice_MST', ten: 'Hóa đơn - MST' },
+        { ma: 'strPersonInvoice_MaQHNS', ten: 'Hóa đơn - Mã QHNS' },
+        { ma: 'strPersonInvoice_SDT', ten: 'Hóa đơn - SĐT' },
+        { ma: 'strPersonInvoice_DiaChi', ten: 'Hóa đơn - Địa chỉ' },
+        { ma: 'strPersonInvoice_Email', ten: 'Hóa đơn - Email' },
+        { ma: 'strPersonBank_HinhThucTT', ten: 'Ngân hàng - Hình thức TT' },
+        { ma: 'strPersonBank_TenNganHang', ten: 'Ngân hàng - Tên NH' },
+        { ma: 'strPersonBank_SoTaiKhoan', ten: 'Ngân hàng - Số TK' },
+        { ma: 'strPersonBank_ChuTaiKhoan', ten: 'Ngân hàng - Chủ TK' },
+        { ma: 'strPersonBank_GhiChu', ten: 'Ngân hàng - Ghi chú' },
+        { ma: 'strExtra_Person_Data', ten: 'Extra Person Data (JSON)' },
+        { ma: 'strExtra_HoSo_Data', ten: 'Extra Hồ Sơ Data (JSON)' },
+        { ma: 'strExtra_Intake_Data', ten: 'Extra Intake Data (JSON)' }
+    ],
+
+    /*------------------------------------------
+    -- Alias mapping: tên cột API (CMC/UHD/...) → param của Them_HoSo_TS.
+    -- Auto-map ưu tiên tra alias trước, sau đó mới fuzzy match theo tên.
+    -------------------------------------------*/
+    _docAPI_ColAliases: {
+        // CMC (Nhaphoc) — Import proc dùng convention _Ma (BE tự tra cứu ID)
+        'hoten': 'strCorePerson_HoTen',
+        'dob': 'strCorePerson_NgaySinh',
+        'gt': 'strCorePerson_GioiTinh_Ma',
+        'dantoc': 'strPersonProfile_DanToc_Ma',
+        'quoctich': 'strPersonProfile_QuocTich_Ma',
+        'sdt': 'strPersonContact_DienThoai',
+        'emailts': 'strPersonContact_Email',
+        'emailsv': 'strPersonContact_Email',
+        'cccd': 'strPersonIden_SoCCCD',
+        'noisinh': 'strPersonAddr_NoiSinh',
+        'dc_tinhthanh': 'strPersonAddr_HK_Tinh_Ma',
+        'dc_phuongxa': 'strPersonAddr_HK_Xa_Ma',
+        'dc_lienlac': 'strPersonAddr_HK_SoNha',
+        'truongthpt': 'strPersonEdu_TruongMaTen',
+        'tinhthpt': 'strPersonEdu_Tinh_Ma',
+        'hocluc_12': 'strPersonEdu_HocLuc',
+        'hangkiem_12': 'strPersonEdu_HanhKiem',
+        'hotenph_bo': 'strPersonFam_Bo_HoTen',
+        'sdtph_bo': 'strPersonFam_Bo_SDT',
+        'hotenph_me': 'strPersonFam_Me_HoTen',
+        'sdtph_me': 'strPersonFam_Me_SDT',
+        'mssv': 'strMaSo',
+        'mahoso': 'strHoSo_MaHoSo',
+        'sbd': 'strHoSo_SoBaoDanh',
+        'phuongthuc_trungtuyen': 'strHoSo_KH_Dot_PT_Ma',
+        'dtut': 'strHoSo_DoiTuong_UT_Mas',
+        'kvut': 'strHoSo_KhuVuc_UT_Ma',
+        'tohop_trungtuyen': 'strXetTuyen_TohopMon_Code',
+        'diem_trungtuyen': 'dXetTuyen_DiemTongXT',
+        // 2 field IMPORT-only:
+        'manganh': 'strMaNganhTrungTuyen',
+        'mactdt': 'strMaCTDT'
+    },
+
+    initDocAPI_Bindings: function () {
+        var me = this;
+
+        // Load preset combo lần đầu khi trang init (không phụ thuộc modal)
+        me.docAPI_LoadPresets();
+
+        // Show modal → reset UI + populate preset + load config từ localStorage (nếu có)
+        $("#doc-api-tuyensinh").on('show.bs.modal', function () {
+            me.docAPI_ResetView();
+            // Auto-pick preset theo hostname nếu chưa chọn
+            if (!$('#ddlDocAPI_Preset').val()) {
+                var host = (edu.system.strhost || '').toLowerCase();
+                if (host.indexOf('103.159.50.116') !== -1) $('#ddlDocAPI_Preset').val('UHD').trigger('change');
+                else if (host.indexOf('phenikaa-uni.edu.vn') !== -1) $('#ddlDocAPI_Preset').val('PHENIKAA').trigger('change');
+                else $('#ddlDocAPI_Preset').val('CMC').trigger('change');
+            } else {
+                $('#ddlDocAPI_Preset').trigger('change');
+            }
+            // Load combo Đợt theo KH đang mở (Đối tượng không cần cho proc Them_HoSo_TS,
+            // user tự map cột API vào strHoSo_DoiTuong_TS_Id nếu có)
+            me.docAPI_LoadDotCombo();
+            // Load Cơ sở đào tạo (dùng chung DM KHCT.COSODAOTAO với form Lớp quản lý)
+            edu.system.loadToCombo_DanhMucDuLieu("KHCT.COSODAOTAO", "ddlDocAPI_CoSoDaoTao");
+        });
+
+        $("#ddlDocAPI_Preset").on('change', function () {
+            var preset = me._getDocAPI_Preset($(this).val());
+            $('#docAPI_PresetHint').html(preset
+                ? '<b>Host:</b> <code>' + preset.host + '</code>'
+                : '');
+        });
+
+        $("#btnDocAPI_Fetch").click(function () {
+            me.docAPI_FetchAll();
+        });
+
+        $("#txtDocAPI_Keyword").keypress(function (e) {
+            if (e.which === 13) { e.preventDefault(); me.docAPI_FetchAll(); }
+        });
+
+        $("#btnDocAPI_AutoMap").click(function () { me.docAPI_AutoMap(); });
+        $("#btnDocAPI_ClearMap").click(function () { me.docAPI_ClearMapping(); });
+        $("#btnDocAPI_SaveMap").click(function () { me.docAPI_SaveMapping(true); });
+
+        // Update mapping state khi user đổi select trong table (mode chuẩn)
+        $("#tblDocAPI_Mapping").on('change', 'select.docAPI-map-sel', function () {
+            var apiCol = $(this).attr('data-apicol');
+            me._docAPI_Mapping[apiCol] = $(this).val() || '';
+            me.docAPI_RefreshPreview();
+        });
+        // Update mapping state khi user gõ trong input fallback (mode C)
+        $("#tblDocAPI_Mapping").on('input', 'input.docAPI-map-input', function () {
+            var apiCol = $(this).attr('data-apicol');
+            var v = ($(this).val() || '').trim();
+            if (v) me._docAPI_Mapping[apiCol] = v;
+            else delete me._docAPI_Mapping[apiCol];
+            me.docAPI_RefreshPreview();
+        });
+        $("#ddlDocAPI_KeyCol").on('change', function () {
+            me._docAPI_KeyCol = $(this).val() || '';
+            me.docAPI_RefreshPreview();
+        });
+
+        // Select all preview
+        $("#chkDocAPI_SelectAll").click(function () {
+            $('#tblDocAPI_Preview tbody .docAPI-sel').prop('checked', $(this).is(':checked'));
+        });
+
+        $("#btnDocAPI_StartImport").click(function () { me.docAPI_StartImport(); });
+        $("#btnDocAPI_CancelImport").click(function () { me._docAPI_ImportCancelled = true; });
+    },
+
+    docAPI_LoadPresets: function () {
+        var me = this;
+        var $sel = $('#ddlDocAPI_Preset');
+        $sel.empty().append('<option value="">-- Chọn nguồn --</option>');
+        me._docAPI_Presets.forEach(function (p) {
+            $sel.append('<option value="' + p.id + '">' + p.ten + '</option>');
+        });
+    },
+
+    _docAPI_esc: function (s) {
+        return String(s == null ? '' : s)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    },
+
+    _getDocAPI_Preset: function (id) {
+        var me = this;
+        if (!id) return null;
+        for (var i = 0; i < me._docAPI_Presets.length; i++) {
+            if (me._docAPI_Presets[i].id === id) return me._docAPI_Presets[i];
+        }
+        return null;
+    },
+
+    docAPI_ResetView: function () {
+        var me = this;
+        me._docAPI_ApiCols = [];
+        me._docAPI_ApiData = [];
+        me._docAPI_Mapping = {};
+        me._docAPI_KeyCol = '';
+        me._docAPI_ImportCancelled = false;
+        $('#txtDocAPI_Keyword').val('');
+        $('#lblDocAPI_FetchInfo').text('');
+        $('#docAPI_MapWrap, #docAPI_ImportWrap').addClass('d-none');
+        $('#tblDocAPI_Mapping tbody, #tblDocAPI_Preview tbody').html('');
+        $('#lblDocAPI_ApiColCount, #lblDocAPI_TargetColCount, #lblDocAPI_RowCount').text('0');
+        $('#docAPI_ProgressWrap').addClass('d-none');
+        $('#lblDocAPI_Progress').text('0 / 0');
+        $('#lblDocAPI_OK, #lblDocAPI_Err').text('0');
+        $('#docAPI_ProgressBar').css('width', '0%').text('0%');
+        $('#btnDocAPI_CancelImport').addClass('d-none');
+        $('#btnDocAPI_StartImport').prop('disabled', false);
+    },
+
+    /*------------------------------------------
+    -- Load combo Đợt từ me.dtDotTuyenSinh (đã load ở modal Đợt).
+    -- Auto-preselect nếu mở từ context Đợt cụ thể (me.strDot_Id_ForKQ).
+    -------------------------------------------*/
+    docAPI_LoadDotCombo: function () {
+        var me = this;
+        var $sel = $('#ddlDocAPI_Dot');
+        $sel.empty().append('<option value="">-- Chọn đợt --</option>');
+        (me.dtDotTuyenSinh || []).forEach(function (d) {
+            var id = d.ID || d.Id || d.id || '';
+            var ma = d.MA || d.Ma || '';
+            var ten = d.TEN || d.Ten || '';
+            if (id) $sel.append('<option value="' + id + '">' + (ma ? '[' + ma + '] ' : '') + ten + '</option>');
+        });
+        if (me.strDot_Id_ForKQ) $sel.val(me.strDot_Id_ForKQ);
+    },
+
+    /*------------------------------------------
+    -- Load combo Đối tượng dự tuyển từ danh mục master data "TS.DOITUONGDUTUYEN".
+    -- App mới không dùng endpoint TS_Dot_DoiTuong/LayDSTS_DoiTuong (chỉ trả các
+    -- đối tượng đã link vào Đợt) — thay bằng master data giống form Khai trực tiếp
+    -- (kehoachtuyensinhnew.js:1456). Data luôn có, không phụ thuộc KH config.
+    -------------------------------------------*/
+    docAPI_LoadDoiTuongCombo: function () {
+        var me = this;
+        var $sel = $('#ddlDocAPI_DoiTuong');
+        $sel.empty().append('<option value="">-- Chọn đối tượng --</option>');
+        $('#docAPI_DoiTuongHint').remove();
+        // Dùng helper getList_DanhMucDulieu để tự populate select (native, không select2).
+        var obj = {
+            strMaBangDanhMuc: 'TS.DOITUONGDUTUYEN',
+            strTenCotSapXep: '',
+            iTrangThai: 1
+        };
+        edu.system.getList_DanhMucDulieu(obj, '', '', function (data) {
+            var arr = Array.isArray(data) ? data : [];
+            me._docAPI_DoiTuong = arr;
+            arr.forEach(function (d) {
+                var id = d.MA || d.ID || d.Id || '';
+                var ten = d.TEN || d.Ten || id;
+                if (id) $sel.append('<option value="' + id + '">' + ten + (d.MA && d.TEN ? ' [' + d.MA + ']' : '') + '</option>');
+            });
+            if (arr.length === 0) {
+                $sel.empty().append('<option value="">(Không có đối tượng — sẽ để trống)</option>');
+                $sel.after(
+                    '<div id="docAPI_DoiTuongHint" class="fz12 mt-5" '
+                    + 'style="color:#d97706;"><i class="fa-regular fa-triangle-exclamation"></i> '
+                    + 'Danh mục "TS.DOITUONGDUTUYEN" trống.</div>'
+                );
+            }
+        });
+    },
+
+    /*------------------------------------------
+    -- Tải song song: (1) cấu trúc API bên ngoài, (2) trường thông tin của KH
+    -- Cả hai xong → render mapping table + preview + auto-load config đã lưu
+    -------------------------------------------*/
+    docAPI_FetchAll: function () {
+        var me = this;
+        var presetId = $('#ddlDocAPI_Preset').val();
+        var preset = me._getDocAPI_Preset(presetId);
+        if (!preset) { edu.system.alert("Vui lòng chọn nguồn API", "w"); return; }
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            edu.system.alert("Chưa xác định kế hoạch tuyển sinh (mở lại modal Đợt từ danh sách KH)", "w");
+            return;
+        }
+        var strDotId = $('#ddlDocAPI_Dot').val() || '';
+        if (!strDotId) {
+            edu.system.alert("Vui lòng chọn Đợt tuyển sinh trước khi tải cấu trúc", "w");
+            return;
+        }
+        me._docAPI_CurrentPresetId = presetId;
+        $('#lblDocAPI_FetchInfo').html('<i class="fa fa-spinner fa-spin"></i> Đang tải...');
+
+        var doneApi = false, doneTarget = false;
+        function tryFinalize() {
+            if (!doneApi || !doneTarget) return;
+            $('#lblDocAPI_FetchInfo').text(
+                'Đã tải ' + me._docAPI_ApiData.length + ' bản ghi API, '
+                + me._docAPI_TargetCols.length + ' trường thông tin.');
+            me.docAPI_RenderMapping();
+            me.docAPI_LoadMapping();     // apply mapping đã lưu (nếu có)
+            me.docAPI_RefreshPreview();
+            $('#docAPI_MapWrap, #docAPI_ImportWrap').removeClass('d-none');
+        }
+
+        me.docAPI_FetchApiStructure(preset, function (ok) {
+            doneApi = true;
+            if (!ok) $('#lblDocAPI_FetchInfo').html('<span style="color:#dc2626">Không tải được dữ liệu API</span>');
+            tryFinalize();
+        });
+        me.docAPI_FetchTargetCols(function () {
+            doneTarget = true;
+            tryFinalize();
+        });
+    },
+
+    docAPI_FetchApiStructure: function (preset, cb) {
+        var me = this;
+        var kw = (edu.util.getValById('txtDocAPI_Keyword') || '').trim();
+        var host = preset.host;
+        if (kw && preset.filterFmt) {
+            host += preset.filterFmt.replace('{kw}', encodeURIComponent(kw));
+        }
+        var obj_save = {
+            'action': 'CM_UngDung/CustomAPIGet',
+            'type': 'POST',
+            'strHost': host,
+            'strApi': '',
+            'strLoaiXacThuc': preset.loaiXacThuc || '',
+            'strMaXacThuc': preset.token || '',
+            'strData': '',
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) {
+                    edu.system.alert("CustomAPIGet: " + data.Message, "w");
+                    return cb(false);
+                }
+                var parsed = null;
+                try { parsed = JSON.parse(data.Data); } catch (ex) {
+                    edu.system.alert("Response API không phải JSON hợp lệ", "w");
+                    return cb(false);
+                }
+                // Bóc theo path responseUnwrap ('data' hay 'data.listProfile')
+                var records = parsed;
+                (preset.responseUnwrap || '').split('.').forEach(function (k) {
+                    if (records && k) records = records[k];
+                });
+                if (!Array.isArray(records)) records = [];
+                me._docAPI_ApiData = records;
+                me._docAPI_ApiCols = records.length ? Object.keys(records[0]) : [];
+                // Set keyCol mặc định theo preset nếu có
+                me._docAPI_KeyCol = preset.keyCol_default && me._docAPI_ApiCols.indexOf(preset.keyCol_default) !== -1
+                    ? preset.keyCol_default
+                    : (me._docAPI_ApiCols[0] || '');
+                cb(true);
+            },
+            error: function (er) {
+                edu.system.alert("CustomAPIGet (er): " + JSON.stringify(er), "w");
+                cb(false);
+            },
+            type: 'POST', contentType: true,
+            action: obj_save.action, data: obj_save, fakedb: []
+        }, false, false, false, null);
+    },
+
+    docAPI_FetchTargetCols: function (cb) {
+        var me = this;
+        // Target list = 77 param của Them_HoSo_TS (hardcode, không cần gọi BE).
+        // Import qua "Đọc từ API" ghi thẳng vào bảng chuẩn hóa giống Import Excel.
+        me._docAPI_TargetCols = me._docAPI_TargetParams.slice();
+        cb();
+    },
+
+    docAPI_RenderMapping: function () {
+        var me = this;
+        $('#lblDocAPI_ApiColCount').text(me._docAPI_ApiCols.length);
+        $('#lblDocAPI_TargetColCount').text(me._docAPI_TargetCols.length);
+        $('#lblDocAPI_RowCount').text(me._docAPI_ApiData.length);
+
+        // Combo cột định danh HS = các cột API
+        var $keySel = $('#ddlDocAPI_KeyCol');
+        $keySel.empty();
+        me._docAPI_ApiCols.forEach(function (c) {
+            $keySel.append('<option value="' + edu.util.returnEmpty(c) + '">' + edu.util.returnEmpty(c) + '</option>');
+        });
+        if (me._docAPI_KeyCol) $keySel.val(me._docAPI_KeyCol);
+
+        // Fallback C: nếu target list rỗng → dùng input text để user tự gõ mã
+        var useInputFallback = me._docAPI_TargetCols.length === 0;
+        var optsTarget = '';
+        if (!useInputFallback) {
+            optsTarget = '<option value="">-- Bỏ qua --</option>';
+            me._docAPI_TargetCols.forEach(function (t) {
+                optsTarget += '<option value="' + edu.util.returnEmpty(t.ma) + '">'
+                    + edu.util.returnEmpty(t.ten) + ' [' + edu.util.returnEmpty(t.ma) + ']</option>';
+            });
+        }
+
+        var sample = me._docAPI_ApiData[0] || {};
+        var html = '';
+        me._docAPI_ApiCols.forEach(function (col, idx) {
+            var sv = sample[col];
+            if (typeof sv === 'object') sv = JSON.stringify(sv);
+            if (sv == null) sv = '';
+            sv = String(sv);
+            if (sv.length > 80) sv = sv.substring(0, 80) + '…';
+            var mapCell;
+            if (useInputFallback) {
+                mapCell = '<input type="text" class="form-control form-control-sm docAPI-map-input" '
+                    + 'data-apicol="' + edu.util.returnEmpty(col) + '" '
+                    + 'placeholder="Gõ mã trường thông tin (để trống = bỏ qua)">';
+            } else {
+                mapCell = '<select class="form-select form-select-sm docAPI-map-sel" data-apicol="'
+                    + edu.util.returnEmpty(col) + '">' + optsTarget + '</select>';
+            }
+            html += '<tr>'
+                + '<td class="td-center">' + (idx + 1) + '</td>'
+                + '<td><b>' + edu.util.returnEmpty(col) + '</b></td>'
+                + '<td><span style="color:#64748b;">' + me._docAPI_esc(sv) + '</span></td>'
+                + '<td>' + mapCell + '</td>'
+                + '</tr>';
+        });
+        if (!html) html = '<tr><td colspan="4" class="td-center text-muted" style="padding:16px;">Không có cột nào từ API</td></tr>';
+        $('#tblDocAPI_Mapping tbody').html(html);
+
+        // Banner cảnh báo khi rơi vào fallback
+        var $mapWrap = $('#docAPI_MapWrap');
+        $mapWrap.find('.docAPI-fallback-warn').remove();
+        if (useInputFallback && me._docAPI_ApiCols.length) {
+            $mapWrap.prepend(
+                '<div class="docAPI-fallback-warn alert alert-warning fz13 mb-10" '
+                + 'style="background:#fef3c7; border-left:4px solid #f59e0b; padding:8px 12px; border-radius:4px; color:#92400e;">'
+                + '<i class="fa-regular fa-triangle-exclamation"></i> '
+                + 'KH này chưa có <b>trường thông tin</b> nào — chuyển sang chế độ nhập tay. '
+                + 'Gõ mã đích cho cột API cần import (để trống = bỏ qua).'
+                + '</div>'
+            );
+        }
+    },
+
+    /*------------------------------------------
+    -- Fuzzy auto-map: chuẩn hóa lowercase + bỏ ký tự không phải chữ/số + so sánh
+    -- Ưu tiên khớp tuyệt đối, sau đó khớp chứa nhau
+    -------------------------------------------*/
+    docAPI_AutoMap: function () {
+        var me = this;
+        if (!me._docAPI_ApiCols.length || !me._docAPI_TargetCols.length) return;
+        function norm(s) {
+            return String(s || '').toLowerCase()
+                .normalize('NFD').replace(/[̀-ͯ]/g, '')  // bỏ dấu tiếng Việt (combining diacritics)
+                .replace(/[^a-z0-9]/g, '');
+        }
+        var MIN_FUZZY_LEN = 5;   // tránh match ngắn kiểu "ho" (Họ) khớp "thptho"/"hbho"
+        var targetsNorm = me._docAPI_TargetCols.map(function (t) {
+            return { ma: t.ma, nma: norm(t.ma), nten: norm(t.ten) };
+        });
+        var validTargetMa = {};
+        me._docAPI_TargetCols.forEach(function (t) { validTargetMa[t.ma] = 1; });
+
+        // Dedupe: mỗi target chỉ được map bởi 1 cột API (first-come-first-serve)
+        // Ưu tiên: alias thắng fuzzy → chạy 2 pass, pass 1 lấy alias trước
+        var used = {};   // { targetMa: apiCol }
+        var pendingCols = [];
+
+        // Pass 1: alias exact match — priority tuyệt đối
+        me._docAPI_ApiCols.forEach(function (col) {
+            var colLower = String(col || '').toLowerCase();
+            var alias = me._docAPI_ColAliases[colLower];
+            if (alias && validTargetMa[alias] && !used[alias]) {
+                me._docAPI_Mapping[col] = alias;
+                used[alias] = col;
+                $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]').val(alias);
+            } else {
+                pendingCols.push(col);
+            }
+        });
+
+        // Pass 2: fuzzy match cho các cột còn lại
+        pendingCols.forEach(function (col) {
+            var nc = norm(col);
+            if (!nc) return;
+            // Ưu tiên: exact mã > mã contains (min length) > exact tên > tên contains (min length)
+            var hit = targetsNorm.find(function (t) {
+                return !used[t.ma] && t.nma === nc;
+            });
+            if (!hit) hit = targetsNorm.find(function (t) {
+                return !used[t.ma] && t.nma && t.nma.length >= MIN_FUZZY_LEN
+                    && (t.nma.indexOf(nc) !== -1 || nc.indexOf(t.nma) !== -1)
+                    && Math.min(t.nma.length, nc.length) >= MIN_FUZZY_LEN;
+            });
+            if (!hit) hit = targetsNorm.find(function (t) {
+                return !used[t.ma] && t.nten === nc;
+            });
+            if (!hit) hit = targetsNorm.find(function (t) {
+                return !used[t.ma] && t.nten && t.nten.length >= MIN_FUZZY_LEN
+                    && (t.nten.indexOf(nc) !== -1 || nc.indexOf(t.nten) !== -1)
+                    && Math.min(t.nten.length, nc.length) >= MIN_FUZZY_LEN;
+            });
+            if (hit) {
+                me._docAPI_Mapping[col] = hit.ma;
+                used[hit.ma] = col;
+                $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]').val(hit.ma);
+            }
+        });
+        me.docAPI_RefreshPreview();
+    },
+
+    docAPI_ClearMapping: function () {
+        var me = this;
+        me._docAPI_Mapping = {};
+        $('#tblDocAPI_Mapping select.docAPI-map-sel').val('');
+        $('#tblDocAPI_Mapping input.docAPI-map-input').val('');
+        me.docAPI_RefreshPreview();
+    },
+
+    _docAPI_StorageKey: function () {
+        var me = this;
+        return (edu.system.strChucNang_Id || '') + '_docAPI_'
+            + (me._docAPI_CurrentPresetId || '') + '_'
+            + (me.strKeHoachTuyenSinh_Id || '');
+    },
+
+    docAPI_SaveMapping: function (announce) {
+        var me = this;
+        // Đọc lại từ DOM để chắc chắn state đúng (bắt cả select và input fallback)
+        me._docAPI_Mapping = {};
+        $('#tblDocAPI_Mapping select.docAPI-map-sel').each(function () {
+            var col = $(this).attr('data-apicol');
+            var v = $(this).val() || '';
+            if (v) me._docAPI_Mapping[col] = v;
+        });
+        $('#tblDocAPI_Mapping input.docAPI-map-input').each(function () {
+            var col = $(this).attr('data-apicol');
+            var v = ($(this).val() || '').trim();
+            if (v) me._docAPI_Mapping[col] = v;
+        });
+        me._docAPI_KeyCol = $('#ddlDocAPI_KeyCol').val() || '';
+        try {
+            localStorage.setItem(me._docAPI_StorageKey(), JSON.stringify({
+                keyCol: me._docAPI_KeyCol,
+                mapping: me._docAPI_Mapping,
+                savedAt: new Date().toISOString()
+            }));
+            if (announce) edu.system.alert("Đã lưu cấu hình mapping cho KH này + nguồn API này.");
+        } catch (ex) {
+            edu.system.alert("Không lưu được vào localStorage: " + ex.message, "w");
+        }
+    },
+
+    docAPI_LoadMapping: function () {
+        var me = this;
+        var raw = null;
+        try { raw = localStorage.getItem(me._docAPI_StorageKey()); } catch (ex) { return; }
+        if (!raw) return;
+        var cfg = null;
+        try { cfg = JSON.parse(raw); } catch (ex) { return; }
+        if (!cfg) return;
+        if (cfg.keyCol && me._docAPI_ApiCols.indexOf(cfg.keyCol) !== -1) {
+            me._docAPI_KeyCol = cfg.keyCol;
+            $('#ddlDocAPI_KeyCol').val(cfg.keyCol);
+        }
+        me._docAPI_Mapping = cfg.mapping || {};
+        Object.keys(me._docAPI_Mapping).forEach(function (col) {
+            var $sel = $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]');
+            var $inp = $('#tblDocAPI_Mapping input.docAPI-map-input[data-apicol="' + col + '"]');
+            if ($sel.length) $sel.val(me._docAPI_Mapping[col]);
+            else if ($inp.length) $inp.val(me._docAPI_Mapping[col]);
+        });
+        $('#lblDocAPI_FetchInfo').append(' <span style="color:#059669;">— Đã khôi phục cấu hình đã lưu.</span>');
+    },
+
+    /*------------------------------------------
+    -- Preview: mỗi record → 1 row với các field đã map
+    -- Refresh mỗi khi user đổi keyCol hoặc mapping
+    -------------------------------------------*/
+    docAPI_RefreshPreview: function () {
+        var me = this;
+        var html = '';
+        var mappedCols = Object.keys(me._docAPI_Mapping).filter(function (c) { return me._docAPI_Mapping[c]; });
+        me._docAPI_ApiData.forEach(function (rec, idx) {
+            var maHS = me._docAPI_KeyCol ? edu.util.returnEmpty(rec[me._docAPI_KeyCol]) : '';
+            var preview = mappedCols.map(function (col) {
+                var v = rec[col];
+                if (typeof v === 'object') v = JSON.stringify(v);
+                if (v == null) v = '';
+                var s = String(v);
+                if (s.length > 40) s = s.substring(0, 40) + '…';
+                return '<span style="margin-right:12px;"><b>' + me._docAPI_Mapping[col] + '</b>=' + me._docAPI_esc(s) + '</span>';
+            }).join('');
+            html += '<tr>'
+                + '<td class="td-center"><input type="checkbox" class="docAPI-sel" data-idx="' + idx + '"></td>'
+                + '<td class="td-center">' + (idx + 1) + '</td>'
+                + '<td>' + me._docAPI_esc(maHS) + '</td>'
+                + '<td>' + (preview || '<span style="color:#94a3b8;">(chưa map cột nào)</span>') + '</td>'
+                + '<td class="td-center docAPI-status" data-idx="' + idx + '">—</td>'
+                + '</tr>';
+        });
+        if (!html) html = '<tr><td colspan="5" class="td-center text-muted" style="padding:16px;">Không có bản ghi nào</td></tr>';
+        $('#tblDocAPI_Preview tbody').html(html);
+        $('#chkDocAPI_SelectAll').prop('checked', false);
+    },
+
+    /*------------------------------------------
+    -- Import: mỗi record checked → build 1 payload đầy đủ từ mapping → gọi Them_HoSo_TS.
+    -- Data ghi vào bảng chuẩn hóa TS_HOSO (giống Import Excel), hiển thị được ở bảng
+    -- "Kết quả đăng ký" mới thông qua LayDS_HoSo_TS.
+    -- Progress bar + counter OK/Err.
+    -------------------------------------------*/
+    docAPI_StartImport: function () {
+        var me = this;
+        if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
+            edu.system.alert("Chưa xác định kế hoạch tuyển sinh", "w"); return;
+        }
+        var strDotId = $('#ddlDocAPI_Dot').val() || me.strDot_Id_ForKQ || '';
+        if (!strDotId) {
+            edu.system.alert("Chưa chọn Đợt tuyển sinh", "w"); return;
+        }
+        var strCoSoId = $('#ddlDocAPI_CoSoDaoTao').val() || '';
+        if (!strCoSoId) {
+            edu.system.alert("Chưa chọn Cơ sở đào tạo", "w"); return;
+        }
+        var mappedCols = Object.keys(me._docAPI_Mapping).filter(function (c) { return me._docAPI_Mapping[c]; });
+        if (!mappedCols.length) {
+            edu.system.alert("Chưa mapping cột nào — vào bước 2 để chọn param tương ứng", "w"); return;
+        }
+        var arrIdx = [];
+        $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
+            arrIdx.push(parseInt($(this).attr('data-idx'), 10));
+        });
+        if (!arrIdx.length) {
+            edu.system.alert("Chưa chọn bản ghi nào để import", "w"); return;
+        }
+
+        // Auto-save mapping mỗi lần import (không cần user bấm Lưu)
+        me.docAPI_SaveMapping(false);
+
+        // === DEBUG LOG: tổng quan trước khi import ===
+        console.log('%c[docAPI] === START IMPORT ===', 'color:#7c3aed;font-weight:bold;font-size:14px', {
+            records: arrIdx.length,
+            KH_TS_Id: me.strKeHoachTuyenSinh_Id,
+            Dot_Id: strDotId,
+            mappedCols: mappedCols.length,
+            mapping: me._docAPI_Mapping,
+            keyCol: me._docAPI_KeyCol,
+            preset: me._docAPI_CurrentPresetId
+        });
+
+        var totalReq = arrIdx.length;
+        var doneReq = 0, okReq = 0, errReq = 0;
+        me._docAPI_ImportCancelled = false;
+        $('#docAPI_ProgressWrap').removeClass('d-none');
+        $('#btnDocAPI_StartImport').prop('disabled', true);
+        $('#btnDocAPI_CancelImport').removeClass('d-none');
+        $('#lblDocAPI_Progress').text('0 / ' + totalReq);
+        $('#lblDocAPI_OK').text('0'); $('#lblDocAPI_Err').text('0');
+        $('#docAPI_ProgressBar').css('width', '0%').text('0%');
+        arrIdx.forEach(function (i) {
+            $('.docAPI-status[data-idx="' + i + '"]').html('<i class="fa fa-spinner fa-spin"></i>');
+        });
+
+        // Build queue: 1 item per record — row là dict {paramName: value} theo mapping
+        var queue = [];
+        arrIdx.forEach(function (i) {
+            var rec = me._docAPI_ApiData[i];
+            var row = {};
+            mappedCols.forEach(function (apiCol) {
+                var target = me._docAPI_Mapping[apiCol];
+                if (!target) return;
+                var v = rec[apiCol];
+                if (typeof v === 'object') v = JSON.stringify(v);
+                if (v == null) v = '';
+                row[target] = String(v);
+            });
+            queue.push({ idx: i, row: row });
+        });
+
+        function updateProgress() {
+            var pct = totalReq > 0 ? Math.round(doneReq * 100 / totalReq) : 0;
+            $('#lblDocAPI_Progress').text(doneReq + ' / ' + totalReq);
+            $('#lblDocAPI_OK').text(okReq); $('#lblDocAPI_Err').text(errReq);
+            $('#docAPI_ProgressBar').css('width', pct + '%').text(pct + '%');
+        }
+
+        function runNext(k) {
+            if (me._docAPI_ImportCancelled) {
+                $('#btnDocAPI_StartImport').prop('disabled', false);
+                $('#btnDocAPI_CancelImport').addClass('d-none');
+                edu.system.alert("Đã dừng import ở record " + doneReq + "/" + totalReq);
+                return;
+            }
+            if (k >= queue.length) {
+                $('#btnDocAPI_StartImport').prop('disabled', false);
+                $('#btnDocAPI_CancelImport').addClass('d-none');
+                edu.system.alert("Xong. Thành công: " + okReq + " / Lỗi: " + errReq);
+                return;
+            }
+            var item = queue[k];
+            // Reuse _buildImportPayload — truyền override Dot_Id + CoSoDaoTao_Id từ combo
+            var payload = me._buildImportPayload(item.row, item.idx + 1, { Dot: strDotId, CoSo: strCoSoId });
+            // === DEBUG LOG: payload gửi lên ===
+            console.log('%c[docAPI] REQUEST #' + (item.idx + 1), 'color:#2563eb;font-weight:bold', {
+                idx: item.idx,
+                mappedFields: Object.keys(item.row).length,
+                row: item.row,
+                payload: payload
+            });
+            edu.system.makeRequest({
+                success: function (data) {
+                    // === DEBUG LOG: response từ BE ===
+                    console.log('%c[docAPI] RESPONSE #' + (item.idx + 1), 'color:#059669;font-weight:bold', {
+                        idx: item.idx,
+                        success: data && data.Success,
+                        message: data && data.Message,
+                        rawData: data
+                    });
+                    doneReq++;
+                    var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
+                    var msg = (data && data.Message) || '';
+                    if (data && data.Success) {
+                        okReq++;
+                        if (msg) {
+                            // Success nhưng có message — có thể là warning (silent skip)
+                            $cell.html('<span style="color:#d97706;" title="' + me._docAPI_esc(msg) + '"><i class="fa fa-exclamation-triangle"></i> ' + me._docAPI_esc(msg.substring(0, 30)) + '…</span>');
+                        } else {
+                            $cell.html('<span class="color-success" title="Success (no message)"><i class="fa fa-check"></i></span>');
+                        }
+                    } else {
+                        errReq++;
+                        var errMsg = msg || 'Lỗi không xác định';
+                        $cell.html('<span class="color-red" title="' + me._docAPI_esc(errMsg) + '"><i class="fa fa-times"></i> ' + me._docAPI_esc(errMsg.substring(0, 40)) + '</span>');
+                    }
+                    updateProgress();
+                    runNext(k + 1);
+                },
+                error: function (er) {
+                    console.error('[docAPI] ERROR #' + (item.idx + 1), er);
+                    doneReq++; errReq++;
+                    var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
+                    $cell.html('<span class="color-red" title="' + me._docAPI_esc(JSON.stringify(er)) + '"><i class="fa fa-times"></i> Network</span>');
+                    updateProgress();
+                    runNext(k + 1);
+                },
+                type: 'POST', contentType: true,
+                action: payload.action, data: payload, fakedb: []
+            }, false, false, false, null);
+        }
+        runNext(0);
     }
 };
