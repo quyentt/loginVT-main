@@ -4486,6 +4486,7 @@ KeHoachTuyenSinhNew.prototype = {
 
         $("#btnDocAPI_StartImport").click(function () { me.docAPI_StartImport(); });
         $("#btnDocAPI_CancelImport").click(function () { me._docAPI_ImportCancelled = true; });
+        $("#btnDocAPI_ExportExcel").click(function () { me.docAPI_ExportToExcel(); });
     },
 
     docAPI_LoadPresets: function () {
@@ -4923,6 +4924,74 @@ KeHoachTuyenSinhNew.prototype = {
     -- "Kết quả đăng ký" mới thông qua LayDS_HoSo_TS.
     -- Progress bar + counter OK/Err.
     -------------------------------------------*/
+    /*------------------------------------------
+    -- Xuất raw data từ API ra Excel (backup / review offline).
+    -- Nếu user tick 1 số record → xuất record đã tick; không tick → xuất tất cả.
+    -- Headers = union tất cả keys (record khác nhau có thể có set field khác nhau).
+    -- Reuse SheetJS đã load sẵn cho Import Excel.
+    -------------------------------------------*/
+    docAPI_ExportToExcel: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
+            return;
+        }
+        if (!me._docAPI_ApiData || !me._docAPI_ApiData.length) {
+            edu.system.alert("Chưa có dữ liệu API — bấm 'Kết nối & Tải' trước khi xuất.", "w");
+            return;
+        }
+        // Records cần xuất: đã tick > 0 → chỉ tick; = 0 → tất cả
+        var arrIdx = [];
+        $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
+            arrIdx.push(parseInt($(this).attr('data-idx'), 10));
+        });
+        var records = arrIdx.length
+            ? arrIdx.map(function (i) { return me._docAPI_ApiData[i]; })
+            : me._docAPI_ApiData.slice();
+
+        // Union keys: quét toàn bộ records để tính đủ headers (order = order xuất hiện)
+        var headerSet = {};
+        var headers = [];
+        records.forEach(function (rec) {
+            Object.keys(rec || {}).forEach(function (k) {
+                if (!headerSet[k]) { headerSet[k] = 1; headers.push(k); }
+            });
+        });
+        if (!headers.length) {
+            edu.system.alert("Records không có field nào để xuất.", "w");
+            return;
+        }
+
+        // AoA: hàng 1 = headers, hàng 2+ = data (object → JSON string)
+        var aoa = [headers];
+        records.forEach(function (rec) {
+            var row = headers.map(function (h) {
+                var v = rec[h];
+                if (v == null) return '';
+                if (typeof v === 'object') return JSON.stringify(v);
+                return v;
+            });
+            aoa.push(row);
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+        ws['!cols'] = headers.map(function (h) {
+            return { wch: Math.max(12, Math.min(40, h.length + 2)) };
+        });
+        ws['!freeze'] = { xSplit: 0, ySplit: 1 };
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'DuLieuAPI');
+
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var now = new Date();
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+            + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+        var preset = me._docAPI_CurrentPresetId || 'API';
+        var fname = 'DuLieuAPI_' + preset + '_' + records.length + 'ban_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fname);
+        edu.system.alert("Đã xuất " + records.length + " bản ghi ra file " + fname, "s");
+    },
+
     docAPI_StartImport: function () {
         var me = this;
         if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
