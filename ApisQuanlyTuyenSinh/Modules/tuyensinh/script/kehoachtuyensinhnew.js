@@ -464,6 +464,27 @@ KeHoachTuyenSinhNew.prototype = {
             $('#kqdk_list, #kqdk_import, #kqdk_khai').addClass('d-none');
             if (mode === 'import') {
                 $('#kqdk_import').removeClass('d-none');
+                // Load DS Cơ sở đào tạo mặc định cho batch Import Excel — populate manual để tránh
+                // timing issue của loadToCombo_DanhMucDuLieu (đôi khi trả rỗng do cache).
+                edu.system.getList_DanhMucDulieu({
+                    strMaBangDanhMuc: 'KHCT.COSODAOTAO',
+                    strTenCotSapXep: '',
+                    iTrangThai: 1
+                }, '', '', function (data) {
+                    var arr = Array.isArray(data) ? data : [];
+                    console.log('%c[Import] CSDT loaded:', 'color:#059669;font-weight:bold', {
+                        count: arr.length,
+                        sample: arr[0]
+                    });
+                    var $sel = $('#ddlImportTT_CoSoDaoTao');
+                    $sel.empty().append('<option value="">-- Chọn cơ sở đào tạo --</option>');
+                    arr.forEach(function (d) {
+                        var id = d.ID || d.Id || d.id || '';
+                        var ma = d.MA || d.Ma || '';
+                        var ten = d.TEN || d.Ten || ma;
+                        if (id) $sel.append('<option value="' + id + '">' + ten + (ma && ma !== ten ? ' [' + ma + ']' : '') + '</option>');
+                    });
+                });
             } else if (mode === 'khai') {
                 $('#kqdk_khai').removeClass('d-none');
                 me._exitSuaMode();   // ensure Thêm mới mode, banner ẩn, save btn "Lưu hồ sơ"
@@ -611,6 +632,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonInvoice_DiaChi', 'strPersonInvoice_Email',
             'strPersonBank_HinhThucTT', 'strPersonBank_TenNganHang', 'strPersonBank_SoTaiKhoan',
             'strPersonBank_ChuTaiKhoan', 'strPersonBank_GhiChu',
+            'strDaoTao_CoSoDaoTao',
             'strExtra_Person_Data', 'strExtra_HoSo_Data', 'strExtra_Intake_Data'
         ];
         // Dòng ví dụ — dùng VD sếp cung cấp ở signature Toad (mã theo convention BE Import).
@@ -655,6 +677,7 @@ KeHoachTuyenSinhNew.prototype = {
             strPersonBank_HinhThucTT: 'CK', strPersonBank_TenNganHang: 'Vietcombank',
             strPersonBank_SoTaiKhoan: '1012345678', strPersonBank_ChuTaiKhoan: 'Nguyễn Văn A',
             strPersonBank_GhiChu: '',
+            strDaoTao_CoSoDaoTao: '',   // để trống → dùng dropdown ở modal; điền nếu muốn override per record
             strExtra_Person_Data: '', strExtra_HoSo_Data: '', strExtra_Intake_Data: ''
         };
         var sampleRow = headers.map(function (h) {
@@ -771,12 +794,19 @@ KeHoachTuyenSinhNew.prototype = {
                 + (me._importCancelled ? " — đã dừng" : ""), kind);
         };
 
+        // Cơ sở đào tạo mặc định cho batch (dropdown trong modal) — dùng làm ctx.CoSo.
+        // Nếu row Excel có value strDaoTao_CoSoDaoTao → value trong file ưu tiên (ghi đè ctx).
+        var strCoSo_Default = edu.system.getValById('ddlImportTT_CoSoDaoTao') || '';
+
         var next = function () {
             if (me._importCancelled) { finish(); return; }
             if (idx >= total) { finish(); return; }
             var rowNo = idx + 2; // hàng 1 là header → dữ liệu từ hàng 2
             var row = rows[idx];
-            var payload = me._buildImportPayload(row, rowNo);
+            // Row Excel ưu tiên: nếu có strDaoTao_CoSoDaoTao trong row thì dùng, ngược lại dùng dropdown
+            var rowCoSo = row['strDaoTao_CoSoDaoTao'];
+            var ctxCoSo = (rowCoSo && String(rowCoSo).trim()) ? String(rowCoSo).trim() : strCoSo_Default;
+            var payload = me._buildImportPayload(row, rowNo, { CoSo: ctxCoSo });
             edu.system.makeRequest({
                 success: function (data) {
                     idx++;
