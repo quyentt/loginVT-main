@@ -398,8 +398,8 @@ BaoCao.prototype = {
             arrChecked_Id.forEach(e => me.delete_MaKhachHang(e));
         });
 
-        $(".zonebtnBaoCao_TC").click(function () {
-            $("#myModalLichBaoCao").modal("show")
+        $("#btnXemLichBaoCao").click(function () {
+            $("#myModalLichBaoCao").modal("show");
             me.getList_LichBaoCao();
         });
         $("#tblLichBaoCao").delegate(".btnThongSo", "click", function (e) {

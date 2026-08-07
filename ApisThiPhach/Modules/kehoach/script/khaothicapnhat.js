@@ -146,10 +146,7 @@ KhaoThi.prototype = {
         $("#txtSearch_NgayThi").on("keyup", function () {
             var value = ($(this).val() || "").toLowerCase();
             var dtTemp = me.dtDanhSachThi.filter(function (e) {
-                var strCombined = (edu.util.returnEmpty(e.MADANHSACHTHI) + " "
-                    + edu.util.returnEmpty(e.NGAYTHI) + " "
-                    + edu.util.returnEmpty(e.THI_CATHI_TEN) + " "
-                    + edu.util.returnEmpty(e.TKB_PHONGTHI_TEN)).toLowerCase();
+                var strCombined = me.buildDanhSachThiLabel(e).toLowerCase();
                 return strCombined.indexOf(value) != -1;
             });
             me.cbGenCombo_DanhSachThi(dtTemp)
@@ -566,6 +563,18 @@ KhaoThi.prototype = {
             ]
         }, false, false, false, null);
     },
+    buildDanhSachThiLabel: function (aData) {
+        var parts = [
+            aData.MADANHSACHTHI,
+            aData.NGAYTHI,
+            aData.THI_CATHI_TEN,
+            aData.TKB_PHONGHOC_TEN
+        ];
+        return parts
+            .map(function (v) { return v == null ? "" : String(v).trim(); })
+            .filter(function (v) { return v.length > 0; })
+            .join(" - ");
+    },
     cbGenCombo_DanhSachThi: function (data) {
         var me = this;
         var obj = {
@@ -577,10 +586,7 @@ KhaoThi.prototype = {
                 code: "",
                 avatar: "",
                 mRender: function (nRow, aData) {
-                    return edu.util.returnEmpty(aData.MADANHSACHTHI)
-                        + " - " + edu.util.returnEmpty(aData.NGAYTHI)
-                        + " - " + edu.util.returnEmpty(aData.THI_CATHI_TEN)
-                        + " - " + edu.util.returnEmpty(aData.TKB_PHONGTHI_TEN);
+                    return me.buildDanhSachThiLabel(aData);
                 }
             },
             renderPlace: ["dropSearch_DanhSach"],
