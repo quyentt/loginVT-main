@@ -17113,3 +17113,6 @@ table#clone {
 .btn.btn-white.btnCloseSinhVien{
     border: 0 !important;
 }
+.btn-white.btnCloseSinhVien i{
+    padding-right: 0 !important;
+}
