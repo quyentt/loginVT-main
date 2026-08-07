@@ -20,6 +20,43 @@ KhaiMucPhi.prototype = {
     strKeHoachId_NganhDauRa: '',
     dtNganhDauRa: [],
     dtKeHoachDauRa: [],             // danh sách chương trình đầu ra để chọn thêm
+    _pageThemNganh: 1,              // trang hiện tại của bảng chọn ngành (client-side paging)
+    _pageSizeThemNganh: 20,         // số dòng / trang
+    _selectedIds_ThemNganh: {},     // Set ID đã tick — giữ state qua các trang
+    _pageNganh: 1,                  // trang hiện tại của bảng ngành đã cấu hình
+    _pageSizeNganh: 20,
+    _selectedIds_Nganh: {},         // Set ID đã tick trong bảng ngành đã cấu hình
+
+    /* Helper: lấy label "TEN (MA)" cho 1 nhóm theo ID — dùng cho title modal.
+       Convention chung: modal đang xem phải chỉ rõ đang xem nhóm nào cả tên lẫn mã. */
+    _getNhomLabel: function (strNhomId) {
+        var me = this;
+        if (!strNhomId) return '';
+        var found = null;
+        (me.dtNhomDinhMuc || []).some(function (r) {
+            var id = r.ID || r.NH_CAUHINH_TC_NHOM_ID;
+            if (id === strNhomId) { found = r; return true; }
+            return false;
+        });
+        if (!found) return strNhomId;
+        var ten = found.TEN_NHOM || found.TEN || '';
+        var ma = found.MA_NHOM || found.MA || '';
+        if (ten && ma) return ten + ' (' + ma + ')';
+        return ten || ma || strNhomId;
+    },
+
+    /* Helper: format số VN cho tổng (giữ nguyên nếu không phải số) */
+    _fmtNumVN: function (v) {
+        if (v === '' || v == null || isNaN(v)) return '';
+        return Number(v).toLocaleString('vi-VN');
+    },
+
+    /* Helper: gộp "TEN (MA)" — dùng cho ngành đào tạo / tuyển sinh / chương trình */
+    _mergeTenMa: function (ten, ma) {
+        ten = ten || ''; ma = ma || '';
+        if (ten && ma) return ten + ' (' + ma + ')';
+        return ten || ma;
+    },
 
     // State cho modal cấu hình đầu vào (SV/đối tượng)
     strNhomId_DauVao: '',
@@ -129,6 +166,14 @@ KhaiMucPhi.prototype = {
                 edu.system.alert("Vui lòng chọn kế hoạch nhập học.", "w");
                 return;
             }
+            me.strKeHoachNhapHoc_Id = strId;
+            me.getList_NhomDinhMuc();
+        });
+
+        // Auto-load danh sách nhóm khi user chọn Kế hoạch nhập học (không phải bấm Xem)
+        $("#dropKeHoachNhapHoc_HSNH").off("change.autoLoad").on("change.autoLoad", function () {
+            var strId = $(this).val();
+            if (!strId) return;
             me.strKeHoachNhapHoc_Id = strId;
             me.getList_NhomDinhMuc();
         });
@@ -265,26 +310,62 @@ KhaiMucPhi.prototype = {
 
         // Filter ds chương trình đầu ra trong modal Thêm
         $("#btnLoc_ThemNganhDauRa_HSNH").off("click").on("click", function () {
+            me._pageThemNganh = 1;
             me.getList_KeHoachDauRa();
         });
         var tmoLoc = null;
         $("#txtTuKhoa_ThemNganhDauRa_HSNH").off("keyup").on("keyup", function () {
             clearTimeout(tmoLoc);
-            tmoLoc = setTimeout(function () { me.getList_KeHoachDauRa(); }, 400);
+            tmoLoc = setTimeout(function () {
+                me._pageThemNganh = 1;
+                me.getList_KeHoachDauRa();
+            }, 400);
         });
 
-        // Select all trong modal Thêm
+        // Select all trong modal Thêm — apply cho TOÀN BỘ arr (all pages), không chỉ page hiện tại
         $("#chkSelectAll_ThemNganhDauRa_HSNH").off("change").on("change", function () {
             var bCheck = $(this).is(":checked");
-            $("#tblThemNganhDauRa_HSNH tbody input.chkThemNganhDauRa_HSNH").prop("checked", bCheck);
+            me._selectedIds_ThemNganh = {};
+            if (bCheck) {
+                (me.dtKeHoachDauRa || []).forEach(function (r) {
+                    var id = r.ID || r.NH_KEHOACH_DAURA_ID || '';
+                    if (id) me._selectedIds_ThemNganh[id] = true;
+                });
+            }
+            me.genTable_KeHoachDauRa(me.dtKeHoachDauRa);
         });
 
-        // Nút Lưu trong modal Thêm — duyệt từng bản ghi tick, call API Thêm
-        $("#btnSave_ThemNganhDauRa_HSNH").off("click").on("click", function () {
-            var arrIds = [];
-            $("#tblThemNganhDauRa_HSNH tbody input.chkThemNganhDauRa_HSNH:checked").each(function () {
-                arrIds.push($(this).attr("data-id"));
+        // Row checkbox: update state _selectedIds (giữ tick qua các trang)
+        $("#tblThemNganhDauRa_HSNH").off("change", ".chkThemNganhDauRa_HSNH")
+            .on("change", ".chkThemNganhDauRa_HSNH", function () {
+                var id = $(this).attr("data-id");
+                if (!id) return;
+                if ($(this).is(":checked")) me._selectedIds_ThemNganh[id] = true;
+                else delete me._selectedIds_ThemNganh[id];
+                $("#pgChecked_ThemNganh").text(Object.keys(me._selectedIds_ThemNganh).length);
+                me._syncHeaderChk_ThemNganh();
             });
+
+        // Pagination click
+        $("#paging_ThemNganhDauRa_HSNH").off("click", ".page-link")
+            .on("click", ".page-link", function (e) {
+                e.preventDefault();
+                var target = parseInt($(this).attr("data-page"), 10);
+                if (isNaN(target)) return;
+                me._pageThemNganh = target;
+                me.genTable_KeHoachDauRa(me.dtKeHoachDauRa);
+            });
+
+        // Đổi page size
+        $("#pgSize_ThemNganh").off("change").on("change", function () {
+            me._pageSizeThemNganh = parseInt($(this).val(), 10) || 20;
+            me._pageThemNganh = 1;
+            me.genTable_KeHoachDauRa(me.dtKeHoachDauRa);
+        });
+
+        // Nút Lưu trong modal Thêm — duyệt state _selectedIds, call API Thêm
+        $("#btnSave_ThemNganhDauRa_HSNH").off("click").on("click", function () {
+            var arrIds = Object.keys(me._selectedIds_ThemNganh || {});
             if (arrIds.length === 0) {
                 edu.system.alert("Vui lòng chọn ít nhất một chương trình đầu ra.", "w");
                 return;
@@ -334,18 +415,50 @@ KhaiMucPhi.prototype = {
             }
         });
 
-        // Chọn tất cả checkbox ngành đầu ra
+        // Chọn tất cả checkbox ngành đầu ra — TOÀN BỘ arr (all pages)
         $("#chkSelectAll_NganhDauRa_HSNH").off("change").on("change", function () {
             var bCheck = $(this).is(":checked");
-            $("#tblNganhDauRa_HSNH tbody input.chkNganhDauRa_HSNH").prop("checked", bCheck);
+            me._selectedIds_Nganh = {};
+            if (bCheck) {
+                (me.dtNganhDauRa || []).forEach(function (r) {
+                    var id = r.ID || r.NH_CAUHINH_TC_NHOM_DAURA_ID || '';
+                    if (id) me._selectedIds_Nganh[id] = true;
+                });
+            }
+            me.genTable_NganhDauRa(me.dtNganhDauRa);
         });
 
-        // Xóa các ngành đã tick (bulk delete)
-        $("#btnDelete_NganhDauRa_HSNH").off("click").on("click", function () {
-            var arrIds = [];
-            $("#tblNganhDauRa_HSNH tbody input.chkNganhDauRa_HSNH:checked").each(function () {
-                arrIds.push($(this).attr("data-id"));
+        // Row checkbox: update state (giữ qua trang)
+        $("#tblNganhDauRa_HSNH").off("change", ".chkNganhDauRa_HSNH")
+            .on("change", ".chkNganhDauRa_HSNH", function () {
+                var id = $(this).attr("data-id");
+                if (!id) return;
+                if ($(this).is(":checked")) me._selectedIds_Nganh[id] = true;
+                else delete me._selectedIds_Nganh[id];
+                $("#pgChecked_Nganh").text(Object.keys(me._selectedIds_Nganh).length);
+                me._syncHeaderChk_Nganh();
             });
+
+        // Pagination click
+        $("#paging_NganhDauRa_HSNH").off("click", ".page-link")
+            .on("click", ".page-link", function (e) {
+                e.preventDefault();
+                var target = parseInt($(this).attr("data-page"), 10);
+                if (isNaN(target)) return;
+                me._pageNganh = target;
+                me.genTable_NganhDauRa(me.dtNganhDauRa);
+            });
+
+        // Đổi page size
+        $("#pgSize_Nganh").off("change").on("change", function () {
+            me._pageSizeNganh = parseInt($(this).val(), 10) || 20;
+            me._pageNganh = 1;
+            me.genTable_NganhDauRa(me.dtNganhDauRa);
+        });
+
+        // Xóa các ngành đã tick (bulk delete) — đọc từ state _selectedIds_Nganh
+        $("#btnDelete_NganhDauRa_HSNH").off("click").on("click", function () {
+            var arrIds = Object.keys(me._selectedIds_Nganh || {});
             if (arrIds.length === 0) {
                 edu.system.alert("Vui lòng chọn ít nhất một dòng để xóa.", "w");
                 return;
@@ -528,15 +641,10 @@ KhaiMucPhi.prototype = {
         me.strNhomId_KhoanThu = strNhomId;
         me.strKeHoachId_KhoanThu = strKeHoachIdRow;
 
-        // Tìm tên nhóm để hiển thị label
-        var strTenNhom = '';
-        (me.dtNhomDinhMuc || []).forEach(function (r) {
-            var id = r.ID || r.NH_CAUHINH_TC_NHOM_ID;
-            if (id === strNhomId) strTenNhom = r.TEN_NHOM || r.TEN || '';
-        });
-        $("#lblNhomInfo_KhoanThu").text(
-            "Nhóm: " + (strTenNhom || strNhomId)
-        );
+        // Gắn tên+mã nhóm vào TITLE (badge) + sub-title bên trong
+        var strLabel = me._getNhomLabel(strNhomId);
+        $("#titleNhom_KhoanThu").text(strLabel);
+        $("#lblNhomInfo_KhoanThu").text("Nhóm: " + strLabel);
 
         var obj_save = {
             'action': 'SV_Core_NhapHoc_MH/DSA4BRIeDykgMQkuIh4CIDQJKC8pHhUC',
@@ -571,14 +679,16 @@ KhaiMucPhi.prototype = {
         }, false, false, false, null);
     },
 
-    /* Render bảng khoản thu — cột đúng theo Excel */
+    /* Render bảng khoản thu — cột đúng theo Excel + dòng SUM cho "Định mức thu" */
     genTable_KhoanThu: function (arr) {
         var me = this;
         var $tbody = $("#tblKhoanThu_HSNH tbody");
+        var $tfoot = $("#tfootSum_KhoanThu_HSNH");
         $tbody.empty();
 
         if (!arr || arr.length === 0) {
             $tbody.append('<tr><td colspan="13" class="td-center italic color-666">Chưa có khoản thu nào trong nhóm.</td></tr>');
+            $tfoot.hide();
             return;
         }
         // Helper: lookup TEN từ cache DM theo MA
@@ -631,6 +741,15 @@ KhaiMucPhi.prototype = {
             html += '</tr>';
         });
         $tbody.append(html);
+
+        // Sum "Định mức thu" (SO_TIEN_DINH_MUC) — dòng tổng ở tfoot
+        var sumDinhMuc = 0;
+        arr.forEach(function (r) {
+            var v = r.SO_TIEN_DINH_MUC;
+            if (v !== '' && v != null && !isNaN(v)) sumDinhMuc += Number(v);
+        });
+        $("#sumDinhMuc_KhoanThu").text(me._fmtNumVN(sumDinhMuc));
+        $tfoot.show();
     },
 
     /* -----------------------------------------------------------------
@@ -641,16 +760,16 @@ KhaiMucPhi.prototype = {
         var me = this;
         me.strNhomId_NganhDauRa = strNhomId;
         me.strKeHoachId_NganhDauRa = strKeHoachIdRow;
+        // Reset state phân trang + selection mỗi lần mở modal cấu hình
+        me._pageNganh = 1;
+        me._pageSizeNganh = parseInt($("#pgSize_Nganh").val(), 10) || 20;
+        me._selectedIds_Nganh = {};
+        $("#chkSelectAll_NganhDauRa_HSNH").prop('checked', false).prop('indeterminate', false);
 
-        // Tên nhóm để hiển thị
-        var strTenNhom = '';
-        (me.dtNhomDinhMuc || []).forEach(function (r) {
-            var id = r.ID || r.NH_CAUHINH_TC_NHOM_ID;
-            if (id === strNhomId) strTenNhom = r.TEN_NHOM || r.TEN || '';
-        });
-        $("#lblNhomInfo_NganhDauRa").text(
-            "Nhóm: " + (strTenNhom || strNhomId)
-        );
+        // Tên+mã nhóm — gắn vào TITLE (badge) + sub-title
+        var strLabel = me._getNhomLabel(strNhomId);
+        $("#titleNhom_NganhDauRa").text(strLabel);
+        $("#lblNhomInfo_NganhDauRa").text("Nhóm: " + strLabel);
 
         var obj_save = {
             'action': 'SV_Core_NhapHoc_MH/DSA4BRIeDwkeAiA0CSgvKR4VAh4PKS4sHgUgNBMg',
@@ -684,28 +803,44 @@ KhaiMucPhi.prototype = {
         }, false, false, false, null);
     },
 
-    /* Render bảng ngành đầu ra — cột đúng theo Excel */
+    /* Render bảng ngành đầu ra — cột đúng theo Excel + client-side pagination */
     genTable_NganhDauRa: function (arr) {
+        var me = this;
         var $tbody = $("#tblNganhDauRa_HSNH tbody");
+        var $paging = $("#paging_NganhDauRa_HSNH");
         $tbody.empty();
 
         if (!arr || arr.length === 0) {
             $tbody.append('<tr><td colspan="9" class="td-center italic color-666">Chưa có ngành đầu ra nào.</td></tr>');
+            $paging.hide();
+            me._syncHeaderChk_Nganh();
             return;
         }
 
+        var pageSize = me._pageSizeNganh || 20;
+        var totalPages = Math.max(1, Math.ceil(arr.length / pageSize));
+        if (!me._pageNganh || me._pageNganh > totalPages) me._pageNganh = totalPages;
+        if (me._pageNganh < 1) me._pageNganh = 1;
+        var page = me._pageNganh;
+        var startIdx = (page - 1) * pageSize;
+        var endIdx = Math.min(startIdx + pageSize, arr.length);
+
         var html = '';
-        arr.forEach(function (r, i) {
+        for (var i = startIdx; i < endIdx; i++) {
+            var r = arr[i];
             var strId = r.ID || r.NH_CAUHINH_TC_NHOM_DAURA_ID || '';
             var strHe = r.TENHEDAOTAO || r.TEN_HEDAOTAO || r.TEN_HE_DAOTAO || '';
             var strKhoa = r.TENKHOA || r.TEN_KHOA || '';
-            var strNganhDT = r.TEN_NGANH_DT || r.TEN_NGANHDT || '';
-            var strNganhTS = r.TEN_NGANH_TS || r.TEN_NGANHTS || '';
+            var strMaNganhDT = r.MA_NGANH_DT || r.NGANH_DT_MA || r.MANGANH_DT || '';
+            var strMaNganhTS = r.MA_NGANH_TS || r.NGANH_TS_MA || r.MANGANH_TS || '';
+            var strNganhDT = me._mergeTenMa(r.TEN_NGANH_DT || r.TEN_NGANHDT || r.NGANH_DT_TEN || '', strMaNganhDT);
+            var strNganhTS = me._mergeTenMa(r.TEN_NGANH_TS || r.TEN_NGANHTS || r.NGANH_TS_TEN || '', strMaNganhTS);
             var strKhoaQL = r.TEN_KHOAQUANLY || r.TENKHOAQUANLY || '';
             var strTenCT = r.TENCHUONGTRINH || r.TEN_CHUONGTRINH || '';
             var strMaCT = r.MACHUONGTRINH || r.MA_CHUONGTRINH || '';
-            var strChuongTrinh = strTenCT + (strMaCT ? ' (' + strMaCT + ')' : '');
+            var strChuongTrinh = me._mergeTenMa(strTenCT, strMaCT);
             var strGhiChu = r.GHICHU || r.GHI_CHU || '';
+            var checked = me._selectedIds_Nganh[strId] ? ' checked' : '';
 
             html += '<tr id="row_nganhdaura_' + strId + '" data-id="' + strId + '">';
             html += '<td class="td-center">' + (i + 1) + '</td>';
@@ -716,10 +851,51 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-left">' + strKhoaQL + '</td>';
             html += '<td class="td-left">' + strChuongTrinh + '</td>';
             html += '<td class="td-left">' + strGhiChu + '</td>';
-            html += '<td class="td-center"><input type="checkbox" class="chkNganhDauRa_HSNH" data-id="' + strId + '" /></td>';
+            html += '<td class="td-center"><input type="checkbox" class="chkNganhDauRa_HSNH" data-id="' + strId + '"' + checked + ' /></td>';
             html += '</tr>';
-        });
+        }
         $tbody.append(html);
+
+        $("#pgCur_Nganh").text(page);
+        $("#pgTotal_Nganh").text(totalPages);
+        $("#pgSum_Nganh").text(arr.length);
+        $("#pgChecked_Nganh").text(Object.keys(me._selectedIds_Nganh).length);
+        $paging.css('display', 'flex');
+        me._renderPagingBtns_Nganh(page, totalPages);
+        me._syncHeaderChk_Nganh();
+    },
+
+    _renderPagingBtns_Nganh: function (page, totalPages) {
+        var $ul = $("#pgList_Nganh");
+        $ul.empty();
+        var add = function (label, target, disabled, active) {
+            var cls = 'page-item';
+            if (disabled) cls += ' disabled';
+            if (active) cls += ' active';
+            $ul.append('<li class="' + cls + '"><a class="page-link" href="javascript:;" data-page="' + target + '">' + label + '</a></li>');
+        };
+        add('«', 1, page === 1, false);
+        add('‹', Math.max(1, page - 1), page === 1, false);
+        var winSize = 5;
+        var startP = Math.max(1, page - Math.floor(winSize / 2));
+        var endP = Math.min(totalPages, startP + winSize - 1);
+        startP = Math.max(1, endP - winSize + 1);
+        for (var p = startP; p <= endP; p++) add(String(p), p, false, p === page);
+        add('›', Math.min(totalPages, page + 1), page === totalPages, false);
+        add('»', totalPages, page === totalPages, false);
+    },
+
+    _syncHeaderChk_Nganh: function () {
+        var me = this;
+        var arr = me.dtNganhDauRa || [];
+        var $chk = $("#chkSelectAll_NganhDauRa_HSNH");
+        if (arr.length === 0) {
+            $chk.prop('checked', false).prop('indeterminate', false);
+            return;
+        }
+        var checkedCount = Object.keys(me._selectedIds_Nganh).length;
+        $chk.prop('checked', checkedCount === arr.length);
+        $chk.prop('indeterminate', checkedCount > 0 && checkedCount < arr.length);
     },
 
     /* -----------------------------------------------------------------
@@ -731,15 +907,10 @@ KhaiMucPhi.prototype = {
         me.strNhomId_DauVao = strNhomId;
         me.strKeHoachId_DauVao = strKeHoachIdRow;
 
-        // Tên nhóm để hiển thị
-        var strTenNhom = '';
-        (me.dtNhomDinhMuc || []).forEach(function (r) {
-            var id = r.ID || r.NH_CAUHINH_TC_NHOM_ID;
-            if (id === strNhomId) strTenNhom = r.TEN_NHOM || r.TEN || '';
-        });
-        $("#lblNhomInfo_DauVao").text(
-            "Nhóm: " + (strTenNhom || strNhomId)
-        );
+        // Tên+mã nhóm — gắn vào TITLE (badge) + sub-title
+        var strLabel = me._getNhomLabel(strNhomId);
+        $("#titleNhom_DauVao").text(strLabel);
+        $("#lblNhomInfo_DauVao").text("Nhóm: " + strLabel);
 
         var obj_save = {
             'action': 'SV_Core_NhapHoc_MH/DSA4BRIeDwkeAiA0CSgvKR4VAh4PKS4sHgUV',
@@ -1413,17 +1584,16 @@ KhaiMucPhi.prototype = {
 
     openModal_ThemNganhDauRa: function () {
         var me = this;
-        // Tìm tên nhóm cho label thân thiện hơn (thay vì lộ ID lằng ngoằng)
-        var strTenNhom = '';
-        (me.dtNhomDinhMuc || []).forEach(function (r) {
-            var id = r.ID || r.NH_CAUHINH_TC_NHOM_ID;
-            if (id === me.strNhomId_NganhDauRa) strTenNhom = r.TEN_NHOM || r.TEN || '';
-        });
-        $("#lblNhomInfo_ThemNganhDauRa").text(
-            "Thêm ngành vào nhóm: " + (strTenNhom || me.strNhomId_NganhDauRa)
-        );
+        // Tên+mã nhóm — gắn vào TITLE (badge) + sub-title
+        var strLabel = me._getNhomLabel(me.strNhomId_NganhDauRa);
+        $("#titleNhom_ThemNganhDauRa").text(strLabel);
+        $("#lblNhomInfo_ThemNganhDauRa").text("Thêm ngành vào nhóm: " + strLabel);
         $("#txtTuKhoa_ThemNganhDauRa_HSNH").val("");
-        $("#chkSelectAll_ThemNganhDauRa_HSNH").prop("checked", false);
+        $("#chkSelectAll_ThemNganhDauRa_HSNH").prop("checked", false).prop("indeterminate", false);
+        // Reset state phân trang + selection mỗi lần mở modal
+        me._pageThemNganh = 1;
+        me._pageSizeThemNganh = parseInt($("#pgSize_ThemNganh").val(), 10) || 20;
+        me._selectedIds_ThemNganh = {};
         me.getList_KeHoachDauRa();
         $("#modalThemNganhDauRa_HSNH").modal("show");
     },
@@ -1467,28 +1637,45 @@ KhaiMucPhi.prototype = {
         }, false, false, false, null);
     },
 
-    /* Render bảng chương trình đầu ra để chọn — cột đúng theo Excel */
+    /* Render bảng chương trình đầu ra để chọn — cột đúng theo Excel
+       Client-side pagination + giữ state checkbox qua các trang */
     genTable_KeHoachDauRa: function (arr) {
+        var me = this;
         var $tbody = $("#tblThemNganhDauRa_HSNH tbody");
+        var $paging = $("#paging_ThemNganhDauRa_HSNH");
         $tbody.empty();
 
         if (!arr || arr.length === 0) {
             $tbody.append('<tr><td colspan="9" class="td-center italic color-666">Không có chương trình đầu ra nào.</td></tr>');
+            $paging.hide();
+            me._syncHeaderChk_ThemNganh();
             return;
         }
 
+        var pageSize = me._pageSizeThemNganh || 20;
+        var totalPages = Math.max(1, Math.ceil(arr.length / pageSize));
+        if (!me._pageThemNganh || me._pageThemNganh > totalPages) me._pageThemNganh = totalPages;
+        if (me._pageThemNganh < 1) me._pageThemNganh = 1;
+        var page = me._pageThemNganh;
+        var startIdx = (page - 1) * pageSize;
+        var endIdx = Math.min(startIdx + pageSize, arr.length);
+
         var html = '';
-        arr.forEach(function (r, i) {
+        for (var i = startIdx; i < endIdx; i++) {
+            var r = arr[i];
             var strId = r.ID || r.NH_KEHOACH_DAURA_ID || '';
             var strHe = r.HEDAOTAO_TEN || r.TENHEDAOTAO || '';
             var strKhoa = r.KHOADAOTAO_TEN || r.TENKHOA || '';
-            var strNganhDT = r.NGANH_DT_TEN || r.TEN_NGANH_DT || '';
-            var strNganhTS = r.NGANH_TS_TEN || r.TEN_NGANH_TS || '';
+            var strMaNganhDT = r.NGANH_DT_MA || r.MA_NGANH_DT || '';
+            var strMaNganhTS = r.NGANH_TS_MA || r.MA_NGANH_TS || '';
+            var strNganhDT = me._mergeTenMa(r.NGANH_DT_TEN || r.TEN_NGANH_DT || '', strMaNganhDT);
+            var strNganhTS = me._mergeTenMa(r.NGANH_TS_TEN || r.TEN_NGANH_TS || '', strMaNganhTS);
             var strKhoaQL = r.KHOAQUANLY_TEN || r.TEN_KHOAQUANLY || '';
             var strTenCT = r.CHUONGTRINH_TEN || r.TENCHUONGTRINH || '';
             var strMaCT = r.CHUONGTRINH_MA || r.MACHUONGTRINH || '';
-            var strChuongTrinh = strTenCT + (strMaCT ? ' (' + strMaCT + ')' : '');
+            var strChuongTrinh = me._mergeTenMa(strTenCT, strMaCT);
             var strGhiChu = r.GHICHU || r.GHI_CHU || '';
+            var checked = me._selectedIds_ThemNganh[strId] ? ' checked' : '';
 
             html += '<tr data-id="' + strId + '">';
             html += '<td class="td-center">' + (i + 1) + '</td>';
@@ -1499,10 +1686,52 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-left">' + strKhoaQL + '</td>';
             html += '<td class="td-left">' + strChuongTrinh + '</td>';
             html += '<td class="td-left">' + strGhiChu + '</td>';
-            html += '<td class="td-center"><input type="checkbox" class="chkThemNganhDauRa_HSNH" data-id="' + strId + '" /></td>';
+            html += '<td class="td-center"><input type="checkbox" class="chkThemNganhDauRa_HSNH" data-id="' + strId + '"' + checked + ' /></td>';
             html += '</tr>';
-        });
+        }
         $tbody.append(html);
+
+        $("#pgCur_ThemNganh").text(page);
+        $("#pgTotal_ThemNganh").text(totalPages);
+        $("#pgSum_ThemNganh").text(arr.length);
+        $("#pgChecked_ThemNganh").text(Object.keys(me._selectedIds_ThemNganh).length);
+        $paging.css('display', 'flex');
+        me._renderPagingBtns_ThemNganh(page, totalPages);
+        me._syncHeaderChk_ThemNganh();
+    },
+
+    _renderPagingBtns_ThemNganh: function (page, totalPages) {
+        var $ul = $("#pgList_ThemNganh");
+        $ul.empty();
+        var add = function (label, target, disabled, active) {
+            var cls = 'page-item';
+            if (disabled) cls += ' disabled';
+            if (active) cls += ' active';
+            $ul.append('<li class="' + cls + '"><a class="page-link" href="javascript:;" data-page="' + target + '">' + label + '</a></li>');
+        };
+        add('«', 1, page === 1, false);
+        add('‹', Math.max(1, page - 1), page === 1, false);
+        var winSize = 5;
+        var startP = Math.max(1, page - Math.floor(winSize / 2));
+        var endP = Math.min(totalPages, startP + winSize - 1);
+        startP = Math.max(1, endP - winSize + 1);
+        for (var p = startP; p <= endP; p++) add(String(p), p, false, p === page);
+        add('›', Math.min(totalPages, page + 1), page === totalPages, false);
+        add('»', totalPages, page === totalPages, false);
+    },
+
+    // Đồng bộ header checkbox theo state _selectedIds (không chỉ page hiện tại)
+    _syncHeaderChk_ThemNganh: function () {
+        var me = this;
+        var arr = me.dtKeHoachDauRa || [];
+        var $chk = $("#chkSelectAll_ThemNganhDauRa_HSNH");
+        if (arr.length === 0) {
+            $chk.prop('checked', false).prop('indeterminate', false);
+            return;
+        }
+        var checkedCount = Object.keys(me._selectedIds_ThemNganh).length;
+        $chk.prop('checked', checkedCount === arr.length);
+        $chk.prop('indeterminate', checkedCount > 0 && checkedCount < arr.length);
     },
 
     /* Duyệt từng bản ghi tick → call Them_NH_CauHinh_TC_Nhom_DauRa */
@@ -1851,12 +2080,14 @@ KhaiMucPhi.prototype = {
     genTable_MucPhiDaGan: function (arr) {
         var me = this;
         var $tbody = $("#tblMucPhiDaGan_HSNH tbody");
+        var $tfoot = $("#tfootSum_MucPhiDaGan_HSNH");
         $tbody.empty();
         $("#lblTong_MucPhiDaGan_HSNH").text(me._total_MucPhiDaGan || 0);
         $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false);
 
         if (!arr || arr.length === 0) {
             $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không tìm thấy dữ liệu</td></tr>');
+            $tfoot.hide();
             return;
         }
 
@@ -1920,6 +2151,15 @@ KhaiMucPhi.prototype = {
             html += '</tr>';
         });
         $tbody.append(html);
+
+        // Sum "Tổng phí" trên trang hiện tại — dòng tổng ở tfoot
+        var sumTong = 0;
+        arr.forEach(function (r) {
+            var v = pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI');
+            if (v !== '' && v != null && !isNaN(v)) sumTong += Number(v);
+        });
+        $("#sumTongPhi_MucPhiDaGan").text(me._fmtNumVN(sumTong));
+        $tfoot.show();
     },
 
     /* Server-side pagination — render nút phân trang */

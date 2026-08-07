@@ -121,6 +121,14 @@
     </html>
     <script>
         $(document).ready(function () {
-            sessionStorage.removeItem("objUserVT");
+            try {
+                sessionStorage.clear();
+            } catch (e) { }
+            try {
+                var lsKeys = ['iShk', 'strIM', 'strRootPath', 'pendingThuVaiSV', 'reload'];
+                for (var i = 0; i < lsKeys.length; i++) {
+                    localStorage.removeItem(lsKeys[i]);
+                }
+            } catch (e) { }
         });
     </script>

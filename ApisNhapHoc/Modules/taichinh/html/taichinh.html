@@ -78,6 +78,55 @@
         background: #1a71e8 !important;
         border-color: #1a71e8 !important;
     }
+
+    /* Action bar phiếu (Hủy / Đóng / Xuất HĐ / In) — Hủy tách trái, còn lại nhóm phải, gap 10px */
+    /* left: 320px để tránh sidebar rộng 300px; right: 20px để chừa mép phải */
+    #zoneAction_Phieu .btn-sms-fixed {
+        position: fixed;
+        bottom: 15px;
+        left: 320px;
+        right: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 999;
+        background: #fff;
+        padding: 10px 20px;
+        border-top: 1px solid #e5e5e5;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.08);
+        border-radius: 8px 8px 0 0;
+    }
+
+    /* Khi sidebar bị thu gọn (body có class sidebar-collapse) → dịch bar sát lề trái */
+    body.sidebar-collapse #zoneAction_Phieu .btn-sms-fixed {
+        left: 70px;
+    }
+
+    #zoneAction_Phieu .action-right-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    #zoneAction_Phieu .btn {
+        font-size: 15px !important;
+        padding: 8px 18px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        line-height: 1;
+        margin: 0 !important;
+    }
+
+    #zoneAction_Phieu .btn i {
+        font-size: 16px;
+    }
+
+    /* Ẩn box phiếu in khi #print_hoadon trống (backend chưa trả nội dung) */
+    #zoneList_PhieuDaThu:has(#print_hoadon:empty) {
+        display: none !important;
+    }
 </style>
 <!-- Main content -->
 <section class="content aps-nhapHoc">
@@ -425,7 +474,9 @@
             </div>
         </div>
 
-        <!-- Tìm kiếm lớp quản lý -->
+        <!-- Action bar sau khi Thu tiền: Hủy tách trái, Đóng/Xuất HĐ/In nhóm phải -->
+        <!-- OLD: 4 nút xếp ngang với margin-right:300px hardcode + font-size lẫn lộn 17/27px (giữ comment, không xóa) -->
+        <!--
         <div class="row zone-action" id="zoneAction_Phieu">
             <div class="pull-right">
                 <div class="btn-sms-fixed">
@@ -437,6 +488,25 @@
                         <i class="fa fa-paper-plane fa-lg"></i>Xuất hóa đơn</a>
                     <a class="btn btn-primary" id="btnPrint_HoaDon" style="font-size:27px">
                         <i class="fa fa-print fa-lg"></i>In</a>
+                </div>
+            </div>
+        </div>
+        -->
+        <div class="row zone-action" id="zoneAction_Phieu">
+            <div class="btn-sms-fixed">
+                <a class="btn btn-danger" id="btnCancle_HoaDon">
+                    <i class="fa fa-times"></i> Hủy
+                </a>
+                <div class="action-right-group">
+                    <a class="btn btn-default" id="btnClose_HoaDon">
+                        <i class="fa fa-times-circle"></i> Đóng
+                    </a>
+                    <a class="btn btn-primary" id="btnSave_HoaDon">
+                        <i class="fa fa-paper-plane"></i> Xuất hóa đơn
+                    </a>
+                    <a class="btn btn-primary" id="btnPrint_HoaDon">
+                        <i class="fa fa-print"></i> In
+                    </a>
                 </div>
             </div>
         </div>
@@ -464,7 +534,7 @@
     </div>
 </section>
 <!-- page script -->
-<script src="/modules/taichinh/scripts/taichinh.js?v=1.0.7.9"></script>
+<script src="/modules/taichinh/scripts/taichinh.js?v=1.0.8.2-dbg"></script>
 <script src="/modules/taichinh/scripts/n2vi.min.js"></script>
 <script src="/modules/taichinh/scripts/qrcode.min.js"></script>
 <script type="text/javascript">

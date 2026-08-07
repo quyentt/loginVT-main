@@ -144,10 +144,15 @@ KhaoThi.prototype = {
             me.getList_ViPhamQuyChe();
         });
         $("#txtSearch_NgayThi").on("keyup", function () {
-            var value = $(this).val();
-            //if (!value) return;
-            var dtTemp = me.dtDanhSachThi.filter(e => e.MADANHSACHTHI.indexOf(value) != -1)
-            me.cbGenCombo_DanhSachThi(dtTemp)   
+            var value = ($(this).val() || "").toLowerCase();
+            var dtTemp = me.dtDanhSachThi.filter(function (e) {
+                var strCombined = (edu.util.returnEmpty(e.MADANHSACHTHI) + " "
+                    + edu.util.returnEmpty(e.NGAYTHI) + " "
+                    + edu.util.returnEmpty(e.THI_CATHI_TEN) + " "
+                    + edu.util.returnEmpty(e.TKB_PHONGTHI_TEN)).toLowerCase();
+                return strCombined.indexOf(value) != -1;
+            });
+            me.cbGenCombo_DanhSachThi(dtTemp)
         });
     },
     
@@ -271,7 +276,7 @@ KhaoThi.prototype = {
                 },
                 {
                     "mRender": function (nRow, aData) {
-                        return aData.DAOTAO_HOCPHAN_TEN + " - " + aData.DAOTAO_HOCPHAN_MA;
+                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + " (" + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ")";
                     }
                 }
                 ,
@@ -508,7 +513,7 @@ KhaoThi.prototype = {
                 code: "",
                 avatar: "",
                 mRender: function (nRow, aData) {
-                    return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                    return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + " (" + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ")";
                 }
             },
             renderPlace: ["dropSearch_HocPhan"],
@@ -570,7 +575,13 @@ KhaoThi.prototype = {
                 parentId: "",
                 name: "MADANHSACHTHI",
                 code: "",
-                avatar: ""
+                avatar: "",
+                mRender: function (nRow, aData) {
+                    return edu.util.returnEmpty(aData.MADANHSACHTHI)
+                        + " - " + edu.util.returnEmpty(aData.NGAYTHI)
+                        + " - " + edu.util.returnEmpty(aData.THI_CATHI_TEN)
+                        + " - " + edu.util.returnEmpty(aData.TKB_PHONGTHI_TEN);
+                }
             },
             renderPlace: ["dropSearch_DanhSach"],
             type: "",
@@ -1012,9 +1023,9 @@ KhaoThi.prototype = {
                     "mDataProp": "DAOTAO_CHUONGTRINH_TEN"
                 },
                 {
-                    "mData": "DaoTao_HocPhan_Ma -  DaoTao_HocPhan_Ten",
+                    "mData": "DaoTao_HocPhan_Ten (DaoTao_HocPhan_Ma)",
                     "mRender": function (nRow, aData) {
-                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + " - " + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN);
+                        return edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_TEN) + " (" + edu.util.returnEmpty(aData.DAOTAO_HOCPHAN_MA) + ")";
                     }
                 },
                 {
