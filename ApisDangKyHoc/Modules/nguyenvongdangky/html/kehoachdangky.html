@@ -182,7 +182,7 @@
                         <a class="btn btn-default btnCloseToggle" href="#" title="Close"><i class="fa fa-times"></i></a>
                     </div>
                 </div>
-                <div class="box-body pd20">
+                <div class="box-body pd0">
                     <div class="col-sm-12 box-view aps-add-new">
                         <div class="row aps-form">
                             <!-- Row: 1 -->
@@ -279,7 +279,7 @@
 
                         <div class="row aps-form">
                             <!--Kieu dang ky-->
-                            <div class="col-sm-6 pr20 mt-15">
+                            <div class="col-sm-6 pr20 mt-15 pl0">
                                 <div class="row aps-form">
                                     <div class="row aps-lable-name">
                                         <p class="group-group-title-name border-0 mb-0 color-blue">
@@ -331,7 +331,7 @@
 
                         <div class="row aps-form mt-15">
                             <!--trang thai sinh vien-->
-                            <div class="col-sm-6 pr20">
+                            <div class="col-sm-6 pr20  pl0">
                                 <div class="row aps-lable-name">
                                     <p class="group-group-title-name border-0 mb-0">
                                         <span class="badge bg-blue" style="color:#3380db !important">
@@ -365,7 +365,8 @@
                                                 <th class="td-center">Kiểu học</th>
                                                 <th class="td-center">Điểm quy đổi</th>
                                                 <th class="td-center td-fixed" style="width: 60px !important;">
-                                                    <input type="checkbox" id="chkSelectAll_KieuHoc" class="chkSystemSelectAll" />
+                                                    <input type="checkbox" id="chkSelectAll_KieuHoc"
+                                                        class="chkSystemSelectAll" />
                                                 </th>
                                             </tr>
                                         </thead>
@@ -374,11 +375,11 @@
                                 </div>
                                 <div class="row">
                                     <div class="pull-left">
-                                        <a class="btn btn-outline-danger btnDelete_KieuHoc" id="">
+                                        <a class="btn btn-soft-danger btnDelete_KieuHoc" id="">
                                             <i class="fa fa-trash"></i>Xóa</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a class="btn btn-outline-primary" id="btnThemDongMoi">
+                                        <a class="btn btn-soft-primary" id="btnThemDongMoi">
                                             <i class="fa fa-plus"></i>Thêm dòng mới</a>
                                     </div>
                                 </div>
@@ -394,7 +395,8 @@
                                 </p>
                             </div>
                             <div class="row">
-                                <table id="tblHocPhan" class="table table-hover table-bordered mb-10 table-noborder tblHocPhan">
+                                <table id="tblHocPhan"
+                                    class="table table-hover table-bordered mb-10 table-noborder tblHocPhan">
                                     <thead>
                                         <tr>
                                             <td class="td-fixed td-center">Stt</td>
@@ -409,11 +411,11 @@
                             </div>
                             <div class="row">
                                 <div class="pull-left">
-                                    <a class="btn btn-outline-danger btnDelete_HocPhan" id="">
+                                    <a class="btn btn-soft-danger btnDelete_HocPhan" id="">
                                         <i class="fa fa-trash"></i>Xóa</a>
                                 </div>
                                 <div class="pull-right">
-                                    <a class="btn btn-outline-primary btnSearch_HocPhan btnOpenDelete" id="">
+                                    <a class="btn btn-soft-primary btnSearch_HocPhan btnOpenDelete" id="">
                                         <i class="fa fa-plus color-active"></i>Thêm mới</a>
                                 </div>
                             </div>
@@ -426,7 +428,8 @@
                                     </p>
                                 </div>
                                 <div class="row aps-table-select">
-                                    <table id="tblQuyMoLop" class="table table-hover table-bordered mb-10 table-noborder tblQuyMoLop">
+                                    <table id="tblQuyMoLop"
+                                        class="table table-hover table-bordered mb-10 table-noborder tblQuyMoLop">
                                         <thead>
                                             <tr>
                                                 <td class="td-fixed td-center">Stt</td>
@@ -446,7 +449,7 @@
                                         </div>
                                     </div>-->
                                     <div class="pull-right">
-                                        <a class="btn btn-outline-primary btnSearch_QuyMoLop" id="">
+                                        <a class="btn btn-soft-primary btnSearch_QuyMoLop" id="">
                                             <i class="fa fa-plus color-active"></i>Thêm dòng mới</a>
                                     </div>
                                 </div>
@@ -455,11 +458,16 @@
                     </div>
                 </div>
                 <div class="box-footer pr20">
-                    <a class="btn btn-default btnCloseToggle mb-0" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>Đóng</a>
-                    <a class="submit btn btn-danger btnOpenDelete mb-0" id="btnDelete_KeHoach" style="display: none">
-                        <i class="fa fa-trash"></i>Xóa</a>                    
-                    <a id="btnSave" class="btn btn-primary mb-0"><i class="fa fa-save"></i>Lưu</a>
+                    <div class="pull-left">                      
+                        <a class="submit btn btn-danger btnOpenDelete mb-0" id="btnDelete_KeHoach"
+                            style="display: none">
+                            <i class="fa fa-trash"></i>Xóa</a>
+                    </div>
+                    <div class="pull-right">
+                        <a class="btn btn-default btnCloseToggle mb-0" href="#" title="Close">
+                            <i class="fa-solid fa-xmark"></i>Đóng</a>                      
+                        <a id="btnSave" class="btn btn-primary mb-0"><i class="fa fa-save"></i>Lưu</a>
+                    </div>
                 </div>
             </div>
         </div>

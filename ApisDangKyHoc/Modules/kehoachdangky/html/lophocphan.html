@@ -33,8 +33,9 @@
     /* Find-in-table widget (Ctrl+F-style) */
     .aps-find-in-table-bar {
         display: flex;
-        justify-content: flex-end;
+        justify-content: flex-start;
         margin-bottom: 8px;
+        width: 100% !important;
     }
     .find-in-table-box {
         display: inline-flex;
@@ -45,9 +46,10 @@
         border-radius: 4px;
         padding: 3px 6px;
         box-shadow: 0 1px 2px rgba(0,0,0,.04);
+        margin-left: -5px; width: 100% !important;
     }
     .find-in-table-input {
-        width: 260px;
+        width: 50% !important;
         height: 28px;
         padding: 2px 8px;
         border: 1px solid #d0d7e2;
@@ -256,19 +258,19 @@
                             </div>
                             <!-- Xem danh sách lớp học phần-->
                             <div class="row aps-gap-10" style="margin-left: -10px !important;">
-                                <a id="btnSearch" class="btn btn-outline-danger">
+                                <a id="btnSearch" class="btn btn-soft-primary">
                                     <i class="fa-solid fa-screen-users"></i><span class="lang" key="">Xem danh sách lớp
                                         học phần</span></a>
-                                <a id="btnSearchChiTiet" class="btn btn-outline-primary">
+                                <a id="btnSearchChiTiet" class="btn btn-soft-primary">
                                     <i class="fa-light fa-user-pen"></i><span class="lang" key="">Xem danh sách đăng ký
                                         chi tiết</span></a>
-                                <a id="btnSearchCanBoDangKy" class="btn btn-outline-secondary ">
+                                <a id="btnSearchCanBoDangKy" class="btn btn-soft-primary ">
                                     <i class="fa-solid fa-user-tie"></i><span class="lang" key="">Xem kết quả đăng ký
                                         chi tiết(cán bộ đăng ký)</span></a>
-                                <a id="btnSearchChiTietRut" class="btn btn-outline-success">
+                                <a id="btnSearchChiTietRut" class="btn btn-soft-primary">
                                     <i class="fa-solid fa-user-magnifying-glass"></i><span class="lang" key="">Xem danh
                                         sách rút đăng ký</span></a>
-                                <a id="btnDSKhongDangKy" class="btn btn-outline-warning">
+                                <a id="btnDSKhongDangKy" class="btn btn-soft-primary">
                                     <i class="fa-solid fa-user-slash"></i><span class="lang" key="">Danh sách không
                                         đăng ký</span></a>
                                 <div class="dropdown" id="zonebtnBaoCao_LopHocPhan"></div>
@@ -300,34 +302,28 @@
                             <span id="lblLopHocPhan_Tong"></span>
                         </span>
                     </h3>
-                    <div class="box-tools pull-right right-0">
-                        <a id="btnTongHopCongNo" class="btn"
-                           style="color: #fff; background-color: #6610f2; border-color: #520dc2;">
+                    <div class="box-tools pull-right right-0 mt-5">
+                        <a id="btnTongHopCongNo" class="btn btn-soft-primary">
                             <i class="fa-solid fa-coins"></i>Tổng hợp công nợ</a>
-                        <a id="btnCanBangNo" class="btn"
-                           style="color: #fff; background-color: #20c997; border-color: #1ba37e;">
+                        <a id="btnCanBangNo" class="btn btn-soft-success">
                             <i class="fa-solid fa-scale-balanced"></i>Cân bằng nợ</a>
-                        <a id="btnHuyCanBangNo" class="btn"
-                           style="color: #fff; background-color: #6c757d; border-color: #5a6268;">
+                        <a id="btnHuyCanBangNo" class="btn btn-soft-danger">
                             <i class="fa-solid fa-ban"></i>Hủy cân bằng nợ</a>
-                        <a id="btnThuocTinhKLGD" class="btn"
-                           style="color: #fff; background-color: #6f42c1; border-color: #5a32a3;">
+                        <a id="btnThuocTinhKLGD" class="btn btn-soft-primary">
                             <i class="fa-solid fa-scale-balanced"></i>Thuộc tính phục vụ tính khối lượng</a>
-                        <a id="btnThietLapCheDoTinhPhi" class="btn"
-                           style="color: #fff; background-color: #17a2b8; border-color: #138496;">
+                        <a id="btnThietLapCheDoTinhPhi" class="btn btn-soft-success">
                             <i class="fa-solid fa-money-check-dollar"></i>Thiết lập chế độ tính phí</a>
-                        <a id="btnThucHienRutHocPhan" class="btn btn-warning" style="color: #fff; background-color: #f39c12; border-color: #e08e0b;">
+                        <a id="btnThucHienRutHocPhan" class="btn btn-soft-info">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i>Thực hiện rút học phần</a>
-                        <a id="btnTaoDSNhapDiem" class="btn btn-outline-danger">
+                        <a id="btnTaoDSNhapDiem" class="btn btn-soft-success">
                             <i class="fa-solid fa-pen-field"></i>Tạo danh sách nhập điểm</a>
-                        <a class="btn btn-outline-primary" id="btnThietLapLopRieng" href="#">
+                        <a class="btn btn-soft-primary" id="btnThietLapLopRieng" href="#">
                             <i class="fa-solid fa-users-between-lines"></i>Thiết lập lớp riêng</a>
-                        <a class="btn btn-outline-success" id="btnThietLapKhongTinhPhi" href="#">
+                        <a class="btn btn-soft-success" id="btnThietLapKhongTinhPhi" href="#">
                             <i class="fa-solid fa-users-gear"></i>Thiết đặt lớp không tín phí</a>
-                        <a class="btn btn-outline-secondary" id="btnThietLapKhongToChucThi" href="#">
+                        <a class="btn btn-soft-puple" id="btnThietLapKhongToChucThi" href="#">
                             <i class="fa-light fa-screen-users"></i>Thiết đặt lớp không tổ chức thi</a>
-                        <a id="btnHuyPhiTinChi" class="btn"
-                           style="color: #fff; background-color: #dc3545; border-color: #c82333;">
+                        <a id="btnHuyPhiTinChi" class="btn btn-soft-danger">
                             <i class="fa-solid fa-ban"></i>Hủy phí tín chỉ</a>
                     </div>
                 </div>

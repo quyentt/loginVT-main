@@ -22,7 +22,7 @@
   /* Mã màu bootstrap */
   --color-danger: rgb(220, 53, 69) !important;
   --color-red-hover: #e00202 !important;
-  --color-orange: #d54b07 !important;
+  --color-orange: rgb(213, 75, 7) !important;
   --color-orange-hover: #ff4500;
   --color-nv: #d4145a;
   --color-delete: #df322b;
@@ -51,7 +51,7 @@
   --color-yellow: #ffe600 !important;
   --color-white: #ffffff;
   --color-puple: rgb(161, 34, 216);
-  --color-add: #6610f2;
+  --color-add: rgb(102, 16, 242);
   --color-view: #8601af;
   --color-edit: #ffb400;
   --color-pink: #ff0081 !important;
