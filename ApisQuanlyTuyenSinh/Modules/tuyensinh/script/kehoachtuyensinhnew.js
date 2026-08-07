@@ -4405,7 +4405,10 @@ KeHoachTuyenSinhNew.prototype = {
         // CMC mới bổ sung (chiều 05/08/2026):
         'dc_hoadon': 'strPersonInvoice_DiaChi',
         // CMC field tài chính (sếp bổ sung 06/08/2026):
-        'tc_lpgd': 'strSoTienNopTruoc'
+        'tc_lpgd': 'strSoTienNopTruoc',
+        // CMC tên cột NEW song song (sếp confirm 06/08/2026):
+        'noptientruoc': 'strSoTienNopTruoc',
+        'diachixuathoadon': 'strPersonInvoice_DiaChi'
     },
 
     initDocAPI_Bindings: function () {
