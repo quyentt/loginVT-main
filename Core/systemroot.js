@@ -7545,7 +7545,7 @@ systemroot.prototype = {
         if (strMaDanhMuc != undefined && strMaDanhMuc != "") {
             var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
             body += '<div class="col-sm-3 fw-semibold">- Mẫu ' + strTenHienThi + ':</div>';
-            body += '<div class="col-sm-9"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div>';
+            body += '<div class="col-sm-9"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa-solid fa-file-import"></i></a></div>';
         }
         body += '</div>';
         body += '<div id="zoneImportChung_Result" class="mt-3"></div>';

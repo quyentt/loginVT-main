@@ -5325,11 +5325,11 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .aps-canbo-dangky-add-l .aps-info-sv {
     background-color: #f1f1f1 !important;
-    padding: 20px !important;
+    padding: 15px !important;
     border: 5px solid #fff;
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
-    height: 100vh;
+    height: 100vh !important;
 }
 
 .aps-canbo-dangky-add-l .box.box-solid {
@@ -5392,8 +5392,8 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .aps-canbo-dangky-add-item .zone-box .btn {
     margin-left: 8px !important;
-    padding: 8px 15px 6.6px 15px !important;
-    margin-bottom: 8px;
+    padding: 10px 15px 6.6px 15px !important;
+    margin-bottom: 8px !important;
     float: left;
     white-space: normal !important;
     color: #222;
@@ -5478,7 +5478,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .zoneLopHocPhan .col-lg-3 .box-hocphan tr td {
-    padding: 5px 8px !important;
+    padding: 3px 8px !important;
 }
 
 .zoneLopHocPhan .col-lg-3 .box-hocphan .name-hocphan {
@@ -5495,7 +5495,12 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     border-right: 0 !important;
     word-break: break-all !important;
 }
-
+.zoneLopHocPhan .col-lg-3 .box-hocphan .dangky-hocphan td{
+    padding-bottom: 10px !important;
+}
+.zoneLopHocPhan .col-lg-3 .box-hocphan .day-hocphan td{
+    padding-top: 10px !important;
+}
 .thu-hocphan td,
 .gv-hocphan td,
 .day-hocphan td:nth-child(2),
@@ -10335,7 +10340,7 @@ table#clone {
 .aps-form-item .select2-container--default .select2-selection--single .select2-selection__rendered,
 .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     color: #444;
-    line-height: 36px;
+    line-height: 22px;
 }
 
 .aps-form-item .select2-container--default .select2-selection--single .select2-selection__arrow,
@@ -11269,7 +11274,7 @@ table#clone {
 .zonePhanCong {
     gap: 20px;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     /* 4 cột bằng nhau */
 }
 
@@ -15712,10 +15717,10 @@ table#clone {
     position: absolute;
 }
 
-.aps-add-new .row>* {
+/* .aps-add-new .row>* {
     padding-right: 0 !important;
     padding-left: 0 !important;
-}
+} */
 
 .aps-add-new .aps-form-lable.text-right.pr15 {
     padding-right: 15px !important;
@@ -17092,4 +17097,19 @@ table#clone {
 .tbllichSuXN.table-bordered tbody tr:nth-child(2n+2),.tbllichSuXN.table-bordered tbody tr:nth-child(2n+2) td {
     background: #f8f8f8 ;
     color:#222;
+}
+
+.pull-left.aps-list-btn .btn:first-child{
+    margin-left: 0 !important;
+}
+
+.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop
+{
+    margin-top: 10px !important;
+}
+.col-TT-phamvi.pr10{
+    padding-right: 10px !important;
+}
+.btn.btn-white.btnCloseSinhVien{
+    border: 0 !important;
 }

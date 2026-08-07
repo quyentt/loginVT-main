@@ -205,7 +205,7 @@ systemroot.prototype = {
         strModal += '</div>';
         strModal += '<div class="modal-body" id="modal_body"></div>';
         strModal += '<div class="modal-footer">';
-        strModal += '<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>';
+        strModal += '<button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-regular fa-xmark"></i> <span class="lang" key="">Đóng</span></button>';
         strModal += '</div>';
         strModal += '</div>';
         $(me.ctPlacehoder).after('<div class="modal fade" id="modalBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog" style="width: ' + (window.screen.width - 40) + 'px">' + strModal + '</div></div>');
@@ -7839,7 +7839,7 @@ systemroot.prototype = {
         row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Upload ' + strTenHienThi + ': </div><div class="col-sm-8"><div id="zoneImportChung"></div></div>';
         if (strMaDanhMuc != undefined && strMaDanhMuc != "") {
             var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
-            row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-8"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div>';
+            row += '<div class="col-sm-4" style="overflow: hidden; height: 30px">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-8"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa-solid fa-file-import"></i></a></div>';
         }
         row += '</div><div class="clear"></div>';
         edu.system.alert(row);
@@ -7965,11 +7965,11 @@ systemroot.prototype = {
         }
         var row = '';
         row += '<div class="box-upload-file col-sm-6">';
-        row += '<div class="row"><div class="col-sm-3" ><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Upload ' + strTenHienThi + ' </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
-        row += '<div class="row"><div class="col-sm-3" ><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Mẫu ' + strTenHienThi + ' </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
+        row += '<div class="row"><div class="col-sm-4" ><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Upload ' + strTenHienThi + ' </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
+        row += '<div class="row"><div class="col-sm-4" ><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Mẫu ' + strTenHienThi + ' </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa-solid fa-file-import"></i></a></div></div>';
         row += '</div>';
         row += '<div class="box-import-sheet col-sm-6">';
-        row += '<div class="clear">Sheet import</div>';
+        row += '<div class="clear"><i class="fa-light fa-file-spreadsheet"></i> Sheet import</div>';
         row += '<div>';
         row += '<div style="width: 400px;margin-top:5px" class="form-select-2"><select id="dropSearch_BangA" class="select-opt select2"></select></div>';
         row += '</div>';
@@ -7978,7 +7978,7 @@ systemroot.prototype = {
         row += '<div class="zone-content" id="tblChuaImport">';
         row += '<div class="box-header with-border">';
         row += '<h3 class="box-title"><i class="fa fa-list-alt"></i> Danh sách</h3>';
-        row += '<div class="pull-right"><a class="btn btn-soft-primary" id="btnThucHienImport" href="#"><i class="fa fa-plus"></i> Thực hiện import</a></div>';
+        row += '<div class="pull-right"><a class="btn btn-soft-primary" id="btnThucHienImport" href="#"><i class="fa-duotone fa-solid fa-file-import"></i> Thực hiện import</a></div>';
         row += '</div>';
         row += '<div class="clear"></div>';
         row += '<div class="row row-align">';
@@ -7991,7 +7991,7 @@ systemroot.prototype = {
         row += '<div class="clear"></div>';
         row += '<div class="zone-content" id="tblImportLoi" style="display:none">';
         row += '<div class="box-header with-border">';
-        row += '<h3 class="box-title"><i class="fa fa-list-alt"></i>Danh sách Lỗi</h3>';
+        row += '<h3 class="box-title"><i class="fa-duotone fa-regular fa-triangle-exclamation"></i>Danh sách Lỗi</h3>';
         row += '<div class="pull-right"><a class="btn btn-primary" id="btnDownloadAllTableLoi" title="tblBangB" href="#" ><i class="fa-duotone fa-solid fa-download"></i> Tải file</a></div>';
         row += '</div>';
         row += '<div class="clear"></div>';
