@@ -632,7 +632,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonInvoice_DiaChi', 'strPersonInvoice_Email',
             'strPersonBank_HinhThucTT', 'strPersonBank_TenNganHang', 'strPersonBank_SoTaiKhoan',
             'strPersonBank_ChuTaiKhoan', 'strPersonBank_GhiChu',
-            'strDaoTao_CoSoDaoTao',
+            'strDaoTao_CoSoDaoTao', 'strSoTienNopTruoc',
             'strExtra_Person_Data', 'strExtra_HoSo_Data', 'strExtra_Intake_Data'
         ];
         // Dòng ví dụ — dùng VD sếp cung cấp ở signature Toad (mã theo convention BE Import).
@@ -678,6 +678,7 @@ KeHoachTuyenSinhNew.prototype = {
             strPersonBank_SoTaiKhoan: '1012345678', strPersonBank_ChuTaiKhoan: 'Nguyễn Văn A',
             strPersonBank_GhiChu: '',
             strDaoTao_CoSoDaoTao: '',   // để trống → dùng dropdown ở modal; điền nếu muốn override per record
+            strSoTienNopTruoc: '5000000',   // VD: 'Số tiền nộp trước (đăng ký giữ chỗ)'
             strExtra_Person_Data: '', strExtra_HoSo_Data: '', strExtra_Intake_Data: ''
         };
         var sampleRow = headers.map(function (h) {
@@ -2040,6 +2041,9 @@ KeHoachTuyenSinhNew.prototype = {
 
             // Cơ sở đào tạo — param "new" của Them_HoSo_TS (proc Oracle đã có, comment C# chưa update)
             'strDaoTao_CoSoDaoTao_Id': g('ddlKQ_CoSoDaoTao'),
+
+            // Số tiền nộp trước (giữ chỗ) — param mới (06/08/2026); form Khai chưa có input UI → gửi rỗng
+            'strSoTienNopTruoc': '',
 
             // Nguyện vọng đầu ra — BẮT BUỘC trong signature, BE dùng để snapshot Hệ/Khóa/CT/NganhTS/NganhDT
             'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
@@ -4354,6 +4358,7 @@ KeHoachTuyenSinhNew.prototype = {
         { ma: 'strPersonBank_SoTaiKhoan', ten: 'Ngân hàng - Số TK' },
         { ma: 'strPersonBank_ChuTaiKhoan', ten: 'Ngân hàng - Chủ TK' },
         { ma: 'strPersonBank_GhiChu', ten: 'Ngân hàng - Ghi chú' },
+        { ma: 'strSoTienNopTruoc', ten: 'Số tiền nộp trước (giữ chỗ)' },
         { ma: 'strExtra_Person_Data', ten: 'Extra Person Data (JSON)' },
         { ma: 'strExtra_HoSo_Data', ten: 'Extra Hồ Sơ Data (JSON)' },
         { ma: 'strExtra_Intake_Data', ten: 'Extra Intake Data (JSON)' }
@@ -4398,7 +4403,9 @@ KeHoachTuyenSinhNew.prototype = {
         'manganh': 'strMaNganhTrungTuyen',
         'mactdt': 'strMaCTDT',
         // CMC mới bổ sung (chiều 05/08/2026):
-        'dc_hoadon': 'strPersonInvoice_DiaChi'
+        'dc_hoadon': 'strPersonInvoice_DiaChi',
+        // CMC field tài chính (sếp bổ sung 06/08/2026):
+        'tc_lpgd': 'strSoTienNopTruoc'
     },
 
     initDocAPI_Bindings: function () {
