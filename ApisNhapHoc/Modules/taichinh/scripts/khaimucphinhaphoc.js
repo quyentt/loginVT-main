@@ -727,9 +727,9 @@ KhaiMucPhi.prototype = {
             var strKieuTuDong = lookupDM(me.dtDM_KieuTuDong, r.KIEU_TU_DONG_SINH_PHAITHU_ID || r.KIEU_SINH_PHAITHU_ID);
             var iChoPhepMienGiam = Number(r.CHO_PHEP_MIEN_GIAM || 0);
             var strGhiChu = r.GHICHU || r.GHI_CHU || '';
-            // Cơ sở đào tạo: ưu tiên tên từ API, fallback lookup theo ID từ cache
-            var strCSDTen = r.COSODAOTAO_TEN || r.NHAPHOC_COSO_TEN
-                          || lookupCSD(r.DAOTAO_COSODAOTAO_ID || r.COSODAOTAO_ID || r.NHAPHOC_COSO_ID || '');
+            // Cơ sở đào tạo: backend trả NHAPHOC_COSO_TEN / NHAPHOC_COSO_ID (khớp cột DB)
+            var strCSDTen = r.NHAPHOC_COSO_TEN || r.COSODAOTAO_TEN
+                          || lookupCSD(r.NHAPHOC_COSO_ID || r.DAOTAO_COSODAOTAO_ID || r.COSODAOTAO_ID || '');
 
             // format số tiền có dấu phân cách hàng nghìn
             var strDinhMucFmt = strDinhMuc;
@@ -1075,6 +1075,9 @@ KhaiMucPhi.prototype = {
                     var arr = data.Data || [];
                     var r = Array.isArray(arr) ? arr[0] : arr;
                     if (!r) { edu.system.alert("Không tìm thấy dữ liệu nhóm.", "w"); return; }
+                    // Force gán ID gốc để không phụ thuộc field naming của API response
+                    // (đảm bảo save_Nhom đi đúng nhánh SUA, không phải THEM)
+                    r.__forcedId = strNhomId;
                     me.openModal_Nhom_Edit(r);
                 } else {
                     edu.system.alert(data.Message, "s");
@@ -1108,13 +1111,20 @@ KhaiMucPhi.prototype = {
        [8] Mở modal Xem & chỉnh sửa nhóm (đổ dữ liệu)
        ----------------------------------------------------------------- */
     openModal_Nhom_Edit: function (r) {
-        var strId = r.ID || r.NH_CAUHINH_TC_NHOM_ID || '';
-        var strKeHoachId = r.NH_KEHOACH_NHAPHOC_ID || this.strKeHoachNhapHoc_Id || '';
-        var strMa = r.MA_NHOM || r.MA || '';
-        var strTen = r.TEN_NHOM || r.TEN || '';
-        var iPriority = (r.PRIORITY_NO !== undefined && r.PRIORITY_NO !== null) ? r.PRIORITY_NO : 100;
-        var iIsDefault = (r.IS_DEFAULT !== undefined && r.IS_DEFAULT !== null) ? Number(r.IS_DEFAULT) : 1;
-        var strGhiChu = r.GHICHU || r.GHI_CHU || '';
+        // Ưu tiên ID force từ caller (xem_ChiTiet_Nhom truyền vào), rồi mới fallback field response
+        var strId = r.__forcedId || r.ID || r.Id || r.id
+                 || r.NH_CAUHINH_TC_NHOM_ID || r.Nh_Cauhinh_Tc_Nhom_Id || '';
+        var strKeHoachId = r.NH_KEHOACH_NHAPHOC_ID || r.Nh_Kehoach_Nhaphoc_Id
+                        || this.strKeHoachNhapHoc_Id || '';
+        var strMa = r.MA_NHOM || r.Ma_Nhom || r.MA || '';
+        var strTen = r.TEN_NHOM || r.Ten_Nhom || r.TEN || '';
+        var iPriority = (r.PRIORITY_NO !== undefined && r.PRIORITY_NO !== null) ? r.PRIORITY_NO
+                      : (r.Priority_No !== undefined && r.Priority_No !== null) ? r.Priority_No
+                      : 100;
+        var iIsDefault = (r.IS_DEFAULT !== undefined && r.IS_DEFAULT !== null) ? Number(r.IS_DEFAULT)
+                       : (r.Is_Default !== undefined && r.Is_Default !== null) ? Number(r.Is_Default)
+                       : 1;
+        var strGhiChu = r.GHICHU || r.GhiChu || r.GHI_CHU || '';
 
         $("#modalNhom_HSNH_Title").text("Xem và chỉnh sửa nhóm");
         $("#hdId_Nhom_HSNH").val(strId);
@@ -1406,7 +1416,9 @@ KhaiMucPhi.prototype = {
         var me = this;
         me.loadCombos_KhoanThu(function () {
             $("#modalKhoanThuEdit_HSNH_Title").text("Xem và chỉnh sửa khoản thu");
-            var strId = r.ID || r.NH_CAUHINH_TC_ID || '';
+            // Fallback nhiều biến thể naming để không mất ID → tránh save gửi rỗng → THEM thay vì SUA
+            var strId = r.ID || r.Id || r.id
+                     || r.NH_CAUHINH_TC_ID || r.Nh_Cauhinh_Tc_Id || '';
             $("#hdId_KhoanThu_HSNH").val(strId);
             edu.util.viewValById("dropKhoanThu_KhoanThu_HSNH",
                 r.TAICHINH_CACKHOANTHU_ID || r.KHOANTHU_ID || '');
@@ -1418,8 +1430,9 @@ KhaiMucPhi.prototype = {
             $("#txtThuTu_KhoanThu_HSNH").val(r.THU_TU_HIEN_THI != null ? r.THU_TU_HIEN_THI : 0);
             edu.util.viewValById("dropKieuTuDong_KhoanThu_HSNH", r.KIEU_TU_DONG_SINH_PHAITHU_ID || r.KIEU_SINH_PHAITHU_ID || '');
             $("#chkChoPhepMienGiam_KhoanThu_HSNH").prop("checked", Number(r.CHO_PHEP_MIEN_GIAM || 0) === 1);
+            // Backend trả field NHAPHOC_COSO_ID (khớp cột DB NHAPHOC_COSO_ID)
             edu.util.viewValById("dropCoSoDaoTao_KhoanThu_HSNH",
-                r.DAOTAO_COSODAOTAO_ID || r.COSODAOTAO_ID || r.NHAPHOC_COSO_ID || '');
+                r.NHAPHOC_COSO_ID || r.DAOTAO_COSODAOTAO_ID || r.COSODAOTAO_ID || '');
             $("#txtGhiChu_KhoanThu_HSNH").val(r.GHICHU || r.GHI_CHU || '');
             $("#zoneDelete_KhoanThu_HSNH").show();
             // Ở chế độ sửa, khoản thu gốc không cho đổi (hoặc để đổi được cũng ok — Sua có param strTaiChinh_CacKhoanThu_Id)
@@ -1466,6 +1479,8 @@ KhaiMucPhi.prototype = {
                 'strKieu_Sinh_PhaiThu_Id': strKieuTuDongId,
                 'dThu_Tu_Hien_Thi': Number(strThuTu || 0),
                 'strDaoTao_CoSoDaoTao_Id': strCoSoDaoTaoId,
+                'strNhapHoc_CoSo_Id': strCoSoDaoTaoId,
+                'strNhaphoc_Coso_Id': strCoSoDaoTaoId,
                 'strGhiChu': strGhiChu,
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strVaiTroDangNhap_Id': '',
@@ -1489,6 +1504,8 @@ KhaiMucPhi.prototype = {
                 'strKieu_Sinh_PhaiThu_Id': strKieuTuDongId,
                 'dThu_Tu_Hien_Thi': Number(strThuTu || 0),
                 'strDaoTao_CoSoDaoTao_Id': strCoSoDaoTaoId,
+                'strNhapHoc_CoSo_Id': strCoSoDaoTaoId,
+                'strNhaphoc_Coso_Id': strCoSoDaoTaoId,
                 'strGhiChu': strGhiChu,
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strVaiTroDangNhap_Id': '',
