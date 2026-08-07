@@ -228,29 +228,31 @@
                             </a>
                         </div>
                         <div class="clearfix"></div>
-                        <div class="col-sm-6 item-search d-flex">
-                            <a id="btnAddNamBaoCao" class="btn btn-soft-primary mr-10">
-                                <i class="fal fa-usd-circle"></i> <span class="lang" key="">
-                                    Cấu hình năm tài
-                                    chính
-                                </span>
+                        <div class="col-sm-6 item-search d-flex justify-content-between" style="gap: 10px;">
+                            <a id="btnXoaNamBaoCao" class="btn btn-danger">
+                                <i class="fa fa-trash"></i> Xóa năm tài chính
                             </a>
-                            <a id="btnViewBaoCao" class="btn btn-soft-success mr-10">
-                                <i class="fal fa-file-invoice-dollar"></i> <span class="lang" key="">
-                                    Xem báo cáo đã
-                                    thực hiện
-                                </span>
-                            </a>
-                            <a id="btnXoaNamBaoCao" class="btn btn-soft-danger mr-10">
-                                <i class="fa fa-trash"></i> Xóa
-                                năm tài chính
-                            </a>
+                            <div class="d-flex" style="gap: 10px;">
+                                <a id="btnAddNamBaoCao" class="btn btn-primary">
+                                    <i class="fal fa-usd-circle"></i>
+                                    <span class="lang" key="">Cấu hình năm tài chính</span>
+                                </a>
+                                <a id="btnViewBaoCao" class="btn btn-success">
+                                    <i class="fal fa-file-invoice-dollar"></i>
+                                    <span class="lang" key="">Xem báo cáo đã thực hiện</span>
+                                </a>
+                            </div>
                         </div>
                         <div class="col-sm-6 item-search d-flex">
                             <div class="dropdown zonebtnBaoCao_TC" id="zonebtnBaoCao_TC"
                                 style="width: auto !important;"></div>
+                            <div class="dropdown zonebtnBaoCao_TC_DatLich" id="zonebtnBaoCao_TC_DatLich"
+                                style="width: auto !important; margin-left: 5px;"></div>
+                            <a id="btnXemLichBaoCao" class="btn btn-default" style="margin-left: 5px;">
+                                <i class="fal fa-calendar-alt"></i> Xem đã đặt
+                            </a>
                             <div class="dropdown zonebtnBaoCao_TC_Import" id="zonebtnBaoCao_TC_Import"
-                                style="width: auto !important;">
+                                style="width: auto !important; margin-left: 5px;">
                                 <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
                                     <i class="fa-regular fa-file-import"></i> Import <span class="caret"></span>
                                 </button>
