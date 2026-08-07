@@ -825,7 +825,7 @@ XacNhanKetQua.prototype = {
         row += '<div class="row"><div class="col-sm-2" >- Thực hiện import: </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
         if (strMaDanhMuc) {
             var url_report = edu.system.strhost + "/reportcms/Modules/Common/MauImport.aspx?Ma=" + strMaDanhMuc;
-            row += '<div class="row"><div class="col-sm-2" style="overflow: hidden; height: 30px">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
+            row += '<div class="row"><div class="col-sm-2" style="overflow: hidden; height: 30px">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa-solid fa-file-import"></i></a></div></div>';
         }
         row += '<div class="group-title">';
         row += '<div class="clear">Bảng import</div>';

@@ -7,7 +7,7 @@
     .table>thead>tr>th {
         border-top: 1px solid #f1f1f1;
         border-left: 1px solid #f1f1f1;
-        padding: 0px !important;
+        padding: 0px;
     }
 
     .box-hocphan {
@@ -46,9 +46,9 @@
 
     .zone-box .btn-primary,
     .zone-box .btnSelectInList.btn-primary {
-        background-color: #fff !important;
-        color: #333 !important;
-        border: 2px solid #007bff !important;
+        background-color: rgb(0, 123, 255,0.1)  !important;
+        color:rgb(0, 123, 255)  !important;
+        border: 1px solid rgb(0, 123, 255) !important;
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
         -moz-box-shadow: 1px 1px 1px 1px #ccc;
         box-shadow: 1px 1px 1px 1px #ccc;
@@ -231,7 +231,7 @@
                         <a class="btn btn-default btn-search" id="btnSearchSinhVien">
                             <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span></a>
                         <div class="dropdown" id="zonebtnBaoCao_DangKyHoc_Import">
-                            <button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">
+                            <button class="btn btn-success dropdown-toggle" type="button" data-toggle="dropdown">
                                 <i class="far fa-upload"></i>Import <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu form-container">
@@ -270,9 +270,11 @@
                     </span>
                 </h3>
                 <div class="pull-right d-flex">
+                    <a id="btnDelete_Import" class="btn btn-soft-danger"><i class="fa fa-trash"></i>Xóa dữ liệu
+                        import</a>
                     <a id="btnAddnew" class="btn btn-primary btnSave"><i class="far fa-user-edit"></i>Đăng ký</a>
-                    <a id="btnDelete_Import" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa dữ liệu import</a>
-                    <a id="btnSearch_Import" class="btn btn-default btn-search"><i class="fa fa-search"></i>Tìm theo
+
+                    <a id="btnSearch_Import" class="btn btn-success"><i class="fa fa-search"></i>Tìm theo
                         import</a>
                 </div>
             </div>
@@ -568,17 +570,21 @@
 <div class="aps-all-button ml-20 aps-gap-10 btn-show mt-10 pl20" style="display: none !important;">
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModal">
         Danh sách học phần</button>
-    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#myModalPhamVi">
+    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#myModalChiTietLich">
         Danh sách phạm vi</button>
+        <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#phuongan_dangky">
+            Chi tiết quân số lớp</button>
 </div>
 <!-- ---------- -->
+<!-- Danh sách học phần -->
 <div class="modal fade modal-ds-hocphan" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1">Danh sách học phần</span> </h4>
+                <h4 class="modal-title"><span class="myModalLabel1"><i class="fa-solid fa-books"></i> 
+                    Danh sách học phần</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="box-body zone-box" id="zoneDoiLichDangKy">
@@ -586,13 +592,19 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
-                    <span class="lang" key="">Đóng</span></button>
-                <a id="btnDelete_LopHocPhan" class="btn btn-warning"><i class="fa fa eraser"></i> Xóa</a>
+                <div class="pull-left aps-list-btn"> <a id="btnDelete_LopHocPhan" class="btn btn-soft-danger"><i
+                            class="fa fa eraser"></i> Xóa</a></div>
+                <div class="pull-right aps-list-btn">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa-regular fa-xmark"></i>
+                        <span class="lang" key="">Đóng</span></button>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
+<!-- Chi tiết quân số lớp -->
 <div class="modal fade myModalChiTietLich" id="myModalChiTietLich" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered" style="width: 95%">
@@ -600,7 +612,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1"><i class="fa fa-plus"></i> Chi tiết - </span> <span
+                <h4 class="modal-title"><span class="myModalLabel1"><i class="fa fa-plus"></i>Chi tiết - </span> <span
                         class="lang" key="" id="lblChiTietHocPhan">Chi tiết quân số lớp</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
@@ -636,6 +648,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade phuongan_dangky" id="phuongan_dangky" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
     <div class="modal-dialog" style="width: 95%">
@@ -647,8 +660,8 @@
                         class="lang" key="" id="zoomfileLabel_PhuongAn">Chi tiết quân số lớp</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="clear"></div>
-                <table id="tblPhuongAnDangKy" class="table table-hover table-bordered">
+                <div class="scroll-table-x aps-table-select">
+                <table id="tblPhuongAnDangKy" class="table table-hover table-bordered table-noborder tblPhuongAnDangKy">
                     <thead>
                         <tr>
                             <th class="td-center td-fix"><span class="lang" key="">Stt</span></th>
@@ -659,7 +672,7 @@
                         </tr>
                     </thead>
                     <tbody></tbody>
-                </table>
+                </table></div>
             </div>
             <div id="notify"></div>
             <div class="modal-footer">

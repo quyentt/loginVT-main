@@ -765,11 +765,15 @@ TongHopDiem.prototype = {
         }
 
         var row = '';
-        row += '<div class="row"><div class="col-sm-2">- Upload ' + strTenHienThi + ': </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
-        row += '<div class="row"><div class="col-sm-2">- Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa fa-cloud-download"></i></a></div></div>';
-        row += '<div class="clear">Sheet import</div>';
+        row += '<div class="box-upload-file col-sm-6">';
+        row += '<div class="row"><div class="col-sm-4"><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Upload ' + strTenHienThi + ': </div><div class="col-sm-2"><div id="importToCheck"></div></div></div>';
+        row += '<div class="row"><div class="col-sm-4"><i class="fa-solid fa-circle-check bold mr-5 color-blue"></i> Mẫu ' + strTenHienThi + ': </div><div class="col-sm-2"><a id="btnHSLL_Import" href="' + url_report + '"><i class="fa-solid fa-file-import"></i></a></div></div>';
+        row += '</div>';
+        row += '<div class="box-import-sheet col-sm-6">';
+        row += '<div class="clear"><i class="fa-light fa-file-spreadsheet"></i> Sheet import</div>';
         row += '<div><div style="width: 400px;margin-top:5px"><select id="dropSearch_BangA" class="select-opt"></select></div></div>';
         row += '<div class="clear"></div>';
+        row += '</div>';
 
         // Vùng thanh tiến trình (ẩn cho tới khi bấm "Thực hiện import")
         row += '<div id="zoneImportProgress_THD" style="display:none; margin:12px 0;">';
@@ -795,7 +799,7 @@ TongHopDiem.prototype = {
         row += '<div class="clear"></div>';
         row += '<div class="zone-content" id="tblImportLoi" style="display:none">';
         row += '  <div class="box-header with-border">';
-        row += '    <h3 class="box-title"><i class="fa fa-list-alt"></i>Danh sách Lỗi</h3>';
+        row += '    <h3 class="box-title"><i class="fa-duotone fa-regular fa-triangle-exclamation"></i>Danh sách Lỗi</h3>';
         row += '    <div class="pull-right"><a class="btn btn-primary" id="btnDownloadAllTableLoi" title="tblBangB" href="#"><i class="fa fa-cloud-download"></i> Tải file</a></div>';
         row += '  </div>';
         row += '  <div class="clear"></div>';

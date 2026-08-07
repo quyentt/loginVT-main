@@ -6667,9 +6667,6 @@ input[type="radio"] {
   min-width: 100px;
 }
 
-.zone-pag-footertblQuanSoLop .light-paginationtblQuanSoLop.simple-pagination ul {
-  float: left !important;
-}
 
 .zone-pag-footertblQuanSoLop {
   margin-top: 0px !important;

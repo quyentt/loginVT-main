@@ -28,7 +28,11 @@
 }
 
 @media only screen and (max-width: 1400px) {
-   
+    .zonePhanCong {
+        gap: 20px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
     .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
         width: 32.3% !important;
     }
@@ -234,6 +238,11 @@
 }
 
 @media (max-width: 1024px) {
+    .zonePhanCong {
+        gap: 20px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
     .aps-list-chuongtrinh .zoneBox_ChuongTrinh .col-sm-3 {
         width: 48.3% !important;
     }
