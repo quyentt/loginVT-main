@@ -5,10 +5,10 @@
     }
 
     .aps-kehoach-add .group-group-title-name .badge {
-        background-color: #3c8dbc !important;
-        color: #fff !important;
-        padding: 6px 14px !important;
-        font-size: 14px !important;
+        background-color: #fff !important;
+        color: #0d6efd !important;
+        padding: 6px 10px 6px 0 !important;
+        font-size: 16px !important;
         font-weight: 600 !important;
         border-radius: 4px !important;
         line-height: 1.4 !important;
@@ -59,7 +59,7 @@
                         </span>
                     </h3>
                     <div class="box-tools pull-right d-flex">
-                        <a id="btnXoaKeHoachXuLy" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
+                        <a id="btnXoaKeHoachXuLy" class="btn btn-soft-danger"><i class="fa fa-trash"></i>Xóa</a>
                         <a class="btn btnAdd btn-primary" id="btnAddKeHoach" href="#">
                             <i class="fa fa-plus"></i>Thêm mới
                         </a>
@@ -113,7 +113,7 @@
             style="display: none">
             <div class="box-header with-border">
                 <h3 class="box-title line-20">
-                    <span class="myModalLabel">
+                    <span class="myModalLabel pr10">
                         <i class="fa fa-plus mt-2"></i> Thêm mới - </span> Kế hoạch
                 </h3>
                 <div class="pull-right position-relative">
@@ -293,7 +293,7 @@
                                     </div>
                                 </div>
                                 <div class="pull-right">
-                                    <a class="btn btn-outline-primary" id="btnThemHeKhoa">
+                                    <a class="btn btn-soft-primary" id="btnThemHeKhoa">
                                         <i class="fa fa-plus color-active"></i> Thêm dòng mới
                                     </a>
                                 </div>
@@ -327,7 +327,7 @@
                                 </div>
                                 <div class="row aps-form-btn">
                                     <div class="pull-right">
-                                        <a class="btn btn-outline-primary" id="btnAddThoiGian">
+                                        <a class="btn btn-soft-primary" id="btnAddThoiGian">
                                             <i class="fa fa-plus color-active mr-0"></i>Thêm dòng mới
                                         </a>
                                     </div>
@@ -351,7 +351,8 @@
                                             <td class="td-left">Đợt thi</td>
                                             <td class="td-center w-100px">Xóa</td>
                                             <td class="td-center w-50px">
-                                                <input class="chkSystemSelectAll" type="checkbox" id="chkSelectAll_DotThi">
+                                                <input class="chkSystemSelectAll" type="checkbox"
+                                                    id="chkSelectAll_DotThi">
                                             </td>
                                         </tr>
                                     </thead>
@@ -359,10 +360,10 @@
                                 </table>
                             </div>
                             <div class="row aps-form-btn d-flex justify-content-end align-items-center">
-                                <a class="btn btn-outline-danger" id="btnDelete_DotThi">
-                                    <i class="fa fa-trash color-active mr-0"></i>Xóa
+                                <a class="btn btn-soft-danger" id="btnDelete_DotThi">
+                                    <i class="fa fa-trash mr-0"></i>Xóa
                                 </a>
-                                <a class="btn btn-outline-primary ml-10" id="btnAdd_DotThi">
+                                <a class="btn btn-soft-primary ml-10" id="btnAdd_DotThi">
                                     <i class="fa fa-plus color-active mr-0"></i>Thêm mới
                                 </a>
                             </div>
@@ -398,10 +399,10 @@
                         </div>-->
                             <div class="pull-right">
                                 <div class="title-name d-flex">
-                                    <a id="btnDelete_PhamVi" class="btn btn-outline-danger btnDelete_PhamVi">
+                                    <a id="btnDelete_PhamVi" class="btn btn-soft-danger btnDelete_PhamVi">
                                         <i class="fa fa-trash mr-0"></i>Xóa
                                     </a>
-                                    <a class="btn btn-outline-primary btnSearch_PhamVi" id="">
+                                    <a class="btn btn-soft-primary btnSearch_PhamVi" id="">
                                         <i class="fa fa-plus color-active mr-0"></i>Thêm
                                     </a>
                                 </div>
@@ -436,10 +437,10 @@
                         <div class="row aps-form-btn">
                             <div class="pull-right">
                                 <div class="title-name d-flex">
-                                    <a id="btnDelete_HPDangKy" class="btn btn-outline-danger">
+                                    <a id="btnDelete_HPDangKy" class="btn btn-soft-danger">
                                         <i class="fa fa-trash mr-0"></i>Xóa
                                     </a>
-                                    <a class="btn btn-outline-primary" id="btnAdd_HPDangKy">
+                                    <a class="btn btn-soft-primary" id="btnAdd_HPDangKy">
                                         <i class="fa fa-plus color-active mr-0"></i>Thêm
                                     </a>
                                 </div>
@@ -474,10 +475,10 @@
                         <div class="row aps-form-btn">
                             <div class="pull-right">
                                 <div class="title-name d-flex">
-                                    <a id="btnDelete_HPKhong" class="btn btn-outline-danger">
+                                    <a id="btnDelete_HPKhong" class="btn btn-soft-danger">
                                         <i class="fa fa-trash mr-0"></i>Xóa
                                     </a>
-                                    <a class="btn btn-outline-primary" id="btnAdd_HPKhong">
+                                    <a class="btn btn-soft-primary" id="btnAdd_HPKhong">
                                         <i class="fa fa-plus color-active mr-0"></i>Thêm
                                     </a>
                                 </div>
@@ -489,7 +490,7 @@
             <div class="box-footer mt-25 pt20 pr20">
                 <div class="pull-right d-flex">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>Đóng
+                        <i class="fa-solid fa-xmark"></i> Đóng
                     </a>
                     <a id="btnSave_KeHoachXuLy" class="btn btn-primary btnSave_KeHoachXuLy">
                         <i class="fal fa-save"></i>Lưu
@@ -553,10 +554,10 @@
                             </div>
                             <div class="pull-right">
                                 <div class="title-name d-flex">
-                                    <a class="btn btn-outline-danger btnDelete_Nganh" id="">
+                                    <a class="btn btn-soft-danger btnDelete_Nganh" id="">
                                         <i class="fa fa-trash mr-0"></i>Xóa
                                     </a>
-                                    <a class="btn btn-outline-primary btnSearch_Nganh" id="">
+                                    <a class="btn btn-soft-primary btnSearch_Nganh" id="">
                                         <i class="fa fa-plus color-active mr-0"></i>Thêm
                                     </a>
                                 </div>
@@ -569,7 +570,7 @@
             <div class="box-footer pr20">
                 <div class="pull-right">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i> Đóng
+                        <i class="fa-solid fa-xmark"></i> Đóng
                     </a>
                     <!--<a id="btnSave_KhoaPhuTrach" class="btn btn-primary"><i class="fal fa-save"></i> Lưu</a>-->
                 </div>
@@ -667,7 +668,7 @@
                                 </div>
                                 <div class="pull-right">
                                     <div class="title-name">
-                                        <a class="btn btn-outline-danger btnDeleteDTSV_SinhVien" id="">
+                                        <a class="btn btn-soft-danger btnDeleteDTSV_SinhVien" id="">
                                             <i class="fa fa-trash mr-0"></i>Xóa
                                         </a>
                                     </div>
@@ -684,7 +685,7 @@
                 <div class="box-footer">
                     <div class="pull-right">
                         <a class="btn btn-default btnClose" href="#" title="Close">
-                            <i class="fa fa-times-circle"></i>Đóng
+                            <i class="fa-solid fa-xmark"></i>Đóng
                         </a>
                         <!--<a id="btnSave_SinhVien" class="btn btn-primary"><i class="fa fa-check"></i> Lưu</a>-->
                     </div>
@@ -772,9 +773,9 @@
                 <div class="box-footer">
                     <div class="pull-right">
                         <a class="btn btn-default btnClose" href="#" title="Close">
-                            <i class="fa fa-times-circle"></i>Đóng
+                            <i class="fa-solid fa-xmark"></i>Đóng
                         </a>
-                        <a id="btnDelete_DangKy" class="btn btn-danger"><i class="fa fa-trash"></i>Hủy đăng ký</a>
+                        <a id="btnDelete_DangKy" class="btn btn-soft-danger"><i class="fa fa-trash"></i>Hủy đăng ký</a>
                         <a class="btn btn-primary" id="btnSave_DangKy" href="#"><i class="fa-solid fa-user-pen"></i>Đăng
                             ký</a>
                     </div>
@@ -809,11 +810,12 @@
                 </div>
             </div>
             <div class="box-footer">
+                <div class="pull-left d-flex"><a id="btnDelete_PhanCong" class="btn btn-soft-danger"><i
+                            class="fa fa-trash"></i>Xóa</a></div>
                 <div class="pull-right d-flex">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>Đóng
+                        <i class="fa-solid fa-xmark"></i> Đóng
                     </a>
-                    <a id="btnDelete_PhanCong" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                     <a class="btn btn-success" id="btnAdd_PhanCong" href="#"><i class="fa fa-plus"></i>Thêm</a>
                     <!-- <a id="btnSave_KeHoachXuLy" class="btn btn-primary"><i class="fa fa-save"></i>Lưu</a> -->
                 </div>
@@ -847,11 +849,12 @@
                 </div>
             </div>
             <div class="box-footer">
+                <div class="pull-left d-flex"><a id="btnDelete_Phi" class="btn btn-soft-danger"><i
+                            class="fa fa-trash"></i>Xóa</a></div>
                 <div class="pull-right d-flex">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>Đóng
+                        <i class="fa-solid fa-xmark"></i> Đóng
                     </a>
-                    <a id="btnDelete_Phi" class="btn btn-danger"><i class="fa fa-trash"></i>Xóa</a>
                     <a class="btn btn-primary btnAdd" id="btnAdd_Phi" href="#">
                         <i class="fa fa-plus"></i>Thêm
                     </a>
@@ -882,13 +885,13 @@
                                 <a id="btnSearch_DSD" class="btn btn-default btn-search">
                                     <i class="fa fa-search"></i><span class="lang" key="">Tìm kiếm</span>
                                 </a>
-                                <a class="btn btn-outline-success" id="btnAdd_DSD" href="#">
+                                <a class="btn btn-soft-success" id="btnAdd_DSD" href="#">
                                     <i class="fa-solid fa-file-plus"></i>Tạo danh sách nhập điểm
                                 </a>
-                                <a class="btn btn-outline-danger" id="btnAdd_TinhDiemDSD" href="#">
+                                <a class="btn btn-soft-danger" id="btnAdd_TinhDiemDSD" href="#">
                                     <i class="fa-solid fa-arrows-retweet"></i>Tính điểm thi lại
                                 </a>
-                                <a class="btn btn-outline-primary" id="btnAdd_ChuaTao" href="#">
+                                <a class="btn btn-soft-primary" id="btnAdd_ChuaTao" href="#">
                                     <i class="fa fa-plus"></i>Danh sách đã duyệt nhưng chưa tạo danh sách
                                 </a>
                             </div>
@@ -934,7 +937,7 @@
             <div class="box-footer mt-20">
                 <div class="pull-right d-flex">
                     <a class="btn btn-default btnClose" href="#" title="Close">
-                        <i class="fa fa-times-circle"></i>Đóng
+                        <i class="fa-solid fa-xmark"></i>Đóng
                     </a>
                     <a id="btnDelete_DSD" class="btn btn-danger">
                         <i class="fa fa-trash"></i>Xóa tên khỏi danh sách
@@ -1051,7 +1054,7 @@
             <div id="notify"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" id="btnCancel"><i
-                        class="fa fa-times-circle"></i> Đóng</button>
+                        class="fa-solid fa-xmark"></i> Đóng</button>
             </div>
         </div>
     </div>
@@ -1088,7 +1091,7 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-solid fa-xmark"></i>
                     <span class="lang" key="">Đóng</span></button>
             </div>
         </div>
@@ -1127,14 +1130,16 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
+                <div class="pull-left d-flex aps-list-btn">
+                    <a class="btn btn-danger" id="btnDelete_LopHocPhanSuDung">
+                        <i class="fa fa-trash mr-0"></i>Xóa</a></div>
                 <div class="pull-right d-flex">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
-                            class="fa fa-times-circle-o"></i>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
                         <span class="lang" key="">Đóng</span></button>
-                    <a class="btn btn-outline-danger" id="btnDelete_LopHocPhanSuDung">
-                        <i class="fa fa-trash mr-0"></i>Xóa</a>
-                    <a class="btn btn-outline-primary" id="btnAdd_LopHocPhanSuDung">
-                        <i class="fa fa-plus color-active mr-0"></i>Thêm</a>
+
+                    <a class="btn btn-primary" id="btnAdd_LopHocPhanSuDung">
+                        <i class="fa fa-plus mr-0"></i>Thêm</a>
                 </div>
             </div>
         </div>
@@ -1154,7 +1159,8 @@
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="aps-table-select">
-                    <table id="tblLopQuanLySuDung" class="tblLopQuanLySuDung table table-hover table-bordered table-noborder">
+                    <table id="tblLopQuanLySuDung"
+                        class="tblLopQuanLySuDung table table-hover table-bordered table-noborder">
                         <thead>
                             <tr>
                                 <th class="td-center w-50px" scope="col">STT</th>
@@ -1168,18 +1174,20 @@
                         <tbody></tbody>
                     </table>
                 </div>
-               
+
             </div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <div class="pull-right d-flex">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
-                            class="fa fa-times-circle-o"></i>
-                        <span class="lang" key="">Đóng</span></button>
-                    <a class="btn btn-outline-danger" id="btnDelete_LopQuanLySuDung">
+                <div class="pull-left d-flex aps-list-btn">
+                    <a class="btn btn-danger" id="btnDelete_LopQuanLySuDung">
                         <i class="fa fa-trash"></i>Xóa</a>
-                    <a class="btn btn-outline-primary" id="btnAdd_LopQuanLySuDung">
-                        <i class="fa fa-plus color-active"></i>Thêm</a>
+                </div>
+                <div class="pull-right d-flex">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span class="lang" key="">Đóng</span></button>                   
+                    <a class="btn btn-primary" id="btnAdd_LopQuanLySuDung">
+                        <i class="fa fa-plus"></i>Thêm</a>
                 </div>
             </div>
         </div>
@@ -1259,7 +1267,7 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-solid fa-xmark"></i>
                     <span class="lang" key="">Đóng</span></button>
                 <a class="submit btn btn-primary" id="btnSave_LopHocPhanSuDung">
                     <i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
@@ -1328,7 +1336,7 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-solid fa-xmark"></i>
                     <span class="lang" key="">Đóng</span></button>
                 <a class="submit btn btn-primary" id="btnSave_LopQuanLySuDung">
                     <i class="fa fa-save"></i><span class="lang" key=""> Lưu</span></a>
@@ -1345,11 +1353,11 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
                 <h3 class="box-title mt-0"><span class="myModalLabel">
-                        <is class="fa-solid fa-circle-dollar-to-slot"></i>
+                        <is class="fa-solid fa-circle-dollar-to-slot pr10"></i>
                     </span>Phí</h3>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="row aps-form">
+                <div class="row aps-form pl0 pr-0">
                     <div class="row aps-form-item">
                         <div class="col-sm-3 aps-lable-name">
                             <label style="font-weight: normal"><span class="lang" key="">Loại khoản</span></label>
@@ -1377,7 +1385,7 @@
             <div class="clear"></div>
             <div id="notify"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i>
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa-solid fa-xmark"></i>
                     <span class="lang" key="">Đóng</span></button>
                 <a class="submit btn btn-primary" id="btnSave_Phi">
                     <i class="fa fa-save"></i><span class="lang" key="">Lưu</span></a>
@@ -1423,8 +1431,8 @@
             <div id="notify"></div>
             <div class="modal-footer mt-20">
                 <div class="pull-right d-flex">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
-                            class="fa fa-times-circle-o"></i>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
                         <span class="lang" key="">Đóng</span></button>
                     <!-- <a class="btn btn-danger" id="btnDelete_LopQuanLySuDung">
                         <i class="fa fa-trash"></i>Xóa</a>
@@ -1448,7 +1456,7 @@
                         <i class="fa-solid fa-users-between-lines"></i>Danh sách Chưa đăng ký </span> </h4>
             </div>
             <div class="modal-body" id="modal_body">
-                <div class="row aps-table-select">
+                <div class="row aps-table-select pl0 pr0">
                     <table id="tblChuaDangKy"
                         class="table table-hover table-bordered tblChuaDangKy table-noborder mb-0">
                         <thead>
@@ -1477,12 +1485,12 @@
             </div>
             <div id="notify"></div>
             <div class="modal-footer mt-5">
+                <div class="pull-left aps-list-btn d-flex"> <a class="btn btn-danger" id="btnDelete_LopQuanLySuDung">
+                    <i class="fa fa-trash"></i>Xóa</a></div>
                 <div class="pull-right d-flex">
-                    <button type="button" class="btn btn-default" data-dismiss="modal"><i
-                            class="fa fa-times-circle-o"></i>
-                        <span class="lang" key="">Đóng</span></button>
-                    <a class="btn btn-danger" id="btnDelete_LopQuanLySuDung">
-                        <i class="fa fa-trash"></i>Xóa</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span class="lang" key="">Đóng</span></button>                   
                     <a class="btn btn-success" id="btnAdd_LopQuanLySuDung">
                         <i class="fa fa-plus"></i>Thêm</a>
                 </div>
@@ -1541,7 +1549,7 @@
             <div class="modal-footer">
                 <div class="pull-right d-flex">
                     <button type="button" class="btn btn-default" data-dismiss="modal">
-                        <i class="fa fa-times-circle-o"></i>
+                        <i class="fa-solid fa-xmark"></i>
                         <span class="lang" key="">Đóng</span>
                     </button>
                     <a class="submit btn btn-primary" id="btnSave_DotThi_Modal">

@@ -7279,7 +7279,7 @@ input[type="radio"] {
   color: var(--color-green) !important;
 }
 
-.btn-soft-success:hover .lang {
+.btn-soft-success:hover .lang,.btn-soft-success:hover i {
   color: #fff !important;
 }
 
@@ -7308,7 +7308,7 @@ input[type="radio"] {
   color: var(--color-blue) !important;
 }
 
-.btn-soft-primary:hover .lang {
+.btn-soft-primary:hover .lang,.btn-soft-primary:hover i {
   color: #fff !important;
 }
 
@@ -7337,7 +7337,7 @@ input[type="radio"] {
   color: var(--color-danger) !important;
 }
 
-.btn-soft-danger:hover .lang {
+.btn-soft-danger:hover .lang,.btn-soft-danger:hover i {
   color: #fff !important;
 }
 
@@ -7362,7 +7362,7 @@ input[type="radio"] {
   color: var(--color-blue) !important;
 }
 
-.btn-soft-info:hover .lang {
+.btn-soft-info:hover .lang ,.btn-soft-info:hover i{
   color: #fff !important;
 }
 
@@ -7391,7 +7391,7 @@ input[type="radio"] {
   color: var(--color-warning) !important;
 }
 
-.btn-soft-warning:hover .lang {
+.btn-soft-warning:hover .lang,.btn-soft-warning:hover i {
   color: #fff !important;
 }
 
@@ -7420,12 +7420,68 @@ input[type="radio"] {
   color: var(--color-save) !important;
 }
 
-.btn-soft-secondary:hover .lang {
+.btn-soft-secondary:hover .lang ,.btn-soft-secondary:hover i{
   color: #fff !important;
 }
 
 .btn-soft-secondary i {
   font-weight: bold !important;
+}
+/* --btn-soft-puple-- */
+.btn-soft-puple {
+  background: rgba(102, 16, 242, 0.1) !important;
+  color: var(--color-add) !important;
+  font-weight: bold !important;
+  border: 1px solid rgba(102, 16, 242, 0.3) !important;
+}
+
+.btn-soft-puple:hover {
+  background: rgba(102, 16, 242, 1) !important;
+  color: #fff !important;
+}
+
+.border-puple {
+  border: 1px solid rgba(102, 16, 242, 0.3) !important;
+}
+
+.btn-soft-puple i {
+  font-weight: bold !important;
+}
+
+.btn-soft-puple .lang {
+  color: var(--color-add) !important;
+}
+
+.btn-soft-puple:hover .lang,.btn-soft-puple:hover i {
+  color: #fff !important;
+}
+/* --btn-soft-orange-- */
+.btn-soft-orange {
+  background: rgba(213, 75, 7, 0.1) !important;
+  color: var(--color-orange) !important;
+  font-weight: bold !important;
+  border: 1px solid rgba(213, 75, 7, 0.3) !important;
+}
+
+.btn-soft-orange:hover {
+  background: rgba(213, 75, 7, 1) !important;
+  color: #fff !important;
+}
+
+.border-orange {
+  border: 1px solid rgba(213, 75, 7, 0.3) !important;
+}
+
+.btn-soft-orange i {
+  font-weight: bold !important;
+}
+
+.btn-soft-orange .lang {
+  color: var(--color-orange) !important;
+}
+
+.btn-soft-orange:hover .lang ,.btn-soft-orange:hover i{
+  color: #fff !important;
 }
 
 /* ------------- */

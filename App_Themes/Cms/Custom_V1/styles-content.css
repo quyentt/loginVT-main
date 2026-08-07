@@ -238,7 +238,7 @@
     line-height: 13px;
     background: transparent !important;
     margin-right: -10px;
-    margin-top: -10px;
+    margin-top: -8px;
     border: 0 !important;
     color: #fff !important;
 }
@@ -2497,6 +2497,9 @@
 }
 .aps-modal-nhansu .col-sm-9 .simple-pagination li:first-child {
     border-left: 1px solid #e1e1e1 !important;
+}
+.aps-modal-nhansu .col-sm-9 .zone-pag-footertblModal_HocPhan .simple-pagination li:first-child {
+    border-left: 0 solid #e1e1e1 !important;
 }
 .aps-modal-nhansu .modal-body .col-sm-3 .box.box-solid {
     padding: 0 !important;
@@ -11279,7 +11282,7 @@ table#clone {
 }
 
 .zonePhanCong .table.table-hover {
-    border-left: 1px solid #e1e1e1 !important;
+    border-left: 1px solid #d1d1d1 !important;
     width: 100% !important;
     margin-bottom: 0 !important;
     float: left;
@@ -16362,6 +16365,9 @@ table#clone {
 
 .aps-table-select .aps-hienthi-input .select2-container--default .select2-selection--single .select2-selection__rendered {
     line-height: 24px !important;
+    display: block !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 .aps-table-select .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -17114,5 +17120,31 @@ table#clone {
     border: 0 !important;
 }
 .btn-white.btnCloseSinhVien i{
+    padding-right: 0 !important;
+}
+
+.aps-table-select .zone-pag-footertblKHDK .light-paginationtblKHDK.simple-pagination li:first-child {
+    border-left: 0px solid #e1e1e1 !important;
+}
+.box-solid.aps-kehoach-dangky-list .tblKHDK tr td:nth-last-child(3){
+    text-align: center !important;
+}
+.aps-phancong-phamvi  .zonePhanCong{
+    /* gap: 20px !important; */
+    /* display: flex; */
+}
+.aps-ketqua-list .tblKetQua tr td{
+    text-align: left !important;
+}
+.aps-ketqua-list .tblKetQua tr td:first-child{
+    text-align: center !important;
+}
+.zone-pag-headertblQuanSoLop .change-tblQuanSoLop .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #444;
+    line-height: 22px;
+}
+
+.modal .modal-body .row.aps-add-new,.modal .modal-body .row.aps-form{
+    padding-left:  0 !important;
     padding-right: 0 !important;
 }
