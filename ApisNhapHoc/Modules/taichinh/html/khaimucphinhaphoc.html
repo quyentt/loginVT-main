@@ -482,13 +482,14 @@
                 <div class="aps-table-select" style="overflow-x: auto;">
                     <table id="tblKhoanThu_HSNH"
                         class="table table-condensed table-hover table-bordered table-noborder"
-                        style="min-width: 1600px;">
+                        style="min-width: 1760px;">
                         <thead>
                             <tr>
                                 <th class="td-center" style="width:40px">STT</th>
                                 <th class="td-left" style="width:200px">Tên khoản thu</th>
                                 <th class="td-left" style="width:130px">Mã khoản thu</th>
                                 <th class="td-left" style="width:150px">Thuộc nhóm</th>
+                                <th class="td-left" style="width:160px">Cơ sở đào tạo</th>
                                 <th class="td-right" style="width:120px">Định mức thu</th>
                                 <th class="td-center" style="width:80px">Đơn vị tính</th>
                                 <th class="td-center" style="width:160px">Bắt buộc / không bắt buộc</th>
@@ -505,7 +506,7 @@
                         </tbody>
                         <tfoot id="tfootSum_KhoanThu_HSNH" style="display:none;">
                             <tr class="kmp-sum-row">
-                                <td class="td-center" colspan="4">Tổng cộng</td>
+                                <td class="td-center" colspan="5">Tổng cộng</td>
                                 <td class="td-right kmp-sum-value" id="sumDinhMuc_KhoanThu">0</td>
                                 <td colspan="8"></td>
                             </tr>
@@ -855,6 +856,14 @@
                             <td class="aps-form-lable">Đơn vị tính</td>
                             <td class="aps-form-input">
                                 <select class="select-opt" id="dropDonVi_KhoanThu_HSNH"></select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="aps-form-lable">Cơ sở đào tạo</td>
+                            <td class="aps-form-input">
+                                <select class="select-opt" id="dropCoSoDaoTao_KhoanThu_HSNH">
+                                    <option value="">Áp dụng cho tất cả cơ sở</option>
+                                </select>
                             </td>
                         </tr>
                         <tr>

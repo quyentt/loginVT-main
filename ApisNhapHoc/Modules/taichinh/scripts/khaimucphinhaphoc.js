@@ -13,6 +13,7 @@ KhaiMucPhi.prototype = {
     strKeHoachId_KhoanThu: '',
     dtKhoanThu: [],
     dtLoaiKhoan: [],                // danh sách khoản thu chung để chọn thêm
+    dtCoSoDaoTao: [],               // danh sách cơ sở đào tạo (cache để lookup tên trong bảng)
     bLoadedCombo_KhoanThu: false,   // flag đã load combo lookup cho form khoản thu chưa
 
     // State cho modal ngành đầu ra
@@ -687,7 +688,7 @@ KhaiMucPhi.prototype = {
         $tbody.empty();
 
         if (!arr || arr.length === 0) {
-            $tbody.append('<tr><td colspan="13" class="td-center italic color-666">Chưa có khoản thu nào trong nhóm.</td></tr>');
+            $tbody.append('<tr><td colspan="14" class="td-center italic color-666">Chưa có khoản thu nào trong nhóm.</td></tr>');
             $tfoot.hide();
             return;
         }
@@ -699,6 +700,15 @@ KhaiMucPhi.prototype = {
                 if (dmArr[j].MA === code) return dmArr[j].TEN || code;
             }
             return code;
+        };
+        // Lookup tên Cơ sở đào tạo theo ID (cache dtCoSoDaoTao dùng field ID)
+        var lookupCSD = function (id) {
+            if (!id) return '<span class="italic color-999">Tất cả cơ sở</span>';
+            var arr = me.dtCoSoDaoTao || [];
+            for (var j = 0; j < arr.length; j++) {
+                if (arr[j].ID === id) return arr[j].TEN || id;
+            }
+            return id;
         };
 
         var html = '';
@@ -717,6 +727,9 @@ KhaiMucPhi.prototype = {
             var strKieuTuDong = lookupDM(me.dtDM_KieuTuDong, r.KIEU_TU_DONG_SINH_PHAITHU_ID || r.KIEU_SINH_PHAITHU_ID);
             var iChoPhepMienGiam = Number(r.CHO_PHEP_MIEN_GIAM || 0);
             var strGhiChu = r.GHICHU || r.GHI_CHU || '';
+            // Cơ sở đào tạo: ưu tiên tên từ API, fallback lookup theo ID từ cache
+            var strCSDTen = r.COSODAOTAO_TEN || r.NHAPHOC_COSO_TEN
+                          || lookupCSD(r.DAOTAO_COSODAOTAO_ID || r.COSODAOTAO_ID || r.NHAPHOC_COSO_ID || '');
 
             // format số tiền có dấu phân cách hàng nghìn
             var strDinhMucFmt = strDinhMuc;
@@ -729,6 +742,7 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-left">' + strTen + '</td>';
             html += '<td class="td-left">' + strMa + '</td>';
             html += '<td class="td-left">' + strNhomTen + '</td>';
+            html += '<td class="td-left">' + strCSDTen + '</td>';
             html += '<td class="td-right">' + strDinhMucFmt + '</td>';
             html += '<td class="td-center">' + strDonVi + '</td>';
             html += '<td class="td-center">' + (iBatBuoc === 1 ? '<span class="label label-danger">Bắt buộc</span>' : '') + '</td>';
@@ -1308,6 +1322,24 @@ KhaiMucPhi.prototype = {
             }
         );
 
+        // Cơ sở đào tạo — dùng helper edu.system.getList_CoSoDaoTao đã có
+        edu.system.getList_CoSoDaoTao(
+            { strTuKhoa: "", strDaoTao_LoaiCoSo_Id: "", pageIndex: 1, pageSize: 10000 },
+            "", "",
+            function (data) {
+                me.dtCoSoDaoTao = data || [];
+                edu.system.loadToCombo_data({
+                    data: me.dtCoSoDaoTao,
+                    renderInfor: { id: "ID", parentId: "", name: "TEN", code: "" },
+                    renderPlace: ["dropCoSoDaoTao_KhoanThu_HSNH"],
+                    title: "Áp dụng cho tất cả cơ sở",
+                    default_val: ""
+                });
+                // Re-render bảng khoản thu nếu đã có data để hiển thị tên CSD
+                if (me.dtKhoanThu && me.dtKhoanThu.length) me.genTable_KhoanThu(me.dtKhoanThu);
+            }
+        );
+
         // Danh sách khoản thu (TC_KhoanThu/LayDanhSach)
         var obj_list = {
             'action': 'TC_KhoanThu/LayDanhSach',
@@ -1360,6 +1392,7 @@ KhaiMucPhi.prototype = {
             $("#txtThuTu_KhoanThu_HSNH").val(0);
             edu.util.viewValById("dropKieuTuDong_KhoanThu_HSNH", "");
             $("#chkChoPhepMienGiam_KhoanThu_HSNH").prop("checked", false);
+            edu.util.viewValById("dropCoSoDaoTao_KhoanThu_HSNH", "");
             $("#txtGhiChu_KhoanThu_HSNH").val("");
             $("#zoneDelete_KhoanThu_HSNH").hide();
             // Khi thêm mới cho phép chọn khoản thu
@@ -1385,6 +1418,8 @@ KhaiMucPhi.prototype = {
             $("#txtThuTu_KhoanThu_HSNH").val(r.THU_TU_HIEN_THI != null ? r.THU_TU_HIEN_THI : 0);
             edu.util.viewValById("dropKieuTuDong_KhoanThu_HSNH", r.KIEU_TU_DONG_SINH_PHAITHU_ID || r.KIEU_SINH_PHAITHU_ID || '');
             $("#chkChoPhepMienGiam_KhoanThu_HSNH").prop("checked", Number(r.CHO_PHEP_MIEN_GIAM || 0) === 1);
+            edu.util.viewValById("dropCoSoDaoTao_KhoanThu_HSNH",
+                r.DAOTAO_COSODAOTAO_ID || r.COSODAOTAO_ID || r.NHAPHOC_COSO_ID || '');
             $("#txtGhiChu_KhoanThu_HSNH").val(r.GHICHU || r.GHI_CHU || '');
             $("#zoneDelete_KhoanThu_HSNH").show();
             // Ở chế độ sửa, khoản thu gốc không cho đổi (hoặc để đổi được cũng ok — Sua có param strTaiChinh_CacKhoanThu_Id)
@@ -1405,6 +1440,7 @@ KhaiMucPhi.prototype = {
         var strThuTu = edu.util.getValById('txtThuTu_KhoanThu_HSNH');
         var strKieuTuDongId = edu.util.getValById('dropKieuTuDong_KhoanThu_HSNH');
         var iChoPhepMienGiam = $("#chkChoPhepMienGiam_KhoanThu_HSNH").is(":checked") ? 1 : 0;
+        var strCoSoDaoTaoId = edu.util.getValById('dropCoSoDaoTao_KhoanThu_HSNH');
         var strGhiChu = edu.util.getValById('txtGhiChu_KhoanThu_HSNH');
 
         if (!strKhoanThuId) { edu.system.alert("Vui lòng chọn khoản thu.", "w"); return; }
@@ -1429,6 +1465,7 @@ KhaiMucPhi.prototype = {
                 'dTu_Dong_Sinh_PhaiThu': iTuDongSinh,
                 'strKieu_Sinh_PhaiThu_Id': strKieuTuDongId,
                 'dThu_Tu_Hien_Thi': Number(strThuTu || 0),
+                'strDaoTao_CoSoDaoTao_Id': strCoSoDaoTaoId,
                 'strGhiChu': strGhiChu,
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strVaiTroDangNhap_Id': '',
@@ -1451,6 +1488,7 @@ KhaiMucPhi.prototype = {
                 'dTu_Dong_Sinh_PhaiThu': iTuDongSinh,
                 'strKieu_Sinh_PhaiThu_Id': strKieuTuDongId,
                 'dThu_Tu_Hien_Thi': Number(strThuTu || 0),
+                'strDaoTao_CoSoDaoTao_Id': strCoSoDaoTaoId,
                 'strGhiChu': strGhiChu,
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strVaiTroDangNhap_Id': '',
