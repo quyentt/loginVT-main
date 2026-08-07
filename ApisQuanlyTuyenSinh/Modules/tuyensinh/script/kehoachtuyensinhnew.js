@@ -4396,7 +4396,9 @@ KeHoachTuyenSinhNew.prototype = {
         'diem_trungtuyen': 'dXetTuyen_DiemTongXT',
         // 2 field IMPORT-only:
         'manganh': 'strMaNganhTrungTuyen',
-        'mactdt': 'strMaCTDT'
+        'mactdt': 'strMaCTDT',
+        // CMC mới bổ sung (chiều 05/08/2026):
+        'dc_hoadon': 'strPersonInvoice_DiaChi'
     },
 
     initDocAPI_Bindings: function () {

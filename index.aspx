@@ -79,6 +79,248 @@
         font-style: italic;
         cursor: default;
       }
+
+      /* ─── Role picker (giao diện chọn vai trò kiểu mới) ─── */
+      /* Reset background image + màu chữ của .quick-action cho gọn */
+      .dashboard-content .quick-action {
+        background: transparent !important;
+        margin-top: 0 !important;
+        padding: 20px 25px 25px;
+      }
+      .dashboard-content .quick-action .welcome {
+        color: #64748b;
+        font-style: italic;
+        font-size: 14px;
+        padding-top: 0;
+      }
+      .dashboard-content .quick-action .welcome strong {
+        font-weight: 700;
+        font-style: normal;
+        color: #223771;
+      }
+      .dashboard-content .quick-action .quick-acction-title {
+        color: #0f172a !important;
+        font-size: 22px;
+        font-weight: 800;
+        margin: 6px 0 18px;
+      }
+
+      .role-picker-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 12px;
+      }
+      .role-picker-search {
+        position: relative;
+        flex: 1;
+        height: 42px;
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        transition: border-color .2s ease, box-shadow .2s ease;
+      }
+      .role-picker-search:focus-within {
+        border-color: #cbd5e1;
+      }
+      /* Ghi đè global input:focus trong all.css/bootstrap để không vẽ viền màu quanh input */
+      .role-picker-search input,
+      .role-picker-search input:focus,
+      .role-picker-search input:focus-visible,
+      .role-picker-search input:active {
+        border: 0 !important;
+        outline: none !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+      }
+      .role-picker-search > .fa-search {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #64748b;
+        font-size: 14px;
+        pointer-events: none;
+      }
+      .role-picker-search input {
+        flex: 1;
+        height: 100%;
+        border: 0;
+        outline: 0;
+        background: transparent;
+        padding: 0 40px 0 42px;
+        font-size: 14px;
+        color: #0f172a;
+      }
+      .role-picker-search input::placeholder { color: #94a3b8; }
+      .role-picker-clear {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        border: 0;
+        background: #f1f5f9;
+        color: #64748b;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .role-picker-clear.show { display: flex; }
+      .role-picker-clear:hover { background: #e2e8f0; color: #0f172a; }
+      .role-picker-counter {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+        white-space: nowrap;
+      }
+
+      .role-picker-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+      .role-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        color: #0f172a;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all .15s ease;
+      }
+      .role-chip:hover { border-color: #223771; }
+      .role-chip.active {
+        background: #223771;
+        border-color: #223771;
+        color: #fff;
+      }
+      .role-chip-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 20px;
+        padding: 0 6px;
+        height: 18px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 1;
+      }
+      .role-chip.active .role-chip-count {
+        background: rgba(255, 255, 255, .2);
+        color: #fff;
+      }
+
+      /* Ghi đè .action-group flex mặc định để dùng grouped layout */
+      #zonedashbroad.role-picker-grid {
+        display: block !important;
+        margin: 0 !important;
+        gap: 0;
+      }
+      /* Ẩn cho tới khi role picker render xong (tránh flash tile cũ) */
+      #zonedashbroad:not(.role-picker-ready) { visibility: hidden; }
+
+      .role-group + .role-group { margin-top: 22px; }
+      .role-group-title {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        margin: 0 0 12px;
+        font-size: 16px;
+        font-weight: 800;
+        color: #0f172a;
+      }
+      .role-group-count {
+        font-weight: 600;
+        color: #64748b;
+        font-size: 13px;
+      }
+      .role-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+      @media (min-width: 640px)  { .role-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+      @media (min-width: 1024px) { .role-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+      @media (min-width: 1280px) { .role-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+      .role-card {
+        display: flex !important;
+        flex-direction: column;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        border-radius: 12px;
+        transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+        min-height: 106px;
+        width: auto !important;
+        height: auto !important;
+        cursor: pointer;
+      }
+      .role-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(15, 23, 42, .08);
+        border-color: #cbd5e1;
+      }
+      .role-card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .role-card-icon {
+        display: grid;
+        place-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .role-card-badge {
+        padding: 3px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+      .role-card-name {
+        font-size: 15px;
+        font-weight: 700;
+        color: #0f172a;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        margin: 0;
+      }
+      .role-empty {
+        padding: 40px 20px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+        font-style: italic;
+        border: 1px dashed #e2e8f0;
+        border-radius: 12px;
+        background: #fff;
+      }
     </style>
   </head>
 
@@ -243,9 +485,20 @@
       <div class="main-content" id="main-content-wrapper">
         <div class="dashboard-content">
           <div class="quick-action">
-            <div class="welcome">Chào mừng bạn!</div>
+            <div class="welcome"><span id="welcome-greeting">Chào mừng</span>, <strong id="welcome-name"><%=fullname %></strong>!</div>
             <div class="quick-acction-title">Danh sách vai trò</div>
-            <div class="action-group" id="zonedashbroad">
+            <div class="role-picker-toolbar">
+              <div class="role-picker-search">
+                <i class="fal fa-search"></i>
+                <input type="text" id="role-search-input" placeholder="Tìm vai trò theo tên hoặc mã..." autocomplete="off" />
+                <button type="button" class="role-picker-clear" id="role-search-clear" aria-label="Xoá tìm kiếm">
+                  <i class="fal fa-times"></i>
+                </button>
+              </div>
+              <div class="role-picker-counter" id="role-picker-counter">0 / 0 vai trò</div>
+            </div>
+            <div class="role-picker-chips" id="role-picker-chips"></div>
+            <div class="action-group role-picker-grid" id="zonedashbroad">
             </div>
           </div>
           <div class="for-u-today" style="display: none">
@@ -512,7 +765,23 @@
 
           initHashDeepLink();
           initGlobalSearch();
+          initRolePicker();
+          initTimeGreeting();
         });
+
+        // Chào theo giờ VN (UTC+7): sáng / trưa / chiều / tối / khuya
+        function initTimeGreeting() {
+          var $g = $('#welcome-greeting');
+          if (!$g.length) return;
+          var h = (new Date().getUTCHours() + 7) % 24;
+          var text;
+          if      (h >= 5  && h < 11) text = 'Chào buổi sáng';
+          else if (h >= 11 && h < 13) text = 'Chào buổi trưa';
+          else if (h >= 13 && h < 18) text = 'Chào buổi chiều';
+          else if (h >= 18 && h < 22) text = 'Chào buổi tối';
+          else                        text = 'Chào buổi khuya';
+          $g.text(text);
+        }
 
         // Hash deep-link: mở URL dạng index.aspx#<duongdanhienthi> đúng màn hình khi đã đăng nhập.
         // 2 giai đoạn: (1) nếu đang ở trang chọn vai trò, tra hash -> ứng dụng (role) -> auto
@@ -877,6 +1146,270 @@
             ev.preventDefault();
             search($input.val().trim());
             $input.focus();
+          });
+        }
+
+        // ─── Role picker: render tile chọn vai trò theo tone nhóm + search + filter chip.
+        // Nguồn dữ liệu: edu.system.dtUngDung (systemroot.js:checkChucNang nạp async).
+        // Giữ class .ungdung + id=ROLE_ID để delegate click trong systemroot.js:190 vẫn chạy.
+        function initRolePicker() {
+          var $grid = $('#zonedashbroad');
+          if (!$grid.length) return;
+          var $counter = $('#role-picker-counter');
+          var $chips = $('#role-picker-chips');
+          var $input = $('#role-search-input');
+          var $clear = $('#role-search-clear');
+
+          var GROUPS = {
+            cong:     { label: 'Cổng người dùng', bg: '#dbeafe', fg: '#1d4ed8', chipBg: '#eff6ff', chipFg: '#1d4ed8' },
+            hocvu:    { label: 'Học vụ',          bg: '#d1fae5', fg: '#047857', chipBg: '#ecfdf5', chipFg: '#047857' },
+            daotao:   { label: 'Đào tạo',         bg: '#ede9fe', fg: '#6d28d9', chipBg: '#f5f3ff', chipFg: '#6d28d9' },
+            taichinh: { label: 'Tài chính',       bg: '#fef3c7', fg: '#b45309', chipBg: '#fffbeb', chipFg: '#b45309' },
+            nhansu:   { label: 'Nhân sự',         bg: '#ffe4e6', fg: '#be123c', chipBg: '#fff1f2', chipFg: '#be123c' },
+            quantri:  { label: 'Quản trị',        bg: '#f1f5f9', fg: '#475569', chipBg: '#f8fafc', chipFg: '#475569' },
+            khac:     { label: 'Khác',            bg: '#f3f4f6', fg: '#6b7280', chipBg: '#f9fafb', chipFg: '#6b7280' }
+          };
+          var GROUP_ORDER = ['cong', 'hocvu', 'daotao', 'taichinh', 'nhansu', 'quantri', 'khac'];
+
+          function stripDiacritics(s) {
+            return (s || '').toString().toLowerCase()
+              .normalize('NFD').replace(/[̀-ͯ]/g, '')
+              .replace(/đ/g, 'd').replace(/Đ/g, 'd');
+          }
+
+          // Rule phân loại theo TÊN vai trò (đã bỏ dấu). MAUNGDUNG hay đổi format
+          // nên khớp theo tên là chắc ăn nhất. Rule cụ thể đặt trước rule chung
+          // (vd 'cong can bo(admin)' trước 'cong can bo', 'chuong trinh dao tao'
+          // trước 'chuong trinh'). Duyệt tuần tự, hit đầu tiên thắng.
+          var RULES = [
+            // Ưu tiên đặc biệt (tránh bị rule chung bên dưới nuốt mất)
+            { kw: 'phan quyen',              group: 'quantri',  icon: 'fa-shield-halved' },
+            { kw: 'tra cuu ket qua dang ky', group: 'taichinh', icon: 'fa-receipt' },
+            { kw: 'tra cuu chuong trinh',    group: 'daotao',   icon: 'fa-magnifying-glass' },
+
+            // Cổng người dùng
+            { kw: 'cong can bo(admin)', group: 'cong', icon: 'fa-user-shield' },
+            { kw: 'cong can bo',        group: 'cong', icon: 'fa-briefcase' },
+            { kw: 'cong sinh vien',     group: 'cong', icon: 'fa-circle-user' },
+            { kw: 'cong thong tin',     group: 'cong', icon: 'fa-globe' },
+            { kw: 'app sinh vien',      group: 'cong', icon: 'fa-mobile-screen' },
+            { kw: 'dashboard',          group: 'cong', icon: 'fa-gauge-high' },
+
+            // Học vụ
+            { kw: 'chuyen can',            group: 'hocvu', icon: 'fa-calendar-check' },
+            { kw: 'hoc lai',               group: 'hocvu', icon: 'fa-rotate-right' },
+            { kw: 'thi lai',               group: 'hocvu', icon: 'fa-rotate-right' },
+            { kw: 'thi trac nghiem',       group: 'hocvu', icon: 'fa-list-check' },
+            { kw: 'thi phach',             group: 'hocvu', icon: 'fa-hashtag' },
+            { kw: 'quyet dinh nguoi hoc',  group: 'hocvu', icon: 'fa-file-signature' },
+            { kw: 'quan ly diem',          group: 'hocvu', icon: 'fa-pen-to-square' },
+            { kw: 'tien do nhap diem',     group: 'hocvu', icon: 'fa-chart-line' },
+            { kw: 'nhap diem',             group: 'hocvu', icon: 'fa-pen-to-square' },
+            { kw: 'xu ly hoc vu',          group: 'hocvu', icon: 'fa-triangle-exclamation' },
+            { kw: 'ren luyen',             group: 'hocvu', icon: 'fa-star' },
+            { kw: 'dang ky hoc',           group: 'hocvu', icon: 'fa-pen-line' },
+            { kw: 'dang ky thi',           group: 'hocvu', icon: 'fa-clipboard-list' },
+            { kw: 'tot nghiep',            group: 'hocvu', icon: 'fa-circle-check' },
+            { kw: 'vbc',                   group: 'hocvu', icon: 'fa-certificate' },
+            { kw: 'chung chi',             group: 'hocvu', icon: 'fa-certificate' },
+            { kw: 'bang cap',              group: 'hocvu', icon: 'fa-certificate' },
+            { kw: 'chot so luong',         group: 'hocvu', icon: 'fa-clipboard-check' },
+
+            // Đào tạo
+            { kw: 'ke hoach nhap hoc',     group: 'daotao', icon: 'fa-calendar-plus' },
+            { kw: 'ke hoach tuyen sinh',   group: 'daotao', icon: 'fa-calendar-days' },
+            { kw: 'ke hoach chuong trinh', group: 'daotao', icon: 'fa-calendar' },
+            { kw: 'chuong trinh dao tao',  group: 'daotao', icon: 'fa-book-open' },
+            { kw: 'chuong trinh',          group: 'daotao', icon: 'fa-book-open' },
+            { kw: 'luan van',              group: 'daotao', icon: 'fa-scroll' },
+            { kw: 'luan an',               group: 'daotao', icon: 'fa-scroll' },
+            { kw: 'nghien cuu khoa hoc',   group: 'daotao', icon: 'fa-flask' },
+            { kw: 'nckh',                  group: 'daotao', icon: 'fa-flask' },
+            { kw: 'tuyen sinh',            group: 'daotao', icon: 'fa-graduation-cap' },
+            { kw: 'nhap hoc',              group: 'daotao', icon: 'fa-user-plus' },
+
+            // Tài chính
+            { kw: 'ky tuc xa',             group: 'taichinh', icon: 'fa-building' },
+            { kw: 'hoc bong',              group: 'taichinh', icon: 'fa-award' },
+            { kw: 'hoc phi',               group: 'taichinh', icon: 'fa-wallet' },
+            { kw: 'tai chinh',             group: 'taichinh', icon: 'fa-wallet' },
+            { kw: 'muc phi',               group: 'taichinh', icon: 'fa-money-bill' },
+
+            // Nhân sự
+            { kw: 'nhan su',               group: 'nhansu', icon: 'fa-users' },
+            { kw: 'gio giang',             group: 'nhansu', icon: 'fa-clock' },
+            { kw: 'thong ke gio',          group: 'nhansu', icon: 'fa-clock' },
+            { kw: 'sinh vien',             group: 'nhansu', icon: 'fa-graduation-cap' },
+
+            // Quản trị
+            { kw: 'khao sat',              group: 'quantri', icon: 'fa-clipboard-list' },
+            { kw: 'he thong thong tin',    group: 'quantri', icon: 'fa-server' },
+            { kw: 'he thong',              group: 'quantri', icon: 'fa-server' },
+            { kw: 'khoa quan ly',          group: 'quantri', icon: 'fa-network-wired' },
+            { kw: 'tin tuc',               group: 'quantri', icon: 'fa-newspaper' },
+            { kw: 'sms',                   group: 'quantri', icon: 'fa-comment-dots' },
+            { kw: 'cms',                   group: 'quantri', icon: 'fa-gear' },
+            { kw: 'chinh sach',            group: 'quantri', icon: 'fa-scale-balanced' },
+            { kw: 'mien giam',             group: 'quantri', icon: 'fa-percent' },
+            { kw: 'doi tuong',             group: 'quantri', icon: 'fa-user-tag' },
+            { kw: 'tra cuu',               group: 'quantri', icon: 'fa-magnifying-glass' }
+          ];
+          var FALLBACK = { group: 'khac', icon: 'fa-cube' };
+
+          function classify(role) {
+            var hay = stripDiacritics((role && (role.TENVAITRO || role.TENUNGDUNG)) || '');
+            for (var i = 0; i < RULES.length; i++) {
+              if (hay.indexOf(RULES[i].kw) >= 0) {
+                return { group: RULES[i].group, icon: RULES[i].icon };
+              }
+            }
+            return FALLBACK;
+          }
+
+          function escapeHtml(s) {
+            return (s || '').replace(/[&<>"']/g, function (c) {
+              return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+          }
+
+          function enrich(list) {
+            var unmatched = [];
+            var out = (list || []).map(function (r) {
+              var meta = classify(r);
+              var iconClass = (r.TENANH && /^fa[-\s]/.test(r.TENANH))
+                ? r.TENANH
+                : ('fa-light ' + meta.icon);
+              if (meta === FALLBACK) unmatched.push(r.TENVAITRO || r.MAUNGDUNG);
+              return {
+                id: r.ID,
+                name: r.TENVAITRO || r.TENUNGDUNG || 'Vai trò',
+                code: r.MAUNGDUNG || '',
+                group: meta.group,
+                icon: iconClass
+              };
+            });
+            if (unmatched.length) console.warn('[role-picker] Chưa phân nhóm được:', unmatched);
+            return out;
+          }
+
+          var state = { roles: [], query: '', filter: 'all', rendered: false };
+
+          function countByGroup(items) {
+            var counts = {};
+            GROUP_ORDER.forEach(function (g) { counts[g] = 0; });
+            items.forEach(function (it) { counts[it.group] = (counts[it.group] || 0) + 1; });
+            return counts;
+          }
+
+          function chipHtml(key, label, count) {
+            var active = state.filter === key;
+            return '<button type="button" class="role-chip' + (active ? ' active' : '') + '" data-key="' + key + '">' +
+              '<span>' + label + '</span>' +
+              '<span class="role-chip-count">' + count + '</span>' +
+            '</button>';
+          }
+
+          function renderChips() {
+            var counts = countByGroup(state.roles);
+            var html = chipHtml('all', 'Tất cả', state.roles.length);
+            GROUP_ORDER.forEach(function (g) {
+              if (counts[g] > 0) html += chipHtml(g, GROUPS[g].label, counts[g]);
+            });
+            $chips.html(html);
+          }
+
+          function cardHtml(it) {
+            var meta = GROUPS[it.group];
+            return '<div class="role-card ungdung" id="' + it.id + '">' +
+              '<div class="role-card-head">' +
+                '<span class="role-card-icon" style="background:' + meta.bg + ';color:' + meta.fg + '">' +
+                  '<i class="' + it.icon + '"></i>' +
+                '</span>' +
+                '<span class="role-card-badge" style="background:' + meta.chipBg + ';color:' + meta.chipFg + '">' + meta.label + '</span>' +
+              '</div>' +
+              '<div class="role-card-name" title="' + escapeHtml(it.name) + '">' + escapeHtml(it.name) + '</div>' +
+            '</div>';
+          }
+
+          function renderGrid(items) {
+            if (!items.length) {
+              $grid.html('<div class="role-empty">Không tìm thấy vai trò phù hợp.</div>').addClass('role-picker-ready');
+              return;
+            }
+            var html;
+            if (!state.query.trim()) {
+              var byGroup = {};
+              items.forEach(function (it) { (byGroup[it.group] = byGroup[it.group] || []).push(it); });
+              html = '';
+              GROUP_ORDER.forEach(function (g) {
+                var arr = byGroup[g];
+                if (!arr || !arr.length) return;
+                html += '<section class="role-group">' +
+                  '<h3 class="role-group-title"><span>' + GROUPS[g].label + '</span>' +
+                    '<span class="role-group-count">(' + arr.length + ')</span></h3>' +
+                  '<div class="role-grid">' + arr.map(cardHtml).join('') + '</div>' +
+                '</section>';
+              });
+            } else {
+              html = '<div class="role-grid">' + items.map(cardHtml).join('') + '</div>';
+            }
+            $grid.html(html).addClass('role-picker-ready');
+          }
+
+          function apply() {
+            var q = stripDiacritics(state.query.trim());
+            var filtered = state.roles.filter(function (it) {
+              if (state.filter !== 'all' && it.group !== state.filter) return false;
+              if (!q) return true;
+              return stripDiacritics(it.name + ' ' + it.code).indexOf(q) >= 0;
+            });
+            $counter.text(filtered.length + ' / ' + state.roles.length + ' vai trò');
+            renderChips();
+            renderGrid(filtered);
+          }
+
+          // Poll cho tới khi systemroot nạp xong dtUngDung, rồi render đè.
+          // Vì systemroot có thể render tile cũ trước → dùng MutationObserver để render lại
+          // mỗi khi #zonedashbroad bị systemroot ghi đè (vd: back về, đổi vai trò).
+          function tryRender(force) {
+            var raw = (window.edu && edu.system && edu.system.dtUngDung) || null;
+            if (!raw || !raw.length) return false;
+            var same = state.rendered && state.roles.length === raw.length;
+            if (same && !force) return true;
+            state.rendered = true;
+            state.roles = enrich(raw);
+            apply();
+            return true;
+          }
+
+          var tries = 0;
+          var timer = setInterval(function () {
+            tries++;
+            if (tryRender(false) || tries > 200) clearInterval(timer);
+          }, 100);
+
+          if (window.MutationObserver) {
+            var mo = new MutationObserver(function () {
+              // Nếu bị systemroot ghi đè bằng tile cũ (.item.pointer.ungdung) → render lại
+              if ($grid.find('.item.pointer.ungdung').length) tryRender(true);
+            });
+            mo.observe($grid[0], { childList: true });
+          }
+
+          $input.on('input', function () {
+            state.query = $(this).val();
+            $clear.toggleClass('show', !!state.query);
+            apply();
+          });
+          $clear.on('click', function () {
+            state.query = '';
+            $input.val('').focus();
+            $clear.removeClass('show');
+            apply();
+          });
+          $chips.on('click', '.role-chip', function () {
+            state.filter = $(this).data('key');
+            apply();
           });
         }
       </script>
