@@ -4743,6 +4743,7 @@ PhieuThu.prototype = {
         }
 
         function save_PhieuThu(strTaiChinh_CacKhoanThu_Ids, strThoiGianDaoTaoIds, strNoiDung_s, strSoLuong_s, strDonGia_s, strSoTien_s) {
+            var strNgayOverride = me._getNgayLapPhieuOverride();
             var obj_save = {
                 'action': 'TC_DaNop/ThemMoi',
                 'versionAPI': 'v1.0',
@@ -4761,7 +4762,7 @@ PhieuThu.prototype = {
                 'strHinhThucThu_Id': edu.util.getValById("dropHinhThucThuPTC_PT_Edit"),
                 'strXuatHoaDonTrucTiep': '',
                 'strNguonDuLieu_Id': '',
-                'strNgayXuatChungTu': me.strNgayXuatChungTu,
+                'strNgayXuatChungTu': strNgayOverride || me.strNgayXuatChungTu,
             };
             //default
             edu.system.beginLoading();
@@ -4795,11 +4796,12 @@ PhieuThu.prototype = {
         }
 
         function save_PhieuRut(strTaiChinh_CacKhoanThu_Ids, strThoiGianDaoTaoIds, strNoiDungRut_s, strSoLuong_s, strDonGia_s, strSoTienRut_s) {
+            var strNgayOverride = me._getNgayLapPhieuOverride();
             var obj_save = {
                 'action': 'TC_TaiChinh_Rut/ThemMoi',
                 'versionAPI': 'v1.0',
                 'strNguoiThucHien_Id': edu.system.userId,
-                'strNgayChungTuRut': edu.util.getValById('txtNgayChungTu'),
+                'strNgayChungTuRut': strNgayOverride || edu.util.getValById('txtNgayChungTu'),
                 'strTaiChinh_CacKhoanThu_Ids': strTaiChinh_CacKhoanThu_Ids,
                 'strTaiChinh_SoTien_s': strSoTienRut_s,
                 'strTaiChinh_NoiDung_s': strNoiDungRut_s,
@@ -4852,6 +4854,7 @@ PhieuThu.prototype = {
             $("#btnSaveHDBL").replaceWith('');
             $("#btnXuat_HD").replaceWith('');
             $(".btnXuat_HDDT").remove();
+            me._hideNgayLapPhieuEditor();
         }
     },
     save_HD: function (strTable_id, bThu) {
@@ -4976,6 +4979,7 @@ PhieuThu.prototype = {
             $("#tbldata_NopTruoc_HDBL tbody").html('');
             $(".ckbLKT_HDBL").attr('checked', false);
             $(".lbLoaiChungTu").html("hóa đơn");
+            me._hideNgayLapPhieuEditor();
         }
     },
     save_ThuTien: function (strTable_id, bThu, linkHDDT, strPhuongThuc_Ma, strPhuongThucNhap) {
@@ -5076,7 +5080,7 @@ PhieuThu.prototype = {
                 'dKhongSinhChungTu': 0,
                 'strPhieuThuTheoPhoiSan_Id': '',
                 'strPhuongThuc_MA': strPhuongThuc_Ma,
-                'strNgayXuatChungTu': me.strNgayXuatChungTu,
+                'strNgayXuatChungTu': me._getNgayLapPhieuOverride() || me.strNgayXuatChungTu,
                 'strDaoTao_ToChucCT_Id': me.strChuongTrinh_Id,
 
             };
@@ -5365,7 +5369,8 @@ PhieuThu.prototype = {
             } catch{
 
             }
-            
+            me._showNgayLapPhieuEditor(me.strNgayXuatChungTu);
+
 
             $(".txtNgaySinhPTC_PT_Edit").html(edu.util.returnEmpty(data.NGAYSINH));
             $(".txtMaSoThue_PT_Edit").html(edu.util.returnEmpty(data.MASOTHUECANHAN));
@@ -5560,6 +5565,7 @@ PhieuThu.prototype = {
                 $(".iThangPTC_PT_Edit").html(edu.util.thisMonth());
                 $(".iNamPTC_PT_Edit").html(edu.util.thisYear());
             }
+            me._showNgayLapPhieuEditor(strNgayChungTu);
             $(".txtNgaySinhPTC_PT_Edit").html(edu.util.returnEmpty(data.NGAYSINH));
             $(".txtMaSoThue_PT_Edit").html(edu.util.returnEmpty(data.MASOTHUECANHAN));
             console.log(data);
@@ -6037,6 +6043,7 @@ PhieuThu.prototype = {
     },
     closePhieu: function () {
         var me = this;
+        me._hideNgayLapPhieuEditor();
         $("#zoneBienLaiHoaDon").slideUp('slow');
         $("#zoneTimKiemSinhVien").slideDown('slow');
         $("#zoneThongTinHSSV").slideDown('slow');
@@ -6178,6 +6185,47 @@ PhieuThu.prototype = {
             data: obj_list,
             fakedb: []
         }, false, false, false, null);
+    },
+    /*------------------------------------------
+    --Discription: Ngày lập phiếu - cho phép user chỉnh ngay trên biên lai trước khi save
+    -------------------------------------------*/
+    _showNgayLapPhieuEditor: function (strMacDinh) {
+        var me = this;
+        var $ip = $("#txtNgayLap_BienLai_Edit");
+        if ($ip.length === 0) return;
+        var strNgay = strMacDinh;
+        if (!strNgay || strNgay.indexOf('/') === -1) {
+            strNgay = edu.util.thisDay() + '/' + edu.util.thisMonth() + '/' + edu.util.thisYear();
+        }
+        $ip.val(strNgay);
+        $("#zoneChinhNgayLapPhieu").show();
+        if (!$ip.data('cleaveInited') && typeof Cleave !== 'undefined') {
+            new Cleave($ip[0], { date: true, datePattern: ['d', 'm', 'Y'] });
+            $ip.data('cleaveInited', true);
+        }
+        $ip.off('input.ngaylap change.ngaylap blur.ngaylap')
+           .on('input.ngaylap change.ngaylap blur.ngaylap', function () {
+               me._syncNgayLapPhieuToBienLai(this.value);
+           });
+        me._syncNgayLapPhieuToBienLai(strNgay);
+    },
+    _hideNgayLapPhieuEditor: function () {
+        $("#zoneChinhNgayLapPhieu").hide();
+    },
+    _syncNgayLapPhieuToBienLai: function (strNgay) {
+        if (!strNgay || strNgay.indexOf('/') === -1) return;
+        var arr = strNgay.split('/');
+        if (arr.length < 3) return;
+        $(".iNgayPTC_PT_Edit").html(arr[0]);
+        $(".iThangPTC_PT_Edit").html(arr[1]);
+        $(".iNamPTC_PT_Edit").html(arr[2]);
+    },
+    _getNgayLapPhieuOverride: function () {
+        var v = $("#txtNgayLap_BienLai_Edit").val();
+        if (!v || v.indexOf('/') === -1) return '';
+        var arr = v.split('/');
+        if (arr.length < 3 || !arr[0] || !arr[1] || !arr[2]) return '';
+        return v;
     },
     genTable_ChiTietKhoanPhaiNop: function (data) {
         var me = this;

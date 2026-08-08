@@ -869,8 +869,10 @@ KeHoachTuyenSinhNew.prototype = {
             // Context (lấy từ form/dropdown → dùng _Id)
             'strHoSo_KH_TS_Id': ctx.KH || me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': ctx.Dot || me.strDot_Id_ForKQ || '',
-            // Cơ sở đào tạo — IMPORT convention: KHÔNG có _Id (ParamDaoTao_CoSoDaoTao)
-            'strDaoTao_CoSoDaoTao': ctx.CoSo || '',
+            // Cơ sở đào tạo — ƯU TIÊN row (mapping từ cosonhaphoc CMC) > ctx (dropdown modal)
+            'strDaoTao_CoSoDaoTao': (row && row.strDaoTao_CoSoDaoTao && String(row.strDaoTao_CoSoDaoTao).trim())
+                ? String(row.strDaoTao_CoSoDaoTao).trim()
+                : (ctx.CoSo || ''),
             'dHoSo_Import_Row_No': rowNo
         };
         // Các field pass-through từ file — tên khớp param IMPORT proc (dùng _Ma / _Mas).
@@ -917,6 +919,27 @@ KeHoachTuyenSinhNew.prototype = {
                 payload[f] = typeof v === 'string' ? v : String(v);
             }
         }
+
+        // ===== Post-process: normalize ngày sinh =====
+        // BE thường expect strCorePerson_NgaySinh dạng dd/mm/yyyy + 3 field số NgayS/ThangS/NamS.
+        // API bên ngoài (CMC) trả ISO "yyyy-mm-dd" → tự convert + fill 3 số nếu chưa có.
+        // Excel user điền dd/mm/yyyy → chỉ fill 3 số (không đổi format).
+        var ns = payload.strCorePerson_NgaySinh;
+        if (typeof ns === 'string' && ns) {
+            var mISO = ns.match(/^(\d{4})-(\d{2})-(\d{2})/);       // yyyy-mm-dd (ISO)
+            var mVN  = ns.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);    // dd/mm/yyyy
+            if (mISO) {
+                payload.strCorePerson_NgaySinh = mISO[3] + '/' + mISO[2] + '/' + mISO[1];
+                if (payload.dCorePerson_NgayS  == null) payload.dCorePerson_NgayS  = parseInt(mISO[3], 10);
+                if (payload.dCorePerson_ThangS == null) payload.dCorePerson_ThangS = parseInt(mISO[2], 10);
+                if (payload.dCorePerson_NamS   == null) payload.dCorePerson_NamS   = parseInt(mISO[1], 10);
+            } else if (mVN) {
+                if (payload.dCorePerson_NgayS  == null) payload.dCorePerson_NgayS  = parseInt(mVN[1], 10);
+                if (payload.dCorePerson_ThangS == null) payload.dCorePerson_ThangS = parseInt(mVN[2], 10);
+                if (payload.dCorePerson_NamS   == null) payload.dCorePerson_NamS   = parseInt(mVN[3], 10);
+            }
+        }
+
         return payload;
     },
 
@@ -4358,6 +4381,7 @@ KeHoachTuyenSinhNew.prototype = {
         { ma: 'strPersonBank_SoTaiKhoan', ten: 'Ngân hàng - Số TK' },
         { ma: 'strPersonBank_ChuTaiKhoan', ten: 'Ngân hàng - Chủ TK' },
         { ma: 'strPersonBank_GhiChu', ten: 'Ngân hàng - Ghi chú' },
+        { ma: 'strDaoTao_CoSoDaoTao', ten: 'Cơ sở đào tạo (Mã/Tên)' },
         { ma: 'strSoTienNopTruoc', ten: 'Số tiền nộp trước (giữ chỗ)' },
         { ma: 'strExtra_Person_Data', ten: 'Extra Person Data (JSON)' },
         { ma: 'strExtra_HoSo_Data', ten: 'Extra Hồ Sơ Data (JSON)' },
@@ -4408,7 +4432,9 @@ KeHoachTuyenSinhNew.prototype = {
         'tc_lpgd': 'strSoTienNopTruoc',
         // CMC tên cột NEW song song (sếp confirm 06/08/2026):
         'noptientruoc': 'strSoTienNopTruoc',
-        'diachixuathoadon': 'strPersonInvoice_DiaChi'
+        'diachixuathoadon': 'strPersonInvoice_DiaChi',
+        // CMC "cosonhaphoc" = Cơ sở nhập học ("Hà Nội" / "Hồ Chí Minh") — chính là Cơ sở đào tạo bên mình
+        'cosonhaphoc': 'strDaoTao_CoSoDaoTao'
     },
 
     initDocAPI_Bindings: function () {

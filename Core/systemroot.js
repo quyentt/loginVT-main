@@ -85,8 +85,46 @@ systemroot.prototype = {
     iLuuDon: 0,//Chia trường hợp lưu từng ô một hoặc có nút cập nhật trên cùng sẽ lưu toàn bộ nội dung bên trong bảng
     socket: null,
 
+    // ─── [THU-VAI-PERSIST] Giữ phiên thủ vai qua reload F5 ───────────────────
+    // Trạng thái thủ vai (userId + currentThuVai) mặc định chỉ nằm trong RAM →
+    // reload mất. 3 hàm dưới persist vào sessionStorage (per-tab, đóng tab tự mất).
+    //   _saveThuVaiSession()   — gọi sau khi vào vai (chonNguoiDung + _autoThuVaiSV)
+    //   _restoreThuVaiSession() — gọi đầu startApp, restore trước checkChucNang
+    //   _thoatThuVai()         — click nút X trên card sidebar-thuvai-info
+    _saveThuVaiSession: function () {
+        var me = this;
+        if (!me.currentThuVai || !me.userId) return;
+        try {
+            sessionStorage.setItem('thuvai', JSON.stringify({
+                userIdGoc: me.strNguoiThucVai_Id || me.userId,
+                userIdVai: me.userId,
+                info: me.currentThuVai
+            }));
+            console.log('[thuvai] saved to sessionStorage:', me.currentThuVai);
+        } catch (ex) { console.warn('[thuvai] save fail', ex); }
+    },
+    _restoreThuVaiSession: function () {
+        var me = this;
+        try {
+            var str = sessionStorage.getItem('thuvai');
+            if (!str) return;
+            var tv = JSON.parse(str);
+            if (tv && tv.userIdVai && tv.info) {
+                me.strNguoiThucVai_Id = tv.userIdGoc;
+                me.userId = tv.userIdVai;
+                me.currentThuVai = tv.info;
+                console.log('[thuvai] restored from sessionStorage:', tv);
+            }
+        } catch (ex) { console.warn('[thuvai] restore fail', ex); }
+    },
+    _thoatThuVai: function () {
+        try { sessionStorage.removeItem('thuvai'); } catch (ex) {}
+        location.reload();
+    },
+
     startApp: function () {
         var me = this;
+        me._restoreThuVaiSession();
         me.objApi = Init_API();
         me.ctPlacehoder = constant.setting.initsystem.content_placehoder;
         me.pageIndex = constant.setting.initsystem.page_index;
@@ -247,6 +285,7 @@ systemroot.prototype = {
                         email: record.EMAIL || record.Email || record.email || '',
                         tenVaiTro: strTenVaiTro
                     };
+                    edu.system._saveThuVaiSession();
                     $("#myModalAlert").modal("hide");
                     me.setUngDung(objUngDung);
                 };
@@ -4960,6 +4999,7 @@ systemroot.prototype = {
                     email: record.EMAIL || record.Email || record.email || '',
                     tenVaiTro: strTenVaiTro
                 };
+                edu.system._saveThuVaiSession();
                 console.log('[AUTO-THU-VAI][_autoThuVaiSV] set userId =', edu.system.userId, '| currentThuVai =', edu.system.currentThuVai);
                 // Nếu có yêu cầu mở chức năng cụ thể → set trước vào sessionStorage để setUngDung → menu load xong sẽ tự trigger (systemroot.js:6276-6277)
                 if (pending.strHashChucNang) {
@@ -6373,7 +6413,8 @@ systemroot.prototype = {
             var tv = me.currentThuVai;
             var strLabel = tv.tenVaiTro ? ('Đang xem — ' + tv.tenVaiTro) : 'Đang xem';
             var tvInfo = ''
-                + '<div class="sidebar-thuvai-info" style="padding:10px 12px;background:#eff6ff;border-radius:6px;margin:8px;border-left:3px solid #0d6efd">'
+                + '<div class="sidebar-thuvai-info" style="position:relative;padding:10px 28px 10px 12px;background:#eff6ff;border-radius:6px;margin:8px;border-left:3px solid #0d6efd">'
+                + '  <button type="button" class="btnThoatThuVai" title="Thoát vai" style="position:absolute;top:4px;right:4px;width:22px;height:22px;border:0;background:transparent;color:#6c757d;font-size:18px;line-height:1;cursor:pointer;padding:0;border-radius:4px" onclick="edu.system._thoatThuVai();return false;">×</button>'
                 + '  <div style="font-size:10px;color:#6c757d;text-transform:uppercase;font-weight:600;letter-spacing:.3px">' + strLabel + '</div>'
                 + '  <div style="font-weight:700;color:#1e3a8a;font-size:13px;margin-top:3px;line-height:1.25;word-break:break-word">' + tv.ten + '</div>'
                 + (tv.ma ? '  <div style="font-family:monospace;color:#6c757d;font-size:12px;margin-top:2px">' + tv.ma + '</div>' : '')

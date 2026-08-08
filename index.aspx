@@ -321,6 +321,89 @@
         border-radius: 12px;
         background: #fff;
       }
+
+      /* ─── Reskin header + sidebar theo tone NewUI (dask-blue #223771 + orange #f8843d) ─── */
+      /* Header top nav dùng --color-link (#2563EB) mặc định → đổi sang dask-blue */
+      .top-nav { background: #223771 !important; }
+
+      /* Sidebar: nền dask-blue, chữ light-blue, active/hover accent orange */
+      .left-sidebar {
+        background: #223771 !important;
+        box-shadow: none !important;
+      }
+      .left-sidebar a:hover { color: #ffffff !important; }
+      .left-sidebar a:hover .item-icon { color: #ffffff !important; }
+
+      .sidebar-menu-header {
+        color: #d2ddfd !important;
+        background: transparent !important;
+        font-weight: 500 !important;
+      }
+      .sidebar-menu-header .item-icon,
+      .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header i {
+        color: #d2ddfd !important;
+      }
+      .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header {
+        color: #d2ddfd !important;
+      }
+      .sidebar-menu-header:not(.collapsed):hover,
+      .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header:hover {
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+      }
+      .sidebar-menu-header:not(.collapsed):hover i,
+      .sidebar-menu-header:not(.collapsed):hover .item-icon {
+        color: #ffffff !important;
+      }
+
+      .sidebar-menu-item.active .sidebar-menu-header {
+        background: rgba(255, 255, 255, 0.10) !important;
+        color: #f8843d !important;
+        font-weight: 700 !important;
+      }
+      .sidebar-menu-item.active .sidebar-menu-header .item-icon,
+      .sidebar-menu-item.active .sidebar-menu-header i {
+        color: #f8843d !important;
+      }
+
+      /* Submenu (cấp con) — bullet + border-left theo tone dask-blue */
+      .sidebar-menu-sub a {
+        color: #d2ddfd !important;
+        border-left-color: #5a7adb !important;
+      }
+      .sidebar-menu-sub a:hover,
+      .sidebar-menu-sub a.active {
+        color: #f8843d !important;
+      }
+      .sidebar-menu-sub a::before,
+      .sidebar-menu-sub a::after {
+        background-color: #5a7adb !important;
+      }
+      .sidebar-menu-sub a:hover::before,
+      .sidebar-menu-sub a:hover::after,
+      .sidebar-menu-sub a.active::before,
+      .sidebar-menu-sub a.active::after {
+        background-color: #f8843d !important;
+      }
+
+      /* Nền wrap = dask-blue để lộ được góc bo top-left của main-content
+         (nếu không sẽ trùng màu với main-content nên không thấy round) */
+      .main-wrap {
+        background-color: #223771 !important;
+      }
+      /* Main content: nền light-gray + bo góc trái trên tiếp giáp sidebar.
+         overflow-y auto để scroll dọc được (main-wrap = 100vh, content dài hơn thì scroll).
+         overflow-x hidden để nội dung không tràn ra ngoài góc bo top-left 16px. */
+      .main-content {
+        background: #f0f3fd;
+        border-top-left-radius: 16px;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      /* Header controls: chữ menu + bell trắng, tránh bị var(--color-*) đè */
+      .top-nav .sidebar-bars,
+      .top-nav .sidebar-bars span { color: #ffffff !important; }
     </style>
   </head>
 
