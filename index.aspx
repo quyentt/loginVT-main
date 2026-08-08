@@ -101,7 +101,7 @@
       .dashboard-content .quick-action .quick-acction-title {
         color: #0f172a !important;
         font-size: 22px;
-        font-weight: 800;
+        font-weight: 700;
         margin: 6px 0 18px;
       }
 
@@ -200,10 +200,10 @@
         cursor: pointer;
         transition: all .15s ease;
       }
-      .role-chip:hover { border-color: #223771; }
+      .role-chip:hover { border-color:var(--color-blue); }
       .role-chip.active {
-        background: #223771;
-        border-color: #223771;
+        background:var(--color-blue);
+        border-color:var(--color-blue);
         color: #fff;
       }
       .role-chip-count {
@@ -236,6 +236,7 @@
 
       .role-group + .role-group { margin-top: 22px; }
       .role-group-title {
+        font-family: Arial, Helvetica, sans-serif !important;
         display: flex;
         align-items: baseline;
         gap: 6px;
@@ -267,7 +268,7 @@
         background: #fff;
         border-radius: 12px;
         transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-        min-height: 106px;
+        min-height: 90px;
         width: auto !important;
         height: auto !important;
         cursor: pointer;
@@ -280,17 +281,22 @@
       .role-card-head {
         display: flex;
         align-items: flex-start;
-        justify-content: space-between;
-        gap: 8px;
+        /* justify-content: space-between; */
+        gap: 10px;
       }
       .role-card-icon {
         display: grid;
         place-items: center;
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-        font-size: 18px;
+        width: 60px;
+        height: 60px;
+        border-radius: 12px;
+        font-size: 28px;
         flex-shrink: 0;
+        font-weight: 700 !important;
+      }
+      .role-card-icon i{
+        font-size: 28px;
+        /* font-weight: 700 !important; */
       }
       .role-card-badge {
         padding: 3px 8px;
@@ -1325,9 +1331,12 @@
                 '<span class="role-card-icon" style="background:' + meta.bg + ';color:' + meta.fg + '">' +
                   '<i class="' + it.icon + '"></i>' +
                 '</span>' +
+                '<div class="role-card-right">' +
+                '<div class="role-card-name" title="' + escapeHtml(it.name) + '">' + escapeHtml(it.name) + '</div>' +
                 '<span class="role-card-badge" style="background:' + meta.chipBg + ';color:' + meta.chipFg + '">' + meta.label + '</span>' +
+                '</div>' +
               '</div>' +
-              '<div class="role-card-name" title="' + escapeHtml(it.name) + '">' + escapeHtml(it.name) + '</div>' +
+              
             '</div>';
           }
 
