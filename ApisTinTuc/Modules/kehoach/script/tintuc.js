@@ -18,6 +18,8 @@ TinTuc.prototype = {
     arrKhoa: [],
     arrHe: [],
     arrChuongTrinh: [],
+    strChuyenMuc_TenBangId: '', // cache ID bảng TINTUC.CHUYENMUC (lazy load)
+    dtChuyenMuc_QuickAdd: [], // cache danh sách chuyên mục hiển thị trong modal quản lý
 
     init: function () {
         var me = this;
@@ -444,6 +446,36 @@ TinTuc.prototype = {
         $('#dropSearch_ChuongTrinh_PV').on('select2:select select2:unselect', function (e) {
             me.getList_LopQuanLy_PV();
         });
+
+        // Quick-add / Quản lý Chuyên mục ngay trong form Thêm/Sửa tin tức
+        $("#btnQuickAdd_ChuyenMuc").click(function (e) {
+            e.preventDefault();
+            me.openQuickAdd_ChuyenMuc();
+        });
+        $("#btnQuickAdd_ChuyenMuc_Save").click(function (e) {
+            e.preventDefault();
+            me.saveQuickAdd_ChuyenMuc();
+        });
+        $("#btnQuickAdd_ChuyenMuc_Reset").click(function (e) {
+            e.preventDefault();
+            me.resetForm_QuickAdd_ChuyenMuc();
+        });
+        $("#btnQuickAdd_ChuyenMuc_Refresh").click(function (e) {
+            e.preventDefault();
+            me.getList_QuickAdd_ChuyenMuc();
+        });
+        $("#tblQuickAdd_ChuyenMuc").delegate('.btnQuickAdd_ChuyenMuc_Edit', 'click', function (e) {
+            e.preventDefault();
+            var strId = $(this).data('id');
+            me.editRow_QuickAdd_ChuyenMuc(strId);
+        });
+        $("#tblQuickAdd_ChuyenMuc").delegate('.btnQuickAdd_ChuyenMuc_Delete', 'click', function (e) {
+            e.preventDefault();
+            var strId = $(this).data('id');
+            var strTen = $(this).data('ten');
+            me.deleteRow_QuickAdd_ChuyenMuc(strId, strTen);
+        });
+
         me.arrValid= [
             //EM-empty, FL-float, IN-int, DA-date, seperated by '#' character...
             { "MA": "txtTinTuc_So", "THONGTIN1": "EM" },
@@ -2611,6 +2643,280 @@ TinTuc.prototype = {
             action: obj_send.action,
             contentType: true,
             data: obj_send,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*----------------------------------------------
+    --Discription: [7] Quản lý Chuyên mục tin tức (thêm/sửa/xóa danh mục TINTUC.CHUYENMUC)
+    ----------------------------------------------*/
+    openQuickAdd_ChuyenMuc: function () {
+        var me = this;
+        me.resetForm_QuickAdd_ChuyenMuc();
+        $("#modalQuickAdd_ChuyenMuc").modal("show");
+
+        // lazy load ID bảng TINTUC.CHUYENMUC (chỉ gọi 1 lần rồi cache), sau đó load danh sách
+        if (!me.strChuyenMuc_TenBangId) {
+            me.getTenBangId_ChuyenMuc(function () {
+                me.getList_QuickAdd_ChuyenMuc();
+            });
+        } else {
+            me.getList_QuickAdd_ChuyenMuc();
+        }
+    },
+
+    getTenBangId_ChuyenMuc: function (callback) {
+        var me = this;
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success && edu.util.checkValue(data.Data)) {
+                    for (var i = 0; i < data.Data.length; i++) {
+                        var row = data.Data[i];
+                        var maField = row.MADANHMUC || row.MA || '';
+                        if (String(maField).toUpperCase() === 'TINTUC.CHUYENMUC') {
+                            me.strChuyenMuc_TenBangId = row.ID;
+                            break;
+                        }
+                    }
+                    if (!me.strChuyenMuc_TenBangId) {
+                        edu.system.alert("Chưa khai báo bảng danh mục TINTUC.CHUYENMUC trong hệ thống. Vui lòng vào Danh mục dữ liệu để tạo trước!", "w");
+                        return;
+                    }
+                    if (typeof callback === 'function') callback();
+                }
+                else {
+                    edu.system.alert("Không lấy được thông tin bảng danh mục: " + (data.Message || ""), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi lấy ID bảng danh mục: " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucTenBang/LayDanhSach',
+            contentType: true,
+            data: {
+                'strTuKhoa': 'TINTUC.CHUYENMUC',
+                'strChung_TenDanhMuc_Cha_Id': '',
+                'strNhomDanhMuc_Id': '',
+                'pageIndex': 1,
+                'pageSize': 20,
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    getList_QuickAdd_ChuyenMuc: function () {
+        var me = this;
+        if (!me.strChuyenMuc_TenBangId) {
+            me.getTenBangId_ChuyenMuc(function () { me.getList_QuickAdd_ChuyenMuc(); });
+            return;
+        }
+        $("#tblQuickAdd_ChuyenMuc tbody").html('<tr><td colspan="6" class="text-center" style="padding:20px;color:#999;"><i class="fa fa-spinner fa-spin"></i> Đang tải...</td></tr>');
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var dtResult = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.dtChuyenMuc_QuickAdd = dtResult;
+                    me.genTable_QuickAdd_ChuyenMuc(dtResult);
+                }
+                else {
+                    edu.system.alert("Lỗi lấy danh sách: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi lấy danh sách chuyên mục: " + JSON.stringify(er), "w");
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucDuLieu/LayDanhSach',
+            contentType: true,
+            data: {
+                'strCha_Id': '',
+                'strTuKhoa': '',
+                'strCHUNG_TENDANHMUC_Id': me.strChuyenMuc_TenBangId,
+                'strTieuChiSapXep': '',
+                'pageIndex': 1,
+                'pageSize': 1000,
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genTable_QuickAdd_ChuyenMuc: function (data) {
+        var $tbody = $("#tblQuickAdd_ChuyenMuc tbody");
+        $tbody.html("");
+        $("#lblQuickAdd_ChuyenMuc_Tong").html(data.length);
+
+        if (!data.length) {
+            $tbody.html('<tr><td colspan="6" class="text-center" style="padding:20px;color:#999;">Chưa có chuyên mục nào. Nhập thông tin bên dưới để tạo mới.</td></tr>');
+            return;
+        }
+        for (var i = 0; i < data.length; i++) {
+            var row = data[i];
+            var strId = edu.util.returnEmpty(row.ID);
+            var strMa = edu.util.returnEmpty(row.MA);
+            var strTen = edu.util.returnEmpty(row.TEN);
+            var strMoTa = edu.util.returnEmpty(row.MOTA);
+            var tenEsc = String(strTen).replace(/"/g, '&quot;');
+            var html = "";
+            html += "<tr>";
+            html += "<td class='td-center'>" + (i + 1) + "</td>";
+            html += "<td><code>" + strMa + "</code></td>";
+            html += "<td>" + strTen + "</td>";
+            html += "<td style='color:#666;'>" + strMoTa + "</td>";
+            html += "<td class='td-center'><a class='btn btn-xs btn-info btnQuickAdd_ChuyenMuc_Edit' data-id='" + strId + "' title='Sửa'><i class='fa fa-edit'></i></a></td>";
+            html += "<td class='td-center'><a class='btn btn-xs btn-danger btnQuickAdd_ChuyenMuc_Delete' data-id='" + strId + "' data-ten=\"" + tenEsc + "\" title='Xóa'><i class='fa fa-trash'></i></a></td>";
+            html += "</tr>";
+            $tbody.append(html);
+        }
+    },
+
+    editRow_QuickAdd_ChuyenMuc: function (strId) {
+        var me = this;
+        var row = null;
+        for (var i = 0; i < me.dtChuyenMuc_QuickAdd.length; i++) {
+            if (me.dtChuyenMuc_QuickAdd[i].ID === strId) {
+                row = me.dtChuyenMuc_QuickAdd[i];
+                break;
+            }
+        }
+        if (!row) {
+            edu.system.alert("Không tìm thấy chuyên mục để sửa!", "w");
+            return;
+        }
+        $("#txtQuickAdd_ChuyenMuc_Id").val(row.ID);
+        $("#txtQuickAdd_ChuyenMuc_Ma").val(edu.util.returnEmpty(row.MA));
+        $("#txtQuickAdd_ChuyenMuc_Ten").val(edu.util.returnEmpty(row.TEN));
+        $("#txtQuickAdd_ChuyenMuc_MoTa").val(edu.util.returnEmpty(row.MOTA));
+        $("#lblQuickAdd_ChuyenMuc_FormTitle").html("Đang sửa: " + edu.util.returnEmpty(row.TEN));
+        $("#lblQuickAdd_ChuyenMuc_BtnSave").html("Cập nhật");
+        // scroll form vào tầm nhìn
+        $("#modalQuickAdd_ChuyenMuc .modal-body").animate({ scrollTop: $("#modalQuickAdd_ChuyenMuc .modal-body")[0].scrollHeight }, 300);
+        $("#txtQuickAdd_ChuyenMuc_Ten").focus();
+    },
+
+    resetForm_QuickAdd_ChuyenMuc: function () {
+        $("#txtQuickAdd_ChuyenMuc_Id").val("");
+        $("#txtQuickAdd_ChuyenMuc_Ma").val("");
+        $("#txtQuickAdd_ChuyenMuc_Ten").val("");
+        $("#txtQuickAdd_ChuyenMuc_MoTa").val("");
+        $("#lblQuickAdd_ChuyenMuc_FormTitle").html("Thêm chuyên mục mới");
+        $("#lblQuickAdd_ChuyenMuc_BtnSave").html("Thêm mới");
+    },
+
+    deleteRow_QuickAdd_ChuyenMuc: function (strId, strTen) {
+        var me = this;
+        edu.system.confirm("Bạn có chắc chắn muốn xóa chuyên mục \"" + strTen + "\"?");
+        $("#btnYes").off('click').on('click', function () {
+            $('#myModalAlert').modal('hide');
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data.Success) {
+                        edu.system.alert("Đã xóa chuyên mục!");
+                        me.getList_QuickAdd_ChuyenMuc();
+                        // nếu đang sửa đúng bản ghi vừa xóa → reset form
+                        if ($("#txtQuickAdd_ChuyenMuc_Id").val() === strId) {
+                            me.resetForm_QuickAdd_ChuyenMuc();
+                        }
+                        // reload combo bên form tin tức
+                        edu.system.loadToCombo_DanhMucDuLieu("TINTUC.CHUYENMUC", "dropSearch_ChuyenMuc,dropChuyenMuc");
+                    }
+                    else {
+                        edu.system.alert("Lỗi xóa: " + data.Message, "w");
+                    }
+                },
+                error: function (er) {
+                    edu.system.alert("Lỗi xóa chuyên mục: " + JSON.stringify(er), "w");
+                },
+                type: 'POST',
+                action: 'CMS_DanhMucDuLieu/Xoa',
+                contentType: true,
+                data: {
+                    'strId': strId,
+                    'strNguoiThucHien_Id': edu.system.userId,
+                    'dTrangThai': 1
+                },
+                fakedb: []
+            }, false, false, false, null);
+        });
+    },
+
+    saveQuickAdd_ChuyenMuc: function () {
+        var me = this;
+        var strId = $.trim($("#txtQuickAdd_ChuyenMuc_Id").val());
+        var strMa = $.trim($("#txtQuickAdd_ChuyenMuc_Ma").val());
+        var strTen = $.trim($("#txtQuickAdd_ChuyenMuc_Ten").val());
+        var strMoTa = $.trim($("#txtQuickAdd_ChuyenMuc_MoTa").val());
+
+        if (!strMa) {
+            edu.system.alert("Vui lòng nhập Mã!");
+            $("#txtQuickAdd_ChuyenMuc_Ma").focus();
+            return;
+        }
+        if (!strTen) {
+            edu.system.alert("Vui lòng nhập Tên!");
+            $("#txtQuickAdd_ChuyenMuc_Ten").focus();
+            return;
+        }
+        if (!me.strChuyenMuc_TenBangId) {
+            edu.system.alert("Chưa xác định được bảng danh mục TINTUC.CHUYENMUC. Vui lòng thử lại!", "w");
+            me.getTenBangId_ChuyenMuc();
+            return;
+        }
+
+        var isUpdate = !!strId;
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var savedId = isUpdate ? strId : (data.Id || data.ID || '');
+                    edu.system.alert(isUpdate ? "Cập nhật chuyên mục thành công!" : "Thêm chuyên mục thành công!");
+                    me.resetForm_QuickAdd_ChuyenMuc();
+                    me.getList_QuickAdd_ChuyenMuc();
+                    // reload cả 2 combo (search + form) và auto-select bản ghi vừa lưu ở form
+                    edu.system.loadToCombo_DanhMucDuLieu(
+                        "TINTUC.CHUYENMUC",
+                        "dropSearch_ChuyenMuc,dropChuyenMuc",
+                        "",
+                        function () {
+                            if (savedId) {
+                                $("#dropChuyenMuc").val(savedId).trigger("change");
+                            }
+                        }
+                    );
+                }
+                else {
+                    edu.system.alert("Lỗi lưu chuyên mục: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Lỗi lưu chuyên mục: " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: isUpdate ? 'CMS_DanhMucDuLieu/CapNhat' : 'CMS_DanhMucDuLieu/ThemMoi',
+            contentType: true,
+            data: {
+                'strMa': strMa,
+                'strTen': strTen,
+                'strChung_TenDanhMuc_Cha_Id': '',
+                'strCHUNG_TENDANHMUC_Id': me.strChuyenMuc_TenBangId,
+                'dHeSo1': 0,
+                'dHeSo2': 0,
+                'dHeSo3': 0,
+                'strThongTin1': '',
+                'strThongTin2': '',
+                'strThongTin3': '',
+                'strThongTin4': '',
+                'strThongTin5': '',
+                'strThongTin6': '',
+                'strThongTin7': '',
+                'strThongTin8': '',
+                'strMoTa': strMoTa,
+                'strId': strId,
+                'dTrangThai': 1,
+                'strNguoiThucHien_Id': edu.system.userId
+            },
             fakedb: []
         }, false, false, false, null);
     },

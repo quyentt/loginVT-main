@@ -2,14 +2,47 @@
     .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
         margin-left: 0px;
     }
-    
+
     /* Style cho row sinh viên có thể click */
     #tblSinhVien_PhamVi tbody tr.row-sinhvien:hover {
         background-color: #f5f5f5 !important;
     }
-    
+
     #tblSinhVien_PhamVi tbody tr.row-sinhvien {
         transition: background-color 0.2s;
+    }
+
+    /* Sticky footer cho các form Thêm/Sửa, Phạm vi, Gửi Email
+       => Nút Đóng/Lưu luôn thấy khi cuộn */
+    #zoneEdit > .box-footer,
+    #zonePhamVi > .box-footer,
+    #zoneSendEmail > .box-footer {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: #fff;
+        border-top: 1px solid #e0e0e0;
+        box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.08);
+        z-index: 100;
+        padding: 12px 20px;
+        margin-top: 0;
+        border-bottom-left-radius: 12px;
+        border-bottom-right-radius: 12px;
+    }
+
+    /* Chừa khoảng trắng nhỏ cuối box-body để nội dung cuối không bị footer đè */
+    #zoneEdit > .box-body,
+    #zonePhamVi > .box-body,
+    #zoneSendEmail > .box-body {
+        padding-bottom: 15px;
+    }
+
+    /* Đảm bảo sticky hoạt động: cha không được overflow hidden */
+    #zoneEdit,
+    #zonePhamVi,
+    #zoneSendEmail {
+        overflow: visible !important;
     }
 </style>
 <section class="content aps-tintuc">
@@ -107,87 +140,118 @@
                     <a class="btn btn-default btnClose" href="#" title="Close"><i class="fa fa-times"></i></a>
                 </div>
             </div>
-            <div class="box-body pd0">
-                <div class="col-sm-12 box-view aps-add-new pd20">
-                    <!-- 1. Noi dung bai bao -->
-                    <div class="row aps-form">
-                        <div class="row d-none">
-                            <p class="group-title-name">
-                                <span class="badge bg-blue"> Thông tin chung</span>
-                            </p>
-                        </div>
-                        <div class="row aps-form">
-                            <div class="col col-lg-9 col-sm-10 mt-10 pr20">
-                                <!--row 1-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable">Tiêu đề</div>
-                                    <div class="col-sm-10 aps-form-input">
-                                        <input id="txtTieuDe" class="form-control" />
+            <div class="box-body" style="background-color: #f4f6f9; padding: 15px;">
+                <div class="row">
+                    <!-- LEFT: Nội dung chính -->
+                    <div class="col col-lg-9 col-sm-9">
+
+                        <!-- Section 1: Thông tin cơ bản -->
+                        <div class="box box-solid" style="border-top: 3px solid #3c8dbc; margin-bottom: 15px; border-radius: 4px;">
+                            <div class="box-header with-border" style="padding: 10px 15px;">
+                                <h4 class="box-title" style="margin: 0; font-size: 15px; color: #3c8dbc; font-weight: 600;">
+                                    <i class="fa fa-info-circle"></i> Thông tin cơ bản
+                                </h4>
+                            </div>
+                            <div class="box-body" style="padding: 15px;">
+                                <div class="row" style="margin-bottom: 12px;">
+                                    <div class="col-sm-12">
+                                        <label style="font-weight: 600; margin-bottom: 5px;">Tiêu đề <span style="color: red;">*</span></label>
+                                        <input id="txtTieuDe" class="form-control" placeholder="Nhập tiêu đề tin tức..." />
                                     </div>
                                 </div>
-                                <!--row 2-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable">Chuyên mục</div>
-                                    <div class="col-sm-10 aps-form-input">
-                                        <select id="dropChuyenMuc" class="select-opt"></select>
+                                <div class="row" style="margin-bottom: 12px;">
+                                    <div class="col-sm-12">
+                                        <label style="font-weight: 600; margin-bottom: 5px;">Chuyên mục</label>
+                                        <div style="display: flex; gap: 6px; align-items: stretch;">
+                                            <div style="flex: 1; min-width: 0;">
+                                                <select id="dropChuyenMuc" class="select-opt" style="width: 100%;"></select>
+                                            </div>
+                                            <a id="btnQuickAdd_ChuyenMuc" class="btn btn-primary" title="Quản lý chuyên mục" style="flex-shrink: 0;">
+                                                <i class="fa fa-cog"></i> Quản lý
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
-                                <!--row 3-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable">Ngày bắt đầu đăng</div>
-                                    <div class="col-sm-4 aps-form-input">
+                                <div class="row">
+                                    <div class="col-sm-6" style="margin-bottom: 12px;">
+                                        <label style="font-weight: 600; margin-bottom: 5px;"><i class="fa fa-calendar text-blue"></i> Ngày bắt đầu đăng</label>
                                         <input id="txtNgayBatDau" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                                     </div>
-                                    <div class="col-sm-2 aps-form-lable text-right pr15">Ngày hết hạn</div>
-                                    <div class="col-sm-4 aps-form-input">
+                                    <div class="col-sm-6" style="margin-bottom: 12px;">
+                                        <label style="font-weight: 600; margin-bottom: 5px;"><i class="fa fa-calendar-times-o text-red"></i> Ngày hết hạn đăng</label>
                                         <input id="txtNgayHetHan" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                                     </div>
                                 </div>
-                                <!--row 4-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable">Tin tức từ đơn vị</div>
-                                    <div class="col-sm-10 aps-form-input">
+                            </div>
+                        </div>
+
+                        <!-- Section 2: Phân loại & Hiển thị -->
+                        <div class="box box-solid" style="border-top: 3px solid #00c0ef; margin-bottom: 15px; border-radius: 4px;">
+                            <div class="box-header with-border" style="padding: 10px 15px;">
+                                <h4 class="box-title" style="margin: 0; font-size: 15px; color: #00c0ef; font-weight: 600;">
+                                    <i class="fa fa-share-alt"></i> Phân loại & Phạm vi hiển thị
+                                </h4>
+                            </div>
+                            <div class="box-body" style="padding: 15px;">
+                                <div class="row">
+                                    <div class="col-sm-6" style="margin-bottom: 5px;">
+                                        <label style="font-weight: 600; margin-bottom: 5px;"><i class="fa fa-building-o"></i> Tin tức từ đơn vị</label>
                                         <select id="dropDonVi" class="select-opt"></select>
                                     </div>
-                                </div>
-                                <!--row 5-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable">Hiển thị ở ứng dụng</div>
-                                    <div class="col-sm-10 aps-form-input">
+                                    <div class="col-sm-6" style="margin-bottom: 5px;">
+                                        <label style="font-weight: 600; margin-bottom: 5px;"><i class="fa fa-mobile"></i> Hiển thị ở ứng dụng</label>
                                         <select id="dropUngDung" class="select-opt"></select>
                                     </div>
                                 </div>
-                                <!--Nội dung-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable"><span class="lang" key="">Nội dung</span></div>
-                                    <div class="col-sm-10">
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Nội dung + File đính kèm -->
+                        <div class="box box-solid" style="border-top: 3px solid #00a65a; margin-bottom: 0; border-radius: 4px;">
+                            <div class="box-header with-border" style="padding: 10px 15px;">
+                                <h4 class="box-title" style="margin: 0; font-size: 15px; color: #00a65a; font-weight: 600;">
+                                    <i class="fa fa-file-text-o"></i> Nội dung tin tức
+                                </h4>
+                            </div>
+                            <div class="box-body" style="padding: 15px;">
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col-sm-12">
+                                        <label style="font-weight: 600; margin-bottom: 5px;">Nội dung chi tiết</label>
                                         <textarea name="editor_NoiDung" id="editor_NoiDung"></textarea>
                                     </div>
                                 </div>
-                                <!--row 7-->
-                                <div class="row aps-form-item">
-                                    <div class="col-sm-2 aps-form-lable"><span class="lang" key="">File đính kèm</span></div>
-                                    <div class="col-sm-10 mt-5">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <label style="font-weight: 600; margin-bottom: 5px;"><i class="fa fa-paperclip"></i> File đính kèm</label>
                                         <textarea name="txtFileDinhKem" id="txtFileDinhKem"></textarea>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col col-lg-3 col-sm-2 pl20">
-                                <!--row 2-->
-                                <div class="row">
-                                    <div class="col-sm-12 aps-form-lable">Ảnh trang bìa</div>
-                                    <div class="col-sm-12">
-                                        <div id="uploadPicture_TinTuc"></div>
-                                    </div>
-                                    <div class="col-sm-12 aps-form-input  checkbox-inline user-check-print mt-10" style="padding-left: 20px">
-                                        <input checked="checked" type="checkbox" style="float: left;" id="ckhTinUuTien" />
-                                        <span><p>Tin được ưu tiên</p></span>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Sidebar (Ảnh + Ưu tiên) -->
+                    <div class="col col-lg-3 col-sm-3">
+                        <div class="box box-solid" style="border-top: 3px solid #f39c12; margin-bottom: 15px; border-radius: 4px;">
+                            <div class="box-header with-border" style="padding: 10px 15px;">
+                                <h4 class="box-title" style="margin: 0; font-size: 15px; color: #f39c12; font-weight: 600;">
+                                    <i class="fa fa-image"></i> Ảnh trang bìa
+                                </h4>
+                            </div>
+                            <div class="box-body" style="padding: 15px;">
+                                <div id="uploadPicture_TinTuc"></div>
                             </div>
                         </div>
 
-
+                        <div class="box box-solid" style="border-top: 3px solid #dd4b39; margin-bottom: 0; border-radius: 4px;">
+                            <div class="box-body" style="padding: 12px 15px;">
+                                <label style="display: flex; align-items: center; gap: 8px; font-weight: 600; color: #dd4b39; margin: 0; cursor: pointer;">
+                                    <input type="checkbox" id="ckhTinUuTien" checked="checked" style="margin: 0; width: 16px; height: 16px;" />
+                                    <span><i class="fa fa-star"></i> Đánh dấu là tin ưu tiên</span>
+                                </label>
+                                <p style="margin: 6px 0 0 24px; color: #999; font-size: 12px;">Tin ưu tiên sẽ được hiển thị nổi bật trên trang tin tức.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -419,6 +483,89 @@
     </div>
 </div>
 
+<!-- Modal Quản lý Chuyên mục tin tức -->
+<div class="modal fade" id="modalQuickAdd_ChuyenMuc" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="background-color: #3c8dbc; color: #fff; border-bottom: 3px solid #367fa9;">
+                <button type="button" class="close" data-dismiss="modal" style="color: #fff; opacity: 0.9;">&times;</button>
+                <h4 class="modal-title"><i class="fa fa-tags"></i> Quản lý chuyên mục tin tức</h4>
+            </div>
+            <div class="modal-body" style="background-color: #f4f6f9; padding: 15px;">
+                <!-- Section: Danh sách -->
+                <div class="box box-solid" style="margin-bottom: 15px; border-top: 3px solid #3c8dbc;">
+                    <div class="box-header with-border" style="padding: 10px 15px;">
+                        <h4 class="box-title" style="margin: 0; color: #3c8dbc; font-weight: 600; font-size: 15px;">
+                            <i class="fa fa-list"></i> Danh sách chuyên mục
+                            <span class="badge bg-light-blue" style="margin-left: 8px;">
+                                <span id="lblQuickAdd_ChuyenMuc_Tong">0</span>
+                            </span>
+                        </h4>
+                        <div class="pull-right">
+                            <a id="btnQuickAdd_ChuyenMuc_Refresh" class="btn btn-xs btn-default" title="Tải lại danh sách"><i class="fa fa-refresh"></i> Tải lại</a>
+                        </div>
+                    </div>
+                    <div class="box-body" style="padding: 0; max-height: 320px; overflow-y: auto;">
+                        <table id="tblQuickAdd_ChuyenMuc" class="table table-hover table-bordered" style="margin-bottom: 0;">
+                            <thead style="background-color: #ecf0f5;">
+                                <tr>
+                                    <th class="td-center" style="width: 50px;">Stt</th>
+                                    <th style="width: 150px;">Mã</th>
+                                    <th>Tên</th>
+                                    <th>Mô tả</th>
+                                    <th class="td-center" style="width: 60px;">Sửa</th>
+                                    <th class="td-center" style="width: 60px;">Xóa</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="6" class="text-center" style="padding: 20px; color: #999;">Đang tải...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section: Form Thêm/Sửa -->
+                <div class="box box-solid" style="border-top: 3px solid #00a65a;">
+                    <div class="box-header with-border" style="padding: 10px 15px;">
+                        <h4 class="box-title" style="margin: 0; color: #00a65a; font-weight: 600; font-size: 15px;">
+                            <i class="fa fa-plus-circle"></i>
+                            <span id="lblQuickAdd_ChuyenMuc_FormTitle">Thêm chuyên mục mới</span>
+                        </h4>
+                    </div>
+                    <div class="box-body" style="padding: 15px;">
+                        <input type="hidden" id="txtQuickAdd_ChuyenMuc_Id" />
+                        <div class="row">
+                            <div class="col-sm-4" style="margin-bottom: 10px;">
+                                <label style="font-weight: 600;">Mã <span style="color: red;">*</span></label>
+                                <input type="text" id="txtQuickAdd_ChuyenMuc_Ma" class="form-control" placeholder="VD: TB_CHUNG" />
+                            </div>
+                            <div class="col-sm-8" style="margin-bottom: 10px;">
+                                <label style="font-weight: 600;">Tên <span style="color: red;">*</span></label>
+                                <input type="text" id="txtQuickAdd_ChuyenMuc_Ten" class="form-control" placeholder="VD: Thông báo chung" />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label style="font-weight: 600;">Mô tả</label>
+                                <textarea id="txtQuickAdd_ChuyenMuc_MoTa" class="form-control" rows="2" placeholder="Mô tả ngắn về chuyên mục (không bắt buộc)"></textarea>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 12px;">
+                            <div class="col-sm-12 text-right">
+                                <a id="btnQuickAdd_ChuyenMuc_Reset" class="btn btn-default"><i class="fa fa-eraser"></i> Làm mới</a>
+                                <a id="btnQuickAdd_ChuyenMuc_Save" class="btn btn-primary" style="margin-left: 10px;"><i class="fa fa-save"></i> <span id="lblQuickAdd_ChuyenMuc_BtnSave">Thêm mới</span></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle"></i> Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- aps-modal_nhansu -->
 <div class="modal fade aps-modal_nhansu" id="modal_sinhvien" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <!-- load from js -->
@@ -462,7 +609,7 @@
         tryLoadScript();
     })();
 </script>
-<script src="modules/kehoach/script/tintuc.js?v=1.0.0.1"></script>
+<script src="modules/kehoach/script/tintuc.js?v=1.0.0.4"></script>
 <script>
 
     CKEDITOR.replace('ckeditor', {
