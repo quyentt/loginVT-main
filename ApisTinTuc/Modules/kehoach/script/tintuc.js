@@ -36,10 +36,13 @@ TinTuc.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("TINTUC.PHEDUYET", "dropSearch_TinhTrang");
 
         $("#btnSearch").click(function (e) {
+            edu.system.pageIndex_default = 1;
             me.getList_TinTuc();
         });
-        $("#txtSearch").keypress(function (e) {
+        $("#txtSearch_TieuDe").keypress(function (e) {
             if (e.which === 13) {
+                e.preventDefault();
+                edu.system.pageIndex_default = 1;
                 me.getList_TinTuc();
             }
         });
@@ -535,7 +538,7 @@ TinTuc.prototype = {
         var obj_list = {
             'action': 'TT_BangTin/LayDanhSach',
             'type': 'GET',
-            'strTuKhoa': edu.util.getValById('txtAAAA'),
+            'strTuKhoa': edu.util.getValById('txtSearch_TieuDe'),
             'strTuNgay': edu.util.getValById('txtSearch_TuNgay'),
             'strDenNgay': edu.util.getValById('txtSearch_DenNgay'),
             'strNguoiThucHien_Id': edu.system.userId,
