@@ -4274,7 +4274,8 @@ KeHoachTuyenSinhNew.prototype = {
             // Frappe/ERPNext: "Authorization: token <api_key>:<api_secret>"
             token: 'token 62e39c71e027e21:edca5904211fb8c',
             keyCol_default: 'mssv',
-            filterFmt: '&filters=[["mssv","=","{kw}"]]',
+            // Frappe LIKE partial match: %kw% (encode % thành %25 vì đây là 1 phần URL)
+            filterFmt: '&filters=[["mssv","like","%25{kw}%25"]]',
             responseUnwrap: 'data'   // JSON.parse(data.Data).data
         },
         {
@@ -4434,7 +4435,75 @@ KeHoachTuyenSinhNew.prototype = {
         'noptientruoc': 'strSoTienNopTruoc',
         'diachixuathoadon': 'strPersonInvoice_DiaChi',
         // CMC "cosonhaphoc" = Cơ sở nhập học ("Hà Nội" / "Hồ Chí Minh") — chính là Cơ sở đào tạo bên mình
-        'cosonhaphoc': 'strDaoTao_CoSoDaoTao'
+        'cosonhaphoc': 'strDaoTao_CoSoDaoTao',
+
+        // ===== EXPLICIT SKIP (value=null) — các cột CMC KHÔNG map vào target =====
+        // Lý do: fuzzy match có thể khớp nhầm (VD 'tennganh' chứa 'tenngan' → mismap vào TenNganHang).
+        // Đây là whitelist "biết rõ không map" — an toàn hơn để fuzzy tự do.
+
+        // Tên khoa/ngành/tổ hợp — không có target riêng (nhưng có nguy cơ mismap TenNganHang)
+        'tennganh': null,
+        'tenkhoa': null,
+        'maxettuyen': null,
+        'maxettuyengoc': null,        // CMC bổ sung 09/08 — mã xét tuyển gốc theo cơ sở
+        'tohop_thpt': null,
+        'tohop_hocba': null,
+        // Điểm cộng CMC (không có target riêng — đã tính vào tổng)
+        'diem_tieuchicong': null,
+        'diem_diemcongthanhtich': null,
+
+        // Metadata Frappe/CMC — không dùng cho tuyển sinh mình
+        'name': null, 'owner': null, 'creation': null, 'modified': null,
+        'modified_by': null, 'docstatus': null, 'idx': null, 'naming_series': null,
+        'da_xacthucdinhdanh': null, 'mssv_barcode': null,
+
+        // Thông tin phụ / anh chị em — không có target trong signature IMPORT
+        'sdt_khac': null, 'hotenph_anhchi': null, 'sdtph_anhchi': null,
+        'nguoinhacmc': null, 'namtotnghiep': null, 'ttnv': null, 'ccnn': null,
+
+        // Public letter (giấy báo online của CMC)
+        'public_letter_token': null, 'public_letter_expires_on': null,
+        'allow_public_letter': null, 'linkgiaybao': null,
+
+        // Trạng thái nhập học CMC / cơ sở
+        'thoigiannhaphoc': null, 'xacnhannhaphoc': null, 'tuvanvien': null,
+        'diachinhaphoc': null, 'da_checkin': null,
+        'trangthaicheckin': null, 'trangthaichupanh': null, 'trangthaihoso': null,
+        'trangthaiquatang': null, 'trangthaidongtien': null, 'trangthailaptop': null,
+        'trangthaifaceid': null, 'trangthaidvsv': null, 'trangthaikhaosat': null,
+
+        // Điểm chi tiết môn (không có target riêng — chỉ giữ diem_trungtuyen)
+        'diem_dgnl': null, 'diem_tuyenthang': null, 'diem_thpt': null, 'diem_hocba': null,
+        'thpt_to': null, 'thpt_li': null, 'thpt_si': null, 'thpt_di': null,
+        'thpt_cncn': null, 'thpt_th': null, 'thpt_va': null, 'thpt_ho': null,
+        'thpt_su': null, 'thpt_kt': null, 'thpt_cnnn': null, 'thpt_nn': null,
+        'hb_to': null, 'hb_li': null, 'hb_si': null, 'hb_di': null,
+        'hb_cncn': null, 'hb_ti': null, 'hb_va': null, 'hb_ho': null,
+        'hb_su': null, 'hb_ktpl': null, 'hb_cnnn': null, 'hb_nn': null,
+
+        // Tài chính chi tiết CMC — chỉ giữ tc_lpgd (đã map vào strSoTienNopTruoc)
+        'tc_hocphi': null, 'tc_ndck': null, 'tc_link_ndck': null,
+        'tc_ksk': null, 'tc_bhyt': null, 'tc_hbud_giatri': null, 'tc_qs': null,
+        'tc_tongtien': null, 'tc_hbud': null, 'tc_gdtc': null,
+        'base_total': null, 'tc_tienconlai': null,
+
+        // Trạng thái CTSV / nội bộ CMC (không import vào tuyển sinh)
+        'ctsv_mabhyt': null, 'ctsv_ngaynhaphoc': null, 'ctsv_ngaydongbhyt': null,
+        'ctsv_sohoso': null, 'ctsv_ngayhetbhyt': null, 'ctsv_sohoso_tichluy': null,
+        'ctsv_hieulucbhyt': null, 'ctsv_gbnh': null, 'ctsv_gcnkqt': null,
+        'ctsv_gcnnvqs': null, 'ctsv_ggtnvqs': null, 'ctsv_sodoandang': null,
+        'ctsv_ddcd': null, 'ctsv_btnthpt': null, 'ctsv_hocba': null, 'ctsv_gks': null,
+        'nh_gcntn': null, 'ctsv_gtkhac': null, 'ctsv_ngayvaodoan': null,
+        'ctsv_ngayvaodang': null, 'ctsv_thett': null, 'ctsv_nhatro': null,
+        'ctsv_xnsinhvien': null, 'ctsv_tvvayvon': null, 'dbcl_khaosattsv': null,
+        'mc_laptop': null, 'mc_henlaptop': null, 'mc_quasinhvien': null,
+        'dhs_faceid': null, 'tadv_diem': null, 'tadv_phanloai': null,
+        'tadv_ngaythi': null, 'tadv_ghichu': null,
+
+        // Ảnh — không import
+        'anh_dai_dien': null, 'anh_dai_dien_goc': null,
+        // Dots — không rõ nghĩa, để null
+        'dots': null
     },
 
     initDocAPI_Bindings: function () {
@@ -4498,33 +4567,44 @@ KeHoachTuyenSinhNew.prototype = {
         $("#btnDocAPI_ClearMap").click(function () { me.docAPI_ClearMapping(); });
         $("#btnDocAPI_SaveMap").click(function () { me.docAPI_SaveMapping(true); });
 
-        // Update mapping state khi user đổi select trong table (mode chuẩn)
+        // Update mapping state khi user đổi select — dùng DEBOUNCED để tránh render preview
+        // 11K row mỗi lần chọn 1 dropdown (freeze browser).
         $("#tblDocAPI_Mapping").on('change', 'select.docAPI-map-sel', function () {
             var apiCol = $(this).attr('data-apicol');
             me._docAPI_Mapping[apiCol] = $(this).val() || '';
-            me.docAPI_RefreshPreview();
+            me.docAPI_RefreshPreview_Debounced();
         });
-        // Update mapping state khi user gõ trong input fallback (mode C)
         $("#tblDocAPI_Mapping").on('input', 'input.docAPI-map-input', function () {
             var apiCol = $(this).attr('data-apicol');
             var v = ($(this).val() || '').trim();
             if (v) me._docAPI_Mapping[apiCol] = v;
             else delete me._docAPI_Mapping[apiCol];
-            me.docAPI_RefreshPreview();
+            me.docAPI_RefreshPreview_Debounced();
         });
         $("#ddlDocAPI_KeyCol").on('change', function () {
             me._docAPI_KeyCol = $(this).val() || '';
-            me.docAPI_RefreshPreview();
+            me.docAPI_RefreshPreview_Debounced();
         });
 
-        // Select all preview
+        // Select all preview — set flag để docAPI_StartImport biết chọn toàn bộ (không chỉ visible 200 row)
         $("#chkDocAPI_SelectAll").click(function () {
-            $('#tblDocAPI_Preview tbody .docAPI-sel').prop('checked', $(this).is(':checked'));
+            var checked = $(this).is(':checked');
+            $('#tblDocAPI_Preview tbody .docAPI-sel').prop('checked', checked);
+            me._docAPI_SelectedAll = checked;
+        });
+        // Nếu user tự bỏ tick 1 checkbox lẻ → flag SelectAll về false
+        $("#tblDocAPI_Preview").on('change', '.docAPI-sel', function () {
+            if (!$(this).is(':checked')) {
+                me._docAPI_SelectedAll = false;
+                $('#chkDocAPI_SelectAll').prop('checked', false);
+            }
         });
 
         $("#btnDocAPI_StartImport").click(function () { me.docAPI_StartImport(); });
         $("#btnDocAPI_CancelImport").click(function () { me._docAPI_ImportCancelled = true; });
         $("#btnDocAPI_ExportExcel").click(function () { me.docAPI_ExportToExcel(); });
+        $("#btnDocAPI_ShowErrors").click(function (e) { e.preventDefault(); me.docAPI_RenderErrorsPanel(); $('#docAPI_ErrorsPanel').removeClass('d-none'); });
+        $("#btnDocAPI_HideErrors").click(function (e) { e.preventDefault(); $('#docAPI_ErrorsPanel').addClass('d-none'); });
     },
 
     docAPI_LoadPresets: function () {
@@ -4675,6 +4755,20 @@ KeHoachTuyenSinhNew.prototype = {
         if (kw && preset.filterFmt) {
             host += preset.filterFmt.replace('{kw}', encodeURIComponent(kw));
         }
+        // Áp dụng giới hạn số bản ghi: nếu chọn "Chỉ đọc N" → replace limit_page_length trong URL.
+        // Chọn "Toàn bộ" → giữ nguyên limit_page_length gốc (5000000).
+        var limitMode = $('input[name="docAPI_LimitMode"]:checked').val() || 'custom';
+        if (limitMode === 'custom') {
+            var limitN = parseInt(edu.util.getValById('txtDocAPI_Limit'), 10);
+            if (limitN > 0) {
+                if (/limit_page_length=\d+/.test(host)) {
+                    host = host.replace(/limit_page_length=\d+/, 'limit_page_length=' + limitN);
+                } else {
+                    host += (host.indexOf('?') === -1 ? '?' : '&') + 'limit_page_length=' + limitN;
+                }
+            }
+        }
+        console.log('%c[docAPI] Fetch URL:', 'color:#7c3aed', host);
         var obj_save = {
             'action': 'CM_UngDung/CustomAPIGet',
             'type': 'POST',
@@ -4819,16 +4913,23 @@ KeHoachTuyenSinhNew.prototype = {
         var pendingCols = [];
 
         // Pass 1: alias exact match — priority tuyệt đối
+        // NẾU cột có key trong _docAPI_ColAliases (kể cả value null/'') → EXPLICIT DECISION:
+        //   - value truthy + target hợp lệ → map
+        //   - value null/'' → SKIP fuzzy (không map, không mismap)
+        // Chỉ những cột KHÔNG có key alias mới fall xuống pass 2 fuzzy.
         me._docAPI_ApiCols.forEach(function (col) {
             var colLower = String(col || '').toLowerCase();
-            var alias = me._docAPI_ColAliases[colLower];
-            if (alias && validTargetMa[alias] && !used[alias]) {
-                me._docAPI_Mapping[col] = alias;
-                used[alias] = col;
-                $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]').val(alias);
-            } else {
-                pendingCols.push(col);
+            if (me._docAPI_ColAliases.hasOwnProperty(colLower)) {
+                var alias = me._docAPI_ColAliases[colLower];
+                if (alias && validTargetMa[alias] && !used[alias]) {
+                    me._docAPI_Mapping[col] = alias;
+                    used[alias] = col;
+                    $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]').val(alias);
+                }
+                // Có key → tôn trọng quyết định (map hoặc skip), không rơi vào fuzzy
+                return;
             }
+            pendingCols.push(col);
         });
 
         // Pass 2: fuzzy match cho các cột còn lại
@@ -4915,25 +5016,57 @@ KeHoachTuyenSinhNew.prototype = {
             me._docAPI_KeyCol = cfg.keyCol;
             $('#ddlDocAPI_KeyCol').val(cfg.keyCol);
         }
-        me._docAPI_Mapping = cfg.mapping || {};
-        Object.keys(me._docAPI_Mapping).forEach(function (col) {
+        // Filter mapping cũ theo alias hiện tại: nếu cột có explicit null alias → SKIP restore
+        // (bảo vệ chống mismap cũ đã lưu trong localStorage từ phiên bản trước).
+        var oldMapping = cfg.mapping || {};
+        var cleanMapping = {};
+        var skippedCount = 0;
+        Object.keys(oldMapping).forEach(function (col) {
+            var colLower = String(col).toLowerCase();
+            if (me._docAPI_ColAliases.hasOwnProperty(colLower)
+                && me._docAPI_ColAliases[colLower] == null) {
+                skippedCount++;
+                return;   // explicit skip, không restore
+            }
+            cleanMapping[col] = oldMapping[col];
+        });
+        me._docAPI_Mapping = cleanMapping;
+        Object.keys(cleanMapping).forEach(function (col) {
             var $sel = $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]');
             var $inp = $('#tblDocAPI_Mapping input.docAPI-map-input[data-apicol="' + col + '"]');
-            if ($sel.length) $sel.val(me._docAPI_Mapping[col]);
-            else if ($inp.length) $inp.val(me._docAPI_Mapping[col]);
+            if ($sel.length) $sel.val(cleanMapping[col]);
+            else if ($inp.length) $inp.val(cleanMapping[col]);
         });
-        $('#lblDocAPI_FetchInfo').append(' <span style="color:#059669;">— Đã khôi phục cấu hình đã lưu.</span>');
+        var msg = ' <span style="color:#059669;">— Đã khôi phục cấu hình đã lưu.</span>';
+        if (skippedCount > 0) {
+            msg += ' <span style="color:#d97706;">(Đã bỏ qua ' + skippedCount + ' mapping cũ không hợp lệ.)</span>';
+        }
+        $('#lblDocAPI_FetchInfo').append(msg);
     },
 
     /*------------------------------------------
-    -- Preview: mỗi record → 1 row với các field đã map
-    -- Refresh mỗi khi user đổi keyCol hoặc mapping
+    -- Preview: mỗi record → 1 row với các field đã map.
+    -- ⚠ Perf: chỉ render tối đa PREVIEW_LIMIT rows đầu (không full 11K) để tránh freeze
+    --   khi user đổi mapping. Import khi bấm "Bắt đầu" vẫn chạy TOÀN BỘ records đã tick.
+    -- Debounce hook: dùng docAPI_RefreshPreview_Debounced() ở event handler tương tác.
     -------------------------------------------*/
+    _docAPI_PREVIEW_LIMIT: 200,
+
+    docAPI_RefreshPreview_Debounced: function () {
+        var me = this;
+        if (me._docAPI_previewTimer) clearTimeout(me._docAPI_previewTimer);
+        me._docAPI_previewTimer = setTimeout(function () { me.docAPI_RefreshPreview(); }, 400);
+    },
+
     docAPI_RefreshPreview: function () {
         var me = this;
         var html = '';
         var mappedCols = Object.keys(me._docAPI_Mapping).filter(function (c) { return me._docAPI_Mapping[c]; });
-        me._docAPI_ApiData.forEach(function (rec, idx) {
+        var total = me._docAPI_ApiData.length;
+        var limit = me._docAPI_PREVIEW_LIMIT;
+        var renderCount = Math.min(total, limit);
+        for (var idx = 0; idx < renderCount; idx++) {
+            var rec = me._docAPI_ApiData[idx];
             var maHS = me._docAPI_KeyCol ? edu.util.returnEmpty(rec[me._docAPI_KeyCol]) : '';
             var preview = mappedCols.map(function (col) {
                 var v = rec[col];
@@ -4949,9 +5082,18 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td>' + me._docAPI_esc(maHS) + '</td>'
                 + '<td>' + (preview || '<span style="color:#94a3b8;">(chưa map cột nào)</span>') + '</td>'
                 + '<td class="td-center docAPI-status" data-idx="' + idx + '">—</td>'
+                + '<td class="docAPI-errmsg" data-idx="' + idx + '"></td>'
                 + '</tr>';
-        });
-        if (!html) html = '<tr><td colspan="5" class="td-center text-muted" style="padding:16px;">Không có bản ghi nào</td></tr>';
+        }
+        if (!html) html = '<tr><td colspan="6" class="td-center text-muted" style="padding:16px;">Không có bản ghi nào</td></tr>';
+        // Nếu có nhiều hơn limit → thêm row footer báo "còn X record ẩn"
+        if (total > limit) {
+            html += '<tr style="background:#fef3c7;"><td colspan="6" class="td-center" style="padding:10px; color:#92400e; font-weight:600;">'
+                + '<i class="fa-regular fa-eye-slash"></i> '
+                + 'Chỉ hiển thị ' + limit + ' / ' + total + ' bản ghi để mắt preview mapping. '
+                + 'Khi bấm <b>Bắt đầu Import</b>, hệ thống sẽ chạy toàn bộ record đã tick.'
+                + '</td></tr>';
+        }
         $('#tblDocAPI_Preview tbody').html(html);
         $('#chkDocAPI_SelectAll').prop('checked', false);
     },
@@ -4978,11 +5120,15 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa có dữ liệu API — bấm 'Kết nối & Tải' trước khi xuất.", "w");
             return;
         }
-        // Records cần xuất: đã tick > 0 → chỉ tick; = 0 → tất cả
+        // Records cần xuất: SelectAll ON + total > limit → toàn bộ; đã tick > 0 → chỉ tick; = 0 → tất cả
         var arrIdx = [];
-        $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
-            arrIdx.push(parseInt($(this).attr('data-idx'), 10));
-        });
+        if (me._docAPI_SelectedAll && me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT) {
+            for (var i = 0; i < me._docAPI_ApiData.length; i++) arrIdx.push(i);
+        } else {
+            $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
+                arrIdx.push(parseInt($(this).attr('data-idx'), 10));
+            });
+        }
         var records = arrIdx.length
             ? arrIdx.map(function (i) { return me._docAPI_ApiData[i]; })
             : me._docAPI_ApiData.slice();
@@ -5030,6 +5176,54 @@ KeHoachTuyenSinhNew.prototype = {
         edu.system.alert("Đã xuất " + records.length + " bản ghi ra file " + fname, "s");
     },
 
+    /*------------------------------------------
+    -- Log 1 lỗi vào bộ nhớ tổng hợp + hiện nút "Xem chi tiết lỗi" ở progress header.
+    -- type: 'BE'  = BE reject (Success=false, ParamErr có nội dung)
+    --       'API' = network error khi call BE (không nhận được response)
+    -- Sau này có thể thêm 'PARSE' cho trường hợp record API bị lỗi parse ở FE.
+    -------------------------------------------*/
+    _docAPI_LogError: function (idx, type, msg) {
+        var me = this;
+        if (!me._docAPI_Errors) me._docAPI_Errors = [];
+        var rec = me._docAPI_ApiData[idx] || {};
+        var maHS = me._docAPI_KeyCol ? rec[me._docAPI_KeyCol] : '';
+        me._docAPI_Errors.push({
+            row: idx + 1,
+            maHS: maHS || '',
+            hoTen: rec.hoten || rec.HoTen || rec.HOTEN || '',
+            type: type,
+            msg: msg || ''
+        });
+        // Hiện nút "Xem chi tiết lỗi" ở progress header
+        $('#btnDocAPI_ShowErrors').removeClass('d-none');
+    },
+
+    /*------------------------------------------
+    -- Render danh sách lỗi vào panel #docAPI_ErrorsPanel
+    -------------------------------------------*/
+    docAPI_RenderErrorsPanel: function () {
+        var me = this;
+        var errs = me._docAPI_Errors || [];
+        $('#lblDocAPI_ErrCount').text(errs.length);
+        var $tbody = $('#tblDocAPI_Errors tbody');
+        if (!errs.length) {
+            $tbody.html('<tr><td colspan="5" class="td-center text-muted" style="padding:12px;">Chưa có lỗi nào</td></tr>');
+            return;
+        }
+        var html = errs.map(function (e) {
+            var typeColor = e.type === 'API' ? '#7c2d12' : '#991b1b';
+            var typeBg = e.type === 'API' ? '#fed7aa' : '#fecaca';
+            return '<tr>'
+                + '<td class="td-center">' + e.row + '</td>'
+                + '<td>' + me._docAPI_esc(e.maHS) + '</td>'
+                + '<td>' + me._docAPI_esc(e.hoTen) + '</td>'
+                + '<td class="td-center"><span style="background:' + typeBg + ';color:' + typeColor + ';padding:2px 8px;border-radius:10px;font-weight:600;font-size:11px;">' + e.type + '</span></td>'
+                + '<td>' + me._docAPI_esc(e.msg) + '</td>'
+                + '</tr>';
+        }).join('');
+        $tbody.html(html);
+    },
+
     docAPI_StartImport: function () {
         var me = this;
         if (!edu.util.checkValue(me.strKeHoachTuyenSinh_Id)) {
@@ -5045,9 +5239,15 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa mapping cột nào — vào bước 2 để chọn param tương ứng", "w"); return;
         }
         var arrIdx = [];
-        $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
-            arrIdx.push(parseInt($(this).attr('data-idx'), 10));
-        });
+        // Nếu SelectAll ON và total > số row visible (do preview limit 200) → chọn TOÀN BỘ 0..total-1
+        // Ngược lại chỉ lấy checkbox visible đã tick
+        if (me._docAPI_SelectedAll && me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT) {
+            for (var i = 0; i < me._docAPI_ApiData.length; i++) arrIdx.push(i);
+        } else {
+            $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
+                arrIdx.push(parseInt($(this).attr('data-idx'), 10));
+            });
+        }
         if (!arrIdx.length) {
             edu.system.alert("Chưa chọn bản ghi nào để import", "w"); return;
         }
@@ -5069,7 +5269,10 @@ KeHoachTuyenSinhNew.prototype = {
         var totalReq = arrIdx.length;
         var doneReq = 0, okReq = 0, errReq = 0;
         me._docAPI_ImportCancelled = false;
+        me._docAPI_Errors = [];   // reset error log tổng hợp
         $('#docAPI_ProgressWrap').removeClass('d-none');
+        $('#docAPI_ErrorsPanel').addClass('d-none');   // ẩn panel lỗi cũ
+        $('#btnDocAPI_ShowErrors').addClass('d-none');
         $('#btnDocAPI_StartImport').prop('disabled', true);
         $('#btnDocAPI_CancelImport').removeClass('d-none');
         $('#lblDocAPI_Progress').text('0 / ' + totalReq);
@@ -5077,6 +5280,7 @@ KeHoachTuyenSinhNew.prototype = {
         $('#docAPI_ProgressBar').css('width', '0%').text('0%');
         arrIdx.forEach(function (i) {
             $('.docAPI-status[data-idx="' + i + '"]').html('<i class="fa fa-spinner fa-spin"></i>');
+            $('.docAPI-errmsg[data-idx="' + i + '"]').html('');
         });
 
         // Build queue: 1 item per record — row là dict {paramName: value} theo mapping
@@ -5136,19 +5340,24 @@ KeHoachTuyenSinhNew.prototype = {
                     });
                     doneReq++;
                     var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
+                    var $errCell = $('.docAPI-errmsg[data-idx="' + item.idx + '"]');
                     var msg = (data && data.Message) || '';
                     if (data && data.Success) {
                         okReq++;
                         if (msg) {
                             // Success nhưng có message — có thể là warning (silent skip)
-                            $cell.html('<span style="color:#d97706;" title="' + me._docAPI_esc(msg) + '"><i class="fa fa-exclamation-triangle"></i> ' + me._docAPI_esc(msg.substring(0, 30)) + '…</span>');
+                            $cell.html('<span style="color:#d97706;" title="' + me._docAPI_esc(msg) + '"><i class="fa fa-exclamation-triangle"></i></span>');
+                            $errCell.html('<span style="color:#d97706;">' + me._docAPI_esc(msg) + '</span>');
                         } else {
-                            $cell.html('<span class="color-success" title="Success (no message)"><i class="fa fa-check"></i></span>');
+                            $cell.html('<span class="color-success" title="OK"><i class="fa fa-check"></i></span>');
+                            $errCell.html('');
                         }
                     } else {
                         errReq++;
                         var errMsg = msg || 'Lỗi không xác định';
-                        $cell.html('<span class="color-red" title="' + me._docAPI_esc(errMsg) + '"><i class="fa fa-times"></i> ' + me._docAPI_esc(errMsg.substring(0, 40)) + '</span>');
+                        $cell.html('<span class="color-red" title="' + me._docAPI_esc(errMsg) + '"><i class="fa fa-times"></i></span>');
+                        $errCell.html('<span class="color-red">' + me._docAPI_esc(errMsg) + '</span>');
+                        me._docAPI_LogError(item.idx, 'BE', errMsg);
                     }
                     updateProgress();
                     runNext(k + 1);
@@ -5157,7 +5366,11 @@ KeHoachTuyenSinhNew.prototype = {
                     console.error('[docAPI] ERROR #' + (item.idx + 1), er);
                     doneReq++; errReq++;
                     var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
-                    $cell.html('<span class="color-red" title="' + me._docAPI_esc(JSON.stringify(er)) + '"><i class="fa fa-times"></i> Network</span>');
+                    var $errCell = $('.docAPI-errmsg[data-idx="' + item.idx + '"]');
+                    var netErr = 'Network error: ' + JSON.stringify(er);
+                    $cell.html('<span class="color-red" title="' + me._docAPI_esc(netErr) + '"><i class="fa fa-times"></i></span>');
+                    $errCell.html('<span class="color-red">' + me._docAPI_esc(netErr) + '</span>');
+                    me._docAPI_LogError(item.idx, 'API', netErr);
                     updateProgress();
                     runNext(k + 1);
                 },
