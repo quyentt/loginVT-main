@@ -294,6 +294,43 @@
         position: relative;
     }
 
+    /* Ô chỉnh "Ngày lập phiếu" nằm trên biên lai — cho phép user đổi ngày trước khi save,
+       tránh phải lưu xong rồi quay lại sửa. Nằm ngoài #MauInPhieuThu nên không bị in ra giấy. */
+    #zoneChinhNgayLapPhieu {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 16px;
+        margin: 0 0 8px 0;
+        background: #f8fafc;
+        border: 1px dashed #94a3b8;
+        border-radius: 6px;
+    }
+
+    #zoneChinhNgayLapPhieu label {
+        margin: 0;
+        font-weight: 600;
+        color: #334155;
+        white-space: nowrap;
+    }
+
+    #zoneChinhNgayLapPhieu label i {
+        color: #3b7ddd;
+        margin-right: 4px;
+    }
+
+    #zoneChinhNgayLapPhieu #txtNgayLap_BienLai_Edit {
+        width: 140px;
+        height: 32px;
+        padding: 4px 10px;
+    }
+
+    #zoneChinhNgayLapPhieu .hint {
+        font-size: 12px;
+        color: #64748b;
+        font-style: italic;
+    }
+
     #zoneLienHoaDon {
         display: inline-flex;
         gap: 4px;
@@ -1713,6 +1750,12 @@
                                     <div class="UB"></div>
                                 </div>
                             </div>
+                        </div>
+                        <div id="zoneChinhNgayLapPhieu" style="display: none">
+                            <label><i class="fa-light fa-calendar-pen"></i> Ngày lập phiếu:</label>
+                            <input type="text" id="txtNgayLap_BienLai_Edit"
+                                class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
+                            <span class="hint">Đổi ngày ở đây trước khi bấm "Xuất biên lai".</span>
                         </div>
                         <div id="MauInPhieuThu" class="MauInPhieuThu"></div>
                         <div class="aps-list-btn d-flex">

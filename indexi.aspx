@@ -24,6 +24,254 @@
         <link href="App_Themes/Cms/css/index.min.css?v=2" rel="stylesheet" /><!-- editor -->
         <!-- custom theme v1- bich -->
         <link href="App_Themes/Cms/Custom_V1/styles.css?v=4" rel="stylesheet" />
+
+        <style>
+          /* ─── Reskin AdminLTE shell (indexi.aspx) tone dask-blue #223771 + orange #f8843d
+             Mục đích: đồng bộ với index.aspx (SPA shell mới). Không đụng HTML/JS gốc, chỉ
+             override class AdminLTE (.skin-blue, .main-header, .main-sidebar, .content-wrapper,
+             .sidebar-menu, ...). Nội dung module bên trong #main-content-wrapper vẫn giữ style
+             AdminLTE nguyên bản để không vỡ layout hàng loạt màn hình cũ. ─── */
+
+          /* Selector prefix "html body.skin-blue" (spec 22) để đánh bại chắc chắn
+             AdminLTE `_all-skins.min.css` (spec 20) và styles.css `.main-sidebar
+             { background:#fff !important }` (spec 10). */
+
+          /* Wrapper nền dask-blue để lộ được góc bo top-left của content-wrapper */
+          html body.skin-blue,
+          html body.skin-blue .wrapper {
+            background-color: #223771 !important;
+          }
+
+          /* Header top: logo (bên trái, chiếm width sidebar) + navbar (bên phải).
+             styles.css:2586 set navbar bằng background: linear-gradient shorthand → phải
+             ép cả `background` shorthand + `background-image: none` để dập gradient. */
+          html body.skin-blue .main-header {
+            background: #223771 !important;
+            box-shadow: none !important;
+          }
+          html body.skin-blue .main-header .navbar,
+          html body.skin-blue .main-header .logo {
+            background: #223771 !important;
+            background-color: #223771 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border-bottom-color: rgba(255, 255, 255, 0.06) !important;
+            box-shadow: none !important;
+          }
+          html body.skin-blue .main-header .logo:hover {
+            background-color: #1c2e5f !important;
+          }
+          html body.skin-blue .main-header .navbar .sidebar-toggle,
+          html body.skin-blue .main-header .navbar .nav > li > a {
+            color: #ffffff !important;
+          }
+          html body.skin-blue .main-header .navbar .sidebar-toggle:hover,
+          html body.skin-blue .main-header .navbar .nav > li > a:hover,
+          html body.skin-blue .main-header .navbar .nav > li > a:active,
+          html body.skin-blue .main-header .navbar .nav > li > a:focus,
+          html body.skin-blue .main-header .navbar .nav .open > a,
+          html body.skin-blue .main-header .navbar .nav .open > a:hover,
+          html body.skin-blue .main-header .navbar .nav .open > a:focus {
+            background-color: rgba(255, 255, 255, 0.08) !important;
+            color: #ffffff !important;
+          }
+          html body.skin-blue .main-header li.user-header {
+            background-color: #223771 !important;
+          }
+
+          /* Sidebar chính */
+          html body.skin-blue .main-sidebar,
+          html body.skin-blue .left-side {
+            background: #223771 !important;
+            background-color: #223771 !important;
+            box-shadow: none !important;
+            border-top-right-radius: 0 !important;
+          }
+          html body.skin-blue .sidebar a { color: #d2ddfd !important; }
+          html body.skin-blue .sidebar a:hover { color: #ffffff !important; }
+
+          /* Menu items — prefix #menu_vertical (ID selector, spec +100) để đánh
+             chắc chắn `styles.css` .skin-blue .sidebar-menu>li.active>a { background: #fff
+             !important } và các rule khác cùng loại. */
+          html body.skin-blue #menu_vertical > li > a,
+          html body.skin-blue .sidebar-menu > li > a {
+            border-left: 3px solid transparent !important;
+            color: #d2ddfd !important;
+            background: transparent !important;
+            background-image: none !important;
+            border-radius: 6px !important;
+            margin: 2px 6px !important;
+            padding: 8px 10px 8px 12px !important;
+          }
+          html body.skin-blue #menu_vertical > li:hover > a,
+          html body.skin-blue .sidebar-menu > li:hover > a {
+            color: #ffffff !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            background-image: none !important;
+            border-left-color: rgba(248, 132, 61, 0.5) !important;
+          }
+          html body.skin-blue #menu_vertical > li.active > a,
+          html body.skin-blue #menu_vertical > li.menu-open > a,
+          html body.skin-blue .sidebar-menu > li.active > a,
+          html body.skin-blue .sidebar-menu > li.menu-open > a {
+            color: #f8843d !important;
+            background: rgba(248, 132, 61, 0.12) !important;
+            background-image: none !important;
+            border-left-color: #f8843d !important;
+            font-weight: 700 !important;
+          }
+          html body.skin-blue #menu_vertical > li > .treeview-menu,
+          html body.skin-blue .sidebar-menu > li > .treeview-menu {
+            background: rgba(0, 0, 0, 0.15) !important;
+            background-color: rgba(0, 0, 0, 0.15) !important;
+            border-radius: 6px !important;
+            margin: 2px 6px !important;
+          }
+          html body.skin-blue #menu_vertical .treeview-menu > li > a,
+          html body.skin-blue .treeview-menu > li > a {
+            color: #d2ddfd !important;
+            background: transparent !important;
+          }
+          html body.skin-blue #menu_vertical .treeview-menu > li.active > a,
+          html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a,
+          html body.skin-blue #menu_vertical .treeview-menu > li > a:hover,
+          html body.skin-blue .treeview-menu > li.active > a,
+          html body.skin-blue .treeview-menu > li.menu-open > a,
+          html body.skin-blue .treeview-menu > li > a:hover {
+            color: #f8843d !important;
+            background: rgba(248, 132, 61, 0.18) !important;
+          }
+
+          /* Bullet dots ::before/::after — đổi tone light-blue/orange (styles.css:2744-2772
+             set #989898 gray + var(--color-link) blue mặc định) */
+          html body.skin-blue #menu_vertical .treeview-menu > li > a::before,
+          html body.skin-blue #menu_vertical .treeview-menu > li > a::after,
+          html body.skin-blue .sidebar-menu .treeview-menu > li > a::before,
+          html body.skin-blue .sidebar-menu .treeview-menu > li > a::after {
+            background-color: rgba(210, 221, 253, 0.4) !important;
+          }
+          html body.skin-blue #menu_vertical .treeview-menu > li.active > a::before,
+          html body.skin-blue #menu_vertical .treeview-menu > li.active > a::after,
+          html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::before,
+          html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::after,
+          html body.skin-blue .sidebar-menu .treeview-menu > li.active > a::before,
+          html body.skin-blue .sidebar-menu .treeview-menu > li.active > a::after,
+          html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a::before,
+          html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a::after {
+            background-color: #f8843d !important;
+          }
+
+          /* Search box trong sidebar */
+          html body.skin-blue .sidebar-form {
+            background-color: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 8px !important;
+            margin: 10px !important;
+          }
+          html body.skin-blue .sidebar-form input.form-control,
+          html body.skin-blue .sidebar-form input[type="text"] {
+            background-color: transparent !important;
+            color: #ffffff !important;
+            border: 0 !important;
+            box-shadow: none !important;
+          }
+          html body.skin-blue .sidebar-form input.form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5) !important;
+          }
+          html body.skin-blue .sidebar-form .btn {
+            color: #d2ddfd !important;
+            background-color: transparent !important;
+            border: 0 !important;
+          }
+          html body.skin-blue .sidebar-form .btn:hover {
+            color: #ffffff !important;
+          }
+
+          /* Content wrapper: nền light-gray + bo góc top-left */
+          html body.skin-blue .content-wrapper {
+            background-color: #f0f3fd !important;
+            border-top-left-radius: 16px;
+          }
+
+          /* Breadcrumb "Bảng điều khiển / …" */
+          html body.skin-blue .content-header {
+            padding: 14px 18px 6px !important;
+          }
+          html body.skin-blue .content-header .list-group-item {
+            background-color: transparent !important;
+            border: 0 !important;
+            color: #64748b !important;
+            padding: 0 !important;
+            font-size: 13px !important;
+          }
+
+          /* Footer bar */
+          html body.skin-blue .main-footer {
+            background-color: #f0f3fd !important;
+            border-top-color: #e2e8f0 !important;
+            color: #64748b !important;
+          }
+
+          /* Pagination (simplePagination + Bootstrap .pagination) — tone dask-blue */
+          html body.skin-blue .simple-pagination a,
+          html body.skin-blue .simple-pagination span,
+          html body.skin-blue .light-theme a,
+          html body.skin-blue .light-theme span,
+          html body.skin-blue .compact-theme a,
+          html body.skin-blue .compact-theme span {
+            background: #fff !important;
+            background-image: none !important;
+            color: #223771 !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 6px !important;
+            box-shadow: none !important;
+            font-weight: 600 !important;
+            min-width: 32px !important;
+            line-height: 30px !important;
+            margin: 0 3px 0 0 !important;
+            padding: 0 8px !important;
+          }
+          html body.skin-blue .simple-pagination a:hover,
+          html body.skin-blue .light-theme a:hover,
+          html body.skin-blue .compact-theme a:hover {
+            background: #f0f3fd !important;
+            background-image: none !important;
+            border-color: #223771 !important;
+            color: #223771 !important;
+          }
+          html body.skin-blue .simple-pagination .current,
+          html body.skin-blue .light-theme .current,
+          html body.skin-blue .compact-theme .current {
+            background: #223771 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border-color: #223771 !important;
+            cursor: default !important;
+          }
+          html body.skin-blue .simple-pagination .ellipse,
+          html body.skin-blue .light-theme .ellipse,
+          html body.skin-blue .compact-theme .ellipse {
+            background: transparent !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            color: #64748b !important;
+          }
+
+          /* Bootstrap 3 pagination (nếu module con dùng) */
+          html body.skin-blue .pagination > li > a,
+          html body.skin-blue .pagination > li > span {
+            color: #223771 !important;
+            border-color: #e2e8f0 !important;
+          }
+          html body.skin-blue .pagination > .active > a,
+          html body.skin-blue .pagination > .active > span,
+          html body.skin-blue .pagination > .active > a:hover,
+          html body.skin-blue .pagination > .active > span:hover {
+            background-color: #223771 !important;
+            border-color: #223771 !important;
+            color: #ffffff !important;
+          }
+        </style>
     </head>
     <!--sidebar-mini-expand-feature sidebar-collapse colage when pageload ==>hold-transition skin-blue fixed sidebar-mini sidebar-mini-expand-feature sidebar-collapse-->
     <!--sidebar-mini only for display left-menu, tooglle this-->
@@ -436,7 +684,121 @@
                 edu.system.startApp();
                 edu.extend.init();
                 edu.constant.init();
+                initSidebarActiveEnforcer();
+                // Inject 1 style block cuoi body -> cascade cuoi cung, thang bat cu
+                // CSS nao code-behind chen vao head server sau inline style tren.
+                injectFinalSidebarStyles();
             });
+
+            function injectFinalSidebarStyles() {
+                if (document.getElementById('reskin-final-style')) return;
+                var s = document.createElement('style');
+                s.id = 'reskin-final-style';
+                s.textContent = [
+                    'html body.skin-blue .main-sidebar, html body.skin-blue .left-side { background: #223771 !important; box-shadow: none !important; }',
+                    // KEY: styles.css:2987 co .menu-open { background: #fff !important } rat broad
+                    // - ep transparent trong scope sidebar de khong bi nen trang chen ngang.
+                    'html body.skin-blue .main-sidebar .menu-open, html body.skin-blue #menu_vertical .menu-open, html body.skin-blue #menu_vertical li { background: transparent !important; background-color: transparent !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background: transparent !important; background-color: transparent !important; border-radius: 0 !important; margin: 2px 0 4px 26px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #e4ecff !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover { color: #f8843d !important; background: rgba(248,132,61,0.18) !important; background-color: rgba(248,132,61,0.18) !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu > li > a::before, html body.skin-blue #menu_vertical .treeview-menu > li > a::after { background-color: rgba(210,221,253,0.4) !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu > li.active > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.active > a::after, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::after, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::before, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::after { background-color: #f8843d !important; }'
+                ].join('\n');
+                document.body.appendChild(s);
+            }
+
+            // Force inline style trên menu items để win qua mọi CSS !important của
+            // AdminLTE + styles.css legacy (đặc biệt .skin-blue .sidebar-menu>li.active>a
+            // { background: #fff !important } và .treeview-menu { background: #f4f4f4 !important }).
+            // MutationObserver theo dõi class thay đổi trên li, chạy lại mỗi khi systemroot
+            // render menu hoặc user click chuyển màn.
+            function initSidebarActiveEnforcer() {
+                var menu = document.getElementById('menu_vertical');
+                if (!menu) return;
+
+                // Style cho top-level (có border-left orange indicator)
+                var TOP_ACTIVE = {
+                    'background': 'rgba(248, 132, 61, 0.12)',
+                    'background-image': 'none',
+                    'color': '#f8843d',
+                    'border-left': '3px solid #f8843d',
+                    'font-weight': '700'
+                };
+                var TOP_DEFAULT = {
+                    'background': 'transparent',
+                    'background-image': 'none',
+                    'color': '#d2ddfd',
+                    'border-left': '3px solid transparent',
+                    'font-weight': '500'
+                };
+                // Style cho submenu (không border-left, tương phản cao hơn)
+                var SUB_ACTIVE = {
+                    'background': 'rgba(248, 132, 61, 0.18)',
+                    'background-image': 'none',
+                    'color': '#f8843d',
+                    'font-weight': '700'
+                };
+                var SUB_DEFAULT = {
+                    'background': 'transparent',
+                    'background-image': 'none',
+                    'color': '#e4ecff',
+                    'font-weight': '500'
+                };
+                // Container submenu: trong suốt, phân cấp bằng border-left mỏng
+                // (khớp NewUI sidebar.tsx style, không tạo "bóng đen")
+                var SUB_UL = {
+                    'background': 'transparent',
+                    'background-color': 'transparent',
+                    'background-image': 'none',
+                    'border-radius': '0',
+                    'border-left': '1px solid rgba(210, 221, 253, 0.18)',
+                    'margin': '2px 0 4px 26px',
+                    'padding': '2px 0 2px 6px'
+                };
+
+                function setStyle(el, obj) {
+                    if (!el) return;
+                    Object.keys(obj).forEach(function (k) {
+                        el.style.setProperty(k, obj[k], 'important');
+                    });
+                }
+                function apply() {
+                    // Top-level items: direct child of #menu_vertical
+                    menu.querySelectorAll('#menu_vertical > li > a').forEach(function (a) {
+                        var li = a.parentElement;
+                        var isActive = li.classList.contains('active') || li.classList.contains('menu-open');
+                        setStyle(a, isActive ? TOP_ACTIVE : TOP_DEFAULT);
+                    });
+                    // Sub-items inside .treeview-menu
+                    menu.querySelectorAll('.treeview-menu > li > a').forEach(function (a) {
+                        var li = a.parentElement;
+                        var isActive = li.classList.contains('active') || li.classList.contains('menu-open');
+                        setStyle(a, isActive ? SUB_ACTIVE : SUB_DEFAULT);
+                    });
+                    // Force treeview-menu container bg (thang #f4f4f4 !important cua styles.css)
+                    menu.querySelectorAll('.treeview-menu').forEach(function (ul) {
+                        setStyle(ul, SUB_UL);
+                    });
+                    // KEY FIX: styles.css:2987 co rule .menu-open { background: #fff !important }
+                    // rat broad - moi LI co .menu-open bi nen trang. Ep transparent cho tat ca LI.
+                    menu.querySelectorAll('li').forEach(function (li) {
+                        li.style.setProperty('background', 'transparent', 'important');
+                        li.style.setProperty('background-color', 'transparent', 'important');
+                    });
+                }
+                // Lần đầu (sau khi menu render)
+                setTimeout(apply, 300);
+                setTimeout(apply, 1000);
+                // Mỗi lần class li thay đổi (AdminLTE tree toggle active) hoặc DOM thay đổi
+                var mo = new MutationObserver(function () { setTimeout(apply, 30); });
+                mo.observe(menu, {
+                    childList: true, subtree: true,
+                    attributes: true, attributeFilter: ['class']
+                });
+                // Click trên menu link (menu chuyển) → apply lại sau tick
+                $(menu).on('click', 'a', function () { setTimeout(apply, 100); });
+            }
         </script>
     </body>
 </html>
