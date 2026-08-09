@@ -4269,7 +4269,10 @@ KeHoachTuyenSinhNew.prototype = {
         {
             id: 'CMC',
             ten: 'CMC (Nhap hoc)',
-            host: 'https://crm.cmcu.edu.vn/api/resource/Nhaphoc?fields=["*"]&limit_page_length=5000000',
+            // Bên CMC (Nguyễn Văn Thái, 09/08) khuyến nghị 15K — hiện ~11K records.
+            // FE để 50K làm buffer dài hạn (limit_page_length chỉ là max cap, không force fetch,
+            // server vẫn trả về data thực tế 11K nên không tăng tải).
+            host: 'https://crm.cmcu.edu.vn/api/resource/Nhaphoc?fields=["*"]&limit_page_length=50000',
             loaiXacThuc: 'Authorization',
             // Frappe/ERPNext: "Authorization: token <api_key>:<api_secret>"
             token: 'token 62e39c71e027e21:edca5904211fb8c',
