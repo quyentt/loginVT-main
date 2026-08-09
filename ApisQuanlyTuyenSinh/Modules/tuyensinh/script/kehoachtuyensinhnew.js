@@ -4649,7 +4649,6 @@ KeHoachTuyenSinhNew.prototype = {
         me._docAPI_ImportCancelled = false;
         me._docAPI_FilterKeyword = '';   // reset filter client-side
         me._docAPI_SelectedAll = false;
-        me._docAPI_MapPage = 1;   // reset trang mapping về 1
         $('#txtDocAPI_Keyword').val('');
         $('#txtDocAPI_FilterPreview').val('');
         $('#lblDocAPI_FilterInfo').text('');
@@ -4835,8 +4834,6 @@ KeHoachTuyenSinhNew.prototype = {
         cb();
     },
 
-    _docAPI_MAP_PAGE_SIZE: 20,
-
     docAPI_RenderMapping: function () {
         var me = this;
         $('#lblDocAPI_ApiColCount').text(me._docAPI_ApiCols.length);
@@ -4851,27 +4848,6 @@ KeHoachTuyenSinhNew.prototype = {
         });
         if (me._docAPI_KeyCol) $keySel.val(me._docAPI_KeyCol);
 
-        // Init page = 1 khi render lần đầu
-        if (!me._docAPI_MapPage) me._docAPI_MapPage = 1;
-        me.docAPI_RenderMappingPage();
-    },
-
-    /*------------------------------------------
-    -- Render 1 trang bảng mapping (20 cột/trang). State giữ trong _docAPI_Mapping global,
-    -- nên chuyển trang qua lại không mất mapping đã chọn.
-    -------------------------------------------*/
-    docAPI_RenderMappingPage: function () {
-        var me = this;
-        var totalCols = me._docAPI_ApiCols.length;
-        var pageSize = me._docAPI_MAP_PAGE_SIZE;
-        var totalPages = Math.max(1, Math.ceil(totalCols / pageSize));
-        // Clamp page vào range hợp lệ
-        if (me._docAPI_MapPage < 1) me._docAPI_MapPage = 1;
-        if (me._docAPI_MapPage > totalPages) me._docAPI_MapPage = totalPages;
-        var page = me._docAPI_MapPage;
-        var startIdx = (page - 1) * pageSize;
-        var endIdx = Math.min(startIdx + pageSize, totalCols);
-
         // Fallback C: nếu target list rỗng → dùng input text để user tự gõ mã
         var useInputFallback = me._docAPI_TargetCols.length === 0;
         var optsTarget = '';
@@ -4883,30 +4859,25 @@ KeHoachTuyenSinhNew.prototype = {
             });
         }
 
+        // Xóa div pagination cũ nếu còn tồn tại (từ v68/v69 đã revert)
+        $('#docAPI_MapPagination').remove();
+
         var sample = me._docAPI_ApiData[0] || {};
         var html = '';
-        for (var idx = startIdx; idx < endIdx; idx++) {
-            var col = me._docAPI_ApiCols[idx];
+        me._docAPI_ApiCols.forEach(function (col, idx) {
             var sv = sample[col];
             if (typeof sv === 'object') sv = JSON.stringify(sv);
             if (sv == null) sv = '';
             sv = String(sv);
             if (sv.length > 80) sv = sv.substring(0, 80) + '…';
-            var currentMap = me._docAPI_Mapping[col] || '';
             var mapCell;
             if (useInputFallback) {
                 mapCell = '<input type="text" class="form-control form-control-sm docAPI-map-input" '
                     + 'data-apicol="' + edu.util.returnEmpty(col) + '" '
-                    + 'value="' + me._docAPI_esc(currentMap) + '" '
                     + 'placeholder="Gõ mã trường thông tin (để trống = bỏ qua)">';
             } else {
-                // Set selected option cho current mapping (dropdown restore đúng trạng thái)
-                var opts = optsTarget;
-                if (currentMap) {
-                    opts = opts.replace('value="' + currentMap + '"', 'value="' + currentMap + '" selected');
-                }
                 mapCell = '<select class="form-select form-select-sm docAPI-map-sel" data-apicol="'
-                    + edu.util.returnEmpty(col) + '">' + opts + '</select>';
+                    + edu.util.returnEmpty(col) + '">' + optsTarget + '</select>';
             }
             html += '<tr>'
                 + '<td class="td-center">' + (idx + 1) + '</td>'
@@ -4914,11 +4885,19 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td><span style="color:#64748b;">' + me._docAPI_esc(sv) + '</span></td>'
                 + '<td>' + mapCell + '</td>'
                 + '</tr>';
-        }
+        });
         if (!html) html = '<tr><td colspan="4" class="td-center text-muted" style="padding:16px;">Không có cột nào từ API</td></tr>';
         $('#tblDocAPI_Mapping tbody').html(html);
 
-        me.docAPI_RenderMappingPagination(page, totalPages, totalCols, startIdx, endIdx);
+        // Restore value cho các select/input theo _docAPI_Mapping đã có (auto-map / localStorage)
+        Object.keys(me._docAPI_Mapping).forEach(function (col) {
+            var v = me._docAPI_Mapping[col];
+            if (!v) return;
+            var $sel = $('#tblDocAPI_Mapping select.docAPI-map-sel[data-apicol="' + col + '"]');
+            var $inp = $('#tblDocAPI_Mapping input.docAPI-map-input[data-apicol="' + col + '"]');
+            if ($sel.length) $sel.val(v);
+            else if ($inp.length) $inp.val(v);
+        });
 
         // Banner cảnh báo khi rơi vào fallback
         var $mapWrap = $('#docAPI_MapWrap');
@@ -4933,51 +4912,6 @@ KeHoachTuyenSinhNew.prototype = {
                 + '</div>'
             );
         }
-    },
-
-    docAPI_RenderMappingPagination: function (page, totalPages, totalCols, startIdx, endIdx) {
-        var me = this;
-        var $wrap = $('#docAPI_MapPagination');
-        if (!$wrap.length) {
-            // Lần đầu — inject wrap sau bảng mapping
-            $('#tblDocAPI_Mapping').after('<div id="docAPI_MapPagination" class="d-flex align-items-center justify-content-between mt-10" style="flex-wrap:wrap; gap:10px;"></div>');
-            $wrap = $('#docAPI_MapPagination');
-        }
-        if (totalCols <= me._docAPI_MAP_PAGE_SIZE) {
-            $wrap.html('<span class="fz12" style="color:#64748b;">Hiển thị tất cả ' + totalCols + ' cột trong 1 trang</span>');
-            return;
-        }
-        // Info bên trái
-        var info = '<span class="fz13" style="color:#475569;">'
-            + 'Hiển thị <b>' + (startIdx + 1) + '–' + endIdx + '</b> / ' + totalCols + ' cột'
-            + ' — Trang <b>' + page + '</b> / ' + totalPages
-            + '</span>';
-        // Nút Prev / Next + input jump
-        var btns = '<div class="d-flex align-items-center" style="gap:6px;">'
-            + '<button class="btn btn-sm btn-default" id="btnDocAPI_MapPagePrev" ' + (page <= 1 ? 'disabled' : '') + '>'
-            + '<i class="fa-solid fa-chevron-left"></i>&nbsp;Trước</button>'
-            + '<input type="number" id="txtDocAPI_MapPageJump" class="form-control form-control-sm" min="1" max="' + totalPages + '" value="' + page + '" style="width:70px; text-align:center;">'
-            + '<button class="btn btn-sm btn-default" id="btnDocAPI_MapPageNext" ' + (page >= totalPages ? 'disabled' : '') + '>'
-            + 'Sau&nbsp;<i class="fa-solid fa-chevron-right"></i></button>'
-            + '</div>';
-        $wrap.html(info + btns);
-
-        // Bind handler (off trước để tránh double-bind)
-        $('#btnDocAPI_MapPagePrev').off('click').on('click', function () {
-            me._docAPI_MapPage = Math.max(1, page - 1);
-            me.docAPI_RenderMappingPage();
-        });
-        $('#btnDocAPI_MapPageNext').off('click').on('click', function () {
-            me._docAPI_MapPage = Math.min(totalPages, page + 1);
-            me.docAPI_RenderMappingPage();
-        });
-        $('#txtDocAPI_MapPageJump').off('change').on('change', function () {
-            var v = parseInt($(this).val(), 10);
-            if (isNaN(v) || v < 1) v = 1;
-            if (v > totalPages) v = totalPages;
-            me._docAPI_MapPage = v;
-            me.docAPI_RenderMappingPage();
-        });
     },
 
     /*------------------------------------------
