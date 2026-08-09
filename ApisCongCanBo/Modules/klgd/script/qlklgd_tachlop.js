@@ -966,6 +966,8 @@ qlklgd_tachlop.prototype = {
         var dt = edu.util.objGetDataInData(me.strLopHocPhanId, me.dtLopHocPhan, "IDLOPMONHOC");
         console.log(dt[0]);
         console.log('Kieu: ' + dt[0].MAHINHTHUCHOC);
+        
+
         var strTongSoTiet = dt[0].TONGTIETLOPMONTINCHI;
         var strKieuHoc = dt[0].MAHINHTHUCHOC;
         const array_LoaiLopTachTheoSV = ['DA', 'TN', 'TT','TH']; 
@@ -973,17 +975,18 @@ qlklgd_tachlop.prototype = {
             edu.system.alert("Không tách được lớp học phần");
             return;
         }
-        
-        if (strTachTheoSinhVien_Tiet == "SV") {
-            if (array_LoaiLopTachTheoSV.includes(strKieuHoc) == false) {
-                edu.system.alert("Chỉ được <span style='color:red'> tách số sinh viên</span> đối với các loại lớp: Thực tập, Đồ án, Thí nghiệm, Thực hành");
-                return;
+        if (drpHeDaoTao.options[drpHeDaoTao.selectedIndex].text != 'NCS') {
+            if (strTachTheoSinhVien_Tiet == "SV") {
+                if (array_LoaiLopTachTheoSV.includes(strKieuHoc) == false) {
+                    edu.system.alert("Chỉ được <span style='color:red'> tách số sinh viên</span> đối với các loại lớp: Thực tập, Đồ án, Thí nghiệm, Thực hành");
+                    return;
+                }
             }
-        }
-        else {
-            if (array_LoaiLopTachTheoSV.includes(strKieuHoc) == true) {
-                edu.system.alert("Chỉ được <span style='color:red'> tách số tiết </span> đối với các loại lớp: Lý thuyết, Bài tập, thảo luận, thí nghiệm, thực hành");
-                return;
+            else {
+                if (array_LoaiLopTachTheoSV.includes(strKieuHoc) == true) {
+                    edu.system.alert("Chỉ được <span style='color:red'> tách số tiết </span> đối với các loại lớp: Lý thuyết, Bài tập, thảo luận, thí nghiệm, thực hành");
+                    return;
+                }
             }
         }
         var strTongSoSinhVien = dt[0].SOSINHVIEN;

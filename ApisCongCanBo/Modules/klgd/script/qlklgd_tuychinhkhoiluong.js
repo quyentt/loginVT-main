@@ -76,6 +76,36 @@ qlklgd_tuychinhkhoiluong.prototype = {
 
 
         });
+        $("#btnCapNhapPhanBoTiet").click(function () {
+            var arrChecked_Id = edu.util.getArrCheckedIds("tblKhoiLuong", "checkXDelete");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng chọn đối tượng cần cập nhật?");
+                return;
+            }
+            me.strErr = "";
+            edu.system.confirm("Bạn có chắc chắn cập nhật?");
+            $("#btnYes").click(function (e) {
+                $('#myModalAlert #alert_content').html('');
+                var dulieuLopHocPhan;
+                for (var i = 0; i < arrChecked_Id.length; i++) {
+                    dulieuLopHocPhan = edu.util.objGetDataInData(arrChecked_Id[i], me.dtKhoiLuongThoiKhoaBieu, "KHOILUONGTHOIKHOABIEUID");
+                    var strLopHocPhanId = dulieuLopHocPhan[0].IDLOPHOCPHAN;
+                    me.CapNhatPhanBoTiet(arrChecked_Id[i], strLopHocPhanId);
+                }
+                setTimeout(function () {
+                    if (me.strErr == "") {
+                        edu.system.alert("Cập nhật thành công");
+                        me.getList_tblKhoiLuong();
+                    }
+                    else
+                        edu.system.alert(me.strErr);
+
+                }, 2000);
+
+            });
+
+
+        });
         $('#drpLoaiTiet').on('select2:select', function () {
             
             me.dtKhoiLuongThoiKhoaBieu = null;
@@ -1024,7 +1054,46 @@ qlklgd_tuychinhkhoiluong.prototype = {
          
 
     },
-    
+    CapNhatPhanBoTiet: function (strKhoiLuongThoiKhoaBieuId_Xoa, strLopHocPhanId) {
+        var me = this;
+
+        var strHocKy = edu.util.getValById('drpHocKy');
+        var obj_list = {
+            'strNamHoc': edu.util.getValById('drpNamHoc'),
+            'strHocKy': strHocKy,
+            'strDotHoc': edu.util.getValById('drpDotHoc'),
+            'strKhoiLuongThoiKhoaBieuId': strKhoiLuongThoiKhoaBieuId_Xoa,
+            'strLopHocPhanId': strLopHocPhanId,
+
+        };
+
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.strErr += data.Message;
+                }
+                else {
+                    edu.system.alert(obj_list.action + " (er): " + JSON.stringify(data.Message), "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: "POST",
+            action: "TKGG_QLKLGD/CapNhatPhanBoTiet",
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            authen: true,
+            data: obj_list,
+            fakedb: [
+
+            ]
+        }, false, false, false, null);
+
+
+    },
+
     getList_drpHocPhan: function () {
         var me = this;
         //--Edit
