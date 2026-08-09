@@ -902,6 +902,9 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonInvoice_DiaChi', 'strPersonInvoice_Email',
             'strPersonBank_HinhThucTT', 'strPersonBank_TenNganHang', 'strPersonBank_SoTaiKhoan',
             'strPersonBank_ChuTaiKhoan', 'strPersonBank_GhiChu',
+            // Số tiền nộp trước (đăng ký giữ chỗ) — param VARCHAR2 của IMPORT proc (thêm 06/08/2026);
+            // pass-through từ row (map từ tc_lpgd / noptientruoc).
+            'strSoTienNopTruoc',
             'strExtra_Person_Data', 'strExtra_HoSo_Data', 'strExtra_Intake_Data'
         ];
         // Convention: prefix 'd' → Oracle NUMBER, phải gửi null (không phải '') khi rỗng
@@ -920,25 +923,9 @@ KeHoachTuyenSinhNew.prototype = {
             }
         }
 
-        // ===== Post-process: normalize ngày sinh =====
-        // BE thường expect strCorePerson_NgaySinh dạng dd/mm/yyyy + 3 field số NgayS/ThangS/NamS.
-        // API bên ngoài (CMC) trả ISO "yyyy-mm-dd" → tự convert + fill 3 số nếu chưa có.
-        // Excel user điền dd/mm/yyyy → chỉ fill 3 số (không đổi format).
-        var ns = payload.strCorePerson_NgaySinh;
-        if (typeof ns === 'string' && ns) {
-            var mISO = ns.match(/^(\d{4})-(\d{2})-(\d{2})/);       // yyyy-mm-dd (ISO)
-            var mVN  = ns.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);    // dd/mm/yyyy
-            if (mISO) {
-                payload.strCorePerson_NgaySinh = mISO[3] + '/' + mISO[2] + '/' + mISO[1];
-                if (payload.dCorePerson_NgayS  == null) payload.dCorePerson_NgayS  = parseInt(mISO[3], 10);
-                if (payload.dCorePerson_ThangS == null) payload.dCorePerson_ThangS = parseInt(mISO[2], 10);
-                if (payload.dCorePerson_NamS   == null) payload.dCorePerson_NamS   = parseInt(mISO[1], 10);
-            } else if (mVN) {
-                if (payload.dCorePerson_NgayS  == null) payload.dCorePerson_NgayS  = parseInt(mVN[1], 10);
-                if (payload.dCorePerson_ThangS == null) payload.dCorePerson_ThangS = parseInt(mVN[2], 10);
-                if (payload.dCorePerson_NamS   == null) payload.dCorePerson_NamS   = parseInt(mVN[3], 10);
-            }
-        }
+        // ⚠ KHÔNG normalize ngày sinh ở FE — data API sao thì gửi nguyên vậy xuống BE (yêu cầu sếp 09/08/2026).
+        // BE version hiện tại expect yyyy-mm-dd (Oracle native) → API CMC trả yyyy-mm-dd → pass-through.
+        // Nếu BE cần dd/mm/yyyy hoặc 3 field NgayS/ThangS/NamS → BE tự parse từ strCorePerson_NgaySinh.
 
         return payload;
     },
@@ -4589,17 +4576,62 @@ KeHoachTuyenSinhNew.prototype = {
             me.docAPI_RefreshPreview_Debounced();
         });
 
-        // Select all preview — set flag để docAPI_StartImport biết chọn toàn bộ (không chỉ visible 200 row)
+        // Select all preview — set flag → import dùng toàn bộ filteredIdx (không chỉ trang hiện tại).
+        // Đồng thời tick TẤT CẢ checkbox visible + populate ManualPicks với toàn bộ filteredIdx để
+        // trạng thái tick nhất quán khi chuyển trang.
         $("#chkDocAPI_SelectAll").click(function () {
             var checked = $(this).is(':checked');
             $('#tblDocAPI_Preview tbody .docAPI-sel').prop('checked', checked);
             me._docAPI_SelectedAll = checked;
+            if (checked) {
+                var filteredIdx = me._docAPI_getFilteredIdx();
+                me._docAPI_ManualPicks = {};
+                for (var i = 0; i < filteredIdx.length; i++) me._docAPI_ManualPicks[filteredIdx[i]] = true;
+            } else {
+                me._docAPI_ManualPicks = {};
+            }
+            me._docAPI_RenderPager(
+                me._docAPI_getFilteredIdx().length,
+                Math.max(1, Math.ceil(me._docAPI_getFilteredIdx().length / me._docAPI_PAGE_SIZE)),
+                me._docAPI_currentPage, 0, 0
+            );
         });
-        // Nếu user tự bỏ tick 1 checkbox lẻ → flag SelectAll về false
+        // Individual checkbox: sync ManualPicks + tắt flag SelectAll khi bỏ tick 1 dòng
         $("#tblDocAPI_Preview").on('change', '.docAPI-sel', function () {
-            if (!$(this).is(':checked')) {
-                me._docAPI_SelectedAll = false;
-                $('#chkDocAPI_SelectAll').prop('checked', false);
+            var idx = parseInt($(this).attr('data-idx'), 10);
+            if (isNaN(idx)) return;
+            if ($(this).is(':checked')) {
+                me._docAPI_ManualPicks[idx] = true;
+            } else {
+                delete me._docAPI_ManualPicks[idx];
+                if (me._docAPI_SelectedAll) {
+                    me._docAPI_SelectedAll = false;
+                    $('#chkDocAPI_SelectAll').prop('checked', false);
+                }
+            }
+            me._docAPI_RenderPager(
+                me._docAPI_getFilteredIdx().length,
+                Math.max(1, Math.ceil(me._docAPI_getFilteredIdx().length / me._docAPI_PAGE_SIZE)),
+                me._docAPI_currentPage, 0, 0
+            );
+        });
+
+        // Pagination buttons — dùng _docAPI_GoPage(delta, absolute)
+        $("#btnDocAPI_PageFirst").click(function () { me._docAPI_GoPage(1, true); });
+        $("#btnDocAPI_PagePrev").click(function () { me._docAPI_GoPage(-1, false); });
+        $("#btnDocAPI_PageNext").click(function () { me._docAPI_GoPage(1, false); });
+        $("#btnDocAPI_PageLast").click(function () { me._docAPI_GoPage(999999, false); });
+        $("#txtDocAPI_PageJump").on('change', function () {
+            var n = parseInt($(this).val(), 10);
+            if (!isNaN(n) && n >= 1) me._docAPI_GoPage(n, true);
+            else $(this).val(me._docAPI_currentPage + 1);
+        });
+        $("#ddlDocAPI_PageSize").on('change', function () {
+            var n = parseInt($(this).val(), 10);
+            if (!isNaN(n) && n > 0) {
+                me._docAPI_PAGE_SIZE = n;
+                me._docAPI_currentPage = 0;   // đổi page size → về trang 1
+                me.docAPI_RefreshPreview();
             }
         });
 
@@ -4607,9 +4639,11 @@ KeHoachTuyenSinhNew.prototype = {
         $("#btnDocAPI_CancelImport").click(function () { me._docAPI_ImportCancelled = true; });
         $("#btnDocAPI_ExportExcel").click(function () { me.docAPI_ExportToExcel(); });
 
-        // Filter client-side: mỗi lần user gõ → debounce refresh preview theo keyword
+        // Filter client-side: mỗi lần user gõ → debounce refresh preview theo keyword.
+        // Filter đổi → về trang 1; giữ ManualPicks (user có thể lọc + tick dần nhiều nhóm).
         $("#txtDocAPI_FilterPreview").on('input', function () {
             me._docAPI_FilterKeyword = ($(this).val() || '').trim().toLowerCase();
+            me._docAPI_currentPage = 0;
             me.docAPI_RefreshPreview_Debounced();
         });
         $("#btnDocAPI_ShowErrors").click(function (e) { e.preventDefault(); me.docAPI_RenderErrorsPanel(); $('#docAPI_ErrorsPanel').removeClass('d-none'); });
@@ -4649,6 +4683,8 @@ KeHoachTuyenSinhNew.prototype = {
         me._docAPI_ImportCancelled = false;
         me._docAPI_FilterKeyword = '';   // reset filter client-side
         me._docAPI_SelectedAll = false;
+        me._docAPI_ManualPicks = {};     // reset picks tay
+        me._docAPI_currentPage = 0;
         $('#txtDocAPI_Keyword').val('');
         $('#txtDocAPI_FilterPreview').val('');
         $('#lblDocAPI_FilterInfo').text('');
@@ -5075,8 +5111,15 @@ KeHoachTuyenSinhNew.prototype = {
     -- ⚠ Perf: chỉ render tối đa PREVIEW_LIMIT rows đầu (không full 11K) để tránh freeze
     --   khi user đổi mapping. Import khi bấm "Bắt đầu" vẫn chạy TOÀN BỘ records đã tick.
     -- Debounce hook: dùng docAPI_RefreshPreview_Debounced() ở event handler tương tác.
+    -- Pagination: mỗi trang render tối đa _docAPI_PAGE_SIZE row (mặc định 200).
+    --   _docAPI_currentPage: index trang hiện tại (0-based)
+    --   _docAPI_ManualPicks: dict {idx: true} — record đã tick tay, PERSIST khi đổi trang
+    --   _docAPI_SelectedAll: cờ "chọn tất cả" — khi TRUE, import dùng toàn bộ filteredIdx
+    --     (bỏ qua ManualPicks) để user không phải tick từng trang.
     -------------------------------------------*/
-    _docAPI_PREVIEW_LIMIT: 200,
+    _docAPI_PAGE_SIZE: 200,
+    _docAPI_currentPage: 0,
+    _docAPI_ManualPicks: {},
 
     docAPI_RefreshPreview_Debounced: function () {
         var me = this;
@@ -5117,11 +5160,10 @@ KeHoachTuyenSinhNew.prototype = {
         var html = '';
         var mappedCols = Object.keys(me._docAPI_Mapping).filter(function (c) { return me._docAPI_Mapping[c]; });
         var total = me._docAPI_ApiData.length;
-        var limit = me._docAPI_PREVIEW_LIMIT;
+        var pageSize = me._docAPI_PAGE_SIZE;
         // Filter theo _docAPI_FilterKeyword (client-side)
         var filteredIdx = me._docAPI_getFilteredIdx();
         var filteredTotal = filteredIdx.length;
-        var renderCount = Math.min(filteredTotal, limit);
 
         // Cập nhật label info filter
         var kw = me._docAPI_FilterKeyword || '';
@@ -5131,20 +5173,37 @@ KeHoachTuyenSinhNew.prototype = {
             $('#lblDocAPI_FilterInfo').text('');
         }
 
-        for (var ii = 0; ii < renderCount; ii++) {
+        // Clamp trang hiện tại: nếu filter đổi làm total nhỏ đi → về trang cuối hợp lệ
+        var totalPages = Math.max(1, Math.ceil(filteredTotal / pageSize));
+        if (me._docAPI_currentPage >= totalPages) me._docAPI_currentPage = totalPages - 1;
+        if (me._docAPI_currentPage < 0) me._docAPI_currentPage = 0;
+        var page = me._docAPI_currentPage;
+        var start = page * pageSize;
+        var end = Math.min(start + pageSize, filteredTotal);
+        var picks = me._docAPI_ManualPicks || {};
+        var selAll = !!me._docAPI_SelectedAll;
+
+        for (var ii = start; ii < end; ii++) {
             var idx = filteredIdx[ii];
             var rec = me._docAPI_ApiData[idx];
             var maHS = me._docAPI_KeyCol ? edu.util.returnEmpty(rec[me._docAPI_KeyCol]) : '';
             var preview = mappedCols.map(function (col) {
                 var v = rec[col];
-                if (typeof v === 'object') v = JSON.stringify(v);
-                if (v == null) v = '';
+                // ⚠ Phải check null TRƯỚC typeof === 'object' vì typeof null === 'object' trong JS
+                // → nếu không, JSON.stringify(null) = "null" (string) sẽ hiện ra dạng text "null".
+                if (v == null) {
+                    v = '';
+                } else if (typeof v === 'object') {
+                    v = JSON.stringify(v);
+                }
                 var s = String(v);
                 if (s.length > 40) s = s.substring(0, 40) + '…';
                 return '<span style="margin-right:12px;"><b>' + me._docAPI_Mapping[col] + '</b>=' + me._docAPI_esc(s) + '</span>';
             }).join('');
+            // Restore trạng thái tick từ ManualPicks (persist qua các trang)
+            var isChecked = selAll || !!picks[idx];
             html += '<tr>'
-                + '<td class="td-center"><input type="checkbox" class="docAPI-sel" data-idx="' + idx + '"></td>'
+                + '<td class="td-center"><input type="checkbox" class="docAPI-sel" data-idx="' + idx + '"' + (isChecked ? ' checked' : '') + '></td>'
                 + '<td class="td-center">' + (idx + 1) + '</td>'
                 + '<td>' + me._docAPI_esc(maHS) + '</td>'
                 + '<td>' + (preview || '<span style="color:#94a3b8;">(chưa map cột nào)</span>') + '</td>'
@@ -5153,19 +5212,70 @@ KeHoachTuyenSinhNew.prototype = {
                 + '</tr>';
         }
         if (!html) html = '<tr><td colspan="6" class="td-center text-muted" style="padding:16px;">Không có bản ghi nào</td></tr>';
-        // Nếu có nhiều hơn limit → thêm row footer báo "còn X record ẩn"
-        if (filteredTotal > limit) {
-            html += '<tr style="background:#fef3c7;"><td colspan="6" class="td-center" style="padding:10px; color:#92400e; font-weight:600;">'
-                + '<i class="fa-regular fa-eye-slash"></i> '
-                + 'Chỉ hiển thị ' + limit + ' / ' + filteredTotal + ' bản ghi'
-                + (kw ? ' (đã lọc theo "' + me._docAPI_esc(kw) + '")' : '')
-                + '. Khi bấm <b>Bắt đầu Import</b>, hệ thống sẽ chạy toàn bộ record đã tick'
-                + (kw ? ' hoặc toàn bộ ' + filteredTotal + ' record đã lọc (nếu tick "Chọn tất cả")' : '')
-                + '.'
-                + '</td></tr>';
-        }
         $('#tblDocAPI_Preview tbody').html(html);
-        $('#chkDocAPI_SelectAll').prop('checked', false);
+
+        // Header select-all checkbox: reflect state — "checked" khi flag ON hoặc mọi row của trang đều được pick
+        var allPageChecked = false;
+        if (end > start) {
+            allPageChecked = selAll;
+            if (!allPageChecked) {
+                allPageChecked = true;
+                for (var jj = start; jj < end; jj++) {
+                    if (!picks[filteredIdx[jj]]) { allPageChecked = false; break; }
+                }
+            }
+        }
+        $('#chkDocAPI_SelectAll').prop('checked', allPageChecked);
+
+        // Render pager
+        me._docAPI_RenderPager(filteredTotal, totalPages, page, start, end);
+    },
+
+    /*------------------------------------------
+    -- Cập nhật UI pagination: enable/disable các nút, hiển thị "Trang x/y", "hiển thị a-b/N",
+    -- và số record đã pick tay (nếu có).
+    -------------------------------------------*/
+    _docAPI_RenderPager: function (filteredTotal, totalPages, page, start, end) {
+        var me = this;
+        $('#txtDocAPI_PageJump').val(page + 1);
+        $('#lblDocAPI_PageTotal').text(totalPages);
+        var rangeLbl = filteredTotal === 0 ? '0-0' : ((start + 1) + '-' + end);
+        $('#lblDocAPI_PageRange').text(rangeLbl);
+        $('#lblDocAPI_PageTotalRec').text(filteredTotal);
+        var atFirst = page <= 0;
+        var atLast = page >= totalPages - 1;
+        $('#btnDocAPI_PageFirst, #btnDocAPI_PagePrev').prop('disabled', atFirst);
+        $('#btnDocAPI_PageNext, #btnDocAPI_PageLast').prop('disabled', atLast);
+        // Hiển thị số record đã tick tay (persist qua các trang)
+        var pickCount = 0;
+        if (me._docAPI_ManualPicks) {
+            for (var k in me._docAPI_ManualPicks) if (me._docAPI_ManualPicks[k]) pickCount++;
+        }
+        if (me._docAPI_SelectedAll) {
+            $('#lblDocAPI_PagePicks').html('<i class="fa-solid fa-check-double"></i> Đã chọn TẤT CẢ ' + filteredTotal + ' bản ghi');
+        } else if (pickCount > 0) {
+            $('#lblDocAPI_PagePicks').html('<i class="fa-solid fa-check"></i> Đã tick ' + pickCount + ' bản ghi');
+        } else {
+            $('#lblDocAPI_PagePicks').text('');
+        }
+    },
+
+    /*------------------------------------------
+    -- Chuyển trang: gọi từ handler nút pager. delta = số trang di chuyển; nếu absolute = true
+    -- thì delta là số trang (1-based → 0-based).
+    -------------------------------------------*/
+    _docAPI_GoPage: function (delta, absolute) {
+        var me = this;
+        var pageSize = me._docAPI_PAGE_SIZE;
+        var filteredIdx = me._docAPI_getFilteredIdx();
+        var totalPages = Math.max(1, Math.ceil(filteredIdx.length / pageSize));
+        var next;
+        if (absolute) next = delta - 1; else next = me._docAPI_currentPage + delta;
+        if (next < 0) next = 0;
+        if (next > totalPages - 1) next = totalPages - 1;
+        if (next === me._docAPI_currentPage) return;
+        me._docAPI_currentPage = next;
+        me.docAPI_RefreshPreview();
     },
 
     /*------------------------------------------
@@ -5190,17 +5300,20 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa có dữ liệu API — bấm 'Kết nối & Tải' trước khi xuất.", "w");
             return;
         }
-        // Records cần xuất: SelectAll ON + (filter hoặc total > limit) → dùng filtered indices
-        //                    đã tick > 0 → chỉ tick; = 0 → tất cả
+        // Records cần xuất:
+        //   SelectAll flag ON → toàn bộ filteredIdx
+        //   Else → ManualPicks giao filteredIdx (persist qua các trang, loại record ngoài filter)
+        //   Nếu vẫn 0 → xuất all raw
         var arrIdx = [];
         var filteredIdxExp = me._docAPI_getFilteredIdx();
-        var hasFilterExp = (me._docAPI_FilterKeyword || '').length > 0;
-        if (me._docAPI_SelectedAll && (hasFilterExp || me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT)) {
+        if (me._docAPI_SelectedAll) {
             arrIdx = filteredIdxExp.slice();
         } else {
-            $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
-                arrIdx.push(parseInt($(this).attr('data-idx'), 10));
-            });
+            var filterSetExp = {};
+            for (var fx = 0; fx < filteredIdxExp.length; fx++) filterSetExp[filteredIdxExp[fx]] = true;
+            for (var k in me._docAPI_ManualPicks) {
+                if (me._docAPI_ManualPicks[k] && filterSetExp[k]) arrIdx.push(parseInt(k, 10));
+            }
         }
         var records = arrIdx.length
             ? arrIdx.map(function (i) { return me._docAPI_ApiData[i]; })
@@ -5312,17 +5425,19 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa mapping cột nào — vào bước 2 để chọn param tương ứng", "w"); return;
         }
         var arrIdx = [];
-        // SelectAll ON + có filter → chỉ toàn bộ records ĐÃ LỌC (không all data)
-        // SelectAll ON + không filter + total > preview limit → toàn bộ 0..total-1
-        // Còn lại: chỉ lấy checkbox visible đã tick
+        // SelectAll flag ON → import TOÀN BỘ filteredIdx (bỏ qua paging, bỏ qua ManualPicks)
+        // Flag OFF → import các record đã tick tay (ManualPicks persist qua các trang),
+        //   nhưng CHỈ lấy record còn nằm trong filter hiện tại (tránh import record đã lọc ẩn).
         var filteredIdx = me._docAPI_getFilteredIdx();
-        var hasFilter = (me._docAPI_FilterKeyword || '').length > 0;
-        if (me._docAPI_SelectedAll && (hasFilter || me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT)) {
+        if (me._docAPI_SelectedAll) {
             arrIdx = filteredIdx.slice();
         } else {
-            $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
-                arrIdx.push(parseInt($(this).attr('data-idx'), 10));
-            });
+            var filterSet = {};
+            for (var fi = 0; fi < filteredIdx.length; fi++) filterSet[filteredIdx[fi]] = true;
+            for (var pickIdx in me._docAPI_ManualPicks) {
+                if (me._docAPI_ManualPicks[pickIdx] && filterSet[pickIdx]) arrIdx.push(parseInt(pickIdx, 10));
+            }
+            arrIdx.sort(function (a, b) { return a - b; });   // import theo thứ tự record
         }
         if (!arrIdx.length) {
             edu.system.alert("Chưa chọn bản ghi nào để import", "w"); return;
@@ -5368,8 +5483,12 @@ KeHoachTuyenSinhNew.prototype = {
                 var target = me._docAPI_Mapping[apiCol];
                 if (!target) return;
                 var v = rec[apiCol];
-                if (typeof v === 'object') v = JSON.stringify(v);
-                if (v == null) v = '';
+                // Null check TRƯỚC typeof (typeof null === 'object') — tránh gửi text "null" xuống BE.
+                if (v == null) {
+                    v = '';
+                } else if (typeof v === 'object') {
+                    v = JSON.stringify(v);
+                }
                 row[target] = String(v);
             });
             queue.push({ idx: i, row: row });
