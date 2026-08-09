@@ -410,6 +410,177 @@
       /* Header controls: chữ menu + bell trắng, tránh bị var(--color-*) đè */
       .top-nav .sidebar-bars,
       .top-nav .sidebar-bars span { color: #ffffff !important; }
+
+      /* ─── [SPA-MODULE-TONE] Đồng bộ tone module SPA-native (load trong index.aspx)
+         với reskin dask-blue + orange. Không đụng assets/css-new (file share). ─── */
+
+      /* Card wrapper: border-#f5f5f5 gần như vô hình (css-new/main.css:304) → làm
+         cho card trắng tinh trơ trên nền. Bump border rõ hơn + shadow rõ hơn. */
+      #main-content-wrapper .card.today-card,
+      #main-content-wrapper .today-card {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+        background: #ffffff !important;
+      }
+      /* Bỏ hiệu ứng "double layer" ::before của .today-card (nhìn dơ trên UI mới) */
+      #main-content-wrapper .card.today-card::before,
+      #main-content-wrapper .today-card::before {
+        display: none !important;
+      }
+
+      /* Card body có padding rõ + tách khối với header */
+      #main-content-wrapper .card.today-card > .card-body,
+      #main-content-wrapper .today-card > .card-body {
+        padding: 16px 18px !important;
+        background: #ffffff !important;
+      }
+
+      /* Card header: css-new/main.css:329 set background: var(--color-link) = #2563EB xanh
+         Bootstrap. Override về dask-blue để khớp header shell + reskin indexi. */
+      #main-content-wrapper .card.today-card > .card-header,
+      #main-content-wrapper .today-card-1 > .card-header,
+      #main-content-wrapper .today-card-2 > .card-header,
+      #main-content-wrapper .today-card-3 > .card-header {
+        background: #223771 !important;
+        background-image: none !important;
+        border: 0 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        padding: 12px 18px !important;
+      }
+      /* Card title (không phải tab) → trắng */
+      #main-content-wrapper .today-card > .card-header .title .feature-name {
+        color: #ffffff !important;
+      }
+      /* Tab inactive (chưa chọn): text trắng mờ trên nền dask-blue */
+      #main-content-wrapper .today-card > .card-header .myTab-header-link,
+      #main-content-wrapper .today-card > .card-header .myTab-header-link i {
+        color: rgba(255, 255, 255, 0.85) !important;
+      }
+      #main-content-wrapper .today-card > .card-header .myTab-header-link:hover,
+      #main-content-wrapper .today-card > .card-header .myTab-header-link:hover i {
+        color: #ffffff !important;
+      }
+      /* Tab active: pill trắng bg (giữ design gốc css-new/main.css:1650) + text
+         dask-blue + icon cam accent */
+      #main-content-wrapper .today-card > .card-header .myTab-header-link.active {
+        background: #ffffff !important;
+        color: #223771 !important;
+        font-weight: 700 !important;
+      }
+      #main-content-wrapper .today-card > .card-header .myTab-header-link.active i {
+        color: #f8843d !important;
+      }
+      /* Icon frame trong card header (today-card-1 gradient xanh) → tone dask-blue */
+      #main-content-wrapper .today-card-1 > .card-header .icon,
+      #main-content-wrapper .today-card > .card-header .title .icon {
+        background: rgba(255, 255, 255, 0.18) !important;
+        background-image: none !important;
+        color: #ffffff !important;
+      }
+
+      /* Section title .color-blue (dùng cho "Danh sách học phần dự kiến..." v.v.) */
+      #main-content-wrapper .color-blue,
+      #main-content-wrapper .text-blue {
+        color: #223771 !important;
+      }
+
+      /* Buttons SPA-native: .btn-view / .btn-link / .btn-save → dask-blue solid */
+      #main-content-wrapper .btn.btn-view,
+      #main-content-wrapper .btn.btn-link,
+      #main-content-wrapper .btn.btn-save,
+      #main-content-wrapper #btnSearch.btn.btn-view {
+        background: #223771 !important;
+        background-image: none !important;
+        border: 1px solid #223771 !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
+      }
+      #main-content-wrapper .btn.btn-view:hover,
+      #main-content-wrapper .btn.btn-link:hover,
+      #main-content-wrapper .btn.btn-save:hover,
+      #main-content-wrapper #btnSearch.btn.btn-view:hover {
+        background: #1c2e5f !important;
+        border-color: #1c2e5f !important;
+        color: #ffffff !important;
+      }
+
+      /* Outline buttons — giữ semantic màu (success/danger/warning) nhưng đồng bộ
+         .btn-outline-primary về dask-blue thay vì bright blue */
+      #main-content-wrapper .btn.btn-outline-primary {
+        color: #223771 !important;
+        border-color: #223771 !important;
+        background: transparent !important;
+      }
+      #main-content-wrapper .btn.btn-outline-primary:hover {
+        background: #223771 !important;
+        color: #ffffff !important;
+        border-color: #223771 !important;
+      }
+
+      /* Table header .bg-th trong SPA-native → nền tím nhạt khớp indexi reskin */
+      #main-content-wrapper .table > thead > tr > th.bg-th,
+      #main-content-wrapper .table .bg-th {
+        background: #f0f3fd !important;
+        color: #0f172a !important;
+        font-weight: 700 !important;
+      }
+
+      /* Breadcrumb SPA (.content-tab .nav-content-left .link) → tone xám khớp */
+      #main-content-wrapper .content-tab .nav-content-left .link,
+      #main-content-wrapper .content-tab .nav-content-left .link a {
+        color: #64748b !important;
+      }
+      #main-content-wrapper .content-tab .nav-content-left .link i {
+        color: #94a3b8 !important;
+        margin: 0 6px;
+      }
+
+      /* Custom select (Select2 wrapper) height + border khớp với input-label-left */
+      #main-content-wrapper .custom-select .select2-container .select2-selection--single,
+      #main-content-wrapper .input-label-left .select2-container .select2-selection--single {
+        height: 38px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+      }
+      #main-content-wrapper .custom-select .select2-container--default .select2-selection--single .select2-selection__rendered,
+      #main-content-wrapper .input-label-left .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 36px !important;
+        padding-left: 10px !important;
+      }
+      #main-content-wrapper .custom-select .select2-container--default .select2-selection--single .select2-selection__arrow,
+      #main-content-wrapper .input-label-left .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 36px !important;
+      }
+
+      /* Floating label trong .box-search-hocphan (css-new/main.css:4010): mặc định
+         12px + #888 → hơi bé + mờ. Bump lên 13px + color đậm hơn cho dễ đọc. */
+      #main-content-wrapper .box-search-hocphan .input-label-left label,
+      #main-content-wrapper .filter-4-item .input-label-left label {
+        font-size: 13px !important;
+        color: #475569 !important;
+        font-weight: 500 !important;
+        padding: 4px 8px !important;
+        line-height: 1 !important;
+        height: auto !important;
+      }
+
+      /* Filter row: button "Xem danh sách" / "Tìm kiếm" phải align cuối dòng với
+         input row (tránh nằm lệch trên khi input wrap 2 dòng) */
+      #main-content-wrapper .filter-4-item {
+        align-items: flex-end !important;
+      }
+      #main-content-wrapper .filter-4-item .flex-shrink-0 {
+        display: flex;
+        align-items: flex-end;
+        padding-bottom: 10px;
+      }
+      #main-content-wrapper .filter-4-item .flex-shrink-0 .btn {
+        height: 38px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        margin-top: 0 !important;
+      }
     </style>
   </head>
 

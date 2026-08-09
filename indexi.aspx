@@ -257,6 +257,23 @@
             color: #64748b !important;
           }
 
+          /* Disabled prev/next/first/last: simplePagination render span rong (khong co
+             icon ben trong) khi o trang 1 hoac trang cuoi -> tao ra hop trang. An di. */
+          html body.skin-blue .simple-pagination span.prev,
+          html body.skin-blue .simple-pagination span.next,
+          html body.skin-blue .simple-pagination span.first,
+          html body.skin-blue .simple-pagination span.last,
+          html body.skin-blue .light-theme span.prev,
+          html body.skin-blue .light-theme span.next,
+          html body.skin-blue .light-theme span.first,
+          html body.skin-blue .light-theme span.last,
+          html body.skin-blue .compact-theme span.prev,
+          html body.skin-blue .compact-theme span.next,
+          html body.skin-blue .compact-theme span.first,
+          html body.skin-blue .compact-theme span.last {
+            display: none !important;
+          }
+
           /* Bootstrap 3 pagination (nếu module con dùng) */
           html body.skin-blue .pagination > li > a,
           html body.skin-blue .pagination > li > span {
@@ -270,6 +287,295 @@
             background-color: #223771 !important;
             border-color: #223771 !important;
             color: #ffffff !important;
+          }
+
+          /* ─── [MODULE-RESKIN] Reskin content module cu (AdminLTE .box, .form-control, .btn, .table, ...)
+             Scope: #main-content-wrapper de khong lem ra sidebar/header.
+             Muc dich: dong bo tone + padding + font voi sidebar reskin, giam cam giac "lech". ─── */
+          html body.skin-blue #main-content-wrapper .box {
+            border: 1px solid #e2e8f0 !important;
+            border-top: 1px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+            margin-bottom: 14px !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-body {
+            padding: 14px !important;
+            overflow: visible !important;
+            max-height: none !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-header {
+            padding: 12px 14px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-title {
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            color: #0f172a !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-footer {
+            padding: 10px 14px !important;
+            border-top: 1px solid #e2e8f0 !important;
+          }
+
+          /* Form inputs — vien nhat khop tone, focus dask-blue subtle (khong cam gao) */
+          html body.skin-blue #main-content-wrapper .form-control {
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 6px !important;
+            box-shadow: none !important;
+            color: #0f172a !important;
+            font-size: 14px !important;
+            padding: 6px 12px !important;
+            height: 38px !important;
+          }
+          html body.skin-blue #main-content-wrapper .form-control:focus {
+            border-color: #cbd5e1 !important;
+            box-shadow: none !important;
+          }
+          html body.skin-blue #main-content-wrapper input.form-control::placeholder,
+          html body.skin-blue #main-content-wrapper input::placeholder {
+            color: #94a3b8 !important;
+          }
+
+          /* Select2 (module cu dung .select-opt) — dong bo voi form-control */
+          html body.skin-blue #main-content-wrapper .select2-container .select2-selection--single {
+            height: 38px !important;
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 6px !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 36px !important;
+            padding-left: 12px !important;
+            color: #0f172a !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 36px !important;
+          }
+
+          /* Buttons — dong bo font/padding, tone dask-blue */
+          html body.skin-blue #main-content-wrapper .btn {
+            font-weight: 600 !important;
+            font-size: 14px !important;
+            border-radius: 6px !important;
+            padding: 8px 14px !important;
+            box-shadow: none !important;
+          }
+          html body.skin-blue #main-content-wrapper .btn.btn-default {
+            background: #fff !important;
+            color: #223771 !important;
+            border: 1px solid #e2e8f0 !important;
+          }
+          html body.skin-blue #main-content-wrapper .btn.btn-default:hover {
+            background: #f0f3fd !important;
+            border-color: #223771 !important;
+            color: #223771 !important;
+          }
+          html body.skin-blue #main-content-wrapper .btn.btn-primary {
+            background: #223771 !important;
+            color: #fff !important;
+            border: 1px solid #223771 !important;
+          }
+          html body.skin-blue #main-content-wrapper .btn.btn-primary:hover {
+            background: #1c2e5f !important;
+            border-color: #1c2e5f !important;
+          }
+          /* .btn-search / .btnSearch: styles.css:3272 set nen xam #e1e1e1 !important +
+             chu ke thua nhat -> kho nhin. Override ve solid dask-blue + chu trang */
+          html body.skin-blue #main-content-wrapper .btn.btn-search,
+          html body.skin-blue #main-content-wrapper .btn.btn-default.btn-search,
+          html body.skin-blue #main-content-wrapper a.btn.btn-search,
+          html body.skin-blue #main-content-wrapper .btnSearch {
+            background: #223771 !important;
+            background-image: none !important;
+            color: #ffffff !important;
+            border: 1px solid #223771 !important;
+            border-radius: 6px !important;
+            padding: 6px 14px !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+          }
+          html body.skin-blue #main-content-wrapper .btn.btn-search:hover,
+          html body.skin-blue #main-content-wrapper .btn.btn-default.btn-search:hover,
+          html body.skin-blue #main-content-wrapper a.btn.btn-search:hover,
+          html body.skin-blue #main-content-wrapper .btnSearch:hover {
+            background: #1c2e5f !important;
+            border-color: #1c2e5f !important;
+            color: #ffffff !important;
+          }
+          html body.skin-blue #main-content-wrapper .btn.btn-search i,
+          html body.skin-blue #main-content-wrapper .btn.btn-search .lang,
+          html body.skin-blue #main-content-wrapper .btnSearch i,
+          html body.skin-blue #main-content-wrapper .btnSearch .lang {
+            color: #ffffff !important;
+          }
+
+          /* Table headers — khop tone role picker table (nen tim nhat, font dam) */
+          html body.skin-blue #main-content-wrapper .table > thead > tr > th,
+          html body.skin-blue #main-content-wrapper .table > thead > tr > td {
+            background: #f0f3fd !important;
+            color: #0f172a !important;
+            font-weight: 700 !important;
+            font-size: 13px !important;
+            border-bottom: 1px solid #e2e8f0 !important;
+          }
+          html body.skin-blue #main-content-wrapper .table > tbody > tr > td {
+            font-size: 14px !important;
+            color: #0f172a !important;
+            border-color: #f1f5f9 !important;
+          }
+          /* Row hover: giu chu dam, chi doi nen (default index.min.css:58 set
+             color: var(--color-green) -> chu xanh la mo tit tren nen trang). */
+          html body.skin-blue #main-content-wrapper .table-hover > tbody > tr:hover,
+          html body.skin-blue #main-content-wrapper .table-hover > tbody > tr:hover > td {
+            background: #f8fafc !important;
+            color: #0f172a !important;
+          }
+
+          /* Button nho gon khi nam trong table cell, cang giua cell */
+          html body.skin-blue #main-content-wrapper .table td .btn,
+          html body.skin-blue #main-content-wrapper .table th .btn {
+            padding: 4px 12px !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            border-radius: 4px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+          }
+          /* Cell chua button -> can giua theo chieu ngang */
+          html body.skin-blue #main-content-wrapper .table td:has(> .btn),
+          html body.skin-blue #main-content-wrapper .table td:has(> a.btn) {
+            text-align: center !important;
+            vertical-align: middle !important;
+          }
+          /* Fallback cho browser cu (khong ho tro :has): center btn.btn-primary
+             trong table cell bang display:block + margin auto */
+          html body.skin-blue #main-content-wrapper .table td > .btn.btn-primary {
+            margin-left: auto !important;
+            margin-right: auto !important;
+          }
+          /* Icon check dau chu "Chon" — dung FA4 unicode \f00c (font-family FontAwesome) */
+          html body.skin-blue #main-content-wrapper .table td .btn.btn-primary::before {
+            content: "\f00c";
+            font-family: "FontAwesome", "Font Awesome 5 Free", "Font Awesome 6 Free";
+            font-weight: 900;
+            font-size: 12px;
+            display: inline-block;
+          }
+
+          /* Header xanh cua box/modal: cac nut tool (+ collapse, x close, .btnClose ...)
+             mac dinh bi reskin .btn.btn-default ap nen trang + border -> tach ra khoi nen
+             xanh nhin xau. Cho ve transparent + chu trang. Bao gom ca .btnClose
+             (custom class trong module cu nhu ApisChuyenCan) va cac dang standard. */
+          html body.skin-blue #main-content-wrapper .box-header .btn-box-tool,
+          html body.skin-blue #main-content-wrapper .box-header .btnClose,
+          html body.skin-blue #main-content-wrapper .box-header a.btnClose,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btnClose,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btn-default.btnClose,
+          html body.skin-blue #main-content-wrapper .box-header button.close,
+          html body.skin-blue #main-content-wrapper .box-header .close,
+          html body.skin-blue #main-content-wrapper .box-header .btn-close,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > a.btn,
+          html body.skin-blue #main-content-wrapper .modal-header button.close,
+          html body.skin-blue #main-content-wrapper .modal-header .close,
+          html body.skin-blue #main-content-wrapper .modal-header .btn-close,
+          html body.skin-blue #main-content-wrapper .modal-header .btn-box-tool,
+          html body.skin-blue #main-content-wrapper .modal-header .btnClose {
+            background: transparent !important;
+            background-color: transparent !important;
+            border: 0 !important;
+            border-radius: 4px !important;
+            color: #ffffff !important;
+            opacity: 0.85 !important;
+            box-shadow: none !important;
+            padding: 4px 10px !important;
+            font-size: 14px !important;
+            line-height: 1 !important;
+            font-weight: 400 !important;
+            text-shadow: none !important;
+            min-width: 0 !important;
+            width: auto !important;
+            height: auto !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-header .btn-box-tool:hover,
+          html body.skin-blue #main-content-wrapper .box-header .btnClose:hover,
+          html body.skin-blue #main-content-wrapper .box-header a.btnClose:hover,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btnClose:hover,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btn-default.btnClose:hover,
+          html body.skin-blue #main-content-wrapper .box-header button.close:hover,
+          html body.skin-blue #main-content-wrapper .box-header .close:hover,
+          html body.skin-blue #main-content-wrapper .box-header .btn-close:hover,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn:hover,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > a.btn:hover,
+          html body.skin-blue #main-content-wrapper .modal-header button.close:hover,
+          html body.skin-blue #main-content-wrapper .modal-header .close:hover,
+          html body.skin-blue #main-content-wrapper .modal-header .btn-close:hover,
+          html body.skin-blue #main-content-wrapper .modal-header .btn-box-tool:hover,
+          html body.skin-blue #main-content-wrapper .modal-header .btnClose:hover {
+            background: rgba(255, 255, 255, 0.18) !important;
+            color: #ffffff !important;
+            opacity: 1 !important;
+            border: 0 !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-header .btn-box-tool i,
+          html body.skin-blue #main-content-wrapper .box-header .btnClose i,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn i,
+          html body.skin-blue #main-content-wrapper .modal-header .btn-box-tool i,
+          html body.skin-blue #main-content-wrapper .modal-header .btnClose i {
+            color: #ffffff !important;
+          }
+
+          /* Bien nut .btnClose thanh button "x Dong" solid do — luon do, icon x luon hien */
+          html body.skin-blue #main-content-wrapper .box-header .btnClose,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btnClose,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btn-default.btnClose {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            padding: 6px 14px !important;
+            border: 1px solid #dc2626 !important;
+            border-radius: 6px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            opacity: 1 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 6px !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15) !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-header .btnClose:hover,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btnClose:hover,
+          html body.skin-blue #main-content-wrapper .box-header .btn.btn-default.btnClose:hover {
+            background: #b91c1c !important;
+            color: #ffffff !important;
+            border-color: #b91c1c !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-header .btnClose i,
+          html body.skin-blue #main-content-wrapper .box-header .btnClose i.fa,
+          html body.skin-blue #main-content-wrapper .box-header .btnClose i.fas {
+            color: #ffffff !important;
+            display: inline-block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            font-size: 13px !important;
+          }
+          html body.skin-blue #main-content-wrapper .box-header .btnClose::after {
+            content: "Đóng";
+            color: #ffffff !important;
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1;
+          }
+
+          /* Item search spacing — 4 dropdown deu can, dung .col-sm-3 default */
+          html body.skin-blue #main-content-wrapper .item-search {
+            padding: 6px !important;
+          }
+
+          /* Section .content padding — align voi header 60px */
+          html body.skin-blue #main-content-wrapper section.content,
+          html body.skin-blue #main-content-wrapper .content.MainPage {
+            padding: 12px !important;
           }
         </style>
     </head>

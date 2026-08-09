@@ -803,7 +803,21 @@ systemroot.prototype = {
             me.rootPathReport = objChucNang.TENFILEDINHKEM;
             sessionStorage.setItem("strChucNang_Id", objChucNang.ID);
             let strTenAnh = objChucNang.TENANH? objChucNang.TENANH.trim() : "";
-            if ((objChucNang.DUONGDANFILE && strTenAnh && strTenAnh.indexOf('fa ') == 0)) {
+            // [SPA-MIGRATE] Whitelist module da rewrite HTML theo SPA-native style
+            // (dung .card, .myTab, .input-label-left, assets/css-new/styles.css).
+            // Duong dan trong list -> bo qua redirect sang indexi.aspx, load inline vao
+            // #main-content-wrapper cua index.aspx. Khi migrate xong 1 module, add path
+            // vao day. Long-term: update TENANH trong DB tu "fa fa-x" sang "fa-light fa-x"
+            // de tu dong trigger SPA khong can whitelist.
+            var arrSpaWhitelist = [
+                '/nhapchuyencan/html/nhaptheolop.html'
+            ];
+            var isWhitelisted = arrSpaWhitelist.some(function (p) {
+                return strRootPath && strRootPath.toLowerCase().indexOf(p.toLowerCase()) >= 0;
+            });
+            if (isWhitelisted) {
+                console.log('[SPA-MIGRATE] load in SPA shell:', strRootPath);
+            } else if ((objChucNang.DUONGDANFILE && strTenAnh && strTenAnh.indexOf('fa ') == 0)) {
                 location.href = "./indexi.aspx"
             }
             $("#sidebar-menu .active").removeClass('active');
