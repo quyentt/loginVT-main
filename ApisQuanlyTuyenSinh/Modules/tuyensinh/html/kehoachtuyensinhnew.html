@@ -2309,6 +2309,15 @@
                         <span class="badge bg-primary" id="lblDocAPI_RowCount" style="margin-left:4px;">0</span>
                         <span style="color:#64748b; font-weight:500;">bản ghi từ API</span>
 
+                        <!-- Filter client-side (không call API lại) — chỉ hiển thị records match keyword trong data đã fetch -->
+                        <div style="display:flex; align-items:center; gap:6px; margin-left:20px;">
+                            <i class="fa-light fa-magnifying-glass" style="color:#94a3b8;"></i>
+                            <input id="txtDocAPI_FilterPreview" type="text" class="form-control form-control-sm"
+                                placeholder="Lọc trong data đã tải (mã HS, họ tên, SĐT, CCCD...)"
+                                style="min-width:280px; height:32px;">
+                            <span id="lblDocAPI_FilterInfo" class="fz12" style="color:#7c3aed; font-weight:600;"></span>
+                        </div>
+
                         <div style="margin-left:auto; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                             <div style="display:flex; align-items:center; gap:6px;">
                                 <input type="checkbox" id="chkDocAPI_ChoPhepSua">
@@ -2417,7 +2426,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.66"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.68"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

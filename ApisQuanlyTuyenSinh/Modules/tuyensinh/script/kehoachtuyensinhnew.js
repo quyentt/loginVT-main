@@ -4603,6 +4603,12 @@ KeHoachTuyenSinhNew.prototype = {
         $("#btnDocAPI_StartImport").click(function () { me.docAPI_StartImport(); });
         $("#btnDocAPI_CancelImport").click(function () { me._docAPI_ImportCancelled = true; });
         $("#btnDocAPI_ExportExcel").click(function () { me.docAPI_ExportToExcel(); });
+
+        // Filter client-side: mỗi lần user gõ → debounce refresh preview theo keyword
+        $("#txtDocAPI_FilterPreview").on('input', function () {
+            me._docAPI_FilterKeyword = ($(this).val() || '').trim().toLowerCase();
+            me.docAPI_RefreshPreview_Debounced();
+        });
         $("#btnDocAPI_ShowErrors").click(function (e) { e.preventDefault(); me.docAPI_RenderErrorsPanel(); $('#docAPI_ErrorsPanel').removeClass('d-none'); });
         $("#btnDocAPI_HideErrors").click(function (e) { e.preventDefault(); $('#docAPI_ErrorsPanel').addClass('d-none'); });
     },
@@ -4638,7 +4644,12 @@ KeHoachTuyenSinhNew.prototype = {
         me._docAPI_Mapping = {};
         me._docAPI_KeyCol = '';
         me._docAPI_ImportCancelled = false;
+        me._docAPI_FilterKeyword = '';   // reset filter client-side
+        me._docAPI_SelectedAll = false;
+        me._docAPI_MapPage = 1;   // reset trang mapping về 1
         $('#txtDocAPI_Keyword').val('');
+        $('#txtDocAPI_FilterPreview').val('');
+        $('#lblDocAPI_FilterInfo').text('');
         $('#lblDocAPI_FetchInfo').text('');
         $('#docAPI_MapWrap, #docAPI_ImportWrap').addClass('d-none');
         $('#tblDocAPI_Mapping tbody, #tblDocAPI_Preview tbody').html('');
@@ -4821,6 +4832,8 @@ KeHoachTuyenSinhNew.prototype = {
         cb();
     },
 
+    _docAPI_MAP_PAGE_SIZE: 20,
+
     docAPI_RenderMapping: function () {
         var me = this;
         $('#lblDocAPI_ApiColCount').text(me._docAPI_ApiCols.length);
@@ -4835,6 +4848,27 @@ KeHoachTuyenSinhNew.prototype = {
         });
         if (me._docAPI_KeyCol) $keySel.val(me._docAPI_KeyCol);
 
+        // Init page = 1 khi render lần đầu
+        if (!me._docAPI_MapPage) me._docAPI_MapPage = 1;
+        me.docAPI_RenderMappingPage();
+    },
+
+    /*------------------------------------------
+    -- Render 1 trang bảng mapping (20 cột/trang). State giữ trong _docAPI_Mapping global,
+    -- nên chuyển trang qua lại không mất mapping đã chọn.
+    -------------------------------------------*/
+    docAPI_RenderMappingPage: function () {
+        var me = this;
+        var totalCols = me._docAPI_ApiCols.length;
+        var pageSize = me._docAPI_MAP_PAGE_SIZE;
+        var totalPages = Math.max(1, Math.ceil(totalCols / pageSize));
+        // Clamp page vào range hợp lệ
+        if (me._docAPI_MapPage < 1) me._docAPI_MapPage = 1;
+        if (me._docAPI_MapPage > totalPages) me._docAPI_MapPage = totalPages;
+        var page = me._docAPI_MapPage;
+        var startIdx = (page - 1) * pageSize;
+        var endIdx = Math.min(startIdx + pageSize, totalCols);
+
         // Fallback C: nếu target list rỗng → dùng input text để user tự gõ mã
         var useInputFallback = me._docAPI_TargetCols.length === 0;
         var optsTarget = '';
@@ -4848,20 +4882,28 @@ KeHoachTuyenSinhNew.prototype = {
 
         var sample = me._docAPI_ApiData[0] || {};
         var html = '';
-        me._docAPI_ApiCols.forEach(function (col, idx) {
+        for (var idx = startIdx; idx < endIdx; idx++) {
+            var col = me._docAPI_ApiCols[idx];
             var sv = sample[col];
             if (typeof sv === 'object') sv = JSON.stringify(sv);
             if (sv == null) sv = '';
             sv = String(sv);
             if (sv.length > 80) sv = sv.substring(0, 80) + '…';
+            var currentMap = me._docAPI_Mapping[col] || '';
             var mapCell;
             if (useInputFallback) {
                 mapCell = '<input type="text" class="form-control form-control-sm docAPI-map-input" '
                     + 'data-apicol="' + edu.util.returnEmpty(col) + '" '
+                    + 'value="' + me._docAPI_esc(currentMap) + '" '
                     + 'placeholder="Gõ mã trường thông tin (để trống = bỏ qua)">';
             } else {
+                // Set selected option cho current mapping (dropdown restore đúng trạng thái)
+                var opts = optsTarget;
+                if (currentMap) {
+                    opts = opts.replace('value="' + currentMap + '"', 'value="' + currentMap + '" selected');
+                }
                 mapCell = '<select class="form-select form-select-sm docAPI-map-sel" data-apicol="'
-                    + edu.util.returnEmpty(col) + '">' + optsTarget + '</select>';
+                    + edu.util.returnEmpty(col) + '">' + opts + '</select>';
             }
             html += '<tr>'
                 + '<td class="td-center">' + (idx + 1) + '</td>'
@@ -4869,9 +4911,11 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<td><span style="color:#64748b;">' + me._docAPI_esc(sv) + '</span></td>'
                 + '<td>' + mapCell + '</td>'
                 + '</tr>';
-        });
+        }
         if (!html) html = '<tr><td colspan="4" class="td-center text-muted" style="padding:16px;">Không có cột nào từ API</td></tr>';
         $('#tblDocAPI_Mapping tbody').html(html);
+
+        me.docAPI_RenderMappingPagination(page, totalPages, totalCols, startIdx, endIdx);
 
         // Banner cảnh báo khi rơi vào fallback
         var $mapWrap = $('#docAPI_MapWrap');
@@ -4886,6 +4930,51 @@ KeHoachTuyenSinhNew.prototype = {
                 + '</div>'
             );
         }
+    },
+
+    docAPI_RenderMappingPagination: function (page, totalPages, totalCols, startIdx, endIdx) {
+        var me = this;
+        var $wrap = $('#docAPI_MapPagination');
+        if (!$wrap.length) {
+            // Lần đầu — inject wrap sau bảng mapping
+            $('#tblDocAPI_Mapping').after('<div id="docAPI_MapPagination" class="d-flex align-items-center justify-content-between mt-10" style="flex-wrap:wrap; gap:10px;"></div>');
+            $wrap = $('#docAPI_MapPagination');
+        }
+        if (totalCols <= me._docAPI_MAP_PAGE_SIZE) {
+            $wrap.html('<span class="fz12" style="color:#64748b;">Hiển thị tất cả ' + totalCols + ' cột trong 1 trang</span>');
+            return;
+        }
+        // Info bên trái
+        var info = '<span class="fz13" style="color:#475569;">'
+            + 'Hiển thị <b>' + (startIdx + 1) + '–' + endIdx + '</b> / ' + totalCols + ' cột'
+            + ' — Trang <b>' + page + '</b> / ' + totalPages
+            + '</span>';
+        // Nút Prev / Next + input jump
+        var btns = '<div class="d-flex align-items-center" style="gap:6px;">'
+            + '<button class="btn btn-sm btn-default" id="btnDocAPI_MapPagePrev" ' + (page <= 1 ? 'disabled' : '') + '>'
+            + '<i class="fa-solid fa-chevron-left"></i>&nbsp;Trước</button>'
+            + '<input type="number" id="txtDocAPI_MapPageJump" class="form-control form-control-sm" min="1" max="' + totalPages + '" value="' + page + '" style="width:70px; text-align:center;">'
+            + '<button class="btn btn-sm btn-default" id="btnDocAPI_MapPageNext" ' + (page >= totalPages ? 'disabled' : '') + '>'
+            + 'Sau&nbsp;<i class="fa-solid fa-chevron-right"></i></button>'
+            + '</div>';
+        $wrap.html(info + btns);
+
+        // Bind handler (off trước để tránh double-bind)
+        $('#btnDocAPI_MapPagePrev').off('click').on('click', function () {
+            me._docAPI_MapPage = Math.max(1, page - 1);
+            me.docAPI_RenderMappingPage();
+        });
+        $('#btnDocAPI_MapPageNext').off('click').on('click', function () {
+            me._docAPI_MapPage = Math.min(totalPages, page + 1);
+            me.docAPI_RenderMappingPage();
+        });
+        $('#txtDocAPI_MapPageJump').off('change').on('change', function () {
+            var v = parseInt($(this).val(), 10);
+            if (isNaN(v) || v < 1) v = 1;
+            if (v > totalPages) v = totalPages;
+            me._docAPI_MapPage = v;
+            me.docAPI_RenderMappingPage();
+        });
     },
 
     /*------------------------------------------
@@ -5058,14 +5147,55 @@ KeHoachTuyenSinhNew.prototype = {
         me._docAPI_previewTimer = setTimeout(function () { me.docAPI_RefreshPreview(); }, 400);
     },
 
+    /*------------------------------------------
+    -- Build danh sách indices sau khi filter theo _docAPI_FilterKeyword.
+    -- Nếu không có filter → trả indices [0..total-1] (nguyên bản).
+    -- Nếu có filter → quét toàn bộ records, giữ record có bất kỳ field value chứa keyword.
+    -------------------------------------------*/
+    _docAPI_getFilteredIdx: function () {
+        var me = this;
+        var kw = (me._docAPI_FilterKeyword || '').trim().toLowerCase();
+        var total = me._docAPI_ApiData.length;
+        if (!kw) {
+            var all = [];
+            for (var i = 0; i < total; i++) all.push(i);
+            return all;
+        }
+        var arr = [];
+        for (var j = 0; j < total; j++) {
+            var rec = me._docAPI_ApiData[j];
+            var match = false;
+            for (var k in rec) {
+                var v = rec[k];
+                if (v == null) continue;
+                if (String(v).toLowerCase().indexOf(kw) !== -1) { match = true; break; }
+            }
+            if (match) arr.push(j);
+        }
+        return arr;
+    },
+
     docAPI_RefreshPreview: function () {
         var me = this;
         var html = '';
         var mappedCols = Object.keys(me._docAPI_Mapping).filter(function (c) { return me._docAPI_Mapping[c]; });
         var total = me._docAPI_ApiData.length;
         var limit = me._docAPI_PREVIEW_LIMIT;
-        var renderCount = Math.min(total, limit);
-        for (var idx = 0; idx < renderCount; idx++) {
+        // Filter theo _docAPI_FilterKeyword (client-side)
+        var filteredIdx = me._docAPI_getFilteredIdx();
+        var filteredTotal = filteredIdx.length;
+        var renderCount = Math.min(filteredTotal, limit);
+
+        // Cập nhật label info filter
+        var kw = me._docAPI_FilterKeyword || '';
+        if (kw) {
+            $('#lblDocAPI_FilterInfo').html('<i class="fa-solid fa-filter"></i> Lọc: ' + filteredTotal + '/' + total);
+        } else {
+            $('#lblDocAPI_FilterInfo').text('');
+        }
+
+        for (var ii = 0; ii < renderCount; ii++) {
+            var idx = filteredIdx[ii];
             var rec = me._docAPI_ApiData[idx];
             var maHS = me._docAPI_KeyCol ? edu.util.returnEmpty(rec[me._docAPI_KeyCol]) : '';
             var preview = mappedCols.map(function (col) {
@@ -5087,11 +5217,14 @@ KeHoachTuyenSinhNew.prototype = {
         }
         if (!html) html = '<tr><td colspan="6" class="td-center text-muted" style="padding:16px;">Không có bản ghi nào</td></tr>';
         // Nếu có nhiều hơn limit → thêm row footer báo "còn X record ẩn"
-        if (total > limit) {
+        if (filteredTotal > limit) {
             html += '<tr style="background:#fef3c7;"><td colspan="6" class="td-center" style="padding:10px; color:#92400e; font-weight:600;">'
                 + '<i class="fa-regular fa-eye-slash"></i> '
-                + 'Chỉ hiển thị ' + limit + ' / ' + total + ' bản ghi để mắt preview mapping. '
-                + 'Khi bấm <b>Bắt đầu Import</b>, hệ thống sẽ chạy toàn bộ record đã tick.'
+                + 'Chỉ hiển thị ' + limit + ' / ' + filteredTotal + ' bản ghi'
+                + (kw ? ' (đã lọc theo "' + me._docAPI_esc(kw) + '")' : '')
+                + '. Khi bấm <b>Bắt đầu Import</b>, hệ thống sẽ chạy toàn bộ record đã tick'
+                + (kw ? ' hoặc toàn bộ ' + filteredTotal + ' record đã lọc (nếu tick "Chọn tất cả")' : '')
+                + '.'
                 + '</td></tr>';
         }
         $('#tblDocAPI_Preview tbody').html(html);
@@ -5120,10 +5253,13 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa có dữ liệu API — bấm 'Kết nối & Tải' trước khi xuất.", "w");
             return;
         }
-        // Records cần xuất: SelectAll ON + total > limit → toàn bộ; đã tick > 0 → chỉ tick; = 0 → tất cả
+        // Records cần xuất: SelectAll ON + (filter hoặc total > limit) → dùng filtered indices
+        //                    đã tick > 0 → chỉ tick; = 0 → tất cả
         var arrIdx = [];
-        if (me._docAPI_SelectedAll && me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT) {
-            for (var i = 0; i < me._docAPI_ApiData.length; i++) arrIdx.push(i);
+        var filteredIdxExp = me._docAPI_getFilteredIdx();
+        var hasFilterExp = (me._docAPI_FilterKeyword || '').length > 0;
+        if (me._docAPI_SelectedAll && (hasFilterExp || me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT)) {
+            arrIdx = filteredIdxExp.slice();
         } else {
             $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
                 arrIdx.push(parseInt($(this).attr('data-idx'), 10));
@@ -5239,10 +5375,13 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa mapping cột nào — vào bước 2 để chọn param tương ứng", "w"); return;
         }
         var arrIdx = [];
-        // Nếu SelectAll ON và total > số row visible (do preview limit 200) → chọn TOÀN BỘ 0..total-1
-        // Ngược lại chỉ lấy checkbox visible đã tick
-        if (me._docAPI_SelectedAll && me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT) {
-            for (var i = 0; i < me._docAPI_ApiData.length; i++) arrIdx.push(i);
+        // SelectAll ON + có filter → chỉ toàn bộ records ĐÃ LỌC (không all data)
+        // SelectAll ON + không filter + total > preview limit → toàn bộ 0..total-1
+        // Còn lại: chỉ lấy checkbox visible đã tick
+        var filteredIdx = me._docAPI_getFilteredIdx();
+        var hasFilter = (me._docAPI_FilterKeyword || '').length > 0;
+        if (me._docAPI_SelectedAll && (hasFilter || me._docAPI_ApiData.length > me._docAPI_PREVIEW_LIMIT)) {
+            arrIdx = filteredIdx.slice();
         } else {
             $('#tblDocAPI_Preview tbody .docAPI-sel:checked').each(function () {
                 arrIdx.push(parseInt($(this).attr('data-idx'), 10));
