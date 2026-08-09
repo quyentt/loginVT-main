@@ -404,7 +404,7 @@ qlklgd_phanconggiangday.prototype = {
         var obj_list = {
             'action': 'TKGG_QLKLGD/ListDS_HeDaoTao',
             'strChucNang_Id': edu.system.strChucNang_Id,
-            'strNguoiThucHien_Id': edu.system.userId,
+            'strNguoiThucHienId': edu.system.userId,
             
         };
 

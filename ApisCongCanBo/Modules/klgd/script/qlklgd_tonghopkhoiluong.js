@@ -363,6 +363,7 @@ qlklgd_tonghopkhoiluong.prototype = {
                 if (data.Success) {
                     if (data.Data.length > 0)
                         me.genList_drpBoMon(data.Data);
+                    me.dtNhomMonHoc = data.Data;
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -574,12 +575,14 @@ qlklgd_tonghopkhoiluong.prototype = {
     TinhKhoiLuongTruDanTheoChuan_Kieu2: function (strNhomMonHocID) {
         var me = this;
         //--Edit
-        
-        
+        var dtBM = edu.util.objGetDataInData(strNhomMonHocID, me.dtNhomMonHoc, "ID");
+
+        var strBoMonId = dtBM[0].TBL_BOMONID;
         var obj_list = {
             'action': 'TKGG_QLKLGD/TinhKhoiLuongTruDanTheoChuan_Kieu2',
             'versionAPI': 'v1.0',
             'NhomMonHocID': strNhomMonHocID, 
+            'strBoMonId': strBoMonId, 
             'strNamHoc': edu.util.getValById('drpNamHoc'),
             'strHocKy': edu.util.getValById('drpHocKy'),
             'strNguoiDung_Id': edu.system.userId,

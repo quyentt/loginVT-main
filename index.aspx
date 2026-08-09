@@ -242,7 +242,7 @@
         gap: 6px;
         margin: 0 0 12px;
         font-size: 16px;
-        font-weight: 800;
+        font-weight: 700;
         color: #0f172a;
       }
       .role-group-count {
@@ -585,8 +585,6 @@
   </head>
 
   <body>
-
-
     <div id="overlay" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:2051; display:none; background:#fff; padding:30px 55px; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.15); text-align:center; min-width:220px;">
       <i class="fas fa-spinner fa-spin fa-3x text-primary" style="color:#223771;"></i>
       <h5 style="margin:18px 0 0; color:#223771; font-weight:600; font-size:15px;">Đang tải dữ liệu...</h5>

@@ -15,9 +15,15 @@ qlklgd_thietlapthoigian.prototype = {
             me.getList_drpDotHoc(); 
         });
         $('#drpDotHoc').on('select2:select', function () {
-
+             
+            var strHeDaoTao_Ids = me.getHeDaoTaoIds();
             
-            me.getList_tblPhanQuyenThoiGian();
+            me.getList_tblPhanQuyenThoiGian(strHeDaoTao_Ids);
+        });
+        $('#drpHeDaoTao').on('select2:select', function () { 
+            var strHeDaoTao_Ids = me.getHeDaoTaoIds();
+            
+            me.getList_tblPhanQuyenThoiGian(strHeDaoTao_Ids);
         });
         $('#btnFillThoiGian').click(function () { 
           
@@ -34,6 +40,11 @@ qlklgd_thietlapthoigian.prototype = {
             }
             if (edu.util.getValById('drpHocKy') == "") {
                 edu.system.alert('Bạn chưa chọn học kỳ');
+                return;
+            }
+            var strHeDaoTao_Ids = me.getHeDaoTaoIds();
+            if (strHeDaoTao_Ids == "") {
+                edu.system.alert('Bạn chưa chọn hệ đào tạo');
                 return;
             }
             edu.system.confirm("Bạn có chắc chắn cập nhật ?");
@@ -54,7 +65,7 @@ qlklgd_thietlapthoigian.prototype = {
                     if ($('#checkX' + me.dtPhanQuyenThoiGian[i].USERID).is(":checked"))
                         strLaUserQuanTri = "1";
                     
-                    me.UpdatePhanQuyenTheoThoiGian(strUserId, strThoiGianBatDau, strThoiGianKetThuc, strLaUserQuanTri);
+                    me.UpdatePhanQuyenTheoThoiGian(strUserId, strThoiGianBatDau, strThoiGianKetThuc, strLaUserQuanTri, strHeDaoTao_Ids);
                 }
                 if (me.strErr == "")
                     edu.system.alert("Cập nhật thành công");
@@ -75,6 +86,7 @@ qlklgd_thietlapthoigian.prototype = {
         var me = this;
         edu.system.page_load();
         me.getList_NamHoc();
+        me.getList_drpHeDaoTao();
         
         //me.getList_drpDotHoc();
         //me.getList_tblPhanQuyenThoiGian();
@@ -124,7 +136,49 @@ qlklgd_thietlapthoigian.prototype = {
         };
         edu.system.loadToCombo_data(obj);
     },
+    getList_drpHeDaoTao: function () {
+        var me = this;
 
+        var obj_list = {
+            'action': 'TKGG_QLKLGD/ListDS_HeDaoTao',
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strNguoiThucHienId': edu.system.userId,
+
+        };
+
+
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.genList_drpHeDaoTao(data.Data);
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
+            },
+            error: function (er) { },
+            type: "GET",
+            contentType: true,
+            action: obj_list.action,
+            data: obj_list,
+        }, false, false, false, null);
+    },
+    genList_drpHeDaoTao: function (data) {
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "NAME",
+                code: "",
+                avatar: ""
+            },
+            renderPlace: ["drpHeDaoTao"],
+            type: "",
+            title: "Chọn hệ đào tạo"
+        };
+        edu.system.loadToCombo_data(obj);
+    },
     getList_drpHocKy: function () {
         var me = this;
         
@@ -216,7 +270,7 @@ qlklgd_thietlapthoigian.prototype = {
         };
         edu.system.loadToCombo_data(obj);
     },
-    getList_tblPhanQuyenThoiGian: function () {
+    getList_tblPhanQuyenThoiGian: function (strHeDaoTao_Ids) {
         var me = this;
         //--Edit
         
@@ -225,6 +279,7 @@ qlklgd_thietlapthoigian.prototype = {
             'versionAPI': 'v1.0', 
             'strHocKy': edu.util.getValById('drpHocKy'),
             'strDotHoc': edu.util.getValById('drpDotHoc'),
+            'strHeDaoTao_Ids': strHeDaoTao_Ids,            
             'strNguoiThucHienId': edu.system.userId,
 
         };
@@ -299,7 +354,7 @@ qlklgd_thietlapthoigian.prototype = {
         edu.system.loadToTable_data(jsonForm);
         /*III. Callback*/
     },
-    UpdatePhanQuyenTheoThoiGian: function (strUserId, strThoiGianBatDau, strThoiGianKetThuc, strLaUserQuanTri) {
+    UpdatePhanQuyenTheoThoiGian: function (strUserId, strThoiGianBatDau, strThoiGianKetThuc, strLaUserQuanTri, strHeDaoTao_Ids) {
         var me = this;
         
         var obj_list = {
@@ -314,6 +369,7 @@ qlklgd_thietlapthoigian.prototype = {
             'strThoiGianKetThuc': strThoiGianKetThuc,
             'strLaUserQuanTri': strLaUserQuanTri,
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValById('drpDotHoc'),
+            'strHeDaoTao_Ids': strHeDaoTao_Ids,
             'strNguoiThucHienId': edu.system.userId,
         };
 
@@ -343,6 +399,12 @@ qlklgd_thietlapthoigian.prototype = {
         }, false, false, false, null);
          
     },
-   
+    getHeDaoTaoIds: function() {
+    const select = document.getElementById("drpHeDaoTao");
+    const values = Array.from(select.selectedOptions)
+        .map(o => o.value)
+        .filter(v => v !== "");
+    return values.join(",");
+    },
 }
 
