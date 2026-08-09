@@ -337,19 +337,89 @@
             color: #94a3b8 !important;
           }
 
-          /* Select2 (module cu dung .select-opt) — dong bo voi form-control */
+          /* ═══ Select2 xin: flex center + border-radius + focus ring ═══ */
           html body.skin-blue #main-content-wrapper .select2-container .select2-selection--single {
-            height: 38px !important;
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 6px !important;
+            height: 40px !important;
+            min-height: 40px !important;
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            background: #ffffff !important;
+            display: flex !important;
+            align-items: center !important;
+            padding: 0 !important;
+            transition: border-color .15s ease, box-shadow .15s ease !important;
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container--focus .select2-selection--single,
+          html body.skin-blue #main-content-wrapper .select2-container--open .select2-selection--single {
+            border-color: #223771 !important;
+            box-shadow: 0 0 0 3px rgba(34, 55, 113, 0.12) !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container .select2-selection--single:hover {
+            border-color: #94a3b8 !important;
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 36px !important;
-            padding-left: 12px !important;
+            line-height: 1 !important;
+            padding: 0 32px 0 14px !important;
             color: #0f172a !important;
+            font-size: 14px !important;
+            font-weight: 500 !important;
+            width: 100% !important;
+            display: flex !important;
+            align-items: center !important;
+            height: 100% !important;
+            margin: 0 !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
+            color: #94a3b8 !important;
+            font-weight: 400 !important;
+            font-style: italic;
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
-            height: 36px !important;
+            height: 100% !important;
+            top: 0 !important;
+            right: 8px !important;
+            width: 20px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
+            border-color: #64748b transparent transparent transparent !important;
+            border-width: 6px 5px 0 5px !important;
+            position: static !important;
+            margin: 0 !important;
+          }
+          html body.skin-blue #main-content-wrapper .select2-container--open .select2-selection__arrow b {
+            border-color: transparent transparent #223771 transparent !important;
+            border-width: 0 5px 6px 5px !important;
+          }
+          /* Dropdown khi mo: bo goc + shadow */
+          body .select2-container--default .select2-dropdown {
+            border: 1px solid #cbd5e1 !important;
+            border-radius: 8px !important;
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+            overflow: hidden !important;
+            margin-top: 4px !important;
+          }
+          body .select2-container--default .select2-search--dropdown .select2-search__field {
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 6px !important;
+            padding: 6px 10px !important;
+            font-size: 13px !important;
+          }
+          body .select2-container--default .select2-results__option {
+            padding: 8px 14px !important;
+            font-size: 14px !important;
+          }
+          body .select2-container--default .select2-results__option--highlighted[aria-selected] {
+            background: #223771 !important;
+            color: #ffffff !important;
+          }
+          body .select2-container--default .select2-results__option[aria-selected="true"] {
+            background: #f0f3fd !important;
+            color: #223771 !important;
+            font-weight: 600 !important;
           }
 
           /* Buttons — dong bo font/padding, tone dask-blue */
@@ -576,6 +646,26 @@
           html body.skin-blue #main-content-wrapper section.content,
           html body.skin-blue #main-content-wrapper .content.MainPage {
             padding: 12px !important;
+          }
+
+          /* Multi-table float layout (vd phancongphamvi.html: 6 table float:left width:300px).
+             Khi row counts khac nhau, tables lech cao thap va noi dung cell can giua doc
+             -> cam giac chu lech. Convert scroll-table-x sang flex, tat ca tables align top. */
+          html body.skin-blue #main-content-wrapper .scroll-table-x {
+            display: flex !important;
+            flex-wrap: wrap !important;
+            gap: 12px !important;
+            align-items: flex-start !important;
+            overflow-x: auto;
+          }
+          html body.skin-blue #main-content-wrapper .scroll-table-x > table {
+            float: none !important;
+            margin: 0 !important;
+            vertical-align: top !important;
+          }
+          html body.skin-blue #main-content-wrapper .scroll-table-x > table td,
+          html body.skin-blue #main-content-wrapper .scroll-table-x > table th {
+            vertical-align: middle !important;
           }
         </style>
     </head>

@@ -810,7 +810,8 @@ systemroot.prototype = {
             // vao day. Long-term: update TENANH trong DB tu "fa fa-x" sang "fa-light fa-x"
             // de tu dong trigger SPA khong can whitelist.
             var arrSpaWhitelist = [
-                '/nhapchuyencan/html/nhaptheolop.html'
+                '/nhapchuyencan/html/nhaptheolop.html',
+                '/lichgiang/html/lichgiangnhieuphonghoc.html'
             ];
             var isWhitelisted = arrSpaWhitelist.some(function (p) {
                 return strRootPath && strRootPath.toLowerCase().indexOf(p.toLowerCase()) >= 0;

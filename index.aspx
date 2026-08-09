@@ -536,21 +536,93 @@
         margin: 0 6px;
       }
 
-      /* Custom select (Select2 wrapper) height + border khớp với input-label-left */
-      #main-content-wrapper .custom-select .select2-container .select2-selection--single,
-      #main-content-wrapper .input-label-left .select2-container .select2-selection--single {
-        height: 38px !important;
+      /* ═══ Select2 SPA — center dọc chuẩn + look xịn (border-radius + focus ring) ═══ */
+      #main-content-wrapper .select2-container .select2-selection--single {
+        height: 40px !important;
+        min-height: 40px !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        background: #ffffff !important;
+        display: flex !important;
+        align-items: center !important;
+        padding: 0 !important;
+        transition: border-color .15s ease, box-shadow .15s ease !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+      }
+      /* Focus state: viền dask-blue + shadow ring xanh nhạt */
+      #main-content-wrapper .select2-container--focus .select2-selection--single,
+      #main-content-wrapper .select2-container--open .select2-selection--single {
+        border-color: #223771 !important;
+        box-shadow: 0 0 0 3px rgba(34, 55, 113, 0.12) !important;
+      }
+      /* Hover state: viền đậm hơn 1 chút */
+      #main-content-wrapper .select2-container .select2-selection--single:hover {
+        border-color: #94a3b8 !important;
+      }
+      /* Text render — center dọc bằng flex, KHÔNG dùng line-height (gây lệch) */
+      #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 1 !important;
+        padding: 0 32px 0 14px !important;
+        color: #0f172a !important;
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        height: 100% !important;
+        margin: 0 !important;
+      }
+      #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #94a3b8 !important;
+        font-weight: 400 !important;
+        font-style: italic;
+      }
+      /* Mũi tên: căn giữa dọc, cách viền phải 8px */
+      #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 100% !important;
+        top: 0 !important;
+        right: 8px !important;
+        width: 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+      #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
+        border-color: #64748b transparent transparent transparent !important;
+        border-width: 6px 5px 0 5px !important;
+        position: static !important;
+        margin: 0 !important;
+      }
+      #main-content-wrapper .select2-container--open .select2-selection__arrow b {
+        border-color: transparent transparent #223771 transparent !important;
+        border-width: 0 5px 6px 5px !important;
+      }
+      /* Dropdown khi mở: bo góc + shadow + border đồng bộ */
+      .select2-container--default .select2-dropdown {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+        overflow: hidden !important;
+        margin-top: 4px !important;
+      }
+      .select2-container--default .select2-search--dropdown .select2-search__field {
         border: 1px solid #e2e8f0 !important;
         border-radius: 6px !important;
+        padding: 6px 10px !important;
+        font-size: 13px !important;
       }
-      #main-content-wrapper .custom-select .select2-container--default .select2-selection--single .select2-selection__rendered,
-      #main-content-wrapper .input-label-left .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 36px !important;
-        padding-left: 10px !important;
+      .select2-container--default .select2-results__option {
+        padding: 8px 14px !important;
+        font-size: 14px !important;
       }
-      #main-content-wrapper .custom-select .select2-container--default .select2-selection--single .select2-selection__arrow,
-      #main-content-wrapper .input-label-left .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 36px !important;
+      .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background: #223771 !important;
+        color: #ffffff !important;
+      }
+      .select2-container--default .select2-results__option[aria-selected="true"] {
+        background: #f0f3fd !important;
+        color: #223771 !important;
+        font-weight: 600 !important;
       }
 
       /* Floating label trong .box-search-hocphan (css-new/main.css:4010): mặc định
@@ -580,6 +652,299 @@
         display: inline-flex !important;
         align-items: center !important;
         margin-top: 0 !important;
+      }
+
+      /* ─── [SPA-ALT] Pattern module SPA-native KHÔNG dùng .card.today-card
+         (vd phieu.html khảo sát) — dùng .box-shadow.zone-bus / .register-wish /
+         .group-title. Add card-like border + section title + button để đồng bộ. ─── */
+
+      /* Wrapper container thay .card.today-card — LOẠI TRỪ .modal (nếu áp vào modal
+         wrapper sẽ vỡ layout modal vì modal cần transparent frame ngoài) */
+      #main-content-wrapper .box-shadow.zone-bus:not(.modal),
+      #main-content-wrapper .register-wish:not(.modal),
+      #main-content-wrapper .zone-bus.box-shadow:not(.modal) {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
+        padding: 16px 18px !important;
+        margin-bottom: 16px !important;
+      }
+
+      /* Modal riêng — dùng cho .modal.register-wish, .modal.modaldangky, v.v...
+         Ép proper Bootstrap 5 modal style + backdrop */
+      #main-content-wrapper .modal,
+      body > .modal {
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      #main-content-wrapper .modal .modal-content,
+      body > .modal .modal-content {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 10px !important;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.2) !important;
+      }
+      #main-content-wrapper .modal .modal-header,
+      body > .modal .modal-header {
+        background: #223771 !important;
+        color: #ffffff !important;
+        border-bottom: 0 !important;
+        border-top-left-radius: 10px !important;
+        border-top-right-radius: 10px !important;
+        padding: 12px 18px !important;
+      }
+      #main-content-wrapper .modal .modal-header .modal-title,
+      #main-content-wrapper .modal .modal-header p,
+      #main-content-wrapper .modal .modal-header i,
+      body > .modal .modal-header .modal-title,
+      body > .modal .modal-header p,
+      body > .modal .modal-header i {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+      }
+      #main-content-wrapper .modal .modal-header .btn-close,
+      body > .modal .modal-header .btn-close {
+        filter: invert(1) brightness(2) !important;
+        opacity: 0.8 !important;
+      }
+      #main-content-wrapper .modal .modal-header .btn-close:hover,
+      body > .modal .modal-header .btn-close:hover {
+        opacity: 1 !important;
+      }
+      #main-content-wrapper .modal .modal-body,
+      body > .modal .modal-body {
+        padding: 16px 18px !important;
+        background: #ffffff !important;
+      }
+      #main-content-wrapper .modal .modal-footer,
+      body > .modal .modal-footer {
+        padding: 12px 18px !important;
+        border-top: 1px solid #e2e8f0 !important;
+      }
+
+      /* Form top (filter row đầu module) — spacing */
+      #main-content-wrapper .form-top {
+        margin-bottom: 8px;
+      }
+      #main-content-wrapper .form-top .form-item .form-control,
+      #main-content-wrapper .form-top .input-group input.form-control {
+        height: 38px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+        font-size: 14px !important;
+      }
+      #main-content-wrapper .form-top .form-control:focus {
+        border-color: #cbd5e1 !important;
+        box-shadow: none !important;
+      }
+
+      /* Section title dùng .group-title (thay .color-blue) */
+      #main-content-wrapper .group-title,
+      #main-content-wrapper .group-title.pl0 {
+        margin-bottom: 8px;
+      }
+      #main-content-wrapper .group-title p,
+      #main-content-wrapper .group-title.pl0 p {
+        color: #223771 !important;
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin: 0 !important;
+      }
+      #main-content-wrapper .group-title p i,
+      #main-content-wrapper .group-title.pl0 p i {
+        color: #223771 !important;
+        font-size: 15px;
+      }
+
+      /* Button search combo — .btn-search + .btn-default → dask-blue solid */
+      #main-content-wrapper .btn.btn-search,
+      #main-content-wrapper .btn.btn-search.btn-default,
+      #main-content-wrapper div.btn.btn-search,
+      #main-content-wrapper div.btn.btn-search.btn-default {
+        background: #223771 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 1px solid #223771 !important;
+        border-radius: 6px !important;
+        height: 38px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        padding: 0 14px !important;
+        cursor: pointer !important;
+        font-weight: 500 !important;
+      }
+      #main-content-wrapper .btn.btn-search:hover,
+      #main-content-wrapper .btn.btn-search.btn-default:hover {
+        background: #1c2e5f !important;
+        border-color: #1c2e5f !important;
+      }
+      #main-content-wrapper .btn.btn-search i {
+        color: #ffffff !important;
+      }
+
+      /* Table plain trong SPA-alt module (không có .table-responsive wrapper) */
+      #main-content-wrapper .table.tblPhieu,
+      #main-content-wrapper .table.transcrip-table {
+        margin-top: 4px !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px !important;
+      }
+
+      /* Bump toàn bộ table header trong SPA scope — cover cả các bảng không có
+         class .bg-th (vd tblPhieu). Nền tím nhạt + chữ đậm + border dày dưới. */
+      #main-content-wrapper .table > thead > tr > th,
+      #main-content-wrapper table.table > thead > tr > th {
+        background: #f0f3fd !important;
+        color: #0f172a !important;
+        font-weight: 700 !important;
+        font-size: 13px !important;
+        padding: 10px 12px !important;
+        border-bottom: 2px solid #e2e8f0 !important;
+        vertical-align: middle !important;
+      }
+      /* Body row có border + hover nhẹ để tách khối */
+      #main-content-wrapper .table > tbody > tr > td {
+        padding: 10px 12px !important;
+        color: #0f172a !important;
+        border-color: #f1f5f9 !important;
+        vertical-align: middle !important;
+      }
+      #main-content-wrapper .table-hover > tbody > tr:hover,
+      #main-content-wrapper .table-hover > tbody > tr:hover > td {
+        background: #f8fafc !important;
+        color: #0f172a !important;
+      }
+      /* Bảng có class .table-noborder — bo góc + shadow nhẹ để thấy khối */
+      #main-content-wrapper .table.table-noborder {
+        border-collapse: separate !important;
+        border-spacing: 0 !important;
+        overflow: hidden !important;
+      }
+
+      /* ─── [SPA-ADMINLTE-COMPAT] Cover module cu dung .box, .box-body, .box-header
+         nhung load trong SPA shell (vd phancongphamvi.html cua Dang ky hoc).
+         Add card-like style tuong tu compat trong indexi.aspx. ─── */
+      #main-content-wrapper .box {
+        position: relative;
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        border-top: 1px solid #e2e8f0 !important;
+        border-radius: 8px !important;
+        margin-bottom: 14px !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+      }
+      #main-content-wrapper .box.box-solid { border-top: 1px solid #e2e8f0 !important; }
+      #main-content-wrapper .box.box-shadow { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important; }
+      #main-content-wrapper .box-header {
+        padding: 12px 16px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+      }
+      #main-content-wrapper .box-body {
+        padding: 14px !important;
+        overflow: visible !important;
+        max-height: none !important;
+      }
+      #main-content-wrapper .box-footer {
+        padding: 12px 16px !important;
+        border-top: 1px solid #e2e8f0 !important;
+      }
+      #main-content-wrapper .box-title {
+        font-weight: 700 !important;
+        font-size: 15px !important;
+        color: #0f172a !important;
+        margin: 0 !important;
+      }
+      #main-content-wrapper .box-title.color-blue { color: #223771 !important; }
+      /* Padding/margin helpers module AdminLTE */
+      #main-content-wrapper .pd0 { padding: 0 !important; }
+      #main-content-wrapper .pd10 { padding: 10px !important; }
+      #main-content-wrapper .pd15 { padding: 15px !important; }
+      #main-content-wrapper .pd20 { padding: 20px !important; }
+      #main-content-wrapper .pt10 { padding-top: 10px !important; }
+      #main-content-wrapper .pt15 { padding-top: 15px !important; }
+      #main-content-wrapper .pt20 { padding-top: 20px !important; }
+      #main-content-wrapper .pb10 { padding-bottom: 10px !important; }
+      #main-content-wrapper .pb15 { padding-bottom: 15px !important; }
+      #main-content-wrapper .pl0 { padding-left: 0 !important; }
+      #main-content-wrapper .pl15 { padding-left: 15px !important; }
+      #main-content-wrapper .pl20 { padding-left: 20px !important; }
+      #main-content-wrapper .pr10 { padding-right: 10px !important; }
+      #main-content-wrapper .pr20 { padding-right: 20px !important; }
+      #main-content-wrapper .mt-10 { margin-top: 10px !important; }
+      #main-content-wrapper .mt-20 { margin-top: 20px !important; }
+      #main-content-wrapper .ml-10 { margin-left: 10px !important; }
+      #main-content-wrapper .ml-20 { margin-left: 20px !important; }
+      #main-content-wrapper .mb-10 { margin-bottom: 10px !important; }
+      #main-content-wrapper .mb-20 { margin-bottom: 20px !important; }
+      #main-content-wrapper .item-search { padding: 6px 8px; }
+      #main-content-wrapper .table-noborder { border: 0 !important; }
+      #main-content-wrapper .pull-right { float: right !important; }
+      #main-content-wrapper .pull-left { float: left !important; }
+      /* Multi-table float layout (vd phancongphamvi.html: 6 table float:left width:300px)
+         → khi row counts khác nhau, table thấp/cao lệch. Align top + gap giữa các table. */
+      #main-content-wrapper .scroll-table-x {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 12px !important;
+        align-items: flex-start !important;
+        overflow-x: auto;
+      }
+      #main-content-wrapper .scroll-table-x > table {
+        float: none !important;
+        margin: 0 !important;
+        vertical-align: top !important;
+      }
+      #main-content-wrapper .scroll-table-x > table td,
+      #main-content-wrapper .scroll-table-x > table th {
+        vertical-align: middle !important;
+      }
+
+      /* Button trong table cell (vd "Chi tiết", "Xem" của module Khảo sát render
+         qua kehoach.js:1009 dùng .btn.btn-default) — .btn-default trong SPA shell
+         không có bg/color → hover row làm chữ trắng invisible. Ép dask-blue solid +
+         chữ trắng, kích thước nhỏ gọn khớp cell. */
+      #main-content-wrapper .table td .btn.btn-default,
+      #main-content-wrapper .table td a.btn.btn-default,
+      #main-content-wrapper .table td span > a.btn.btn-default,
+      #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default,
+      #main-content-wrapper .table-hover > tbody > tr:hover > td a.btn.btn-default {
+        background: #223771 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: 1px solid #223771 !important;
+        border-radius: 4px !important;
+        padding: 4px 10px !important;
+        font-size: 12px !important;
+        font-weight: 500 !important;
+        display: inline-block !important;
+        min-width: auto !important;
+        cursor: pointer !important;
+        text-decoration: none !important;
+        line-height: 18px !important;
+      }
+      #main-content-wrapper .table td .btn.btn-default:hover,
+      #main-content-wrapper .table td a.btn.btn-default:hover {
+        background: #1c2e5f !important;
+        border-color: #1c2e5f !important;
+        color: #ffffff !important;
+      }
+      /* Đảm bảo text/icon bên trong button trong cell luôn trắng — không bị inherit
+         từ row hover color rule */
+      #main-content-wrapper .table td .btn.btn-default *,
+      #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default * {
+        color: #ffffff !important;
       }
     </style>
   </head>
