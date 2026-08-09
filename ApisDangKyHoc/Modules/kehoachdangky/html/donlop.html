@@ -52,13 +52,13 @@
                                     multiple="multiple"></select>
                             </div>
                             <div class="col-sm-3 item-search checkbox-inline user-check-print"
-                                style="padding-left: 20px">
-                                <input style="float: left;" type="checkbox" id="dChuaPhanCong" />
+                                style="padding-left: 35px; display: flex; align-items: center; gap: 6px;">
+                                <input style="margin: 0; flex-shrink: 0;" type="checkbox" id="dChuaPhanCong" />
                                 <span class="line-38">Chỉ hiện các lớp chưa phân công</span>
                             </div>
                             <div class="col-sm-3 item-search checkbox-inline user-check-print"
-                                style="padding-left: 20px;">
-                                <input style="float: left;margin-top: 13px !important;" type="checkbox" id="dLocCTDT" />
+                                style="padding-left: 35px; display: flex; align-items: center; gap: 6px;">
+                                <input style="margin: 0; flex-shrink: 0;" type="checkbox" id="dLocCTDT" />
                                 <span class="line-38">Lọc theo học phần mở theo chương trình</span>
                             </div>
                             <div class="clear"></div>
@@ -249,13 +249,13 @@
 <!-- ---------- -->
 <!-- Danh sách sinh viên -->
 <div class="modal fade myModalDSSV" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable" style="width: 95%">
+    <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
                 <h4 class="modal-title"><span class="myModalLabel1"><i class="fa-solid fa-users"></i>Danh sách sinh
                         viên</span> </h4>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
+                        class="sr-only">Close</span></button>
             </div>
             <div class="modal-body" id="modal_body">
                 <table id="tblQuanSoLop" class="table table-hover table-bordered table-noborder tblQuanSoLop mb-0">
@@ -289,12 +289,10 @@
 <!-- Danh sách phạm vi -->
 <div class="modal fade myModalPhamVi" id="myModalPhamVi" role="dialog" aria-labelledby="myModalLabel"
     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-1024">
+    <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h4 class="modal-title"><span class="myModalLabel1"><i class="fa-light fa-users-viewfinder"></i>Danh
+            <div class="modal-header" style="justify-content: center !important;">
+                <h4 class="modal-title" style="margin: 0 auto !important;"><span class="myModalLabel1"><i class="fa-light fa-users-viewfinder"></i>Danh
                         sách phạm vi</span> </h4>
             </div>
             <div class="modal-body" id="modal_body">

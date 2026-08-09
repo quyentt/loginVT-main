@@ -213,6 +213,71 @@
           }
 
           /* Pagination (simplePagination + Bootstrap .pagination) — tone dask-blue */
+          /* Fix align vertical cho khu "Hien thi [10] du lieu": systemroot.js hardcode
+             margin-top:10px + float:left cho .aps-hienthi/.aps-dulieu -> lech baseline.
+             Ep flex align-items center, reset margin-top. */
+          html body.skin-blue .aps-hienthi,
+          html body.skin-blue .aps-hienthi-input,
+          html body.skin-blue .aps-dulieu {
+            margin-top: 0 !important;
+            float: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            line-height: 32px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+          }
+          html body.skin-blue .aps-hienthi label,
+          html body.skin-blue .aps-dulieu label {
+            margin: 0 !important;
+            line-height: 32px !important;
+            display: inline-block !important;
+            white-space: nowrap !important;
+          }
+          /* Wrap "Hien thi ... du lieu" + pagination thanh 1 hang can giua. Container
+             la .zone-pag-header{tableId} hoac div id=change{tableId}. */
+          html body.skin-blue [id^="change"][class*="pull-left"],
+          html body.skin-blue [class*="zone-pag-"] {
+            display: flex !important;
+            align-items: center !important;
+            gap: 4px !important;
+          }
+          /* Badge trong box-title (339): reset mt-10 + can giua vertical voi text title */
+          html body.skin-blue .box-title .badge,
+          html body.skin-blue .box-title .badge.bg-light-blue {
+            vertical-align: middle !important;
+            margin-top: 0 !important;
+            margin-left: 6px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            line-height: 1 !important;
+            padding: 4px 10px !important;
+          }
+          /* Chan wrap: simplePagination render <ul><li> mac dinh display:inline-block ->
+             wrap xuong dong khi container hep (bug lech "Hien thi 10 du lieu" | 1 2 3...33 wrap 34).
+             Ep ul flex nowrap + white-space nowrap; neu hep qua thi overflow-x auto. */
+          html body.skin-blue .simple-pagination,
+          html body.skin-blue .simple-pagination ul,
+          html body.skin-blue .light-theme,
+          html body.skin-blue .light-theme ul,
+          html body.skin-blue .compact-theme,
+          html body.skin-blue .compact-theme ul {
+            display: flex !important;
+            flex-wrap: nowrap !important;
+            white-space: nowrap !important;
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            overflow-x: auto !important;
+            max-width: 100% !important;
+          }
+          html body.skin-blue .simple-pagination li,
+          html body.skin-blue .light-theme li,
+          html body.skin-blue .compact-theme li {
+            display: inline-flex !important;
+            flex-shrink: 0 !important;
+            white-space: nowrap !important;
+          }
           html body.skin-blue .simple-pagination a,
           html body.skin-blue .simple-pagination span,
           html body.skin-blue .light-theme a,
@@ -257,20 +322,20 @@
             color: #64748b !important;
           }
 
-          /* Disabled prev/next/first/last: simplePagination render span rong (khong co
-             icon ben trong) khi o trang 1 hoac trang cuoi -> tao ra hop trang. An di. */
-          html body.skin-blue .simple-pagination span.prev,
-          html body.skin-blue .simple-pagination span.next,
-          html body.skin-blue .simple-pagination span.first,
-          html body.skin-blue .simple-pagination span.last,
-          html body.skin-blue .light-theme span.prev,
-          html body.skin-blue .light-theme span.next,
-          html body.skin-blue .light-theme span.first,
-          html body.skin-blue .light-theme span.last,
-          html body.skin-blue .compact-theme span.prev,
-          html body.skin-blue .compact-theme span.next,
-          html body.skin-blue .compact-theme span.first,
-          html body.skin-blue .compact-theme span.last {
+          /* An het prev/next/first/last (ca <a> lan <span>) — chi giu so trang, gon hon,
+             khi chi 1 trang cung khong show 2 mui ten ⏴ ⏵ vo nghia duoi so 1. */
+          html body.skin-blue .simple-pagination .prev,
+          html body.skin-blue .simple-pagination .next,
+          html body.skin-blue .simple-pagination .first,
+          html body.skin-blue .simple-pagination .last,
+          html body.skin-blue .light-theme .prev,
+          html body.skin-blue .light-theme .next,
+          html body.skin-blue .light-theme .first,
+          html body.skin-blue .light-theme .last,
+          html body.skin-blue .compact-theme .prev,
+          html body.skin-blue .compact-theme .next,
+          html body.skin-blue .compact-theme .first,
+          html body.skin-blue .compact-theme .last {
             display: none !important;
           }
 
@@ -394,23 +459,54 @@
             border-color: transparent transparent #223771 transparent !important;
             border-width: 0 5px 6px 5px !important;
           }
-          /* Dropdown khi mo: bo goc + shadow */
-          body .select2-container--default .select2-dropdown {
-            border: 1px solid #cbd5e1 !important;
-            border-radius: 8px !important;
-            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+          /* Dropdown khi mo — max spec + shadow to de dropdown "nhay ra" khoi container */
+          html body .select2-container,
+          html body > .select2-container,
+          html body .select2-container--default .select2-dropdown {
+            z-index: 99999 !important;
+          }
+          html body .select2-container--default .select2-dropdown {
+            border: 2px solid #223771 !important;
+            border-radius: 10px !important;
+            box-shadow:
+              0 0 0 1px rgba(34, 55, 113, 0.05),
+              0 4px 12px rgba(15, 23, 42, 0.12),
+              0 20px 40px rgba(15, 23, 42, 0.25) !important;
+            margin-top: 8px !important;
+            background: #ffffff !important;
+            padding: 6px 0 !important;
             overflow: hidden !important;
-            margin-top: 4px !important;
+          }
+          html body .select2-container--default .select2-dropdown--above {
+            margin-top: 0 !important;
+            margin-bottom: 8px !important;
+            box-shadow:
+              0 0 0 1px rgba(34, 55, 113, 0.05),
+              0 -4px 12px rgba(15, 23, 42, 0.12),
+              0 -20px 40px rgba(15, 23, 42, 0.25) !important;
+          }
+          body .select2-container--default .select2-search--dropdown {
+            padding: 6px 8px !important;
           }
           body .select2-container--default .select2-search--dropdown .select2-search__field {
-            border: 1px solid #e2e8f0 !important;
+            border: 1px solid #cbd5e1 !important;
             border-radius: 6px !important;
             padding: 6px 10px !important;
             font-size: 13px !important;
+            outline: none !important;
+          }
+          body .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+            border-color: #223771 !important;
+            box-shadow: 0 0 0 2px rgba(34, 55, 113, 0.1) !important;
+          }
+          body .select2-container--default .select2-results__options {
+            max-height: 250px !important;
           }
           body .select2-container--default .select2-results__option {
             padding: 8px 14px !important;
             font-size: 14px !important;
+            color: #0f172a !important;
+            transition: background .1s ease;
           }
           body .select2-container--default .select2-results__option--highlighted[aria-selected] {
             background: #223771 !important;
@@ -594,6 +690,177 @@
           html body.skin-blue #main-content-wrapper .modal-header .btn-box-tool i,
           html body.skin-blue #main-content-wrapper .modal-header .btnClose i {
             color: #ffffff !important;
+          }
+
+          /* ═══ Modal reskin — override styles.css:3810 dat modal-header bright blue ═══
+             Modal duoc BS3 append vao body (khong nam trong #main-content-wrapper),
+             nen dung selector body.skin-blue > .modal + .modal (fallback) voi max spec. */
+          /* Backdrop: dam hon de content sau modal khong lo ra (fix bug thay dropdown filter
+             xuyen qua modal khi modal ngan). BS default rgba(0,0,0,.5) van thay xuyen qua.
+             z-index CAO (10050+) de an select2-container va pagination cua page ben duoi. */
+          html body.skin-blue .modal.show,
+          html body.skin-blue .modal.in {
+            z-index: 10055 !important;
+          }
+          html body.skin-blue .modal-backdrop.show,
+          html body.skin-blue .modal-backdrop.in {
+            z-index: 10050 !important;
+            opacity: 0.85 !important;
+            background-color: #0f172a !important;
+          }
+          /* ═══ modal-fullscreen: ep 100vw x 100vh, override styles.css .modal-1024/1360/etc
+             va default BS .modal-dialog max-width. Bo border-radius de sat edge.
+             Background TRANG DAC de che tuyet doi background page (select2/pagination). ═══ */
+          html body.skin-blue .modal .modal-dialog.modal-fullscreen,
+          html body.skin-blue > .modal .modal-dialog.modal-fullscreen {
+            max-width: 100vw !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            min-height: 100vh !important;
+            margin: 0 !important;
+            padding: 0 !important;
+          }
+          html body.skin-blue .modal .modal-dialog.modal-fullscreen .modal-content,
+          html body.skin-blue > .modal .modal-dialog.modal-fullscreen .modal-content {
+            height: 100vh !important;
+            max-height: 100vh !important;
+            width: 100vw !important;
+            border-radius: 0 !important;
+            border: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            background-color: #ffffff !important;
+          }
+          html body.skin-blue .modal .modal-dialog.modal-fullscreen .modal-header,
+          html body.skin-blue > .modal .modal-dialog.modal-fullscreen .modal-header {
+            border-radius: 0 !important;
+            flex-shrink: 0 !important;
+          }
+          html body.skin-blue .modal .modal-dialog.modal-fullscreen .modal-body,
+          html body.skin-blue > .modal .modal-dialog.modal-fullscreen .modal-body {
+            flex: 1 1 auto !important;
+            overflow-y: auto !important;
+            background-color: #ffffff !important;
+            opacity: 1 !important;
+          }
+          html body.skin-blue .modal .modal-dialog.modal-fullscreen .modal-footer,
+          html body.skin-blue > .modal .modal-dialog.modal-fullscreen .modal-footer {
+            flex-shrink: 0 !important;
+            border-radius: 0 !important;
+            background-color: #f8fafc !important;
+          }
+          /* Khi modal fullscreen mo, an het select2-container va pagination cua page ben
+             duoi (chung co the co z-index cao xuyen qua modal). */
+          html body.skin-blue.modal-open .select2-container,
+          html body.skin-blue.modal-open .pagination,
+          html body.skin-blue.modal-open .dataTables_paginate,
+          html body.skin-blue.modal-open .dataTables_length {
+            z-index: auto !important;
+          }
+          html body.skin-blue.modal-open .modal.show .select2-container,
+          html body.skin-blue.modal-open .modal.show .pagination,
+          html body.skin-blue.modal-open .modal.show .dataTables_paginate,
+          html body.skin-blue.modal-open .modal.show .dataTables_length {
+            z-index: auto !important;
+          }
+          html body.skin-blue .modal .modal-content,
+          html body.skin-blue > .modal .modal-content {
+            border: 1px solid #e2e8f0 !important;
+            border-radius: 12px !important;
+            box-shadow: 0 20px 60px rgba(15, 23, 42, 0.3) !important;
+            overflow: hidden !important;
+            background: #ffffff !important;
+          }
+          html body.skin-blue .modal .modal-header,
+          html body.skin-blue > .modal .modal-header {
+            background: #223771 !important;
+            color: #ffffff !important;
+            border-bottom: 0 !important;
+            padding: 12px 20px !important;
+            min-height: 52px !important;
+            border-top-left-radius: 12px !important;
+            border-top-right-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+          }
+          html body.skin-blue .modal .modal-header .modal-title,
+          html body.skin-blue .modal .modal-header .modal-title *,
+          html body.skin-blue .modal .modal-header h4,
+          html body.skin-blue .modal .modal-header h5,
+          html body.skin-blue .modal .modal-header i {
+            color: #ffffff !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+          }
+          html body.skin-blue .modal .modal-header .close,
+          html body.skin-blue .modal .modal-header .btn-close {
+            color: #ffffff !important;
+            opacity: 0.85 !important;
+            background: transparent !important;
+            border: 0 !important;
+            font-size: 24px !important;
+            font-weight: 300 !important;
+            text-shadow: none !important;
+            padding: 0 8px !important;
+          }
+          html body.skin-blue .modal .modal-header .close:hover,
+          html body.skin-blue .modal .modal-header .btn-close:hover {
+            opacity: 1 !important;
+            color: #ffffff !important;
+          }
+          html body.skin-blue .modal .modal-body {
+            padding: 16px 20px !important;
+            background: #ffffff !important;
+          }
+          html body.skin-blue .modal .modal-footer {
+            padding: 12px 20px !important;
+            border-top: 1px solid #e2e8f0 !important;
+            background: #f8fafc !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+          }
+          /* BS5 bo float .pull-left/.pull-right — modal-footer flex mac dinh dun het sang phai.
+             Ep .pull-left (Xoa/destructive) tach trai bang margin-right: auto (chuan convention:
+             destructive trai, Dong/Luu phai) */
+          html body.skin-blue .modal .modal-footer .pull-left {
+            margin-right: auto !important;
+            float: none !important;
+          }
+          html body.skin-blue .modal .modal-footer .pull-right {
+            float: none !important;
+          }
+          /* Buttons trong modal-footer: chuan hoa
+             .btn-soft-danger (Xoa) → do subtle, .btn-default (Dong) → xam outline */
+          html body.skin-blue .modal .modal-footer .btn.btn-soft-danger {
+            background: #fee2e2 !important;
+            color: #dc2626 !important;
+            border: 1px solid #fecaca !important;
+          }
+          html body.skin-blue .modal .modal-footer .btn.btn-soft-danger:hover {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            border-color: #dc2626 !important;
+          }
+          html body.skin-blue .modal .modal-footer .btn.btn-default {
+            background: #ffffff !important;
+            color: #475569 !important;
+            border: 1px solid #cbd5e1 !important;
+          }
+          html body.skin-blue .modal .modal-footer .btn.btn-default:hover {
+            background: #f0f3fd !important;
+            border-color: #223771 !important;
+            color: #223771 !important;
+          }
+          html body.skin-blue .modal .modal-footer .btn.btn-primary {
+            background: #223771 !important;
+            color: #ffffff !important;
+            border: 1px solid #223771 !important;
+          }
+          html body.skin-blue .modal .modal-footer .btn.btn-primary:hover {
+            background: #1c2e5f !important;
+            border-color: #1c2e5f !important;
           }
 
           /* Bien nut .btnClose thanh button "x Dong" solid do — luon do, icon x luon hien */
@@ -1003,6 +1270,16 @@
         <script type="text/javascript" src="App_Themes/Plugins/fastclick/lib/fastclick.min.js"></script><!-- FastClick -->
         <script type="text/javascript" src="App_Themes/Cms/adminlte/js/adminlte.min.js"></script><!--Template AdminLTE App -->
         <script type="text/javascript" src="App_Themes/Plugins/select2/js/select2.min.js"></script><!--select_option-->
+        <script type="text/javascript">
+            /* [SELECT2-DROPDOWN-PARENT] Force moi Select2 append dropdown vao body,
+               tranh bi clip boi container cha co overflow. Set default NGAY khi
+               library load, truoc khi module JS goi .select2(). */
+            (function () {
+                if (typeof $ !== 'undefined' && $.fn && $.fn.select2 && $.fn.select2.defaults) {
+                    try { $.fn.select2.defaults.set('dropdownParent', $(document.body)); } catch (e) {}
+                }
+            })();
+        </script>
         <script type="text/javascript" src="App_Themes/Plugins/currency/ax5core.min.js"></script><!--Start script cho currency number-->
         <script type="text/javascript" src="App_Themes/Plugins/currency/ax5formatter.min.js"></script><!--Start script cho currency number-->
         <script type="text/javascript" src="App_Themes/Plugins/chartjs/Chart.min.js"></script><!--ChartJS-->

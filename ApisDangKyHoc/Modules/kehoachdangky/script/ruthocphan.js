@@ -551,7 +551,7 @@ RutHocPhan.prototype = {
             strTable_Id: "tblHocPhan",
             aaData: data,
             //bPaginate: {
-            //    strFuntionName: "main_doc.RutHocPhan.getList_RutHocPhan()",
+            //    strFuntionName: "main_doc.RutHocPhan.getList_HocPhan()",
             //    iDataRow: iPager
             //},
             colPos: {

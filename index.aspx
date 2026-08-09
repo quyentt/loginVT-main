@@ -597,23 +597,55 @@
         border-color: transparent transparent #223771 transparent !important;
         border-width: 0 5px 6px 5px !important;
       }
-      /* Dropdown khi mở: bo góc + shadow + border đồng bộ */
-      .select2-container--default .select2-dropdown {
-        border: 1px solid #cbd5e1 !important;
-        border-radius: 8px !important;
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+      /* Dropdown khi mở — max spec + shadow to + border đậm để dropdown "nhảy ra"
+         hoàn toàn khỏi container. Bố cục shadow 3 lớp cho depth chuẩn. */
+      html body .select2-container,
+      html body > .select2-container,
+      html body .select2-container--default .select2-dropdown {
+        z-index: 99999 !important;
+      }
+      html body .select2-container--default .select2-dropdown {
+        border: 2px solid #223771 !important;
+        border-radius: 10px !important;
+        box-shadow:
+          0 0 0 1px rgba(34, 55, 113, 0.05),
+          0 4px 12px rgba(15, 23, 42, 0.12),
+          0 20px 40px rgba(15, 23, 42, 0.25) !important;
+        margin-top: 8px !important;
+        background: #ffffff !important;
+        padding: 6px 0 !important;
         overflow: hidden !important;
-        margin-top: 4px !important;
+      }
+      html body .select2-container--default .select2-dropdown--above {
+        margin-top: 0 !important;
+        margin-bottom: 8px !important;
+        box-shadow:
+          0 0 0 1px rgba(34, 55, 113, 0.05),
+          0 -4px 12px rgba(15, 23, 42, 0.12),
+          0 -20px 40px rgba(15, 23, 42, 0.25) !important;
+      }
+      .select2-container--default .select2-search--dropdown {
+        padding: 6px 8px !important;
       }
       .select2-container--default .select2-search--dropdown .select2-search__field {
-        border: 1px solid #e2e8f0 !important;
+        border: 1px solid #cbd5e1 !important;
         border-radius: 6px !important;
         padding: 6px 10px !important;
         font-size: 13px !important;
+        outline: none !important;
+      }
+      .select2-container--default .select2-search--dropdown .select2-search__field:focus {
+        border-color: #223771 !important;
+        box-shadow: 0 0 0 2px rgba(34, 55, 113, 0.1) !important;
+      }
+      .select2-container--default .select2-results__options {
+        max-height: 250px !important;
       }
       .select2-container--default .select2-results__option {
         padding: 8px 14px !important;
         font-size: 14px !important;
+        color: #0f172a !important;
+        transition: background .1s ease;
       }
       .select2-container--default .select2-results__option--highlighted[aria-selected] {
         background: #223771 !important;
@@ -1337,6 +1369,16 @@
   <script src="assets/js/jquery-2.2.0.min.js" type="text/javascript"></script>
   <script src="assets/js/jquery-ui.min.js" type="text/javascript"></script>
   <script src="assets/js/select2.min.js"></script>
+  <script type="text/javascript">
+    // [SELECT2-DROPDOWN-PARENT] Force mọi Select2 append dropdown vào <body>,
+    // tránh bị clip bởi container cha có overflow hoặc positioning issues.
+    // Set default NGAY khi library load, trước khi module JS gọi .select2().
+    (function () {
+      if (typeof $ !== 'undefined' && $.fn && $.fn.select2 && $.fn.select2.defaults) {
+        try { $.fn.select2.defaults.set('dropdownParent', $(document.body)); } catch (e) {}
+      }
+    })();
+  </script>
   <script src="assets/js/swiper-bundle.min.js"></script>
   <script src="assets/js/slick.js"></script>
   <script src="assets/js/tab.js"></script>
