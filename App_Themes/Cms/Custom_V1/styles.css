@@ -1665,6 +1665,8 @@ input:active,
 .skin-blue .sidebar-form .btn {
   border-top-left-radius: 0 !important;
   border-bottom-left-radius: 0 !important;
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
 }
 
 .main-header .logo {
@@ -2724,7 +2726,7 @@ input:active,
 
 .sidebar-menu {
   margin: 0px 0px !important;
-  border-top: 1px solid #d1d1d1;
+  /* border-top: 1px solid #00206d !important; */
   padding: 5px 8px;
 }
 
