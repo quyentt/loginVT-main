@@ -4656,6 +4656,7 @@ KeHoachTuyenSinhNew.prototype = {
         });
         $("#btnDocAPI_ShowErrors").click(function (e) { e.preventDefault(); me.docAPI_RenderErrorsPanel(); $('#docAPI_ErrorsPanel').removeClass('d-none'); });
         $("#btnDocAPI_HideErrors").click(function (e) { e.preventDefault(); $('#docAPI_ErrorsPanel').addClass('d-none'); });
+        $("#btnDocAPI_ExportErrors").click(function (e) { e.preventDefault(); me.docAPI_ExportErrorsToExcel(); });
     },
 
     docAPI_LoadPresets: function () {
@@ -5496,6 +5497,83 @@ KeHoachTuyenSinhNew.prototype = {
                 + '</tr>';
         }).join('');
         $tbody.html(html);
+    },
+
+    /*------------------------------------------
+    -- Export danh sách record lỗi ra Excel để gửi BE dev debug.
+    -- 2 sheet:
+    --   Sheet 1 "Loi_TomTat": row/mã HS/họ tên/loại/thông báo lỗi (giống panel)
+    --   Sheet 2 "Loi_FullData": ngoài info lỗi, kèm TOÀN BỘ field raw từ API của record đó
+    --                           → BE dev có đủ data để reproduce.
+    -- Reuse SheetJS đã load. Không có lỗi → alert warning.
+    -------------------------------------------*/
+    docAPI_ExportErrorsToExcel: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
+            return;
+        }
+        var errs = me._docAPI_Errors || [];
+        if (!errs.length) {
+            edu.system.alert("Chưa có lỗi nào để xuất.", "w");
+            return;
+        }
+
+        // --- Sheet 1: Tóm tắt ---
+        var sheet1Aoa = [['STT', 'Hàng', 'Mã HS/MSSV', 'Họ tên', 'Loại lỗi', 'Chi tiết lỗi']];
+        errs.forEach(function (e, i) {
+            sheet1Aoa.push([i + 1, e.row, e.maHS || '', e.hoTen || '', e.type || '', e.msg || '']);
+        });
+        var ws1 = XLSX.utils.aoa_to_sheet(sheet1Aoa);
+        ws1['!cols'] = [{ wch: 6 }, { wch: 8 }, { wch: 18 }, { wch: 26 }, { wch: 10 }, { wch: 80 }];
+        ws1['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+        // --- Sheet 2: Full data (info lỗi + toàn bộ field API của record) ---
+        // Union keys từ tất cả record lỗi → order = order xuất hiện trong record đầu
+        var fullRecs = errs.map(function (e) {
+            // e.row là 1-based → idx = row - 1
+            var idx = (e.row || 1) - 1;
+            return me._docAPI_ApiData && me._docAPI_ApiData[idx] ? me._docAPI_ApiData[idx] : {};
+        });
+        var headerSet = {};
+        var apiHeaders = [];
+        fullRecs.forEach(function (rec) {
+            Object.keys(rec || {}).forEach(function (k) {
+                if (!headerSet[k]) { headerSet[k] = 1; apiHeaders.push(k); }
+            });
+        });
+        // Header sheet 2: info lỗi trước + all API fields sau
+        var sheet2Headers = ['Hàng', 'Mã HS/MSSV', 'Họ tên', 'Loại lỗi', 'Chi tiết lỗi'].concat(apiHeaders);
+        var sheet2Aoa = [sheet2Headers];
+        errs.forEach(function (e, i) {
+            var rec = fullRecs[i] || {};
+            var row = [e.row, e.maHS || '', e.hoTen || '', e.type || '', e.msg || ''];
+            apiHeaders.forEach(function (h) {
+                var v = rec[h];
+                if (v == null) row.push('');
+                else if (typeof v === 'object') row.push(JSON.stringify(v));
+                else row.push(v);
+            });
+            sheet2Aoa.push(row);
+        });
+        var ws2 = XLSX.utils.aoa_to_sheet(sheet2Aoa);
+        ws2['!cols'] = [{ wch: 8 }, { wch: 18 }, { wch: 26 }, { wch: 10 }, { wch: 60 }]
+            .concat(apiHeaders.map(function (h) { return { wch: Math.max(12, Math.min(30, h.length + 2)) }; }));
+        ws2['!freeze'] = { xSplit: 5, ySplit: 1 };   // freeze 5 cột đầu + hàng header
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws1, 'Loi_TomTat');
+        XLSX.utils.book_append_sheet(wb, ws2, 'Loi_FullData');
+
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var now = new Date();
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+            + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+        var preset = me._docAPI_CurrentPresetId || 'API';
+        var fname = 'LoiImport_' + preset + '_' + errs.length + 'loi_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fname);
+        edu.system.alert("Đã xuất " + errs.length + " record lỗi ra file " + fname
+            + "\n\nSheet 1: Tóm tắt lỗi\nSheet 2: Full data để BE debug", "s");
     },
 
     docAPI_StartImport: function () {

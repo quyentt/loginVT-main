@@ -48,6 +48,46 @@
     #zoneEdit > .box-body {
         padding-bottom: 80px;
     }
+    /* Fix textarea xâu điều kiện xét bị collapse — .form-control reskin trong
+       index.aspx/indexi.aspx set height: 38px !important -> ep textarea rieng cao 600px */
+    html body #zoneKeThua textarea#txtXauDieuKien.form-control,
+    html body #zoneKeThua textarea#txtXauDieuKien,
+    #main-content-wrapper #zoneKeThua textarea#txtXauDieuKien.form-control,
+    #main-content-wrapper #zoneKeThua textarea#txtXauDieuKien {
+        height: 600px !important;
+        min-height: 500px !important;
+        max-height: 80vh !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+        padding: 12px !important;
+        white-space: pre !important;
+        overflow: auto !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        resize: vertical !important;
+        display: block !important;
+        box-sizing: border-box !important;
+    }
+    /* Parent .row-align + .tab-pane luon co du kich thuoc de textarea no ra */
+    #zoneKeThua .tab-pane#tab_1,
+    #zoneKeThua .tab-pane#tab_1 .row-align,
+    #main-content-wrapper #zoneKeThua .tab-pane#tab_1,
+    #main-content-wrapper #zoneKeThua .tab-pane#tab_1 .row-align {
+        display: block !important;
+        width: 100% !important;
+        min-height: 600px !important;
+        overflow: visible !important;
+    }
+    #zoneKeThua .tab-content,
+    #main-content-wrapper #zoneKeThua .tab-content {
+        min-height: 600px !important;
+        overflow: visible !important;
+    }
 </style>
 <section class="content aps-TotNghiep">
     <div class="row aps-kehoach">
