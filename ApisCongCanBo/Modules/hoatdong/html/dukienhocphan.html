@@ -1,4 +1,45 @@
 ﻿<link rel="stylesheet" href="assets/css-new/styles.css">
+<style>
+    /* Bo floating-label pattern (position:absolute; top:-7px) — chu bi che boi dark bar
+       phia tren va cat cua filter box. Chuyen sang stacked layout: label o TREN, select
+       o DUOI, khoang cach ro rang. Trang du rong, khong can floating. */
+    .aps-dukienhocphan .box-search-hocphan .col-12 {
+        position: relative !important;
+        margin-bottom: 10px !important;
+    }
+    .aps-dukienhocphan .box-search-hocphan .input-label-left {
+        display: block !important;
+        position: relative !important;
+    }
+    .aps-dukienhocphan .box-search-hocphan .input-label-left label,
+    .aps-dukienhocphan .box-search-hocphan .input-label-left label.mt-5 {
+        position: static !important;
+        display: block !important;
+        top: auto !important;
+        left: auto !important;
+        z-index: auto !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 0 4px 0 !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        color: #334155 !important;
+        line-height: 1.4 !important;
+        height: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
+        border-radius: 0 !important;
+    }
+    /* Select/input ben duoi: border ro, khong bi chong len label */
+    .aps-dukienhocphan .box-search-hocphan .custom-select,
+    .aps-dukienhocphan .box-search-hocphan .form-control {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+    }
+</style>
 <div class="one-door mt-0 aps-dukienhocphan">
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
