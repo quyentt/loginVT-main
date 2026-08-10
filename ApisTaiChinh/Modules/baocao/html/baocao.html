@@ -1,4 +1,39 @@
 ﻿<style>
+    /* Modal "Thiet lap bao cao chay tu dong": title CENTER, X button o goc top-right */
+    .myModalLichBaoCao .modal-header {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px 50px !important;
+    }
+    .myModalLichBaoCao .modal-header .modal-title {
+        margin: 0 auto !important;
+        text-align: center !important;
+        flex: 0 0 auto !important;
+    }
+    .myModalLichBaoCao .modal-header .close {
+        position: absolute !important;
+        top: 50% !important;
+        right: 16px !important;
+        transform: translateY(-50%) !important;
+        margin: 0 !important;
+        padding: 4px 10px !important;
+        opacity: 0.9 !important;
+        color: #ffffff !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        background: transparent !important;
+        border: 0 !important;
+        z-index: 5 !important;
+    }
+    .myModalLichBaoCao .modal-header .close:hover {
+        opacity: 1 !important;
+        color: #ffffff !important;
+    }
+    .myModalLichBaoCao .modal-header .close span {
+        color: #ffffff !important;
+    }
     .todo-list {
         overflow: unset;
     }
@@ -931,15 +966,20 @@
 </div>
 
 <!-- Thiết lập báo cáo chạy tự động -->
-<div class="modal fade" id="myModalLichBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width: 95%">
+<div class="modal fade myModalLichBaoCao" id="myModalLichBaoCao" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
-                        class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel1" style="padding-right: 0 !important;">
-                        <i class="fa-sharp-duotone fa-solid fa-file-chart-column"></i></span> Thiết lập báo cáo
-                    chạy tự động</h3>
+                <h4 class="modal-title line-20">
+                    <span class="myModalLabel1">
+                        <i class="fa-sharp-duotone fa-solid fa-file-chart-column"></i>
+                        Thiết lập báo cáo chạy tự động
+                    </span>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                    <span class="sr-only">Close</span>
+                </button>
             </div>
             <div class="modal-body">
                 <div class="row pd0">

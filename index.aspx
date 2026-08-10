@@ -62,10 +62,10 @@
         box-shadow: none !important;
         border-color: transparent !important;
       }
-      /* Neu can focus visible cho keyboard nav: chi apply on :focus-visible voi tone chinh */
+      /* Focus visible: khong dung outline vien cam (xau) — chi doi mau chu */
       .sidebar-menu-sub a:focus-visible {
-        outline: 2px solid #f8843d !important;
-        outline-offset: -2px !important;
+        outline: none !important;
+        color: #f8843d !important;
       }
       /* FCM header notifications: layout only (no new colors) */
       #fcm-noti-button {
@@ -453,7 +453,10 @@
       .sidebar-menu-sub a:hover,
       .sidebar-menu-sub a.active {
         color: #f8843d !important;
-        background: rgba(255, 255, 255, 0.06) !important;
+        background: transparent !important;
+        border-color: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
       }
       .sidebar-menu-sub a::before,
       .sidebar-menu-sub a::after {

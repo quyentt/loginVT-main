@@ -57,7 +57,8 @@ NhapDiem.prototype = {
         /*------------------------------------------
         --Discription: Load Select
         -------------------------------------------*/
-        $(".btnClose").click(function () {
+        $(".btnClose").click(function (e) {
+            e.preventDefault();
             me.toggle_notify();
         });
         $("#btnSearch").click(function () {
