@@ -63,6 +63,80 @@
     .activeLien {
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
+    /* ═══ Fix pagination trong sidebar hep col-sm-3 — LAYOUT 1 dong DUY NHAT ═══ */
+    /* An label "Hien thi / du lieu" (chi giu dropdown + so trang de gon) */
+    #main-content-wrapper .aps-taichinh-thutien-l .aps-hienthi,
+    #main-content-wrapper .aps-taichinh-thutien-l .aps-dulieu {
+        display: none !important;
+    }
+    /* An hoan toan mui ten prev/next/first/last */
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination li:has(.fa-backward),
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination li:has(.fa-forward),
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination .page-link:has(.fa-backward),
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination .page-link:has(.fa-forward) {
+        display: none !important;
+    }
+    /* Container "change{tableId}" chua dropdown + so trang — flex 1 dong, KHONG wrap */
+    #main-content-wrapper .aps-taichinh-thutien-l [id^="change"],
+    #main-content-wrapper .aps-taichinh-thutien-l [class*="zone-pag-"] {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        gap: 4px !important;
+        overflow-x: auto !important;
+    }
+    /* Dropdown page-size — to hon, de doc */
+    #main-content-wrapper .aps-taichinh-thutien-l .aps-hienthi-input {
+        width: 75px !important;
+        flex-shrink: 0 !important;
+    }
+    #main-content-wrapper .aps-taichinh-thutien-l .aps-hienthi-input .select2-selection {
+        min-height: 38px !important;
+        height: 38px !important;
+    }
+    #main-content-wrapper .aps-taichinh-thutien-l .aps-hienthi-input .select2-selection__rendered {
+        line-height: 36px !important;
+        font-size: 14px !important;
+        padding: 0 24px 0 12px !important;
+        font-weight: 600 !important;
+    }
+    #main-content-wrapper .aps-taichinh-thutien-l .aps-hienthi-input .select2-selection__arrow {
+        height: 36px !important;
+    }
+    /* Page number buttons — TO ro rang, de nhin */
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination a,
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination span,
+    #main-content-wrapper .aps-taichinh-thutien-l .light-theme a,
+    #main-content-wrapper .aps-taichinh-thutien-l .light-theme span {
+        min-width: 36px !important;
+        line-height: 36px !important;
+        padding: 0 10px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        margin: 0 3px !important;
+        border-radius: 6px !important;
+    }
+    /* Current page highlight */
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination .current,
+    #main-content-wrapper .aps-taichinh-thutien-l .light-theme .current {
+        background: #223771 !important;
+        color: #fff !important;
+    }
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination,
+    #main-content-wrapper .aps-taichinh-thutien-l .simple-pagination ul {
+        flex-wrap: nowrap !important;
+    }
+    /* Widen sidebar tu col-sm-3 (25%) len ~33% de fit pagination */
+    #main-content-wrapper .aps-taichinh-thutien-l.col-sm-3 {
+        flex: 0 0 33% !important;
+        max-width: 33% !important;
+        width: 33% !important;
+    }
+    #main-content-wrapper .aps-taichinh-thutien-r.col-sm-9 {
+        flex: 0 0 67% !important;
+        max-width: 67% !important;
+        width: 67% !important;
+    }
 </style>
 <!-- Main content -->
 <section class="content aps-nhapHoc">

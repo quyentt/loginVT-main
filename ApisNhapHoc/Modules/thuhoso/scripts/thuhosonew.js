@@ -538,7 +538,7 @@ ThuHoSo.prototype = {
             strTable_Id: "tblNguoiHoc_ThuHoSo",
             aaData: data,
             bPaginate: {
-                strFuntionName: "me.getList_NguoiHoc_TTTS('" + me.iTinhTrangNhapHoc + "', '" + me.strKeHoach_Id + "', '" + strTuKhoa + "',main_doc.ThuHoSo.cbGenTable_NguoiHoc_TTTS)",
+                strFuntionName: "main_doc.ThuHoSo.getList_NguoiHoc_TTTS('" + me.iTinhTrangNhapHoc + "', '" + me.strKeHoach_Id + "', '" + strTuKhoa + "',main_doc.ThuHoSo.cbGenTable_NguoiHoc_TTTS)",
                 iDataRow: iPager,
             },
             arrClassName: ["tr-pointer", "btnPopover_NguoiHoc_ThuHS"],

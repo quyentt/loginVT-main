@@ -48,6 +48,46 @@
     #zoneEdit > .box-body {
         padding-bottom: 80px;
     }
+    /* Fix textarea xâu điều kiện xét bị collapse — .form-control reskin trong
+       index.aspx/indexi.aspx set height: 38px !important -> ep textarea rieng cao 600px */
+    html body #zoneKeThua textarea#txtXauDieuKien.form-control,
+    html body #zoneKeThua textarea#txtXauDieuKien,
+    #main-content-wrapper #zoneKeThua textarea#txtXauDieuKien.form-control,
+    #main-content-wrapper #zoneKeThua textarea#txtXauDieuKien {
+        height: 600px !important;
+        min-height: 500px !important;
+        max-height: 80vh !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        background-color: #f8fafc !important;
+        color: #0f172a !important;
+        font-family: 'Consolas', 'Monaco', 'Courier New', monospace !important;
+        font-size: 13px !important;
+        line-height: 1.6 !important;
+        padding: 12px !important;
+        white-space: pre !important;
+        overflow: auto !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        resize: vertical !important;
+        display: block !important;
+        box-sizing: border-box !important;
+    }
+    /* Parent .row-align + .tab-pane luon co du kich thuoc de textarea no ra */
+    #zoneKeThua .tab-pane#tab_1,
+    #zoneKeThua .tab-pane#tab_1 .row-align,
+    #main-content-wrapper #zoneKeThua .tab-pane#tab_1,
+    #main-content-wrapper #zoneKeThua .tab-pane#tab_1 .row-align {
+        display: block !important;
+        width: 100% !important;
+        min-height: 600px !important;
+        overflow: visible !important;
+    }
+    #zoneKeThua .tab-content,
+    #main-content-wrapper #zoneKeThua .tab-content {
+        min-height: 600px !important;
+        overflow: visible !important;
+    }
 </style>
 <section class="content aps-TotNghiep">
     <div class="row aps-kehoach">
@@ -281,10 +321,29 @@
 
                     <!--4.Danh sách học sinh - sinh viên xét duyệt-->
                     <div class="row aps-form mt-15 btnOpenDelete">
-                        <div class="row">
-                            <p class="group-group-title-name aps-section-title border-0 mb-5">
+                        <!-- Action bar tren table (4000+ row scroll). Title TRAI, TOAN BO
+                             nut (Xoa + cac Them...) canh PHAI cung 1 cum. -->
+                        <div class="row d-flex align-items-center flex-wrap mb-10"
+                             style="width: 100%; margin: 0; gap: 10px; padding: 0 !important;">
+                            <p class="group-group-title-name aps-section-title border-0 mb-0 mr-auto"
+                               style="padding-left: 0 !important;">
                                 <i class="fa fa-users"></i><span>Danh sách học sinh - sinh viên xét duyệt</span>
                             </p>
+                            <div id="ApDungChoKhoa"></div>
+                            <div id="ApDungChoChuongTrinh"></div>
+                            <div id="ApDungChoLop"></div>
+                            <a class="btn btn-danger btnDeleteDTSV_SinhVien" id="" style="background:#dc3545 !important;border-color:#dc3545 !important;color:#fff !important;">
+                                <i class="fa fa-trash" style="color:#fff !important"></i>Xóa
+                            </a>
+                            <a class="btn btn-outline-danger btnSearch_SinhVienKeHoach" id="">
+                                <i class="fa fa-plus color-active"></i> Thêm từ kế hoạch tốt nghiệp khác
+                            </a>
+                            <a class="btn btn-outline-success btnSearch_SinhVienDKH" id="">
+                                <i class="fa fa-plus color-active"></i> Thêm từ đăng ký học
+                            </a>
+                            <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id="">
+                                <i class="fa fa-plus color-active"></i> Thêm thành viên
+                            </a>
                         </div>
                         <div class="row">
                             <div class="aps-table-select">
@@ -306,27 +365,6 @@
                                     </thead>
                                     <tbody></tbody>
                                 </table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="pull-left">
-                                <div id="ApDungChoKhoa"></div>
-                                <div id="ApDungChoChuongTrinh"></div>
-                                <div id="ApDungChoLop"></div>
-                                <a class="btn btn-outline-secondary btnDeleteDTSV_SinhVien" id="">
-                                    <i class="fa fa-trash"></i>Xóa
-                                </a>
-                            </div>
-                            <div class="pull-right">
-                                <a class="btn btn-outline-danger btnSearch_SinhVienKeHoach" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm từ kế hoạch tốt nghiệp khác
-                                </a>
-                                <a class="btn btn-outline-success btnSearch_SinhVienDKH" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm từ đăng ký học
-                                </a>
-                                <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm thành viên
-                                </a>
                             </div>
                         </div>
                     </div>

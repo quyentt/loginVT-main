@@ -536,7 +536,7 @@ RutTien.prototype = {
             strTable_Id: "tblNguoiHoc_RutTien",
             aaData: data,
             bPaginate: {
-                strFuntionName: "me.getList_NguoiHoc_TTTS('" + me.iTinhTrangNhapHoc + "', '" + me.strKeHoach_Id + "', '" + strTuKhoa + "',main_doc.RutTien.cbGenTable_NguoiHoc_TTTS)",
+                strFuntionName: "main_doc.RutTien.getList_NguoiHoc_TTTS('" + me.iTinhTrangNhapHoc + "', '" + me.strKeHoach_Id + "', '" + strTuKhoa + "',main_doc.RutTien.cbGenTable_NguoiHoc_TTTS)",
                 iDataRow: iPager,
             },
             arrClassName: ["tr-pointer", "btnPopover_NguoiHoc_RutTien"],
