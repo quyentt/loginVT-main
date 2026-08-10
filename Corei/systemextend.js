@@ -7149,8 +7149,8 @@ systemextend.prototype = {
         var me = this;
         //--Edit
         var obj_save = {
-            'action': 'TS_NH_ThongTin_MH/DSA4BRIPKSAxCS4iHgokCS4gIikPKSAxCS4i',
-            'func': 'pkg_nhaphoc_thongtin.LayDSNhapHoc_KeHoachNhapHoc',
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIPKSAxCS4iHgokCS4gIikPKSAxCS4i',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSNhapHoc_KeHoachNhapHoc',
             'iM': edu.system.iM,
             'strDAOTAO_KhoaDaoTao_Id': obj.strKhoaDaoTao_Id,
             'strMoHinhNhapHoc_Id': obj.strMHNhapHoc_Id,
@@ -7202,8 +7202,8 @@ systemextend.prototype = {
         var me = this;
         //--lay danh sach ke hoach cho tung NguoiDung_Id duoc phan quyen
         var obj_save = {
-            'action': 'TS_NH_ThongTin_MH/DSA4BRIKJAkuICIpDykgMQkuIgPP',
-            'func': 'pkg_nhaphoc_thongtin.LayDSKeHoachNhapHoc',
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIKJAkuICIpDykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc',
             'iM': edu.system.iM,
             'strNguoiThucHien_Id': obj.strNguoiDung_Id,
         }
@@ -7256,8 +7256,8 @@ systemextend.prototype = {
         var pageSize = edu.system.pageSize_default;
 
         var obj_save = {
-            'action': 'TS_NH_ThongTin_MH/DSA4BRIQDRIXHg8mNC4oCS4iHhUVFRIP',
-            'func': 'pkg_nhaphoc_thongtin.LayDSQLSV_NguoiHoc_TTTS',
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIQDRIXHg8mNC4oCS4iHhUVFRIP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSQLSV_NguoiHoc_TTTS',
             'iM': edu.system.iM,
             'dDaNhapHoc': iDaNhapHoc,
             'strTaiChinh_KeHoach_Id': strTAICHINH_KeHoach_Id,

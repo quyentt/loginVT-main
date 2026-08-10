@@ -73,7 +73,7 @@ ThuHoSo.prototype = {
                 me.strKeHoach_Id = "xxx";
             }
             //1. call nguoihoc_ttts
-            me..getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
         });
         $('.rdThuHoSo').on('change', function () {
             me.reset_NguoiHoc_ThuHS();
@@ -83,7 +83,7 @@ ThuHoSo.prototype = {
             if (!edu.util.checkValue(me.strKeHoach_Id)) {
                 me.strKeHoach_Id = "xxx";
             }
-            me..getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
         });
         $("#txtKeyword_ThuHoSo").keypress(function (e) {
             if (e.which == 13) {
@@ -94,7 +94,7 @@ ThuHoSo.prototype = {
                     me.strKeHoach_Id = "xxx";
                 }
                 //1. call nguoihoc_ttts
-                me..getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+                me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
             }
         });
         $("#btnDel_Keyword_ThuHS").click(function () {
@@ -105,7 +105,7 @@ ThuHoSo.prototype = {
             me.reset_NguoiHoc_ThuHS();
             me.strKeHoach_Id = edu.util.getValById("dropKeHoachNhapHoc_ThuHoSo");
             var strTuKhoa = edu.util.getValById("txtKeyword_ThuHoSo");
-            me..getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
         });
         /*------------------------------------------
         --Discription: [2] Action ThuHoSo
@@ -173,7 +173,7 @@ ThuHoSo.prototype = {
             var obj = {
                 strNguoiDung_Id: edu.system.userId
             };
-           me..getList_KeHoachNhapHoc_NhanSu(obj, resolve, reject, "");
+           me.getList_KeHoachNhapHoc_NhanSu(obj, resolve, reject, "");
 
         }).then(function (data) {
             me.genCombo_KeHoachNhapHoc(data);
@@ -181,7 +181,7 @@ ThuHoSo.prototype = {
             if (!edu.util.checkValue(me.strKeHoach_Id)) {
                 me.strKeHoach_Id = "xxx";
             }
-            me..getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, "", me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, "", me.cbGenTable_NguoiHoc_TTTS);
         });
     },
     showHide_Box: function (cl, id) {
@@ -538,7 +538,7 @@ ThuHoSo.prototype = {
             strTable_Id: "tblNguoiHoc_ThuHoSo",
             aaData: data,
             bPaginate: {
-                strFuntionName: "me..getList_NguoiHoc_TTTS('" + me.iTinhTrangNhapHoc + "', '" + me.strKeHoach_Id + "', '" + strTuKhoa + "',main_doc.ThuHoSo.cbGenTable_NguoiHoc_TTTS)",
+                strFuntionName: "me.getList_NguoiHoc_TTTS('" + me.iTinhTrangNhapHoc + "', '" + me.strKeHoach_Id + "', '" + strTuKhoa + "',main_doc.ThuHoSo.cbGenTable_NguoiHoc_TTTS)",
                 iDataRow: iPager,
             },
             arrClassName: ["tr-pointer", "btnPopover_NguoiHoc_ThuHS"],

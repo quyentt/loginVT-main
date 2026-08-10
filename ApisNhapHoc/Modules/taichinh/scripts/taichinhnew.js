@@ -279,7 +279,7 @@ ThuTien.prototype = {
             var obj = {
                 strNguoiDung_Id: edu.system.userId
             };
-            edu.extend.getList_KeHoachNhapHoc_NhanSu(obj, resolve, reject, "");
+            me.getList_KeHoachNhapHoc_NhanSu(obj, resolve, reject, "");
         }).then(function (data) {
             me.genCombo_KeHoachNhapHoc(data);
             me.strKeHoach_Id = edu.util.getValById("dropKeHoachNhapHoc_ThuTien");
