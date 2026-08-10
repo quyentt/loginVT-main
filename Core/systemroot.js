@@ -798,6 +798,9 @@ systemroot.prototype = {
             if (temp) strChucNang_Id = temp.ID;
             else strChucNang_Id = "";
         }
+        if (strRootPath && strRootPath.indexOf('http') == 0) {
+            window.open(strRootPath, "_blank");
+        }
         me.strChucNang_Id = strChucNang_Id;
         var objChucNang = me.dtChucNang.find(e => e.ID === strChucNang_Id);
         if (objChucNang) {
@@ -6412,7 +6415,7 @@ systemroot.prototype = {
                 node += arrChild.length ? 'data-bs-toggle="collapse" data-bs-target="#collapse' + data[j].ID + '">' : '>';
                 node += '<i class="' + data[j].TENANH + ' item-icon"></i>';
                 node += '<span>' + data[j].TENCHUCNANG + '</span>';
-                node += arrChild.length ? '<i class="fal fa-chevron-right item-arrow-icon"></i><i class="fal fa-chevron-down item-arrow-icon down"></i>': '';
+                node += arrChild.length ? '<i class="fal fa-chevron-right item-arrow-icon"></i><i class="fal fa-chevron-down item-arrow-icon down"></i>' : '';
                 node += '</a>';
                 if (arrChild.length) {
                     node += '<div class="sidebar-menu-sub collapse" id="collapse' + data[j].ID + '" data-bs-parent="#sidebar-menu">';

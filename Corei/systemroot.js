@@ -751,6 +751,9 @@ systemroot.prototype = {
             if (temp) strChucNang_Id = temp.ID;
             else strChucNang_Id = "";
         }
+        if (strRootPath && strRootPath.indexOf('http') == 0) {
+            window.open(strRootPath, "_blank");
+        }
         if (window.innerWidth < 737) {
             $(".sidebar-toggle").trigger('click');
         }
