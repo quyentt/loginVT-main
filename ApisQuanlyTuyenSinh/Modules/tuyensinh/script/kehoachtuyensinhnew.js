@@ -4327,7 +4327,7 @@ KeHoachTuyenSinhNew.prototype = {
         { ma: 'strCorePerson_Ho', ten: 'Họ' },
         { ma: 'strCorePerson_Dem', ten: 'Đệm' },
         { ma: 'strCorePerson_Ten', ten: 'Tên' },
-        { ma: 'strCorePerson_NgaySinh', ten: 'Ngày sinh (dd/mm/yyyy)' },
+        { ma: 'strCorePerson_NgaySinh', ten: 'Ngày sinh (raw từ API, không format)' },
         { ma: 'dCorePerson_NgayS', ten: 'Ngày sinh - ngày (số)' },
         { ma: 'dCorePerson_ThangS', ten: 'Ngày sinh - tháng (số)' },
         { ma: 'dCorePerson_NamS', ten: 'Ngày sinh - năm (số)' },
