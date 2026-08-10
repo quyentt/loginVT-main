@@ -128,7 +128,7 @@
 .zone_input_detai .box-header .box-title i,
 .aps-spkh-tapchiquocgia-l .box-header .box-title i,
 .aps-box-l .box-header .box-title i {
-    margin-top: 3px !important;
+    margin-top: 0 !important;
 }
 
 .zone_input_tcqg .box-header .box-title i,
@@ -5825,7 +5825,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .table-bordered .btn.btnChonDanhSach {
     padding: 0px 10px !important;
     height: 28px !important;
-    line-height: 27px !important;
+    line-height: 28px !important;
     margin-bottom: 4px;
 }
 
@@ -10650,7 +10650,7 @@ table#clone {
     font-size: 18px;
     font-size: 18px !important;
     color: var(--color-blue);
-    font-weight: 700;
+    font-weight: 600;
 }
 
 .aps-tongtheongay .titleSearchContent {
@@ -17148,3 +17148,29 @@ table#clone {
     padding-left:  0 !important;
     padding-right: 0 !important;
 }
+
+/* ---------- */
+#main-content-wrapper .box-search.box.box-solid .item-search:nth-child(1){
+    padding-left: 0 !important;
+}
+.aps-nhaptheolop .box-search.box.box-solid .item-search:nth-child(4){ padding-right: 0 !important;}
+.table.table-noborder thead > tr > th {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top:1px solid #d1d1d1 !important;
+    border-bottom: 1px solid #d1d1d1 !important;
+}
+.table.table-noborder tbody > tr > td {
+    border-left: 0 !important;
+    border-right: 0 !important;
+    border-top: 0 !important;
+    border-bottom: 1px solid #d1d1d1 !important;
+}
+.register-wish .form-top .col-md-6.mb-15{
+    margin-bottom: 10px !important;
+}
+.box-shadow.aps-box-l .box-search,.box-shadow.aps-box-l .box-search.box-solid.box{
+    border-radius: 12px 12px 0 0 !important;
+    padding: 15px 15px 15px 15px !important;
+}
+

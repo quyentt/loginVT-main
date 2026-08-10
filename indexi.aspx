@@ -464,7 +464,7 @@
           html body.skin-blue #main-content-wrapper .box {
             /* border: 1px solid #e2e8f0 !important; */
             /* border-top: 1px solid #e2e8f0 !important; */
-            border-radius: 12px !important;
+            border-radius: 12px;
             /* box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important; */
             margin-bottom: 14px !important;
           }
@@ -473,8 +473,12 @@
             max-height: none !important;
           }
           html body.skin-blue #main-content-wrapper .box-header {
-            padding: 12px 14px !important;
-            border-bottom: 1px solid #e2e8f0 !important;
+            padding: 10px 12px !important;
+            /* border-bottom: 1px solid #e2e8f0 !important; */
+          }
+          html body.skin-blue #main-content-wrapper .aps-box-l .box-header {
+            padding: 0px 12px !important;
+            /* border-bottom: 1px solid #e2e8f0 !important; */
           }
           html body.skin-blue #main-content-wrapper .box-title {
             font-weight: 700 !important;
@@ -488,16 +492,17 @@
 
           /* Form inputs — vien nhat khop tone, focus dask-blue subtle (khong cam gao) */
           html body.skin-blue #main-content-wrapper .form-control {
-            border: 1px solid #e2e8f0 !important;
-            border-radius: 6px !important;
+            border: 1px solid #d1d1d1 !important;
+            border-radius: 7px !important;
             box-shadow: none !important;
-            color: #0f172a !important;
+            color: #888 !important;
             font-size: 14px !important;
             padding: 6px 12px !important;
             height: 38px !important;
+            /* margin-bottom: 10px; */
           }
           html body.skin-blue #main-content-wrapper .form-control:focus {
-            border-color: #cbd5e1 !important;
+            border-color:var(--color-blue) !important;
             box-shadow: none !important;
           }
           html body.skin-blue #main-content-wrapper input.form-control::placeholder,
@@ -509,7 +514,7 @@
           html body.skin-blue #main-content-wrapper .select2-container .select2-selection--single {
             height: 40px !important;
             min-height: 40px !important;
-            border: 1px solid #cbd5e1 !important;
+            border: 1px solid #d1d1d1 !important;
             border-radius: 8px !important;
             background: #ffffff !important;
             display: flex !important;
@@ -520,7 +525,7 @@
           }
           html body.skin-blue #main-content-wrapper .select2-container--focus .select2-selection--single,
           html body.skin-blue #main-content-wrapper .select2-container--open .select2-selection--single {
-            border-color: #223771 !important;
+            border-color: #d1d1d1 !important;
             box-shadow: 0 0 0 3px rgba(34, 55, 113, 0.12) !important;
           }
           html body.skin-blue #main-content-wrapper .select2-container .select2-selection--single:hover {
@@ -528,8 +533,8 @@
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: 1 !important;
-            padding: 0 32px 0 14px !important;
-            color: #0f172a !important;
+            padding: 0 32px 0 12px !important;
+            color: #d1d1d1 !important;
             font-size: 14px !important;
             font-weight: 500 !important;
             width: 100% !important;
@@ -539,7 +544,7 @@
             margin: 0 !important;
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: #94a3b8 !important;
+            color: #d1d1d1 !important;
             font-weight: 400 !important;
             font-style: italic;
           }
@@ -553,7 +558,7 @@
             justify-content: center !important;
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
-            border-color: #64748b transparent transparent transparent !important;
+            border-color: #d1d1d1 transparent transparent transparent !important;
             border-width: 6px 5px 0 5px !important;
             position: static !important;
             margin: 0 !important;
@@ -569,7 +574,7 @@
             z-index: 99999 !important;
           }
           html body .select2-container--default .select2-dropdown {
-            border: 2px solid #223771 !important;
+            border: 2px solid #d1d1d1 !important;
             border-radius: 10px !important;
             box-shadow:
               0 0 0 1px rgba(34, 55, 113, 0.05),
@@ -658,8 +663,8 @@
             background-image: none !important;
             color: #ffffff !important;
             border: 1px solid #223771 !important;
-            border-radius: 6px !important;
-            padding: 6px 14px !important;
+            border-radius: 7px !important;
+            padding: 10px 12px !important;
             font-weight: 600 !important;
             box-shadow: none !important;
           }
@@ -738,7 +743,7 @@
              (custom class trong module cu nhu ApisChuyenCan) va cac dang standard. */
           html body.skin-blue #main-content-wrapper .box-header .btn-box-tool,
           html body.skin-blue #main-content-wrapper .box-header .btnClose,
-          html body.skin-blue #main-content-wrapper .box-header a.btnClose,
+          -header a.btnClose,
           html body.skin-blue #main-content-wrapper .box-header .btn.btnClose,
           html body.skin-blue #main-content-wrapper .box-header .btn.btn-default.btnClose,
           html body.skin-blue #main-content-wrapper .box-header button.close,

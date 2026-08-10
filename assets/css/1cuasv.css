@@ -518,7 +518,7 @@
 }
 
 .single-sheet-img {
-  border: 1px solid #e1e1e1;
+  border: 1px solid #d1d1d1;
 }
 
 .zoom-single-sheet .modal-body img {
@@ -531,7 +531,7 @@
   line-height: 40px;
   font-size: 14px;
   padding-left: 42px;
-  border: 1px solid #d2d6de;
+  border: 1px solid #d1d1d1;
   background: #fff;
   padding-top: 10px;
 }
@@ -540,15 +540,15 @@
   line-height: 20px !important;
 }
 .change-calendar .form-item .form-control {
-    border: 1px solid #e1e1e1;
+    border: 1px solid #d1d1d1;
 }
 .form-add-info .form-select {
-  border-radius: 5px !important;
+  border-radius: 7px !important;
   height: 38px;
   line-height: 27px;
   font-size: 14px;
   padding-left: 12px;
-  border: 1px solid #d2d6de !important;
+  border: 1px solid #d1d1d1 !important;
   background: #fff;
   position: relative;
   z-index: 1;
@@ -603,7 +603,7 @@
   left: 10px;
   z-index: 99;
   font-size: 16px;
-  color: var(--dask-blue) !important;
+  color: #aaa !important;
 }
 
 .modalDoiLich .input-group i {
@@ -630,7 +630,7 @@
   margin-right: 10px;
   width: 20px;
   height: 20px;
-  border: 1px solid #acbeec;
+  border: 1px solid #c1c1c1;
 }
 
 .group-checkbox .form-check-label {
@@ -826,7 +826,7 @@
 
 .modal-button .btn-come-back {
   background: #fff;
-  border: 1px solid #d1d1d1;
+  border: 1px solid #c1c1c1;
   color: var(--dask-blue);
   margin-right: 10px;
 }
@@ -947,7 +947,7 @@
 
 .select2-container--default .select2-selection--single {
   /* border: 1px solid #acbeec !important; */
-  border: 1px solid #d2d6de !important;
+  border: 1px solid #c1c1c1 !important;
 }
 
 input:focus,
@@ -961,7 +961,7 @@ input:active,
 }
 
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
-  border-color: #d2d6de transparent transparent transparent !important;
+  border-color: #c1c1c1 transparent transparent transparent !important;
 }
 
 @media (min-width: 768px) {

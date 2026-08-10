@@ -480,7 +480,7 @@
 }
 
 .single-sheet-img {
-    border: 1px solid #e1e1e1;
+    border: 1px solid #d1d1d1;
 }
 
 .zoom-single-sheet .modal-body img {
@@ -493,18 +493,18 @@
     line-height: 40px;
     font-size: 14px;
     padding-left: 42px;
-    border: 1px solid #acbeec;
+    border: 1px solid #d1d1d1;
     background: #fff;
     padding-top: 9px;
 }
 
 .form-add-info .form-select {
-    border-radius: 4px !important;
+    border-radius: 7px !important;
     height: 38px;
     line-height: 27px;
     font-size: 14px;
     padding-left: 40px;
-    border: 1px solid #acbeec;
+    border: 1px solid #d1d1d1;
     background: #fff;
     position: relative;
     z-index: 1;
@@ -540,7 +540,7 @@
     left: 10px;
     z-index: 4;
     font-size: 18px;
-    color: var(--dask-blue);
+    color: #aaa;
 }
 
 .form-item-1 {

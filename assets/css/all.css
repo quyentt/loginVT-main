@@ -658,7 +658,7 @@ blockquote {
 }
 
 .color-dask-blue {
-  color: var(--dask-blue) !important;
+  color: var(--color-blue) !important;
 }
 
 body {
@@ -5218,7 +5218,7 @@ img.st-1-img {
 
 .cmc-form .form-add-info .form-control,
 .cmc-form .form-add-info .form-select {
-  border-color: #e1e1e1;
+  border-color: #d1d1d1;
 }
 
 .text-init {

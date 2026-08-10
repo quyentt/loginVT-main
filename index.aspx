@@ -438,9 +438,8 @@
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
       html body .sidebar-menu-item .sidebar-menu-sub.collapse {
-        background: transparent !important;
-        background-color: transparent !important;
-        border-radius: 0 !important;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 0 12px 12px 0 !important;
         padding: 4px 0 8px 0 !important;
         margin-top: 0 !important;
         box-shadow: none !important;
@@ -630,7 +629,7 @@
       /* Focus state: viền dask-blue + shadow ring xanh nhạt */
       #main-content-wrapper .select2-container--focus .select2-selection--single,
       #main-content-wrapper .select2-container--open .select2-selection--single {
-        border-color: #223771 !important;
+        border-color: #d1d1d1 !important;
         box-shadow: 0 0 0 3px rgba(34, 55, 113, 0.12) !important;
       }
       /* Hover state: viền đậm hơn 1 chút */
@@ -641,7 +640,7 @@
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 1 !important;
         padding: 0 32px 0 14px !important;
-        color: #0f172a !important;
+        color: #d1d1d1 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
         width: 100% !important;
@@ -651,14 +650,14 @@
         margin: 0 !important;
       }
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
-        color: #94a3b8 !important;
+        color: #d1d1d1 !important;
         font-weight: 400 !important;
         font-style: italic;
       }
       /* Mũi tên: căn giữa dọc, cách viền phải 8px */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 100% !important;
-        top: 0 !important;
+        top: -3px !important;
         right: 8px !important;
         width: 20px !important;
         display: flex !important;
@@ -666,13 +665,13 @@
         justify-content: center !important;
       }
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
-        border-color: #64748b transparent transparent transparent !important;
+        border-color: #d1d1d1 transparent transparent transparent !important;
         border-width: 6px 5px 0 5px !important;
         position: static !important;
         margin: 0 !important;
       }
       #main-content-wrapper .select2-container--open .select2-selection__arrow b {
-        border-color: transparent transparent #223771 transparent !important;
+        border-color: transparent transparent #d1d1d1 transparent !important;
         border-width: 0 5px 6px 5px !important;
       }
       /* Dropdown khi mở — max spec + shadow to + border đậm để dropdown "nhảy ra"
@@ -844,7 +843,7 @@
       #main-content-wrapper .form-top .form-item .form-control,
       #main-content-wrapper .form-top .input-group input.form-control {
         height: 38px !important;
-        border: 1px solid #e2e8f0 !important;
+        border: 1px solid #c1c1c1 !important;
         border-radius: 6px !important;
         font-size: 14px !important;
       }
@@ -870,8 +869,9 @@
       }
       #main-content-wrapper .group-title p i,
       #main-content-wrapper .group-title.pl0 p i {
-        color: #223771 !important;
+        color: var(--color-blue-dark) !important;
         font-size: 15px;
+        margin-right: 5px !important;
       }
 
       /* Button search combo — .btn-search + .btn-default → dask-blue solid */
@@ -906,9 +906,9 @@
       /* Table plain trong SPA-alt module (không có .table-responsive wrapper) */
       #main-content-wrapper .table.tblPhieu,
       #main-content-wrapper .table.transcrip-table {
-        margin-top: 4px !important;
-        border: 1px solid #e2e8f0 !important;
-        border-radius: 6px !important;
+        /* margin-top: 4px !important; */
+        /* border: 1px solid #e2e8f0 !important; */
+        /* border-radius: 6px !important; */
       }
 
       /* Bump toàn bộ table header trong SPA scope — cover cả các bảng không có
@@ -920,14 +920,13 @@
         font-weight: 700 !important;
         font-size: 13px !important;
         padding: 10px 12px !important;
-        border-bottom: 2px solid #e2e8f0 !important;
+        border-bottom: 1px solid #d1d1d1 !important;
         vertical-align: middle !important;
       }
       /* Body row có border + hover nhẹ để tách khối */
       #main-content-wrapper .table > tbody > tr > td {
         padding: 10px 12px !important;
         color: #0f172a !important;
-        border-color: #f1f5f9 !important;
         vertical-align: middle !important;
       }
       #main-content-wrapper .table-hover > tbody > tr:hover,
@@ -957,8 +956,8 @@
       #main-content-wrapper .box.box-solid { border-top: 1px solid #e2e8f0 !important; }
       #main-content-wrapper .box.box-shadow { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important; }
       #main-content-wrapper .box-header {
-        padding: 12px 16px !important;
-        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 10px 15px 5px 15px !important;
+        /* border-bottom: 1px solid #e2e8f0 !important; */
         display: flex !important;
         align-items: center !important;
         justify-content: space-between !important;

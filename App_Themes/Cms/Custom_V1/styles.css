@@ -325,6 +325,7 @@ a.btn {
 
 .btn i {
   padding-right: 5px;
+  margin-top: 2px;
 }
 
 .item-modal {
@@ -2706,7 +2707,7 @@ input:active,
 .skin-blue .sidebar-form .input-group-btn {
   position: absolute;
   top: 0;
-  right: 5px;
+  right: 0;
 }
 
 .pull-right-container .fa-angle-left {
@@ -2821,7 +2822,7 @@ input:active,
   margin-bottom: 5px;
   margin-top: 3px;
   font-size: 16px;
-  color: var(--color-blue);
+  color: #fff;
   font-weight: 700 !important;
 }
 
@@ -3011,7 +3012,7 @@ input:active,
 }
 
 .sidebar-menu>li.sidebar-menu-home>a i {
-  color: var(--color-blue) !important;
+  color: #fff !important;
   background: transparent;
 }
 
@@ -3203,7 +3204,7 @@ input:active,
 
 .box-search,
 .box-search.box-solid.box {
-  background: #f8f8f8 !important;
+  background: #f4f4f4 !important;
   border-right: 3px solid #fff !important;
   border-left: 3px solid #fff !important;
   border-top: 3px solid #fff !important;
@@ -3212,9 +3213,9 @@ input:active,
   border-top-right-radius: 12px !important;
   border-bottom-left-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  border-bottom: 1px solid #e1e1e1 !important;
+  border-bottom: 1px solid #d1d1d1 !important;
   margin-top: 0 !important;
-  padding: 15px 17px 8px 17px !important;
+  padding: 15px 15px 8px 15px !important;
 }
 
 .box-search {
@@ -3238,7 +3239,7 @@ input:active,
   padding: 0 !important;
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 0 !important;
+  margin-bottom: 10px !important;
 }
 
 .box-search .item-search {
@@ -7101,8 +7102,8 @@ input[type="radio"] {
 .table td .btn,
 .table td .btn:hover,
 .table .btn {
-  padding: 0px 8px 2px 8px !important;
-  border-radius: 5px !important;
+  padding: 0px 10px 0px 10px !important;
+  border-radius: 4px !important;
   line-height: 28px !important;
   height: 28px !important;
 }

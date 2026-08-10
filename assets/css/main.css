@@ -4154,7 +4154,7 @@ a.other-action_item:hover {
   display: flex;
   padding: 0 15px;
   height: 44px;
-  border-radius:0 12px 12px 0;
+  border-radius:0 8px 8px 0;
   color: var(--color-text-3);
   font-weight: 600;
 }
@@ -4180,7 +4180,7 @@ a.other-action_item:hover {
     line-height: 20px;
 }
 .item-icon {
-  font-size: 16px;
+  font-size: 15px;
   width: 20px;
   margin-right: 8px;
   flex-shrink: 0;
@@ -4210,7 +4210,7 @@ a.other-action_item:hover {
 .sidebar-menu-item.active .sidebar-menu-header {
   font-weight: 700;
   color: var(--color-white);
-  background: var(--color-link);
+  background: var(--color-blue) !important;
 }
 
 .sidebar-menu-item.active .sidebar-menu-header .item-icon {
@@ -4236,6 +4236,7 @@ a.other-action_item:hover {
     position: relative;
     padding-top: 5px;
     padding-bottom: 5px;
+    padding-right: 5px;
     color: var(--color-text-3-80);
 }
 
@@ -5875,8 +5876,8 @@ a.other-action_item:hover {
   font-size: 18px;
   margin: 0;
   line-height: 1;
-  font-weight: 500 !important;
-  color: var(--color-blue);
+  font-weight: 600 !important;
+  color: #223771 ;
 }
 
 .register-wish .title-is-paging .color-dask-blue i,
@@ -5889,7 +5890,7 @@ a.other-action_item:hover {
   margin-right: 9px;
   float: left;
   font-size: 18px !important;
-  color: var(--color-blue) !important;
+  color: #223771  !important;
   font-weight: 700 !important;
 }
 
@@ -5898,8 +5899,8 @@ a.other-action_item:hover {
   font-size: 18px !important;
   margin: 0;
   line-height: 1;
-  font-weight: 500 !important;
-  color: var(--color-blue) !important;
+  font-weight: 600 !important;
+  color: var(--color-blue-dark) !important;
 }
 
 .form-check .form-check-label {
