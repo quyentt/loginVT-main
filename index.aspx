@@ -834,7 +834,10 @@
         background: #1c2e5f !important;
         border-color: #1c2e5f !important;
       }
-      #main-content-wrapper .btn.btn-search i {
+      #main-content-wrapper .btn.btn-search i,
+      #main-content-wrapper .btn.btn-search span,
+      #main-content-wrapper .btn.btn-search .lang,
+      #main-content-wrapper .btn.btn-search * {
         color: #ffffff !important;
       }
 
