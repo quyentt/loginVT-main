@@ -408,14 +408,13 @@
              Scope: #main-content-wrapper de khong lem ra sidebar/header.
              Muc dich: dong bo tone + padding + font voi sidebar reskin, giam cam giac "lech". ─── */
           html body.skin-blue #main-content-wrapper .box {
-            border: 1px solid #e2e8f0 !important;
-            border-top: 1px solid #e2e8f0 !important;
-            border-radius: 8px !important;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+            /* border: 1px solid #e2e8f0 !important; */
+            /* border-top: 1px solid #e2e8f0 !important; */
+            border-radius: 12px !important;
+            /* box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important; */
             margin-bottom: 14px !important;
           }
           html body.skin-blue #main-content-wrapper .box-body {
-            padding: 14px !important;
             overflow: visible !important;
             max-height: none !important;
           }
@@ -1004,7 +1003,7 @@
 
           /* Item search spacing — 4 dropdown deu can, dung .col-sm-3 default */
           html body.skin-blue #main-content-wrapper .item-search {
-            padding: 6px !important;
+            /* padding: 6px !important; */
           }
 
           /* Section .content padding — align voi header 60px */

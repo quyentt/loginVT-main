@@ -467,14 +467,27 @@ systemroot.prototype = {
     setSessionUser: function () {
 
     },
+    // Chon dropdownParent cho select2 theo ngu canh cua the select:
+    // - Nam trong modal: phai gan vao chinh modal do. Neu gan vao body, popup nam ngoai
+    //   DOM cua modal nen Bootstrap enforceFocus se keo focus tra ve modal => o tim kiem
+    //   cua select2 khong giu duoc focus, go phim khong an.
+    // - Ngoai modal: gan vao body de popup khong bi clip boi container cha
+    //   co overflow/stacking context (bug dropdown bi an sau row ke tiep trong form).
+    getSelect2Parent: function (el) {
+        var $parent = $(el).closest(".modal-content");
+        if (!$parent.length) $parent = $(el).closest(".modal");
+        return $parent.length ? $parent : $(document.body);
+    },
     page_load: function () {
         var me = this;
-        // Force dropdownParent = body de popup select2 khong bi clip boi container cha
-        // co overflow/stacking context. Fix bug dropdown bi an sau row ke tiep trong form.
-        $(".select-opt").select2({ dropdownParent: $(document.body) });
-        $(".select-opt-img").select2({
-            templateResult: me.formatState,
-            dropdownParent: $(document.body)
+        $(".select-opt").each(function () {
+            $(this).select2({ dropdownParent: me.getSelect2Parent(this) });
+        });
+        $(".select-opt-img").each(function () {
+            $(this).select2({
+                templateResult: me.formatState,
+                dropdownParent: me.getSelect2Parent(this)
+            });
         });
         //$(document).delegate('.input-datepicker', 'blur', function () {
         //    var point = this;
