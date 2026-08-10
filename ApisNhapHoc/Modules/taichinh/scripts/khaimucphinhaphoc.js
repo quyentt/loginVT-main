@@ -126,24 +126,28 @@ KhaiMucPhi.prototype = {
     bindEvent: function () {
         var me = this;
 
-        // ============ Fix stacked modal z-index (BS5 không auto adjust) ============
-        // Với các modal con (mở trên modal cha), sử dụng shown.bs.modal (sau khi hiện xong)
-        // để force z-index cao hơn parent + backdrop tương ứng.
+        // ============ Fix stacked modal z-index (BS3 không auto adjust) ============
+        // ⚠ App dùng Bootstrap 3.3.7 (indexi.aspx:1332) → class visible là `.in`, KHÔNG phải `.show`.
+        //   Selector `.modal.show` fail → count=0 → return sớm → bug: modal con bị backdrop đè.
+        // ⚠ BASE = 10055 (KHÔNG phải 1050 default BS3) vì indexi.aspx reskin CSS ép
+        //   .modal.in{z-index:10055!important} + .modal-backdrop.in{z-index:10050!important}.
+        // Inline style.setProperty(...,'important') thắng CSS !important theo CSS spec → OK.
         $(document).off('shown.bs.modal.kmpStack').on('shown.bs.modal.kmpStack', '.modal', function () {
             var $this = $(this);
             var isAlert = $this.attr('id') === 'myModalAlert'
                        || $this.hasClass('modal-alert')
                        || $this.hasClass('modal-confirm');
-            var $modals = $('.modal.show');
+            // BS3 dùng `.in`, BS5 dùng `.show` — match cả 2 cho tương thích ngược
+            var $modals = $('.modal.in, .modal.show');
             var count = $modals.length;
             var zIndex;
             if (isAlert) {
                 // Alert/confirm luôn trên cùng, bất kể level
-                zIndex = 20000;
+                zIndex = 999999;
             } else if (count <= 1) {
-                return; // modal đầu tiên, không cần fix
+                return; // modal đầu tiên, không cần fix (CSS reskin đã set 10055)
             } else {
-                zIndex = 1055 + 30 * (count - 1);
+                zIndex = 10055 + 30 * (count - 1);
             }
             $this[0].style.setProperty('z-index', zIndex, 'important');
             var $backdrops = $('.modal-backdrop');

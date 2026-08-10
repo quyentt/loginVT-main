@@ -1721,6 +1721,9 @@ a.other-action_item:hover {
 .myTab-header-item {
   padding: 0 15px;
 }
+.myTab-header-item:first-child{
+  padding-left: 0 !important;
+}
 
 .myTab-header-link {
   color: var(--color-link);
@@ -4151,7 +4154,7 @@ a.other-action_item:hover {
   display: flex;
   padding: 0 15px;
   height: 44px;
-  border-radius: 12px;
+  border-radius:0 12px 12px 0;
   color: var(--color-text-3);
   font-weight: 600;
 }

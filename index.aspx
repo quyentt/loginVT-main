@@ -24,11 +24,48 @@
         color-scheme: light only !important;
         forced-color-adjust: none;
       }
+      /* Ap dung forced-color-adjust cho MOI element de chan Windows High Contrast Mode +
+         Chrome dark theme adjustments tu do bien viet ve tren border/outline. */
+      *, *::before, *::after {
+        forced-color-adjust: none !important;
+      }
       input, select, textarea, button {
         color-scheme: light !important;
       }
       *:focus, *:focus-visible {
         outline-color: #223771 !important;
+      }
+      /* Sidebar: bulletproof — chan MOI kha nang browser inject vien do (High Contrast
+         Mode, Chrome dark focus outline, extensions, autofill highlight...). Force outline
+         va box-shadow ve 0/tone chinh, khong cho browser tu quyet dinh mau focus. */
+      .left-sidebar,
+      .left-sidebar *,
+      .sidebar-menu,
+      .sidebar-menu *,
+      .sidebar-menu-sub,
+      .sidebar-menu-sub * {
+        forced-color-adjust: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      .left-sidebar *:focus,
+      .left-sidebar *:focus-visible,
+      .left-sidebar *:active,
+      .sidebar-menu *:focus,
+      .sidebar-menu *:focus-visible,
+      .sidebar-menu *:active,
+      .sidebar-menu-sub a:focus,
+      .sidebar-menu-sub a:focus-visible,
+      .sidebar-menu-sub a:active {
+        outline: none !important;
+        outline-color: transparent !important;
+        outline-width: 0 !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+      }
+      /* Focus visible: khong dung outline vien cam (xau) — chi doi mau chu */
+      .sidebar-menu-sub a:focus-visible {
+        outline: none !important;
+        color: #f8843d !important;
       }
       /* FCM header notifications: layout only (no new colors) */
       #fcm-noti-button {
@@ -353,7 +390,7 @@
         background: #223771 !important;
         box-shadow: none !important;
       }
-      .left-sidebar a:hover { color: #ffffff !important; }
+      .left-sidebar a:hover { color: #ffffff !important; background: rgba(255, 255, 255, 0.1) !important;}
       .left-sidebar a:hover .item-icon { color: #ffffff !important; }
 
       .sidebar-menu-header {
@@ -371,7 +408,8 @@
       .sidebar-menu-header:not(.collapsed):hover,
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header:hover {
         color: #ffffff !important;
-        background: rgba(255, 255, 255, 0.08) !important;
+        /* background: rgba(255, 255, 255, 0.1) !important; */
+        background-color: var(--color-blue);
       }
       .sidebar-menu-header:not(.collapsed):hover i,
       .sidebar-menu-header:not(.collapsed):hover .item-icon {
@@ -379,23 +417,46 @@
       }
 
       .sidebar-menu-item.active .sidebar-menu-header {
-        background: rgba(255, 255, 255, 0.10) !important;
-        color: #f8843d !important;
+        background-color: var(--color-blue);
+        color: #fff !important;
         font-weight: 700 !important;
       }
       .sidebar-menu-item.active .sidebar-menu-header .item-icon,
       .sidebar-menu-item.active .sidebar-menu-header i {
-        color: #f8843d !important;
+        color: #fff !important;
       }
 
       /* Submenu (cấp con) — bullet + border-left theo tone dask-blue */
+      /* Container submenu: ep TRANSPARENT background de blend voi sidebar toi.
+         THU PHAM: App_Themes/Cms/Custom_V1/styles.css:2896 co rule
+         `.sidebar-menu-item .sidebar-menu-sub.collapse { background:#f4f4f4 !important }`
+         voi specificity cao hon. Can beat bang ID selector (#sidebar-menu) + full chain. */
+      #sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
+      #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
+      #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
+      .sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
+      .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
+      .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
+      html body .sidebar-menu-item .sidebar-menu-sub.collapse {
+        background: transparent !important;
+        background-color: transparent !important;
+        border-radius: 0 !important;
+        padding: 4px 0 8px 0 !important;
+        margin-top: 0 !important;
+        box-shadow: none !important;
+      }
       .sidebar-menu-sub a {
         color: #d2ddfd !important;
+        background: transparent !important;
         border-left-color: #5a7adb !important;
       }
       .sidebar-menu-sub a:hover,
       .sidebar-menu-sub a.active {
         color: #f8843d !important;
+        background: transparent !important;
+        border-color: transparent !important;
+        outline: none !important;
+        box-shadow: none !important;
       }
       .sidebar-menu-sub a::before,
       .sidebar-menu-sub a::after {
@@ -459,10 +520,10 @@
       #main-content-wrapper .today-card-2 > .card-header,
       #main-content-wrapper .today-card-3 > .card-header {
         background: #223771 !important;
-        background-image: none !important;
         border: 0 !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-        padding: 12px 18px !important;
+        padding: 0 18px !important;
+        margin-bottom: -1px;
       }
       /* Card title (không phải tab) → trắng */
       #main-content-wrapper .today-card > .card-header .title .feature-name {
@@ -485,7 +546,8 @@
         font-weight: 700 !important;
       }
       #main-content-wrapper .today-card > .card-header .myTab-header-link.active i {
-        color: #f8843d !important;
+        color: #223771 !important;
+        font-weight: 700;
       }
       /* Icon frame trong card header (today-card-1 gradient xanh) → tone dask-blue */
       #main-content-wrapper .today-card-1 > .card-header .icon,
@@ -715,7 +777,7 @@
         border: 1px solid #e2e8f0 !important;
         border-radius: 10px !important;
         box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
-        padding: 16px 18px !important;
+        padding: 0 !important;
         margin-bottom: 16px !important;
       }
 

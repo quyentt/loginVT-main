@@ -36,11 +36,46 @@
             color-scheme: light only !important;
             forced-color-adjust: none;
           }
+          /* Ap dung forced-color-adjust cho MOI element de chan Windows High Contrast Mode +
+             Chrome dark theme adjustments tu bien viet ve tren border/outline. */
+          *, *::before, *::after {
+            forced-color-adjust: none !important;
+          }
           input, select, textarea, button {
             color-scheme: light !important;
           }
           *:focus, *:focus-visible {
             outline-color: #223771 !important;
+          }
+          /* Sidebar AdminLTE: chan browser inject vien do do High Contrast / focus dark */
+          .main-sidebar,
+          .main-sidebar *,
+          .sidebar-menu,
+          .sidebar-menu *,
+          .treeview-menu,
+          .treeview-menu * {
+            forced-color-adjust: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+          .main-sidebar *:focus,
+          .main-sidebar *:focus-visible,
+          .main-sidebar *:active,
+          .sidebar-menu *:focus,
+          .sidebar-menu *:focus-visible,
+          .sidebar-menu *:active,
+          .treeview-menu a:focus,
+          .treeview-menu a:focus-visible,
+          .treeview-menu a:active {
+            outline: none !important;
+            outline-color: transparent !important;
+            outline-width: 0 !important;
+            box-shadow: none !important;
+            border-color: transparent !important;
+          }
+          /* Focus visible: khong dung outline vien cam (xau) — chi doi mau chu */
+          .treeview-menu a:focus-visible {
+            outline: none !important;
+            color: #f8843d !important;
           }
           /* ─── Reskin AdminLTE shell (indexi.aspx) tone dask-blue #223771 + orange #f8843d
              Mục đích: đồng bộ với index.aspx (SPA shell mới). Không đụng HTML/JS gốc, chỉ
@@ -153,9 +188,21 @@
           html body.skin-blue #menu_vertical .treeview-menu > li > a:hover,
           html body.skin-blue .treeview-menu > li.active > a,
           html body.skin-blue .treeview-menu > li.menu-open > a,
-          html body.skin-blue .treeview-menu > li > a:hover {
+          html body.skin-blue .treeview-menu > li > a:hover,
+          /* Cung ep tren li de tranh bg parent cua a thu hien qua */
+          html body.skin-blue #menu_vertical .treeview-menu > li.active,
+          html body.skin-blue #menu_vertical .treeview-menu > li.menu-open,
+          html body.skin-blue .sidebar-menu .treeview-menu > li.active,
+          html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open,
+          html body.skin-blue .treeview-menu > li.active,
+          html body.skin-blue .treeview-menu > li.menu-open {
             color: #f8843d !important;
-            background: rgba(248, 132, 61, 0.18) !important;
+            background: transparent !important;
+            background-color: transparent !important;
+            border-color: transparent !important;
+            outline: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
           }
 
           /* Bullet dots ::before/::after — đổi tone light-blue/orange (styles.css:2744-2772
@@ -177,12 +224,19 @@
             background-color: #f8843d !important;
           }
 
-          /* Search box trong sidebar */
+          /* Search box trong sidebar — input va nut Q dinh HAN vao nhau nhu 1 khoi */
           html body.skin-blue .sidebar-form {
             background-color: rgba(255, 255, 255, 0.05) !important;
             border: 1px solid rgba(255, 255, 255, 0.1) !important;
             border-radius: 8px !important;
             margin: 10px !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+          }
+          html body.skin-blue .sidebar-form .input-group {
+            width: 100% !important;
+            display: flex !important;
+            align-items: stretch !important;
           }
           html body.skin-blue .sidebar-form input.form-control,
           html body.skin-blue .sidebar-form input[type="text"] {
@@ -190,17 +244,51 @@
             color: #ffffff !important;
             border: 0 !important;
             box-shadow: none !important;
+            height: 38px !important;
+            padding: 6px 12px !important;
+            flex: 1 1 auto !important;
+            border-radius: 0 !important;
           }
           html body.skin-blue .sidebar-form input.form-control::placeholder {
             color: rgba(255, 255, 255, 0.5) !important;
           }
-          html body.skin-blue .sidebar-form .btn {
-            color: #d2ddfd !important;
-            background-color: transparent !important;
-            border: 0 !important;
+          html body.skin-blue .sidebar-form .input-group-btn {
+            display: flex !important;
+            width: auto !important;
+            flex: 0 0 auto !important;
           }
-          html body.skin-blue .sidebar-form .btn:hover {
+          html body.skin-blue .sidebar-form .btn,
+          html body.skin-blue .sidebar-form .input-group-btn .btn,
+          html body.skin-blue .sidebar-form .input-group-btn .btn.btn-flat,
+          html body.skin-blue .sidebar-form button.btn {
             color: #ffffff !important;
+            background: #2a4a95 !important;
+            background-color: #2a4a95 !important;
+            background-image: none !important;
+            border: 0 !important;
+            box-shadow: none !important;
+            outline: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+            padding: 0 14px !important;
+            height: 38px !important;
+            min-height: 38px !important;
+            line-height: 38px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          html body.skin-blue .sidebar-form .btn:hover,
+          html body.skin-blue .sidebar-form .input-group-btn .btn:hover {
+            color: #ffffff !important;
+            background: #365dbf !important;
+          }
+          html body.skin-blue .sidebar-form .btn i,
+          html body.skin-blue .sidebar-form .input-group-btn .btn i {
+            color: #ffffff !important;
+            font-size: 14px !important;
+            margin: 0 !important;
+            line-height: 1 !important;
           }
 
           /* Content wrapper: nền light-gray + bo góc top-left */
@@ -374,14 +462,13 @@
              Scope: #main-content-wrapper de khong lem ra sidebar/header.
              Muc dich: dong bo tone + padding + font voi sidebar reskin, giam cam giac "lech". ─── */
           html body.skin-blue #main-content-wrapper .box {
-            border: 1px solid #e2e8f0 !important;
-            border-top: 1px solid #e2e8f0 !important;
-            border-radius: 8px !important;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+            /* border: 1px solid #e2e8f0 !important; */
+            /* border-top: 1px solid #e2e8f0 !important; */
+            border-radius: 12px !important;
+            /* box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important; */
             margin-bottom: 14px !important;
           }
           html body.skin-blue #main-content-wrapper .box-body {
-            padding: 14px !important;
             overflow: visible !important;
             max-height: none !important;
           }
@@ -970,7 +1057,7 @@
 
           /* Item search spacing — 4 dropdown deu can, dung .col-sm-3 default */
           html body.skin-blue #main-content-wrapper .item-search {
-            padding: 6px !important;
+            /* padding: 6px !important; */
           }
 
           /* Section .content padding — align voi header 60px */
@@ -1467,7 +1554,7 @@
                     'html body.skin-blue .main-sidebar .menu-open, html body.skin-blue #menu_vertical .menu-open, html body.skin-blue #menu_vertical li { background: transparent !important; background-color: transparent !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background: transparent !important; background-color: transparent !important; border-radius: 0 !important; margin: 2px 0 4px 26px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #e4ecff !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
-                    'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover { color: #f8843d !important; background: rgba(248,132,61,0.18) !important; background-color: rgba(248,132,61,0.18) !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-color: transparent !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu > li > a::before, html body.skin-blue #menu_vertical .treeview-menu > li > a::after { background-color: rgba(210,221,253,0.4) !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu > li.active > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.active > a::after, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::after, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::before, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::after { background-color: #f8843d !important; }'
                 ].join('\n');

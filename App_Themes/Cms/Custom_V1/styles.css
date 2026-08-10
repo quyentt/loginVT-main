@@ -2727,7 +2727,7 @@ input:active,
 .sidebar-menu {
   margin: 0px 0px !important;
   /* border-top: 1px solid #00206d !important; */
-  padding: 5px 8px;
+  padding: 5px 5px 0 0;
 }
 
 .sidebar-menu .treeview-menu .menu-open {
@@ -2895,7 +2895,7 @@ input:active,
 .skin-blue .sidebar-menu>li>.treeview-,
 .sidebar-menu-item .sidebar-menu-sub.collapse,
 .skin-blue .sidebar-menu>li>.treeview-menu {
-  background: #f4f4f4 !important;
+  background: rgba(255,255,255,0.1) !important;
   border-radius: 12px !important;
   padding: 0;
   margin-top: 5px !important;
@@ -3127,7 +3127,9 @@ input:active,
 }
 
 .list-group {
-  background: #e3e4e5 !important;
+  background:transparent !important;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 .search-app>input {
@@ -3309,7 +3311,7 @@ input:active,
 .content-wrapper,
 .content-header,
 .content {
-  background-color: #e3e4e5 !important;
+  background-color:transparent !important;
 }
 
 .box.box-solid {
