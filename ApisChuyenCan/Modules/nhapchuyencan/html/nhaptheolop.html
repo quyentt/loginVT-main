@@ -1,5 +1,6 @@
-<!-- Main content — SPA-native rewrite (giu 100% ID + JS-hook class de khong doi nhaptheolop.js) -->
-<link rel="stylesheet" href="assets/css-new/styles.css">
+<!-- Main content — pattern cu (box-search + col-sm-3) tuong thich CA index.aspx + indexi.aspx.
+     Da GO link "assets/css-new/styles.css" vi no import BS5.3 + main.css conflict voi indexi.aspx
+     (dung BS5.0.2 + reskin dask-blue) -> break header/sidebar khi navigate qua lai skin. -->
 <style>
     .lbTinhTrang {
         float: right;
@@ -16,6 +17,92 @@
         -webkit-box-shadow: 1px 1px 1px 1px #ccc;
         -moz-box-shadow: 1px 1px 1px 1px #ccc;
         box-shadow: 1px 1px 1px 1px #ccc;
+    }
+    /* ═══ Page-scoped fix — ep hien wrapper .myTab-item.show + card mo (khong co
+         inline display:none). Panel #zone_nhapchuyencan co inline display:none van
+         phai giu (chi hien khi JS bat), nen dung [style*="display:none"] excluder. ═══ */
+    .aps-nhaptheolop .myTab-item.show,
+    .aps-nhaptheolop .card.today-card:not([style*="display:none"]):not([style*="display: none"]),
+    .aps-nhaptheolop .card.today-card:not([style*="display:none"]):not([style*="display: none"]) > .card-body,
+    .aps-nhaptheolop .myTab-content,
+    .aps-nhaptheolop .function-content,
+    .aps-nhaptheolop .feature-content {
+        display: block !important;
+        visibility: visible !important;
+        height: auto !important;
+        opacity: 1 !important;
+        overflow: visible !important;
+    }
+    /* An breadcrumb noi bo (duplicate voi app-shell breadcrumb) */
+    .aps-nhaptheolop > .content-tab {
+        display: none !important;
+    }
+    /* Card header + tab header — style don gian, khong ke thua css-new */
+    .aps-nhaptheolop .card.today-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 16px;
+        padding: 0;
+    }
+    .aps-nhaptheolop .card.today-card > .card-header {
+        padding: 12px 16px;
+        border-bottom: 1px solid #e2e8f0;
+        background: #f8fafc;
+    }
+    .aps-nhaptheolop .card.today-card > .card-body {
+        padding: 16px;
+    }
+    .aps-nhaptheolop .myTab-header-link {
+        color: #0f172a;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .aps-nhaptheolop .myTab-header-link.active {
+        color: #223771;
+    }
+    /* Filter box (pattern cu — box-search + col-sm-3 item-search) */
+    .aps-nhaptheolop .box-search {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 12px;
+    }
+    .aps-nhaptheolop .box-search .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    .aps-nhaptheolop .item-search {
+        padding: 6px !important;
+    }
+    .aps-nhaptheolop .item-search .form-control,
+    .aps-nhaptheolop .item-search select {
+        min-height: 38px;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 6px 10px;
+    }
+    .aps-nhaptheolop .item-search .select2-container {
+        width: 100% !important;
+    }
+    .aps-nhaptheolop .btn-search {
+        background: #223771 !important;
+        color: #fff !important;
+        border: 1px solid #223771 !important;
+        border-radius: 6px !important;
+        padding: 8px 16px !important;
+        font-weight: 600 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        height: 38px;
+    }
+    .aps-nhaptheolop .btn-search:hover {
+        background: #1c2e5f !important;
     }
 </style>
 
@@ -50,66 +137,44 @@
                 <div class="card-body">
                     <div class="myTab-content">
                         <div class="myTab-item show" id="danhsachhoc">
-                            <!-- Filter row -->
-                            <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item mb-10">
-                                <div class="flex-grow-1">
-                                    <div class="row box-search-hocphan">
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Loại danh sách</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_LoaiDanhSach" class="select-opt form-select">
-                                                        <option value="">--Chọn loại danh sách--</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                            <!-- Filter row — pattern cu (box-search + col-sm-3 item-search) giong dangky.html
+                                 de dam bao render dung tren moi skin (index.aspx + indexi.aspx) -->
+                            <div class="box box-solid box-search pt20 pl20 pr20 pt10 pb10">
+                                <div class="box-body pd0">
+                                    <div class="row d-flex mb-0">
+                                        <div class="col-sm-3 item-search">
+                                            <select id="dropSearch_LoaiDanhSach" class="select-opt" style="width:100% !important">
+                                                <option value="">--Chọn loại danh sách--</option>
+                                            </select>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Thời gian</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_ThoiGian" class="select-opt form-select">
-                                                        <option value="">--Chọn thời gian--</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                        <div class="col-sm-3 item-search">
+                                            <select id="dropSearch_ThoiGian" class="select-opt" style="width:100% !important">
+                                                <option value="">--Chọn thời gian--</option>
+                                            </select>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Lớp quản lý</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_LopQuanLy" class="select-opt form-select">
-                                                        <option value="">--Chọn lớp quản lý--</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                        <div class="col-sm-3 item-search">
+                                            <select id="dropSearch_LopQuanLy" class="select-opt" style="width:100% !important">
+                                                <option value="">--Chọn lớp quản lý--</option>
+                                            </select>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Học phần</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_HocPhan" class="select-opt form-select">
-                                                        <option value="">--Chọn học phần--</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Từ khoá</label>
-                                                <input id="txtSearch_TuKhoa" type="text" class="form-control"
-                                                       placeholder="Nhập mã số hoặc tên" />
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-3">
-                                            <div class="dropdown mt-25" id="zonebtnBaoCao_NTL_Import"></div>
+                                        <div class="col-sm-3 item-search">
+                                            <select id="dropSearch_HocPhan" class="select-opt" style="width:100% !important">
+                                                <option value="">--Chọn học phần--</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="flex-shrink-0">
-                                    <a id="btnSearch" class="btn btn-view ms-10 mb-10 mt-5" href="javascript:void(0)">
-                                        <i class="fa-light fa-magnifying-glass mr-5"></i> Tìm kiếm
-                                    </a>
+                                    <div class="row d-flex mb-0">
+                                        <div class="col-sm-3 item-search">
+                                            <input id="txtSearch_TuKhoa" type="text" class="form-control"
+                                                   placeholder="Nhập mã số hoặc tên" />
+                                        </div>
+                                        <div class="col-sm-6 item-search d-flex" style="gap: 8px;">
+                                            <a id="btnSearch" class="btn btn-default btn-search" href="javascript:void(0)">
+                                                <i class="fa fa-search"></i><span>Tìm kiếm</span>
+                                            </a>
+                                            <div class="dropdown" id="zonebtnBaoCao_NTL_Import"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -158,11 +223,14 @@
                                 </a>
                             </div>
                         </div>
+                        <!-- Nut Dong panel — an theo yeu cau, giu code de mo lai khi can
                         <div class="ms-auto">
                             <a class="btn btnClose btn-close-custom" href="javascript:void(0)" title="Đóng">
                                 <i class="fa-light fa-xmark"></i> <span>Đóng</span>
                             </a>
                         </div>
+                        -->
+
                     </div>
                 </div>
                 <div class="card-body">

@@ -262,20 +262,17 @@
         </div>
         <!-- Danh sách sinh viên -->
         <div class="box box-solid box-reg-sv pd20">
-            <div class="box-header pd0">
-                <h3 class="box-title color-blue line-38">
+            <div class="box-header pd0" style="display: flex !important; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                <h3 class="box-title color-blue line-38" style="margin: 0; display: inline-flex; align-items: center; gap: 8px;">
                     <i class="far fa-address-book line-38"></i> Danh sách sinh viên
-                    <span class="pull-right badge bg-light-blue mt-20" style="margin-top: 8px !important;">
+                    <span class="badge bg-light-blue" style="margin: 0 !important; vertical-align: middle;">
                         <span id="lblSinhVien"></span>
                     </span>
                 </h3>
-                <div class="pull-right d-flex">
-                    <a id="btnDelete_Import" class="btn btn-soft-danger"><i class="fa fa-trash"></i>Xóa dữ liệu
-                        import</a>
-                    <a id="btnAddnew" class="btn btn-primary btnSave"><i class="far fa-user-edit"></i>Đăng ký</a>
-
-                    <a id="btnSearch_Import" class="btn btn-success"><i class="fa fa-search"></i>Tìm theo
-                        import</a>
+                <div class="pull-right d-flex" style="display: flex !important; gap: 8px; float: none !important; align-items: center;">
+                    <a id="btnDelete_Import" class="btn btn-danger" style="display: inline-flex !important; align-items: center; gap: 4px; background-color: #dc2626 !important; color: #fff !important; border: 1px solid #b91c1c !important; font-weight: 600;"><i class="fa fa-trash"></i>Xóa dữ liệu import</a>
+                    <a id="btnAddnew" class="btn btn-primary btnSave" style="display: inline-flex !important; align-items: center; gap: 4px;"><i class="far fa-user-edit"></i>Đăng ký</a>
+                    <a id="btnSearch_Import" class="btn btn-success" style="display: inline-flex !important; align-items: center; gap: 4px;"><i class="fa fa-search"></i>Tìm theo import</a>
                 </div>
             </div>
             <div class="box-body mt-10">

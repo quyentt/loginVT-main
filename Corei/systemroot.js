@@ -469,9 +469,12 @@ systemroot.prototype = {
     },
     page_load: function () {
         var me = this;
-        $(".select-opt").select2();
+        // Force dropdownParent = body de popup select2 khong bi clip boi container cha
+        // co overflow/stacking context. Fix bug dropdown bi an sau row ke tiep trong form.
+        $(".select-opt").select2({ dropdownParent: $(document.body) });
         $(".select-opt-img").select2({
-            templateResult: me.formatState
+            templateResult: me.formatState,
+            dropdownParent: $(document.body)
         });
         //$(document).delegate('.input-datepicker', 'blur', function () {
         //    var point = this;
@@ -5757,8 +5760,8 @@ systemroot.prototype = {
 
                 alert += '<div id="myModalAlert" class="modal fade modal-alert" role="dialog" style=""><div class="modal-dialog">';
                 alert += '<div class="modal-content"><div class="modal-header">';
-                alert += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                 alert += '<h4 class="modal-title">' + title + '</h4>';
+                alert += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                 alert += ' </div>';
                 alert += '<div class="modal-body" id="alert_content">';
                 alert += '</div>';
@@ -5842,8 +5845,8 @@ systemroot.prototype = {
             if (!me.flag_alert) {
                 confirm += '<div id="myModalAlert" class="modal fade modal-confirm" role="dialog"><div class="modal-dialog">';
                 confirm += '<div class="modal-content"><div class="modal-header">';
-                confirm += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                 confirm += '<h4 class="modal-title" id="lblConfirmTitle">' + title + '</h4>';
+                confirm += '<button type="button" class="close" data-dismiss="modal">&times;</button>';
                 confirm += ' </div>';
                 confirm += '<div class="modal-body" id="alert_content">';
                 confirm += '</div>';

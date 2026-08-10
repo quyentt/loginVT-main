@@ -641,8 +641,8 @@
           html body.skin-blue #main-content-wrapper .box-header button.close,
           html body.skin-blue #main-content-wrapper .box-header .close,
           html body.skin-blue #main-content-wrapper .box-header .btn-close,
-          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn,
-          html body.skin-blue #main-content-wrapper .box-header .pull-right > a.btn,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn.btn-default:not(.btn-search):not(.btnSave),
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > a.btn.btn-default:not(.btn-search):not(.btnSave),
           html body.skin-blue #main-content-wrapper .modal-header button.close,
           html body.skin-blue #main-content-wrapper .modal-header .close,
           html body.skin-blue #main-content-wrapper .modal-header .btn-close,
@@ -672,8 +672,8 @@
           html body.skin-blue #main-content-wrapper .box-header button.close:hover,
           html body.skin-blue #main-content-wrapper .box-header .close:hover,
           html body.skin-blue #main-content-wrapper .box-header .btn-close:hover,
-          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn:hover,
-          html body.skin-blue #main-content-wrapper .box-header .pull-right > a.btn:hover,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > .btn.btn-default:not(.btn-search):not(.btnSave):hover,
+          html body.skin-blue #main-content-wrapper .box-header .pull-right > a.btn.btn-default:not(.btn-search):not(.btnSave):hover,
           html body.skin-blue #main-content-wrapper .modal-header button.close:hover,
           html body.skin-blue #main-content-wrapper .modal-header .close:hover,
           html body.skin-blue #main-content-wrapper .modal-header .btn-close:hover,
@@ -749,19 +749,34 @@
             border-radius: 0 !important;
             background-color: #f8fafc !important;
           }
-          /* Khi modal fullscreen mo, an het select2-container va pagination cua page ben
-             duoi (chung co the co z-index cao xuyen qua modal). */
-          html body.skin-blue.modal-open .select2-container,
-          html body.skin-blue.modal-open .pagination,
-          html body.skin-blue.modal-open .dataTables_paginate,
-          html body.skin-blue.modal-open .dataTables_length {
-            z-index: auto !important;
+          /* ═══ FIX TRIET DE: khi modal mo, an TOAN BO #main-content-wrapper de khong
+             container nao xuyen qua backdrop. ═══
+             Dung ca body.modal-open (BS auto add) LAN body:has(.modal.show) (fallback
+             cho truong hop alert modal don le BS khong kip add class -> filter row bright). */
+          html body.skin-blue.modal-open #main-content-wrapper,
+          html body.skin-blue:has(.modal.show) #main-content-wrapper,
+          html body.skin-blue:has(.modal.in) #main-content-wrapper {
+            visibility: hidden !important;
           }
-          html body.skin-blue.modal-open .modal.show .select2-container,
-          html body.skin-blue.modal-open .modal.show .pagination,
-          html body.skin-blue.modal-open .modal.show .dataTables_paginate,
-          html body.skin-blue.modal-open .modal.show .dataTables_length {
-            z-index: auto !important;
+          /* Modal (o bat ky dau — body level hoac inline trong module) va backdrop luon hien */
+          html body.skin-blue.modal-open .modal.show,
+          html body.skin-blue.modal-open .modal.in,
+          html body.skin-blue.modal-open .modal-backdrop,
+          html body.skin-blue:has(.modal.show) .modal.show,
+          html body.skin-blue:has(.modal.in) .modal.in,
+          html body.skin-blue:has(.modal.show) .modal-backdrop,
+          html body.skin-blue:has(.modal.in) .modal-backdrop {
+            visibility: visible !important;
+          }
+          /* Select2 dropdown (khi mo) append vao body, khong nam trong #main-content-wrapper
+             nen 2 rule tren khong bat. Van cho hien binh thuong.
+             BUG FIX: z-index 20000 truoc day THAP hon baseline 99999 (line 466) nhung
+             specificity cao hon -> override nguoc, dropdown bi row ke tiep che. Bump len
+             999999 de dam bao luon noi tren moi noi dung page. */
+          html body.skin-blue .select2-container--open,
+          html body.skin-blue > .select2-container.select2-container--open,
+          html body.skin-blue .select2-container--open .select2-dropdown {
+            z-index: 999999 !important;
           }
           html body.skin-blue .modal .modal-content,
           html body.skin-blue > .modal .modal-content {
@@ -801,8 +816,41 @@
             border: 0 !important;
             font-size: 24px !important;
             font-weight: 300 !important;
+          }
+          /* ═══ Alert & Confirm modal (myModalAlert): title CENTERED, × sat phai
+             (kieu chuan cho popup thong bao — khac voi modal thong tin/list). ═══ */
+          html body.skin-blue .modal.modal-alert .modal-header,
+          html body.skin-blue .modal.modal-confirm .modal-header {
+            position: relative !important;
+            justify-content: center !important;
+          }
+          html body.skin-blue .modal.modal-alert .modal-header .modal-title,
+          html body.skin-blue .modal.modal-confirm .modal-header .modal-title {
+            margin: 0 auto !important;
+            text-align: center !important;
+          }
+          html body.skin-blue .modal.modal-alert .modal-header .close,
+          html body.skin-blue .modal.modal-alert .modal-header .btn-close,
+          html body.skin-blue .modal.modal-confirm .modal-header .close,
+          html body.skin-blue .modal.modal-confirm .modal-header .btn-close {
+            position: absolute !important;
+            right: 15px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            margin: 0 !important;
             text-shadow: none !important;
             padding: 0 8px !important;
+          }
+          /* Body text CENTERED (nen thong bao ngan gon, doc dep hon khi giua) */
+          html body.skin-blue .modal.modal-alert .modal-body,
+          html body.skin-blue .modal.modal-confirm .modal-body {
+            text-align: center !important;
+          }
+          /* Footer: nut Dong sat phai (chuan modal action bar), nut Yes/Save neu co
+             thi sat trai cua nut Dong (nhom cung nhau ben phai) */
+          html body.skin-blue .modal.modal-alert .modal-footer,
+          html body.skin-blue .modal.modal-confirm .modal-footer {
+            justify-content: flex-end !important;
           }
           html body.skin-blue .modal .modal-header .close:hover,
           html body.skin-blue .modal .modal-header .btn-close:hover {
@@ -1273,10 +1321,39 @@
         <script type="text/javascript">
             /* [SELECT2-DROPDOWN-PARENT] Force moi Select2 append dropdown vao body,
                tranh bi clip boi container cha co overflow. Set default NGAY khi
-               library load, truoc khi module JS goi .select2(). */
+               library load, truoc khi module JS goi .select2().
+               Them bao hiem: retry tren jQuery ready + auto-fix moi container--open
+               moi xuat hien (dam bao module reload cung duoc ap dung). */
             (function () {
-                if (typeof $ !== 'undefined' && $.fn && $.fn.select2 && $.fn.select2.defaults) {
-                    try { $.fn.select2.defaults.set('dropdownParent', $(document.body)); } catch (e) {}
+                function forceBodyParent() {
+                    if (typeof $ !== 'undefined' && $.fn && $.fn.select2 && $.fn.select2.defaults) {
+                        try { $.fn.select2.defaults.set('dropdownParent', $(document.body)); } catch (e) {}
+                    }
+                }
+                forceBodyParent();
+                if (typeof $ !== 'undefined') { $(function () { forceBodyParent(); }); }
+                // MutationObserver toan cuc: bat moi .select2-container--open moi xuat hien,
+                // di chuyen ra body va ep z-index max, phong khi module init select2 khong
+                // ke thua dropdownParent (bi override boi call site khac).
+                if (typeof MutationObserver !== 'undefined') {
+                    var obs = new MutationObserver(function (muts) {
+                        muts.forEach(function (m) {
+                            m.addedNodes.forEach(function (n) {
+                                if (n.nodeType !== 1) return;
+                                var opens = [];
+                                if (n.classList && n.classList.contains('select2-container--open')) opens.push(n);
+                                if (n.querySelectorAll) {
+                                    n.querySelectorAll('.select2-container--open').forEach(function (x) { opens.push(x); });
+                                }
+                                opens.forEach(function (node) {
+                                    if (node.parentNode !== document.body) document.body.appendChild(node);
+                                    node.style.zIndex = '999999';
+                                    node.style.position = 'absolute';
+                                });
+                            });
+                        });
+                    });
+                    obs.observe(document.body || document.documentElement, { childList: true, subtree: true });
                 }
             })();
         </script>

@@ -535,7 +535,9 @@ systemroot.prototype = {
     },
     page_load: function () {
         var me = this;
-        $(".select-opt").select2(); 
+        // Force dropdownParent = body de popup select2 khong bi clip boi container cha
+        // co overflow/stacking context. Fix bug dropdown bi an sau row ke tiep trong form.
+        $(".select-opt").select2({ dropdownParent: $(document.body) });
         //$(".select-opt-img").select2({
         //    templateResult: me.formatState
         //});

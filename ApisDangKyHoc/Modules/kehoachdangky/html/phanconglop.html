@@ -3,6 +3,45 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+    /* Overflow visible cho container ancestors — dropdown khong bi clip khi fallback
+       render inline (truong hop select2 chua ap dropdownParent=body). Style + z-index
+       cua popup select2 da duoc xu ly toan cuc o indexi.aspx (line 463-519, 775). */
+    .aps-phanconglop .zone-box,
+    .aps-phanconglop .box-body,
+    .aps-phanconglop .col-TT-phamvi,
+    .aps-phanconglop .col-TT-batbuoc,
+    .aps-phanconglop .aps-form-item,
+    .aps-phanconglop .aps-form-input,
+    .aps-phanconglop .row {
+        overflow: visible !important;
+    }
+    /* Badge "Thong tin pham vi" / "Thong tin bat buoc" — text mac dinh toi tren nen xanh
+       dam gay kho doc. Ep chu trang + padding thoang. */
+    .aps-phanconglop .group-group-title-name .badge.bg-blue {
+        color: #ffffff !important;
+        background-color: #223771 !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        padding: 6px 14px !important;
+        border-radius: 6px !important;
+        letter-spacing: .2px;
+    }
+    /* Nut "Xoa" ngoai (btnXoaPhanCongLop) — soft-danger qua nhat, doi solid do de noi bat
+       action destructive. */
+    .aps-phanconglop #btnXoaPhanCongLop.btn,
+    .aps-phanconglop #btnXoaPhanCongLop.btn.btn-soft-danger {
+        background: #dc3545 !important;
+        border: 1px solid #dc3545 !important;
+        color: #ffffff !important;
+    }
+    .aps-phanconglop #btnXoaPhanCongLop.btn:hover {
+        background: #c82333 !important;
+        border-color: #bd2130 !important;
+        color: #ffffff !important;
+    }
+    .aps-phanconglop #btnXoaPhanCongLop.btn i {
+        color: #ffffff !important;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-phanconglop">
@@ -491,5 +530,17 @@
     main_doc['PhanCongLop'] = new PhanCongLop();
     $(document).ready(function () {
         main_doc.PhanCongLop.init();
+        // Re-init cac .select-opt trong form "Them moi - Phan cong" voi dropdownParent = body,
+        // dam bao popup KHONG bi render inline (bi row ke tiep che). Chay 1 lan sau khi
+        // module init xong; global observer + z-index o indexi.aspx lo phan con lai.
+        setTimeout(function () {
+            if (window.jQuery && $.fn.select2) {
+                $('#zoneEdit .select-opt').each(function () {
+                    var $el = $(this);
+                    if ($el.data('select2')) { try { $el.select2('destroy'); } catch (e) {} }
+                    $el.select2({ dropdownParent: $(document.body) });
+                });
+            }
+        }, 500);
     });
 </script>

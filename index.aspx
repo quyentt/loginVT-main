@@ -978,6 +978,42 @@
       #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default * {
         color: #ffffff !important;
       }
+
+      /* ═══ FIX MODAL BLEED-THROUGH — khi modal mo, an TOAN BO #main-content-wrapper de
+         khong container nao xuyen qua backdrop. ═══
+         Truoc day chi bat khi body.modal-open — nhung alert modal (myModalAlert) khi show
+         solo (khong stack) doi luc BS khong kip add class -> filter row van bright. Fix bang
+         cach dung :has() bat truc tiep su ton tai cua modal show tren document. */
+      body.modal-open #main-content-wrapper,
+      body:has(.modal.show) #main-content-wrapper,
+      body:has(.modal.in) #main-content-wrapper {
+        visibility: hidden !important;
+      }
+      /* Modal (o bat ky dau — body level via #alert hoac inline trong module) va backdrop
+         luon hien khi mo. Child visibility:visible override parent's visibility:hidden. */
+      body.modal-open .modal.show,
+      body.modal-open .modal.in,
+      body.modal-open .modal-backdrop,
+      body:has(.modal.show) .modal.show,
+      body:has(.modal.in) .modal.in,
+      body:has(.modal.show) .modal-backdrop,
+      body:has(.modal.in) .modal-backdrop {
+        visibility: visible !important;
+      }
+      /* Select2 dropdown khi open (append vao body) — z-index cao hon modal (BS default 1055) */
+      .select2-container--open {
+        z-index: 20000 !important;
+      }
+      /* Modal & backdrop z-index cao de dam bao che het */
+      .modal.show, .modal.in {
+        z-index: 10055 !important;
+      }
+      .modal-backdrop.show, .modal-backdrop.in {
+        z-index: 10050 !important;
+        opacity: 0.75 !important;
+        background-color: #0f172a !important;
+      }
+
     </style>
   </head>
 

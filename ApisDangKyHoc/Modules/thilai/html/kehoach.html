@@ -4,17 +4,101 @@
         margin-left: 0px;
     }
 
-    .aps-kehoach-add .group-group-title-name .badge {
-        background-color: #fff !important;
-        color: #0d6efd !important;
-        padding: 6px 10px 6px 0 !important;
-        font-size: 16px !important;
+    /* Badge titles (Thoi gian / Chon dot thi / Danh sach pham vi / DS hoc phan...) —
+       dong bo voi phanconglop.html: chu trang tren nen xanh dam #223771. */
+    .aps-kehoach-add .group-group-title-name .badge,
+    .aps-kehoach-add .group-group-title-name .badge.bg-blue {
+        background: #223771 !important;
+        background-color: #223771 !important;
+        color: #ffffff !important;
+        padding: 6px 14px !important;
+        font-size: 14px !important;
         font-weight: 600 !important;
-        border-radius: 4px !important;
+        border-radius: 6px !important;
         line-height: 1.4 !important;
         display: inline-block !important;
         margin-bottom: 8px !important;
         text-transform: none !important;
+        letter-spacing: .2px;
+    }
+    /* Action buttons trong cac sub-table (Them / Them moi / Them dong moi / Xoa) —
+       dong bo voi phanconglop: Them = solid xanh dam, Xoa = solid do. Giu gap >= 10px. */
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-primary,
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-primary.btnSearch_PhamVi {
+        background: #223771 !important;
+        border: 1px solid #223771 !important;
+        color: #ffffff !important;
+    }
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-primary:hover {
+        background: #1c2e5f !important;
+        border-color: #1c2e5f !important;
+        color: #ffffff !important;
+    }
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-primary i {
+        color: #ffffff !important;
+    }
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-danger {
+        background: #dc3545 !important;
+        border: 1px solid #dc3545 !important;
+        color: #ffffff !important;
+    }
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-danger:hover {
+        background: #c82333 !important;
+        border-color: #bd2130 !important;
+        color: #ffffff !important;
+    }
+    .aps-kehoach-add .aps-form-btn .btn.btn-soft-danger i {
+        color: #ffffff !important;
+    }
+    /* Convention: destructive (Xoa) tach trai voi Them (right group), gap >= 10px */
+    .aps-kehoach-add .aps-form-btn .title-name.d-flex .btn + .btn,
+    .aps-kehoach-add .aps-form-btn.d-flex .btn + .btn {
+        margin-left: 10px !important;
+    }
+    /* Icon + text trong btn action bi lech baseline (default inline-block + icon float
+       xuong duoi). Ep inline-flex + center + gap de icon nam giua theo trong so hop cua text. */
+    .aps-kehoach-add .aps-form-btn .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        line-height: 1.2 !important;
+        vertical-align: middle !important;
+    }
+    .aps-kehoach-add .aps-form-btn .btn i {
+        margin: 0 !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    /* Container action-bar: canh phai + canh giua theo chieu doc */
+    .aps-kehoach-add .aps-form-btn {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        margin-top: 4px !important;
+    }
+    .aps-kehoach-add .aps-form-btn .pull-right,
+    .aps-kehoach-add .aps-form-btn .title-name.d-flex {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+    }
+    /* Nut "Xoa" ngoai (btnXoaKeHoachXuLy) — soft-danger qua nhat, doi solid do de noi bat
+       action destructive. Chi ap dung cho nut ngoai o header danh sach, khong dung modal. */
+    .aps-thilai #btnXoaKeHoachXuLy.btn,
+    .aps-thilai #btnXoaKeHoachXuLy.btn.btn-soft-danger {
+        background: #dc3545 !important;
+        border: 1px solid #dc3545 !important;
+        color: #ffffff !important;
+    }
+    .aps-thilai #btnXoaKeHoachXuLy.btn:hover {
+        background: #c82333 !important;
+        border-color: #bd2130 !important;
+        color: #ffffff !important;
+    }
+    .aps-thilai #btnXoaKeHoachXuLy.btn i {
+        color: #ffffff !important;
     }
 </style>
 <section class="content aps-dangkyhoc">
