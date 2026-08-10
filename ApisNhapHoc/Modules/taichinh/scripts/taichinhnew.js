@@ -813,7 +813,7 @@ ThuTien.prototype = {
             strTable_Id: "tblThuTien",
             aaData: data,
             bPaginate: {
-                strFuntionName: "me.getList_NguoiHoc_TTTS(main_doc.ThuTien.iTinhTrangNhapHoc,main_doc.ThuTien.strKeHoach_Id, '" + strTuKhoa + "',main_doc.ThuTien.cbGenTable_NguoiHoc_TTTS)",
+                strFuntionName: "main_doc.ThuTien.getList_NguoiHoc_TTTS(main_doc.ThuTien.iTinhTrangNhapHoc,main_doc.ThuTien.strKeHoach_Id, '" + strTuKhoa + "',main_doc.ThuTien.cbGenTable_NguoiHoc_TTTS)",
                 iDataRow: iPager,
             },
             arrClassName: ["tr-pointer", "btnSelect_NguoiHoc_ThuTien"],
