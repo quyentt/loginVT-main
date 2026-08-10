@@ -464,6 +464,17 @@ KeHoachTuyenSinhNew.prototype = {
             $('#kqdk_list, #kqdk_import, #kqdk_khai').addClass('d-none');
             if (mode === 'import') {
                 $('#kqdk_import').removeClass('d-none');
+                // Load combo Đợt tuyển sinh — dùng cache dtDotTuyenSinh (đã load ở modal Đợt).
+                // Auto-preselect nếu mở từ context Đợt (button "Import trúng tuyển" ở modal Đợt).
+                var $selDot = $('#ddlImportTT_Dot');
+                $selDot.empty().append('<option value="">-- Chọn đợt --</option>');
+                (me.dtDotTuyenSinh || []).forEach(function (d) {
+                    var id = d.ID || d.Id || d.id || '';
+                    var ma = d.MA || d.Ma || '';
+                    var ten = d.TEN || d.Ten || '';
+                    if (id) $selDot.append('<option value="' + id + '">' + (ma ? '[' + ma + '] ' : '') + ten + '</option>');
+                });
+                if (me.strDot_Id_ForKQ) $selDot.val(me.strDot_Id_ForKQ);
                 // Load DS Cơ sở đào tạo mặc định cho batch Import Excel — populate manual để tránh
                 // timing issue của loadToCombo_DanhMucDuLieu (đôi khi trả rỗng do cache).
                 edu.system.getList_DanhMucDulieu({
@@ -639,7 +650,8 @@ KeHoachTuyenSinhNew.prototype = {
         var sample = {
             strCorePerson_HoTen: 'Nguyễn Văn A',
             strCorePerson_Ho: 'Nguyễn', strCorePerson_Dem: 'Văn', strCorePerson_Ten: 'A',
-            strCorePerson_NgaySinh: '15/03/2007',
+            // ⚠ Ngày sinh: BE expect yyyy-mm-dd (Oracle native). FE không tự transform (yêu cầu sếp 09/08/2026).
+            strCorePerson_NgaySinh: '2007-03-15',
             dCorePerson_NgayS: 15, dCorePerson_ThangS: 3, dCorePerson_NamS: 2007,
             strCorePerson_GioiTinh_Ma: 'GENDER_NAM_ID', strMaSo: '',
             strDaoTao_LopQuanLy_DuKien: '',
@@ -728,6 +740,13 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa xác định kế hoạch tuyển sinh (mở lại từ danh sách kế hoạch/đợt)", "w");
             return;
         }
+        // Đợt lấy từ dropdown modal — bắt buộc phải chọn (giống bên "Đọc từ API")
+        var strDotId = $('#ddlImportTT_Dot').val() || me.strDot_Id_ForKQ || '';
+        if (!strDotId) {
+            edu.system.alert("Vui lòng chọn Đợt tuyển sinh trước khi import", "w");
+            return;
+        }
+        me.strDot_Id_ForKQ = strDotId;   // sync context để _buildImportPayload dùng
         if (typeof XLSX === 'undefined') {
             edu.system.alert("Thư viện đọc Excel chưa load xong, vui lòng thử lại sau 1-2 giây", "w");
             return;
@@ -807,7 +826,8 @@ KeHoachTuyenSinhNew.prototype = {
             // Row Excel ưu tiên: nếu có strDaoTao_CoSoDaoTao trong row thì dùng, ngược lại dùng dropdown
             var rowCoSo = row['strDaoTao_CoSoDaoTao'];
             var ctxCoSo = (rowCoSo && String(rowCoSo).trim()) ? String(rowCoSo).trim() : strCoSo_Default;
-            var payload = me._buildImportPayload(row, rowNo, { CoSo: ctxCoSo });
+            var strDotId_Batch = $('#ddlImportTT_Dot').val() || me.strDot_Id_ForKQ || '';
+            var payload = me._buildImportPayload(row, rowNo, { Dot: strDotId_Batch, CoSo: ctxCoSo });
             edu.system.makeRequest({
                 success: function (data) {
                     idx++;
@@ -4654,8 +4674,19 @@ KeHoachTuyenSinhNew.prototype = {
         var me = this;
         var $sel = $('#ddlDocAPI_Preset');
         $sel.empty().append('<option value="">-- Chọn nguồn --</option>');
+        // Filter theo domain hiện tại:
+        //   - CMC preset CHỈ hiện khi domain là iu.cmcu.edu.vn (tránh trường khác ăn nhầm API của CMC)
+        //   - UHD & Phenikaa: tạm ẩn hết (yêu cầu sếp 10/08/2026)
+        // Reference: rule "ẩn UI thì comment code, đừng xóa" — dữ liệu preset vẫn giữ ở _docAPI_Presets
+        // để bật lại nhanh khi cần; chỉ filter ở tầng render.
+        var host = (window.location && window.location.hostname || '').toLowerCase();
+        var isCmcDomain = host.indexOf('cmcu.edu.vn') !== -1;
         me._docAPI_Presets.forEach(function (p) {
-            $sel.append('<option value="' + p.id + '">' + p.ten + '</option>');
+            var show = false;
+            if (p.id === 'CMC') show = isCmcDomain;
+            // if (p.id === 'UHD') show = ...;         // tạm ẩn
+            // if (p.id === 'PHENIKAA') show = ...;    // tạm ẩn
+            if (show) $sel.append('<option value="' + p.id + '">' + p.ten + '</option>');
         });
     },
 

@@ -6,6 +6,9 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
         <title>Cổng cán bộ</title>
         <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/><!--Tell the browser to be responsive to screen width-->
+        <!-- Force light color scheme — chan browser tu dong invert / doi mau khi user OS o
+             dark mode (gay ra vien do/hong la tren sidebar submenu, form controls...). -->
+        <meta name="color-scheme" content="light only" />
         <!--no cache in browser-->
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
         <meta http-equiv="Pragma" content="no-cache" />
@@ -26,6 +29,19 @@
         <link href="App_Themes/Cms/Custom_V1/styles.css?v=4" rel="stylesheet" />
 
         <style>
+          /* Force light color scheme — bao hiem tren nhung browser bo qua meta color-scheme.
+             Ep form controls (input/select/scrollbar) render theo light theme + tat outline
+             mac dinh mau do/hong tren dark OS. */
+          html, :root {
+            color-scheme: light only !important;
+            forced-color-adjust: none;
+          }
+          input, select, textarea, button {
+            color-scheme: light !important;
+          }
+          *:focus, *:focus-visible {
+            outline-color: #223771 !important;
+          }
           /* ─── Reskin AdminLTE shell (indexi.aspx) tone dask-blue #223771 + orange #f8843d
              Mục đích: đồng bộ với index.aspx (SPA shell mới). Không đụng HTML/JS gốc, chỉ
              override class AdminLTE (.skin-blue, .main-header, .main-sidebar, .content-wrapper,

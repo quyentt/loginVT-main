@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Force light color scheme — chan browser tu dong invert / doi mau khi user OS o
+         dark mode (gay ra vien do/hong la tren sidebar submenu, form controls...). -->
+    <meta name="color-scheme" content="light only">
     <title>Education management</title>
     <link rel="stylesheet" href="assets/css/styles.css?v=<%= Guid.NewGuid().ToString() %>">
     <link href="assets/select2/css/select2.min.css" rel="stylesheet" />
@@ -14,6 +17,19 @@
     <link rel="shortcut icon" type="image/x-icon" href="assets/images/logo.ico" />
 
     <style>
+      /* Force light color scheme — bao hiem tren nhung browser bo qua meta color-scheme.
+         Ep form controls (input/select/scrollbar) render theo light theme + tat outline
+         mac dinh mau do/hong tren dark OS. */
+      html, :root {
+        color-scheme: light only !important;
+        forced-color-adjust: none;
+      }
+      input, select, textarea, button {
+        color-scheme: light !important;
+      }
+      *:focus, *:focus-visible {
+        outline-color: #223771 !important;
+      }
       /* FCM header notifications: layout only (no new colors) */
       #fcm-noti-button {
         position: relative;
