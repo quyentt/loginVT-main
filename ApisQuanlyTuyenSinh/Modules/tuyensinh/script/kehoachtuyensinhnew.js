@@ -776,6 +776,18 @@ KeHoachTuyenSinhNew.prototype = {
                 return;
             }
 
+            // Áp dụng giới hạn số bản ghi (giống bên docAPI): "Chỉ nhập N" hoặc "Toàn bộ"
+            var limitMode = $('input[name="importTT_LimitMode"]:checked').val() || 'custom';
+            var totalRaw = rows.length;
+            if (limitMode === 'custom') {
+                var lim = parseInt($('#txtImportTT_Limit').val(), 10);
+                if (isNaN(lim) || lim < 1) lim = 100;
+                if (lim < totalRaw) rows = rows.slice(0, lim);
+            }
+            if (rows.length < totalRaw) {
+                console.log('[Import TT] Giới hạn: chỉ nhập ' + rows.length + '/' + totalRaw + ' dòng đầu');
+            }
+
             me._importCancelled = false;
             me._importTT_Errors = [];   // reset error log tổng hợp trước batch mới
             $('#btnStartImportTT').prop('disabled', true);
@@ -1018,10 +1030,14 @@ KeHoachTuyenSinhNew.prototype = {
                 : '<i class="fa-solid fa-xmark color-red"></i>');
         var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
         var maHS = row.strHoSo_MaHoSo || row.strHoSo_SoBaoDanh || '';
+        var cccd = row.strPersonIden_SoCCCD || '';
         var hoTen = row.strCorePerson_HoTen || '';
+        // Gộp Mã HS + CCCD vào 1 cell: dòng 1 = mã HS đậm, dòng 2 = CCCD nhỏ xám (dễ copy check)
+        var idCell = esc(maHS)
+            + (cccd ? '<br><span style="font-size:11px; color:#64748b;">CCCD: ' + esc(cccd) + '</span>' : '');
         var html = '<tr>'
             + '<td class="td-center td-fix">' + rowNo + '</td>'
-            + '<td class="td-left">' + esc(maHS) + '</td>'
+            + '<td class="td-left">' + idCell + '</td>'
             + '<td class="td-left">' + esc(hoTen) + '</td>'
             + '<td class="td-center">' + icon + '</td>'
             + '<td class="td-left">' + esc(msg) + '</td>'
@@ -1033,6 +1049,7 @@ KeHoachTuyenSinhNew.prototype = {
             me._importTT_Errors.push({
                 row: rowNo,
                 maHS: maHS || '',
+                cccd: cccd || '',
                 hoTen: hoTen || '',
                 type: kind === 'http' ? 'HTTP' : 'BE',
                 msg: msg || '',
@@ -1059,9 +1076,12 @@ KeHoachTuyenSinhNew.prototype = {
         var html = errs.map(function (e) {
             var typeColor = e.type === 'HTTP' ? '#7c2d12' : '#991b1b';
             var typeBg = e.type === 'HTTP' ? '#fed7aa' : '#fecaca';
+            // Gộp Mã HS + CCCD (dễ copy check khi lỗi)
+            var idCell = esc(e.maHS)
+                + (e.cccd ? '<br><span style="font-size:11px; color:#64748b;">CCCD: ' + esc(e.cccd) + '</span>' : '');
             return '<tr>'
                 + '<td class="td-center">' + e.row + '</td>'
-                + '<td>' + esc(e.maHS) + '</td>'
+                + '<td>' + idCell + '</td>'
                 + '<td>' + esc(e.hoTen) + '</td>'
                 + '<td class="td-center"><span style="background:' + typeBg + ';color:' + typeColor + ';padding:2px 8px;border-radius:10px;font-weight:600;font-size:11px;">' + e.type + '</span></td>'
                 + '<td>' + esc(e.msg) + '</td>'
