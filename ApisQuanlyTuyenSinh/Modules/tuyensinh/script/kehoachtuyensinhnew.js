@@ -585,6 +585,21 @@ KeHoachTuyenSinhNew.prototype = {
             me.downloadMauImport_TrungTuyen();
         });
 
+        // Panel lỗi Import Excel (giống docAPI): show/hide + tải Excel lỗi
+        $("#btnImportTT_ShowErrors").click(function (e) {
+            e.preventDefault();
+            me.renderImportTT_ErrorsPanel();
+            $('#importTT_ErrorsPanel').removeClass('d-none');
+        });
+        $("#btnImportTT_HideErrors").click(function (e) {
+            e.preventDefault();
+            $('#importTT_ErrorsPanel').addClass('d-none');
+        });
+        $("#btnImportTT_ExportErrors").click(function (e) {
+            e.preventDefault();
+            me.exportImportTT_ErrorsToExcel();
+        });
+
         // Đọc dữ liệu từ nguồn API (mapping cột API ↔ trường thông tin, lưu localStorage)
         me.initDocAPI_Bindings();
     },
@@ -709,6 +724,11 @@ KeHoachTuyenSinhNew.prototype = {
         $('#lblImportProgress').text('0 / 0');
         $('#lblImportOK, #lblImportErr').text('0');
         $('#importProgressBar').css('width', '0%').text('0%');
+        // reset error panel state
+        this._importTT_Errors = [];
+        $('#importTT_ErrorsPanel').addClass('d-none');
+        $('#btnImportTT_ShowErrors').addClass('d-none');
+        $('#lblImportTT_ErrCount').text('0');
     },
 
     /*------------------------------------------
@@ -757,10 +777,14 @@ KeHoachTuyenSinhNew.prototype = {
             }
 
             me._importCancelled = false;
+            me._importTT_Errors = [];   // reset error log tổng hợp trước batch mới
             $('#btnStartImportTT').prop('disabled', true);
             $('#btnCancelImportTT').removeClass('d-none');
             $('#fileImportTT').prop('disabled', true);
             $('#importProgressWrap').removeClass('d-none');
+            $('#importTT_ErrorsPanel').addClass('d-none');
+            $('#btnImportTT_ShowErrors').addClass('d-none');
+            $('#lblImportTT_ErrCount').text('0');
             $('#tblImportTT_Log tbody').html('');
             me._runImport(rows);
         };
@@ -771,77 +795,104 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Chạy tuần tự từng row (recursion). Đợi response mỗi row rồi mới next
-    -- → tránh overload backend + log tuần tự dễ đọc.
+    -- Chạy PARALLEL với concurrency limit = _IMPORT_CONCURRENCY (mặc định 5).
+    -- Giữ tối đa N request đồng thời in-flight; khi 1 xong → kick request kế tiếp.
+    -- Nhanh ~5× so với tuần tự cũ. Cancel: khi flag on, không dispatch thêm; chờ in-flight xong rồi finish.
     -------------------------------------------*/
+    _IMPORT_CONCURRENCY: 5,
+
     _runImport: function (rows) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var total = rows.length, idx = 0, ok = 0, err = 0;
+        var total = rows.length;
+        var nextDispatch = 0;   // index dòng kế tiếp sẽ dispatch
+        var done = 0;           // số dòng đã hoàn tất (bao gồm cả lỗi)
+        var inFlight = 0;       // số request đang chạy
+        var ok = 0, err = 0;
+        var finished = false;
         var $bar = $('#importProgressBar');
+        var CONC = me._IMPORT_CONCURRENCY || 5;
 
         var updateProgress = function () {
-            var pct = total ? Math.round((idx / total) * 100) : 0;
+            var pct = total ? Math.round((done / total) * 100) : 0;
             $bar.css('width', pct + '%').text(pct + '%');
-            $('#lblImportProgress').text(idx + ' / ' + total);
+            $('#lblImportProgress').text(done + ' / ' + total);
             $('#lblImportOK').text(ok);
             $('#lblImportErr').text(err);
         };
 
         var finish = function () {
+            if (finished) return;
+            finished = true;
             $('#btnStartImportTT').prop('disabled', false);
             $('#btnCancelImportTT').addClass('d-none');
             $('#fileImportTT').prop('disabled', false);
             var kind = (err === 0 && !me._importCancelled) ? 's' : 'i';
-            edu.system.alert("Đã xử lý " + idx + "/" + total + " (OK: " + ok + ", lỗi: " + err + ")"
+            edu.system.alert("Đã xử lý " + done + "/" + total + " (OK: " + ok + ", lỗi: " + err + ")"
                 + (me._importCancelled ? " — đã dừng" : ""), kind);
         };
 
         // Cơ sở đào tạo mặc định cho batch (dropdown trong modal) — dùng làm ctx.CoSo.
         // Nếu row Excel có value strDaoTao_CoSoDaoTao → value trong file ưu tiên (ghi đè ctx).
         var strCoSo_Default = edu.system.getValById('ddlImportTT_CoSoDaoTao') || '';
+        var strDotId_Batch = $('#ddlImportTT_Dot').val() || me.strDot_Id_ForKQ || '';
 
-        var next = function () {
-            if (me._importCancelled) { finish(); return; }
-            if (idx >= total) { finish(); return; }
-            var rowNo = idx + 2; // hàng 1 là header → dữ liệu từ hàng 2
-            var row = rows[idx];
-            // Row Excel ưu tiên: nếu có strDaoTao_CoSoDaoTao trong row thì dùng, ngược lại dùng dropdown
-            var rowCoSo = row['strDaoTao_CoSoDaoTao'];
-            var ctxCoSo = (rowCoSo && String(rowCoSo).trim()) ? String(rowCoSo).trim() : strCoSo_Default;
-            var strDotId_Batch = $('#ddlImportTT_Dot').val() || me.strDot_Id_ForKQ || '';
-            var payload = me._buildImportPayload(row, rowNo, { Dot: strDotId_Batch, CoSo: ctxCoSo });
-            edu.system.makeRequest({
-                success: function (data) {
-                    idx++;
-                    if (data && data.Success) {
-                        ok++;
-                        me._appendLog(rowNo, row, 'ok', 'Thành công');
-                    } else {
-                        err++;
-                        me._appendLog(rowNo, row, 'err', (data && data.Message) || 'Lỗi không xác định');
-                    }
-                    updateProgress();
-                    next();
-                },
-                error: function (er) {
-                    idx++;
-                    err++;
-                    var msg = 'HTTP lỗi';
-                    if (er && er.statusText) msg = 'HTTP ' + (er.status || '') + ' ' + er.statusText;
-                    else if (er) { try { msg = JSON.stringify(er); } catch (e) { } }
-                    me._appendLog(rowNo, row, 'err', msg);
-                    updateProgress();
-                    next();
-                },
-                type: 'POST',
-                contentType: true,
-                action: payload.action,
-                data: payload,
-                fakedb: []
-            }, false, false, false, null);
+        var onComplete = function () {
+            inFlight--;
+            done++;
+            updateProgress();
+            // Đã xong tất cả (kể cả pending in-flight) → finish
+            if (done >= total) { finish(); return; }
+            // Đã cancel + không còn in-flight → finish
+            if (me._importCancelled && inFlight === 0) { finish(); return; }
+            // Còn chỗ + còn dòng → kick tiếp
+            kickNext();
         };
+
+        var kickNext = function () {
+            while (!me._importCancelled && inFlight < CONC && nextDispatch < total) {
+                var myIdx = nextDispatch++;
+                inFlight++;
+                var rowNo = myIdx + 2;   // hàng 1 = header
+                var row = rows[myIdx];
+                var rowCoSo = row['strDaoTao_CoSoDaoTao'];
+                var ctxCoSo = (rowCoSo && String(rowCoSo).trim()) ? String(rowCoSo).trim() : strCoSo_Default;
+                var payload = me._buildImportPayload(row, rowNo, { Dot: strDotId_Batch, CoSo: ctxCoSo });
+                (function (rowNo, row) {
+                    edu.system.makeRequest({
+                        success: function (data) {
+                            if (data && data.Success) {
+                                ok++;
+                                me._appendLog(rowNo, row, 'ok', 'Thành công');
+                            } else {
+                                err++;
+                                me._appendLog(rowNo, row, 'err', (data && data.Message) || 'Lỗi không xác định');
+                            }
+                            onComplete();
+                        },
+                        error: function (er) {
+                            err++;
+                            var msg = 'HTTP lỗi';
+                            if (er && er.statusText) msg = 'HTTP ' + (er.status || '') + ' ' + er.statusText;
+                            else if (er) { try { msg = JSON.stringify(er); } catch (e) { } }
+                            me._appendLog(rowNo, row, 'http', msg);
+                            onComplete();
+                        },
+                        type: 'POST',
+                        contentType: true,
+                        action: payload.action,
+                        data: payload,
+                        fakedb: []
+                    }, false, false, false, null);
+                })(rowNo, row);
+            }
+            // Không dispatch được thêm + không còn in-flight → hoàn tất (case cancel ngay đầu)
+            if (inFlight === 0 && (me._importCancelled || nextDispatch >= total)) {
+                if (done >= total || me._importCancelled) finish();
+            }
+        };
+
         updateProgress();
-        next();
+        kickNext();
     },
 
     /*------------------------------------------
@@ -955,8 +1006,11 @@ KeHoachTuyenSinhNew.prototype = {
     /*------------------------------------------
     -- Log 1 row vào bảng tiến trình. Dùng prepend để row mới nổi lên đầu.
     -- Escape HTML bằng $('<div>').text().html() để tránh XSS từ file người dùng.
+    -- Nếu kind='err' → push thêm vào _importTT_Errors để render panel tổng hợp + export Excel.
+    -- kind: 'ok' | 'err' | 'cancel' | 'http' (HTTP error, phân biệt với BE reject)
     -------------------------------------------*/
     _appendLog: function (rowNo, row, kind, msg) {
+        var me = this;
         var icon = kind === 'ok'
             ? '<i class="fa-solid fa-check color-success"></i>'
             : (kind === 'cancel'
@@ -973,6 +1027,112 @@ KeHoachTuyenSinhNew.prototype = {
             + '<td class="td-left">' + esc(msg) + '</td>'
             + '</tr>';
         $('#tblImportTT_Log tbody').prepend(html);
+        // Track lỗi tổng hợp cho panel + export Excel (chỉ 'err' và 'http', không 'cancel')
+        if (kind === 'err' || kind === 'http') {
+            if (!me._importTT_Errors) me._importTT_Errors = [];
+            me._importTT_Errors.push({
+                row: rowNo,
+                maHS: maHS || '',
+                hoTen: hoTen || '',
+                type: kind === 'http' ? 'HTTP' : 'BE',
+                msg: msg || '',
+                raw: row   // full row từ Excel để export debug
+            });
+            $('#lblImportTT_ErrCount').text(me._importTT_Errors.length);
+            $('#btnImportTT_ShowErrors').removeClass('d-none');
+        }
+    },
+
+    /*------------------------------------------
+    -- Render danh sách lỗi Import Excel vào panel #importTT_ErrorsPanel (giống docAPI).
+    -------------------------------------------*/
+    renderImportTT_ErrorsPanel: function () {
+        var me = this;
+        var errs = me._importTT_Errors || [];
+        $('#lblImportTT_ErrCount').text(errs.length);
+        var $tbody = $('#tblImportTT_Errors tbody');
+        if (!errs.length) {
+            $tbody.html('<tr><td colspan="5" class="td-center text-muted" style="padding:12px;">Chưa có lỗi nào</td></tr>');
+            return;
+        }
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var html = errs.map(function (e) {
+            var typeColor = e.type === 'HTTP' ? '#7c2d12' : '#991b1b';
+            var typeBg = e.type === 'HTTP' ? '#fed7aa' : '#fecaca';
+            return '<tr>'
+                + '<td class="td-center">' + e.row + '</td>'
+                + '<td>' + esc(e.maHS) + '</td>'
+                + '<td>' + esc(e.hoTen) + '</td>'
+                + '<td class="td-center"><span style="background:' + typeBg + ';color:' + typeColor + ';padding:2px 8px;border-radius:10px;font-weight:600;font-size:11px;">' + e.type + '</span></td>'
+                + '<td>' + esc(e.msg) + '</td>'
+                + '</tr>';
+        }).join('');
+        $tbody.html(html);
+    },
+
+    /*------------------------------------------
+    -- Export danh sách row lỗi Import Excel ra file Excel để gửi BE dev debug.
+    -- 2 sheet: TomTat + FullData (giống docAPI_ExportErrorsToExcel).
+    -------------------------------------------*/
+    exportImportTT_ErrorsToExcel: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
+            return;
+        }
+        var errs = me._importTT_Errors || [];
+        if (!errs.length) {
+            edu.system.alert("Chưa có lỗi nào để xuất.", "w");
+            return;
+        }
+
+        // --- Sheet 1: Tóm tắt ---
+        var sheet1Aoa = [['STT', 'Hàng Excel', 'Mã HS/SBD', 'Họ tên', 'Loại lỗi', 'Chi tiết lỗi']];
+        errs.forEach(function (e, i) {
+            sheet1Aoa.push([i + 1, e.row, e.maHS || '', e.hoTen || '', e.type || '', e.msg || '']);
+        });
+        var ws1 = XLSX.utils.aoa_to_sheet(sheet1Aoa);
+        ws1['!cols'] = [{ wch: 6 }, { wch: 10 }, { wch: 18 }, { wch: 26 }, { wch: 10 }, { wch: 80 }];
+        ws1['!freeze'] = { xSplit: 0, ySplit: 1 };
+
+        // --- Sheet 2: Full data (info lỗi + toàn bộ column raw từ Excel gốc) ---
+        var headerSet = {};
+        var rowHeaders = [];
+        errs.forEach(function (e) {
+            Object.keys(e.raw || {}).forEach(function (k) {
+                if (!headerSet[k]) { headerSet[k] = 1; rowHeaders.push(k); }
+            });
+        });
+        var sheet2Headers = ['Hàng Excel', 'Mã HS/SBD', 'Họ tên', 'Loại lỗi', 'Chi tiết lỗi'].concat(rowHeaders);
+        var sheet2Aoa = [sheet2Headers];
+        errs.forEach(function (e) {
+            var rec = e.raw || {};
+            var row = [e.row, e.maHS || '', e.hoTen || '', e.type || '', e.msg || ''];
+            rowHeaders.forEach(function (h) {
+                var v = rec[h];
+                if (v == null) row.push('');
+                else if (typeof v === 'object') row.push(JSON.stringify(v));
+                else row.push(v);
+            });
+            sheet2Aoa.push(row);
+        });
+        var ws2 = XLSX.utils.aoa_to_sheet(sheet2Aoa);
+        ws2['!cols'] = [{ wch: 10 }, { wch: 18 }, { wch: 26 }, { wch: 10 }, { wch: 60 }]
+            .concat(rowHeaders.map(function (h) { return { wch: Math.max(12, Math.min(30, h.length + 2)) }; }));
+        ws2['!freeze'] = { xSplit: 5, ySplit: 1 };
+
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws1, 'Loi_TomTat');
+        XLSX.utils.book_append_sheet(wb, ws2, 'Loi_FullData');
+
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var now = new Date();
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+            + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+        var fname = 'LoiImportExcel_' + errs.length + 'loi_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fname);
+        edu.system.alert("Đã xuất " + errs.length + " row lỗi ra file " + fname
+            + "\n\nSheet 1: Tóm tắt lỗi\nSheet 2: Full data (row Excel gốc) để BE debug", "s");
     },
 
     /*------------------------------------------
@@ -5667,78 +5827,81 @@ KeHoachTuyenSinhNew.prototype = {
             $('#docAPI_ProgressBar').css('width', pct + '%').text(pct + '%');
         }
 
-        function runNext(k) {
+        // ====== PARALLEL với concurrency limit ======
+        // Chạy tối đa N request cùng lúc, khi 1 xong → kick request kế tiếp.
+        // Nhanh ~5× so với tuần tự cũ. Cancel: dừng dispatch mới, chờ in-flight xong.
+        var CONC = me._IMPORT_CONCURRENCY || 5;
+        var nextDispatch = 0;
+        var inFlight = 0;
+        var finished = false;
+
+        function doFinish() {
+            if (finished) return;
+            finished = true;
+            $('#btnDocAPI_StartImport').prop('disabled', false);
+            $('#btnDocAPI_CancelImport').addClass('d-none');
             if (me._docAPI_ImportCancelled) {
-                $('#btnDocAPI_StartImport').prop('disabled', false);
-                $('#btnDocAPI_CancelImport').addClass('d-none');
-                edu.system.alert("Đã dừng import ở record " + doneReq + "/" + totalReq);
-                return;
-            }
-            if (k >= queue.length) {
-                $('#btnDocAPI_StartImport').prop('disabled', false);
-                $('#btnDocAPI_CancelImport').addClass('d-none');
+                edu.system.alert("Đã dừng ở " + doneReq + "/" + totalReq + ". OK: " + okReq + " / Lỗi: " + errReq);
+            } else {
                 edu.system.alert("Xong. Thành công: " + okReq + " / Lỗi: " + errReq);
-                return;
             }
-            var item = queue[k];
-            // Reuse _buildImportPayload — truyền override Dot_Id + CoSoDaoTao_Id từ combo
-            var payload = me._buildImportPayload(item.row, item.idx + 1, { Dot: strDotId, CoSo: strCoSoId });
-            // === DEBUG LOG: payload gửi lên ===
-            console.log('%c[docAPI] REQUEST #' + (item.idx + 1), 'color:#2563eb;font-weight:bold', {
-                idx: item.idx,
-                mappedFields: Object.keys(item.row).length,
-                row: item.row,
-                payload: payload
-            });
-            edu.system.makeRequest({
-                success: function (data) {
-                    // === DEBUG LOG: response từ BE ===
-                    console.log('%c[docAPI] RESPONSE #' + (item.idx + 1), 'color:#059669;font-weight:bold', {
-                        idx: item.idx,
-                        success: data && data.Success,
-                        message: data && data.Message,
-                        rawData: data
-                    });
-                    doneReq++;
-                    var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
-                    var $errCell = $('.docAPI-errmsg[data-idx="' + item.idx + '"]');
-                    var msg = (data && data.Message) || '';
-                    if (data && data.Success) {
-                        okReq++;
-                        if (msg) {
-                            // Success nhưng có message — có thể là warning (silent skip)
-                            $cell.html('<span style="color:#d97706;" title="' + me._docAPI_esc(msg) + '"><i class="fa fa-exclamation-triangle"></i></span>');
-                            $errCell.html('<span style="color:#d97706;">' + me._docAPI_esc(msg) + '</span>');
-                        } else {
-                            $cell.html('<span class="color-success" title="OK"><i class="fa fa-check"></i></span>');
-                            $errCell.html('');
-                        }
-                    } else {
-                        errReq++;
-                        var errMsg = msg || 'Lỗi không xác định';
-                        $cell.html('<span class="color-red" title="' + me._docAPI_esc(errMsg) + '"><i class="fa fa-times"></i></span>');
-                        $errCell.html('<span class="color-red">' + me._docAPI_esc(errMsg) + '</span>');
-                        me._docAPI_LogError(item.idx, 'BE', errMsg);
-                    }
-                    updateProgress();
-                    runNext(k + 1);
-                },
-                error: function (er) {
-                    console.error('[docAPI] ERROR #' + (item.idx + 1), er);
-                    doneReq++; errReq++;
-                    var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
-                    var $errCell = $('.docAPI-errmsg[data-idx="' + item.idx + '"]');
-                    var netErr = 'Network error: ' + JSON.stringify(er);
-                    $cell.html('<span class="color-red" title="' + me._docAPI_esc(netErr) + '"><i class="fa fa-times"></i></span>');
-                    $errCell.html('<span class="color-red">' + me._docAPI_esc(netErr) + '</span>');
-                    me._docAPI_LogError(item.idx, 'API', netErr);
-                    updateProgress();
-                    runNext(k + 1);
-                },
-                type: 'POST', contentType: true,
-                action: payload.action, data: payload, fakedb: []
-            }, false, false, false, null);
         }
-        runNext(0);
+
+        function onOne() {
+            inFlight--;
+            updateProgress();
+            if (doneReq >= totalReq) { doFinish(); return; }
+            if (me._docAPI_ImportCancelled && inFlight === 0) { doFinish(); return; }
+            kickNext();
+        }
+
+        function kickNext() {
+            while (!me._docAPI_ImportCancelled && inFlight < CONC && nextDispatch < queue.length) {
+                var item = queue[nextDispatch++];
+                inFlight++;
+                (function (item) {
+                    var payload = me._buildImportPayload(item.row, item.idx + 1, { Dot: strDotId, CoSo: strCoSoId });
+                    edu.system.makeRequest({
+                        success: function (data) {
+                            doneReq++;
+                            var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
+                            var $errCell = $('.docAPI-errmsg[data-idx="' + item.idx + '"]');
+                            var msg = (data && data.Message) || '';
+                            if (data && data.Success) {
+                                okReq++;
+                                if (msg) {
+                                    $cell.html('<span style="color:#d97706;" title="' + me._docAPI_esc(msg) + '"><i class="fa fa-exclamation-triangle"></i></span>');
+                                    $errCell.html('<span style="color:#d97706;">' + me._docAPI_esc(msg) + '</span>');
+                                } else {
+                                    $cell.html('<span class="color-success" title="OK"><i class="fa fa-check"></i></span>');
+                                    $errCell.html('');
+                                }
+                            } else {
+                                errReq++;
+                                var errMsg = msg || 'Lỗi không xác định';
+                                $cell.html('<span class="color-red" title="' + me._docAPI_esc(errMsg) + '"><i class="fa fa-times"></i></span>');
+                                $errCell.html('<span class="color-red">' + me._docAPI_esc(errMsg) + '</span>');
+                                me._docAPI_LogError(item.idx, 'BE', errMsg);
+                            }
+                            onOne();
+                        },
+                        error: function (er) {
+                            doneReq++; errReq++;
+                            var $cell = $('.docAPI-status[data-idx="' + item.idx + '"]');
+                            var $errCell = $('.docAPI-errmsg[data-idx="' + item.idx + '"]');
+                            var netErr = 'Network error: ' + JSON.stringify(er);
+                            $cell.html('<span class="color-red" title="' + me._docAPI_esc(netErr) + '"><i class="fa fa-times"></i></span>');
+                            $errCell.html('<span class="color-red">' + me._docAPI_esc(netErr) + '</span>');
+                            me._docAPI_LogError(item.idx, 'API', netErr);
+                            onOne();
+                        },
+                        type: 'POST', contentType: true,
+                        action: payload.action, data: payload, fakedb: []
+                    }, false, false, false, null);
+                })(item);
+            }
+        }
+
+        kickNext();
     }
 };
