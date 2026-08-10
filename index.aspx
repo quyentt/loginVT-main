@@ -353,7 +353,7 @@
         background: #223771 !important;
         box-shadow: none !important;
       }
-      .left-sidebar a:hover { color: #ffffff !important; }
+      .left-sidebar a:hover { color: #ffffff !important; background: rgba(255, 255, 255, 0.1) !important;}
       .left-sidebar a:hover .item-icon { color: #ffffff !important; }
 
       .sidebar-menu-header {
@@ -371,7 +371,8 @@
       .sidebar-menu-header:not(.collapsed):hover,
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header:hover {
         color: #ffffff !important;
-        background: rgba(255, 255, 255, 0.08) !important;
+        /* background: rgba(255, 255, 255, 0.1) !important; */
+        background-color: var(--color-blue);
       }
       .sidebar-menu-header:not(.collapsed):hover i,
       .sidebar-menu-header:not(.collapsed):hover .item-icon {
@@ -379,13 +380,13 @@
       }
 
       .sidebar-menu-item.active .sidebar-menu-header {
-        background: rgba(255, 255, 255, 0.10) !important;
-        color: #f8843d !important;
+        background-color: var(--color-blue);
+        color: #fff !important;
         font-weight: 700 !important;
       }
       .sidebar-menu-item.active .sidebar-menu-header .item-icon,
       .sidebar-menu-item.active .sidebar-menu-header i {
-        color: #f8843d !important;
+        color: #fff !important;
       }
 
       /* Submenu (cấp con) — bullet + border-left theo tone dask-blue */
@@ -459,10 +460,10 @@
       #main-content-wrapper .today-card-2 > .card-header,
       #main-content-wrapper .today-card-3 > .card-header {
         background: #223771 !important;
-        background-image: none !important;
         border: 0 !important;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-        padding: 12px 18px !important;
+        padding: 0 18px !important;
+        margin-bottom: -1px;
       }
       /* Card title (không phải tab) → trắng */
       #main-content-wrapper .today-card > .card-header .title .feature-name {
@@ -485,7 +486,8 @@
         font-weight: 700 !important;
       }
       #main-content-wrapper .today-card > .card-header .myTab-header-link.active i {
-        color: #f8843d !important;
+        color: #223771 !important;
+        font-weight: 700;
       }
       /* Icon frame trong card header (today-card-1 gradient xanh) → tone dask-blue */
       #main-content-wrapper .today-card-1 > .card-header .icon,
@@ -715,7 +717,7 @@
         border: 1px solid #e2e8f0 !important;
         border-radius: 10px !important;
         box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important;
-        padding: 16px 18px !important;
+        padding: 0 !important;
         margin-bottom: 16px !important;
       }
 
