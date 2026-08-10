@@ -321,10 +321,29 @@
 
                     <!--4.Danh sách học sinh - sinh viên xét duyệt-->
                     <div class="row aps-form mt-15 btnOpenDelete">
-                        <div class="row">
-                            <p class="group-group-title-name aps-section-title border-0 mb-5">
+                        <!-- Action bar tren table (4000+ row scroll). Title TRAI, TOAN BO
+                             nut (Xoa + cac Them...) canh PHAI cung 1 cum. -->
+                        <div class="row d-flex align-items-center flex-wrap mb-10"
+                             style="width: 100%; margin: 0; gap: 10px; padding: 0 !important;">
+                            <p class="group-group-title-name aps-section-title border-0 mb-0 mr-auto"
+                               style="padding-left: 0 !important;">
                                 <i class="fa fa-users"></i><span>Danh sách học sinh - sinh viên xét duyệt</span>
                             </p>
+                            <div id="ApDungChoKhoa"></div>
+                            <div id="ApDungChoChuongTrinh"></div>
+                            <div id="ApDungChoLop"></div>
+                            <a class="btn btn-danger btnDeleteDTSV_SinhVien" id="" style="background:#dc3545 !important;border-color:#dc3545 !important;color:#fff !important;">
+                                <i class="fa fa-trash" style="color:#fff !important"></i>Xóa
+                            </a>
+                            <a class="btn btn-outline-danger btnSearch_SinhVienKeHoach" id="">
+                                <i class="fa fa-plus color-active"></i> Thêm từ kế hoạch tốt nghiệp khác
+                            </a>
+                            <a class="btn btn-outline-success btnSearch_SinhVienDKH" id="">
+                                <i class="fa fa-plus color-active"></i> Thêm từ đăng ký học
+                            </a>
+                            <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id="">
+                                <i class="fa fa-plus color-active"></i> Thêm thành viên
+                            </a>
                         </div>
                         <div class="row">
                             <div class="aps-table-select">
@@ -346,27 +365,6 @@
                                     </thead>
                                     <tbody></tbody>
                                 </table>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="pull-left">
-                                <div id="ApDungChoKhoa"></div>
-                                <div id="ApDungChoChuongTrinh"></div>
-                                <div id="ApDungChoLop"></div>
-                                <a class="btn btn-outline-secondary btnDeleteDTSV_SinhVien" id="">
-                                    <i class="fa fa-trash"></i>Xóa
-                                </a>
-                            </div>
-                            <div class="pull-right">
-                                <a class="btn btn-outline-danger btnSearch_SinhVienKeHoach" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm từ kế hoạch tốt nghiệp khác
-                                </a>
-                                <a class="btn btn-outline-success btnSearch_SinhVienDKH" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm từ đăng ký học
-                                </a>
-                                <a class="btn btn-outline-primary btnSearchDTSV_SinhVien" id="">
-                                    <i class="fa fa-plus color-active"></i> Thêm thành viên
-                                </a>
                             </div>
                         </div>
                     </div>
