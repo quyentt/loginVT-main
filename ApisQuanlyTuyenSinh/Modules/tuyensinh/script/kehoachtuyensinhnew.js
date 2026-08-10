@@ -475,27 +475,9 @@ KeHoachTuyenSinhNew.prototype = {
                     if (id) $selDot.append('<option value="' + id + '">' + (ma ? '[' + ma + '] ' : '') + ten + '</option>');
                 });
                 if (me.strDot_Id_ForKQ) $selDot.val(me.strDot_Id_ForKQ);
-                // Load DS Cơ sở đào tạo mặc định cho batch Import Excel — populate manual để tránh
-                // timing issue của loadToCombo_DanhMucDuLieu (đôi khi trả rỗng do cache).
-                edu.system.getList_DanhMucDulieu({
-                    strMaBangDanhMuc: 'KHCT.COSODAOTAO',
-                    strTenCotSapXep: '',
-                    iTrangThai: 1
-                }, '', '', function (data) {
-                    var arr = Array.isArray(data) ? data : [];
-                    console.log('%c[Import] CSDT loaded:', 'color:#059669;font-weight:bold', {
-                        count: arr.length,
-                        sample: arr[0]
-                    });
-                    var $sel = $('#ddlImportTT_CoSoDaoTao');
-                    $sel.empty().append('<option value="">-- Chọn cơ sở đào tạo --</option>');
-                    arr.forEach(function (d) {
-                        var id = d.ID || d.Id || d.id || '';
-                        var ma = d.MA || d.Ma || '';
-                        var ten = d.TEN || d.Ten || ma;
-                        if (id) $sel.append('<option value="' + id + '">' + ten + (ma && ma !== ten ? ' [' + ma + ']' : '') + '</option>');
-                    });
-                });
+                // Load DS Cơ sở đào tạo cho batch Import Excel — reuse cache + proc business
+                // giống dropdown "Đọc từ API". Xem loadCoSoDaoTao_ToSelect.
+                me.loadCoSoDaoTao_ToSelect('#ddlImportTT_CoSoDaoTao');
             } else if (mode === 'khai') {
                 $('#kqdk_khai').removeClass('d-none');
                 me._exitSuaMode();   // ensure Thêm mới mode, banner ẩn, save btn "Lưu hồ sơ"
@@ -943,9 +925,29 @@ KeHoachTuyenSinhNew.prototype = {
             }
         }
 
-        // ⚠ KHÔNG normalize ngày sinh ở FE — data API sao thì gửi nguyên vậy xuống BE (yêu cầu sếp 09/08/2026).
-        // BE version hiện tại expect yyyy-mm-dd (Oracle native) → API CMC trả yyyy-mm-dd → pass-through.
-        // Nếu BE cần dd/mm/yyyy hoặc 3 field NgayS/ThangS/NamS → BE tự parse từ strCorePerson_NgaySinh.
+        // ⚠ Ngày sinh — signature BE có 4 param riêng cho ngày sinh (xác nhận qua C# entity
+        // Core_TS_HoSo_Import_MHEntity 09/08/2026):
+        //   strCorePerson_NgaySinh (string dd/mm/yyyy) + dCorePerson_NgayS/ThangS/NamS (number).
+        // BE validator strict: `Ngay sinh phai theo dinh dang dd/mm/yyyy (VD: 15/03/2007)`.
+        // → Bắt buộc convert ở FE:
+        //   - Nếu API trả ISO yyyy-mm-dd → convert dd/mm/yyyy + fill 3 số
+        //   - Nếu đã dd/mm/yyyy (Excel người dùng nhập tay) → chỉ fill 3 số nếu chưa có
+        // Fill đủ 3 field số cho khớp schema BE explicit — trước đây để trống là phí.
+        var ns = payload.strCorePerson_NgaySinh;
+        if (typeof ns === 'string' && ns) {
+            var mISO = ns.match(/^(\d{4})-(\d{2})-(\d{2})/);       // yyyy-mm-dd (ISO)
+            var mVN  = ns.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);    // dd/mm/yyyy
+            if (mISO) {
+                payload.strCorePerson_NgaySinh = mISO[3] + '/' + mISO[2] + '/' + mISO[1];
+                if (payload.dCorePerson_NgayS  == null) payload.dCorePerson_NgayS  = parseInt(mISO[3], 10);
+                if (payload.dCorePerson_ThangS == null) payload.dCorePerson_ThangS = parseInt(mISO[2], 10);
+                if (payload.dCorePerson_NamS   == null) payload.dCorePerson_NamS   = parseInt(mISO[1], 10);
+            } else if (mVN) {
+                if (payload.dCorePerson_NgayS  == null) payload.dCorePerson_NgayS  = parseInt(mVN[1], 10);
+                if (payload.dCorePerson_ThangS == null) payload.dCorePerson_ThangS = parseInt(mVN[2], 10);
+                if (payload.dCorePerson_NamS   == null) payload.dCorePerson_NamS   = parseInt(mVN[3], 10);
+            }
+        }
 
         return payload;
     },
@@ -4537,25 +4539,10 @@ KeHoachTuyenSinhNew.prototype = {
             // Load combo Đợt theo KH đang mở (Đối tượng không cần cho proc Them_HoSo_TS,
             // user tự map cột API vào strHoSo_DoiTuong_TS_Id nếu có)
             me.docAPI_LoadDotCombo();
-            // Load Cơ sở đào tạo — populate manual (tránh timing issue của loadToCombo_DanhMucDuLieu)
-            edu.system.getList_DanhMucDulieu({
-                strMaBangDanhMuc: 'KHCT.COSODAOTAO',
-                strTenCotSapXep: '',
-                iTrangThai: 1
-            }, '', '', function (data) {
-                var arr = Array.isArray(data) ? data : [];
-                console.log('%c[docAPI] CSDT loaded:', 'color:#059669;font-weight:bold', {
-                    count: arr.length, sample: arr[0]
-                });
-                var $sel = $('#ddlDocAPI_CoSoDaoTao');
-                $sel.empty().append('<option value="">-- Chọn cơ sở đào tạo --</option>');
-                arr.forEach(function (d) {
-                    var id = d.ID || d.Id || d.id || '';
-                    var ma = d.MA || d.Ma || '';
-                    var ten = d.TEN || d.Ten || ma;
-                    if (id) $sel.append('<option value="' + id + '">' + ten + (ma && ma !== ten ? ' [' + ma + ']' : '') + '</option>');
-                });
-            });
+            // Cơ sở đào tạo — data thật lấy qua proc `pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao`
+            // (giống chuongtrinh.js:953, lophoc.js:946). DM `KHCT.COSODAOTAO` trên CMC trả rỗng
+            // → dùng proc business. Share cache với Import Excel.
+            me.loadCoSoDaoTao_ToSelect('#ddlDocAPI_CoSoDaoTao');
         });
 
         $("#ddlDocAPI_Preset").on('change', function () {
@@ -4573,7 +4560,8 @@ KeHoachTuyenSinhNew.prototype = {
             if (e.which === 13) { e.preventDefault(); me.docAPI_FetchAll(); }
         });
 
-        $("#btnDocAPI_AutoMap").click(function () { me.docAPI_AutoMap(); });
+        // Ẩn Auto-map (2026-08-09) — UI đã comment ở HTML; hàm docAPI_AutoMap giữ nguyên để mở lại nếu cần.
+        // $("#btnDocAPI_AutoMap").click(function () { me.docAPI_AutoMap(); });
         $("#btnDocAPI_ClearMap").click(function () { me.docAPI_ClearMapping(); });
         $("#btnDocAPI_SaveMap").click(function () { me.docAPI_SaveMapping(true); });
 
@@ -4746,6 +4734,75 @@ KeHoachTuyenSinhNew.prototype = {
             if (id) $sel.append('<option value="' + id + '">' + (ma ? '[' + ma + '] ' : '') + ten + '</option>');
         });
         if (me.strDot_Id_ForKQ) $sel.val(me.strDot_Id_ForKQ);
+    },
+
+    /*------------------------------------------
+    -- Load combo Cơ sở đào tạo từ proc business `pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao`.
+    -- Pattern copy từ chuongtrinh.js:953. DM `KHCT.COSODAOTAO` trả rỗng ở CMC nên phải dùng proc này.
+    -- Cache data — DM không đổi trong session, tránh call lặp mỗi lần mở modal.
+    -- Dùng cho cả dropdown "Đọc từ API" và "Import Excel" (share cache).
+    -- Param: selector — string jQuery selector của <select> cần populate (VD '#ddlDocAPI_CoSoDaoTao').
+    -------------------------------------------*/
+    loadCoSoDaoTao_ToSelect: function (selector) {
+        var me = this;
+        if (!selector) return;
+        // Đã có cache → render ngay, không call API
+        if (me._dtCoSoDaoTao_Cache && me._dtCoSoDaoTao_Cache.length) {
+            me._renderCoSoDaoTao_ToSelect(selector, me._dtCoSoDaoTao_Cache);
+            return;
+        }
+        // Đang có request pending → subscribe vào list callback, tránh call trùng khi mở nhiều modal
+        if (me._dtCoSoDaoTao_Loading) {
+            (me._dtCoSoDaoTao_Waiters = me._dtCoSoDaoTao_Waiters || []).push(selector);
+            return;
+        }
+        me._dtCoSoDaoTao_Loading = true;
+        me._dtCoSoDaoTao_Waiters = [selector];
+        edu.system.makeRequest({
+            success: function (data) {
+                me._dtCoSoDaoTao_Loading = false;
+                if (data && data.Success) {
+                    var arr = Array.isArray(data.Data) ? data.Data : [];
+                    console.log('%c[CSDT] via pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao:',
+                        'color:#059669;font-weight:bold', { count: arr.length, sample: arr[0] });
+                    me._dtCoSoDaoTao_Cache = arr;
+                    (me._dtCoSoDaoTao_Waiters || []).forEach(function (sel) {
+                        me._renderCoSoDaoTao_ToSelect(sel, arr);
+                    });
+                    me._dtCoSoDaoTao_Waiters = [];
+                } else {
+                    console.warn('[CSDT] LayDSDaoTao_CoSoDaoTao lỗi:', data && data.Message);
+                }
+            },
+            error: function (er) {
+                me._dtCoSoDaoTao_Loading = false;
+                console.warn('[CSDT] LayDSDaoTao_CoSoDaoTao network err:', er);
+            },
+            type: "POST",
+            contentType: true,
+            action: 'KHCT_ThongTin_MH/DSA4BRIFIC4VIC4eAi4SLgUgLhUgLgPP',
+            data: {
+                'action': 'KHCT_ThongTin_MH/DSA4BRIFIC4VIC4eAi4SLgUgLhUgLgPP',
+                'func': 'pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao',
+                'iM': edu.system.iM,
+                'strTuKhoa': '',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'pageIndex': 1,
+                'pageSize': 100000
+            }
+        }, false, false, false, null);
+    },
+
+    _renderCoSoDaoTao_ToSelect: function (selector, arr) {
+        var $sel = $(selector);
+        if (!$sel.length) return;
+        $sel.empty().append('<option value="">-- Chọn cơ sở đào tạo --</option>');
+        (arr || []).forEach(function (d) {
+            var id = d.ID || d.Id || d.id || '';
+            var ma = d.MA || d.Ma || '';
+            var ten = d.TEN || d.Ten || ma;
+            if (id) $sel.append('<option value="' + id + '">' + ten + (ma && ma !== ten ? ' [' + ma + ']' : '') + '</option>');
+        });
     },
 
     /*------------------------------------------

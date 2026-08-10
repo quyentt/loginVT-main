@@ -36,11 +36,45 @@
             color-scheme: light only !important;
             forced-color-adjust: none;
           }
+          /* Ap dung forced-color-adjust cho MOI element de chan Windows High Contrast Mode +
+             Chrome dark theme adjustments tu bien viet ve tren border/outline. */
+          *, *::before, *::after {
+            forced-color-adjust: none !important;
+          }
           input, select, textarea, button {
             color-scheme: light !important;
           }
           *:focus, *:focus-visible {
             outline-color: #223771 !important;
+          }
+          /* Sidebar AdminLTE: chan browser inject vien do do High Contrast / focus dark */
+          .main-sidebar,
+          .main-sidebar *,
+          .sidebar-menu,
+          .sidebar-menu *,
+          .treeview-menu,
+          .treeview-menu * {
+            forced-color-adjust: none !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+          .main-sidebar *:focus,
+          .main-sidebar *:focus-visible,
+          .main-sidebar *:active,
+          .sidebar-menu *:focus,
+          .sidebar-menu *:focus-visible,
+          .sidebar-menu *:active,
+          .treeview-menu a:focus,
+          .treeview-menu a:focus-visible,
+          .treeview-menu a:active {
+            outline: none !important;
+            outline-color: transparent !important;
+            outline-width: 0 !important;
+            box-shadow: none !important;
+            border-color: transparent !important;
+          }
+          .treeview-menu a:focus-visible {
+            outline: 2px solid #f8843d !important;
+            outline-offset: -2px !important;
           }
           /* ─── Reskin AdminLTE shell (indexi.aspx) tone dask-blue #223771 + orange #f8843d
              Mục đích: đồng bộ với index.aspx (SPA shell mới). Không đụng HTML/JS gốc, chỉ

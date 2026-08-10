@@ -24,11 +24,48 @@
         color-scheme: light only !important;
         forced-color-adjust: none;
       }
+      /* Ap dung forced-color-adjust cho MOI element de chan Windows High Contrast Mode +
+         Chrome dark theme adjustments tu do bien viet ve tren border/outline. */
+      *, *::before, *::after {
+        forced-color-adjust: none !important;
+      }
       input, select, textarea, button {
         color-scheme: light !important;
       }
       *:focus, *:focus-visible {
         outline-color: #223771 !important;
+      }
+      /* Sidebar: bulletproof — chan MOI kha nang browser inject vien do (High Contrast
+         Mode, Chrome dark focus outline, extensions, autofill highlight...). Force outline
+         va box-shadow ve 0/tone chinh, khong cho browser tu quyet dinh mau focus. */
+      .left-sidebar,
+      .left-sidebar *,
+      .sidebar-menu,
+      .sidebar-menu *,
+      .sidebar-menu-sub,
+      .sidebar-menu-sub * {
+        forced-color-adjust: none !important;
+        -webkit-tap-highlight-color: transparent !important;
+      }
+      .left-sidebar *:focus,
+      .left-sidebar *:focus-visible,
+      .left-sidebar *:active,
+      .sidebar-menu *:focus,
+      .sidebar-menu *:focus-visible,
+      .sidebar-menu *:active,
+      .sidebar-menu-sub a:focus,
+      .sidebar-menu-sub a:focus-visible,
+      .sidebar-menu-sub a:active {
+        outline: none !important;
+        outline-color: transparent !important;
+        outline-width: 0 !important;
+        box-shadow: none !important;
+        border-color: transparent !important;
+      }
+      /* Neu can focus visible cho keyboard nav: chi apply on :focus-visible voi tone chinh */
+      .sidebar-menu-sub a:focus-visible {
+        outline: 2px solid #f8843d !important;
+        outline-offset: -2px !important;
       }
       /* FCM header notifications: layout only (no new colors) */
       #fcm-noti-button {
@@ -389,13 +426,33 @@
       }
 
       /* Submenu (cấp con) — bullet + border-left theo tone dask-blue */
+      /* Container submenu: ep TRANSPARENT background de blend voi sidebar toi.
+         THU PHAM: App_Themes/Cms/Custom_V1/styles.css:2896 co rule
+         `.sidebar-menu-item .sidebar-menu-sub.collapse { background:#f4f4f4 !important }`
+         voi specificity cao hon. Can beat bang ID selector (#sidebar-menu) + full chain. */
+      #sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
+      #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
+      #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
+      .sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
+      .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
+      .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
+      html body .sidebar-menu-item .sidebar-menu-sub.collapse {
+        background: transparent !important;
+        background-color: transparent !important;
+        border-radius: 0 !important;
+        padding: 4px 0 8px 0 !important;
+        margin-top: 0 !important;
+        box-shadow: none !important;
+      }
       .sidebar-menu-sub a {
         color: #d2ddfd !important;
+        background: transparent !important;
         border-left-color: #5a7adb !important;
       }
       .sidebar-menu-sub a:hover,
       .sidebar-menu-sub a.active {
         color: #f8843d !important;
+        background: rgba(255, 255, 255, 0.06) !important;
       }
       .sidebar-menu-sub a::before,
       .sidebar-menu-sub a::after {
