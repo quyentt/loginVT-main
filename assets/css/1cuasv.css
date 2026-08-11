@@ -76,7 +76,7 @@
   width: 100%;
   /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); */
   padding-left: 20px;
-  padding-top: 10px;
+  padding-top: 8px;
 }
 
 .content-tab .dashboad-item-box {
@@ -526,7 +526,7 @@
 }
 
 .form-add-info .form-control {
-  border-radius: 4px !important;
+  border-radius: 7px !important;
   height: 38px;
   line-height: 40px;
   font-size: 14px;

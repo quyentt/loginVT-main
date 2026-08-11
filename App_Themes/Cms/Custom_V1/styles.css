@@ -785,9 +785,9 @@ thead,
 
 /* ------------------- */
 .form-check-input {
-  width: 1em !important;
-  height: 1em !important;
-  font-size: 16px !important;
+  width: 14px !important;
+  height: 14px !important;
+  font-size: 14px !important;
 }
 
 /* ------------------- */
@@ -1718,13 +1718,6 @@ input:active,
   position: absolute;
   top: 0;
   left: 0;
-}
-
-/* ------------------- */
-.form-check-input {
-  width: 1em !important;
-  height: 1em !important;
-  font-size: 16px !important;
 }
 
 /* ------------------- */
@@ -4450,7 +4443,7 @@ button:not(:disabled) {
 .modal-alert .modal-title i:before,
 .modal-confirm .modal-title i:before {
   content: "\f0f3" !important;
-  font-size: 22px;
+  font-size: 20px;
   padding-right: 5px;
 }
 
@@ -6027,7 +6020,7 @@ input[type="radio"] {
 
 .main-label,
 .aps-lable {
-  color: #222 !important;
+  color: #888 !important;
 }
 
 .btnClose_none {
@@ -7488,7 +7481,62 @@ input[type="radio"] {
 .btn-soft-orange:hover .lang ,.btn-soft-orange:hover i{
   color: #fff !important;
 }
+/* --btn-soft-red-- */
+.btn-soft-red {
+  background: rgba(255, 0, 0, 0.1) !important;
+  color: var(--color-red) !important;
+  font-weight: bold !important;
+  border: 1px solid rgba(255, 0, 0, 0.3) !important;
+}
 
+.btn-soft-red:hover {
+  background: rgba(255, 0, 0, 1) !important;
+  color: #fff !important;
+}
+
+.border-red {
+  border: 1px solid rgba(255, 0, 0, 0.3) !important;
+}
+
+.btn-soft-red i {
+  font-weight: bold !important;
+}
+
+.btn-soft-red .lang {
+  color: var(--color-red) !important;
+}
+
+.btn-soft-red:hover .lang ,.btn-soft-red:hover i{
+  color: #fff !important;
+}
+/* --btn-soft-pink-- */
+.btn-soft-pink {
+  background: rgba(255, 0, 129, 0.1) !important;
+  color: var(--color-pink) !important;
+  font-weight: bold !important;
+  border: 1px solid rgba(2255, 0, 129, 0.3) !important;
+}
+
+.btn-soft-pink:hover {
+  background: rgba(255, 0, 129, 1) !important;
+  color: #fff !important;
+}
+
+.border-pink {
+  border: 1px solid rgba(255, 0, 129, 0.3) !important;
+}
+
+.btn-soft-pink i {
+  font-weight: bold !important;
+}
+
+.btn-soft-pink .lang {
+  color: var(--color-pink) !important;
+}
+
+.btn-soft-pink:hover .lang ,.btn-soft-pink:hover i{
+  color: #fff !important;
+}
 /* ------------- */
 .small-box {
   display: flex;

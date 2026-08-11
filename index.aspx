@@ -441,7 +441,7 @@
         background: rgba(255, 255, 255, 0.1);
         border-radius: 0 12px 12px 0 !important;
         padding: 4px 0 8px 0 !important;
-        margin-top: 0 !important;
+        margin-top: 5px !important;
         box-shadow: none !important;
       }
       .sidebar-menu-sub a {
@@ -559,7 +559,7 @@
       /* Section title .color-blue (dùng cho "Danh sách học phần dự kiến..." v.v.) */
       #main-content-wrapper .color-blue,
       #main-content-wrapper .text-blue {
-        color: #223771 !important;
+        color: var(--color-blue) !important;
       }
 
       /* Buttons SPA-native: .btn-view / .btn-link / .btn-save → dask-blue solid */
@@ -610,13 +610,14 @@
       }
       #main-content-wrapper .content-tab .nav-content-left .link i {
         color: #94a3b8 !important;
-        margin: 0 6px;
+        margin: 5px 0px;
+        font-size: 12px !important;
       }
 
       /* ═══ Select2 SPA — center dọc chuẩn + look xịn (border-radius + focus ring) ═══ */
       #main-content-wrapper .select2-container .select2-selection--single {
-        height: 40px !important;
-        min-height: 40px !important;
+        height: 38px !important;
+        min-height: 38px !important;
         border: 1px solid #cbd5e1 !important;
         border-radius: 8px !important;
         background: #ffffff !important;
@@ -640,7 +641,7 @@
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 1 !important;
         padding: 0 32px 0 14px !important;
-        color: #d1d1d1 !important;
+        color: #222 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
         width: 100% !important;
@@ -784,7 +785,7 @@
          Ép proper Bootstrap 5 modal style + backdrop */
       #main-content-wrapper .modal,
       body > .modal {
-        background: transparent !important;
+        /* background: transparent !important; */
         border: 0 !important;
         border-radius: 0 !important;
         box-shadow: none !important;
@@ -814,7 +815,7 @@
       body > .modal .modal-header p,
       body > .modal .modal-header i {
         color: #ffffff !important;
-        font-weight: 700 !important;
+        font-weight: 500 !important;
       }
       #main-content-wrapper .modal .modal-header .btn-close,
       body > .modal .modal-header .btn-close {
@@ -843,7 +844,7 @@
       #main-content-wrapper .form-top .form-item .form-control,
       #main-content-wrapper .form-top .input-group input.form-control {
         height: 38px !important;
-        border: 1px solid #c1c1c1 !important;
+        border: 1px solid #d1d1d1 !important;
         border-radius: 6px !important;
         font-size: 14px !important;
       }
@@ -859,7 +860,7 @@
       }
       #main-content-wrapper .group-title p,
       #main-content-wrapper .group-title.pl0 p {
-        color: #223771 !important;
+        color: var(--color-blue) !important;
         font-weight: 700 !important;
         font-size: 15px !important;
         display: flex !important;
@@ -926,7 +927,7 @@
       /* Body row có border + hover nhẹ để tách khối */
       #main-content-wrapper .table > tbody > tr > td {
         padding: 10px 12px !important;
-        color: #0f172a !important;
+        color: #0f172a;
         vertical-align: middle !important;
       }
       #main-content-wrapper .table-hover > tbody > tr:hover,
@@ -964,7 +965,7 @@
         flex-wrap: wrap !important;
       }
       #main-content-wrapper .box-body {
-        padding: 14px !important;
+        padding: 15px 0 !important;
         overflow: visible !important;
         max-height: none !important;
       }
@@ -1009,7 +1010,7 @@
       #main-content-wrapper .scroll-table-x {
         display: flex !important;
         flex-wrap: wrap !important;
-        gap: 12px !important;
+        /* gap: 12px !important; */
         align-items: flex-start !important;
         overflow-x: auto;
       }
@@ -1032,10 +1033,10 @@
       #main-content-wrapper .table td span > a.btn.btn-default,
       #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default,
       #main-content-wrapper .table-hover > tbody > tr:hover > td a.btn.btn-default {
-        background: #223771 !important;
+        background: var(--color-link) !important;
         background-image: none !important;
         color: #ffffff !important;
-        border: 1px solid #223771 !important;
+        border: 1px solid var(--color-link) !important;
         border-radius: 4px !important;
         padding: 4px 10px !important;
         font-size: 12px !important;

@@ -5825,7 +5825,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 .table-bordered .btn.btnChonDanhSach {
     padding: 0px 10px !important;
     height: 28px !important;
-    line-height: 28px !important;
+    line-height: 27px !important;
     margin-bottom: 4px;
 }
 
@@ -11270,7 +11270,7 @@ table#clone {
 
 #zonepercentInDS {
     line-height: 27px !important;
-    padding: 2px 15px !important;
+    padding: 2px 0px !important;
 }
 
 /* --------------- */
@@ -17174,3 +17174,60 @@ table#clone {
     padding: 15px 15px 15px 15px !important;
 }
 
+
+#btnCongBo i{
+    line-height: 34px !important;
+    margin-right: 0px;
+}
+.aps-score-sheet .tblNhapDiem tr td{
+    text-align: left !important;
+}
+/* .zonebtnBaoCao_NhapDiem_Import {
+    background: #3380db !important;
+    border: 1px solid #3380db !important;
+    color: #fff !important;
+    height: 38px;
+} */
+
+.modal_XacNhan  .aps-form-table .table  {
+    padding: 0 !important;
+}
+.modal_XacNhan  .aps-add-new .action-group .btn {
+    margin-left: 0px !important;
+}
+.aps-inbangdiem-detail {
+    padding-top: 8px;
+}
+.aps-table-select.table-list-sv .zone-pag-headertblSinhVien .simple-pagination {
+    margin-bottom: 0px !important;
+}
+.aps-table-select.table-list-sv .zone-pag-headertblSinhVien .gv-paging-group {
+    margin-right: 15px;
+}
+.title-is-paging.zone-pag-headertblSinhVienNoMon{
+    width: 100%;
+    padding-bottom: 0 !important;
+}
+.tblTaskBar_TongHopKetQua .color-o.fw-bold{
+    color: #222 !important;
+}
+.myModalDiemRenLuyen .aps-table-select.scroll-table-x {
+    margin-bottom: 20px;
+}
+.box-nhapdiemchamkiemtra .container-fluid{
+    padding-top: 15px !important;
+}
+.aps-nguoihoc #btnCongBo i {
+    line-height: 15px !important;
+    margin-right: 4px;
+}
+.aps-nguoihoc .container-fluid.pl20.pr20,.container-fluid.pl20.pr20{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+#main-content-wrapper .modal .modal-body.change-calendar.pd0{
+    padding: 0 !important;
+}
+.modal-dangky-sd-phong .gv-button-group .btn {
+    margin-bottom: 0px;
+}

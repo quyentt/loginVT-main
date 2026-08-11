@@ -1975,7 +1975,7 @@ input::placeholder {
 }
 
 .no-tab {
-  min-height: 50px;
+  min-height: 42px;
 }
 
 .no-tab .link {
@@ -2285,7 +2285,7 @@ input::placeholder {
   display: flex;
   align-items: center;
   margin-left: auto;
-  font-weight: 400;
+  font-weight: 600;
   color: #666;
 }
 
@@ -2791,10 +2791,10 @@ input:checked~label {
 .collapse-short a i {
   background: #ffffff;
   z-index: 1;
-  /* padding-right: 10px; */
+  padding-right: 10px;
   color: #222222;
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .collapse-short a:not(.collapsed) i.fal {
@@ -6691,8 +6691,8 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .register-wish .title-is-paging {
-  margin-top: 10px;
-  padding-bottom: 12px;
+  margin-top: 20px;
+  padding-bottom: 0;
 }
 
 .register-wish .title-is-paging .bg-dask-blue {
@@ -7422,8 +7422,8 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .modal.modal-nhapdiem-phach .modal-header {
-  height: 70px !important;
-  line-height: 28px !important;
+  height: 60px !important;
+  line-height: 30px !important;
 }
 
 .aps-lable .group-group-title-name,

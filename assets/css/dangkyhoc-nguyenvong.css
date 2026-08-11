@@ -52,9 +52,9 @@
 
 .register-wish {
   margin: 20px;
-  padding-top: 25px;
+  padding-top: 5px;
   padding-bottom: 25px !important;
-  margin-top: 5px;
+  margin-top: 0;
 }
 
 .register-wish .table {
@@ -80,7 +80,7 @@
 /* Đăng ký phúc khảo */
 
 .dk-phuckhao {
-  padding: 0 20px;
+  padding: 15px 20px 20px 20px;
 }
 
 .dk-phuckhao .table-w {
@@ -92,7 +92,7 @@
 }
 
 .dk-phuckhao .table-w .table {
-  width: 2000px;
+  width: 100%;
 }
 
 .dk-phuckhao .table-w .table th {
@@ -191,7 +191,7 @@
 }
 
 .dk-phuckhao .table-w .table th .is-fixed {
-  height: 93px;
+  height: 100px;
 }
 
 .dk-phuckhao .table-w .table a.is-fixed:hover {

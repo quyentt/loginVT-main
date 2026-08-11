@@ -512,10 +512,10 @@
 
           /* ═══ Select2 xin: flex center + border-radius + focus ring ═══ */
           html body.skin-blue #main-content-wrapper .select2-container .select2-selection--single {
-            height: 40px !important;
-            min-height: 40px !important;
-            border: 1px solid #d1d1d1 !important;
-            border-radius: 8px !important;
+            height: 38px !important;
+            min-height: 38px !important;
+            border: 1px solid #c1c1c1 !important;
+            border-radius: 7px !important;
             background: #ffffff !important;
             display: flex !important;
             align-items: center !important;

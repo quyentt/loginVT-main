@@ -121,7 +121,7 @@
 
 .tabs-scores .nav {
   border-bottom: none;
-  border-bottom: 1px solid #e1e1e1;
+  border-bottom: 1px solid var(--orange);
 }
 
 .tabs-scores .box-shadow {

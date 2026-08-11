@@ -1,8 +1,9 @@
 ﻿<style>
-    #btntindaluu{
+    #btntindaluu {
         background-color: var(--orange);
         color: white;
     }
+
     .file-data span {
         max-width: unset;
         align-items: center;
@@ -20,21 +21,24 @@
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        padding: 0 30px;
-        margin-top: 10px;
+        padding: 0 0px;
+        margin-top: 15px;
     }
+
     .one-door .nav-news a {
         color: #222;
-        margin-right: 50px;
+        margin-right: 20px;
         margin-bottom: 10px;
         position: relative;
         text-decoration: none;
-        padding-bottom: 6px;
+        padding-bottom:3px;
     }
+
     .one-door .nav-news a.active {
         font-weight: 700;
-        color: #f8843d;
+        color: var(--color-blue);
     }
+
     .one-door .nav-news a.active::after {
         content: "";
         position: absolute;
@@ -42,11 +46,16 @@
         bottom: -4px;
         width: 100%;
         height: 3px;
-        background: #f8843d;
+        background: var(--color-blue);
     }
-    .one-door .nav-news a:hover { color: #f8843d; }
 
-    .one-door .news-page { padding: 15px 25px 0 25px; }
+    .one-door .nav-news a:hover {
+        color: #f8843d;
+    }
+
+    .one-door .news-page {
+        padding: 15px 25px 0 25px;
+    }
 
     .one-door .news-item {
         display: flex;
@@ -56,6 +65,7 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
         height: 100%;
     }
+
     .one-door .news-item .image {
         width: 40%;
         flex-shrink: 0;
@@ -65,6 +75,7 @@
         border-radius: 8px;
         display: block;
     }
+
     .one-door .news-item .image img {
         width: 100%;
         height: 100%;
@@ -72,12 +83,14 @@
         object-fit: cover;
         display: block;
     }
+
     .one-door .news-item-right {
         flex: 1;
         min-width: 0;
         display: flex;
         flex-direction: column;
     }
+
     .one-door .news-item .title {
         font-size: 16px;
         line-height: 22px;
@@ -93,8 +106,12 @@
         text-decoration: none;
         margin-bottom: 6px;
     }
+
     .one-door .news-item .title:hover,
-    .one-door .news-item .cate-link:hover { color: #f8843d; }
+    .one-door .news-item .cate-link:hover {
+        color: #f8843d;
+    }
+
     .one-door .news-item .meta {
         display: flex;
         align-items: center;
@@ -103,12 +120,17 @@
         font-size: 13px;
         padding: 4px 0;
     }
+
     .one-door .news-item .cate-link {
         color: #2563eb;
         margin-right: 18px;
         text-decoration: none;
     }
-    .one-door .news-item .meta p { margin-bottom: 0; }
+
+    .one-door .news-item .meta p {
+        margin-bottom: 0;
+    }
+
     .one-door .news-item .home-text {
         color: #666;
         display: -webkit-box;
@@ -128,22 +150,38 @@
         align-items: center;
         flex-wrap: wrap;
         gap: 10px;
-        padding: 10px 30px;
+        padding: 0px;
     }
+
     .one-door .news-search-form .form-group {
         position: relative;
         margin: 0;
     }
-    .one-door .news-search-form .form-group.search-input { flex: 1; max-width: 320px; }
-    .one-door .news-search-form .form-group.date-input { max-width: 160px; }
+
+    .one-door .news-search-form .form-group.search-input {
+        flex: 1;
+        max-width: 320px;
+    }
+
+    .one-door .news-search-form .form-group.date-input {
+        max-width: 160px;
+    }
+
     .one-door .news-search-form .form-control {
         height: 38px;
         font-size: 14px;
-        border: 1px solid #e1e1e1;
+        border: 1px solid #e1e1e1 !important;
         border-radius: 6px;
     }
-    .one-door .news-search-form .search-input .form-control { padding-left: 32px; }
-    .one-door .news-search-form .date-input .form-control { padding-right: 32px; }
+
+    .one-door .news-search-form .search-input .form-control {
+        padding-left: 32px;
+    }
+
+    .one-door .news-search-form .date-input .form-control {
+        padding-right: 32px;
+    }
+
     .one-door .news-search-form .search-input .form-label {
         position: absolute;
         top: 50%;
@@ -152,6 +190,7 @@
         color: #b0b0b0;
         margin: 0;
     }
+
     .one-door .news-search-form .date-input .form-label {
         position: absolute;
         top: 50%;
@@ -168,6 +207,7 @@
         font-size: 15px;
         line-height: 1.7;
     }
+
     .one-door .news-detail .title {
         color: #223771;
         font-size: 22px;
@@ -175,6 +215,7 @@
         line-height: 1.4;
         margin-bottom: 12px;
     }
+
     .one-door .news-detail .meta {
         display: flex;
         align-items: center;
@@ -183,16 +224,26 @@
         font-size: 14px;
         margin-bottom: 18px;
     }
+
     .one-door .news-detail .meta .cate-link {
         color: #2563eb;
         margin-right: 30px;
         text-decoration: none;
     }
-    .one-door .news-detail .meta p { margin-bottom: 0; }
+
+    .one-door .news-detail .meta p {
+        margin-bottom: 0;
+    }
+
     .one-door .news-detail .news-content {
         margin-bottom: 18px;
     }
-    .one-door .news-detail .news-content img { max-width: 100%; height: auto; }
+
+    .one-door .news-detail .news-content img {
+        max-width: 100%;
+        height: auto;
+    }
+
     .one-door .news-detail .author {
         font-size: 16px;
         font-weight: 700;
@@ -217,6 +268,7 @@
         margin-top: 20px;
         flex-wrap: wrap;
     }
+
     .one-door .group-btn a {
         border: solid 1px #d1d5db;
         padding: 6px 18px;
@@ -229,19 +281,23 @@
         background: #fff;
         transition: all .2s;
     }
+
     .one-door .group-btn a:hover {
         background: #f5f7fb;
         border-color: #2563eb;
         color: #2563eb;
     }
+
     .one-door .group-btn a.color-orange {
         color: #f8843d;
         border-color: #f8843d;
     }
+
     .one-door .group-btn a.color-orange:hover {
         background: #fff5ec;
         color: #f8843d;
     }
+
     .one-door #btntindaluu {
         background-color: #f8843d !important;
         color: #fff !important;
@@ -252,17 +308,21 @@
     .one-door .comments {
         margin-top: 28px !important;
     }
+
     .one-door .comments .fw-bold.text-decoration-underline {
         margin-bottom: 14px !important;
     }
+
     .one-door .comments .news-search-form {
         padding: 0;
     }
+
     .one-door .comments .news-search-form .form-group {
         width: 100%;
         max-width: 100%;
         margin: 0;
     }
+
     .one-door .comments .form-control {
         height: auto;
         padding: 12px 60px 12px 14px;
@@ -272,6 +332,7 @@
         border-radius: 8px;
         resize: vertical;
     }
+
     .one-door .comments #btnGuiTin {
         position: absolute;
         top: 50%;
@@ -283,13 +344,16 @@
         margin: 0;
         cursor: pointer;
     }
+
     .one-door .commented {
         margin-top: 30px;
     }
+
     .one-door .com-label {
         margin-bottom: 20px;
         position: relative;
     }
+
     .one-door .com-label::before {
         content: "";
         position: absolute;
@@ -299,19 +363,23 @@
         height: 1px;
         background-color: #e1e1e1;
     }
+
     .one-door .com-label .group {
         position: relative;
         z-index: 1;
         width: fit-content;
     }
+
     .one-door .com-label .group img {
         width: 28px;
         height: auto;
     }
+
     .one-door .comment-item {
         display: flex;
         margin-bottom: 15px;
     }
+
     .one-door .comment-item img {
         width: 45px;
         height: 45px;
@@ -320,6 +388,7 @@
         flex-shrink: 0;
         margin-right: 12px;
     }
+
     .one-door .comment-item .right {
         font-size: 14px;
         line-height: 22px;
@@ -328,8 +397,15 @@
         border-radius: 10px;
         flex: 1;
     }
-    .one-door .comment-item .right p { margin-bottom: 4px; }
-    .one-door .comment-item .right .meta { color: #999; font-size: 12px; }
+
+    .one-door .comment-item .right p {
+        margin-bottom: 4px;
+    }
+
+    .one-door .comment-item .right .meta {
+        color: #999;
+        font-size: 12px;
+    }
 
     /* === Sidebar tin đã đánh dấu === */
     .one-door .block-news .dashboad-cate-title {
@@ -340,7 +416,11 @@
         margin-bottom: 0;
         font-weight: 600;
     }
-    .one-door .block-news .news-list { padding: 0 15px; }
+
+    .one-door .block-news .news-list {
+        padding: 0 15px;
+    }
+
     .one-door .block-news .news-item {
         padding: 15px 0;
         border-bottom: solid 1px #e1e1e1;
@@ -348,13 +428,20 @@
         border-radius: 0;
         display: block;
     }
+
     .one-door .block-news .news-item .image {
         width: 100%;
         max-height: 90px;
         margin: 0 0 10px 0;
     }
-    .one-door .block-news .news-item .title { font-size: 15px; }
-    .one-door .block-news .news-list .col-12:last-child .news-item { border-bottom: 0; }
+
+    .one-door .block-news .news-item .title {
+        font-size: 15px;
+    }
+
+    .one-door .block-news .news-list .col-12:last-child .news-item {
+        border-bottom: 0;
+    }
 </style>
 <div class="one-door study-space">
     <div class="content-tab no-tab">
@@ -399,7 +486,8 @@
                     <h4 class="title" id="newstitle"></h4>
 
                     <div class="meta">
-                        <a class="cate-link" href=""><i class="fas fa-caret-right me-1"></i><span id="newscoso"></span></a>
+                        <a class="cate-link" href=""><i class="fas fa-caret-right me-1"></i><span
+                                id="newscoso"></span></a>
                         <p class="mb-0 ms4"><i class="fal fa-calendar-alt me-1"></i><span id="newsngay"></span></p>
                     </div>
                     <div class="news-content" id="newscontent">
@@ -410,15 +498,19 @@
                     <div class="line"></div>
                     <div class="group-btn">
                         <a href="#" class="btnClose"><i class="fal fa-chevron-left me-1"></i> Quay lại</a>
-                        <a class="color-orange" id="btnLuuDanhDau" href="#">Lưu đánh dấu<i class="fal fa-bookmark ms-2"></i></a>
-                        <a id="btntindaluu" href="#" style="display: none">Đã lưu<i class="fal fa-bookmark ms-2"></i></a>
+                        <a class="color-orange" id="btnLuuDanhDau" href="#">Lưu đánh dấu<i
+                                class="fal fa-bookmark ms-2"></i></a>
+                        <a id="btntindaluu" href="#" style="display: none">Đã lưu<i
+                                class="fal fa-bookmark ms-2"></i></a>
                     </div>
                     <div class="comments mt-3">
                         <p class="fs-18 fst-italic fw-bold text-decoration-underline">Ý kiến cá nhân</p>
                         <div class="news-search-form">
                             <div class="form-group date-input" style="max-width: unset">
-                                <label for="start_date_input" id="btnGuiTin" class="form-label" style="top:20px; right: 15px; cursor: pointer;">Gửi</label>
-                                <textarea class="form-control" rows="3" id="txtNoiDungTinNhan" placeholder="Bạn nghĩ gì về tin này?"></textarea>
+                                <label for="start_date_input" id="btnGuiTin" class="form-label"
+                                    style="top:20px; right: 15px; cursor: pointer;">Gửi</label>
+                                <textarea class="form-control" rows="3" id="txtNoiDungTinNhan"
+                                    placeholder="Bạn nghĩ gì về tin này?"></textarea>
 
                             </div>
                         </div>

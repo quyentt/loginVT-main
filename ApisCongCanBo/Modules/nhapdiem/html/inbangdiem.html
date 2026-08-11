@@ -167,7 +167,7 @@
                                 <table id="tblTaskBar_TongHopKetQua" class="bg-default tblTaskBar_TongHopKetQua">
                                     <thead class="bg-default" style="background: transparent !important;">
                                         <tr>
-                                            <td class="color-dask-blue fw-bold mr-10" style="min-width: 140px">Phạm vi
+                                            <td class="color-o fw-bold mr-10" style="min-width: 140px">Phạm vi
                                                 tổng hợp</td>
                                             <td class="td-right" style="min-width: 220px">
                                                 <div class="input-group no-icon">
@@ -239,34 +239,35 @@
             </div>
 
             <div class="title-is-paging mt-20">
-                <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-users"></i> Danh sách sinh viên</p>
+                <p class="color-dask-blue fw-bold mt-5"><i class="fa-solid fa-users"></i> Danh sách sinh viên</p>
                 <span class="bg-dask-blue text-white px-2 rounded-20px ms-2 fs-13 fw-bold aps-tong"
-                    id="lblSinhVien_Tong" style="margin-top: 12px !important;"></span>
-                <div class="form-check d-flex align-items-center ms-3" style="margin-top: 10px;">
+                    id="lblSinhVien_Tong" style="margin-top: 10px !important;"></span>
+                <div class="form-check d-flex align-items-center ms-3 ml-20" style="margin-top: 15px;">
                     <input class="form-check-input pointer" type="checkbox" id="chkFilterCongNo"
                         style="margin-top: 0; margin-right: 6px;">
                     <label class="form-check-label pointer" for="chkFilterCongNo"
                         style="font-weight: 600; color: #d9534f;" title="Lọc ra các SV có Tài chính > 0 trong trang đang xem">
-                        <i class="fa-solid fa-filter mr-5"></i>Chỉ SV còn nợ tài chính
+                        <i class="fa-solid fa-filter mr-5 ml-10"></i>Chỉ SV còn nợ tài chính
                     </label>
                 </div>
                 <div class="ms-auto aps-gap-10 aps-btn-list">
-                    <div class="btn btn-success" id="btnTongHopDuLieu">
+                    <div class="btn btn-soft-success" id="btnTongHopDuLieu">
                         <i class="fa-solid fa-book-open-reader"></i>Tổng hợp dữ liệu học tập
                     </div>
-                    <div id="btnSearchSinhVienNoMon" class="btn btn-primary">
+                    <div id="btnSearchSinhVienNoMon" class="btn btn-soft-primary">
                         <i class="fa-solid fa-chalkboard-user"></i>Danh sách còn nợ môn
                     </div>
+                    <div id="btnGuiEmail_IBD" class="btn btn-soft-orange"
+                    title="Gửi email kết quả học tập / báo công nợ cho các SV đã tick chọn (hoặc toàn bộ SV đang hiển thị).">
+                    <i class="fa-solid fa-envelope mr-5"></i>Gửi Email
+                </div>
                     <div id="btnXuatExcel_DSSV" class="btn btn-success"
                         title="Xuất danh sách theo dữ liệu đang hiển thị (Ctrl+G). Đổi 'Hiển thị' sang số lớn hơn để xuất nhiều dòng hơn."
                         style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
                         <i class="fa-solid fa-file-excel mr-5" style="color:#fff;"></i>Xuất Excel
-                        <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:1px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
+                        <kbd style="background:rgba(255,255,255,.22);color:#fff;border:0;padding:3px 6px;border-radius:3px;font-size:11px;margin-left:6px;">Ctrl+G</kbd>
                     </div>
-                    <div id="btnGuiEmail_IBD" class="btn btn-primary"
-                        title="Gửi email kết quả học tập / báo công nợ cho các SV đã tick chọn (hoặc toàn bộ SV đang hiển thị).">
-                        <i class="fa-solid fa-envelope mr-5"></i>Gửi Email
-                    </div>
+                 
                 </div>
             </div>
             <div id="zoneprocessXXXXA"></div>

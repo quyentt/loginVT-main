@@ -79,15 +79,15 @@
                         <i class="fa-solid fa-circle-check"></i><span>Xác nhận hoàn thành</span>
                     </div>
                     <div class="dropdown" id="zonebtnBaoCao_NhapDiem"></div>
-                    <div class="dropdown" id="zonebtnBaoCao_NhapDiem_Import"></div>
+                    <div class="dropdown zonebtnBaoCao_NhapDiem_Import" id="zonebtnBaoCao_NhapDiem_Import"></div>
                 </div>
             </div>
         </div>
-        <div class="container-fluid px-20">
-            <div class="title-is-paging">
+        <div class="container-fluid px-20 pb20">
+            <div class="title-is-paging mb-10">
                 <p class="color-dask-blue fw-bold"> <i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
             </div>
-            <div class="aps-table-select scroll-table-x">
+            <div class="aps-table-select scroll-table-x aps-score-sheet">
                 <table class="table transcrip-table tabs-scores tblNhapDiem table-bordered table-noborder"
                     id="tblNhapDiem">
                     <thead>
@@ -136,11 +136,11 @@
             <div class="modal-body">
                 <div class="row pr-0 pl-0">
                     <div class="pull-right pr-0 pl-0 justify-content-end d-flex">
-                        <a class="btn btn-outline-primary" onclick="edu.system.reportAllTable_User('tblTuiThi')">
+                        <a class="btn btn-soft-primary" onclick="edu.system.reportAllTable_User('tblTuiThi')">
                             <i class="fa-light fa-upload"></i><span>Tải bảng điểm</span></a>
-                        <a class="btn btn-outline-success" onclick="edu.system.showReportAndImportTable_User(true)">
+                        <a class="btn btn-soft-success" onclick="edu.system.showReportAndImportTable_User(true)">
                             <i class="fa-light fa-file-pen"></i><span>Nhập điểm qua file</span></a>
-                        <button class="btn btn-outline-secondary btnCongBo">
+                        <button class="btn btn-soft-orange btnCongBo">
                             <i class="fa-light fa-folder-bookmark"></i><span>Công bố</span></button>
                     </div>
                 </div>
@@ -172,9 +172,9 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end my-3 d-flex">
-                    <button class="btn btn-primary" id="btnXacNhanTuiThi">
+                    <button class="btn btn-success" id="btnXacNhanTuiThi">
                         <i class="fa-solid fa-gear"></i><span>Xử lý vi phạm</span></button>
-                    <button class="btn btn-success" id="btnSave_TuiThi"><i class="fas fa-save me-2"></i>
+                    <button class="btn btn-primary" id="btnSave_TuiThi"><i class="fas fa-save me-2"></i>
                         <span>Lưu</span></button>
                 </div>
             </div>
@@ -206,7 +206,7 @@
 
                             </div>
                         </div>
-                        <a class="btn btn-primary" id="btnDongYXacNhan">
+                        <a class="btn btn-primary ml-0" id="btnDongYXacNhan">
                             <i class="fal fa-circle-check"></i> <span>Đồng ý</span></a>
                     </div>
                     <!-- 2. Lịch sử xác nhận -->
@@ -218,7 +218,7 @@
                         </div>
                         <div class="row aps-form-table scroll-table-x">
                             <table
-                                class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder"
+                                class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan table-bordered table-noborder pl-0 pr-0"
                                 id="tblModal_XacNhan">
                                 <thead>
                                     <tr>

@@ -221,7 +221,7 @@ input:focus-visible {
   /* max-width: 1512px; */
   margin-top: 6px !important;
   margin: 0 -12px;
-  gap: 15px;
+  gap: 10px;
 }
 
 .action-group .item {
@@ -4143,7 +4143,7 @@ a.other-action_item:hover {
 
 .sidebar-menu-item {
   margin-top: 0;
-  margin-bottom: 0;
+  margin-bottom: 5px !important;
 }
 .sidebar-menu-item.sidebar-menu-home {
     /* margin-bottom: 10px; */
@@ -5877,21 +5877,21 @@ a.other-action_item:hover {
   margin: 0;
   line-height: 1;
   font-weight: 600 !important;
-  color: #223771 ;
+  color: var(--color-blue) ;
 }
 
 .register-wish .title-is-paging .color-dask-blue i,
 .title-txt i {
   font-weight: 700 !important;
-  margin-right: 10px !important;
+  margin-right: 8px !important;
 }
 
 .group-title i {
   margin-right: 9px;
   float: left;
   font-size: 18px !important;
-  color: #223771  !important;
-  font-weight: 700 !important;
+  color: var(--color-blue)  !important;
+  font-weight: 600 !important;
 }
 
 .group-title .lang {

@@ -130,7 +130,7 @@
             </div>
             <div class="modal-body">
                 <div class="row aps-add-new justify-content-between pd0">
-                    <div class="col-lg-4 col-md-6 mb-15 aps-form pr0 pl-0">
+                    <div class="col-lg-3 col-md-3 mb-15 aps-form pr0 pl-0">
                         <div class="form-item d-flex form-add-info aps-form-item">
                             <div class="input-group no-icon">
                                 <select class="form-select select-opt" aria-label="Default select example"
@@ -138,17 +138,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8 col-md-6 aps-gap-10 col-12">
-                        <a class="btn btn-outline-primary btnXacNhanTheoTui" href="#" title="Close">
-                            <i class="fa-solid fa-circle-check"></i>
-                            Xác nhận theo túi</a>
-                        <a class="btn btn-outline-success btnXacNhanTungSinhVien" href="#" title="Close">
-                            <i class="fa-solid fa-circle-check"></i> Xác nhận từng phách</a>
+                    <div class="col-lg-9 col-md-9 aps-gap-10 col-12">
+                        <a class="btn btn-soft-primary btnXacNhanTheoTui" href="#" title="Close">
+                            <i class="fa-solid fa-circle-check"></i>Xác nhận theo túi</a>
+                        <a class="btn btn-soft-success btnXacNhanTungSinhVien" href="#" title="Close">
+                            <i class="fa-solid fa-circle-check"></i>Xác nhận từng phách</a>
                         <div class="dropdown" id="zonebtnBaoCao_NhapDS" style="float: right"></div>
-                        <a class="btn btn-outline-secondary" onclick="edu.system.reportAllTable_User('tblTuiThi')"><i
+                        <a class="btn btn-soft-orange" onclick="edu.system.reportAllTable_User('tblTuiThi')">
+                            <i
                                 class="fas fa-file-download me-2"></i><span>Tải bảng điểm</span></a>
-                        <a class="btn btn-outline-danger" onclick="edu.system.showReportAndImportTable_User(true)"><i
-                                class="fas fa-file-upload me-2"></i><span>Nhập điểm qua file</span></a>
+                        <a class="btn btn-soft-danger" onclick="edu.system.showReportAndImportTable_User(true)">
+                            <i class="fas fa-file-upload me-2"></i><span>Nhập điểm qua file</span></a>
                     </div>
                 </div>
                 <div class="aps-table-select scroll-table-x">
@@ -202,7 +202,7 @@
 
                             </div>
                         </div>
-                        <a class="btn btn-success" id="btnDongYXacNhan">
+                        <a class="btn btn-success ml-0" id="btnDongYXacNhan">
                             <i class="fa-solid fa-circle-check"></i> <span>Đồng ý</span></a>
                     </div>
                     <!-- 2. Lịch sử xác nhận -->
@@ -212,9 +212,9 @@
                                 <span class="badge bg-blue">Lịch sử</span>
                             </p>
                         </div>
-                        <div class="row aps-form-table scroll-table-x">
+                        <div class="row aps-form-table scroll-table-x pl-0 pr-0">
                             <table
-                                class="table transcrip-table tabs-scores fs-14 tblModal_XacNhan mr-0 table-bordered table-noborder"
+                                class="table tabs-scores tblModal_XacNhan mr-0 table-bordered table-noborder pl-0 pr-0"
                                 id="tblModal_XacNhan">
                                 <thead>
                                     <tr>

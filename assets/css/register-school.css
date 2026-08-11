@@ -624,7 +624,7 @@
 }
 
 .modal {
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.3);
   /* padding: 15px; */
 }
 
@@ -912,4 +912,13 @@
 }
 .money-class .btn-light-blue:hover,.register-school-right .plan  .btn-light-blue:hover{
   background-color: var(--color-dask-link);
+}
+.modal-nhapdiem .tblTuiThi tr th {
+  text-align: center !important;
+}
+.container-fluid.px-20{
+  padding-bottom: 20px !important;
+}
+.container-fluid.px-20 .title-is-paging{
+  margin-bottom: 10px;
 }

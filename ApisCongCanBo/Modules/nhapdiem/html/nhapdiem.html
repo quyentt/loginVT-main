@@ -64,9 +64,9 @@
 
             </div>
         </div>
-        <div class="container-fluid px-20">
+        <div class="container-fluid px-20 pb20">
             <div class="title-is-paging">
-                <p class="color-dask-blue fw-bold mt-10"><i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
+                <p class="color-dask-blue fw-bold"><i class="fa-solid fa-file-lines"></i>Danh sách bảng điểm</p>
                 <div class="ms-auto">
                     <div class="btn btn-success" id="btnThongKe">
                         <i class="fa-solid fa-square-poll-horizontal"></i>Thống kê
@@ -107,7 +107,7 @@
             </a>
             <p id="lblHocPhan"></p>
         </div>
-        <div class="container-fluid px-20">
+        <div class="container-fluid px-20 pb20">
             <div class="gv-button-group row">
                 <div class="form-item d-flex  form-add-info col-12 col-lg-2 pl-0 pr0">
                     <div class="input-group no-icon">
@@ -121,21 +121,21 @@
                 </div>
                 <div class="col-12 col-lg-10 d-flex justify-content-end flex-wrap gv-button-list aps-gap-10 pr0 pl-0">
                     <div class="dropdown" id="zonebtnBaoCao_Diem"> </div>
-                    <button class="btn btn-sm btn-outline-success min-w-auto ms-3 btnXacNhanDiemXN"><i
+                    <button class="btn btn-sm btn-soft-success btnXacNhanDiemXN"><i
                             class="fas fa-check-circle me-2"></i><span>Vi phạm điều kiện thi</span></button>
-                    <button class="btn btn-sm btn-outline-secondary min-w-auto ms-3" id="btnBaoCao_GiaoDien"><i
+                    <button class="btn btn-sm btn-soft-orange" id="btnBaoCao_GiaoDien"><i
                             class="fas fa-file-download me-2"></i><span>Tải bảng điểm</span></button>
-                    <button class="btn btn-sm btn-outline-primary min-w-auto ms-3" id="btnCall_Import_Table_GiaoDien"><i
+                    <button class="btn btn-sm btn-soft-primary" id="btnCall_Import_Table_GiaoDien"><i
                             class="fas fa-file-upload me-2"></i><span>Nhập điểm qua file</span></button>
-                    <button class="btn btn-sm btn-outline-danger min-w-auto ms-3 btnCongBo"><i
+                    <button class="btn btn-sm btn-soft-red btnCongBo"><i
                             class="fas fa-bullhorn me-2"></i><span>Công bố</span></button>
-                    <button class="btn btn-sm btn-outline-success min-w-auto ms-3 btnXacNhan"><i
+                    <button class="btn btn-sm btn-soft-success btnXacNhan"><i
                             class="fas fa-check-circle me-2"></i><span>Xác nhận</span></button>
-                    <button class="btn btn-sm btn-outline-info min-w-auto ms-3 btnLayLaiDiem"><i
+                    <button class="btn btn-sm btn-soft-info btnLayLaiDiem"><i
                             class="fas fa-calculator me-2"></i><span>Lấy điểm lại theo Rubri</span></button>
-                    <button class="btn btn-sm btn-outline-info min-w-auto ms-3 btnTinhDiem"><i
+                    <button class="btn btn-sm btn-soft-puple btnTinhDiem"><i
                             class="fas fa-calculator me-2"></i><span>Tính lại</span></button>
-                    <button class="btn btn-sm btn-dask-blue min-w-auto ms-3 btnSaveDSDiem"><i
+                    <button class="btn btn-sm btn-dask-blue btnSaveDSDiem"><i
                             class="fas fa-save me-2"></i><span>Lưu</span></button>
                     <button type="button" class="btn btn-default btnClose">
                         <i class="fa fa-times" aria-hidden="true"></i>Đóng</button>
@@ -144,8 +144,7 @@
             <div class="aps-table-select scroll-table-x">
                 <table class="table transcrip-table tabs-scores table-bordered small-table table-border tblNhapDiem"
                     id="tblNhapDiem" colreport="1">
-                    <thead>
-                    </thead>
+                    <thead></thead>
                     <tbody></tbody>
                 </table>
             </div>
@@ -273,7 +272,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="loaiXacNhan"></span> Hoàn thành nhập điểm</p>
+                    <p><span class="loaiXacNhan"></span>Hoàn thành nhập điểm</p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -288,7 +287,7 @@
                             </div>
                         </div>
                     </div>
-                    <a class="btn btn-success" id="btnDongYXacNhan">
+                    <a class="btn btn-success" id="btnDongYXacNhan" style="margin-left: 0 !important;">
                         <i class="fal fa-check me-2"></i><span>Đồng ý</span></a>
                 </div>
 
@@ -337,7 +336,7 @@
                         </div>
                     </div>
                     <div class="select-group">
-                        <div class="label text-right mr-5 ml-20">Trạng thái</div>
+                        <div class="label text-right mr-10 ml-20">Trạng thái</div>
                         <div class="form-item d-flex  form-add-info">
                             <div class="input-group no-icon">
                                 <select class="form-select select-opt" aria-label="Default select example"
@@ -346,7 +345,7 @@
 
                         </div>
                     </div>
-                    <a class="btn btn-success" id="btnDongYXacNhanXN"><i class="fal fa-check me-2"></i> <span>Đồng
+                    <a class="btn btn-success" id="btnDongYXacNhanXN" style="margin-left: 0 !important;"><i class="fal fa-check me-2"></i> <span>Đồng
                             ý</span></a>
                 </div>
                 <p class="fw-bold mb-2">Lịch sử <span class="loaiXacNhan"></span></p>

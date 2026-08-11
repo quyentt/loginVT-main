@@ -136,7 +136,7 @@
 
 .my-calendar .news-search-form {
   border-bottom: solid 1px #e1e1e1;
-  padding: 15px 15px 0 15px;
+  padding: 15px 15px 15px 15px;
 }
 
 .task-header {
@@ -231,7 +231,8 @@
   align-items: center;
   font-size: 15px;
   text-transform: inherit;
-  background: var(--color-main);
+  /* background: var(--color-main); */
+  background: var(--color-blue-dask);
 }
 
 .block-calendar .block-label .next-prev-month {
@@ -334,7 +335,7 @@
 
 .change-calendar label {
   font-size: 14px;
-  color: #666666;
+  color: #888;
   margin-right: 15px;
   width: 140px;
   flex-shrink: 0;
