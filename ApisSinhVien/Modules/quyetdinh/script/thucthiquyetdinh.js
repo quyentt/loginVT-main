@@ -217,7 +217,23 @@ ThucThiQuyetDinh.prototype = {
             });
         });
         $("#btnThucThi_DanhSach").click(function () {
-            var arrChecked_Id = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkTT");
+            // Cho phép chạy lại: nhặt cả checkTT (chưa thực thi) và checkX (đã thực thi)
+            var arrChecked_TT = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkTT");
+            var arrChecked_X = edu.util.getArrCheckedIds("tblInput_DTSV_SinhVien", "checkX");
+            var arrChecked_Id = arrChecked_TT.slice();
+            for (var i = 0; i < arrChecked_X.length; i++) {
+                var strThucThi_Id = arrChecked_X[i];
+                var svRecord = null;
+                for (var j = 0; j < me.dtSinhVien.length; j++) {
+                    if (me.dtSinhVien[j].QLSV_QUYETDINH_THUCTHI_ID == strThucThi_Id) {
+                        svRecord = me.dtSinhVien[j];
+                        break;
+                    }
+                }
+                if (svRecord && arrChecked_Id.indexOf(svRecord.ID) == -1) {
+                    arrChecked_Id.push(svRecord.ID);
+                }
+            }
             if (arrChecked_Id.length == 0) {
                 edu.system.alert("Vui lòng chọn sinh viên cần thực thi?");
                 return;
