@@ -1617,6 +1617,33 @@
                                 <tbody></tbody>
                             </table>
                         </div>
+
+                        <!-- Phân trang FE cho bảng Kết quả đăng ký — ẩn khi không có data -->
+                        <div id="kqdk_pagination_wrap" class="d-none align-items-center flex-wrap" style="display:flex; gap:14px; padding:4px 4px 12px;">
+                            <div style="display:inline-flex; align-items:center; gap:6px;">
+                                <span class="fz13">Hiển thị</span>
+                                <select id="ddlKQDK_PageSize" class="form-select" style="width:88px; height:32px; padding:2px 8px;">
+                                    <option value="25">25</option>
+                                    <option value="50" selected>50</option>
+                                    <option value="100">100</option>
+                                    <option value="200">200</option>
+                                    <option value="99999">Tất cả</option>
+                                </select>
+                                <span class="fz13">/ trang</span>
+                            </div>
+                            <div style="display:inline-flex; align-items:center; gap:6px; margin-left:auto;">
+                                <button id="btnKQDK_PageFirst" class="btn btn-default btn-sm" title="Trang đầu" type="button" style="padding:4px 10px;"><i class="fa fa-angle-double-left"></i></button>
+                                <button id="btnKQDK_PagePrev" class="btn btn-default btn-sm" title="Trang trước" type="button" style="padding:4px 10px;"><i class="fa fa-angle-left"></i></button>
+                                <span class="fz13">Trang</span>
+                                <input id="txtKQDK_PageJump" type="number" class="form-control" min="1" value="1" style="width:70px; height:32px; text-align:center; padding:2px 6px;">
+                                <span class="fz13">/ <b id="lblKQDK_PageTotal">1</b></span>
+                                <button id="btnKQDK_PageNext" class="btn btn-default btn-sm" title="Trang sau" type="button" style="padding:4px 10px;"><i class="fa fa-angle-right"></i></button>
+                                <button id="btnKQDK_PageLast" class="btn btn-default btn-sm" title="Trang cuối" type="button" style="padding:4px 10px;"><i class="fa fa-angle-double-right"></i></button>
+                            </div>
+                            <div class="fz13">
+                                Đang xem <b id="lblKQDK_PageRange">0-0</b> / <b id="lblKQDK_PageTotalRecords">0</b>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -1732,6 +1759,93 @@
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- ═══ Panel: Đối chiếu file Excel với DS hệ thống (dùng CCCD làm key) ═══
+                         Use case: sau import chạy xong, kiểm tra row nào trong file KHÔNG vào được
+                         hệ thống (fail BE, network cut, hoặc giới hạn "chỉ nhập N dòng"). Xuất Excel
+                         "Chỉ trong file" để import lại. Còn 5 nhóm khác để user tự dùng. -->
+                    <div id="importTT_DiffPanel" class="mb-15 mt-10" style="border:1px solid #cbd5e1; background:#f8fafc; border-radius:6px; padding:12px 16px;">
+                        <div class="d-flex align-items-center justify-content-between mb-10" style="flex-wrap:wrap; gap:10px;">
+                            <h5 class="mb-0" style="color:#1e40af;">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i>
+                                Đối chiếu file Excel với danh sách hệ thống
+                            </h5>
+                            <a href="#" id="btnDiff_ToggleHelp" class="fz12" style="color:#0369a1;">
+                                <i class="fa-regular fa-circle-question"></i> Hướng dẫn
+                            </a>
+                        </div>
+                        <div id="diffHelp" class="d-none fz12 mb-10" style="background:#dbeafe; border-left:3px solid #2563eb; padding:8px 12px; border-radius:4px;">
+                            <b>1.</b> Chọn file Excel bạn đã import (có cột <code>strPersonIden_SoCCCD</code>).
+                            <b>2.</b> Bấm "So sánh" — hệ thống dùng CCCD để đối chiếu với DS "Kết quả đăng ký" hiện tại (theo KH/Đợt đang chọn).
+                            <b>3.</b> Xuất Excel theo nhóm — quan tâm nhất: <b>Chỉ trong file</b> (row chưa vào hệ thống, xuất để import lại).
+                            <br><span style="color:#7f1d1d;">Lưu ý: CCCD sẽ được normalize (chỉ giữ digit, bỏ khoảng trắng/dash). Cần load DS "Kết quả đăng ký" trước bằng cách chuyển sang tab đó.</span>
+                        </div>
+                        <div class="d-flex align-items-center flex-wrap mb-10" style="gap:10px;">
+                            <input type="file" id="fileDiff" accept=".xlsx,.xls,.csv" class="form-control" style="max-width:380px;" />
+                            <button id="btnDiff_Compare" class="btn btn-primary" disabled type="button">
+                                <i class="fa-solid fa-bolt"></i><span>&nbsp;So sánh</span>
+                            </button>
+                            <span id="lblDiff_FileInfo" class="fz13"></span>
+                        </div>
+
+                        <div id="diffResultWrap" class="d-none">
+                            <div class="d-flex fz13 mb-8 flex-wrap" style="gap:12px 16px; padding:8px 12px; background:#e0f2fe; border-radius:4px;">
+                                <span><b>File:</b> <span id="lblDiff_TotalFile">0</span> row</span>
+                                <span style="color:#94a3b8;">|</span>
+                                <span><b>Hệ thống:</b> <span id="lblDiff_TotalSys">0</span> row</span>
+                                <span style="color:#94a3b8;">|</span>
+                                <span>Key: <b>CCCD</b> (normalize: chỉ giữ digit, giữ leading zero)</span>
+                            </div>
+                            <table class="table table-bordered fz13 mb-0" style="background:#fff;">
+                                <thead style="background:#f1f5f9;">
+                                    <tr>
+                                        <th class="td-center" style="width:36px;"></th>
+                                        <th class="td-left">Nhóm</th>
+                                        <th class="td-center" style="width:100px;">Số bản ghi</th>
+                                        <th class="td-center" style="width:150px;">Xuất Excel</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="td-center"><i class="fa-solid fa-circle-check" style="color:#10b981;"></i></td>
+                                        <td>Có trong <b>cả hai</b> (import thành công)</td>
+                                        <td class="td-center"><b id="lblDiff_Both">0</b></td>
+                                        <td class="td-center"><button class="btn btn-sm btn-default btnDiff_Export" data-cat="both" disabled type="button"><i class="fa-regular fa-file-excel"></i> Xuất</button></td>
+                                    </tr>
+                                    <tr style="background:#fef2f2;">
+                                        <td class="td-center"><i class="fa-solid fa-circle-xmark" style="color:#dc2626;"></i></td>
+                                        <td><b>Chỉ trong file</b>, không có trong hệ thống <span class="fz11" style="color:#7f1d1d;">★ (thiếu import — xuất để nhập lại)</span></td>
+                                        <td class="td-center"><b id="lblDiff_OnlyFile" style="color:#dc2626;">0</b></td>
+                                        <td class="td-center"><button class="btn btn-sm btn-danger btnDiff_Export" data-cat="onlyFile" disabled type="button"><i class="fa-regular fa-file-excel"></i> Xuất</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="td-center"><i class="fa-solid fa-circle-dot" style="color:#0369a1;"></i></td>
+                                        <td><b>Chỉ trong hệ thống</b>, không có trong file <span class="fz11" style="color:#475569;">(khai tay / batch khác)</span></td>
+                                        <td class="td-center"><b id="lblDiff_OnlySys">0</b></td>
+                                        <td class="td-center"><button class="btn btn-sm btn-default btnDiff_Export" data-cat="onlySys" disabled type="button"><i class="fa-regular fa-file-excel"></i> Xuất</button></td>
+                                    </tr>
+                                    <tr style="background:#fefce8;">
+                                        <td class="td-center"><i class="fa-solid fa-triangle-exclamation" style="color:#ca8a04;"></i></td>
+                                        <td>Không có CCCD trong file (không đối chiếu được) <span class="fz11" style="color:#713f12;">— gồm cả CCCD &lt; 9 số / sai format</span></td>
+                                        <td class="td-center"><b id="lblDiff_NoCCCD">0</b></td>
+                                        <td class="td-center"><button class="btn btn-sm btn-default btnDiff_Export" data-cat="noCCCD" disabled type="button"><i class="fa-regular fa-file-excel"></i> Xuất</button></td>
+                                    </tr>
+                                    <tr style="background:#fefce8;">
+                                        <td class="td-center"><i class="fa-solid fa-triangle-exclamation" style="color:#ca8a04;"></i></td>
+                                        <td>CCCD trùng trong file (cùng 1 CCCD ở nhiều dòng)</td>
+                                        <td class="td-center"><b id="lblDiff_DupFile">0</b></td>
+                                        <td class="td-center"><button class="btn btn-sm btn-default btnDiff_Export" data-cat="dupFile" disabled type="button"><i class="fa-regular fa-file-excel"></i> Xuất</button></td>
+                                    </tr>
+                                    <tr style="background:#fefce8;">
+                                        <td class="td-center"><i class="fa-solid fa-triangle-exclamation" style="color:#ca8a04;"></i></td>
+                                        <td>CCCD trùng trong hệ thống</td>
+                                        <td class="td-center"><b id="lblDiff_DupSys">0</b></td>
+                                        <td class="td-center"><button class="btn btn-sm btn-default btnDiff_Export" data-cat="dupSys" disabled type="button"><i class="fa-regular fa-file-excel"></i> Xuất</button></td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>

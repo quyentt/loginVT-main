@@ -37,6 +37,10 @@ KeHoachTuyenSinhNew.prototype = {
     _importCancelled: false,
     _khaiDMLoaded: false,  // danh mục form khai đã nạp lần đầu chưa (lazy)
     dtKQDK_HoSo: [],       // cache raw danh sách hồ sơ để filter local + export Excel
+    _kqViewData: [],       // data đang view (raw hoặc đã filter) — nguồn cho phân trang FE
+    _kqPageIdx: 1,         // trang hiện tại (1-based)
+    _kqPageSize: 50,       // số dòng / trang (đồng bộ với #ddlKQDK_PageSize)
+    _diffResult: null,     // { both, onlyFile, onlySys, noCCCD, dupFile, dupSys, fileTotal, sysTotal }
     strSuaHoSo_Id: '',     // ID hồ sơ đang sửa qua form Khai (chế độ Sửa)
 
     init: function () {
@@ -507,6 +511,27 @@ KeHoachTuyenSinhNew.prototype = {
             $('#tblKQDK_HoSo tbody .kqdk-sel').prop('checked', $(this).is(':checked'));
         });
 
+        // Phân trang FE cho bảng Kết quả đăng ký (data đã cache đầy đủ ở _kqViewData)
+        $('#ddlKQDK_PageSize').on('change', function () {
+            me._kqPageSize = parseInt($(this).val(), 10) || 50;
+            me._kqPageIdx = 1;
+            me._kqRenderPage();
+        });
+        $('#btnKQDK_PageFirst').click(function () { me._kqGoPage(1); });
+        $('#btnKQDK_PagePrev').click(function () { me._kqGoPage(me._kqPageIdx - 1); });
+        $('#btnKQDK_PageNext').click(function () { me._kqGoPage(me._kqPageIdx + 1); });
+        $('#btnKQDK_PageLast').click(function () {
+            var total = (me._kqViewData || []).length;
+            var pages = Math.max(1, Math.ceil(total / me._kqPageSize));
+            me._kqGoPage(pages);
+        });
+        $('#txtKQDK_PageJump').on('change keypress', function (e) {
+            if (e.type === 'keypress' && e.which !== 13) return;
+            if (e.type === 'keypress') e.preventDefault();
+            var p = parseInt($(this).val(), 10);
+            if (!isNaN(p)) me._kqGoPage(p);
+        });
+
         // Delegate: nút Sửa / Xóa trên từng row hồ sơ
         $('#tblKQDK_HoSo').on('click', '.btnSuaHoSo', function () {
             me.openSuaHoSo($(this).attr('data-id'));
@@ -598,6 +623,23 @@ KeHoachTuyenSinhNew.prototype = {
         $("#btnImportTT_ExportErrors").click(function (e) {
             e.preventDefault();
             me.exportImportTT_ErrorsToExcel();
+        });
+
+        // Đối chiếu file Excel với DS hệ thống (dùng CCCD làm key)
+        $("#fileDiff").on('change', function () {
+            var f = this.files && this.files[0];
+            if (!f) {
+                $('#lblDiff_FileInfo').text('');
+                $('#btnDiff_Compare').prop('disabled', true);
+                return;
+            }
+            $('#lblDiff_FileInfo').text('Đã chọn: ' + f.name + ' (' + (f.size / 1024).toFixed(1) + ' KB)');
+            $('#btnDiff_Compare').prop('disabled', false);
+        });
+        $("#btnDiff_Compare").click(function () { me._diffCompareFileVsSystem(); });
+        $("#btnDiff_ToggleHelp").click(function (e) { e.preventDefault(); $('#diffHelp').toggleClass('d-none'); });
+        $("#importTT_DiffPanel").on('click', '.btnDiff_Export', function () {
+            me._diffExportCategory($(this).attr('data-cat'));
         });
 
         // Đọc dữ liệu từ nguồn API (mapping cột API ↔ trường thông tin, lưu localStorage)
@@ -723,7 +765,14 @@ KeHoachTuyenSinhNew.prototype = {
         $('#btnCancelImportTT').addClass('d-none');
         $('#lblImportProgress').text('0 / 0');
         $('#lblImportOK, #lblImportErr').text('0');
-        $('#importProgressBar').css('width', '0%').text('0%');
+        $('#importProgressBar').css({ width: '0%', background: '#17a2b8' }).text('0%');
+        $('#importTT_FinishBanner').remove();
+        // reset panel đối chiếu file
+        $('#fileDiff').val('');
+        $('#lblDiff_FileInfo').text('');
+        $('#btnDiff_Compare').prop('disabled', true);
+        $('#diffResultWrap').addClass('d-none');
+        this._diffResult = null;
         // reset error panel state
         this._importTT_Errors = [];
         $('#importTT_ErrorsPanel').addClass('d-none');
@@ -794,6 +843,8 @@ KeHoachTuyenSinhNew.prototype = {
             $('#btnCancelImportTT').removeClass('d-none');
             $('#fileImportTT').prop('disabled', true);
             $('#importProgressWrap').removeClass('d-none');
+            $('#importProgressBar').css('background', '#17a2b8');   // reset màu về default
+            $('#importTT_FinishBanner').remove();                    // xóa banner batch cũ
             $('#importTT_ErrorsPanel').addClass('d-none');
             $('#btnImportTT_ShowErrors').addClass('d-none');
             $('#lblImportTT_ErrCount').text('0');
@@ -838,9 +889,50 @@ KeHoachTuyenSinhNew.prototype = {
             $('#btnStartImportTT').prop('disabled', false);
             $('#btnCancelImportTT').addClass('d-none');
             $('#fileImportTT').prop('disabled', false);
-            var kind = (err === 0 && !me._importCancelled) ? 's' : 'i';
-            edu.system.alert("Đã xử lý " + done + "/" + total + " (OK: " + ok + ", lỗi: " + err + ")"
-                + (me._importCancelled ? " — đã dừng" : ""), kind);
+
+            // ⚠ KHÔNG dùng edu.system.alert ở đây:
+            // - Batch dài (3K+ rec) hay bị network chập chờn → window 'offline'/'online' bắn
+            //   edu.system.alert lên cùng modal #myModalAlert (append content).
+            // - Khi user đóng modal alert stack đó, BS3 gỡ body.modal-open → modal #ket-qua-dk
+            //   phía dưới bị mất backdrop/scroll lock → user thấy như "tự đóng".
+            // → Hiển thị inline banner ngay dưới progress để tránh stack + user vẫn thấy summary.
+            var isCancel = me._importCancelled;
+            var isAllOk = (err === 0 && !isCancel);
+            var color, icon, label;
+            if (isCancel) {
+                color = '#f59e0b'; icon = 'fa-ban'; label = 'Đã dừng';
+            } else if (isAllOk) {
+                color = '#10b981'; icon = 'fa-circle-check'; label = 'Hoàn tất — tất cả thành công';
+            } else if (ok === 0) {
+                color = '#dc2626'; icon = 'fa-circle-xmark'; label = 'Hoàn tất — TẤT CẢ LỖI';
+            } else {
+                color = '#f59e0b'; icon = 'fa-triangle-exclamation'; label = 'Hoàn tất — có lỗi';
+            }
+            // Đổi màu progress bar theo outcome (visual signal)
+            $bar.css('background', color);
+            // Banner summary (thay cho edu.system.alert)
+            var $b = $('#importTT_FinishBanner');
+            if (!$b.length) {
+                $('#importProgressWrap').after('<div id="importTT_FinishBanner" class="mt-10"></div>');
+                $b = $('#importTT_FinishBanner');
+            }
+            $b.css({
+                padding: '10px 14px', 'border-radius': '6px',
+                'border-left': '4px solid ' + color,
+                background: color + '1a',   // hex + alpha 10%
+                'font-size': '14px'
+            }).html(
+                '<i class="fa-solid ' + icon + '" style="color:' + color + ';"></i> '
+                + '<b>' + label + ':</b> đã xử lý <b>' + done + '/' + total + '</b> '
+                + '(<span class="color-success">OK: ' + ok + '</span>, '
+                + '<span class="color-red">Lỗi: ' + err + '</span>)'
+            );
+            // Nếu có lỗi → auto-mở panel chi tiết để user thấy ngay
+            if (err > 0) {
+                me.renderImportTT_ErrorsPanel();
+                $('#importTT_ErrorsPanel').removeClass('d-none');
+            }
+            console.log('[Import TT] Finish:', { done: done, total: total, ok: ok, err: err, cancelled: isCancel });
         };
 
         // Cơ sở đào tạo mặc định cho batch (dropdown trong modal) — dùng làm ctx.CoSo.
@@ -1153,6 +1245,184 @@ KeHoachTuyenSinhNew.prototype = {
         XLSX.writeFile(wb, fname);
         edu.system.alert("Đã xuất " + errs.length + " row lỗi ra file " + fname
             + "\n\nSheet 1: Tóm tắt lỗi\nSheet 2: Full data (row Excel gốc) để BE debug", "s");
+    },
+
+    /*------------------------------------------
+    -- === Đối chiếu file Excel vs DS hệ thống (dùng CCCD làm key) ===
+    -- Use case: sau import → biết row nào chưa vào hệ thống → xuất Excel import lại.
+    -- Normalize CCCD: strip mọi ký tự không phải digit; length < 9 coi như không hợp lệ.
+    -- Trả { key, corrupt }: corrupt=true khi phát hiện scientific notation (Excel bôi corrupt).
+    -------------------------------------------*/
+    _diffNormalizeCCCD: function (v) {
+        if (v == null) return { key: '', corrupt: false };
+        var s = String(v).trim();
+        if (!s) return { key: '', corrupt: false };
+        var corrupt = /[eE][+\-]?\d+$/.test(s);   // 1.23E+11 → Excel format Number quá dài
+        s = s.replace(/[^\d]/g, '');
+        if (s.length < 9) return { key: '', corrupt: corrupt };   // CCCD hợp lệ 9-12 số
+        return { key: s, corrupt: corrupt };
+    },
+
+    /*------------------------------------------
+    -- Đọc file Excel + so sánh với me.dtKQDK_HoSo (cache list hệ thống).
+    -- Phân 6 nhóm: both / onlyFile / onlySys / noCCCD / dupFile / dupSys.
+    -- Dup rows vẫn được xếp vào both/onlyFile theo lookup, đồng thời liệt kê ở dupFile/dupSys.
+    -------------------------------------------*/
+    _diffCompareFileVsSystem: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
+            return;
+        }
+        var el = $('#fileDiff')[0];
+        var f = el && el.files && el.files[0];
+        if (!f) { edu.system.alert("Vui lòng chọn file để so sánh", "w"); return; }
+        var sysList = me.dtKQDK_HoSo || [];
+        if (!sysList.length) {
+            edu.system.alert("Danh sách hệ thống rỗng — chuyển sang tab 'Kết quả đăng ký' để load dữ liệu trước, rồi quay lại đây.", "w");
+            return;
+        }
+
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var fileRows = [];
+            try {
+                var wb = XLSX.read(e.target.result, { type: 'array', cellDates: true, cellNF: false });
+                var ws = wb.Sheets[wb.SheetNames[0]];
+                fileRows = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false });
+            } catch (ex) {
+                edu.system.alert("Không đọc được file: " + (ex && ex.message ? ex.message : ex), "w");
+                return;
+            }
+            if (!fileRows.length) { edu.system.alert("File không có dữ liệu (hàng 1 phải là header)", "w"); return; }
+
+            // Build map hệ thống: normalized CCCD → array records (chuẩn detect trùng)
+            var sysMap = {};
+            for (var i = 0; i < sysList.length; i++) {
+                var kSys = me._diffNormalizeCCCD(sysList[i]['PERSONIDEN_SOCCCD']).key;
+                if (!kSys) continue;
+                (sysMap[kSys] = sysMap[kSys] || []).push(sysList[i]);
+            }
+
+            // Build map file + gom noCCCD
+            var fileMap = {};
+            var noCCCD = [];
+            for (var j = 0; j < fileRows.length; j++) {
+                var norm = me._diffNormalizeCCCD(fileRows[j]['strPersonIden_SoCCCD']);
+                if (!norm.key) {
+                    var row = fileRows[j];
+                    if (norm.corrupt) row.__diff_note = 'CCCD bị Excel format thành scientific notation';
+                    noCCCD.push(row);
+                    continue;
+                }
+                (fileMap[norm.key] = fileMap[norm.key] || []).push(fileRows[j]);
+            }
+
+            // Categorize file → both / onlyFile / dupFile
+            var both = [], onlyFile = [], dupFile = [];
+            for (var kf in fileMap) {
+                var rowsF = fileMap[kf];
+                if (rowsF.length > 1) { for (var a = 0; a < rowsF.length; a++) dupFile.push(rowsF[a]); }
+                if (sysMap[kf]) { for (var b = 0; b < rowsF.length; b++) both.push(rowsF[b]); }
+                else { for (var c = 0; c < rowsF.length; c++) onlyFile.push(rowsF[c]); }
+            }
+
+            // Categorize sys → onlySys / dupSys
+            var onlySys = [], dupSys = [];
+            for (var ks in sysMap) {
+                var rowsS = sysMap[ks];
+                if (rowsS.length > 1) { for (var d = 0; d < rowsS.length; d++) dupSys.push(rowsS[d]); }
+                if (!fileMap[ks]) { for (var e2 = 0; e2 < rowsS.length; e2++) onlySys.push(rowsS[e2]); }
+            }
+
+            me._diffResult = {
+                both: both, onlyFile: onlyFile, onlySys: onlySys,
+                noCCCD: noCCCD, dupFile: dupFile, dupSys: dupSys,
+                fileTotal: fileRows.length, sysTotal: sysList.length
+            };
+            me._diffRenderResult();
+            console.log('[Diff] Kết quả:', me._diffResult);
+        };
+        reader.onerror = function () { edu.system.alert("Lỗi đọc file", "w"); };
+        reader.readAsArrayBuffer(f);
+    },
+
+    /*------------------------------------------
+    -- Update counters + enable/disable nút Xuất Excel theo từng nhóm.
+    -------------------------------------------*/
+    _diffRenderResult: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var r = me._diffResult;
+        if (!r) return;
+        $('#lblDiff_TotalFile').text(r.fileTotal);
+        $('#lblDiff_TotalSys').text(r.sysTotal);
+        $('#lblDiff_Both').text(r.both.length);
+        $('#lblDiff_OnlyFile').text(r.onlyFile.length);
+        $('#lblDiff_OnlySys').text(r.onlySys.length);
+        $('#lblDiff_NoCCCD').text(r.noCCCD.length);
+        $('#lblDiff_DupFile').text(r.dupFile.length);
+        $('#lblDiff_DupSys').text(r.dupSys.length);
+        $('#diffResultWrap').removeClass('d-none');
+        $('.btnDiff_Export[data-cat="both"]').prop('disabled', !r.both.length);
+        $('.btnDiff_Export[data-cat="onlyFile"]').prop('disabled', !r.onlyFile.length);
+        $('.btnDiff_Export[data-cat="onlySys"]').prop('disabled', !r.onlySys.length);
+        $('.btnDiff_Export[data-cat="noCCCD"]').prop('disabled', !r.noCCCD.length);
+        $('.btnDiff_Export[data-cat="dupFile"]').prop('disabled', !r.dupFile.length);
+        $('.btnDiff_Export[data-cat="dupSys"]').prop('disabled', !r.dupSys.length);
+    },
+
+    /*------------------------------------------
+    -- Xuất 1 nhóm ra Excel. Header = union tất cả keys của rows trong nhóm (bảo toàn nguyên
+    -- cột file gốc → import lại được ngay). onlySys/dupSys có schema từ API (COREPERSON_*),
+    -- các nhóm còn lại có schema từ file Excel (strCorePerson_*, strPersonIden_*, ...).
+    -------------------------------------------*/
+    _diffExportCategory: function (cat) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
+            return;
+        }
+        if (!me._diffResult) return;
+        var rows = me._diffResult[cat] || [];
+        if (!rows.length) { edu.system.alert("Nhóm này không có bản ghi", "w"); return; }
+
+        // Union keys → giữ thứ tự xuất hiện đầu tiên (bảo toàn cấu trúc file gốc)
+        var keys = [];
+        var seen = {};
+        for (var i = 0; i < rows.length; i++) {
+            for (var k in rows[i]) {
+                if (rows[i].hasOwnProperty(k) && !seen[k]) { seen[k] = true; keys.push(k); }
+            }
+        }
+        var aoa = [keys];
+        for (var i2 = 0; i2 < rows.length; i2++) {
+            var line = [];
+            for (var j = 0; j < keys.length; j++) {
+                var v = rows[i2][keys[j]];
+                line.push(v == null ? '' : v);
+            }
+            aoa.push(line);
+        }
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+        ws['!cols'] = keys.map(function (h) { return { wch: Math.max(14, Math.min(32, (h || '').length + 2)) }; });
+        ws['!freeze'] = { xSplit: 0, ySplit: 1 };
+        var wb = XLSX.utils.book_new();
+        var meta = {
+            both: { sheet: 'Co_Ca_Hai', label: 'Co trong ca hai' },
+            onlyFile: { sheet: 'Chi_Trong_File', label: 'Chi trong file' },
+            onlySys: { sheet: 'Chi_Trong_HeThong', label: 'Chi trong he thong' },
+            noCCCD: { sheet: 'Khong_Co_CCCD', label: 'Khong co CCCD' },
+            dupFile: { sheet: 'Trung_Trong_File', label: 'Trung trong file' },
+            dupSys: { sheet: 'Trung_Trong_HeThong', label: 'Trung trong he thong' }
+        }[cat] || { sheet: 'Data', label: 'data' };
+        XLSX.utils.book_append_sheet(wb, ws, meta.sheet);
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var now = new Date();
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+            + '_' + pad(now.getHours()) + pad(now.getMinutes());
+        var fname = 'DoiChieu_' + meta.sheet + '_' + rows.length + 'rec_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fname);
+        edu.system.alert("Đã xuất " + rows.length + " bản ghi nhóm '" + meta.label + "' ra file " + fname, "s");
     },
 
     /*------------------------------------------
@@ -1499,6 +1769,22 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Fuzzy pick: quét key của record, trả value đầu tiên khớp regex.
+    -- Fallback cho field convention API không nhất quán (VD CCCD: SOCCCD/CCCD/SO_CCCD/soCCCD…).
+    -------------------------------------------*/
+    _kqPickFuzzy: function (d, re) {
+        if (!d) return '';
+        for (var k in d) {
+            if (!d.hasOwnProperty(k)) continue;
+            if (re.test(k)) {
+                var v = d[k];
+                if (v !== undefined && v !== null && v !== '') return v;
+            }
+        }
+        return '';
+    },
+
+    /*------------------------------------------
     -- Lookup TEN theo ID từ option của 1 dropdown DM đã load (VD tra Giới tính TEN từ ID).
     -- Fallback trả '' nếu DM chưa load hoặc ID không match.
     -------------------------------------------*/
@@ -1513,35 +1799,73 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Render bảng 51 cột. Escape HTML để tránh XSS.
+    -- Entry point: cache toàn bộ data đang view + reset về trang 1 + render.
+    -- Không render trực tiếp — delegate cho _kqRenderPage() để chỉ vẽ slice (tránh đơ 11K row).
     -------------------------------------------*/
     renderKQDK_Table: function (data) {
         var me = main_doc.KeHoachTuyenSinhNew;
+        me._kqViewData = data || [];
+        me._kqPageIdx = 1;
+        $('#lblKQDK_Total').text(me._kqViewData.length);
+        me._kqRenderPage();
+    },
+
+    /*------------------------------------------
+    -- Nhảy tới trang N (clamp trong [1, totalPages]) rồi render.
+    -------------------------------------------*/
+    _kqGoPage: function (p) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var total = (me._kqViewData || []).length;
+        var pages = Math.max(1, Math.ceil(total / me._kqPageSize));
+        if (p < 1) p = 1;
+        if (p > pages) p = pages;
+        me._kqPageIdx = p;
+        me._kqRenderPage();
+    },
+
+    /*------------------------------------------
+    -- Render 1 trang (slice _kqViewData) vào tbody + update control phân trang.
+    -- STT là chỉ số toàn cục (offset + i + 1) để nhất quán khi lật trang.
+    -- Escape HTML để tránh XSS từ raw API/import.
+    -------------------------------------------*/
+    _kqRenderPage: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $('#tblKQDK_HoSo tbody');
+        var data = me._kqViewData || [];
+        var total = data.length;
+        var $wrap = $('#kqdk_pagination_wrap');
+
         $tbody.html('');
-        $('#lblKQDK_Total').text((data && data.length) || 0);
         $('#chkKQDK_All').prop('checked', false);
 
-        if (!data || !data.length) {
+        if (!total) {
             $tbody.append('<tr><td class="td-center" colspan="52">Không có dữ liệu</td></tr>');
+            $wrap.addClass('d-none');
             return;
         }
+        $wrap.removeClass('d-none');
+
+        var size = me._kqPageSize || 50;
+        var pages = Math.max(1, Math.ceil(total / size));
+        if (me._kqPageIdx > pages) me._kqPageIdx = pages;
+        if (me._kqPageIdx < 1) me._kqPageIdx = 1;
+        var pageIdx = me._kqPageIdx;
+        var offset = (pageIdx - 1) * size;
+        var end = Math.min(offset + size, total);
 
         var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
         var pick = me._kqPick;
         var rows = '';
-        for (var i = 0; i < data.length; i++) {
+        for (var i = offset; i < end; i++) {
             var d = data[i];
-            // Ưu tiên HOSO_ID (API trả về) — dùng cho Sửa/Xóa
             var id = pick(d, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
-            var arr = me._kqRowToArray(d, i + 1);
+            var arr = me._kqRowToArray(d, i + 1);   // STT toàn cục
             var tds = '';
             tds += '<td class="td-center td-fix">' + arr[0] + '</td>';
-            tds += '<td class="td-center">' + arr[1] + '</td>';   // checkbox (raw HTML)
+            tds += '<td class="td-center">' + arr[1] + '</td>';
             for (var j = 2; j < arr.length; j++) {
                 tds += '<td>' + esc(arr[j]) + '</td>';
             }
-            // Cột Thao tác (raw HTML — không escape)
             var idAttr = esc(id);
             tds += '<td class="td-center">'
                 + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
@@ -1550,6 +1874,14 @@ KeHoachTuyenSinhNew.prototype = {
             rows += '<tr data-id="' + idAttr + '">' + tds + '</tr>';
         }
         $tbody.append(rows);
+
+        // Update pagination controls
+        $('#lblKQDK_PageTotal').text(pages);
+        $('#lblKQDK_PageRange').text((offset + 1) + '-' + end);
+        $('#lblKQDK_PageTotalRecords').text(total);
+        $('#txtKQDK_PageJump').val(pageIdx).attr('max', pages);
+        $('#btnKQDK_PageFirst, #btnKQDK_PagePrev').prop('disabled', pageIdx <= 1);
+        $('#btnKQDK_PageNext, #btnKQDK_PageLast').prop('disabled', pageIdx >= pages);
     },
 
     /*------------------------------------------
@@ -1586,10 +1918,13 @@ KeHoachTuyenSinhNew.prototype = {
             pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
             pick(d, ['PERSONCONTACT_EMAIL', 'PersonContact_Email', 'EMAIL']),
             pick(d, ['PERSONADDR_NOISINH', 'PersonAddr_NoiSinh', 'NOISINH']),
-            // CCCD
-            pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD']),
-            pick(d, ['PERSONIDEN_NGAYCAP', 'PersonIden_NgayCap', 'NGAYCAPCCCD']),
-            pick(d, ['PERSONIDEN_NOICAP', 'PersonIden_NoiCap', 'NOICAPCCCD']),
+            // CCCD — thử alias biết trước, fallback fuzzy quét mọi key chứa "CCCD"/"CMND"
+            (pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD', 'SO_CCCD', 'CCCD', 'CCCD_SO', 'SoCCCD', 'strPersonIden_SoCCCD', 'SOCMND', 'SO_CMND', 'CMND'])
+                || me._kqPickFuzzy(d, /^(?!.*NGAY)(?!.*NOI)(?!.*NGAY_CAP)(?!.*NOI_CAP).*(CCCD|CMND).*$/i)),
+            (pick(d, ['PERSONIDEN_NGAYCAP', 'PersonIden_NgayCap', 'NGAYCAPCCCD', 'NGAY_CAP', 'NGAYCAP', 'NgayCap', 'NgayCapCCCD', 'strPersonIden_NgayCap'])
+                || me._kqPickFuzzy(d, /(NGAY_?CAP|NGAYCAP)/i)),
+            (pick(d, ['PERSONIDEN_NOICAP', 'PersonIden_NoiCap', 'NOICAPCCCD', 'NOI_CAP', 'NOICAP', 'NoiCap', 'NoiCapCCCD', 'strPersonIden_NoiCap'])
+                || me._kqPickFuzzy(d, /(NOI_?CAP|NOICAP)/i)),
             // Hộ khẩu
             pick(d, ['PERSONADDR_HK_TINH_TEN', 'HK_TINH_TEN', 'PersonAddr_HK_Tinh_Ten']),
             pick(d, ['PERSONADDR_HK_XA_TEN', 'HK_XA_TEN', 'PersonAddr_HK_Xa_Ten']),
