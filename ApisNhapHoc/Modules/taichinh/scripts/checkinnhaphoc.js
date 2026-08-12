@@ -83,7 +83,7 @@ CheckInNhapHoc.prototype = {
             else {
                 me.strKeHoach_Id = "xxx";
             }
-            edu.extend.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
         });
         $('.rdThuTien').on('change', function () {
             me.reset_NguoiHoc_TTTS();
@@ -93,7 +93,7 @@ CheckInNhapHoc.prototype = {
             if (!edu.util.checkValue(me.strKeHoach_Id)) {
                 me.strKeHoach_Id = "xxx";
             }
-            edu.extend.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
         });
         $("#txtTimKiem_ThuTien").keypress(function (e) {
             if (e.which == 13) {
@@ -104,7 +104,7 @@ CheckInNhapHoc.prototype = {
                     me.strKeHoach_Id = "xxx";
                 }
                 //1. call nguoihoc_ttts
-                edu.extend.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+                me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
             }
         });
         $("#btnDel_Keyword_ThuTien").click(function () {
@@ -119,7 +119,7 @@ CheckInNhapHoc.prototype = {
                 me.strKeHoach_Id = "xxx";
             }
             //1. call nguoihoc_ttts
-            edu.extend.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, strTuKhoa, me.cbGenTable_NguoiHoc_TTTS);
 
         });
         /*------------------------------------------
@@ -310,7 +310,7 @@ CheckInNhapHoc.prototype = {
             if (!edu.util.checkValue(me.strKeHoach_Id)) {
                 me.strKeHoach_Id = "xxx";
             }
-            edu.extend.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, "", me.cbGenTable_NguoiHoc_TTTS);
+            me.getList_NguoiHoc_TTTS(me.iTinhTrangNhapHoc, me.strKeHoach_Id, "", me.cbGenTable_NguoiHoc_TTTS);
         });
     },
     showHide_Box: function (cl, id) {
@@ -388,11 +388,11 @@ CheckInNhapHoc.prototype = {
             edu.system.alert("Dữ liệu không hợp lệ!");
             return false;
         }
-        //2.
+        //2. Migrate: pkg_nhaphoc_thongtin.NhapHoc_ThuTien → PKG_CORE_NhapHoc_ThuTien.NhapHoc_ThuTien
         var obj_save = {
-            'action': 'NH_ThongTin/NhapHoc_ThuTien',
-            'versionAPI': 'v1.0',
-
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DykgMQkuIh4VKTQVKCQv',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.NhapHoc_ThuTien',
+            'iM': edu.system.iM,
             'strQLSV_NguoiHoc_TTTS_Id': me.strNguoiHoc_Id,
             'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
             'strTAICHINH_CacKhoanThu_Ids': arrKhoanThu_Id.toString(),
@@ -400,6 +400,7 @@ CheckInNhapHoc.prototype = {
             'strHinhThucThu_Id': edu.util.getValById('dropHinhThucThu'),
             'strNgayThuTien': edu.util.getValById('txtNgayThu'),
             'strNguoiThucHien_Id': edu.system.userId,
+            'strChucNang_Id': edu.system.strChucNang_Id
         };
         edu.system.beginLoading();
         edu.system.makeRequest({
@@ -428,7 +429,7 @@ CheckInNhapHoc.prototype = {
                 }
                 else {
                     var obj = {
-                        content: "NH_NguoiHoc_ThongTinTuyenSinh.ThuTien: " + data.Message,
+                        content: "PKG_CORE_NhapHoc_ThuTien.NhapHoc_ThuTien: " + data.Message,
                         code: "w",
                     }
                     edu.system.afterComfirm(obj);
@@ -437,7 +438,7 @@ CheckInNhapHoc.prototype = {
             },
             error: function (er) {
                 var obj = {
-                    content: "NH_NguoiHoc_ThongTinTuyenSinh.ThuTien (er): " + data.Message,
+                    content: "PKG_CORE_NhapHoc_ThuTien.NhapHoc_ThuTien (er): " + data.Message,
                     code: "w",
                 }
                 edu.system.afterComfirm(obj);
@@ -455,7 +456,14 @@ CheckInNhapHoc.prototype = {
     getList_KhoanNhapHoc: function (strNguoiHoc_Id, resolve, reject) {
         var me = this;
         var strQLSV_NguoiHoc_TTTS_Id = strNguoiHoc_Id;
-
+        // Migrate: pkg_nhaphoc_thongtin.LayDSCacKhoanNhapHoc → PKG_CORE_NhapHoc_ThuTien.LayDSCacKhoanNhapHoc
+        var obj_save = {
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRICICIKKS4gLw8pIDEJLiIP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSCacKhoanNhapHoc',
+            'iM': edu.system.iM,
+            'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
+            'strQLSV_NguoiHoc_TTTS_Id': strQLSV_NguoiHoc_TTTS_Id
+        };
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
@@ -472,22 +480,19 @@ CheckInNhapHoc.prototype = {
                     }
                 }
                 else {
-                    edu.system.alert("NH_NguoiHoc_ThongTinTuyenSinh.LayDanhSach_KhoanNhapHoc: " + data.Message, "w");
+                    edu.system.alert("PKG_CORE_NhapHoc_ThuTien.LayDSCacKhoanNhapHoc: " + data.Message, "w");
                 }
                 edu.system.endLoading();
             },
             error: function (er) {
                 edu.system.endLoading();
-                edu.system.alert("NH_NguoiHoc_ThongTinTuyenSinh.LayDanhSach_KhoanNhapHoc (er): " + JSON.stringify(er), "w");
+                edu.system.alert("PKG_CORE_NhapHoc_ThuTien.LayDSCacKhoanNhapHoc (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: 'NH_DinhMuc_Chung/LayDSCacKhoanNhapHoc',
+            type: 'POST',
+            action: obj_save.action,
             versionAPI: 'v1.0',
             contentType: true,
-            data: {
-                'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
-                'strQLSV_NguoiHoc_TTTS_Id': strQLSV_NguoiHoc_TTTS_Id
-            },
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);
@@ -522,11 +527,11 @@ CheckInNhapHoc.prototype = {
             arrKhoanThu_SoTien.push(strKhoanThu_SoTien);
             arrKhoanThu_Id.push(me.dtKhoanDaThu[i].TAICHINH_CACKHOANTHU_ID);
         }
-        //2.
+        //2. Migrate: pkg_nhaphoc_thongtin.NhapHoc_SuaPhieuThu → PKG_CORE_NhapHoc_ThuTien.NhapHoc_SuaPhieuThu
         var obj_save = {
-            'action': 'NH_NguoiHoc_ThongTinTuyenSinh/NhapHoc_SuaPhieuThu',
-            'versionAPI': 'v1.0',
-
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DykgMQkuIh4SNCARKSgkNBUpNAPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.NhapHoc_SuaPhieuThu',
+            'iM': edu.system.iM,
             'strPhieuThu_Rut_Id': me.strPhieuThu_Id,
             'strTAICHINH_CacKhoanThu_Ids': arrKhoanThu_Id.toString(),
             'strTAICHINH_SoTien_s': arrKhoanThu_SoTien.toString(),
@@ -557,7 +562,7 @@ CheckInNhapHoc.prototype = {
                 }
                 else {
                     var obj = {
-                        content: "NH_Phieu.NhapHoc_SuaPhieuThu: " + data.Message,
+                        content: "PKG_CORE_NhapHoc_ThuTien.NhapHoc_SuaPhieuThu: " + data.Message,
                         code: "w",
                     }
                     edu.system.afterComfirm(obj);
@@ -566,7 +571,7 @@ CheckInNhapHoc.prototype = {
             },
             error: function (er) {
                 var obj = {
-                    content: "NH_Phieu.NhapHoc_SuaPhieuThu (er): " + data.Message,
+                    content: "PKG_CORE_NhapHoc_ThuTien.NhapHoc_SuaPhieuThu (er): " + data.Message,
                     code: "w",
                 }
                 edu.system.afterComfirm(obj);
@@ -664,11 +669,16 @@ CheckInNhapHoc.prototype = {
     },
     getDetail_NguoiHoc_PhieuThu: function (strPhieuThu_Id) {
         var me = this;
-
+        // Migrate: pkg_nhaphoc_thongtin.LayTTQLSV_NguoiHoc_TTTS → PKG_CORE_NhapHoc_ThuTien.LayTTQLSV_NguoiHoc_TTTS
+        var obj_save = {
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4FRUQDRIXHg8mNC4oCS4iHhUVFRIP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayTTQLSV_NguoiHoc_TTTS',
+            'iM': edu.system.iM,
+            'strId': me.strNguoiHoc_Id,
+        };
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    console.log(4444)
                     me.dtNguoiHoc_Print = data.Data[0];
                     me.getList_KhoanDaThu_Rut(strPhieuThu_Id);
                     edu.util.viewHTMLById("lblNganhLop_ThuTien", data.Data[0].DAOTAO_LOPQUANLY_TEN);
@@ -680,13 +690,11 @@ CheckInNhapHoc.prototype = {
             error: function (er) {
                 edu.system.alert(JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: 'NH_NguoiHoc_ThongTinTuyenSinh/LayChiTiet',
+            type: 'POST',
+            action: obj_save.action,
             versionAPI: 'v1.0',
             contentType: true,
-            data: {
-                'strId': me.strNguoiHoc_Id,
-            },
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);
@@ -694,7 +702,14 @@ CheckInNhapHoc.prototype = {
     getList_KhoanDaThu_Rut: function (strPhieuThu_Id, strLoaiPhieu) {
         var me = this;
         var strPhieuThu_Rut_Id = strPhieuThu_Id;
-
+        // Migrate: pkg_nhaphoc_thongtin.LayDSKhoanDaThuNhapHoc → PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc
+        var obj_save = {
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIKKS4gLwUgFSk0DykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc',
+            'iM': edu.system.iM,
+            'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
+            'strPhieuThu_Rut_Id': strPhieuThu_Rut_Id,
+        };
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
@@ -723,23 +738,20 @@ CheckInNhapHoc.prototype = {
                     }
                 }
                 else {
-                    edu.system.alert("NH_Phieu.LayDanhSach_KhoanDaThu_Rut: " + data.Message, "w");
+                    edu.system.alert("PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc: " + data.Message, "w");
                     edu.system.endLoading();
                 }
                 edu.system.endLoading();
             },
             error: function (er) {
                 edu.system.endLoading();
-                edu.system.alert("NH_Phieu.LayDanhSach_KhoanDaThu_Rut (er): " + JSON.stringify(er), "w");
+                edu.system.alert("PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: 'NH_DinhMuc_Chung/LayDSKhoanDaThuNhapHoc',
+            type: 'POST',
+            action: obj_save.action,
             versionAPI: 'v1.0',
             contentType: true,
-            data: {
-                'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
-                'strPhieuThu_Rut_Id': strPhieuThu_Rut_Id
-            },
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);
@@ -813,6 +825,42 @@ CheckInNhapHoc.prototype = {
             data: obj_save,
         }, false, false, false, null);
     },
+    // Copy từ taichinhnew.js:1864 — dùng PKG_CORE_NhapHoc_ThuTien.LayDSQLSV_NguoiHoc_TTTS.
+    // Cùng lý do như getList_KeHoachNhapHoc_NhanSu: tự gọi trực tiếp, không phụ thuộc edu.extend.
+    getList_NguoiHoc_TTTS: function (iTinhTrangNhapHoc, strKeHoach_Id, strTuKhoa, callback) {
+        var obj_save = {
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIQDRIXHg8mNC4oCS4iHhUVFRIP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSQLSV_NguoiHoc_TTTS',
+            'iM': edu.system.iM,
+            'dDaNhapHoc': iTinhTrangNhapHoc,
+            'strTaiChinh_KeHoach_Id': strKeHoach_Id,
+            'strNguoiThucHien_Id': '',
+            'strTuKhoa': strTuKhoa,
+            'pageIndex': edu.system.pageIndex_default,
+            'pageSize': edu.system.pageSize_default,
+        };
+        edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    if (typeof callback === "function") callback(arr, data.Pager || 0);
+                } else {
+                    edu.system.alert(data.Message, "w");
+                }
+                edu.system.endLoading();
+            },
+            error: function (er) {
+                edu.system.endLoading();
+            },
+            type: 'POST',
+            action: obj_save.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_save,
+            fakedb: [],
+        }, false, false, false, null);
+    },
     genCombo_KeHoachNhapHoc: function (data) {
         var me = this;
         var obj = {
@@ -847,7 +895,7 @@ CheckInNhapHoc.prototype = {
             strTable_Id: "tblThuTien",
             aaData: data,
             bPaginate: {
-                strFuntionName: "edu.extend.getList_NguoiHoc_TTTS(main_doc.CheckInNhapHoc.iTinhTrangNhapHoc,main_doc.CheckInNhapHoc.strKeHoach_Id, '" + strTuKhoa + "',main_doc.CheckInNhapHoc.cbGenTable_NguoiHoc_TTTS)",
+                strFuntionName: "main_doc.CheckInNhapHoc.getList_NguoiHoc_TTTS(main_doc.CheckInNhapHoc.iTinhTrangNhapHoc,main_doc.CheckInNhapHoc.strKeHoach_Id, '" + strTuKhoa + "',main_doc.CheckInNhapHoc.cbGenTable_NguoiHoc_TTTS)",
                 iDataRow: iPager,
             },
             arrClassName: ["tr-pointer", "btnPopover_NguoiHoc_ThuTien"],
@@ -1256,7 +1304,14 @@ CheckInNhapHoc.prototype = {
     -------------------------------------------*/
     getList_KhoanDaThu_XuatHoaDon: function (strPhieuThu_Id) {
         var me = this;
-
+        // Migrate: pkg_nhaphoc_thongtin.LayDSKhoanDaThuNhapHoc → PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc
+        var obj_save = {
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIKKS4gLwUgFSk0DykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc',
+            'iM': edu.system.iM,
+            'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
+            'strPhieuThu_Rut_Id': strPhieuThu_Id
+        };
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -1273,16 +1328,13 @@ CheckInNhapHoc.prototype = {
                 }
             },
             error: function (er) {
-                edu.system.alert("NH_Phieu.LayDanhSach_KhoanDaThu_Rut (er): " + JSON.stringify(er), "w");
+                edu.system.alert("PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc (er): " + JSON.stringify(er), "w");
             },
-            type: 'GET',
-            action: 'NH_DinhMuc_Chung/LayDSKhoanDaThuNhapHoc',
+            type: 'POST',
+            action: obj_save.action,
             versionAPI: 'v1.0',
             contentType: true,
-            data: {
-                'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
-                'strPhieuThu_Rut_Id': strPhieuThu_Id
-            },
+            data: obj_save,
             fakedb: [
             ]
         }, false, false, false, null);

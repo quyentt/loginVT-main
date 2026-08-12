@@ -76,6 +76,8 @@ KhaiMucPhi.prototype = {
     dtMucPhiDaGan: [],
     dtMucPhiDaGan_All: [],
     _filtered_MucPhiDaGan: [],
+    // Set ID (Core_Person_Intake_Id) đã tick — giữ qua các trang khi paging client-side
+    _selectedIds_MucPhiDaGan: {},
 
     /* --------- INIT --------- */
     init: function () {
@@ -292,10 +294,69 @@ KhaiMucPhi.prototype = {
             me.xem_ChiTiet_PhaiNop(strIntakeId, strHoTen, strMa);
         });
 
-        // Chọn tất cả checkbox
+        // Select-all — apply cho TOÀN BỘ filtered (không chỉ trang hiện tại), giữ state qua các trang
         $("#chkSelectAll_MucPhiDaGan_HSNH").off("change").on("change", function () {
             var bCheck = $(this).is(":checked");
-            $("#tblMucPhiDaGan_HSNH tbody input.chkMucPhiDaGan_Row").prop("checked", bCheck);
+            me._selectedIds_MucPhiDaGan = {};
+            if (bCheck) {
+                (me._filtered_MucPhiDaGan || []).forEach(function (r) {
+                    var id = r.ID || r.CORE_PERSON_INTAKE_ID || r.Core_Person_Intake_Id || '';
+                    if (id) me._selectedIds_MucPhiDaGan[id] = true;
+                });
+            }
+            // Update checked state trên trang hiện tại + count
+            $("#tblMucPhiDaGan_HSNH tbody input.chkMucPhiDaGan_Row").each(function () {
+                var id = $(this).attr("data-id");
+                $(this).prop("checked", !!me._selectedIds_MucPhiDaGan[id]);
+            });
+            me._updateCount_MucPhiDaGan();
+        });
+
+        // Row checkbox: update state (giữ tick qua các trang)
+        $("#tblMucPhiDaGan_HSNH").off("change", ".chkMucPhiDaGan_Row")
+            .on("change", ".chkMucPhiDaGan_Row", function () {
+                var id = $(this).attr("data-id");
+                if (!id) return;
+                if ($(this).is(":checked")) me._selectedIds_MucPhiDaGan[id] = true;
+                else delete me._selectedIds_MucPhiDaGan[id];
+                me._syncHeaderChk_MucPhiDaGan();
+                me._updateCount_MucPhiDaGan();
+            });
+
+        // Sync scroll-x giả trên đầu bảng ↔ scroll dưới của bảng (bảng rộng 2200px)
+        // Dùng flag `syncing` để tránh loop khi setScrollLeft trigger event.
+        var syncingMPDG = false;
+        $("#scrollTop_MucPhiDaGan_HSNH").off("scroll.mpdg").on("scroll.mpdg", function () {
+            if (syncingMPDG) return;
+            syncingMPDG = true;
+            $("#scrollBottom_MucPhiDaGan_HSNH").scrollLeft($(this).scrollLeft());
+            syncingMPDG = false;
+        });
+        $("#scrollBottom_MucPhiDaGan_HSNH").off("scroll.mpdg").on("scroll.mpdg", function () {
+            if (syncingMPDG) return;
+            syncingMPDG = true;
+            $("#scrollTop_MucPhiDaGan_HSNH").scrollLeft($(this).scrollLeft());
+            syncingMPDG = false;
+        });
+
+        // Nút "Tạo phí nhập học" cho các dòng đã tick
+        // Reuse _openModalProgress_GenMucPhi + _gen_MucPhi_Sequential (đã có cho luồng "tạo cho cả kế hoạch")
+        $("#btnTaoPhi_Selected_MucPhiDaGan_HSNH").off("click").on("click", function (e) {
+            e.preventDefault();
+            var arrIds = Object.keys(me._selectedIds_MucPhiDaGan || {});
+            if (arrIds.length === 0) {
+                edu.system.alert("Vui lòng tick chọn ít nhất một thí sinh.", "w");
+                return;
+            }
+            edu.system.confirm("Bạn có chắc chắn muốn tạo phí nhập học cho " + arrIds.length + " thí sinh đã chọn?");
+            $("#btnYes").off("click.genMucPhiSelected").on("click.genMucPhiSelected", function () {
+                // Build arr đơn giản {ID: xxx} — _gen_MucPhi_Sequential picks row.ID
+                var arr = arrIds.map(function (id) { return { ID: id }; });
+                me._openModalProgress_GenMucPhi();
+                me._setStatus_GenMucPhi("Đang chuẩn bị tạo phí cho " + arr.length + " thí sinh...");
+                me._genFrom_MucPhiDaGan = true;   // flag để _enableClose_GenMucPhi biết reload đúng list
+                me._gen_MucPhi_Sequential(arr);
+            });
         });
 
         // Nút Lưu trong modal nhóm
@@ -2109,12 +2170,23 @@ KhaiMucPhi.prototype = {
     },
 
     _enableClose_GenMucPhi: function () {
+        var me = this;
         $("#btnCloseX_GenMucPhi_HSNH").prop('disabled', false);
         $("#btnDong_GenMucPhi_HSNH").css({ 'pointer-events': 'auto', 'opacity': '1' });
         // Dừng animation của progress-bar khi hoàn tất
         $("#barGenMucPhi_HSNH").removeClass('progress-bar-animated');
         // Reload bảng nhóm định mức để user thấy dữ liệu mới (nếu có ảnh hưởng)
-        if (this.strKeHoachNhapHoc_Id) this.getList_NhomDinhMuc();
+        if (me.strKeHoachNhapHoc_Id) me.getList_NhomDinhMuc();
+        // Nếu luồng vừa chạy là "Tạo phí cho các dòng đã chọn" trong modal MucPhiDaGan
+        // → reload lại list đó luôn để user thấy tổng phí cập nhật, clear selection.
+        if (me._genFrom_MucPhiDaGan) {
+            me._genFrom_MucPhiDaGan = false;
+            me._selectedIds_MucPhiDaGan = {};
+            $("#lblSelected_MucPhiDaGan_HSNH").text('0');
+            if ($("#modalMucPhiDaGan_HSNH").hasClass('in') || $("#modalMucPhiDaGan_HSNH").hasClass('show')) {
+                me.getList_MucPhiDaGan();
+            }
+        }
     },
 
     /* =================================================================
@@ -2135,7 +2207,9 @@ KhaiMucPhi.prototype = {
         me._filtered_MucPhiDaGan = [];
         me.dtMucPhiDaGan = [];
         me._total_MucPhiDaGan = 0;
-        $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false);
+        me._selectedIds_MucPhiDaGan = {};
+        $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false).prop('indeterminate', false);
+        $("#lblSelected_MucPhiDaGan_HSNH").text('0');
         $("#modalMucPhiDaGan_HSNH").modal("show");
         me.getList_MucPhiDaGan();
     },
@@ -2249,6 +2323,26 @@ KhaiMucPhi.prototype = {
         me._renderCurrentPage_MucPhiDaGan();
     },
 
+    /* Sync header checkbox theo state _selectedIds (không chỉ page hiện tại — dựa trên toàn bộ filtered) */
+    _syncHeaderChk_MucPhiDaGan: function () {
+        var me = this;
+        var arr = me._filtered_MucPhiDaGan || [];
+        var $chk = $("#chkSelectAll_MucPhiDaGan_HSNH");
+        if (arr.length === 0) {
+            $chk.prop('checked', false).prop('indeterminate', false);
+            return;
+        }
+        var checkedCount = Object.keys(me._selectedIds_MucPhiDaGan).length;
+        $chk.prop('checked', checkedCount === arr.length);
+        $chk.prop('indeterminate', checkedCount > 0 && checkedCount < arr.length);
+    },
+
+    /* Update badge "Đã chọn: X" */
+    _updateCount_MucPhiDaGan: function () {
+        var n = Object.keys(this._selectedIds_MucPhiDaGan || {}).length;
+        $("#lblSelected_MucPhiDaGan_HSNH").text(n);
+    },
+
     /* Slice _filtered theo trang hiện tại → set dtMucPhiDaGan → genTable + renderPaging */
     _renderCurrentPage_MucPhiDaGan: function () {
         var me = this;
@@ -2335,10 +2429,19 @@ KhaiMucPhi.prototype = {
                 +    '</a>'
                 + '</td>';
             html += '<td class="td-left">' + esc(strGhiChu) + '</td>';
-            html += '<td class="td-center"><input type="checkbox" class="chkMucPhiDaGan_Row" data-id="' + esc(strId) + '" /></td>';
+            var checked = me._selectedIds_MucPhiDaGan[strId] ? ' checked' : '';
+            html += '<td class="td-center"><input type="checkbox" class="chkMucPhiDaGan_Row" data-id="' + esc(strId) + '"' + checked + ' /></td>';
             html += '</tr>';
         });
         $tbody.append(html);
+        me._syncHeaderChk_MucPhiDaGan();
+        me._updateCount_MucPhiDaGan();
+
+        // Đồng bộ width scroll-top với scrollWidth thực tế của bảng (an toàn hơn hardcode 2200px)
+        setTimeout(function () {
+            var w = $("#tblMucPhiDaGan_HSNH")[0].scrollWidth;
+            $("#scrollTop_MucPhiDaGan_HSNH .kmp-scroll-top-inner").css("width", w + "px");
+        }, 0);
 
         // Sum "Tổng phí" trên TOÀN BỘ bộ lọc (không chỉ trang hiện tại) — hữu ích hơn cho user
         // vì đã chuyển sang client-side paging, sum theo trang không có nhiều giá trị.
