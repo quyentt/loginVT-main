@@ -22,7 +22,7 @@ ImportTrungTuyen.prototype = {
         var obj = {
             strNguoiDung_Id: edu.system.userId
         };
-        edu.extend.getList_KeHoachNhapHoc_NhanSu(obj, "", "", me.cbGenCombo_KeHoachNhapHoc);
+        me.getList_KeHoachNhapHoc_NhanSu(obj, "", "", me.cbGenCombo_KeHoachNhapHoc);
         /*------------------------------------------
         --Discription: Load Select 
         -------------------------------------------*/
@@ -197,5 +197,32 @@ ImportTrungTuyen.prototype = {
             title: "Chọn kế hoạch nhập học",
         }
         edu.system.loadToCombo_data(obj);
+    },
+    // Copy từ ruttiennew.js — dùng PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc (hàm mới BE mới cấp).
+    // Trước đó gọi qua edu.extend.getList_KeHoachNhapHoc_NhanSu, nhưng Core/systemextend.js bản cũ
+    // vẫn trỏ về pkg_nhaphoc_thongtin (API cũ) — trang này ép dùng bản mới không phụ thuộc load thứ tự.
+    getList_KeHoachNhapHoc_NhanSu: function (obj, resolve, reject, callback) {
+        var obj_save = {
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIKJAkuICIpDykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': obj.strNguoiDung_Id,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    if (typeof resolve === "function") resolve(arr);
+                    if (typeof callback === "function") callback(arr, data.Pager);
+                } else {
+                    edu.system.alert(data.Message, "w");
+                }
+            },
+            error: function (er) { edu.system.alert(JSON.stringify(er), "w"); },
+            type: "POST",
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+        }, false, false, false, null);
     },
 }

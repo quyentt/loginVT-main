@@ -32,36 +32,27 @@ ThemMoi.prototype = {
     --Discription: cau truc ChinhSuaThongTin
     -------------------------------------------*/
     getList_KeHoach: function(){
-        //
+        // Chuyển sang PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc (hàm mới BE mới cấp),
+        // chỉ lấy kế hoạch đã phân quyền cho user đăng nhập.
         var obj_save = {
-            'action': 'NH_KeHoachNhapHoc/LayDanhSach',
-            'versionAPI': 'v1.0',
-            //
-            "strDAOTAO_KhoaDaoTao_Id": "",
-            "strMoHinhNhapHoc_Id": "",
-            "strMoHinhApDungPhieuThu_Id": "",
-            "strTAICHINH_HeThongPhieu_Id": "",
-            "strMoHinhApDungPhieuRut_Id": "",
-            "strTAICHINH_HeThongRut_Id": "",
-            "strNguoiThucHien_Id": "",
-            "strTuKhoa":"",
-            "pageIndex": "1",
-            "pageSize": "1000"
-        }
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIKJAkuICIpDykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
 
         //default
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    var data = data.Data;
-                    console.log("kehoach: " + JSON.stringify(data));
+                    var data = edu.util.checkValue(data.Data) ? data.Data : [];
                     var obj = {
                         data: data,
                         renderInfor: {
                             id: "ID",
                             parentId: "",
-                            name: "ID",
+                            name: "TENKEHOACH",
                             code: "",
                         },
                         renderPlace: ["dropKeHoach"],
@@ -76,9 +67,8 @@ ThemMoi.prototype = {
                 edu.system.endLoading();
             },
             error: function (er) { edu.system.endLoading(); },
-            type: "GET",
+            type: "POST",
             action: obj_save.action,
-            versionAPI: obj_save.versionAPI,
             contentType: true,
             data: obj_save,
             fakedb: [

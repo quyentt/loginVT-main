@@ -316,26 +316,20 @@ ChuyenLopNhapHoc.prototype = {
     -------------------------------------------*/
     getList_KeHoach: function () {
         var me = this;
+        // Chuyển sang PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc (hàm mới BE mới cấp),
+        // chỉ lấy kế hoạch đã phân quyền cho user đăng nhập.
         var obj_list = {
-            'action': 'NH_KeHoachNhapHoc/LayDanhSach',
-
-            'versionAPI': 'v1.0',
-            'pageIndex': 1,
-            'pageSize': 100000,
-            'strDAOTAO_KhoaDaoTao_Id': "",
-            'strMoHinhNhapHoc_Id': "",
-            'strMoHinhApDungPhieuThu_Id': "",
-            'strTAICHINH_HeThongPhieu_Id': "",
-            'strMoHinhApDungPhieuRut_Id': "",
-            'strTAICHINH_HeThongRut_Id': "",
-            'strNguoiThucHien_Id': "",
-            'strTuKhoa': '',
-        }
+            'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIKJAkuICIpDykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKeHoachNhapHoc',
+            'iM': edu.system.iM,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.genCombo_KeHoach(data.Data, data.Pager);
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me.genCombo_KeHoach(arr, data.Pager);
                 }
                 else {
                     edu.system.alert("Lỗi: " + data.Message, "w");
@@ -346,9 +340,8 @@ ChuyenLopNhapHoc.prototype = {
                 edu.system.endLoading();
                 edu.system.alert("Lỗi (er): " + JSON.stringify(er), "w");
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
-            versionAPI: obj_list.versionAPI,
             contentType: true,
             data: obj_list,
             fakedb: [
