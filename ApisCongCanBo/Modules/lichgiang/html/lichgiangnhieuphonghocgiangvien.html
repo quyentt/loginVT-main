@@ -31,7 +31,7 @@
 
     /* Search Bar Section - Vertical Layout */
     .search-bar-section {
-        padding: 10px 12px;
+        padding: 15px;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -42,6 +42,7 @@
         flex-direction: column;
         gap: 6px;
     }
+
     .search-bar-header {
         margin-bottom: 4px;
     }
@@ -54,10 +55,11 @@
     }
 
     .search-bar-subtitle {
-        font-size: 10px;
+        font-size: 12px;
         color: #666;
         margin: 0;
         font-style: italic;
+        padding-top: 5px;
     }
 
     .search-bar-info {
@@ -67,7 +69,7 @@
         padding: 8px;
         background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
         border-radius: 6px;
-        border-left: 3px solid #223771;
+        border-left: 3px solid var(--color-link);
     }
 
     .info-item {
@@ -77,6 +79,7 @@
         color: #000;
         font-size: 11px;
     }
+
     .info-item i {
         font-size: 13px;
         width: 18px;
@@ -107,9 +110,9 @@
     .search-bar-controls .btn {
         flex: 1;
         white-space: nowrap;
-        height: 32px;
+        height: 38px;
         padding: 6px 12px;
-        font-size: 11px;
+        font-size: 14px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -117,8 +120,10 @@
     }
 
     .search-bar-controls .btn i {
-        margin-right: 5px;
-        font-size: 11px;
+        margin-right: 5px !important;
+        font-size: 14px;
+        padding-right: 0px !important;
+        margin-top: 0px !important;
     }
 
     /* Make search bar same height as calendar */
@@ -206,7 +211,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 8px 12px;
+        padding: 7px 12px;
         background: linear-gradient(135deg, #223771 0%, #3c5398 100%);
         color: white;
         border-top-left-radius: 12px;
@@ -255,7 +260,7 @@
     .weekdays-compact li {
         text-align: center;
         font-weight: 600;
-        font-size: 9px;
+        font-size: 14px;
         padding: 3px 1px;
         color: #666;
         background: #f8f9fa;
@@ -274,9 +279,9 @@
     .calendar-body .days li {
         text-align: center;
         padding: 5px 2px;
-        font-size: 11px;
+        font-size: 14px;
         cursor: pointer;
-        border-radius: 2px;
+        border-radius: 4px;
         transition: all 0.2s;
         background: #f8f9fa;
         border: 1px solid transparent;
@@ -757,24 +762,24 @@
     }
 
     /* Multi-select chọn nhiều giảng viên — đẹp hơn */
-    #dropSearch_CanBoMulti + .select2-container .select2-selection--multiple {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection--multiple {
         min-height: 38px !important;
         max-height: 110px;
         overflow-y: auto;
         border: 1px solid #ced4da !important;
         border-radius: 6px !important;
-        padding: 3px 6px !important;
+        padding: 3px 12px !important;
         background: #fff;
         transition: border-color 0.2s, box-shadow 0.2s;
     }
 
-    #dropSearch_CanBoMulti + .select2-container--focus .select2-selection--multiple,
-    #dropSearch_CanBoMulti + .select2-container--open .select2-selection--multiple {
+    #dropSearch_CanBoMulti+.select2-container--focus .select2-selection--multiple,
+    #dropSearch_CanBoMulti+.select2-container--open .select2-selection--multiple {
         border-color: #223771 !important;
         box-shadow: 0 0 0 0.15rem rgba(34, 55, 113, 0.15) !important;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__rendered {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__rendered {
         padding: 0 !important;
         display: flex;
         flex-wrap: wrap;
@@ -782,7 +787,7 @@
         align-items: center;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__choice {
         background: linear-gradient(135deg, #223771 0%, #3c5398 100%) !important;
         color: #fff !important;
         border: none !important;
@@ -799,12 +804,12 @@
         transition: transform 0.15s, box-shadow 0.15s;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice:hover {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__choice:hover {
         transform: translateY(-1px);
         box-shadow: 0 2px 5px rgba(34, 55, 113, 0.3);
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice__remove {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__choice__remove {
         color: #fff !important;
         font-weight: 700 !important;
         margin-right: 2px !important;
@@ -814,13 +819,13 @@
         margin-left: 4px;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__choice__remove:hover {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__choice__remove:hover {
         opacity: 1;
         color: #ffd1d1 !important;
         background: transparent !important;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__clear {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__clear {
         color: #888 !important;
         margin-right: 6px !important;
         font-size: 16px;
@@ -828,18 +833,18 @@
         align-self: center;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-search--inline {
+    #dropSearch_CanBoMulti+.select2-container .select2-search--inline {
         flex: 1;
         min-width: 120px;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-search--inline .select2-search__field {
+    #dropSearch_CanBoMulti+.select2-container .select2-search--inline .select2-search__field {
         margin-top: 4px !important;
         font-size: 12px !important;
         min-height: 24px;
     }
 
-    #dropSearch_CanBoMulti + .select2-container .select2-selection__placeholder {
+    #dropSearch_CanBoMulti+.select2-container .select2-selection__placeholder {
         color: #6c757d;
         font-size: 12px;
         font-style: italic;
@@ -849,7 +854,7 @@
     #modal_export_excel .select2-container {
         width: 100% !important;
     }
-    
+
     #modal_export_excel .select2-container .select2-selection--single {
         height: 38px !important;
         display: flex !important;
@@ -857,7 +862,7 @@
         border: 1px solid #ced4da !important;
         border-radius: 4px !important;
     }
-    
+
     #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 38px !important;
         padding-left: 12px !important;
@@ -865,34 +870,34 @@
         font-size: 14px !important;
         color: #495057 !important;
     }
-    
+
     #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 38px !important;
         right: 8px !important;
     }
-    
+
     #modal_export_excel .select2-container--default .select2-selection--single .select2-selection__placeholder {
         color: #6c757d !important;
         font-size: 14px !important;
     }
-    
+
     /* Select2 dropdown trong modal */
     .select2-container--default .select2-results__option {
         padding: 8px 12px !important;
         font-size: 14px !important;
     }
-    
+
     .select2-container--default .select2-results__option--highlighted[aria-selected] {
         background-color: #667eea !important;
     }
-    
+
     .select2-container--default .select2-search--dropdown .select2-search__field {
         border: 1px solid #ced4da !important;
         border-radius: 4px !important;
         padding: 8px 12px !important;
         font-size: 14px !important;
     }
-    
+
     .select2-container--default .select2-search--dropdown .select2-search__field:focus {
         border-color: #667eea !important;
         outline: none !important;
@@ -1010,7 +1015,7 @@
         }
 
         .weekdays-compact li {
-            font-size: 12px;
+            font-size: 14px;
             padding: 6px 3px;
         }
     }
@@ -1083,7 +1088,7 @@
         }
 
         .weekdays-compact li {
-            font-size: 11px;
+            font-size: 14px;
             padding: 6px 2px;
         }
     }
@@ -1193,19 +1198,22 @@
         }
 
         .search-bar-controls .form-select {
-            font-size: 13px;
+            font-size: 14px;
             height: 38px;
         }
+
         .search-bar-controls-buttons {
             display: flex;
             gap: 6px;
         }
+
         .search-bar-controls-buttons .btn {
             flex: 1;
             font-size: 12px;
             height: 38px;
             padding: 8px 10px;
         }
+
         .search-bar-controls-buttons .btn i {
             font-size: 12px;
         }
@@ -1256,7 +1264,7 @@
         }
 
         .weekdays-compact li {
-            font-size: 10px;
+            font-size: 14px;
             padding: 5px 2px;
         }
     }
@@ -1335,12 +1343,14 @@
             flex-direction: column;
             gap: 8px;
         }
+
         .search-bar-controls-buttons .btn {
             width: 100%;
             height: 42px;
             font-size: 14px;
             padding: 10px 14px;
         }
+
         .search-bar-controls-buttons .btn i {
             font-size: 14px;
             margin-right: 6px;
@@ -1366,8 +1376,9 @@
         .info-item i {
             font-size: 15px;
         }
+
         .search-bar-controls .form-select {
-            font-size: 13px;
+            font-size: 14px;
             height: 38px;
             padding: 6px 10px;
         }
@@ -1394,6 +1405,7 @@
             text-align: center;
             width: 100%;
         }
+
         .calendar-header {
             padding: 10px 12px;
         }
@@ -1412,7 +1424,7 @@
         }
 
         .weekdays-compact li {
-            font-size: 11px;
+            font-size: 14px;
             padding: 6px 2px;
         }
     }
@@ -1806,7 +1818,7 @@
     }
 </style>
 
-<div class="one-door study-space">
+<div class="one-door study-space aps-lichgiang">
     <div class="overlay"></div>
     <div class="content-tab no-tab">
         <p class="link">
@@ -1816,9 +1828,9 @@
     </div>
 
     <!-- Top Section: Search Bar + Calendar -->
-    <div class="row mb-1">
+    <div class="row mb-1 aps-lichgiangnhieuphonghocgiangvien">
         <!-- Search Bar - Left Side -->
-        <div class="col-12 col-lg-7 mb-1 mb-lg-0">
+        <div class="aps-lichGiangVien col-12 col-lg-7 mb-1 mb-lg-0">
             <div class="box-shadow">
                 <div class="search-bar-section">
                     <div class="search-bar-content">
@@ -1832,21 +1844,22 @@
                         </div>
                         <div class="search-bar-info">
                             <div class="info-item" style="color: #000;">
-                                <i class="fa-solid fa-sitemap" style="color: #223771;"></i>
+                                <i class="fa-solid fa-sitemap bold" style="color: #0d6efd;"></i>
                                 <span>Chọn khoa/đơn vị để hiển thị danh sách giảng viên</span>
                             </div>
                             <div class="info-item" style="color: #000;">
-                                <i class="fa-solid fa-calendar-week" style="color: #223771;"></i>
+                                <i class="fa-solid fa-calendar-week bold" style="color: #0d6efd;"></i>
                                 <span>Hiển thị lịch theo tuần (T2 - CN)</span>
                             </div>
                             <div class="info-item" style="color: #000;">
-                                <i class="fa-solid fa-file-export" style="color: #223771;"></i>
+                                <i class="fa-solid fa-file-export bold" style="color: #0d6efd;"></i>
                                 <span>Xuất báo cáo Excel theo nhu cầu</span>
                             </div>
                         </div>
                     </div>
                     <div class="search-bar-controls">
-                        <select class="form-select" id="dropSearch_DonVi" style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
+                        <select class="form-select" id="dropSearch_DonVi"
+                            style="flex: 1 1 100%; min-width: 100%; margin-bottom: 6px;">
                             <option value="">Tất cả khoa/đơn vị</option>
                         </select>
                         <select class="form-select" id="dropSearch_CanBo"
@@ -1867,14 +1880,14 @@
                             <option value="afternoon-evening">Tính theo chiều + tối (T7-15)</option>
                             <option value="all-sessions">Tính theo cả 3 buổi (T1-15)</option>
                         </select>
-                        <div class="search-bar-controls-buttons">
-                            <button class="btn btn-primary" id="btnSearch">
+                        <div class="search-bar-controls-buttons aps-btn-list d-block">
+                            <button class="btn btn-soft-primary" id="btnSearch">
                                 <i class="fa-solid fa-search"></i> Xem lịch giảng viên
                             </button>
-                            <button class="btn btn-info text-white" id="btnViewMulti">
+                            <button class="btn btn-soft-info text-white" id="btnViewMulti">
                                 <i class="fa-solid fa-layer-group"></i> Xem nhiều giảng viên
                             </button>
-                            <button class="btn btn-outline-secondary" id="btnViewAll">
+                            <button class="btn btn-soft-red" id="btnViewAll">
                                 <i class="fa-solid fa-th-list"></i> Xem tất cả lịch giảng
                             </button>
                             <button class="btn btn-success" id="btnExportExcel">
@@ -1885,9 +1898,8 @@
                 </div>
             </div>
         </div>
-
         <!-- Calendar - Right Side -->
-        <div class="col-12 col-lg-5">
+        <div class="aps-gvCalender col-12 col-lg-5">
             <div class="box-shadow p-0">
                 <div class="calendar-compact">
                     <div class="calendar-header">
@@ -1943,10 +1955,20 @@
     </div>
 </div>
 </div>
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display:  none !important;">
+    <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modal_export_excel">
+        khối kiến thức chuyên ngành
+    </button>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modal_detail">
+        Yêu cầu đổi lịch
+    </button>
+</div>
+<!-- ---------- -->
 <!-- Modal xuất Excel -->
-<div class="modal fade" id="modal_export_excel" tabindex="-1" aria-labelledby="exportExcelLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+<div class="modal fade modal_export_excel" id="modal_export_excel" tabindex="-1" aria-labelledby="exportExcelLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-700">
         <div class="modal-content">
             <div class="modal-header bg-success text-white">
                 <h5 class="modal-title" id="exportExcelLabel">
@@ -1956,86 +1978,89 @@
                     aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label class="form-label fw-bold">
-                        <i class="fa-solid fa-calendar-check me-2"></i>Chọn khoảng thời gian xuất
-                    </label>
-                    <select class="form-select" id="exportTimeRange">
-                        <option value="current_week">Tuần hiện tại đang xem</option>
-                        <option value="custom_date">Chọn ngày cụ thể</option>
-                        <option value="custom_range">Chọn khoảng thời gian</option>
-                    </select>
-                </div>
-
-                <div id="customDateSection" style="display: none;">
-                    <div class="mb-3">
-                        <label class="form-label">Chọn ngày</label>
-                        <input type="date" class="form-control" id="exportSingleDate">
+                <div class="aps-form">
+                    <div class="form-item mb-10">
+                        <label class="form-label fw-bold">
+                            <i class="fa-solid fa-calendar-check me-2"></i>Chọn khoảng thời gian xuất
+                        </label>
+                        <select class="form-select" id="exportTimeRange">
+                            <option value="current_week">Tuần hiện tại đang xem</option>
+                            <option value="custom_date">Chọn ngày cụ thể</option>
+                            <option value="custom_range">Chọn khoảng thời gian</option>
+                        </select>
                     </div>
-                </div>
 
-                <div id="customRangeSection" style="display: none;">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Từ ngày</label>
-                            <input type="date" class="form-control" id="exportStartDate">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Đến ngày</label>
-                            <input type="date" class="form-control" id="exportEndDate">
+                    <div id="customDateSection" class="form-item mb-10" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Chọn ngày</label>
+                            <input type="date" class="form-control" id="exportSingleDate">
                         </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">
-                        <i class="fa-solid fa-user-tie me-2"></i>Chọn giảng viên
-                    </label>
-                    <select class="form-select" id="exportRoomFilter">
-                        <option value="all">Tất cả giảng viên</option>
-                        <option value="current">Giảng viên đang lọc hiện tại</option>
-                        <option value="custom">Chọn giảng viên cụ thể</option>
-                    </select>
-                </div>
-
-                <div id="customRoomSection" style="display: none;">
-                    <div class="mb-3">
-                        <label class="form-label">Chọn giảng viên</label>
-                        <select class="form-select" id="exportCustomRoom"></select>
+                    <div id="customRangeSection" class="form-item mb-10" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Từ ngày</label>
+                                <input type="date" class="form-control" id="exportStartDate">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Đến ngày</label>
+                                <input type="date" class="form-control" id="exportEndDate">
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">
-                        <i class="fa-solid fa-file-alt me-2"></i>Định dạng file
-                    </label>
-                    <select class="form-select" id="exportFileFormat">
-                        <option value="xlsx">Excel (.xlsx) - Định dạng đầy đủ</option>
-                        <option value="csv">CSV (.csv) - Tương thích cao</option>
-                    </select>
-                </div>
+                    <div class="form-item mb-10">
+                        <label class="form-label fw-bold">
+                            <i class="fa-solid fa-user-tie me-2"></i>Chọn giảng viên
+                        </label>
+                        <select class="form-select" id="exportRoomFilter">
+                            <option value="all">Tất cả giảng viên</option>
+                            <option value="current">Giảng viên đang lọc hiện tại</option>
+                            <option value="custom">Chọn giảng viên cụ thể</option>
+                        </select>
+                    </div>
 
-                <div class="alert alert-info mb-0">
-                    <i class="fa-solid fa-info-circle me-2"></i>
-                    <small>File Excel sẽ bao gồm đầy đủ thông tin: Giảng viên, Thời gian, Học phần, Lớp, Phòng
-                        học</small>
+                    <div id="customRoomSection" class="form-item mb-10" style="display: none;">
+                        <div class="mb-3">
+                            <label class="form-label">Chọn giảng viên</label>
+                            <select class="form-select" id="exportCustomRoom"></select>
+                        </div>
+                    </div>
+
+                    <div class="form-item mb-10">
+                        <label class="form-label fw-bold">
+                            <i class="fa-solid fa-file-alt me-2"></i>Định dạng file
+                        </label>
+                        <select class="form-select" id="exportFileFormat">
+                            <option value="xlsx">Excel (.xlsx) - Định dạng đầy đủ</option>
+                            <option value="csv">CSV (.csv) - Tương thích cao</option>
+                        </select>
+                    </div>
+
+                    <div class="alert alert-info form-item mb-10">
+                        <i class="fa-solid fa-info-circle me-2"></i>
+                        <small>File Excel sẽ bao gồm đầy đủ thông tin: Giảng viên, Thời gian, Học phần, Lớp, Phòng
+                            học</small>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <div class="pull-right aps-btn-list">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-2"></i>Hủy
                 </button>
                 <button type="button" class="btn btn-success" id="btnConfirmExport">
                     <i class="fa-solid fa-download me-2"></i>Xuất file
-                </button>
+                </button></div>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Modal chi tiết lịch học -->
-<div class="modal fade finance-modal my-calendar" id="modal_detail" tabindex="-1" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade finance-modal my-calendar modal-chiTietLichHoc" id="modal_detail" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <div class="modal-header"
@@ -2111,7 +2136,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="background: white; border-top: 2px solid #f0f0f0;">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">
                     <i class="fa-solid fa-times me-2"></i>Đóng
                 </button>
             </div>
