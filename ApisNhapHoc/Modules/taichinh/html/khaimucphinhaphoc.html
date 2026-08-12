@@ -1108,6 +1108,28 @@
                         </a>
                     </div>
                 </div>
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="txtTongTu_MucPhiDaGan_HSNH"
+                            placeholder="Tổng phí từ (VD: 15.000.000)..."
+                            inputmode="numeric" autocomplete="off" />
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="text" class="form-control" id="txtTongDen_MucPhiDaGan_HSNH"
+                            placeholder="Tổng phí đến (VD: 20.000.000)..."
+                            inputmode="numeric" autocomplete="off" />
+                    </div>
+                    <div class="col-sm-3">
+                        <a class="btn btn-warning" id="btnLocTien_MucPhiDaGan_HSNH" href="#" style="width:100%;">
+                            <i class="fa fa-filter"></i>&nbsp;Lọc theo tổng phí
+                        </a>
+                    </div>
+                    <div class="col-sm-3">
+                        <a class="btn btn-default" id="btnResetTien_MucPhiDaGan_HSNH" href="#" style="width:100%;">
+                            <i class="fa fa-times"></i>&nbsp;Xóa lọc tổng phí
+                        </a>
+                    </div>
+                </div>
                 <div class="aps-table-select" style="overflow-x: auto;">
                     <table id="tblMucPhiDaGan_HSNH"
                         class="table table-condensed table-hover table-bordered table-noborder"
@@ -1136,7 +1158,7 @@
                         </tbody>
                         <tfoot id="tfootSum_MucPhiDaGan_HSNH" style="display:none;">
                             <tr class="kmp-sum-row">
-                                <td class="td-center" colspan="10">Tổng cộng</td>
+                                <td class="td-center" colspan="10">Tổng cộng (theo bộ lọc)</td>
                                 <td class="td-right kmp-sum-value" id="sumTongPhi_MucPhiDaGan">0</td>
                                 <td colspan="2"></td>
                             </tr>
@@ -1227,7 +1249,7 @@
 </div>
 
 <!-- page script -->
-<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.38"></script>
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.40"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaiMucPhi'] = new KhaiMucPhi();

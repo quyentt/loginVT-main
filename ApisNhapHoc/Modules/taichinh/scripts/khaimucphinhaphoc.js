@@ -65,11 +65,17 @@ KhaiMucPhi.prototype = {
     dtDauVao: [],
     bLoadedCombo_DoiTuong: false,   // flag đã load combo QLSV.DOITUONG chưa
 
-    // State cho modal "Mức phí đã gán cho thí sinh" (server-side pagination)
+    // State cho modal "Mức phí đã gán cho thí sinh"
+    // Đổi từ server-side paging → load all + client-side filter/paging để hỗ trợ lọc range tổng phí.
+    //   dtMucPhiDaGan_All   : raw toàn bộ rows từ API (chỉ đổi khi dropDaNhapHoc đổi hoặc reload)
+    //   _filtered_MucPhiDaGan: sau khi apply filter keyword + tiền range
+    //   dtMucPhiDaGan       : slice trang hiện tại (dùng để render)
     _pageIndex_MucPhiDaGan: 1,
     _pageSize_MucPhiDaGan: 50,
     _total_MucPhiDaGan: 0,
     dtMucPhiDaGan: [],
+    dtMucPhiDaGan_All: [],
+    _filtered_MucPhiDaGan: [],
 
     /* --------- INIT --------- */
     init: function () {
@@ -220,17 +226,24 @@ KhaiMucPhi.prototype = {
             me.openModal_MucPhiDaGan();
         });
 
-        // Filter modal Mức phí đã gán (nút + Enter + đổi page size)
+        // Filter modal Mức phí đã gán
+        // Sau khi chuyển sang load-all + client-side filter:
+        //  - Keyword + range tổng phí: chỉ gọi _applyFilter_MucPhiDaGan (instant, không reload server)
+        //  - dDaNhapHoc đổi: reload server (server-side param, không rõ field FE để lọc)
+        //  - Đổi pgSize / click page: chỉ render lại slice, không reload
         $("#btnLoc_MucPhiDaGan_HSNH").off("click").on("click", function () {
-            me._pageIndex_MucPhiDaGan = 1;
-            me.getList_MucPhiDaGan();
+            me._applyFilter_MucPhiDaGan();
         });
-        $("#txtTuKhoa_MucPhiDaGan_HSNH").off("keypress").on("keypress", function (e) {
+        var tmoKw_MPDG = null;
+        $("#txtTuKhoa_MucPhiDaGan_HSNH").off("keypress input").on("keypress", function (e) {
             if (e.which === 13) {
                 e.preventDefault();
-                me._pageIndex_MucPhiDaGan = 1;
-                me.getList_MucPhiDaGan();
+                clearTimeout(tmoKw_MPDG);
+                me._applyFilter_MucPhiDaGan();
             }
+        }).on("input", function () {
+            clearTimeout(tmoKw_MPDG);
+            tmoKw_MPDG = setTimeout(function () { me._applyFilter_MucPhiDaGan(); }, 300);
         });
         $("#dropDaNhapHoc_MucPhiDaGan_HSNH").off("change").on("change", function () {
             me._pageIndex_MucPhiDaGan = 1;
@@ -239,14 +252,36 @@ KhaiMucPhi.prototype = {
         $("#pgSize_MucPhiDaGan").off("change").on("change", function () {
             me._pageSize_MucPhiDaGan = parseInt($(this).val(), 10) || 50;
             me._pageIndex_MucPhiDaGan = 1;
-            me.getList_MucPhiDaGan();
+            me._renderCurrentPage_MucPhiDaGan();
         });
         $("#paging_MucPhiDaGan_HSNH").off("click", ".page-link").on("click", ".page-link", function (e) {
             e.preventDefault();
             var t = parseInt($(this).attr("data-page"), 10);
             if (isNaN(t) || t < 1) return;
             me._pageIndex_MucPhiDaGan = t;
-            me.getList_MucPhiDaGan();
+            me._renderCurrentPage_MucPhiDaGan();
+        });
+        // Filter range tổng phí — instant debounced + format thousand sep khi blur
+        var tmoTien_MPDG = null;
+        $("#txtTongTu_MucPhiDaGan_HSNH, #txtTongDen_MucPhiDaGan_HSNH")
+            .off("input.locTien blur.locTien")
+            .on("input.locTien", function () {
+                clearTimeout(tmoTien_MPDG);
+                tmoTien_MPDG = setTimeout(function () { me._applyFilter_MucPhiDaGan(); }, 300);
+            })
+            .on("blur.locTien", function () {
+                var n = me._parseTien_MucPhi($(this).val());
+                if (n === null) { $(this).val(''); return; }
+                $(this).val(n.toLocaleString('vi-VN'));
+            });
+        $("#btnLocTien_MucPhiDaGan_HSNH").off("click").on("click", function () {
+            clearTimeout(tmoTien_MPDG);
+            me._applyFilter_MucPhiDaGan();
+        });
+        $("#btnResetTien_MucPhiDaGan_HSNH").off("click").on("click", function () {
+            $("#txtTongTu_MucPhiDaGan_HSNH").val('');
+            $("#txtTongDen_MucPhiDaGan_HSNH").val('');
+            me._applyFilter_MucPhiDaGan();
         });
 
         // Nút Sửa cột Tổng phí → mở modal chi tiết PhaiNop
@@ -2089,36 +2124,52 @@ KhaiMucPhi.prototype = {
 
     openModal_MucPhiDaGan: function () {
         var me = this;
-        // Reset filter mỗi lần mở
+        // Reset filter + cache mỗi lần mở
         $("#txtTuKhoa_MucPhiDaGan_HSNH").val('');
         $("#dropDaNhapHoc_MucPhiDaGan_HSNH").val('0');
+        $("#txtTongTu_MucPhiDaGan_HSNH").val('');
+        $("#txtTongDen_MucPhiDaGan_HSNH").val('');
         me._pageIndex_MucPhiDaGan = 1;
         me._pageSize_MucPhiDaGan = parseInt($("#pgSize_MucPhiDaGan").val(), 10) || 50;
+        me.dtMucPhiDaGan_All = [];
+        me._filtered_MucPhiDaGan = [];
+        me.dtMucPhiDaGan = [];
+        me._total_MucPhiDaGan = 0;
         $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false);
         $("#modalMucPhiDaGan_HSNH").modal("show");
         me.getList_MucPhiDaGan();
     },
 
+    /*
+     * Load ALL rows 1 phát (pageSize=100000) → cache vào dtMucPhiDaGan_All.
+     * Keyword + range tổng phí: lọc CLIENT-side qua _applyFilter_MucPhiDaGan (instant).
+     * dDaNhapHoc: giữ server-side (không rõ field FE để lọc), đổi giá trị → gọi lại hàm này.
+     * Precedent: _load_DSNguoiHoc_ForGen cũng dùng pageSize=100000 cho cùng KH.
+     */
     getList_MucPhiDaGan: function () {
         var me = this;
+        var $tbody = $("#tblMucPhiDaGan_HSNH tbody");
+        $tbody.html('<tr><td colspan="13" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
+        $("#tfootSum_MucPhiDaGan_HSNH").hide();
+        $("#paging_MucPhiDaGan_HSNH").attr('style', 'gap:10px; display:none;');
+
         var obj_save = {
             'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIMNCIRKSgFIAYgLw8pIDEJLiIP',
             'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSMucPhiDaGanNhapHoc',
             'iM': edu.system.iM,
-            'strTuKhoa': edu.util.getValById('txtTuKhoa_MucPhiDaGan_HSNH') || '',
+            'strTuKhoa': '',                          // Load tất cả — keyword lọc client-side
             'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
             'strNguoiThucHien_Id': edu.system.userId,
             'dDaNhapHoc': parseInt($("#dropDaNhapHoc_MucPhiDaGan_HSNH").val(), 10) || 0,
-            'pageIndex': me._pageIndex_MucPhiDaGan || 1,
-            'pageSize': me._pageSize_MucPhiDaGan || 50
+            'pageIndex': 1,
+            'pageSize': 100000                        // Tải hết 1 phát
         };
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtMucPhiDaGan = edu.util.checkValue(data.Data) ? data.Data : [];
-                    me._total_MucPhiDaGan = parseInt(data.Pager, 10) || me.dtMucPhiDaGan.length;
-                    me.genTable_MucPhiDaGan(me.dtMucPhiDaGan);
-                    me._renderPaging_MucPhiDaGan();
+                    me.dtMucPhiDaGan_All = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me._pageIndex_MucPhiDaGan = 1;
+                    me._applyFilter_MucPhiDaGan();
                 } else {
                     edu.system.alert(data.Message || "LayDSMucPhiDaGanNhapHoc: lỗi", "w");
                 }
@@ -2133,6 +2184,84 @@ KhaiMucPhi.prototype = {
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
+    },
+
+    /*
+     * Apply filter client-side (keyword + range tổng phí) → set _filtered_MucPhiDaGan,
+     * reset về trang 1, gọi renderCurrentPage.
+     * Được trigger bởi: input keyword, thay đổi ô Từ/Đến, nút Lọc/Xóa, sau khi load xong.
+     */
+    /* Parse chuỗi tiền do user gõ (cho phép '.', ',', space) → số nguyên hoặc null.
+       Dùng type="text" + inputmode="numeric" để cho phép gõ "17.690.000" tự nhiên
+       (type="number" bị lỗi locale VN: "." bị hiểu là dấu thập phân). */
+    _parseTien_MucPhi: function (s) {
+        if (s == null) return null;
+        var digits = String(s).replace(/[^0-9]/g, '');
+        if (!digits) return null;
+        var n = Number(digits);
+        return isNaN(n) ? null : n;
+    },
+
+    _applyFilter_MucPhiDaGan: function () {
+        var me = this;
+        var arr = me.dtMucPhiDaGan_All || [];
+
+        var strKw = String($("#txtTuKhoa_MucPhiDaGan_HSNH").val() || '').trim().toLowerCase();
+        var nTu = me._parseTien_MucPhi($("#txtTongTu_MucPhiDaGan_HSNH").val());
+        var nDen = me._parseTien_MucPhi($("#txtTongDen_MucPhiDaGan_HSNH").val());
+
+        var pick = function (row) {
+            for (var i = 1; i < arguments.length; i++) {
+                var k = arguments[i];
+                if (row[k] != null && row[k] !== '') return row[k];
+            }
+            return '';
+        };
+
+        var filtered = arr.filter(function (r) {
+            // Range tổng phí
+            if (nTu !== null || nDen !== null) {
+                var vTong = pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI');
+                var nTong = (vTong === '' || vTong == null || isNaN(vTong)) ? 0 : Number(vTong);
+                if (nTu !== null && nTong < nTu) return false;
+                if (nDen !== null && nTong > nDen) return false;
+            }
+            // Keyword: search trên các cột hiển thị chính (giữ đồng bộ placeholder)
+            if (strKw) {
+                var s1 = String(pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD') || '').toLowerCase();
+                var s2 = String(pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO') || '').toLowerCase();
+                var s3 = String(pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN') || '').toLowerCase();
+                var s4 = String(pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS') || '').toLowerCase();
+                var s5 = String(pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH') || '').toLowerCase();
+                var hit = s1.indexOf(strKw) >= 0
+                       || s2.indexOf(strKw) >= 0
+                       || s3.indexOf(strKw) >= 0
+                       || s4.indexOf(strKw) >= 0
+                       || s5.indexOf(strKw) >= 0;
+                if (!hit) return false;
+            }
+            return true;
+        });
+
+        me._filtered_MucPhiDaGan = filtered;
+        me._total_MucPhiDaGan = filtered.length;
+        me._pageIndex_MucPhiDaGan = 1;
+        me._renderCurrentPage_MucPhiDaGan();
+    },
+
+    /* Slice _filtered theo trang hiện tại → set dtMucPhiDaGan → genTable + renderPaging */
+    _renderCurrentPage_MucPhiDaGan: function () {
+        var me = this;
+        var arr = me._filtered_MucPhiDaGan || [];
+        var pageSize = me._pageSize_MucPhiDaGan || 50;
+        var totalPages = Math.max(1, Math.ceil(arr.length / pageSize));
+        if (me._pageIndex_MucPhiDaGan > totalPages) me._pageIndex_MucPhiDaGan = totalPages;
+        if (me._pageIndex_MucPhiDaGan < 1) me._pageIndex_MucPhiDaGan = 1;
+        var startIdx = (me._pageIndex_MucPhiDaGan - 1) * pageSize;
+        var endIdx = Math.min(startIdx + pageSize, arr.length);
+        me.dtMucPhiDaGan = arr.slice(startIdx, endIdx);
+        me.genTable_MucPhiDaGan(me.dtMucPhiDaGan);
+        me._renderPaging_MucPhiDaGan();
     },
 
     /* Render bảng — tolerant về field name (viết hoa / gạch dưới đều nhận) */
@@ -2211,9 +2340,11 @@ KhaiMucPhi.prototype = {
         });
         $tbody.append(html);
 
-        // Sum "Tổng phí" trên trang hiện tại — dòng tổng ở tfoot
+        // Sum "Tổng phí" trên TOÀN BỘ bộ lọc (không chỉ trang hiện tại) — hữu ích hơn cho user
+        // vì đã chuyển sang client-side paging, sum theo trang không có nhiều giá trị.
         var sumTong = 0;
-        arr.forEach(function (r) {
+        var arrSum = me._filtered_MucPhiDaGan && me._filtered_MucPhiDaGan.length ? me._filtered_MucPhiDaGan : arr;
+        arrSum.forEach(function (r) {
             var v = pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI');
             if (v !== '' && v != null && !isNaN(v)) sumTong += Number(v);
         });
