@@ -350,6 +350,8 @@ KhaiMucPhi.prototype = {
             }
             edu.system.confirm("Bạn có chắc chắn muốn tạo phí nhập học cho " + arrIds.length + " thí sinh đã chọn?");
             $("#btnYes").off("click.genMucPhiSelected").on("click.genMucPhiSelected", function () {
+                // Đóng confirm modal ngay — nếu không body sẽ lộ ra rỗng sau khi progress modal đóng
+                $('#myModalAlert').modal('hide');
                 // Build arr đơn giản {ID: xxx} — _gen_MucPhi_Sequential picks row.ID
                 var arr = arrIds.map(function (id) { return { ID: id }; });
                 me._openModalProgress_GenMucPhi();
@@ -2075,6 +2077,15 @@ KhaiMucPhi.prototype = {
                 me._setStatus_GenMucPhi("Hoàn tất: " + iOk + " thành công, " + iFail + " lỗi (tổng " + iTotal + ")");
                 me._updateBar_GenMucPhi(100);
                 me._enableClose_GenMucPhi();
+                // Summary alert — user không phải nhìn kỹ trong progress modal mới biết kết quả
+                var strSummary = "Đã hoàn tất tạo phí nhập học!"
+                    + "\n• Tổng: " + iTotal + " thí sinh"
+                    + "\n• Thành công: " + iOk
+                    + "\n• Lỗi: " + iFail;
+                if (iFail > 0) strSummary += "\n\n(Xem chi tiết lỗi trong log dưới progress modal)";
+                setTimeout(function () {
+                    edu.system.alert(strSummary, iFail > 0 ? 'w' : '');
+                }, 300);
                 return;
             }
             var row = arr[iIdx];
