@@ -151,64 +151,202 @@
             gap: 12px;
         }
     }
+
+    /* ============ Reskin panel Filter bên trái ============ */
+    .chk-filter-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 14px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .chk-filter-section {
+        margin-bottom: 12px;
+    }
+    .chk-filter-section:last-child {
+        margin-bottom: 0;
+    }
+    .chk-filter-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 6px;
+    }
+    /* Radio segmented control (pill) — thay <p> + input radio default xấu */
+    .chk-filter-radios {
+        display: flex;
+        gap: 3px;
+        background: #f1f5f9;
+        padding: 3px;
+        border-radius: 6px;
+    }
+    .chk-radio-pill {
+        flex: 1;
+        margin: 0;
+        cursor: pointer;
+        position: relative;
+        font-weight: normal;
+    }
+    .chk-radio-pill input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+    .chk-radio-pill > span {
+        display: block;
+        padding: 6px 4px;
+        text-align: center;
+        font-size: 12px;
+        font-weight: 500;
+        color: #64748b;
+        border-radius: 4px;
+        transition: all 0.15s;
+        user-select: none;
+    }
+    .chk-radio-pill input[type="radio"]:checked + span {
+        background: #ffffff;
+        color: #1a56db;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        font-weight: 600;
+    }
+    .chk-radio-pill:hover input[type="radio"]:not(:checked) + span {
+        color: #0f172a;
+    }
+    /* Nút action (Xuất báo cáo / Import) */
+    .chk-filter-actions {
+        display: flex;
+        gap: 8px;
+        align-items: stretch;
+    }
+    .chk-filter-actions > .dropdown {
+        flex: 1;
+    }
+    .chk-filter-actions > .dropdown:empty {
+        display: none;
+    }
+    .chk-filter-actions > .dropdown .btn {
+        width: 100%;
+    }
+    /* Search input hiện đại — thay input-group Bootstrap 3 cũ */
+    .chk-search-box {
+        display: flex;
+        align-items: center;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        overflow: hidden;
+        background: #fff;
+        transition: all 0.15s;
+    }
+    .chk-search-box:focus-within {
+        border-color: #1a56db;
+        box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+    }
+    .chk-search-box .chk-search-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 8px 12px;
+        font-size: 13px;
+        background: transparent;
+        min-width: 0;
+    }
+    .chk-search-box .chk-search-clear {
+        padding: 6px 8px;
+        color: #94a3b8;
+        cursor: pointer;
+        transition: color 0.15s;
+        text-decoration: none;
+    }
+    .chk-search-box .chk-search-clear:hover {
+        color: #ef4444;
+    }
+    .chk-search-box .chk-search-btn {
+        padding: 8px 14px;
+        background: #1a56db;
+        color: #fff !important;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+    }
+    .chk-search-box .chk-search-btn:hover {
+        background: #1e40af;
+    }
+    /* Card danh sách kết quả */
+    .chk-result-card {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .chk-result-card .table {
+        margin: 0;
+    }
 </style>
 <!-- Main content -->
 <section class="content">
     <div class="row bg-default beforeActive" id="zoneTimKiemSinhVien">
         <div class="col-sm-3">
-            <div class="box box-solid">
-                <div class="box-body">
-                    <div class="search">
-                        <select id="dropKeHoachNhapHoc_ThuTien" class="select-opt">
-                            <!-- load from taichinh.js -->
-                        </select>
-                        <div class="radio-box">
-                            <p>
-                                Điều kiện:
-                                <input type="radio" class="rdThuTien" name="rdThuTien" value="1" checked="checked"> Đã nhập
-                                <input type="radio" class="rdThuTien" name="rdThuTien" value="0"> Chưa nhập
-                                <input type="radio" class="rdThuTien" name="rdThuTien" value="-1"> Toàn bộ
-                            </p>
-                        </div>
-                        <div class="clear"></div>
-                        <div class="search-result">
-                            <div class="clear"></div>
-                            <div class="col-sm-3 item-search">
-                                <div class="dropdown" id="zonebtnTT">
-                                </div>
-                            </div>
-                            <div class="col-sm-3 item-search">
-                                <div class="dropdown" id="zonebtnTT_Import">
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="clear"></div>
-                        <div class="input-group">
-                            <input id="txtTimKiem_ThuTien" class="form-control" type="text" placeholder="Nhập từ khóa tìm kiếm: tên, số báo danh..." style="border-right:none">
-                            <span class="input-group-addon" style="padding:5px 10px 5px 0px; border-left: none">
-                                <a id="btnDel_Keyword_ThuTien" class="color-default opacity-5 poiter" title="Xóa nội dung tìm kiếm"><i class="fa fa-times"></i></a>
-                            </span>
-                            <span id="btnSearch_NguoiHoc_ThuTien" class="input-group-addon bg-default poiter">
-                                <a class="btn-circle"><i class="fa fa-search"></i></a>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="search-result">
-                        <table id="tblThuTien" class="table">
-                            <tbody>
-                                <tr class="tr-pointer detail-hs">
-                                    <td class="td-left td-img"><img src="" class="table-img" /></td>
-                                    <td class="td-middle">
-                                        <!-- load from taichinh.js -->
-                                    </td>
-                                    <td class="td-middle"><span class="detail_tc"><a href="#">Chọn</a></span></td>
-                                </tr>
-                                <!-- load from taichinh.js -->
-                            </tbody>
-                        </table>
+            <div class="chk-filter-card">
+                <div class="chk-filter-section">
+                    <label class="chk-filter-label"><i class="fa-solid fa-clipboard-list"></i>&nbsp;Kế hoạch nhập học</label>
+                    <select id="dropKeHoachNhapHoc_ThuTien" class="select-opt">
+                        <!-- load from taichinh.js -->
+                    </select>
+                </div>
+                <div class="chk-filter-section">
+                    <label class="chk-filter-label"><i class="fa-solid fa-filter"></i>&nbsp;Điều kiện</label>
+                    <div class="chk-filter-radios">
+                        <label class="chk-radio-pill">
+                            <input type="radio" class="rdThuTien" name="rdThuTien" value="1" checked="checked" />
+                            <span>Đã nhập</span>
+                        </label>
+                        <label class="chk-radio-pill">
+                            <input type="radio" class="rdThuTien" name="rdThuTien" value="0" />
+                            <span>Chưa nhập</span>
+                        </label>
+                        <label class="chk-radio-pill">
+                            <input type="radio" class="rdThuTien" name="rdThuTien" value="-1" />
+                            <span>Toàn bộ</span>
+                        </label>
                     </div>
                 </div>
+                <div class="chk-filter-section chk-filter-actions">
+                    <div class="dropdown" id="zonebtnTT"></div>
+                    <div class="dropdown" id="zonebtnTT_Import"></div>
+                </div>
+                <div class="chk-filter-section">
+                    <div class="chk-search-box">
+                        <input id="txtTimKiem_ThuTien" class="chk-search-input" type="text"
+                            placeholder="Tìm theo tên, số báo danh..." />
+                        <a id="btnDel_Keyword_ThuTien" class="chk-search-clear" href="#" title="Xóa nội dung tìm kiếm">
+                            <i class="fa fa-times"></i>
+                        </a>
+                        <a id="btnSearch_NguoiHoc_ThuTien" class="chk-search-btn" href="#" title="Tìm kiếm">
+                            <i class="fa fa-search"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="chk-result-card">
+                <table id="tblThuTien" class="table">
+                    <tbody>
+                        <tr class="tr-pointer detail-hs">
+                            <td class="td-left td-img"><img src="" class="table-img" /></td>
+                            <td class="td-middle">
+                                <!-- load from taichinh.js -->
+                            </td>
+                            <td class="td-middle"><span class="detail_tc"><a href="#">Chọn</a></span></td>
+                        </tr>
+                        <!-- load from taichinh.js -->
+                    </tbody>
+                </table>
             </div>
         </div>
         <div class="col-sm-9">
@@ -529,7 +667,7 @@
     </div>
 </div>
 <!-- page script -->
-<script src="/modules/taichinh/scripts/checkinnhaphoc.js?v=1.0.8.1"></script>
+<script src="/modules/taichinh/scripts/checkinnhaphoc.js?v=1.0.8.2"></script>
 <script src="/modules/taichinh/scripts/n2vi.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};
