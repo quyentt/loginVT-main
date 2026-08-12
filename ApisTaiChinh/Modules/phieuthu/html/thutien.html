@@ -94,6 +94,174 @@
         width: 100% !important;
     }
 
+    /* Khi biên lai/hóa đơn đang hiển thị (jQuery slideDown → không còn "display: none" trong style):
+       - Ẩn sidebar tìm SV bên trái (không cần thiết ở chế độ preview chứng từ)
+       - Cột phải chiếm full 100% viewport → action bar đủ chỗ, 8 nút hiển thị 1 hàng không wrap
+       Dùng :has() (Chrome 105+, Safari 15.4+, Firefox 121+). Nếu browser không support → fallback layout 25/75 bình thường (không lỗi, chỉ nút bị wrap 2 hàng như hiện tại). */
+    .aps-thutien-in:has(#zoneBienLaiHoaDon:not([style*="display: none"])) > .aps-thutien-l {
+        display: none !important;
+    }
+
+    .aps-thutien-in:has(#zoneBienLaiHoaDon:not([style*="display: none"])) > .aps-thutien-r {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        padding-left: 0 !important;
+    }
+
+    /* Ép action bar không xuống dòng để 8 nút nằm 1 hàng khi form expanded.
+       Dùng selector nested để đè rule `#zoneActionHoaDon { flex-wrap: wrap }` phía dưới file (specificity cao hơn). */
+    .aps-thutien-in:has(#zoneBienLaiHoaDon:not([style*="display: none"])) #zoneActionHoaDon {
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+    }
+
+    /* ==================================================================
+       SELECT2 style cho 3 dropdown trên mẫu phiếu (Hình thức thu / Loại tiền tệ / Đơn vị tính).
+       JS init trong changeWidthPrint (thutien.js). Native select được thay bằng select2 container.
+       ================================================================== */
+    #MauInPhieuThu .select2-container {
+        min-width: 140px !important;
+        vertical-align: middle;
+    }
+
+    #MauInPhieuThu .select2-container--default .select2-selection--single {
+        height: 34px !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+        background: #fff !important;
+        padding: 0 !important;
+        transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    #MauInPhieuThu .select2-container--default .select2-selection--single:hover {
+        border-color: #9ca3af !important;
+    }
+
+    #MauInPhieuThu .select2-container--default.select2-container--focus .select2-selection--single,
+    #MauInPhieuThu .select2-container--default.select2-container--open .select2-selection--single {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+        outline: none !important;
+    }
+
+    #MauInPhieuThu .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 32px !important;
+        padding: 0 32px 0 12px !important;
+        color: #1f2937 !important;
+        font-family: 'Roboto', 'Arial', sans-serif !important;
+        font-size: 13px !important;
+        font-weight: 400 !important;
+    }
+
+    #MauInPhieuThu .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 32px !important;
+        top: 1px !important;
+        right: 4px !important;
+    }
+
+    /* Popup dropdown "xịn" theo mẫu ảnh 2 user gửi (12/08/2026):
+       - Rounded 12px, shadow lớn, viền nhẹ
+       - Ô search "Tìm..." có icon lens ở đầu, nền xám nhạt phân biệt với list
+       - Option padding rộng, hover xanh nhạt, selected xanh đậm chữ trắng
+       - Font sans-serif đồng bộ toàn app
+       Render ở body root, scope bằng dropdownCssClass "select2-dropdown--phieuthu" */
+    .select2-dropdown--phieuthu {
+        border: 1px solid #e5e7eb !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+        overflow: hidden;
+        margin-top: 4px;
+        min-width: 220px !important;
+    }
+
+    /* Search box với icon lens (SVG inline) */
+    .select2-dropdown--phieuthu .select2-search--dropdown {
+        padding: 10px !important;
+        border-bottom: 1px solid #f1f5f9;
+        background: #fff;
+    }
+
+    .select2-dropdown--phieuthu .select2-search--dropdown .select2-search__field {
+        width: 100% !important;
+        padding: 9px 12px 9px 36px !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 8px !important;
+        background: #f8fafc url("data:image/svg+xml;utf8,<svg fill='none' stroke='%239ca3af' stroke-width='2' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><circle cx='11' cy='11' r='7'/><path d='M21 21l-4.35-4.35' stroke-linecap='round'/></svg>") no-repeat 12px center !important;
+        background-size: 16px !important;
+        font-family: 'Roboto', 'Arial', sans-serif !important;
+        font-size: 13px !important;
+        color: #1f2937 !important;
+        outline: none !important;
+        transition: border-color 0.15s, background-color 0.15s;
+    }
+
+    .select2-dropdown--phieuthu .select2-search--dropdown .select2-search__field:focus {
+        border-color: #2563eb !important;
+        background-color: #fff !important;
+    }
+
+    .select2-dropdown--phieuthu .select2-search--dropdown .select2-search__field::placeholder {
+        color: #9ca3af;
+        font-style: italic;
+    }
+
+    /* List container: max-height + scroll đẹp */
+    .select2-dropdown--phieuthu .select2-results__options {
+        max-height: 280px !important;
+        padding: 6px 4px !important;
+    }
+
+    /* Option — padding rộng, transition mượt */
+    .select2-dropdown--phieuthu .select2-results__option {
+        padding: 9px 14px !important;
+        margin: 1px 4px !important;
+        border-radius: 6px !important;
+        font-family: 'Roboto', 'Arial', sans-serif !important;
+        font-size: 13px !important;
+        color: #1f2937 !important;
+        transition: background-color 0.1s, color 0.1s;
+        line-height: 1.4;
+    }
+
+    /* Hover option: xanh nhạt, chữ xanh đậm */
+    .select2-dropdown--phieuthu .select2-results__option--highlighted[aria-selected] {
+        background-color: #eff6ff !important;
+        color: #1e40af !important;
+    }
+
+    /* Option đang chọn: xanh đậm, chữ trắng, đậm */
+    .select2-dropdown--phieuthu .select2-results__option[aria-selected="true"] {
+        background-color: #2563eb !important;
+        color: #fff !important;
+        font-weight: 500;
+    }
+
+    .select2-dropdown--phieuthu .select2-results__option[aria-selected="true"].select2-results__option--highlighted {
+        background-color: #1d4ed8 !important;
+        color: #fff !important;
+    }
+
+    /* Placeholder khi chưa chọn (trong select box + option đầu) */
+    #MauInPhieuThu .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #9ca3af !important;
+        font-style: italic;
+    }
+
+    /* Scrollbar mảnh cho list dài */
+    .select2-dropdown--phieuthu .select2-results__options::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .select2-dropdown--phieuthu .select2-results__options::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 3px;
+    }
+
+    .select2-dropdown--phieuthu .select2-results__options::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
+
     .btnChiTietKhoanThu,
     .btnChiTietKhoanThu,
     .actionThuTien_PhieuThu,
@@ -206,15 +374,83 @@
         line-height: 1;
         border-radius: 4px;
         white-space: nowrap;
+        /* Ép phẳng — Bootstrap có thể áp background-image linear-gradient trên .btn-primary/.btn-success/.btn-info
+           gây ra vệt màu đè lên nền custom → chỉ giữ background-color solid. */
+        background-image: none !important;
+        text-decoration: none !important;
     }
 
-    #zoneActionHoaDon .btn i {
+    /* Icon trong nút: KHÔNG có background/padding riêng — tránh sinh "khối màu" tách biệt với text
+       (bug cũ: BE trả THONGTIN3 chứa background-color cho icon, hoặc CSS global .btn i có background). */
+    #zoneActionHoaDon .btn i,
+    #zoneActionHoaDon .btn > i {
         font-size: 14px;
         margin: 0;
+        padding: 0 !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        border: none !important;
+        box-shadow: none !important;
+        line-height: 1;
     }
 
-    /* Đồng bộ tông màu nút — dịu lại, tránh cụm đỏ+xanh+vàng chọi mắt.
-       Semantic vẫn giữ: đỏ = destructive, xanh = primary, teal = phụ, xám = đóng. */
+    /* Reset các nút được prepend/append bằng JS có inline style cứng
+       (ví dụ #btnSaveHDBL cũ có style="width:85px; background:#fff; border-bottom:...").
+       Ép về wrapper flex-inline thuần để mọi anchor con render đồng nhất. */
+    #zoneActionHoaDon > [id^="btn"],
+    #zoneActionHoaDon > [class*="btn"] {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-bottom: none !important;
+        text-align: left !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    /* ROOT CAUSE: styles-content.css:11466-11484 (global) set background lên WRAPPER DIV .btnXuat_HDDT (#198754 xanh lá)
+       và #btnSaveHDBL (#1a71e8 xanh dương) + border 1px + padding + height:38px với !important.
+       Wrapper có màu + anchor .btn bên trong có màu khác → 2 layer nested tạo cảm giác "khung bao quanh nút".
+       Selector super-specific + full reset để đè global rule (specificity: 1 id + 2 class = 120 > global 1 class = 10). */
+    #zoneActionHoaDon .btnXuat_HDDT.aps-btn,
+    #zoneActionHoaDon #btnXuat_HD.aps-btn,
+    #zoneActionHoaDon #btnSaveHDBL.aps-btn,
+    #zoneActionHoaDon div.btnXuat_HDDT,
+    #zoneActionHoaDon div#btnSaveHDBL,
+    #zoneActionHoaDon div#btnXuat_HD {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        min-height: 0 !important;
+        line-height: normal !important;
+        color: inherit !important;
+        box-shadow: none !important;
+    }
+
+    /* Đảm bảo lbsymbolHD (span text cũ trong #btnSaveHDBL nếu còn) và anchor con không rớt style xanh lá/dương từ global.
+       Rule global 11499-11505 set color:#fff cho .lbsymbolHD wrapper → khi wrapper transparent, chữ trắng invisible. */
+    #zoneActionHoaDon #btnSaveHDBL .lbsymbolHD,
+    #zoneActionHoaDon .btnXuat_HDDT .lbsymbolHD {
+        color: inherit !important;
+        padding: 0 !important;
+    }
+
+    /* Phân cấp trực quan nhóm nút (Hướng A):
+       - Xuất biên Lai (#btnSaveHDBL)          → filled xanh đậm + hơi lớn hơn (CTA chính)
+       - HDDT Nháp (#btnXuat_HD) + Xuất HĐ điện tử (.btnXuat_HDDT) → outline teal (nhóm HĐĐT phụ)
+       - Thu tiền không HĐ/BL (#btnThuTien)    → outline cam (alternative flow — tách khỏi HĐĐT)
+       - Hủy chứng từ (#btnHuy_HDBL)           → đỏ solid (destructive, order:-1 tách trái)
+       - Đóng (#btnClose_HDBL)                 → grey outline (không tranh chú ý) */
+
     #zoneActionHoaDon .btn-danger {
         background-color: #dc3545;
         border-color: #dc3545;
@@ -239,17 +475,116 @@
         color: #fff;
     }
 
-    /* Nút "Thu tiền (không sinh HĐ/BL)" đổi từ vàng btn-warning sang teal — bớt chói, hài hòa với xanh chủ đạo */
-    #zoneActionHoaDon #btnThuTien .btn {
-        background-color: #17a2b8 !important;
-        border-color: #17a2b8 !important;
+    /* CTA chính: Xuất biên Lai — filled xanh đậm, cao 42px + font 14/600 để nhỉnh hơn nhóm phụ.
+       Dùng !important vì nút được prepend bằng JS có inline style (background-color:#fff...). */
+    #zoneActionHoaDon #btnSaveHDBL .btn,
+    #zoneActionHoaDon #btnSaveHDBL > a.btn {
+        background-color: #2563eb !important;
+        border: 1px solid #2563eb !important;
+        color: #fff !important;
+        height: 42px !important;
+        padding: 8px 20px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        border-radius: 4px !important;
+        box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25) !important;
+    }
+
+    #zoneActionHoaDon #btnSaveHDBL .btn:hover,
+    #zoneActionHoaDon #btnSaveHDBL > a.btn:hover {
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #fff !important;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.35) !important;
+    }
+
+    #zoneActionHoaDon #btnSaveHDBL .btn i {
         color: #fff !important;
     }
 
-    #zoneActionHoaDon #btnThuTien .btn:hover {
-        background-color: #138496 !important;
-        border-color: #117a8b !important;
+    /* Nút "Xem trước HĐ" — solid grey neutral (hành động không đổi state, chỉ preview).
+       Đặt đầu nhóm HDDT để user thấy ngay tùy chọn "xem trước" trước khi bấm xuất thật. */
+    #zoneActionHoaDon #btnPreviewHD .btn,
+    #zoneActionHoaDon #btnPreviewHD > a.btn {
+        background: #64748b !important;
+        background-color: #64748b !important;
+        background-image: none !important;
+        border: 1px solid #64748b !important;
         color: #fff !important;
+        font-weight: 500 !important;
+    }
+
+    #zoneActionHoaDon #btnPreviewHD .btn:hover,
+    #zoneActionHoaDon #btnPreviewHD > a.btn:hover {
+        background: #475569 !important;
+        background-color: #475569 !important;
+        border-color: #475569 !important;
+        color: #fff !important;
+    }
+
+    #zoneActionHoaDon #btnPreviewHD .btn i {
+        color: #fff !important;
+        background: transparent !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Nhóm hóa đơn điện tử — SOLID teal đồng bộ với "In chứng từ"/"Liên HĐ"/"Hủy chứng từ" (solid),
+       tránh outline nhìn "yếu" giữa các nút solid khác + khử triệt để vệt màu tách biệt do icon bg.
+       Ép background-image:none và !important trên mọi property để đè global .btn-success/.btn-info (dù JS đã strip class). */
+    #zoneActionHoaDon #btnXuat_HD .btn,
+    #zoneActionHoaDon #btnXuat_HD > a.btn,
+    #zoneActionHoaDon .btnXuat_HDDT .btn,
+    #zoneActionHoaDon .btnXuat_HDDT > a.btn,
+    #zoneActionHoaDon a.btnXuat_HDDT.btn {
+        background: #0891b2 !important;
+        background-color: #0891b2 !important;
+        background-image: none !important;
+        border: 1px solid #0891b2 !important;
+        color: #fff !important;
+        font-weight: 500 !important;
+    }
+
+    #zoneActionHoaDon #btnXuat_HD .btn:hover,
+    #zoneActionHoaDon #btnXuat_HD > a.btn:hover,
+    #zoneActionHoaDon .btnXuat_HDDT .btn:hover,
+    #zoneActionHoaDon .btnXuat_HDDT > a.btn:hover,
+    #zoneActionHoaDon a.btnXuat_HDDT.btn:hover {
+        background: #0e7490 !important;
+        background-color: #0e7490 !important;
+        border-color: #0e7490 !important;
+        color: #fff !important;
+    }
+
+    /* Icon trong nhóm HDDT: TRẮNG (do nền teal solid) — override cả inline style THONGTIN3 (color/background) từ BE */
+    #zoneActionHoaDon #btnXuat_HD .btn i,
+    #zoneActionHoaDon .btnXuat_HDDT .btn i,
+    #zoneActionHoaDon .btnXuat_HDDT i {
+        color: #fff !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    /* Thu tiền (không sinh HĐ/BL) — outline cam để tách khỏi nhóm HĐĐT.
+       Cam mang ý "cảnh báo nhẹ" vì bỏ qua chứng từ; đồng thời khác hẳn tone teal → user không click nhầm. */
+    #zoneActionHoaDon #btnThuTien .btn {
+        background-color: #fff !important;
+        border: 1px solid #f59e0b !important;
+        color: #b45309 !important;
+        font-weight: 500 !important;
+    }
+
+    #zoneActionHoaDon #btnThuTien .btn:hover {
+        background-color: #fef3c7 !important;
+        border-color: #d97706 !important;
+        color: #92400e !important;
+    }
+
+    #zoneActionHoaDon #btnThuTien .btn i {
+        color: #f59e0b !important;
     }
 
     #zoneActionHoaDon .btn-success {
@@ -596,6 +931,159 @@
     .aps-tabs-custom>.nav-tabs>li.active>a:focus {
         color: #fff !important;
         font-weight: 700 !important;
+    }
+
+    /* ==================================================================
+       MODAL "Xem trước hóa đơn" — override CSS global reskin modal (indexi.aspx đè navy blue + X bên trái).
+       Cần !important đầy đủ để đè global rules. Đặt cuối <style> để cascade thắng.
+       ================================================================== */
+    #modalPreviewHoaDon .modal-dialog {
+        width: 95% !important;
+        max-width: 1200px !important;
+        margin: 30px auto !important;
+    }
+
+    #modalPreviewHoaDon .modal-content {
+        border-radius: 12px !important;
+        overflow: hidden !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3) !important;
+        border: none !important;
+    }
+
+    /* Header — nền trắng nhạt, không xanh navy đè lên nữa */
+    #modalPreviewHoaDon .modal-header {
+        background: #f8fafc !important;
+        background-color: #f8fafc !important;
+        background-image: none !important;
+        padding: 16px 60px 16px 24px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        display: block !important;
+        position: relative !important;
+        min-height: 60px;
+    }
+
+    /* Nút X: đưa về BÊN PHẢI, to hơn (26px), hover đỏ nhạt */
+    #modalPreviewHoaDon .modal-header .close {
+        position: absolute !important;
+        top: 50% !important;
+        right: 14px !important;
+        left: auto !important;
+        transform: translateY(-50%) !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 4px 12px !important;
+        width: auto !important;
+        height: auto !important;
+        font-size: 26px !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        color: #64748b !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-radius: 6px !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s;
+    }
+
+    #modalPreviewHoaDon .modal-header .close:hover,
+    #modalPreviewHoaDon .modal-header .close:focus {
+        background: #fee2e2 !important;
+        color: #dc2626 !important;
+        opacity: 1 !important;
+        outline: none !important;
+    }
+
+    /* Title — đen đậm, icon xanh dương, không đè bởi color trắng global */
+    #modalPreviewHoaDon .modal-header .box-title,
+    #modalPreviewHoaDon .modal-header h3 {
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #1e293b !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        display: flex !important;
+        align-items: center !important;
+        flex-wrap: wrap;
+        gap: 8px !important;
+    }
+
+    #modalPreviewHoaDon .modal-header .box-title > i {
+        color: #2563eb !important;
+        font-size: 20px !important;
+        margin: 0 !important;
+    }
+
+    /* Hint italic bên trong title — dịu, xám */
+    #modalPreviewHoaDon .modal-header .box-title > span {
+        font-size: 12px !important;
+        font-weight: 400 !important;
+        color: #64748b !important;
+        font-style: italic !important;
+        margin: 0 !important;
+    }
+
+    /* Body — background xám nhạt để phiếu trắng bên trong nổi bật */
+    #modalPreviewHoaDon .modal-body {
+        background: #f8fafc !important;
+        padding: 20px !important;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    /* Footer clean */
+    #modalPreviewHoaDon .modal-footer {
+        background: #f8fafc !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 14px 24px !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 10px;
+    }
+
+    #modalPreviewHoaDon .modal-footer > span {
+        margin-right: auto;
+    }
+
+    #modalPreviewHoaDon .modal-footer .btn {
+        height: 38px !important;
+        padding: 8px 18px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin: 0 !important;
+    }
+
+    #modalPreviewHoaDon .modal-footer .btn-primary {
+        background: #0891b2 !important;
+        background-color: #0891b2 !important;
+        border-color: #0891b2 !important;
+        color: #fff !important;
+    }
+
+    #modalPreviewHoaDon .modal-footer .btn-primary:hover {
+        background: #0e7490 !important;
+        background-color: #0e7490 !important;
+        border-color: #0e7490 !important;
+        color: #fff !important;
+    }
+
+    #modalPreviewHoaDon .modal-footer .btn-default {
+        background: #fff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
+    }
+
+    #modalPreviewHoaDon .modal-footer .btn-default:hover {
+        background: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: #1e293b !important;
     }
 </style>
 <div id="MainContent">
@@ -2682,8 +3170,53 @@
 </div>
 
 
+<!-- Modal: Xem trước hóa đơn điện tử — clone content #MauInPhieuThu + banner PREVIEW.
+     Style chi tiết ở #modalPreviewHoaDon CSS block cuối <style> thutien.html (override global reskin modal). -->
+<div class="modal fade" id="modalPreviewHoaDon" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 class="box-title">
+                    <i class="fa-light fa-eye"></i>
+                    Xem trước hóa đơn điện tử
+                    <span>(Mẫu xem trước — chưa phát hành / chưa có hiệu lực pháp lý)</span>
+                </h3>
+            </div>
+            <div class="modal-body">
+                <div id="zonePreviewHoaDon_Content"
+                     style="background: #fff; padding: 30px; border: 1px dashed #94a3b8; border-radius: 8px; position: relative;">
+                    <!-- Watermark "XEM TRƯỚC" mờ đỏ, xoay -25° -->
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-25deg);
+                                font-size: 90px; font-weight: 900; color: rgba(239, 68, 68, 0.08); pointer-events: none;
+                                z-index: 1; user-select: none; white-space: nowrap;">
+                        XEM TRƯỚC
+                    </div>
+                    <div style="position: relative; z-index: 2;">
+                        <!-- Content được clone từ #MauInPhieuThu bằng JS khi mở modal (showPreviewHoaDon) -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span style="font-size: 12px; color: #64748b; font-style: italic;">
+                    <i class="fa fa-info-circle"></i>
+                    Đây chỉ là bản xem trước để kiểm tra thông tin. Bấm "Xuất HĐ điện tử" để phát hành chính thức.
+                </span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i> Đóng
+                </button>
+                <button type="button" class="btn btn-primary" id="btnXuatHDDT_FromPreview">
+                    <i class="fal fa-paper-plane"></i> Xuất HĐ điện tử ngay
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
-<script src="modules/phieuthu/scripts/thutien.js?v=1.0.0.16"></script>
+<script src="modules/phieuthu/scripts/thutien.js?v=1.0.0.28"></script>
 <script src="modules/phieuthu/scripts/n2vi.min.js"></script>
 <script src="modules/hoadon/scripts/qrcode.min.js"></script>
 <!--<script src="modules/phieuthu/scripts/misa_kyso.js"></script>

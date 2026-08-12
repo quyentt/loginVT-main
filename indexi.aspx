@@ -813,8 +813,19 @@
           html body.skin-blue .modal-backdrop.show,
           html body.skin-blue .modal-backdrop.in {
             z-index: 10050 !important;
-            opacity: 0.85 !important;
+            opacity: 0.5 !important;
             background-color: #0f172a !important;
+          }
+          /* ═══ [FIX 2026-08-12] Khi modal open, select2-container base (line 571) o
+             z-index 99999 cao hon backdrop (10050) -> user van chon duoc dropdown xuyen
+             qua modal. Reset ve auto khi modal open de backdrop chan pointer events. ═══ */
+          html body.skin-blue.modal-open .select2-container,
+          html body.skin-blue.modal-open > .select2-container,
+          html body.skin-blue:has(.modal.show) .select2-container,
+          html body.skin-blue:has(.modal.show) > .select2-container,
+          html body.skin-blue:has(.modal.in) .select2-container,
+          html body.skin-blue:has(.modal.in) > .select2-container {
+            z-index: auto !important;
           }
           /* ═══ modal-fullscreen: ep 100vw x 100vh, override styles.css .modal-1024/1360/etc
              va default BS .modal-dialog max-width. Bo border-radius de sat edge.
@@ -857,15 +868,17 @@
             border-radius: 0 !important;
             background-color: #f8fafc !important;
           }
-          /* ═══ FIX TRIET DE: khi modal mo, an TOAN BO #main-content-wrapper de khong
-             container nao xuyen qua backdrop. ═══
-             Dung ca body.modal-open (BS auto add) LAN body:has(.modal.show) (fallback
-             cho truong hop alert modal don le BS khong kip add class -> filter row bright). */
+          /* ═══ [DISABLED 2026-08-12] FIX TRIET DE: khi modal mo, an TOAN BO
+             #main-content-wrapper de khong container nao xuyen qua backdrop. ═══
+             User feedback: an het main-content khien khong biet modal thong bao xuat hien
+             tu form nao -> comment lai, giu backdrop opacity thap de van thay form phia sau. */
+          /*
           html body.skin-blue.modal-open #main-content-wrapper,
           html body.skin-blue:has(.modal.show) #main-content-wrapper,
           html body.skin-blue:has(.modal.in) #main-content-wrapper {
             visibility: hidden !important;
           }
+          */
           /* Modal (o bat ky dau — body level hoac inline trong module) va backdrop luon hien */
           html body.skin-blue.modal-open .modal.show,
           html body.skin-blue.modal-open .modal.in,

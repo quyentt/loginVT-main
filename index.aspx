@@ -1060,16 +1060,17 @@
         color: #ffffff !important;
       }
 
-      /* ═══ FIX MODAL BLEED-THROUGH — khi modal mo, an TOAN BO #main-content-wrapper de
-         khong container nao xuyen qua backdrop. ═══
-         Truoc day chi bat khi body.modal-open — nhung alert modal (myModalAlert) khi show
-         solo (khong stack) doi luc BS khong kip add class -> filter row van bright. Fix bang
-         cach dung :has() bat truc tiep su ton tai cua modal show tren document. */
+      /* ═══ [DISABLED 2026-08-12] FIX MODAL BLEED-THROUGH — khi modal mo, an TOAN BO
+         #main-content-wrapper de khong container nao xuyen qua backdrop. ═══
+         User feedback: an het main-content khien khong biet modal thong bao xuat hien
+         tu form nao -> comment lai, giu backdrop opacity thap de van thay form phia sau. */
+      /*
       body.modal-open #main-content-wrapper,
       body:has(.modal.show) #main-content-wrapper,
       body:has(.modal.in) #main-content-wrapper {
         visibility: hidden !important;
       }
+      */
       /* Modal (o bat ky dau — body level via #alert hoac inline trong module) va backdrop
          luon hien khi mo. Child visibility:visible override parent's visibility:hidden. */
       body.modal-open .modal.show,
@@ -1091,8 +1092,19 @@
       }
       .modal-backdrop.show, .modal-backdrop.in {
         z-index: 10050 !important;
-        opacity: 0.75 !important;
+        opacity: 0.5 !important;
         background-color: #0f172a !important;
+      }
+      /* ═══ [FIX 2026-08-12] Khi modal open, select2-container base (line 680) o
+         z-index 99999 cao hon backdrop (10050) -> user van chon duoc dropdown xuyen
+         qua modal. Reset ve auto khi modal open de backdrop chan pointer events. ═══ */
+      body.modal-open .select2-container,
+      body.modal-open > .select2-container,
+      body:has(.modal.show) .select2-container,
+      body:has(.modal.show) > .select2-container,
+      body:has(.modal.in) .select2-container,
+      body:has(.modal.in) > .select2-container {
+        z-index: auto !important;
       }
 
     </style>

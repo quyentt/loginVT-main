@@ -53,6 +53,59 @@ PhieuThu.prototype = {
         //console.log(x[x.length -1]);
         //test Nhớ comment lại
         //me.getList_HSSV_Test();
+
+        // Helper: init select2 cho 1 <select> nếu chưa được init.
+        // Dùng chung cho MutationObserver + event delegation (nhiều layer safety).
+        me._initSelect2ForPhieu = function ($sel) {
+            if (typeof $.fn.select2 !== 'function') return false;
+            if (!$sel || !$sel.length) return false;
+            if ($sel.hasClass('select2-hidden-accessible')) return true;
+            var strPlaceholder = $sel.find('option[value=""]').first().text() || 'Chọn...';
+            try {
+                $sel.select2({
+                    width: 'auto',
+                    minimumResultsForSearch: 0,
+                    placeholder: strPlaceholder,
+                    dropdownCssClass: 'select2-dropdown--phieuthu',
+                    dropdownParent: $(document.body)
+                });
+                console.log('[select2] inited for:', $sel.attr('id') || $sel[0]);
+                return true;
+            } catch (e) { console.warn('[select2 init] fail:', e); return false; }
+        };
+
+        // LAYER 1: Event delegation — bulletproof. Khi user mousedown/focus vào bất kỳ <select> nào
+        // trong #MauInPhieuThu mà chưa có select2 → init NGAY. Không phụ thuộc timing của template load.
+        // Dùng $(document) để bắt được cả element được thêm sau khi trang load.
+        $(document).on('mousedown focusin', '#MauInPhieuThu select:not(.select2-hidden-accessible)', function (e) {
+            var $sel = $(this);
+            if (me._initSelect2ForPhieu($sel)) {
+                // Sau khi init, tự động mở popup select2 (thay cho native đang định mở)
+                setTimeout(function () {
+                    try { $sel.select2('open'); } catch (er) {}
+                }, 0);
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        });
+
+        // LAYER 2: MutationObserver — pre-init khi template render, để user click 1 phát mở popup luôn
+        // (không phải chờ init lần đầu ở LAYER 1). Setup lazily (defer 500ms) để đảm bảo #MauInPhieuThu tồn tại.
+        setTimeout(function () {
+            var elMauInPhieuThu = document.getElementById('MauInPhieuThu');
+            if (!elMauInPhieuThu || typeof MutationObserver === 'undefined') return;
+            var initSelect2Timer = null;
+            var observer = new MutationObserver(function () {
+                clearTimeout(initSelect2Timer);
+                initSelect2Timer = setTimeout(function () {
+                    $('#MauInPhieuThu select').each(function () {
+                        me._initSelect2ForPhieu($(this));
+                    });
+                }, 150);
+            });
+            observer.observe(elMauInPhieuThu, { childList: true, subtree: true });
+        }, 500);
+
         /*------------------------------------------
         --Discription: Initial local
         -------------------------------------------*/
@@ -1201,8 +1254,10 @@ PhieuThu.prototype = {
         me["dtNutHDDT"] = data;
         var row = '';
         for (var i = 0; i < data.length; i++) {
+            // Bỏ class btn-info — global styles-content.css có rule .btn-info override mạnh (!important) gây vệt teal đậm bên trái.
+            // Style outline teal đồng nhất do CSS #zoneActionHoaDon .btnXuat_HDDT .btn ở thutien.html quản lý.
             row += '<div class="btnXuat_HDDT aps-btn" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '">'
-                + '<a title="' + data[i].TEN + '" class="btn btn-info">'
+                + '<a title="' + data[i].TEN + '" class="btn">'
                 + '<i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + '"></i> ' + data[i].TEN
                 + '</a></div>';
         }
@@ -5386,7 +5441,9 @@ PhieuThu.prototype = {
             $("#btnIn_HDBL").hide();
             $("#btnHuy_HDBL").hide();
             if (document.getElementById('btnSaveHDBL') == undefined) {
-                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất biên lai" class="btn"><i style="color: #00a65a" class="far fa-receipt fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất biên Lai</a></div>');
+                // Structure chuẩn: 1 div wrapper .aps-btn + 1 anchor .btn chứa icon+text (giống #btnXuat_HD, .btnXuat_HDDT).
+                // Style chi tiết (filled xanh đậm CTA chính) do CSS #zoneActionHoaDon #btnSaveHDBL .btn ở thutien.html quản lý.
+                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" class="aps-btn"><a title="Xuất biên lai" class="btn btn-primary"><i class="far fa-receipt"></i> Xuất biên Lai</a></div>');
                 $("#btnSaveHDBL").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
                     $("#btnYes").click(function (e) {
@@ -5396,9 +5453,15 @@ PhieuThu.prototype = {
                 });
                 if (bThuTien) {
                     $("#btnThuTien").show();
-                    var row = '';
+                    // Nút "Xem trước HĐ" (grey neutral) đặt đầu nhóm HDDT → cho user preview
+                    // mẫu hóa đơn TRƯỚC KHI phát hành thật qua HDDT provider (VNPT/MISA/...).
+                    var row = '<div id="btnPreviewHD" class="aps-btn"><a title="Xem trước hóa đơn (chưa phát hành)" class="btn"><i class="fal fa-eye"></i> Xem trước HĐ</a></div>';
                     row += me.strHDDT;
                     $("#zoneActionXuatHoaDon").html(row);
+                    $("#btnPreviewHD").click(function (e) {
+                        e.stopImmediatePropagation();
+                        me.showPreviewHoaDon();
+                    });
                     //$("#btnXuat_HD").click(function (e) {
                     //    e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn xuất hóa đơn không!', 'w');
                     //    $("#btnYes").click(function (e) {
@@ -5582,7 +5645,9 @@ PhieuThu.prototype = {
             //$("#btnThuTien").show();
             $("#btnHuy_HDBL").hide();
             if (document.getElementById('btnSaveHDBL') == undefined) {
-                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất biên lai" class="btn"><i style="color: #00a65a" class="fal fa-file-invoice fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất biên lai</a></div>');
+                // Structure chuẩn: 1 div wrapper .aps-btn + 1 anchor .btn chứa icon+text (giống #btnXuat_HD, .btnXuat_HDDT).
+                // Style chi tiết (filled xanh đậm CTA chính) do CSS #zoneActionHoaDon #btnSaveHDBL .btn ở thutien.html quản lý.
+                $("#zoneActionHoaDon").prepend('<div id="btnSaveHDBL" class="aps-btn"><a title="Xuất biên lai" class="btn btn-primary"><i class="fal fa-file-invoice"></i> Xuất biên lai</a></div>');
                 $("#btnSaveHDBL").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
                     $("#btnYes").click(function (e) {
@@ -5592,9 +5657,17 @@ PhieuThu.prototype = {
                 });
                 if (bThuTien) {
                     $("#btnThuTien").show();
-                    var row = '<div id="btnXuat_HD" class="aps-btn"><a title="Xuất hóa đơn" class="btn btn-success"><i class="fal fa-file-invoice"></i> Xuất hóa đơn</a></div>';
+                    // Bỏ class btn-success — global styles-content.css có rule .btn-success { background:#4d8d41 !important }
+                    // đè lên bg trắng outline teal mong muốn. Style cụ thể do CSS #zoneActionHoaDon #btnXuat_HD .btn quản lý.
+                    // Nút "Xem trước HĐ" đặt đầu nhóm → cho user preview mẫu hóa đơn TRƯỚC KHI phát hành thật.
+                    var row = '<div id="btnPreviewHD" class="aps-btn"><a title="Xem trước hóa đơn (chưa phát hành)" class="btn"><i class="fal fa-eye"></i> Xem trước HĐ</a></div>';
+                    row += '<div id="btnXuat_HD" class="aps-btn"><a title="Xuất hóa đơn" class="btn"><i class="fal fa-file-invoice"></i> Xuất hóa đơn</a></div>';
                     row += me.strHDDT;
                     $("#zoneActionXuatHoaDon").html(row);
+                    $("#btnPreviewHD").click(function (e) {
+                        e.stopImmediatePropagation();
+                        me.showPreviewHoaDon();
+                    });
                     $("#btnXuat_HD").click(function (e) {
                         e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn xuất hóa đơn không!', 'w');
                         $("#btnYes").click(function (e) {
@@ -6092,6 +6165,120 @@ PhieuThu.prototype = {
         }
         return iCountCheck;
     },
+    /*------------------------------------------
+    --Discription: Preview hóa đơn điện tử trước khi phát hành
+    -- Clone HTML mẫu phiếu (#MauInPhieuThu) vào modal + banner watermark "XEM TRƯỚC"
+    -- User review; bấm "Xuất HĐ điện tử ngay" trong modal footer → trigger #btnXuat_HD thật.
+    -------------------------------------------*/
+    showPreviewHoaDon: function () {
+        var me = this;
+        var $mauInSrc = $('#MauInPhieuThu');
+        if (!$mauInSrc.length || $mauInSrc.html().trim() === '') {
+            edu.extend.notifyBeginLoading('Chưa có nội dung phiếu để xem trước!', 'w');
+            return;
+        }
+
+        // BƯỚC 1: Lưu runtime state (value của select/input) TRƯỚC KHI clone.
+        // jQuery .clone() chỉ copy HTML attributes, KHÔNG copy DOM properties (selectedIndex, .value).
+        // Nên phải đọc từ DOM gốc rồi re-apply vào clone.
+        var arrSelectValues = [];
+        $mauInSrc.find('select').each(function () {
+            arrSelectValues.push($(this).val());
+        });
+        var arrInputValues = [];
+        $mauInSrc.find('input').each(function () {
+            var type = (this.type || 'text').toLowerCase();
+            if (type === 'checkbox' || type === 'radio') {
+                arrInputValues.push({ checked: this.checked, value: this.value });
+            } else {
+                arrInputValues.push({ value: $(this).val() });
+            }
+        });
+
+        // BƯỚC 2: Clone deep
+        var $mauInClone = $mauInSrc.clone(true, true);
+
+        // BƯỚC 3: Re-apply state vào clone (cùng thứ tự index như khi lưu).
+        // Với select: dùng .val() để set + set attribute selected trên option (để :selected selector work).
+        $mauInClone.find('select').each(function (idx) {
+            var strVal = arrSelectValues[idx];
+            var $sel = $(this);
+            $sel.find('option').removeAttr('selected');
+            if (strVal != null) {
+                $sel.val(strVal);
+                var $optSelected = $sel.find('option').filter(function () { return this.value === strVal; });
+                if ($optSelected.length) $optSelected.attr('selected', 'selected');
+            }
+        });
+        $mauInClone.find('input').each(function (idx) {
+            var state = arrInputValues[idx];
+            if (!state) return;
+            var type = (this.type || 'text').toLowerCase();
+            if (type === 'checkbox' || type === 'radio') {
+                this.checked = state.checked;
+                if (state.checked) $(this).attr('checked', 'checked'); else $(this).removeAttr('checked');
+            } else {
+                $(this).val(state.value).attr('value', state.value);
+            }
+        });
+
+        // BƯỚC 4: Đổi id="xxx" → id="xxx_preview" tránh trùng ID với template gốc trong DOM.
+        $mauInClone.find('[id]').each(function () {
+            this.id = this.id + '_preview';
+        });
+
+        // BƯỚC 5: Convert <select> → <span> text tĩnh. Preview là để xem, không cho chọn nữa.
+        $mauInClone.find('select').each(function () {
+            var $sel = $(this);
+            var $opt = $sel.find('option:selected');
+            // Fallback: nếu :selected không match (edge case), lấy option đầu có attr selected
+            if (!$opt.length) $opt = $sel.find('option[selected]').first();
+            if (!$opt.length) $opt = $sel.find('option').first();
+            var strText = ($opt.text() || '').trim();
+            var strVal = $opt.val();
+            var bIsPlaceholder = (!strVal || strVal === '' || /^chọn\s/i.test(strText) || /^--/.test(strText));
+            var strDisplay = bIsPlaceholder ? '—' : strText;
+            var strStyle = bIsPlaceholder
+                ? 'color: #94a3b8; font-style: italic;'
+                : 'font-weight: 600; color: #1e40af;';
+            $sel.replaceWith('<span class="preview-value" style="' + strStyle + '">' + strDisplay + '</span>');
+        });
+
+        // BƯỚC 6: Convert <input type="text|number"> → text tĩnh (nội dung, số lượng, đơn giá...)
+        $mauInClone.find('input').each(function () {
+            var $inp = $(this);
+            var type = ($inp.attr('type') || 'text').toLowerCase();
+            if (type !== 'text' && type !== 'number' && type !== '') return;
+            var strVal = ($inp.attr('value') || '').trim();
+            $inp.replaceWith('<span>' + (strVal === '' ? '&nbsp;' : strVal) + '</span>');
+        });
+
+        // Ẩn thanh chỉnh ngày lập phiếu (chỉ dùng ở form thật để edit, không cần trong preview)
+        $mauInClone.find('#zoneChinhNgayLapPhieu_preview').remove();
+
+        // Fill nội dung phiếu vào wrapper trong modal (giữ watermark "XEM TRƯỚC" bên ngoài wrapper)
+        var $target = $('#zonePreviewHoaDon_Content > div[style*="z-index: 2"]');
+        $target.empty().append($mauInClone.contents());
+
+        // Bind lại nút "Xuất HĐ điện tử ngay" — off trước để tránh double-bind khi mở modal nhiều lần.
+        // Ưu tiên #btnXuat_HD (nhánh Thu tiền trước có nút này), fallback .btnXuat_HDDT đầu tiên
+        // (nhánh Thu tiền khoản nợ chỉ có các nút HDDT dynamic từ BE, không có #btnXuat_HD).
+        $('#btnXuatHDDT_FromPreview').off('click').on('click', function () {
+            $('#modalPreviewHoaDon').modal('hide');
+            setTimeout(function () {
+                var $btnXuat = $('#btnXuat_HD');
+                if ($btnXuat.length === 0) $btnXuat = $('.btnXuat_HDDT').first();
+                if ($btnXuat.length > 0) {
+                    $btnXuat.trigger('click');
+                } else {
+                    edu.extend.notifyBeginLoading('Không tìm thấy nút Xuất HĐ điện tử!', 'w');
+                }
+            }, 300);
+        });
+
+        $('#modalPreviewHoaDon').modal('show');
+    },
+
     changeWidthPrint: function () {
         //Thay đổi vùng in
         var lMauInPhieuThu = document.getElementById("MauInPhieuThu").offsetWidth;
@@ -6119,6 +6306,28 @@ PhieuThu.prototype = {
         var elBienLai = document.getElementById('zoneBienLaiHoaDon');
         if (elBienLai) elBienLai.style.paddingLeft = '';
         edu.extend.genChonLien("MauInPhieuThu", "zoneLienHoaDon");
+
+        // Init select2 cho các dropdown trên mẫu phiếu (Hình thức thu / Loại tiền tệ / Đơn vị tính).
+        // Style theo mẫu "dropdown xịn" của user (ảnh tham chiếu 12/08/2026): popup rounded lớn, có ô Tìm...,
+        // hover xanh nhạt, format option MÃ · TÊN nếu option value khác text.
+        // - minimumResultsForSearch: 0 → luôn bật ô search (đồng bộ visual với các dropdown khác trong app).
+        // - dropdownCssClass "select2-dropdown--phieuthu" để CSS scope popup, không đụng select2 khác.
+        setTimeout(function () {
+            if (typeof $.fn.select2 !== 'function') return;
+            $('#MauInPhieuThu select').each(function () {
+                if ($(this).hasClass('select2-hidden-accessible')) return;
+                var $sel = $(this);
+                // Dùng placeholder từ option đầu (thường là "Chọn ...") nếu có
+                var strPlaceholder = $sel.find('option[value=""]').first().text() || 'Chọn...';
+                $sel.select2({
+                    width: 'auto',
+                    minimumResultsForSearch: 0,
+                    placeholder: strPlaceholder,
+                    dropdownCssClass: 'select2-dropdown--phieuthu',
+                    dropdownParent: $(document.body)
+                });
+            });
+        }, 50);
     },
     /*------------------------------------------
     --Discription: [7] 
