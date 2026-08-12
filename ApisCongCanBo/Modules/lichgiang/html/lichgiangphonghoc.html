@@ -53,7 +53,7 @@
 
     #duyet-calendar-box .days li.active span,
     #duyet-calendar-box .days li.active.actionclde span {
-        background-color: var(--bs-cyan) !important;
+        background-color: var(--color-link) !important;
         color: white !important;
         border-radius: 100%;
     }
@@ -770,9 +770,9 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="row">
-                    <div class="col-12 col-md-9">
-                        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                <div class="row aps-duyetdangky">
+                    <div class="col-12 col-md-9 pl-0">
+                        <div class="d-flex align-items-center gap-2 mb-10 flex-wrap">
                             <label class="form-label main-label mb-0 me-1">Phòng học</label>
                             <div class="input-group no-icon mb-0" style="min-width: 240px; width: 240px;">
                                 <select class="form-select select-opt" id="dropDuyet_PhongHoc"></select>
@@ -808,7 +808,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-12 col-md-3">
+                    <div class="col-12 col-md-3 pr-0">
                         <div class="box-shadow p-0 block-calendar" id="duyet-calendar-box">
                             <div class="block-label top-radius bg-dask-blue">
                                 <i class="fa-solid fa-calendar-range mr-5"
@@ -906,7 +906,7 @@
             </div>
             <div class="modal-body">
                 <div class="aps-table-select scroll-table-x">
-                    <table class="table transcrip-table tabs-scores fs-14 table-bordered table-border mr-0"
+                    <table class="table transcrip-table tabs-scores fs-14 table-bordered table-border mr-0 tblKetQuaCaNhan"
                         id="tblKetQuaCaNhan">
                         <thead>
                             <tr>

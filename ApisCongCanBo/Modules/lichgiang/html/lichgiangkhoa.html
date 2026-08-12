@@ -149,7 +149,7 @@
     <!-- end đăng ký nguyện vọng -->
 </div>
 <!-- ---------- -->
-<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: block !important;">
     <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalXemLich">
         Yêu cầu đổi lịch</button>
     <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalPheDuyet">
@@ -285,12 +285,15 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <div class="gv-button-group pull-right d-flex pt-10">
-                    <button class="btn btn-danger" id="btnDeleteDoiLich" style="display: block">
+                <div class="gv-button-group pull-left d-flex pt-0">
+                    <button class="btn btn-soft-danger mb-0" id="btnDeleteDoiLich" style="display: block;margin-left: 0 !important;">
                         <i class="fas fa-trash me-2"></i>
                         <span>Xóa</span>
                     </button>
-                    <button class="btn btn-success" id="btnPheDuyet">
+
+                </div>
+                <div class="gv-button-group pull-right d-flex pt-0">                   
+                    <button class="btn btn-success mb-0" id="btnPheDuyet">
                         <i class="fa-solid fa-circle-check"></i><span>Phê duyệt</span>
                     </button>
                 </div>

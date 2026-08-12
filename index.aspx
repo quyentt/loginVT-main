@@ -518,9 +518,9 @@
       #main-content-wrapper .today-card-1 > .card-header,
       #main-content-wrapper .today-card-2 > .card-header,
       #main-content-wrapper .today-card-3 > .card-header {
-        background: #223771 !important;
+        background: #223771 ;
         border: 0 !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         padding: 0 18px !important;
         margin-bottom: -1px;
       }
@@ -531,21 +531,21 @@
       /* Tab inactive (chưa chọn): text trắng mờ trên nền dask-blue */
       #main-content-wrapper .today-card > .card-header .myTab-header-link,
       #main-content-wrapper .today-card > .card-header .myTab-header-link i {
-        color: rgba(255, 255, 255, 0.85) !important;
+        color: rgba(255, 255, 255, 0.85);
       }
       #main-content-wrapper .today-card > .card-header .myTab-header-link:hover,
       #main-content-wrapper .today-card > .card-header .myTab-header-link:hover i {
-        color: #ffffff !important;
+        color: #ffffff;
       }
       /* Tab active: pill trắng bg (giữ design gốc css-new/main.css:1650) + text
          dask-blue + icon cam accent */
       #main-content-wrapper .today-card > .card-header .myTab-header-link.active {
         background: #ffffff !important;
-        color: #223771 !important;
+        color: #223771;
         font-weight: 700 !important;
       }
       #main-content-wrapper .today-card > .card-header .myTab-header-link.active i {
-        color: #223771 !important;
+        color: #223771;
         font-weight: 700;
       }
       /* Icon frame trong card header (today-card-1 gradient xanh) → tone dask-blue */
@@ -640,7 +640,7 @@
       /* Text render — center dọc bằng flex, KHÔNG dùng line-height (gây lệch) */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 1 !important;
-        padding: 0 32px 0 14px !important;
+        padding: 2px 32px 1px 12px !important;
         color: #222 !important;
         font-size: 14px !important;
         font-weight: 500 !important;
@@ -658,7 +658,7 @@
       /* Mũi tên: căn giữa dọc, cách viền phải 8px */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 100% !important;
-        top: -3px !important;
+        top: 0px;
         right: 8px !important;
         width: 20px !important;
         display: flex !important;
@@ -667,7 +667,7 @@
       }
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
         border-color: #d1d1d1 transparent transparent transparent !important;
-        border-width: 6px 5px 0 5px !important;
+        border-width: 5px 5px 0 5px !important;
         position: static !important;
         margin: 0 !important;
       }
@@ -833,7 +833,7 @@
       }
       #main-content-wrapper .modal .modal-footer,
       body > .modal .modal-footer {
-        padding: 12px 18px !important;
+        padding: 15px 18px !important;
         border-top: 1px solid #e2e8f0 !important;
       }
 
@@ -957,7 +957,7 @@
       #main-content-wrapper .box.box-solid { border-top: 1px solid #e2e8f0 !important; }
       #main-content-wrapper .box.box-shadow { box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06) !important; }
       #main-content-wrapper .box-header {
-        padding: 10px 15px 5px 15px !important;
+        padding: 10px 15px 5px 15px;
         /* border-bottom: 1px solid #e2e8f0 !important; */
         display: flex !important;
         align-items: center !important;
@@ -975,8 +975,8 @@
       }
       #main-content-wrapper .box-title {
         font-weight: 700 !important;
-        font-size: 15px !important;
-        color: #0f172a !important;
+        /* font-size: 15px !important; */
+        color: var(--color-blue) !important;
         margin: 0 !important;
       }
       #main-content-wrapper .box-title.color-blue { color: #223771 !important; }

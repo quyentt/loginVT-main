@@ -473,7 +473,7 @@
             max-height: none !important;
           }
           html body.skin-blue #main-content-wrapper .box-header {
-            padding: 10px 12px !important;
+            padding: 10px 12px;
             /* border-bottom: 1px solid #e2e8f0 !important; */
           }
           html body.skin-blue #main-content-wrapper .aps-box-l .box-header {
@@ -559,7 +559,7 @@
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow b {
             border-color: #d1d1d1 transparent transparent transparent !important;
-            border-width: 6px 5px 0 5px !important;
+            border-width: 5px 5px 0 5px !important;
             position: static !important;
             margin: 0 !important;
           }
@@ -763,7 +763,7 @@
             color: #ffffff !important;
             opacity: 0.85 !important;
             box-shadow: none !important;
-            padding: 4px 10px !important;
+            padding: 4px 10px ;
             font-size: 14px !important;
             line-height: 1 !important;
             font-weight: 400 !important;
