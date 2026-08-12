@@ -2097,6 +2097,7 @@ KhaiMucPhi.prototype = {
                 'iM': edu.system.iM,
                 'strCore_Person_Intake_Id': strPersonIntakeId,
                 'dChayThu': 0,
+                'dGhiLog': 1,
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strChucNangThucHien_Id': edu.system.strChucNang_Id || ''
             };
