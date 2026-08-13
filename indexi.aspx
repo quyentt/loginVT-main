@@ -1582,7 +1582,7 @@
                     // - ep transparent trong scope sidebar de khong bi nen trang chen ngang.
                     'html body.skin-blue .main-sidebar .menu-open, html body.skin-blue #menu_vertical .menu-open, html body.skin-blue #menu_vertical li { background: transparent !important; background-color: transparent !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background: transparent !important; background-color: transparent !important; border-radius: 0 !important; margin: 2px 0 4px 26px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
-                    'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #e4ecff !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
+                    'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #ffffff !important; font-weight: 500 !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-color: transparent !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu > li > a::before, html body.skin-blue #menu_vertical .treeview-menu > li > a::after { background-color: rgba(210,221,253,0.4) !important; }',
                     'html body.skin-blue #menu_vertical .treeview-menu > li.active > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.active > a::after, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::before, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a::after, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::before, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover::after { background-color: #f8843d !important; }'
@@ -1610,7 +1610,7 @@
                 var TOP_DEFAULT = {
                     'background': 'transparent',
                     'background-image': 'none',
-                    'color': '#d2ddfd',
+                    'color': '#ffffff',
                     'border-left': '3px solid transparent',
                     'font-weight': '500'
                 };
@@ -1624,7 +1624,7 @@
                 var SUB_DEFAULT = {
                     'background': 'transparent',
                     'background-image': 'none',
-                    'color': '#e4ecff',
+                    'color': '#ffffff',
                     'font-weight': '500'
                 };
                 // Container submenu: trong suốt, phân cấp bằng border-left mỏng

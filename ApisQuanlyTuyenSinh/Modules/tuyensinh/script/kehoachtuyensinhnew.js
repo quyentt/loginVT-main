@@ -2235,17 +2235,18 @@ KeHoachTuyenSinhNew.prototype = {
             var d = data[i];
             var id = pick(d, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
             var arr = me._kqRowToArray(d, i + 1);   // STT toàn cục
-            var tds = '';
-            tds += '<td class="td-center td-fix">' + arr[0] + '</td>';
-            tds += '<td class="td-center">' + arr[1] + '</td>';
-            for (var j = 2; j < arr.length; j++) {
-                tds += '<td>' + esc(arr[j]) + '</td>';
-            }
             var idAttr = esc(id);
-            tds += '<td class="td-center">'
+            var tds = '';
+            tds += '<td class="td-center kqdk-col1">' + arr[0] + '</td>';
+            tds += '<td class="td-center kqdk-col2">' + arr[1] + '</td>';
+            // Thao tác — chuyển lên vị trí 3 (sticky) để không bị khuất khi scroll ngang
+            tds += '<td class="td-center kqdk-col3">'
                 + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
                 + '<a class="btn btn-sm btn-danger btnXoaHoSo" data-id="' + idAttr + '" title="Xóa hồ sơ" style="padding:4px 8px;"><i class="fa fa-trash"></i></a>'
                 + '</td>';
+            for (var j = 2; j < arr.length; j++) {
+                tds += '<td>' + esc(arr[j]) + '</td>';
+            }
             rows += '<tr data-id="' + idAttr + '">' + tds + '</tr>';
         }
         $tbody.append(rows);

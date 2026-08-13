@@ -394,16 +394,16 @@
       .left-sidebar a:hover .item-icon { color: #ffffff !important; }
 
       .sidebar-menu-header {
-        color: #d2ddfd !important;
+        color: #ffffff !important;
         background: transparent !important;
         font-weight: 500 !important;
       }
       .sidebar-menu-header .item-icon,
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header i {
-        color: #d2ddfd !important;
+        color: #ffffff !important;
       }
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header {
-        color: #d2ddfd !important;
+        color: #ffffff !important;
       }
       .sidebar-menu-header:not(.collapsed):hover,
       .sidebar-menu-item.sidebar-menu-home .sidebar-menu-header:hover {
@@ -438,14 +438,16 @@
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
       html body .sidebar-menu-item .sidebar-menu-sub.collapse {
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 0 12px 12px 0 !important;
+        background: transparent !important;
+        background-color: transparent !important;
+        border-radius: 0 !important;
         padding: 4px 0 8px 0 !important;
         margin-top: 5px !important;
         box-shadow: none !important;
       }
       .sidebar-menu-sub a {
-        color: #d2ddfd !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
         background: transparent !important;
         border-left-color: #5a7adb !important;
       }

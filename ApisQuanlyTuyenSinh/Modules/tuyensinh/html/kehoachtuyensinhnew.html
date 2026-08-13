@@ -1547,6 +1547,31 @@
                             </div>
                         </div>
 
+                        <!-- Sticky 3 cột đầu (STT 50, checkbox 50, Thao tác 130) — width cứng để left offset match chính xác -->
+                        <style>
+                            #tblKQDK_HoSo thead th.kqdk-col1,
+                            #tblKQDK_HoSo tbody td.kqdk-col1 {
+                                position: sticky; left: 0; z-index: 4; background: #fff;
+                                width: 50px; min-width: 50px; max-width: 50px;
+                            }
+                            #tblKQDK_HoSo thead th.kqdk-col2,
+                            #tblKQDK_HoSo tbody td.kqdk-col2 {
+                                position: sticky; left: 50px; z-index: 4; background: #fff;
+                                width: 50px; min-width: 50px; max-width: 50px;
+                            }
+                            #tblKQDK_HoSo thead th.kqdk-col3,
+                            #tblKQDK_HoSo tbody td.kqdk-col3 {
+                                position: sticky; left: 100px; z-index: 4; background: #fff;
+                                width: 130px; min-width: 130px; max-width: 130px;
+                                border-right: 2px solid #cbd5e1;
+                            }
+                            #tblKQDK_HoSo thead th.kqdk-col1,
+                            #tblKQDK_HoSo thead th.kqdk-col2 { background: #f8fafc; z-index: 5; }
+                            #tblKQDK_HoSo thead th.kqdk-col3 { background: #f1f5f9; z-index: 5; }
+                            /* Buffer padding cho cột Họ và tên (cột 4) — tránh chữ đầu bị dính vào border-right của cột Thao tác */
+                            #tblKQDK_HoSo thead tr:first-child th:nth-child(4),
+                            #tblKQDK_HoSo tbody tr td:nth-child(4) { padding-left: 14px; }
+                        </style>
                         <!-- Thanh scroll ngang giả ở TRÊN bảng — sync với scroll thật bên dưới (JS: _kqSyncScrollTop) -->
                         <div id="kqdk_scrollx_top" style="overflow-x:auto;overflow-y:hidden;height:14px;margin-bottom:2px;">
                             <div id="kqdk_scrollx_top_inner" style="height:1px;width:1px;"></div>
@@ -1555,8 +1580,9 @@
                             <table id="tblKQDK_HoSo" class="table table-hover table-bordered table-noborder">
                                 <thead>
                                     <tr>
-                                        <th class="td-fixed td-center" rowspan="2" style="width:50px;">STT</th>
-                                        <th class="td-center" rowspan="2" style="width:50px;"><input type="checkbox" id="chkKQDK_All"></th>
+                                        <th class="td-fixed td-center kqdk-col1" rowspan="2">STT</th>
+                                        <th class="td-center kqdk-col2" rowspan="2"><input type="checkbox" id="chkKQDK_All"></th>
+                                        <th class="td-center kqdk-col3" rowspan="2">Thao tác</th>
                                         <th class="td-left" rowspan="2" style="min-width:180px;">Họ và tên</th>
                                         <th class="td-center" rowspan="2" style="min-width:110px;">Ngày sinh</th>
                                         <th class="td-center" rowspan="2" style="min-width:80px;">Giới tính</th>
@@ -1573,7 +1599,6 @@
                                         <th class="td-center" colspan="4" style="background:#fce7f3;color:#9f1239;">Thông tin về Mẹ</th>
                                         <th class="td-center" colspan="6" style="background:#f5d0fe;color:#701a75;">Thông tin trúng tuyển</th>
                                         <th class="td-center" colspan="5" style="background:#fed7aa;color:#9a3412;">Thông tin xuất hóa đơn</th>
-                                        <th class="td-center" rowspan="2" style="min-width:120px; background:#f1f5f9;">Thao tác</th>
                                     </tr>
                                     <tr>
                                         <th class="td-center" style="min-width:130px;">Số CCCD</th>

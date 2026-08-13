@@ -73,6 +73,154 @@
         color: #64748b !important;
         opacity: 1 !important;
     }
+
+    /* ═══ Đổi btn-soft-* thành FILLED SOLID (giống nút "Thêm học phần" xanh lá đậm)
+       CHỈ trong cthp.html — user muốn nút "đậm đà" như Thêm học phần.
+       Scope 2-ID để win rule base styles.css:7256+. ═══ */
+    html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-primary,
+    body .aps-chuongtrinhhocphan .btn-soft-primary {
+        background: #0d6efd !important;
+        border: 1px solid #0d6efd !important;
+        color: #ffffff !important;
+    }
+    html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-success,
+    body .aps-chuongtrinhhocphan .btn-soft-success {
+        background: #198754 !important;
+        border: 1px solid #198754 !important;
+        color: #ffffff !important;
+    }
+    html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-warning,
+    body .aps-chuongtrinhhocphan .btn-soft-warning {
+        background: #ffc107 !important;
+        border: 1px solid #ffc107 !important;
+        color: #000000 !important;
+    }
+    html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-danger,
+    body .aps-chuongtrinhhocphan .btn-soft-danger {
+        background: #dc3545 !important;
+        border: 1px solid #dc3545 !important;
+        color: #ffffff !important;
+    }
+    html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-info,
+    body .aps-chuongtrinhhocphan .btn-soft-info {
+        background: #0dcaf0 !important;
+        border: 1px solid #0dcaf0 !important;
+        color: #ffffff !important;
+    }
+    html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-secondary,
+    body .aps-chuongtrinhhocphan .btn-soft-secondary {
+        background: #6c757d !important;
+        border: 1px solid #6c757d !important;
+        color: #ffffff !important;
+    }
+    /* Text + icon TRẮNG cho các nút solid (warning giữ đen vì nền vàng nhạt) */
+    .aps-chuongtrinhhocphan .btn-soft-primary .lang,
+    .aps-chuongtrinhhocphan .btn-soft-primary i,
+    .aps-chuongtrinhhocphan .btn-soft-success .lang,
+    .aps-chuongtrinhhocphan .btn-soft-success i,
+    .aps-chuongtrinhhocphan .btn-soft-danger .lang,
+    .aps-chuongtrinhhocphan .btn-soft-danger i,
+    .aps-chuongtrinhhocphan .btn-soft-info .lang,
+    .aps-chuongtrinhhocphan .btn-soft-info i,
+    .aps-chuongtrinhhocphan .btn-soft-secondary .lang,
+    .aps-chuongtrinhhocphan .btn-soft-secondary i {
+        color: #ffffff !important;
+        font-weight: 600 !important;
+    }
+    .aps-chuongtrinhhocphan .btn-soft-warning .lang,
+    .aps-chuongtrinhhocphan .btn-soft-warning i {
+        color: #000000 !important;
+        font-weight: 600 !important;
+    }
+    /* Hover — darken nhẹ */
+    .aps-chuongtrinhhocphan .btn-soft-primary:hover { background: #0b5ed7 !important; border-color: #0b5ed7 !important; }
+    .aps-chuongtrinhhocphan .btn-soft-success:hover { background: #157347 !important; border-color: #157347 !important; }
+    .aps-chuongtrinhhocphan .btn-soft-warning:hover { background: #e0a800 !important; border-color: #e0a800 !important; }
+    .aps-chuongtrinhhocphan .btn-soft-danger:hover  { background: #bb2d3b !important; border-color: #bb2d3b !important; }
+    .aps-chuongtrinhhocphan .btn-soft-info:hover    { background: #31d2f2 !important; border-color: #31d2f2 !important; }
+    .aps-chuongtrinhhocphan .btn-soft-secondary:hover { background: #5c636a !important; border-color: #5c636a !important; }
+    /* Shadow nhẹ cho nút "+" tròn (btnAdd_KhoiBatBuoc/KhoiDon/DinhHuong) */
+    .aps-chuongtrinhhocphan #btnAdd_KhoiBatBuoc,
+    .aps-chuongtrinhhocphan #btnAdd_KhoiDon,
+    .aps-chuongtrinhhocphan #btnAdd_DinhHuong {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    /* ═══ Thu gọn / mở rộng panel bên phải (Các khối lựa chọn) ═══
+       Click nút »: ẩn cột right, cột left rộng full-width.
+       Click nút «: hiện lại panel right, cột left về col-sm-9. */
+    .zone_chuongtrinhhocphan-detail {
+        position: relative;
+    }
+    .zone_chuongtrinhhocphan-right {
+        position: relative;
+    }
+    /* Nút thu gọn — attached vào cạnh trái của panel right */
+    .btn-toggle-right-panel {
+        position: absolute;
+        left: -14px;
+        top: 24px;
+        width: 26px;
+        height: 46px;
+        background: #223771 !important;
+        color: #fff !important;
+        border-radius: 6px 0 0 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        cursor: pointer;
+        box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.12);
+        text-decoration: none !important;
+        font-size: 13px;
+        transition: background .15s ease, left .15s ease;
+    }
+    .btn-toggle-right-panel:hover {
+        background: #1a2b5e !important;
+        left: -18px;
+    }
+    .btn-toggle-right-panel i {
+        color: #fff !important;
+    }
+    /* Nút mở lại — nổi ở góc phải khi bị collapse (mặc định ẩn) */
+    .btn-expand-right-panel {
+        position: absolute;
+        right: 0;
+        top: 24px;
+        width: 34px;
+        height: 46px;
+        background: #223771 !important;
+        color: #fff !important;
+        border-radius: 6px 0 0 6px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 20;
+        cursor: pointer;
+        box-shadow: -2px 2px 6px rgba(0, 0, 0, 0.12);
+        text-decoration: none !important;
+        font-size: 13px;
+        transition: background .15s ease, right .15s ease;
+    }
+    .btn-expand-right-panel:hover {
+        background: #1a2b5e !important;
+        right: 3px;
+    }
+    .btn-expand-right-panel i {
+        color: #fff !important;
+    }
+    /* State: panel-right-collapsed */
+    .zone_chuongtrinhhocphan-detail.panel-right-collapsed .zone_chuongtrinhhocphan-right {
+        display: none !important;
+    }
+    .zone_chuongtrinhhocphan-detail.panel-right-collapsed .zone_chuongtrinhhocphan-left {
+        width: 100% !important;
+        padding-right: 15px !important;
+        float: none !important;
+    }
+    .zone_chuongtrinhhocphan-detail.panel-right-collapsed .btn-expand-right-panel {
+        display: flex !important;
+    }
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
@@ -139,6 +287,10 @@
                     </div>
                 </div>
                 <div class="row pd0 zone_chuongtrinhhocphan-detail bg-f8">
+                    <!-- Nút mở lại panel bên phải khi bị thu gọn -->
+                    <a class="btn-expand-right-panel" title="Mở panel Các khối lựa chọn">
+                        <i class="fa fa-angle-double-left"></i>
+                    </a>
                     <div class="col-sm-9 bg-white pr0 zone_chuongtrinhhocphan-left">
                         <div class="box box-solid pd20">
                             <div class="box-header pl0 pr0 mb-5">
@@ -242,6 +394,10 @@
                         </div>
                     </div>
                     <div class="col-sm-3 bg-f8 zone_chuongtrinhhocphan-right" id="">
+                        <!-- Nút thu gọn panel bên phải -->
+                        <a class="btn-toggle-right-panel" title="Thu gọn panel Các khối lựa chọn">
+                            <i class="fa fa-angle-double-right"></i>
+                        </a>
                         <div class="box box-solid pd0 bg-f8">
                             <div class="box-header pt25 pl20 pr20">
                                 <h3 class="box-title color-blue line-20"
@@ -2181,5 +2337,15 @@
     main_doc['ChuongTrinhHocPhan'] = new ChuongTrinhHocPhan();
     $(document).ready(function () {
         main_doc.ChuongTrinhHocPhan.init();
+    });
+
+    // Toggle thu gọn / mở rộng panel bên phải (Các khối lựa chọn bắt buộc/đơn/định hướng)
+    $(document).on('click', '.btn-toggle-right-panel', function (e) {
+        e.preventDefault();
+        $(this).closest('.zone_chuongtrinhhocphan-detail').addClass('panel-right-collapsed');
+    });
+    $(document).on('click', '.btn-expand-right-panel', function (e) {
+        e.preventDefault();
+        $(this).closest('.zone_chuongtrinhhocphan-detail').removeClass('panel-right-collapsed');
     });
 </script>
