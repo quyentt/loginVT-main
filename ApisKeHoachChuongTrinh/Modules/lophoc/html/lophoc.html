@@ -1,4 +1,37 @@
-﻿<!-- Main content -->
+﻿<!-- Placeholder + label emphasis, scoped trong form "Thêm mới - Lớp quản lý".
+     Selector cần dài để override indexi.aspx:508 (#94a3b8) và :546 (#d1d1d1) — 2 rule shell
+     có specificity 1 ID + nhiều class, thêm html body.skin-blue #main-content-wrapper
+     #zone_input_LopHoc → 2 ID sẽ win. -->
+<style>
+    /* Placeholder trong input/textarea (VD: dd/mm/yyyy) */
+    html body.skin-blue #main-content-wrapper #zone_input_LopHoc .form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_LopHoc input::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_LopHoc input.form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_LopHoc textarea::placeholder {
+        color: #64748b !important;
+        opacity: 1 !important;
+    }
+    /* Placeholder trong select2 (Chọn loại lớp, Chọn khóa đào tạo...) */
+    html body.skin-blue #main-content-wrapper #zone_input_LopHoc .select2-container--default .select2-selection--single .select2-selection__placeholder,
+    html body #main-content-wrapper #zone_input_LopHoc .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #64748b !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        opacity: 1 !important;
+    }
+    /* Text đã chọn trong select2 (khi có value) đen đậm hơn */
+    html body.skin-blue #main-content-wrapper #zone_input_LopHoc .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #0f172a !important;
+        font-weight: 500 !important;
+    }
+    /* Label các trường (Mã lớp, Tên lớp, Loại lớp...) đậm hơn để dễ nhìn */
+    #zone_input_LopHoc .aps-form-lable {
+        font-weight: 600 !important;
+        color: #0f172a !important;
+    }
+</style>
+
+<!-- Main content -->
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-qllophoc-lophoc">
         <div class="box box-solid zone-bus col-lg-12 pd0" id="zone_notify_LopHoc">
