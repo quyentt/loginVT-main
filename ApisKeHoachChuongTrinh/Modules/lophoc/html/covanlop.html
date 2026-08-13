@@ -1,4 +1,37 @@
-﻿<section class="content aps-KeHoachChuongTrinh">
+﻿<!-- Placeholder + label emphasis, scoped trong form "Thêm mới - Cố vấn lớp".
+     Selector 2 ID (html body.skin-blue #main-content-wrapper #zone_input_CoVanLop) để
+     override rule shell indexi.aspx:508 (input placeholder #94a3b8) và :546 (select2
+     placeholder #d1d1d1). -->
+<style>
+    /* Placeholder trong input/textarea */
+    html body.skin-blue #main-content-wrapper #zone_input_CoVanLop .form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_CoVanLop input::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_CoVanLop input.form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_CoVanLop textarea::placeholder {
+        color: #64748b !important;
+        opacity: 1 !important;
+    }
+    /* Placeholder trong select2 (Chọn bộ môn, Chọn giảng viên, Chọn lớp quản lý...) */
+    html body.skin-blue #main-content-wrapper #zone_input_CoVanLop .select2-container--default .select2-selection--single .select2-selection__placeholder,
+    html body #main-content-wrapper #zone_input_CoVanLop .select2-container--default .select2-selection--single .select2-selection__placeholder {
+        color: #64748b !important;
+        font-style: normal !important;
+        font-weight: 500 !important;
+        opacity: 1 !important;
+    }
+    /* Text đã chọn trong select2 (khi có value) đen đậm hơn */
+    html body.skin-blue #main-content-wrapper #zone_input_CoVanLop .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #0f172a !important;
+        font-weight: 500 !important;
+    }
+    /* Label các trường (Bộ môn, Giảng viên, Lớp quản lý, Vai trò) đậm hơn */
+    #zone_input_CoVanLop .aps-form-lable {
+        font-weight: 600 !important;
+        color: #0f172a !important;
+    }
+</style>
+
+<section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-qllophoc-covanlop">
         <div class="box box-solid zone-bus  col-lg-12 pd0" id="zone_notify_CoVanLop">
             <!-- /.Tìm kiếm -->

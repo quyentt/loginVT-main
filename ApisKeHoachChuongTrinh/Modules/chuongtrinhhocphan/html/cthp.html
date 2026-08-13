@@ -37,6 +37,42 @@
         background: #fff;
         z-index: 2;
     }
+
+    /* ═══ Fix chữ bị mờ trong 4 modal "Thêm học phần / khối bắt buộc / khối tự chọn / định hướng".
+       Nguyên nhân: <ul class="sidebar-menu"> vốn là AdminLTE sidebar → inherit light text cho
+       dark background. Khi dùng trong modal → chữ hầu như tàng hình.
+       Fix: scope theo ID zone + selector 2 IDs (html body.skin-blue #main-content-wrapper)
+       để win rule shell. ═══ */
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan .sidebar-menu li a,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan .sidebar-menu li a span,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan .sidebar-menu li a i,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoibatbuoc .sidebar-menu li a,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoibatbuoc .sidebar-menu li a span,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoibatbuoc .sidebar-menu li a i,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoituchondon .sidebar-menu li a,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoituchondon .sidebar-menu li a span,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoituchondon .sidebar-menu li a i,
+    html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a,
+    html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a span,
+    html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a i {
+        color: #0f172a !important;
+        font-weight: 500 !important;
+    }
+    /* Icon check-circle (item đã chọn) giữ tone xanh dương primary */
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan .sidebar-menu li a i.fa-circle-check,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoibatbuoc .sidebar-menu li a i.fa-circle-check,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoituchondon .sidebar-menu li a i.fa-circle-check,
+    html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a i.fa-circle-check {
+        color: #223771 !important;
+    }
+    /* Placeholder input tìm kiếm trong 4 modal (Nhập từ khóa tìm kiếm) */
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan .form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoibatbuoc .form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoituchondon .form-control::placeholder,
+    html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .form-control::placeholder {
+        color: #64748b !important;
+        opacity: 1 !important;
+    }
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
