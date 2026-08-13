@@ -641,19 +641,36 @@
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
         line-height: 1 !important;
         padding: 2px 32px 1px 12px !important;
-        color: #222 !important;
+        color: #0f172a !important;
         font-size: 14px !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         width: 100% !important;
         display: flex !important;
         align-items: center !important;
         height: 100% !important;
         margin: 0 !important;
       }
+      /* Placeholder select2 — đậm hơn cho dễ nhìn (user global request) */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
-        color: #d1d1d1 !important;
-        font-weight: 400 !important;
-        font-style: italic;
+        color: #64748b !important;
+        font-weight: 500 !important;
+        font-style: normal !important;
+        opacity: 1 !important;
+      }
+      /* Placeholder input/textarea — global đậm hơn */
+      #main-content-wrapper input.form-control::placeholder,
+      #main-content-wrapper input::placeholder,
+      #main-content-wrapper textarea::placeholder,
+      #main-content-wrapper textarea.form-control::placeholder {
+        color: #64748b !important;
+        opacity: 1 !important;
+      }
+      /* Text đã nhập trong input/select đậm hơn */
+      #main-content-wrapper input.form-control,
+      #main-content-wrapper select.form-control,
+      #main-content-wrapper textarea.form-control {
+        color: #0f172a !important;
+        font-weight: 500 !important;
       }
       /* Mũi tên: căn giữa dọc, cách viền phải 8px */
       #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {

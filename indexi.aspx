@@ -506,8 +506,18 @@
             box-shadow: none !important;
           }
           html body.skin-blue #main-content-wrapper input.form-control::placeholder,
-          html body.skin-blue #main-content-wrapper input::placeholder {
-            color: #94a3b8 !important;
+          html body.skin-blue #main-content-wrapper input::placeholder,
+          html body.skin-blue #main-content-wrapper textarea.form-control::placeholder,
+          html body.skin-blue #main-content-wrapper textarea::placeholder {
+            color: #64748b !important;
+            opacity: 1 !important;
+          }
+          /* Text đã nhập trong input/textarea đậm hơn (global user request) */
+          html body.skin-blue #main-content-wrapper input.form-control,
+          html body.skin-blue #main-content-wrapper select.form-control,
+          html body.skin-blue #main-content-wrapper textarea.form-control {
+            color: #0f172a !important;
+            font-weight: 500 !important;
           }
 
           /* ═══ Select2 xin: flex center + border-radius + focus ring ═══ */
@@ -534,9 +544,9 @@
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: 1 !important;
             padding: 0 32px 0 12px !important;
-            color: #d1d1d1 !important;
+            color: #0f172a !important;
             font-size: 14px !important;
-            font-weight: 500 !important;
+            font-weight: 600 !important;
             width: 100% !important;
             display: flex !important;
             align-items: center !important;
@@ -544,9 +554,10 @@
             margin: 0 !important;
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__placeholder {
-            color: #d1d1d1 !important;
-            font-weight: 400 !important;
-            font-style: italic;
+            color: #64748b !important;
+            font-weight: 500 !important;
+            font-style: normal !important;
+            opacity: 1 !important;
           }
           html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
             height: 100% !important;
