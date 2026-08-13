@@ -660,20 +660,15 @@ ThuHoSo.prototype = {
             'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRICICIKKS4gLw8pIDEJLiIP',
             'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSCacKhoanNhapHoc',
             'iM': edu.system.iM,
-            'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuTien'),
+            'strTC_KeHoachNhapHoc_Id': edu.util.getValById('dropKeHoachNhapHoc_ThuHoSo'),
             'strQLSV_NguoiHoc_TTTS_Id': strQLSV_NguoiHoc_TTTS_Id,
         };
         edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    if (edu.util.checkValue(data.Data)) {
-                        me.dtKhoanThu = data.Data;
-                        me.genTable_KhoanNhapHoc(data.Data);
-                    }
-                    else {
-                        me.genTable_KhoanNhapHoc([{}]);
-                    }
+                    me.dtKhoanThu = data.Data;
+                    me.genTable_KhoanNhapHoc(data.Data);
                     if (typeof resolve === "function") {
                         resolve();
                     }
