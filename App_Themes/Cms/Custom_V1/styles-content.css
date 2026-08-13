@@ -11681,11 +11681,17 @@ table#clone {
 .arrow {
     width: 0;
     height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid #000;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid #000;
+    height: 6px !important;
+    margin-top: 12px !important;
 }
-
+.arrow.none-title{
+    color: #888 !important;
+    border-left: 6px solid #888;
+    margin-top: 12px !important;
+}
 .arrow-right {
     width: 46px;
     margin-left: 10px;
@@ -17480,7 +17486,7 @@ table#clone {
 }
 
 .register-wish.aps-lichgiangkhoa .form-top.calendar-top .w-25p .form-item .select2-container--default .select2-selection--single .select2-selection__arrow {
-    top: -4px !important;
+    top: 0px !important;
 }
 
 .register-wish.aps-lichgiangkhoa .box-header {
@@ -17495,4 +17501,24 @@ table#clone {
 }
 .zone-pag-footertblLichGiang_XacNhan {
     margin-top: 10px !important;
+}
+
+.finance-modal.modalPheDuyet2 .form-item .select2-container--default .select2-selection--single .select2-selection__arrow {
+}
+.input-group .select2-selection__arrow {
+    margin-top: 0 !important;
+}
+.row.aps-form-table.scroll-table-x,.row.aps-form-table.scroll-table-x .table{
+    padding-right:0 !important;
+    padding-left:0 !important;
+}
+#main-content-wrapper .aps-table-select.scroll-table-x{
+    display: block !important;
+}
+#main-content-wrapper .aps-table-select.scroll-table-x .title-is-paging {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+#btnDongYXacNhan{
+    margin-left: 0px;
 }
