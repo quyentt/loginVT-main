@@ -39,6 +39,9 @@ PhieuThu.prototype = {
     strHDDT: '',
     dTongDu: 0,
     strChuongTrinh_Id: '',
+    // Tên người thu tiền lấy từ danh mục NTT (mã bảng danh mục = "NTT", 1 record duy nhất).
+    // Dùng override cho: (1) cột "Người thu" trong bảng phiếu đã thu/hóa đơn, (2) chữ ký "Người thu tiền" ở biên lai.
+    strTenNguoiThuTien_NTT: '',
 
     //data tinh hinh hoc phi sinh vien
     init: function () {
@@ -111,6 +114,7 @@ PhieuThu.prototype = {
         -------------------------------------------*/
         me.getList_HSSV();
         me.getList_DMLKT();
+        me.getList_NguoiThuTien_NTT();
         $(".btnClose").click(function () {
             if (me.tabActive == 1) {
                 me.showHide_Box("zoneThongTinBoSung", "zoneThongTinBoSungTab1");
@@ -1984,6 +1988,16 @@ PhieuThu.prototype = {
             ]
         }, false, false, false, null);
     },
+    getList_NguoiThuTien_NTT: function () {
+        var me = this;
+        // Bảng danh mục "NTT" chỉ có 1 record (MA=nguoithutien, TEN=<tên hiển thị>).
+        // Cache vào strTenNguoiThuTien_NTT để render cho cả bảng phiếu và biên lai.
+        edu.system.getList_DanhMucDulieu({ strMaBangDanhMuc: "NTT" }, function (data) {
+            if (data && data.length > 0 && data[0].TEN) {
+                me.strTenNguoiThuTien_NTT = data[0].TEN;
+            }
+        });
+    },
     getList_ChiTietKhoanThu: function (strzone) {
         var me = this;
         switch (strzone) {
@@ -3856,7 +3870,10 @@ PhieuThu.prototype = {
                     "mDataProp": "NGAYTHU_DD_MM_YYYY_HHMMSS"
                 }
                 , {
-                    "mDataProp": "TAIKHOAN_NGUOITHU"
+                    "mData": "TAIKHOAN_NGUOITHU",
+                    "mRender": function (nRow, aData) {
+                        return me.strTenNguoiThuTien_NTT || edu.util.returnEmpty(aData.TAIKHOAN_NGUOITHU);
+                    }
                 }
                 , {
                     "mData": "Chitiet",
@@ -3990,7 +4007,10 @@ PhieuThu.prototype = {
                     "mDataProp": "NGAYTHU_DD_MM_YYYY_HHMMSS"
                 }
                 , {
-                    "mDataProp": "TAIKHOAN_NGUOITHU"
+                    "mData": "TAIKHOAN_NGUOITHU",
+                    "mRender": function (nRow, aData) {
+                        return me.strTenNguoiThuTien_NTT || edu.util.returnEmpty(aData.TAIKHOAN_NGUOITHU);
+                    }
                 }
                 , {
                     "mData": "Chitiet",
@@ -4659,7 +4679,10 @@ PhieuThu.prototype = {
                     "mDataProp": "NGAYTHU_DD_MM_YYYY_HHMMSS"
                 }
                 , {
-                    "mDataProp": "TAIKHOAN_NGUOITHU"
+                    "mData": "TAIKHOAN_NGUOITHU",
+                    "mRender": function (nRow, aData) {
+                        return me.strTenNguoiThuTien_NTT || edu.util.returnEmpty(aData.TAIKHOAN_NGUOITHU);
+                    }
                 }
                 , {
                     "mData": "Chitiet",
@@ -4712,7 +4735,10 @@ PhieuThu.prototype = {
                     "mDataProp": "NGAYTHU_DD_MM_YYYY_HHMMSS"
                 }
                 , {
-                    "mDataProp": "TAIKHOAN_NGUOITHU"
+                    "mData": "TAIKHOAN_NGUOITHU",
+                    "mRender": function (nRow, aData) {
+                        return me.strTenNguoiThuTien_NTT || edu.util.returnEmpty(aData.TAIKHOAN_NGUOITHU);
+                    }
                 }
                 , {
                     "mData": "Chitiet",
@@ -6328,6 +6354,108 @@ PhieuThu.prototype = {
                 });
             });
         }, 50);
+
+        // Override chữ ký "Người thu tiền" bằng tên từ danh mục NTT (nếu có).
+        // Template `Edit_DHCNTTTN_BIENLAITHU_2018.html` (load từ server) dùng class
+        // `txtNguoiThu_BenA_<ID>` cho ô tên người thu. `getData_Phieu` (systemextend.js)
+        // đã fill `NGUOITAO_TENDAYDU` vào đây trước; đoạn override chạy sau cùng.
+        // Chạy defer để chắc chắn đã sau bước fill của getData_Phieu.
+        var strTenNTT = main_doc.PhieuThu.strTenNguoiThuTien_NTT;
+        if (strTenNTT) {
+            setTimeout(function () {
+                $('#MauInPhieuThu [class*="txtNguoiThu_BenA_"]').html(strTenNTT);
+            }, 100);
+        }
+
+        // Chèn "Lớp: <tên lớp>" cùng dòng với Mã SV trên biên lai.
+        // - Nguồn dữ liệu (ưu tiên): dt_DoiTuongThu.DAOTAO_LOPQUANLY_N1_TEN → element .txtLop_BenB_* / .txtLopPTC_PT_Edit đã fill sẵn.
+        // - Anchor (nhiều fallback vì template mỗi trường khác nhau):
+        //   (1) class .txtMa_BenB_*, (2) .txtMaNCSPTC_PT_Edit, (3) leaf element có chứa text "Mã SV".
+        // Guard idempotent qua class .txtLopInline_Injected.
+        setTimeout(function () {
+            var $mauIn = $('#MauInPhieuThu');
+            if (!$mauIn.length || $mauIn.find('.txtLopInline_Injected').length > 0) return;
+
+            var strLop = '';
+            var dt = main_doc.PhieuThu.dt_DoiTuongThu;
+            if (dt && dt.DAOTAO_LOPQUANLY_N1_TEN) strLop = dt.DAOTAO_LOPQUANLY_N1_TEN;
+            // Fallback 1: dt_HS (danh sách SV từ search) — thường giữ đầy đủ info học vụ.
+            // dt_DoiTuongThu có thể bị override bởi API tài chính (chỉ có tổng nợ/thu, không có lớp).
+            if (!strLop && dt && dt.MASO) {
+                var arrHS = main_doc.PhieuThu.dt_HS;
+                if (arrHS && arrHS.length) {
+                    for (var i = 0; i < arrHS.length; i++) {
+                        if (arrHS[i].MASO === dt.MASO && arrHS[i].DAOTAO_LOPQUANLY_N1_TEN) {
+                            strLop = arrHS[i].DAOTAO_LOPQUANLY_N1_TEN;
+                            break;
+                        }
+                    }
+                }
+            }
+            // Fallback 2-3: đọc từ element template đã fill
+            if (!strLop) {
+                var $lopBenB = $mauIn.find('[class*="txtLop_BenB_"]').first();
+                if ($lopBenB.length && $.trim($lopBenB.text())) strLop = $.trim($lopBenB.text());
+            }
+            if (!strLop) {
+                var $lopEdit = $mauIn.find('.txtLopPTC_PT_Edit').first();
+                if ($lopEdit.length && $.trim($lopEdit.text())) strLop = $.trim($lopEdit.text());
+            }
+            if (!strLop) {
+                console.log('[Lớp inject] SV không có tên lớp (data source đều null). dt_DoiTuongThu =', dt);
+                return;
+            }
+            console.log('[Lớp inject] strLop =', strLop);
+
+            // Nếu template đã có slot "Lớp:" đang rỗng (label sẵn nhưng chưa fill) → điền vào đó, khỏi inject mới.
+            // Trường hợp này gặp ở mẫu "PHIẾU THU TIỀN" của ĐHCN Đông Á: header có "Lớp:" nhưng slot value trống.
+            var $lopSlot = $mauIn.find('[class*="txtLop_BenB_"], .txtLopPTC_PT_Edit').filter(function () {
+                return !$.trim($(this).text());
+            }).first();
+            if ($lopSlot.length) {
+                $lopSlot.html(strLop).addClass('txtLopInline_Injected');
+                console.log('[Lớp inject] fill vào slot có sẵn:', $lopSlot.attr('class'));
+                return;
+            }
+
+            // Style inline mạnh: ép trên cùng dòng, không wrap, không xuống hàng.
+            var strHTML = '<span class="txtLopInline_Injected" ' +
+                'style="display:inline-block !important; margin-left:30px; ' +
+                'white-space:nowrap; vertical-align:baseline;">Lớp: <b>' + strLop + '</b></span>';
+
+            // Chiến lược 1: anchor theo class đã biết
+            var $anchor = $mauIn.find('[class*="txtMa_BenB_"]').first();
+            if (!$anchor.length) $anchor = $mauIn.find('.txtMaNCSPTC_PT_Edit').first();
+            if ($anchor.length) {
+                $anchor.after(strHTML);
+                console.log('[Lớp inject] via class anchor:', $anchor.attr('class'));
+                return;
+            }
+
+            // Chiến lược 2: text-search — tìm leaf element chứa "Mã SV"
+            var $textEl = $mauIn.find('*').filter(function () {
+                return this.children.length === 0 && $(this).text().indexOf('Mã SV') !== -1;
+            }).first();
+            if ($textEl.length) {
+                $textEl.parent().append(strHTML);
+                console.log('[Lớp inject] via text search "Mã SV" in:', $textEl.prop('tagName'));
+                return;
+            }
+
+            // Chiến lược 3: cuối cùng, thử tìm block cha chứa "Mã SV" (không phải leaf)
+            var $anyEl = $mauIn.find(':contains("Mã SV")').last();
+            if ($anyEl.length) {
+                $anyEl.append(strHTML);
+                console.log('[Lớp inject] via generic contains("Mã SV")');
+                return;
+            }
+            // Debug: liệt kê một số class có prefix "txt" trong template để biết cấu trúc thực
+            var arrClasses = [];
+            $mauIn.find('[class^="txt"], [class*=" txt"]').each(function () {
+                arrClasses.push($(this).attr('class'));
+            });
+            console.log('[Lớp inject] Không tìm được anchor "Mã SV". Các class txt* có trong template:', arrClasses);
+        }, 300);
     },
     /*------------------------------------------
     --Discription: [7] 

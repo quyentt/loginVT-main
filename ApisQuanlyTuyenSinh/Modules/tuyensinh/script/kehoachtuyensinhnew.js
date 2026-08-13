@@ -581,7 +581,6 @@ KeHoachTuyenSinhNew.prototype = {
             var $tr = $(this).closest('tr');
             me.confirmChonNVDauVao({
                 ChuongTrinh_Id: $tr.data('ct-id') || '',
-                Intake_Id: $tr.data('intake-id') || '',
                 TenHT: $tr.data('ten-ht') || ''
             });
         });
@@ -1588,10 +1587,12 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Không tìm thấy hồ sơ trong cache — vui lòng Tải lại danh sách", "w");
             return;
         }
-        var personId = pick(d, ['HOSO_COREPERSON_ID', 'COREPERSON_ID', 'CorePerson_Id', 'CorePersonId']);
+        var personId = pick(d, ['COREPERSON_ID', 'HOSO_COREPERSON_ID', 'CorePerson_Id', 'CorePersonId']);
+        // INTAKE_Id lấy từ hồ sơ thí sinh (không phải từ item picker) — field trong view: CORE_PERSON_INTAKE_ID
+        var intakeId = pick(d, ['CORE_PERSON_INTAKE_ID', 'COREPERSON_INTAKE_ID', 'CorePerson_Intake_Id', 'INTAKE_ID']);
         var hoTen = pick(d, ['COREPERSON_HOTEN', 'CorePerson_HoTen']);
         var maHS = pick(d, ['HOSO_MAHOSO', 'HoSo_MaHoSo']);
-        me._chonNVDV_ctx = { CorePerson_Id: personId, HoTen: hoTen };
+        me._chonNVDV_ctx = { CorePerson_Id: personId, Intake_Id: intakeId, HoTen: hoTen };
         $('#lblChonNVDV_HoSo').text(hoTen ? (hoTen + (maHS ? ' — ' + maHS : '')) : (maHS || ''));
 
         // Render skeleton "đang tải..." rồi call API
@@ -1615,7 +1616,14 @@ KeHoachTuyenSinhNew.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
-                me._renderChonNVDauVao(rows);
+                // Enrich MA_CHUONGTRINH (qua KHCT_ToChucChuongTrinh/LayDanhSach) và MA_NGANH_TS
+                // (qua DM TUYENSINH.NGANHNGHE). Chạy song song → render khi cả 2 xong.
+                var remaining = 2;
+                var afterAll = function () {
+                    if (--remaining === 0) me._renderChonNVDauVao(rows);
+                };
+                me._ensureCTMaLookup(rows, afterAll);
+                me._ensureNganhMaLookup(afterAll);
             },
             error: function () {
                 $tb.html('<tr><td colspan="8" class="text-center text-danger" style="padding:20px;">Lỗi tải danh sách nguyện vọng.</td></tr>');
@@ -1628,6 +1636,103 @@ KeHoachTuyenSinhNew.prototype = {
         }, false, false, false, null);
 
         $('#modal-chon-nvdv').modal('show');
+    },
+
+    /*------------------------------------------
+    -- Lazy-cache map { CT_ID: MACHUONGTRINH } bằng KHCT_ToChucChuongTrinh/LayDanhSach.
+    -- API cần {He_Id, Khoa_Id} → gom unique pair từ rows đầu ra rồi batch song song.
+    -- Cache tồn tại suốt session (me._ctMaLookup) — mở picker lần sau chỉ gọi cho CT mới.
+    -- Silent-fail: lỗi cũng gọi cb() để render vẫn chạy (chỉ mất mã).
+    -------------------------------------------*/
+    _ensureCTMaLookup: function (rows, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._ctMaLookup = me._ctMaLookup || {};
+        var pick = function () {
+            for (var k = 0; k < arguments.length; k++) {
+                var v = arguments[k];
+                if (v != null && String(v).trim() !== '') return String(v).trim();
+            }
+            return '';
+        };
+        var pairs = {};
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i];
+            var ctId = pick(r.DAOTAO_TOCHUCCHUONGTRINH_ID);
+            if (!ctId || me._ctMaLookup.hasOwnProperty(ctId)) continue;
+            var heId = pick(r.DAOTAO_HEDAOTAO_ID);
+            var khoaId = pick(r.DAOTAO_KHOADAOTAO_ID);
+            pairs[heId + '|' + khoaId] = { heId: heId, khoaId: khoaId };
+        }
+        var keys = Object.keys(pairs);
+        if (!keys.length) { if (cb) cb(); return; }
+        var remaining = keys.length;
+        var done = function () { if (--remaining === 0 && cb) cb(); };
+        keys.forEach(function (k) {
+            var p = pairs[k];
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data && data.Success && data.Data && data.Data.length) {
+                        for (var i = 0; i < data.Data.length; i++) {
+                            var c = data.Data[i];
+                            if (c.ID) me._ctMaLookup[c.ID] = c.MACHUONGTRINH || '';
+                        }
+                    }
+                    done();
+                },
+                error: function () { done(); },
+                type: 'GET',
+                action: 'KHCT_ToChucChuongTrinh/LayDanhSach',
+                contentType: true,
+                data: {
+                    'strTuKhoa': '',
+                    'strDaoTao_KhoaDaoTao_Id': p.khoaId,
+                    'strDaoTao_HeDaoTao_Id': p.heId,
+                    'strDaoTao_N_CN_Id': '',
+                    'strDaoTao_KhoaQuanLy_Id': '',
+                    'strDaoTao_ToChucCT_Cha_Id': '',
+                    'strNguoiThucHien_Id': '',
+                    'pageIndex': 1,
+                    'pageSize': 100000
+                },
+                fakedb: []
+            }, false, false, false, null);
+        });
+    },
+
+    /*------------------------------------------
+    -- Lazy-cache map { NganhTS_ID: MA_NGANH } bằng DM TUYENSINH.NGANHNGHE.
+    -- Endpoint: CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM (mỗi record có ID/MA/TEN).
+    -- Gọi 1 lần cho toàn session (me._nganhMaLookup) — không phụ thuộc rows.
+    -------------------------------------------*/
+    _ensureNganhMaLookup: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._nganhMaLookup) { if (cb) cb(); return; }
+        edu.system.makeRequest({
+            success: function (data) {
+                var map = {};
+                if (data && data.Success && data.Data && data.Data.length) {
+                    for (var i = 0; i < data.Data.length; i++) {
+                        var r = data.Data[i];
+                        if (r.ID) map[r.ID] = r.MA || '';
+                    }
+                }
+                me._nganhMaLookup = map;
+                if (cb) cb();
+            },
+            error: function () {
+                me._nganhMaLookup = {};
+                if (cb) cb();
+            },
+            type: 'GET',
+            action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+            contentType: true,
+            data: {
+                'strMaBangDanhMuc': 'TUYENSINH.NGANHNGHE',
+                'strTieuChiSapXep': '',
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
@@ -1653,29 +1758,38 @@ KeHoachTuyenSinhNew.prototype = {
             }
             return '';
         };
+        // Mã CT lookup từ me._ctMaLookup (KHCT_ToChucChuongTrinh/LayDanhSach).
+        // Mã Ngành TS lookup từ me._nganhMaLookup (DM TUYENSINH.NGANHNGHE).
+        var ctMaMap = me._ctMaLookup || {};
+        var nganhMaMap = me._nganhMaLookup || {};
+        var fmt = function (ten, ma) {
+            if (ten && ma && ten !== ma) return ten + ' (' + ma + ')';
+            return ten || ma || '';
+        };
         var html = '';
         for (var i = 0; i < rows.length; i++) {
             var d = rows[i];
-            var ma = pick(d.MA_HIENTHI, d.MA_CT, d.MaCT, d.MA, d.Ma);
-            var ten = pick(d.TEN_HIENTHI, d.TenHienThi, d.TEN, d.Ten);
+            var ma = pick(d.MA_HIENTHI, d.MA);
+            var ten = pick(d.TEN_HIENTHI, d.TEN);
             var he = pick(d.DAOTAO_HEDAOTAO_TEN);
             var khoa = pick(d.DAOTAO_KHOADAOTAO_TEN);
-            var ct = pick(d.DAOTAO_TOCHUCCHUONGTRINH_TEN);
-            var nganh = pick(d.DAOTAO_NGANH_TS_TEN, d.DAOTAO_NGANH_DT_TEN);
+            var ctTen = pick(d.DAOTAO_TOCHUCCHUONGTRINH_TEN);
             var ctId = pick(d.DAOTAO_TOCHUCCHUONGTRINH_ID);
-            var intakeId = pick(d.CORE_PERSON_INTAKE_ID, d.COREPERSON_INTAKE_ID, d.INTAKE_ID, d.PERSON_INTAKE_ID);
+            var ctMa = ctMaMap[ctId] || '';
+            var nganhTen = pick(d.DAOTAO_NGANH_TS_TEN, d.DAOTAO_NGANH_DT_TEN);
+            var nganhId = pick(d.DAOTAO_NGANH_TS_ID, d.DAOTAO_NGANH_DT_ID);
+            var nganhMa = nganhMaMap[nganhId] || '';
             html += '<tr'
                 + ' data-ct-id="' + esc(ctId) + '"'
-                + ' data-intake-id="' + esc(intakeId) + '"'
-                + ' data-ten-ht="' + esc(ten || nganh) + '"'
+                + ' data-ten-ht="' + esc(ten || ctTen || nganhTen) + '"'
                 + '>'
                 + '<td class="text-center">' + (i + 1) + '</td>'
-                + '<td>' + esc(ma) + '</td>'
-                + '<td>' + esc(ten) + '</td>'
+                + '<td>' + esc(ma || ctMa) + '</td>'
+                + '<td>' + esc(ten || ctTen) + '</td>'
                 + '<td>' + esc(he) + '</td>'
                 + '<td>' + esc(khoa) + '</td>'
-                + '<td>' + esc(ct) + '</td>'
-                + '<td>' + esc(nganh) + '</td>'
+                + '<td>' + esc(fmt(ctTen, ctMa)) + '</td>'
+                + '<td>' + esc(fmt(nganhTen, nganhMa)) + '</td>'
                 + '<td class="text-center">'
                 + '<button type="button" class="btn btn-sm btn-primary btn-chon-nvdv">'
                 + '<i class="fa-light fa-check"></i> Chọn</button>'
@@ -1695,14 +1809,14 @@ KeHoachTuyenSinhNew.prototype = {
         var me = main_doc.KeHoachTuyenSinhNew;
         var ctx = me._chonNVDV_ctx || {};
         var personId = ctx.CorePerson_Id || '';
-        var ctId = sel.ChuongTrinh_Id || '';
-        var intakeId = sel.Intake_Id || '';
+        var intakeId = ctx.Intake_Id || '';       // Lấy từ hồ sơ (view LayDS_HoSo_TS.CORE_PERSON_INTAKE_ID)
+        var ctId = sel.ChuongTrinh_Id || '';      // Lấy từ item picker (Pr_Ts_Kh_Dau_Ra_Get_Ds.DAOTAO_TOCHUCCHUONGTRINH_ID)
 
         // Validate 3 field khác rỗng theo spec
         var missing = [];
-        if (!edu.util.checkValue(personId)) missing.push('Person_Id (CorePerson_Id của hồ sơ)');
-        if (!edu.util.checkValue(ctId)) missing.push('DaoTao_ChuongTrinh_Id (DAOTAO_TOCHUCCHUONGTRINH_ID của nguyện vọng)');
-        if (!edu.util.checkValue(intakeId)) missing.push('INTAKE_Id (core_person_intake_id của nguyện vọng)');
+        if (!edu.util.checkValue(personId)) missing.push('Person_Id (COREPERSON_ID của hồ sơ)');
+        if (!edu.util.checkValue(ctId)) missing.push('DaoTao_ChuongTrinh_Id (DAOTAO_TOCHUCCHUONGTRINH_ID của nguyện vọng đầu ra)');
+        if (!edu.util.checkValue(intakeId)) missing.push('INTAKE_Id (CORE_PERSON_INTAKE_ID của hồ sơ)');
         if (missing.length) {
             edu.system.alert("Dữ liệu không hợp lệ. Thiếu: " + missing.join(', '), "w");
             return;
