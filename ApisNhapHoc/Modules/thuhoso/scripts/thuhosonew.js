@@ -130,6 +130,18 @@ ThuHoSo.prototype = {
         $("#btnSave_ThuHoSo").click(function () {
             me.save_ThuHoSo();
         });
+        $("#btnToggle_ThongTinNopPhi").click(function (e) {
+            e.preventDefault();
+            var $zone = $("#zoneInput_ThuTien");
+            var $btn = $(this);
+            if ($zone.is(":visible")) {
+                $zone.slideUp();
+                $btn.html('<i class="fa fa-eye"></i> <span>Xem thông tin nộp phí</span>');
+            } else {
+                $zone.slideDown();
+                $btn.html('<i class="fa fa-eye-slash"></i> <span>Ẩn thông tin nộp phí</span>');
+            }
+        });
         $("#btnDel_ThuHoSo").click(function () {
             me.resetText_LopQuanLy_Ten();
         });
