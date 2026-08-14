@@ -6139,7 +6139,8 @@ PhieuThu.prototype = {
                margin: 0 để loại hoàn toàn dải trắng đầu/cuối trang; content padding qua body. */
             + '@page { size: A5 landscape; margin: 0; }'
             + 'html, body { margin: 0; padding: 0; width: 100%; }'
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.2; color: #000; padding: 0.4cm 0.5cm; width: 100%; }'
+            /* padding ngang tăng lên 1.2cm để co bảng vào 1 chút (không chạy sát mép giấy) */
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.2; color: #000; padding: 0.4cm 1.2cm; width: 100%; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
             /* Ẩn <br> đứng đầu và <br> liên tiếp — template BE hay đệm nhiều <br> đầu */
             + '#MauInPhieuThu > br:first-child { display: none !important; }'
@@ -6211,7 +6212,16 @@ PhieuThu.prototype = {
             + '#MauInPhieuThu h1, #MauInPhieuThu h2, #MauInPhieuThu h3, #MauInPhieuThu h4 {'
             + '  text-align: center; text-transform: uppercase; font-weight: bold;'
             + '}'
-            + '#MauInPhieuThu [class*="txtTongTien"] { font-weight: bold; }';
+            + '#MauInPhieuThu [class*="txtTongTien"] { font-weight: bold; }'
+            /* Ghi chú "Phải giữ biên lai" — tách khối chữ ký, dùng !important đè rule
+               "#MauInPhieuThu div { margin-top: 0 !important }" ở trên. */
+            + '#MauInPhieuThu .ghiChuBienLai,'
+            + '#MauInPhieuThu div.ghiChuBienLai,'
+            + '#MauInPhieuThu p.ghiChuBienLai {'
+            + '  margin-top: 40px !important;'
+            + '  padding-top: 8px !important;'
+            + '  display: block !important;'
+            + '}';
 
         // Script inline chạy trong popup: 2 nhiệm vụ
         //  (1) Detect bảng hàng hóa/khoản thu → gắn class .tblHangHoa để CSS apply border.
@@ -6233,15 +6243,19 @@ PhieuThu.prototype = {
             + '      mauIn.firstElementChild.style.paddingTop = "0";'
             + '    }'
             + '  }'
-            /* (1) Tag bảng hàng hóa */
+            /* (1) Tag bảng hàng hóa/khoản thu.
+               Heuristic: text chứa keyword + (có <th> header HOẶC có >= 3 cột).
+               Bảng info đơn vị/người mua chỉ có <td> (label:value, 1-2 cột) → bị loại. */
             + '  var tables = document.querySelectorAll("#' + divId + ' table");'
             + '  for (var i = 0; i < tables.length; i++) {'
             + '    var t = tables[i];'
             + '    var probe = ((t.textContent || "").substring(0, 500)).toLowerCase();'
-            + '    var matchText = /hàng hóa|dịch vụ|khoản thu|thành tiền|đơn giá|số lượng|số tiền|stt/i.test(probe);'
+            + '    var matchText = /hàng hóa|dịch vụ|khoản thu|thành tiền|đơn giá|số lượng|số tiền|tt|stt/i.test(probe);'
+            + '    var hasTH = t.querySelectorAll("th").length >= 2;'
             + '    var firstRow = t.rows && t.rows[0];'
             + '    var nCols = firstRow ? firstRow.cells.length : 0;'
-            + '    if (matchText && nCols >= 4) {'
+            + '    var isDataTable = hasTH || nCols >= 3;'
+            + '    if (matchText && isDataTable) {'
             + '      t.className = (t.className || "") + " tblHangHoa";'
             + '    }'
             + '  }'
@@ -6274,6 +6288,32 @@ PhieuThu.prototype = {
             + '      p.parentNode.removeChild(p);'
             + '    }'
             + '  });'
+            /* (3) Đẩy ghi chú "Phải giữ biên lai" xuống thêm, cách khối chữ ký.
+               Gắn class .ghiChuBienLai — CSS scoped sẽ apply margin với !important
+               để đè rule "div { margin-top:0 !important }" chung. */
+            + '  var mauIn2 = document.getElementById("' + divId + '");'
+            + '  if (mauIn2) {'
+            + '    var all = mauIn2.querySelectorAll("*");'
+            + '    for (var j = 0; j < all.length; j++) {'
+            + '      var e = all[j];'
+            + '      if (e.children.length === 0 && /phải giữ biên lai/i.test(e.textContent || "")) {'
+            /* Bắt block container (block-level ancestor). Nếu leaf là inline (span/i/b),
+               đi lên đến khi gặp block (p/div/td). */
+            + '        var target = e;'
+            + '        while (target && target !== mauIn2) {'
+            + '          var tn = target.tagName;'
+            + '          if (tn === "P" || tn === "DIV" || tn === "TD" || tn === "TR" || tn === "TABLE") break;'
+            + '          target = target.parentNode;'
+            + '        }'
+            + '        if (target && target !== mauIn2) {'
+            + '          target.className = (target.className || "") + " ghiChuBienLai";'
+            + '        } else {'
+            + '          e.className = (e.className || "") + " ghiChuBienLai";'
+            + '        }'
+            + '        break;'
+            + '      }'
+            + '    }'
+            + '  }'
             + '})();'
             + '<\/script>';
 
