@@ -572,7 +572,7 @@ BaoCao.prototype = {
                 } else {
                     console.log(data.Message);
                     edu.extend.notifyBeginLoading("Lỗi: " + data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },
@@ -634,7 +634,7 @@ BaoCao.prototype = {
                     me.cbGenCombo_NamNhapHoc(json);
                 } else {
                     edu.extend.notifyBeginLoading("Lỗi: " + data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
             },
             error: function (er) {
@@ -666,7 +666,7 @@ BaoCao.prototype = {
                     me.cbGenCombo_KhoaQuanLy(json);
                 } else {
                     edu.extend.notifyBeginLoading("Lỗi: " + data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
             },
             error: function (er) {
@@ -1076,7 +1076,7 @@ BaoCao.prototype = {
                 else {
                     console.log(data.Message);
                     edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },
@@ -1153,7 +1153,7 @@ BaoCao.prototype = {
                 else {
                     console.log(data.Message);
                     edu.extend.notifyBeginLoading("Lỗi: " + data.Message, "w");
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },
@@ -1404,7 +1404,7 @@ BaoCao.prototype = {
                 }
                 else {
                     console.log(data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },
@@ -1512,7 +1512,7 @@ BaoCao.prototype = {
                 }
                 else {
                     console.log(data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },
@@ -1718,7 +1718,7 @@ BaoCao.prototype = {
                 }
                 else {
                     console.log(data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },
@@ -1757,7 +1757,7 @@ BaoCao.prototype = {
                 }
                 else {
                     console.log(data.Message);
-                    edu.system.alert(d.Message);
+                    edu.system.alert(data.Message);
                 }
                 edu.system.endLoading();
             },

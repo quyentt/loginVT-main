@@ -926,6 +926,15 @@ PhieuThu.prototype = {
             else
             me.save_KhoanDaRut();
         });
+
+        $("#btnAddnew_KhoanNoChung_TaoMaQRThanhToan").click(function () {
+            if (me.dt_DoiTuongThu) {
+                let url = edu.system.strhost + '/congthongtin/pages/thanhtoan.aspx?strMa=' + me.dt_DoiTuongThu.MASO;
+                $("#modal_ThanhToan .modal-body").html('<iframe src="' + url + '" width="100%" height="1000px"></iframe >');
+                $("#modal_ThanhToan").modal("show")
+            }
+            
+        });
     },
     alert: function (content, code, title) {
         var me = edu.system;

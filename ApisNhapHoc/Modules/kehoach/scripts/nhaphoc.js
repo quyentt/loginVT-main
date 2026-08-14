@@ -239,8 +239,9 @@ KeHoachNhapHoc.prototype = {
     getList_KHNH: function () {
         var me = this;
         var obj_list = {
-            'action': 'NH_KeHoachNhapHoc/LayDanhSach',
-
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIPKSAxCS4iHgokCS4gIikPKSAxCS4i',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSNhapHoc_KeHoachNhapHoc',
+            'iM': edu.system.iM,
             'versionAPI': 'v1.0',
             'pageIndex': edu.system.pageIndex_default,
             'pageSize': edu.system.pageSize_default,
@@ -269,7 +270,7 @@ KeHoachNhapHoc.prototype = {
                 edu.system.endLoading();
                 edu.system.alert("Lỗi (er): " + JSON.stringify(er), "w");
             },
-            type: "GET",
+            type: "POST",
             action: obj_list.action,
             versionAPI: obj_list.versionAPI,
             contentType: true,
