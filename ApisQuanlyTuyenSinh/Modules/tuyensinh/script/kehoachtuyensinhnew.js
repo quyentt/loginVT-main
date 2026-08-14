@@ -1438,6 +1438,25 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Convert ngày sinh: BE store ISO "yyyy-mm-dd" hoặc "dd/mm/yyyy" ↔ UI dd/mm/yyyy.
+    -- Vì input type=text (cũ là type=date bị browser mangle theo locale US → dd/mm ↔ mm/dd).
+    -------------------------------------------*/
+    _ngaySinhToUI: function (s) {
+        if (!s) return '';
+        var m = String(s).match(/^(\d{4})-(\d{2})-(\d{2})/);
+        if (m) return m[3] + '/' + m[2] + '/' + m[1];
+        // Đã dd/mm/yyyy — giữ nguyên
+        return String(s).replace(/^(\d{2})\/(\d{2})\/(\d{4}).*$/, '$1/$2/$3');
+    },
+    _ngaySinhToISO: function (s) {
+        if (!s) return '';
+        var m = String(s).trim().match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+        if (m) return m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
+        if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+        return s;
+    },
+
+    /*------------------------------------------
     -- Set value cho <select> với retry (chờ DM populate xong) + fallback lookup theo TEN.
     -- Cần thiết vì initKhai_DanhMuc load DM async — nếu set value ngay sẽ trượt.
     -- View LayDS_HoSo_TS đôi khi chỉ trả field _TEN mà không có _ID (VD Giới tính) →
@@ -1517,14 +1536,8 @@ KeHoachTuyenSinhNew.prototype = {
         $('#btnKhaiSave').html('<i class="fa-light fa-floppy-disk"></i> Cập nhật hồ sơ');
         $('#btnKhaiDoiNVDauVao').removeClass('d-none');
 
-        // Format ngày sinh cho input type=date (dd/mm/yyyy → yyyy-mm-dd)
-        var ngaySinh = pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh']);
-        if (ngaySinh && /^(\d{2})\/(\d{2})\/(\d{4})/.test(ngaySinh)) {
-            var m = ngaySinh.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
-            if (m) ngaySinh = m[3] + '-' + m[2] + '-' + m[1];
-        } else if (ngaySinh && /^(\d{4})-(\d{2})-(\d{2})/.test(ngaySinh)) {
-            // Đã ISO — giữ nguyên
-        }
+        // Format ngày sinh cho input text (dd/mm/yyyy) — tránh browser locale mangle (input type=date)
+        var ngaySinh = me._ngaySinhToUI(pick(d, ['COREPERSON_NGAYSINH', 'CorePerson_NgaySinh']));
 
         // Populate các field có từ cache
         $('#txtKQ_HoTen').val(pick(d, ['COREPERSON_HOTEN']));
@@ -1956,6 +1969,7 @@ KeHoachTuyenSinhNew.prototype = {
             'strHanhDong_Code': 'SUA',
             'strHoSo_Id': me.strSuaHoSo_Id,
             'strCorePerson_HoTen': hoTen,
+            // BE strict format dd/mm/yyyy (comment dòng 1097-1098). Input text đã lưu dd/mm/yyyy → gửi thẳng.
             'strCorePerson_NgaySinh': g('txtKQ_NgaySinh'),
             'strCorePerson_GioiTinh_Id': g('ddlKQ_GioiTinh'),
             'strPersonContact_DienThoai': g('txtKQ_DienThoai'),
@@ -2879,12 +2893,13 @@ KeHoachTuyenSinhNew.prototype = {
 
         var g = function (id) { return edu.system.getValById(id) || ''; };
 
-        // Tách ngày/tháng/năm sinh (input type=date trả yyyy-mm-dd)
+        // Input text dd/mm/yyyy → payload strCorePerson_NgaySinh giữ nguyên dd/mm/yyyy (BE strict)
+        // Đồng thời tách số riêng biệt cho dCorePerson_NgayS/ThangS/NamS
         var dNgayS = '', dThangS = '', dNamS = '';
         var strNgaySinh = g('txtKQ_NgaySinh');
         if (strNgaySinh) {
-            var m = strNgaySinh.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-            if (m) { dNamS = parseInt(m[1], 10); dThangS = parseInt(m[2], 10); dNgayS = parseInt(m[3], 10); }
+            var m = strNgaySinh.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+            if (m) { dNgayS = parseInt(m[1], 10); dThangS = parseInt(m[2], 10); dNamS = parseInt(m[3], 10); }
         }
 
         // XT_Mon_Data format: MON_MA~DIEM~SO_MON~STT~MON_TEN|... (delimited theo spec)
