@@ -1724,18 +1724,23 @@ KeHoachTuyenSinhNew.prototype = {
         if (me._nganhMaLookup) { if (cb) cb(); return; }
         edu.system.makeRequest({
             success: function (data) {
-                var map = {};
+                var mapId = {}, mapTen = {};
                 if (data && data.Success && data.Data && data.Data.length) {
                     for (var i = 0; i < data.Data.length; i++) {
                         var r = data.Data[i];
-                        if (r.ID) map[r.ID] = r.MA || '';
+                        if (r.ID) mapId[r.ID] = r.MA || '';
+                        // Fallback lookup by TEN (lowercase trim) — vì ID có thể không match giữa
+                        // TS_KH_DAU_RA (DAOTAO_NGANH_TS_ID/DT_ID) và DM TUYENSINH.NGANHNGHE.ID
+                        if (r.TEN) mapTen[String(r.TEN).trim().toLowerCase()] = r.MA || '';
                     }
                 }
-                me._nganhMaLookup = map;
+                me._nganhMaLookup = mapId;
+                me._nganhMaLookupByTen = mapTen;
                 if (cb) cb();
             },
             error: function () {
                 me._nganhMaLookup = {};
+                me._nganhMaLookupByTen = {};
                 if (cb) cb();
             },
             type: 'GET',
@@ -1774,9 +1779,15 @@ KeHoachTuyenSinhNew.prototype = {
             return '';
         };
         // Mã CT lookup từ me._ctMaLookup (KHCT_ToChucChuongTrinh/LayDanhSach).
-        // Mã Ngành TS lookup từ me._nganhMaLookup (DM TUYENSINH.NGANHNGHE).
+        // Mã Ngành TS lookup từ me._nganhMaLookup (DM TUYENSINH.NGANHNGHE) — fallback by TEN nếu ID không match.
         var ctMaMap = me._ctMaLookup || {};
         var nganhMaMap = me._nganhMaLookup || {};
+        var nganhMaMapByTen = me._nganhMaLookupByTen || {};
+        var lookupNganhMa = function (id, ten) {
+            return nganhMaMap[id]
+                || (ten ? nganhMaMapByTen[String(ten).trim().toLowerCase()] : '')
+                || '';
+        };
         var fmt = function (ten, ma) {
             if (ten && ma && ten !== ma) return ten + ' (' + ma + ')';
             return ten || ma || '';
@@ -1793,7 +1804,7 @@ KeHoachTuyenSinhNew.prototype = {
             var ctMa = ctMaMap[ctId] || '';
             var nganhTen = pick(d.DAOTAO_NGANH_TS_TEN, d.DAOTAO_NGANH_DT_TEN);
             var nganhId = pick(d.DAOTAO_NGANH_TS_ID, d.DAOTAO_NGANH_DT_ID);
-            var nganhMa = nganhMaMap[nganhId] || '';
+            var nganhMa = lookupNganhMa(nganhId, nganhTen);
             html += '<tr'
                 + ' data-ct-id="' + esc(ctId) + '"'
                 + ' data-ten-ht="' + esc(ten || ctTen || nganhTen) + '"'
@@ -4847,7 +4858,11 @@ KeHoachTuyenSinhNew.prototype = {
                 if (data.Success) {
                     var dtResult = edu.util.checkValue(data.Data) ? data.Data : [];
                     me.dtKeHoachDauRa = dtResult;
-                    me.genTable_KeHoachDauRa(dtResult);
+                    // Enrich mã CT + mã Ngành song song trước khi render (reuse lookup từ picker "Đổi NV")
+                    var remaining = 2;
+                    var afterAll = function () { if (--remaining === 0) me.genTable_KeHoachDauRa(dtResult); };
+                    me._ensureCTMaLookup(dtResult, afterAll);
+                    me._ensureNganhMaLookup(afterAll);
                 }
                 else {
                     edu.system.alert("Pr_Ts_Kh_Dau_Ra_Get_Ds: " + data.Message, "w");
@@ -4899,9 +4914,25 @@ KeHoachTuyenSinhNew.prototype = {
             var sKieuHoc = d.STUDY_TYPE_CODE_Name || d.STUDY_TYPE_CODE_Ten || lookupTen(me.dtKieuHocTap, d.STUDY_TYPE_CODE);
             var sHe = d.DAOTAO_HEDAOTAO_Ten || d.DAOTAO_HEDAOTAO_TEN || '';
             var sKhoa = d.DAOTAO_KHOADAOTAO_Ten || d.DAOTAO_KHOADAOTAO_TEN || '';
-            var sCT = d.DAOTAO_TOCHUCCHUONGTRINH_Ten || d.DAOTAO_TOCHUCCHUONGTRINH_TEN || '';
-            var sNganhTS = d.DAOTAO_NGANH_TS_Ten || d.DAOTAO_NGANH_TS_TEN || '';
-            var sNganhDT = d.DAOTAO_NGANH_DT_Ten || d.DAOTAO_NGANH_DT_TEN || '';
+            // Format "TEN (MA)" cho 3 cột — lookup từ me._ctMaLookup / me._nganhMaLookup(ByTen)
+            var ctMaMap = me._ctMaLookup || {};
+            var nganhMaMap = me._nganhMaLookup || {};
+            var nganhMaMapByTen = me._nganhMaLookupByTen || {};
+            var lookupNganhMa = function (id, ten) {
+                return nganhMaMap[id]
+                    || (ten ? nganhMaMapByTen[String(ten).trim().toLowerCase()] : '')
+                    || '';
+            };
+            var fmtTenMa = function (ten, ma) {
+                if (ten && ma && ten !== ma) return ten + ' (' + ma + ')';
+                return ten || ma || '';
+            };
+            var ctTen = d.DAOTAO_TOCHUCCHUONGTRINH_Ten || d.DAOTAO_TOCHUCCHUONGTRINH_TEN || '';
+            var nganhTsTen = d.DAOTAO_NGANH_TS_Ten || d.DAOTAO_NGANH_TS_TEN || '';
+            var nganhDtTen = d.DAOTAO_NGANH_DT_Ten || d.DAOTAO_NGANH_DT_TEN || '';
+            var sCT = fmtTenMa(ctTen, ctMaMap[d.DAOTAO_TOCHUCCHUONGTRINH_ID] || '');
+            var sNganhTS = fmtTenMa(nganhTsTen, lookupNganhMa(d.DAOTAO_NGANH_TS_ID, nganhTsTen));
+            var sNganhDT = fmtTenMa(nganhDtTen, lookupNganhMa(d.DAOTAO_NGANH_DT_ID, nganhDtTen));
             var sActive = (d.is_active || d.IS_ACTIVE) == 1;
             var sNguoiTao = d.NGUOITAO_TaiKhoan || d.NGUOITAO_TEN || d.NGUOI_TAO || d.NguoiTao || '';
             var sNgayTao = d.NgayTao_dd_mm_yyyy_hhmmss || d.NGAY_TAO || d.NgayTao || '';
