@@ -1568,84 +1568,63 @@ PhieuThu.prototype = {
         $("#txtMaNCSPTCEdit").html(strMa);
         //????????????????????????????????????????????????????
 
-        //[2]. TinhTrang
-        var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
+        //[2]. TinhTrang — mỗi case có text fallback riêng để không phụ thuộc BE trả TEN
+        var strTrangThai_TenBE = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
         var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
-        var strTrangThaiHienThi = '';
         var colorLable = '';
         var icon = '';
+        var strTrangThai_Ten = '';
 
         switch (strTrangThai_Ma) {
             case "CHUYENTRUONGDI":
-                colorLable = 'label-danger';
-                icon = 'fa-sign-out';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-danger'; icon = 'fa-sign-out'; strTrangThai_Ten = 'Chuyển trường đi'; break;
             case "NORMAL":
-                colorLable = 'label-info';
-                icon = 'fa-users';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-info'; icon = 'fa-users'; strTrangThai_Ten = 'Đang học'; break;
             case "CHUYENTRUONG":
-                colorLable = 'label-info';
-                icon = 'fa-sign-in';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-info'; icon = 'fa-sign-in'; strTrangThai_Ten = 'Chuyển trường đến'; break;
             case "KHONGXACDINH":
-                colorLable = 'label-warning';
-                icon = 'fa-exclamation-triangle';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-warning'; icon = 'fa-exclamation-triangle'; strTrangThai_Ten = 'Không xác định'; break;
             case "GRADUATE":
-                colorLable = 'label-success';
-                icon = 'fa-graduation-cap';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-success'; icon = 'fa-graduation-cap'; strTrangThai_Ten = 'Tốt nghiệp'; break;
             case "FORCEDROPOUT":
-                colorLable = 'label-info';
-                icon = 'fa-exclamation-triangle';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-danger'; icon = 'fa-exclamation-triangle'; strTrangThai_Ten = 'Buộc thôi học'; break;
             case "CANHBAO":
-                colorLable = 'label-warning';
-                icon = 'fa-exclamation-triangle';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-warning'; icon = 'fa-exclamation-triangle'; strTrangThai_Ten = 'Cảnh báo'; break;
             case "RESERVE":
-                colorLable = 'label-info';
-                icon = 'fa-user-secret';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-info'; icon = 'fa-user-secret'; strTrangThai_Ten = 'Bảo lưu'; break;
             case "DROPOUT":
-                colorLable = 'label-warning';
-                icon = 'fa-exclamation-triangle';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-warning'; icon = 'fa-exclamation-triangle'; strTrangThai_Ten = 'Thôi học'; break;
             case "XOATEN":
-                colorLable = 'label-danger';
-                icon = 'fa-user-times';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-danger'; icon = 'fa-user-times'; strTrangThai_Ten = 'Xóa tên'; break;
             case "REPEATE":
-                colorLable = 'label-warning';
-                icon = 'fa-exclamation-triangle';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-warning'; icon = 'fa-exclamation-triangle'; strTrangThai_Ten = 'Học lại'; break;
             case "DUNGHOC":
-                colorLable = 'label-warning';
-                icon = 'fa-ban';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-warning'; icon = 'fa-ban'; strTrangThai_Ten = 'Đình chỉ'; break;
             default:
-                colorLable = 'label-success';
-                icon = 'fa-graduation-cap';
-                displayTinhTrang(colorLable, icon);
-                break;
+                colorLable = 'label-success'; icon = 'fa-graduation-cap'; strTrangThai_Ten = 'Đang học'; break;
         }
-        function displayTinhTrang(colorLable, icon) {
-            strTrangThaiHienThi = '<a id="txtTinhTrang" name="' + data.ID + '" class="label ' + colorLable + ' trangthaiHS" title="' + strTrangThai_Ten + '"><i class="fa ' + icon + '"></i> ' + strTrangThai_Ten + '</a>';
-            $("#txtTinhTrang").replaceWith(strTrangThaiHienThi);
+        // Ưu tiên text từ BE nếu có (có trường hợp BE customize label), fallback hard-coded ở trên
+        if (strTrangThai_TenBE && strTrangThai_TenBE.trim() !== '' && strTrangThai_TenBE !== '-') {
+            strTrangThai_Ten = strTrangThai_TenBE;
         }
+        displayTinhTrang(colorLable, icon, strTrangThai_Ten);
+
+        function displayTinhTrang(colorLable, icon, strText) {
+            // Không dùng replaceWith (xóa element khỏi DOM → lần chọn SV sau không render được).
+            // Reset class label-*, gán class mới, đổi icon + text bằng .html() giữ id="txtTinhTrang".
+            var $lbl = $("#txtTinhTrang");
+            $lbl.removeClass('label-success label-info label-warning label-danger label-primary label-default')
+                .addClass(colorLable)
+                .attr('title', strText)
+                .attr('name', data.ID)
+                .html('<i class="fa ' + icon + '"></i> <span class="txtTinhTrang_Ten">' + strText + '</span>');
+        }
+
+        //[2b]. Info row: Lớp / Ngành / Khoa / Niên khóa
+        $("#txtSV_Lop").text(edu.util.checkEmpty(data.DAOTAO_LOPQUANLY_N1_TEN) || '-');
+        $("#txtSV_Nganh").text(edu.util.checkEmpty(data.NGANHHOC_N1_TEN) || '-');
+        $("#txtSV_Khoa").text(edu.util.checkEmpty(data.KHOAHOC_N1_TEN) || '-');
+        $("#txtSV_NienKhoa").text(edu.util.checkEmpty(data.NIENKHOA_N1) || '-');
 
         //[3]. call tinhtrangtaichinh
         me.getList_TinhTrangTaiChinh();

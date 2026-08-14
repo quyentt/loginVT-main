@@ -285,6 +285,180 @@
         font-size: 24px
     }
 
+    /* ==============================================================
+       Mẫu in "PHIẾU THU TIỀN" (C00-AA / TT 100/2020/TT-BTC) — fix layout xô lệch.
+       Template load vào #MauInPhieuThu. Class chuẩn từ genKhoanThu_*:
+       .txtHoTen_BenB_*, .txtMa_BenB_*, .txtNgaySinh_BenB_*, .txtLop_BenB_*, .txtNganh_BenB_*, .txtKhoa_BenB_*
+       ============================================================== */
+    #MauInPhieuThu {
+        font-family: 'Times New Roman', 'Cambria', serif !important;
+        font-size: 13pt;
+        line-height: 1.55;
+        color: #000;
+    }
+    #MauInPhieuThu p,
+    #MauInPhieuThu div,
+    #MauInPhieuThu span,
+    #MauInPhieuThu td,
+    #MauInPhieuThu th,
+    #MauInPhieuThu label,
+    #MauInPhieuThu b,
+    #MauInPhieuThu strong {
+        font-family: 'Times New Roman', 'Cambria', serif !important;
+    }
+    /* Table info SV: cell padding thoáng, align top để label + value thẳng đầu dòng */
+    #MauInPhieuThu table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    #MauInPhieuThu table td,
+    #MauInPhieuThu table th {
+        vertical-align: top;
+        padding: 4px 8px;
+        line-height: 1.55;
+    }
+    /* Cell chứa họ tên + mã SV: nowrap để value không xuống dòng lệch cột.
+       Nếu quá dài, cell sẽ dãn ngang thay vì wrap giữa từ. */
+    #MauInPhieuThu [class*="txtHoTen_BenB_"],
+    #MauInPhieuThu [class*="txtMa_BenB_"],
+    #MauInPhieuThu [class*="txtNgaySinh_BenB_"],
+    #MauInPhieuThu [class*="txtMaSoThue"],
+    #MauInPhieuThu .txtHoTenPTC_PT_Edit,
+    #MauInPhieuThu .txtMaNCSPTC_PT_Edit {
+        white-space: nowrap;
+        display: inline-block;
+    }
+    /* Line "Lớp: … - Ngành: … - Khóa: …" — inline-block, wrap giữa các segment (không giữa từ) */
+    #MauInPhieuThu [class*="txtLop_BenB_"],
+    #MauInPhieuThu [class*="txtNganh_BenB_"],
+    #MauInPhieuThu [class*="txtKhoa_BenB_"],
+    #MauInPhieuThu .txtLopPTC_PT_Edit,
+    #MauInPhieuThu .txtNganhPTC_PT_Edit,
+    #MauInPhieuThu .txtKhoaPTC_PT_Edit,
+    #MauInPhieuThu .txtLopInline_Injected {
+        display: inline-block;
+        vertical-align: baseline;
+        word-break: keep-all;
+        overflow-wrap: normal;
+    }
+    /* Paragraph/dòng info: line-height thoáng, tránh xé chữ */
+    #MauInPhieuThu p {
+        line-height: 1.7;
+        margin: 4px 0;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+    }
+    /* Tổng số tiền + viết bằng chữ: giữ nguyên dòng, không wrap giữa số */
+    #MauInPhieuThu [class*="txtTongTienChungTu_"],
+    #MauInPhieuThu [class*="txtTongTienBangChu_"] {
+        white-space: normal;
+        word-break: keep-all;
+    }
+    /* Trailing "-" khi ngành/khóa rỗng: ẩn dấu gạch lẻ khi span kế bên empty */
+    #MauInPhieuThu [class*="txtLop_BenB_"]:empty::after,
+    #MauInPhieuThu [class*="txtNganh_BenB_"]:empty::after,
+    #MauInPhieuThu [class*="txtKhoa_BenB_"]:empty::after {
+        content: "";
+    }
+
+    /* Header SV: badge tình trạng + tên/mã cùng hàng, hàng info Lớp/Ngành/Khoa/Niên khóa dịu */
+    #zoneSinhVien .sv-header-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    /* Override toàn bộ .trangthaiHS legacy: thutien.css set width:100px, styles-content.css
+       set height:38px, line-height:32px, margin âm, border-radius 0 90px 90px 0, font 24px, float:left,
+       background xanh lá cứng. Reset về badge pill hiện đại. */
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label.label-success,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label.label-info,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label.label-warning,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label.label-danger,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.trangthaiHS,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.trangthaiHS.label-info,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.trangthaiHS.label-success,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.trangthaiHS.label-warning,
+    #zoneSinhVien .sv-header-row #txtTinhTrang.trangthaiHS.label-danger {
+        width: auto !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        height: auto !important;
+        min-height: 0 !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 6px 12px !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        float: none !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
+        color: #fff !important;
+    }
+
+    /* Màu chuẩn theo trạng thái (đè global #4d8d41 cứng của label-info) */
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label-info {
+        background: #3b7ddd !important;
+        background-color: #3b7ddd !important;
+    }
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label-success {
+        background: #28a745 !important;
+        background-color: #28a745 !important;
+    }
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label-warning {
+        background: #f0ad4e !important;
+        background-color: #f0ad4e !important;
+    }
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label-danger {
+        background: #dc3545 !important;
+        background-color: #dc3545 !important;
+    }
+
+    #zoneSinhVien .sv-header-row #txtTinhTrang.label i {
+        font-size: 13px !important;
+        line-height: 1 !important;
+        color: #fff !important;
+    }
+
+    #zoneSinhVien .sv-header-row #txtTinhTrang .txtTinhTrang_Ten {
+        font-size: 13px !important;
+        line-height: 1 !important;
+        color: #fff !important;
+    }
+
+    #zoneSinhVien .sv-info-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #475569;
+    }
+
+    #zoneSinhVien .sv-info-row .sv-info-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        line-height: 1.4;
+    }
+
+    #zoneSinhVien .sv-info-row .sv-info-item i {
+        color: #2563eb;
+        font-size: 13px;
+    }
+
+    #zoneSinhVien .sv-info-row .sv-info-item b {
+        color: #0f172a;
+        font-weight: 600;
+    }
+
     .inputsotien {
         text-align: right;
         font-size: 20px;
@@ -1287,8 +1461,23 @@
                             <div class="box-body">
                                 <!-- /.Thong tin sinh vien -->
                                 <div id="zoneSinhVien" class="header pull-left">
-                                    <span class="label label-success" id="txtTinhTrang">[TinhTrang SinhVien]</span>
-                                    <span id="txtTen_Ma_NS_SDT" class="txtTen_Ma_NS_SDT">[HOTEN-MASO-SDT]</span><br>
+                                    <div class="sv-header-row">
+                                        <a id="txtTinhTrang" class="label label-success trangthaiHS" title=""><i
+                                                class="fa fa-graduation-cap"></i> <span
+                                                class="txtTinhTrang_Ten">Đang học</span></a>
+                                        <span id="txtTen_Ma_NS_SDT"
+                                            class="txtTen_Ma_NS_SDT">[HOTEN-MASO-SDT]</span>
+                                    </div>
+                                    <div class="sv-info-row">
+                                        <span class="sv-info-item"><i class="fa-solid fa-screen-users"></i> Lớp: <b
+                                                id="txtSV_Lop">-</b></span>
+                                        <span class="sv-info-item"><i class="fa-brands fa-leanpub"></i> Ngành: <b
+                                                id="txtSV_Nganh">-</b></span>
+                                        <span class="sv-info-item"><i class="fa-solid fa-building-columns"></i> Khoa: <b
+                                                id="txtSV_Khoa">-</b></span>
+                                        <span class="sv-info-item"><i class="fa-regular fa-calendar-days"></i> Niên
+                                            khóa: <b id="txtSV_NienKhoa">-</b></span>
+                                    </div>
                                     <p class="pl15 pt10 fz20"><span id="lbSoTienDaChon" class="mt-10 pt10"
                                             style="color: red"></span></p>
                                 </div>
