@@ -6124,9 +6124,67 @@ PhieuThu.prototype = {
     printPhieu: function () {
         var me = this;
         edu.extend.remove_PhoiIn("MauInPhieuThu");
-        edu.util.printHTML('MauInPhieuThu');
+        me._printPhieuThuCustom('MauInPhieuThu');
         edu.system.switchTab('tab_1');
         me.closePhieu();
+    },
+    // Custom print riêng cho phiếu thu — thay edu.util.printHTML shared vì nó không carry CSS
+    // scoped #MauInPhieuThu sang popup window → khung table biến mất + họ tên wrap.
+    // Inject đầy đủ CSS cho popup: border table, Times New Roman, nowrap họ tên/mã/ngày sinh.
+    _printPhieuThuCustom: function (divId) {
+        var content = document.getElementById(divId).innerHTML;
+        var w = window.open('', 'Print', 'height=800,width=1200');
+        var css = ''
+            + '@page { margin: 1cm 1.5cm; }'
+            + 'html, body { margin: 0; padding: 0; }'
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 12pt; line-height: 1.55; color: #000; padding: 0.8cm; }'
+            + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
+            + '#MauInPhieuThu { width: 100%; }'
+            /* Table: viền đen, border-collapse, cell padding */
+            + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 6px 0; }'
+            + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: 1px solid #000; padding: 4px 8px; vertical-align: middle; }'
+            + '#MauInPhieuThu table th { text-align: center; font-weight: bold; }'
+            /* Value cạnh label: inline nowrap → không xuống dòng */
+            + '#MauInPhieuThu [class*="txtHoTen_BenB_"], #MauInPhieuThu [class*="txtMa_BenB_"],'
+            + '#MauInPhieuThu [class*="txtNgaySinh_BenB_"], #MauInPhieuThu [class*="txtMaSoThue"],'
+            + '#MauInPhieuThu .txtHoTenPTC_PT_Edit, #MauInPhieuThu .txtMaNCSPTC_PT_Edit,'
+            + '#MauInPhieuThu .txtNgaySinhPTC_PT_Edit {'
+            + '  display: inline !important; white-space: nowrap !important;'
+            + '  margin: 0 !important; padding: 0 !important; font-weight: bold;'
+            + '}'
+            /* Lớp/Ngành/Khóa: inline, word-break keep-all → không xé giữa từ */
+            + '#MauInPhieuThu [class*="txtLop_BenB_"], #MauInPhieuThu [class*="txtNganh_BenB_"],'
+            + '#MauInPhieuThu [class*="txtKhoa_BenB_"], #MauInPhieuThu .txtLopPTC_PT_Edit,'
+            + '#MauInPhieuThu .txtNganhPTC_PT_Edit, #MauInPhieuThu .txtKhoaPTC_PT_Edit,'
+            + '#MauInPhieuThu .txtLopInline_Injected {'
+            + '  display: inline !important; word-break: keep-all; overflow-wrap: normal;'
+            + '  margin: 0 !important; padding: 0 !important;'
+            + '}'
+            + '#MauInPhieuThu p { line-height: 1.7; margin: 4px 0; word-break: keep-all; }'
+            /* Ẩn/style dropdown chọn đơn vị tính/loại tiền tệ khi in — bỏ appearance native */
+            + '#MauInPhieuThu select { border: none !important; background: transparent !important;'
+            + '  -webkit-appearance: none !important; -moz-appearance: none !important; appearance: none !important;'
+            + '  padding: 0 !important; font-family: inherit !important; font-size: inherit !important; color: #000 !important;'
+            + '}'
+            /* Title phiếu — chữ hoa, đậm, center */
+            + '#MauInPhieuThu h1, #MauInPhieuThu h2, #MauInPhieuThu h3, #MauInPhieuThu h4 {'
+            + '  text-align: center; margin: 6px 0; text-transform: uppercase; font-weight: bold;'
+            + '}'
+            /* Số tiền tổng + viết bằng chữ */
+            + '#MauInPhieuThu [class*="txtTongTien"] { font-weight: bold; }';
+        w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Phiếu thu tiền</title>');
+        w.document.write('<style>' + css + '</style>');
+        w.document.write('</head><body><div id="' + divId + '">' + content + '</div></body></html>');
+        w.document.close();
+        w.focus();
+        // Delay để browser render + apply CSS xong mới print
+        setTimeout(function () {
+            try { w.print(); } catch (e) { console.log('Print error:', e); }
+            setTimeout(function () {
+                try { w.close(); } catch (e) { }
+            }, 500);
+        }, 400);
+        return true;
     },
     closePhieu: function () {
         var me = this;
