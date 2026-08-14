@@ -6135,31 +6135,55 @@ PhieuThu.prototype = {
         var content = document.getElementById(divId).innerHTML;
         var w = window.open('', 'Print', 'height=800,width=1200');
         var css = ''
-            + '@page { margin: 1cm 1.5cm; }'
-            + 'html, body { margin: 0; padding: 0; }'
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 12pt; line-height: 1.55; color: #000; padding: 0.8cm; }'
+            /* A5 nằm ngang: 210mm × 148mm — giãn full width, siết khoảng trắng dọc.
+               margin: 0 để loại hoàn toàn dải trắng đầu/cuối trang; content padding qua body. */
+            + '@page { size: A5 landscape; margin: 0; }'
+            + 'html, body { margin: 0; padding: 0; width: 100%; }'
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.2; color: #000; padding: 0.4cm 0.5cm; width: 100%; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
-            + '#MauInPhieuThu { width: 100%; }'
-            /* Table: viền đen, border-collapse, cell padding.
-               Force border cho MỌI cell (td/th/rowspan/colspan) + viền ngoài cho table + row.
-               Dùng !important để đè inline style/class cứng có thể có trên template C00-AA. */
-            + '#MauInPhieuThu table { border-collapse: collapse !important; width: 100%; margin: 6px 0; border: 1.5px solid #000 !important; }'
-            + '#MauInPhieuThu table thead, #MauInPhieuThu table tbody, #MauInPhieuThu table tfoot { border: 1px solid #000 !important; }'
-            + '#MauInPhieuThu table tr { border: 1px solid #000 !important; }'
-            + '#MauInPhieuThu table td, #MauInPhieuThu table th,'
-            + '#MauInPhieuThu table tr td, #MauInPhieuThu table tr th,'
-            + '#MauInPhieuThu table td[rowspan], #MauInPhieuThu table th[rowspan],'
-            + '#MauInPhieuThu table td[colspan], #MauInPhieuThu table th[colspan] {'
-            + '  border: 1px solid #000 !important;'
-            + '  border-top: 1px solid #000 !important;'
-            + '  border-right: 1px solid #000 !important;'
-            + '  border-bottom: 1px solid #000 !important;'
-            + '  border-left: 1px solid #000 !important;'
-            + '  padding: 4px 8px;'
-            + '  vertical-align: middle;'
+            /* Ẩn <br> đứng đầu và <br> liên tiếp — template BE hay đệm nhiều <br> đầu */
+            + '#MauInPhieuThu > br:first-child { display: none !important; }'
+            + '#MauInPhieuThu > br + br { display: none !important; }'
+            + '#MauInPhieuThu > *:first-child { margin-top: 0 !important; padding-top: 0 !important; }'
+            /* Full-width toàn khối in — đè inline width cứng của template (kiểu width: 750px) */
+            + '#MauInPhieuThu { width: 100% !important; max-width: 100% !important; margin: 0 !important; }'
+            + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p,'
+            + '#MauInPhieuThu > center, #MauInPhieuThu > span {'
+            + '  width: 100% !important; max-width: 100% !important;'
+            + '  margin-left: 0 !important; margin-right: 0 !important;'
             + '}'
-            + '#MauInPhieuThu table th { text-align: center; font-weight: bold; background: transparent !important; }'
-            /* Value cạnh label: inline nowrap → không xuống dòng */
+            /* Ép mọi <br> chỉ chiếm 1 dòng, không cộng thêm margin */
+            + '#MauInPhieuThu br { line-height: 1 !important; }'
+            /* Title (PHIẾU THU TIỀN / BIÊN LAI THU TIỀN) — siết margin */
+            + '#MauInPhieuThu h1, #MauInPhieuThu h2 { font-size: 13pt !important; margin: 0 0 1px !important; padding: 0 !important; }'
+            + '#MauInPhieuThu h3, #MauInPhieuThu h4 { font-size: 10.5pt !important; margin: 0 0 1px !important; padding: 0 !important; }'
+            /* DEFAULT: mọi table KHÔNG có viền — bảng thông tin đơn vị/người mua sẽ trong sạch.
+               width 100% !important + max-width để đè template có style="width: 750px" cứng. */
+            + '#MauInPhieuThu table { border-collapse: collapse !important; width: 100% !important; max-width: 100% !important; margin: 1px 0 !important; border: none !important; }'
+            + '#MauInPhieuThu table thead, #MauInPhieuThu table tbody, #MauInPhieuThu table tfoot { border: none !important; }'
+            + '#MauInPhieuThu table tr { border: none !important; }'
+            + '#MauInPhieuThu table td, #MauInPhieuThu table th {'
+            + '  border: none !important; padding: 1px 4px; vertical-align: middle; font-size: 10pt;'
+            + '}'
+            /* CHỈ bảng hàng hóa dịch vụ (JS gắn class .tblHangHoa) mới có viền đen */
+            + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000 !important; }'
+            + '#MauInPhieuThu table.tblHangHoa thead,'
+            + '#MauInPhieuThu table.tblHangHoa tbody,'
+            + '#MauInPhieuThu table.tblHangHoa tfoot { border: 1px solid #000 !important; }'
+            + '#MauInPhieuThu table.tblHangHoa tr { border: 1px solid #000 !important; }'
+            + '#MauInPhieuThu table.tblHangHoa td,'
+            + '#MauInPhieuThu table.tblHangHoa th,'
+            + '#MauInPhieuThu table.tblHangHoa td[rowspan],'
+            + '#MauInPhieuThu table.tblHangHoa th[rowspan],'
+            + '#MauInPhieuThu table.tblHangHoa td[colspan],'
+            + '#MauInPhieuThu table.tblHangHoa th[colspan] {'
+            + '  border: 1px solid #000 !important;'
+            + '  padding: 2px 5px;'
+            + '  vertical-align: middle;'
+            + '  font-size: 10pt;'
+            + '}'
+            + '#MauInPhieuThu table.tblHangHoa th { text-align: center; font-weight: bold; background: transparent !important; }'
+            /* Value cạnh label: inline nowrap */
             + '#MauInPhieuThu [class*="txtHoTen_BenB_"], #MauInPhieuThu [class*="txtMa_BenB_"],'
             + '#MauInPhieuThu [class*="txtNgaySinh_BenB_"], #MauInPhieuThu [class*="txtMaSoThue"],'
             + '#MauInPhieuThu .txtHoTenPTC_PT_Edit, #MauInPhieuThu .txtMaNCSPTC_PT_Edit,'
@@ -6167,7 +6191,7 @@ PhieuThu.prototype = {
             + '  display: inline !important; white-space: nowrap !important;'
             + '  margin: 0 !important; padding: 0 !important; font-weight: bold;'
             + '}'
-            /* Lớp/Ngành/Khóa: inline, word-break keep-all → không xé giữa từ */
+            /* Lớp/Ngành/Khóa: inline */
             + '#MauInPhieuThu [class*="txtLop_BenB_"], #MauInPhieuThu [class*="txtNganh_BenB_"],'
             + '#MauInPhieuThu [class*="txtKhoa_BenB_"], #MauInPhieuThu .txtLopPTC_PT_Edit,'
             + '#MauInPhieuThu .txtNganhPTC_PT_Edit, #MauInPhieuThu .txtKhoaPTC_PT_Edit,'
@@ -6175,24 +6199,91 @@ PhieuThu.prototype = {
             + '  display: inline !important; word-break: keep-all; overflow-wrap: normal;'
             + '  margin: 0 !important; padding: 0 !important;'
             + '}'
-            + '#MauInPhieuThu p { line-height: 1.7; margin: 4px 0; word-break: keep-all; }'
-            /* Ẩn/style dropdown chọn đơn vị tính/loại tiền tệ khi in — bỏ appearance native */
+            + '#MauInPhieuThu p { line-height: 1.25; margin: 0 !important; padding: 0 !important; word-break: keep-all; font-size: 10pt; }'
+            /* Siết mọi div padding/margin thừa của template (BE hay để margin-top lớn cho các block) */
+            + '#MauInPhieuThu div { margin-top: 0 !important; margin-bottom: 0 !important; }'
+            /* Ẩn/style dropdown */
             + '#MauInPhieuThu select { border: none !important; background: transparent !important;'
             + '  -webkit-appearance: none !important; -moz-appearance: none !important; appearance: none !important;'
             + '  padding: 0 !important; font-family: inherit !important; font-size: inherit !important; color: #000 !important;'
             + '}'
-            /* Title phiếu — chữ hoa, đậm, center */
+            /* Title phiếu (giữ text-transform + text-align, margin đã siết ở rule h1/h2 trên) */
             + '#MauInPhieuThu h1, #MauInPhieuThu h2, #MauInPhieuThu h3, #MauInPhieuThu h4 {'
-            + '  text-align: center; margin: 6px 0; text-transform: uppercase; font-weight: bold;'
+            + '  text-align: center; text-transform: uppercase; font-weight: bold;'
             + '}'
-            /* Số tiền tổng + viết bằng chữ */
             + '#MauInPhieuThu [class*="txtTongTien"] { font-weight: bold; }';
+
+        // Script inline chạy trong popup: 2 nhiệm vụ
+        //  (1) Detect bảng hàng hóa/khoản thu → gắn class .tblHangHoa để CSS apply border.
+        //  (2) Xóa <br> đứng ngay trước value SV (họ tên/mã/ngày sinh/địa chỉ) → giữ label+value 1 dòng.
+        var scriptDetect = ''
+            + '<script>'
+            + '(function() {'
+            /* (0) Dọn <br> ở đầu #MauInPhieuThu (trước content đầu tiên) — bỏ khoảng trắng dòng đầu */
+            + '  var mauIn = document.getElementById("' + divId + '");'
+            + '  if (mauIn) {'
+            + '    while (mauIn.firstChild) {'
+            + '      var f = mauIn.firstChild;'
+            + '      if (f.nodeType === 3 && !(f.textContent || "").trim()) { mauIn.removeChild(f); continue; }'
+            + '      if (f.nodeName === "BR") { mauIn.removeChild(f); continue; }'
+            + '      break;'
+            + '    }'
+            + '    if (mauIn.firstElementChild) {'
+            + '      mauIn.firstElementChild.style.marginTop = "0";'
+            + '      mauIn.firstElementChild.style.paddingTop = "0";'
+            + '    }'
+            + '  }'
+            /* (1) Tag bảng hàng hóa */
+            + '  var tables = document.querySelectorAll("#' + divId + ' table");'
+            + '  for (var i = 0; i < tables.length; i++) {'
+            + '    var t = tables[i];'
+            + '    var probe = ((t.textContent || "").substring(0, 500)).toLowerCase();'
+            + '    var matchText = /hàng hóa|dịch vụ|khoản thu|thành tiền|đơn giá|số lượng|số tiền|stt/i.test(probe);'
+            + '    var firstRow = t.rows && t.rows[0];'
+            + '    var nCols = firstRow ? firstRow.cells.length : 0;'
+            + '    if (matchText && nCols >= 4) {'
+            + '      t.className = (t.className || "") + " tblHangHoa";'
+            + '    }'
+            + '  }'
+            /* (2) Xóa <br> ngay trước value SV (label + value về cùng 1 dòng) */
+            + '  var valSelectors = ['
+            + '    "[class*=\\"txtHoTen_BenB_\\"]",'
+            + '    "[class*=\\"txtMa_BenB_\\"]",'
+            + '    "[class*=\\"txtNgaySinh_BenB_\\"]",'
+            + '    "[class*=\\"txtDiaChi_BenB_\\"]",'
+            + '    "[class*=\\"txtLop_BenB_\\"]",'
+            + '    "[class*=\\"txtNganh_BenB_\\"]",'
+            + '    "[class*=\\"txtKhoa_BenB_\\"]",'
+            + '    "[class*=\\"txtMaSoThue_BenB_\\"]",'
+            + '    ".txtHoTenPTC_PT_Edit",'
+            + '    ".txtMaNCSPTC_PT_Edit",'
+            + '    ".txtNgaySinhPTC_PT_Edit",'
+            + '    ".txtDiaChiPTC_PT_Edit",'
+            + '    ".txtLopPTC_PT_Edit",'
+            + '    ".txtNganhPTC_PT_Edit",'
+            + '    ".txtKhoaPTC_PT_Edit"'
+            + '  ].join(",");'
+            + '  var vals = document.querySelectorAll("#' + divId + ' " + valSelectors);'
+            + '  vals.forEach(function(el) {'
+            + '    var p = el.previousSibling;'
+            /* Bỏ qua text-node whitespace */
+            + '    while (p && p.nodeType === 3 && !(p.textContent || "").trim()) {'
+            + '      p = p.previousSibling;'
+            + '    }'
+            + '    if (p && p.nodeName === "BR") {'
+            + '      p.parentNode.removeChild(p);'
+            + '    }'
+            + '  });'
+            + '})();'
+            + '<\/script>';
+
         w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>Phiếu thu tiền</title>');
         w.document.write('<style>' + css + '</style>');
-        w.document.write('</head><body><div id="' + divId + '">' + content + '</div></body></html>');
+        w.document.write('</head><body><div id="' + divId + '">' + content + '</div>');
+        w.document.write(scriptDetect);
+        w.document.write('</body></html>');
         w.document.close();
         w.focus();
-        // Delay để browser render + apply CSS xong mới print
         setTimeout(function () {
             try { w.print(); } catch (e) { console.log('Print error:', e); }
             setTimeout(function () {
@@ -6517,6 +6608,26 @@ PhieuThu.prototype = {
             });
             console.log('[Lớp inject] Không tìm được anchor "Mã SV". Các class txt* có trong template:', arrClasses);
         }, 300);
+
+        // Hardcode địa chỉ đơn vị cho biên lai của trường CMC.
+        // BE đang trả DIACHI bị trùng "Tây Mỗ" 2 lần → override tạm ở FE cho đến khi BE fix.
+        // Detect template CMC bằng text "CMC" trong #MauInPhieuThu (mẫu C45-BB-CMC / tên trường).
+        setTimeout(function () {
+            var $mauIn = $('#MauInPhieuThu');
+            if (!$mauIn.length) return;
+            var strTemplate = ($mauIn.text() || '').toUpperCase();
+            if (strTemplate.indexOf('CMC') === -1) return; // không phải biên lai CMC → bỏ qua
+            if ($mauIn.find('.txtDiaChiCMC_Override').length) return; // idempotent
+
+            var strDiaChiCMC = 'Tây Mỗ, phường Xuân Phương, thành phố Hà Nội, Việt Nam';
+            var $addr = $mauIn.find('[class*="txtDiaChi_BenA_"]');
+            if ($addr.length) {
+                $addr.html(strDiaChiCMC).addClass('txtDiaChiCMC_Override');
+                console.log('[CMC address override] Đã hardcode', $addr.length, 'field địa chỉ:', strDiaChiCMC);
+            } else {
+                console.log('[CMC address override] Không tìm thấy .txtDiaChi_BenA_* trong template CMC. Kiểm tra class thực tế.');
+            }
+        }, 350);
     },
     /*------------------------------------------
     --Discription: [7] 
