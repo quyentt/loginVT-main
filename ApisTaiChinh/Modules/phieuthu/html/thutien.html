@@ -317,18 +317,21 @@
         padding: 4px 8px;
         line-height: 1.55;
     }
-    /* Cell chứa họ tên + mã SV: nowrap để value không xuống dòng lệch cột.
-       Nếu quá dài, cell sẽ dãn ngang thay vì wrap giữa từ. */
+    /* Value cạnh label (Họ tên/Mã/Ngày sinh/Lớp/Ngành/Khóa): ép inline để nằm chung dòng
+       với label, không nhảy xuống dòng dưới. white-space:nowrap cho value không wrap giữa từ. */
     #MauInPhieuThu [class*="txtHoTen_BenB_"],
     #MauInPhieuThu [class*="txtMa_BenB_"],
     #MauInPhieuThu [class*="txtNgaySinh_BenB_"],
     #MauInPhieuThu [class*="txtMaSoThue"],
     #MauInPhieuThu .txtHoTenPTC_PT_Edit,
-    #MauInPhieuThu .txtMaNCSPTC_PT_Edit {
-        white-space: nowrap;
-        display: inline-block;
+    #MauInPhieuThu .txtMaNCSPTC_PT_Edit,
+    #MauInPhieuThu .txtNgaySinhPTC_PT_Edit {
+        display: inline !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
-    /* Line "Lớp: … - Ngành: … - Khóa: …" — inline-block, wrap giữa các segment (không giữa từ) */
+    /* Line "Lớp: … - Ngành: … - Khóa: …" — inline, wrap giữa các segment (không giữa từ) */
     #MauInPhieuThu [class*="txtLop_BenB_"],
     #MauInPhieuThu [class*="txtNganh_BenB_"],
     #MauInPhieuThu [class*="txtKhoa_BenB_"],
@@ -336,10 +339,12 @@
     #MauInPhieuThu .txtNganhPTC_PT_Edit,
     #MauInPhieuThu .txtKhoaPTC_PT_Edit,
     #MauInPhieuThu .txtLopInline_Injected {
-        display: inline-block;
+        display: inline !important;
         vertical-align: baseline;
         word-break: keep-all;
         overflow-wrap: normal;
+        margin: 0 !important;
+        padding: 0 !important;
     }
     /* Paragraph/dòng info: line-height thoáng, tránh xé chữ */
     #MauInPhieuThu p {
