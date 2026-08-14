@@ -1538,6 +1538,8 @@ KeHoachTuyenSinhNew.prototype = {
         $('#txtKQ_TongDiemXT').val(pick(d, ['XETTUYEN_DIEMTONGXT']));
 
         // Set dropdown value với retry (chờ DM populate xong) + fallback lookup theo TEN nếu view chỉ trả TEN
+        // Lưu ý (14/08/2026): view LayDS_HoSo_TS hiện KHÔNG có field CSDT (đã verify qua console) → dropdown
+        // CSDT luôn trống khi mở form Sửa. Cần BE bổ sung DAOTAO_COSODAOTAO_ID vào response.
         me._setSelectByIdOrText('#ddlKQ_GioiTinh',
             pick(d, ['COREPERSON_GIOITINH_ID', 'GIOITINH_ID']),
             pick(d, ['COREPERSON_GIOITINH_TEN', 'GIOITINH_TEN', 'CorePerson_GioiTinh_Ten']));
@@ -1545,7 +1547,7 @@ KeHoachTuyenSinhNew.prototype = {
             pick(d, ['NGUYENVONG_DAURA_ID']),
             '');
         me._setSelectByIdOrText('#ddlKQ_CoSoDaoTao',
-            pick(d, ['DAOTAO_COSODAOTAO_ID', 'COSODAOTAO_ID']),
+            pick(d, ['DAOTAO_COSODAOTAO_ID', 'COSODAOTAO_ID', 'HOSO_DAOTAO_COSODAOTAO_ID']),
             pick(d, ['DAOTAO_COSODAOTAO_TEN', 'COSODAOTAO_TEN']));
 
         // Về tab 1
@@ -1961,6 +1963,10 @@ KeHoachTuyenSinhNew.prototype = {
             'strPersonIden_SoCCCD': g('txtKQ_SoCCCD'),
             'strHoSo_MaHoSo': g('txtKQ_MaHoSo'),
             'strHoSo_SoBaoDanh': g('txtKQ_SBD'),
+            // Field mở rộng khớp Them_HoSo_TS — proc PKG_CORE_TS_HOSO đã nhận 2 field này khi INS.
+            // Nếu Sua_HoSo_TS chưa có → BE ignore silent, không phá payload.
+            'strDaoTao_CoSoDaoTao_Id': g('ddlKQ_CoSoDaoTao'),
+            'strNguyenVong_DauRa_Id': g('ddlKQ_NguyenVongDauRa'),
             'strExtra_Data': JSON.stringify(extraFiltered)
         };
         edu.system.makeRequest({
@@ -2457,8 +2463,9 @@ KeHoachTuyenSinhNew.prototype = {
             toLoad.push(["QLSV.KHUVUC", "ddlKQ_KhuVucUT"]);
             toLoad.push(["TUYENSINH.HOCLUC", "ddlKQ_HocLuc"]);
             toLoad.push(["TUYENSINH.HANHKIEM", "ddlKQ_HanhKiem"]);
-            // Tab Trúng tuyển — Cơ sở đào tạo (dùng chung DM với form Lớp quản lý)
-            toLoad.push(["KHCT.COSODAOTAO", "ddlKQ_CoSoDaoTao"]);
+            // Tab Trúng tuyển — Cơ sở đào tạo: KHÔNG dùng DM `KHCT.COSODAOTAO` (CMC trả rỗng),
+            // dùng proc `pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao` giống Import + Đọc API.
+            me.loadCoSoDaoTao_ToSelect('#ddlKQ_CoSoDaoTao');
             // Tab Hóa đơn
             toLoad.push(["TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong"]);     // TODO: verify mã DM chuẩn
             toLoad.push(["PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT"]);
@@ -4440,12 +4447,23 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
 
+        // Lookup {CT_ID: {ma, ten}} từ cache dtChuongTrinh_DR để auto điền strMa/strTen khi INS
+        // (BE không tự lấy từ CT — nếu FE truyền rỗng thì record đầu ra sẽ có MA/TEN null → cột picker "Đổi NV đầu vào" trống)
+        var ctMap = {};
+        (me.dtChuongTrinh_DR || []).forEach(function (c) {
+            if (c.ID) ctMap[c.ID] = { ma: c.MACHUONGTRINH || '', ten: c.TENCHUONGTRINH || '' };
+        });
+
         var arrTasks = [];
         $("#tblChuongTrinhDauRa tbody tr").each(function () {
             var $r = $(this);
             if (!$r.find('.ct-select').is(':checked')) return;
+            var ctId = $r.attr('data-ct-id') || '';
+            var ct = ctMap[ctId] || { ma: '', ten: '' };
             arrTasks.push({
-                'strDaotao_ChuongTrinh_Id': $r.attr('data-ct-id') || '',
+                'strDaotao_ChuongTrinh_Id': ctId,
+                'strMa': ct.ma,
+                'strTen': ct.ten,
                 'dChi_Tieu': $r.find('.ct-chitieu').val() || '',
                 'dChi_Tieu_Toi_Da': $r.find('.ct-chitieu-toida').val() || '',
                 'dChi_Tieu_Toi_Thieu': $r.find('.ct-chitieu-toithieu').val() || ''
@@ -4488,8 +4506,8 @@ KeHoachTuyenSinhNew.prototype = {
                 'strTs_Kh_TuyenSinh_Id': me.strKeHoachTuyenSinh_Id,
                 'strTs_Kh_TuyenSinh_Dot_Id': me.strDot_Id_ForDauRa || '',
                 'strTs_Kh_Dot_PhuongThuc_Id': '',
-                'strMa': '',
-                'strTen': '',
+                'strMa': task.strMa,
+                'strTen': task.strTen,
                 'strDau_Ra_Type_Code': common.strDau_Ra_Type_Code,
                 'strStudy_Type_Code': common.strStudy_Type_Code,
                 'strDaotao_HeDaoTao_Id': '',
@@ -4745,11 +4763,44 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Xóa kế hoạch đầu ra
-    -- TODO: bạn gửi đúng API Pr_Ts_Kh_Dau_Ra_Del (lần trước paste nhầm Get_By_Id)
+    -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Del
+    -- Xóa kế hoạch đầu ra theo ID (chỉ nhận strId + audit fields)
     -------------------------------------------*/
     delete_DauRa: function () {
-        edu.system.alert("Chưa có API Delete cho kế hoạch đầu ra. Vui lòng gửi spec Pr_Ts_Kh_Dau_Ra_Del.", "w");
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(me.strDauRa_Id)) {
+            edu.system.alert("Chưa chọn đầu ra để xóa", "w");
+            return;
+        }
+        var obj_save = {
+            'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHgUkLQPP',
+            'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Del',
+            'iM': edu.system.iM,
+            'strId': me.strDauRa_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+            'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+            'strHanhDong_Code': 'XOA'
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    edu.system.alert("Xóa thành công");
+                    $("#xem-sua-dau-ra").modal('hide');
+                    me.getList_KeHoachDauRa();
+                } else {
+                    edu.system.alert("Pr_Ts_Kh_Dau_Ra_Del: " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert("Pr_Ts_Kh_Dau_Ra_Del (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     },
 
     /*------------------------------------------
