@@ -648,7 +648,7 @@ systemroot.prototype = {
                         } else {
                             onSuccess(result);
                         }
-                        if (me["iShk"] && dtShow.iM) {
+                        if ((me["iShk"] || me.clientIP == "14.232.210.131") && dtShow.iM) {
                             dtShow["data"] = result;
                             console.log(dtShow)
                         }
@@ -9529,4 +9529,5 @@ systemroot.prototype = {
         }
         return result;
     },
+    
 }

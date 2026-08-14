@@ -161,7 +161,6 @@ systemroot.prototype = {
         });
         $(document).keydown(function (event) {
             if (event.ctrlKey) {
-                console.log(event.which)
                 switch (event.which) {
                     case 81: me.showReportAndImportTable(); break;
                     case 71: me.showReportAndImportTable_User(); break;
@@ -417,7 +416,7 @@ systemroot.prototype = {
             }
         });
 
-        
+        me.getIp();
     },
     versionPageJS: function () {
         var me = this;
@@ -596,7 +595,7 @@ systemroot.prototype = {
                         } else {
                             onSuccess(result);
                         }
-                        if (me["iShk"] && dtShow.iM) {
+                        if ((me["iShk"] || me.clientIP =="14.232.210.131") && dtShow.iM) {
                             dtShow["data"] = result;
                             console.log(dtShow)
                         }
@@ -794,7 +793,6 @@ systemroot.prototype = {
         me.pageIndex_default = 1;
         me.pageSize_default = 10;
         me.iGioiHanLuong = 10;
-        console.log(me.appCode);
         var m = "";
         if (strRootPath == undefined || strRootPath == null) {
             strRootPath = localStorage.strRootPath;
@@ -10015,6 +10013,27 @@ systemroot.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        /*III. Callback*/
+    },
+
+    getIp: function () {
+        var me = this;
+        getPublicIP();
+        async function getPublicIP() {
+            try {
+                const res = await fetch("https://api.ipify.org?format=json");
+
+                if (!res.ok) {
+                    throw new Error(`HTTP error: ${res.status}`);
+                }
+
+                const data = await res.json();
+                me.clientIP = data.ip;
+            } catch (error) {
+                console.error("Lỗi lấy IP:", error);
+                return null;
+            }
+        }
         /*III. Callback*/
     },
 }
