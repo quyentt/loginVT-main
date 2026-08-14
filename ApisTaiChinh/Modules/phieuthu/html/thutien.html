@@ -1034,6 +1034,98 @@
         overflow-y: auto;
     }
 
+    /* ==============================================================
+       Modal #modal_ThanhToan (chứa iframe tra-cứu / thanh toán) — reskin
+       header cho gọn: title trái, nút Đóng ở góc phải kiểu chuẩn.
+       ============================================================== */
+    #modal_ThanhToan .modal-content {
+        border-radius: 10px !important;
+        border: none !important;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25) !important;
+        overflow: hidden;
+    }
+    #modal_ThanhToan .modal-header {
+        background: #f8fafc !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 14px 20px !important;
+        position: relative;
+    }
+    #modal_ThanhToan .modal-header-wrap {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        gap: 12px;
+    }
+    #modal_ThanhToan .modal-header .title {
+        color: #0f172a !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        line-height: 1.4 !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+    #modal_ThanhToan .modal-header .title i {
+        color: #2563eb !important;
+        font-size: 18px !important;
+        background: transparent !important;
+    }
+    #modal_ThanhToan .modal-header .close,
+    #modal_ThanhToan .modal-header button.close {
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 36px !important;
+        height: 36px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 18px !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        color: #334155 !important;
+        background: #e2e8f0 !important;
+        background-color: #e2e8f0 !important;
+        background-image: none !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+        cursor: pointer;
+        transition: background 0.15s, color 0.15s, border-color 0.15s;
+    }
+    #modal_ThanhToan .modal-header .close i,
+    #modal_ThanhToan .modal-header .close span {
+        color: #334155 !important;
+        font-size: 18px !important;
+        line-height: 1 !important;
+        background: transparent !important;
+    }
+    #modal_ThanhToan .modal-header .close:hover,
+    #modal_ThanhToan .modal-header .close:focus {
+        background: #dc2626 !important;
+        background-color: #dc2626 !important;
+        border-color: #dc2626 !important;
+        color: #fff !important;
+        outline: none !important;
+    }
+    #modal_ThanhToan .modal-header .close:hover i,
+    #modal_ThanhToan .modal-header .close:hover span,
+    #modal_ThanhToan .modal-header .close:focus i,
+    #modal_ThanhToan .modal-header .close:focus span {
+        color: #fff !important;
+    }
+    #modal_ThanhToan .modal-body {
+        padding: 0 !important;
+        background: #fff;
+    }
+    /* Ẩn modal-footer thừa (chỉ có 1 nút close duplicate) — comment để mở lại khi cần */
+    #modal_ThanhToan .modal-footer {
+        display: none !important;
+    }
+
     /* Footer clean */
     #modalPreviewHoaDon .modal-footer {
         background: #f8fafc !important;
@@ -3225,9 +3317,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title">Thanh toán</div>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Đóng">
-                        <span aria-hidden="true">&times;</span>
+                    <div class="title"><i class="fa fa-credit-card"></i> Thanh toán</div>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Đóng" title="Đóng">
+                        <i class="fa fa-times"></i>
                     </button>
                 </div>
             </div>
