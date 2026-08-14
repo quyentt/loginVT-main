@@ -6140,10 +6140,25 @@ PhieuThu.prototype = {
             + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 12pt; line-height: 1.55; color: #000; padding: 0.8cm; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
             + '#MauInPhieuThu { width: 100%; }'
-            /* Table: viền đen, border-collapse, cell padding */
-            + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 6px 0; }'
-            + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: 1px solid #000; padding: 4px 8px; vertical-align: middle; }'
-            + '#MauInPhieuThu table th { text-align: center; font-weight: bold; }'
+            /* Table: viền đen, border-collapse, cell padding.
+               Force border cho MỌI cell (td/th/rowspan/colspan) + viền ngoài cho table + row.
+               Dùng !important để đè inline style/class cứng có thể có trên template C00-AA. */
+            + '#MauInPhieuThu table { border-collapse: collapse !important; width: 100%; margin: 6px 0; border: 1.5px solid #000 !important; }'
+            + '#MauInPhieuThu table thead, #MauInPhieuThu table tbody, #MauInPhieuThu table tfoot { border: 1px solid #000 !important; }'
+            + '#MauInPhieuThu table tr { border: 1px solid #000 !important; }'
+            + '#MauInPhieuThu table td, #MauInPhieuThu table th,'
+            + '#MauInPhieuThu table tr td, #MauInPhieuThu table tr th,'
+            + '#MauInPhieuThu table td[rowspan], #MauInPhieuThu table th[rowspan],'
+            + '#MauInPhieuThu table td[colspan], #MauInPhieuThu table th[colspan] {'
+            + '  border: 1px solid #000 !important;'
+            + '  border-top: 1px solid #000 !important;'
+            + '  border-right: 1px solid #000 !important;'
+            + '  border-bottom: 1px solid #000 !important;'
+            + '  border-left: 1px solid #000 !important;'
+            + '  padding: 4px 8px;'
+            + '  vertical-align: middle;'
+            + '}'
+            + '#MauInPhieuThu table th { text-align: center; font-weight: bold; background: transparent !important; }'
             /* Value cạnh label: inline nowrap → không xuống dòng */
             + '#MauInPhieuThu [class*="txtHoTen_BenB_"], #MauInPhieuThu [class*="txtMa_BenB_"],'
             + '#MauInPhieuThu [class*="txtNgaySinh_BenB_"], #MauInPhieuThu [class*="txtMaSoThue"],'
