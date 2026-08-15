@@ -574,9 +574,14 @@ ThuHoSo.prototype = {
                         var strTen = edu.util.returnEmpty(aData.TEN);
                         var strFullName = strHoDem + " " + strTen;
                         var strSoBaoDanh = edu.util.returnEmpty(aData.SOBAODANH);
+                        var strCMND = edu.util.returnEmpty(aData.CMTND_SO);
                         var html = '';
                         html = '<span class="td-middle">' + strFullName + '</span><br />';
-                        html += '<span class="td-middle td-font">' + strSoBaoDanh + '</span>';
+                        html += '<span class="td-middle td-font">' + strSoBaoDanh;
+                        if (strCMND) {
+                            html += ' - ' + strCMND;
+                        }
+                        html += '</span>';
                         return html;
                     }
                 }
