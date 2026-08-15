@@ -44,6 +44,14 @@
     #zoneSendEmail {
         overflow: visible !important;
     }
+
+    /* Đảm bảo nút xóa luôn hiển thị */
+    #btnXoaTinTuc {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        margin-right: 5px !important;
+    }
 </style>
 <section class="content aps-tintuc">
     <div class="row aps-tintuc-detail">
@@ -98,7 +106,7 @@
                         </span>
                     </h3>
                     <div class="box-tools pull-right right-0">
-                        <a id="btnXoaTinTuc" class="btn btn-default"><i class="fa fa-trash"></i> Xóa</a>
+                        <a id="btnXoaTinTuc" class="btn btn-danger" style="margin-right: 5px;"><i class="fa fa-trash"></i> Xóa</a>
                         <a class="btn btnAdd btn-primary" href="#"><i class="fa fa-plus"></i> Thêm mới</a>
                     </div>
                 </div>
