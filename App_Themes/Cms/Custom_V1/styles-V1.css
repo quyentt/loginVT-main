@@ -58,10 +58,6 @@ body {
   border-width: 5px 4px 0 5px !important;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 2x !important;
-  right: 6px !important;
-}
 
 .form-top .select2-container--default .select2-selection--single .select2-selection__arrow,
 .form-item .select2-container--default .select2-selection--single .select2-selection__arrow {
