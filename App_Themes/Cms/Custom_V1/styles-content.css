@@ -17522,3 +17522,10 @@ table#clone {
 #btnDongYXacNhan{
     margin-left: 0px;
 }
+.aps-nhapdiemlichthi .container-fluid.px-20,.aps-nhapdiemlophocphan .container-fluid.px-20,
+.aps-nhapdiemhocphan .container-fluid.px-20,.aps-ketquakhaosat .container-fluid.px-20{
+ padding-top: 15px;
+}
+.aps-nhapdiemlichthi .container-fluid.px-20 .title-is-paging {
+    margin-bottom: 0 !important;
+}

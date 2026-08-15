@@ -645,7 +645,7 @@
         padding: 2px 32px 1px 12px !important;
         color: #0f172a !important;
         font-size: 14px !important;
-        font-weight: 600 !important;
+        font-weight: 400 !important;
         width: 100% !important;
         display: flex !important;
         align-items: center !important;
