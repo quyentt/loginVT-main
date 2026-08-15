@@ -6140,7 +6140,7 @@ PhieuThu.prototype = {
             + '@page { size: A5 landscape; margin: 0; }'
             + 'html, body { margin: 0; padding: 0; width: 100%; }'
             /* padding ngang tăng lên 1.2cm để co bảng vào 1 chút (không chạy sát mép giấy) */
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.2; color: #000; padding: 0.4cm 1.2cm; width: 100%; }'
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.45; color: #000; padding: 0.4cm 1.2cm; width: 100%; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
             /* Ẩn <br> đứng đầu và <br> liên tiếp — template BE hay đệm nhiều <br> đầu */
             + '#MauInPhieuThu > br:first-child { display: none !important; }'
@@ -6152,19 +6152,20 @@ PhieuThu.prototype = {
             + '#MauInPhieuThu > center, #MauInPhieuThu > span {'
             + '  width: 100% !important; max-width: 100% !important;'
             + '  margin-left: 0 !important; margin-right: 0 !important;'
+            + '  margin-top: 0 !important; margin-bottom: 0 !important;'
             + '}'
             /* Ép mọi <br> chỉ chiếm 1 dòng, không cộng thêm margin */
             + '#MauInPhieuThu br { line-height: 1 !important; }'
-            /* Title (PHIẾU THU TIỀN / BIÊN LAI THU TIỀN) — siết margin */
-            + '#MauInPhieuThu h1, #MauInPhieuThu h2 { font-size: 13pt !important; margin: 0 0 1px !important; padding: 0 !important; }'
-            + '#MauInPhieuThu h3, #MauInPhieuThu h4 { font-size: 10.5pt !important; margin: 0 0 1px !important; padding: 0 !important; }'
+            /* Title (PHIẾU THU TIỀN / BIÊN LAI THU TIỀN) — giữ spacing vừa đủ */
+            + '#MauInPhieuThu h1, #MauInPhieuThu h2 { font-size: 13pt !important; margin: 0.08cm 0 0.06cm 0 !important; padding: 0 !important; }'
+            + '#MauInPhieuThu h3, #MauInPhieuThu h4 { font-size: 10.5pt !important; margin: 0.06cm 0 0.04cm 0 !important; padding: 0 !important; }'
             /* DEFAULT: mọi table KHÔNG có viền — bảng thông tin đơn vị/người mua sẽ trong sạch.
                width 100% !important + max-width để đè template có style="width: 750px" cứng. */
             + '#MauInPhieuThu table { border-collapse: collapse !important; width: 100% !important; max-width: 100% !important; margin: 1px 0 !important; border: none !important; }'
             + '#MauInPhieuThu table thead, #MauInPhieuThu table tbody, #MauInPhieuThu table tfoot { border: none !important; }'
             + '#MauInPhieuThu table tr { border: none !important; }'
             + '#MauInPhieuThu table td, #MauInPhieuThu table th {'
-            + '  border: none !important; padding: 1px 4px; vertical-align: middle; font-size: 10pt;'
+            + '  border: none !important; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5;'
             + '}'
             /* CHỈ bảng hàng hóa dịch vụ (JS gắn class .tblHangHoa) mới có viền đen */
             + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000 !important; }'
@@ -6200,9 +6201,9 @@ PhieuThu.prototype = {
             + '  display: inline !important; word-break: keep-all; overflow-wrap: normal;'
             + '  margin: 0 !important; padding: 0 !important;'
             + '}'
-            + '#MauInPhieuThu p { line-height: 1.25; margin: 0 !important; padding: 0 !important; word-break: keep-all; font-size: 10pt; }'
-            /* Siết mọi div padding/margin thừa của template (BE hay để margin-top lớn cho các block) */
-            + '#MauInPhieuThu div { margin-top: 0 !important; margin-bottom: 0 !important; }'
+            + '#MauInPhieuThu p { line-height: 1.55; margin: 0.04cm 0 !important; padding: 0 !important; word-break: keep-all; font-size: 10pt; }'
+            /* Giữ khoảng trống giữa các block nội dung vừa đủ, không tăng phần đệm đầu của phiếu */
+            + '#MauInPhieuThu div { margin-top: 0.02cm !important; margin-bottom: 0.02cm !important; }'
             /* Ẩn/style dropdown */
             + '#MauInPhieuThu select { border: none !important; background: transparent !important;'
             + '  -webkit-appearance: none !important; -moz-appearance: none !important; appearance: none !important;'

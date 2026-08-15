@@ -291,10 +291,19 @@
        .txtHoTen_BenB_*, .txtMa_BenB_*, .txtNgaySinh_BenB_*, .txtLop_BenB_*, .txtNganh_BenB_*, .txtKhoa_BenB_*
        ============================================================== */
     #MauInPhieuThu {
+        width: 100% !important;
+        max-width: 980px !important;
+        margin: 0 auto !important;
         font-family: 'Times New Roman', 'Cambria', serif !important;
         font-size: 13pt;
         line-height: 1.55;
         color: #000;
+    }
+    #zoneBienLaiHoaDon {
+        width: 100% !important;
+        max-width: 1100px !important;
+        margin: 0 auto !important;
+        padding-left: 0 !important;
     }
     #MauInPhieuThu p,
     #MauInPhieuThu div,
@@ -314,8 +323,8 @@
     #MauInPhieuThu table td,
     #MauInPhieuThu table th {
         vertical-align: top;
-        padding: 4px 8px;
-        line-height: 1.55;
+        padding: 6px 10px;
+        line-height: 1.7;
     }
     /* Value cạnh label (Họ tên/Mã/Ngày sinh/Lớp/Ngành/Khóa): ép inline để nằm chung dòng
        với label, không nhảy xuống dòng dưới. white-space:nowrap cho value không wrap giữa từ. */
@@ -348,10 +357,13 @@
     }
     /* Paragraph/dòng info: line-height thoáng, tránh xé chữ */
     #MauInPhieuThu p {
-        line-height: 1.7;
-        margin: 4px 0;
+        line-height: 1.9;
+        margin: 8px 0;
         word-break: keep-all;
         overflow-wrap: break-word;
+    }
+    #MauInPhieuThu > * + * {
+        margin-top: 8px;
     }
     /* Tổng số tiền + viết bằng chữ: giữ nguyên dòng, không wrap giữa số */
     #MauInPhieuThu [class*="txtTongTienChungTu_"],
