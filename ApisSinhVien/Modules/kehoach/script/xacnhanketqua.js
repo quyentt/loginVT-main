@@ -19,9 +19,6 @@ XacNhanKetQua.prototype = {
         me.getList_KeHoach();
         //me.getList_ThongTin();
         edu.system.loadToCombo_DanhMucDuLieu("QLSV.XACNHAN.SINHVIEN.NHAP.HOSO", "", "", me.loadBtnXacNhan);
-        $('#dropSearch_KeHoach').on('select2:select', function (e) {
-            me.getList_TongHop();
-        });
         //edu.system.loadToCombo_DanhMucDuLieu("QLTC.CDCS", "dropSearch_CheDo");
 
         $("#btnSearch").click(function (e) {
@@ -34,7 +31,6 @@ XacNhanKetQua.prototype = {
         });
 
         $('#dropSearch_KeHoach').on('select2:select', function (e) {
-
             me.getList_ThongTin();
         });
         $("#tblKetQua").delegate(".chkSelectAll", "click", function (e) {
@@ -170,7 +166,7 @@ XacNhanKetQua.prototype = {
             
         });
         $('#dropSearch_TruongThongTin').on('select2:select', function (e) {
-            me.getList_TongHop();
+            //me.getList_TongHop();
         });
         $("#dropSearch_KeHoach").on("select2:select", function () {
             var temp = $("#dropSearch_KeHoach option:selected").attr("name");
@@ -307,7 +303,7 @@ XacNhanKetQua.prototype = {
                 if (data.Success) {
                     me.dtThongTin = data.Data;
                     me.genList_ThongTin(data.Data, data.Pager);
-                    me.getList_TongHop();
+                    //me.getList_TongHop();
                 }
                 else {
                     console.log(data.Message);
