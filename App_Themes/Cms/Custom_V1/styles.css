@@ -323,11 +323,6 @@ a.btn {
   font-size: 14px;
 }
 
-.btn i {
-  padding-right: 5px;
-  margin-top: 2px;
-}
-
 .item-modal {
   position: relative;
 }
@@ -617,10 +612,8 @@ a.btn {
 }
 
 
-.table td .btn,
-.table td .btn:hover,
-.table .btn {
-  padding: 0px 8px 2px 8px !important;
+.table td .btn,.table td .btn:hover,.table .btn {
+  padding: 0 8px 0 8px !important;
   border-radius: 5px !important;
   line-height: 28px !important;
   height: 28px !important;
@@ -1242,11 +1235,6 @@ thead,
 .select2-container--default .select2-selection--single .select2-selection__arrow b {
   border-color: #d2d6de transparent transparent transparent !important;
   border-width: 5px 4px 0 5px !important;
-}
-
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 6px !important;
-  right: 7px !important;
 }
 
 .register-school.my-calendar .news-search-form .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -2183,10 +2171,6 @@ input:active,
   border-width: 5px 4px 0 5px !important;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__arrow {
-  top: 6px !important;
-  right: 7px !important;
-}
 
 .register-school.my-calendar .news-search-form .select2-container--default .select2-selection--single .select2-selection__arrow {
   top: 1px !important;
@@ -3531,7 +3515,7 @@ input:active,
 
 .simple-pagination li span {
   height: 34px !important;
-  padding-top: 3px !important;
+  padding-top: 2px !important;
 }
 
 .simple-pagination li:first-child {
@@ -6051,20 +6035,15 @@ input[type="radio"] {
 .table td .btn.btn-kekhai,
 .table td .btn.btn-kekhai:hover,
 .table .btn.btn-kekhai {
-  padding: 2px 10px 2px 10px !important;
-  line-height: 36px !important;
-  height: 38px !important;
+  padding: 2px 8px !important;
+  line-height: 28px !important;
+  height: 28px !important;
 }
 
 .table td .btn.btn-kekhai:hover {
   color: var(--color-yellow) !important;
 }
 
-/*
- .table td .btn.btn-kekhai:hover .fa {
-     background: var(--color-yellow) !important;
-     color: var(--color-blue) !important;
- } */
 
 #divuploadtxtVBSC_ThongTinDinhKemQD:focus,
 #divuploadtxtVBSC_ThongTinDinhKemQD:active {
@@ -6791,15 +6770,6 @@ input[type="radio"] {
   border-right: 1px solid #d1d1d1 !important;
 }
 
-.table td .btn,
-.table td .btn:hover,
-.table .btn {
-  padding: 0px 8px 2px 8px !important;
-  border-radius: 4px !important;
-  line-height: 34px !important;
-  height: 34px !important;
-}
-
 .table .btn:hover {
   color: #fff !important;
 }
@@ -7091,15 +7061,6 @@ input[type="radio"] {
   border-right: 1px solid #d1d1d1 !important;
 }
 
-
-.table td .btn,
-.table td .btn:hover,
-.table .btn {
-  padding: 0px 10px 0px 10px !important;
-  border-radius: 4px !important;
-  line-height: 28px !important;
-  height: 28px !important;
-}
 
 .table .btn:hover {
   color: #fff !important;
@@ -7841,4 +7802,17 @@ input[type="radio"] {
 .btn.btn-success.dropdown-toggle .caret {
   margin-left: 10px;
   margin-top: 8px;
+}
+.function-content .feature-content.has-tabs{
+  position: relative !important;
+}
+/* /----- */
+.aps_nhapchuyencan{
+  position: absolute !important;
+  z-index: 111 !important;
+  top: 0 !important;
+  width: 100% !important;
+}
+#main-content-wrapper .card.today-card, #main-content-wrapper .today-card{
+  z-index: 10 !important;
 }

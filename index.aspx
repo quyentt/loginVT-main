@@ -512,6 +512,8 @@
       #main-content-wrapper .today-card > .card-body {
         padding: 16px 18px !important;
         background: #ffffff !important;
+        border-bottom-right-radius: 12px;
+        border-bottom-left-radius: 12px;
       }
 
       /* Card header: css-new/main.css:329 set background: var(--color-link) = #2563EB xanh
@@ -601,7 +603,7 @@
       #main-content-wrapper .table > thead > tr > th.bg-th,
       #main-content-wrapper .table .bg-th {
         background: #f0f3fd !important;
-        color: #0f172a !important;
+        color: #222 !important;
         font-weight: 700 !important;
       }
 
@@ -620,7 +622,7 @@
       #main-content-wrapper .select2-container .select2-selection--single {
         height: 38px !important;
         min-height: 38px !important;
-        border: 1px solid #cbd5e1 !important;
+        border: 1px solid #c1c1c1 !important;
         border-radius: 8px !important;
         background: #ffffff !important;
         display: flex !important;
@@ -758,12 +760,12 @@
          12px + #888 → hơi bé + mờ. Bump lên 13px + color đậm hơn cho dễ đọc. */
       #main-content-wrapper .box-search-hocphan .input-label-left label,
       #main-content-wrapper .filter-4-item .input-label-left label {
-        font-size: 13px !important;
-        color: #475569 !important;
-        font-weight: 500 !important;
-        padding: 4px 8px !important;
-        line-height: 1 !important;
-        height: auto !important;
+        font-size: 14px !important;
+        color: #888 !important;
+        font-weight: 400 !important;
+        padding: 0 8px !important;
+        line-height: 38px !important;
+        margin-top: 0 !important;
       }
 
       /* Filter row: button "Xem danh sách" / "Tìm kiếm" phải align cuối dòng với
