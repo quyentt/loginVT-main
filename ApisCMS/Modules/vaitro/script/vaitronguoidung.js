@@ -370,10 +370,12 @@ VaiTroNguoiDung.prototype = {
         var me = this;
         //--Edit
         var obj_save = {
-            'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeDykgLxI0HhcgKBUzLgPP',
-            'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_NhanSu_VaiTro',
+            'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeDykgLxI0HhcgKBUzLnMP',
+            'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_NhanSu_VaiTro2',
             'iM': edu.system.iM,
             'strId': Ids,
+            'strCore_NhanSu_Id': '',
+            'strVaiTro_Id': me.strVaiTro_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //default
