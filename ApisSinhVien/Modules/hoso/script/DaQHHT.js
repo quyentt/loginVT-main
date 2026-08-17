@@ -2931,10 +2931,12 @@ DaQHHT.prototype = {
             actionLabel: 'Lưu thông tin cơ bản',
             onConfirm: function () {
                 var obj_save = {
-                    'action': 'NS_HoSoNhanSu5_MH/CC8yJDM1Ai4zJBEkMzIuLwPP',
-                    'func': 'PKG_CORE_HOSONHANSU_05.InsertCorePerson',
+                    'action': 'NS_HoSoNhanSu5_MH/FDElIDUkAi4zJBEkMzIuLwPP',
+                    'func': 'PKG_CORE_HOSONHANSU_05.UpdateCorePerson',
                     'iM': edu.system.iM,
                     'strChucNang_Id': edu.system.strChucNang_Id || edu.system.chucNangHeThong_Id || '',
+                    'strId': aData.CORE_PERSON_ID || aData.PERSON_ID || '',
+                    'strPerson_Id': aData.CORE_PERSON_ID || aData.PERSON_ID || '',
                     'strFullName': strFullName,
                     'strLastName': edu.util.getValById('txtMdl_LastName'),
                     'strMiddleName': edu.util.getValById('txtMdl_MiddleName'),

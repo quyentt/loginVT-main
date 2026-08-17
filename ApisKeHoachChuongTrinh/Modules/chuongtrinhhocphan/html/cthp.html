@@ -2646,13 +2646,20 @@
     }
 
     // Sync thanh scroll giả trên đầu với scroll thực của .aps-table-select bên dưới
+    // Retry vài lần vì scrollWidth có thể chưa chính xác ngay sau khi DOM update (chưa layout xong)
     function syncTblHocPhanScrollTop() {
-        var $bottom = $('#tblHocPhan-scroll-bottom .aps-table-select.scroll-table-x');
-        var $topInner = $('#tblHocPhan-scroll-top .tblHocPhan-scroll-top-inner');
-        var tbl = document.getElementById('tblHocPhan');
-        if (!tbl || !$bottom.length) return;
-        var w = tbl.scrollWidth;
-        $topInner.css('width', w + 'px');
+        var doSync = function () {
+            var container = document.querySelector('#tblHocPhan-scroll-bottom .aps-table-select.scroll-table-x');
+            var $topInner = $('#tblHocPhan-scroll-top .tblHocPhan-scroll-top-inner');
+            var tbl = document.getElementById('tblHocPhan');
+            if (!container || !tbl || !$topInner.length) return;
+            // Lấy max giữa scrollWidth của container và table để chắc chắn có scroll bar khi content tràn
+            var w = Math.max(container.scrollWidth || 0, tbl.scrollWidth || 0, tbl.offsetWidth || 0);
+            if (w > 0) $topInner.css('width', w + 'px');
+        };
+        doSync();
+        setTimeout(doSync, 100);
+        setTimeout(doSync, 400);
     }
 
     $(document).on('keyup input', '#txtSearchTblHocPhan', function () {
