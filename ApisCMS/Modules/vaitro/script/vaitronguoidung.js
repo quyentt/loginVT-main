@@ -373,8 +373,8 @@ VaiTroNguoiDung.prototype = {
             'action': 'CMS_QuanTri02_MH/GS4gHgIuMyQeDykgLxI0HhcgKBUzLnMP',
             'func': 'PKG_CORE_QUANTRI_02.Xoa_Core_NhanSu_VaiTro2',
             'iM': edu.system.iM,
-            'strId': Ids,
-            'strCore_NhanSu_Id': '',
+            'strId': '',
+            'strCore_NhanSu_Id': Ids,
             'strVaiTro_Id': me.strVaiTro_Id,
             'strNguoiThucHien_Id': edu.system.userId,
         };
