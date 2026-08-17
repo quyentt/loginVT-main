@@ -27,7 +27,27 @@ TinTuc.prototype = {
         --Discription: Initial system
         -------------------------------------------*/
 
-        CKEDITOR.replace('editor_NoiDung');
+        var edCk = CKEDITOR.replace('editor_NoiDung', {
+            filebrowserImageUploadUrl: (edu.system.rootPathUpload || '') + '/Handler/up_files_v2.ashx?outFolderPath=TinTuc/Editor/&userId=' + edu.system.userId
+        });
+        edCk.on('fileUploadResponse', function (evt) {
+            evt.stop();
+            var data = evt.data;
+            var xhr = data.fileLoader.xhr;
+            var response = String(xhr.responseText || '').trim();
+            if (response.indexOf('Sys_error:') !== -1) {
+                data.message = response;
+                evt.cancel();
+                return;
+            }
+            var fileName = response.split(',')[0].trim();
+            if (!fileName) {
+                data.message = 'Server không trả về tên file';
+                evt.cancel();
+                return;
+            }
+            data.url = (edu.system.rootPathUpload || '') + '/' + fileName;
+        });
         edu.system.uploadAvatar(['uploadPicture_TinTuc'], "");
         me.getList_TinTuc();
         me.getList_UngDung();
@@ -477,6 +497,42 @@ TinTuc.prototype = {
             var strId = $(this).data('id');
             var strTen = $(this).data('ten');
             me.deleteRow_QuickAdd_ChuyenMuc(strId, strTen);
+        });
+
+        $("#btnMaximize_NoiDung").click(function (e) {
+            e.preventDefault();
+            var $wrap = $("#wrapEditor_NoiDung");
+            var $ico = $(this).find('i');
+            var $lbl = $("#lblBtnMaximize_NoiDung");
+            var isFull = $wrap.toggleClass('is-fullscreen').hasClass('is-fullscreen');
+            $('body').toggleClass('tintuc-editor-fullscreen', isFull);
+            $ico.toggleClass('fa-expand', !isFull).toggleClass('fa-compress', isFull);
+            $lbl.text(isFull ? 'Thu nhỏ' : 'Phóng to');
+            var ed = CKEDITOR.instances.editor_NoiDung;
+            if (ed) {
+                var h = isFull ? (window.innerHeight - 130) : 320;
+                ed.resize('100%', h);
+            }
+            // Force hide select2 + datepicker khi vào fullscreen (chắc chắn ẩn, không phụ thuộc CSS cascade)
+            var elems = document.querySelectorAll('.select2-container, .select2, .datepicker, .datepicker-dropdown');
+            for (var i = 0; i < elems.length; i++) {
+                if (isFull) {
+                    if (!elems[i].hasAttribute('data-tintuc-prev-display')) {
+                        elems[i].setAttribute('data-tintuc-prev-display', elems[i].style.display || '');
+                    }
+                    elems[i].style.display = 'none';
+                } else {
+                    if (elems[i].hasAttribute('data-tintuc-prev-display')) {
+                        elems[i].style.display = elems[i].getAttribute('data-tintuc-prev-display');
+                        elems[i].removeAttribute('data-tintuc-prev-display');
+                    }
+                }
+            }
+        });
+        $(document).on('keydown.tintucFullscreen', function (e) {
+            if (e.key === 'Escape' && $("#wrapEditor_NoiDung").hasClass('is-fullscreen')) {
+                $("#btnMaximize_NoiDung").click();
+            }
         });
 
         me.arrValid= [

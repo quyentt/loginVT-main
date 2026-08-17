@@ -52,6 +52,34 @@
         opacity: 1 !important;
         margin-right: 5px !important;
     }
+
+    /* Fullscreen mode cho CKEditor nội dung tin tức */
+    body.tintuc-editor-fullscreen {
+        overflow: hidden !important;
+    }
+    .tintuc-editor-wrap.is-fullscreen {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 100000 !important;
+        background: #fff !important;
+        padding: 12px 16px 16px !important;
+        overflow: auto !important;
+        box-shadow: 0 0 0 100vmax rgba(15, 23, 42, 0.4);
+    }
+    .tintuc-editor-wrap.is-fullscreen .cke_chrome,
+    .tintuc-editor-wrap.is-fullscreen .cke {
+        width: 100% !important;
+    }
+    /* Che select2 (z-index 99999) và dropdown body-appended khi fullscreen */
+    body.tintuc-editor-fullscreen .select2-container,
+    body.tintuc-editor-fullscreen > .select2-container,
+    body.tintuc-editor-fullscreen .select2-container--open,
+    body.tintuc-editor-fullscreen .select2-dropdown {
+        display: none !important;
+    }
 </style>
 <section class="content aps-tintuc">
     <div class="row aps-tintuc-detail">
@@ -223,12 +251,19 @@
                                 <h4 class="box-title" style="margin: 0; font-size: 15px; color: #00a65a; font-weight: 600;">
                                     <i class="fa fa-file-text-o"></i> Nội dung tin tức
                                 </h4>
+                                <div class="pull-right">
+                                    <a id="btnMaximize_NoiDung" class="btn btn-xs btn-default" title="Phóng to editor để soạn thảo thoải mái" href="#">
+                                        <i class="fa fa-expand"></i> <span id="lblBtnMaximize_NoiDung">Phóng to</span>
+                                    </a>
+                                </div>
                             </div>
                             <div class="box-body" style="padding: 15px;">
                                 <div class="row" style="margin-bottom: 15px;">
                                     <div class="col-sm-12">
                                         <label style="font-weight: 600; margin-bottom: 5px;">Nội dung chi tiết</label>
-                                        <textarea name="editor_NoiDung" id="editor_NoiDung"></textarea>
+                                        <div id="wrapEditor_NoiDung" class="tintuc-editor-wrap">
+                                            <textarea name="editor_NoiDung" id="editor_NoiDung"></textarea>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -620,7 +655,7 @@
         tryLoadScript();
     })();
 </script>
-<script src="modules/kehoach/script/tintuc.js?v=1.0.0.5"></script>
+<script src="modules/kehoach/script/tintuc.js?v=1.0.0.10"></script>
 <script>
 
     CKEDITOR.replace('ckeditor', {

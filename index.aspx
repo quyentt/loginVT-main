@@ -1122,7 +1122,11 @@
       body:has(.modal.show) .select2-container,
       body:has(.modal.show) > .select2-container,
       body:has(.modal.in) .select2-container,
-      body:has(.modal.in) > .select2-container {
+      body:has(.modal.in) > .select2-container,
+      body:has(.cke_dialog_container) .select2-container,
+      body:has(.cke_dialog_container) > .select2-container,
+      body:has(.cke_dialog_background_cover) .select2-container,
+      body:has(.cke_dialog_background_cover) > .select2-container {
         z-index: auto !important;
       }
 
