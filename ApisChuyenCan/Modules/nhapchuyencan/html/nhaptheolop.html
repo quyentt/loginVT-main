@@ -179,14 +179,14 @@
                             </div>
 
                             <!-- Danh sach lop hoc -->
-                            <div class="color-blue mb-10 mt-10">
+                            <div class="color-blue mb-5 mt-10">
                                 <i class="fa-light fa-list-timeline fw-bold mr-5"></i>
                                 Danh sách lớp học phần
                             </div>
                             <div class="table-wrap aps-table-select aps-nhaptheolop-table">
                                 <div class="table-responsive fs-14 no-swiper aps-table-select">
                                     <table id="tblLopHoc"
-                                           class="table table-border table-bordered tblLopHoc mb-0 table-noborder">
+                                           class="table table-border table-bordered tblLopHoc mb-0 table-noborder table-hover">
                                         <thead>
                                             <tr>
                                                 <th class="td-fixed td-center bg-th">Stt</th>
@@ -212,13 +212,13 @@
             </div>
 
             <!-- Panel Danh sach chuyen can (an mac dinh, hien khi user chon 1 danh sach) -->
-            <div class="card today-card today-card-1 mb-40 aps_nhapchuyencan" id="zone_nhapchuyencan" style="display:none">
+            <div class="card today-card today-card-1 mb-40 aps_nhapchuyencan" id="zone_nhapchuyencan" style="display:block">
                 <div class="card-header">
                     <div class="d-flex justify-content-between align-items-center w-100">
                         <div class="myTab-header">
                             <div class="myTab-header-item">
                                 <a href="javascript:void(0)" class="myTab-header-link active">
-                                    <i class="fa-solid fa-list-timeline mr-5"></i>
+                                    <!-- <i class="fa-solid fa-list-timeline mr-5"></i> -->
                                     <span id="lblForm_KhoiTao_NO">Danh sách</span>
                                 </a>
                             </div>
@@ -230,16 +230,15 @@
                             </a>
                         </div>
                         -->
-
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item mb-10">
                         <div class="flex-grow-1">
                             <div class="row">
-                                <div class="col-12 col-md-6 mb-10 col-xxl-3">
+                                <div class="col-12 col-md-6 mb-10 col-xxl-3 pl-0">
                                     <div class="input-label-left">
-                                        <label class="mt-5">Ngày khởi tạo</label>
+                                        <label class="mt-5 pl-0" style="padding-left: 0 !important;">Ngày khởi tạo</label>
                                         <input id="txtSearch_TuNgay_KhoiTao" type="text"
                                                class="form-control input-datepicker"
                                                placeholder="dd/mm/yyyy" />
@@ -261,10 +260,10 @@
                             </div>
                         </div>
                         <div class="flex-shrink-0 d-flex align-items-center gap-2 flex-wrap">
-                            <a id="btnKhoiTao" class="btn btn-success mb-10" href="javascript:void(0)">
+                            <a id="btnKhoiTao" class="btn btn-soft-red mb-10" href="javascript:void(0)">
                                 <i class="fa-light fa-calendar-day mr-5"></i> Khởi tạo ngày chuyên cần
                             </a>
-                            <a id="btnCongBo" class="btn btn-primary mb-10" href="javascript:void(0)">
+                            <a id="btnCongBo" class="btn btn-soft-primary mb-10" href="javascript:void(0)">
                                 <i class="fa-light fa-check-circle mr-5"></i> Xác nhận
                             </a>
                             <div class="dropdown mb-10" id="zonebtnBaoCao_NTL"></div>
@@ -281,7 +280,7 @@
                                    class="table table-border table-bordered aps-tblNhapChuyenCan mb-0 table-noborder">
                                 <thead>
                                     <tr>
-                                        <th class="td-fixed td-center w bg-th">Stt</th>
+                                        <th class="td-fixed td-center w-50px bg-th">Stt</th>
                                         <th class="td-left bg-th">Hệ đào tạo</th>
                                         <th class="td-left bg-th">Khóa học</th>
                                         <th class="td-left bg-th">Khoa quản lý</th>
@@ -394,7 +393,7 @@
             <div id="notify"></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal" id="btnCancel">
-                    <i class="fa-light fa-times-circle mr-5"></i> Đóng
+                    <i class="fa-regular fa-xmark"></i> Đóng
                 </button>
             </div>
         </div>

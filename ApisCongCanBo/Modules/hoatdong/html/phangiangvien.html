@@ -1,5 +1,5 @@
 ﻿<link rel="stylesheet" href="assets/css-new/styles.css">
-<div class="one-door mt-0">
+<div class="one-door mt-0 aps-phangiangvien">
     <div class="content-tab no-tab">
         <div class="d-flex justify-content-between">
             <div class="nav-content-left">
@@ -30,35 +30,37 @@
                         <!--  Khoa phân công giảng viên -->
                         <div class="myTab-item show khoaphanconggiangvien-search" id="khoaphanconggiangvien">
                             <div class="d-flex align-items-end flex-wrap flex-md-nowrap col-12 filter-4-item mb-10">
-                                <div class="flex-grow-1">
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-4">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Năm</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_Nam" class="select-opt form-select"></select>
-                                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-3">
+                                        <div class="input-label-left">
+                                            <label class="mt-5">Năm</label>
+                                            <div class="custom-select">
+                                                <select id="dropSearch_Nam" class="select-opt form-select">
+
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-4">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Kế hoạch năm</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_KeHoachNam"
-                                                        class="select-opt form-select"></select>
-                                                </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-3">
+                                        <div class="input-label-left">
+                                            <label class="mt-5">Kế hoạch năm</label>
+                                            <div class="custom-select">
+                                                <select id="dropSearch_KeHoachNam" class="select-opt form-select">
+
+                                                </select>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6 mb-10 col-xxl-4">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Kế hoạch chi tiết</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_KeHoachChiTiet"
-                                                        class="select-opt form-select"></select>
-                                                </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-3">
+                                        <div class="input-label-left">
+                                            <label class="mt-5">Kế hoạch chi tiết</label>
+                                            <div class="custom-select">
+                                                <select id="dropSearch_KeHoachChiTiet"
+                                                    class="select-opt form-select"></select>
                                             </div>
                                         </div>
-                                        <!--<div class="col-12 col-md-6 col-lg-4 mb-10">
+                                    </div>
+                                    <!--<div class="col-12 col-md-6 col-lg-4 mb-10">
                                             <div class="input-label-left">
                                                 <label class="mt-5">Thời gian</label>
                                                 <div class="custom-select">
@@ -66,38 +68,36 @@
                                                 </div>
                                             </div>
                                         </div>-->
-                                        <div class="col-12 col-md-6 col-lg-4 mb-10">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Hệ đào tạo</label>
-                                                <div class="custom-select">
-                                                    <select id="dropHeDaoTao_CB"
-                                                        class="select-opt form-select"></select>
-                                                </div>
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-3 mb-10">
+                                        <div class="input-label-left">
+                                            <label class="mt-5">Hệ đào tạo</label>
+                                            <div class="custom-select">
+                                                <select id="dropHeDaoTao_CB" class="select-opt form-select"></select>
+                                            </div>
 
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6 col-lg-4 mb-10">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Học phần</label>
-                                                <div class="custom-select">
-                                                    <select id="dropSearch_HocPhan"
-                                                        class="select-opt form-select"></select>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6  col-lg-4 mb-10">
-                                            <div class="input-label-left">
-                                                <label class="mt-5">Thông tin</label>
-                                                <input type="text" id="txtSearch" class="form-control"
-                                                    placeholder="Thông tin">
-                                            </div>
                                         </div>
                                     </div>
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-3 mb-10">
+                                        <div class="input-label-left">
+                                            <label class="mt-5">Học phần</label>
+                                            <div class="custom-select">
+                                                <select id="dropSearch_HocPhan" class="select-opt form-select"></select>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-6 mb-10">
+                                        <div class="input-label-left">
+                                            <label class="mt-5">Thông tin</label>
+                                            <input type="text" id="txtSearch" class="form-control"
+                                                placeholder="Thông tin">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-10 col-xxl-3 mb-10 aps-all-btn">
+                                        <div id="btnSearch" class="btn btn-view ms-10 mb-10"><i class="fa-regular fa-magnifying-glass"></i>Xem danh sách</div>
+                                    </div>
                                 </div>
-                                <div class="flex-shrink-0">
-                                    <div id="btnSearch" class="btn btn-view ms-10 mb-10">Xem danh sách</div>
-                                </div>
+
                             </div>
 
                             <div class="row">
@@ -108,7 +108,8 @@
                             </div>
                             <div class="table-wrap">
                                 <div class="table-responsive fs-14 no-swiper aps-table-select">
-                                    <table class="table table-bordered tblHocPhan mt-5 pb-5 table-noborder" id="tblHocPhan">
+                                    <table class="table table-bordered tblHocPhan mt-5 pb-5 table-border"
+                                        id="tblHocPhan">
                                         <thead>
                                         </thead>
                                         <tbody></tbody>
@@ -126,11 +127,11 @@
 </div>
 <!-- ---------- -->
 <div class="aps-all-button ml-20 aps-gap-10" style="display: none !important;">
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#khoaphancong_giangvien">Phân giảng viên </button>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#modal_nhansu">Tìm kiếm giảng viên</button>
-</div> 
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#khoaphancong_giangvien">Phân
+        giảng viên </button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal_nhansu">Tìm kiếm giảng
+        viên</button>
+</div>
 
 <!-- modal Phân giảng viên -->
 <div class="modal fade khoaphancong_giangvien" id="khoaphancong_giangvien" tabindex="-1"
@@ -167,15 +168,18 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <div class="d-flex flex-wrap justify-content-end">
+                <div class="pull-left">
+                    <button class="btn btn-delete btn-soft-red ms-10" id="btnDelete_GiangVien">
+                        <i class="fal fa-trash-alt"></i>
+                        <span>Xóa</span>
+                    </button>
+                </div>
+                <div class="pull-right d-flex flex-wrap justify-content-end">
                     <button class="btn btn-success" id="btnAddGiangVien">
                         <i class="fal fa-plus"></i>
                         <span>Thêm mới</span>
                     </button>
-                    <button class="btn btn-delete ms-10" id="btnDelete_GiangVien">
-                        <i class="fal fa-trash-alt"></i>
-                        <span>Xóa</span>
-                    </button>
+                   
                     <button class="btn btn-primary ms-10" id="btnSave_GiangVien">
                         <i class="fal fa-save"></i>
                         <span>Lưu</span>

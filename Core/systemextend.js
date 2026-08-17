@@ -113,7 +113,7 @@ systemextend.prototype = {
         html += '<div class="d-flex flex-wrap align-items-start list-title-first addNhieuNguoiDung pl0" id="addNhieuNguoiDung">';
         html += '<p class="mt-8 mb-1 color-88">Thêm nhiều</p>';
         html += '<div class="d-flex flex-wrap list">';
-        html += '<a class="btn btn-sm btn-outline-success min-w-auto" id="btnAdd_TungDonVi"> <i class="fal fa-plus"></i> Thêm từng đơn vị</a>';
+        html += '<a class="btn btn-sm btn-soft-success min-w-auto" id="btnAdd_TungDonVi"> <i class="fal fa-plus"></i> Thêm từng đơn vị</a>';
         html += '</div>';
         html += '</div>';
         html += '</div>';

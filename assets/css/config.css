@@ -356,7 +356,7 @@ a.btn {
 
 .form-control {
   height: 38px;
-  border-radius: 4px;
+  border-radius: 8px !important;
   border-color: var(--color-border);
   font-size: 14px;
 }

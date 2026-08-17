@@ -158,7 +158,7 @@
                         <tfoot></tfoot>
                     </table>
                 </div>
-                <div class="row mt-10">
+                <div class="row mt-0">
                     <div class="col-lg-5">
                         <div class="btn-taifile d-flex mt-7 mr-20">
                             <span class="mr-10" style="margin-top: 1px;">Tải file</span>
@@ -166,17 +166,17 @@
                         </div>
                     </div>
                     <div class="col-lg-7 aps-all-btn justify-content-end">
-                        <a class="btn btn-delete  btnDelete_DeTai">
+                        <a class="btn btn-delete btn-soft-red  btnDelete_DeTai">
                             <i class="fal fa-trash "></i>
                             <span>Xóa</span>
                         </a>
 
-                        <a class="btn btnSearch_DeTai btn-primary">
+                        <a class="btn btnSearch_DeTai btn-soft-primary">
                             <i class="fa-solid fa-user-plus"></i>
                             <span>Thêm người hướng dẫn</span>
                         </a>
 
-                        <a class="btn btn-add btn-success btnAdd btnSearch_AddDeTai ">
+                        <a class="btn btn-add btn-soft-success btnAdd btnSearch_AddDeTai ">
                             <i class="fal fa-plus "></i>
                             <span>Thêm đề tài - bản giao đề tài cho Người học chọn</span>
                         </a>
@@ -197,7 +197,7 @@
 
 <!-- modal người hướng dẫn-->
 <div class="modal fade modalDeTai" id="modalDeTai">
-    <div class="modal-dialog modal-dialog-centered modal-800">
+    <div class="modal-dialog modal-dialog-centered modal-800 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
@@ -246,7 +246,7 @@
                         </a>
                     </div>-->
                     <div class="d-flex justify-content-end ">
-                        <a class="btn btnSearch_NguoiHuongDan btn-outline-primary">
+                        <a class="btn btnSearch_NguoiHuongDan btn-soft-primary">
                             <i class="fal fa-plus "></i><span>Thêm dòng</span>
                         </a>
                     </div>
@@ -338,12 +338,12 @@
                         <tbody></tbody>
                     </table>
                     <div style="display: flex">
-                        <div class="d-flex"></div>
-                        <div class="d-flex ms-auto aps-all-btn">
-                            <a class="btn btn-delete btnDelete_DSDeTai">
+                        <div class="d-flex pull-left aps-all-btn"> 
+                            <a class="btn btn-delete btnDelete_DSDeTai btn-soft-red">
                                 <i class="fal fa-trash "></i>
                                 <span>Xóa</span>
-                            </a>
+                            </a></div>
+                        <div class="d-flex ms-auto aps-all-btn">
                             <a class="btn btn-add btnSearch_DSDeTai btn-success">
                                 <i class="fal fa-plus "></i>
                                 <span>Thêm</span>
@@ -354,7 +354,7 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
+                    <button class="btn btn-soft-danger ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
                     </button>
@@ -366,11 +366,11 @@
 
 <!-- modal Đề tài-->
 <div class="modal fade modalDSDeTai" id="modalDSDeTai">
-    <div class="modal-dialog modal-dialog-centered modal-800">
+    <div class="modal-dialog modal-dialog-centered modal-680 modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-header-wrap">
-                    <div class="title "><span class="myModalLabel"></span> Đề tài</div>
+                    <div class="title "><span class="myModalLabel"></span><i class="fa-solid fa-books-medical"></i> Đề tài</div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
@@ -390,7 +390,7 @@
             </div>
             <div class="modal-footer">
                 <div class="d-flex justify-content-end">
-                    <button class="btn btn-outline-secondary ms-20" data-bs-dismiss="modal">
+                    <button class="btn btn-soft-danger ms-20" data-bs-dismiss="modal">
                         <i class="fal fa-times"></i>
                         <span>Hủy</span>
                     </button>

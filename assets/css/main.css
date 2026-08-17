@@ -35,7 +35,7 @@ input:focus-visible {
   width: 100%;
   padding-top: 12px;
   padding-bottom: 12px;
-  padding: 10px 30px;
+  padding: 10px 20px;
   background: var(--color-link);
 }
 
@@ -1760,6 +1760,7 @@ a.other-action_item:hover {
 
 .input-label-left {
   display: flex;
+  position: relative;
 }
 
 .input-label-left label {
@@ -5866,8 +5867,10 @@ a.other-action_item:hover {
 }
 
 .btn i {
-  padding-right: 5px;
   font-weight: 300;
+  margin-right: 7px !important;
+  padding-right: 0 !important;
+  line-height: 20px !important;
 }
 
 .register-wish .title-is-paging .color-dask-blue,

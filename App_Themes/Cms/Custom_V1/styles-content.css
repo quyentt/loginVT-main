@@ -164,7 +164,7 @@
 .select2-container--default .select2-selection--multiple {
     border: 1px solid #d2d6de !important;
     min-height: 38px;
-    border-radius: 5px !important;
+    border-radius: 8px !important;
 }
 
 
@@ -2784,6 +2784,7 @@
 
 .modal-footer .btn {
     margin-left: 10px !important;
+    display: flex;
 }
 
 .modal-footer .pull-left {
@@ -5835,9 +5836,9 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 }
 
 .table-bordered .btn.btnChonDanhSach {
-    padding: 0px 10px !important;
+    padding: 0 8px !important;
     height: 28px !important;
-    line-height: 27px !important;
+    line-height: 28px !important;
     margin-bottom: 4px;
 }
 
@@ -5858,6 +5859,7 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
     margin-left: 0 !important;
     margin-right: auto;
     width: 100% !important;
+    padding: 0 !important;
 }
 
 .zoneBtnXacNhan .btn .fa {
@@ -5866,6 +5868,12 @@ h2.pr-head.txtTenPhieuBienLai_Edit {
 
 .aps-chonXacNhan.aps-add-new .group-group-title-name {
     border-bottom: 1px solid #e1e1e1 !important;
+}
+
+.aps_modal_XacNhan .aps-add-new .group-group-title-name,
+.aps_modal_XacNhan .table.table-noborder,
+.aps_modal_XacNhan .col-sm-12 {
+    padding: 0 !important;
 }
 
 .scroll-table-x {
@@ -11053,7 +11061,7 @@ table#clone {
 }
 
 .box-search-GV .addNhieuNguoiDung .mt-8 {
-    margin-top: 6px !important;
+    margin-top: 5px !important;
 }
 
 .box-list-gv .title-is-paging #btnChonNhanSu {
@@ -11687,11 +11695,13 @@ table#clone {
     height: 6px !important;
     margin-top: 12px !important;
 }
-.arrow.none-title{
+
+.arrow.none-title {
     color: #888 !important;
     border-left: 6px solid #888;
     margin-top: 12px !important;
 }
+
 .arrow-right {
     width: 46px;
     margin-left: 10px;
@@ -17492,40 +17502,143 @@ table#clone {
 .register-wish.aps-lichgiangkhoa .box-header {
     padding: 10px 0px 5px 0px !important;
 }
+
 .aps-lichgiangkhoa .container-fluid.px-20 .title-is-paging {
     margin-bottom: 0px;
     width: 100%;
 }
-.aps-lichgiangkhoa .container-fluid.px-20 .title-is-paging .gv-paging-group{
+
+.aps-lichgiangkhoa .container-fluid.px-20 .title-is-paging .gv-paging-group {
     font-weight: 400 !important;
 }
+
 .zone-pag-footertblLichGiang_XacNhan {
     margin-top: 10px !important;
 }
 
-.finance-modal.modalPheDuyet2 .form-item .select2-container--default .select2-selection--single .select2-selection__arrow {
-}
+.finance-modal.modalPheDuyet2 .form-item .select2-container--default .select2-selection--single .select2-selection__arrow {}
+
 .input-group .select2-selection__arrow {
     margin-top: 0 !important;
 }
-.row.aps-form-table.scroll-table-x,.row.aps-form-table.scroll-table-x .table{
-    padding-right:0 !important;
-    padding-left:0 !important;
+
+.row.aps-form-table.scroll-table-x,
+.row.aps-form-table.scroll-table-x .table {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
 }
-#main-content-wrapper .aps-table-select.scroll-table-x{
+
+#main-content-wrapper .aps-table-select.scroll-table-x {
     display: block !important;
 }
+
 #main-content-wrapper .aps-table-select.scroll-table-x .title-is-paging {
     margin-top: 0px !important;
     margin-bottom: 0px !important;
 }
-#btnDongYXacNhan{
+
+#btnDongYXacNhan {
     margin-left: 0px;
 }
-.aps-nhapdiemlichthi .container-fluid.px-20,.aps-nhapdiemlophocphan .container-fluid.px-20,
-.aps-nhapdiemhocphan .container-fluid.px-20,.aps-ketquakhaosat .container-fluid.px-20{
- padding-top: 15px;
+
+.aps-nhapdiemlichthi .container-fluid.px-20,
+.aps-nhapdiemlophocphan .container-fluid.px-20,
+.aps-nhapdiemhocphan .container-fluid.px-20,
+.aps-ketquakhaosat .container-fluid.px-20 {
+    padding-top: 15px;
 }
+
 .aps-nhapdiemlichthi .container-fluid.px-20 .title-is-paging {
     margin-bottom: 0 !important;
+}
+
+.zone-pag-footertblLopHoc {
+    margin-top: 10px !important;
+}
+
+/* --------------- */
+#main-content-wrapper .aps-dukienhocphan .box-search-hocphan .input-label-left label,
+#main-content-wrapper .aps-dukienhocphan .filter-4-item .input-label-left label {
+    padding: 0 0 !important;
+    line-height: 15px !important;
+}
+
+#main-content-wrapper .aps-dukienhocphan .select2-container .select2-selection--single {
+    border: 0 solid #cbd5e1 !important;
+}
+
+.dropdown-toggle::after {
+    margin-left: 8px !important;
+}
+#main-content-wrapper .modal-dialog .modal-body.pd0,
+.themhocphantheochuongtrinhdaotao .box-search{
+    padding: 0 !important;
+}
+.themhocphantheochuongtrinhdaotao .box-search .col-12,
+.themhocphantheodonvi .box-search .col-12 {
+    padding-left: 0 !important;
+}
+.themhocphantheochuongtrinhdaotao .box-search .input-label-left label,
+.themhocphantheodonvi .box-search .input-label-left label {
+    text-align: right;
+}
+#main-content-wrapper .themhocphantheochuongtrinhdaotao .flex-grow-1.pd20,
+#main-content-wrapper .themhocphantheodonvi .flex-grow-1.pd20,
+#main-content-wrapper .themhocphantheodonvi .box-search.pd20{
+    padding-bottom: 0 !important;
+}
+#main-content-wrapper .themhocphantheodonvi  .table{
+    margin-bottom: 0 !important;
+}
+.tblAddHocPhanDonVi tr td:nth-child(4),.tblAddHocPhanDonVi tr td:nth-child(9),
+.tblAddHocPhanChuongTrinh tr td:nth-child(4),.tblAddHocPhanChuongTrinh tr td:nth-child(9){
+    text-align: center !important;
+}
+.finance-modal.modal_XacNhan .aps-form{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.aps-form-item.action-group{
+
+}
+.finance-modal.modal_XacNhan .form-item.form-add-info.aps-form-input{
+    padding-right: 10px !important;
+}
+.finance-modal.modal_XacNhan .aps-add-new.pt-0.pd20{
+    padding-top: 0 !important;
+}
+.aps-phangiangvien .box-search-hocphan .col-12.col-md-6 .input-label-left label{
+    position: relative !important;
+}
+.aps-phangiangvien .box-search-hocphan  .input-label-left {
+    display: block !important;
+    position: relative !important;
+}
+#main-content-wrapper .aps-phangiangvien  .filter-4-item .input-label-left label {
+    padding: 0 !important;
+}
+.aps-all-btn .btn:first-child{
+    margin-left: 0 !important;
+}
+.modal-footer .pull-left .btn:first-child{
+    margin-left: 0 !important;
+}
+.aps-tim-nhansu .modal-body .box-search-GV p {
+    font-size: 14px !important;
+    line-height: 25px !important;
+}
+.tblGiaoDeTai tr td .btn i,.tblDSDeTai tr td .btn i ,.tblDuyetDeTai tr td .btn i,.table .btn.btn-default.btnEdit i{
+    margin-right: 0 !important;
+}
+.table .btn.btn-default.btnDuyet i {
+    margin-right: 4px !important;
+}
+.tblDSDeTai tr td:nth-child(6){
+    text-align: left !important;
+}
+.zone-pag-footertblGiaoDeTai {
+    margin-top: 10px !important;
+}
+.tblDuyetDeTai tr td:last-child{
+    text-align: center !important;
 }

@@ -3757,8 +3757,9 @@ table>tbody>tr:hover .view-in-table-sticky {
 
 .inputs-wr {
   display: flex;
+  gap: 10px;
   flex: 1;
-  margin: 0 -7px;
+  margin: 0;
 }
 
 .inputs-tksv {
@@ -3767,7 +3768,7 @@ table>tbody>tr:hover .view-in-table-sticky {
 
 .inputs-tksv .btn {
   flex-shrink: 0;
-  margin-left: 14px !important;
+  margin-left: 0 !important;
   margin-bottom: 16px;
 }
 
@@ -7512,9 +7513,9 @@ tr:last-child .d-flex.gap-3 {
 /* ------------------- */
 
 .aps-tim-nhansu .inputs-tksv {
-  padding-top: 14px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-top:0px;
+  padding-left: 0px;
+  padding-right: 0px;
 }
 
 .aps-tim-nhansu .btn-dask-blue {
@@ -7537,20 +7538,25 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .aps-tim-nhansu .title-is-paging {
-  margin-top: 15px;
+  margin-top: 10px;
   padding-bottom: 10px;
-  padding-left: 20px;
+  padding-left: 0px;
 }
 
 .aps-tim-nhansu .bus-wrp {
   max-height: unset;
-  padding-left: 20px;
-  padding-right: 10px;
-  padding-bottom: 30px;
+  padding-left: 0;
+  padding-right: 0;
+  padding-bottom: 0;
   border-bottom: solid 0px #e1e1e1;
   border-top: solid 0px #e1e1e1;
 }
 
+.aps-tim-nhansu .box-list-gv .title-is-paging #btnChonNhanSu {
+  top: -9px !important;
+  right: 11px !important;
+  border: 0 solid var(--color-blue) !important;
+}
 .aps-tim-nhansu .bus-wrp .title-is-paging {
   padding-left: 0px !important;
 }
@@ -7601,8 +7607,8 @@ tr:last-child .d-flex.gap-3 {
 }
 
 #addNhieuNguoiDung {
-  padding-left: 20px !important;
-  margin-bottom: 15px !important;
+  padding-left: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .box-search-GV #addNhieuNguoiDung {
@@ -7619,6 +7625,7 @@ tr:last-child .d-flex.gap-3 {
 
 .aps-tim-nhansu .title-is-paging.zone-pag-headertblModal_NhanSu {
   margin-top: 5px !important;
+  padding-bottom: 0 !important;
 }
 
 .aps-tim-nhansu .light-paginationtblModal_NhanSu {
@@ -7637,7 +7644,9 @@ tr:last-child .d-flex.gap-3 {
   right: 150px !important;
   top: -7px !important;
 }
-
+.aps-tim-nhansu .btn.btn-sm{
+  height: 38px !important;
+}
 /* ------------------------ */
 .gv-paging-group .info-pag {
   margin-top: -10px;
