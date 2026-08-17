@@ -6139,7 +6139,7 @@ PhieuThu.prototype = {
         var css = ''
             + '@page { size: A5 landscape; margin: 0; }'
             + 'html, body { margin: 0; padding: 0; width: 100%; }'
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.45; color: #000; padding: 0.5cm; width: 100%; background: #fff; text-align: center; }'
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.45; color: #000; padding: 0.4cm 0.7cm; width: 100%; background: #fff; text-align: center; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
             + '#MauInPhieuThu { width: 100%; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; }'
             + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { width: 100%; max-width: 100%; margin: 0.02cm auto; padding: 0; }'
@@ -6156,7 +6156,11 @@ PhieuThu.prototype = {
             + '#MauInPhieuThu [class*="txtTongTien"] { font-weight: bold; }'
             + '#MauInPhieuThu select { border: none; background: transparent; -webkit-appearance: none; -moz-appearance: none; appearance: none; padding: 0; font-family: inherit; font-size: inherit; color: #000; }'
             + 'table, tr, td, th { page-break-inside: avoid; }'
-            + '* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+            + '* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }'
+            /* Tên trường sau khi viết tắt "ĐẠI HỌC" → "ĐH": nowrap để không xuống dòng,
+               cell cha auto-width, có thể giảm font 1pt nếu vẫn dài. */
+            + '#MauInPhieuThu .tenTruongVietTat { white-space: nowrap !important; word-break: keep-all !important; overflow: visible !important; font-size: 8.5pt !important; letter-spacing: -0.3px; display: inline-block !important; }'
+            + '#MauInPhieuThu td:has(.tenTruongVietTat), #MauInPhieuThu th:has(.tenTruongVietTat) { width: auto !important; min-width: 0 !important; max-width: none !important; white-space: nowrap !important; overflow: visible !important; }';
 
         // Script inline chạy trong popup: 2 nhiệm vụ
         //  (1) Detect bảng hàng hóa/khoản thu → gắn class .tblHangHoa để CSS apply border.
@@ -6248,6 +6252,31 @@ PhieuThu.prototype = {
             + '        break;'
             + '      }'
             + '    }'
+            + '  }'
+            /* (4) Tên trường viết tắt: force cell cha (td/th) auto-width + nowrap.
+               Cần thiết vì CSS :has() có thể không support ở popup Chrome cũ. */
+            + '  var mauIn3 = document.getElementById("' + divId + '");'
+            + '  if (mauIn3) {'
+            + '    var vt = mauIn3.querySelectorAll(".tenTruongVietTat");'
+            + '    vt.forEach(function(vel) {'
+            + '      vel.style.setProperty("white-space", "nowrap", "important");'
+            + '      vel.style.setProperty("word-break", "keep-all", "important");'
+            + '      vel.style.setProperty("overflow", "visible", "important");'
+            /* Đi lên tìm td/th cha, ép width auto + nowrap */
+            + '      var pp = vel.parentNode;'
+            + '      while (pp && pp !== mauIn3) {'
+            + '        var pn = pp.tagName;'
+            + '        if (pn === "TD" || pn === "TH") {'
+            + '          pp.style.setProperty("width", "auto", "important");'
+            + '          pp.style.setProperty("min-width", "0", "important");'
+            + '          pp.style.setProperty("max-width", "none", "important");'
+            + '          pp.style.setProperty("white-space", "nowrap", "important");'
+            + '          pp.removeAttribute("width");'
+            + '          break;'
+            + '        }'
+            + '        pp = pp.parentNode;'
+            + '      }'
+            + '    });'
             + '  }'
             + '})();'
             + '<\/script>';
@@ -6603,6 +6632,49 @@ PhieuThu.prototype = {
                 console.log('[CMC address override] Không tìm thấy .txtDiaChi_BenA_* trong template CMC. Kiểm tra class thực tế.');
             }
         }, 350);
+
+        // Viết tắt "ĐẠI HỌC" → "ĐH" cho tên trường dài (VD: TRƯỜNG ĐẠI HỌC CÔNG NGHỆ ĐÔNG Á).
+        // Dùng TreeWalker để cover cả text node trực tiếp trong <td>/<div> (không wrap trong element con).
+        // Chỉ apply khi text node chứa "TRƯỜNG" + "ĐẠI HỌC" và độ dài > 22 ký tự.
+        setTimeout(function () {
+            var mauInEl = document.getElementById('MauInPhieuThu');
+            if (!mauInEl) return;
+            if (mauInEl.querySelector('.tenTruongVietTat')) return; // idempotent
+
+            var walker = document.createTreeWalker(mauInEl, NodeFilter.SHOW_TEXT, null, false);
+            var textNodes = [];
+            var tn;
+            while ((tn = walker.nextNode())) textNodes.push(tn);
+
+            textNodes.forEach(function (node) {
+                var txt = node.nodeValue || '';
+                var normalized = txt.replace(/\s+/g, ' ').trim();
+                if (/TRƯỜNG\s+ĐẠI\s+HỌC/i.test(normalized) && normalized.length > 22) {
+                    node.nodeValue = txt.replace(/ĐẠI\s+HỌC/gi, 'ĐH');
+                    // Gắn class .tenTruongVietTat vào parent element (cần để CSS apply nowrap/font)
+                    var p = node.parentNode;
+                    if (p && p.nodeType === 1 && (p.className || '').indexOf('tenTruongVietTat') === -1) {
+                        p.className = (p.className || '') + ' tenTruongVietTat';
+                    }
+                    // Đi lên tìm td/th cha, ép width auto + remove width attribute + nowrap
+                    var cell = p;
+                    while (cell && cell !== mauInEl) {
+                        var tn2 = cell.tagName;
+                        if (tn2 === 'TD' || tn2 === 'TH') {
+                            cell.style.setProperty('width', 'auto', 'important');
+                            cell.style.setProperty('min-width', '0', 'important');
+                            cell.style.setProperty('max-width', 'none', 'important');
+                            cell.style.setProperty('white-space', 'nowrap', 'important');
+                            cell.style.setProperty('overflow', 'visible', 'important');
+                            cell.removeAttribute('width');
+                            break;
+                        }
+                        cell = cell.parentNode;
+                    }
+                    console.log('[Tên trường viết tắt] "' + normalized + '" → "' + node.nodeValue.replace(/\s+/g, ' ').trim() + '"');
+                }
+            });
+        }, 380);
     },
     /*------------------------------------------
     --Discription: [7] 
