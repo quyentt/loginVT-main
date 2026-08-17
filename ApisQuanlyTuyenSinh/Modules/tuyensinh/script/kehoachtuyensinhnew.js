@@ -507,6 +507,7 @@ KeHoachTuyenSinhNew.prototype = {
             me.loadKQDK_List();
         });
         $('#btnKQDK_Export').click(function () { me.exportKQDK_Excel(); });
+        $('#btnKQDK_AutoClass').click(function () { me.kqdk_PhanLopTuDong_Selected(); });
         $('#chkKQDK_All').click(function () {
             $('#tblKQDK_HoSo tbody .kqdk-sel').prop('checked', $(this).is(':checked'));
         });
@@ -1715,6 +1716,62 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Load toàn bộ đầu ra của KH hiện tại (Pr_Ts_Kh_Dau_Ra_Get_Ds) và build map:
+    --   _kqDauRaMap[DauRa_ID] = { nganhId, nganhTen, ctTen, heTen, khoaTen, ... }
+    -- Dùng để enrich cột "Mã ngành" trong bảng KQĐK (response chính không có NGÀNH).
+    -- Cache theo KH_ID hiện tại — đổi KH sẽ reload.
+    -------------------------------------------*/
+    _ensureKQDK_DauRaMap: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var khId = me.strKeHoachTuyenSinh_Id || '';
+        if (me._kqDauRaMap && me._kqDauRaMapKH === khId) { if (cb) cb(); return; }
+        var obj_save = {
+            'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHgYkNR4FMgPP',
+            'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Get_Ds',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strTs_Kh_TuyenSinh_Id': khId,
+            'strTs_Kh_TuyenSinh_Dot_Id': '',
+            'strTs_Kh_Dot_PhuongThuc_Id': '',
+            'strOutput_Status_Code': '',
+            'dIs_Public': '',
+            'dIs_Active': 1
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                var map = {};
+                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i];
+                    var id = r.ID || r.Id || r.TS_KH_DAU_RA_ID;
+                    if (!id) continue;
+                    map[id] = {
+                        nganhId: r.DAOTAO_NGANH_TS_ID || r.DAOTAO_NGANH_DT_ID || '',
+                        nganhTen: r.DAOTAO_NGANH_TS_TEN || r.DAOTAO_NGANH_DT_TEN || '',
+                        ctTen: r.DAOTAO_TOCHUCCHUONGTRINH_TEN || '',
+                        ctId: r.DAOTAO_TOCHUCCHUONGTRINH_ID || '',
+                        heTen: r.DAOTAO_HEDAOTAO_TEN || '',
+                        khoaTen: r.DAOTAO_KHOADAOTAO_TEN || ''
+                    };
+                }
+                me._kqDauRaMap = map;
+                me._kqDauRaMapKH = khId;
+                if (cb) cb();
+            },
+            error: function () {
+                me._kqDauRaMap = {};
+                me._kqDauRaMapKH = khId;
+                if (cb) cb();
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
     -- Lazy-cache map { NganhTS_ID: MA_NGANH } bằng DM TUYENSINH.NGANHNGHE.
     -- Endpoint: CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM (mỗi record có ID/MA/TEN).
     -- Gọi 1 lần cho toàn session (me._nganhMaLookup) — không phụ thuộc rows.
@@ -2121,7 +2178,15 @@ KeHoachTuyenSinhNew.prototype = {
                 if (data && data.Success) {
                     var rows = edu.util.checkValue(data.Data) ? data.Data : [];
                     me.dtKQDK_HoSo = rows;
-                    me.renderKQDK_Table(rows);
+                    // Response KHÔNG có field NGÀNH → phải lookup 2 bước:
+                    //   NGUYENVONG_DAURA_ID → đầu ra (Pr_Ts_Kh_Dau_Ra_Get_Ds) → NGANH_TS_ID/TEN
+                    //   → _nganhMaLookup (DM TUYENSINH.NGANHNGHE) → MA_NGANH
+                    var remaining = 2;
+                    var afterAll = function () {
+                        if (--remaining === 0) me.renderKQDK_Table(rows);
+                    };
+                    me._ensureKQDK_DauRaMap(afterAll);
+                    me._ensureNganhMaLookup(afterAll);
                 } else {
                     me.dtKQDK_HoSo = [];
                     me.renderKQDK_Table([]);
@@ -2265,8 +2330,10 @@ KeHoachTuyenSinhNew.prototype = {
         for (var i = offset; i < end; i++) {
             var d = data[i];
             var id = pick(d, ['HOSO_ID', 'ID', 'HoSo_Id', 'Id']);
+            var corePersonId = pick(d, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'Core_Person_Id', 'PERSON_ID', 'Person_Id']);
             var arr = me._kqRowToArray(d, i + 1);   // STT toàn cục
             var idAttr = esc(id);
+            var corePersonIdAttr = esc(corePersonId);
             var tds = '';
             tds += '<td class="td-center kqdk-col1">' + arr[0] + '</td>';
             tds += '<td class="td-center kqdk-col2">' + arr[1] + '</td>';
@@ -2278,7 +2345,7 @@ KeHoachTuyenSinhNew.prototype = {
             for (var j = 2; j < arr.length; j++) {
                 tds += '<td>' + esc(arr[j]) + '</td>';
             }
-            rows += '<tr data-id="' + idAttr + '">' + tds + '</tr>';
+            rows += '<tr data-id="' + idAttr + '" data-kq-idx="' + i + '" data-core-person-id="' + corePersonIdAttr + '">' + tds + '</tr>';
         }
         $tbody.append(rows);
 
@@ -2369,7 +2436,21 @@ KeHoachTuyenSinhNew.prototype = {
             pick(d, ['KETQUA_QUYETDINH_MA', 'SO_QD_TT', 'SoQuyetDinh']),
             pick(d, ['KETQUA_NGAYBANHANH', 'NGAY_QD_TT', 'HOSO_NGAYKETQUA']),
             pick(d, ['INTAKE_KHOA_TEN', 'KHOA_DT', 'KhoaDT']),
-            pick(d, ['INTAKE_NGANH_TEN', 'MA_NGANH', 'MaNganh']),
+            (function () {
+                // Mã ngành: response không có field NGANH → lookup qua NGUYENVONG_DAURA_ID
+                var direct = pick(d, ['INTAKE_NGANH_MA', 'MA_NGANH', 'MaNganh']);
+                if (direct) return direct;
+                var drId = pick(d, ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']);
+                var drMap = me._kqDauRaMap || {};
+                var dr = drId ? drMap[drId] : null;
+                if (!dr) return '';
+                var nganhMap = me._nganhMaLookup || {};
+                var nganhMapTen = me._nganhMaLookupByTen || {};
+                return nganhMap[dr.nganhId]
+                    || (dr.nganhTen ? nganhMapTen[String(dr.nganhTen).trim().toLowerCase()] : '')
+                    || dr.nganhTen
+                    || '';
+            })(),
             pick(d, ['INTAKE_LOP_MA', 'MA_LOP', 'MaLop']),
             pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASV', 'MASO']),
             // Hóa đơn
@@ -2454,6 +2535,137 @@ KeHoachTuyenSinhNew.prototype = {
         var fname = 'DS_HoSo_TS_' + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
             + '_' + pad(now.getHours()) + pad(now.getMinutes()) + '.xlsx';
         XLSX.writeFile(wb, fname);
+    },
+
+    /*------------------------------------------
+    -- Gọi phân lớp tự động cho các bản ghi đang tick ở list KQĐK.
+    -- ParamCore_Person_Id lấy từ record field CorePerson_Id.
+    -- Ưu tiên endpoint old3, fallback old2 -> old để tương thích nhiều môi trường.
+    -------------------------------------------*/
+    kqdk_PhanLopTuDong_Selected: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $checked = $('#tblKQDK_HoSo tbody .kqdk-sel:checked');
+        if (!$checked.length) {
+            edu.system.alert('Vui lòng tick ít nhất 1 hồ sơ để phân lớp tự động', 'w');
+            return;
+        }
+
+        var tasks = [];
+        $checked.each(function () {
+            var $tr = $(this).closest('tr');
+            var idx = parseInt($tr.attr('data-kq-idx'), 10);
+            var row = (!isNaN(idx) && me._kqViewData && me._kqViewData[idx]) ? me._kqViewData[idx] : null;
+            var corePersonId = '';
+            if (row) {
+                corePersonId = me._kqPick(row, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'Core_Person_Id', 'PERSON_ID', 'Person_Id']);
+            }
+            if (!corePersonId) corePersonId = $tr.attr('data-core-person-id') || '';
+            tasks.push({
+                corePersonId: corePersonId,
+                hoSoId: $tr.attr('data-id') || '',
+                hoTen: $.trim($tr.find('td').eq(3).text())
+            });
+        });
+
+        var valid = tasks.filter(function (t) { return !!t.corePersonId; });
+        var skipped = tasks.length - valid.length;
+        if (!valid.length) {
+            edu.system.alert('Không lấy được CorePerson_Id từ các dòng đã tick', 'w');
+            return;
+        }
+
+        edu.system.confirm('Thực hiện phân lớp tự động cho ' + valid.length + ' hồ sơ đã chọn?');
+        $('#btnYes').off('click').on('click', function () {
+            var i = 0, ok = 0, fail = 0;
+            var errs = [];
+
+            var runNext = function () {
+                if (i >= valid.length) {
+                    var summary = 'Phân lớp tự động xong. Thành công: ' + ok + '/' + valid.length + ', Lỗi: ' + fail;
+                    if (skipped > 0) summary += ', Bỏ qua (thiếu CorePerson_Id): ' + skipped;
+                    if (errs.length) {
+                        summary += '\nChi tiết lỗi: ' + errs.slice(0, 5).join(' | ');
+                        if (errs.length > 5) summary += ' ...';
+                    }
+                    edu.system.alert(summary, fail ? 'w' : 's');
+                    me.loadKQDK_List();
+                    return;
+                }
+
+                var item = valid[i++];
+                me._call_PhanLopTuDong_ByCorePerson(item.corePersonId, function (res) {
+                    if (res && res.ok) {
+                        ok++;
+                    } else {
+                        fail++;
+                        errs.push((item.hoTen || item.hoSoId || item.corePersonId) + ': ' + ((res && res.message) || 'Lỗi không xác định'));
+                    }
+                    runNext();
+                });
+            };
+
+            runNext();
+        });
+    },
+
+    /*------------------------------------------
+    -- Call 1 hồ sơ theo CorePerson_Id.
+    -- Dùng func mới PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong, endpoint fallback.
+    -------------------------------------------*/
+    _call_PhanLopTuDong_ByCorePerson: function (corePersonId, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var apis = [
+            'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYeLi0lcgPP',
+            'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYeLi0lcwPP',
+            'SV_CORE_NhapHoc_ThuTien_MH/ESkgLw0uMR4VNAUuLyYeLi0l'
+        ];
+        var tryAt = 0;
+        var messages = [];
+
+        var tryOne = function () {
+            if (tryAt >= apis.length) {
+                cb({ ok: false, message: messages.join(' | ') || 'Không gọi được API phân lớp' });
+                return;
+            }
+
+            var action = apis[tryAt++];
+            var obj_save = {
+                'action': action,
+                'func': 'PKG_CORE_NhapHoc_ThuTien.PhanLop_TuDong',
+                'iM': edu.system.iM,
+                'strCore_Person_Id': corePersonId,
+                'strNguonSuKien_Code': 'TS_KQDK_AUTO_CLASS',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || ''
+            };
+
+            edu.system.makeRequest({
+                success: function (data) {
+                    if (data && data.Success) {
+                        cb({ ok: true, message: data.Message || '' });
+                    } else {
+                        messages.push((action.split('/')[1] || action) + ': ' + ((data && data.Message) || 'BE reject'));
+                        tryOne();
+                    }
+                },
+                error: function (er) {
+                    messages.push((action.split('/')[1] || action) + ': HTTP ' + JSON.stringify(er));
+                    tryOne();
+                },
+                type: 'POST',
+                contentType: true,
+                action: obj_save.action,
+                data: obj_save,
+                fakedb: []
+            }, false, false, false, null);
+        };
+
+        if (!corePersonId) {
+            cb({ ok: false, message: 'Thiếu CorePerson_Id' });
+            return;
+        }
+        tryOne();
     },
 
     /*------------------------------------------

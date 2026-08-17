@@ -13,6 +13,45 @@ UngDungChucNang.prototype = {
         -------------------------------------------*/
         edu.system.page_load();
         me.getList_UngDung();
+
+        $("#txtSearch_UngDung_UDCN").on("input", function () {
+            me.filterTree($(this).val(), "treesjs_ungdung_udcn");
+        });
+        $("#txtSearch_ChucNang_UDCN").on("input", function () {
+            me.filterTree($(this).val(), "treesjs_ungdungchucnang_udcn");
+        });
+    },
+
+    filterTree: function (keyword, treeId) {
+        var $tree = $("#" + treeId);
+        var kw = (keyword || "").toString().trim().toLowerCase();
+        var $anchors = $tree.find("a.jstree-anchor");
+        if (!kw) {
+            $tree.find("li").show();
+            $anchors.each(function () {
+                $(this).html($(this).text());
+            });
+            return;
+        }
+        $tree.find("li").hide();
+        $anchors.each(function () {
+            var $a = $(this);
+            var text = $a.text();
+            var lower = text.toLowerCase();
+            var idx = lower.indexOf(kw);
+            var icon = $a.find("i").prop("outerHTML") || "";
+            if (idx >= 0) {
+                var $li = $a.closest("li");
+                $li.show();
+                $li.parents("li").show();
+                var before = text.substring(0, idx);
+                var match = text.substring(idx, idx + kw.length);
+                var after = text.substring(idx + kw.length);
+                $a.html(icon + " " + before + '<mark style="background:#ffe066;padding:0 2px">' + match + '</mark>' + after);
+            } else {
+                $a.html(icon + " " + text);
+            }
+        });
     },
     /*----------------------------------------------
     --Discription: [1] Access DB UngDung and ChucNang

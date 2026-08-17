@@ -1,4 +1,43 @@
-﻿<!-- Main content -->
+﻿<style>
+    /* ===== Xác nhận kết quả — fix hover trắng + contrast text ===== */
+    /* 1) Bỏ hover trắng chữ (override rule global .aps-table-select tr:hover td label) */
+    .aps-xacnhanketqua .aps-table-select .table tbody tr:hover td label,
+    .aps-xacnhanketqua .aps-table-select .table tbody tr:hover td span,
+    .aps-xacnhanketqua .aps-table-select .table tbody tr:hover td a,
+    .aps-xacnhanketqua .aps-table-select .table tbody tr:hover td {
+        color: #0f172a !important;
+    }
+
+    /* 2) Nền hover dịu, không quá sáng */
+    .aps-xacnhanketqua .aps-table-select .table.table-hover > tbody > tr:hover > td {
+        background-color: #eef2ff !important;
+    }
+
+    /* 3) Value trong ô — đậm & rõ (theo chuẩn contrast global) */
+    .aps-xacnhanketqua #tblKetQua tbody td,
+    .aps-xacnhanketqua #tblKetQua tbody td label,
+    .aps-xacnhanketqua #tblKetQua tbody td span {
+        color: #0f172a !important;
+        font-weight: 600;
+        opacity: 1;
+        font-style: normal;
+    }
+
+    /* 4) Header bảng — đậm */
+    .aps-xacnhanketqua #tblKetQua thead th {
+        color: #0f172a !important;
+        font-weight: 700;
+        background-color: #f1f5f9;
+    }
+
+    /* 5) Mã / lớp cột đầu — giữ đen chắc */
+    .aps-xacnhanketqua #tblKetQua tbody td:nth-child(-n+4) {
+        color: #0f172a !important;
+        font-weight: 600;
+    }
+</style>
+
+<!-- Main content -->
 <section class="content MainPage aps-sinhvien" id="MainContent">
     <div class="row aps-xacnhanketqua">
         <!--Search zone-->

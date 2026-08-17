@@ -1476,17 +1476,17 @@ ChuongTrinhHocPhan.prototype = {
                 else {
                     edu.system.alert(obj_list.action + " : " + data.Message, "w");
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list.action + " (er): " + JSON.stringify(er), "w");
             },
             type: "GET",
             action: obj_list.action,
-            
+
             contentType: true,
-            
+
             data: obj_list,
             fakedb: [
 
@@ -2580,6 +2580,7 @@ ChuongTrinhHocPhan.prototype = {
         edu.system.loadToTable_data(jsonForm);
         //Hiển thị tổng số học phần:
         $("#iTongSoHocPhan").html(data.length);
+        $("#badgeTongHocPhan").text(data.length > 0 ? "Tổng: " + data.length + " HP" : "");
         var iTongSoTinChi = 0;
         var iTongSoTinChiHocPhi = 0;
         for (var i = 0; i < data.length; i++) {
@@ -2897,7 +2898,7 @@ ChuongTrinhHocPhan.prototype = {
         //--Edit
         var obj_save = {
             'action': 'KHCT_HocPhan_KhoiBatBuoc/ThemMoi',
-            
+
 
             'strId': '',
             'strDaoTao_HocPhan_Id': strHocPhan_Id,
@@ -2926,14 +2927,14 @@ ChuongTrinhHocPhan.prototype = {
                 }
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_save.action + " (er): " + er);
             },
             type: "POST",
             action: obj_save.action,
-            
+
             contentType: true,
-            
+
             data: obj_save,
             fakedb: [
             ]

@@ -1,12 +1,39 @@
 ﻿<!-- Main content -->
 <style>
-    /*.btnEvent {
-        list-style-position: inside;
-        border-bottom: 1px solid #c1c1c1;
-        border-left-width: -5px;
-    }*/
     .jstree-leaf:hover {
         background: #f1f1f1 !important;
+    }
+    /* Tăng size + độ đậm cho cây vai trò và bảng người dùng */
+    .aps-vaitro-nguoidung #treesjs_vaitro_vtnd .jstree-anchor {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        line-height: 26px !important;
+    }
+    .aps-vaitro-nguoidung #treesjs_vaitro_vtnd .jstree-icon.fa {
+        font-size: 15px !important;
+    }
+    .aps-vaitro-nguoidung #txtSearch_VaiTro {
+        font-size: 14px;
+        font-weight: 500;
+        height: 34px;
+    }
+    .aps-vaitro-nguoidung .aps-vaitro-nguoidung-table table {
+        font-size: 14px;
+    }
+    .aps-vaitro-nguoidung .aps-vaitro-nguoidung-table table thead th {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+    .aps-vaitro-nguoidung .aps-vaitro-nguoidung-table table tbody td {
+        font-weight: 600 !important;
+        color: #0f172a !important;
+    }
+    .aps-vaitro-nguoidung .box-title {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
     }
 </style>
 <section class="content">
@@ -23,6 +50,9 @@
                     </span>
                 </div>
                 <div class="box-body">
+                    <div style="padding:6px 8px 8px">
+                        <input id="txtSearch_VaiTro" class="form-control input-sm" placeholder="Tìm tên vai trò..." />
+                    </div>
                     <div id="treesjs_vaitro_vtnd">
                         <!--Content of treejs-->
                     </div>

@@ -221,6 +221,201 @@
     .zone_chuongtrinhhocphan-detail.panel-right-collapsed .btn-expand-right-panel {
         display: flex !important;
     }
+
+    /* ═══ Bảng danh sách học phần chính (#tblHocPhan) — scroll ngang ═══
+       Root cause bug "cột phải bị cắt, phải zoom nhỏ mới thấy" (2 tầng):
+       (1) AdminLTE .box-body { overflow-x: hidden } — cha ngoài cắt trước khi tới bảng.
+       (2) styles.css shared: .scroll-table-x::-webkit-scrollbar { width: 1px } — scrollbar CÓ
+           nhưng chỉ 1px nên user KHÔNG thấy, tưởng là không scroll được.
+       Fix: mở overflow-x cho .box-body cha (scope hẹp theo module), ép .aps-table-select có
+       scroll-x auto, và override scrollbar shared thành 12px cho scope này để user thấy rõ. */
+    .aps-chuongtrinhhocphan .zone_chuongtrinhhocphan-left .box-body {
+        overflow-x: visible !important;
+        overflow-y: visible !important;
+    }
+    .aps-chuongtrinhhocphan .zone_chuongtrinhhocphan-left .aps-table-select.scroll-table-x {
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        max-width: 100% !important;
+        max-height: none !important;
+        height: auto !important;
+        display: block !important;
+    }
+    .aps-chuongtrinhhocphan .zone_chuongtrinhhocphan-left .aps-table-select.scroll-table-x::-webkit-scrollbar {
+        height: 12px !important;
+        width: 12px !important;
+    }
+    .aps-chuongtrinhhocphan .zone_chuongtrinhhocphan-left .aps-table-select.scroll-table-x::-webkit-scrollbar-track {
+        background: #e9ecef !important;
+        border-radius: 6px !important;
+    }
+    .aps-chuongtrinhhocphan .zone_chuongtrinhhocphan-left .aps-table-select.scroll-table-x::-webkit-scrollbar-thumb {
+        background: #6c757d !important;
+        border-radius: 6px !important;
+    }
+    .aps-chuongtrinhhocphan .zone_chuongtrinhhocphan-left .aps-table-select.scroll-table-x::-webkit-scrollbar-thumb:hover {
+        background: #495057 !important;
+    }
+    /* Sticky thead theo scroll dọc của .wrapper (AdminLTE có overflow-y:auto) — giữ header khi cuộn trang */
+    .aps-chuongtrinhhocphan #tblHocPhan thead th {
+        position: sticky;
+        top: 0;
+        background: #f1f5f9 !important;
+        z-index: 3;
+        box-shadow: inset 0 -1px 0 #cbd5e1;
+    }
+    /* Filter bar bảng học phần — ô search inline, user tìm nhanh không phải cuộn */
+    .aps-chuongtrinhhocphan .tblHocPhan-filter-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        margin-top: 10px;
+        background: #f1f5f9;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-filter-icon {
+        color: #223771;
+        font-size: 14px;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-filter-input {
+        flex: 1;
+        min-width: 200px;
+        height: 34px;
+        font-size: 13px;
+        border: 1px solid #cbd5e1;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-filter-clear {
+        height: 34px;
+        line-height: 20px;
+        padding: 6px 10px;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-filter-counter {
+        font-size: 13px;
+        color: #223771;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-filter-counter:empty {
+        display: none;
+    }
+    /* Thanh scroll ngang giả TRÊN đầu bảng — user thấy scroll ngang ngay mà không cần cuộn xuống đáy */
+    .aps-chuongtrinhhocphan .tblHocPhan-scroll-top {
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin-top: 8px;
+        height: 14px;
+        border: 1px solid #cbd5e1;
+        background: #f1f5f9;
+        border-radius: 4px;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-scroll-top-inner {
+        height: 1px;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-scroll-top::-webkit-scrollbar {
+        height: 12px !important;
+        width: 12px !important;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-scroll-top::-webkit-scrollbar-track {
+        background: #e9ecef !important;
+        border-radius: 6px !important;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-scroll-top::-webkit-scrollbar-thumb {
+        background: #6c757d !important;
+        border-radius: 6px !important;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-scroll-top::-webkit-scrollbar-thumb:hover {
+        background: #495057 !important;
+    }
+
+    /* Pagination bar dưới bảng */
+    .aps-chuongtrinhhocphan .tblHocPhan-pager {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        margin-top: 10px;
+        background: #f8fafc;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        flex-wrap: wrap;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-size {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #223771;
+        font-weight: 500;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-size select {
+        width: auto;
+        min-width: 80px;
+        height: 32px;
+        font-size: 13px;
+        display: inline-block;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-info {
+        font-size: 13px;
+        color: #223771;
+        font-weight: 600;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-buttons {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-buttons a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 32px;
+        height: 32px;
+        padding: 0 8px;
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #223771;
+        font-size: 13px;
+        font-weight: 600;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none !important;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-buttons a:hover {
+        background: #e0e7ff;
+        border-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-buttons a.active {
+        background: #223771;
+        color: #ffffff;
+        border-color: #223771;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-buttons a.disabled {
+        opacity: 0.4;
+        pointer-events: none;
+        cursor: not-allowed;
+    }
+    .aps-chuongtrinhhocphan .tblHocPhan-pager-buttons span.ellipsis {
+        padding: 0 4px;
+        color: #6c757d;
+    }
+    /* Badge tổng số học phần cạnh tiêu đề — user biết ngay bảng có bao nhiêu HP */
+    .aps-chuongtrinhhocphan #badgeTongHocPhan {
+        display: inline-block;
+        background: #223771;
+        color: #ffffff;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 2px 10px;
+        border-radius: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+    }
+    .aps-chuongtrinhhocphan #badgeTongHocPhan:empty {
+        display: none;
+    }
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
@@ -298,6 +493,7 @@
                                     style="padding-top: 0 !important;margin-bottom: 0 !important;"
                                     title="Danh sách học phần">
                                     <i class="fa-solid fa-book-open-reader line-38"></i> Danh sách học phần
+                                    <span id="badgeTongHocPhan" title="Tổng số học phần trong chương trình"></span>
                                 </h3>
                                 <span class="pull-right d-flex">
                                     <div class="dropdown" id="zonebtnHPCT_Import" style="float: left;">
@@ -344,7 +540,21 @@
                                     </a>
                                 </span>
                             </div>
-                            <div class="box-body pd0 mt-15">
+                            <!-- Ô lọc nhanh trong bảng: search theo mã/tên HP để user không phải scroll qua 90+ dòng -->
+                            <div class="tblHocPhan-filter-bar">
+                                <i class="fa fa-search tblHocPhan-filter-icon"></i>
+                                <input type="text" id="txtSearchTblHocPhan" class="form-control tblHocPhan-filter-input"
+                                    placeholder="Lọc nhanh trong bảng — gõ mã hoặc tên học phần (VD: FIDIC, IE6.008, Đồ án...)" />
+                                <a id="btnClearSearchTblHocPhan" class="btn btn-default btn-sm tblHocPhan-filter-clear" title="Xóa bộ lọc">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                                <span id="counterTblHocPhan" class="tblHocPhan-filter-counter"></span>
+                            </div>
+                            <!-- Thanh scroll ngang giả ở TRÊN bảng — sync với scroll thực dưới, giúp user không phải cuộn tận đáy mới thấy được thanh scroll ngang -->
+                            <div id="tblHocPhan-scroll-top" class="tblHocPhan-scroll-top">
+                                <div class="tblHocPhan-scroll-top-inner"></div>
+                            </div>
+                            <div class="box-body pd0" id="tblHocPhan-scroll-bottom">
                                 <div class="aps-table-select scroll-table-x">
                                     <table id="tblHocPhan"
                                         class="table table-bordered table-noborder tblHocPhan table-hover">
@@ -371,6 +581,21 @@
                                         <tbody></tbody>
                                     </table>
                                 </div>
+                            </div>
+                            <!-- Thanh phân trang client-side cho bảng học phần: user chọn số dòng/trang + chuyển trang -->
+                            <div id="tblHocPhan-pager" class="tblHocPhan-pager">
+                                <div class="tblHocPhan-pager-size">
+                                    <span>Hiển thị</span>
+                                    <select id="ddlPageSizeTblHocPhan" class="form-control">
+                                        <option value="20">20</option>
+                                        <option value="50" selected>50</option>
+                                        <option value="100">100</option>
+                                        <option value="0">Tất cả</option>
+                                    </select>
+                                    <span>dòng/trang</span>
+                                </div>
+                                <div class="tblHocPhan-pager-info" id="tblHocPhan-pager-info"></div>
+                                <div class="tblHocPhan-pager-buttons" id="tblHocPhan-pager-buttons"></div>
                             </div>
                             <div class="box-footer border-0 pd0">
                                 <table class="table border-0 table-sum">
@@ -2348,4 +2573,155 @@
         e.preventDefault();
         $(this).closest('.zone_chuongtrinhhocphan-detail').removeClass('panel-right-collapsed');
     });
+
+    // ═══ Bảng #tblHocPhan: filter + pagination client-side + dual scroll ═══
+    // - Filter theo search text (mã/tên HP)
+    // - Pagination client-side (show/hide rows theo range) — không đụng render server-side
+    // - Thanh scroll ngang giả trên đầu sync với scroll thực dưới
+    var tblHocPhanState = { pageIndex: 1, pageSize: 50, keyword: '' };
+
+    function getFilteredRowsTblHocPhan() {
+        var kw = tblHocPhanState.keyword;
+        var $all = $('#tblHocPhan tbody tr');
+        if (!kw) return $all;
+        return $all.filter(function () {
+            return ($(this).text() || '').toLowerCase().indexOf(kw) > -1;
+        });
+    }
+
+    function renderPagerButtonsTblHocPhan(totalPages, currentPage) {
+        var $btns = $('#tblHocPhan-pager-buttons').empty();
+        if (totalPages <= 1) return;
+        var html = '';
+        html += '<a data-page="1" class="' + (currentPage === 1 ? 'disabled' : '') + '" title="Trang đầu"><i class="fa fa-angle-double-left"></i></a>';
+        html += '<a data-page="' + (currentPage - 1) + '" class="' + (currentPage === 1 ? 'disabled' : '') + '" title="Trang trước"><i class="fa fa-angle-left"></i></a>';
+        var pagesToShow = [];
+        pagesToShow.push(1);
+        for (var p = currentPage - 2; p <= currentPage + 2; p++) {
+            if (p > 1 && p < totalPages) pagesToShow.push(p);
+        }
+        if (totalPages > 1) pagesToShow.push(totalPages);
+        pagesToShow = pagesToShow.filter(function (v, i, a) { return a.indexOf(v) === i; }).sort(function (a, b) { return a - b; });
+        var prev = 0;
+        for (var i = 0; i < pagesToShow.length; i++) {
+            var pg = pagesToShow[i];
+            if (pg - prev > 1) html += '<span class="ellipsis">...</span>';
+            html += '<a data-page="' + pg + '" class="' + (pg === currentPage ? 'active' : '') + '">' + pg + '</a>';
+            prev = pg;
+        }
+        html += '<a data-page="' + (currentPage + 1) + '" class="' + (currentPage === totalPages ? 'disabled' : '') + '" title="Trang sau"><i class="fa fa-angle-right"></i></a>';
+        html += '<a data-page="' + totalPages + '" class="' + (currentPage === totalPages ? 'disabled' : '') + '" title="Trang cuối"><i class="fa fa-angle-double-right"></i></a>';
+        $btns.html(html);
+    }
+
+    function applyTblHocPhanPager() {
+        var $all = $('#tblHocPhan tbody tr');
+        var totalRows = $all.length;
+        if (totalRows === 0) {
+            $('#tblHocPhan-pager-info').text('');
+            $('#tblHocPhan-pager-buttons').empty();
+            syncTblHocPhanScrollTop();
+            return;
+        }
+        $all.hide();
+        var $filtered = getFilteredRowsTblHocPhan();
+        var filteredCount = $filtered.length;
+        var pageSize = tblHocPhanState.pageSize;
+        if (pageSize === 0) {
+            $filtered.show();
+            $('#tblHocPhan-pager-info').text('Hiển thị tất cả ' + filteredCount + (tblHocPhanState.keyword ? '/' + totalRows : '') + ' HP');
+            $('#tblHocPhan-pager-buttons').empty();
+            syncTblHocPhanScrollTop();
+            return;
+        }
+        var totalPages = Math.max(1, Math.ceil(filteredCount / pageSize));
+        if (tblHocPhanState.pageIndex > totalPages) tblHocPhanState.pageIndex = 1;
+        var currentPage = tblHocPhanState.pageIndex;
+        var from = (currentPage - 1) * pageSize;
+        var to = Math.min(from + pageSize, filteredCount);
+        $filtered.slice(from, to).show();
+        $('#tblHocPhan-pager-info').text('Hiển thị ' + (filteredCount === 0 ? 0 : (from + 1)) + '-' + to + ' của ' + filteredCount + (tblHocPhanState.keyword ? '/' + totalRows : '') + ' HP');
+        renderPagerButtonsTblHocPhan(totalPages, currentPage);
+        syncTblHocPhanScrollTop();
+    }
+
+    // Sync thanh scroll giả trên đầu với scroll thực của .aps-table-select bên dưới
+    // Retry vài lần vì scrollWidth có thể chưa chính xác ngay sau khi DOM update (chưa layout xong)
+    function syncTblHocPhanScrollTop() {
+        var doSync = function () {
+            var container = document.querySelector('#tblHocPhan-scroll-bottom .aps-table-select.scroll-table-x');
+            var $topInner = $('#tblHocPhan-scroll-top .tblHocPhan-scroll-top-inner');
+            var tbl = document.getElementById('tblHocPhan');
+            if (!container || !tbl || !$topInner.length) return;
+            // Lấy max giữa scrollWidth của container và table để chắc chắn có scroll bar khi content tràn
+            var w = Math.max(container.scrollWidth || 0, tbl.scrollWidth || 0, tbl.offsetWidth || 0);
+            if (w > 0) $topInner.css('width', w + 'px');
+        };
+        doSync();
+        setTimeout(doSync, 100);
+        setTimeout(doSync, 400);
+    }
+
+    $(document).on('keyup input', '#txtSearchTblHocPhan', function () {
+        tblHocPhanState.keyword = ($(this).val() || '').trim().toLowerCase();
+        tblHocPhanState.pageIndex = 1;
+        applyTblHocPhanPager();
+    });
+    $(document).on('click', '#btnClearSearchTblHocPhan', function (e) {
+        e.preventDefault();
+        $('#txtSearchTblHocPhan').val('').focus();
+        tblHocPhanState.keyword = '';
+        tblHocPhanState.pageIndex = 1;
+        applyTblHocPhanPager();
+    });
+    $(document).on('change', '#ddlPageSizeTblHocPhan', function () {
+        tblHocPhanState.pageSize = parseInt($(this).val(), 10) || 0;
+        tblHocPhanState.pageIndex = 1;
+        applyTblHocPhanPager();
+    });
+    $(document).on('click', '#tblHocPhan-pager-buttons a', function (e) {
+        e.preventDefault();
+        if ($(this).hasClass('disabled') || $(this).hasClass('active')) return;
+        var p = parseInt($(this).data('page'), 10);
+        if (!p || p < 1) return;
+        tblHocPhanState.pageIndex = p;
+        applyTblHocPhanPager();
+        $('html, body').animate({ scrollTop: $('#tblHocPhan').offset().top - 80 }, 200);
+    });
+
+    // Sync scroll: kéo scroll top → bottom cuộn theo, và ngược lại
+    (function () {
+        var syncing = false;
+        $(document).on('scroll', '#tblHocPhan-scroll-top', function () {
+            if (syncing) return; syncing = true;
+            $('#tblHocPhan-scroll-bottom .aps-table-select.scroll-table-x').scrollLeft($(this).scrollLeft());
+            setTimeout(function () { syncing = false; }, 10);
+        });
+        $(document).on('scroll', '#tblHocPhan-scroll-bottom .aps-table-select.scroll-table-x', function () {
+            if (syncing) return; syncing = true;
+            $('#tblHocPhan-scroll-top').scrollLeft($(this).scrollLeft());
+            setTimeout(function () { syncing = false; }, 10);
+        });
+    })();
+
+    // MutationObserver: sau khi loadToTable_data render lại tbody → tự apply pager + sync scroll
+    (function () {
+        var tbody = document.querySelector('#tblHocPhan tbody');
+        if (!tbody) {
+            var tryLater = setInterval(function () {
+                var t = document.querySelector('#tblHocPhan tbody');
+                if (t) { clearInterval(tryLater); attachObserver(t); }
+            }, 300);
+            return;
+        }
+        attachObserver(tbody);
+        function attachObserver(node) {
+            var mo = new MutationObserver(function () {
+                setTimeout(function () { applyTblHocPhanPager(); }, 50);
+            });
+            mo.observe(node, { childList: true });
+        }
+    })();
+
+    $(window).on('resize', syncTblHocPhanScrollTop);
 </script>

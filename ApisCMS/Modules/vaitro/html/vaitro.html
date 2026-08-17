@@ -1,4 +1,79 @@
 ﻿<!-- Main content -->
+<style>
+    .jstree-leaf:hover {
+        background: #f1f1f1 !important;
+    }
+    /* Cây vai trò + form: chữ to đậm */
+    .aps-vaitro #zone_vaitro_treejs .jstree-anchor {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        line-height: 26px !important;
+    }
+    .aps-vaitro #zone_vaitro_treejs .jstree-icon.fa {
+        font-size: 15px !important;
+    }
+    .aps-vaitro #txtSearch_VaiTro_VT {
+        font-size: 14px;
+        font-weight: 500;
+        height: 34px;
+    }
+    .aps-vaitro .box-title {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+    .aps-vaitro .aps-form .title-name {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+    }
+    .aps-vaitro .aps-form .form-control {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #0f172a !important;
+    }
+    /* Form sát 2 bên lề */
+    .aps-vaitro .aps-vaitro-r > .box > .box-body {
+        padding: 12px !important;
+    }
+    .aps-vaitro .aps-vaitro-r .col-sm-12.aps-form {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+    .aps-vaitro .aps-vaitro-r .aps-form-item {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        display: flex !important;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+    .aps-vaitro .aps-vaitro-r .aps-form-item > .col-sm-2 {
+        padding-left: 0 !important;
+        padding-right: 12px !important;
+        width: 160px !important;
+        max-width: 160px !important;
+        flex: 0 0 160px !important;
+    }
+    .aps-vaitro .aps-vaitro-r .aps-form-item > .col-sm-10.aps-form-input {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        flex: 1 1 auto !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+    .aps-vaitro .aps-vaitro-r .aps-form-item > .col-sm-4.aps-form-input {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        flex: 1 1 0 !important;
+        width: auto !important;
+        max-width: none !important;
+    }
+    .aps-vaitro .aps-vaitro-r .aps-form-input .select2-container,
+    .aps-vaitro .aps-vaitro-r .aps-form-input .select2-container .select2-selection {
+        width: 100% !important;
+    }
+</style>
 <section class="content aps-cms">
     <div class="row aps-vaitro">
         <!-- /.left-content -->
@@ -13,6 +88,9 @@
                     </span>
                 </div>
                 <div class="box-body mt-5">
+                    <div style="padding:6px 8px 8px">
+                        <input id="txtSearch_VaiTro_VT" class="form-control input-sm" placeholder="Tìm tên vai trò..." />
+                    </div>
                     <div id="zone_vaitro_treejs">
                         <!--Content of treejs-->
                     </div>

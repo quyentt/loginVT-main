@@ -835,7 +835,11 @@
           html body.skin-blue:has(.modal.show) .select2-container,
           html body.skin-blue:has(.modal.show) > .select2-container,
           html body.skin-blue:has(.modal.in) .select2-container,
-          html body.skin-blue:has(.modal.in) > .select2-container {
+          html body.skin-blue:has(.modal.in) > .select2-container,
+          html body.skin-blue:has(.cke_dialog_container) .select2-container,
+          html body.skin-blue:has(.cke_dialog_container) > .select2-container,
+          html body.skin-blue:has(.cke_dialog_background_cover) .select2-container,
+          html body.skin-blue:has(.cke_dialog_background_cover) > .select2-container {
             z-index: auto !important;
           }
           /* ═══ modal-fullscreen: ep 100vw x 100vh, override styles.css .modal-1024/1360/etc
