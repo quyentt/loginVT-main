@@ -22,17 +22,31 @@ VaiTroNguoiDung.prototype = {
             edu.util.checkedOne_BgRow(this, { table_id: "tblNguoiDung", regexp: /checkX/g, });
         });
 
-        $("#dropSearch_DoiTuong").on("select2:select", function () {
+        $("#txtSearch_VaiTro").on("input", function () {
+            me.filterTree_VaiTro($(this).val());
+        });
+
+        $("#dropSearch_DoiTuong").on("select2:select change", function () {
+            edu.system.pageIndex_default = 1;
             me.getList_NguoiDung();
         });
         $("#btnSearch").click(function () {
+            edu.system.pageIndex_default = 1;
             me.getList_NguoiDung();
         });
-        $("#txtSearch_TuKhoa_ND").keypress(function (e) {
+        $("#txtSearch_TuKhoa_ND").on("keypress", function (e) {
             if (e.which === 13) {
                 e.preventDefault();
+                edu.system.pageIndex_default = 1;
                 me.getList_NguoiDung();
             }
+        });
+        $("#txtSearch_TuKhoa_ND").on("input", function () {
+            clearTimeout(me._tmoSearchND);
+            me._tmoSearchND = setTimeout(function () {
+                edu.system.pageIndex_default = 1;
+                me.getList_NguoiDung();
+            }, 400);
         });
         $("#btnThem").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblNguoiDung", "checkX");
@@ -138,6 +152,39 @@ VaiTroNguoiDung.prototype = {
             me.strVaiTro_Id = strNameNode;
             $("#lblVaiTroNguoiDung").html(me["dtVaiTroNguoiDung"].find(e => e.ID == strNameNode).TENVAITRO)
             me.getList_NguoiDungDaThem();
+        });
+    },
+
+    filterTree_VaiTro: function (keyword) {
+        var $tree = $("#treesjs_vaitro_vtnd");
+        var kw = (keyword || "").toString().trim().toLowerCase();
+        var $anchors = $tree.find("a.jstree-anchor");
+        if (!kw) {
+            $tree.find("li").show();
+            $anchors.each(function () {
+                $(this).html($(this).text());
+            });
+            return;
+        }
+        $tree.find("li").hide();
+        $anchors.each(function () {
+            var $a = $(this);
+            var text = $a.text();
+            var lower = text.toLowerCase();
+            var idx = lower.indexOf(kw);
+            if (idx >= 0) {
+                var $li = $a.closest("li");
+                $li.show();
+                $li.parents("li").show();
+                var before = text.substring(0, idx);
+                var match = text.substring(idx, idx + kw.length);
+                var after = text.substring(idx + kw.length);
+                var icon = $a.find("i").prop("outerHTML") || "";
+                $a.html(icon + " " + before + '<mark style="background:#ffe066;padding:0 2px">' + match + '</mark>' + after);
+            } else {
+                var icon2 = $a.find("i").prop("outerHTML") || "";
+                $a.html(icon2 + " " + text);
+            }
         });
     },
 

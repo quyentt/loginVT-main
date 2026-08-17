@@ -30,6 +30,10 @@ VaiTro.prototype = {
             { "MA": "dropVaiTro_Loai", "THONGTIN1": "EM" }
         ];
         me.getList_VaiTro();
+
+        $("#txtSearch_VaiTro_VT").on("input", function () {
+            me.filterTree_VaiTro($(this).val());
+        });
         /*------------------------------------------
         --Discription: Action_main DanhMucThuocTinh
         --Order: thêm/xóa/sửa/tìm kiếm/tải lại/khác
@@ -254,6 +258,38 @@ VaiTro.prototype = {
     --Discription: Generating html on interface
     --ULR:  Modules/VaiTro/Templates/VaiTro
     ----------------------------------------------*/
+    filterTree_VaiTro: function (keyword) {
+        var $tree = $("#zone_vaitro_treejs");
+        var kw = (keyword || "").toString().trim().toLowerCase();
+        var $anchors = $tree.find("a.jstree-anchor");
+        if (!kw) {
+            $tree.find("li").show();
+            $anchors.each(function () {
+                $(this).html($(this).text());
+            });
+            return;
+        }
+        $tree.find("li").hide();
+        $anchors.each(function () {
+            var $a = $(this);
+            var text = $a.text();
+            var lower = text.toLowerCase();
+            var idx = lower.indexOf(kw);
+            var icon = $a.find("i").prop("outerHTML") || "";
+            if (idx >= 0) {
+                var $li = $a.closest("li");
+                $li.show();
+                $li.parents("li").show();
+                var before = text.substring(0, idx);
+                var match = text.substring(idx, idx + kw.length);
+                var after = text.substring(idx + kw.length);
+                $a.html(icon + " " + before + '<mark style="background:#ffe066;padding:0 2px">' + match + '</mark>' + after);
+            } else {
+                $a.html(icon + " " + text);
+            }
+        });
+    },
+
     genTreeJs_Vaitro: function (dtResult, iPager) {
         var me = this;
         edu.util.viewHTMLById("lblDanhMucTenBang_Tong", iPager);

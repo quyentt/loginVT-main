@@ -1,4 +1,31 @@
 ﻿<!-- Main content -->
+<style>
+    .jstree-leaf:hover {
+        background: #f1f1f1 !important;
+    }
+    .aps-ungdungchucnang #treesjs_ungdung_udcn .jstree-anchor,
+    .aps-ungdungchucnang #treesjs_ungdungchucnang_udcn .jstree-anchor {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        line-height: 26px !important;
+    }
+    .aps-ungdungchucnang #treesjs_ungdung_udcn .jstree-icon.fa,
+    .aps-ungdungchucnang #treesjs_ungdungchucnang_udcn .jstree-icon.fa {
+        font-size: 15px !important;
+    }
+    .aps-ungdungchucnang #txtSearch_UngDung_UDCN,
+    .aps-ungdungchucnang #txtSearch_ChucNang_UDCN {
+        font-size: 14px;
+        font-weight: 500;
+        height: 34px;
+    }
+    .aps-ungdungchucnang .box-title {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+</style>
 <section class="content aps-cms">
     <div class="row aps-app-function aps-ungdungchucnang">
         <div class="col-sm-3 aps-box-l aps-app-function-l">
@@ -12,6 +39,9 @@
                     </span>
                 </div>
                 <div class="box-body">
+                    <div style="padding:6px 8px 8px">
+                        <input id="txtSearch_UngDung_UDCN" class="form-control input-sm" placeholder="Tìm tên ứng dụng..." />
+                    </div>
                     <div id="treesjs_ungdung_udcn">
                         <!--Content of treejs-->
                     </div>
@@ -29,6 +59,9 @@
                     </span>
                 </div>
                 <div class="box-body">
+                    <div style="padding:6px 8px 8px">
+                        <input id="txtSearch_ChucNang_UDCN" class="form-control input-sm" placeholder="Tìm tên chức năng..." />
+                    </div>
                     <div id="treesjs_ungdungchucnang_udcn">
                         <!--Content of treejs-->
                     </div>

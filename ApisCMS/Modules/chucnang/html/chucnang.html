@@ -1,4 +1,55 @@
 ﻿<!-- Main content -->
+<style>
+    .jstree-leaf:hover {
+        background: #f1f1f1 !important;
+    }
+    /* Cây chức năng + form: chữ to đậm */
+    .aps-chucnang #treesjs_chucnang_cn .jstree-anchor {
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+        line-height: 26px !important;
+    }
+    .aps-chucnang #treesjs_chucnang_cn .jstree-icon.fa {
+        font-size: 15px !important;
+    }
+    .aps-chucnang #txtSearch_ChucNang_CN {
+        font-size: 14px;
+        font-weight: 500;
+        height: 34px;
+    }
+    .aps-chucnang .box-title {
+        font-size: 15px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+    .aps-chucnang .aps-function-detail .aps-form-lable,
+    .aps-chucnang .aps-form .aps-form-lable {
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        color: #0f172a !important;
+    }
+    .aps-chucnang .aps-function-detail .aps-form-input span,
+    .aps-chucnang .aps-function-detail .col-sm-10 span {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #0f172a !important;
+    }
+    .aps-chucnang .aps-form .form-control {
+        font-size: 14px !important;
+        font-weight: 500 !important;
+        color: #0f172a !important;
+    }
+    .aps-chucnang .table thead th {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #0f172a !important;
+    }
+    .aps-chucnang .table tbody td {
+        font-weight: 600 !important;
+        color: #0f172a !important;
+    }
+</style>
 <section class="content aps-cms">
     <div class="row box-solid box-shadow aps-function aps-chucnang">
         <div class="col-sm-3 aps-box-l aps-function-l">
@@ -20,6 +71,9 @@
                     </span>
                 </div>
                 <div class="box-body">
+                    <div style="padding:6px 8px 8px">
+                        <input id="txtSearch_ChucNang_CN" class="form-control input-sm" placeholder="Tìm tên chức năng..." />
+                    </div>
                     <div id="treesjs_chucnang_cn">
                         <!--Content of treejs-->
                     </div>

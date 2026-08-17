@@ -1716,6 +1716,62 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Load toàn bộ đầu ra của KH hiện tại (Pr_Ts_Kh_Dau_Ra_Get_Ds) và build map:
+    --   _kqDauRaMap[DauRa_ID] = { nganhId, nganhTen, ctTen, heTen, khoaTen, ... }
+    -- Dùng để enrich cột "Mã ngành" trong bảng KQĐK (response chính không có NGÀNH).
+    -- Cache theo KH_ID hiện tại — đổi KH sẽ reload.
+    -------------------------------------------*/
+    _ensureKQDK_DauRaMap: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var khId = me.strKeHoachTuyenSinh_Id || '';
+        if (me._kqDauRaMap && me._kqDauRaMapKH === khId) { if (cb) cb(); return; }
+        var obj_save = {
+            'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeBSA0HhMgHgYkNR4FMgPP',
+            'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Get_Ds',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strTs_Kh_TuyenSinh_Id': khId,
+            'strTs_Kh_TuyenSinh_Dot_Id': '',
+            'strTs_Kh_Dot_PhuongThuc_Id': '',
+            'strOutput_Status_Code': '',
+            'dIs_Public': '',
+            'dIs_Active': 1
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                var map = {};
+                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                for (var i = 0; i < rows.length; i++) {
+                    var r = rows[i];
+                    var id = r.ID || r.Id || r.TS_KH_DAU_RA_ID;
+                    if (!id) continue;
+                    map[id] = {
+                        nganhId: r.DAOTAO_NGANH_TS_ID || r.DAOTAO_NGANH_DT_ID || '',
+                        nganhTen: r.DAOTAO_NGANH_TS_TEN || r.DAOTAO_NGANH_DT_TEN || '',
+                        ctTen: r.DAOTAO_TOCHUCCHUONGTRINH_TEN || '',
+                        ctId: r.DAOTAO_TOCHUCCHUONGTRINH_ID || '',
+                        heTen: r.DAOTAO_HEDAOTAO_TEN || '',
+                        khoaTen: r.DAOTAO_KHOADAOTAO_TEN || ''
+                    };
+                }
+                me._kqDauRaMap = map;
+                me._kqDauRaMapKH = khId;
+                if (cb) cb();
+            },
+            error: function () {
+                me._kqDauRaMap = {};
+                me._kqDauRaMapKH = khId;
+                if (cb) cb();
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
     -- Lazy-cache map { NganhTS_ID: MA_NGANH } bằng DM TUYENSINH.NGANHNGHE.
     -- Endpoint: CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM (mỗi record có ID/MA/TEN).
     -- Gọi 1 lần cho toàn session (me._nganhMaLookup) — không phụ thuộc rows.
@@ -2122,7 +2178,15 @@ KeHoachTuyenSinhNew.prototype = {
                 if (data && data.Success) {
                     var rows = edu.util.checkValue(data.Data) ? data.Data : [];
                     me.dtKQDK_HoSo = rows;
-                    me.renderKQDK_Table(rows);
+                    // Response KHÔNG có field NGÀNH → phải lookup 2 bước:
+                    //   NGUYENVONG_DAURA_ID → đầu ra (Pr_Ts_Kh_Dau_Ra_Get_Ds) → NGANH_TS_ID/TEN
+                    //   → _nganhMaLookup (DM TUYENSINH.NGANHNGHE) → MA_NGANH
+                    var remaining = 2;
+                    var afterAll = function () {
+                        if (--remaining === 0) me.renderKQDK_Table(rows);
+                    };
+                    me._ensureKQDK_DauRaMap(afterAll);
+                    me._ensureNganhMaLookup(afterAll);
                 } else {
                     me.dtKQDK_HoSo = [];
                     me.renderKQDK_Table([]);
@@ -2372,7 +2436,21 @@ KeHoachTuyenSinhNew.prototype = {
             pick(d, ['KETQUA_QUYETDINH_MA', 'SO_QD_TT', 'SoQuyetDinh']),
             pick(d, ['KETQUA_NGAYBANHANH', 'NGAY_QD_TT', 'HOSO_NGAYKETQUA']),
             pick(d, ['INTAKE_KHOA_TEN', 'KHOA_DT', 'KhoaDT']),
-            pick(d, ['INTAKE_NGANH_TEN', 'MA_NGANH', 'MaNganh']),
+            (function () {
+                // Mã ngành: response không có field NGANH → lookup qua NGUYENVONG_DAURA_ID
+                var direct = pick(d, ['INTAKE_NGANH_MA', 'MA_NGANH', 'MaNganh']);
+                if (direct) return direct;
+                var drId = pick(d, ['NGUYENVONG_DAURA_ID', 'NguyenVong_DauRa_Id']);
+                var drMap = me._kqDauRaMap || {};
+                var dr = drId ? drMap[drId] : null;
+                if (!dr) return '';
+                var nganhMap = me._nganhMaLookup || {};
+                var nganhMapTen = me._nganhMaLookupByTen || {};
+                return nganhMap[dr.nganhId]
+                    || (dr.nganhTen ? nganhMapTen[String(dr.nganhTen).trim().toLowerCase()] : '')
+                    || dr.nganhTen
+                    || '';
+            })(),
             pick(d, ['INTAKE_LOP_MA', 'MA_LOP', 'MaLop']),
             pick(d, ['COREPERSON_MASO', 'MA_SV', 'MASV', 'MASO']),
             // Hóa đơn

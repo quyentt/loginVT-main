@@ -23,6 +23,10 @@ ChucNang.prototype = {
         me.toggle_detail();
         me.getList_UngDung();
         edu.system.loadToCombo_DanhMucDuLieu("CHUNG.HANHDONG", "dropQuyen_QuyenCN");
+
+        $("#txtSearch_ChucNang_CN").on("input", function () {
+            me.filterTree_ChucNang($(this).val());
+        });
         /*------------------------------------------
         --Discription: [0] Action Common
         --Order: 
@@ -487,6 +491,38 @@ ChucNang.prototype = {
         };
         edu.system.loadToCombo_data(obj);
     },
+    filterTree_ChucNang: function (keyword) {
+        var $tree = $("#treesjs_chucnang_cn");
+        var kw = (keyword || "").toString().trim().toLowerCase();
+        var $anchors = $tree.find("a.jstree-anchor");
+        if (!kw) {
+            $tree.find("li").show();
+            $anchors.each(function () {
+                $(this).html($(this).text());
+            });
+            return;
+        }
+        $tree.find("li").hide();
+        $anchors.each(function () {
+            var $a = $(this);
+            var text = $a.text();
+            var lower = text.toLowerCase();
+            var idx = lower.indexOf(kw);
+            var icon = $a.find("i").prop("outerHTML") || "";
+            if (idx >= 0) {
+                var $li = $a.closest("li");
+                $li.show();
+                $li.parents("li").show();
+                var before = text.substring(0, idx);
+                var match = text.substring(idx, idx + kw.length);
+                var after = text.substring(idx + kw.length);
+                $a.html(icon + " " + before + '<mark style="background:#ffe066;padding:0 2px">' + match + '</mark>' + after);
+            } else {
+                $a.html(icon + " " + text);
+            }
+        });
+    },
+
     genTreeJs_ChucNang: function (data, iPager) {
         var me = this;
         edu.util.viewHTMLById("lblChucNang_Tong_CN", iPager);
