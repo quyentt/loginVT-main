@@ -98,11 +98,17 @@ KhaiMucPhi.prototype = {
     // Set ID (Core_Person_Intake_Id) đã tick — giữ qua các trang khi paging client-side
     _selectedIds_MucPhiDaGan: {},
 
-    // State cho modal "Danh sách nhập học & thu tiền" (server-side paging)
+    // State cho modal "Danh sách nhập học & thu tiền"
+    // Chuyển sang load-all-once + client-side filter/paging (giống MucPhiDaGan)
+    // để sum "toàn bộ" bản ghi không sai khi paging server-side (BE không trả aggregate).
     _pageIndex_DSNHTT: 1,
     _pageSize_DSNHTT: 50,
     _total_DSNHTT: 0,
-    dtDSNHTT: [],
+    dtDSNHTT: [],              // slice trang hiện tại (để render)
+    dtDSNHTT_All: [],          // raw toàn bộ từ API (chỉ fetch lại khi mở modal / refresh)
+    _filtered_DSNHTT: [],      // sau khi apply filter keyword + tình trạng nhập học
+    _sumTongPhaiNop_DSNHTT: 0, // sum trên _filtered_DSNHTT — hiển thị ở top row
+    _sumDaNop_DSNHTT: 0,
 
     /* --------- INIT --------- */
     init: function () {
@@ -262,46 +268,40 @@ KhaiMucPhi.prototype = {
             }
             me.openModal_DSNHTT();
         });
-        // Filter: nút Tìm
+        // Filter: nút Tìm — client-side (chỉ apply filter, không reload API)
         $("#btnLoc_DSNHTT_HSNH").off("click").on("click", function () {
-            me._pageIndex_DSNHTT = 1;
-            me.getList_DSNHTT();
+            me._applyFilter_DSNHTT();
         });
-        // Filter: keyword Enter/debounce
+        // Filter: keyword Enter/debounce — client-side
         var tmoKw_DSNHTT = null;
         $("#txtTuKhoa_DSNHTT_HSNH").off("keypress input").on("keypress", function (e) {
             if (e.which === 13) {
                 e.preventDefault();
                 clearTimeout(tmoKw_DSNHTT);
-                me._pageIndex_DSNHTT = 1;
-                me.getList_DSNHTT();
+                me._applyFilter_DSNHTT();
             }
         }).on("input", function () {
             clearTimeout(tmoKw_DSNHTT);
-            tmoKw_DSNHTT = setTimeout(function () {
-                me._pageIndex_DSNHTT = 1;
-                me.getList_DSNHTT();
-            }, 400);
+            tmoKw_DSNHTT = setTimeout(function () { me._applyFilter_DSNHTT(); }, 300);
         });
-        // Filter: đổi tình trạng nhập học
+        // Filter: đổi tình trạng nhập học — client-side
         $("#dropDaNhapHoc_DSNHTT_HSNH").off("change").on("change", function () {
-            me._pageIndex_DSNHTT = 1;
-            me.getList_DSNHTT();
+            me._applyFilter_DSNHTT();
         });
-        // Đổi page size — value="-1" nghĩa "Tất cả" → dùng 100000 khi gọi API
+        // Đổi page size — value="-1" nghĩa "Tất cả" → render lại slice, KHÔNG reload API
         $("#pgSize_DSNHTT").off("change").on("change", function () {
             var v = parseInt($(this).val(), 10);
-            me._pageSize_DSNHTT = (v === -1) ? 100000 : (v || 50);
+            me._pageSize_DSNHTT = (v === -1) ? 999999 : (v || 50);
             me._pageIndex_DSNHTT = 1;
-            me.getList_DSNHTT();
+            me._renderCurrentPage_DSNHTT();
         });
-        // Click page
+        // Click page — client-side, chỉ re-slice
         $("#paging_DSNHTT_HSNH").off("click", ".page-link").on("click", ".page-link", function (e) {
             e.preventDefault();
             var t = parseInt($(this).attr("data-page"), 10);
             if (isNaN(t) || t < 1) return;
             me._pageIndex_DSNHTT = t;
-            me.getList_DSNHTT();
+            me._renderCurrentPage_DSNHTT();
         });
         // Nút Xuất Excel + Ctrl+G khi modal đang mở
         $("#btnXuatExcel_DSNHTT_HSNH").off("click").on("click", function (e) {
@@ -2792,14 +2792,14 @@ KhaiMucPhi.prototype = {
     /* -----------------------------------------------------------------
        [Đông Á] Danh sách nhập học & thu tiền
        PKG_CORE_NhapHoc_ThuTien.LayDSThiSinhNhapHoc
-       Server-side paging: pageIndex/pageSize gửi lên, Pager trả về TotalRow.
+       Load-all-once + client-side filter/paging (sum "toàn bộ" chính xác).
        ----------------------------------------------------------------- */
     openModal_DSNHTT: function () {
         var me = this;
         me._pageIndex_DSNHTT = 1;
         $("#txtTuKhoa_DSNHTT_HSNH").val('');
         $("#dropDaNhapHoc_DSNHTT_HSNH").val('0');
-        // Nếu _pageSize là mock "Tất cả" (100000) → chọn option value="-1", ngược lại giữ nguyên
+        // Nếu _pageSize là mock "Tất cả" (>= 999999) → chọn option value="-1", ngược lại giữ nguyên
         $("#pgSize_DSNHTT").val(me._pageSize_DSNHTT >= 100000 ? '-1' : String(me._pageSize_DSNHTT));
         $("#lblTong_DSNHTT_HSNH").text('0');
         $("#tblDSNHTT_HSNH tbody").html(
@@ -2810,6 +2810,8 @@ KhaiMucPhi.prototype = {
         me.getList_DSNHTT();
     },
 
+    /* Load TOÀN BỘ 1 lần (pageSize=100000, dDaNhapHoc=0 để lấy hết) → cache dtDSNHTT_All.
+       Sau đó filter client-side (keyword + tình trạng). Filter/paging về sau chỉ dùng cache. */
     getList_DSNHTT: function () {
         var me = this;
         var $tbody = $("#tblDSNHTT_HSNH tbody");
@@ -2820,21 +2822,19 @@ KhaiMucPhi.prototype = {
             'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIVKSgSKC8pDykgMQkuIgPP',
             'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSThiSinhNhapHoc',
             'iM': edu.system.iM,
-            'strTuKhoa': $("#txtTuKhoa_DSNHTT_HSNH").val() || '',
+            'strTuKhoa': '',                                       // Load tất cả — keyword lọc client-side
             'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
             'strNguoiThucHien_Id': edu.system.userId,
-            'dDaNhapHoc': parseInt($("#dropDaNhapHoc_DSNHTT_HSNH").val(), 10) || 0,
-            'pageIndex': me._pageIndex_DSNHTT || 1,
-            'pageSize': me._pageSize_DSNHTT || 50
+            'dDaNhapHoc': 0,                                        // Load tất cả — tình trạng lọc client-side
+            'pageIndex': 1,
+            'pageSize': 100000                                      // Tải hết 1 phát
         };
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtDSNHTT = edu.util.checkValue(data.Data) ? data.Data : [];
-                    me._total_DSNHTT = parseInt(data.Pager, 10) || me.dtDSNHTT.length;
-                    $("#lblTong_DSNHTT_HSNH").text(me._total_DSNHTT);
-                    me.genTable_DSNHTT(me.dtDSNHTT);
-                    me._renderPaging_DSNHTT();
+                    me.dtDSNHTT_All = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me._pageIndex_DSNHTT = 1;
+                    me._applyFilter_DSNHTT();
                 } else {
                     edu.system.alert(data.Message || "LayDSThiSinhNhapHoc: lỗi", "w");
                     $tbody.html('<tr><td colspan="11" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>');
@@ -2850,6 +2850,62 @@ KhaiMucPhi.prototype = {
             data: obj_save,
             fakedb: []
         }, false, false, false, null);
+    },
+
+    /* Apply filter client-side (keyword + dDaNhapHoc) → _filtered_DSNHTT + sum toàn bộ → render page 1 */
+    _applyFilter_DSNHTT: function () {
+        var me = this;
+        var arr = me.dtDSNHTT_All || [];
+        var strKw = String($("#txtTuKhoa_DSNHTT_HSNH").val() || '').trim().toLowerCase();
+        var iDaNH = parseInt($("#dropDaNhapHoc_DSNHTT_HSNH").val(), 10) || 0;
+
+        var filtered = arr.filter(function (r) {
+            // Filter tình trạng "Đã nhập học" (1 = chỉ đã nhập học, 0 = tất cả)
+            if (iDaNH === 1) {
+                var iCreated = Number(me._pickCI(r, 'IsStudyCreated', 'DaNhapHoc', 'IsNhapHoc') || 0);
+                if (iCreated !== 1) return false;
+            }
+            // Filter keyword: CCCD / Mã số / Họ tên
+            if (strKw) {
+                var s1 = String(me._pickCI(r, 'IdentifierNo', 'CCCD') || '').toLowerCase();
+                var s2 = String(me._pickCI(r, 'CurrentEmployeeCode', 'MaSo') || '').toLowerCase();
+                var s3 = String(me._pickCI(r, 'FullName', 'HoTen') || '').toLowerCase();
+                if (s1.indexOf(strKw) < 0 && s2.indexOf(strKw) < 0 && s3.indexOf(strKw) < 0) return false;
+            }
+            return true;
+        });
+
+        me._filtered_DSNHTT = filtered;
+        me._total_DSNHTT = filtered.length;
+        $("#lblTong_DSNHTT_HSNH").text(me._total_DSNHTT);
+
+        // Compute sum TOÀN BỘ filtered (không phải chỉ trang hiện tại) — user yêu cầu sum chuẩn
+        var sumTong = 0, sumDaNop = 0;
+        filtered.forEach(function (r) {
+            var v = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
+            if (v !== '' && v != null && !isNaN(v)) sumTong += Number(v);
+            var v2 = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            if (v2 !== '' && v2 != null && !isNaN(v2)) sumDaNop += Number(v2);
+        });
+        me._sumTongPhaiNop_DSNHTT = sumTong;
+        me._sumDaNop_DSNHTT = sumDaNop;
+
+        me._pageIndex_DSNHTT = 1;
+        me._renderCurrentPage_DSNHTT();
+    },
+
+    /* Slice _filtered theo trang hiện tại → render + update paging + update top sum row */
+    _renderCurrentPage_DSNHTT: function () {
+        var me = this;
+        var arr = me._filtered_DSNHTT || [];
+        var pageSize = me._pageSize_DSNHTT || 50;
+        var totalPages = Math.max(1, Math.ceil(arr.length / pageSize));
+        if (me._pageIndex_DSNHTT > totalPages) me._pageIndex_DSNHTT = totalPages;
+        var start = (me._pageIndex_DSNHTT - 1) * pageSize;
+        var slice = arr.slice(start, start + pageSize);
+        me.dtDSNHTT = slice;
+        me.genTable_DSNHTT(slice);
+        me._renderPaging_DSNHTT();
     },
 
     genTable_DSNHTT: function (arr) {
@@ -2886,8 +2942,6 @@ KhaiMucPhi.prototype = {
         var pageIdx = this._pageIndex_DSNHTT || 1;
         var sttBase = (pageIdx - 1) * pageSize;
 
-        // Sum theo TRANG hiện tại (server-side paging → không tính được tổng cả list nếu không fetch all)
-        var sumTongPhaiNop = 0, sumDaNop = 0;
         var html = '';
         arr.forEach(function (r, i) {
             var strCCCD = me._pickCI(r, 'IdentifierNo', 'CCCD');
@@ -2902,9 +2956,6 @@ KhaiMucPhi.prototype = {
             // var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
             var vTongPhaiNop = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
             var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
-            // Cộng sum
-            if (vTongPhaiNop !== '' && vTongPhaiNop != null && !isNaN(vTongPhaiNop)) sumTongPhaiNop += Number(vTongPhaiNop);
-            if (vDaNop !== '' && vDaNop != null && !isNaN(vDaNop)) sumDaNop += Number(vDaNop);
             // ẨN cột "Còn phải nộp" — giữ compute để dễ mở lại sau
             // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
             // if ((vConNop === '' || vConNop == null) && vTongPhaiNop !== '' && vDaNop !== '') {
@@ -2934,13 +2985,11 @@ KhaiMucPhi.prototype = {
             html += '</tr>';
         });
         $tbody.append(html);
-        // Update sum row ở đầu bảng
-        $("#sumTongPhaiNop_DSNHTT").text(me._fmtNumVN(sumTongPhaiNop));
-        $("#sumDaNop_DSNHTT").text(me._fmtNumVN(sumDaNop));
-        // Label sum row: nếu pageSize ≥ total (hoặc chọn "Tất cả") → "toàn bộ", còn lại → "trang hiện tại"
-        var isAll = (me._pageSize_DSNHTT >= 100000) || (arr.length >= (me._total_DSNHTT || 0));
-        $("#tblDSNHTT_HSNH thead tr.kmp-sum-row-top th:first-child")
-            .text(isAll ? 'Tổng cộng (toàn bộ)' : 'Tổng cộng (trang hiện tại)');
+        // Sum row ở đầu bảng — lấy từ state đã compute trên TOÀN BỘ _filtered (không theo trang)
+        $("#sumTongPhaiNop_DSNHTT").text(me._fmtNumVN(me._sumTongPhaiNop_DSNHTT || 0));
+        $("#sumDaNop_DSNHTT").text(me._fmtNumVN(me._sumDaNop_DSNHTT || 0));
+        // Label sum row: luôn là "toàn bộ" vì sum tính trên full filtered
+        $("#tblDSNHTT_HSNH thead tr.kmp-sum-row-top th:first-child").text('Tổng cộng (toàn bộ)');
     },
 
     _renderPaging_DSNHTT: function () {
@@ -2984,128 +3033,73 @@ KhaiMucPhi.prototype = {
         addLi('»', totalPages, cur === totalPages, false);
     },
 
-    /* Xuất Excel: fetch TOÀN BỘ list (không phân trang) rồi build workbook.
-       Server-side paging → phải gọi lại API với pageSize lớn (100000) để lấy hết theo
-       filter hiện tại (keyword + tình trạng nhập học). */
+    /* Xuất Excel: dùng cache _filtered_DSNHTT (đã filter client-side). Không fetch lại API. */
     _xuatExcel_DSNHTT: function () {
         var me = this;
         if (typeof XLSX === 'undefined') {
             edu.system.alert("Thư viện Excel (XLSX) chưa được nạp.", "w");
             return;
         }
-        if (!me.strKeHoachNhapHoc_Id) {
-            edu.system.alert("Chưa chọn kế hoạch nhập học.", "w");
+        var arr = (me._filtered_DSNHTT && me._filtered_DSNHTT.length)
+                    ? me._filtered_DSNHTT
+                    : (me.dtDSNHTT_All || []);
+        if (!arr || arr.length === 0) {
+            edu.system.alert("Không có dữ liệu để xuất.", "w");
             return;
         }
-
-        // Loading state — disable nút để tránh double-click
-        var $btn = $("#btnXuatExcel_DSNHTT_HSNH");
-        var htmlOrig = $btn.html();
-        $btn.prop('disabled', true).css('pointer-events', 'none')
-            .html('<i class="fa fa-spinner fa-spin"></i>&nbsp;Đang tải dữ liệu...');
-
-        var restoreBtn = function () {
-            $btn.prop('disabled', false).css('pointer-events', '').html(htmlOrig);
+        var toNum = function (v) {
+            if (v === '' || v == null || isNaN(v)) return '';
+            return Number(v);
         };
 
-        var obj_save = {
-            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIVKSgSKC8pDykgMQkuIgPP',
-            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSThiSinhNhapHoc',
-            'iM': edu.system.iM,
-            'strTuKhoa': $("#txtTuKhoa_DSNHTT_HSNH").val() || '',
-            'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
-            'strNguoiThucHien_Id': edu.system.userId,
-            'dDaNhapHoc': parseInt($("#dropDaNhapHoc_DSNHTT_HSNH").val(), 10) || 0,
-            'pageIndex': 1,
-            'pageSize': 100000
-        };
-        edu.system.makeRequest({
-            success: function (data) {
-                try {
-                    if (!data.Success) {
-                        edu.system.alert(data.Message || "LayDSThiSinhNhapHoc: lỗi", "w");
-                        return;
-                    }
-                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
-                    if (!arr.length) {
-                        edu.system.alert("Không có dữ liệu để xuất.", "w");
-                        return;
-                    }
-                    var pick = function (row) {
-                        for (var i = 1; i < arguments.length; i++) {
-                            var k = arguments[i];
-                            if (row[k] != null && row[k] !== '') return row[k];
-                        }
-                        return '';
-                    };
-                    var toNum = function (v) {
-                        if (v === '' || v == null || isNaN(v)) return '';
-                        return Number(v);
-                    };
+        var header = [
+            'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
+            'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
+            // 'Đã nhập học',   // ẨN: mở lại nếu cần
+            'Tổng phải nộp', 'Đã nộp'
+            // , 'Còn phải nộp' // ẨN: sẽ mở lại khi có info miễn giảm
+        ];
+        var aoa = [header];
+        arr.forEach(function (r, i) {
+            var vTong = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
+            var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            // ẨN — giữ compute
+            // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
+            // if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
+            //     vConNop = (Number(vTong) || 0) - (Number(vDaNop) || 0);
+            // }
+            // var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
+            aoa.push([
+                i + 1,
+                me._pickCI(r, 'IdentifierNo', 'CCCD'),
+                me._pickCI(r, 'CurrentEmployeeCode', 'MaSo'),
+                me._pickCI(r, 'FullName', 'HoTen'),
+                me._pickCI(r, 'GenderTen', 'GioiTinhTen', 'GioiTinh', 'Gender'),
+                me._pickCI(r, 'DateOfBirth', 'NgaySinhStr', 'NgaySinh'),
+                me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen'),
+                me._pickCI(r, 'TenChuongTrinh', 'TenCT', 'ChuongTrinhTen', 'DaoTaoToChucChuongTrinhTen'),
+                me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen'),
+                // iDaNH === 1 ? 'Đã nhập học' : 'Chưa',   // ẨN
+                toNum(vTong),
+                toNum(vDaNop)
+                // , toNum(vConNop)  // ẨN
+            ]);
+        });
 
-                    var header = [
-                        'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
-                        'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
-                        // 'Đã nhập học',   // ẨN: mở lại nếu cần
-                        'Tổng phải nộp', 'Đã nộp'
-                        // , 'Còn phải nộp' // ẨN: sẽ mở lại khi có info miễn giảm
-                    ];
-                    var aoa = [header];
-                    arr.forEach(function (r, i) {
-                        var vTong = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
-                        var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
-                        // ẨN — giữ compute
-                        // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
-                        // if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
-                        //     vConNop = (Number(vTong) || 0) - (Number(vDaNop) || 0);
-                        // }
-                        // var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
-                        aoa.push([
-                            i + 1,
-                            me._pickCI(r, 'IdentifierNo', 'CCCD'),
-                            me._pickCI(r, 'CurrentEmployeeCode', 'MaSo'),
-                            me._pickCI(r, 'FullName', 'HoTen'),
-                            me._pickCI(r, 'GenderTen', 'GioiTinhTen', 'GioiTinh', 'Gender'),
-                            me._pickCI(r, 'DateOfBirth', 'NgaySinhStr', 'NgaySinh'),
-                            me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen'),
-                            me._pickCI(r, 'TenChuongTrinh', 'TenCT', 'ChuongTrinhTen', 'DaoTaoToChucChuongTrinhTen'),
-                            me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen'),
-                            // iDaNH === 1 ? 'Đã nhập học' : 'Chưa',   // ẨN
-                            toNum(vTong),
-                            toNum(vDaNop)
-                            // , toNum(vConNop)  // ẨN
-                        ]);
-                    });
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+        ws['!cols'] = [
+            { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
+            { wch: 28 }, { wch: 34 }, { wch: 18 },
+            { wch: 16 }, { wch: 16 }
+        ];
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'DSNhapHocThuTien');
 
-                    var ws = XLSX.utils.aoa_to_sheet(aoa);
-                    ws['!cols'] = [
-                        { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
-                        { wch: 28 }, { wch: 34 }, { wch: 18 },
-                        { wch: 16 }, { wch: 16 }
-                    ];
-                    var wb = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(wb, ws, 'DSNhapHocThuTien');
-
-                    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
-                    var now = new Date();
-                    var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
-                              + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
-                    var fname = 'DSNhapHocThuTien_' + arr.length + 'rec_' + stamp + '.xlsx';
-                    XLSX.writeFile(wb, fname);
-                } finally {
-                    restoreBtn();
-                }
-            },
-            error: function (er) {
-                restoreBtn();
-                edu.system.alert("LayDSThiSinhNhapHoc (ex): " + JSON.stringify(er), "w");
-            },
-            type: 'POST',
-            action: obj_save.action,
-            versionAPI: 'v1.0',
-            contentType: true,
-            data: obj_save,
-            fakedb: []
-        }, false, false, false, null);
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        var now = new Date();
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                  + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+        var fname = 'DSNhapHocThuTien_' + arr.length + 'rec_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fname);
     }
 };
