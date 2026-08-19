@@ -3319,6 +3319,20 @@ KeHoachTuyenSinhNew.prototype = {
             'strExtra_Intake_Data': ''
         };
 
+        // Convention Oracle: param prefix 'd*' = NUMBER → rỗng phải gửi null (không phải '')
+        // Nếu gửi '' vào NUMBER → PLS-00306 wrong type, C# catch nuốt exception thành
+        // Success=true, Message='' nhưng proc chưa insert gì (giống bug đã fix ở _buildImportPayload).
+        Object.keys(payload).forEach(function (k) {
+            if (k.charAt(0) !== 'd') return;
+            var v = payload[k];
+            if (v === '' || v === undefined || v === null) {
+                payload[k] = null;
+            } else {
+                var n = Number(v);
+                payload[k] = isNaN(n) ? null : n;
+            }
+        });
+
         edu.system.makeRequest({
             success: function (data) {
                 if (data && data.Success) {
