@@ -59,6 +59,25 @@ KhaiMucPhi.prototype = {
         return ten || ma;
     },
 
+    /* Helper case-insensitive pick — match key bỏ qua hoa/thường/underscore/khoảng trắng.
+       Dùng cho các field mà BE có thể trả về nhiều biến thể casing:
+       'TongSoTienDaNop' matches 'TONG_SO_TIEN_DA_NOP', 'tongsotiendanop', 'Tong_SoTien_DaNop'... */
+    _pickCI: function (row) {
+        if (!row) return '';
+        var normKeyMap = {};
+        for (var k in row) {
+            if (Object.prototype.hasOwnProperty.call(row, k)) {
+                normKeyMap[String(k).toLowerCase().replace(/[_\-\s]/g, '')] = row[k];
+            }
+        }
+        for (var i = 1; i < arguments.length; i++) {
+            var target = String(arguments[i]).toLowerCase().replace(/[_\-\s]/g, '');
+            var v = normKeyMap[target];
+            if (v != null && v !== '') return v;
+        }
+        return '';
+    },
+
     // State cho modal cấu hình đầu vào (SV/đối tượng)
     strNhomId_DauVao: '',
     strKeHoachId_DauVao: '',
@@ -78,6 +97,12 @@ KhaiMucPhi.prototype = {
     _filtered_MucPhiDaGan: [],
     // Set ID (Core_Person_Intake_Id) đã tick — giữ qua các trang khi paging client-side
     _selectedIds_MucPhiDaGan: {},
+
+    // State cho modal "Danh sách nhập học & thu tiền" (server-side paging)
+    _pageIndex_DSNHTT: 1,
+    _pageSize_DSNHTT: 50,
+    _total_DSNHTT: 0,
+    dtDSNHTT: [],
 
     /* --------- INIT --------- */
     init: function () {
@@ -228,6 +253,86 @@ KhaiMucPhi.prototype = {
             me.openModal_MucPhiDaGan();
         });
 
+        // ----- Modal "Danh sách nhập học & thu tiền" -----
+        // Nút mở modal
+        $("#btnDSNhapHocThuTien_HSNH").off("click").on("click", function () {
+            if (!me.strKeHoachNhapHoc_Id) {
+                edu.system.alert("Vui lòng chọn kế hoạch nhập học và bấm Xem trước.", "w");
+                return;
+            }
+            me.openModal_DSNHTT();
+        });
+        // Filter: nút Tìm
+        $("#btnLoc_DSNHTT_HSNH").off("click").on("click", function () {
+            me._pageIndex_DSNHTT = 1;
+            me.getList_DSNHTT();
+        });
+        // Filter: keyword Enter/debounce
+        var tmoKw_DSNHTT = null;
+        $("#txtTuKhoa_DSNHTT_HSNH").off("keypress input").on("keypress", function (e) {
+            if (e.which === 13) {
+                e.preventDefault();
+                clearTimeout(tmoKw_DSNHTT);
+                me._pageIndex_DSNHTT = 1;
+                me.getList_DSNHTT();
+            }
+        }).on("input", function () {
+            clearTimeout(tmoKw_DSNHTT);
+            tmoKw_DSNHTT = setTimeout(function () {
+                me._pageIndex_DSNHTT = 1;
+                me.getList_DSNHTT();
+            }, 400);
+        });
+        // Filter: đổi tình trạng nhập học
+        $("#dropDaNhapHoc_DSNHTT_HSNH").off("change").on("change", function () {
+            me._pageIndex_DSNHTT = 1;
+            me.getList_DSNHTT();
+        });
+        // Đổi page size
+        $("#pgSize_DSNHTT").off("change").on("change", function () {
+            me._pageSize_DSNHTT = parseInt($(this).val(), 10) || 50;
+            me._pageIndex_DSNHTT = 1;
+            me.getList_DSNHTT();
+        });
+        // Click page
+        $("#paging_DSNHTT_HSNH").off("click", ".page-link").on("click", ".page-link", function (e) {
+            e.preventDefault();
+            var t = parseInt($(this).attr("data-page"), 10);
+            if (isNaN(t) || t < 1) return;
+            me._pageIndex_DSNHTT = t;
+            me.getList_DSNHTT();
+        });
+        // Nút Xuất Excel + Ctrl+G khi modal đang mở
+        $("#btnXuatExcel_DSNHTT_HSNH").off("click").on("click", function (e) {
+            if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+            me._xuatExcel_DSNHTT();
+        });
+        $(document).off('keydown.dsnhtt_export').on('keydown.dsnhtt_export', function (e) {
+            var $m = $('#modalDSNHTT_HSNH');
+            if (!$m.hasClass('in') && !$m.is(':visible')) return;
+            if (/^(input|textarea|select)$/i.test((e.target && e.target.tagName) || '')) return;
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G' || e.which === 71)) {
+                e.preventDefault();
+                e.stopPropagation();
+                me._xuatExcel_DSNHTT();
+            }
+        });
+
+        // Sync scroll-x giả trên đầu bảng ↔ scroll dưới
+        var syncingDSNHTT = false;
+        $("#scrollTop_DSNHTT_HSNH").off("scroll.dsnhtt").on("scroll.dsnhtt", function () {
+            if (syncingDSNHTT) return;
+            syncingDSNHTT = true;
+            $("#scrollBottom_DSNHTT_HSNH").scrollLeft($(this).scrollLeft());
+            syncingDSNHTT = false;
+        });
+        $("#scrollBottom_DSNHTT_HSNH").off("scroll.dsnhtt").on("scroll.dsnhtt", function () {
+            if (syncingDSNHTT) return;
+            syncingDSNHTT = true;
+            $("#scrollTop_DSNHTT_HSNH").scrollLeft($(this).scrollLeft());
+            syncingDSNHTT = false;
+        });
+
         // Filter modal Mức phí đã gán
         // Sau khi chuyển sang load-all + client-side filter:
         //  - Keyword + range tổng phí: chỉ gọi _applyFilter_MucPhiDaGan (instant, không reload server)
@@ -294,35 +399,6 @@ KhaiMucPhi.prototype = {
             me.xem_ChiTiet_PhaiNop(strIntakeId, strHoTen, strMa);
         });
 
-        // Select-all — apply cho TOÀN BỘ filtered (không chỉ trang hiện tại), giữ state qua các trang
-        $("#chkSelectAll_MucPhiDaGan_HSNH").off("change").on("change", function () {
-            var bCheck = $(this).is(":checked");
-            me._selectedIds_MucPhiDaGan = {};
-            if (bCheck) {
-                (me._filtered_MucPhiDaGan || []).forEach(function (r) {
-                    var id = r.ID || r.CORE_PERSON_INTAKE_ID || r.Core_Person_Intake_Id || '';
-                    if (id) me._selectedIds_MucPhiDaGan[id] = true;
-                });
-            }
-            // Update checked state trên trang hiện tại + count
-            $("#tblMucPhiDaGan_HSNH tbody input.chkMucPhiDaGan_Row").each(function () {
-                var id = $(this).attr("data-id");
-                $(this).prop("checked", !!me._selectedIds_MucPhiDaGan[id]);
-            });
-            me._updateCount_MucPhiDaGan();
-        });
-
-        // Row checkbox: update state (giữ tick qua các trang)
-        $("#tblMucPhiDaGan_HSNH").off("change", ".chkMucPhiDaGan_Row")
-            .on("change", ".chkMucPhiDaGan_Row", function () {
-                var id = $(this).attr("data-id");
-                if (!id) return;
-                if ($(this).is(":checked")) me._selectedIds_MucPhiDaGan[id] = true;
-                else delete me._selectedIds_MucPhiDaGan[id];
-                me._syncHeaderChk_MucPhiDaGan();
-                me._updateCount_MucPhiDaGan();
-            });
-
         // Sync scroll-x giả trên đầu bảng ↔ scroll dưới của bảng (bảng rộng 2200px)
         // Dùng flag `syncing` để tránh loop khi setScrollLeft trigger event.
         var syncingMPDG = false;
@@ -339,26 +415,21 @@ KhaiMucPhi.prototype = {
             syncingMPDG = false;
         });
 
-        // Nút "Tạo phí nhập học" cho các dòng đã tick
-        // Reuse _openModalProgress_GenMucPhi + _gen_MucPhi_Sequential (đã có cho luồng "tạo cho cả kế hoạch")
-        $("#btnTaoPhi_Selected_MucPhiDaGan_HSNH").off("click").on("click", function (e) {
-            e.preventDefault();
-            var arrIds = Object.keys(me._selectedIds_MucPhiDaGan || {});
-            if (arrIds.length === 0) {
-                edu.system.alert("Vui lòng tick chọn ít nhất một thí sinh.", "w");
-                return;
+        // Nút Xuất excel: build từ _filtered_MucPhiDaGan (toàn bộ list đang lọc, không chỉ trang hiện tại)
+        $("#btnXuatExcel_MucPhiDaGan_HSNH").off("click").on("click", function (e) {
+            if (e && e.preventDefault) { e.preventDefault(); e.stopPropagation(); }
+            me._xuatExcel_MucPhiDaGan();
+        });
+        // Hotkey Ctrl+G (hoặc Cmd+G Mac) — chỉ trigger khi modal đang mở + focus không nằm ở input
+        $(document).off('keydown.mpdg_export').on('keydown.mpdg_export', function (e) {
+            var $m = $('#modalMucPhiDaGan_HSNH');
+            if (!$m.hasClass('in') && !$m.is(':visible')) return;
+            if (/^(input|textarea|select)$/i.test((e.target && e.target.tagName) || '')) return;
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'g' || e.key === 'G' || e.which === 71)) {
+                e.preventDefault();
+                e.stopPropagation();
+                me._xuatExcel_MucPhiDaGan();
             }
-            edu.system.confirm("Bạn có chắc chắn muốn tạo phí nhập học cho " + arrIds.length + " thí sinh đã chọn?");
-            $("#btnYes").off("click.genMucPhiSelected").on("click.genMucPhiSelected", function () {
-                // Đóng confirm modal ngay — nếu không body sẽ lộ ra rỗng sau khi progress modal đóng
-                $('#myModalAlert').modal('hide');
-                // Build arr đơn giản {ID: xxx} — _gen_MucPhi_Sequential picks row.ID
-                var arr = arrIds.map(function (id) { return { ID: id }; });
-                me._openModalProgress_GenMucPhi();
-                me._setStatus_GenMucPhi("Đang chuẩn bị tạo phí cho " + arr.length + " thí sinh...");
-                me._genFrom_MucPhiDaGan = true;   // flag để _enableClose_GenMucPhi biết reload đúng list
-                me._gen_MucPhi_Sequential(arr);
-            });
         });
 
         // Nút Lưu trong modal nhóm
@@ -2236,7 +2307,9 @@ KhaiMucPhi.prototype = {
         var me = this;
         var $tbody = $("#tblMucPhiDaGan_HSNH tbody");
         $tbody.html('<tr><td colspan="13" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
-        $("#tfootSum_MucPhiDaGan_HSNH").hide();
+        // Reset sums về 0 khi bắt đầu load (tfoot luôn hiển thị)
+        $("#sumTongPhi_MucPhiDaGan").text('0');
+        $("#sumTongDaNop_MucPhiDaGan").text('0');
         $("#paging_MucPhiDaGan_HSNH").attr('style', 'gap:10px; display:none;');
 
         var obj_save = {
@@ -2374,15 +2447,32 @@ KhaiMucPhi.prototype = {
     genTable_MucPhiDaGan: function (arr) {
         var me = this;
         var $tbody = $("#tblMucPhiDaGan_HSNH tbody");
-        var $tfoot = $("#tfootSum_MucPhiDaGan_HSNH");
         $tbody.empty();
         $("#lblTong_MucPhiDaGan_HSNH").text(me._total_MucPhiDaGan || 0);
-        $("#chkSelectAll_MucPhiDaGan_HSNH").prop('checked', false);
 
         if (!arr || arr.length === 0) {
             $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không tìm thấy dữ liệu</td></tr>');
-            $tfoot.hide();
+            $("#sumTongPhi_MucPhiDaGan").text('0');
+            $("#sumTongDaNop_MucPhiDaGan").text('0');
             return;
+        }
+
+        // Debug 1 lần / phiên: log các key của row đầu để confirm tên field "TongSoTienDaNop"
+        // và auto-detect nếu alias hiện tại không khớp. Chỉ log khi chưa dump lần nào để
+        // tránh spam console khi user paging/filter.
+        if (!me._dumpedKeys_MucPhiDaGan) {
+            me._dumpedKeys_MucPhiDaGan = true;
+            var keys0 = Object.keys(arr[0] || {});
+            try { console.log('[MucPhiDaGan] row keys:', keys0); } catch (e) {}
+            // Auto-detect field TongSoTienDaNop nếu tất cả alias hard-coded fail
+            var hits = keys0.filter(function (k) {
+                var kn = String(k).toLowerCase().replace(/[_\-\s]/g, '');
+                return kn.indexOf('danop') >= 0 || kn.indexOf('dathu') >= 0 || kn.indexOf('thutien') >= 0;
+            });
+            if (hits.length) {
+                try { console.log('[MucPhiDaGan] candidates cho "đã nộp":', hits); } catch (e) {}
+                me._extraAlias_TongDaNop = hits;   // fallback list dùng bên dưới
+            }
         }
 
         // Helper get first non-empty
@@ -2417,6 +2507,13 @@ KhaiMucPhi.prototype = {
             var strLop = pick(r, 'LOPQUANLY_TEN', 'LopQuanLy_Ten', 'LOP_QUANLY_TEN');
             var strThongTin = pick(r, 'THONGTINMUCPHI', 'ThongTinMucPhi', 'THONG_TIN_MUC_PHI');
             var strTong = pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI');
+            var strTongDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            if ((strTongDaNop === '' || strTongDaNop == null) && me._extraAlias_TongDaNop) {
+                for (var _i = 0; _i < me._extraAlias_TongDaNop.length; _i++) {
+                    var _k = me._extraAlias_TongDaNop[_i];
+                    if (r[_k] != null && r[_k] !== '') { strTongDaNop = r[_k]; break; }
+                }
+            }
             var strGhiChu = pick(r, 'GHICHU', 'GhiChu', 'GHI_CHU');
 
             var dataAttrs = 'data-id="' + esc(strId)
@@ -2440,14 +2537,11 @@ KhaiMucPhi.prototype = {
                 +      '<i class="fa fa-pencil"></i> Sửa'
                 +    '</a>'
                 + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(strTongDaNop)) + '</td>';
             html += '<td class="td-left">' + esc(strGhiChu) + '</td>';
-            var checked = me._selectedIds_MucPhiDaGan[strId] ? ' checked' : '';
-            html += '<td class="td-center"><input type="checkbox" class="chkMucPhiDaGan_Row" data-id="' + esc(strId) + '"' + checked + ' /></td>';
             html += '</tr>';
         });
         $tbody.append(html);
-        me._syncHeaderChk_MucPhiDaGan();
-        me._updateCount_MucPhiDaGan();
 
         // Đồng bộ width scroll-top với scrollWidth thực tế của bảng (an toàn hơn hardcode 2200px)
         setTimeout(function () {
@@ -2455,16 +2549,23 @@ KhaiMucPhi.prototype = {
             $("#scrollTop_MucPhiDaGan_HSNH .kmp-scroll-top-inner").css("width", w + "px");
         }, 0);
 
-        // Sum "Tổng phí" trên TOÀN BỘ bộ lọc (không chỉ trang hiện tại) — hữu ích hơn cho user
-        // vì đã chuyển sang client-side paging, sum theo trang không có nhiều giá trị.
-        var sumTong = 0;
+        // Sum "Tổng phí phải nộp" + "Tổng phí đã nộp" trên TOÀN BỘ bộ lọc
+        var sumTong = 0, sumDaNop = 0;
         var arrSum = me._filtered_MucPhiDaGan && me._filtered_MucPhiDaGan.length ? me._filtered_MucPhiDaGan : arr;
         arrSum.forEach(function (r) {
             var v = pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI');
             if (v !== '' && v != null && !isNaN(v)) sumTong += Number(v);
+            var v2 = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            if ((v2 === '' || v2 == null) && me._extraAlias_TongDaNop) {
+                for (var _k = 0; _k < me._extraAlias_TongDaNop.length; _k++) {
+                    var _key = me._extraAlias_TongDaNop[_k];
+                    if (r[_key] != null && r[_key] !== '') { v2 = r[_key]; break; }
+                }
+            }
+            if (v2 !== '' && v2 != null && !isNaN(v2)) sumDaNop += Number(v2);
         });
         $("#sumTongPhi_MucPhiDaGan").text(me._fmtNumVN(sumTong));
-        $tfoot.show();
+        $("#sumTongDaNop_MucPhiDaGan").text(me._fmtNumVN(sumDaNop));
     },
 
     /* Server-side pagination — render nút phân trang */
@@ -2498,6 +2599,79 @@ KhaiMucPhi.prototype = {
         for (var p = startP; p <= endP; p++) add(String(p), p, false, p === page);
         add('›', Math.min(totalPages, page + 1), page === totalPages, false);
         add('»', totalPages, page === totalPages, false);
+    },
+
+    /* Xuất Excel: toàn bộ list đang lọc (_filtered_MucPhiDaGan), không giới hạn theo trang.
+       Dùng SheetJS (XLSX) — thư viện đã được load global qua Corei/systemroot.js. */
+    _xuatExcel_MucPhiDaGan: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel (XLSX) chưa được nạp.", "w");
+            return;
+        }
+        var arr = (me._filtered_MucPhiDaGan && me._filtered_MucPhiDaGan.length)
+                    ? me._filtered_MucPhiDaGan
+                    : (me.dtMucPhiDaGan_All || []);
+        if (!arr || arr.length === 0) {
+            edu.system.alert("Không có dữ liệu để xuất.", "w");
+            return;
+        }
+        var pick = function (row) {
+            for (var i = 1; i < arguments.length; i++) {
+                var k = arguments[i];
+                if (row[k] != null && row[k] !== '') return row[k];
+            }
+            return '';
+        };
+        var toNum = function (v) {
+            if (v === '' || v == null || isNaN(v)) return '';
+            return Number(v);
+        };
+
+        var header = [
+            'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
+            'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
+            'Thông tin mức phí nhập học',
+            'Tổng phí phải nộp', 'Tổng phí đã nộp',
+            'Ghi chú'
+        ];
+        var aoa = [header];
+        arr.forEach(function (r, i) {
+            var strTenCT = pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH');
+            var strMaCT = pick(r, 'MACHUONGTRINH', 'MaChuongTrinh', 'MA_CHUONGTRINH');
+            aoa.push([
+                i + 1,
+                pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD'),
+                pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO'),
+                pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN'),
+                pick(r, 'GENDER_TEN', 'Gender_Ten', 'GIOITINH_TEN'),
+                pick(r, 'DATE_OF_BIRTH', 'Date_Of_Birth', 'NGAYSINH'),
+                pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS'),
+                strTenCT + (strMaCT ? ' (' + strMaCT + ')' : ''),
+                pick(r, 'LOPQUANLY_TEN', 'LopQuanLy_Ten', 'LOP_QUANLY_TEN'),
+                pick(r, 'THONGTINMUCPHI', 'ThongTinMucPhi', 'THONG_TIN_MUC_PHI'),
+                toNum(pick(r, 'TONGMUCPHI', 'TongMucPhi', 'TONG_MUC_PHI')),
+                toNum(me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu')),
+                pick(r, 'GHICHU', 'GhiChu', 'GHI_CHU')
+            ]);
+        });
+
+        var ws = XLSX.utils.aoa_to_sheet(aoa);
+        // Set column widths (approximate)
+        ws['!cols'] = [
+            { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
+            { wch: 28 }, { wch: 34 }, { wch: 18 }, { wch: 36 },
+            { wch: 16 }, { wch: 16 }, { wch: 24 }
+        ];
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'MucPhiDaGan');
+
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        var now = new Date();
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                  + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+        var fname = 'MucPhiDaGan_' + arr.length + 'rec_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fname);
     },
 
     /* =================================================================
@@ -2606,5 +2780,298 @@ KhaiMucPhi.prototype = {
             html += '</tr>';
         });
         $tbody.append(html);
+    },
+
+    /* -----------------------------------------------------------------
+       [Đông Á] Danh sách nhập học & thu tiền
+       PKG_CORE_NhapHoc_ThuTien.LayDSThiSinhNhapHoc
+       Server-side paging: pageIndex/pageSize gửi lên, Pager trả về TotalRow.
+       ----------------------------------------------------------------- */
+    openModal_DSNHTT: function () {
+        var me = this;
+        me._pageIndex_DSNHTT = 1;
+        $("#txtTuKhoa_DSNHTT_HSNH").val('');
+        $("#dropDaNhapHoc_DSNHTT_HSNH").val('0');
+        $("#pgSize_DSNHTT").val(String(me._pageSize_DSNHTT));
+        $("#lblTong_DSNHTT_HSNH").text('0');
+        $("#tblDSNHTT_HSNH tbody").html(
+            '<tr><td colspan="13" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>'
+        );
+        $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
+        $("#modalDSNHTT_HSNH").modal("show");
+        me.getList_DSNHTT();
+    },
+
+    getList_DSNHTT: function () {
+        var me = this;
+        var $tbody = $("#tblDSNHTT_HSNH tbody");
+        $tbody.html('<tr><td colspan="13" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
+        $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
+
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIVKSgSKC8pDykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSThiSinhNhapHoc',
+            'iM': edu.system.iM,
+            'strTuKhoa': $("#txtTuKhoa_DSNHTT_HSNH").val() || '',
+            'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dDaNhapHoc': parseInt($("#dropDaNhapHoc_DSNHTT_HSNH").val(), 10) || 0,
+            'pageIndex': me._pageIndex_DSNHTT || 1,
+            'pageSize': me._pageSize_DSNHTT || 50
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    me.dtDSNHTT = edu.util.checkValue(data.Data) ? data.Data : [];
+                    me._total_DSNHTT = parseInt(data.Pager, 10) || me.dtDSNHTT.length;
+                    $("#lblTong_DSNHTT_HSNH").text(me._total_DSNHTT);
+                    me.genTable_DSNHTT(me.dtDSNHTT);
+                    me._renderPaging_DSNHTT();
+                } else {
+                    edu.system.alert(data.Message || "LayDSThiSinhNhapHoc: lỗi", "w");
+                    $tbody.html('<tr><td colspan="13" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>');
+                }
+            },
+            error: function (er) {
+                edu.system.alert("LayDSThiSinhNhapHoc (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    genTable_DSNHTT: function (arr) {
+        var $tbody = $("#tblDSNHTT_HSNH tbody");
+        $tbody.empty();
+        if (!arr || arr.length === 0) {
+            $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
+            return;
+        }
+        var pick = function (row) {
+            for (var i = 1; i < arguments.length; i++) {
+                var k = arguments[i];
+                if (row[k] != null && row[k] !== '') return row[k];
+            }
+            return '';
+        };
+        var fmtNum = function (v) {
+            if (v === '' || v == null || isNaN(v)) return v || '';
+            return Number(v).toLocaleString('vi-VN');
+        };
+        var esc = function (v) {
+            return String(v == null ? '' : v).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        };
+
+        var pageSize = this._pageSize_DSNHTT || 50;
+        var pageIdx = this._pageIndex_DSNHTT || 1;
+        var sttBase = (pageIdx - 1) * pageSize;
+
+        var html = '';
+        arr.forEach(function (r, i) {
+            var strCCCD = pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD');
+            var strMaSo = pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO');
+            var strHoTen = pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN');
+            var strGT = pick(r, 'GIOI_TINH_TEN', 'GIOITINH_TEN', 'GIOI_TINH');
+            var strNgSinh = pick(r, 'NGAY_SINH_STR', 'NGAYSINH_STR', 'NGAY_SINH', 'NGAYSINH');
+            var strNganh = pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS', 'NGANH_TEN');
+            var strCT = pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH', 'CHUONGTRINH_TEN');
+            var strLop = pick(r, 'TEN_LOP', 'LOP_TEN', 'LOP_CT_TEN', 'LOPCHINHTHUC_TEN');
+            var iDaNH = Number(pick(r, 'DA_NHAP_HOC', 'DaNhapHoc', 'DANHAPHOC', 'IS_NHAP_HOC') || 0);
+            var vTongPhaiNop = pick(r, 'TONG_PHAI_NOP', 'TONGPHAINOP', 'TONG_MUC_PHI', 'TONGMUCPHI', 'TONG_TIEN');
+            var vDaNop = pick(r, 'TONG_DA_NOP', 'TONGDANOP', 'DA_NOP', 'SO_TIEN_DA_NOP');
+            var vConNop = pick(r, 'TONG_CON_NOP', 'TONGCONNOP', 'CON_PHAI_NOP', 'CON_LAI');
+            if ((vConNop === '' || vConNop == null) && vTongPhaiNop !== '' && vDaNop !== '') {
+                vConNop = (Number(vTongPhaiNop) || 0) - (Number(vDaNop) || 0);
+            }
+
+            html += '<tr>';
+            html += '<td class="td-center">' + (sttBase + i + 1) + '</td>';
+            html += '<td class="td-left">' + esc(strCCCD) + '</td>';
+            html += '<td class="td-left">' + esc(strMaSo) + '</td>';
+            html += '<td class="td-left">' + esc(strHoTen) + '</td>';
+            html += '<td class="td-center">' + esc(strGT) + '</td>';
+            html += '<td class="td-center">' + esc(strNgSinh) + '</td>';
+            html += '<td class="td-left">' + esc(strNganh) + '</td>';
+            html += '<td class="td-left">' + esc(strCT) + '</td>';
+            html += '<td class="td-left">' + esc(strLop) + '</td>';
+            html += '<td class="td-center">'
+                 + (iDaNH === 1
+                    ? '<span class="label" style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:3px;">Đã nhập học</span>'
+                    : '<span class="label" style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:3px;">Chưa</span>')
+                 + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(vTongPhaiNop)) + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(vDaNop)) + '</td>';
+            html += '<td class="td-right">' + esc(fmtNum(vConNop)) + '</td>';
+            html += '</tr>';
+        });
+        $tbody.append(html);
+    },
+
+    _renderPaging_DSNHTT: function () {
+        var me = this;
+        var total = me._total_DSNHTT || 0;
+        var pageSize = me._pageSize_DSNHTT || 50;
+        var totalPages = Math.max(1, Math.ceil(total / pageSize));
+        var cur = me._pageIndex_DSNHTT || 1;
+        if (cur > totalPages) cur = totalPages;
+
+        $("#pgCur_DSNHTT").text(cur);
+        $("#pgTotal_DSNHTT").text(totalPages);
+        $("#pgSum_DSNHTT").text(total);
+
+        // Show/hide
+        if (total <= 0) {
+            $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
+            return;
+        }
+        $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:flex;');
+
+        // Build page list: window ±2 around current
+        var $ul = $("#pgList_DSNHTT");
+        $ul.empty();
+        var addLi = function (label, page, disabled, active) {
+            var cls = 'page-item';
+            if (disabled) cls += ' disabled';
+            if (active) cls += ' active';
+            $ul.append('<li class="' + cls + '"><a class="page-link" href="#" data-page="' + page + '">' + label + '</a></li>');
+        };
+        addLi('«', 1, cur === 1, false);
+        addLi('‹', Math.max(1, cur - 1), cur === 1, false);
+        var from = Math.max(1, cur - 2), to = Math.min(totalPages, cur + 2);
+        if (from > 1) { addLi('1', 1, false, false); if (from > 2) addLi('…', from - 1, true, false); }
+        for (var p = from; p <= to; p++) addLi(String(p), p, false, p === cur);
+        if (to < totalPages) {
+            if (to < totalPages - 1) addLi('…', to + 1, true, false);
+            addLi(String(totalPages), totalPages, false, false);
+        }
+        addLi('›', Math.min(totalPages, cur + 1), cur === totalPages, false);
+        addLi('»', totalPages, cur === totalPages, false);
+    },
+
+    /* Xuất Excel: fetch TOÀN BỘ list (không phân trang) rồi build workbook.
+       Server-side paging → phải gọi lại API với pageSize lớn (100000) để lấy hết theo
+       filter hiện tại (keyword + tình trạng nhập học). */
+    _xuatExcel_DSNHTT: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert("Thư viện Excel (XLSX) chưa được nạp.", "w");
+            return;
+        }
+        if (!me.strKeHoachNhapHoc_Id) {
+            edu.system.alert("Chưa chọn kế hoạch nhập học.", "w");
+            return;
+        }
+
+        // Loading state — disable nút để tránh double-click
+        var $btn = $("#btnXuatExcel_DSNHTT_HSNH");
+        var htmlOrig = $btn.html();
+        $btn.prop('disabled', true).css('pointer-events', 'none')
+            .html('<i class="fa fa-spinner fa-spin"></i>&nbsp;Đang tải dữ liệu...');
+
+        var restoreBtn = function () {
+            $btn.prop('disabled', false).css('pointer-events', '').html(htmlOrig);
+        };
+
+        var obj_save = {
+            'action': 'SV_CORE_NhapHoc_ThuTien_MH/DSA4BRIVKSgSKC8pDykgMQkuIgPP',
+            'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSThiSinhNhapHoc',
+            'iM': edu.system.iM,
+            'strTuKhoa': $("#txtTuKhoa_DSNHTT_HSNH").val() || '',
+            'strTaiChinh_KeHoach_Id': me.strKeHoachNhapHoc_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'dDaNhapHoc': parseInt($("#dropDaNhapHoc_DSNHTT_HSNH").val(), 10) || 0,
+            'pageIndex': 1,
+            'pageSize': 100000
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                try {
+                    if (!data.Success) {
+                        edu.system.alert(data.Message || "LayDSThiSinhNhapHoc: lỗi", "w");
+                        return;
+                    }
+                    var arr = edu.util.checkValue(data.Data) ? data.Data : [];
+                    if (!arr.length) {
+                        edu.system.alert("Không có dữ liệu để xuất.", "w");
+                        return;
+                    }
+                    var pick = function (row) {
+                        for (var i = 1; i < arguments.length; i++) {
+                            var k = arguments[i];
+                            if (row[k] != null && row[k] !== '') return row[k];
+                        }
+                        return '';
+                    };
+                    var toNum = function (v) {
+                        if (v === '' || v == null || isNaN(v)) return '';
+                        return Number(v);
+                    };
+
+                    var header = [
+                        'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
+                        'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
+                        'Đã nhập học',
+                        'Tổng phải nộp', 'Đã nộp', 'Còn phải nộp'
+                    ];
+                    var aoa = [header];
+                    arr.forEach(function (r, i) {
+                        var vTong = pick(r, 'TONG_PHAI_NOP', 'TONGPHAINOP', 'TONG_MUC_PHI', 'TONGMUCPHI', 'TONG_TIEN');
+                        var vDaNop = pick(r, 'TongSoTienDaNop', 'TONG_DA_NOP', 'TONGDANOP', 'DA_NOP', 'SO_TIEN_DA_NOP');
+                        var vConNop = pick(r, 'TONG_CON_NOP', 'TONGCONNOP', 'CON_PHAI_NOP', 'CON_LAI');
+                        if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
+                            vConNop = (Number(vTong) || 0) - (Number(vDaNop) || 0);
+                        }
+                        var iDaNH = Number(pick(r, 'DA_NHAP_HOC', 'DaNhapHoc', 'DANHAPHOC', 'IS_NHAP_HOC') || 0);
+                        aoa.push([
+                            i + 1,
+                            pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD'),
+                            pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO'),
+                            pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN'),
+                            pick(r, 'GIOI_TINH_TEN', 'GIOITINH_TEN', 'GIOI_TINH'),
+                            pick(r, 'NGAY_SINH_STR', 'NGAYSINH_STR', 'NGAY_SINH', 'NGAYSINH'),
+                            pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS', 'NGANH_TEN'),
+                            pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH', 'CHUONGTRINH_TEN'),
+                            pick(r, 'TEN_LOP', 'LOP_TEN', 'LOP_CT_TEN', 'LOPCHINHTHUC_TEN'),
+                            iDaNH === 1 ? 'Đã nhập học' : 'Chưa',
+                            toNum(vTong),
+                            toNum(vDaNop),
+                            toNum(vConNop)
+                        ]);
+                    });
+
+                    var ws = XLSX.utils.aoa_to_sheet(aoa);
+                    ws['!cols'] = [
+                        { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
+                        { wch: 28 }, { wch: 34 }, { wch: 18 }, { wch: 14 },
+                        { wch: 16 }, { wch: 16 }, { wch: 16 }
+                    ];
+                    var wb = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(wb, ws, 'DSNhapHocThuTien');
+
+                    var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+                    var now = new Date();
+                    var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+                              + '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+                    var fname = 'DSNhapHocThuTien_' + arr.length + 'rec_' + stamp + '.xlsx';
+                    XLSX.writeFile(wb, fname);
+                } finally {
+                    restoreBtn();
+                }
+            },
+            error: function (er) {
+                restoreBtn();
+                edu.system.alert("LayDSThiSinhNhapHoc (ex): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            versionAPI: 'v1.0',
+            contentType: true,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
     }
 };

@@ -184,7 +184,8 @@
     #modalDauVao_HSNH .modal-dialog,
     #modalThemNganhDauRa_HSNH .modal-dialog,
     #modalNganhDauRa_HSNH .modal-dialog,
-    #modalMucPhiDaGan_HSNH .modal-dialog {
+    #modalMucPhiDaGan_HSNH .modal-dialog,
+    #modalDSNHTT_HSNH .modal-dialog {
         max-width: 100vw !important;
         width: 100vw !important;
         margin: 0 !important;
@@ -196,7 +197,8 @@
     #modalDauVao_HSNH .modal-content,
     #modalThemNganhDauRa_HSNH .modal-content,
     #modalNganhDauRa_HSNH .modal-content,
-    #modalMucPhiDaGan_HSNH .modal-content {
+    #modalMucPhiDaGan_HSNH .modal-content,
+    #modalDSNHTT_HSNH .modal-content {
         height: 100vh !important;
         min-height: 100vh !important;
         max-height: 100vh !important;
@@ -214,12 +216,14 @@
     #modalThemNganhDauRa_HSNH .modal-header,
     #modalNganhDauRa_HSNH .modal-header,
     #modalMucPhiDaGan_HSNH .modal-header,
+    #modalDSNHTT_HSNH .modal-header,
     #modalXem_HSNH .modal-footer,
     #modalKhoanThu_HSNH .modal-footer,
     #modalDauVao_HSNH .modal-footer,
     #modalThemNganhDauRa_HSNH .modal-footer,
     #modalNganhDauRa_HSNH .modal-footer,
-    #modalMucPhiDaGan_HSNH .modal-footer {
+    #modalMucPhiDaGan_HSNH .modal-footer,
+    #modalDSNHTT_HSNH .modal-footer {
         flex-shrink: 0 !important;
     }
     /* Body chiếm hết không gian còn lại + tự cuộn (min-height:0 để flex scroll đúng) */
@@ -228,7 +232,8 @@
     #modalDauVao_HSNH .modal-body,
     #modalThemNganhDauRa_HSNH .modal-body,
     #modalNganhDauRa_HSNH .modal-body,
-    #modalMucPhiDaGan_HSNH .modal-body {
+    #modalMucPhiDaGan_HSNH .modal-body,
+    #modalDSNHTT_HSNH .modal-body {
         overflow: auto !important;
         background-color: #ffffff !important;
         flex: 1 1 auto !important;
@@ -282,12 +287,20 @@
 
     /* Dòng SUM ở footer bảng — nền nhấn nhẹ, chữ đậm */
     .kmp-sum-row td {
-        background-color: #f1f5f9 !important;
+        background-color: #e0e7ff !important;
         font-weight: 700 !important;
-        border-top: 2px solid #cbd5e1 !important;
+        border-top: 2px solid #6366f1 !important;
+        color: #1e3a8a !important;
     }
     .kmp-sum-row .kmp-sum-value {
         color: #0f172a;
+        font-size: 14px;
+    }
+    /* Sticky tfoot: dính đáy scroll-container (bảng nằm trong div.aps-table-select overflow) */
+    #tblMucPhiDaGan_HSNH tfoot tr.kmp-sum-row td {
+        position: sticky;
+        bottom: 0;
+        z-index: 5;
     }
 
     /* Paging bar (đặt trong modal-footer) — gọn gàng cạnh nút Đóng/Lưu */
@@ -382,6 +395,9 @@
                                 </p>
                             </div>
                             <div class="btn-group-actions">
+                                <a id="btnDSNhapHocThuTien_HSNH" class="btn btn-info">
+                                    <i class="fa-solid fa-list-ul"></i>&nbsp;Danh sách nhập học &amp; thu tiền
+                                </a>
                                 <a id="btnRefresh_HSNH" class="btn btn-warning">
                                     <i class="fa fa-refresh"></i>&nbsp;Tải lại
                                 </a>
@@ -1144,13 +1160,11 @@
                         </a>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 10px; gap: 10px; flex-wrap: wrap;">
-                    <span class="text-muted small">
-                        <i class="fa-solid fa-square-check"></i>
-                        Đã chọn: <b id="lblSelected_MucPhiDaGan_HSNH">0</b> thí sinh
-                    </span>
-                    <a class="btn btn-warning" id="btnTaoPhi_Selected_MucPhiDaGan_HSNH" href="#">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp;Tạo phí nhập học cho các dòng đã chọn
+                <div class="d-flex justify-content-end align-items-center" style="margin-bottom: 10px; gap: 10px; flex-wrap: wrap;">
+                    <a class="btn btn-success" id="btnXuatExcel_MucPhiDaGan_HSNH" href="javascript:void(0);"
+                        title="Xuất Excel toàn bộ danh sách đang hiển thị theo bộ lọc (Ctrl+G)"
+                        style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                        <i class="fa-solid fa-file-excel" style="color:#fff;"></i>&nbsp;Xuất Excel
                     </a>
                 </div>
                 <!-- Thanh scroll-x giả trên đầu — sync với scroll dưới -->
@@ -1173,21 +1187,20 @@
                                 <th class="td-left" style="width:220px">Chương trình nhập học</th>
                                 <th class="td-left" style="width:150px">Lớp chính thức</th>
                                 <th class="td-left" style="width:240px">Thông tin mức phí nhập học</th>
-                                <th class="td-right" style="width:150px">Tổng phí</th>
+                                <th class="td-right" style="width:150px">Tổng phí phải nộp</th>
+                                <th class="td-right" style="width:150px">Tổng phí đã nộp</th>
                                 <th class="td-left" style="width:180px">Ghi chú</th>
-                                <th class="td-fixed td-center" style="width:60px">
-                                    <input type="checkbox" id="chkSelectAll_MucPhiDaGan_HSNH" />
-                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <!-- load from khaimucphinhaphoc.js -->
                         </tbody>
-                        <tfoot id="tfootSum_MucPhiDaGan_HSNH" style="display:none;">
+                        <tfoot id="tfootSum_MucPhiDaGan_HSNH">
                             <tr class="kmp-sum-row">
                                 <td class="td-center" colspan="10">Tổng cộng (theo bộ lọc)</td>
                                 <td class="td-right kmp-sum-value" id="sumTongPhi_MucPhiDaGan">0</td>
-                                <td colspan="2"></td>
+                                <td class="td-right kmp-sum-value" id="sumTongDaNop_MucPhiDaGan">0</td>
+                                <td></td>
                             </tr>
                         </tfoot>
                     </table>
@@ -1275,8 +1288,111 @@
     </div>
 </div>
 
+<!-- Modal: Danh sách thí sinh nhập học & thu tiền (server-side paging) -->
+<div class="modal fade" id="modalDSNHTT_HSNH" role="dialog"
+    aria-labelledby="modalDSNHTT_HSNH_Label" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header" style="display:flex; align-items:center; justify-content:center; position:relative; padding-right:60px; padding-left:60px;">
+                <h4 class="modal-title modal-name" id="modalDSNHTT_HSNH_Label" style="margin:0; text-align:center;">
+                    <a><i class="fa-solid fa-list-ul"></i>
+                    <span>Danh sách nhập học &amp; thu tiền</span>
+                    <span class="badge bg-primary ms-2" id="lblTong_DSNHTT_HSNH">0</span></a>
+                </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                    style="position:absolute; right:14px; top:50%; transform:translateY(-50%); margin:0; padding:0; border:none; background:rgba(255,255,255,0.18); color:#fff; opacity:1; width:34px; height:34px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:18px; line-height:1; transition:background 0.15s;"
+                    onmouseover="this.style.background='rgba(255,255,255,0.32)'" onmouseout="this.style.background='rgba(255,255,255,0.18)'">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row" style="margin-bottom: 10px;">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="txtTuKhoa_DSNHTT_HSNH"
+                            placeholder="Tìm theo CCCD / Mã số / Họ tên..." />
+                    </div>
+                    <div class="col-sm-3">
+                        <select class="form-control" id="dropDaNhapHoc_DSNHTT_HSNH">
+                            <option value="0">Tất cả tình trạng</option>
+                            <option value="1">Đã nhập học</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <a class="btn btn-primary btn-search" id="btnLoc_DSNHTT_HSNH" href="#" style="width:100%;">
+                            <i class="fa fa-search"></i>&nbsp;Tìm
+                        </a>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end align-items-center" style="margin-bottom: 10px; gap: 10px; flex-wrap: wrap;">
+                    <a class="btn btn-success" id="btnXuatExcel_DSNHTT_HSNH" href="javascript:void(0);"
+                        title="Xuất Excel toàn bộ danh sách theo bộ lọc hiện tại (Ctrl+G)"
+                        style="background:#1e8e3e;border-color:#1e8e3e;color:#fff;font-weight:500;">
+                        <i class="fa-solid fa-file-excel" style="color:#fff;"></i>&nbsp;Xuất Excel
+                    </a>
+                </div>
+                <!-- Thanh scroll-x giả trên đầu — sync với scroll dưới -->
+                <div class="kmp-scroll-top" id="scrollTop_DSNHTT_HSNH">
+                    <div class="kmp-scroll-top-inner" style="width: 2200px;"></div>
+                </div>
+                <div class="aps-table-select" id="scrollBottom_DSNHTT_HSNH" style="overflow-x: auto;">
+                    <table id="tblDSNHTT_HSNH"
+                        class="table table-condensed table-hover table-bordered table-noborder"
+                        style="min-width: 2200px;">
+                        <thead>
+                            <tr>
+                                <th class="td-center" style="width:40px">STT</th>
+                                <th class="td-left" style="width:130px">CCCD</th>
+                                <th class="td-left" style="width:110px">Mã số</th>
+                                <th class="td-left" style="width:200px">Họ tên</th>
+                                <th class="td-center" style="width:80px">Giới tính</th>
+                                <th class="td-center" style="width:110px">Ngày sinh</th>
+                                <th class="td-left" style="width:200px">Ngành nhập học</th>
+                                <th class="td-left" style="width:220px">Chương trình nhập học</th>
+                                <th class="td-left" style="width:150px">Lớp chính thức</th>
+                                <th class="td-center" style="width:110px">Đã nhập học</th>
+                                <th class="td-right" style="width:140px">Tổng phải nộp</th>
+                                <th class="td-right" style="width:130px">Đã nộp</th>
+                                <th class="td-right" style="width:130px">Còn phải nộp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- load from khaimucphinhaphoc.js -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="paging_DSNHTT_HSNH"
+                     class="d-flex justify-content-between align-items-center mt-2 flex-wrap"
+                     style="gap:10px; display:none !important;">
+                    <div class="text-muted small">
+                        Trang <b><span id="pgCur_DSNHTT">1</span>/<span id="pgTotal_DSNHTT">1</span></b>
+                        &nbsp;·&nbsp; Tổng: <b><span id="pgSum_DSNHTT">0</span></b>
+                    </div>
+                    <div class="d-flex align-items-center" style="gap:8px;">
+                        <label class="small text-muted mb-0">Hiển thị</label>
+                        <select id="pgSize_DSNHTT" class="form-control" style="width:auto; height:30px; padding:2px 6px;">
+                            <option value="20">20</option>
+                            <option value="50" selected>50</option>
+                            <option value="100">100</option>
+                            <option value="200">200</option>
+                        </select>
+                        <ul id="pgList_DSNHTT" class="pagination pagination-sm m-0" style="margin:0;"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="pull-right d-flex" style="gap: 10px;">
+                    <a class="btn btn-default" href="#" data-dismiss="modal">
+                        <i class="fa fa-times-circle"></i>&nbsp;Đóng
+                    </a>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- page script -->
-<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.44"></script>
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.50"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaiMucPhi'] = new KhaiMucPhi();
