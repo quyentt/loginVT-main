@@ -1356,9 +1356,10 @@
                         <thead>
                             <!-- Sum row ở đầu bảng (2 cột tiền cuối) — sticky top cùng header khi cuộn -->
                             <tr class="kmp-sum-row-top">
-                                <th class="td-center" colspan="9">Tổng cộng (trang hiện tại)</th>
+                                <th class="td-center" colspan="9">Tổng cộng (toàn bộ)</th>
                                 <th class="td-right kmp-sum-value" id="sumTongPhaiNop_DSNHTT">0</th>
                                 <th class="td-right kmp-sum-value" id="sumDaNop_DSNHTT">0</th>
+                                <th></th>
                                 <!-- Sếp yêu cầu ẨN cột "Còn phải nộp" — comment giữ code, mở lại sau khi có info miễn giảm
                                 <th></th>
                                 -->
@@ -1381,6 +1382,7 @@
                                 <!-- ẨN cột "Còn phải nộp" — sẽ mở lại sau khi có info miễn giảm
                                 <th class="td-right" style="width:130px">Còn phải nộp</th>
                                 -->
+                                <th class="td-center" style="width:130px">Ngày nộp</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1443,7 +1445,7 @@
 </script>
 
 <!-- page script -->
-<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.57"></script>
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.58"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaiMucPhi'] = new KhaiMucPhi();

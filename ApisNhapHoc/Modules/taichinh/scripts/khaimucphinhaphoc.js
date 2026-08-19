@@ -2803,7 +2803,7 @@ KhaiMucPhi.prototype = {
         $("#pgSize_DSNHTT").val(me._pageSize_DSNHTT >= 100000 ? '-1' : String(me._pageSize_DSNHTT));
         $("#lblTong_DSNHTT_HSNH").text('0');
         $("#tblDSNHTT_HSNH tbody").html(
-            '<tr><td colspan="11" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>'
+            '<tr><td colspan="12" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>'
         );
         $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
         $("#modalDSNHTT_HSNH").modal("show");
@@ -2815,7 +2815,7 @@ KhaiMucPhi.prototype = {
     getList_DSNHTT: function () {
         var me = this;
         var $tbody = $("#tblDSNHTT_HSNH tbody");
-        $tbody.html('<tr><td colspan="11" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
+        $tbody.html('<tr><td colspan="12" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
         $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
 
         var obj_save = {
@@ -2837,7 +2837,7 @@ KhaiMucPhi.prototype = {
                     me._applyFilter_DSNHTT();
                 } else {
                     edu.system.alert(data.Message || "LayDSThiSinhNhapHoc: lỗi", "w");
-                    $tbody.html('<tr><td colspan="11" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>');
+                    $tbody.html('<tr><td colspan="12" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>');
                 }
             },
             error: function (er) {
@@ -2913,7 +2913,7 @@ KhaiMucPhi.prototype = {
         var $tbody = $("#tblDSNHTT_HSNH tbody");
         $tbody.empty();
         if (!arr || arr.length === 0) {
-            $tbody.append('<tr><td colspan="11" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
+            $tbody.append('<tr><td colspan="12" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
             $("#sumTongPhaiNop_DSNHTT").text('0');
             $("#sumDaNop_DSNHTT").text('0');
             return;
@@ -2956,6 +2956,7 @@ KhaiMucPhi.prototype = {
             // var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
             var vTongPhaiNop = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
             var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            var vNgayNop = me._pickCI(r, 'NgayNop', 'NgayThuTien', 'NgayThu', 'NgayNopGanNhat', 'NgayNopCuoi');
             // ẨN cột "Còn phải nộp" — giữ compute để dễ mở lại sau
             // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
             // if ((vConNop === '' || vConNop == null) && vTongPhaiNop !== '' && vDaNop !== '') {
@@ -2982,6 +2983,7 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-right">' + esc(fmtNum(vDaNop)) + '</td>';
             // ẨN cột "Còn phải nộp"
             // html += '<td class="td-right">' + esc(fmtNum(vConNop)) + '</td>';
+            html += '<td class="td-center">' + esc(vNgayNop) + '</td>';
             html += '</tr>';
         });
         $tbody.append(html);
@@ -3056,13 +3058,15 @@ KhaiMucPhi.prototype = {
             'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
             'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
             // 'Đã nhập học',   // ẨN: mở lại nếu cần
-            'Tổng phải nộp', 'Đã nộp'
-            // , 'Còn phải nộp' // ẨN: sẽ mở lại khi có info miễn giảm
+            'Tổng phải nộp', 'Đã nộp',
+            // 'Còn phải nộp',  // ẨN: sẽ mở lại khi có info miễn giảm
+            'Ngày nộp'
         ];
         var aoa = [header];
         arr.forEach(function (r, i) {
             var vTong = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
             var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            var vNgayNop = me._pickCI(r, 'NgayNop', 'NgayThuTien', 'NgayThu', 'NgayNopGanNhat', 'NgayNopCuoi');
             // ẨN — giữ compute
             // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
             // if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
@@ -3081,8 +3085,9 @@ KhaiMucPhi.prototype = {
                 me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen'),
                 // iDaNH === 1 ? 'Đã nhập học' : 'Chưa',   // ẨN
                 toNum(vTong),
-                toNum(vDaNop)
+                toNum(vDaNop),
                 // , toNum(vConNop)  // ẨN
+                vNgayNop
             ]);
         });
 
@@ -3090,7 +3095,7 @@ KhaiMucPhi.prototype = {
         ws['!cols'] = [
             { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
             { wch: 28 }, { wch: 34 }, { wch: 18 },
-            { wch: 16 }, { wch: 16 }
+            { wch: 16 }, { wch: 16 }, { wch: 14 }
         ];
         var wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'DSNhapHocThuTien');
