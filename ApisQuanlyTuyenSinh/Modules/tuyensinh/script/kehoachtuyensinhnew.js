@@ -486,6 +486,9 @@ KeHoachTuyenSinhNew.prototype = {
                 $('#kqdk_khai').removeClass('d-none');
                 me._exitSuaMode();   // ensure Thêm mới mode, banner ẩn, save btn "Lưu hồ sơ"
                 me.initKhai_DanhMuc();
+                // Đợt tuyển sinh: load từ cache dtDotTuyenSinh; auto-select nếu chỉ 1 đợt
+                // hoặc preselect nếu context Đợt đã có (mở từ row Đợt).
+                me._loadDotToKhai();
                 // Nguyện vọng đầu ra + Phương thức tuyển sinh đều phụ thuộc KH+Đợt → refresh mỗi lần mở
                 me._loadNguyenVongDauRa();
                 me._loadPhuongThucTuyenSinh();
@@ -584,6 +587,16 @@ KeHoachTuyenSinhNew.prototype = {
                 ChuongTrinh_Id: $tr.data('ct-id') || '',
                 TenHT: $tr.data('ten-ht') || ''
             });
+        });
+
+        // Cascade: chọn Đợt tuyển sinh → cập nhật context + reload NV đầu ra & Phương thức
+        // (2 dropdown này lọc theo KH + Đợt hiện tại). Reset luôn Lớp dự kiến vì NV đầu ra đổi.
+        $("#ddlKQ_DotTuyenSinh").off('change.dotkq').on('change.dotkq', function () {
+            me.strDot_Id_ForKQ = $(this).val() || '';
+            me._loadNguyenVongDauRa();
+            me._loadPhuongThucTuyenSinh();
+            $('#ddlKQ_LopDuKien').html('<option value="">-- Chọn nguyện vọng đầu ra trước --</option>')
+                .prop('disabled', true).val('');
         });
 
         // Cascade: chọn Nguyện vọng đầu ra → load Lớp dự kiến theo Đầu ra đó
@@ -2768,6 +2781,37 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
+    -- Nạp dropdown Đợt tuyển sinh (#ddlKQ_DotTuyenSinh) trong form Khai.
+    -- Nguồn data: cache me.dtDotTuyenSinh (đã load ở modal Đợt trước đó).
+    -- Auto-select:
+    --   1) Ưu tiên preselect nếu đã có context (me.strDot_Id_ForKQ) — mở khai từ row Đợt.
+    --   2) Nếu KH chỉ có 1 đợt → auto pick đợt duy nhất (UX phổ biến, khỏi bắt user click).
+    -- Trường hợp không có đợt nào (dtDotTuyenSinh rỗng): giữ placeholder, user không lưu được
+    -- (validate ở saveKhai_HoSo sẽ chặn).
+    -------------------------------------------*/
+    _loadDotToKhai: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $sel = $('#ddlKQ_DotTuyenSinh');
+        $sel.empty().append('<option value="">-- Chọn đợt tuyển sinh --</option>');
+        var arr = me.dtDotTuyenSinh || [];
+        arr.forEach(function (d) {
+            var id = d.ID || d.Id || d.id || '';
+            var ma = d.MA || d.Ma || '';
+            var ten = d.TEN || d.Ten || '';
+            if (id) $sel.append('<option value="' + id + '">' + (ma ? '[' + ma + '] ' : '') + ten + '</option>');
+        });
+        if (me.strDot_Id_ForKQ) {
+            $sel.val(me.strDot_Id_ForKQ);
+        } else if (arr.length === 1) {
+            var onlyId = arr[0].ID || arr[0].Id || arr[0].id || '';
+            if (onlyId) {
+                $sel.val(onlyId);
+                me.strDot_Id_ForKQ = onlyId;
+            }
+        }
+    },
+
+    /*------------------------------------------
     -- Load Nguyện vọng đầu ra (list Kế hoạch đầu ra theo KH+Đợt) vào dropdown.
     -- Origin API: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Dau_Ra_Get_Ds
     -- Chỉ lấy các đầu ra còn hiệu lực (dIs_Active=1).
@@ -3102,6 +3146,15 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Vui lòng nhập Điện thoại", "w");
             $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
             $('#txtKQ_DienThoai').focus();
+            return;
+        }
+        // Đợt tuyển sinh: bắt buộc (BE proc yêu cầu strHoSo_KH_TS_Dot_Id).
+        // Sync lại từ dropdown phòng khi context bị lệch (VD user vừa đổi dropdown).
+        me.strDot_Id_ForKQ = edu.system.getValById('ddlKQ_DotTuyenSinh') || me.strDot_Id_ForKQ || '';
+        if (!edu.util.checkValue(me.strDot_Id_ForKQ)) {
+            edu.system.alert("Vui lòng chọn Đợt tuyển sinh (bắt buộc)", "w");
+            $('#kqdkKhaiTabs .aps-sv-tab').eq(3).trigger('click');   // tab Trúng tuyển (index 3)
+            $('#ddlKQ_DotTuyenSinh').focus();
             return;
         }
         if (!edu.util.checkValue(edu.system.getValById('ddlKQ_NguyenVongDauRa'))) {
