@@ -3135,33 +3135,47 @@ KeHoachTuyenSinhNew.prototype = {
             edu.system.alert("Chưa xác định kế hoạch tuyển sinh (mở lại từ danh sách)", "w");
             return;
         }
+        // Validate theo thứ tự tab (tránh nhảy tab lung tung). Mỗi lỗi: nhảy đúng tab + focus field.
+        var goTab = function (idx) { $('#kqdkKhaiTabs .aps-sv-tab').eq(idx).trigger('click'); };
+        var warn = function (msg, tabIdx, fieldId) {
+            edu.system.alert(msg, "w");
+            goTab(tabIdx);
+            $('#' + fieldId).focus();
+        };
+
+        // --- TAB 1: Cá nhân ---
         var hoTen = edu.system.getValById('txtKQ_HoTen');
-        if (!edu.util.checkValue(hoTen)) {
-            edu.system.alert("Vui lòng nhập Họ và tên", "w");
-            $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
-            $('#txtKQ_HoTen').focus();
-            return;
+        if (!edu.util.checkValue(hoTen)) { warn("Vui lòng nhập Họ và tên", 0, 'txtKQ_HoTen'); return; }
+
+        var strNgaySinh = edu.system.getValById('txtKQ_NgaySinh');
+        if (!edu.util.checkValue(strNgaySinh)) { warn("Vui lòng nhập Ngày tháng năm sinh", 0, 'txtKQ_NgaySinh'); return; }
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(strNgaySinh)) {
+            warn("Ngày sinh phải theo định dạng dd/mm/yyyy (VD: 15/03/2007)", 0, 'txtKQ_NgaySinh'); return;
+        }
+
+        if (!edu.util.checkValue(edu.system.getValById('ddlKQ_GioiTinh'))) {
+            warn("Vui lòng chọn Giới tính", 0, 'ddlKQ_GioiTinh'); return;
         }
         if (!edu.util.checkValue(edu.system.getValById('txtKQ_DienThoai'))) {
-            edu.system.alert("Vui lòng nhập Điện thoại", "w");
-            $('#kqdkKhaiTabs .aps-sv-tab').first().trigger('click');
-            $('#txtKQ_DienThoai').focus();
-            return;
+            warn("Vui lòng nhập Điện thoại", 0, 'txtKQ_DienThoai'); return;
         }
+
+        // --- TAB 2: CCCD & Hộ khẩu ---
+        var soCCCD = edu.system.getValById('txtKQ_SoCCCD');
+        if (!edu.util.checkValue(soCCCD)) { warn("Vui lòng nhập Số CCCD", 1, 'txtKQ_SoCCCD'); return; }
+        if (!/^\d{9,12}$/.test(soCCCD)) {
+            warn("Số CCCD phải là 9–12 chữ số", 1, 'txtKQ_SoCCCD'); return;
+        }
+
+        // --- TAB 4: Trúng tuyển ---
         // Đợt tuyển sinh: bắt buộc (BE proc yêu cầu strHoSo_KH_TS_Dot_Id).
         // Sync lại từ dropdown phòng khi context bị lệch (VD user vừa đổi dropdown).
         me.strDot_Id_ForKQ = edu.system.getValById('ddlKQ_DotTuyenSinh') || me.strDot_Id_ForKQ || '';
         if (!edu.util.checkValue(me.strDot_Id_ForKQ)) {
-            edu.system.alert("Vui lòng chọn Đợt tuyển sinh (bắt buộc)", "w");
-            $('#kqdkKhaiTabs .aps-sv-tab').eq(3).trigger('click');   // tab Trúng tuyển (index 3)
-            $('#ddlKQ_DotTuyenSinh').focus();
-            return;
+            warn("Vui lòng chọn Đợt tuyển sinh", 3, 'ddlKQ_DotTuyenSinh'); return;
         }
         if (!edu.util.checkValue(edu.system.getValById('ddlKQ_NguyenVongDauRa'))) {
-            edu.system.alert("Vui lòng chọn Nguyện vọng đầu ra (bắt buộc)", "w");
-            $('#kqdkKhaiTabs .aps-sv-tab').eq(3).trigger('click');   // tab Trúng tuyển (index 3)
-            $('#ddlKQ_NguyenVongDauRa').focus();
-            return;
+            warn("Vui lòng chọn Nguyện vọng đầu ra (ngành đầu vào)", 3, 'ddlKQ_NguyenVongDauRa'); return;
         }
 
         // Tự tính tổng lần cuối trước khi build payload
