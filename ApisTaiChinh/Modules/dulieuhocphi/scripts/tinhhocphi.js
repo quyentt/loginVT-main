@@ -104,7 +104,11 @@ TinhHocPhi.prototype = {
                 me.delete_KetQuaDaTinhPhi();
             });
         });
-        $("#tblTaskBar_TinhHocPhi").delegate("#btnXemDanhSach", "click", function () {
+        //$("#tblTaskBar_TinhHocPhi").delegate("#btnXemDanhSach", "click", function () {
+        //    me.getList_NienChe();
+        //    me.getList_TinChi();
+        //});
+        $("#btnXemDanhSach").click(function () {
             me.getList_NienChe();
             me.getList_TinChi();
         });
@@ -962,7 +966,7 @@ TinhHocPhi.prototype = {
             'strDaoTao_ThoiGianDaoTao_Id': edu.util.getValCombo('dropThoiGianDaoTao_TP'),
             'strHeDaoTao_Id': edu.util.getValById('dropHeDaoTao_TP'),
             'strKhoaDaoTao_Id': edu.util.getValById('dropKhoaDaoTao_TP'),
-            'strDaoTao_LopQuanLy_Id': edu.util.getValCombo('dropLopQuanLy_TP'),
+            'strLopQuanLy_Id': edu.util.getValCombo('dropLopQuanLy_TP'),
             'strNghiepVuApDung_Id': edu.util.getValById('dropNghiepVu_TP'),
             'strTaiChinh_CacKhoanThu_Id': edu.util.getValById('dropKhoanThu_TP'),
             'strNguoiThucHien_Id': edu.system.userId,
