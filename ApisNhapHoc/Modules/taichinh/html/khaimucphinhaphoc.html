@@ -302,6 +302,18 @@
         bottom: 0;
         z-index: 5;
     }
+    /* Sum row ở ĐẦU bảng DSNHTT — nổi bật + sticky top (dưới header row nếu cả 2 cùng sticky) */
+    #tblDSNHTT_HSNH thead tr.kmp-sum-row-top th {
+        background-color: #e0e7ff !important;
+        color: #1e3a8a !important;
+        font-weight: 700 !important;
+        border-bottom: 2px solid #6366f1 !important;
+        font-size: 14px;
+        padding: 8px;
+    }
+    #tblDSNHTT_HSNH thead tr.kmp-sum-row-top .kmp-sum-value {
+        color: #0f172a;
+    }
 
     /* Paging bar (đặt trong modal-footer) — gọn gàng cạnh nút Đóng/Lưu */
     .kmp-paging-bar {
@@ -748,6 +760,7 @@
                             <option value="20" selected>20</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
+                            <option value="-1">Tất cả</option>
                         </select>
                         <ul id="pgList_ThemNganh" class="pagination pagination-sm m-0"></ul>
                     </div>
@@ -833,6 +846,7 @@
                             <option value="20" selected>20</option>
                             <option value="50">50</option>
                             <option value="100">100</option>
+                            <option value="-1">Tất cả</option>
                         </select>
                         <ul id="pgList_Nganh" class="pagination pagination-sm m-0"></ul>
                     </div>
@@ -1219,6 +1233,7 @@
                             <option value="50" selected>50</option>
                             <option value="100">100</option>
                             <option value="200">200</option>
+                            <option value="-1">Tất cả</option>
                         </select>
                         <ul id="pgList_MucPhiDaGan" class="pagination pagination-sm m-0" style="margin:0;"></ul>
                     </div>
@@ -1339,6 +1354,15 @@
                         class="table table-condensed table-hover table-bordered table-noborder"
                         style="min-width: 2200px;">
                         <thead>
+                            <!-- Sum row ở đầu bảng (2 cột tiền cuối) — sticky top cùng header khi cuộn -->
+                            <tr class="kmp-sum-row-top">
+                                <th class="td-center" colspan="9">Tổng cộng (trang hiện tại)</th>
+                                <th class="td-right kmp-sum-value" id="sumTongPhaiNop_DSNHTT">0</th>
+                                <th class="td-right kmp-sum-value" id="sumDaNop_DSNHTT">0</th>
+                                <!-- Sếp yêu cầu ẨN cột "Còn phải nộp" — comment giữ code, mở lại sau khi có info miễn giảm
+                                <th></th>
+                                -->
+                            </tr>
                             <tr>
                                 <th class="td-center" style="width:40px">STT</th>
                                 <th class="td-left" style="width:130px">CCCD</th>
@@ -1349,10 +1373,14 @@
                                 <th class="td-left" style="width:200px">Ngành nhập học</th>
                                 <th class="td-left" style="width:220px">Chương trình nhập học</th>
                                 <th class="td-left" style="width:150px">Lớp chính thức</th>
+                                <!-- ẨN cột "Đã nhập học" — sếp bảo user hay thắc mắc; comment giữ code
                                 <th class="td-center" style="width:110px">Đã nhập học</th>
+                                -->
                                 <th class="td-right" style="width:140px">Tổng phải nộp</th>
                                 <th class="td-right" style="width:130px">Đã nộp</th>
+                                <!-- ẨN cột "Còn phải nộp" — sẽ mở lại sau khi có info miễn giảm
                                 <th class="td-right" style="width:130px">Còn phải nộp</th>
+                                -->
                             </tr>
                         </thead>
                         <tbody>
@@ -1374,6 +1402,7 @@
                             <option value="50" selected>50</option>
                             <option value="100">100</option>
                             <option value="200">200</option>
+                            <option value="-1">Tất cả</option>
                         </select>
                         <ul id="pgList_DSNHTT" class="pagination pagination-sm m-0" style="margin:0;"></ul>
                     </div>
@@ -1391,8 +1420,30 @@
     </div>
 </div>
 
+<!-- XLSX (SheetJS) — phục vụ Xuất Excel cho các bảng modal. Load 1 lần, idempotent + 3 CDN fallback -->
+<script>
+    (function loadXLSX() {
+        if (typeof XLSX !== 'undefined') return;
+        var cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    })();
+</script>
+
 <!-- page script -->
-<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.52"></script>
+<script src="/modules/taichinh/scripts/khaimucphinhaphoc.js?v=1.0.0.56"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KhaiMucPhi'] = new KhaiMucPhi();

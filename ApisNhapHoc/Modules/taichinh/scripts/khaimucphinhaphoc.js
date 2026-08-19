@@ -288,9 +288,10 @@ KhaiMucPhi.prototype = {
             me._pageIndex_DSNHTT = 1;
             me.getList_DSNHTT();
         });
-        // Đổi page size
+        // Đổi page size — value="-1" nghĩa "Tất cả" → dùng 100000 khi gọi API
         $("#pgSize_DSNHTT").off("change").on("change", function () {
-            me._pageSize_DSNHTT = parseInt($(this).val(), 10) || 50;
+            var v = parseInt($(this).val(), 10);
+            me._pageSize_DSNHTT = (v === -1) ? 100000 : (v || 50);
             me._pageIndex_DSNHTT = 1;
             me.getList_DSNHTT();
         });
@@ -357,7 +358,8 @@ KhaiMucPhi.prototype = {
             me.getList_MucPhiDaGan();
         });
         $("#pgSize_MucPhiDaGan").off("change").on("change", function () {
-            me._pageSize_MucPhiDaGan = parseInt($(this).val(), 10) || 50;
+            var _v = parseInt($(this).val(), 10);
+            me._pageSize_MucPhiDaGan = (_v === -1) ? 999999 : (_v || 50);
             me._pageIndex_MucPhiDaGan = 1;
             me._renderCurrentPage_MucPhiDaGan();
         });
@@ -530,9 +532,10 @@ KhaiMucPhi.prototype = {
                 me.genTable_KeHoachDauRa(me.dtKeHoachDauRa);
             });
 
-        // Đổi page size
+        // Đổi page size — value="-1" = "Tất cả" → dùng 999999
         $("#pgSize_ThemNganh").off("change").on("change", function () {
-            me._pageSizeThemNganh = parseInt($(this).val(), 10) || 20;
+            var _v = parseInt($(this).val(), 10);
+            me._pageSizeThemNganh = (_v === -1) ? 999999 : (_v || 20);
             me._pageThemNganh = 1;
             me.genTable_KeHoachDauRa(me.dtKeHoachDauRa);
         });
@@ -623,9 +626,10 @@ KhaiMucPhi.prototype = {
                 me.genTable_NganhDauRa(me.dtNganhDauRa);
             });
 
-        // Đổi page size
+        // Đổi page size — value="-1" = "Tất cả" → dùng 999999
         $("#pgSize_Nganh").off("change").on("change", function () {
-            me._pageSizeNganh = parseInt($(this).val(), 10) || 20;
+            var _v = parseInt($(this).val(), 10);
+            me._pageSizeNganh = (_v === -1) ? 999999 : (_v || 20);
             me._pageNganh = 1;
             me.genTable_NganhDauRa(me.dtNganhDauRa);
         });
@@ -949,7 +953,8 @@ KhaiMucPhi.prototype = {
         me.strKeHoachId_NganhDauRa = strKeHoachIdRow;
         // Reset state phân trang + selection mỗi lần mở modal cấu hình
         me._pageNganh = 1;
-        me._pageSizeNganh = parseInt($("#pgSize_Nganh").val(), 10) || 20;
+        var _vN = parseInt($("#pgSize_Nganh").val(), 10);
+        me._pageSizeNganh = (_vN === -1) ? 999999 : (_vN || 20);
         me._selectedIds_Nganh = {};
         $("#chkSelectAll_NganhDauRa_HSNH").prop('checked', false).prop('indeterminate', false);
 
@@ -1820,7 +1825,8 @@ KhaiMucPhi.prototype = {
         $("#chkSelectAll_ThemNganhDauRa_HSNH").prop("checked", false).prop("indeterminate", false);
         // Reset state phân trang + selection mỗi lần mở modal
         me._pageThemNganh = 1;
-        me._pageSizeThemNganh = parseInt($("#pgSize_ThemNganh").val(), 10) || 20;
+        var _vTN = parseInt($("#pgSize_ThemNganh").val(), 10);
+        me._pageSizeThemNganh = (_vTN === -1) ? 999999 : (_vTN || 20);
         me._selectedIds_ThemNganh = {};
         me.getList_KeHoachDauRa();
         $("#modalThemNganhDauRa_HSNH").modal("show");
@@ -2285,7 +2291,8 @@ KhaiMucPhi.prototype = {
         $("#txtTongTu_MucPhiDaGan_HSNH").val('');
         $("#txtTongDen_MucPhiDaGan_HSNH").val('');
         me._pageIndex_MucPhiDaGan = 1;
-        me._pageSize_MucPhiDaGan = parseInt($("#pgSize_MucPhiDaGan").val(), 10) || 50;
+        var _vMP = parseInt($("#pgSize_MucPhiDaGan").val(), 10);
+        me._pageSize_MucPhiDaGan = (_vMP === -1) ? 999999 : (_vMP || 50);
         me.dtMucPhiDaGan_All = [];
         me._filtered_MucPhiDaGan = [];
         me.dtMucPhiDaGan = [];
@@ -2602,7 +2609,7 @@ KhaiMucPhi.prototype = {
     },
 
     /* Xuất Excel: toàn bộ list đang lọc (_filtered_MucPhiDaGan), không giới hạn theo trang.
-       Dùng SheetJS (XLSX) — thư viện đã được load global qua Corei/systemroot.js. */
+       Lib: XLSX (SheetJS) — load lazy từ 3 CDN fallback trong khaimucphinhaphoc.html. */
     _xuatExcel_MucPhiDaGan: function () {
         var me = this;
         if (typeof XLSX === 'undefined') {
@@ -2792,10 +2799,11 @@ KhaiMucPhi.prototype = {
         me._pageIndex_DSNHTT = 1;
         $("#txtTuKhoa_DSNHTT_HSNH").val('');
         $("#dropDaNhapHoc_DSNHTT_HSNH").val('0');
-        $("#pgSize_DSNHTT").val(String(me._pageSize_DSNHTT));
+        // Nếu _pageSize là mock "Tất cả" (100000) → chọn option value="-1", ngược lại giữ nguyên
+        $("#pgSize_DSNHTT").val(me._pageSize_DSNHTT >= 100000 ? '-1' : String(me._pageSize_DSNHTT));
         $("#lblTong_DSNHTT_HSNH").text('0');
         $("#tblDSNHTT_HSNH tbody").html(
-            '<tr><td colspan="13" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>'
+            '<tr><td colspan="11" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>'
         );
         $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
         $("#modalDSNHTT_HSNH").modal("show");
@@ -2805,7 +2813,7 @@ KhaiMucPhi.prototype = {
     getList_DSNHTT: function () {
         var me = this;
         var $tbody = $("#tblDSNHTT_HSNH tbody");
-        $tbody.html('<tr><td colspan="13" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
+        $tbody.html('<tr><td colspan="11" class="td-center italic color-666 py-3">Đang tải dữ liệu...</td></tr>');
         $("#paging_DSNHTT_HSNH").attr('style', 'gap:10px; display:none;');
 
         var obj_save = {
@@ -2829,7 +2837,7 @@ KhaiMucPhi.prototype = {
                     me._renderPaging_DSNHTT();
                 } else {
                     edu.system.alert(data.Message || "LayDSThiSinhNhapHoc: lỗi", "w");
-                    $tbody.html('<tr><td colspan="13" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>');
+                    $tbody.html('<tr><td colspan="11" class="td-center italic color-666 py-3">Lỗi tải dữ liệu</td></tr>');
                 }
             },
             error: function (er) {
@@ -2849,7 +2857,9 @@ KhaiMucPhi.prototype = {
         var $tbody = $("#tblDSNHTT_HSNH tbody");
         $tbody.empty();
         if (!arr || arr.length === 0) {
-            $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
+            $tbody.append('<tr><td colspan="11" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
+            $("#sumTongPhaiNop_DSNHTT").text('0');
+            $("#sumDaNop_DSNHTT").text('0');
             return;
         }
         // Debug 1 lần: dump keys row đầu để confirm tên field trong response
@@ -2876,6 +2886,8 @@ KhaiMucPhi.prototype = {
         var pageIdx = this._pageIndex_DSNHTT || 1;
         var sttBase = (pageIdx - 1) * pageSize;
 
+        // Sum theo TRANG hiện tại (server-side paging → không tính được tổng cả list nếu không fetch all)
+        var sumTongPhaiNop = 0, sumDaNop = 0;
         var html = '';
         arr.forEach(function (r, i) {
             var strCCCD = me._pickCI(r, 'IdentifierNo', 'CCCD');
@@ -2886,13 +2898,18 @@ KhaiMucPhi.prototype = {
             var strNganh = me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen');
             var strCT = me._pickCI(r, 'TenChuongTrinh', 'TenCT', 'ChuongTrinhTen', 'DaoTaoToChucChuongTrinhTen');
             var strLop = me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen');
-            var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
+            // ẨN cột "Đã nhập học" — giữ biến để dễ mở lại sau
+            // var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
             var vTongPhaiNop = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
             var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
-            var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
-            if ((vConNop === '' || vConNop == null) && vTongPhaiNop !== '' && vDaNop !== '') {
-                vConNop = (Number(vTongPhaiNop) || 0) - (Number(vDaNop) || 0);
-            }
+            // Cộng sum
+            if (vTongPhaiNop !== '' && vTongPhaiNop != null && !isNaN(vTongPhaiNop)) sumTongPhaiNop += Number(vTongPhaiNop);
+            if (vDaNop !== '' && vDaNop != null && !isNaN(vDaNop)) sumDaNop += Number(vDaNop);
+            // ẨN cột "Còn phải nộp" — giữ compute để dễ mở lại sau
+            // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
+            // if ((vConNop === '' || vConNop == null) && vTongPhaiNop !== '' && vDaNop !== '') {
+            //     vConNop = (Number(vTongPhaiNop) || 0) - (Number(vDaNop) || 0);
+            // }
 
             html += '<tr>';
             html += '<td class="td-center">' + (sttBase + i + 1) + '</td>';
@@ -2904,17 +2921,26 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-left">' + esc(strNganh) + '</td>';
             html += '<td class="td-left">' + esc(strCT) + '</td>';
             html += '<td class="td-left">' + esc(strLop) + '</td>';
-            html += '<td class="td-center">'
-                 + (iDaNH === 1
-                    ? '<span class="label" style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:3px;">Đã nhập học</span>'
-                    : '<span class="label" style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:3px;">Chưa</span>')
-                 + '</td>';
+            // ẨN cột "Đã nhập học"
+            // html += '<td class="td-center">'
+            //      + (iDaNH === 1
+            //         ? '<span class="label" style="background:#dcfce7;color:#166534;padding:3px 8px;border-radius:3px;">Đã nhập học</span>'
+            //         : '<span class="label" style="background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:3px;">Chưa</span>')
+            //      + '</td>';
             html += '<td class="td-right">' + esc(fmtNum(vTongPhaiNop)) + '</td>';
             html += '<td class="td-right">' + esc(fmtNum(vDaNop)) + '</td>';
-            html += '<td class="td-right">' + esc(fmtNum(vConNop)) + '</td>';
+            // ẨN cột "Còn phải nộp"
+            // html += '<td class="td-right">' + esc(fmtNum(vConNop)) + '</td>';
             html += '</tr>';
         });
         $tbody.append(html);
+        // Update sum row ở đầu bảng
+        $("#sumTongPhaiNop_DSNHTT").text(me._fmtNumVN(sumTongPhaiNop));
+        $("#sumDaNop_DSNHTT").text(me._fmtNumVN(sumDaNop));
+        // Label sum row: nếu pageSize ≥ total (hoặc chọn "Tất cả") → "toàn bộ", còn lại → "trang hiện tại"
+        var isAll = (me._pageSize_DSNHTT >= 100000) || (arr.length >= (me._total_DSNHTT || 0));
+        $("#tblDSNHTT_HSNH thead tr.kmp-sum-row-top th:first-child")
+            .text(isAll ? 'Tổng cộng (toàn bộ)' : 'Tổng cộng (trang hiện tại)');
     },
 
     _renderPaging_DSNHTT: function () {
@@ -3020,18 +3046,20 @@ KhaiMucPhi.prototype = {
                     var header = [
                         'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
                         'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
-                        'Đã nhập học',
-                        'Tổng phải nộp', 'Đã nộp', 'Còn phải nộp'
+                        // 'Đã nhập học',   // ẨN: mở lại nếu cần
+                        'Tổng phải nộp', 'Đã nộp'
+                        // , 'Còn phải nộp' // ẨN: sẽ mở lại khi có info miễn giảm
                     ];
                     var aoa = [header];
                     arr.forEach(function (r, i) {
                         var vTong = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
                         var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
-                        var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
-                        if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
-                            vConNop = (Number(vTong) || 0) - (Number(vDaNop) || 0);
-                        }
-                        var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
+                        // ẨN — giữ compute
+                        // var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
+                        // if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
+                        //     vConNop = (Number(vTong) || 0) - (Number(vDaNop) || 0);
+                        // }
+                        // var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
                         aoa.push([
                             i + 1,
                             me._pickCI(r, 'IdentifierNo', 'CCCD'),
@@ -3042,18 +3070,18 @@ KhaiMucPhi.prototype = {
                             me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen'),
                             me._pickCI(r, 'TenChuongTrinh', 'TenCT', 'ChuongTrinhTen', 'DaoTaoToChucChuongTrinhTen'),
                             me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen'),
-                            iDaNH === 1 ? 'Đã nhập học' : 'Chưa',
+                            // iDaNH === 1 ? 'Đã nhập học' : 'Chưa',   // ẨN
                             toNum(vTong),
-                            toNum(vDaNop),
-                            toNum(vConNop)
+                            toNum(vDaNop)
+                            // , toNum(vConNop)  // ẨN
                         ]);
                     });
 
                     var ws = XLSX.utils.aoa_to_sheet(aoa);
                     ws['!cols'] = [
                         { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
-                        { wch: 28 }, { wch: 34 }, { wch: 18 }, { wch: 14 },
-                        { wch: 16 }, { wch: 16 }, { wch: 16 }
+                        { wch: 28 }, { wch: 34 }, { wch: 18 },
+                        { wch: 16 }, { wch: 16 }
                     ];
                     var wb = XLSX.utils.book_new();
                     XLSX.utils.book_append_sheet(wb, ws, 'DSNhapHocThuTien');
