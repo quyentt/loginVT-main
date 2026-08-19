@@ -2845,11 +2845,17 @@ KhaiMucPhi.prototype = {
     },
 
     genTable_DSNHTT: function (arr) {
+        var me = this;
         var $tbody = $("#tblDSNHTT_HSNH tbody");
         $tbody.empty();
         if (!arr || arr.length === 0) {
             $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
             return;
+        }
+        // Debug 1 lần: dump keys row đầu để confirm tên field trong response
+        if (!me._dumpedKeys_DSNHTT) {
+            me._dumpedKeys_DSNHTT = true;
+            try { console.log('[DSNHTT] row keys:', Object.keys(arr[0] || {})); } catch (e) {}
         }
         var pick = function (row) {
             for (var i = 1; i < arguments.length; i++) {
@@ -2872,18 +2878,18 @@ KhaiMucPhi.prototype = {
 
         var html = '';
         arr.forEach(function (r, i) {
-            var strCCCD = pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD');
-            var strMaSo = pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO');
-            var strHoTen = pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN');
-            var strGT = pick(r, 'GIOI_TINH_TEN', 'GIOITINH_TEN', 'GIOI_TINH');
-            var strNgSinh = pick(r, 'NGAY_SINH_STR', 'NGAYSINH_STR', 'NGAY_SINH', 'NGAYSINH');
-            var strNganh = pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS', 'NGANH_TEN');
-            var strCT = pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH', 'CHUONGTRINH_TEN');
-            var strLop = pick(r, 'TEN_LOP', 'LOP_TEN', 'LOP_CT_TEN', 'LOPCHINHTHUC_TEN');
-            var iDaNH = Number(pick(r, 'DA_NHAP_HOC', 'DaNhapHoc', 'DANHAPHOC', 'IS_NHAP_HOC') || 0);
-            var vTongPhaiNop = pick(r, 'TONG_PHAI_NOP', 'TONGPHAINOP', 'TONG_MUC_PHI', 'TONGMUCPHI', 'TONG_TIEN');
-            var vDaNop = pick(r, 'TONG_DA_NOP', 'TONGDANOP', 'DA_NOP', 'SO_TIEN_DA_NOP');
-            var vConNop = pick(r, 'TONG_CON_NOP', 'TONGCONNOP', 'CON_PHAI_NOP', 'CON_LAI');
+            var strCCCD = me._pickCI(r, 'IdentifierNo', 'CCCD');
+            var strMaSo = me._pickCI(r, 'CurrentEmployeeCode', 'MaSo');
+            var strHoTen = me._pickCI(r, 'FullName', 'HoTen');
+            var strGT = me._pickCI(r, 'GenderTen', 'GioiTinhTen', 'GioiTinh', 'Gender');
+            var strNgSinh = me._pickCI(r, 'DateOfBirth', 'NgaySinhStr', 'NgaySinh');
+            var strNganh = me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen');
+            var strCT = me._pickCI(r, 'TenChuongTrinh', 'TenCT', 'ChuongTrinhTen', 'DaoTaoToChucChuongTrinhTen');
+            var strLop = me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen');
+            var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
+            var vTongPhaiNop = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
+            var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+            var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
             if ((vConNop === '' || vConNop == null) && vTongPhaiNop !== '' && vDaNop !== '') {
                 vConNop = (Number(vTongPhaiNop) || 0) - (Number(vDaNop) || 0);
             }
@@ -3019,23 +3025,23 @@ KhaiMucPhi.prototype = {
                     ];
                     var aoa = [header];
                     arr.forEach(function (r, i) {
-                        var vTong = pick(r, 'TONG_PHAI_NOP', 'TONGPHAINOP', 'TONG_MUC_PHI', 'TONGMUCPHI', 'TONG_TIEN');
-                        var vDaNop = pick(r, 'TongSoTienDaNop', 'TONG_DA_NOP', 'TONGDANOP', 'DA_NOP', 'SO_TIEN_DA_NOP');
-                        var vConNop = pick(r, 'TONG_CON_NOP', 'TONGCONNOP', 'CON_PHAI_NOP', 'CON_LAI');
+                        var vTong = me._pickCI(r, 'TONGMUCPHI', 'TongMucPhi', 'TongPhaiNop', 'TongTienPhaiNop');
+                        var vDaNop = me._pickCI(r, 'TongSoTienDaNop', 'TongTienDaNop', 'TongDaNop', 'SoTienDaNop', 'DaNop', 'TongThuTien', 'TongDaThu');
+                        var vConNop = me._pickCI(r, 'TongConNop', 'ConPhaiNop', 'ConLai', 'TongTienConNop');
                         if ((vConNop === '' || vConNop == null) && vTong !== '' && vDaNop !== '') {
                             vConNop = (Number(vTong) || 0) - (Number(vDaNop) || 0);
                         }
-                        var iDaNH = Number(pick(r, 'DA_NHAP_HOC', 'DaNhapHoc', 'DANHAPHOC', 'IS_NHAP_HOC') || 0);
+                        var iDaNH = Number(me._pickCI(r, 'DaNhapHoc', 'IsNhapHoc', 'IsStudyCreated') || 0);
                         aoa.push([
                             i + 1,
-                            pick(r, 'IDENTIFIER_NO', 'Identifier_No', 'CCCD'),
-                            pick(r, 'CURRENT_EMPLOYEE_CODE', 'Current_Employee_Code', 'MASO', 'MA_SO'),
-                            pick(r, 'FULL_NAME', 'Full_Name', 'HOTEN', 'HO_TEN'),
-                            pick(r, 'GIOI_TINH_TEN', 'GIOITINH_TEN', 'GIOI_TINH'),
-                            pick(r, 'NGAY_SINH_STR', 'NGAYSINH_STR', 'NGAY_SINH', 'NGAYSINH'),
-                            pick(r, 'DAOTAO_NGANH_TS_TEN', 'DaoTao_Nganh_TS_Ten', 'NGANH_TS_TEN', 'TEN_NGANH_TS', 'NGANH_TEN'),
-                            pick(r, 'TENCHUONGTRINH', 'TenChuongTrinh', 'TEN_CHUONGTRINH', 'CHUONGTRINH_TEN'),
-                            pick(r, 'TEN_LOP', 'LOP_TEN', 'LOP_CT_TEN', 'LOPCHINHTHUC_TEN'),
+                            me._pickCI(r, 'IdentifierNo', 'CCCD'),
+                            me._pickCI(r, 'CurrentEmployeeCode', 'MaSo'),
+                            me._pickCI(r, 'FullName', 'HoTen'),
+                            me._pickCI(r, 'GenderTen', 'GioiTinhTen', 'GioiTinh', 'Gender'),
+                            me._pickCI(r, 'DateOfBirth', 'NgaySinhStr', 'NgaySinh'),
+                            me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen'),
+                            me._pickCI(r, 'TenChuongTrinh', 'TenCT', 'ChuongTrinhTen', 'DaoTaoToChucChuongTrinhTen'),
+                            me._pickCI(r, 'LopQuanLyTen', 'TenLop', 'LopTen', 'LopCtTen', 'LopChinhThucTen'),
                             iDaNH === 1 ? 'Đã nhập học' : 'Chưa',
                             toNum(vTong),
                             toNum(vDaNop),
