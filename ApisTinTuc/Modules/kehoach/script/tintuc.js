@@ -103,17 +103,20 @@ TinTuc.prototype = {
         });
         $("#tblTinTuc").delegate('.btnEdit', 'click', function (e) {
             var strId = this.id;
-            me.toggle_edit()
             strId = edu.util.cutPrefixId(/edit/g, strId);
             edu.util.setOne_BgRow(strId, "tblTinTuc");
-            if (edu.util.checkValue(strId)) {
-                var data = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0];
+            if (!edu.util.checkValue(strId)) {
+                edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
+                return;
+            }
+            me.toggle_edit();
+            // Lazy-load chi tiết: list không còn chứa NOIDUNG, phải gọi API riêng
+            var baseData = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0] || {};
+            me.getChiTiet_TinTuc(strId, function (detail) {
+                var data = $.extend({}, baseData, detail || {});
                 me.viewEdit_TinTuc(data);
                 edu.system.viewFiles("txtFileDinhKem", strId, "SV_Files");
-            }
-            else {
-                edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
-            }
+            });
         });
         $("#tblTinTuc").delegate('.btnPhamVi', 'click', function (e) {
             var strId = this.id;
@@ -134,22 +137,22 @@ TinTuc.prototype = {
         $("#tblTinTuc").delegate('.btnSendEmail', 'click', function (e) {
             var strId = this.id;
             strId = edu.util.cutPrefixId(/edit/g, strId);
-            if (edu.util.checkValue(strId)) {
-                var data = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0];
-                me.strTinTuc_Id = data.ID;
-                me.tinTucData = data; // Lưu data tin tức
+            if (!edu.util.checkValue(strId)) {
+                edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
+                return;
+            }
+            var baseData = edu.util.objGetDataInData(strId, me.dtTinTuc, "ID")[0] || {};
+            me.strTinTuc_Id = baseData.ID || strId;
+            // Fetch chi tiết để lấy NOIDUNG trước khi mở modal (template email cần)
+            me.getChiTiet_TinTuc(strId, function (detail) {
+                me.tinTucData = $.extend({}, baseData, detail || {});
                 me.toggle_sendemail();
-                // Load bộ lọc
                 me.getList_HeDaoTao_SendEmail();
                 me.getList_KhoaDaoTao_SendEmail();
                 me.getList_ChuongTrinhDaoTao_SendEmail();
                 me.getList_LopQuanLy_SendEmail();
-                // Tự động load danh sách sinh viên và đếm số lượng
                 me.countSinhVien_SendEmail();
-            }
-            else {
-                edu.system.alert(edu.constant.getting("NOTIFY", "SELECT_F"));
-            }
+            });
         });
         /*------------------------------------------
         --Discription: [2] Action SinhVien
@@ -631,6 +634,38 @@ TinTuc.prototype = {
             fakedb: [
 
             ]
+        }, false, false, false, null);
+    },
+    // Lấy chi tiết 1 tin tức (đầy đủ NOIDUNG) — chỉ gọi khi user click vào Edit/Gửi Email
+    // Backend proc: pkg_tintuc.LayTinTuc_BangTin_ChiTiet
+    getChiTiet_TinTuc: function (strId, callback) {
+        var obj_save = {
+            'action': 'TS_TinTuc_MH/DSA4FSgvFTQiHgMgLyYVKC8eAikoFSgkNQPP',
+            'func': 'pkg_tintuc.LayTinTuc_BangTin_ChiTiet',
+            'iM': edu.system.iM,
+            'strTinTuc_BangTin_Id': strId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data.Success) {
+                    var detail = null;
+                    if (edu.util.checkValue(data.Data)) {
+                        detail = Array.isArray(data.Data) ? data.Data[0] : data.Data;
+                    }
+                    if (typeof callback === 'function') callback(detail);
+                }
+                else {
+                    edu.system.alert(obj_save.action + ": " + data.Message, "w");
+                }
+            },
+            error: function (er) {
+                edu.system.alert(obj_save.action + " (er): " + JSON.stringify(er), "w");
+            },
+            type: 'POST',
+            action: obj_save.action,
+            contentType: true,
+            data: obj_save,
+            fakedb: []
         }, false, false, false, null);
     },
     save_TinTuc: function () {

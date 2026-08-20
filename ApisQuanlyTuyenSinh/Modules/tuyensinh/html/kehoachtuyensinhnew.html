@@ -1927,11 +1927,11 @@
                                             <input class="aps-sv-input" id="txtKQ_HoTen" placeholder="Ví dụ: Nguyễn Văn A">
                                         </div>
                                         <div class="aps-sv-field">
-                                            <label class="aps-sv-label">Ngày tháng năm sinh</label>
+                                            <label class="aps-sv-label">Ngày tháng năm sinh <span class="aps-sv-req">*</span></label>
                                             <input type="text" class="aps-sv-input" id="txtKQ_NgaySinh" placeholder="dd/mm/yyyy" maxlength="10" inputmode="numeric" pattern="\d{2}/\d{2}/\d{4}">
                                         </div>
                                         <div class="aps-sv-field">
-                                            <label class="aps-sv-label">Giới tính</label>
+                                            <label class="aps-sv-label">Giới tính <span class="aps-sv-req">*</span></label>
                                             <div class="aps-sv-select">
                                                 <i class="fa-light fa-chevron-down"></i>
                                                 <select class="aps-sv-input" id="ddlKQ_GioiTinh"><option value="">-- Chọn giới tính --</option></select>
@@ -2013,8 +2013,8 @@
                                     <div class="aps-sv-section-title"><i class="fa-light fa-address-card"></i> Số CCCD / Định danh</div>
                                     <div class="aps-sv-grid">
                                         <div class="aps-sv-field">
-                                            <label class="aps-sv-label">Số Căn cước công dân</label>
-                                            <input class="aps-sv-input" id="txtKQ_SoCCCD" placeholder="12 chữ số">
+                                            <label class="aps-sv-label">Số Căn cước công dân <span class="aps-sv-req">*</span></label>
+                                            <input class="aps-sv-input" id="txtKQ_SoCCCD" placeholder="12 chữ số" maxlength="12" inputmode="numeric">
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Ngày / tháng / năm cấp</label>
@@ -2181,6 +2181,17 @@
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Số quyết định trúng tuyển</label>
                                             <input class="aps-sv-input" id="txtKQ_QDMa" placeholder="Số QĐ">
+                                        </div>
+                                        <div class="aps-sv-field aps-sv-col-full">
+                                            <label class="aps-sv-label">Đợt tuyển sinh <span class="aps-sv-req">*</span></label>
+                                            <div class="aps-sv-select">
+                                                <i class="fa-light fa-chevron-down"></i>
+                                                <select class="aps-sv-input" id="ddlKQ_DotTuyenSinh"><option value="">-- Chọn đợt tuyển sinh --</option></select>
+                                            </div>
+                                            <div style="margin-top:6px;font-size:12px;color:#94a3b8;line-height:1.5;">
+                                                <i class="fa-light fa-circle-info"></i>
+                                                Chọn đợt tuyển sinh trước — Nguyện vọng đầu ra & Phương thức tuyển sinh sẽ load theo đợt này.
+                                            </div>
                                         </div>
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Nguyện vọng đầu ra <span class="aps-sv-req">*</span></label>
