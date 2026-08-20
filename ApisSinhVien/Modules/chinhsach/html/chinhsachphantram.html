@@ -1,4 +1,24 @@
 ﻿<!-- Main content -->
+<style>
+    /* Overlay "Nhập cho nhiều lớp" nằm tren search area. Select2 cua search area
+       co z-index: 99999 (index/indexi.aspx) → tro`i len xuyen overlay.
+       Fix: overlay z-index cao hon + background opaque, va` reset select2
+       cua search area xuong auto khi overlay dang mo. */
+    .aps-chinhsachphantram {
+        position: relative;
+    }
+    #zone_nhapchonhieulop.add-absolue {
+        z-index: 100001 !important;
+        background: #fff !important;
+        left: 0;
+    }
+    /* Khi overlay dang hien (khong co inline display:none), tat z-index cua
+       select2-container trong search area de khong tro`i len xuyen overlay. */
+    section.aps-sinhvien:has(#zone_nhapchonhieulop:not([style*="display: none"])) #search .select2-container,
+    section.aps-sinhvien:has(#zone_nhapchonhieulop:not([style*="display:none"])) #search .select2-container {
+        z-index: auto !important;
+    }
+</style>
 <section class="content MainPage aps-sinhvien" id="MainContent">
     <div class="row box box-solid aps-chinhsachphantram pd0">
         <!--Box search-->
