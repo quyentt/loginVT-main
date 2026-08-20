@@ -18,7 +18,6 @@ GiaoDeTai.prototype = {
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
-
         //me.getList_ThoiGianDaoTao();
         me.getList_GiaoDeTai();
         me.getList_KeHoach();

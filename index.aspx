@@ -961,6 +961,7 @@
         border-collapse: separate !important;
         border-spacing: 0 !important;
         overflow: hidden !important;
+        margin-bottom: 10px;
       }
 
       /* ─── [SPA-ADMINLTE-COMPAT] Cover module cu dung .box, .box-body, .box-header

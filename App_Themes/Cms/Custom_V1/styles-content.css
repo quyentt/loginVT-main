@@ -17642,3 +17642,6 @@ table#clone {
 .tblDuyetDeTai tr td:last-child{
     text-align: center !important;
 }
+.aps-all-btn .btn span {
+    margin-top: 2px !important;
+}
