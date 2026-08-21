@@ -89,7 +89,7 @@
     </div>
 
     <!-- Câu hỏi -->
-    <div class="fake-modal zone-bus" id="zoneEdit" style="display: block">
+    <div class="fake-modal zone-bus modal-question" id="zoneEdit" style="display: none">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
@@ -101,9 +101,9 @@
                 </div>
             </div>
 
-            <div class="form-top rounded-0 border-top mb-15">
+            <div class="form-top rounded-0 border-top">
                 <div class="row">
-                    <div class="col-12 col-md-12 col-lg-12">
+                    <div class="col-12 col-md-4 col-lg-4 pr-0">
                         <div class="form-item d-flex mb-0 form-add-info">
                             <label class="form-label" style="width:150px">Tên câu hỏi</label>
                             <div class="input-group">
@@ -111,15 +111,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-6 pr0">
+                    <div class="col-12 col-md-4 col-lg-4">
                         <div class="form-item d-flex mb-0 form-add-info ">
-                            <label class="form-label" style="width:150px">Thuộc nhóm</label>
+                            <label class="form-label text-right pr-15" style="width:150px">Thuộc nhóm</label>
                             <div class="input-group">
                                 <select id="dropThuocNhom" class="select-opt"></select>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-6">
+                    <div class="col-12 col-md-4 col-lg-4">
                         <div class="form-item d-flex mb-0 form-add-info">
                             <label class="form-label text-right pr-15" style="width:150px">Thứ tự</label>
                             <div class="input-group">
@@ -127,7 +127,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-6">
+                    <div class="col-12 col-md-4 col-lg-4">
                         <div class="form-item d-flex mb-0 form-add-info no-icon">
                             <label class="form-label" style="width:150px">Loại câu hỏi</label>
                             <div class="input-group">
@@ -139,7 +139,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-6">
+                    <div class="col-12 col-md-4 col-lg-4">
                         <div class="form-item d-flex mb-0 form-add-info no-icon">
                             <label class="form-label text-right pr-15" style="width:150px">Kiểu trả lời</label>
                             <div class="input-group">
@@ -150,9 +150,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6 col-lg-6 pr0">
+                    <div class="col-12 col-md-4 col-lg-4">
                         <div class="form-item d-flex mb-15 form-add-info no-icon">
-                            <label class="form-label" style="width:150px">Kiểu hiển thị</label>
+                            <label class="form-label text-right pr-15" style="width:150px">Kiểu hiển thị</label>
                             <div class="input-group">
                                 <select id="dropKieuHienThi" class="select-opt">
                                     <option value="1">Mặc định</option>
@@ -173,8 +173,9 @@
                             <select id="dropSearch_CauHoi" class="select-opt form-select mr-10"
                                 style="width: 600px !important;" aria-label="Default select example"></select>
                             <!-- <button class="btn-sm btn btn-outline-secondary min-w-auto px-3 ms-auto btnDelete_PhamVi"><i class="fal fa-trash me-1"></i> Xóa</button> -->
-                            <button class="btn-sm btn btn-success pull-right min-w-100p ml-15" id="btnAdd_DapAn_Mau"><i
-                                    class="fal fa-plus"></i> Thêm</button>
+                            <button class="btn-sm btn btn-soft-success pull-right min-w-100p ml-10"
+                                id="btnAdd_DapAn_Mau">
+                                <i class="fal fa-plus"></i> Thêm</button>
                         </div>
                         <div class="mt-10 aps-table-select">
                             <table
@@ -183,10 +184,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center w-50px" scope="col">STT</th>
-                                        <th scope="col">Tên </th>
-                                        <th scope="col">Mã </th>
-                                        <th scope="col">Thứ tự</th>
-                                        <th scope="col">Trọng số </th>
+                                        <th scope="col" class="text-center">Tên </th>
+                                        <th scope="col" class="text-center">Mã </th>
+                                        <th scope="col" class="text-center">Thứ tự</th>
+                                        <th scope="col" class="text-center">Trọng số </th>
                                         <th class="text-center" scope="col">
                                             <input class="form-check-input" type="checkbox" id="chkSelectAll_DapAn_Mau">
                                         </th>
@@ -196,7 +197,7 @@
                             </table>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 mt-6">
+                    <div class="col-12 col-lg-6 mt-6 pr-0">
                         <div class="d-flex align-items-center">
                             <span class="fw-bold text-success">Danh sách đáp án dụng cho câu hỏi</span>
                             <!--<button class="btn-sm btn btn-outline-secondary min-w-auto px-3 ms-auto btnAdd_DapAn"><i class="fal fa-trash me-1"></i> Xóa</button>-->
@@ -208,10 +209,10 @@
                                 <thead>
                                     <tr>
                                         <th class="text-center w-50px" scope="col">STT</th>
-                                        <th scope="col">Tên </th>
-                                        <th scope="col">Mã </th>
-                                        <th scope="col">Thứ tự</th>
-                                        <th scope="col">Trọng số </th>
+                                        <th scope="col" class="text-center">Tên </th>
+                                        <th scope="col" class="text-center">Mã </th>
+                                        <th scope="col" class="text-center">Thứ tự</th>
+                                        <th scope="col" class="text-center">Trọng số </th>
                                         <th class="text-center" scope="col">
                                             <!--<input class="form-check-input" type="checkbox" id="chkSelectAll_DapAn">-->
                                         </th>
@@ -221,23 +222,23 @@
                             </table>
                         </div>
                         <div style="width: 100%; margin-top: 10px">
-                            <button class="btn-sm btn btn-outline-primary min-w-auto  ms-auto px-3 ms-2 btnAdd_DapAn"
-                                style="float: right"><i class="fal fa-plus me-1"></i> Thêm dòng</button>
+                            <button class="btn-sm btn btn-soft-primary min-w-auto btnAdd_DapAn" style="float: right">
+                                <i class="fal fa-plus me-1"></i>Thêm dòng</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="container-fluid px-20">
+            <div class="container-fluid px-20 pl-0 pr-0">
                 <hr />
-                <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                <div class="d-flex align-items-center flex-wrap pl20 pr20">
                     <div class="ms-auto aps-gap-10">
                         <div class="btn btn-outline-secondary btnClosePhieu">
-                            <i class="fal fa-times"></i> Đóng
+                            <i class="fal fa-times"></i>Đóng
                         </div>
-                        <div class="btn btn-danger" id="btnDelete_Phieu" style="min-width: unset">
-                            <i class="fal fa-trash"></i> Xóa
+                        <div class="btn btn-soft-danger" id="btnDelete_Phieu" style="min-width: unset">
+                            <i class="fal fa-trash"></i>Xóa
                         </div>
-                        <div class="btn btn-primary" id="btnSave_CauHoi"><i class="fal fa-save"></i> Lưu</div>
+                        <div class="btn btn-primary" id="btnSave_CauHoi"><i class="fal fa-save"></i>Lưu</div>
                     </div>
                 </div>
             </div>
@@ -245,7 +246,7 @@
         </div>
     </div>
     <!-- Chỉnh sửa -->
-    <div class="fake-modal zonePhieu zone-bus" id="zonePhieu" style="display: none">
+    <div class="fake-modal zonePhieu zone-bus zonePhieu-edit" id="zonePhieu" style="display: none">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
@@ -273,10 +274,10 @@
                                     <div class="tern-name" id="lblMoTaPhieu">
                                     </div>
                                     <div class="d-flex align-items-right" style="float: right; margin-right: -15px">
-                                        <a class="btn btn-success btnAdd" id="btnAdd_Nhom" style="min-width: unset">
+                                        <a class="btn btn-soft-success btnAdd" id="btnAdd_Nhom" style="min-width: unset">
                                             <i class="fal fa-plus"></i><span>Thêm nhóm</span>
                                         </a>
-                                        <a class="btn btn-warning btnAdd_CauHoi btnAdd" style="min-width: unset">
+                                        <a class="btn btn-soft-primary btnAdd_CauHoi btnAdd" style="min-width: unset">
                                             <i class="fal fa-plus"></i><span>Thêm câu hỏi</span>
                                         </a>
                                     </div>
@@ -299,7 +300,7 @@
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
         Phiếu mẫu </button>
     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal_NhomCauHoi">
-    Nhóm câu hỏi </button>
+        Nhóm câu hỏi </button>
 </div>
 <!-- ---------- -->
 
@@ -336,7 +337,7 @@
                 <div class="form-item d-flex mb-15 form-add-info">
                     <label class="form-label">Mô tả</label>
                     <div class="input-group input-group-tẽ no-icon">
-                        <textarea id="txtMoTa" class="form-control form-control-textarea" style="min-height: 200px" />
+                        <textarea id="txtMoTa" class="form-control form-control-textarea" style="min-height: 200px"></textarea>
                     </div>
                 </div>
             </div>
@@ -357,7 +358,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="finance-user-info in-modal ">
-                    <p><span class="myModalLabel"> <i class="fa-solid fa-circle-question"></i> </span> Nhóm câu hỏi</a></p>
+                    <p><span class="myModalLabel"> <i class="fa-solid fa-circle-question"></i> </span> Nhóm câu hỏi</a>
+                    </p>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -377,16 +379,17 @@
                 <div class="form-item d-flex mb-15 form-add-info">
                     <label class="form-label">Mô tả</label>
                     <div class="input-group  no-icon">
-                        <textarea id="txtMoTa_NhomCauHoi" class="form-control" style="min-height: 200px" />
+                        <textarea id="txtMoTa_NhomCauHoi" class="form-control" style="min-height: 200px"></textarea>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <div style="flex-direction: row; width: 100%">
-                    <div class="btn btn-danger" id="btnDelete_Nhom"><i class="fal fa-trash me-2"></i> Xóa
-                    </div>
-                    <div class="btn btn-primary" style="float: right" id="btnSave_Nhom"><i
-                            class="fal fa-save me-2"></i> Lưu</div>
+                <div class="pull-left aps-all-btn">
+                    <div class="btn btn-soft-danger" id="btnDelete_Nhom"><i class="fal fa-trash"></i>Xóa</div>
+                </div>
+                <div class="pull-right aps-all-btn">
+                    <div class="btn btn-primary" style="float: right" id="btnSave_Nhom">
+                        <i class="fal fa-save me-2"></i>Lưu</div>
                 </div>
             </div>
         </div>

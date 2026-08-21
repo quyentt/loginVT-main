@@ -17570,81 +17570,248 @@ table#clone {
 .dropdown-toggle::after {
     margin-left: 8px !important;
 }
+
 #main-content-wrapper .modal-dialog .modal-body.pd0,
-.themhocphantheochuongtrinhdaotao .box-search{
+.themhocphantheochuongtrinhdaotao .box-search {
     padding: 0 !important;
 }
+
 .themhocphantheochuongtrinhdaotao .box-search .col-12,
 .themhocphantheodonvi .box-search .col-12 {
     padding-left: 0 !important;
 }
+
 .themhocphantheochuongtrinhdaotao .box-search .input-label-left label,
 .themhocphantheodonvi .box-search .input-label-left label {
     text-align: right;
 }
+
 #main-content-wrapper .themhocphantheochuongtrinhdaotao .flex-grow-1.pd20,
 #main-content-wrapper .themhocphantheodonvi .flex-grow-1.pd20,
-#main-content-wrapper .themhocphantheodonvi .box-search.pd20{
+#main-content-wrapper .themhocphantheodonvi .box-search.pd20 {
     padding-bottom: 0 !important;
 }
-#main-content-wrapper .themhocphantheodonvi  .table{
+
+#main-content-wrapper .themhocphantheodonvi .table {
     margin-bottom: 0 !important;
 }
-.tblAddHocPhanDonVi tr td:nth-child(4),.tblAddHocPhanDonVi tr td:nth-child(9),
-.tblAddHocPhanChuongTrinh tr td:nth-child(4),.tblAddHocPhanChuongTrinh tr td:nth-child(9){
+
+.tblAddHocPhanDonVi tr td:nth-child(4),
+.tblAddHocPhanDonVi tr td:nth-child(9),
+.tblAddHocPhanChuongTrinh tr td:nth-child(4),
+.tblAddHocPhanChuongTrinh tr td:nth-child(9) {
     text-align: center !important;
 }
-.finance-modal.modal_XacNhan .aps-form{
+
+.finance-modal.modal_XacNhan .aps-form {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.aps-form-item.action-group{
 
-}
-.finance-modal.modal_XacNhan .form-item.form-add-info.aps-form-input{
+.aps-form-item.action-group {}
+
+.finance-modal.modal_XacNhan .form-item.form-add-info.aps-form-input {
     padding-right: 10px !important;
 }
-.finance-modal.modal_XacNhan .aps-add-new.pt-0.pd20{
+
+.finance-modal.modal_XacNhan .aps-add-new.pt-0.pd20 {
     padding-top: 0 !important;
 }
-.aps-phangiangvien .box-search-hocphan .col-12.col-md-6 .input-label-left label{
+
+.aps-phangiangvien .box-search-hocphan .col-12.col-md-6 .input-label-left label {
     position: relative !important;
 }
-.aps-phangiangvien .box-search-hocphan  .input-label-left {
+
+.aps-phangiangvien .box-search-hocphan .input-label-left {
     display: block !important;
     position: relative !important;
 }
-#main-content-wrapper .aps-phangiangvien  .filter-4-item .input-label-left label {
+
+#main-content-wrapper .aps-phangiangvien .filter-4-item .input-label-left label {
     padding: 0 !important;
 }
-.aps-all-btn .btn:first-child{
+
+.aps-all-btn .btn:first-child {
     margin-left: 0 !important;
 }
-.modal-footer .pull-left .btn:first-child{
+
+.modal-footer .pull-left .btn:first-child {
     margin-left: 0 !important;
 }
+
 .aps-tim-nhansu .modal-body .box-search-GV p {
     font-size: 14px !important;
     line-height: 25px !important;
 }
-.tblGiaoDeTai tr td .btn i,.tblDSDeTai tr td .btn i ,.tblDuyetDeTai tr td .btn i,.table .btn.btn-default.btnEdit i{
+
+.tblGiaoDeTai tr td .btn i,
+.tblDSDeTai tr td .btn i,
+.tblDuyetDeTai tr td .btn i,
+.table .btn.btn-default.btnEdit i {
     margin-right: 0 !important;
 }
+
 .table .btn.btn-default.btnDuyet i {
     margin-right: 4px !important;
 }
-.tblDSDeTai tr td:nth-child(6){
+
+.tblDSDeTai tr td:nth-child(6) {
     text-align: left !important;
 }
+
 .zone-pag-footertblGiaoDeTai {
     margin-top: 10px !important;
 }
-.tblDuyetDeTai tr td:last-child{
+
+.tblDuyetDeTai tr td:last-child {
     text-align: center !important;
 }
+
 .aps-all-btn .btn span {
     margin-top: 2px !important;
 }
-#zoneFileUptxtFileDinhKem{
+
+#zoneFileUptxtFileDinhKem {
     margin-top: 7px;
+}
+
+/* ---------------- */
+.register-wish.modal-aps-add .box-header {
+    height: 52px !important;
+    line-height: 40px !important;
+}
+
+.modal-question.zone-bus,.zonePhieu.zone-bus,.box-none.zone-bus {
+    background: transparent !important;
+    border-radius: 0 !important;
+    -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+    box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
+}
+.modal-question.zone-bus .form-top .col-12:nth-child(4),
+.modal-question.zone-bus .form-top .col-12:nth-child(5),
+.modal-question.zone-bus .form-top .col-12:nth-child(6) {
+    margin-bottom: 0 !important;
+}
+.modal-question.zone-bus .form-top .col-12:nth-child(3),
+.modal-question.zone-bus .form-top .col-12:nth-child(6),
+.modal-question.zone-bus .form-top .col-12:nth-child(9) {
+    padding-right: 0 !important;
+}
+.btn i.fa-plus {
+    margin-right: 3px !important;
+}
+.deleteRowButton{
+    min-width: 60px;
+    display: block;
+}
+.px-20.pl-0.pr-0{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.myModal_NhomCauHoi .form-add-info .form-label {
+    width: 130px !important;
+}
+.zonePhieu.zonePhieu-edit .form-top .cmc-con-before{
+    padding-top: 0px;
+    border-bottom: solid 0 #e1e1e1;
+}
+.zonePhieu.zonePhieu-edit  .form-top {
+    border-bottom: 0 solid #e1e1e1 !important;
+}
+#main-content-wrapper .table td .btn.btn-default.btnEdit{
+    padding-top: 4px !important;
+}
+.register-wish.modal_nhansu .bus-wrp.box-table-gv.aps-table-select{
+    border-bottom: solid 0 #e1e1e1;
+    border-top: solid 0 #e1e1e1;
+}
+.register-wish.modal_nhansu .inputs-wr .item {
+    padding: 0 !important;
+}
+#tblKhoaHocPopup{
+    width: 100% !important;
+}
+#doituongduockhaosat{
+    /* padding: 20px !important; */
+}
+.zoneKetQua .register-school .tab-pane.fade{
+    padding: 0 20px 20px 20px !important;
+}
+#main-content-wrapper .zoneKetQua .register-wish:not(.modal){
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0) !important;
+    border: 0 solid #e2e8f0 !important;
+    border-radius: 0 !important;
+}
+.register-wish.modal_sinhvien.modal .modal-body.p-0,#modalDSDangKyHocPicker .modal-body,
+#main-content-wrapper.register-wish.modal_sinhvien.modal .modal-content .modal-body.p-0{
+    padding: 0 !important;
+}
+.modal.dspicker-modal .box-search .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    margin-top: 2px !important;
+}
+.modal.dspicker-modal .box-search .item-search {
+    padding: 4px 10px 0 0 !important;
+    margin-bottom: 5px !important;
+}
+.modal.dspicker-modal .box-search .select2-container .select2-selection--single .select2-selection__rendered {
+    padding-left: 0px !important;
+}
+.modal.dspicker-modal  .aps-list-btn{
+    justify-content: end;
+}
+.modal.dspicker-modal .box-search .box-body .row .item-search:last-child{
+    padding-right: 0 !important;
+}
+.modal.dspicker-modal .box-search .box-body .row .item-search label{
+    line-height: 38px;
+}
+.modal.dspicker-modal .box-search .box-body .row .item-search label input[type="checkbox"] {
+    margin: 0px 0 0 !important;
+}
+.dspicker-modal.modal .dspicker-table-wrap {
+    border: 0px solid #e6ebf2 !important;
+    margin-top: 0 !important;
+    padding: 15px !important;
+}
+.dspicker-modal.modal .modal-header .modal-title {
+    left: 20px !important;
+    position: absolute;
+}
+.dspicker-modal.modal .modal-header .close {
+    right: 20px !important;
+    position: absolute;
+}
+.dspicker-modal.modal .modal-content .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 5px !important;
+}
+.dspicker-modal.modal .modal-content .select2-container--default .select2-selection--single {
+    padding: 5px 10px !important;
+}
+.dspicker-modal.modal .box-search{
+    padding: 10px 15px 8px 15px !important;
+}
+.dspicker-modal.modal .modal-header .box-title i {
+    padding-right: 3px !important;
+}
+
+.dspicker-modal.modal .box-search-student .btn i.fa-plus {
+    margin-right: 0 !important;
+}
+.register-wish.modal_sinhvien .title-is-paging {
+    margin-top: 0px !important;
+    justify-content: space-between !important;
+}
+.register-wish.modal_sinhvien .title-is-paging #btnChonSinhVien {
+    height: 32px;
+    padding: 0 8px !important;
+    margin-left: 0px !important;
+    color: rgb(13, 110, 253) !important;
+    background: rgb(255, 255, 255) !important;
+    border: 0px solid rgb(13, 110, 253) !important;
+}
+.box-search-student  .inputs-wr .item {
+    padding: 0 !important;
+}
+.box-search-student  #btnSearch_ModalSinhVien{
+    margin-left: 10px !important;
 }
