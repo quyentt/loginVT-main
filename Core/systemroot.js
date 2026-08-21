@@ -1358,7 +1358,7 @@ systemroot.prototype = {
                     row += '<a class="file-w-e upload-file"  name="' + strFileNameInStorage + '"><i class="' + strFileStyleNew + '"></i>';
                     row += '<span class="upload-file"  name="' + strFileNameInStorage + '">' + strFileName + '</span></a>';
                 }
-                row += '<a class="btn btn-default btn-delete-file btnDeleteFileUp' + elementId + '" name="' + elementId + '" title="' + strFileNameInStorage + '" filename="' + strFileName + '" href="#"><i class="fa fa-times-circle"></i></a>';
+                row += '<a class="btn btn-default btn-delete-file btnDeleteFileUp' + elementId + '" name="' + elementId + '" title="' + strFileNameInStorage + '" filename="' + strFileName + '" href="#"><i class="fa-regular fa-xmark"></i></a>';
                 row += '</div>';
 
 
