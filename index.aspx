@@ -866,7 +866,7 @@
       #main-content-wrapper .form-top .input-group input.form-control {
         height: 38px !important;
         border: 1px solid #d1d1d1 !important;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         font-size: 14px !important;
       }
       #main-content-wrapper .form-top .form-control:focus {
