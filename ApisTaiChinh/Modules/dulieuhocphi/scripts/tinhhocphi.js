@@ -250,12 +250,8 @@ TinhHocPhi.prototype = {
             'strDangKy_KeHoachDangKy_Id': edu.util.getValById('dropKeHoachDangKy_TP'),
             'strNguoiThucHien_Id': edu.system.userId,
         };
-        // Fix "dung do": beginLoading() da bi disable trong systemroot.js:717 (comment out)
-        // → khong hien overlay spinner. Va confirm btnYes tu clear #alert_content → modal
-        // trong tron. Dung beginLoadings/endLoadings (co s) van hoat dong + inject text
-        // "Dang tinh hoc phi..." vao alert_content de user thay phan hoi.
-        edu.system.beginLoadings();
-        $('#myModalAlert #alert_content').html('<p class="text-center"><i class="fa fa-spinner fa-spin"></i> Đang tính học phí, vui lòng chờ...</p>');
+        //default
+        edu.system.beginLoading();
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
@@ -273,10 +269,10 @@ TinhHocPhi.prototype = {
                     }
                     edu.system.afterComfirm(obj);
                 }
-                edu.system.endLoadings();
+                edu.system.endLoading();
             },
             error: function (er) {
-                edu.system.endLoadings();
+                edu.system.endLoading();
                 var obj = {
                     content: "QLTC_HangDoi.TaoHangDoi_TinhHocPhi_TuDong (er): " + JSON.stringify(er),
                     code: "w",
