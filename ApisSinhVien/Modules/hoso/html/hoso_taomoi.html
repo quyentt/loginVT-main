@@ -365,6 +365,140 @@
         border-color: #1d4ed8 !important;
     }
     #zoneEdit .aps-gap-10 { display: flex; gap: 10px; }
+
+    /* ========= Tabs trong modal (2026-08-21) ========= */
+    #zoneEdit .zoneEdit-tabbar {
+        display: flex;
+        gap: 4px;
+        padding: 0 24px;
+        background: #ffffff;
+        border-bottom: 2px solid #e2e8f0;
+        margin-top: 0;
+        position: sticky;
+        top: 0;
+        z-index: 5;
+    }
+    #zoneEdit .zoneEdit-tab {
+        padding: 12px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #64748b;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.15s;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    #zoneEdit .zoneEdit-tab i { font-size: 15px; }
+    #zoneEdit .zoneEdit-tab:hover {
+        color: #2563eb;
+        background: #f8fafc;
+    }
+    #zoneEdit .zoneEdit-tab.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+        background: #eff6ff;
+    }
+    #zoneEdit .zoneEdit-pane {
+        display: none;
+        animation: fadeIn 0.2s;
+    }
+    #zoneEdit .zoneEdit-pane.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ========= Styling APS-SV cho tab XHD — mirror kehoachtuyensinhnew (2026-08-21) ========= */
+    #zoneEdit #zoneXHD {
+        --aps-sv-primary: #2563eb;
+        --aps-sv-primary-soft: #eaf1ff;
+        --aps-sv-border: #e2e8f0;
+        --aps-sv-label: #475569;
+        --aps-sv-text: #0f172a;
+        --aps-sv-radius: 5px;
+        padding: 24px 28px !important;
+    }
+    #zoneEdit #zoneXHD .aps-sv-section + .aps-sv-section { margin-top: 24px; }
+    #zoneEdit #zoneXHD .aps-sv-section-title {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--aps-sv-primary);
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+        margin: 6px 0 18px;
+    }
+    #zoneEdit #zoneXHD .aps-sv-section-title::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(90deg, var(--aps-sv-border), transparent);
+    }
+    #zoneEdit #zoneXHD .aps-sv-section-title i { color: var(--aps-sv-primary); }
+    #zoneEdit #zoneXHD .aps-sv-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px 26px;
+    }
+    @media (max-width: 900px) {
+        #zoneEdit #zoneXHD .aps-sv-grid { grid-template-columns: 1fr; }
+    }
+    #zoneEdit #zoneXHD .aps-sv-field.aps-sv-col-full { grid-column: 1 / -1; }
+    #zoneEdit #zoneXHD .aps-sv-label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--aps-sv-label);
+        margin-bottom: 7px;
+    }
+    #zoneEdit #zoneXHD .aps-sv-label .aps-sv-req { color: #ef4444; margin-left: 2px; }
+    #zoneEdit #zoneXHD .aps-sv-input {
+        width: 100%;
+        height: 38px;
+        padding: 0 14px;
+        font-size: 14px;
+        color: var(--aps-sv-text) !important;
+        background: #fff;
+        border: 1px solid var(--aps-sv-border) !important;
+        border-radius: var(--aps-sv-radius) !important;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        outline: none;
+        box-sizing: border-box;
+    }
+    #zoneEdit #zoneXHD .aps-sv-input::placeholder { color: #94a3b8; }
+    #zoneEdit #zoneXHD .aps-sv-input:focus {
+        border-color: var(--aps-sv-primary) !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14) !important;
+    }
+    #zoneEdit #zoneXHD .aps-sv-select { position: relative; }
+    #zoneEdit #zoneXHD .aps-sv-select select.aps-sv-input {
+        appearance: none;
+        -webkit-appearance: none;
+        padding-right: 38px;
+        cursor: pointer;
+    }
+    #zoneEdit #zoneXHD .aps-sv-select > i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: #94a3b8;
+        font-size: 13px;
+    }
+    #zoneEdit #zoneXHD .aps-sv-input-icon { position: relative; }
+    #zoneEdit #zoneXHD .aps-sv-input-icon > i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 14px;
+    }
+    #zoneEdit #zoneXHD .aps-sv-input-icon .aps-sv-input { padding-left: 40px; }
 </style>
 <section class="content aps-sinhvien">
     <div class="row aps-hoso-taomoi">
@@ -709,6 +843,14 @@
                     <a class="d-block text-right fs-16 mt-5 color-fff btnClose"><i class="fal fa-times"></i></a>
                 </div>
             </div>
+            <!-- Tab bar -->
+            <div class="zoneEdit-tabbar">
+                <div class="zoneEdit-tab active" data-zetab="tabInfo"><i class="fal fa-user"></i> Thông tin cơ bản</div>
+                <div class="zoneEdit-tab" data-zetab="tabDinhDanh"><i class="fal fa-id-card"></i> Định danh &amp; Liên hệ</div>
+                <div class="zoneEdit-tab" data-zetab="tabXHD"><i class="fal fa-file-invoice-dollar"></i> Xuất hoá đơn</div>
+            </div>
+            <!-- Tab: Thông tin cơ bản -->
+            <div class="zoneEdit-pane active" id="tabInfo">
             <div class="form-top rounded-0 border-top mb-15">
                 <div class="row">
                     <div class="col-12 col-md-8 col-lg-8">
@@ -801,7 +943,12 @@
                     </div>
                 </div>
             </div>
-            <div class="container-fluid px-20">
+            </div>
+            <!-- /Tab: Thông tin cơ bản -->
+
+            <!-- Tab: Định danh & Liên hệ -->
+            <div class="zoneEdit-pane" id="tabDinhDanh">
+            <div class="container-fluid px-20 mt-15">
                 <div class="row">
                     <div class="col-12 col-lg-6 mt-6 pl0">
                         <div class="d-flex align-items-center w-100 justify-content-between">
@@ -845,6 +992,102 @@
                     </div>
                 </div>
             </div>
+
+            </div>
+            <!-- /Tab: Định danh & Liên hệ -->
+
+            <!-- Tab: Xuất hoá đơn (mirror kehoachtuyensinhnew.html:2295-2377 với style aps-sv-*, 2026-08-21) -->
+            <div class="zoneEdit-pane" id="tabXHD">
+            <div id="zoneXHD">
+                <div class="aps-sv-section">
+                    <div class="aps-sv-section-title"><i class="fa-light fa-file-invoice-dollar"></i> Người mua / Xuất hoá đơn</div>
+                    <div class="aps-sv-grid">
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Đối tượng xuất hoá đơn</label>
+                            <div class="aps-sv-select">
+                                <i class="fa-light fa-chevron-down"></i>
+                                <select class="aps-sv-input" id="ddlKQ_HD_DoiTuong">
+                                    <option value="">-- Chọn đối tượng --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Họ tên người mua hàng</label>
+                            <input class="aps-sv-input" id="txtKQ_HD_NguoiMua" placeholder="Người nộp tiền / người mua">
+                        </div>
+                        <div class="aps-sv-field aps-sv-col-full">
+                            <label class="aps-sv-label">Tên đơn vị / Công ty <span style="font-weight:500;color:#94a3b8">(nếu xuất cho tổ chức)</span></label>
+                            <input class="aps-sv-input" id="txtKQ_HD_TenDonVi" placeholder="Tên đơn vị nhận hoá đơn">
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Mã số thuế (MST)</label>
+                            <div class="aps-sv-input-icon">
+                                <i class="fa-light fa-hashtag"></i>
+                                <input class="aps-sv-input" id="txtKQ_HD_MST" placeholder="10 hoặc 13 chữ số">
+                            </div>
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Mã quan hệ ngân sách</label>
+                            <div class="aps-sv-input-icon">
+                                <i class="fa-light fa-landmark"></i>
+                                <input class="aps-sv-input" id="txtKQ_HD_MaQHNS" placeholder="Mã QHNS (nếu là đơn vị NSNN)">
+                            </div>
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Số điện thoại nhận</label>
+                            <div class="aps-sv-input-icon">
+                                <i class="fa-light fa-phone"></i>
+                                <input class="aps-sv-input" id="txtKQ_HD_SDT" placeholder="09xx xxx xxx">
+                            </div>
+                        </div>
+                        <div class="aps-sv-field aps-sv-col-full">
+                            <label class="aps-sv-label">Địa chỉ trên hoá đơn</label>
+                            <input class="aps-sv-input" id="txtKQ_HD_DiaChi" placeholder="Địa chỉ ghi trên hoá đơn">
+                        </div>
+                        <div class="aps-sv-field aps-sv-col-full">
+                            <label class="aps-sv-label">Email nhận hoá đơn điện tử</label>
+                            <div class="aps-sv-input-icon">
+                                <i class="fa-light fa-envelope"></i>
+                                <input type="email" class="aps-sv-input" id="txtKQ_HD_Email" placeholder="email nhận HĐĐT">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="aps-sv-section">
+                    <div class="aps-sv-section-title"><i class="fa-light fa-money-check-dollar"></i> Thông tin thanh toán</div>
+                    <div class="aps-sv-grid">
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Loại tài khoản ngân hàng</label>
+                            <div class="aps-sv-select">
+                                <i class="fa-light fa-chevron-down"></i>
+                                <select class="aps-sv-input" id="ddlKQ_HD_HinhThucTT">
+                                    <option value="">-- Chọn loại tài khoản --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Ngân hàng</label>
+                            <input class="aps-sv-input" id="txtKQ_HD_NganHang" placeholder="Tên ngân hàng">
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Số tài khoản</label>
+                            <input class="aps-sv-input" id="txtKQ_HD_SoTK" placeholder="Số tài khoản ngân hàng">
+                        </div>
+                        <div class="aps-sv-field">
+                            <label class="aps-sv-label">Chủ tài khoản</label>
+                            <input class="aps-sv-input" id="txtKQ_HD_ChuTK" placeholder="Tên chủ tài khoản">
+                        </div>
+                        <div class="aps-sv-field aps-sv-col-full">
+                            <label class="aps-sv-label">Ghi chú</label>
+                            <input class="aps-sv-input" id="txtKQ_HD_GhiChu" placeholder="Ghi chú thêm cho hoá đơn (nếu có)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            <!-- /Tab: Xuất hoá đơn -->
+
             <div class="container-fluid px-20">
                 <hr />
                 <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
@@ -861,7 +1104,7 @@
 </section>
 <!-- page script -->
 <script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.2"></script>
-<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.128"></script>
+<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.131"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoTaoMoi'] = new HoSoTaoMoi();
