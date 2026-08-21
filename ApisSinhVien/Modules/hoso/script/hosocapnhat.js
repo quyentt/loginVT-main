@@ -27,6 +27,19 @@ HoSoCapNhat.prototype = {
         $("#tblSinhVien_CN").delegate(".btnView", "click", function () {
             var strId = this.id;
             strId = edu.util.cutPrefixId(/view_/g, strId);
+            // Mở modal chỉnh sửa mới (2026-08-21)
+            var aData = (me.dtSinhVien || []).find(function (x) { return x.ID == strId; }) || {};
+            if (window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson) {
+                main_doc.DeXuatHoSo.openEditByPerson({
+                    id: strId,
+                    hoDem: aData.HODEM, ten: aData.TEN,
+                    ngaySinh_Ngay: aData.NGAYSINH_NGAY,
+                    ngaySinh_Thang: aData.NGAYSINH_THANG,
+                    ngaySinh_Nam: aData.NGAYSINH_NAM,
+                    anh: aData.ANH
+                });
+                return;
+            }
             me.getDetail_HSSV(strId);
         });
         $("#txtSearch_SinhVien_ThuocTinh").on("keyup", function () {

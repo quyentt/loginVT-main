@@ -38,16 +38,31 @@ HoSoTaoMoi.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("CHUN.CHLU", "dropSinhVien_QuocTich");
         edu.extend.setTinhThanh(["txtSinhVien_NoiSinh", "txtSinhVien_QueQuan", "txtSinhVien_HoKhauThuongTru"], 'TP Hà Nội, Quận Hai Bà Trưng, Số 1 Trần Đại Nghĩa');
         edu.system.uploadAvatar(['txtAnh'], "");
-        $(document).delegate("#btnHSLL_Rewrite", "click", function (e) {
-            
-            me.rewrite();
-        });
+        // Ẩn handler theo yêu cầu 2026-08-21: bỏ nút Làm mới / Cập nhật / Xóa / Thêm hồ sơ khác
+        //$(document).delegate("#btnHSLL_Rewrite", "click", function (e) {
+        //    me.rewrite();
+        //});
         $(document).delegate('.detail_HoSoSinhVien', 'click', function (e) {
             e.stopImmediatePropagation();
-            me.rewrite();
             me.strId = this.id;
-            me.editSV();
-            me.activePerson(this.id);
+            // Highlight row (không gọi activePerson để tránh getDetail_HS thừa — dùng data cache trong openEditModal)
+            var row = this;
+            $(".activeSelect").each(function () { this.classList.remove('activeSelect'); });
+            setTimeout(function () { row.classList.add('activeSelect'); }, 50);
+            me.openEditModal(this.id);
+        });
+        // Refresh danh sách trái khi đóng modal chỉnh sửa + gỡ backdrop (2026-08-21)
+        $(document).on('click', '#zoneEdit .btnClose', function () {
+            $('body').removeClass('zoneEdit-open');
+            setTimeout(function () { me.getList_HSSV(); }, 300);
+        });
+        // Tab switch trong modal
+        $(document).on('click', '#zoneEdit .zoneEdit-tab', function () {
+            var target = $(this).data('zetab');
+            $('#zoneEdit .zoneEdit-tab').removeClass('active');
+            $(this).addClass('active');
+            $('#zoneEdit .zoneEdit-pane').removeClass('active');
+            $('#zoneEdit #' + target).addClass('active');
         });
         $(document).delegate('.detail_HoSoSinhVien', 'mouseenter', function (e) {
             e.stopImmediatePropagation();
@@ -62,12 +77,12 @@ HoSoTaoMoi.prototype = {
             me.save_HS();
             me.editSV();
         });
-        $("#btnHSLL_Delete").click(function () {
-            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
-            $("#btnYes").click(function (e) {
-                me.delete_HS();
-            });
-        });
+        //$("#btnHSLL_Delete").click(function () {
+        //    edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+        //    $("#btnYes").click(function (e) {
+        //        me.delete_HS();
+        //    });
+        //});
         $("#btnHSLL_AddMode").click(function () {
             me.addSV();
         });
@@ -140,15 +155,68 @@ HoSoTaoMoi.prototype = {
     /*------------------------------------------
     --Discription: Danh mục NCS
     -------------------------------------------*/
+    /*------------------------------------------
+    --Description: Wrapper — chuẩn hoá data cache dt_HS → gọi dx.openEditByPerson (2026-08-21)
+    --Nếu module chưa load (cache lệch bản), fallback: populate inline + toggle_edit
+    -------------------------------------------*/
+    openEditModal: function (personId) {
+        var me = main_doc.HoSoTaoMoi;
+        var dx = main_doc.DeXuatHoSo;
+        if (!personId) return;
+        var d = (me.dt_HS || []).find(function (e) { return e.ID == personId; }) || {};
+        var person = {
+            id: personId,
+            hoDem: d.HODEM,
+            ten: d.TEN,
+            ngaySinh_Ngay: d.NGAYSINH_NGAY,
+            ngaySinh_Thang: d.NGAYSINH_THANG,
+            ngaySinh_Nam: d.NGAYSINH_NAM,
+            anh: d.ANH
+        };
+        if (dx && typeof dx.openEditByPerson === 'function') {
+            dx.openEditByPerson(person);
+            return;
+        }
+        // Fallback: cache dexuathoso.js phiên bản cũ chưa có openEditByPerson → dùng logic inline
+        if (!dx) {
+            edu.system.alert("Chưa nạp được module chỉnh sửa hồ sơ.", "w");
+            return;
+        }
+        var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
+        var arr = strHoDem.split(' ');
+        var strHo = arr.shift() || '';
+        var strTenDem = arr.join(' ');
+        dx.strDeXuatHoSo_Id = person.id;
+        edu.util.viewValById("txtHo", strHo);
+        edu.util.viewValById("txtTenDem", strTenDem);
+        edu.util.viewValById("txtTen", edu.util.returnEmpty(person.ten));
+        $("#txtTen").trigger("input");
+        edu.util.viewValById("txtNgaySinh", edu.util.returnEmpty(person.ngaySinh_Ngay));
+        edu.util.viewValById("txtThangSinh", edu.util.returnEmpty(person.ngaySinh_Thang));
+        edu.util.viewValById("txtNamSinh", edu.util.returnEmpty(person.ngaySinh_Nam));
+        edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(person.anh));
+        var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(person.anh), constant.setting.EnumImageType.ACCOUNT);
+        $("#srcuploadPicture_SV").attr("src", strAnh);
+        dx.toggle_edit();
+        $('body').addClass('zoneEdit-open');
+        $('#zoneEdit .zoneEdit-tab').removeClass('active');
+        $('#zoneEdit .zoneEdit-tab[data-zetab="tabInfo"]').addClass('active');
+        $('#zoneEdit .zoneEdit-pane').removeClass('active');
+        $('#zoneEdit #tabInfo').addClass('active');
+        if (typeof dx.getList_DinhDanh === 'function') dx.getList_DinhDanh();
+        if (typeof dx.getList_LienHe === 'function') dx.getList_LienHe();
+    },
     editSV: function () {
         //me.toggle_form();
+        $(".aps-add-new").show();
         $("#btnHSLL_Delete").show();
         $("#btnHSLL_AddMode").show();
         $("#btnHSLL_Save").show();
         $("#btnHSLL_Rewrite").hide();
         $("#btnHSLL_Add").hide();
     },
-    addSV: function () { 
+    addSV: function () {
+        $(".aps-add-new").hide();
         $("#btnHSLL_Delete").hide();
         $("#btnHSLL_AddMode").hide();
         $("#btnHSLL_Save").hide();
@@ -411,18 +479,18 @@ HoSoTaoMoi.prototype = {
             aoColumns: [{
                 "mRender": function (nRow, aData) {
                     var strNhanSu_Avatar = edu.system.getRootPathImg(edu.util.returnEmpty(aData.ANH), constant.setting.EnumImageType.ACCOUNT);
-                    var html = '<span id="sl_hoten' + aData.ID + '">' + edu.util.checkEmpty(aData.HODEM) + " " + edu.util.checkEmpty(aData.TEN) + '</span><br />';
+                    var info = '<span id="sl_hoten' + aData.ID + '" class="sv-name">' + edu.util.checkEmpty(aData.HODEM) + " " + edu.util.checkEmpty(aData.TEN) + '</span>';
+                    var meta = '';
                     if (edu.util.checkValue(aData.MASO))
-                        html += '<span id="sl_ma' + aData.ID + '">' + edu.util.checkEmpty(aData.MASO) + '</span> - ';
-                    if (edu.util.checkValue(aData.NGAYSINH_NGAY))
-                        html += '<span>' + edu.util.returnEmpty(aData.NGAYSINH_NGAY) + "/</span>";
-                    if (edu.util.checkValue(aData.NGAYSINH_THANG))
-                        html += '<span>' + edu.util.returnEmpty(aData.NGAYSINH_THANG) + "/</span>";
-                    if (edu.util.checkValue(aData.NGAYSINH_NAM))
-                        html += '<span>' + edu.util.returnEmpty(aData.NGAYSINH_NAM) + "</span>";
-                    var hienthi = '<span style="padding-right: 5px !important; float: left"><img src="' + strNhanSu_Avatar + '" class= "table-img" id="sl_hinhanh' + aData.ID + '" /></span>';
-                    hienthi += html;
-                    return '<a>' + hienthi + '</a>';
+                        meta += '<span id="sl_ma' + aData.ID + '">' + edu.util.checkEmpty(aData.MASO) + '</span>';
+                    var ns = '';
+                    if (edu.util.checkValue(aData.NGAYSINH_NGAY)) ns += edu.util.returnEmpty(aData.NGAYSINH_NGAY) + '/';
+                    if (edu.util.checkValue(aData.NGAYSINH_THANG)) ns += edu.util.returnEmpty(aData.NGAYSINH_THANG) + '/';
+                    if (edu.util.checkValue(aData.NGAYSINH_NAM)) ns += edu.util.returnEmpty(aData.NGAYSINH_NAM);
+                    if (ns) meta += (meta ? ' - ' : '') + '<span>' + ns + '</span>';
+                    var infoBlock = '<div class="sv-info">' + info + (meta ? '<br /><span class="sv-meta">' + meta + '</span>' : '') + '</div>';
+                    var avatar = '<span class="sv-avatar"><img src="' + strNhanSu_Avatar + '" class="table-img" id="sl_hinhanh' + aData.ID + '" /></span>';
+                    return '<a class="sv-row">' + avatar + infoBlock + '</a>';
                 }
             }
                 , {

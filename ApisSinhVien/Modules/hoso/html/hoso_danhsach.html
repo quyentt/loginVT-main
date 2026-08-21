@@ -66,10 +66,12 @@
             </div>
         </div>
         <!-- /.right-content -->
-        <div class="col-sm-9 aps-hoso_danhsach-r pl20 aps-box-r" id="zoneEdit" style="display: block">
-            <!-- Khởi tạo hồ sơ  -->
+        <div class="col-sm-9 aps-hoso_danhsach-r pl20 aps-box-r" id="zoneEditOld" style="display: block">
+            <!-- Host inline form 3 tabs (2026-08-21) — zoneEditModal_inject.js sẽ render vào đây và ẩn form cũ bên dưới -->
+            <div id="zeInlineHost"></div>
+            <!-- Form cũ giữ trong DOM (JS init cần) nhưng ẨN hẳn (2026-08-21) -->
             <div class="box box-solid box-shadow aps-tabs aps-tabs-blue pd0 tabs_input_hososinhvien"
-                id="zone_input_hososinhvien">
+                id="zone_input_hososinhvien" style="display: none !important;" data-ze-legacy="1">
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
                         <li class="active"><a href="#tab_thongtin" data-toggle="tab" aria-expanded="true"><span
@@ -671,11 +673,15 @@
     </div>
 </section>
 <!-- page script -->
-<script src="modules/hoso/script/hosodanhsach.js?v=1.0.0.0"></script>
+<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.4"></script>
+<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.8"></script>
+<script src="Modules/hoso/script/hosodanhsach.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoDanhSach'] = new HoSoDanhSach();
+    main_doc['DeXuatHoSo'] = new DeXuatHoSo();
     $(document).ready(function () {
         main_doc.HoSoDanhSach.init();
+        main_doc.DeXuatHoSo.init();
     });
 </script>

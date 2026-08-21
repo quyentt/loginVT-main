@@ -39,6 +39,20 @@ HoSoDanhSach.prototype = {
             var strId = this.id;
             me.strSinhVien_Id = edu.util.cutPrefixId(/view_/g, strId);
             edu.util.setOne_BgRow(me.strSinhVien_Id, "tblDSSV_NhanSu");
+            // Mở modal chỉnh sửa mới (2026-08-21)
+            var personId = me.strSinhVien_Id;
+            var aData = (me.dt_HS || []).find(function (x) { return x.ID == personId; }) || {};
+            if (window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson) {
+                main_doc.DeXuatHoSo.openEditByPerson({
+                    id: personId,
+                    hoDem: aData.HODEM, ten: aData.TEN,
+                    ngaySinh_Ngay: aData.NGAYSINH_NGAY,
+                    ngaySinh_Thang: aData.NGAYSINH_THANG,
+                    ngaySinh_Nam: aData.NGAYSINH_NAM,
+                    anh: aData.ANH
+                });
+                return;
+            }
             me.getDetail_HSSV(me.strSinhVien_Id);
             me.getList_ThanhVien(me.strSinhVien_Id);
             me.getList_QuyetDinh();

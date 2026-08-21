@@ -179,6 +179,12 @@ XacNhanKetQua.prototype = {
             me.showBaoCao("", "IMPORTWITHPROC_TRUONGTT", main_doc.XacNhanKetQua.getList_TruongTT);
         });
 
+        $("#btnXuatExcel").click(function () { me.exportExcel_OpenModal(); });
+        $("#btnExport_Start").click(function () { me.exportExcel_Start(); });
+        $("#btnExport_Huy").click(function () { me.exportExcel_Cancel(); });
+        $("#btnExport_Dem").click(function () { me.exportExcel_DemTongSV(); });
+        $("#modal_ExportExcel").on('hidden.bs.modal', function () { me.exportCancelled = true; });
+
         $(".btnDownloadAllFile").click(function () {
             var arrFile = [];
             var arrFileName = [];
@@ -1094,4 +1100,311 @@ XacNhanKetQua.prototype = {
             ]
         }, false, false, false, null);
     },
+
+    /*------------------------------------------
+    --Discription: Xuất Excel dữ liệu hồ sơ (client-side)
+    --Nguồn: LayDSQLSV_KeHoach_PhamVi_DL (DS SV) + LayKQQLSV_KeHoach_DuLieu (giá trị từng trường)
+    --Lib: XLSX (SheetJS) load lazy từ CDN trong xacnhanketqua.html
+    -------------------------------------------*/
+    exportExcel_OpenModal: function () {
+        var me = this;
+        if (typeof XLSX === 'undefined') {
+            edu.system.alert('Thư viện Excel chưa load xong. Vui lòng thử lại sau vài giây.', 'w');
+            return;
+        }
+        var strKeHoach_Id = edu.util.getValById('dropSearch_KeHoach');
+        if (!edu.util.checkValue(strKeHoach_Id) || strKeHoach_Id === 'DULIEUGOC') {
+            edu.system.alert('Vui lòng chọn Kế hoạch (khác "Dữ liệu gốc") trước khi xuất Excel.', 'w');
+            return;
+        }
+        me.exportCancelled = false;
+        me._exportResetModalUI();
+        $("#lblExport_KeHoach").text($("#dropSearch_KeHoach option:selected").text() || '—');
+
+        var strTruongTT_Id = edu.util.getValById('dropSearch_TruongThongTin');
+        var arrTT = me.dtThongTin || [];
+        if (edu.util.checkValue(strTruongTT_Id)) {
+            var ids = strTruongTT_Id.indexOf(',') >= 0 ? strTruongTT_Id.split(',') : [strTruongTT_Id];
+            var names = ids.map(function (id) {
+                var f = arrTT.find(function (e) { return e && e.ID === id; });
+                return f ? f.TEN : id;
+            });
+            $("#lblExport_TruongTT").text(names.length + ' trường: ' + names.join(', '));
+        } else {
+            $("#lblExport_TruongTT").text('Tất cả ' + arrTT.length + ' trường của kế hoạch');
+        }
+        $("#lblExport_TongSV").text('— (bấm "Đếm" để kiểm tra)');
+        $("#modal_ExportExcel").modal('show');
+    },
+
+    _exportResetModalUI: function () {
+        $("#zoneExport_Progress").hide();
+        $("#barExport_Progress").css('width', '0%').text('0%');
+        $("#lblExport_ProgressLog").text('Đang chuẩn bị…');
+        $("#btnExport_Huy").hide();
+        $("#btnExport_Start").prop('disabled', false).show();
+        $('input[name="exportQty"]').prop('disabled', false);
+    },
+
+    _exportBuildQueryParams: function (pageIndex, pageSize) {
+        return {
+            'action': 'SV_KeHoach_PhamVi/LayDSQLSV_KeHoach_PhamVi_DL',
+            'type': 'GET',
+            'strTuKhoa': '',
+            'strQLSV_KeHoach_NguoiHoc_Id': edu.util.getValById('dropSearch_KeHoach'),
+            'strNamNhapHoc': '',
+            'strKhoaQuanLy_Id': edu.util.getValCombo('dropSearch_KhoaQuanLy_IHD'),
+            'strHeDaoTao_Id': edu.util.getValCombo('dropSearch_HeDaoTao_IHD'),
+            'strKhoaDaoTao_Id': edu.util.getValCombo('dropSearch_KhoaDaoTao_IHD'),
+            'strChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinh_IHD'),
+            'strLopQuanLy_Id': edu.util.getValCombo('dropSearch_Lop_IHD'),
+            'strTrangThaiNguoiHoc_Id': '',
+            'strTruongThongTin_Id': edu.util.getValById('dropSearch_TruongThongTin'),
+            'strNguoiTao_Id': '',
+            'pageIndex': pageIndex,
+            'pageSize': pageSize
+        };
+    },
+
+    exportExcel_DemTongSV: function () {
+        var me = this;
+        $("#lblExport_TongSV").text('Đang đếm…');
+        var obj = me._exportBuildQueryParams(1, 1);
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) {
+                    var iTotal = parseInt(data.Pager, 10);
+                    if (isNaN(iTotal)) iTotal = (data.Data ? data.Data.length : 0);
+                    me.exportTongSV_Cache = iTotal;
+                    $("#lblExport_TongSV").text(iTotal.toLocaleString('vi-VN') + ' SV');
+                } else {
+                    $("#lblExport_TongSV").text('Lỗi: ' + (data && data.Message ? data.Message : 'không xác định'));
+                }
+            },
+            error: function () { $("#lblExport_TongSV").text('Lỗi mạng khi đếm.'); },
+            type: "GET",
+            versionAPI: "v1.0",
+            contentType: true,
+            action: obj.action,
+            data: obj,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    exportExcel_Cancel: function () {
+        var me = this;
+        me.exportCancelled = true;
+        $("#lblExport_ProgressLog").text('Đã hủy bởi người dùng. Có thể bấm "Xuất Excel" để chạy lại.');
+        me._exportResetModalUI();
+        $("#zoneExport_Progress").show();
+    },
+
+    exportExcel_Start: function () {
+        var me = this;
+        var qtyVal = $('input[name="exportQty"]:checked').val() || 'all';
+        var iPageSize = qtyVal === 'all' ? 100000 : parseInt(qtyVal, 10);
+        if (!iPageSize || isNaN(iPageSize)) iPageSize = 100000;
+
+        me.exportCancelled = false;
+        $("#btnExport_Start").prop('disabled', true);
+        $('input[name="exportQty"]').prop('disabled', true);
+        $("#btnExport_Huy").show();
+        $("#zoneExport_Progress").show();
+        $("#barExport_Progress").css('width', '0%').text('0%');
+        $("#lblExport_ProgressLog").text('Đang lấy danh sách sinh viên…');
+
+        var obj = me._exportBuildQueryParams(1, iPageSize);
+        edu.system.makeRequest({
+            success: function (data) {
+                if (me.exportCancelled) return;
+                if (!data || !data.Success) {
+                    $("#lblExport_ProgressLog").text('Lỗi lấy DS SV: ' + (data && data.Message ? data.Message : ''));
+                    me._exportResetModalUI();
+                    $("#zoneExport_Progress").show();
+                    return;
+                }
+                var arrSV = data.Data || [];
+                if (arrSV.length === 0) {
+                    $("#lblExport_ProgressLog").text('Không có sinh viên nào trong phạm vi lọc.');
+                    me._exportResetModalUI();
+                    $("#zoneExport_Progress").show();
+                    return;
+                }
+                me.exportExcel_FetchAllKetQua(arrSV);
+            },
+            error: function () {
+                $("#lblExport_ProgressLog").text('Lỗi mạng khi lấy danh sách SV.');
+                me._exportResetModalUI();
+                $("#zoneExport_Progress").show();
+            },
+            type: "GET",
+            versionAPI: "v1.0",
+            contentType: true,
+            action: obj.action,
+            data: obj,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    exportExcel_FetchAllKetQua: function (arrSV) {
+        var me = this;
+        var iTotal = arrSV.length;
+        var iDone = 0, iFail = 0;
+        var iRunning = 0, iNext = 0;
+        var CONCURRENCY = 6;
+        var TIMEOUT_MS = 20000;
+        var mapKetQua = {};
+        var strKeHoach_Id = edu.util.getValById('dropSearch_KeHoach');
+
+        function updateProgress() {
+            var iper = iTotal ? Math.round((iDone / iTotal) * 100) : 100;
+            $("#barExport_Progress").css('width', iper + '%').text(iper + '%');
+            $("#lblExport_ProgressLog").text('Đã tải ' + iDone + '/' + iTotal + ' SV (Lỗi/timeout: ' + iFail + ')');
+        }
+        updateProgress();
+
+        function fetchOne(sv) {
+            return new Promise(function (resolve) {
+                var timer = setTimeout(function () { resolve({ error: 'timeout' }); }, TIMEOUT_MS);
+                var obj = {
+                    'action': 'SV_KeHoach_DuLieu/LayKQQLSV_KeHoach_DuLieu',
+                    'type': 'GET',
+                    'strQLSV_KeHoach_NguoiHoc_Id': strKeHoach_Id,
+                    'strTruongThongTin_Id': '',
+                    'strQLSV_NguoiHoc_Id': sv.QLSV_NGUOIHOC_ID
+                };
+                edu.system.makeRequest({
+                    success: function (data) {
+                        clearTimeout(timer);
+                        resolve({ data: (data && data.Success) ? (data.Data || []) : [] });
+                    },
+                    error: function () {
+                        clearTimeout(timer);
+                        resolve({ error: 'network' });
+                    },
+                    type: "GET",
+                    versionAPI: "v1.0",
+                    contentType: true,
+                    action: obj.action,
+                    data: obj,
+                    fakedb: []
+                }, false, false, false, null);
+            });
+        }
+
+        function tick() {
+            if (me.exportCancelled) return;
+            while (iRunning < CONCURRENCY && iNext < iTotal) {
+                var sv = arrSV[iNext++];
+                iRunning++;
+                (function (svCur) {
+                    fetchOne(svCur).then(function (res) {
+                        if (me.exportCancelled) return;
+                        iRunning--;
+                        iDone++;
+                        if (res.error) {
+                            iFail++;
+                        } else {
+                            var row = mapKetQua[svCur.QLSV_NGUOIHOC_ID] = mapKetQua[svCur.QLSV_NGUOIHOC_ID] || {};
+                            (res.data || []).forEach(function (kq) {
+                                if (kq && kq.TRUONGTHONGTIN_ID) row[kq.TRUONGTHONGTIN_ID] = kq;
+                            });
+                        }
+                        updateProgress();
+                        if (iDone === iTotal) {
+                            me.exportExcel_Generate(arrSV, mapKetQua, iFail);
+                        } else {
+                            tick();
+                        }
+                    });
+                })(sv);
+            }
+        }
+        tick();
+    },
+
+    exportExcel_Generate: function (arrSV, mapKetQua, iFail) {
+        var me = this;
+        if (me.exportCancelled) return;
+        if (typeof XLSX === 'undefined') {
+            $("#lblExport_ProgressLog").text('Lỗi: XLSX chưa load. Thử refresh trang.');
+            me._exportResetModalUI(); $("#zoneExport_Progress").show();
+            return;
+        }
+        $("#lblExport_ProgressLog").text('Đang tạo file Excel…');
+
+        var strTruongTT_Id = edu.util.getValById('dropSearch_TruongThongTin');
+        var arrTT_All = (me.dtThongTin || []).filter(function (e) { return e && e.ID && e.TEN; });
+        var arrTT_Ex = [];
+        if (edu.util.checkValue(strTruongTT_Id)) {
+            var ids = strTruongTT_Id.indexOf(',') >= 0 ? strTruongTT_Id.split(',') : [strTruongTT_Id];
+            ids.forEach(function (id) {
+                var f = arrTT_All.find(function (e) { return e.ID === id; });
+                if (f) arrTT_Ex.push(f);
+            });
+        } else {
+            arrTT_Ex = arrTT_All;
+        }
+
+        var v = edu.util.returnEmpty || function (x) { return x == null ? '' : x; };
+        var usedNames = {};
+        function uniqueName(name) {
+            var base = name || 'Trường';
+            var n = base, i = 2;
+            while (usedNames[n]) { n = base + ' (' + i + ')'; i++; }
+            usedNames[n] = true;
+            return n;
+        }
+        var colTT = arrTT_Ex.map(function (tt) { return { id: tt.ID, kieu: tt.KIEUDULIEU, name: uniqueName(tt.TEN || tt.MA || ('Trường ' + tt.ID)) }; });
+
+        var rows = arrSV.map(function (sv, i) {
+            var kqOfSV = mapKetQua[sv.QLSV_NGUOIHOC_ID] || {};
+            var hoTen = (v(sv.QLSV_NGUOIHOC_HODEM) + ' ' + v(sv.QLSV_NGUOIHOC_TEN)).replace(/\s+/g, ' ').trim();
+            var row = {
+                'STT': i + 1,
+                'Lớp': v(sv.DAOTAO_LOPQUANLY_MA),
+                'Mã số': v(sv.QLSV_NGUOIHOC_MASO),
+                'Họ và tên': hoTen
+            };
+            colTT.forEach(function (c) {
+                var kq = kqOfSV[c.id];
+                var val = '';
+                if (kq) {
+                    if (c.kieu === 'FILE') {
+                        val = kq.TRUONGTHONGTIN_GIATRI_KQ ? 'Có file' : '';
+                    } else {
+                        val = v(kq.TRUONGTHONGTIN_GIATRI_KQ);
+                    }
+                }
+                row[c.name] = val;
+            });
+            return row;
+        });
+
+        var ws = XLSX.utils.json_to_sheet(rows);
+        var headers = Object.keys(rows[0] || {});
+        ws['!cols'] = headers.map(function (h) {
+            var maxLen = h.length;
+            for (var i = 0; i < rows.length; i++) {
+                var l = String(rows[i][h] == null ? '' : rows[i][h]).length;
+                if (l > maxLen) maxLen = l;
+            }
+            return { wch: Math.min(maxLen + 2, 50) };
+        });
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'XacNhanKetQua');
+
+        var now = new Date();
+        var pad = function (n) { return n < 10 ? '0' + n : n; };
+        var stamp = now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate())
+            + '_' + pad(now.getHours()) + pad(now.getMinutes());
+        var fileName = 'XacNhanKetQua_' + stamp + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+
+        var msg = 'Đã xuất: ' + fileName + ' (' + arrSV.length + ' SV × ' + colTT.length + ' trường)';
+        if (iFail > 0) msg += ' — có ' + iFail + ' SV bị lỗi/timeout, cột trường TT để trống.';
+        $("#lblExport_ProgressLog").text(msg);
+        me._exportResetModalUI();
+        $("#zoneExport_Progress").show();
+    }
 }
