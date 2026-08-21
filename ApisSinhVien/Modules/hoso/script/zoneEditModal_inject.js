@@ -4,10 +4,12 @@
 -- Idempotent: nếu #zoneEdit đã có trong DOM thì bỏ qua (case: hoso_taomoi.html có sẵn inline).
 -- Dùng cho các trang muốn mở modal chỉnh sửa hồ sơ từ dexuathoso.js openEditByPerson().
 ----------------------------------------------*/
-(function () {
-    if (document.getElementById('zoneEdit')) return;
+function _zeDoInject(forceOverlay) {
+    if (document.getElementById('zoneEdit')) { console.log('[ZE-Inject] skip: #zoneEdit exists'); return; }
     // Inline mode nếu page có `<div id="zeInlineHost">` — render trực tiếp vào đó, không overlay
     var inlineHost = document.getElementById('zeInlineHost');
+    console.log('[ZE-Inject] running, inlineHost=', inlineHost ? 'FOUND' : 'not found', ', forceOverlay=', !!forceOverlay);
+    if (!inlineHost && !forceOverlay) { return; } // Chưa có host, defer retry — không fallback overlay ngay
 
     var css = ''
         + '#zoneEdit.fake-modal{position:fixed !important;top:24px;left:50%;transform:translateX(-50%);width:96vw;max-width:1500px;max-height:calc(100vh - 48px);overflow-y:auto;overflow-x:hidden;z-index:10050;background:#ffffff;border-radius:12px;box-shadow:0 25px 70px rgba(15,23,42,.4);padding:0 !important;}'
@@ -216,10 +218,17 @@
         // Ẩn nút Đóng/footer trong inline mode
         var footerClose = modalEl.querySelector('.container-fluid .btn.btnClose');
         if (footerClose) footerClose.style.display = 'none';
-        // Ẩn các sibling khác của host (form cũ của trang)
-        var sib = inlineHost.parentNode ? inlineHost.parentNode.children : [];
-        for (var i = 0; i < sib.length; i++) {
-            if (sib[i] !== inlineHost) sib[i].style.display = 'none';
+        // HIDE (không xoá) các sibling khác của host để trang cũ init không crash
+        // — style.setProperty với 'important' để đè CSS !important của theme (2026-08-21)
+        var parent = inlineHost.parentNode;
+        if (parent) {
+            for (var i = 0; i < parent.children.length; i++) {
+                var el = parent.children[i];
+                if (el !== inlineHost) {
+                    el.style.setProperty('display', 'none', 'important');
+                    el.setAttribute('data-ze-hidden', '1');
+                }
+            }
         }
     } else {
         document.body.appendChild(modalEl);
@@ -244,6 +253,29 @@
             if (!btn) return;
             document.body.classList.remove('zoneEdit-open');
         });
+    }
+}
+// Kick off: retry loop tìm #zeInlineHost mỗi 100ms, sau 2s vẫn không có thì fallback overlay (2026-08-21)
+(function _zeKickoff() {
+    var tries = 0;
+    var timer = setInterval(function () {
+        tries++;
+        if (document.getElementById('zoneEdit')) { clearInterval(timer); return; }
+        if (document.getElementById('zeInlineHost')) {
+            clearInterval(timer);
+            _zeDoInject(false);  // inline mode
+        } else if (tries > 20) {  // 20 × 100ms = 2s
+            clearInterval(timer);
+            console.log('[ZE-Inject] timeout waiting for #zeInlineHost → fallback overlay');
+            _zeDoInject(true);   // fallback overlay
+        }
+    }, 100);
+    // Chạy ngay lần đầu để bắt case DOM đã ready
+    if (document.getElementById('zeInlineHost')) {
+        clearInterval(timer);
+        _zeDoInject(false);
+    } else if (document.getElementById('zoneEdit')) {
+        clearInterval(timer);
     }
 })();
 

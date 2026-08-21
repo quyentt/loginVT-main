@@ -37,8 +37,8 @@
         <div class="col-sm-9 aps-hoso-capnhat-r  pl20 aps-box-r">
             <!-- Host inline form 3 tabs (2026-08-21) -->
             <div id="zeInlineHost"></div>
-            <!-- box- Thong tin cap nhat -->
-            <div class="box box-solid box-shadow pd0">
+            <!-- Form cũ giữ trong DOM (JS init cần) nhưng ẨN hẳn (2026-08-21) -->
+            <div class="box box-solid box-shadow pd0" style="display: none !important;" data-ze-legacy="1">
                 <div class="box-header with-border bg-header">
                     <h3 class="box-title color-blue"><i class="fa-light fa-id-card"></i> Thông tin cập nhật </h3>
                     <div class="pull-right">
@@ -186,8 +186,8 @@
 </section>
 <!-- page script -->
 <script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.4"></script>
-<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.4"></script>
-<script src="Modules/hoso/script/hosocapnhat.js?v=1.0.0.1"></script>
+<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.8"></script>
+<script src="Modules/hoso/script/hosocapnhat.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoCapNhat'] = new HoSoCapNhat();

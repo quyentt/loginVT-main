@@ -69,9 +69,9 @@
         <div class="col-sm-9 aps-hoso-xem-r pl20 aps-box-r" id="zoneEditOld" style="display: block">
             <!-- Host inline form 3 tabs (2026-08-21) -->
             <div id="zeInlineHost"></div>
-            <!-- Khởi tạo hồ sơ  -->
+            <!-- Form cũ giữ trong DOM (JS init cần) nhưng ẨN hẳn (2026-08-21) -->
             <div class="box box-solid box-shadow aps-tabs aps-tabs-blue pd0 tabs_input_hososinhvien"
-                id="zone_input_hososinhvien">
+                id="zone_input_hososinhvien" style="display: none !important;" data-ze-legacy="1">
                 <div class="box box-solid pd0">
                     <div class="nav-tabs-custom">
                         <ul class="nav nav-tabs">
@@ -614,8 +614,8 @@
 </section>
 <!-- page script -->
 <script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.4"></script>
-<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.4"></script>
-<script src="Modules/hoso/script/xemhoso.js?v=1.0.0.1"></script>
+<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.8"></script>
+<script src="Modules/hoso/script/xemhoso.js?v=1.0.0.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoDanhSach'] = new HoSoDanhSach();
