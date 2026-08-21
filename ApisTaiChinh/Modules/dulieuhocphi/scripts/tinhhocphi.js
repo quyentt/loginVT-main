@@ -66,6 +66,15 @@ TinhHocPhi.prototype = {
         $("#btnTinhHocPhi").click(function () {
             edu.system.confirm("Bạn có chắc chắn <span class='italic color-warning'>Tính học phí</span> không?");
             $("#btnYes").click(function (e) {
+                // Fix UI: systemroot btnYes handler chi clear #alert_content chu khong .modal('hide')
+                // → popup confirm van hien tren man voi body trong, user phai bam Dong thu cong
+                // moi thay overlay loading. Fix: dong modal ngay + show overlay ngay + auto-hide
+                // overlay khi result modal (afterComfirm) xuat hien.
+                $('#myModalAlert').modal('hide');
+                edu.system.beginLoadings();
+                $(document).one('shown.bs.modal', function () {
+                    edu.system.endLoadings();
+                });
                 me.TaoHangDoi_TinhHocPhi_TuDong();
             });
 
