@@ -38,16 +38,31 @@ HoSoTaoMoi.prototype = {
         edu.system.loadToCombo_DanhMucDuLieu("CHUN.CHLU", "dropSinhVien_QuocTich");
         edu.extend.setTinhThanh(["txtSinhVien_NoiSinh", "txtSinhVien_QueQuan", "txtSinhVien_HoKhauThuongTru"], 'TP Hà Nội, Quận Hai Bà Trưng, Số 1 Trần Đại Nghĩa');
         edu.system.uploadAvatar(['txtAnh'], "");
-        $(document).delegate("#btnHSLL_Rewrite", "click", function (e) {
-            
-            me.rewrite();
-        });
+        // Ẩn handler theo yêu cầu 2026-08-21: bỏ nút Làm mới / Cập nhật / Xóa / Thêm hồ sơ khác
+        //$(document).delegate("#btnHSLL_Rewrite", "click", function (e) {
+        //    me.rewrite();
+        //});
         $(document).delegate('.detail_HoSoSinhVien', 'click', function (e) {
             e.stopImmediatePropagation();
-            me.rewrite();
             me.strId = this.id;
-            me.editSV();
-            me.activePerson(this.id);
+            // Highlight row (không gọi activePerson để tránh getDetail_HS thừa — dùng data cache trong openEditModal)
+            var row = this;
+            $(".activeSelect").each(function () { this.classList.remove('activeSelect'); });
+            setTimeout(function () { row.classList.add('activeSelect'); }, 50);
+            me.openEditModal(this.id);
+        });
+        // Refresh danh sách trái khi đóng modal chỉnh sửa + gỡ backdrop (2026-08-21)
+        $(document).on('click', '#zoneEdit .btnClose', function () {
+            $('body').removeClass('zoneEdit-open');
+            setTimeout(function () { me.getList_HSSV(); }, 300);
+        });
+        // Tab switch trong modal
+        $(document).on('click', '#zoneEdit .zoneEdit-tab', function () {
+            var target = $(this).data('zetab');
+            $('#zoneEdit .zoneEdit-tab').removeClass('active');
+            $(this).addClass('active');
+            $('#zoneEdit .zoneEdit-pane').removeClass('active');
+            $('#zoneEdit #' + target).addClass('active');
         });
         $(document).delegate('.detail_HoSoSinhVien', 'mouseenter', function (e) {
             e.stopImmediatePropagation();
@@ -62,12 +77,12 @@ HoSoTaoMoi.prototype = {
             me.save_HS();
             me.editSV();
         });
-        $("#btnHSLL_Delete").click(function () {
-            edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
-            $("#btnYes").click(function (e) {
-                me.delete_HS();
-            });
-        });
+        //$("#btnHSLL_Delete").click(function () {
+        //    edu.system.confirm("Bạn có chắc chắn xóa dữ liệu không?");
+        //    $("#btnYes").click(function (e) {
+        //        me.delete_HS();
+        //    });
+        //});
         $("#btnHSLL_AddMode").click(function () {
             me.addSV();
         });
@@ -140,15 +155,130 @@ HoSoTaoMoi.prototype = {
     /*------------------------------------------
     --Discription: Danh mục NCS
     -------------------------------------------*/
+    /*------------------------------------------
+    --Description: Mở modal "Chỉnh sửa - Hồ sơ đề xuất" của ApisNhanSu (2026-08-21)
+    --Pattern: dùng data cache từ me.dt_HS (list SV_HoSoKhoiTao/LayDanhSach) — giống btnEdit của DeXuatHoSo
+    --Populate field modal → toggle_edit + load 2 bảng con theo person_id
+    -------------------------------------------*/
+    openEditModal: function (personId) {
+        var me = main_doc.HoSoTaoMoi;
+        var dx = main_doc.DeXuatHoSo;
+        if (!dx) {
+            edu.system.alert("Chưa nạp được module chỉnh sửa hồ sơ.", "w");
+            return;
+        }
+        if (!personId) return;
+
+        var d = (me.dt_HS || []).find(function (e) { return e.ID == personId; }) || {};
+        dx.strDeXuatHoSo_Id = personId;
+
+        // Tách HODEM = "Phạm Thị" → Họ "Phạm" + Tên đệm "Thị" (word đầu = Họ, phần còn lại = Tên đệm)
+        var strHoDem = (edu.util.returnEmpty(d.HODEM) || "").trim().replace(/\s+/g, " ");
+        var arrHoDem = strHoDem.split(" ");
+        var strHo = arrHoDem.shift() || "";
+        var strTenDem = arrHoDem.join(" ");
+
+        edu.util.viewValById("txtHo", strHo);
+        edu.util.viewValById("txtTenDem", strTenDem);
+        edu.util.viewValById("txtTen", edu.util.returnEmpty(d.TEN));
+        $("#txtTen").trigger("input");
+        edu.util.viewValById("txtNgaySinh", edu.util.returnEmpty(d.NGAYSINH_NGAY));
+        edu.util.viewValById("txtThangSinh", edu.util.returnEmpty(d.NGAYSINH_THANG));
+        edu.util.viewValById("txtNamSinh", edu.util.returnEmpty(d.NGAYSINH_NAM));
+        edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(d.ANH));
+        var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(d.ANH), constant.setting.EnumImageType.ACCOUNT);
+        $("#srcuploadPicture_SV").attr("src", strAnh);
+
+        dx.toggle_edit();
+        $('body').addClass('zoneEdit-open');
+        // Luôn về tab "Thông tin cơ bản" khi mở modal
+        $('#zoneEdit .zoneEdit-tab').removeClass('active');
+        $('#zoneEdit .zoneEdit-tab[data-zetab="tabInfo"]').addClass('active');
+        $('#zoneEdit .zoneEdit-pane').removeClass('active');
+        $('#zoneEdit #tabInfo').addClass('active');
+        dx.getList_DinhDanh();
+        dx.getList_LienHe();
+
+        // Set mức độ ngày sinh mặc định "EXACT" nếu combo đã load
+        if (dx.dtMucDoNgaySinh && dx.dtMucDoNgaySinh.length) {
+            var opt = dx.dtMucDoNgaySinh.find(function (e) { return e.MA == "EXACT"; });
+            if (opt) {
+                $('#dropMucDoNgaySinh').val(opt.ID).trigger("change").trigger({ type: 'select2:select' });
+            }
+        }
+
+        // Load section XHD (2 khối)
+        me.loadXHD_Section(personId);
+    },
+    /*------------------------------------------
+    --Description: Load section "Xuất hoá đơn" — 2 DMDL + Bank Account theo person_id
+    --TODO: chờ BE bổ sung API Get/Ins/Upd_Person_Invoice_By_Person_Id để wire phần Người mua/HĐ
+    -------------------------------------------*/
+    loadXHD_Section: function (personId) {
+        var me = main_doc.HoSoTaoMoi;
+
+        // 1) Reset toàn bộ field XHD trước khi load (tránh sticky value từ record trước)
+        var arrClear = [
+            "ddlKQ_HD_DoiTuong", "txtKQ_HD_NguoiMua", "txtKQ_HD_TenDonVi", "txtKQ_HD_MST",
+            "txtKQ_HD_MaQHNS", "txtKQ_HD_SDT", "txtKQ_HD_DiaChi", "txtKQ_HD_Email",
+            "ddlKQ_HD_HinhThucTT", "txtKQ_HD_NganHang", "txtKQ_HD_SoTK", "txtKQ_HD_ChuTK", "txtKQ_HD_GhiChu"
+        ];
+        edu.util.resetValByArrId(arrClear);
+
+        // 2) Nạp 2 dropdown DMDL (idempotent — chỉ nạp 1 lần)
+        if (!me._xhdDMDLLoaded) {
+            edu.system.loadToCombo_DanhMucDuLieu("TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong");
+            edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT");
+            me._xhdDMDLLoaded = true;
+        }
+
+        // 3) Load Bank Account theo person — dùng API sẵn có PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account
+        var obj = {
+            'action': 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4DIC8qHgAiIi40LzUP',
+            'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account',
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': '',
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strPerson_Id': personId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success) return;
+                var list = (data.Data || []).filter(function (i) {
+                    return i.PERSON_ID == personId && (i.IS_ACTIVE === undefined || i.IS_ACTIVE == 1);
+                });
+                if (!list.length) return;
+                // Ưu tiên record IS_PRIMARY = 1, không có thì lấy đầu
+                var b = list.find(function (i) { return i.IS_PRIMARY == 1; }) || list[0];
+                me._currentBankId = b.ID || '';
+                edu.util.viewValById("ddlKQ_HD_HinhThucTT", b.ACCOUNT_TYPE_CODE);
+                edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
+                edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
+                edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
+                edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+            },
+            error: function () { /* silent */ },
+            type: 'POST',
+            action: obj.action,
+            contentType: true,
+            data: obj,
+            fakedb: []
+        }, false, false, false, null);
+
+        // 4) TODO: load PersonInvoice khi có API BE — hiện chưa có Get_Person_Invoice_By_Person_Id
+    },
     editSV: function () {
         //me.toggle_form();
+        $(".aps-add-new").show();
         $("#btnHSLL_Delete").show();
         $("#btnHSLL_AddMode").show();
         $("#btnHSLL_Save").show();
         $("#btnHSLL_Rewrite").hide();
         $("#btnHSLL_Add").hide();
     },
-    addSV: function () { 
+    addSV: function () {
+        $(".aps-add-new").hide();
         $("#btnHSLL_Delete").hide();
         $("#btnHSLL_AddMode").hide();
         $("#btnHSLL_Save").hide();
@@ -411,18 +541,18 @@ HoSoTaoMoi.prototype = {
             aoColumns: [{
                 "mRender": function (nRow, aData) {
                     var strNhanSu_Avatar = edu.system.getRootPathImg(edu.util.returnEmpty(aData.ANH), constant.setting.EnumImageType.ACCOUNT);
-                    var html = '<span id="sl_hoten' + aData.ID + '">' + edu.util.checkEmpty(aData.HODEM) + " " + edu.util.checkEmpty(aData.TEN) + '</span><br />';
+                    var info = '<span id="sl_hoten' + aData.ID + '" class="sv-name">' + edu.util.checkEmpty(aData.HODEM) + " " + edu.util.checkEmpty(aData.TEN) + '</span>';
+                    var meta = '';
                     if (edu.util.checkValue(aData.MASO))
-                        html += '<span id="sl_ma' + aData.ID + '">' + edu.util.checkEmpty(aData.MASO) + '</span> - ';
-                    if (edu.util.checkValue(aData.NGAYSINH_NGAY))
-                        html += '<span>' + edu.util.returnEmpty(aData.NGAYSINH_NGAY) + "/</span>";
-                    if (edu.util.checkValue(aData.NGAYSINH_THANG))
-                        html += '<span>' + edu.util.returnEmpty(aData.NGAYSINH_THANG) + "/</span>";
-                    if (edu.util.checkValue(aData.NGAYSINH_NAM))
-                        html += '<span>' + edu.util.returnEmpty(aData.NGAYSINH_NAM) + "</span>";
-                    var hienthi = '<span style="padding-right: 5px !important; float: left"><img src="' + strNhanSu_Avatar + '" class= "table-img" id="sl_hinhanh' + aData.ID + '" /></span>';
-                    hienthi += html;
-                    return '<a>' + hienthi + '</a>';
+                        meta += '<span id="sl_ma' + aData.ID + '">' + edu.util.checkEmpty(aData.MASO) + '</span>';
+                    var ns = '';
+                    if (edu.util.checkValue(aData.NGAYSINH_NGAY)) ns += edu.util.returnEmpty(aData.NGAYSINH_NGAY) + '/';
+                    if (edu.util.checkValue(aData.NGAYSINH_THANG)) ns += edu.util.returnEmpty(aData.NGAYSINH_THANG) + '/';
+                    if (edu.util.checkValue(aData.NGAYSINH_NAM)) ns += edu.util.returnEmpty(aData.NGAYSINH_NAM);
+                    if (ns) meta += (meta ? ' - ' : '') + '<span>' + ns + '</span>';
+                    var infoBlock = '<div class="sv-info">' + info + (meta ? '<br /><span class="sv-meta">' + meta + '</span>' : '') + '</div>';
+                    var avatar = '<span class="sv-avatar"><img src="' + strNhanSu_Avatar + '" class="table-img" id="sl_hinhanh' + aData.ID + '" /></span>';
+                    return '<a class="sv-row">' + avatar + infoBlock + '</a>';
                 }
             }
                 , {

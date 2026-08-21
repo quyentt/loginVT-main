@@ -866,7 +866,7 @@
       #main-content-wrapper .form-top .input-group input.form-control {
         height: 38px !important;
         border: 1px solid #d1d1d1 !important;
-        border-radius: 6px !important;
+        border-radius: 8px !important;
         font-size: 14px !important;
       }
       #main-content-wrapper .form-top .form-control:focus {
@@ -961,6 +961,7 @@
         border-collapse: separate !important;
         border-spacing: 0 !important;
         overflow: hidden !important;
+        margin-bottom: 10px;
       }
 
       /* ─── [SPA-ADMINLTE-COMPAT] Cover module cu dung .box, .box-body, .box-header

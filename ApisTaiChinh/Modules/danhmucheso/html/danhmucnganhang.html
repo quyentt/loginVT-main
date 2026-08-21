@@ -69,13 +69,33 @@
     </div>
 </section>
 <!--  Chỉnh sửa - Thông tin -->
+<style>
+    /* Scoped: title center + close sat phai (giong pattern modal-alert o indexi.aspx:958-979).
+       Khong dung span.myModalLabel de tranh systemroot.js:128 chen ".." + "Chinh sua -" luc btnEdit. */
+    #myModal.modal-editInfo .modal-header {
+        position: relative !important;
+        justify-content: center !important;
+    }
+    #myModal.modal-editInfo .modal-header .modal-title {
+        margin: 0 auto !important;
+        text-align: center !important;
+    }
+    #myModal.modal-editInfo .modal-header .close {
+        position: absolute !important;
+        right: 15px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin: 0 !important;
+        padding: 0 8px !important;
+    }
+</style>
 <div class="modal fade modal-editInfo" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
+                <h4 class="modal-title"><i class="fa fa-pencil"></i> Chỉnh sửa - Thông tin</h4>
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span
                         class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Thông tin</h3>
             </div>
             <div class="modal-body" id="modal_body">
                 <div class="aps-form mb-0">
@@ -113,5 +133,26 @@
     main_doc['DanhMucNganHang'] = new DanhMucNganHang();
     $(document).ready(function () {
         main_doc.DanhMucNganHang.init();
+        /* Fix dropdown "bay" ve top-left khi mo select2 trong modal:
+           Root cause: MutationObserver o indexi.aspx:1474-1493 cuong buc moi
+           .select2-container--open sang body ma khong tinh lai coord. Select2 v4.0.3
+           tinh top/left RELATIVE dropdownParent (css.top -= parentOffset.top). Khi
+           observer move container tu modal → body, coord relative modal → thanh
+           coord viewport → dropdown bay top-left.
+           Fix: bat select2:open, delay 0 (chay sau observer), reposition bang
+           getBoundingClientRect() cua trigger. */
+        $(document).on('select2:open', '#dropTrangThai', function () {
+            var trigger = $(this).next('.select2-container')[0];
+            if (!trigger) return;
+            setTimeout(function () {
+                var rect = trigger.getBoundingClientRect();
+                var $dropdown = $('.select2-container--open').last();
+                $dropdown.css({
+                    top: (rect.bottom + window.pageYOffset) + 'px',
+                    left: (rect.left + window.pageXOffset) + 'px',
+                    width: rect.width + 'px'
+                });
+            }, 0);
+        });
     });
 </script>

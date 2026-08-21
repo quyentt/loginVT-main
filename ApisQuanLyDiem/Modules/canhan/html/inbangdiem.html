@@ -3,6 +3,18 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+
+    /* Fix: dropdown "Xuat bao cao" (#zonebtnSVQD .dropdown-menu) bi select2 cua
+       form search "Dieu kien loc du lieu mo rong" tro`i len che (select2-container
+       co z-index: 99999 tu` index/indexi.aspx).
+       Nang z-index dropdown-menu VA reset select2 z-index khi dropdown dang mo. */
+    .aps-QLdiem .dropdown-menu {
+        z-index: 100002 !important;
+    }
+    section.aps-QLdiem:has(.dropdown.open) #search .select2-container,
+    section.aps-QLdiem:has(.dropdown.show) #search .select2-container {
+        z-index: auto !important;
+    }
 </style>
 <section class="content aps-QLdiem">
     <div class="row aps-inbangdiem">
