@@ -156,117 +156,55 @@ HoSoTaoMoi.prototype = {
     --Discription: Danh mục NCS
     -------------------------------------------*/
     /*------------------------------------------
-    --Description: Mở modal "Chỉnh sửa - Hồ sơ đề xuất" của ApisNhanSu (2026-08-21)
-    --Pattern: dùng data cache từ me.dt_HS (list SV_HoSoKhoiTao/LayDanhSach) — giống btnEdit của DeXuatHoSo
-    --Populate field modal → toggle_edit + load 2 bảng con theo person_id
+    --Description: Wrapper — chuẩn hoá data cache dt_HS → gọi dx.openEditByPerson (2026-08-21)
+    --Nếu module chưa load (cache lệch bản), fallback: populate inline + toggle_edit
     -------------------------------------------*/
     openEditModal: function (personId) {
         var me = main_doc.HoSoTaoMoi;
         var dx = main_doc.DeXuatHoSo;
+        if (!personId) return;
+        var d = (me.dt_HS || []).find(function (e) { return e.ID == personId; }) || {};
+        var person = {
+            id: personId,
+            hoDem: d.HODEM,
+            ten: d.TEN,
+            ngaySinh_Ngay: d.NGAYSINH_NGAY,
+            ngaySinh_Thang: d.NGAYSINH_THANG,
+            ngaySinh_Nam: d.NGAYSINH_NAM,
+            anh: d.ANH
+        };
+        if (dx && typeof dx.openEditByPerson === 'function') {
+            dx.openEditByPerson(person);
+            return;
+        }
+        // Fallback: cache dexuathoso.js phiên bản cũ chưa có openEditByPerson → dùng logic inline
         if (!dx) {
             edu.system.alert("Chưa nạp được module chỉnh sửa hồ sơ.", "w");
             return;
         }
-        if (!personId) return;
-
-        var d = (me.dt_HS || []).find(function (e) { return e.ID == personId; }) || {};
-        dx.strDeXuatHoSo_Id = personId;
-
-        // Tách HODEM = "Phạm Thị" → Họ "Phạm" + Tên đệm "Thị" (word đầu = Họ, phần còn lại = Tên đệm)
-        var strHoDem = (edu.util.returnEmpty(d.HODEM) || "").trim().replace(/\s+/g, " ");
-        var arrHoDem = strHoDem.split(" ");
-        var strHo = arrHoDem.shift() || "";
-        var strTenDem = arrHoDem.join(" ");
-
+        var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
+        var arr = strHoDem.split(' ');
+        var strHo = arr.shift() || '';
+        var strTenDem = arr.join(' ');
+        dx.strDeXuatHoSo_Id = person.id;
         edu.util.viewValById("txtHo", strHo);
         edu.util.viewValById("txtTenDem", strTenDem);
-        edu.util.viewValById("txtTen", edu.util.returnEmpty(d.TEN));
+        edu.util.viewValById("txtTen", edu.util.returnEmpty(person.ten));
         $("#txtTen").trigger("input");
-        edu.util.viewValById("txtNgaySinh", edu.util.returnEmpty(d.NGAYSINH_NGAY));
-        edu.util.viewValById("txtThangSinh", edu.util.returnEmpty(d.NGAYSINH_THANG));
-        edu.util.viewValById("txtNamSinh", edu.util.returnEmpty(d.NGAYSINH_NAM));
-        edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(d.ANH));
-        var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(d.ANH), constant.setting.EnumImageType.ACCOUNT);
+        edu.util.viewValById("txtNgaySinh", edu.util.returnEmpty(person.ngaySinh_Ngay));
+        edu.util.viewValById("txtThangSinh", edu.util.returnEmpty(person.ngaySinh_Thang));
+        edu.util.viewValById("txtNamSinh", edu.util.returnEmpty(person.ngaySinh_Nam));
+        edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(person.anh));
+        var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(person.anh), constant.setting.EnumImageType.ACCOUNT);
         $("#srcuploadPicture_SV").attr("src", strAnh);
-
         dx.toggle_edit();
         $('body').addClass('zoneEdit-open');
-        // Luôn về tab "Thông tin cơ bản" khi mở modal
         $('#zoneEdit .zoneEdit-tab').removeClass('active');
         $('#zoneEdit .zoneEdit-tab[data-zetab="tabInfo"]').addClass('active');
         $('#zoneEdit .zoneEdit-pane').removeClass('active');
         $('#zoneEdit #tabInfo').addClass('active');
-        dx.getList_DinhDanh();
-        dx.getList_LienHe();
-
-        // Set mức độ ngày sinh mặc định "EXACT" nếu combo đã load
-        if (dx.dtMucDoNgaySinh && dx.dtMucDoNgaySinh.length) {
-            var opt = dx.dtMucDoNgaySinh.find(function (e) { return e.MA == "EXACT"; });
-            if (opt) {
-                $('#dropMucDoNgaySinh').val(opt.ID).trigger("change").trigger({ type: 'select2:select' });
-            }
-        }
-
-        // Load section XHD (2 khối)
-        me.loadXHD_Section(personId);
-    },
-    /*------------------------------------------
-    --Description: Load section "Xuất hoá đơn" — 2 DMDL + Bank Account theo person_id
-    --TODO: chờ BE bổ sung API Get/Ins/Upd_Person_Invoice_By_Person_Id để wire phần Người mua/HĐ
-    -------------------------------------------*/
-    loadXHD_Section: function (personId) {
-        var me = main_doc.HoSoTaoMoi;
-
-        // 1) Reset toàn bộ field XHD trước khi load (tránh sticky value từ record trước)
-        var arrClear = [
-            "ddlKQ_HD_DoiTuong", "txtKQ_HD_NguoiMua", "txtKQ_HD_TenDonVi", "txtKQ_HD_MST",
-            "txtKQ_HD_MaQHNS", "txtKQ_HD_SDT", "txtKQ_HD_DiaChi", "txtKQ_HD_Email",
-            "ddlKQ_HD_HinhThucTT", "txtKQ_HD_NganHang", "txtKQ_HD_SoTK", "txtKQ_HD_ChuTK", "txtKQ_HD_GhiChu"
-        ];
-        edu.util.resetValByArrId(arrClear);
-
-        // 2) Nạp 2 dropdown DMDL (idempotent — chỉ nạp 1 lần)
-        if (!me._xhdDMDLLoaded) {
-            edu.system.loadToCombo_DanhMucDuLieu("TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong");
-            edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT");
-            me._xhdDMDLLoaded = true;
-        }
-
-        // 3) Load Bank Account theo person — dùng API sẵn có PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account
-        var obj = {
-            'action': 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4DIC8qHgAiIi40LzUP',
-            'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account',
-            'iM': edu.system.iM,
-            'strChucNang_Id': edu.system.strChucNang_Id,
-            'strVaiTro_Id': '',
-            'strNguoiThucHien_Id': edu.system.userId,
-            'strPerson_Id': personId
-        };
-        edu.system.makeRequest({
-            success: function (data) {
-                if (!data.Success) return;
-                var list = (data.Data || []).filter(function (i) {
-                    return i.PERSON_ID == personId && (i.IS_ACTIVE === undefined || i.IS_ACTIVE == 1);
-                });
-                if (!list.length) return;
-                // Ưu tiên record IS_PRIMARY = 1, không có thì lấy đầu
-                var b = list.find(function (i) { return i.IS_PRIMARY == 1; }) || list[0];
-                me._currentBankId = b.ID || '';
-                edu.util.viewValById("ddlKQ_HD_HinhThucTT", b.ACCOUNT_TYPE_CODE);
-                edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
-                edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
-                edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
-                edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
-            },
-            error: function () { /* silent */ },
-            type: 'POST',
-            action: obj.action,
-            contentType: true,
-            data: obj,
-            fakedb: []
-        }, false, false, false, null);
-
-        // 4) TODO: load PersonInvoice khi có API BE — hiện chưa có Get_Person_Invoice_By_Person_Id
+        if (typeof dx.getList_DinhDanh === 'function') dx.getList_DinhDanh();
+        if (typeof dx.getList_LienHe === 'function') dx.getList_LienHe();
     },
     editSV: function () {
         //me.toggle_form();

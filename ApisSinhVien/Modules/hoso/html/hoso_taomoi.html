@@ -149,8 +149,8 @@
     }
     #zoneEdit .box-header .nav-content-left p.link { margin: 0; padding: 0; }
     #zoneEdit .box-header .nav-content-left a,
-    #zoneEdit .box-header .myModalLabel,
-    #zoneEdit .box-header .myModalLabel i {
+    #zoneEdit .box-header .zeIcon,
+    #zoneEdit .box-header .zeIcon i {
         color: #ffffff !important;
         font-size: 16px;
         font-weight: 600;
@@ -410,7 +410,7 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     /* ========= Styling APS-SV cho tab XHD — mirror kehoachtuyensinhnew (2026-08-21) ========= */
-    #zoneEdit #zoneXHD {
+    #zoneEdit .ze-form {
         --aps-sv-primary: #2563eb;
         --aps-sv-primary-soft: #eaf1ff;
         --aps-sv-border: #e2e8f0;
@@ -419,8 +419,8 @@
         --aps-sv-radius: 5px;
         padding: 24px 28px !important;
     }
-    #zoneEdit #zoneXHD .aps-sv-section + .aps-sv-section { margin-top: 24px; }
-    #zoneEdit #zoneXHD .aps-sv-section-title {
+    #zoneEdit .ze-form .aps-sv-section + .aps-sv-section { margin-top: 24px; }
+    #zoneEdit .ze-form .aps-sv-section-title {
         display: flex;
         align-items: center;
         gap: 9px;
@@ -431,31 +431,31 @@
         letter-spacing: 0.3px;
         margin: 6px 0 18px;
     }
-    #zoneEdit #zoneXHD .aps-sv-section-title::after {
+    #zoneEdit .ze-form .aps-sv-section-title::after {
         content: "";
         flex: 1;
         height: 1px;
         background: linear-gradient(90deg, var(--aps-sv-border), transparent);
     }
-    #zoneEdit #zoneXHD .aps-sv-section-title i { color: var(--aps-sv-primary); }
-    #zoneEdit #zoneXHD .aps-sv-grid {
+    #zoneEdit .ze-form .aps-sv-section-title i { color: var(--aps-sv-primary); }
+    #zoneEdit .ze-form .aps-sv-grid {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 18px 26px;
     }
     @media (max-width: 900px) {
-        #zoneEdit #zoneXHD .aps-sv-grid { grid-template-columns: 1fr; }
+        #zoneEdit .ze-form .aps-sv-grid { grid-template-columns: 1fr; }
     }
-    #zoneEdit #zoneXHD .aps-sv-field.aps-sv-col-full { grid-column: 1 / -1; }
-    #zoneEdit #zoneXHD .aps-sv-label {
+    #zoneEdit .ze-form .aps-sv-field.aps-sv-col-full { grid-column: 1 / -1; }
+    #zoneEdit .ze-form .aps-sv-label {
         display: block;
         font-size: 13px;
         font-weight: 600;
         color: var(--aps-sv-label);
         margin-bottom: 7px;
     }
-    #zoneEdit #zoneXHD .aps-sv-label .aps-sv-req { color: #ef4444; margin-left: 2px; }
-    #zoneEdit #zoneXHD .aps-sv-input {
+    #zoneEdit .ze-form .aps-sv-label .aps-sv-req { color: #ef4444; margin-left: 2px; }
+    #zoneEdit .ze-form .aps-sv-input {
         width: 100%;
         height: 38px;
         padding: 0 14px;
@@ -468,19 +468,19 @@
         outline: none;
         box-sizing: border-box;
     }
-    #zoneEdit #zoneXHD .aps-sv-input::placeholder { color: #94a3b8; }
-    #zoneEdit #zoneXHD .aps-sv-input:focus {
+    #zoneEdit .ze-form .aps-sv-input::placeholder { color: #94a3b8; }
+    #zoneEdit .ze-form .aps-sv-input:focus {
         border-color: var(--aps-sv-primary) !important;
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14) !important;
     }
-    #zoneEdit #zoneXHD .aps-sv-select { position: relative; }
-    #zoneEdit #zoneXHD .aps-sv-select select.aps-sv-input {
+    #zoneEdit .ze-form .aps-sv-select { position: relative; }
+    #zoneEdit .ze-form .aps-sv-select select.aps-sv-input {
         appearance: none;
         -webkit-appearance: none;
         padding-right: 38px;
         cursor: pointer;
     }
-    #zoneEdit #zoneXHD .aps-sv-select > i {
+    #zoneEdit .ze-form .aps-sv-select > i {
         position: absolute;
         right: 15px;
         top: 50%;
@@ -489,8 +489,8 @@
         color: #94a3b8;
         font-size: 13px;
     }
-    #zoneEdit #zoneXHD .aps-sv-input-icon { position: relative; }
-    #zoneEdit #zoneXHD .aps-sv-input-icon > i {
+    #zoneEdit .ze-form .aps-sv-input-icon { position: relative; }
+    #zoneEdit .ze-form .aps-sv-input-icon > i {
         position: absolute;
         left: 14px;
         top: 50%;
@@ -498,7 +498,36 @@
         color: #94a3b8;
         font-size: 14px;
     }
-    #zoneEdit #zoneXHD .aps-sv-input-icon .aps-sv-input { padding-left: 40px; }
+    #zoneEdit .ze-form .aps-sv-input-icon .aps-sv-input { padding-left: 40px; }
+    #zoneEdit .ze-form .aps-sv-input.ze-readonly,
+    #zoneEdit .ze-form .aps-sv-input[readonly] { background: #f1f5f9 !important; color: #475569 !important; }
+    /* Tab 1 layout: form left + avatar right */
+    #zoneEdit .ze-canhan-layout { display: grid; grid-template-columns: 1fr 220px; gap: 24px; align-items: start; }
+    @media (max-width: 900px) { #zoneEdit .ze-canhan-layout { grid-template-columns: 1fr; } }
+    #zoneEdit .ze-canhan-avatar { align-self: start; }
+    #zoneEdit .ze-canhan-avatar .avata-img {
+        margin: 0; width: 200px; height: 200px;
+        overflow: hidden; position: relative; border-radius: 8px;
+        background: #f1f5f9; border: 1px solid #e2e8f0;
+    }
+    #zoneEdit .ze-canhan-avatar .avata-img fieldset {
+        border: none !important; padding: 0 !important; margin: 0 !important;
+        width: 100%; height: 100%; background: transparent;
+    }
+    #zoneEdit .ze-canhan-avatar .avata-img fieldset > div { width: 100%; height: 100%; }
+    #zoneEdit .ze-canhan-avatar .avata-img input[type="image"],
+    #zoneEdit .ze-canhan-avatar .avata-img img {
+        width: 100% !important; height: 100% !important;
+        object-fit: cover; display: block; border-radius: 8px;
+    }
+    #zoneEdit .ze-canhan-avatar .upload-avata {
+        position: absolute; bottom: 8px; right: 8px;
+        width: 36px; height: 36px; border-radius: 50%; background: #2563eb;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff !important; box-shadow: 0 4px 12px rgba(37,99,235,.4);
+        text-decoration: none; z-index: 2;
+    }
+    #zoneEdit .ze-canhan-avatar .upload-avata i { color: #fff !important; }
 </style>
 <section class="content aps-sinhvien">
     <div class="row aps-hoso-taomoi">
@@ -833,7 +862,7 @@
                 <div class="nav-content-left">
                     <p class="link">
                         <a>
-                            <span class="myModalLabel">
+                            <span class="zeIcon">
                                 <i class="fa-regular fa-file-circle-question fw-bold"></i>
                             </span> Chỉnh sửa - Hồ sơ đề xuất
                         </a>
@@ -851,98 +880,61 @@
             </div>
             <!-- Tab: Thông tin cơ bản -->
             <div class="zoneEdit-pane active" id="tabInfo">
-            <div class="form-top rounded-0 border-top mb-15">
-                <div class="row">
-                    <div class="col-12 col-md-8 col-lg-8">
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Họ</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtHo" />
-                                </div>
+                <div id="zoneCaNhan" class="ze-form">
+                    <div class="aps-sv-section">
+                        <div class="aps-sv-section-title"><i class="fa-light fa-user"></i> Thông tin cá nhân</div>
+                        <div class="ze-canhan-layout">
+                            <div class="aps-sv-grid ze-canhan-grid">
+                                <div class="aps-sv-field"><label class="aps-sv-label">Họ</label><input class="aps-sv-input" id="txtHo"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Tên đệm</label><input class="aps-sv-input" id="txtTenDem"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Tên</label><input class="aps-sv-input" id="txtTen"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Tên đầy đủ</label><input class="aps-sv-input ze-readonly" id="txtHoVaTen" readonly="readonly"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Mức độ ngày sinh</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropMucDoNgaySinh"></select></div></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Giới tính</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropGioiTinh"></select></div></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Ngày sinh</label><input class="aps-sv-input" id="txtNgaySinh" placeholder="dd"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Tháng sinh</label><input class="aps-sv-input" id="txtThangSinh" placeholder="mm"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Năm sinh</label><input class="aps-sv-input" id="txtNamSinh" placeholder="yyyy"></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Quốc tịch</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropQuocTich"><option value="">-- Chọn quốc tịch --</option></select></div></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Dân tộc</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropDanToc"><option value="">-- Chọn dân tộc --</option></select></div></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Tôn giáo</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropTonGiao"><option value="">-- Chọn tôn giáo --</option></select></div></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Email</label><div class="aps-sv-input-icon"><i class="fa-light fa-envelope"></i><input class="aps-sv-input" id="txtEmailCaNhan" type="email" placeholder="email@..."></div></div>
+                                <div class="aps-sv-field"><label class="aps-sv-label">Điện thoại</label><div class="aps-sv-input-icon"><i class="fa-light fa-phone"></i><input class="aps-sv-input" id="txtDienThoai" placeholder="09xx xxx xxx"></div></div>
                             </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Tên đệm</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtTenDem" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Tên</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtTen" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important;">Tên đầy đủ</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtHoVaTen" readonly="readonly" style=" background-color: #f5f6f8 !important" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info no-icon">
-                                <label class="form-label" style="width:200px !important">Chọn mức độ ngày sinh</label>
-                                <div class="input-group">
-                                    <select id="dropMucDoNgaySinh" class="select-opt"></select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Ngày sinh</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtNgaySinh" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Tháng sinh</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtThangSinh" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Năm sinh</label>
-                                <div class="input-group">
-                                    <input class="form-control" id="txtNamSinh" />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-12 col-lg-12">
-                            <div class="form-item d-flex mb-0 form-add-info">
-                                <label class="form-label" style="width:200px !important">Giới tính</label>
-                                <div class="input-group">
-                                    <select id="dropGioiTinh" class="select-opt"></select>
+                            <div class="ze-canhan-avatar">
+                                <div class="avata-img">
+                                    <img src="assets/images/avata-form.jpg" id="uploadPicture_SV">
+                                    <a href="#" class="upload-avata"><i class="fal fa-camera color-dask-blue"></i></a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
-                        <div class="sv-add-info-content sv-info-profile">
-                            <div class="row sv-info-base">
-                                <div class="col-12 sv-info-base-avata">
-                                    <div class="avata-img">
-                                        <img src="assets/images/avata-form.jpg" id="uploadPicture_SV">
-                                        <a href="#" class="upload-avata">
-                                            <i class="fal fa-camera color-dask-blue"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="aps-sv-section">
+                        <div class="aps-sv-section-title"><i class="fa-light fa-location-dot"></i> Nơi sinh</div>
+                        <div class="aps-sv-grid">
+                            <div class="aps-sv-field"><label class="aps-sv-label">Tỉnh / Thành phố</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropNS_Tinh"><option value="">Chọn tỉnh thành</option></select></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Quận / Huyện</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropNS_Huyen"><option value="">Vui lòng chọn Tỉnh trước</option></select></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Xã / Phường</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropNS_Xa"><option value="">Vui lòng chọn Quận/Huyện trước</option></select></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Chi tiết (số nhà / thôn / xóm)</label><input class="aps-sv-input" id="txtNS_ChiTiet" placeholder="Số nhà, tên đường, thôn/xóm..."></div>
+                        </div>
+                    </div>
+                    <div class="aps-sv-section">
+                        <div class="aps-sv-section-title"><i class="fa-light fa-id-card"></i> Số CCCD / Định danh</div>
+                        <div class="aps-sv-grid">
+                            <div class="aps-sv-field"><label class="aps-sv-label">Số CCCD</label><div class="aps-sv-input-icon"><i class="fa-light fa-hashtag"></i><input class="aps-sv-input" id="txtCCCD_So" placeholder="12 chữ số"></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Ngày cấp</label><input class="aps-sv-input" id="txtCCCD_NgayCap" type="date"></div>
+                            <div class="aps-sv-field aps-sv-col-full"><label class="aps-sv-label">Nơi cấp</label><input class="aps-sv-input" id="txtCCCD_NoiCap" placeholder="Ví dụ: Cục Cảnh sát QLHC..."></div>
+                        </div>
+                    </div>
+                    <div class="aps-sv-section">
+                        <div class="aps-sv-section-title"><i class="fa-light fa-house"></i> Hộ khẩu thường trú</div>
+                        <div class="aps-sv-grid">
+                            <div class="aps-sv-field"><label class="aps-sv-label">Tỉnh / Thành phố</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropHK_Tinh"><option value="">Chọn tỉnh thành</option></select></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Quận / Huyện</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropHK_Huyen"><option value="">Vui lòng chọn Tỉnh trước</option></select></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Xã / Phường</label><div class="aps-sv-select"><i class="fa-light fa-chevron-down"></i><select class="aps-sv-input" id="dropHK_Xa"><option value="">Vui lòng chọn Quận/Huyện trước</option></select></div></div>
+                            <div class="aps-sv-field"><label class="aps-sv-label">Số nhà / thôn / xóm</label><input class="aps-sv-input" id="txtHK_SoNha"></div>
                         </div>
                     </div>
                 </div>
-            </div>
             </div>
             <!-- /Tab: Thông tin cơ bản -->
 
@@ -998,7 +990,7 @@
 
             <!-- Tab: Xuất hoá đơn (mirror kehoachtuyensinhnew.html:2295-2377 với style aps-sv-*, 2026-08-21) -->
             <div class="zoneEdit-pane" id="tabXHD">
-            <div id="zoneXHD">
+            <div id="zoneXHD" class="ze-form">
                 <div class="aps-sv-section">
                     <div class="aps-sv-section-title"><i class="fa-light fa-file-invoice-dollar"></i> Người mua / Xuất hoá đơn</div>
                     <div class="aps-sv-grid">
@@ -1103,8 +1095,8 @@
     </div>
 </section>
 <!-- page script -->
-<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.2"></script>
-<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.131"></script>
+<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.4"></script>
+<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.136"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoTaoMoi'] = new HoSoTaoMoi();

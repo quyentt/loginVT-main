@@ -35,6 +35,8 @@
         </div>
         <!-- /.right-content -->
         <div class="col-sm-9 aps-hoso-capnhat-r  pl20 aps-box-r">
+            <!-- Host inline form 3 tabs (2026-08-21) -->
+            <div id="zeInlineHost"></div>
             <!-- box- Thong tin cap nhat -->
             <div class="box box-solid box-shadow pd0">
                 <div class="box-header with-border bg-header">
@@ -183,11 +185,15 @@
     </div>
 </section>
 <!-- page script -->
-<script src="modules/hoso/script/hosocapnhat.js?v=1.0.0.0"></script>
+<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.4"></script>
+<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.4"></script>
+<script src="Modules/hoso/script/hosocapnhat.js?v=1.0.0.1"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoCapNhat'] = new HoSoCapNhat();
+    main_doc['DeXuatHoSo'] = new DeXuatHoSo();
     $(document).ready(function () {
         main_doc.HoSoCapNhat.init();
+        main_doc.DeXuatHoSo.init();
     });
 </script>

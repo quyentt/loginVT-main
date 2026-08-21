@@ -621,7 +621,8 @@
             </div>
         </div>-->
 
-        <div class="zone-bus form-container" id="zoneEdit" style="display: none">
+        <!-- Đổi id="zoneEdit" → id="zoneEditOld" (2026-08-21): modal cũ inline, giữ để tương lai dùng lại; modal mới #zoneEdit được inject từ quanlytoanbo.js -->
+        <div class="form-container" id="zoneEditOld" style="display: none">
             <div class="box box-solid">
                 <div class="box-header with-border">
                     <h3 class="box-title"><span id=""><i class="fa fa-plus-square"></i> Chỉnh sửa hồ sơ</span> </h3>
@@ -884,11 +885,15 @@
         </div>
     </div>
 </div>
-<script src="modules/hoso/script/QuanLyToanBo.js?v=1.0.0.0"></script>
+<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.3"></script>
+<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.1"></script>
+<script src="Modules/hoso/script/QuanLyToanBo.js?v=1.0.0.8"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['QuanLyToanBo'] = new QuanLyToanBo();
+    main_doc['DeXuatHoSo'] = new DeXuatHoSo();
     $(document).ready(function () {
         main_doc.QuanLyToanBo.init();
+        main_doc.DeXuatHoSo.init();
     });
 </script>

@@ -5291,3 +5291,166 @@ DeXuatHoSo.prototype = {
 
 
 };
+
+/*----------------------------------------------
+-- Shared API: mở modal #zoneEdit từ bên ngoài (2026-08-21)
+-- Chuẩn hoá input: { id, hoDem, ten, ngaySinh_Ngay, ngaySinh_Thang, ngaySinh_Nam, anh }
+-- Dùng cho: hoso_taomoi (HoSoTaoMoi.openEditModal wrapper) + quanlytoanbo (click .btnEdit)
+----------------------------------------------*/
+DeXuatHoSo.prototype.openEditByPerson = function (person) {
+    var dx = this;
+    if (!person || !person.id) return;
+    dx.strDeXuatHoSo_Id = person.id;
+
+    // Tách HODEM = word đầu (Họ) + phần còn lại (Tên đệm)
+    var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
+    var arr = strHoDem.split(' ');
+    var strHo = arr.shift() || '';
+    var strTenDem = arr.join(' ');
+
+    edu.util.viewValById("txtHo", strHo);
+    edu.util.viewValById("txtTenDem", strTenDem);
+    edu.util.viewValById("txtTen", edu.util.returnEmpty(person.ten));
+    $("#txtTen").trigger("input");
+    edu.util.viewValById("txtNgaySinh", edu.util.returnEmpty(person.ngaySinh_Ngay));
+    edu.util.viewValById("txtThangSinh", edu.util.returnEmpty(person.ngaySinh_Thang));
+    edu.util.viewValById("txtNamSinh", edu.util.returnEmpty(person.ngaySinh_Nam));
+    edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(person.anh));
+    var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(person.anh), constant.setting.EnumImageType.ACCOUNT);
+    $("#srcuploadPicture_SV").attr("src", strAnh);
+
+    // Mở modal + backdrop + reset về tab đầu
+    dx.toggle_edit();
+    $('body').addClass('zoneEdit-open');
+    $('#zoneEdit .zoneEdit-tab').removeClass('active');
+    $('#zoneEdit .zoneEdit-tab[data-zetab="tabInfo"]').addClass('active');
+    $('#zoneEdit .zoneEdit-pane').removeClass('active');
+    $('#zoneEdit #tabInfo').addClass('active');
+
+    // Load 2 bảng con
+    dx.getList_DinhDanh();
+    dx.getList_LienHe();
+
+    // Set mức độ ngày sinh = EXACT nếu đã có combo
+    if (dx.dtMucDoNgaySinh && dx.dtMucDoNgaySinh.length) {
+        var opt = dx.dtMucDoNgaySinh.find(function (e) { return e.MA == "EXACT"; });
+        if (opt) {
+            $('#dropMucDoNgaySinh').val(opt.ID).trigger("change").trigger({ type: 'select2:select' });
+        }
+    }
+
+    // Load section XHD (2 DMDL + Bank Account)
+    dx._loadXHD_Section(person.id);
+
+    // Load tab TT cơ bản extras (DMDL Quốc tịch/Dân tộc/Tôn giáo + Cascade tỉnh/huyện/xã + populate)
+    if (typeof dx._loadTabInfoExtras === 'function') dx._loadTabInfoExtras(person.id);
+};
+
+DeXuatHoSo.prototype._loadTabInfoExtras = function (personId) {
+    var dx = this;
+    // 1) DMDL Quốc tịch / Dân tộc / Tôn giáo (idempotent)
+    if (!dx._infoDMDLLoaded) {
+        try {
+            edu.system.loadToCombo_DanhMucDuLieu("CHUN.CHLU", "dropQuocTich");
+            edu.system.loadToCombo_DanhMucDuLieu("NS.DATO", "dropDanToc");
+            edu.system.loadToCombo_DanhMucDuLieu("NS.TOGI", "dropTonGiao");
+        } catch (e) { console.warn('[TabInfo] loadDMDL error', e); }
+        dx._infoDMDLLoaded = true;
+    }
+    // 2) Cascade Tỉnh/Huyện/Xã cho Nơi sinh + Hộ khẩu (idempotent)
+    if (!dx._cascadeInited && edu.extend && typeof edu.extend.genDropTinhThanh === 'function') {
+        try {
+            edu.extend.genDropTinhThanh('dropNS_Tinh', 'dropNS_Huyen', 'dropNS_Xa');
+            edu.extend.genDropTinhThanh('dropHK_Tinh', 'dropHK_Huyen', 'dropHK_Xa');
+        } catch (e) { console.warn('[TabInfo] genDropTinhThanh error', e); }
+        dx._cascadeInited = true;
+    }
+    // 3) Reset các field mới về rỗng khi mở record mới
+    var arrClear = [
+        "dropQuocTich", "dropDanToc", "dropTonGiao", "txtEmailCaNhan", "txtDienThoai",
+        "dropNS_Tinh", "dropNS_Huyen", "dropNS_Xa", "txtNS_ChiTiet",
+        "txtCCCD_So", "txtCCCD_NgayCap", "txtCCCD_NoiCap",
+        "dropHK_Tinh", "dropHK_Huyen", "dropHK_Xa", "txtHK_SoNha"
+    ];
+    if (edu.util && edu.util.resetValByArrId) edu.util.resetValByArrId(arrClear);
+
+    // 4) Populate Email/ĐT từ dtLienHe cache (async — chờ getList_LienHe xong)
+    setTimeout(function () {
+        var lienHe = dx.dtLienHe || [];
+        lienHe.forEach(function (item) {
+            var typeName = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
+            var typeMa = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
+            var val = item.CONTACT_VALUE || item.VALUE || '';
+            if (typeMa === 'EMAIL' || typeName.indexOf('email') > -1 || typeName.indexOf('e-mail') > -1 || typeName.indexOf('mail') > -1) {
+                edu.util.viewValById('txtEmailCaNhan', val);
+            } else if (typeMa === 'PHONE' || typeMa === 'MOBILE' || typeName.indexOf('điện thoại') > -1 || typeName.indexOf('phone') > -1) {
+                edu.util.viewValById('txtDienThoai', val);
+            }
+        });
+        // Populate CCCD từ dtDinhDanh cache
+        var dinhDanh = dx.dtDinhDanh || [];
+        dinhDanh.forEach(function (item) {
+            var typeName = ((item.IDENTIFIER_TYPE_CODE_NAME || item.IDENTIFIER_TYPE_NAME || '') + '').toUpperCase();
+            var typeMa = ((item.IDENTIFIER_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
+            if (typeMa === 'CCCD' || typeName.indexOf('CCCD') > -1 || typeName.indexOf('CĂN CƯỚC') > -1) {
+                edu.util.viewValById('txtCCCD_So', item.IDENTIFIER_NO || '');
+                edu.util.viewValById('txtCCCD_NgayCap', item.ISSUE_DATE || '');
+                edu.util.viewValById('txtCCCD_NoiCap', item.ISSUE_PLACE || '');
+            }
+        });
+    }, 800);
+};
+
+DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
+    var dx = this;
+
+    // 1) Reset 13 field XHD trước khi load
+    var arrClear = [
+        "ddlKQ_HD_DoiTuong", "txtKQ_HD_NguoiMua", "txtKQ_HD_TenDonVi", "txtKQ_HD_MST",
+        "txtKQ_HD_MaQHNS", "txtKQ_HD_SDT", "txtKQ_HD_DiaChi", "txtKQ_HD_Email",
+        "ddlKQ_HD_HinhThucTT", "txtKQ_HD_NganHang", "txtKQ_HD_SoTK", "txtKQ_HD_ChuTK", "txtKQ_HD_GhiChu"
+    ];
+    edu.util.resetValByArrId(arrClear);
+
+    // 2) Nạp 2 DMDL (idempotent)
+    if (!dx._xhdDMDLLoaded) {
+        edu.system.loadToCombo_DanhMucDuLieu("TS.DOITUONGHOADON", "ddlKQ_HD_DoiTuong");
+        edu.system.loadToCombo_DanhMucDuLieu("PERSON_BANK_ACCOUNT.ACCOUNT_TYPE_CODE", "ddlKQ_HD_HinhThucTT");
+        dx._xhdDMDLLoaded = true;
+    }
+
+    // 3) Load Bank Account theo person
+    var obj = {
+        'action': 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4DIC8qHgAiIi40LzUP',
+        'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account',
+        'iM': edu.system.iM,
+        'strChucNang_Id': edu.system.strChucNang_Id,
+        'strVaiTro_Id': '',
+        'strNguoiThucHien_Id': edu.system.userId,
+        'strPerson_Id': personId
+    };
+    edu.system.makeRequest({
+        success: function (data) {
+            if (!data.Success) return;
+            var list = (data.Data || []).filter(function (i) {
+                return i.PERSON_ID == personId && (i.IS_ACTIVE === undefined || i.IS_ACTIVE == 1);
+            });
+            if (!list.length) return;
+            var b = list.find(function (i) { return i.IS_PRIMARY == 1; }) || list[0];
+            dx._currentBankId = b.ID || '';
+            edu.util.viewValById("ddlKQ_HD_HinhThucTT", b.ACCOUNT_TYPE_CODE);
+            edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
+            edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
+            edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
+            edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+        },
+        error: function () { /* silent */ },
+        type: 'POST',
+        action: obj.action,
+        contentType: true,
+        data: obj,
+        fakedb: []
+    }, false, false, false, null);
+
+    // 4) TODO: load PersonInvoice khi BE có API Get_Person_Invoice_By_Person_Id
+};
