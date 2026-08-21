@@ -1,5 +1,30 @@
 ﻿
 <!-- Main content -->
+<style>
+    /* Fix hien thi chon phan trang (Hien thi [N] du lieu):
+       - styles-content.css:3846 co margin-top:-11px keo .change-tblDaImport len de vao hang nut
+       - styles-content.css:3833 an .filter-tblDaImport → header pagination collapse layout
+       Scoped override: reset margin, tach hang, cach nut ben tren. Ap dung cho ca
+       tblDaImport (tab 1) va tblDaImport_DaHachToan (tab 5). */
+    .aps-import-danop .aps-ds-table .change-tblDaImport,
+    .aps-import-danop .aps-ds-table .change-tblDaImport_DaHachToan {
+        margin-top: 15px !important;
+        margin-bottom: 10px !important;
+        clear: both;
+    }
+    .aps-import-danop .aps-ds-table .zone-pag-headertblDaImport,
+    .aps-import-danop .aps-ds-table .zone-pag-headertblDaImport_DaHachToan {
+        width: 100%;
+        display: block;
+        clear: both;
+        overflow: hidden;
+    }
+    /* Cho dropdown "Hien thi" rong hon 70px de nhin ro so va mui ten */
+    .aps-import-danop .change-tblDaImport .aps-hienthi-input,
+    .aps-import-danop .change-tblDaImport_DaHachToan .aps-hienthi-input {
+        width: 90px !important;
+    }
+</style>
 <section class="content aps-import-danop">
     <div class="row aps-import-info">
         <div class="col-lg-6 pr10 aps-file-import" style="padding: 0px">
