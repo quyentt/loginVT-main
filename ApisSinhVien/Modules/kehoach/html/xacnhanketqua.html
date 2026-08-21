@@ -35,6 +35,25 @@
         color: #0f172a !important;
         font-weight: 600;
     }
+
+    /* 6) Modal Xuất Excel — title CENTER, close × sát phải (override global space-between) */
+    #modal_ExportExcel .modal-header {
+        position: relative !important;
+        justify-content: center !important;
+    }
+    #modal_ExportExcel .modal-header .modal-title {
+        margin: 0 auto !important;
+        text-align: center !important;
+    }
+    #modal_ExportExcel .modal-header .close {
+        position: absolute !important;
+        right: 15px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        margin: 0 !important;
+        text-shadow: none !important;
+        padding: 0 8px !important;
+    }
 </style>
 
 <!-- Main content -->
@@ -115,6 +134,10 @@
                                 class="fa fa-times"></i></a>
                         <a class="btn btn-primary btnDownloadAllFile"><i class="fa-light fa-upload"></i>
                             <span class="lang" key="">Tải file</span></a>
+                        <a id="btnXuatExcel" class="btn btn-success"
+                            style="background:#1d6f42;border-color:#1d6f42"><i
+                                class="fa-solid fa-file-excel"></i>
+                            <span class="lang" key="">Xuất Excel</span></a>
                         <a id="btnImport" class="btn btn-success"><i class="fa fa-cloud-upload"></i>
                             <span class="lang" key="">Import trường thông tin</span></a>
                         <a id="btnXacNhan" class="btn btn-primary"><i class="fa-solid fa-circle-check"></i>
@@ -267,8 +290,100 @@
     </div>
 </div>
 
+<!-- Modal cấu hình + tiến độ Xuất Excel -->
+<div class="modal fade" id="modal_ExportExcel" role="dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog" style="width: 640px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color:#0f172a;font-weight:700">
+                    <i class="fa-solid fa-file-excel" style="color:#1d6f42"></i>
+                    <span class="lang" key="">Xuất Excel dữ liệu hồ sơ</span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div style="padding: 0 15px 10px; color:#0f172a">
+                    <p style="margin:6px 0"><strong>Kế hoạch:</strong>
+                        <span id="lblExport_KeHoach">—</span></p>
+                    <p style="margin:6px 0"><strong>Trường thông tin xuất:</strong>
+                        <span id="lblExport_TruongTT">—</span></p>
+                    <p style="margin:6px 0"><strong>Tổng SV theo bộ lọc:</strong>
+                        <span id="lblExport_TongSV">— (bấm "Đếm" để kiểm tra)</span>
+                        <a class="btn btn-default btn-xs" id="btnExport_Dem" style="margin-left:8px">
+                            <i class="fa fa-refresh"></i> Đếm</a>
+                    </p>
+                </div>
+                <div style="padding: 10px 15px; border-top:1px solid #e5e7eb; color:#0f172a">
+                    <label style="font-weight:700"><span class="lang" key="">Số lượng SV cần xuất</span></label>
+                    <div style="margin-top:8px">
+                        <label style="margin-right:15px;font-weight:500;cursor:pointer">
+                            <input type="radio" name="exportQty" value="100"> 100</label>
+                        <label style="margin-right:15px;font-weight:500;cursor:pointer">
+                            <input type="radio" name="exportQty" value="500"> 500</label>
+                        <label style="margin-right:15px;font-weight:500;cursor:pointer">
+                            <input type="radio" name="exportQty" value="1000"> 1.000</label>
+                        <label style="margin-right:15px;font-weight:500;cursor:pointer">
+                            <input type="radio" name="exportQty" value="5000"> 5.000</label>
+                        <label style="font-weight:500;cursor:pointer">
+                            <input type="radio" name="exportQty" value="all" checked> Tất cả</label>
+                    </div>
+                    <p style="margin-top:8px;color:#64748b;font-size:12px">
+                        Mẹo: xuất ít trước để đo tốc độ, rồi xuất tất cả.
+                    </p>
+                </div>
+                <div id="zoneExport_Progress" style="padding:10px 15px; display:none; border-top:1px solid #e5e7eb">
+                    <label style="font-weight:700;color:#0f172a">Tiến độ xuất</label>
+                    <div class="progress" style="height:25px;margin:6px 0">
+                        <div id="barExport_Progress"
+                             class="progress-bar progress-bar-success progress-bar-striped active"
+                             role="progressbar"
+                             style="width:0%;line-height:25px;font-weight:600">0%</div>
+                    </div>
+                    <p id="lblExport_ProgressLog" style="margin:0;color:#334155;font-size:13px">Đang chuẩn bị…</p>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex;gap:10px;align-items:center">
+                <button type="button" class="btn btn-danger" id="btnExport_Huy" style="display:none">
+                    <i class="fa fa-stop-circle"></i> <span class="lang" key="">Hủy xuất</span>
+                </button>
+                <div style="margin-left:auto;display:flex;gap:10px">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="btnExport_Close">
+                        <i class="fa fa-times-circle"></i> <span class="lang" key="">Đóng</span>
+                    </button>
+                    <button type="button" class="btn btn-success" id="btnExport_Start"
+                            style="background:#1d6f42;border-color:#1d6f42">
+                        <i class="fa-solid fa-file-excel"></i> <span class="lang" key="">Xuất Excel</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- XLSX (SheetJS) — phục vụ Xuất Excel dữ liệu hồ sơ. Load 1 lần, idempotent. -->
+<script>
+    (function loadXLSX() {
+        if (typeof XLSX !== 'undefined') return;
+        var cdnList = [
+            'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js',
+            'https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js',
+            'https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js'
+        ];
+        var i = 0;
+        function tryNext() {
+            if (i >= cdnList.length) { console.error('[XLSX] không load được từ tất cả CDN'); return; }
+            var s = document.createElement('script');
+            s.src = cdnList[i]; s.crossOrigin = 'anonymous';
+            s.onload = function () { console.log('[XLSX] loaded từ', cdnList[i]); };
+            s.onerror = function () { console.warn('[XLSX] fail', cdnList[i]); i++; tryNext(); };
+            document.head.appendChild(s);
+        }
+        tryNext();
+    })();
+</script>
+
 <!-- js -->
-<script src="modules/kehoach/script/xacnhanketqua.js?v=1.0.0.26"></script>
+<script src="modules/kehoach/script/xacnhanketqua.js?v=1.0.0.28"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['XacNhanKetQua'] = new XacNhanKetQua();

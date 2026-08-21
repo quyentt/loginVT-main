@@ -20,8 +20,351 @@
 
     .activeOnSearch,
     .activeSelect {
-        background-color: #f1f1f1;
+        background-color: #eff6ff;
     }
+
+    /* Override nền xanh chói của row đang chọn (2026-08-21)
+       Root cause: styles-content.css:7475-7487 tô var(--color-blue) lên .aps-hoso-table .activeSelect a/i
+       và .aps-hoso-table tr:hover a — cần kill nền trên <a> + <i> luôn, không chỉ tr/td */
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect td,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect td a,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect td a *,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect:hover td a,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr:hover td a,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr:hover td a *,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr:active,
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr:focus {
+        background-color: transparent !important;
+        background-image: none !important;
+    }
+    /* Nền row: đặt trên <td> */
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect td {
+        background-color: #eff6ff !important;
+        box-shadow: inset 3px 0 0 #2563eb;
+    }
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr:hover td {
+        background-color: #f8fafc !important;
+    }
+    .aps-hoso-table #tblHoSoKhoiTao tbody tr.activeSelect:hover td {
+        background-color: #dbeafe !important;
+    }
+
+    /* Fix màu chữ danh sách sinh viên: luôn đen đậm, kể cả khi hover/active (2026-08-21) */
+    #tblHoSoKhoiTao tbody tr td,
+    #tblHoSoKhoiTao tbody tr td a,
+    #tblHoSoKhoiTao tbody tr td a span,
+    #tblHoSoKhoiTao tbody tr:hover td,
+    #tblHoSoKhoiTao tbody tr:hover td a,
+    #tblHoSoKhoiTao tbody tr:hover td a span,
+    #tblHoSoKhoiTao tbody tr.activeSelect td,
+    #tblHoSoKhoiTao tbody tr.activeSelect td a,
+    #tblHoSoKhoiTao tbody tr.activeSelect td a span {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+        text-decoration: none !important;
+    }
+
+    /* Layout mỗi dòng sinh viên: flex avatar + info, tên dài không tràn ra ngoài (2026-08-21) */
+    #tblHoSoKhoiTao tbody tr td a.sv-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+    }
+    #tblHoSoKhoiTao tbody tr td a.sv-row .sv-avatar {
+        flex: 0 0 auto;
+        display: inline-flex;
+    }
+    #tblHoSoKhoiTao tbody tr td a.sv-row .sv-avatar img.table-img {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    #tblHoSoKhoiTao tbody tr td a.sv-row .sv-info {
+        flex: 1 1 auto;
+        min-width: 0;
+        word-break: break-word;
+        line-height: 1.35;
+    }
+    #tblHoSoKhoiTao tbody tr td a.sv-row .sv-info .sv-meta {
+        font-weight: 500 !important;
+        color: #475569 !important;
+        font-size: 12.5px;
+    }
+
+    /* Modal #zoneEdit: overlay float toàn trang + backdrop (2026-08-21, revised)
+       toggle_overide chỉ slideDown DOM inline → force overlay bằng position:fixed */
+    #zoneEdit.fake-modal {
+        position: fixed !important;
+        top: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 96vw;
+        max-width: 1500px;
+        max-height: calc(100vh - 48px);
+        overflow-y: auto;
+        overflow-x: hidden;
+        z-index: 10050;
+        background: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 25px 70px rgba(15, 23, 42, 0.40);
+        padding: 0 !important;
+    }
+    /* Backdrop mờ */
+    body.zoneEdit-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.55);
+        z-index: 10040;
+    }
+    body.zoneEdit-open { overflow: hidden; }
+    body.zoneEdit-open .select2-container {
+        z-index: 10060 !important;
+    }
+
+    /* ========= Header xanh sạch, X ở góc phải ========= */
+    #zoneEdit .box-shadow.register-wish {
+        box-shadow: none !important;
+        border-radius: 12px !important;
+        padding: 0 !important;
+    }
+    #zoneEdit .box-header {
+        background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+        color: #ffffff !important;
+        border-radius: 12px 12px 0 0;
+        margin: 0 !important;
+        padding: 14px 24px !important;
+        min-height: 56px;
+        display: flex !important;
+        align-items: center;
+        justify-content: center !important;   /* title centered */
+        position: relative;                    /* để pin X vào cạnh phải */
+    }
+    #zoneEdit .box-header .nav-content-left {
+        text-align: center;
+        margin: 0 auto;
+    }
+    #zoneEdit .box-header .nav-content-left p.link { margin: 0; padding: 0; }
+    #zoneEdit .box-header .nav-content-left a,
+    #zoneEdit .box-header .myModalLabel,
+    #zoneEdit .box-header .myModalLabel i {
+        color: #ffffff !important;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+    }
+    /* Right slot — pin sát lề phải */
+    #zoneEdit .box-header .nav-content-right {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        margin: 0 !important;
+    }
+    /* Nút X — force icon-only tròn glass, override style đỏ của theme */
+    body #zoneEdit .box-header .nav-content-right a.btnClose,
+    body #zoneEdit .box-header a.btnClose {
+        background: rgba(255,255,255,0.18) !important;
+        background-color: rgba(255,255,255,0.18) !important;
+        background-image: none !important;
+        color: #ffffff !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 34px !important;
+        height: 34px !important;
+        min-width: 34px !important;
+        line-height: 34px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px !important;
+        cursor: pointer;
+        transition: background 0.15s;
+        text-align: center !important;
+        box-shadow: none !important;
+    }
+    body #zoneEdit .box-header a.btnClose:hover {
+        background: rgba(255,255,255,0.32) !important;
+        background-color: rgba(255,255,255,0.32) !important;
+    }
+    body #zoneEdit .box-header a.btnClose i {
+        color: #ffffff !important;
+        font-size: 15px !important;
+    }
+    #zoneEdit .box-header .btnClose::after,
+    #zoneEdit .box-header .btnClose::before {
+        content: none !important;
+    }
+    /* Ẩn text "Đóng" nếu theme tự chèn cạnh icon */
+    #zoneEdit .box-header .btnClose > *:not(i) { display: none !important; }
+
+    /* ========= Body layout ========= */
+    #zoneEdit .form-top {
+        padding: 20px 24px 8px 24px !important;
+        margin-bottom: 0 !important;
+        border-top: none !important;
+    }
+    #zoneEdit .form-item {
+        margin-bottom: 12px !important;
+        align-items: center;
+    }
+    #zoneEdit .form-item .form-label {
+        width: 170px !important;
+        font-weight: 500;
+        color: #334155;
+        font-size: 14px;
+        margin-bottom: 0;
+    }
+    #zoneEdit .form-item .input-group {
+        flex: 1;
+    }
+    #zoneEdit .form-control,
+    #zoneEdit .select-opt + .select2-container .select2-selection {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 6px !important;
+        padding: 8px 12px !important;
+        font-size: 14px !important;
+        min-height: 38px !important;
+        color: #0f172a !important;
+    }
+    #zoneEdit .form-control:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+        outline: none;
+    }
+    #zoneEdit #txtHoVaTen[readonly] {
+        background: #f1f5f9 !important;
+        color: #475569 !important;
+    }
+
+    /* ========= Avatar box ========= */
+    #zoneEdit .sv-info-profile {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 4px;
+    }
+    #zoneEdit .avata-img {
+        position: relative;
+        width: 220px;
+        height: 220px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: #f1f5f9;
+        border: 2px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #zoneEdit .avata-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+    #zoneEdit .avata-img .upload-avata {
+        position: absolute;
+        bottom: 8px;
+        right: 8px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+        text-decoration: none;
+    }
+    #zoneEdit .avata-img .upload-avata i { color: #ffffff !important; }
+
+    /* ========= Bảng Định danh / Liên hệ ========= */
+    #zoneEdit .container-fluid { padding: 8px 24px !important; }
+    #zoneEdit .text-success {
+        color: #059669 !important;
+        font-size: 14px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    #zoneEdit #tblDinhDanh,
+    #zoneEdit #tblLienHe {
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+    #zoneEdit #tblDinhDanh thead th,
+    #zoneEdit #tblLienHe thead th {
+        background: #f8fafc !important;
+        color: #334155 !important;
+        font-size: 12.5px;
+        font-weight: 600;
+        text-transform: uppercase;
+        padding: 10px 8px !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        vertical-align: middle;
+    }
+    #zoneEdit #tblDinhDanh tbody td,
+    #zoneEdit #tblLienHe tbody td {
+        padding: 10px 8px !important;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9 !important;
+    }
+    #zoneEdit #tblDinhDanh tbody td input,
+    #zoneEdit #tblLienHe tbody td input {
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 4px !important;
+        padding: 6px 10px !important;
+        font-size: 13.5px !important;
+        width: 100%;
+    }
+    #zoneEdit #tblDinhDanh tbody td input:focus,
+    #zoneEdit #tblLienHe tbody td input:focus {
+        border-color: #2563eb !important;
+        box-shadow: 0 0 0 2px rgba(37,99,235,0.1) !important;
+    }
+
+    /* ========= Footer buttons ========= */
+    #zoneEdit hr {
+        margin: 8px 0 !important;
+        border-color: #e2e8f0;
+    }
+    #zoneEdit .d-flex.align-items-center.mt-4 {
+        padding: 12px 8px 4px 8px;
+    }
+    #zoneEdit .btn.btnClose:not(.box-header .btnClose) {
+        background: #ffffff !important;
+        color: #475569 !important;
+        border: 1px solid #cbd5e1 !important;
+        padding: 8px 20px !important;
+        border-radius: 6px !important;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    #zoneEdit .btn.btnClose:not(.box-header .btnClose):hover {
+        background: #f1f5f9 !important;
+    }
+    #zoneEdit #btnSave_DeXuatHoSo {
+        background: #2563eb !important;
+        color: #ffffff !important;
+        border: 1px solid #2563eb !important;
+        padding: 8px 28px !important;
+        border-radius: 6px !important;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(37,99,235,0.25);
+    }
+    #zoneEdit #btnSave_DeXuatHoSo:hover {
+        background: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+    }
+    #zoneEdit .aps-gap-10 { display: flex; gap: 10px; }
 </style>
 <section class="content aps-sinhvien">
     <div class="row aps-hoso-taomoi">
@@ -66,7 +409,8 @@
                     <h3 class="box-title color-blue"><i class="fa-light fa-address-card"></i> Khởi tạo hồ sơ </h3>
                 </div>
                 <div class="box-body pd0">
-                    <div class="row aps-add-new">
+                    <!-- Ẩn form khởi tạo theo yêu cầu 2026-08-21: chỉ giữ nút Import + Lưu -->
+                    <div class="row aps-add-new" style="display: none;">
                         <div class="row aps-form pd20 ">
                             <div class="row aps-lable-name">
                                 <p class="group-group-title-name border-0 mb-0">
@@ -324,14 +668,18 @@
                             <!--<a id="btnHSLL_Import" class="btn btn-success"><i class="fa fa-cloud-upload"></i><span class="lang" key=""> Import</span></a>-->
                             <a id="btnHSLL_Add" class="btn btn-primary"><i class="fa fa-save"></i><span class="lang"
                                     key=""> Lưu</span></a>
+                            <!-- Ẩn theo yêu cầu 2026-08-21: bỏ Làm mới; giữ Cập nhật + Thêm hồ sơ khác để phục vụ edit mode
                             <a id="btnHSLL_Rewrite" class="btn btn-warning"><i class="fa fa-refresh"></i><span
                                     class="lang" key=""> Làm mới</span></a>
+                            <a id="btnHSLL_Delete" class="btn btn-default"><i class="fa fa-trash"></i><span class="lang"
+                                    key=""> Xóa</span></a>
+                            -->
+                            <!-- Ẩn Cập nhật + Thêm hồ sơ khác (2026-08-21): flow edit đã chuyển sang modal #zoneEdit của ApisNhanSu
                             <a id="btnHSLL_AddMode" class="btn btn-primary"><i class="fa fa-plus"></i><span class="lang"
                                     key=""> Thêm hồ sơ khác</span></a>
                             <a id="btnHSLL_Save" class="btn btn-warning"><i class="fal fa-edit"></i> <span class="lang"
                                     key=""> Cập nhật</span></a>
-                            <a id="btnHSLL_Delete" class="btn btn-default"><i class="fa fa-trash"></i><span class="lang"
-                                    key=""> Xóa</span></a>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -340,13 +688,186 @@
     </div>
     </div>
     </div>
+
+    <!-- ============================================================
+         Modal "Chỉnh sửa - Hồ sơ đề xuất" — copy từ ApisNhanSu/Modules/kehoach/html/dexuathoso.html (2026-08-21)
+         Dùng bộ hàm main_doc.DeXuatHoSo (dexuathoso.js) để update person theo Id
+         ============================================================ -->
+    <div class="fake-modal zone-bus" id="zoneEdit" style="display: none; padding-top: 15px">
+        <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
+            <div class="d-flex justify-content-between pt-3 px-20 box-header">
+                <div class="nav-content-left">
+                    <p class="link">
+                        <a>
+                            <span class="myModalLabel">
+                                <i class="fa-regular fa-file-circle-question fw-bold"></i>
+                            </span> Chỉnh sửa - Hồ sơ đề xuất
+                        </a>
+                    </p>
+                </div>
+                <div class="nav-content-right mt">
+                    <a class="d-block text-right fs-16 mt-5 color-fff btnClose"><i class="fal fa-times"></i></a>
+                </div>
+            </div>
+            <div class="form-top rounded-0 border-top mb-15">
+                <div class="row">
+                    <div class="col-12 col-md-8 col-lg-8">
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Họ</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtHo" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Tên đệm</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtTenDem" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Tên</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtTen" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important;">Tên đầy đủ</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtHoVaTen" readonly="readonly" style=" background-color: #f5f6f8 !important" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info no-icon">
+                                <label class="form-label" style="width:200px !important">Chọn mức độ ngày sinh</label>
+                                <div class="input-group">
+                                    <select id="dropMucDoNgaySinh" class="select-opt"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Ngày sinh</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtNgaySinh" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Tháng sinh</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtThangSinh" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Năm sinh</label>
+                                <div class="input-group">
+                                    <input class="form-control" id="txtNamSinh" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-12 col-lg-12">
+                            <div class="form-item d-flex mb-0 form-add-info">
+                                <label class="form-label" style="width:200px !important">Giới tính</label>
+                                <div class="input-group">
+                                    <select id="dropGioiTinh" class="select-opt"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4 col-lg-4">
+                        <div class="sv-add-info-content sv-info-profile">
+                            <div class="row sv-info-base">
+                                <div class="col-12 sv-info-base-avata">
+                                    <div class="avata-img">
+                                        <img src="assets/images/avata-form.jpg" id="uploadPicture_SV">
+                                        <a href="#" class="upload-avata">
+                                            <i class="fal fa-camera color-dask-blue"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid px-20">
+                <div class="row">
+                    <div class="col-12 col-lg-6 mt-6 pl0">
+                        <div class="d-flex align-items-center w-100 justify-content-between">
+                            <span class="fw-bold text-success pull-left">Thông tin định danh</span>
+                        </div>
+                        <div class="mt-10 aps-table-select">
+                            <table class="table transcrip-table tabs-scores tblDapAn_Mau mt-10 table-bordered table-noborder"
+                                   id="tblDinhDanh">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50px" scope="col">STT</th>
+                                        <th scope="col">Loại định danh </th>
+                                        <th scope="col">Số định danh </th>
+                                        <th scope="col">Ngày cấp</th>
+                                        <th scope="col">Nơi cấp</th>
+                                        <th class="text-center" scope="col">Là thông tin chính</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 mt-6">
+                        <div class="d-flex align-items-center w-100 justify-content-between">
+                            <span class="fw-bold text-success pull-left">Thông tin liên hệ</span>
+                        </div>
+                        <div class="mt-8 aps-table-select">
+                            <table class="table transcrip-table tabs-scores table-bordered table-noborder tblDapAn"
+                                   id="tblLienHe">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center w-50px" scope="col">STT</th>
+                                        <th scope="col">Loại liên hệ</th>
+                                        <th scope="col">Thông tin</th>
+                                        <th class="text-center" scope="col">Là thông tin chính</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid px-20">
+                <hr />
+                <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
+                    <div class="ms-auto aps-gap-10">
+                        <div class="btn btn-outline-secondary btnClose">
+                            <i class="fal fa-times"></i> Đóng
+                        </div>
+                        <div class="btn btn-primary" id="btnSave_DeXuatHoSo"><i class="fal fa-save"></i> Lưu</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <!-- page script -->
-<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.122"></script>
+<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.2"></script>
+<script src="Modules/hoso/script/hosotaomoi.js?v=1.0.0.128"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['HoSoTaoMoi'] = new HoSoTaoMoi();
+    main_doc['DeXuatHoSo'] = new DeXuatHoSo();
     $(document).ready(function () {
         main_doc.HoSoTaoMoi.init();
+        main_doc.DeXuatHoSo.init();
     });
 </script>
