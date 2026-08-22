@@ -23,7 +23,7 @@
 
 @font-face {
   font-family: "Roboto";
-  font-weight: 800;
+  font-weight: 700;
   font-display: swap;
   src: url(../fonts/Roboto-Black.ttf);
 }
@@ -2247,8 +2247,8 @@ input::placeholder {
   padding: 17px 17px 5px 17px;
   border-radius: 12px 12px 0 0;
   background: #f8f8f8 !important;
-  border: solid 2px #fff;
-  border-bottom: 1px solid #e1e1e1 !important;
+  /* border: solid 2px #fff; */
+  /* border-bottom: 1px solid #e1e1e1 !important; */
   width: 100%;
 }
 
@@ -3286,7 +3286,7 @@ table>tbody>tr:hover .view-in-table-sticky {
 }
 
 .led-header-title {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 1.9rem;
   text-transform: uppercase;
   color: #008fd5;
@@ -3307,7 +3307,7 @@ table>tbody>tr:hover .view-in-table-sticky {
   align-items: center;
   justify-content: space-between;
   font-size: 1.3rem;
-  font-weight: 800;
+  font-weight: 700;
   color: #ffffff;
   text-transform: uppercase;
 }
@@ -3416,7 +3416,7 @@ table>tbody>tr:hover .view-in-table-sticky {
 
 .ad-moni .led-header-right {
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 700;
   color: white;
   display: flex;
   align-items: center;
@@ -3948,7 +3948,7 @@ table>tbody>tr:hover .view-in-table-sticky {
 .lect-block-title {
   color: #fff600;
   font-size: 1.4rem;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   text-align: center;
   margin-top: 1.5rem;
@@ -4569,7 +4569,7 @@ table>tbody>tr:hover .view-in-table-sticky {
   color: #018ed5;
   font-size: 42px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 60px;
   max-width: 635px;
 }
@@ -4704,7 +4704,7 @@ img.st-1-img {
   color: #fff;
   font-size: 32px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 55px;
   text-transform: uppercase;
   margin-bottom: 20px;
@@ -4724,7 +4724,7 @@ img.st-1-img {
   text-align: center;
   font-size: 34px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 55px;
   text-transform: uppercase;
 }
@@ -4959,7 +4959,7 @@ img.st-1-img {
   margin-right: 15px;
   font-size: 20px;
   font-style: normal;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 60px;
   text-transform: uppercase;
 }
@@ -5239,9 +5239,10 @@ img.st-1-img {
 .cmc-tabs .nav-link {
   color: #222222;
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 20px;
   border-color: #f1f1f1;
+  background: #e9e9e9;
   padding: 12px 40px;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
@@ -5429,7 +5430,7 @@ img.st-1-img {
 
 .user-object p.name {
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   margin-top: 10px;
 }
@@ -5447,7 +5448,7 @@ img.st-1-img {
 .cmc-nav-title p {
   margin-bottom: 0;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 60px;
   text-transform: uppercase;
   color: #ffffff;
@@ -5534,7 +5535,7 @@ img.st-1-img {
 
 .cmc-question-title {
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   color: #018ed5;
 }
 
@@ -6315,7 +6316,7 @@ img.st-1-img {
 
 .sv-request-list .left h1 {
   font-size: 52px;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
 }

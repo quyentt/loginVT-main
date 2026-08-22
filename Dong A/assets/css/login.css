@@ -154,7 +154,7 @@ body {
   font-family: var(--aps-display);
   color: #fff;
   font-size: 22px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: .5px;
   line-height: 1.1;
 }
@@ -306,7 +306,7 @@ body {
   border-radius: 50%;
   background: linear-gradient(180deg, #2f6fe0, #1b52c0);
   color: #fff;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 15px;
   font-family: var(--aps-display);
   display: grid;
