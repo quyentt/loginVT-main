@@ -6677,9 +6677,9 @@ tr:last-child .d-flex.gap-3 {
 }
 
 .form-top .dropdown .btn i {
-  padding-left: 5px;
-  font-size: 12px;
-  margin-top: 3px;
+  padding-left: 0px;
+    font-size: 14px;
+    margin-top: 0px;
 }
 
 .gv-paging-group .gv-paging span,

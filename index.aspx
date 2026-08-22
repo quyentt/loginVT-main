@@ -438,9 +438,9 @@
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
       html body .sidebar-menu-item .sidebar-menu-sub.collapse {
-        background: transparent !important;
-        background-color: transparent !important;
-        border-radius: 0 !important;
+        background: transparent;
+        background-color: transparent;
+        border-radius: 0 0 12px 0 !important;
         padding: 4px 0 8px 0 !important;
         margin-top: 5px !important;
         box-shadow: none !important;
@@ -455,7 +455,7 @@
       .sidebar-menu-sub a.active {
         color: #f8843d !important;
         background: transparent !important;
-        border-color: transparent !important;
+        border-color: transparent;
         outline: none !important;
         box-shadow: none !important;
       }
@@ -849,7 +849,7 @@
       }
       #main-content-wrapper .modal .modal-body,
       body > .modal .modal-body {
-        padding: 16px 18px !important;
+        padding: 16px 18px;
         background: #ffffff !important;
       }
       #main-content-wrapper .modal .modal-footer,
@@ -947,7 +947,7 @@
       }
       /* Body row có border + hover nhẹ để tách khối */
       #main-content-wrapper .table > tbody > tr > td {
-        padding: 10px 12px !important;
+        padding: 10px !important;
         color: #0f172a;
         vertical-align: middle !important;
       }
@@ -1006,7 +1006,7 @@
       #main-content-wrapper .pd0 { padding: 0 !important; }
       #main-content-wrapper .pd10 { padding: 10px !important; }
       #main-content-wrapper .pd15 { padding: 15px !important; }
-      #main-content-wrapper .pd20 { padding: 20px !important; }
+      #main-content-wrapper .pd20 { padding: 20px; }
       #main-content-wrapper .pt10 { padding-top: 10px !important; }
       #main-content-wrapper .pt15 { padding-top: 15px !important; }
       #main-content-wrapper .pt20 { padding-top: 20px !important; }
@@ -1055,13 +1055,13 @@
       #main-content-wrapper .table td span > a.btn.btn-default,
       #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default,
       #main-content-wrapper .table-hover > tbody > tr:hover > td a.btn.btn-default {
-        background: var(--color-link) !important;
+        background: rgba(13, 110, 253, 0.1) !important;
         background-image: none !important;
-        color: #ffffff !important;
-        border: 1px solid var(--color-link) !important;
+        color: var(--color-blue)  !important;
+        border: 1px solid rgba(13, 110, 253, 0.3) !important;
         border-radius: 4px !important;
-        padding: 4px 10px !important;
-        font-size: 12px !important;
+        padding: 6px 10px !important;
+        font-size: 13px !important;
         font-weight: 500 !important;
         display: inline-block !important;
         min-width: auto !important;
@@ -1071,15 +1071,16 @@
       }
       #main-content-wrapper .table td .btn.btn-default:hover,
       #main-content-wrapper .table td a.btn.btn-default:hover {
-        background: #1c2e5f !important;
-        border-color: #1c2e5f !important;
+        background:var(--color-blue)  !important;
+        border-color:var(--color-blue)  !important;
         color: #ffffff !important;
       }
       /* Đảm bảo text/icon bên trong button trong cell luôn trắng — không bị inherit
          từ row hover color rule */
       #main-content-wrapper .table td .btn.btn-default *,
       #main-content-wrapper .table-hover > tbody > tr:hover > td .btn.btn-default * {
-        color: #ffffff !important;
+        color: var(--color-blue) !important;
+        font-weight: 700;
       }
 
       /* ═══ [DISABLED 2026-08-12] FIX MODAL BLEED-THROUGH — khi modal mo, an TOAN BO

@@ -564,8 +564,8 @@
   z-index: 1;
 }
 .form-add-info .form-label {
-  width: 110px !important;
   min-width: 110px !important;
+  padding-right: 10px;
 }
 .box-kehoach .form-top .form-label span {
   color: var(--orange);

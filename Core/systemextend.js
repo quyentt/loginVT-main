@@ -972,9 +972,9 @@ systemextend.prototype = {
         html += '<div class="d-flex flex-wrap align-items-start list-title-first box-list-adds mt-15 mb-15">';
         html += '<p class="mt-5">Thêm nhiều</p>';
         html += '<div class="d-flex flex-wrap list">';
-        html += '<a class="btn btn-outline-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i> Thêm từng khóa</a>';
-        html += '<a class="btn btn-outline-success" id="btnAdd_ChuongTrinh"> <i class="fal fa-plus"></i> Thêm từng chương trình</a>';
-        html += '<a class="btn btn-outline-danger" id="btnAdd_Lop"> <i class="fal fa-plus"></i> Thêm từng lớp</a>';
+        html += '<a class="btn btn-soft-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i> Thêm từng khóa</a>';
+        html += '<a class="btn btn-soft-success" id="btnAdd_ChuongTrinh"> <i class="fal fa-plus"></i> Thêm từng chương trình</a>';
+        html += '<a class="btn btn-soft-danger" id="btnAdd_Lop"> <i class="fal fa-plus"></i> Thêm từng lớp</a>';
         html += '</div>';
         html += '</div>';
         html += '<div class="d-flex flex-wrap align-items-start list-title-first">';
@@ -986,7 +986,7 @@ systemextend.prototype = {
         html += '<div class="pd20 list-sv">';
         html += '<div class="title-is-paging pb-0">';
         html += '<p class="color-dask-blue fw-bold mt-3">Danh sách</p>';
-        html += '<button id="btnChonSinhVien" class="btn ms-auto" style="height:32px;padding:4px 14px;margin-left:40px !important;font-weight:500;font-size:13px;color:#0d6efd !important;background:#fff !important;border:1px solid #0d6efd !important;border-radius:6px;line-height:1.4;transition:all .15s;" onmouseover="this.style.setProperty(\'background\',\'#0d6efd\',\'important\');this.style.setProperty(\'color\',\'#fff\',\'important\');" onmouseout="this.style.setProperty(\'background\',\'#fff\',\'important\');this.style.setProperty(\'color\',\'#0d6efd\',\'important\');"><i class="fas fa-check-square me-2"></i>Chọn sinh viên</button>';
+        html += '<button id="btnChonSinhVien" class="btn ms-auto" style="height:32px;padding:4px 14px;margin-left:40px;font-weight:500;font-size:13px;color:#0d6efd;background:#fff;border:1px solid #0d6efd;border-radius:6px;line-height:1.4;transition:all .15s;" onmouseover="this.style.setProperty(\'background\',\'#0d6efd\',\'important\');this.style.setProperty(\'color\',\'#fff\',\'important\');" onmouseout="this.style.setProperty(\'background\',\'#fff\',\'important\');this.style.setProperty(\'color\',\'#0d6efd\',\'important\');"><i class="fas fa-check-square me-2"></i>Chọn sinh viên</button>';
         html += '</div>';
         html += '<div class="bus-wrp box-table-sv" style="max-height: unset;border-top: solid 0px #e1e1e1">';
         html += '<table class="table transcrip-table tabs-scores h-auto tblModal_SinhVien table-bordered table-noborder" id="tblModal_SinhVien">';
