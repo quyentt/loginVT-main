@@ -1264,7 +1264,7 @@ input:focus-visible {
 
 .login-title {
   color: #fff;
-  font-weight: 800;
+  font-weight: 700;
   color: #fff;
   line-height: 43px;
   font-size: 34px;
@@ -1635,7 +1635,7 @@ a.other-action_item:hover {
 }
 
 .modul-category-title {
-  font-weight: 800;
+  font-weight: 700;
   color: #fff;
   font-size: 24px;
   display: flex;
@@ -2327,7 +2327,7 @@ a.other-action_item:hover {
 }
 
 .user-chat-name {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .user-chat-time {
@@ -2535,7 +2535,7 @@ a.other-action_item:hover {
 
 .user-tb-nav .top span {
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-main);
 }
 
@@ -2558,7 +2558,7 @@ a.other-action_item:hover {
 }
 
 .user-tb-link {
-  font-weight: 800;
+  font-weight: 700;
   line-height: 24px;
   color: var(--color-main);
 }
@@ -2915,7 +2915,7 @@ a.other-action_item:hover {
 .user-tl-detail-title {
   color: var(--color-main);
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
   padding: 0 0 10px 0;
   border-bottom: solid 1px #f1f1f1;
 }
@@ -2938,7 +2938,7 @@ a.other-action_item:hover {
 .user-tl-detail-item .title {
   color: var(--color-main);
   font-size: 16px;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 24px;
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -3402,7 +3402,7 @@ a.other-action_item:hover {
 }
 
 .user-chatting-info .name {
-  font-weight: 800;
+  font-weight: 700;
   display: -webkit-box;
   -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
@@ -4373,7 +4373,7 @@ a.other-action_item:hover {
 }
 
 .dashboard-content .today-card .card-header .title .feature-name {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .today-group .dashboard-tinnoibo .item {
@@ -4611,7 +4611,7 @@ a.other-action_item:hover {
 
 .post-list-block-title span {
   font-size: 18px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-main);
   flex-shrink: 0;
   display: block;
@@ -5174,7 +5174,7 @@ a.other-action_item:hover {
   margin-top: 15px;
   color: #1a71e8;
   text-transform: uppercase;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .dashboard-role-item:nth-child(2) .dashboard-role-item-title {

@@ -1189,7 +1189,7 @@
 
  .login-title {
    color: #fff;
-   font-weight: 800;
+   font-weight: 700;
    color: #fff;
    line-height: 43px;
    font-size: 34px;
@@ -1553,7 +1553,7 @@
  }
 
  .modul-category-title {
-   font-weight: 800;
+   font-weight: 700;
    color: #fff;
    font-size: 24px;
    display: flex;
@@ -2220,7 +2220,7 @@
  }
 
  .user-chat-name {
-   font-weight: 800;
+   font-weight: 700;
  }
 
  .user-chat-time {
@@ -2428,7 +2428,7 @@
 
  .user-tb-nav .top span {
    font-size: 18px;
-   font-weight: 800;
+   font-weight: 700;
    color: var(--color-main);
  }
 
@@ -2447,7 +2447,7 @@
  }
 
  .user-tb-link {
-   font-weight: 800;
+   font-weight: 700;
    line-height: 24px;
    color: var(--color-main);
  }
@@ -2795,7 +2795,7 @@
  .user-tl-detail-title {
    color: var(--color-main);
    font-size: 18px;
-   font-weight: 800;
+   font-weight: 700;
    padding: 16px 0;
    border-bottom: solid 1px #f1f1f1;
  }
@@ -2818,7 +2818,7 @@
  .user-tl-detail-item .title {
    color: var(--color-main);
    font-size: 16px;
-   font-weight: 800;
+   font-weight: 700;
    line-height: 24px;
    display: -webkit-box;
    -webkit-line-clamp: 1;
@@ -3280,7 +3280,7 @@
  }
 
  .user-chatting-info .name {
-   font-weight: 800;
+   font-weight: 700;
    display: -webkit-box;
    -webkit-line-clamp: 1;
    -webkit-box-orient: vertical;

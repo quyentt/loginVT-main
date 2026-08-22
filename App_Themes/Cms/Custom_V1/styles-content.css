@@ -13038,7 +13038,7 @@ table#clone {
     font-size: 20px;
     float: left;
     margin-right: 10px;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .aps-student-manager-office .box-title,
@@ -13065,7 +13065,7 @@ table#clone {
     font-size: 20px;
     float: left;
     margin-right: 10px;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .aps-department-manager .box-title .title {
@@ -14790,7 +14790,7 @@ table#clone {
 }
 
 .aps-inbox-list .conv-item.unread .c-name {
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .aps-inbox-list .conv-item .c-time {
@@ -17814,4 +17814,18 @@ table#clone {
 }
 .box-search-student  #btnSearch_ModalSinhVien{
     margin-left: 10px !important;
+}
+.zoneThemPhieu .form-top {
+    border-bottom: 0 solid #e1e1e1 !important;
+}
+.zoneThemPhieu .form-top .form-item .select2-container--default .select2-selection--multiple .select2-selection__rendered {
+    padding: 0;
+}
+.zoneThemPhieu .cmc-con-table .simple-pagination,.zoneThemPhieu .cmc-con-table .zone-pag-footertblTabHome,
+.zone-pag-footertblTabPro,.zone-pag-footertblTabPan{
+    padding: 0 0 5px 0 !important;
+}
+.title-is-paging.zone-pag-headertblTabHome,
+.title-is-paging.zone-pag-headertblTabPro,.title-is-paging.zone-pag-headertblTabPan {
+    margin-top: 10px !important;
 }
