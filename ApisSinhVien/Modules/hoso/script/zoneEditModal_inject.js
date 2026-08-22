@@ -317,6 +317,32 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
             var opt = dx.dtMucDoNgaySinh.find(function (e) { return e.MA == "EXACT"; });
             if (opt) $('#dropMucDoNgaySinh').val(opt.ID).trigger("change").trigger({ type: 'select2:select' });
         }
+        // Populate dropdown — accept ID hoặc MA. Nếu MA thì tìm option có data-ma khớp
+        var _pickIdByMa = function (selectId, ma) {
+            if (!ma) return '';
+            var opt = document.querySelector('#' + selectId + ' option[name="' + ma + '"]')
+                || document.querySelector('#' + selectId + ' option[data-ma="' + ma + '"]');
+            if (opt) return opt.value;
+            // Fallback: tìm option có TEXT khớp MA (không nên nhưng safe)
+            var all = document.querySelectorAll('#' + selectId + ' option');
+            for (var i = 0; i < all.length; i++) {
+                if ((all[i].getAttribute('name') || '') === ma) return all[i].value;
+            }
+            return '';
+        };
+        var _setDrop = function () {
+            var gt = person.gioiTinh || _pickIdByMa('dropGioiTinh', person.gioiTinhMa);
+            var dt = person.danToc || _pickIdByMa('dropDanToc', person.danTocMa);
+            var tg = person.tonGiao || _pickIdByMa('dropTonGiao', person.tonGiaoMa);
+            var qt = person.quocTich || _pickIdByMa('dropQuocTich', person.quocTichMa);
+            if (gt) { $('#dropGioiTinh').val(gt).trigger('change'); }
+            if (dt) { $('#dropDanToc').val(dt).trigger('change'); }
+            if (tg) { $('#dropTonGiao').val(tg).trigger('change'); }
+            if (qt) { $('#dropQuocTich').val(qt).trigger('change'); }
+        };
+        _setDrop();
+        setTimeout(_setDrop, 500);
+        setTimeout(_setDrop, 1500);
         if (typeof dx._loadXHD_Section === 'function') dx._loadXHD_Section(person.id);
         if (typeof dx._loadTabInfoExtras === 'function') dx._loadTabInfoExtras(person.id);
     };
@@ -343,11 +369,20 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadXHD_Section) 
                 if (!list.length) return;
                 var b = list.find(function (i) { return i.IS_PRIMARY == 1; }) || list[0];
                 dx._currentBankId = b.ID || '';
-                edu.util.viewValById("ddlKQ_HD_HinhThucTT", b.ACCOUNT_TYPE_CODE);
-                edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
-                edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
-                edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
-                edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+                // Bank ACCOUNT_TYPE_CODE là MA — cần tra ID từ option[name=MA] để select đúng
+                var _setBank = function () {
+                    var typeId = '';
+                    var opt = document.querySelector('#ddlKQ_HD_HinhThucTT option[name="' + b.ACCOUNT_TYPE_CODE + '"]');
+                    if (opt) typeId = opt.value;
+                    if (typeId) { $('#ddlKQ_HD_HinhThucTT').val(typeId).trigger('change'); }
+                    edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
+                    edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
+                    edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
+                    edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+                };
+                _setBank();
+                setTimeout(_setBank, 500);
+                setTimeout(_setBank, 1500);
             },
             error: function () { },
             type: 'POST',
