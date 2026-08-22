@@ -2913,7 +2913,7 @@ KhaiMucPhi.prototype = {
         var $tbody = $("#tblDSNHTT_HSNH tbody");
         $tbody.empty();
         if (!arr || arr.length === 0) {
-            $tbody.append('<tr><td colspan="12" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
+            $tbody.append('<tr><td colspan="13" class="td-center italic color-666 py-3">Không có dữ liệu</td></tr>');
             $("#sumTongPhaiNop_DSNHTT").text('0');
             $("#sumDaNop_DSNHTT").text('0');
             return;
@@ -2947,6 +2947,7 @@ KhaiMucPhi.prototype = {
             var strCCCD = me._pickCI(r, 'IdentifierNo', 'CCCD');
             var strMaSo = me._pickCI(r, 'CurrentEmployeeCode', 'MaSo');
             var strHoTen = me._pickCI(r, 'FullName', 'HoTen');
+            var strSDT = me._pickCI(r, 'SoDienThoaiCaNhan', 'SoDienThoai', 'DienThoaiCaNhan', 'DienThoai', 'Phone', 'Mobile');
             var strGT = me._pickCI(r, 'GenderTen', 'GioiTinhTen', 'GioiTinh', 'Gender');
             var strNgSinh = me._pickCI(r, 'DateOfBirth', 'NgaySinhStr', 'NgaySinh');
             var strNganh = me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen');
@@ -2968,6 +2969,7 @@ KhaiMucPhi.prototype = {
             html += '<td class="td-left">' + esc(strCCCD) + '</td>';
             html += '<td class="td-left">' + esc(strMaSo) + '</td>';
             html += '<td class="td-left">' + esc(strHoTen) + '</td>';
+            html += '<td class="td-left">' + esc(strSDT) + '</td>';
             html += '<td class="td-center">' + esc(strGT) + '</td>';
             html += '<td class="td-center">' + esc(strNgSinh) + '</td>';
             html += '<td class="td-left">' + esc(strNganh) + '</td>';
@@ -3055,7 +3057,7 @@ KhaiMucPhi.prototype = {
         };
 
         var header = [
-            'STT', 'CCCD', 'Mã số', 'Họ tên', 'Giới tính', 'Ngày sinh',
+            'STT', 'CCCD', 'Mã số', 'Họ tên', 'Số điện thoại', 'Giới tính', 'Ngày sinh',
             'Ngành nhập học', 'Chương trình nhập học', 'Lớp chính thức',
             // 'Đã nhập học',   // ẨN: mở lại nếu cần
             'Tổng phải nộp', 'Đã nộp',
@@ -3078,6 +3080,7 @@ KhaiMucPhi.prototype = {
                 me._pickCI(r, 'IdentifierNo', 'CCCD'),
                 me._pickCI(r, 'CurrentEmployeeCode', 'MaSo'),
                 me._pickCI(r, 'FullName', 'HoTen'),
+                me._pickCI(r, 'SoDienThoaiCaNhan', 'SoDienThoai', 'DienThoaiCaNhan', 'DienThoai', 'Phone', 'Mobile'),
                 me._pickCI(r, 'GenderTen', 'GioiTinhTen', 'GioiTinh', 'Gender'),
                 me._pickCI(r, 'DateOfBirth', 'NgaySinhStr', 'NgaySinh'),
                 me._pickCI(r, 'DaoTaoNganhTsTen', 'NganhTsTen', 'TenNganhTs', 'NganhTen'),
@@ -3093,7 +3096,7 @@ KhaiMucPhi.prototype = {
 
         var ws = XLSX.utils.aoa_to_sheet(aoa);
         ws['!cols'] = [
-            { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 10 }, { wch: 12 },
+            { wch: 5 }, { wch: 14 }, { wch: 12 }, { wch: 26 }, { wch: 14 }, { wch: 10 }, { wch: 12 },
             { wch: 28 }, { wch: 34 }, { wch: 18 },
             { wch: 16 }, { wch: 16 }, { wch: 14 }
         ];
