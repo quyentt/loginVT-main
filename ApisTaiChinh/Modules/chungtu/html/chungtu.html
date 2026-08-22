@@ -138,6 +138,353 @@
     .activeLien {
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
+
+    /* ============================================================
+       Action bar #zoneActionChungTu — reskin theo pattern thutien.html:
+       Hủy (đỏ, order:-1 tách trái) — HDDT Nháp/Xuất HĐĐT (teal) — In (xanh CTA) — Liên HĐ (xanh lá) — Đóng (grey outline)
+       Gap 10px, height 38px, radius 4, chống Bootstrap gradient/background của .btn-*.
+       ============================================================ */
+    #zoneActionChungTu {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        padding: 10px 0;
+    }
+    #zoneActionChungTu .aps-btn,
+    #zoneActionChungTu > div,
+    #zoneActionChungTu > a {
+        display: inline-flex !important;
+        margin: 0 !important;
+        align-items: center;
+    }
+    #zoneActionXuatHoaDon {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 8px;
+    }
+    #zoneActionXuatHoaDon:empty {
+        display: none;
+    }
+    #zoneActionChungTu .btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px;
+        height: 38px;
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        line-height: 1 !important;
+        border-radius: 4px !important;
+        white-space: nowrap;
+        background-image: none !important;
+        text-decoration: none !important;
+        margin: 0 !important;
+    }
+    #zoneActionChungTu .btn i {
+        font-size: 14px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        border: none !important;
+        line-height: 1 !important;
+    }
+    /* Reset wrapper cứng của các btn được prepend/append từ JS (HDDT Nháp, Xuất HĐĐT động) */
+    #zoneActionChungTu > [id^="btn"],
+    #zoneActionChungTu > [class*="btnXuat_HDDT"] {
+        background: transparent !important;
+        background-color: transparent !important;
+        border: none !important;
+        border-radius: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+    }
+
+    /* Hủy chứng từ — destructive: đỏ solid, tách trái */
+    #zoneActionChungTu .btn-danger,
+    #zoneActionChungTu #btnHuy_ChungTu .btn {
+        background-color: #dc3545 !important;
+        border: 1px solid #dc3545 !important;
+        color: #fff !important;
+    }
+    #zoneActionChungTu .btn-danger:hover,
+    #zoneActionChungTu #btnHuy_ChungTu .btn:hover {
+        background-color: #c82333 !important;
+        border-color: #bd2130 !important;
+        color: #fff !important;
+    }
+    #zoneActionChungTu #btnHuy_ChungTu {
+        order: -1;
+        margin-right: auto !important;
+    }
+
+    /* In chứng từ — CTA chính: xanh dương filled, cao hơn 1 tí */
+    #zoneActionChungTu #btnIn_ChungTu,
+    #zoneActionChungTu .btn-primary {
+        background-color: #2563eb !important;
+        border: 1px solid #2563eb !important;
+        color: #fff !important;
+        height: 42px !important;
+        padding: 8px 20px !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25);
+    }
+    #zoneActionChungTu #btnIn_ChungTu:hover,
+    #zoneActionChungTu .btn-primary:hover {
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #fff !important;
+    }
+
+    /* Liên HĐ — xanh lá (btn-warning trong template) đổi sang success để rõ nghĩa nhóm phụ */
+    #zoneActionChungTu #btnLienHoaDon,
+    #zoneActionChungTu .btn-warning {
+        background-color: #28a745 !important;
+        border: 1px solid #28a745 !important;
+        color: #fff !important;
+    }
+    #zoneActionChungTu #btnLienHoaDon:hover,
+    #zoneActionChungTu .btn-warning:hover {
+        background-color: #218838 !important;
+        border-color: #1e7e34 !important;
+        color: #fff !important;
+    }
+
+    /* HDDT Nháp / Xuất hóa đơn điện tử động (.btnXuat_HDDT do JS prepend vào #zoneActionXuatHoaDon):
+       teal solid — nhóm hóa đơn điện tử phụ, khác tone với In/Liên/Hủy để dễ nhận */
+    #zoneActionXuatHoaDon .btn,
+    #zoneActionXuatHoaDon .btnXuat_HDDT,
+    #zoneActionXuatHoaDon a.btnXuat_HDDT,
+    #zoneActionXuatHoaDon #btnHDDTNhap,
+    #zoneActionXuatHoaDon #btnHDDTNhap .btn {
+        background: #0891b2 !important;
+        background-color: #0891b2 !important;
+        background-image: none !important;
+        border: 1px solid #0891b2 !important;
+        color: #fff !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        height: 38px !important;
+        padding: 6px 14px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        border-radius: 4px !important;
+        white-space: nowrap;
+        text-decoration: none !important;
+    }
+    #zoneActionXuatHoaDon .btn:hover,
+    #zoneActionXuatHoaDon .btnXuat_HDDT:hover,
+    #zoneActionXuatHoaDon a.btnXuat_HDDT:hover,
+    #zoneActionXuatHoaDon #btnHDDTNhap:hover,
+    #zoneActionXuatHoaDon #btnHDDTNhap .btn:hover {
+        background: #0e7490 !important;
+        background-color: #0e7490 !important;
+        border-color: #0e7490 !important;
+        color: #fff !important;
+    }
+    #zoneActionXuatHoaDon i,
+    #zoneActionXuatHoaDon .btn i {
+        color: #fff !important;
+        background: transparent !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Đóng — grey outline, tách phải, không tranh chú ý */
+    #zoneActionChungTu #btnClose_ChungTu,
+    #zoneActionChungTu .btn-outline-danger {
+        background-color: #fff !important;
+        border: 1px solid #ced4da !important;
+        color: #495057 !important;
+        margin-left: 16px !important;
+    }
+    #zoneActionChungTu #btnClose_ChungTu:hover,
+    #zoneActionChungTu .btn-outline-danger:hover {
+        background-color: #f1f3f5 !important;
+        border-color: #adb5bd !important;
+        color: #212529 !important;
+    }
+
+    /* Wrapper Liên hóa đơn */
+    #btnLienHoaDon {
+        position: relative;
+    }
+    #zoneLienHoaDon {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        z-index: 999;
+        min-width: 200px;
+    }
+
+    /* ============================================================
+       Nút "Xuất hóa đơn" (D) ở góc trên bảng tab 4 & 5 (#btnAddnew_HoaDon, #btnAddnew_HoaDon_DaNop):
+       thống nhất style xanh CTA, cao 38, radius 4, icon nhỏ.
+       ============================================================ */
+    #btnAddnew_HoaDon,
+    #btnAddnew_HoaDon_DaNop {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        height: 38px !important;
+        padding: 6px 16px !important;
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        border-radius: 4px !important;
+        background-color: #2563eb !important;
+        background-image: none !important;
+        border: 1px solid #2563eb !important;
+        color: #fff !important;
+        text-decoration: none !important;
+        white-space: nowrap;
+        box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25);
+        width: auto !important;
+    }
+    #btnAddnew_HoaDon:hover,
+    #btnAddnew_HoaDon_DaNop:hover {
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #fff !important;
+    }
+    #btnAddnew_HoaDon i,
+    #btnAddnew_HoaDon_DaNop i {
+        font-size: 14px !important;
+        color: #fff !important;
+        margin: 0 !important;
+    }
+
+    /* ============================================================
+       Preview hóa đơn/chứng từ #MauIn_ChungTu — reskin trên SCREEN.
+       (Print flow đã có CSS riêng trong _printChungTuCustom).
+       Đồng bộ pattern với #MauInPhieuThu bên thutien.html.
+       ============================================================ */
+    #MauIn_ChungTu {
+        font-family: 'Times New Roman', 'Cambria', serif;
+        font-size: 13pt;
+        line-height: 1.55;
+        color: #000;
+        background: #f8fafc;
+        padding: 24px 30px;
+        border-radius: 8px;
+        margin-bottom: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    /* Center block-level children trong card + limit max-width cho giống 1 tờ giấy A5 landscape */
+    #MauIn_ChungTu > table,
+    #MauIn_ChungTu > div,
+    #MauIn_ChungTu > p,
+    #MauIn_ChungTu > center,
+    #MauIn_ChungTu > h1,
+    #MauIn_ChungTu > h2,
+    #MauIn_ChungTu > h3,
+    #MauIn_ChungTu > h4,
+    #MauIn_ChungTu > span,
+    #MauIn_ChungTu > br {
+        max-width: 900px;
+        width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #MauIn_ChungTu p,
+    #MauIn_ChungTu div,
+    #MauIn_ChungTu span,
+    #MauIn_ChungTu td,
+    #MauIn_ChungTu th,
+    #MauIn_ChungTu label,
+    #MauIn_ChungTu b,
+    #MauIn_ChungTu strong {
+        font-family: 'Times New Roman', 'Cambria', serif;
+    }
+    /* Table info SV: cell padding thoáng */
+    #MauIn_ChungTu table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    #MauIn_ChungTu table td,
+    #MauIn_ChungTu table th {
+        vertical-align: top;
+        padding: 4px 8px;
+        line-height: 1.55;
+    }
+    /* Value cạnh label: inline nowrap → không xuống dòng lệch cột */
+    #MauIn_ChungTu [class*="txtHoTen_BenB_"],
+    #MauIn_ChungTu [class*="txtMa_BenB_"],
+    #MauIn_ChungTu [class*="txtNgaySinh_BenB_"],
+    #MauIn_ChungTu [class*="txtMaSoThue"],
+    #MauIn_ChungTu .txtHoTenPTC_PT_Edit,
+    #MauIn_ChungTu .txtMaNCSPTC_PT_Edit,
+    #MauIn_ChungTu .txtNgaySinhPTC_PT_Edit {
+        display: inline !important;
+        white-space: nowrap !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    /* Lớp/Ngành/Khóa: inline, word-break keep-all */
+    #MauIn_ChungTu [class*="txtLop_BenB_"],
+    #MauIn_ChungTu [class*="txtNganh_BenB_"],
+    #MauIn_ChungTu [class*="txtKhoa_BenB_"],
+    #MauIn_ChungTu .txtLopPTC_PT_Edit,
+    #MauIn_ChungTu .txtNganhPTC_PT_Edit,
+    #MauIn_ChungTu .txtKhoaPTC_PT_Edit,
+    #MauIn_ChungTu .txtLopInline_Injected {
+        display: inline !important;
+        vertical-align: baseline;
+        word-break: keep-all;
+        overflow-wrap: normal;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    /* Paragraph: line-height thoáng */
+    #MauIn_ChungTu p {
+        line-height: 1.7;
+        margin: 4px 0;
+        word-break: keep-all;
+    }
+    /* Số tổng + viết bằng chữ */
+    #MauIn_ChungTu [class*="txtTongTienChungTu_"],
+    #MauIn_ChungTu [class*="txtTongTienBangChu_"] {
+        font-weight: bold;
+        word-break: keep-all;
+    }
+    /* Title (HÓA ĐƠN BÁN HÀNG / PHIẾU THU TIỀN) */
+    #MauIn_ChungTu h1,
+    #MauIn_ChungTu h2,
+    #MauIn_ChungTu h3,
+    #MauIn_ChungTu h4 {
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin: 8px 0 4px;
+    }
+    /* Trailing "-" khi ngành/khóa rỗng: ẩn dấu gạch lẻ */
+    #MauIn_ChungTu [class*="txtLop_BenB_"]:empty::after,
+    #MauIn_ChungTu [class*="txtNganh_BenB_"]:empty::after,
+    #MauIn_ChungTu [class*="txtKhoa_BenB_"]:empty::after {
+        content: "";
+    }
+    /* Bảng "Nội dung thu" (khoản thu) — border đen rõ trên nền xám nhạt */
+    #MauIn_ChungTu table.table-hoadon,
+    #MauIn_ChungTu table[class*="table-hoadon"] {
+        border: 1.5px solid #000;
+        background: #fff;
+    }
+    #MauIn_ChungTu table.table-hoadon td,
+    #MauIn_ChungTu table.table-hoadon th {
+        border: 1px solid #000;
+        padding: 4px 8px;
+    }
+    #MauIn_ChungTu table.table-hoadon th {
+        text-align: center;
+        font-weight: bold;
+        background: #f1f5f9;
+    }
 </style>
 <div id="MainContent">
     <section class="content aps-chungtu">
@@ -845,25 +1192,39 @@
                         </div>
                     </div>
                 </div>
-                <div class="aps-list-btn d-flex mt-20 justify-content-center w-100" id="zoneActionChungTu">
-                    <div id="zoneActionXuatHoaDon"></div>
+                <!-- Zone render hóa đơn preview (JS .load() template vào đây) — đặt ĐỘC LẬP trên action bar -->
+                <div id="MauIn_ChungTu" class="MauIn_ChungTu"></div>
+                <!-- Action bar 5 nút — nằm dưới hóa đơn preview -->
+                <div class="aps-list-btn d-flex mt-20 w-100" id="zoneActionChungTu">
+                    <!-- Destructive: Hủy (đỏ, tách trái tự động qua CSS order:-1 + margin-right:auto) -->
                     <div id="btnHuy_ChungTu" class="aps-btn">
                         <a class="btn btn-danger"><i class="fa fa-trash-o"></i>
-                            Hủy <span class="lbLoaiChungTu">Chứng từ</span></a>
+                            Hủy <span class="lbLoaiChungTu">chứng từ</span></a>
                     </div>
-                    <div style="float:left;">
-                            <div id="MauIn_ChungTu"></div>
+                    <!-- HDDT Nháp / Xuất hóa đơn điện tử động (JS prepend) -->
+                    <div id="zoneActionXuatHoaDon"></div>
+                    <!-- Xem trước — mở popup print preview không auto-print, cho user check trước -->
+                    <div class="aps-btn">
+                        <a class="btn" id="btnPreview_ChungTu"
+                            style="background:#64748b !important; border:1px solid #64748b !important; color:#fff !important;">
+                            <i class="fa fa-eye"></i> Xem trước</a>
                     </div>
-                    <a class="btn btn-primary" id="btnIn_ChungTu">
-                        <i class="fa fa-print"></i> In <span class="lbLoaiChungTu">Chứng từ</span></a>
-
-                    <a class="btn btn-outline-danger" id="btnClose_ChungTu">
-                        <i class="fa fa-times"></i>Đóng</a>
-
-                    <a title="Liên Hóa đơn" class="btn btn-warning" id="btnLienHoaDon">
-                        <i class="fa fa fa-copy"></i>Liên hóa đơn
-                    <div id="zoneLienHoaDon"></div>
-                    <div class="clear"></div></a>
+                    <!-- CTA chính: In chứng từ -->
+                    <div class="aps-btn">
+                        <a class="btn btn-primary" id="btnIn_ChungTu">
+                            <i class="fa fa-print"></i> In <span class="lbLoaiChungTu">chứng từ</span></a>
+                    </div>
+                    <!-- Liên hóa đơn (dropdown liên) -->
+                    <div class="aps-btn" id="btnLienHoaDon_Wrapper">
+                        <a title="Liên Hóa đơn" class="btn btn-warning" id="btnLienHoaDon">
+                            <i class="fa fa-copy"></i> Liên HĐ</a>
+                        <div id="zoneLienHoaDon"></div>
+                    </div>
+                    <!-- Đóng: grey outline, cách nhóm action bằng margin-left:16 (từ CSS) -->
+                    <div class="aps-btn">
+                        <a class="btn btn-outline-danger" id="btnClose_ChungTu">
+                            <i class="fa fa-times"></i> Đóng</a>
+                    </div>
                 </div>
             </div>
             <div class="clear"></div>

@@ -397,6 +397,12 @@ ChungTu.prototype = {
         me.getList_ThoiGianDaoTao();
         me.getList_TrangThaiSV();
         me.getList_NutHDDT();
+        // Xem trước (không auto-print): mở popup A5 landscape để user kiểm tra layout trước khi in thật
+        $("#btnPreview_ChungTu").click(function (e) {
+            e.stopImmediatePropagation();
+            edu.extend.remove_PhoiIn("MauIn_ChungTu");
+            me._printChungTuCustom('MauIn_ChungTu', false); // false = KHÔNG auto print
+        });
         $("#btnIn_ChungTu").click(function (e) {
             e.stopImmediatePropagation();
             me.printPhieu();
@@ -714,7 +720,12 @@ ChungTu.prototype = {
         me["dtNutHDDT"] = data;
         var row = '';
         for (var i = 0; i < data.length; i++) {
-            row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            // Structure inline horizontal (icon + text 1 dòng) — CSS scoped
+            // #zoneActionXuatHoaDon .btnXuat_HDDT ở chungtu.html style teal solid đồng bộ với HDDT Nháp.
+            // Giữ id/title/name trên div wrapper vì handler .btnXuat_HDDT click đọc các attr này.
+            row += '<div class="btnXuat_HDDT aps-btn" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '">'
+                + '<a title="' + data[i].TEN + '" class="btn"><i class="' + data[i].THONGTIN1 + '"></i> ' + data[i].TEN + '</a>'
+                + '</div>';
         }
         me.strHDDT = row;
     },
@@ -2943,7 +2954,9 @@ ChungTu.prototype = {
                 $("#zoneActionXuatHoaDon").html(me.strHDDT);
             }
             if (document.getElementById('btnSave_ChungTu') == undefined) {
-                $("#zoneActionChungTu").prepend('<div id="btnSave_ChungTu" name="' + strTableId +'" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Xuất chứng từ" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất <span class="lbLoaiChungTu">Biên Lai</span></a></div>');
+                // Structure inline horizontal đồng bộ với các nút khác trong action bar.
+                // CSS scoped #zoneActionChungTu .btn-primary sẽ style xanh dương CTA solid.
+                $("#zoneActionChungTu").prepend('<div id="btnSave_ChungTu" class="aps-btn" name="' + strTableId + '"><a title="Xuất chứng từ" class="btn btn-primary"><i class="fa fa-save"></i> Xuất <span class="lbLoaiChungTu">biên lai</span></a></div>');
                 
                 $("#btnSave_ChungTu").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
@@ -3173,9 +3186,95 @@ ChungTu.prototype = {
     printPhieu: function () {
         var me = this;
         edu.extend.remove_PhoiIn("MauIn_ChungTu");
-        edu.util.printHTML('MauIn_ChungTu');
+        me._printChungTuCustom('MauIn_ChungTu');
         edu.system.switchTab('tab_1');
         me.closePhieu();
+    },
+    // Custom print A5 landscape cho chứng từ / hóa đơn.
+    // Param autoPrint: true (default) → tự gọi w.print(); false → chỉ mở popup preview, user tự Ctrl+P.
+    // Copy pattern _printPhieuThuCustom bên thutien.js: inject full CSS + script detect bảng hàng hóa.
+    _printChungTuCustom: function (divId, autoPrint) {
+        if (autoPrint === undefined) autoPrint = true;
+        var content = document.getElementById(divId).innerHTML;
+        var w = window.open('', 'Print', 'height=800,width=1200');
+        var css = ''
+            + '@page { size: A5 landscape; margin: 0; }'
+            + 'html, body { margin: 0; padding: 0; width: 100%; }'
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.45; color: #000; padding: 0.4cm 0.7cm; width: 100%; background: #fff; text-align: center; }'
+            + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
+            + '#' + divId + ' { width: 100%; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; }'
+            + '#' + divId + ' > div, #' + divId + ' > table, #' + divId + ' > p, #' + divId + ' > center, #' + divId + ' > span, #' + divId + ' > h1, #' + divId + ' > h2, #' + divId + ' > h3, #' + divId + ' > h4 { width: 100%; max-width: 100%; margin: 0.02cm auto; padding: 0; }'
+            /* Default: mọi table KHÔNG có viền — bảng info đơn vị/người mua trong sạch */
+            + '#' + divId + ' table { border-collapse: collapse; width: 100%; margin: 1px auto; border: none; }'
+            + '#' + divId + ' table td, #' + divId + ' table th { border: none; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5; text-align: left; }'
+            /* CHỈ bảng hàng hóa/khoản thu (JS gắn class .tblHangHoa) mới có viền */
+            + '#' + divId + ' table.tblHangHoa { border: 1.2px solid #000; }'
+            + '#' + divId + ' table.tblHangHoa td, #' + divId + ' table.tblHangHoa th { border: 1px solid #000; padding: 2px 5px; }'
+            + '#' + divId + ' table.tblHangHoa th { text-align: center; font-weight: bold; }'
+            + '#' + divId + ' h1, #' + divId + ' h2 { font-size: 13pt; margin: 0.08cm 0; text-align: center; text-transform: uppercase; font-weight: bold; }'
+            + '#' + divId + ' h3, #' + divId + ' h4 { font-size: 10.5pt; margin: 0.06cm 0; text-align: center; text-transform: uppercase; font-weight: bold; }'
+            + '#' + divId + ' p { line-height: 1.55; margin: 0.04cm 0; font-size: 10pt; }'
+            + '#' + divId + ' [class*="txtHoTen_BenB_"], #' + divId + ' [class*="txtMa_BenB_"], #' + divId + ' [class*="txtNgaySinh_BenB_"], #' + divId + ' [class*="txtMaSoThue"] { display: inline; white-space: nowrap; margin: 0; padding: 0; font-weight: bold; }'
+            + '#' + divId + ' [class*="txtLop_BenB_"], #' + divId + ' [class*="txtNganh_BenB_"], #' + divId + ' [class*="txtKhoa_BenB_"] { display: inline; word-break: keep-all; margin: 0; padding: 0; }'
+            + '#' + divId + ' [class*="txtTongTien"] { font-weight: bold; }'
+            + '#' + divId + ' select { border: none; background: transparent; -webkit-appearance: none; -moz-appearance: none; appearance: none; padding: 0; font-family: inherit; font-size: inherit; color: #000; }'
+            + 'table, tr, td, th { page-break-inside: avoid; }'
+            + '* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+
+        // Script inline: detect bảng hàng hóa + dọn <br> đầu template
+        var scriptDetect = ''
+            + '<script>'
+            + '(function() {'
+            /* (0) Dọn <br> ở đầu — bỏ khoảng trắng dòng đầu */
+            + '  var mauIn = document.getElementById("' + divId + '");'
+            + '  if (mauIn) {'
+            + '    while (mauIn.firstChild) {'
+            + '      var f = mauIn.firstChild;'
+            + '      if (f.nodeType === 3 && !(f.textContent || "").trim()) { mauIn.removeChild(f); continue; }'
+            + '      if (f.nodeName === "BR") { mauIn.removeChild(f); continue; }'
+            + '      break;'
+            + '    }'
+            + '  }'
+            /* (1) Tag bảng hàng hóa/khoản thu — có <th> header hoặc >= 3 cột + text keyword */
+            + '  var tables = document.querySelectorAll("#' + divId + ' table");'
+            + '  for (var i = 0; i < tables.length; i++) {'
+            + '    var t = tables[i];'
+            + '    var probe = ((t.textContent || "").substring(0, 500)).toLowerCase();'
+            + '    var matchText = /hàng hóa|dịch vụ|khoản thu|thành tiền|đơn giá|số lượng|số tiền|tt|stt/i.test(probe);'
+            + '    var hasTH = t.querySelectorAll("th").length >= 2;'
+            + '    var firstRow = t.rows && t.rows[0];'
+            + '    var nCols = firstRow ? firstRow.cells.length : 0;'
+            + '    if (matchText && (hasTH || nCols >= 3)) {'
+            + '      t.className = (t.className || "") + " tblHangHoa";'
+            + '    }'
+            + '  }'
+            /* (2) Xóa <br> ngay trước value SV (label + value cùng dòng) */
+            + '  var valSel = \'[class*="txtHoTen_BenB_"],[class*="txtMa_BenB_"],[class*="txtNgaySinh_BenB_"],[class*="txtDiaChi_BenB_"],[class*="txtLop_BenB_"],[class*="txtNganh_BenB_"],[class*="txtKhoa_BenB_"],[class*="txtMaSoThue_BenB_"]\';'
+            + '  var vals = document.querySelectorAll("#' + divId + ' " + valSel);'
+            + '  vals.forEach(function(el) {'
+            + '    var p = el.previousSibling;'
+            + '    while (p && p.nodeType === 3 && !(p.textContent || "").trim()) { p = p.previousSibling; }'
+            + '    if (p && p.nodeName === "BR") { p.parentNode.removeChild(p); }'
+            + '  });'
+            + '})();'
+            + '<\/script>';
+
+        w.document.write('<!DOCTYPE html><html><head><meta charset="utf-8"><title>In chứng từ</title>');
+        w.document.write('<style>' + css + '</style>');
+        w.document.write('</head><body><div id="' + divId + '">' + content + '</div>');
+        w.document.write(scriptDetect);
+        w.document.write('</body></html>');
+        w.document.close();
+        w.focus();
+        if (autoPrint) {
+            setTimeout(function () {
+                try { w.print(); } catch (e) { console.log('Print error:', e); }
+                setTimeout(function () {
+                    try { w.close(); } catch (e) { }
+                }, 500);
+            }, 400);
+        }
+        return true;
     },
     closePhieu: function () {
         var me = this;
@@ -3212,13 +3311,17 @@ ChungTu.prototype = {
             lMauIn_ChungTu = 1250;
         }
         var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
+        // COMMENT: đoạn set inline style dưới đây ép #zoneActionChungTu thành float:left / position:fixed
+        // → phá layout flex của #zoneActionChungTu (5 nút không xếp 1 hàng, nút phân tán khắp trang).
+        // CSS scoped `#zoneActionChungTu { display:flex; width:100% }` trong chungtu.html đã lo layout đúng,
+        // giữ padding-left cho #zoneChungTu để center hóa đơn preview. Giữ code cũ dạng comment để mở lại nếu cần.
         if (lMainPrint > lMauIn_ChungTu) {
             document.getElementById('zoneChungTu').style.paddingLeft = (lMainPrint - lMauIn_ChungTu) / 2 + "px";
-            document.getElementById('zoneActionChungTu').style = "float:left; margin-left: 3px";
+            // document.getElementById('zoneActionChungTu').style = "float:left; margin-left: 3px";
         }
         else {
             document.getElementById('zoneChungTu').style.paddingLeft = "20px";
-            document.getElementById('zoneActionChungTu').style = "position: fixed; right: 10px !important";
+            // document.getElementById('zoneActionChungTu').style = "position: fixed; right: 10px !important";
         }
         edu.extend.genChonLien("MauIn_ChungTu", "zoneLienHoaDon");
     }
