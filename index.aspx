@@ -243,7 +243,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 6px 12px;
+        padding: 7px 12px 5px 12px;
         border: 1px solid #e2e8f0;
         background: #fff;
         color: #0f172a;
@@ -253,7 +253,8 @@
         cursor: pointer;
         transition: all .15s ease;
       }
-      .role-chip:hover { border-color:var(--color-blue); }
+      .role-chip:hover { border-color:var(--color-blue); 
+      color:var(--color-blue) ;}
       .role-chip.active {
         background:var(--color-blue);
         border-color:var(--color-blue);
@@ -878,7 +879,7 @@
 
       /* Form top (filter row đầu module) — spacing */
       #main-content-wrapper .form-top {
-        margin-bottom: 8px;
+        margin-bottom: 15px;
       }
       #main-content-wrapper .form-top .form-item .form-control,
       #main-content-wrapper .form-top .input-group input.form-control {
@@ -1041,7 +1042,7 @@
       #main-content-wrapper .ml-20 { margin-left: 20px !important; }
       #main-content-wrapper .mb-10 { margin-bottom: 10px !important; }
       #main-content-wrapper .mb-20 { margin-bottom: 20px !important; }
-      #main-content-wrapper .item-search { padding: 6px 8px; }
+      #main-content-wrapper .item-search { padding: 6px 10px; }
       #main-content-wrapper .table-noborder { border: 0 !important; }
       #main-content-wrapper .pull-right { float: right !important; }
       #main-content-wrapper .pull-left { float: left !important; }

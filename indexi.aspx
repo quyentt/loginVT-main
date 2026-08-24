@@ -486,7 +486,7 @@
             color: #0f172a !important;
           }
           html body.skin-blue #main-content-wrapper .box-footer {
-            padding: 10px 14px !important;
+            padding: 10px 20px !important;
             border-top: 1px solid #e2e8f0 !important;
           }
 
@@ -1086,11 +1086,6 @@
             font-size: 13px;
             font-weight: 600;
             line-height: 1;
-          }
-
-          /* Item search spacing — 4 dropdown deu can, dung .col-sm-3 default */
-          html body.skin-blue #main-content-wrapper .item-search {
-            /* padding: 6px !important; */
           }
 
           /* Section .content padding — align voi header 60px */

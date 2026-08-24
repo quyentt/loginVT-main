@@ -406,7 +406,7 @@ DanhMucDuLieu.prototype = {
         var strTenCotSapXep = "";
         var pageIndex = edu.system.pageIndex_default;
         var pageSize = 1000000;
-        var iTrangThai = edu.util.getValById("dropTrangThai_DMDL");
+        var iTrangThai = 1;
 
         edu.system.makeRequest({
             success: function (data) {
