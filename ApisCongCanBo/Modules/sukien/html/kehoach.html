@@ -45,7 +45,7 @@
                     </p>
                 </div>
                 <div class="ms-auto aps-gap-10">
-                    <div class="btn btn-danger" id="btnDelete_KeHoach"><i class="fa-solid fa-trash"></i> Xóa</div>
+                    <div class="btn btn-soft-danger" id="btnDelete_KeHoach"><i class="fa-solid fa-trash"></i> Xóa</div>
                     <div class="btn btn-success btnAdd"><i class="fal fa-plus"></i> Thêm mới</div>
                 </div>
             </div>
@@ -68,7 +68,7 @@
             </table>
         </div>
     </div>
-    <div class="fake-modal modal-aps-add" id="zoneEdit" style="display: none">
+    <div class="fake-modal modal-aps-add" id="zoneEdit" style="display: block">
         <div class="box-shadow register-wish pt-0 position-relative">
             <div class="d-flex justify-content-between pt-5 px-20 box-header pr0">
                 <div class="nav-content-left">
@@ -80,7 +80,7 @@
             </div>
             <!-- box search -->
             <div class="form-top rounded-0 border-top" style="position: relative;">
-                <div class="row">
+                <div class="row form-top-search">
                     <!--<div class="col-12 col-md-6 col-lg-4">
                         <div class="form-item d-flex mb-15 form-add-info">
                             <label class="form-label">Mã kế hoạch</label>
@@ -89,7 +89,7 @@
                             </div>
                         </div>
                     </div>-->
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-md-4 col-lg-4 form-item-search">
                         <div class="form-item d-flex form-add-info d-flex">
                             <label class="form-label">Tên kế hoạch</label>
                             <div class="input-group">
@@ -97,9 +97,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4 col-lg-4">
+                    <div class="col-12 col-md-4 col-lg-4 form-item-search">
                         <div class="form-item d-flex form-add-info no-icon">
-                            <label class="form-label">Hiệu lực</label>
+                            <label class="form-label text-right pr10">Hiệu lực</label>
                             <div class="input-group">
                                 <select id="dropHieuLuc" class="select-opt">
                                     <option value="1">Hiệu lực</option>
@@ -109,17 +109,17 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-2 col-lg-2">
+                    <div class="col-6 col-md-2 col-lg-2 form-item-search">
                         <div class="form-item d-flex form-add-info">
-                            <label class="form-label">Từ ngày</label>
+                            <label class="form-label text-right pr10">Từ ngày</label>
                             <div class="input-group">
                                 <input id="txtTuNgay" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-2 col-lg-2">
+                    <div class="col-6 col-md-2 col-lg-2 form-item-search">
                         <div class="form-item d-flex form-add-info">
-                            <label class="form-label">Đến ngày</label>
+                            <label class="form-label text-right pr10">Đến ngày</label>
                             <div class="input-group">
                                 <input id="txtDenNgay" class="form-control input-datepicker" placeholder="dd/mm/yyyy" />
                             </div>
@@ -135,20 +135,20 @@
                                 <span class="fw-bold text-success">Phạm vi áp dụng</span>
                             </div>
                             <div class="pull-right mb-5"
-                                style="min-width: 183px;right:0 !important;margin-right: 0 !important;">
-                                <button class="btn-sm btn btn-outline-danger min-w-auto px-3 ms-auto btnDelete_PhamVi">
+                                style="min-width: 183px;right:-10px !important;margin-right: 0 !important;">
+                                <button class="btn-sm btn btn-soft-danger min-w-auto px-3 ms-auto btnDelete_PhamVi">
                                     <i class="fal fa-trash"></i>Xóa</button>
-                                <button class="btn-sm btn btn-outline-success min-w-auto px-3 ms-2 btnAdd_PhamVi">
+                                <button class="btn-sm btn btn-soft-success min-w-auto px-3 ms-2 btnAdd_PhamVi">
                                     <i class="fal fa-plus"></i>Thêm</button>
                             </div>
                         </div>
                         <div class="mt-2">
-                            <table class="table transcrip-table tabs-scores" id="tblPhamVi">
+                            <table class="table transcrip-table tabs-scores table-hover table-bordered" id="tblPhamVi">
                                 <thead>
                                     <tr>
-                                        <th class="text-center" scope="col">STT</th>
+                                        <th class="text-center w-50px" scope="col">STT</th>
                                         <th scope="col">Tên phạm vi</th>
-                                        <th class="text-center" scope="col">
+                                        <th class="text-center w-50px" scope="col">
                                             <input class="form-check-input" type="checkbox" id="chkSelectAll_PhamVi">
                                         </th>
                                     </tr>
@@ -165,7 +165,7 @@
                 <div class="d-flex align-items-center mt-4 flex-wrap mb-4">
                     <div class="ms-auto aps-gap-10">
                         <div class="btn btn-default  px-4 min-w-auto px-4 btnClose">
-                            <i class="fal fa-times-circle"></i> Đóng
+                            <i class="fa-regular fa-xmark"></i> Đóng
                         </div>
                         <div class="btn btn-primary px-4 min-w-auto px-4" id="btnSave_KeHoach">
                             <i class="fal fa-save"></i> Lưu
@@ -209,7 +209,6 @@
                                 <th class="" scope="col">Lớp</th>
                                 <th class="" scope="col">Ngành</th>
                                 <th class="" scope="col">Khóa</th>
-
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -275,7 +274,7 @@
                 <div class="col-12 box-search-student bg-white">
                     <div class="box-search pd20 w100">
                         <div class="d-flex inputs-tksv">
-                            <div class="row w-100">
+                            <div class="row w-100 inputs-tksv-search">
                                 <div class="item col-12 col-lg-3 col-md-6 pr0">
                                     <div class="form-item d-flex  form-add-info flex-grow-1">
                                         <div class="input-group no-icon">
@@ -317,20 +316,20 @@
                                     </div>
                                 </div>
                                 <div class="item-search col-12 col-lg-3 col-md-6 pr0" style="padding-right: 0 !important;">
-                                    <div class="btn btn-default btn-search ml-0 mt-10"
-                                        style="width: 100% !important;margin-left: 0 !important;"
+                                    <div class="btn btn-default btn-search ml-0 mt-5"
+                                        style="margin-left: 0 !important;width: 115px !important;line-height: 38px;"
                                         id="btnSearch_ModalSinhVien"><i class="fal fa-search me-2"></i> Tìm kiếm</div>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex flex-wrap align-items-start list-title-first box-list-adds mt-15 mb-15">
+                        <div class="d-flex flex-wrap align-items-start list-title-first box-list-adds mt-5 mb-15">
                             <p class="mt-8 mb-1">Thêm nhiều</p>
                             <div class="d-flex flex-wrap list">
-                                <a href="" class="btn btn-sotf-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i>
+                                <a href="" class="btn btn-soft-primary" id="btnAdd_Khoa"> <i class="fal fa-plus"></i>
                                     Thêm từng khóa</a>
-                                <a href="" class="btn btn-sotf-success" id="btnAdd_ChuongTrinh"> <i
+                                <a href="" class="btn btn-soft-success" id="btnAdd_ChuongTrinh"> <i
                                         class="fal fa-plus"></i> Thêm từng chương trình</a>
-                                <a href="" class="btn btn-sotf-danger" id="btnAdd_Lop">
+                                <a href="" class="btn btn-soft-danger" id="btnAdd_Lop">
                                     <i class="fal fa-plus"></i> Thêm từng lớp</a>
                             </div>
                         </div>
@@ -340,13 +339,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="px-3 pb-5 pd20 pt-0 list-sv">
+                    <div class="pd20 pt-0 list-sv">
                         <div class="title-is-paging">
                             <p class="color-dask-blue fw-bold mt-3">Danh sách</p>
                             <button id="btnChonSinhVien" class="btn btnChonSinhVien btn-on-paging"
                                 style="height: 28px;"><i class="fas fa-check-square me-2"></i>Chọn</button>
                         </div>
-                        <div class="bus-wrp" style="max-height: 505px;">
+                        <div class="aps-table-select scroll-table-x mt-5" style="max-height: 505px;">
                             <table class="table transcrip-table tabs-scores h-auto table-bordered table-noborder"
                                 id="tblModal_SinhVien">
                                 <thead>

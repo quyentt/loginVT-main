@@ -238,6 +238,12 @@
 }
 
 @media (max-width: 1024px) {
+    .container-fluid.px-20 .title-is-paging {
+        margin-bottom: 0px;
+    }
+    .register-wish {
+        margin: 10px !important;
+    }
     .zonePhanCong {
         gap: 20px;
         display: grid;

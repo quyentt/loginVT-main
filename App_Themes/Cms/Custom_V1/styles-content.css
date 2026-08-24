@@ -509,8 +509,9 @@
 }
 
 #lblForm_KhoiTao_NO {
-    line-height: 22px;
+    line-height: 25px;
     display: inline-flex;
+    COLOR: #FFF;
 }
 
 .btnReportAll {
@@ -17828,4 +17829,22 @@ table#clone {
 .title-is-paging.zone-pag-headertblTabHome,
 .title-is-paging.zone-pag-headertblTabPro,.title-is-paging.zone-pag-headertblTabPan {
     margin-top: 10px !important;
+}
+.inputs-tksv .inputs-wr {
+    padding-right: 8px !important;
+}
+.register-wish.modal_nhansu .box-timGV {
+    padding: 20px;
+}
+.register-wish.modal_nhansu .title-is-paging {
+    margin-top: 0px;
+    padding-bottom: 0;
+}
+.register-wish.modal_nhansu .box-list-gv .title-is-paging #btnChonNhanSu {
+    top: -18px;
+    right: 10px;
+}
+.aps_tonghoptheongay.box.box-solid{
+    z-index: 99999 !important;
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
 }

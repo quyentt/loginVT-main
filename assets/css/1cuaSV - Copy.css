@@ -27,7 +27,7 @@
 
 .content-welcome h1 {
     font-size: 44px;
-    font-weight: 800;
+    font-weight: 700;
     margin-bottom: 45px;
 }
 
@@ -715,13 +715,6 @@
     font-size: 24px;
     color: var(--dask-blue);
     margin-top: 20px;
-}
-
-.modal-body p {
-    font-weight: 400;
-    font-size: 16px;
-    color: #222;
-    line-height: 26px;
 }
 
 .modal-button {

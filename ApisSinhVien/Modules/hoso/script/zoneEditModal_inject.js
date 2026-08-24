@@ -148,7 +148,7 @@ function _zeDoInject(forceOverlay) {
                     '<div class="aps-sv-section-title"><i class="fa-light fa-id-card"></i> Số CCCD / Định danh</div>' +
                     '<div class="aps-sv-grid">' +
                         '<div class="aps-sv-field"><label class="aps-sv-label">Số CCCD</label><div class="aps-sv-input-icon"><i class="fa-light fa-hashtag"></i><input class="aps-sv-input" id="txtCCCD_So" placeholder="12 chữ số"></div></div>' +
-                        '<div class="aps-sv-field"><label class="aps-sv-label">Ngày cấp</label><input class="aps-sv-input" id="txtCCCD_NgayCap" type="date"></div>' +
+                        '<div class="aps-sv-field"><label class="aps-sv-label">Ngày cấp <span style="color:#dc2626">*</span></label><input class="aps-sv-input" id="txtCCCD_NgayCap" type="date"></div>' +
                         '<div class="aps-sv-field aps-sv-col-full"><label class="aps-sv-label">Nơi cấp</label><input class="aps-sv-input" id="txtCCCD_NoiCap" placeholder="Ví dụ: Cục Cảnh sát QLHC..."></div>' +
                     '</div>' +
                 '</div>' +
@@ -288,6 +288,34 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
         var dx = this;
         if (!person || !person.id) return;
         dx.strDeXuatHoSo_Id = person.id;
+        // Lưu backup để save flow không bị mất (Viện Y schema NOT NULL constraint) (2026-08-24)
+        dx._lockedPersonId = person.id;
+        // Safeguard: intercept Save button để force strDeXuatHoSo_Id đúng, đảm bảo gọi UPDATE (không INSERT)
+        if (!dx._saveGuardBound) {
+            dx._saveGuardBound = true;
+            $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
+                if (dx._lockedPersonId) {
+                    console.log('[ZE Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
+                    dx.strDeXuatHoSo_Id = dx._lockedPersonId;
+                }
+            });
+            // Validate: Ngày cấp CCCD bắt buộc nhập — bind capture-phase click để chặn direct click handler (2026-08-24)
+            var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
+            if (_btnSave && !_btnSave._cccdValidatorBound) {
+                _btnSave._cccdValidatorBound = true;
+                _btnSave.addEventListener('click', function (ev) {
+                    var el = document.getElementById('txtCCCD_NgayCap');
+                    if (el && !el.value) {
+                        try { edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Ngày cấp CCCD.'); }
+                        setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
+                        ev.preventDefault();
+                        ev.stopImmediatePropagation();
+                        ev.stopPropagation();
+                        return false;
+                    }
+                }, true); // capture phase — chạy trước jQuery bubble handler
+            }
+        }
         var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
         var arr = strHoDem.split(' ');
         var strHo = arr.shift() || '';
