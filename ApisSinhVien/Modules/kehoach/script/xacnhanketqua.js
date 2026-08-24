@@ -1159,7 +1159,7 @@ XacNhanKetQua.prototype = {
             'strChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinh_IHD'),
             'strLopQuanLy_Id': edu.util.getValCombo('dropSearch_Lop_IHD'),
             'strTrangThaiNguoiHoc_Id': '',
-            'strTruongThongTin_Id': edu.util.getValById('dropSearch_TruongThongTin'),
+            'strTruongThongTin_Id': '',
             'strNguoiTao_Id': '',
             'pageIndex': pageIndex,
             'pageSize': pageSize
@@ -1357,6 +1357,17 @@ XacNhanKetQua.prototype = {
         }
         var colTT = arrTT_Ex.map(function (tt) { return { id: tt.ID, kieu: tt.KIEUDULIEU, name: uniqueName(tt.TEN || tt.MA || ('Trường ' + tt.ID)) }; });
 
+        function fmtNgaySinh(o) {
+            if (!o) return '';
+            var raw = v(o.QLSV_NGUOIHOC_NGAYSINH) || v(o.NGAYSINH) || v(o.QLSV_NGUOIHOC_NGAYSINH_DD_MM_YYYY);
+            if (raw && String(raw).indexOf('/') > 0) return raw;
+            var d = v(o.QLSV_NGUOIHOC_NGAYSINH) || v(o.NGAYSINH);
+            var m = v(o.QLSV_NGUOIHOC_THANGSINH) || v(o.THANGSINH);
+            var y = v(o.QLSV_NGUOIHOC_NAMSINH) || v(o.NAMSINH);
+            var pad = function (n) { n = String(n); return n.length < 2 ? '0' + n : n; };
+            if (d && m && y) return pad(d) + '/' + pad(m) + '/' + y;
+            return raw || '';
+        }
         var rows = arrSV.map(function (sv, i) {
             var kqOfSV = mapKetQua[sv.QLSV_NGUOIHOC_ID] || {};
             var hoTen = (v(sv.QLSV_NGUOIHOC_HODEM) + ' ' + v(sv.QLSV_NGUOIHOC_TEN)).replace(/\s+/g, ' ').trim();
@@ -1364,7 +1375,9 @@ XacNhanKetQua.prototype = {
                 'STT': i + 1,
                 'Lớp': v(sv.DAOTAO_LOPQUANLY_MA),
                 'Mã số': v(sv.QLSV_NGUOIHOC_MASO),
-                'Họ và tên': hoTen
+                'Họ và tên': hoTen,
+                'Ngày sinh': fmtNgaySinh(sv),
+                'Giới tính': v(sv.QLSV_NGUOIHOC_GIOITINH_TEN) || v(sv.GIOITINH_TEN) || ''
             };
             colTT.forEach(function (c) {
                 var kq = kqOfSV[c.id];

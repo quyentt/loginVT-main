@@ -5301,6 +5301,17 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
     var dx = this;
     if (!person || !person.id) return;
     dx.strDeXuatHoSo_Id = person.id;
+    // Lưu backup + Safeguard Save button (Viện Y bị mất strId → gọi INSERT sai) (2026-08-24)
+    dx._lockedPersonId = person.id;
+    if (!dx._saveGuardBound) {
+        dx._saveGuardBound = true;
+        $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
+            if (dx._lockedPersonId) {
+                console.log('[DX Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
+                dx.strDeXuatHoSo_Id = dx._lockedPersonId;
+            }
+        });
+    }
 
     // Tách HODEM = word đầu (Họ) + phần còn lại (Tên đệm)
     var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');

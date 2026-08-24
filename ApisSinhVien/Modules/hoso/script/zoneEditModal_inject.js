@@ -288,6 +288,18 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
         var dx = this;
         if (!person || !person.id) return;
         dx.strDeXuatHoSo_Id = person.id;
+        // Lưu backup để save flow không bị mất (Viện Y schema NOT NULL constraint) (2026-08-24)
+        dx._lockedPersonId = person.id;
+        // Safeguard: intercept Save button để force strDeXuatHoSo_Id đúng, đảm bảo gọi UPDATE (không INSERT)
+        if (!dx._saveGuardBound) {
+            dx._saveGuardBound = true;
+            $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
+                if (dx._lockedPersonId) {
+                    console.log('[ZE Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
+                    dx.strDeXuatHoSo_Id = dx._lockedPersonId;
+                }
+            });
+        }
         var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
         var arr = strHoDem.split(' ');
         var strHo = arr.shift() || '';
