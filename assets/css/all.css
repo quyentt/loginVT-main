@@ -2248,7 +2248,7 @@ input::placeholder {
   border-radius: 12px 12px 0 0;
   background: #f8f8f8 !important;
   /* border: solid 2px #fff; */
-  /* border-bottom: 1px solid #e1e1e1 !important; */
+  border-bottom: 1px solid #e1e1e1 !important;
   width: 100%;
 }
 
@@ -7335,8 +7335,8 @@ tr:last-child .d-flex.gap-3 {
 
 /* ------modal-aps-add ------- */
 .modal-aps-add .box-header {
-  height: 60px;
-  line-height: 58px;
+  height: 52px;
+  line-height: 40px;
   background: var(--color-link);
   color: #ffff !important;
   border-top-left-radius: 12px !important;
@@ -7670,4 +7670,10 @@ tr:last-child .d-flex.gap-3 {
 
 .modal-phongthi .bl-room {
   min-height: 230px;
+}
+.form-top-search .form-item-search{
+  padding-right: 0 !important;
+}
+.inputs-tksv-search.row {
+  margin: 0 -15px !important;
 }
