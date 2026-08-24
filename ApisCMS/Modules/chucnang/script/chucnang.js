@@ -24,6 +24,57 @@ ChucNang.prototype = {
         me.getList_UngDung();
         edu.system.loadToCombo_DanhMucDuLieu("CHUNG.HANHDONG", "dropQuyen_QuyenCN");
 
+        // Fix Select2 dropdown bay ra ngoài khi trong modal #myModalQuyenCN.
+        // Root cause: MutationObserver global (indexi.aspx) move .select2-container--open sang body.
+        // Fix: khi modal shown, destroy Select2 hiện tại + re-init với dropdownParent = modal
+        // → dropdown attach TRONG modal → observer skip (đã fix ở indexi.aspx thêm guard closest('.modal.in|show')).
+        // Đăng ký ở đây (không đăng ký trong <script> chunk chucnang.html) vì AJAX load HTML
+        // đôi khi không thực thi inline script tag.
+        $(document).off('shown.bs.modal.chucnangSelect2').on('shown.bs.modal.chucnangSelect2', '#myModalQuyenCN', function () {
+            var $modal = $(this);
+            $modal.find('select').each(function () {
+                var $sel = $(this);
+                var curVal = $sel.val();
+                if ($sel.hasClass('select2-hidden-accessible')) {
+                    try { $sel.select2('destroy'); } catch (e) { }
+                }
+                var opts = {
+                    dropdownParent: $modal,
+                    width: '100%'
+                };
+                // Select "Hiệu lực" chỉ 2 option → ẩn ô search cho gọn
+                if ($sel.attr('id') === 'dropHieuLuc_QuyenCN') {
+                    opts.minimumResultsForSearch = Infinity;
+                }
+                $sel.select2(opts);
+                if (curVal !== null && curVal !== undefined) {
+                    $sel.val(curVal).trigger('change.select2');
+                }
+            });
+        });
+        // Backup: nếu observer vẫn kéo container sang body, reposition thủ công qua select2:open
+        $(document).off('select2:open.chucnangReposition').on('select2:open.chucnangReposition', '#myModalQuyenCN select', function () {
+            var native = this;
+            [10, 60, 200].forEach(function (delay) {
+                setTimeout(function () {
+                    var $dd = $('.select2-container--open').last().find('.select2-dropdown');
+                    if (!$dd.length) return;
+                    var rect = native.getBoundingClientRect();
+                    // Chỉ reposition nếu container không nằm trong modal (edge case)
+                    var $container = $dd.closest('.select2-container');
+                    if (!$container.closest('#myModalQuyenCN').length) {
+                        $container.css({
+                            position: 'absolute',
+                            top: (rect.bottom + window.scrollY) + 'px',
+                            left: (rect.left + window.scrollX) + 'px',
+                            width: rect.width + 'px',
+                            'z-index': 100050
+                        });
+                    }
+                }, delay);
+            });
+        });
+
         $("#txtSearch_ChucNang_CN").on("input", function () {
             me.filterTree_ChucNang($(this).val());
         });

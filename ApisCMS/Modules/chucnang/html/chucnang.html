@@ -49,7 +49,205 @@
         font-weight: 600 !important;
         color: #0f172a !important;
     }
+
+    /* ============================================================
+       Modal #myModalQuyenCN — reskin header + footer nút theo memory
+       feedback_modal_design.md: destructive tách trái, Đóng/Lưu nhóm phải, gap ≥10px.
+       Nút close (×) đưa về góc PHẢI (chuẩn Bootstrap), nền header xanh navy sạch.
+       ============================================================ */
+    #myModalQuyenCN .modal-content {
+        border-radius: 10px !important;
+        border: none !important;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25) !important;
+        overflow: hidden;
+    }
+    #myModalQuyenCN .modal-header {
+        background: #1e3a8a !important;
+        background-color: #1e3a8a !important;
+        background-image: none !important;
+        border-bottom: none !important;
+        padding: 14px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-direction: row-reverse;
+    }
+    /* Force màu trắng cho MỌI text/element trong modal-header.
+       Text "Quyền" đã wrap trong <span class="modalTitleSuffix"> để CSS target chính xác
+       (text node trực tiếp trong h3 inherit không ổn định — có thể bị theme global đè). */
+    html body #myModalQuyenCN .modal-header,
+    html body #myModalQuyenCN .modal-header *,
+    html body #myModalQuyenCN .modal-header h3,
+    html body #myModalQuyenCN .modal-header h3 *,
+    html body #myModalQuyenCN .modal-header .box-title,
+    html body #myModalQuyenCN .modal-header .box-title *,
+    html body #myModalQuyenCN .modal-header .myModalLabel,
+    html body #myModalQuyenCN .modal-header .myModalLabel *,
+    html body #myModalQuyenCN .modal-header .modalTitleSuffix,
+    html body #myModalQuyenCN .modal-header .modalTitleSuffix * {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        text-shadow: none !important;
+    }
+    #myModalQuyenCN .modal-header .box-title,
+    #myModalQuyenCN .modal-header h3 {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    #myModalQuyenCN .modal-header .box-title {
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        flex: 1;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px;
+    }
+    #myModalQuyenCN .modal-header .box-title i {
+        color: #ffffff !important;
+        font-size: 18px !important;
+    }
+    #myModalQuyenCN .modal-header .close,
+    #myModalQuyenCN .modal-header button.close {
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 20px !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    #myModalQuyenCN .modal-header .close:hover,
+    #myModalQuyenCN .modal-header .close:focus {
+        background: rgba(220, 53, 69, 0.85) !important;
+        border-color: rgba(220, 53, 69, 0.85) !important;
+        color: #fff !important;
+        outline: none !important;
+    }
+    /* Footer: Đóng (grey outline) + Lưu (blue CTA), gap 10, height 38, radius 6 */
+    #myModalQuyenCN .modal-footer {
+        background: #f8fafc !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 14px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 10px !important;
+    }
+    #myModalQuyenCN .modal-footer .btn {
+        margin: 0 !important;
+        height: 38px !important;
+        padding: 8px 18px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        line-height: 1 !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background-image: none !important;
+    }
+    #myModalQuyenCN .modal-footer .btn-default {
+        background: #fff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
+    }
+    #myModalQuyenCN .modal-footer .btn-default:hover {
+        background: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: #1e293b !important;
+    }
+    #myModalQuyenCN .modal-footer .btn-primary,
+    #myModalQuyenCN .modal-footer .btn-primary *,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN * {
+        background: #2563eb !important;
+        background-color: #2563eb !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        text-shadow: none !important;
+    }
+    #myModalQuyenCN .modal-footer .btn-primary {
+        border: 1px solid #2563eb !important;
+    }
+    #myModalQuyenCN .modal-footer .btn-primary:hover,
+    #myModalQuyenCN .modal-footer .btn-primary:hover *,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN:hover,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN:hover * {
+        background: #1d4ed8 !important;
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #ffffff !important;
+    }
+    /* Icon + span text con của nút primary/close cũng phải trắng */
+    #myModalQuyenCN .modal-footer .btn-primary i,
+    #myModalQuyenCN .modal-footer .btn-primary span,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN i,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN span,
+    #myModalQuyenCN .modal-footer #btnSave_QuyenCN .lang {
+        color: #ffffff !important;
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+    #myModalQuyenCN .modal-footer .btn i {
+        font-size: 13px !important;
+    }
+
+    /* Text contrast trong modal — memory feedback_global_text_contrast.md
+       Label + value đen đậm #0f172a w600, placeholder #64748b w500 normal opacity:1 */
+    #myModalQuyenCN .modal-body label,
+    #myModalQuyenCN .modal-body .aps-form-lable label,
+    #myModalQuyenCN .modal-body .aps-form-lable span {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    #myModalQuyenCN .modal-body input.form-control,
+    #myModalQuyenCN .modal-body textarea.form-control,
+    #myModalQuyenCN .modal-body .select2-selection__rendered,
+    #myModalQuyenCN .modal-body .select2-selection__choice,
+    #myModalQuyenCN .modal-body .select2-selection__choice__display {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    #myModalQuyenCN .modal-body input.form-control::placeholder,
+    #myModalQuyenCN .modal-body textarea.form-control::placeholder,
+    #myModalQuyenCN .modal-body .select2-selection__placeholder,
+    #myModalQuyenCN .modal-body .select2-search__field::placeholder {
+        color: #64748b !important;
+        font-weight: 500 !important;
+        font-style: normal !important;
+        opacity: 1 !important;
+    }
+    /* Select2 dropdown options — text đen đậm cho dễ đọc */
+    .select2-container .select2-results__option {
+        color: #0f172a !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+    }
+    .select2-container .select2-results__option--highlighted[aria-selected],
+    .select2-container .select2-results__option[aria-selected="true"] {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+    }
 </style>
+
+<!-- Fix Select2 dropdown bay ra ngoài modal: đã chuyển sang chucnang.js init()
+     (script inline trong HTML load qua AJAX đôi khi không thực thi). -->
+
 <section class="content aps-cms">
     <div class="row box-solid box-shadow aps-function aps-chucnang">
         <div class="col-sm-3 aps-box-l aps-function-l">
@@ -372,7 +570,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> Quyền</h3>
+                <h3 class="box-title"><span class="myModalLabel"> <i class="fa fa-pencil"></i></span> <span class="modalTitleSuffix">Quyền</span></h3>
             </div>
             <div class="modal-body  aps-form mt-10" id="modal_body">
                 <div class="row zone-box">

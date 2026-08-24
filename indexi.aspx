@@ -1471,6 +1471,9 @@
                 // MutationObserver toan cuc: bat moi .select2-container--open moi xuat hien,
                 // di chuyen ra body va ep z-index max, phong khi module init select2 khong
                 // ke thua dropdownParent (bi override boi call site khac).
+                // FIX 2026-08-24: SKIP move sang body neu container da nam trong modal dang mo
+                // (module da init select2 voi dropdownParent = modal). Neu van move, coord bay
+                // ra 0,0 screen vi position:absolute + khong co top/left.
                 if (typeof MutationObserver !== 'undefined') {
                     var obs = new MutationObserver(function (muts) {
                         muts.forEach(function (m) {
@@ -1482,6 +1485,12 @@
                                     n.querySelectorAll('.select2-container--open').forEach(function (x) { opens.push(x); });
                                 }
                                 opens.forEach(function (node) {
+                                    // Neu container da nam trong modal dang mo → giu nguyen, chi set z-index max
+                                    var inModal = node.closest && node.closest('.modal.show, .modal.in, .modal[style*="display: block"], .modal[style*="display:block"]');
+                                    if (inModal) {
+                                        node.style.zIndex = '100050';
+                                        return;
+                                    }
                                     if (node.parentNode !== document.body) document.body.appendChild(node);
                                     node.style.zIndex = '999999';
                                     node.style.position = 'absolute';

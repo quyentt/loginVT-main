@@ -24,6 +24,54 @@ UngDung.prototype = {
         -------------------------------------------*/
         edu.system.page_load();
         edu.system.buttonLoading();
+
+        // Fix Select2 dropdown bay ra ngoài / bị che khi trong modal #myModal.
+        // Root cause: MutationObserver global (indexi.aspx) move .select2-container--open sang body.
+        // Fix: khi modal shown, re-init Select2 với dropdownParent = modal → dropdown attach TRONG modal.
+        // Namespace .ungdungSelect2 để .off() tránh double-bind khi module reload.
+        $(document).off('shown.bs.modal.ungdungSelect2').on('shown.bs.modal.ungdungSelect2', '#myModal', function () {
+            var $modal = $(this);
+            $modal.find('select').each(function () {
+                var $sel = $(this);
+                var curVal = $sel.val();
+                if ($sel.hasClass('select2-hidden-accessible')) {
+                    try { $sel.select2('destroy'); } catch (e) { }
+                }
+                var opts = {
+                    dropdownParent: $modal,
+                    width: '100%'
+                };
+                // Select 2 option (Trạng thái, đa ngôn ngữ) → ẩn ô search cho gọn
+                var selId = $sel.attr('id') || '';
+                if (selId === 'dropTrangThaiEdit' || selId === 'dropSuDungDaNgonNgu') {
+                    opts.minimumResultsForSearch = Infinity;
+                }
+                $sel.select2(opts);
+                if (curVal !== null && curVal !== undefined) {
+                    $sel.val(curVal).trigger('change.select2');
+                }
+            });
+        });
+        // Backup reposition: nếu observer vẫn kéo container sang body, đè lại position
+        $(document).off('select2:open.ungdungReposition').on('select2:open.ungdungReposition', '#myModal select', function () {
+            var native = this;
+            [10, 60, 200].forEach(function (delay) {
+                setTimeout(function () {
+                    var $container = $('.select2-container--open').last();
+                    if (!$container.length) return;
+                    if (!$container.closest('#myModal').length) {
+                        var rect = native.getBoundingClientRect();
+                        $container.css({
+                            position: 'absolute',
+                            top: (rect.bottom + window.scrollY) + 'px',
+                            left: (rect.left + window.scrollX) + 'px',
+                            width: rect.width + 'px',
+                            'z-index': 100050
+                        });
+                    }
+                }, delay);
+            });
+        });
         /*------------------------------------------
         --Discription: Initial page UngDung
         -------------------------------------------*/
