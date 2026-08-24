@@ -431,7 +431,18 @@
       /* Container submenu: ep TRANSPARENT background de blend voi sidebar toi.
          THU PHAM: App_Themes/Cms/Custom_V1/styles.css:2896 co rule
          `.sidebar-menu-item .sidebar-menu-sub.collapse { background:#f4f4f4 !important }`
-         voi specificity cao hon. Can beat bang ID selector (#sidebar-menu) + full chain. */
+         voi specificity cao hon. Can beat bang ID selector (#sidebar-menu) + full chain.
+         Ngoai ra Windows High Contrast / Chrome dark theme cung co the dao mau -> them
+         color-scheme + forced-color-adjust de khoa mau. */
+      html body #sidebar-menu,
+      html body #sidebar-menu * {
+        color-scheme: light only !important;
+        forced-color-adjust: none !important;
+      }
+      html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
+      html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
+      html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
+      html body #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapsing,
       #sidebar-menu .sidebar-menu-item .sidebar-menu-sub,
       #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
       #sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
@@ -439,18 +450,25 @@
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.collapse,
       .sidebar-menu .sidebar-menu-item .sidebar-menu-sub.show,
       html body .sidebar-menu-item .sidebar-menu-sub.collapse {
-        background: transparent;
-        background-color: transparent;
+        background: #1a2b5c !important;
+        background-color: #1a2b5c !important;
+        background-image: none !important;
         border-radius: 0 0 12px 0 !important;
         padding: 4px 0 8px 0 !important;
         margin-top: 5px !important;
         box-shadow: none !important;
       }
+      html body #sidebar-menu .sidebar-menu-sub a,
+      html body #sidebar-menu .sidebar-menu-sub a:link,
+      html body #sidebar-menu .sidebar-menu-sub a:visited,
+      html body #sidebar-menu .sidebar-menu-sub a span,
       .sidebar-menu-sub a {
         color: #ffffff !important;
         font-weight: 500 !important;
         background: transparent !important;
+        background-color: transparent !important;
         border-left-color: #5a7adb !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
       }
       .sidebar-menu-sub a:hover,
       .sidebar-menu-sub a.active {

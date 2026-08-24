@@ -126,6 +126,12 @@ DeXuatHoSo.prototype = {
             $('#dropMucDoNgaySinh').val(strChinhXac_Id).trigger("change").trigger({ type: 'select2:select' });
         });
         $("#btnSave_DeXuatHoSo").click(function () {
+            // Validate: Ngày cấp CCCD bắt buộc nhập (2026-08-24)
+            if ($('#txtCCCD_NgayCap').length && !$('#txtCCCD_NgayCap').val()) {
+                edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w');
+                setTimeout(function () { try { $('#txtCCCD_NgayCap').focus(); } catch (er) { } }, 50);
+                return;
+            }
             me.icheck = true;
             let iSLCheck = me.dtLoaiDinhDanh.length + me.dtLoaiLienHe.length;
             if (iSLCheck > 0) {
@@ -139,7 +145,7 @@ DeXuatHoSo.prototype = {
                     me.save_DeXuatHoSo();
                 });
             }
-            
+
         });
         $("#btnDelete_DeXuatHoSo").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblDeXuatHoSo", "checkX");
@@ -935,6 +941,13 @@ DeXuatHoSo.prototype = {
             return;
             //edu.system.alert("Lưu thành công");
         }
+        // Validate: Ngày cấp CCCD bắt buộc nhập (2026-08-24)
+        if ($('#txtCCCD_NgayCap').length && !$('#txtCCCD_NgayCap').val()) {
+            edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w');
+            setTimeout(function () { try { $('#txtCCCD_NgayCap').focus(); } catch (er) { } }, 50);
+            me.icheck = false;
+            return;
+        }
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CC8yJDM1Ai4zJBEkMzIuLwPP',
@@ -1067,9 +1080,9 @@ DeXuatHoSo.prototype = {
         $("#lblDeXuatHoSo_Tong").html(iPager);
         me.dtDeXuatHoSo = data || [];
         
-        // Lọc theo từ khóa tìm kiếm
-        var strSearch = $("#txtSearch").val().toLowerCase().trim();
-        var strGioiTinh = $("#dropSearch_GioiTinh").val();
+        // Lọc theo từ khóa tìm kiếm (fallback '' để không crash khi #txtSearch không tồn tại trên page khác)
+        var strSearch = (($("#txtSearch").val() || '') + '').toLowerCase().trim();
+        var strGioiTinh = $("#dropSearch_GioiTinh").val() || '';
         
         var filteredData = me.dtDeXuatHoSo;
         
@@ -5301,6 +5314,33 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
     var dx = this;
     if (!person || !person.id) return;
     dx.strDeXuatHoSo_Id = person.id;
+    // Lưu backup + Safeguard Save button (Viện Y bị mất strId → gọi INSERT sai) (2026-08-24)
+    dx._lockedPersonId = person.id;
+    if (!dx._saveGuardBound) {
+        dx._saveGuardBound = true;
+        $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
+            if (dx._lockedPersonId) {
+                console.log('[DX Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
+                dx.strDeXuatHoSo_Id = dx._lockedPersonId;
+            }
+        });
+        // Validate: Ngày cấp CCCD bắt buộc nhập — capture-phase click (2026-08-24)
+        var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
+        if (_btnSave && !_btnSave._cccdValidatorBound) {
+            _btnSave._cccdValidatorBound = true;
+            _btnSave.addEventListener('click', function (ev) {
+                var el = document.getElementById('txtCCCD_NgayCap');
+                if (el && !el.value) {
+                    try { edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Ngày cấp CCCD.'); }
+                    setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    ev.stopPropagation();
+                    return false;
+                }
+            }, true);
+        }
+    }
 
     // Tách HODEM = word đầu (Họ) + phần còn lại (Tên đệm)
     var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
@@ -5471,6 +5511,17 @@ DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
             _setBank();
             setTimeout(_setBank, 500);
             setTimeout(_setBank, 1500);
+            // Auto-fill XHD chỉ Email + SĐT (không fill Họ tên người mua — có thể là cơ quan)
+            setTimeout(function () {
+                (dx.dtLienHe || []).forEach(function (item) {
+                    var name = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
+                    var ma = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
+                    var val = item.CONTACT_VALUE || item.VALUE || '';
+                    if (!val) return;
+                    if ((ma === 'EMAIL' || name.indexOf('mail') > -1) && !$('#txtKQ_HD_Email').val()) $('#txtKQ_HD_Email').val(val);
+                    else if ((ma === 'PHONE' || ma === 'MOBILE' || name.indexOf('điện thoại') > -1 || name.indexOf('phone') > -1) && !$('#txtKQ_HD_SDT').val()) $('#txtKQ_HD_SDT').val(val);
+                });
+            }, 1000);
         },
         error: function () { /* silent */ },
         type: 'POST',
@@ -5480,5 +5531,40 @@ DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
         fakedb: []
     }, false, false, false, null);
 
-    // 4) TODO: load PersonInvoice khi BE có API Get_Person_Invoice_By_Person_Id
+    // Load PersonInvoice — SONG SONG, không nested trong Bank (fire kể cả khi Bank rỗng) (2026-08-24)
+    edu.system.makeRequest({
+        success: function (respInv) {
+            if (!respInv.Success || !respInv.Data || !respInv.Data.length) return;
+            var inv = respInv.Data[0];
+            dx._currentInvoiceId = inv.ID || '';
+            var _setInv = function () {
+                if (inv.BUYER_TYPE_LOAI) { $('#ddlKQ_HD_DoiTuong').val(inv.BUYER_TYPE_LOAI).trigger('change'); }
+                if (inv.BUYER_NAME_TENNM) $('#txtKQ_HD_TenDonVi').val(inv.BUYER_NAME_TENNM);
+                if (inv.BUYER_ADDR_DIACHI) $('#txtKQ_HD_DiaChi').val(inv.BUYER_ADDR_DIACHI);
+                if (inv.BUYER_TAX_MST) $('#txtKQ_HD_MST').val(inv.BUYER_TAX_MST);
+                if (inv.BUYER_BUDGET_MAQHNS) $('#txtKQ_HD_MaQHNS').val(inv.BUYER_BUDGET_MAQHNS);
+                if (inv.BUYER_EMAIL) $('#txtKQ_HD_Email').val(inv.BUYER_EMAIL);
+                if (inv.BUYER_PHONE_SDT) $('#txtKQ_HD_SDT').val(inv.BUYER_PHONE_SDT);
+            };
+            _setInv();
+            setTimeout(_setInv, 500);
+            setTimeout(_setInv, 1500);
+        },
+        error: function (er) { console.warn('[DX] LayDS_PersonInvoiceInfo error:', er); },
+        type: 'POST',
+        action: 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+        contentType: true,
+        data: {
+            'action': 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+            'iM': edu.system.iM,
+            'strPerson_Id': personId,
+            'dChiHienHanh': 1,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+            'strHanhDong_Code': ''
+        },
+        fakedb: []
+    }, false, false, false, null);
 };

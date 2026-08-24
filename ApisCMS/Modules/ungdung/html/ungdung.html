@@ -1,4 +1,179 @@
 ﻿<!-- Main content -->
+<style>
+    /* ============================================================
+       Modal #myModal (Thêm mới - Ứng dụng) — reskin header + footer
+       theo memory feedback_modal_design.md:
+       - Header: title trái, nút close (×) ở góc PHẢI (chuẩn Bootstrap)
+       - Footer: Đóng (grey outline) + Lưu (blue CTA), căn phải, gap 10px
+       ============================================================ */
+    #myModal .modal-content {
+        border-radius: 10px !important;
+        border: none !important;
+        box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25) !important;
+        overflow: hidden;
+    }
+    #myModal .modal-header {
+        background: #1e3a8a !important;
+        background-color: #1e3a8a !important;
+        background-image: none !important;
+        border-bottom: none !important;
+        padding: 14px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-direction: row-reverse;
+    }
+    /* Force text trắng cho MỌI element trong header */
+    html body #myModal .modal-header,
+    html body #myModal .modal-header *,
+    html body #myModal .modal-header h4,
+    html body #myModal .modal-header h4 *,
+    html body #myModal .modal-header .modal-title,
+    html body #myModal .modal-header .modal-title *,
+    html body #myModal .modal-header .myModalLabel,
+    html body #myModal .modal-header .myModalLabel *,
+    html body #myModal .modal-header .lang {
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        text-shadow: none !important;
+    }
+    #myModal .modal-header .modal-title,
+    #myModal .modal-header h4 {
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: 16px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        flex: 1;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px;
+    }
+    #myModal .modal-header .modal-title i,
+    #myModal .modal-header h4 i {
+        color: #ffffff !important;
+        font-size: 16px !important;
+    }
+    /* Nút close × ở góc phải: khối 32×32 bo tròn 8, hover đỏ */
+    #myModal .modal-header .close,
+    #myModal .modal-header button.close {
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 32px !important;
+        height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-size: 20px !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        color: #ffffff !important;
+        background: rgba(255, 255, 255, 0.15) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px !important;
+        opacity: 1 !important;
+        text-shadow: none !important;
+        cursor: pointer;
+        transition: background 0.15s;
+    }
+    #myModal .modal-header .close:hover,
+    #myModal .modal-header .close:focus {
+        background: rgba(220, 53, 69, 0.85) !important;
+        border-color: rgba(220, 53, 69, 0.85) !important;
+        color: #ffffff !important;
+        outline: none !important;
+    }
+    /* Footer: Đóng + Lưu căn phải, gap 10px */
+    #myModal .modal-footer {
+        background: #f8fafc !important;
+        border-top: 1px solid #e2e8f0 !important;
+        padding: 14px 20px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 10px !important;
+    }
+    #myModal .modal-footer .btn {
+        margin: 0 !important;
+        height: 38px !important;
+        padding: 8px 18px !important;
+        font-size: 13px !important;
+        font-weight: 500 !important;
+        line-height: 1 !important;
+        border-radius: 6px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background-image: none !important;
+    }
+    /* Đóng: grey outline, không tranh chú ý */
+    #myModal .modal-footer .btn-default {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
+    }
+    #myModal .modal-footer .btn-default:hover {
+        background: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: #1e293b !important;
+    }
+    /* Lưu (btn-primary hoặc btnSave_UD): blue CTA solid */
+    #myModal .modal-footer .btn-primary,
+    #myModal .modal-footer .btn-primary *,
+    #myModal .modal-footer #btnSave_UD,
+    #myModal .modal-footer #btnSave_UD * {
+        background: #2563eb !important;
+        background-color: #2563eb !important;
+        color: #ffffff !important;
+        font-weight: 600 !important;
+        text-shadow: none !important;
+    }
+    #myModal .modal-footer .btn-primary,
+    #myModal .modal-footer #btnSave_UD {
+        border: 1px solid #2563eb !important;
+    }
+    #myModal .modal-footer .btn-primary:hover,
+    #myModal .modal-footer .btn-primary:hover *,
+    #myModal .modal-footer #btnSave_UD:hover,
+    #myModal .modal-footer #btnSave_UD:hover * {
+        background: #1d4ed8 !important;
+        background-color: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #ffffff !important;
+    }
+    #myModal .modal-footer .btn-primary i,
+    #myModal .modal-footer #btnSave_UD i,
+    #myModal .modal-footer #btnSave_UD .lang,
+    #myModal .modal-footer #btnSave_UD span {
+        color: #ffffff !important;
+        background: transparent !important;
+        background-color: transparent !important;
+    }
+
+    /* Text contrast trong modal body — label đậm, placeholder nhạt vừa */
+    #myModal .modal-body label,
+    #myModal .modal-body .aps-form-lable {
+        color: #0f172a !important;
+        font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    #myModal .modal-body input.form-control,
+    #myModal .modal-body textarea.form-control,
+    #myModal .modal-body .select2-selection__rendered {
+        color: #0f172a !important;
+        font-weight: 500 !important;
+        font-size: 14px !important;
+    }
+    #myModal .modal-body input.form-control::placeholder,
+    #myModal .modal-body textarea.form-control::placeholder,
+    #myModal .modal-body .select2-selection__placeholder {
+        color: #64748b !important;
+        font-weight: 500 !important;
+        font-style: normal !important;
+        opacity: 1 !important;
+    }
+</style>
 <section class="content aps-cms">
     <div class="box-shadow aps-appli aps-ungdung">
         <div class="row box-search pd20 pb10">

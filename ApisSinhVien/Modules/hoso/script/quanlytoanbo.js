@@ -2155,7 +2155,7 @@ QuanLyToanBo.prototype = {
         + '<div class="aps-sv-section-title"><i class="fa-light fa-id-card"></i> Số CCCD / Định danh</div>'
         + '<div class="aps-sv-grid">'
         + '<div class="aps-sv-field"><label class="aps-sv-label">Số CCCD</label><div class="aps-sv-input-icon"><i class="fa-light fa-hashtag"></i><input class="aps-sv-input" id="txtCCCD_So" placeholder="12 chữ số"></div></div>'
-        + '<div class="aps-sv-field"><label class="aps-sv-label">Ngày cấp</label><input class="aps-sv-input" id="txtCCCD_NgayCap" type="date"></div>'
+        + '<div class="aps-sv-field"><label class="aps-sv-label">Ngày cấp <span style="color:#dc2626">*</span></label><input class="aps-sv-input" id="txtCCCD_NgayCap" type="date"></div>'
         + '<div class="aps-sv-field aps-sv-col-full"><label class="aps-sv-label">Nơi cấp</label><input class="aps-sv-input" id="txtCCCD_NoiCap" placeholder="Ví dụ: Cục Cảnh sát QLHC..."></div>'
         + '</div>'
         + '</div>'
@@ -2241,6 +2241,33 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
         var dx = this;
         if (!person || !person.id) return;
         dx.strDeXuatHoSo_Id = person.id;
+        // Lưu backup + Safeguard Save button (Viện Y bị mất strId → gọi INSERT sai) (2026-08-24)
+        dx._lockedPersonId = person.id;
+        if (!dx._saveGuardBound) {
+            dx._saveGuardBound = true;
+            $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
+                if (dx._lockedPersonId) {
+                    console.log('[QLTB Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
+                    dx.strDeXuatHoSo_Id = dx._lockedPersonId;
+                }
+            });
+            // Validate: Ngày cấp CCCD bắt buộc nhập — capture-phase click (2026-08-24)
+            var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
+            if (_btnSave && !_btnSave._cccdValidatorBound) {
+                _btnSave._cccdValidatorBound = true;
+                _btnSave.addEventListener('click', function (ev) {
+                    var el = document.getElementById('txtCCCD_NgayCap');
+                    if (el && !el.value) {
+                        try { edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Ngày cấp CCCD.'); }
+                        setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
+                        ev.preventDefault();
+                        ev.stopImmediatePropagation();
+                        ev.stopPropagation();
+                        return false;
+                    }
+                }, true);
+            }
+        }
         var strHoDem = ((person.hoDem || '') + '').trim().replace(/\s+/g, ' ');
         var arr = strHoDem.split(' ');
         var strHo = arr.shift() || '';
@@ -2371,6 +2398,17 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadXHD_Section) 
                 _setBank();
                 setTimeout(_setBank, 500);
                 setTimeout(_setBank, 1500);
+                // Auto-fill XHD chỉ Email + SĐT (không fill Họ tên người mua — có thể là cơ quan)
+                setTimeout(function () {
+                    (dx.dtLienHe || []).forEach(function (item) {
+                        var name = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
+                        var ma = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
+                        var val = item.CONTACT_VALUE || item.VALUE || '';
+                        if (!val) return;
+                        if ((ma === 'EMAIL' || name.indexOf('mail') > -1) && !$('#txtKQ_HD_Email').val()) $('#txtKQ_HD_Email').val(val);
+                        else if ((ma === 'PHONE' || ma === 'MOBILE' || name.indexOf('điện thoại') > -1 || name.indexOf('phone') > -1) && !$('#txtKQ_HD_SDT').val()) $('#txtKQ_HD_SDT').val(val);
+                    });
+                }, 1000);
             },
             error: function () { /* silent */ },
             type: 'POST',
@@ -2384,6 +2422,43 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadXHD_Section) 
                 'strVaiTro_Id': '',
                 'strNguoiThucHien_Id': edu.system.userId,
                 'strPerson_Id': personId
+            },
+            fakedb: []
+        }, false, false, false, null);
+
+        // Load PersonInvoice — SONG SONG với Bank, fire kể cả khi Bank rỗng (2026-08-24)
+        edu.system.makeRequest({
+            success: function (respInv) {
+                if (!respInv.Success || !respInv.Data || !respInv.Data.length) return;
+                var inv = respInv.Data[0];
+                dx._currentInvoiceId = inv.ID || '';
+                var _setInv = function () {
+                    if (inv.BUYER_TYPE_LOAI) { $('#ddlKQ_HD_DoiTuong').val(inv.BUYER_TYPE_LOAI).trigger('change'); }
+                    if (inv.BUYER_NAME_TENNM) $('#txtKQ_HD_TenDonVi').val(inv.BUYER_NAME_TENNM);
+                    if (inv.BUYER_ADDR_DIACHI) $('#txtKQ_HD_DiaChi').val(inv.BUYER_ADDR_DIACHI);
+                    if (inv.BUYER_TAX_MST) $('#txtKQ_HD_MST').val(inv.BUYER_TAX_MST);
+                    if (inv.BUYER_BUDGET_MAQHNS) $('#txtKQ_HD_MaQHNS').val(inv.BUYER_BUDGET_MAQHNS);
+                    if (inv.BUYER_EMAIL) $('#txtKQ_HD_Email').val(inv.BUYER_EMAIL);
+                    if (inv.BUYER_PHONE_SDT) $('#txtKQ_HD_SDT').val(inv.BUYER_PHONE_SDT);
+                };
+                _setInv();
+                setTimeout(_setInv, 500);
+                setTimeout(_setInv, 1500);
+            },
+            error: function (er) { console.warn('[QLTB] LayDS_PersonInvoiceInfo error:', er); },
+            type: 'POST',
+            action: 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+            contentType: true,
+            data: {
+                'action': 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': personId,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
             },
             fakedb: []
         }, false, false, false, null);
