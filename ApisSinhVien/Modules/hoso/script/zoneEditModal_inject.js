@@ -397,6 +397,58 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadXHD_Section) 
             },
             fakedb: []
         }, false, false, false, null);
+
+        // Auto-fill XHD chỉ Email + SĐT từ contact cache (KHÔNG fill Họ tên người mua — có thể là cơ quan)
+        setTimeout(function () {
+            (dx.dtLienHe || []).forEach(function (item) {
+                var name = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
+                var ma = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
+                var val = item.CONTACT_VALUE || item.VALUE || '';
+                if (!val) return;
+                if ((ma === 'EMAIL' || name.indexOf('mail') > -1) && !$('#txtKQ_HD_Email').val()) $('#txtKQ_HD_Email').val(val);
+                else if ((ma === 'PHONE' || ma === 'MOBILE' || name.indexOf('điện thoại') > -1 || name.indexOf('phone') > -1) && !$('#txtKQ_HD_SDT').val()) $('#txtKQ_HD_SDT').val(val);
+            });
+        }, 1000);
+
+        // Load PersonInvoice từ PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo (2026-08-24)
+        // TODO: sếp/A xác nhận action code encoded cho endpoint này, hiện dùng literal — nếu BE 404, sếp báo em code chính xác
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data.Success || !data.Data || !data.Data.length) return;
+                // ORDER BY IS_CURRENT DESC → record đầu là hiện hành
+                var inv = data.Data[0];
+                dx._currentInvoiceId = inv.ID || '';
+                var _setInv = function () {
+                    // BUYER_TYPE_LOAI là ID (DM Loại đối tượng) → set trực tiếp
+                    if (inv.BUYER_TYPE_LOAI) { $('#ddlKQ_HD_DoiTuong').val(inv.BUYER_TYPE_LOAI).trigger('change'); }
+                    if (inv.BUYER_NAME_TENNM) $('#txtKQ_HD_NguoiMua').val(inv.BUYER_NAME_TENNM);
+                    if (inv.BUYER_ADDR_DIACHI) $('#txtKQ_HD_DiaChi').val(inv.BUYER_ADDR_DIACHI);
+                    if (inv.BUYER_TAX_MST) $('#txtKQ_HD_MST').val(inv.BUYER_TAX_MST);
+                    if (inv.BUYER_BUDGET_MAQHNS) $('#txtKQ_HD_MaQHNS').val(inv.BUYER_BUDGET_MAQHNS);
+                    if (inv.BUYER_EMAIL) $('#txtKQ_HD_Email').val(inv.BUYER_EMAIL);
+                    if (inv.BUYER_PHONE_SDT) $('#txtKQ_HD_SDT').val(inv.BUYER_PHONE_SDT);
+                };
+                _setInv();
+                setTimeout(_setInv, 500);
+                setTimeout(_setInv, 1500);
+            },
+            error: function (er) { console.warn('[ZE] LayDS_PersonInvoiceInfo error:', er); },
+            type: 'POST',
+            action: 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+            contentType: true,
+            data: {
+                'action': 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': personId,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
     };
 }
 if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadTabInfoExtras) {
