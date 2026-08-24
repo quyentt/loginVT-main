@@ -170,8 +170,13 @@ HoSoTaoMoi.prototype = {
             ten: d.TEN,
             ngaySinh_Ngay: d.NGAYSINH_NGAY,
             ngaySinh_Thang: d.NGAYSINH_THANG,
-            ngaySinh_Nam: d.NGAYSINH_NAM,
-            anh: d.ANH
+            ngaySinh_Nam: d.NGAYSINH_NAM || d.BIRTH_YEAR || '',
+            anh: d.ANH || d.ANHCANHAN || '',
+            gioiTinh: d.GENDER_ID || d.GIOITINH_ID || '',
+            gioiTinhMa: d.GIOITINH_MA || '',
+            danTocMa: d.DANTOC_MA || '',
+            tonGiaoMa: d.TONGIAO_MA || '',
+            quocTichMa: d.QUOCTICH_MA || ''
         };
         if (dx && typeof dx.openEditByPerson === 'function') {
             dx.openEditByPerson(person);

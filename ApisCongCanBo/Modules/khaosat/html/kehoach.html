@@ -369,9 +369,9 @@
                                 <a class="btn-sm btn btn-soft-success"
                                     style="float: right; margin-left: 10px !important" id="btnAdd_DoiTuong"><i
                                         class="fa-solid fa-user-graduate"></i>Thêm người học</a>
-                                <a class="btn-sm btn btn-soft-info"
-                                    style="float: right; margin-left: 10px !important" id="btnAdd_SVDangKy_DoiTuong"><i
-                                        class="fa-solid fa-user-magnifying-glass"></i>Thêm sinh
+                                <a class="btn-sm btn btn-soft-info" style="float: right; margin-left: 10px !important"
+                                    id="btnAdd_SVDangKy_DoiTuong"><i class="fa-solid fa-user-magnifying-glass"></i>Thêm
+                                    sinh
                                     viên từ đăng ký học</a>
                                 <a class="btn-sm btn btn-soft-primary"
                                     style="float: right; margin-left: 10px !important" id="btnAdd_GV_DoiTuong">
@@ -404,7 +404,7 @@
     </div>
 
     <!-- Phiếu khảo sát -->
-    <div class="fake-modal zoneDSPhieu zone-bus" id="zoneDSPhieu" style="display: none">
+    <div class="fake-modal zoneDSPhieu zone-bu box-none" id="zoneDSPhieu" style="display: block">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
@@ -415,13 +415,13 @@
                     <a class="d-block text-right fs-16 color-fff btnClose mt-5"><i class="fal fa-times"></i></a>
                 </div>
             </div>
-            <div class="form-top rounded-0 border-top" style="margin-bottom: 10px"></div>
-            <div class="container-fluid px-20">
+            <div class="form-top rounded-0 border-top d-none" style="margin-bottom: 10px"></div>
+            <div class="container-fluid px-20" style="padding-bottom: 0 !important;">
                 <div class="row">
                     <div class="col-12 col-lg-12 mt-12 pd0">
                         <div class="d-flex align-items-center">
                             <span class="fw-bold color-blue fz16 mt-15">Phiếu khảo sát</span>
-                            <a class="btn btn-outline-success ms-auto mr-10 btnAdd" style="margin-right: 10px"
+                            <a class="btn btn-soft-success ms-auto mr-10 btnAdd" style="margin-right: 10px"
                                 id="btnAdd_PhieuTuDong"><i class="fal fa-plus"></i>Thêm phiếu tự động</a>
                             <a class="btn btn-success btnAdd" id="btnAdd_DSPhieu"><i class="fal fa-plus"></i>Thêm
                                 phiếu</a>
@@ -449,9 +449,9 @@
                         <!--<div class="ApDungChoKhoa"></div>
                         <div class="ApDungChoChuongTrinh"></div>
                         <div class="ApDungChoLop"></div>-->
-                        <div style="width: 100%; margin-top: 10px">
-                            <a class="btn-sm btn btn-outline-danger min-w-auto px-3 ms-auto btnDelete_DSPhieu"
-                                style="float: right; margin-left: 10px !important"><i class="fal fa-trash"></i> Xóa</a>
+                        <div style="width: 100%;">
+                            <!-- <a class="btn-sm btn btn-soft-danger min-w-auto px-3 ms-auto btnDelete_DSPhieu"
+                                style="float: right; margin-left: 10px !important"><i class="fal fa-trash"></i> Xóa</a> -->
                             <!-- <a class="btn-sm btn btn-outline-success min-w-auto ms-auto px-3" style="float: right; margin-left: 10px !important" id="btnAdd_PhamVi"><i class="fa-solid fa-user-graduate"></i>Thêm người học</a> -->
                             <!-- <a class="btn-sm btn btn-outline-primary min-w-auto  ms-auto px-3" style="float: right; margin-left: 10px !important" id="btnAdd_GV_PhamVi"><i class="fa-solid fa-user-graduate"></i>Thêm Giảng viên</a> -->
                             <!-- <a class="btn-sm btn btn-outline-info min-w-auto  ms-auto px-3" style="float: right; margin-left: 10px !important" id="btnAdd_DTK_PhamVi"><i class="fa-solid fa-user"></i>Thêm đối tượng</a> -->
@@ -465,6 +465,7 @@
                     <div class="ms-auto aps-gap-10">
                         <div class="btn btn-outline-secondary  px-4 min-w-auto  btnClose"><i class="fal fa-times"></i>
                             Đóng</div>
+                        <a class="btn-sm btn btn-soft-danger btnDelete_DSPhieu"><i class="fal fa-trash"></i> Xóa</a>
                         <!-- <div class="btn btn-primary px-4 min-w-auto " id="btnSave_KeHoach"><i class="fal fa-save"></i> Lưu</div> -->
                     </div>
                 </div>
@@ -473,7 +474,7 @@
     </div>
 
     <!-- Chỉnh sửa - Phiếu khảo sát -->
-    <div class="fake-modal zonePhieu zone-bus" id="zonePhieu" style="display: none">
+    <div class="fake-modal zonePhieu zone-bus" id="zonePhieu" style="display: block">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
@@ -502,10 +503,10 @@
                                     <div class="tern-name" id="lblMoTaPhieu">
                                     </div>
                                     <div class="align-items-end w-100 ms-auto text-right">
-                                        <button class="btn btn-outline-success mr-10 ms-auto" id="btnKhoiTaoPhieu">
+                                        <button class="btn btn-soft-success mr-10 ms-auto" id="btnKhoiTaoPhieu">
                                             <i class="fal fa-plus"></i><span>Khởi tạo theo phiếu mẫu</span>
                                         </button>
-                                        <button class="btn btn-outline-warning mr-0" id="btnGenPhieu">
+                                        <button class="btn btn-soft-danger mr-0" id="btnGenPhieu">
                                             <i class="fal fa-plus"></i><span>Gen phiếu</span>
                                         </button>
                                     </div>
@@ -590,10 +591,10 @@
                                         <div class="col-12 col-lg-6 mt-6">
                                             <div class="d-flex align-items-center">
                                                 <span class="fw-bold text-success mt-10">Đối tượng tham gia</span>
-                                                <a class="btn-sm btn btn-outline-danger min-w-auto px-3 ms-auto"
+                                                <a class="btn-sm btn btn-soft-danger min-w-auto px-3 ms-auto"
                                                     id="btnDelete_ThamGia" style="float: right;">
                                                     <i class="fal fa-trash"></i>Xóa</a>
-                                                <a class="btn btn-outline-success ms-auto d-none ml-10"
+                                                <a class="btn btn-soft-success ms-auto d-none ml-10"
                                                     style="float: right;" id="btnAdd_ThamGia">
                                                     <i class="fal fa-plus"></i>Thêm</a>
                                             </div>
@@ -615,14 +616,14 @@
                                                 </table>
                                             </div>
                                             <!--<div style="width: 100%; margin-top: 10px">
-                                                <a class="btn-sm btn btn-outline-secondary min-w-auto px-3 ms-auto btnDelete_ThamGia" style="float: right;"><i class="fal fa-trash me-1"></i> Xóa</a>
+                                                <a class="btn-sm btn btn-soft-secondary min-w-auto px-3 ms-auto btnDelete_ThamGia" style="float: right;"><i class="fal fa-trash me-1"></i> Xóa</a>
                                             </div>-->
                                         </div>
 
                                         <div class="col-12 col-lg-6 mt-6 pr0 pl-10">
                                             <div class="d-flex align-items-center">
                                                 <span class="fw-bold text-success mt-10">Chưa tham gia</span>
-                                                <a class="btn btn-outline-success ms-auto" style="float: right;"
+                                                <a class="btn btn-soft-success ms-auto" style="float: right;"
                                                     id="btnAdd_ChuaThamGia"><i class="fal fa-plus"></i>Thêm</a>
                                             </div>
                                             <div class="mt-10">
@@ -643,7 +644,7 @@
                                                 </table>
                                             </div>
                                             <!--<div style="width: 100%; margin-top: 10px">
-                                                <a class="btn-sm btn btn-outline-secondary min-w-auto px-3 ms-auto btnDelete_ChuaThamGia" style="float: right;"><i class="fal fa-trash me-1"></i> Xóa</a>
+                                                <a class="btn-sm btn btn-soft-secondary min-w-auto px-3 ms-auto btnDelete_ChuaThamGia" style="float: right;"><i class="fal fa-trash me-1"></i> Xóa</a>
                                             </div>-->
                                         </div>
                                     </div>
@@ -662,7 +663,7 @@
     </div>
 
     <!-- Chỉnh sửa Phiếu tự động -->
-    <div class="fake-modal zoneThemPhieu zone-bus" id="zoneThemPhieu" style="display: none">
+    <div class="fake-modal zoneThemPhieu zone-bus box-none" id="zoneThemPhieu" style="display: block">
         <div class="box-shadow register-wish pt-0 position-relative modal-aps-add">
             <div class="d-flex justify-content-between pt-3 px-20 box-header">
                 <div class="nav-content-left">
@@ -675,7 +676,7 @@
             </div>
             <div class="form-top rounded-0 border-top pd0 tab-Phieu" style="background: #fff">
                 <div class="cmc-con pd20">
-                    <ul class="nav nav-tabs cmc-tabs mt-0 pt-20" id="myTab" role="tablist">
+                    <ul class="nav nav-tabs cmc-tabs mt-0" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
                                 type="button" role="tab" aria-controls="home" aria-selected="true">
@@ -701,7 +702,7 @@
                                 <div class="cmc-form add-auto-form w-100">
                                     <div class="d-flex  w-100 flex-wrap">
                                         <div class="label fs-14 mb-3 pt-2 color-88" style="width: 115px;">Mô tả</div>
-                                        <div class="form-item d-flex mb-15 form-add-info flex-grow-1 ">
+                                        <div class="form-item d-flex form-add-info flex-grow-1 ">
                                             <div class="input-group">
                                                 <textarea class="form-control form-textarea ps-3 py-4"
                                                     style="height: auto !important; line-height: 20px !important; padding-block: 11px !important;"
@@ -710,13 +711,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-12 col-lg-9 col-md-8">
+                                    <div class="row mt-15">
+                                        <div class="col-12 col-lg-9 col-md-8 mb-0">
                                             <div class="d-flex align-items-center w-100">
                                                 <div class="label fs-14 mb-3 color-88" style="width: 115px;">Chọn thời
                                                     gian
                                                 </div>
-                                                <div class="form-item d-flex mb-15 form-add-info flex-grow-1 ">
+                                                <div class="form-item d-flex form-add-info flex-grow-1 ">
                                                     <div class="input-group">
                                                         <select id="dropSearch_ThoiGianTabHome" multiple="multiple"
                                                             class="select-opt form-select ps-3"
@@ -725,20 +726,20 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-lg-3 col-md-4 pr0">
-                                            <button class="btn btn-cmc-outline w-100" id="btnThoiGianTabHome">
+                                        <div class="col-12 col-lg-3 col-md-4 pr0 mb-0">
+                                            <button class="btn btn-soft-primary" id="btnThoiGianTabHome">
                                                 <i class="fa-solid fa-magnifying-glass"></i>Xem DS GV Theo TKB</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-end mt-3 mb-10">
-                                <button id="btnTaoPhieuTabHome" class="btn btn-outline-success"
+                            <div class="d-flex align-items-center justify-content-end mb-10">
+                                <button id="btnTaoPhieuTabHome" class="btn btn-soft-success"
                                     style=" width: auto;"><span><i class="fa-regular fa-file-plus"></i>Tạo phiếu tự
                                         động</span>
                                 </button>
                             </div>
-                            <div class="cmc-con-table mb-4 mt-4">
+                            <div class="cmc-con-table mb-4">
                                 <table
                                     class="table transcrip-table tabs-scores h-auto table-bordered table-noborder w-100"
                                     id="tblTabHome">
@@ -759,13 +760,12 @@
                                 </table>
                             </div>
                         </div>
-
                         <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                             <div class="d-flex justify-content-center w-100 mt-4">
                                 <div class="cmc-form add-auto-form w-100">
                                     <div class="d-flex  w-100 flex-wrap">
                                         <div class="label fs-14 mb-3 pt-2 color-88" style="width: 115px;">Mô tả</div>
-                                        <div class="form-item d-flex mb-15 form-add-info flex-grow-1 ">
+                                        <div class="form-item d-flex form-add-info flex-grow-1 ">
                                             <div class="input-group">
                                                 <textarea class="form-control form-textarea ps-3 py-4"
                                                     style="height: auto !important; line-height: 20px !important; padding-block: 11px !important;"
@@ -774,13 +774,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-15">
                                         <div class="col-12 col-lg-9 col-md-8">
                                             <div class="d-flex align-items-center w-100 ">
                                                 <div class="label fs-14 mb-3 color-88" style="width: 115px;">Chọn thời
                                                     gian
                                                 </div>
-                                                <div class="form-item d-flex mb-15 form-add-info flex-grow-1 ">
+                                                <div class="form-item d-flex form-add-info flex-grow-1 ">
                                                     <div class="input-group">
                                                         <select id="dropSearch_ThoiGianTabPro" multiple="multiple"
                                                             class="select-opt form-select ps-3"
@@ -789,8 +789,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-lg-3 col-md-4 pr0">
-                                            <button class="btn btn-cmc-outline w-100" id="btnThoiGianTabPro">
+                                        <div class="col-12 col-lg-3 col-md-4 pr0 mb-0">
+                                            <button class="btn btn-soft-primary" id="btnThoiGianTabPro">
                                                 <i class="fa-solid fa-magnifying-glass"></i>Xem DS Học phần Theo
                                                 TKB</button>
                                         </div>
@@ -798,11 +798,11 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center justify-content-end mt-3 mb-10">
-                                <button id="btnTaoPhieuTabPro" class="btn btn-outline-success" style=" width: auto;">
+                                <button id="btnTaoPhieuTabPro" class="btn btn-soft-success" style=" width: auto;">
                                     <i class="fa-regular fa-file-plus"></i><span>Tạo phiếu tự động</span>
                                 </button>
                             </div>
-                            <div class="cmc-con-table mb-4 mt-4">
+                            <div class="cmc-con-table mb-4">
                                 <table
                                     class="table transcrip-table tabs-scores h-auto table-bordered table-noborder w-100 tblTabPro"
                                     id="tblTabPro">
@@ -828,7 +828,7 @@
                                 <div class="cmc-form add-auto-form w-100">
                                     <div class="d-flex  w-100 flex-wrap">
                                         <div class="label fs-14 mb-3 pt-2 color-88" style="width: 115px;">Mô tả</div>
-                                        <div class="form-item d-flex mb-15 form-add-info flex-grow-1 ">
+                                        <div class="form-item d-flex form-add-info flex-grow-1 ">
                                             <div class="input-group">
                                                 <textarea class="form-control form-textarea ps-3 py-4"
                                                     style="height: auto !important; line-height: 20px !important; padding-block: 11px !important;"
@@ -837,14 +837,13 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-15">
                                         <div class="col-12 col-lg-9 col-md-8">
                                             <div class="d-flex align-items-center w-100">
                                                 <div class="label fs-14 mb-3 color-88" style="width: 115px;">
-                                                    Chọn thời
-                                                    gian
+                                                    Chọn thời gian
                                                 </div>
-                                                <div class="form-item d-flex mb-15 form-add-info flex-grow-1 ">
+                                                <div class="form-item d-flex form-add-info flex-grow-1 ">
                                                     <div class="input-group">
                                                         <select id="dropSearch_ThoiGianTabPan" multiple="multiple"
                                                             class="select-opt form-select ps-3"
@@ -853,18 +852,16 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-lg-3 col-md-4 pr0">
-                                            <button class="btn btn-cmc-outline w-100" id="btnThoiGianTabPan">
-                                                <i class="fa-solid fa-magnifying-glass"></i>Xem DS GV - lớp HP theo
-                                                TKB
+                                        <div class="col-12 col-lg-3 col-md-4 pr0 mb">
+                                            <button class="btn btn-soft-primary" id="btnThoiGianTabPan">
+                                                <i class="fa-solid fa-magnifying-glass"></i>Xem DS GV - lớp HP theo TKB
                                             </button>
                                         </div>
                                     </div>
                                     <div class="row mt-2">
                                         <div class="col-12 col-lg-9 col-md-8">
                                             <div class="d-flex align-items-center w-100">
-                                                <div class="label fs-14 mb-3 color-88" style="width: 115px;">Khoa quản
-                                                    lý</div>
+                                                <div class="label fs-14 mb-3 color-88" style="width: 115px;">Khoa quản lý</div>
                                                 <div class="form-item d-flex mb-15 form-add-info flex-grow-1">
                                                     <div class="input-group">
                                                         <select id="dropKhoaQuanLy_TabPan" multiple="multiple"
@@ -877,18 +874,18 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center justify-content-end mt-3 mb-10">
-                                <button id="btnTaoPhieuTabPanTT" class="btn btn-outline-success" style=" width: auto;">
+                            <div class="d-flex align-items-center justify-content-end mb-10 aps-gap-10">
+                                <button id="btnTaoPhieuTabPanTT" class="btn btn-soft-danger" style=" width: auto;">
                                     <i class="fa-regular fa-file-plus"></i>
                                     <span>Chạy tiến trình tạo phiếu</span>
                                 </button>
-                                <button id="btnTaoPhieuTabPan" class="btn btn-outline-success" style=" width: auto;">
+                                <button id="btnTaoPhieuTabPan" class="btn btn-soft-success" style=" width: auto;">
                                     <i class="fa-regular fa-file-plus"></i>
                                     <span>Tạo phiếu tự động</span>
                                 </button>
                             </div>
                             <div id="zoneprocessXXXXPTD"></div>
-                            <div class="cmc-con-table mb-4 mt-4">
+                            <div class="cmc-con-table mb-4">
                                 <table class="table transcrip-table tabs-scores h-auto" id="tblTabPan">
                                     <thead class="text-22 ">
                                         <tr>
@@ -917,7 +914,7 @@
     </div>
 
     <!-- tab kết quả -->
-    <div class="zoneKetQua zone-bus box-none" id="zoneKetQua" style="display: block">
+    <div class="zoneKetQua zone-bus box-none" id="zoneKetQua" style="display: none">
         <div class="">
             <!--<div class="d-flex justify-content-between pt-3 px-20">
                 <div class="nav-content-left">

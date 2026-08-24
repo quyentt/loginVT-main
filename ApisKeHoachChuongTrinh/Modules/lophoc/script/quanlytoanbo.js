@@ -212,11 +212,14 @@ QuanLyToanBo.prototype = {
             }
             edu.system.confirm("Bạn có muốn chuyển lớp cho <span style='color: red'>" + strThongBao + "</span> không?");
             $("#btnYes").click(function (e) {
-                
+
                 edu.system.alert('<div id="zoneprocessXXXX"></div>');
                 edu.system.genHTML_Progress("zoneprocessXXXX", arrChecked_Id.length);
                 for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_ChuyenNguyenVong(arrChecked_Id[i]);
+                    var objSV = edu.util.objGetOneDataInData(arrChecked_Id[i], me.dtQuanLyToanBo, "ID");
+                    if (objSV && objSV.length != 0) {
+                        me.save_ChuyenLop_TrucTiep(objSV.QLSV_NGUOIHOC_ID, objSV.DAOTAO_LOPQUANLY_ID);
+                    }
                 }
             });
         });
@@ -1501,6 +1504,49 @@ QuanLyToanBo.prototype = {
             },
             contentType: true,
 
+            data: obj_save,
+            fakedb: [
+            ]
+        }, false, false, false, null);
+    },
+    save_ChuyenLop_TrucTiep: function (strQLSV_NguoiHoc_Id, strDaoTao_LopQuanLy_Cu_Id) {
+        var me = this;
+        var obj_save = {
+            'action': 'SV_QuyetDinh_MH/FSk0IhUpKB4CKTQ4JC8NLjEeFTM0IhUoJDEP',
+            'func': 'PKG_HOSOHOCVIEN_QUYETDINH.ThucThi_ChuyenLop_TrucTiep',
+            'iM': edu.system.iM,
+            'strQLSV_NguoiHoc_Id': strQLSV_NguoiHoc_Id,
+            'strDaoTao_LopQuanLy_Cu_Id': strDaoTao_LopQuanLy_Cu_Id,
+            'strDaoTao_LopQuanLy_Moi_Id': edu.util.getValCombo('dropLopQuanLy'),
+            'strTrangThaiNguoiHoc_Moi_Id': '',
+            'strTo_Moi_Id': '',
+            'strNgayHieuLuc': '',
+            'strGhiChu': edu.util.getValById('txtLyDoChuyen'),
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                var obj = {
+                    content: data.Success ? "Chuyển lớp thành công" : data.Message,
+                    code: data.Success ? "" : "w"
+                };
+                edu.system.afterComfirm(obj);
+            },
+            error: function (er) {
+                var obj = {
+                    content: obj_save.action + " (er): " + JSON.stringify(er),
+                    code: "w"
+                };
+                edu.system.afterComfirm(obj);
+            },
+            type: 'POST',
+            action: obj_save.action,
+            complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_QuanLyToanBo();
+                });
+            },
+            contentType: true,
             data: obj_save,
             fakedb: [
             ]

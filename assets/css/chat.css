@@ -119,7 +119,7 @@ body {
 }
 
 .chat-plugin-header-note span {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .chat-plugin-body {
@@ -201,7 +201,7 @@ body {
 }
 
 .chat-plugin-body-p span {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .input-icon-left {
@@ -2733,7 +2733,7 @@ body {
 }
 
 .chatting-job .chatting-job-alert-row .fw-bolder {
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .tag-dropdown-menu label {

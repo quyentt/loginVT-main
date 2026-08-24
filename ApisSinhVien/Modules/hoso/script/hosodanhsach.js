@@ -48,8 +48,13 @@ HoSoDanhSach.prototype = {
                     hoDem: aData.HODEM, ten: aData.TEN,
                     ngaySinh_Ngay: aData.NGAYSINH_NGAY,
                     ngaySinh_Thang: aData.NGAYSINH_THANG,
-                    ngaySinh_Nam: aData.NGAYSINH_NAM,
-                    anh: aData.ANH
+                    ngaySinh_Nam: aData.NGAYSINH_NAM || aData.BIRTH_YEAR || '',
+                    anh: aData.ANH || aData.ANHCANHAN || '',
+                    gioiTinh: aData.GENDER_ID || aData.GIOITINH_ID || '',
+                    gioiTinhMa: aData.GIOITINH_MA || '',
+                    danTocMa: aData.DANTOC_MA || '',
+                    tonGiaoMa: aData.TONGIAO_MA || '',
+                    quocTichMa: aData.QUOCTICH_MA || ''
                 });
                 return;
             }

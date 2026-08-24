@@ -5339,6 +5339,27 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
         }
     }
 
+    // Populate dropdown — accept ID hoặc MA
+    var _pickIdByMa = function (selectId, ma) {
+        if (!ma) return '';
+        var opt = document.querySelector('#' + selectId + ' option[name="' + ma + '"]');
+        if (opt) return opt.value;
+        return '';
+    };
+    var _setDrop = function () {
+        var gt = person.gioiTinh || _pickIdByMa('dropGioiTinh', person.gioiTinhMa);
+        var dt = person.danToc || _pickIdByMa('dropDanToc', person.danTocMa);
+        var tg = person.tonGiao || _pickIdByMa('dropTonGiao', person.tonGiaoMa);
+        var qt = person.quocTich || _pickIdByMa('dropQuocTich', person.quocTichMa);
+        if (gt) { $('#dropGioiTinh').val(gt).trigger('change'); }
+        if (dt) { $('#dropDanToc').val(dt).trigger('change'); }
+        if (tg) { $('#dropTonGiao').val(tg).trigger('change'); }
+        if (qt) { $('#dropQuocTich').val(qt).trigger('change'); }
+    };
+    _setDrop();
+    setTimeout(_setDrop, 500);
+    setTimeout(_setDrop, 1500);
+
     // Load section XHD (2 DMDL + Bank Account)
     dx._loadXHD_Section(person.id);
 
@@ -5438,11 +5459,18 @@ DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
             if (!list.length) return;
             var b = list.find(function (i) { return i.IS_PRIMARY == 1; }) || list[0];
             dx._currentBankId = b.ID || '';
-            edu.util.viewValById("ddlKQ_HD_HinhThucTT", b.ACCOUNT_TYPE_CODE);
-            edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
-            edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
-            edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
-            edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+            // Bank ACCOUNT_TYPE_CODE là MA — tra ID qua option[name=MA] để select đúng
+            var _setBank = function () {
+                var opt = document.querySelector('#ddlKQ_HD_HinhThucTT option[name="' + b.ACCOUNT_TYPE_CODE + '"]');
+                if (opt) { $('#ddlKQ_HD_HinhThucTT').val(opt.value).trigger('change'); }
+                edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
+                edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
+                edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
+                edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+            };
+            _setBank();
+            setTimeout(_setBank, 500);
+            setTimeout(_setBank, 1500);
         },
         error: function () { /* silent */ },
         type: 'POST',

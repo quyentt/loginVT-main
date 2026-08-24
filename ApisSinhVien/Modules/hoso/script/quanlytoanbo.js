@@ -181,15 +181,72 @@ QuanLyToanBo.prototype = {
             var personId = me.strSinhVien_Id;
             var aData = (me.dtQuanLyToanBo || []).find(function (x) { return x.QLSV_NGUOIHOC_ID == personId; }) || {};
             var ns = ((aData.QLSV_NGUOIHOC_NGAYSINH || '') + '').split(' ')[0].split('/');
+            // API quanlytoanbo chỉ trả enrollment fields — fetch thêm SV_HoSo/LayDanhSach để có
+            // GENDER_ID, DANTOC_MA, TONGIAO_MA, QUOCTICH_MA... (2026-08-21)
+            var maSo = aData.QLSV_NGUOIHOC_MASO || '';
+            if (maSo && window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson) {
+                edu.system.makeRequest({
+                    success: function (respData) {
+                        var full = {};
+                        if (respData.Success && respData.Data && respData.Data.length) {
+                            // Tìm record khớp MASO chính xác (LayDanhSach có thể match nhiều)
+                            full = respData.Data.find(function (x) { return x.MASO === maSo || x.ID === personId; }) || respData.Data[0];
+                        }
+                        main_doc.DeXuatHoSo.openEditByPerson({
+                            id: personId,
+                            hoDem: full.HODEM || aData.QLSV_NGUOIHOC_HODEM || '',
+                            ten: full.TEN || aData.QLSV_NGUOIHOC_TEN || '',
+                            ngaySinh_Ngay: full.NGAYSINH_NGAY || ns[0] || '',
+                            ngaySinh_Thang: full.NGAYSINH_THANG || ns[1] || '',
+                            ngaySinh_Nam: full.BIRTH_YEAR || full.NGAYSINH_NAM || ns[2] || '',
+                            anh: full.ANH || full.ANHCANHAN || '',
+                            gioiTinh: full.GENDER_ID || '',
+                            gioiTinhMa: full.GIOITINH_MA || '',
+                            danTocMa: full.DANTOC_MA || '',
+                            tonGiaoMa: full.TONGIAO_MA || '',
+                            quocTichMa: full.QUOCTICH_MA || ''
+                        });
+                    },
+                    error: function () {
+                        // Fallback: dùng data cache local nếu API lỗi
+                        main_doc.DeXuatHoSo.openEditByPerson({
+                            id: personId,
+                            hoDem: aData.QLSV_NGUOIHOC_HODEM || '',
+                            ten: aData.QLSV_NGUOIHOC_TEN || '',
+                            ngaySinh_Ngay: ns[0] || '',
+                            ngaySinh_Thang: ns[1] || '',
+                            ngaySinh_Nam: ns[2] || ''
+                        });
+                    },
+                    type: 'GET',
+                    action: 'SV_HoSo/LayDanhSach',
+                    contentType: true,
+                    data: {
+                        action: 'SV_HoSo/LayDanhSach',
+                        versionAPI: 'v1.0',
+                        strTuKhoa: maSo,
+                        strHeDaoTao_Id: '', strKhoaDaoTao_Id: '', strChuongTrinh_Id: '', strLopQuanLy_Id: '',
+                        strNguoiThucHien_Id: '',
+                        pageIndex: 1, pageSize: 10
+                    },
+                    fakedb: []
+                }, false, false, false, null);
+                return;
+            }
             if (window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson) {
                 main_doc.DeXuatHoSo.openEditByPerson({
                     id: personId,
-                    hoDem: aData.QLSV_NGUOIHOC_HODEM,
-                    ten: aData.QLSV_NGUOIHOC_TEN,
-                    ngaySinh_Ngay: ns[0] || '',
-                    ngaySinh_Thang: ns[1] || '',
-                    ngaySinh_Nam: ns[2] || '',
-                    anh: aData.QLSV_NGUOIHOC_ANH || aData.ANH || ''
+                    hoDem: aData.QLSV_NGUOIHOC_HODEM || aData.HODEM,
+                    ten: aData.QLSV_NGUOIHOC_TEN || aData.TEN,
+                    ngaySinh_Ngay: ns[0] || aData.NGAYSINH_NGAY || '',
+                    ngaySinh_Thang: ns[1] || aData.NGAYSINH_THANG || '',
+                    ngaySinh_Nam: ns[2] || aData.BIRTH_YEAR || aData.NGAYSINH_NAM || '',
+                    anh: aData.QLSV_NGUOIHOC_ANH || aData.ANH || '',
+                    gioiTinh: aData.GENDER_ID || aData.QLSV_NGUOIHOC_GIOITINH_ID || aData.GIOITINH_ID || '',
+                    gioiTinhMa: aData.GIOITINH_MA || '',
+                    danTocMa: aData.DANTOC_MA || '',
+                    tonGiaoMa: aData.TONGIAO_MA || '',
+                    quocTichMa: aData.QUOCTICH_MA || ''
                 });
                 return;
             }
@@ -209,7 +266,11 @@ QuanLyToanBo.prototype = {
                             ngaySinh_Ngay: ns[0] || '',
                             ngaySinh_Thang: ns[1] || '',
                             ngaySinh_Nam: ns[2] || '',
-                            anh: aData.QLSV_NGUOIHOC_ANH || aData.ANH || ''
+                            anh: aData.QLSV_NGUOIHOC_ANH || aData.ANH || '',
+                            gioiTinh: aData.QLSV_NGUOIHOC_GIOITINH_ID || aData.GIOITINH_ID || '',
+                            danToc: aData.QLSV_NGUOIHOC_DANTOC_ID || aData.DANTOC_ID || '',
+                            tonGiao: aData.QLSV_NGUOIHOC_TONGIAO_ID || aData.TONGIAO_ID || '',
+                            quocTich: aData.QLSV_NGUOIHOC_QUOCTICH_ID || aData.QUOCTICH_ID || ''
                         });
                     } else {
                         edu.system.alert('Không tải được module DeXuatHoSo. Kiểm tra Network tab.', 'w');
@@ -2206,6 +2267,26 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
             var opt = dx.dtMucDoNgaySinh.find(function (e) { return e.MA == "EXACT"; });
             if (opt) $('#dropMucDoNgaySinh').val(opt.ID).trigger("change").trigger({ type: 'select2:select' });
         }
+        // Populate dropdown — accept ID hoặc MA
+        var _pickIdByMa = function (selectId, ma) {
+            if (!ma) return '';
+            var opt = document.querySelector('#' + selectId + ' option[name="' + ma + '"]');
+            if (opt) return opt.value;
+            return '';
+        };
+        var _setDrop = function () {
+            var gt = person.gioiTinh || _pickIdByMa('dropGioiTinh', person.gioiTinhMa);
+            var dt = person.danToc || _pickIdByMa('dropDanToc', person.danTocMa);
+            var tg = person.tonGiao || _pickIdByMa('dropTonGiao', person.tonGiaoMa);
+            var qt = person.quocTich || _pickIdByMa('dropQuocTich', person.quocTichMa);
+            if (gt) { $('#dropGioiTinh').val(gt).trigger('change'); }
+            if (dt) { $('#dropDanToc').val(dt).trigger('change'); }
+            if (tg) { $('#dropTonGiao').val(tg).trigger('change'); }
+            if (qt) { $('#dropQuocTich').val(qt).trigger('change'); }
+        };
+        _setDrop();
+        setTimeout(_setDrop, 500);
+        setTimeout(_setDrop, 1500);
         if (typeof dx._loadXHD_Section === 'function') dx._loadXHD_Section(person.id);
         if (typeof dx._loadTabInfoExtras === 'function') dx._loadTabInfoExtras(person.id);
     };
@@ -2278,11 +2359,18 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadXHD_Section) 
                 if (!list.length) return;
                 var b = list.find(function (i) { return i.IS_PRIMARY == 1; }) || list[0];
                 dx._currentBankId = b.ID || '';
-                edu.util.viewValById("ddlKQ_HD_HinhThucTT", b.ACCOUNT_TYPE_CODE);
-                edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
-                edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
-                edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
-                edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+                // Bank ACCOUNT_TYPE_CODE là MA — tra ID qua option[name=MA] để select đúng
+                var _setBank = function () {
+                    var opt = document.querySelector('#ddlKQ_HD_HinhThucTT option[name="' + b.ACCOUNT_TYPE_CODE + '"]');
+                    if (opt) { $('#ddlKQ_HD_HinhThucTT').val(opt.value).trigger('change'); }
+                    edu.util.viewValById("txtKQ_HD_NganHang", b.BANK_NAME);
+                    edu.util.viewValById("txtKQ_HD_SoTK", b.ACCOUNT_NUMBER);
+                    edu.util.viewValById("txtKQ_HD_ChuTK", b.ACCOUNT_NAME);
+                    edu.util.viewValById("txtKQ_HD_GhiChu", b.NOTE);
+                };
+                _setBank();
+                setTimeout(_setBank, 500);
+                setTimeout(_setBank, 1500);
             },
             error: function () { /* silent */ },
             type: 'POST',

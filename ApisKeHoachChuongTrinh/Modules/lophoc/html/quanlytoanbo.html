@@ -2,6 +2,65 @@
     .checkbox-inline + .checkbox-inline, .radio-inline + .radio-inline {
         margin-left: 0px;
     }
+
+    #myModalNguyenVong .modal-header,
+    #myModalQuyetDinh .modal-header,
+    #myModalQuaTrinh .modal-header {
+        position: relative;
+        text-align: center;
+        padding: 12px 45px;
+    }
+    #myModalNguyenVong .modal-header .modal-title,
+    #myModalQuyetDinh .modal-header .modal-title,
+    #myModalQuaTrinh .modal-header .modal-title {
+        display: block !important;
+        float: none !important;
+        width: 100%;
+        margin: 0 !important;
+        text-align: center !important;
+    }
+    #myModalNguyenVong .modal-header .close,
+    #myModalQuyetDinh .modal-header .close,
+    #myModalQuaTrinh .modal-header .close {
+        position: absolute !important;
+        top: 50% !important;
+        right: 15px !important;
+        left: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        float: none !important;
+        transform: translateY(-50%);
+        z-index: 2;
+    }
+
+    #myModalNguyenVong .modal-footer,
+    #myModalQuyetDinh .modal-footer,
+    #myModalQuaTrinh .modal-footer {
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 10px;
+        text-align: right !important;
+        padding-right: 15px !important;
+    }
+    #myModalNguyenVong .modal-footer .btn,
+    #myModalQuyetDinh .modal-footer .btn,
+    #myModalQuaTrinh .modal-footer .btn,
+    #myModalNguyenVong .modal-footer .pull-left,
+    #myModalNguyenVong .modal-footer .pull-right,
+    #myModalQuyetDinh .modal-footer .pull-left,
+    #myModalQuyetDinh .modal-footer .pull-right,
+    #myModalQuaTrinh .modal-footer .pull-left,
+    #myModalQuaTrinh .modal-footer .pull-right {
+        float: none !important;
+        margin: 0 !important;
+    }
+    #myModalNguyenVong .modal-footer .btn + .btn,
+    #myModalQuyetDinh .modal-footer .btn + .btn,
+    #myModalQuaTrinh .modal-footer .btn + .btn {
+        margin-left: 0 !important;
+    }
 </style>
 <section class="content">
     <div class="row aps-chuyenlop">
@@ -727,12 +786,12 @@
                     <div class="clear"></div>
                 </div>
                 <!--row 1-->
-                <div style="width: 100%">
-                    <div style="width: 40%; float: left">
+                <div style="width: 100%; margin-top: 10px">
+                    <div style="width: 100%">
                         <label style="font-weight: normal"><span class="lang" key="">Lý do</span></label>
                     </div>
-                    <div style="width: 60%; float: left">
-                        <input id="txtLyDoChuyen" class="form-control" />
+                    <div style="width: 100%">
+                        <textarea id="txtLyDoChuyen" class="form-control" rows="3" style="min-height: 90px; font-size: 14px; resize: vertical; width: 100%"></textarea>
                     </div>
                     <div class="clear"></div>
                 </div>
