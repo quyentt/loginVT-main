@@ -5499,7 +5499,7 @@ DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
             dx._currentInvoiceId = inv.ID || '';
             var _setInv = function () {
                 if (inv.BUYER_TYPE_LOAI) { $('#ddlKQ_HD_DoiTuong').val(inv.BUYER_TYPE_LOAI).trigger('change'); }
-                if (inv.BUYER_NAME_TENNM) $('#txtKQ_HD_NguoiMua').val(inv.BUYER_NAME_TENNM);
+                if (inv.BUYER_NAME_TENNM) $('#txtKQ_HD_TenDonVi').val(inv.BUYER_NAME_TENNM);
                 if (inv.BUYER_ADDR_DIACHI) $('#txtKQ_HD_DiaChi').val(inv.BUYER_ADDR_DIACHI);
                 if (inv.BUYER_TAX_MST) $('#txtKQ_HD_MST').val(inv.BUYER_TAX_MST);
                 if (inv.BUYER_BUDGET_MAQHNS) $('#txtKQ_HD_MaQHNS').val(inv.BUYER_BUDGET_MAQHNS);
