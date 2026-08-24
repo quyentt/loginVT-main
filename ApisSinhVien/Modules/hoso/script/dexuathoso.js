@@ -126,6 +126,12 @@ DeXuatHoSo.prototype = {
             $('#dropMucDoNgaySinh').val(strChinhXac_Id).trigger("change").trigger({ type: 'select2:select' });
         });
         $("#btnSave_DeXuatHoSo").click(function () {
+            // Validate: Ngày cấp CCCD bắt buộc nhập (2026-08-24)
+            if ($('#txtCCCD_NgayCap').length && !$('#txtCCCD_NgayCap').val()) {
+                edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w');
+                setTimeout(function () { try { $('#txtCCCD_NgayCap').focus(); } catch (er) { } }, 50);
+                return;
+            }
             me.icheck = true;
             let iSLCheck = me.dtLoaiDinhDanh.length + me.dtLoaiLienHe.length;
             if (iSLCheck > 0) {
@@ -139,7 +145,7 @@ DeXuatHoSo.prototype = {
                     me.save_DeXuatHoSo();
                 });
             }
-            
+
         });
         $("#btnDelete_DeXuatHoSo").click(function () {
             var arrChecked_Id = edu.util.getArrCheckedIds("tblDeXuatHoSo", "checkX");
@@ -934,6 +940,13 @@ DeXuatHoSo.prototype = {
         if (!me["icheck"]) {
             return;
             //edu.system.alert("Lưu thành công");
+        }
+        // Validate: Ngày cấp CCCD bắt buộc nhập (2026-08-24)
+        if ($('#txtCCCD_NgayCap').length && !$('#txtCCCD_NgayCap').val()) {
+            edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w');
+            setTimeout(function () { try { $('#txtCCCD_NgayCap').focus(); } catch (er) { } }, 50);
+            me.icheck = false;
+            return;
         }
         //--Edit
         var obj_save = {
@@ -5311,6 +5324,22 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
                 dx.strDeXuatHoSo_Id = dx._lockedPersonId;
             }
         });
+        // Validate: Ngày cấp CCCD bắt buộc nhập — capture-phase click (2026-08-24)
+        var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
+        if (_btnSave && !_btnSave._cccdValidatorBound) {
+            _btnSave._cccdValidatorBound = true;
+            _btnSave.addEventListener('click', function (ev) {
+                var el = document.getElementById('txtCCCD_NgayCap');
+                if (el && !el.value) {
+                    try { edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Ngày cấp CCCD.'); }
+                    setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
+                    ev.preventDefault();
+                    ev.stopImmediatePropagation();
+                    ev.stopPropagation();
+                    return false;
+                }
+            }, true);
+        }
     }
 
     // Tách HODEM = word đầu (Họ) + phần còn lại (Tên đệm)
