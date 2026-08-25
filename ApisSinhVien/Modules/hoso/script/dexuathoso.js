@@ -126,12 +126,14 @@ DeXuatHoSo.prototype = {
             $('#dropMucDoNgaySinh').val(strChinhXac_Id).trigger("change").trigger({ type: 'select2:select' });
         });
         $("#btnSave_DeXuatHoSo").click(function () {
-            // Validate: Ngày cấp CCCD bắt buộc nhập (2026-08-24)
-            if ($('#txtCCCD_NgayCap').length && !$('#txtCCCD_NgayCap').val()) {
-                edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w');
-                setTimeout(function () { try { $('#txtCCCD_NgayCap').focus(); } catch (er) { } }, 50);
+            // Validate: Số CCCD bắt buộc nhập (2026-08-25)
+            if ($('#txtCCCD_So').length && !($('#txtCCCD_So').val() || '').trim()) {
+                edu.system.alert('Vui lòng nhập Số CCCD.', 'w');
+                setTimeout(function () { try { $('#txtCCCD_So').focus(); } catch (er) { } }, 50);
                 return;
             }
+            // Bridge #txtCCCD_So → shadow #txtSoDinhDinh<cccdTypeId> để save_DinhDanh đọc được (2026-08-25)
+            if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
             me.icheck = true;
             let iSLCheck = me.dtLoaiDinhDanh.length + me.dtLoaiLienHe.length;
             if (iSLCheck > 0) {
@@ -941,13 +943,15 @@ DeXuatHoSo.prototype = {
             return;
             //edu.system.alert("Lưu thành công");
         }
-        // Validate: Ngày cấp CCCD bắt buộc nhập (2026-08-24)
-        if ($('#txtCCCD_NgayCap').length && !$('#txtCCCD_NgayCap').val()) {
-            edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w');
-            setTimeout(function () { try { $('#txtCCCD_NgayCap').focus(); } catch (er) { } }, 50);
+        // Validate: Số CCCD bắt buộc nhập (2026-08-25)
+        if ($('#txtCCCD_So').length && !($('#txtCCCD_So').val() || '').trim()) {
+            edu.system.alert('Vui lòng nhập Số CCCD.', 'w');
+            setTimeout(function () { try { $('#txtCCCD_So').focus(); } catch (er) { } }, 50);
             me.icheck = false;
             return;
         }
+        // Bridge CCCD → shadow field (safety) (2026-08-25)
+        if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CC8yJDM1Ai4zJBEkMzIuLwPP',
@@ -995,6 +999,8 @@ DeXuatHoSo.prototype = {
                         me.dtLoaiDinhDanh.forEach(e => me.save_DinhDanh(e.ID));
                         me.dtLoaiLienHe.forEach(e => me.save_LienHe(e.ID));
                     }
+                    // Save PersonInvoice (XHĐ tab) sau khi CorePerson save xong (2026-08-25)
+                    if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice();
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -5306,6 +5312,113 @@ DeXuatHoSo.prototype = {
 };
 
 /*----------------------------------------------
+-- Bridge Số CCCD (UI mới #txtCCCD_So) → shadow field #txtSoDinhDinh<cccdTypeId>
+-- Cần thiết vì save_DinhDanh đọc từ shadow field, không đọc từ UI mới (2026-08-25)
+----------------------------------------------*/
+DeXuatHoSo.prototype._findCccdTypeId = function () {
+    var arr = this.dtLoaiDinhDanh || [];
+    var found = arr.find(function (e) {
+        var ma = ((e.MA || '') + '').toUpperCase();
+        var ten = ((e.TEN || '') + '').toUpperCase();
+        return ma === 'CCCD' || ten.indexOf('CCCD') > -1 || ten.indexOf('CĂN CƯỚC') > -1 || ten.indexOf('CAN CUOC') > -1;
+    });
+    return found ? found.ID : null;
+};
+DeXuatHoSo.prototype._bridgeCccdToShadow = function () {
+    var cid = this._findCccdTypeId();
+    if (!cid) { console.warn('[Bridge CCCD] không tìm thấy CCCD type trong dtLoaiDinhDanh'); return; }
+    // Đảm bảo shadow field tồn tại (trường hợp table cũ chưa render)
+    if (!$('#txtSoDinhDinh' + cid).length) {
+        $('body').append('<input type="hidden" id="txtSoDinhDinh' + cid + '" />');
+    }
+    if (!$('#txtNgayCap' + cid).length) {
+        $('body').append('<input type="hidden" id="txtNgayCap' + cid + '" />');
+    }
+    if (!$('#txtNoiCap' + cid).length) {
+        $('body').append('<input type="hidden" id="txtNoiCap' + cid + '" />');
+    }
+    if (!$('#checkX' + cid).length) {
+        $('body').append('<input type="checkbox" id="checkX' + cid + '" style="display:none" checked />');
+    }
+    $('#txtSoDinhDinh' + cid).val(($('#txtCCCD_So').val() || '').trim());
+    $('#txtNgayCap' + cid).val($('#txtCCCD_NgayCap').val() || '');
+    $('#txtNoiCap' + cid).val(($('#txtCCCD_NoiCap').val() || '').trim());
+    // Preserve identifier record ID → save_DinhDanh sẽ UPDATE thay vì INSERT
+    var existing = (this.dtDinhDanh || []).find(function (x) { return x.IDENTIFIER_TYPE_CODE === cid; });
+    if (existing && existing.ID) {
+        $('#txtSoDinhDinh' + cid).attr('name', existing.ID);
+    }
+    console.log('[Bridge CCCD] cid=', cid, 'so=', $('#txtSoDinhDinh' + cid).val(), 'name=', $('#txtSoDinhDinh' + cid).attr('name'));
+};
+
+/*----------------------------------------------
+-- Save PersonInvoice (tab XHĐ) — Them_ hoặc Sua_ tùy _currentInvoiceId (2026-08-25)
+-- Chỉ save khi có data hoặc đã có invoice trước đó (tránh insert record rỗng)
+----------------------------------------------*/
+DeXuatHoSo.prototype.save_PersonInvoice = function () {
+    var me = this;
+    var $ = window.jQuery || window.$;
+    var val = function (id) { return (($('#' + id).val() || '') + '').trim(); };
+    var tenDonVi = val('txtKQ_HD_TenDonVi');
+    var mst = val('txtKQ_HD_MST');
+    var diaChi = val('txtKQ_HD_DiaChi');
+    var email = val('txtKQ_HD_Email');
+    var sdt = val('txtKQ_HD_SDT');
+    var maQHNS = val('txtKQ_HD_MaQHNS');
+    var doiTuong = $('#ddlKQ_HD_DoiTuong').val() || '';
+    var hasData = tenDonVi || mst || diaChi || email || sdt || maQHNS || doiTuong;
+    var invoiceId = me._currentInvoiceId || '';
+    if (!hasData && !invoiceId) return;
+    var isUpdate = !!(invoiceId && invoiceId.length === 32);
+    var obj_save = {
+        action: isUpdate
+            ? 'SV_NGUOIHOC_01_MH/EjQgHhEkMzIuLwgvNy4oIiQILycu'
+            : 'SV_NGUOIHOC_01_MH/FSkkLB4RJDMyLi8ILzcuKCIkCC8nLgPP',
+        func: isUpdate
+            ? 'PKG_CORE_NGUOIHOC_01.Sua_PersonInvoiceInfo'
+            : 'PKG_CORE_NGUOIHOC_01.Them_PersonInvoiceInfo',
+        iM: edu.system.iM,
+        strBuyer_Type_Loai: doiTuong,
+        strBuyer_Ref_Type: '',
+        strBuyer_Ref_Id: '',
+        strBuyer_Name: tenDonVi,
+        strBuyer_Addr: diaChi,
+        strBuyer_Tax_Mst: mst,
+        strBuyer_Budget_Qhns: maQHNS,
+        strBuyer_Email: email,
+        strBuyer_Phone: sdt,
+        strNguoiThucHien_Id: edu.system.userId,
+        strVaiTroDangNhap_Id: edu.system.vaiTroDangNhap_Id || '',
+        strChucNangHeThong_Id: edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+        strHanhDong_Code: ''
+    };
+    if (isUpdate) {
+        obj_save.strId = invoiceId;
+    } else {
+        var pid = me.strDeXuatHoSo_Id || me._lockedPersonId || '';
+        if (!pid) { console.warn('[PersonInvoice] không có strPerson_Id → skip Them'); return; }
+        obj_save.strPerson_Id = pid;
+    }
+    console.log('[PersonInvoice] save', isUpdate ? 'Sua' : 'Them', obj_save);
+    edu.system.makeRequest({
+        success: function (data) {
+            if (data.Success) {
+                if (!isUpdate && data.Id) me._currentInvoiceId = data.Id;
+                console.log('[PersonInvoice] OK id=', data.Id || invoiceId);
+            } else {
+                console.warn('[PersonInvoice] fail:', data.Message);
+            }
+        },
+        error: function (er) { console.warn('[PersonInvoice] err:', er); },
+        type: 'POST',
+        contentType: true,
+        action: obj_save.action,
+        data: obj_save,
+        fakedb: []
+    }, false, false, false, null);
+};
+
+/*----------------------------------------------
 -- Shared API: mở modal #zoneEdit từ bên ngoài (2026-08-21)
 -- Chuẩn hoá input: { id, hoDem, ten, ngaySinh_Ngay, ngaySinh_Thang, ngaySinh_Nam, anh }
 -- Dùng cho: hoso_taomoi (HoSoTaoMoi.openEditModal wrapper) + quanlytoanbo (click .btnEdit)
@@ -5323,15 +5436,17 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
                 console.log('[DX Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
                 dx.strDeXuatHoSo_Id = dx._lockedPersonId;
             }
+            // Bridge CCCD → shadow field trước khi save chạy (2026-08-25)
+            if (typeof dx._bridgeCccdToShadow === 'function') dx._bridgeCccdToShadow();
         });
-        // Validate: Ngày cấp CCCD bắt buộc nhập — capture-phase click (2026-08-24)
+        // Validate: Số CCCD bắt buộc nhập — capture-phase click (2026-08-25)
         var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
         if (_btnSave && !_btnSave._cccdValidatorBound) {
             _btnSave._cccdValidatorBound = true;
             _btnSave.addEventListener('click', function (ev) {
-                var el = document.getElementById('txtCCCD_NgayCap');
-                if (el && !el.value) {
-                    try { edu.system.alert('Vui lòng nhập Ngày cấp CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Ngày cấp CCCD.'); }
+                var el = document.getElementById('txtCCCD_So');
+                if (el && !((el.value || '') + '').trim()) {
+                    try { edu.system.alert('Vui lòng nhập Số CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Số CCCD.'); }
                     setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
                     ev.preventDefault();
                     ev.stopImmediatePropagation();

@@ -1377,7 +1377,11 @@ XacNhanKetQua.prototype = {
                 'Mã số': v(sv.QLSV_NGUOIHOC_MASO),
                 'Họ và tên': hoTen,
                 'Ngày sinh': fmtNgaySinh(sv),
-                'Giới tính': v(sv.QLSV_NGUOIHOC_GIOITINH_TEN) || v(sv.GIOITINH_TEN) || ''
+                'Giới tính': v(sv.QLSV_NGUOIHOC_GIOITINH_TEN) || v(sv.GIOITINH_TEN)
+                    || v(sv.QLSV_NGUOIHOC_GIOITINH) || v(sv.GIOITINH)
+                    || v(sv.TENGIOITINH) || v(sv.QLSV_NGUOIHOC_TENGIOITINH)
+                    || v(sv.QLSV_NGUOIHOC_GIOITINH_MA) || v(sv.GIOITINH_MA)
+                    || ''
             };
             colTT.forEach(function (c) {
                 var kq = kqOfSV[c.id];
