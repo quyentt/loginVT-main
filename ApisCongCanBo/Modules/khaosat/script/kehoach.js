@@ -2374,7 +2374,12 @@ KeHoach.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                edu.system.alert("Thực hiện thành công!");
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công!");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
                 if (!data.Success && data.Message) console.warn("[save_TabHome]", data.Message, obj_save);
             },
             error: function (er) { console.warn("[save_TabHome] error:", er); },
@@ -2489,7 +2494,12 @@ KeHoach.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                edu.system.alert("Thực hiện thành công!");
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công!");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
                 if (!data.Success && data.Message) console.warn("[save_TabPro]", data.Message, obj_save);
             },
             error: function (er) { console.warn("[save_TabPro] error:", er); },
@@ -2748,7 +2758,12 @@ KeHoach.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
-                edu.system.alert("Thực hiện thành công!");
+                if (data.Success) {
+                    edu.system.alert("Thực hiện thành công!");
+                }
+                else {
+                    edu.system.alert(data.Message);
+                }
                 if (!data.Success && data.Message) {
                     console.warn("[save_TabPan]", data.Message, obj_save);
                 }
