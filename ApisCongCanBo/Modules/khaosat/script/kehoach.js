@@ -2374,11 +2374,15 @@ KeHoach.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
+                edu.system.alert("Thực hiện thành công!");
                 if (!data.Success && data.Message) console.warn("[save_TabHome]", data.Message, obj_save);
             },
             error: function (er) { console.warn("[save_TabHome] error:", er); },
             type: 'POST',
             complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_PhieuKhaoSat();
+                });
                 if (typeof cbComplete === 'function') cbComplete();
             },
             contentType: true,
@@ -2485,11 +2489,15 @@ KeHoach.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
+                edu.system.alert("Thực hiện thành công!");
                 if (!data.Success && data.Message) console.warn("[save_TabPro]", data.Message, obj_save);
             },
             error: function (er) { console.warn("[save_TabPro] error:", er); },
             type: 'POST',
             complete: function () {
+                edu.system.start_Progress("zoneprocessXXXX", function () {
+                    me.getList_PhieuKhaoSat();
+                });
                 if (typeof cbComplete === 'function') cbComplete();
             },
             contentType: true,
@@ -2740,15 +2748,21 @@ KeHoach.prototype = {
         };
         edu.system.makeRequest({
             success: function (data) {
+                edu.system.alert("Thực hiện thành công!");
                 if (!data.Success && data.Message) {
                     console.warn("[save_TabPan]", data.Message, obj_save);
                 }
+                me.getList_PhieuKhaoSat();
             },
             error: function (er) {
                 console.warn("[save_TabPan] error:", er);
             },
             type: 'POST',
             complete: function () {
+                //edu.system.start_Progress("zoneprocessXXXX", function () {
+                //});
+                //edu.system.start_Progress("zoneprocessXXXXPTD", function () {
+                //});
                 if (typeof cbComplete === 'function') cbComplete();
             },
             contentType: true,
