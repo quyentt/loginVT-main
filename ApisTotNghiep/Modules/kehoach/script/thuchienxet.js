@@ -333,6 +333,41 @@ ThucHienXet.prototype = {
         $('#dropSearch_KhoaHoc').on('select2:select', function () {
             me.getList_LopQuanLy();
         });
+        // FIX 2026-08-26: Click nut copy nho canh MSSV → copy mã sinh viên vao clipboard
+        $("#tblQuanSoLop, #tblDat, #tblKhongDat, #tblDaCongNhan, #tblHoanXet").delegate('.btnCopyMSSV', 'click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var maso = $(this).data('mssv') || '';
+            if (!maso) return;
+            var $btn = $(this);
+            var $ic = $btn.find('i');
+            var oldClass = $ic.attr('class');
+            var doneOK = function () {
+                $ic.attr('class', 'fa fa-check');
+                $btn.css({ 'background': '#dcfce7', 'border-color': '#22c55e', 'color': '#166534' });
+                setTimeout(function () {
+                    $ic.attr('class', oldClass);
+                    $btn.css({ 'background': 'transparent', 'border-color': '#cbd5e1', 'color': '#475569' });
+                }, 1200);
+            };
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(maso).then(doneOK, function () {
+                    // Fallback textarea method
+                    var ta = document.createElement('textarea');
+                    ta.value = maso; document.body.appendChild(ta);
+                    ta.select(); document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    doneOK();
+                });
+            } else {
+                var ta = document.createElement('textarea');
+                ta.value = maso; document.body.appendChild(ta);
+                ta.select(); document.execCommand('copy');
+                document.body.removeChild(ta);
+                doneOK();
+            }
+        });
+
         // Click mã SV → mở modal chỉ nhúng trang "Theo dõi kết quả học tập" (không dùng thủ vai full cổng SV vì bảo mật). Pattern giống ApisCongCanBo/Modules/lichgiang/script/lichgiang.js
         $("#tblQuanSoLop, #tblDat, #tblKhongDat, #tblDaCongNhan, #tblHoanXet").delegate('.btnView_HocTap', 'click', function (e) {
             var strMSSV = $(this).data('mssv') || $(this).find('u').text();
@@ -1763,7 +1798,11 @@ ThucHienXet.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                        var maso = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                        return '<span class="mssv-cell" style="display:inline-flex;align-items:center;gap:4px;">'
+                            + '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + maso + '"><u>' + maso + '</u></div>'
+                            + '<a class="btn btn-default btnCopyMSSV" data-mssv="' + maso + '" title="Copy mã số" style="padding:4px 7px;line-height:1;min-height:auto;background:transparent;border:1px solid #cbd5e1;color:#475569;cursor:pointer;"><i class="far fa-copy"></i></a>'
+                            + '</span>';
                     }
                 },
                 {
@@ -1860,7 +1899,11 @@ ThucHienXet.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                        var maso = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                        return '<span class="mssv-cell" style="display:inline-flex;align-items:center;gap:4px;">'
+                            + '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + maso + '"><u>' + maso + '</u></div>'
+                            + '<a class="btn btn-default btnCopyMSSV" data-mssv="' + maso + '" title="Copy mã số" style="padding:4px 7px;line-height:1;min-height:auto;background:transparent;border:1px solid #cbd5e1;color:#475569;cursor:pointer;"><i class="far fa-copy"></i></a>'
+                            + '</span>';
                     }
                 },
                 {
@@ -1996,7 +2039,11 @@ ThucHienXet.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                        var maso = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                        return '<span class="mssv-cell" style="display:inline-flex;align-items:center;gap:4px;">'
+                            + '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + maso + '"><u>' + maso + '</u></div>'
+                            + '<a class="btn btn-default btnCopyMSSV" data-mssv="' + maso + '" title="Copy mã số" style="padding:4px 7px;line-height:1;min-height:auto;background:transparent;border:1px solid #cbd5e1;color:#475569;cursor:pointer;"><i class="far fa-copy"></i></a>'
+                            + '</span>';
                     }
                 },
                 {
@@ -2154,7 +2201,11 @@ ThucHienXet.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                        var maso = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                        return '<span class="mssv-cell" style="display:inline-flex;align-items:center;gap:4px;">'
+                            + '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + maso + '"><u>' + maso + '</u></div>'
+                            + '<a class="btn btn-default btnCopyMSSV" data-mssv="' + maso + '" title="Copy mã số" style="padding:4px 7px;line-height:1;min-height:auto;background:transparent;border:1px solid #cbd5e1;color:#475569;cursor:pointer;"><i class="far fa-copy"></i></a>'
+                            + '</span>';
                     }
                 },
                 {
@@ -2343,7 +2394,11 @@ ThucHienXet.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                        var maso = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                        return '<span class="mssv-cell" style="display:inline-flex;align-items:center;gap:4px;">'
+                            + '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + maso + '"><u>' + maso + '</u></div>'
+                            + '<a class="btn btn-default btnCopyMSSV" data-mssv="' + maso + '" title="Copy mã số" style="padding:4px 7px;line-height:1;min-height:auto;background:transparent;border:1px solid #cbd5e1;color:#475569;cursor:pointer;"><i class="far fa-copy"></i></a>'
+                            + '</span>';
                     }
                 },
                 {
@@ -2621,7 +2676,11 @@ ThucHienXet.prototype = {
             aoColumns: [
                 {
                     "mRender": function (nRow, aData) {
-                        return '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '"><u>' + edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO) + '</u></div>';
+                        var maso = edu.util.returnEmpty(aData.QLSV_NGUOIHOC_MASO);
+                        return '<span class="mssv-cell" style="display:inline-flex;align-items:center;gap:4px;">'
+                            + '<div class="btn btn-default min-w-auto btnView_HocTap" id="' + aData.QLSV_NGUOIHOC_ID + '" data-mssv="' + maso + '"><u>' + maso + '</u></div>'
+                            + '<a class="btn btn-default btnCopyMSSV" data-mssv="' + maso + '" title="Copy mã số" style="padding:4px 7px;line-height:1;min-height:auto;background:transparent;border:1px solid #cbd5e1;color:#475569;cursor:pointer;"><i class="far fa-copy"></i></a>'
+                            + '</span>';
                     }
                 },
                 {

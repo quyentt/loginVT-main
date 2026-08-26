@@ -952,6 +952,13 @@ DeXuatHoSo.prototype = {
         }
         // Bridge CCCD → shadow field (safety) (2026-08-25)
         if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
+        var temp = [
+            edu.system.getValById('txtNgaySinh'),
+            edu.system.getValById('txtThangSinh'),
+            edu.system.getValById('txtNamSinh')
+        ].filter(function (x) {
+            return x !== undefined && x !== null && x !== '';
+        }).join('/');
         //--Edit
         var obj_save = {
             'action': 'NS_HoSoNhanSu5_MH/CC8yJDM1Ai4zJBEkMzIuLwPP',
@@ -963,7 +970,7 @@ DeXuatHoSo.prototype = {
             'strLastName': edu.system.getValById('txtHo'),
             'strMiddleName': edu.system.getValById('txtTenDem'),
             'strFirstName': edu.system.getValById('txtTen'),
-            'strDateOfBirth': edu.system.getValById('txtNgaySinh') + "/" + edu.system.getValById('txtThangSinh') + "/" + edu.system.getValById('txtNamSinh'),
+            'strDateOfBirth': temp,
             'strDobPrecisionLevel': edu.system.getValById('dropMucDoNgaySinh'),
             'dBirthDay': edu.system.getValById('txtNgaySinh'),
             'dBirthMonth': edu.system.getValById('txtThangSinh'),

@@ -788,7 +788,10 @@ KeHoachTuyenSinhNew.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtResult = edu.util.checkValue(data.Data) ? data.Data : [];
-                    me.genTable_NhanSu(dtResult);
+                    me.dtNS_List = dtResult;
+                    me._enrichNhanSu_FromPicker(dtResult, function () {
+                        me.genTable_NhanSu(me.dtNS_List);
+                    });
                 } else {
                     edu.system.alert("LayDS_NH_KeHoach_NhanSu: " + data.Message, "w");
                 }
@@ -798,6 +801,72 @@ KeHoachTuyenSinhNew.prototype = {
             },
             type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
         }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- BE proc PKG_CORE_NHAPHOC.LayDS_NH_KeHoach_NhanSu JOIN sai bảng
+    -- → PERSON_HOTEN/PERSON_MA/DONVI_TEN luôn rỗng.
+    -- Workaround: query pkg_nhansu_hoso_v2.LayDSNhanSu_HoSo_v2 (nguồn picker)
+    -- → build map by ID → enrich record trước khi render.
+    -------------------------------------------*/
+    _mapNS_Cache: null,
+    _enrichNhanSu_FromPicker: function (list, done) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!list || list.length === 0) { done(); return; }
+        var missingIds = [];
+        for (var i = 0; i < list.length; i++) {
+            var pid = list[i].CORE_PERSON_ID;
+            if (!pid) continue;
+            var hoten = (list[i].PERSON_HOTEN || '').trim();
+            var mac = list[i].PERSON_MA;
+            if (!hoten || !mac) missingIds.push(pid);
+        }
+        if (missingIds.length === 0) { done(); return; }
+        if (me._mapNS_Cache) {
+            me._applyEnrich(list, me._mapNS_Cache);
+            done();
+            return;
+        }
+        var obj_req = {
+            action: 'NS_HoSo_V2_MH/DSA4BRIPKSAvEjQeCS4SLh43cwPP',
+            func: 'pkg_nhansu_hoso_v2.LayDSNhanSu_HoSo_v2',
+            iM: edu.system.iM,
+            strTuKhoa: '',
+            strDaoTao_CoCauToChuc_Id: '',
+            strChucVu_Id: '',
+            strTinhTrangNhanSu_Id: '',
+            dLaCanBoNgoaiTruong: 0,
+            pageIndex: 1,
+            pageSize: 100000,
+            strNguoiThucHien_Id: edu.system.userId,
+            strVaiTroDangNhap_Id: edu.system.strVaiTro_Id || '',
+            strChucNangHeThong_Id: edu.system.strChucNang_Id || ''
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                var arr = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                var map = {};
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i] && arr[i].ID) map[arr[i].ID] = arr[i];
+                }
+                me._mapNS_Cache = map;
+                me._applyEnrich(list, map);
+                done();
+            },
+            error: function () { done(); },
+            type: 'POST', contentType: true, action: obj_req.action, data: obj_req, fakedb: []
+        }, false, false, false, null);
+    },
+    _applyEnrich: function (list, map) {
+        for (var i = 0; i < list.length; i++) {
+            var d = list[i];
+            var pid = d.CORE_PERSON_ID;
+            if (!pid || !map[pid]) continue;
+            var ns = map[pid];
+            if (!(d.PERSON_HOTEN || '').trim()) d.PERSON_HOTEN = ns.HOTEN || '';
+            if (!d.PERSON_MA) d.PERSON_MA = ns.MASO || '';
+            if (!d.DONVI_TEN) d.DONVI_TEN = ns.DAOTAO_COCAUTOCHUC_TEN || '';
+        }
     },
 
     genTable_NhanSu: function (data) {
@@ -820,7 +889,12 @@ KeHoachTuyenSinhNew.prototype = {
         for (var i = 0; i < data.length; i++) {
             var d = data[i];
             var strId = d.ID || d.Id || d.id || '';
-            var sNhanSu = mergeTenMa(d.PERSON_HOTEN || d.PERSON_TEN || d.NHANSU_TEN, d.PERSON_MA || d.NHANSU_MA);
+            var sTenRaw = (d.PERSON_HOTEN || d.PERSON_TEN || d.NHANSU_TEN || '').trim();
+            var sMaRaw = d.PERSON_MA || d.NHANSU_MA || '';
+            var sNhanSu = mergeTenMa(sTenRaw, sMaRaw);
+            if (!sNhanSu && d.CORE_PERSON_ID) {
+                sNhanSu = '<span class="text-muted" title="BE chưa JOIN được thông tin nhân sự">(ID: ' + d.CORE_PERSON_ID.substring(0, 8) + '…)</span>';
+            }
             rows += '<tr>'
                 + '<td class="td-center">' + (i + 1) + '</td>'
                 + '<td class="td-left">' + sNhanSu + '</td>'
@@ -842,11 +916,22 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     /*------------------------------------------
-    -- Origin: PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Ns_PhanCong_Get_By_Id
     -- Chi tiết phân công nhân sự theo ID
+    -- BE PKG_CORE_NHAPHOC KHÔNG có proc Get_By_Id riêng, chỉ có
+    -- LayDS_NH_KeHoach_NhanSu (đã lưu cache vào me.dtNS_List ở list flow).
+    -- → Lookup trực tiếp trong cache thay vì gọi API detail sai package.
     -------------------------------------------*/
     getDetail_NhanSu: function (strId) {
         var me = main_doc.KeHoachTuyenSinhNew;
+        var list = me.dtNS_List || [];
+        var dt = null;
+        for (var i = 0; i < list.length; i++) {
+            var recId = list[i].ID || list[i].Id || list[i].id;
+            if (recId === strId) { dt = list[i]; break; }
+        }
+        me.genDetail_NhanSu(dt);
+        return;
+        // === legacy call, giữ lại reference ===
         var obj_save = {
             'action': 'TS_Core_KeHoach_MH/ETMeFTIeCikeDzIeESkgLwIuLyYeBiQ1HgM4Hggl',
             'func': 'PKG_CORE_TS_KEHOACH.Pr_Ts_Kh_Ns_PhanCong_Get_By_Id',
@@ -945,11 +1030,22 @@ KeHoachTuyenSinhNew.prototype = {
             if (ten && ma) return ten + ' (' + ma + ')';
             return ten || ma;
         };
-        var sTen = d.PERSON_HOTEN || d.PERSON_TEN || '';
-        var sMa = d.PERSON_MA || '';
-        var sDonVi = d.DONVI_TEN || d.DON_VI_TEN || '';
-        var infoHtml = '<span>' + mergeTenMa(sTen, sMa) + '</span>';
+        var sTen = (d.PERSON_HOTEN || d.PERSON_TEN || d.HOTEN || d.HO_TEN
+            || d.NHANSU_HOTEN || d.NHANSU_TEN || d.NS_HOTEN || d.NS_TEN || '').trim();
+        var sMa = d.PERSON_MA || d.NHANSU_MA || d.MASO || d.MA_NS || d.MA || '';
+        var sDonVi = d.DONVI_TEN || d.DON_VI_TEN || d.TEN_DONVI
+            || d.DAOTAO_COCAUTOCHUC_TEN || d.COCAUTOCHUC_TEN || '';
+        var mergedNS = mergeTenMa(sTen, sMa);
+        var infoHtml;
+        if (mergedNS) {
+            infoHtml = '<span>' + mergedNS + '</span>';
+        } else if (d.CORE_PERSON_ID) {
+            infoHtml = '<span class="text-warning"><i class="fa fa-exclamation-triangle"></i> BE chưa trả về tên nhân sự (CORE_PERSON_ID: <code>' + d.CORE_PERSON_ID + '</code>)</span>';
+        } else {
+            infoHtml = '<span class="text-muted">(không có thông tin nhân sự)</span>';
+        }
         if (sDonVi) infoHtml += '&nbsp;<span class="lbl-k">·</span>&nbsp;<span class="lbl-k">Đơn vị:</span>' + sDonVi;
+        else if (d.DONVI_ID) infoHtml += '&nbsp;<span class="text-muted">· Đơn vị ID: ' + d.DONVI_ID.substring(0, 8) + '…</span>';
         $("#lblThongTinNS_EditNS").html(infoHtml);
 
         $("#txtNgayBD_EditNS").val(me._fmtDate(d.NGAY_BATDAU || d.NGAYBATDAU || ''));
@@ -1789,6 +1885,11 @@ KeHoachTuyenSinhNew.prototype = {
                     return;
                 }
                 me.dtNS_Picker = edu.util.checkValue(data.Data) ? data.Data : [];
+                var map = me._mapNS_Cache || {};
+                for (var i = 0; i < me.dtNS_Picker.length; i++) {
+                    if (me.dtNS_Picker[i] && me.dtNS_Picker[i].ID) map[me.dtNS_Picker[i].ID] = me.dtNS_Picker[i];
+                }
+                me._mapNS_Cache = map;
                 me.genTable_NS_PickNS();
             },
             error: function (er) {
@@ -1864,16 +1965,25 @@ KeHoachTuyenSinhNew.prototype = {
         me.genTable_NSDaChon();
         // BS5 5.3.2 quirk: mở picker qua data-bs-toggle từ ThemNS → BS5 auto-hide ThemNS.
         // Khi đóng picker, BS5 không tự re-show ThemNS → cần chủ động show lại.
-        // Cả 2 modal đều dùng jQuery API để match với edu.system.alert (systemroot dùng $.modal).
+        // KHÔNG dùng edu.system.alert ở đây: alert là BS3 modal, khi close sẽ gỡ
+        // body.modal-open → modal ThemNS còn show nhưng bị kẹt backdrop/click.
+        // Thay bằng badge count + flash tạm ở section title.
         var $picker = $('#modal-PickNS-KHTSN');
         $picker.one('hidden.bs.modal', function () {
-            // Re-show ThemNS nếu bị auto-hide, rồi mới show alert
             var $them = $('#modal-ThemNS-KHTSN');
             if (!$them.hasClass('show')) {
                 $them.modal('show');
             }
             $('body').addClass('modal-open');
-            edu.system.alert("Đã thêm " + added + " nhân sự vào danh sách", "s");
+            if (added > 0) {
+                var $badge = $('#lblCount_NSDaChon');
+                $badge.removeClass('bg-primary').addClass('bg-success')
+                    .text(me.dtNS_DaChon.length + ' (+' + added + ')');
+                setTimeout(function () {
+                    $badge.removeClass('bg-success').addClass('bg-primary')
+                        .text(me.dtNS_DaChon.length);
+                }, 2000);
+            }
         });
         $picker.modal('hide');
     },

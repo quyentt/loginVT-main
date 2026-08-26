@@ -3,6 +3,70 @@
     .radio-inline+.radio-inline {
         margin-left: 0px;
     }
+
+    /* FIX 2026-08-26: Chuan hoa header modal Danh sach dat / khong dat / da cong nhan
+       / hoan xet — TITLE chinh giua, nut X ve GOC PHAI (chuan Bootstrap). */
+    #myModalDat .modal-header,
+    #myModalKhongDat .modal-header,
+    #myModalDaCongNhan .modal-header,
+    #myModalHoanXet .modal-header,
+    #myModal .modal-header {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px 55px !important;
+        min-height: 52px !important;
+    }
+    #myModalDat .modal-header .modal-title,
+    #myModalKhongDat .modal-header .modal-title,
+    #myModalDaCongNhan .modal-header .modal-title,
+    #myModalHoanXet .modal-header .modal-title,
+    #myModal .modal-header .modal-title {
+        text-align: center !important;
+        margin: 0 !important;
+        color: #fff !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        flex: 1 1 auto !important;
+        line-height: 1.4 !important;
+    }
+    #myModalDat .modal-header .modal-title *,
+    #myModalKhongDat .modal-header .modal-title *,
+    #myModalDaCongNhan .modal-header .modal-title *,
+    #myModalHoanXet .modal-header .modal-title *,
+    #myModal .modal-header .modal-title * {
+        color: #fff !important;
+    }
+    #myModalDat .modal-header .close,
+    #myModalKhongDat .modal-header .close,
+    #myModalDaCongNhan .modal-header .close,
+    #myModalHoanXet .modal-header .close,
+    #myModal .modal-header .close {
+        position: absolute !important;
+        right: 14px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        left: auto !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 4px 10px !important;
+        opacity: 0.85 !important;
+        color: #fff !important;
+        text-shadow: none !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    #myModalDat .modal-header .close:hover,
+    #myModalKhongDat .modal-header .close:hover,
+    #myModalDaCongNhan .modal-header .close:hover,
+    #myModalHoanXet .modal-header .close:hover,
+    #myModal .modal-header .close:hover {
+        opacity: 1 !important;
+        color: #ffdcdc !important;
+    }
 </style>
 <section class="content aps-TotNghiep">
     <div class="row aps-thuchienxet">
@@ -28,12 +92,17 @@
                                 <input id="txtSearch" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                             </div>
                             <div class="col-sm-3 item-search">
-                                <a id="btnSearch" class="btn btn-default btn-search"><i class="fa fa-search"></i> <span
-                                        class="lang" key="">Tìm kiếm</span></a>
+                                <a id="btnSearch" class="btn btn-default btn-search">
+                                    <i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span>
+                                </a>
                             </div>
                             <div class="col-sm-6 item-search">
                                 <select id="dropSearch_KhoaHoc" class="select-opt" multiple="multiple"></select>
                             </div>
+                            <div class="col-sm-3 item-search">
+                                <select id="dropSearch_LopQuanLy" class="select-opt" multiple="multiple"></select>
+                            </div>
+
                             <div class="col-sm-3 item-search">
                                 <div class="dropdown" id="zonebtnTHX"> </div>
                                 <div class="dropdown" id="zonebtnTHX_Import"> </div>
