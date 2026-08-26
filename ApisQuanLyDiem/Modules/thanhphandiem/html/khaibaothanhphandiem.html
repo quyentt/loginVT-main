@@ -1,4 +1,53 @@
-﻿<section class="content aps-QLdiem">
+﻿<style>
+    /* FIX 2026-08-26: Nut Tim kiem + Dong bi trang tinh (chu + icon trang tren nen trang)
+       do global reskin cua indexi.aspx override btn-default. Ep filled solid xanh
+       cho btnSearch va outline xam cho btnClose de nhin thay ro. */
+    .aps-khaibaothanhphandiem .btn.btn-default.btnSearch,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnSearch:focus {
+        background: #1e3a6f !important;
+        border: 1px solid #1e3a6f !important;
+        color: #fff !important;
+        padding: 8px 22px !important;
+        font-weight: 600 !important;
+        min-height: 38px;
+        border-radius: 6px !important;
+    }
+    .aps-khaibaothanhphandiem .btn.btn-default.btnSearch:hover {
+        background: #16305d !important;
+        border-color: #16305d !important;
+        color: #fff !important;
+    }
+    .aps-khaibaothanhphandiem .btn.btn-default.btnSearch i,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnSearch span,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnSearch * {
+        color: #fff !important;
+        margin-right: 4px;
+    }
+    /* btnClose / btnReWrite: nut phu, outline xam dam de van doc duoc */
+    .aps-khaibaothanhphandiem .btn.btn-default.btnClose,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnReWrite {
+        background: #fff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+        padding: 8px 18px !important;
+        font-weight: 500 !important;
+    }
+    .aps-khaibaothanhphandiem .btn.btn-default.btnClose:hover,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnReWrite:hover {
+        background: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: #0f172a !important;
+    }
+    .aps-khaibaothanhphandiem .btn.btn-default.btnClose i,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnClose span,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnClose *,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnReWrite i,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnReWrite span,
+    .aps-khaibaothanhphandiem .btn.btn-default.btnReWrite * {
+        color: #0f172a !important;
+    }
+</style>
+<section class="content aps-QLdiem">
     <div class="row aps-khaibaothanhphandiem">
         <div class="col-lg-12">
             <div class="box box-solid zone-bus pd0" id="zone_notify_ThanhPhanDiem">
@@ -22,8 +71,7 @@
                             <input id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm" />
                         </div>
                         <div class="col-sm-3 item-search">
-                            <a class="btn btn-default btnSearch"><i class="fa fa-search"></i> <span class="lang"
-                                    key="">Tìm kiếm</span></a>
+                            <a class="btn btn-default btnSearch" style="background:#1e3a6f !important;border:1px solid #1e3a6f !important;color:#fff !important;padding:8px 22px;font-weight:600;min-height:38px;display:inline-flex;align-items:center;gap:8px;border-radius:6px;"><i class="fa fa-search" style="color:#fff !important;"></i> <span class="lang" key="" style="color:#fff !important;">Tìm kiếm</span></a>
                         </div>
                     </div>
                 </div>
@@ -217,7 +265,7 @@
                         <input type="text" id="txtSearch_TuKhoa" class="form-control" placeholder="Nhập từ khóa tìm kiếm">
                     </div>
                     <div class="bs-item pull-right">
-                        <a class="btn btn-default btnSearch"><i class="fa fa-search"></i> <span class="lang" key="">Tìm kiếm</span></a>
+                        <a class="btn btn-default btnSearch" style="background:#1e3a6f !important;border:1px solid #1e3a6f !important;color:#fff !important;padding:8px 22px;font-weight:600;min-height:38px;display:inline-flex;align-items:center;gap:8px;border-radius:6px;"><i class="fa fa-search" style="color:#fff !important;"></i> <span class="lang" key="" style="color:#fff !important;">Tìm kiếm</span></a>
                     </div>
                 </div>
             </div>
