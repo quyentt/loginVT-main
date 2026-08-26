@@ -9473,14 +9473,27 @@ systemroot.prototype = {
     },
     showAllId: function () {
         var arrId = [];
-        //var x = $(".form-control");
-        //for (var i = 0; i < x.length; i++) {
-        //    console.log(x);
-        //}
-        $(".form-control").each((index, point) => { if (point.id) arrId.push("#" + point.id); });
-        $(".select-opt").each((index, point) => { if (point.id) arrId.push("#" + point.id); });
-        console.log(arrId);
-        edu.system.alert(arrId.toString());
+        $(".form-control").each((index, point) => {
+            if (point.id) arrId.push("#" + point.id);
+        });
+
+        $(".select-opt").each((index, point) => {
+            if (point.id) arrId.push("#" + point.id);
+        });
+
+        $(".btn").each((index, point) => {
+            if (point.id) arrId.push("#" + point.id);
+        });
+
+        // Loại bỏ phần tử có độ dài > 36
+        arrId = arrId.filter(item => item.length <= 36);
+
+        setTimeout(function () {
+            localStorage.setItem("arrIdChucNang", arrId.toString())
+
+            console.log(localStorage.getItem("arrIdChucNang"))
+            edu.system.alert(arrId.toString());
+        }, 200);
     },
     getBrowser: function () {
 
