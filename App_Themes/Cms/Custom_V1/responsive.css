@@ -10,9 +10,9 @@
         height: 66px;
     }
 
-    .aps-list-chuongtrinh.box-solid {
+    /* .aps-list-chuongtrinh.box-solid {
         padding-right: 20px !important;
-    }
+    } */
 }
 
 @media only screen and (min-width:2000px) {
@@ -23,7 +23,7 @@
     } */
 
     .aps-list-chuongtrinh .zoneBox_ChuongTrinh .btnView {
-        width: 100% !important;
+        width: 24% !important;
     }
 }
 

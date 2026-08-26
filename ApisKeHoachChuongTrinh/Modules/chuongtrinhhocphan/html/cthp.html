@@ -55,7 +55,7 @@
     html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a,
     html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a span,
     html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a i {
-        color: #0f172a !important;
+        color: #0f172a;
         font-weight: 500 !important;
     }
     /* Icon check-circle (item đã chọn) giữ tone xanh dương primary */
@@ -63,7 +63,7 @@
     html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoibatbuoc .sidebar-menu li a i.fa-circle-check,
     html body.skin-blue #main-content-wrapper #zone_inputhocphan_khoituchondon .sidebar-menu li a i.fa-circle-check,
     html body.skin-blue #main-content-wrapper #zone_input_dinhhuong .sidebar-menu li a i.fa-circle-check {
-        color: #223771 !important;
+        color: #223771;
     }
     /* Placeholder input tìm kiếm trong 4 modal (Nhập từ khóa tìm kiếm) */
     html body.skin-blue #main-content-wrapper #zone_inputhocphan .form-control::placeholder,
@@ -91,9 +91,9 @@
     }
     html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-warning,
     body .aps-chuongtrinhhocphan .btn-soft-warning {
-        background: #ffc107 !important;
-        border: 1px solid #ffc107 !important;
-        color: #000000 !important;
+        background: #e0a800 !important;
+        border: 1px solid #e0a800 !important;
+        color: #ffffff !important;
     }
     html body.skin-blue #main-content-wrapper .aps-chuongtrinhhocphan .btn-soft-danger,
     body .aps-chuongtrinhhocphan .btn-soft-danger {
@@ -125,12 +125,14 @@
     .aps-chuongtrinhhocphan .btn-soft-secondary .lang,
     .aps-chuongtrinhhocphan .btn-soft-secondary i {
         color: #ffffff !important;
-        font-weight: 600 !important;
+        font-weight: 500 !important;
+        padding-right: 6px !important;
     }
     .aps-chuongtrinhhocphan .btn-soft-warning .lang,
     .aps-chuongtrinhhocphan .btn-soft-warning i {
-        color: #000000 !important;
-        font-weight: 600 !important;
+        color: #ffffff !important;
+        font-weight: 500 !important;
+        padding-right: 6px;
     }
     /* Hover — darken nhẹ */
     .aps-chuongtrinhhocphan .btn-soft-primary:hover { background: #0b5ed7 !important; border-color: #0b5ed7 !important; }
@@ -182,7 +184,7 @@
         padding: 8px 20px !important;
         display: inline-flex !important;
         align-items: center;
-        gap: 6px;
+        gap: 0;
         min-height: 38px;
         line-height: 1.2;
         float: none !important;
@@ -467,7 +469,7 @@
 </style>
 <section class="content aps-KeHoachChuongTrinh">
     <div class="row aps-chuongtrinhhocphan">
-        <div class="zone-content zone_chuongtrinh" id="zone_chuongtrinh">
+        <div class="zone-content zone_chuongtrinh" id="zone_chuongtrinh" style="display:  block !important;">
             <!-- /.Tìm kiếm -->
             <div class="box box-solid box-search pd15 pb5">
                 <div class="box-header with-border d-none">
@@ -816,7 +818,7 @@
                                                 id="zoneTongHocPhan" style="max-height: 480px; overflow-y: scroll"></ul>
                                         </div>
                                         <div class="box-footer border-0">
-                                            <div class="pull-right mt-0">
+                                            <div class="pull-right mt-10">
                                                 <!--<a class="btn btn-default" id="btnAdd_DMHocPhan" href="#" title="Close"><i class="fa fa-plus"></i> Thêm danh mục học phần</a>-->
                                                 <a class="btn btn-soft-success btn-table-none" id="btnAddAll_HocPhan"
                                                     href="#" title="Close">
@@ -855,7 +857,7 @@
                                                 ondragover="main_doc.ChuongTrinhHocPhan.dragover_handler(event);"></ul>
                                         </div>
                                         <div class="box-footer border-0">
-                                            <div class="pull-right mt-0">
+                                            <div class="pull-right mt-10">
                                                 <a class="btn btn-soft-warning btn-table-none" id="btnAdd_DMHocPhan"
                                                     href="#" title="Close">
                                                     <i class="fa fa-refresh"></i> Tải lại
@@ -1106,7 +1108,7 @@
                                 <tbody></tbody>
                                 <tfoot>
                                     <tr>
-                                        <td class="aps-table-lable col-sm-2">
+                                        <td class="aps-table-lable col-sm-1">
                                             Khóa đào tạo<span class="title-colon">:</span>
                                         </td>
                                         <td class="col-sm-2 aps-form-input">
@@ -1130,7 +1132,7 @@
                                                 <!-- Load from js -->
                                             </select>
                                         </td>
-                                        <td class="aps-table-lable col-sm-2">
+                                        <td class="aps-table-lable col-sm-1">
                                             Nhóm<span class="title-colon">:</span>
                                         </td>
                                         <td class="col-sm-2 aps-form-input">
@@ -2339,7 +2341,7 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
-                            <div class="row aps-form-table pl10 pr10 mt-10 scroll-table-x DSHocPhan" id="DSHocPhan">
+                            <div class="row aps-form-table mt-10 scroll-table-x DSHocPhan" id="DSHocPhan">
                                 <table id="tblHocPhanKeThua"
                                     class="table table-hover table-bordered table-noborder tblHocPhanKeThua">
                                     <thead>
@@ -2396,7 +2398,7 @@
                                         Cập nhật thứ tự theo kỳ dự kiến</span></a>
                             </span>
                         </div>
-                        <div class="aps-table-select scroll-table-x">
+                        <div class="aps-table-select scroll-table-x mt-10">
                             <table id="tblThuTuHocPhan"
                                 class="table table-hover table-bordered table-noborder tblThuTuHocPhan mt-10">
                                 <thead>
