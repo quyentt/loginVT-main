@@ -146,6 +146,54 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
     }
 
+    /* FIX 2026-08-26: Form Them moi Dinh Huong — 3 nut Xoa | Dong | Luu FLOATING
+       o day viewport, LUON NHIN THAY du danh sach SV co hang tram/nghin dong.
+       Ap dung khi zone_input_dinhhuong dang mo (co :not([style*="display: none"])). */
+    #zone_input_dinhhuong {
+        padding-bottom: 90px !important; /* chua cho floating footer khong che noi dung */
+    }
+    #zone_input_dinhhuong .dh-form-btn {
+        position: fixed !important;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1050;
+        display: inline-flex !important;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 18px;
+        margin: 0 !important;
+        border: 1px solid #d2d6de;
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+        width: auto !important;
+        max-width: fit-content;
+    }
+    #zone_input_dinhhuong .dh-form-btn .dh-btn-left,
+    #zone_input_dinhhuong .dh-form-btn .dh-btn-center {
+        display: inline-flex;
+        gap: 12px;
+        align-items: center;
+    }
+    #zone_input_dinhhuong .dh-form-btn .btn {
+        margin: 0 !important;
+        padding: 8px 20px !important;
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        min-height: 38px;
+        line-height: 1.2;
+        float: none !important;
+    }
+    /* An floating khi zone bi an di (display: none) — tranh no bam day viewport
+       khi user o trang khac */
+    #zone_input_dinhhuong[style*="display: none"] .dh-form-btn,
+    #zone_input_dinhhuong[style*="display:none"] .dh-form-btn {
+        display: none !important;
+    }
+
     /* ═══ Thu gọn / mở rộng panel bên phải (Các khối lựa chọn) ═══
        Click nút »: ẩn cột right, cột left rộng full-width.
        Click nút «: hiện lại panel right, cột left về col-sm-9. */
@@ -1887,16 +1935,19 @@
                         </div>
 
                         <div class="line-height-1 mt-15 mb-15"></div>
-                        <!--btn-->
-                        <div class="row aps-form-btn">
-                            <div class="pull-left">                                <a class="btn btn-danger" id="delete_DinhHuong">
-                                <i class="fa fa-trash"></i><span class="lang" key="">Xóa</span>
-                            </a></div>
-                            <div class="pull-right d-flex">
+                        <!--btn — Xoa trai (destructive), Dong+Luu nhom giua/phai theo convention.
+                             Su dung flex + justify-content:center de 2 nut Dong/Luu can THANG GIUA
+                             theo phuong ngang cua form-btn container, cung baseline. -->
+                        <div class="row aps-form-btn dh-form-btn">
+                            <div class="dh-btn-left">
+                                <a class="btn btn-danger" id="delete_DinhHuong">
+                                    <i class="fa fa-trash"></i><span class="lang" key="">Xóa</span>
+                                </a>
+                            </div>
+                            <div class="dh-btn-center">
                                 <a class="btn btn-default btnClose_SelectHocPhan" id="">
                                     <i class="fa fa-times"></i><span class="lang" key="">Đóng</span>
                                 </a>
-
                                 <a class="btn btn-primary" id="btnSave_DinhHuong">
                                     <i class="fa fa-save"></i><span class="lang" key="">Lưu</span>
                                 </a>
@@ -2727,4 +2778,64 @@
     })();
 
     $(window).on('resize', syncTblHocPhanScrollTop);
+
+    /* FIX 2026-08-26: Modal "Tim kiem sinh vien" — CHON TAT CA thong minh.
+       Server tra 10 dong/trang, header checkbox chi check 10 dong visible → user
+       phai bam qua tung trang. Bay gio: khi tick "Chon tat ca" ma con nhieu dong
+       chua tai, hoi user co muon TAI TAT CA khong; neu OK → force pageSize=100000
+       + reload + auto check het sau khi load. */
+    $(document).on('click', '#modal_sinhvien #chkSelectAll_SinhVien', function () {
+        var $ck = $(this);
+        if (!$ck.is(':checked')) return; // bo tick: giu handler goc
+        var infoText = ($('.info-tblModal_SinhVien').text() || '').trim();
+        // parse "1 den 10 trong 29594 du lieu"
+        var m = infoText.match(/(\d+)\s*d[ữu]\s*li[ệe]u/i);
+        var totalRows = m ? parseInt(m[1], 10) : 0;
+        var visibleRows = $('#tblModal_SinhVien tbody tr').length;
+        if (!totalRows || totalRows <= visibleRows) return; // da hien du → giu handler goc
+        // Con nhieu → hoi user
+        setTimeout(function () {
+            var msg = 'Trang hiện chỉ hiển thị ' + visibleRows + '/' + totalRows +
+                ' sinh viên.\n\nBạn có muốn TẢI VÀ CHỌN HẾT ' + totalRows +
+                ' sinh viên không?\n(Có thể mất vài giây)';
+            if (!confirm(msg)) {
+                // User huy → giu nguyen check 10 dong visible
+                return;
+            }
+            // Force pageSize = 100000 va reload
+            var $ddl = $('[id$=dropPageSizechangetblModal_SinhVien]');
+            if (!$ddl.length) $ddl = $('#dropPageSizechangetblModal_SinhVien');
+            if ($ddl.length) {
+                if ($ddl.find('option[value="100000"]').length === 0) {
+                    $ddl.append('<option value="100000">Tất cả</option>');
+                }
+                edu.system.pageSize_default = 100000;
+                edu.system.pageIndex_default = 1;
+                $ddl.val('100000').trigger('change');
+                // Trigger reload manually — findFuntionName tu paginate
+                if (typeof edu !== 'undefined' && edu.extend && edu.extend.getList_SinhVien) {
+                    edu.extend.getList_SinhVien('SEARCH');
+                }
+            }
+            // Poll cho toi khi bang tai xong roi check het
+            var tries = 0;
+            var oldCount = visibleRows;
+            var timer = setInterval(function () {
+                tries++;
+                var nowCount = $('#tblModal_SinhVien tbody tr').length;
+                // Xong khi so dong da tang len (khac oldCount) hoac timeout 30s
+                if (nowCount > oldCount + 5 || tries > 120) {
+                    clearInterval(timer);
+                    // Doi them 1 tick de DOM commit xong roi check het
+                    setTimeout(function () {
+                        var $all = $('#tblModal_SinhVien tbody input:checkbox');
+                        $all.prop('checked', true).attr('checked', true);
+                        // Highlight bg row
+                        $('#tblModal_SinhVien tbody tr').addClass('active');
+                        $('#chkSelectAll_SinhVien').prop('checked', true);
+                    }, 100);
+                }
+            }, 250);
+        }, 10);
+    });
 </script>
