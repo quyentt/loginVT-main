@@ -975,5 +975,130 @@
     main_doc['KeHoachXuLy'] = new KeHoachXuLy();
     $(document).ready(function () {
         main_doc.KeHoachXuLy.init();
+
+        // FIX 2026-08-26 (local, khong dua vao indexi.aspx global observer):
+        // Modal "Ke thua" (myModalKeThuaNhom, myModalKeThua) — buoc select2 popup nam
+        // TRONG modal-body bang cach re-init voi dropdownParent = modal khi modal mo.
+        // Popup se position tu nhien theo select2 (co CSS scoped ben duoi) va KHONG bi
+        // observer global reposition ra ngoai.
+        function reInitSelect2InModal($sel, $parentEl) {
+            if (!$sel.length || !$parentEl.length) return;
+            try {
+                if ($sel.hasClass('select2-hidden-accessible')) {
+                    $sel.select2('destroy');
+                }
+            } catch (e) {}
+            $sel.select2({
+                dropdownParent: $parentEl,
+                width: '100%'
+            });
+        }
+        $('#myModalKeThuaNhom').on('shown.bs.modal', function () {
+            reInitSelect2InModal($('#dropKeHoachKT'), $('#myModalKeThuaNhom'));
+        });
+        $('#myModalKeThua').on('shown.bs.modal', function () {
+            reInitSelect2InModal($('#dropHeDaoTao_KT'), $('#myModalKeThua'));
+        });
     });
 </script>
+<style>
+    /* Modal Ke thua — popup select2 nam trong modal-body, khong che nut footer.
+       Neu select2 mo xuong dam vao footer, dung max-height + auto scroll trong popup. */
+    #myModalKeThuaNhom .select2-container--open .select2-dropdown,
+    #myModalKeThua .select2-container--open .select2-dropdown {
+        z-index: 100060 !important;
+    }
+    #myModalKeThuaNhom .select2-container--open,
+    #myModalKeThua .select2-container--open {
+        z-index: 100060 !important;
+    }
+    /* Cap chieu cao popup toi da = 180px, luon co scroll noi bo → khong the che nut */
+    #myModalKeThuaNhom .select2-results,
+    #myModalKeThua .select2-results,
+    #myModalKeThuaNhom .select2-results__options,
+    #myModalKeThua .select2-results__options {
+        max-height: 180px !important;
+        overflow-y: auto !important;
+    }
+
+    /* Chuan hoa header 2 modal Ke thua:
+       - Title CHINH GIUA
+       - Nut × ve GOC PHAI (chuan Bootstrap, thay vi lech giua nhu global reskin) */
+    #myModalKeThua .modal-header,
+    #myModalKeThuaNhom .modal-header {
+        position: relative !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 12px 50px !important;
+        min-height: 52px !important;
+    }
+    #myModalKeThua .modal-header .modal-title,
+    #myModalKeThuaNhom .modal-header .modal-title {
+        text-align: center !important;
+        margin: 0 !important;
+        color: #fff !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        flex: 1 1 auto !important;
+        line-height: 1.4 !important;
+    }
+    #myModalKeThua .modal-header .close,
+    #myModalKeThuaNhom .modal-header .close {
+        position: absolute !important;
+        right: 14px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        left: auto !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 4px 10px !important;
+        opacity: 0.85 !important;
+        color: #fff !important;
+        text-shadow: none !important;
+        font-size: 22px !important;
+        line-height: 1 !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    #myModalKeThua .modal-header .close:hover,
+    #myModalKeThuaNhom .modal-header .close:hover {
+        opacity: 1 !important;
+        color: #ffdcdc !important;
+    }
+
+    /* Chuan hoa footer: Dong (outline) + Ke thua (primary filled) nhom BEN PHAI,
+       gap 10px, khong float lech trai */
+    #myModalKeThua .modal-footer,
+    #myModalKeThuaNhom .modal-footer {
+        display: flex !important;
+        justify-content: flex-end !important;
+        align-items: center !important;
+        gap: 10px !important;
+        padding: 12px 20px !important;
+        border-top: 1px solid #eee !important;
+        text-align: right !important;
+    }
+    #myModalKeThua .modal-footer .btn,
+    #myModalKeThuaNhom .modal-footer .btn,
+    #myModalKeThua .modal-footer a.btn,
+    #myModalKeThuaNhom .modal-footer a.btn {
+        float: none !important;
+        margin: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        padding: 8px 16px !important;
+        font-weight: 500 !important;
+    }
+    #myModalKeThua .modal-footer .btn-primary,
+    #myModalKeThuaNhom .modal-footer .btn-primary {
+        font-weight: 600 !important;
+    }
+
+    /* Modal body: cho row Nhom | dropdown thang hang, padding chuan */
+    #myModalKeThua .modal-body,
+    #myModalKeThuaNhom .modal-body {
+        padding: 20px !important;
+    }
+</style>
