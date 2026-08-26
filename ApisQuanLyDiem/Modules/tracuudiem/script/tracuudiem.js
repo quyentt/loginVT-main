@@ -271,21 +271,27 @@ TraCuuDiem.prototype = {
             success: function (data) {
                 if (data.Success) {
                     var dtReRult = data.Data;
+                    var dtCot = dtReRult && dtReRult.rsDSCotThongTinDiemHocPhan;
+                    if (!dtCot || dtCot.length === 0) {
+                        edu.util.toggle_overide("zone-bus", "zone_notify_TraCuuDiem");
+                        edu.system.alert('Không có cột điểm để hiển thị. Vui lòng chọn "Lọc theo" và tick ít nhất 1 học phần trong Danh sách bảng điểm, sau đó thử lại.', 'w');
+                        return;
+                    }
                     me.genHTML_ThongTinHienThiCot(dtReRult, data.Pager, data.Id);
                     me.getList_NguoiHoc();
                 }
                 else {
                     edu.system.alert(obj_list + " : " + data.Message, "s");
                 }
-                
+
             },
             error: function (er) {
-                
+
                 edu.system.alert(obj_list + " (er): " + JSON.stringify(er), "w");
             },
             type: 'POST',
             action: obj_list.action,
-            
+
             contentType: true,
             data: obj_list,
             fakedb: [
