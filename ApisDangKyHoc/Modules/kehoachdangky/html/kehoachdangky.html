@@ -1,4 +1,14 @@
 ﻿<style>
+    /* FIX 2026-08-26: Select2 trong modal — popup cap max-height 220px voi scroll
+       noi bo, khong tran ra ngoai modal / che nut footer. Z-index cao hon backdrop. */
+    .modal .select2-container--open,
+    .modal .select2-container--open .select2-dropdown {
+        z-index: 100060 !important;
+    }
+    .modal .select2-results__options {
+        max-height: 220px !important;
+        overflow-y: auto !important;
+    }
     #zoneEdit table {
         text-align: center;
         vertical-align: middle;
@@ -2425,6 +2435,20 @@
     main_doc['KeHoachDangKy'] = new KeHoachDangKy();
     $(document).ready(function () {
         main_doc.KeHoachDangKy.init();
+
+        // FIX 2026-08-26: Select2 trong modal — re-init voi dropdownParent = modal khi
+        // modal mo, tranh popup bay lung tung do global observer o indexi.aspx. Handler
+        // delegated tren '.modal' -> ap dung cho MOI modal + MOI select2 trong page.
+        $(document).on('shown.bs.modal', '.modal', function () {
+            var $modal = $(this);
+            $modal.find('select.select-opt, select[id^="drop"]').each(function () {
+                var $sel = $(this);
+                try {
+                    if ($sel.hasClass('select2-hidden-accessible')) $sel.select2('destroy');
+                } catch (e) {}
+                $sel.select2({ dropdownParent: $modal, width: '100%' });
+            });
+        });
 
         // ===== Mobile sticky action bar wiring =====
         (function () {

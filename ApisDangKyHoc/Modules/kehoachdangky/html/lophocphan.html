@@ -4,6 +4,92 @@
         margin-left: 0px;
     }
 
+    /* FIX 2026-08-26: btn-soft-* pastel qua nhat, icon gan nhu vo hinh — override
+       thanh FILLED SOLID chu trang de icon + chu deu ro. Scope trong page lophocphan
+       de khong dung style share o file khac. Warning giu chu den (do vang qua sang). */
+    .aps-lophocphan .btn.btn-soft-primary,
+    .aps-lophocphan .btn.btn-soft-primary:focus {
+        background: #3c8dbc !important;
+        border-color: #3c8dbc !important;
+        color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-primary:hover {
+        background: #2e7ba8 !important; border-color: #2e7ba8 !important; color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-success,
+    .aps-lophocphan .btn.btn-soft-success:focus {
+        background: #22c55e !important;
+        border-color: #22c55e !important;
+        color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-success:hover {
+        background: #16a34a !important; border-color: #16a34a !important; color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-danger,
+    .aps-lophocphan .btn.btn-soft-danger:focus {
+        background: #ef4444 !important;
+        border-color: #ef4444 !important;
+        color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-danger:hover {
+        background: #dc2626 !important; border-color: #dc2626 !important; color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-info,
+    .aps-lophocphan .btn.btn-soft-info:focus {
+        background: #0ea5e9 !important;
+        border-color: #0ea5e9 !important;
+        color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-info:hover {
+        background: #0284c7 !important; border-color: #0284c7 !important; color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-secondary,
+    .aps-lophocphan .btn.btn-soft-secondary:focus {
+        background: #64748b !important;
+        border-color: #64748b !important;
+        color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-secondary:hover {
+        background: #475569 !important; border-color: #475569 !important; color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-warning,
+    .aps-lophocphan .btn.btn-soft-warning:focus {
+        background: #f59e0b !important;
+        border-color: #f59e0b !important;
+        color: #1f2937 !important; /* Warning: chu DEN cho de doc tren nen vang */
+    }
+    .aps-lophocphan .btn.btn-soft-warning:hover {
+        background: #d97706 !important; border-color: #d97706 !important; color: #1f2937 !important;
+    }
+    /* Purple — kem ca variant sai chinh ta "puple" cua source code */
+    .aps-lophocphan .btn.btn-soft-purple,
+    .aps-lophocphan .btn.btn-soft-purple:focus,
+    .aps-lophocphan .btn.btn-soft-puple,
+    .aps-lophocphan .btn.btn-soft-puple:focus {
+        background: #8b5cf6 !important;
+        border-color: #8b5cf6 !important;
+        color: #fff !important;
+    }
+    .aps-lophocphan .btn.btn-soft-purple:hover,
+    .aps-lophocphan .btn.btn-soft-puple:hover {
+        background: #7c3aed !important; border-color: #7c3aed !important; color: #fff !important;
+    }
+    /* Icon + text same color de tuong phan cao */
+    .aps-lophocphan .btn.btn-soft-primary i,
+    .aps-lophocphan .btn.btn-soft-success i,
+    .aps-lophocphan .btn.btn-soft-danger i,
+    .aps-lophocphan .btn.btn-soft-info i,
+    .aps-lophocphan .btn.btn-soft-secondary i,
+    .aps-lophocphan .btn.btn-soft-purple i,
+    .aps-lophocphan .btn.btn-soft-puple i {
+        color: #fff !important;
+        margin-right: 6px;
+    }
+    .aps-lophocphan .btn.btn-soft-warning i {
+        color: #1f2937 !important;
+        margin-right: 6px;
+    }
+
     /* Đồng nhất style cell cho các bảng lớp học phần */
     .tblLopHocPhan tbody td,
     .tblLopHocPhanChiTiet tbody td,
@@ -224,7 +310,11 @@
                                         <option value="thuong">Chỉ lớp thường</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-9 item-search">
+                                <div class="col-sm-3 item-search">
+                                    <select id="dropSearch_HinhThucHoc" class="select-opt"
+                                            style="width:100% !important" multiple="multiple"></select>
+                                </div>
+                                <div class="col-sm-6 item-search">
                                     <div class="aps-filter-checks">
                                         <label class="aps-filter-check" for="dChuaPhanCong">
                                             <input type="checkbox" id="dChuaPhanCong" />

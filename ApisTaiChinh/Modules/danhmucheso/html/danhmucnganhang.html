@@ -133,26 +133,29 @@
     main_doc['DanhMucNganHang'] = new DanhMucNganHang();
     $(document).ready(function () {
         main_doc.DanhMucNganHang.init();
-        /* Fix dropdown "bay" ve top-left khi mo select2 trong modal:
-           Root cause: MutationObserver o indexi.aspx:1474-1493 cuong buc moi
-           .select2-container--open sang body ma khong tinh lai coord. Select2 v4.0.3
-           tinh top/left RELATIVE dropdownParent (css.top -= parentOffset.top). Khi
-           observer move container tu modal → body, coord relative modal → thanh
-           coord viewport → dropdown bay top-left.
-           Fix: bat select2:open, delay 0 (chay sau observer), reposition bang
-           getBoundingClientRect() cua trigger. */
-        $(document).on('select2:open', '#dropTrangThai', function () {
-            var trigger = $(this).next('.select2-container')[0];
-            if (!trigger) return;
-            setTimeout(function () {
-                var rect = trigger.getBoundingClientRect();
-                var $dropdown = $('.select2-container--open').last();
-                $dropdown.css({
-                    top: (rect.bottom + window.pageYOffset) + 'px',
-                    left: (rect.left + window.pageXOffset) + 'px',
-                    width: rect.width + 'px'
-                });
-            }, 0);
+
+        // FIX 2026-08-26: Thay pattern reposition cu (khong on dinh) bang re-init
+        // select2 voi dropdownParent = modal — popup nam trong modal, khong bi
+        // global observer o indexi.aspx dam vao.
+        $(document).on('shown.bs.modal', '.modal', function () {
+            var $modal = $(this);
+            $modal.find('select.select-opt, select[id^="drop"]').each(function () {
+                var $sel = $(this);
+                try {
+                    if ($sel.hasClass('select2-hidden-accessible')) $sel.select2('destroy');
+                } catch (e) {}
+                $sel.select2({ dropdownParent: $modal, width: '100%' });
+            });
         });
     });
 </script>
+<style>
+    .modal .select2-container--open,
+    .modal .select2-container--open .select2-dropdown {
+        z-index: 100060 !important;
+    }
+    .modal .select2-results__options {
+        max-height: 220px !important;
+        overflow-y: auto !important;
+    }
+</style>
