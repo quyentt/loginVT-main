@@ -127,11 +127,11 @@ DeXuatHoSo.prototype = {
         });
         $("#btnSave_DeXuatHoSo").click(function () {
             // Validate: Số CCCD bắt buộc nhập (2026-08-25)
-            if ($('#txtCCCD_So').length && !($('#txtCCCD_So').val() || '').trim()) {
-                edu.system.alert('Vui lòng nhập Số CCCD.', 'w');
-                setTimeout(function () { try { $('#txtCCCD_So').focus(); } catch (er) { } }, 50);
-                return;
-            }
+            //if ($('#txtCCCD_So').length && !($('#txtCCCD_So').val() || '').trim()) {
+            //    edu.system.alert('Vui lòng nhập Số CCCD.', 'w');
+            //    setTimeout(function () { try { $('#txtCCCD_So').focus(); } catch (er) { } }, 50);
+            //    return;
+            //}
             // Bridge #txtCCCD_So → shadow #txtSoDinhDinh<cccdTypeId> để save_DinhDanh đọc được (2026-08-25)
             if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
             me.icheck = true;
@@ -944,12 +944,12 @@ DeXuatHoSo.prototype = {
             //edu.system.alert("Lưu thành công");
         }
         // Validate: Số CCCD bắt buộc nhập (2026-08-25)
-        if ($('#txtCCCD_So').length && !($('#txtCCCD_So').val() || '').trim()) {
-            edu.system.alert('Vui lòng nhập Số CCCD.', 'w');
-            setTimeout(function () { try { $('#txtCCCD_So').focus(); } catch (er) { } }, 50);
-            me.icheck = false;
-            return;
-        }
+        //if ($('#txtCCCD_So').length && !($('#txtCCCD_So').val() || '').trim()) {
+        //    edu.system.alert('Vui lòng nhập Số CCCD.', 'w');
+        //    setTimeout(function () { try { $('#txtCCCD_So').focus(); } catch (er) { } }, 50);
+        //    me.icheck = false;
+        //    return;
+        //}
         // Bridge CCCD → shadow field (safety) (2026-08-25)
         if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
         var temp = [
@@ -5447,21 +5447,21 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
             if (typeof dx._bridgeCccdToShadow === 'function') dx._bridgeCccdToShadow();
         });
         // Validate: Số CCCD bắt buộc nhập — capture-phase click (2026-08-25)
-        var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
-        if (_btnSave && !_btnSave._cccdValidatorBound) {
-            _btnSave._cccdValidatorBound = true;
-            _btnSave.addEventListener('click', function (ev) {
-                var el = document.getElementById('txtCCCD_So');
-                if (el && !((el.value || '') + '').trim()) {
-                    try { edu.system.alert('Vui lòng nhập Số CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Số CCCD.'); }
-                    setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
-                    ev.preventDefault();
-                    ev.stopImmediatePropagation();
-                    ev.stopPropagation();
-                    return false;
-                }
-            }, true);
-        }
+        //var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
+        //if (_btnSave && !_btnSave._cccdValidatorBound) {
+        //    _btnSave._cccdValidatorBound = true;
+        //    _btnSave.addEventListener('click', function (ev) {
+        //        var el = document.getElementById('txtCCCD_So');
+        //        if (el && !((el.value || '') + '').trim()) {
+        //            try { edu.system.alert('Vui lòng nhập Số CCCD.', 'w'); } catch (er) { alert('Vui lòng nhập Số CCCD.'); }
+        //            setTimeout(function () { try { el.focus(); } catch (er) { } }, 50);
+        //            ev.preventDefault();
+        //            ev.stopImmediatePropagation();
+        //            ev.stopPropagation();
+        //            return false;
+        //        }
+        //    }, true);
+        //}
     }
 
     // Tách HODEM = word đầu (Họ) + phần còn lại (Tên đệm)

@@ -463,7 +463,7 @@
       html body #sidebar-menu .sidebar-menu-sub a:visited,
       html body #sidebar-menu .sidebar-menu-sub a span,
       .sidebar-menu-sub a {
-        color: #ffffff !important;
+        color: #ffffff ;
         font-weight: 500 !important;
         background: transparent !important;
         background-color: transparent !important;

@@ -159,6 +159,7 @@
     /*overflow: hidden !important;*/
     -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2) !important;
     box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0.2) !important;
+    z-index: 10 !important;
 }
 
 .select2-container--default .select2-selection--multiple {
@@ -8307,7 +8308,7 @@ input#tblInput_DTSV_SinhVien_input {
 
 /*---------------*/
 .aps-chuongtrinhhocphan .aps-list-chuongtrinh {
-    background: #f1f1f1 !important;
+    background: #e1e1e1 !important;
     border-top-left-radius: 0 !important;
     border-top-right-radius: 0 !important;
     border-bottom-left-radius: 12px !important;
@@ -8319,6 +8320,7 @@ input#tblInput_DTSV_SinhVien_input {
     border-radius: 0 !important;
     border-bottom-left-radius: 12px !important;
     border-bottom-right-radius: 12px !important;
+    padding-right: 0 !important;
 }
 
 .zoneBox_ChuongTrinh {
@@ -8334,7 +8336,7 @@ input#tblInput_DTSV_SinhVien_input {
 }
 
 .zoneBox_ChuongTrinh .btnView .small-box {
-    border-radius: 8px !important;
+    border-radius: 12px !important;
     padding: 0 !important;
     border: 1px solid #e1e1e1 !important;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0) !important;
@@ -8408,8 +8410,9 @@ input#tblInput_DTSV_SinhVien_input {
     border-left: 0 !important;
     border-bottom: 0 !important;
     padding: 10px !important;
-    border-radius: 0 5px 5px 0 !important;
+    border-radius: 0 0 8px 8px !important;
     width: 100%;
+    overflow: hidden;
 }
 
 .zoneBox_ChuongTrinh .small-box>.small-box-footer .btn {
@@ -11235,6 +11238,14 @@ table#clone {
 .zone_input_dinhhuong,
 .zoneViewHocPhan {
     width: calc(100% - 40px) !important;
+}
+
+.zone-content.zone_chuongtrinh {
+    z-index: 99 !important;
+}
+
+.zone_chuongtrinhhocphan.zone-content {
+    z-index: 999 !important;
 }
 
 .zone_chuongtrinhhocphan-detail {
@@ -15366,6 +15377,10 @@ table#clone {
     margin-top: 5px !important;
 }
 
+html body.skin-blue #main-content-wrapper .aps-KeHoachChuongTrinh .box.box-solid.box-search {
+    margin-bottom: 0 !important;
+}
+
 .light-paginationtblAddHocPhanDonVi {
     padding-right: 0 !important;
 }
@@ -17682,115 +17697,148 @@ table#clone {
     line-height: 40px !important;
 }
 
-.modal-question.zone-bus,.zonePhieu.zone-bus,.box-none.zone-bus {
+.modal-question.zone-bus,
+.zonePhieu.zone-bus,
+.box-none.zone-bus {
     background: transparent !important;
     border-radius: 0 !important;
     -webkit-box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
     box-shadow: 0 0 17px 0 rgba(130, 122, 122, 0) !important;
 }
+
 .modal-question.zone-bus .form-top .col-12:nth-child(4),
 .modal-question.zone-bus .form-top .col-12:nth-child(5),
 .modal-question.zone-bus .form-top .col-12:nth-child(6) {
     margin-bottom: 0 !important;
 }
+
 .modal-question.zone-bus .form-top .col-12:nth-child(3),
 .modal-question.zone-bus .form-top .col-12:nth-child(6),
 .modal-question.zone-bus .form-top .col-12:nth-child(9) {
     padding-right: 0 !important;
 }
+
 .btn i.fa-plus {
     margin-right: 3px !important;
 }
-.deleteRowButton{
+
+.deleteRowButton {
     min-width: 60px;
     display: block;
 }
-.px-20.pl-0.pr-0{
+
+.px-20.pl-0.pr-0 {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+
 .myModal_NhomCauHoi .form-add-info .form-label {
     width: 130px !important;
 }
-.zonePhieu.zonePhieu-edit .form-top .cmc-con-before{
+
+.zonePhieu.zonePhieu-edit .form-top .cmc-con-before {
     padding-top: 0px;
     border-bottom: solid 0 #e1e1e1;
 }
-.zonePhieu.zonePhieu-edit  .form-top {
+
+.zonePhieu.zonePhieu-edit .form-top {
     border-bottom: 0 solid #e1e1e1 !important;
 }
-#main-content-wrapper .table td .btn.btn-default.btnEdit{
+
+#main-content-wrapper .table td .btn.btn-default.btnEdit {
     padding-top: 4px !important;
 }
-.register-wish.modal_nhansu .bus-wrp.box-table-gv.aps-table-select{
+
+.register-wish.modal_nhansu .bus-wrp.box-table-gv.aps-table-select {
     border-bottom: solid 0 #e1e1e1;
     border-top: solid 0 #e1e1e1;
 }
+
 .register-wish.modal_nhansu .inputs-wr .item {
     padding: 0 !important;
 }
-#tblKhoaHocPopup{
+
+#tblKhoaHocPopup {
     width: 100% !important;
 }
-#doituongduockhaosat{
+
+#doituongduockhaosat {
     /* padding: 20px !important; */
 }
-.zoneKetQua .register-school .tab-pane.fade{
+
+.zoneKetQua .register-school .tab-pane.fade {
     padding: 0 20px 20px 20px !important;
 }
-#main-content-wrapper .zoneKetQua .register-wish:not(.modal){
+
+#main-content-wrapper .zoneKetQua .register-wish:not(.modal) {
     box-shadow: 0 2px 8px rgba(15, 23, 42, 0) !important;
     border: 0 solid #e2e8f0 !important;
     border-radius: 0 !important;
 }
-.register-wish.modal_sinhvien.modal .modal-body.p-0,#modalDSDangKyHocPicker .modal-body,
-#main-content-wrapper.register-wish.modal_sinhvien.modal .modal-content .modal-body.p-0{
+
+.register-wish.modal_sinhvien.modal .modal-body.p-0,
+#modalDSDangKyHocPicker .modal-body,
+#main-content-wrapper.register-wish.modal_sinhvien.modal .modal-content .modal-body.p-0 {
     padding: 0 !important;
 }
+
 .modal.dspicker-modal .box-search .select2-container--default .select2-selection--multiple .select2-selection__choice {
     margin-top: 2px !important;
 }
+
 .modal.dspicker-modal .box-search .item-search {
     padding: 4px 10px 0 0 !important;
     margin-bottom: 5px !important;
 }
+
 .modal.dspicker-modal .box-search .select2-container .select2-selection--single .select2-selection__rendered {
     padding-left: 0px !important;
 }
-.modal.dspicker-modal  .aps-list-btn{
+
+.modal.dspicker-modal .aps-list-btn {
     justify-content: end;
 }
-.modal.dspicker-modal .box-search .box-body .row .item-search:last-child{
+
+.modal.dspicker-modal .box-search .box-body .row .item-search:last-child {
     padding-right: 0 !important;
 }
-.modal.dspicker-modal .box-search .box-body .row .item-search label{
+
+.modal.dspicker-modal .box-search .box-body .row .item-search label {
     line-height: 38px;
 }
+
 .modal.dspicker-modal .box-search .box-body .row .item-search label input[type="checkbox"] {
     margin: 0px 0 0 !important;
 }
+
 .dspicker-modal.modal .dspicker-table-wrap {
     border: 0px solid #e6ebf2 !important;
     margin-top: 0 !important;
     padding: 15px !important;
 }
+
 .dspicker-modal.modal .modal-header .modal-title {
     left: 20px !important;
     position: absolute;
 }
+
 .dspicker-modal.modal .modal-header .close {
     right: 20px !important;
     position: absolute;
 }
+
 .dspicker-modal.modal .modal-content .select2-container--default .select2-selection--single .select2-selection__arrow {
     top: 5px !important;
 }
+
 .dspicker-modal.modal .modal-content .select2-container--default .select2-selection--single {
     padding: 5px 10px !important;
 }
-.dspicker-modal.modal .box-search{
+
+.dspicker-modal.modal .box-search {
     padding: 10px 15px 8px 15px !important;
 }
+
 .dspicker-modal.modal .modal-header .box-title i {
     padding-right: 3px !important;
 }
@@ -17798,10 +17846,12 @@ table#clone {
 .dspicker-modal.modal .box-search-student .btn i.fa-plus {
     margin-right: 0 !important;
 }
+
 .register-wish.modal_sinhvien .title-is-paging {
     margin-top: 0px !important;
     justify-content: space-between !important;
 }
+
 .register-wish.modal_sinhvien .title-is-paging #btnChonSinhVien {
     height: 32px;
     padding: 0 8px !important;
@@ -17810,41 +17860,212 @@ table#clone {
     background: rgb(255, 255, 255) !important;
     border: 0px solid rgb(13, 110, 253) !important;
 }
-.box-search-student  .inputs-wr .item {
+
+.box-search-student .inputs-wr .item {
     padding: 0 !important;
 }
-.box-search-student  #btnSearch_ModalSinhVien{
+
+.box-search-student #btnSearch_ModalSinhVien {
     margin-left: 10px !important;
 }
+
 .zoneThemPhieu .form-top {
     border-bottom: 0 solid #e1e1e1 !important;
 }
+
 .zoneThemPhieu .form-top .form-item .select2-container--default .select2-selection--multiple .select2-selection__rendered {
     padding: 0;
 }
-.zoneThemPhieu .cmc-con-table .simple-pagination,.zoneThemPhieu .cmc-con-table .zone-pag-footertblTabHome,
-.zone-pag-footertblTabPro,.zone-pag-footertblTabPan{
+
+.zoneThemPhieu .cmc-con-table .simple-pagination,
+.zoneThemPhieu .cmc-con-table .zone-pag-footertblTabHome,
+.zone-pag-footertblTabPro,
+.zone-pag-footertblTabPan {
     padding: 0 0 5px 0 !important;
 }
+
 .title-is-paging.zone-pag-headertblTabHome,
-.title-is-paging.zone-pag-headertblTabPro,.title-is-paging.zone-pag-headertblTabPan {
+.title-is-paging.zone-pag-headertblTabPro,
+.title-is-paging.zone-pag-headertblTabPan {
     margin-top: 10px !important;
 }
+
 .inputs-tksv .inputs-wr {
     padding-right: 8px !important;
 }
+
 .register-wish.modal_nhansu .box-timGV {
     padding: 20px;
 }
+
 .register-wish.modal_nhansu .title-is-paging {
     margin-top: 0px;
     padding-bottom: 0;
 }
+
 .register-wish.modal_nhansu .box-list-gv .title-is-paging #btnChonNhanSu {
     top: -18px;
     right: 10px;
 }
-.aps_tonghoptheongay.box.box-solid{
+
+.aps_tonghoptheongay.box.box-solid {
     z-index: 99999 !important;
     box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+}
+
+.zoneBox_ChuongTrinh .btnView .small-box:hover {
+    box-shadow: 0 10px 10px rgba(15, 23, 42, 0.4) !important;
+    border-radius: 12px !important;
+}
+
+html body.skin-blue #main-content-wrapper .aps-chuongtrinh.btnView .btn-default.btn-soft-primary:hover {
+    background: #223771 !important;
+    border-color: #223771 !important;
+    color: #fff !important;
+}
+
+html body.skin-blue #main-content-wrapper .zoneBox_ChuongTrinh .aps-chuongtrinh.btnView .btn-default.btn-soft-success:hover {
+    background: var(--color-green1) !important;
+    border-color: var(--color-green1) !important;
+    color: #fff !important;
+}
+
+/* --- */
+.zone_inputhocphan .box-header.bg-blue .box-title {
+    color: #fff !important;
+}
+
+.zone_inputhocphan .box-header.bg-blue .pull-right-absolute {
+    right: 10px !important;
+}
+
+html body.skin-blue #main-content-wrapper #txtSearch_TuKhoa_SelectHocPhan {
+    border-radius: 8px 0 0 8px !important;
+}
+
+.submit.btn.btnSelectHocPhan,
+.submit.btn.btnSelectHocPhan .lang,
+.sidebar-menu.aps-list-hocphan .submit.btn-primary.btnSelectHocPhan i {
+    color: #fff !important;
+}
+
+.sidebar-menu.aps-list-hocphan .submit.btn-primary.btnSelectHocPhan .lang {
+    font-size: 13px !important;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+#myModalAlert .modal-header {
+    justify-content: start !important;
+}
+
+html body.skin-blue #myModalAlert .modal-header .modal-title {
+    margin: inherit !important;
+    text-align: left !important;
+}
+
+html body.skin-blue .aps-list-hocphan.sidebar-menu>li {
+    border-radius: 0 !important;
+}
+
+html body.skin-blue .aps-list-hocphan.sidebar-menu>li>a {
+    margin: 2px 0 4px 0px !important;
+    padding: 8px 10px 8px 10px !important;
+    border-radius: 0 !important;
+}
+
+html body.skin-blue .aps-list-hocphan.sidebar-menu>li>a:hover {
+    /* margin: 2px 0 4px 0px !important; */
+}
+
+html body.skin-blue .aps-list-hocphan.sidebar-menu>li>a:hover i {
+    font-weight: 700 !important;
+}
+
+html body.skin-blue .aps-list-hocphan.sidebar-menu>li:hover>a {
+    background: rgba(248, 132, 61, 0.1) !important;
+    border-left-color: rgba(248, 132, 61, 0.5) !important;
+}
+
+.submit.btnSelectHocPhan i {
+    color: var(--color-red) !important;
+}
+
+.zone_edithocphan .box-footer .btn i,.zoneViewHocPhan  .box-footer .btn i,
+.zone_inputhocphan_khoituchondon .box-footer .btn i,.modal-footer .btn i {
+    padding-right: 6px !important;
+}
+
+.zone_ketquahocphan .box-footer .btn i {
+    padding-right: 3px !important;
+}
+
+#deleteRowButton:hover {
+    background: transparent !important;
+    color: var(--color-blue) !important;
+}
+
+#tblInput_HocPhan_ThayThe .btn.btn-default {
+    color: var(--color-blue) !important;
+    border: 0 solid #e2e8f0 !important;
+}
+
+#tblInput_HocPhan_ThayThe tr:hover .btn.btn-default {
+    color: #fff !important;
+}
+
+html body.skin-blue .aps-modal-nhansu.aps-modal-sinhvien.modal .modal-body {
+    padding: 0 !important;
+}
+
+.aps-modal-nhansu.aps-modal-sinhvien.modal .modal-header .close ,
+.modal.myModalLabel .modal-header .close,.modal .modal-header .close{
+    position: absolute;
+    margin-top: 0px !important;
+    right: 15px;
+}
+
+.aps-modal-nhansu.aps-modal-sinhvien.modal .modal-header .modal-title,
+.modal.myModalLabel .modal-header .modal-title ,.modal .modal-header .modal-title{
+    position: absolute;
+}
+
+html body.skin-blue #main-content-wrapper .zone_input_dinhhuong .scroll-table-x {
+    gap: 0px !important;
+}
+
+.aps-modal-nhansu.aps-modal-sinhvien.modal .search .item-modal i {
+    padding-right: 0px !important;
+}
+
+.aps-modal-nhansu.aps-modal-sinhvien.modal .box {
+    margin-bottom: 0px !important;
+}
+
+.zone-pag-headertblModal_SinhVien {
+    width: 100% !important;
+}
+
+html body.skin-blue .aps-modal-nhansu.aps-modal-sinhvien.modal .compact-theme ul {
+    overflow-x: hidden !important;
+}
+
+.light-paginationtblModal_SinhVien.compact-theme {
+    justify-content: end !important;
+}
+
+html body.skin-blue .modal.myModalLabel .modal-footer,.modal .modal-footer {
+    gap: 0px !important;
+    justify-content: flex-end !important;
+}
+.modal .modal-body .row.aps-add-new.box-view {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+#btnAnhXaThuTuKy {
+    display: flex;
+}
+.row.aps-form-table.scroll-table-x.DSHocPhan {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
 }
