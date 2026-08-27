@@ -6137,10 +6137,11 @@ PhieuThu.prototype = {
         
         // CSS tập trung vào việc căn giữa và hiển thị đúng
         var css = ''
-            /* KHÔNG dùng `size: A5 landscape` — nếu khoá khổ giấy khác máy in (khách in A4),
-               Chrome render vùng A5 vào góc trên-trái giấy A4 → phiếu lệch trái + khách phải Scale 85%.
-               Bỏ size, để browser dùng khổ giấy thực tế của máy in (mặc định A4). */
-            + '@page { margin: 0.5cm; }'
+            /* User yêu cầu mẫu phải đúng định dạng A5 landscape (mẫu 02GTTT2/001 Bộ Tài chính chuẩn A5).
+               margin 0.3cm nhỏ để container 200mm căn giữa được trong A5 landscape 210mm (dư 10mm chia đều 2 bên).
+               Note: khách in trên A4 sẽ thấy phiếu chiếm 1 phần giấy — đây là trade-off vì user chọn A5.
+               Nếu cần in A4 flexibly, đổi lại `@page { margin: 0.5cm }` không set size. */
+            + '@page { size: A5 landscape; margin: 0.3cm; }'
             + 'html, body { margin: 0; padding: 0; width: 100%; }'
             + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 0.15cm 0.5cm; width: 100%; background: #fff; text-align: center; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
@@ -6621,23 +6622,78 @@ PhieuThu.prototype = {
             console.log('[Lớp inject] Không tìm được anchor "Mã SV". Các class txt* có trong template:', arrClasses);
         }, 300);
 
-        // Hardcode địa chỉ đơn vị cho biên lai của trường CMC.
-        // BE đang trả DIACHI bị trùng "Tây Mỗ" 2 lần → override tạm ở FE cho đến khi BE fix.
-        // Detect template CMC bằng text "CMC" trong #MauInPhieuThu (mẫu C45-BB-CMC / tên trường).
+        // Override cho biên lai trường UTT (ĐH Công nghệ Giao thông Vận tải):
+        //  (a) Địa chỉ đơn vị: BE trả sai (địa chỉ CMC Hà Nội) → hardcode lại theo địa chỉ Phú Thọ user cung cấp
+        //  (b) Strip 2 dòng ghi chú cuối template ("Công ty cung cấp phần mềm CMC..." + "Phải giữ cẩn thận hóa đơn...")
+        //      do user yêu cầu bỏ hẳn — không phải phần mẫu 02GTTT2/001 chuẩn.
+        // Detect trường UTT dùng tên trường / mã số thuế (KHÔNG dùng "CMC" vì text CMC nằm ở dòng bị strip).
         setTimeout(function () {
             var $mauIn = $('#MauInPhieuThu');
             if (!$mauIn.length) return;
-            var strTemplate = ($mauIn.text() || '').toUpperCase();
-            if (strTemplate.indexOf('CMC') === -1) return; // không phải biên lai CMC → bỏ qua
-            if ($mauIn.find('.txtDiaChiCMC_Override').length) return; // idempotent
+            var strAllText = ($mauIn.text() || '').toUpperCase();
+            var isTruongUTT = strAllText.indexOf('GIAO THÔNG VẬN TẢI') !== -1
+                           || strAllText.indexOf('2500224668') !== -1;
+            if (!isTruongUTT) return;
 
-            var strDiaChiCMC = 'Tây Mỗ, phường Xuân Phương, thành phố Hà Nội, Việt Nam';
-            var $addr = $mauIn.find('[class*="txtDiaChi_BenA_"]');
-            if ($addr.length) {
-                $addr.html(strDiaChiCMC).addClass('txtDiaChiCMC_Override');
-                console.log('[CMC address override] Đã hardcode', $addr.length, 'field địa chỉ:', strDiaChiCMC);
-            } else {
-                console.log('[CMC address override] Không tìm thấy .txtDiaChi_BenA_* trong template CMC. Kiểm tra class thực tế.');
+            // (a) Override địa chỉ
+            if (!$mauIn.find('.txtDiaChiUTT_Override').length) {
+                var strDiaChiUTT = '278 Đường Lam Sơn, Phường Vĩnh Yên, Tỉnh Phú Thọ, Việt Nam';
+                var $addr = $mauIn.find('[class*="txtDiaChi_BenA_"]');
+                if ($addr.length) {
+                    $addr.html(strDiaChiUTT).addClass('txtDiaChiUTT_Override');
+                    console.log('[UTT address override] Đã hardcode', $addr.length, 'field địa chỉ:', strDiaChiUTT);
+                } else {
+                    console.log('[UTT address override] Không tìm thấy .txtDiaChi_BenA_* trong template. Kiểm tra class thực tế.');
+                }
+            }
+
+            // (b) Strip 2 dòng ghi chú footer CMC.
+            // Dùng TreeWalker duyệt TEXT NODE (không phải element) — vì template thường có text node
+            // trực tiếp trong <p>/<div> (không wrap trong span/i), khiến loop leaf-element không match.
+            // Regex match cả "cung cấp phần mềm" (dòng 1) và "phải giữ cẩn thận hóa đơn" (dòng 2).
+            // Tìm text node match → đi lên block cha (p/div/tr) → nếu block chỉ chứa text footer thì remove block;
+            // nếu block có nội dung khác không liên quan thì chỉ remove text node đó.
+            if (!$mauIn.data('utt-footer-stripped')) {
+                var reFooter = /cung cấp phần mềm|phải giữ cẩn thận hóa đơn/i;
+                var walker = document.createTreeWalker($mauIn[0], NodeFilter.SHOW_TEXT, null, false);
+                var footerNodes = [];
+                var tnode;
+                while ((tnode = walker.nextNode())) {
+                    if (reFooter.test(tnode.nodeValue || '')) footerNodes.push(tnode);
+                }
+                var removedCount = 0;
+                footerNodes.forEach(function (node) {
+                    // Đi lên đến block-level cha
+                    var target = node.parentNode;
+                    while (target && target !== $mauIn[0]) {
+                        var tn = (target.tagName || '').toUpperCase();
+                        if (tn === 'P' || tn === 'DIV' || tn === 'TR' || tn === 'TD') break;
+                        target = target.parentNode;
+                    }
+                    if (!target || target === $mauIn[0]) {
+                        // Không tìm được block cha → remove text node và <br> trước/sau
+                        var br = node.previousSibling;
+                        if (br && br.nodeName === 'BR' && br.parentNode) br.parentNode.removeChild(br);
+                        if (node.parentNode) node.parentNode.removeChild(node);
+                        removedCount++;
+                        return;
+                    }
+                    // Check block cha có text nào KHÔNG khớp footer không
+                    var otherText = (target.textContent || '').replace(node.nodeValue || '', '').replace(/\s+/g, ' ').trim();
+                    var hasOtherContent = otherText.length > 3 && !reFooter.test(otherText);
+                    if (hasOtherContent) {
+                        // Block cha có content khác → chỉ remove text node + <br> siblings gần đó
+                        var brPrev = node.previousSibling;
+                        if (brPrev && brPrev.nodeName === 'BR' && brPrev.parentNode) brPrev.parentNode.removeChild(brPrev);
+                        if (node.parentNode) node.parentNode.removeChild(node);
+                    } else {
+                        // Block toàn text footer → remove cả block
+                        if (target.parentNode) target.parentNode.removeChild(target);
+                    }
+                    removedCount++;
+                });
+                $mauIn.data('utt-footer-stripped', true);
+                console.log('[UTT footer strip] Đã xóa', removedCount, 'text node ghi chú CMC/hóa đơn cuối phiếu (tổng', footerNodes.length, 'match).');
             }
         }, 350);
 
