@@ -339,6 +339,23 @@ QuanLyToanBo.prototype = {
             me.getList_LuuY();
         });
 
+        // Tài chính — mở modal chi tiết 8 khoản (2026-08-27)
+        $("#tblQuanLyToanBo").delegate('.btnDetail_TaiChinh', 'click', function (e) {
+            var strPersonId = this.id;
+            var obj = edu.util.objGetOneDataInData(strPersonId, me.dtQuanLyToanBo, "QLSV_NGUOIHOC_ID");
+            me.strHSSV_Id = strPersonId;
+            $(".lblTaiChinh_SinhVien").html(edu.util.returnEmpty(obj.QLSV_NGUOIHOC_HODEM) + " " + edu.util.returnEmpty(obj.QLSV_NGUOIHOC_TEN) + " - " + edu.util.returnEmpty(obj.QLSV_NGUOIHOC_MASO));
+            $('#myModalXemThongTinAll').modal('show');
+            me.getList_KhoanPhaiNop();
+            me.getList_KhoanDaNop();
+            me.getList_KhoanDuocMien();
+            me.getList_KhoanDaRut();
+            me.getList_NoChungCacKhoan();
+            me.getList_NoRiengTungKhoan();
+            me.getList_DuChungCacKhoan();
+            me.getList_DuRiengCacKhoan();
+        });
+
         $("#tblLuuY").delegate(".btnEdit", "click", function () {
             var strId = this.id;
             var data = me.dtLuuY.find(e => e.ID == strId);
@@ -734,7 +751,7 @@ QuanLyToanBo.prototype = {
             },
             aaData: data,
             colPos: {
-                center: [0, 12 ,13],
+                center: [0, 6, 13, 14],
             },
             aoColumns: [
                 {
@@ -760,6 +777,11 @@ QuanLyToanBo.prototype = {
                 },
                 {
                     "mDataProp": "QLSV_TRANGTHAINGUOIHOC_TEN"
+                },
+                {
+                    "mRender": function (nRow, aData) {
+                        return '<span><a class="btn btn-default btnDetail_TaiChinh" id="' + aData.QLSV_NGUOIHOC_ID + '" title="Xem chi tiết tài chính"><i class="fa fa-eye color-active"></i> Xem</a></span>';
+                    }
                 },
                 {
                     "mDataProp": "DAOTAO_LOPQUANLY_TEN"
@@ -2015,6 +2037,307 @@ QuanLyToanBo.prototype = {
             fakedb: [
             ]
         }, false, false, false, null);
+    },
+
+    /*==============================================================
+    == Chi tiết tài chính (2026-08-27) — port từ inbangdiem.js
+    ==   8 API `TC_ThongTinChung/LayDSKhoan*` (chung backend, versionAPI v1.0)
+    ==   render vào modal #myModalXemThongTinAll
+    ==============================================================*/
+    getList_KhoanPhaiNop: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanPhaiNop',
+            'versionAPI': 'v1.0',
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanPhaiNop_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_KhoanDuocMien: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanMien',
+            'versionAPI': 'v1.0',
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanDuocMien_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_KhoanDaNop: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanDaNop',
+            'versionAPI': 'v1.0',
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanDaNop_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_KhoanDaRut: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanDaRut',
+            'versionAPI': 'v1.0',
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanDaRut_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_NoRiengTungKhoan: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanNoRieng',
+            'versionAPI': 'v1.0',
+            'pageIndex': 1, 'pageSize': 1000000000,
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanPhaiNopRieng_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_NoChungCacKhoan: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanNoChung',
+            'versionAPI': 'v1.0',
+            'pageIndex': 1, 'pageSize': 1000000000,
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanPhaiNopChung_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_DuRiengCacKhoan: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanDuRieng',
+            'versionAPI': 'v1.0',
+            'pageIndex': 1, 'pageSize': 1000000000,
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanThuaRieng_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+    getList_DuChungCacKhoan: function () {
+        var me = this;
+        var obj_list = {
+            'action': 'TC_ThongTinChung/LayDSKhoanDuChung',
+            'versionAPI': 'v1.0',
+            'pageIndex': 1, 'pageSize': 1000000000,
+            'strQLSV_NguoiHoc_Id': me.strHSSV_Id,
+            'strNguoiThucHien_Id': edu.system.userId,
+        };
+        edu.system.makeRequest({
+            success: function (data) { if (data.Success) me.genChiTietKhoanThuaChung_XemThongTinAll(data.Data); },
+            error: function () { },
+            type: "GET", versionAPI: "v1.0", contentType: true,
+            action: obj_list.action, data: obj_list, fakedb: []
+        }, false, false, false, null);
+    },
+
+    genChiTietKhoanPhaiNop_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanPhaiNop_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-right">Số tiền</th><th class="td-center">Ngày tạo</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [2, 3], right: [4] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } },
+                { "mDataProp": "NGAYTAO_DD_MM_YYYY" }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [4]);
+            $('#' + $table + ' tfoot td:eq(4)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanDaNop_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanDaNop_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-right">Số tiền</th><th class="td-center">Số chứng từ</th><th class="td-center">Ngày tạo</th><th class="td-center">Người tạo</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [2, 3], right: [4] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } },
+                { "mDataProp": "CHUNGTU_SO" },
+                { "mDataProp": "NGAYTAO_DD_MM_YYYY" },
+                { "mDataProp": "NGUOITAO_TENDAYDU" }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [4]);
+            $('#' + $table + ' tfoot td:eq(4)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanDuocMien_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanDuocMien_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-left">Nội dung</th><th class="td-right">Số tiền được miễn</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [3, 4], right: [5] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "NOIDUNG", "mRender": function (nRow, aData) { return '<span title="' + edu.util.returnEmpty(aData.NOIDUNG) + '">' + (edu.extend && edu.extend.removeNoiDungDai ? edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) : edu.util.returnEmpty(aData.NOIDUNG)) + '</span>'; } },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [5]);
+            $('#' + $table + ' tfoot td:eq(5)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanDaRut_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanDaRut_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-left">Nội dung</th><th class="td-right">Số tiền</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [3, 4], right: [5] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "NOIDUNG", "mRender": function (nRow, aData) { return '<span title="' + edu.util.returnEmpty(aData.NOIDUNG) + '">' + (edu.extend && edu.extend.removeNoiDungDai ? edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) : edu.util.returnEmpty(aData.NOIDUNG)) + '</span>'; } },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [5]);
+            $('#' + $table + ' tfoot td:eq(5)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanPhaiNopChung_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanPhaiNopChung_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-left">Nội dung</th><th class="td-right">Số tiền</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [3, 4], right: [5] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "NOIDUNG", "mRender": function (nRow, aData) { return '<span title="' + edu.util.returnEmpty(aData.NOIDUNG) + '">' + (edu.extend && edu.extend.removeNoiDungDai ? edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) : edu.util.returnEmpty(aData.NOIDUNG)) + '</span>'; } },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [5]);
+            $('#' + $table + ' tfoot td:eq(5)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanPhaiNopRieng_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanPhaiNopRieng_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-left">Nội dung</th><th class="td-right">Số tiền</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [3, 4], right: [5] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "NOIDUNG", "mRender": function (nRow, aData) { return '<span title="' + edu.util.returnEmpty(aData.NOIDUNG) + '">' + (edu.extend && edu.extend.removeNoiDungDai ? edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) : edu.util.returnEmpty(aData.NOIDUNG)) + '</span>'; } },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [5]);
+            $('#' + $table + ' tfoot td:eq(5)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanThuaChung_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanThuaChung_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-left">Nội dung</th><th class="td-right">Số tiền</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [1, 2] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "NOIDUNG", "mRender": function (nRow, aData) { return '<span title="' + edu.util.returnEmpty(aData.NOIDUNG) + '">' + (edu.extend && edu.extend.removeNoiDungDai ? edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) : edu.util.returnEmpty(aData.NOIDUNG)) + '</span>'; } },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [5]);
+            $('#' + $table + ' tfoot td:eq(5)').attr('style', 'text-align: right');
+        }
+    },
+    genChiTietKhoanThuaRieng_XemThongTinAll: function (data) {
+        var $table = "tblChiTietKhoanThuaRieng_XemThongTinAll";
+        $("#" + $table + " thead").html('<tr><th class="td-center td-fixed">Stt</th><th class="td-center">Học kỳ</th><th class="td-center">Đợt</th><th class="td-left">Loại khoản</th><th class="td-left">Nội dung</th><th class="td-right">Số tiền</th></tr>');
+        $("#" + $table + " tbody").html('');
+        $("#" + $table + " tfoot").html('');
+        edu.system.loadToTable_data({
+            strTable_Id: $table, aaData: data,
+            colPos: { left: [3, 4] },
+            aoColumns: [
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO" },
+                { "mDataProp": "DAOTAO_THOIGIANDAOTAO_DOT" },
+                { "mDataProp": "TAICHINH_CACKHOANTHU_TEN" },
+                { "mData": "NOIDUNG", "mRender": function (nRow, aData) { return '<span title="' + edu.util.returnEmpty(aData.NOIDUNG) + '">' + (edu.extend && edu.extend.removeNoiDungDai ? edu.extend.removeNoiDungDai(aData.NOIDUNG, aData.SOTIEN) : edu.util.returnEmpty(aData.NOIDUNG)) + '</span>'; } },
+                { "mData": "SOTIEN", "mRender": function (nRow, aData) { return edu.util.formatCurrency(aData.SOTIEN); } }
+            ]
+        });
+        if (data != null && data.length > 0) {
+            edu.system.insertSumAfterTable($table, [5]);
+            $('#' + $table + ' tfoot td:eq(5)').attr('style', 'text-align: right');
+        }
     },
 };
 
