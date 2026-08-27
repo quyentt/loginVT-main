@@ -6137,13 +6137,20 @@ PhieuThu.prototype = {
         
         // CSS tập trung vào việc căn giữa và hiển thị đúng
         var css = ''
-            + '@page { size: A5 landscape; margin: 0; }'
+            /* KHÔNG dùng `size: A5 landscape` — nếu khoá khổ giấy khác máy in (khách in A4),
+               Chrome render vùng A5 vào góc trên-trái giấy A4 → phiếu lệch trái + khách phải Scale 85%.
+               Bỏ size, để browser dùng khổ giấy thực tế của máy in (mặc định A4). */
+            + '@page { margin: 0.5cm; }'
             + 'html, body { margin: 0; padding: 0; width: 100%; }'
             + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 0.15cm 0.5cm; width: 100%; background: #fff; text-align: center; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
-            /* page-break-inside: avoid → phòng khi content vẫn hơi tràn, browser vẫn cố nén 1 trang thay vì cắt */
-            + '#MauInPhieuThu { width: 100%; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; page-break-inside: avoid; break-inside: avoid; }'
-            + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { width: 100%; max-width: 100%; margin: 0.02cm auto; padding: 0; }'
+            /* Container width cố định 200mm để: (a) `margin: 0 auto` căn giữa được trên mọi khổ giấy;
+               (b) fit trong A5 landscape 210mm, A4 portrait 210mm và A4 landscape 297mm.
+               page-break-inside: avoid → phòng khi content vẫn hơi tràn, browser vẫn cố nén 1 trang thay vì cắt */
+            + '#MauInPhieuThu { width: 200mm; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; page-break-inside: avoid; break-inside: avoid; }'
+            /* Bỏ `width: 100%` cho descendants → nếu template có wrapper width < 200mm, `margin: 0 auto !important` sẽ căn giữa nó trong container.
+               `!important` để override inline style `margin-left: XXpx` mà template server có thể set. */
+            + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { max-width: 100%; margin: 0.02cm auto !important; padding: 0; }'
             + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 1px auto; border: none; }'
             + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: none; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5; text-align: left; }'
             + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000; }'
