@@ -134,6 +134,8 @@ DeXuatHoSo.prototype = {
             //}
             // Bridge #txtCCCD_So → shadow #txtSoDinhDinh<cccdTypeId> để save_DinhDanh đọc được (2026-08-25)
             if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
+            // Bridge #txtEmailCaNhan/#txtDienThoai → shadow #txtLienHe<typeId> để save_LienHe đọc được (2026-08-25)
+            if (typeof me._bridgeLienHeToShadow === 'function') me._bridgeLienHeToShadow();
             me.icheck = true;
             let iSLCheck = me.dtLoaiDinhDanh.length + me.dtLoaiLienHe.length;
             if (iSLCheck > 0) {
@@ -950,8 +952,9 @@ DeXuatHoSo.prototype = {
         //    me.icheck = false;
         //    return;
         //}
-        // Bridge CCCD → shadow field (safety) (2026-08-25)
+        // Bridge CCCD + LienHe → shadow field (safety) (2026-08-25)
         if (typeof me._bridgeCccdToShadow === 'function') me._bridgeCccdToShadow();
+        if (typeof me._bridgeLienHeToShadow === 'function') me._bridgeLienHeToShadow();
         var temp = [
             edu.system.getValById('txtNgaySinh'),
             edu.system.getValById('txtThangSinh'),
@@ -1412,6 +1415,8 @@ DeXuatHoSo.prototype = {
         var me = this;
         var strLienHe_Id = $("#txtLienHe" + strId).attr("name");
         // Skip nếu user không nhập Thông tin liên hệ — tránh insert NULL vào CONTACT_VALUE (2026-08-21)
+        // NOTE: nếu record đã tồn tại + user xóa value → hiện chưa xóa được vì BE chưa có Xoa_PersonContact
+        //       và UpdatePersonContact với empty gây ORA-01407 (CONTACT_VALUE NOT NULL) (2026-08-25)
         var strContactValue = edu.system.getValById('txtLienHe' + strId);
         if (!strContactValue || !strContactValue.trim()) {
             edu.system.start_Progress("zoneprocessXXXX", function () {
@@ -5355,7 +5360,65 @@ DeXuatHoSo.prototype._bridgeCccdToShadow = function () {
     if (existing && existing.ID) {
         $('#txtSoDinhDinh' + cid).attr('name', existing.ID);
     }
-    console.log('[Bridge CCCD] cid=', cid, 'so=', $('#txtSoDinhDinh' + cid).val(), 'name=', $('#txtSoDinhDinh' + cid).attr('name'));
+};
+
+/*----------------------------------------------
+-- Bridge Email/ĐT (UI mới #txtEmailCaNhan/#txtDienThoai) → shadow #txtLienHe<lienHeTypeId>
+-- Cần thiết vì save_LienHe đọc từ shadow field, không đọc từ UI mới (2026-08-25)
+----------------------------------------------*/
+DeXuatHoSo.prototype._findLienHeTypeId = function (matchers) {
+    var arr = this.dtLoaiLienHe || [];
+    // Bỏ dấu tiếng Việt để match accent-insensitive
+    var strip = function (s) {
+        return ((s || '') + '')
+            .normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+            .toUpperCase();
+    };
+    var found = arr.find(function (e) {
+        var ma = strip(e.MA);
+        var ten = strip(e.TEN);
+        return matchers.some(function (m) {
+            var M = strip(m);
+            return ma === M || ma.indexOf(M) > -1 || ten.indexOf(M) > -1;
+        });
+    });
+    return found ? found.ID : null;
+};
+DeXuatHoSo.prototype._bridgeOneLienHe = function (typeId, uiFieldId) {
+    if (!typeId) return;
+    if (!$('#txtLienHe' + typeId).length) $('body').append('<input type="hidden" id="txtLienHe' + typeId + '" />');
+    if (!$('#checkX' + typeId).length) $('body').append('<input type="checkbox" id="checkX' + typeId + '" style="display:none" checked />');
+    var val = (($('#' + uiFieldId).val() || '') + '').trim();
+    $('#txtLienHe' + typeId).val(val);
+    // Preserve name attr (LienHe record ID) → save_LienHe UPDATE thay vì INSERT
+    var existing = (this.dtLienHe || []).find(function (x) { return x.CONTACT_TYPE_CODE_ID === typeId || x.CONTACT_TYPE_CODE === typeId; });
+    if (existing && existing.ID) $('#txtLienHe' + typeId).attr('name', existing.ID);
+};
+DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+    var me = this;
+    var arr = me.dtLoaiLienHe || [];
+    var strip = function (s) {
+        return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase();
+    };
+    // Classify từng type theo MA + TEN + fallback theo existing CONTACT_VALUE (email chứa '@', phone toàn số)
+    arr.forEach(function (type) {
+        var ma = strip(type.MA);
+        var ten = strip(type.TEN);
+        var text = ma + '|' + ten;
+        var isEmail = /EMAIL|E-MAIL|\bMAIL\b|THU DIEN TU/.test(text);
+        var isPhone = /PHONE|MOBILE|\bSDT\b|\bDT\b|\bTEL\b|DIEN THOAI|SO DT/.test(text);
+        // Fallback: dùng giá trị existing (nếu có) để đoán loại
+        if (!isEmail && !isPhone) {
+            var existing = (me.dtLienHe || []).find(function (x) { return (x.CONTACT_TYPE_CODE_ID === type.ID) || (x.CONTACT_TYPE_CODE === type.ID); });
+            var v = existing && (existing.CONTACT_VALUE || existing.VALUE) || '';
+            if (v.indexOf('@') > -1) isEmail = true;
+            else if (/^[\d\s\+\-\(\)\.]+$/.test(v) && v.replace(/\D/g, '').length >= 6) isPhone = true;
+        }
+        var uiFieldId = isEmail ? 'txtEmailCaNhan' : (isPhone ? 'txtDienThoai' : null);
+        if (!uiFieldId) return;
+        me._bridgeOneLienHe(type.ID, uiFieldId);
+    });
 };
 
 /*----------------------------------------------
@@ -5406,12 +5469,10 @@ DeXuatHoSo.prototype.save_PersonInvoice = function () {
         if (!pid) { console.warn('[PersonInvoice] không có strPerson_Id → skip Them'); return; }
         obj_save.strPerson_Id = pid;
     }
-    console.log('[PersonInvoice] save', isUpdate ? 'Sua' : 'Them', obj_save);
     edu.system.makeRequest({
         success: function (data) {
             if (data.Success) {
                 if (!isUpdate && data.Id) me._currentInvoiceId = data.Id;
-                console.log('[PersonInvoice] OK id=', data.Id || invoiceId);
             } else {
                 console.warn('[PersonInvoice] fail:', data.Message);
             }
@@ -5440,11 +5501,11 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
         dx._saveGuardBound = true;
         $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
             if (dx._lockedPersonId) {
-                console.log('[DX Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
                 dx.strDeXuatHoSo_Id = dx._lockedPersonId;
             }
-            // Bridge CCCD → shadow field trước khi save chạy (2026-08-25)
+            // Bridge CCCD + LienHe → shadow field trước khi save chạy (2026-08-25)
             if (typeof dx._bridgeCccdToShadow === 'function') dx._bridgeCccdToShadow();
+            if (typeof dx._bridgeLienHeToShadow === 'function') dx._bridgeLienHeToShadow();
         });
         // Validate: Số CCCD bắt buộc nhập — capture-phase click (2026-08-25)
         //var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
@@ -5559,16 +5620,20 @@ DeXuatHoSo.prototype._loadTabInfoExtras = function (personId) {
 
     // 4) Populate Email/ĐT từ dtLienHe cache (async — chờ getList_LienHe xong)
     setTimeout(function () {
+        var strip = function (s) { return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase(); };
         var lienHe = dx.dtLienHe || [];
         lienHe.forEach(function (item) {
-            var typeName = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
-            var typeMa = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
             var val = item.CONTACT_VALUE || item.VALUE || '';
-            if (typeMa === 'EMAIL' || typeName.indexOf('email') > -1 || typeName.indexOf('e-mail') > -1 || typeName.indexOf('mail') > -1) {
-                edu.util.viewValById('txtEmailCaNhan', val);
-            } else if (typeMa === 'PHONE' || typeMa === 'MOBILE' || typeName.indexOf('điện thoại') > -1 || typeName.indexOf('phone') > -1) {
-                edu.util.viewValById('txtDienThoai', val);
+            var text = strip(item.CONTACT_TYPE_CODE_MA || item.MA) + '|' + strip(item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME);
+            var isEmail = /EMAIL|E-MAIL|\bMAIL\b|THU DIEN TU/.test(text);
+            var isPhone = /PHONE|MOBILE|\bSDT\b|\bDT\b|\bTEL\b|DIEN THOAI|SO DT/.test(text);
+            // Fallback theo value nếu MA/TEN không match
+            if (!isEmail && !isPhone) {
+                if (val.indexOf('@') > -1) isEmail = true;
+                else if (/^[\d\s\+\-\(\)\.]+$/.test(val) && val.replace(/\D/g, '').length >= 6) isPhone = true;
             }
+            if (isEmail) edu.util.viewValById('txtEmailCaNhan', val);
+            else if (isPhone) edu.util.viewValById('txtDienThoai', val);
         });
         // Populate CCCD từ dtDinhDanh cache
         var dinhDanh = dx.dtDinhDanh || [];

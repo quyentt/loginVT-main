@@ -177,7 +177,6 @@ QuanLyToanBo.prototype = {
             me.strSinhVien_Id = edu.util.cutPrefixId(/view_/g, strId);
             edu.util.setOne_BgRow(me.strSinhVien_Id, "tblQuanLyToanBo");
             // >>> Handler mới 2026-08-21: mở modal #zoneEdit qua DeXuatHoSo.openEditByPerson
-            console.warn('[QLTB v2] .btnEdit fired | DeXuatHoSo=', typeof (window.main_doc && main_doc.DeXuatHoSo), '| openEditByPerson=', typeof (window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson));
             var personId = me.strSinhVien_Id;
             var aData = (me.dtQuanLyToanBo || []).find(function (x) { return x.QLSV_NGUOIHOC_ID == personId; }) || {};
             var ns = ((aData.QLSV_NGUOIHOC_NGAYSINH || '') + '').split(' ')[0].split('/');
@@ -2593,10 +2592,9 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.save_PersonInvoice
             if (!pid) { console.warn('[QLTB PersonInvoice] không có strPerson_Id → skip Them'); return; }
             obj_save.strPerson_Id = pid;
         }
-        console.log('[QLTB PersonInvoice] save', isUpdate ? 'Sua' : 'Them', obj_save);
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) { if (!isUpdate && data.Id) me._currentInvoiceId = data.Id; console.log('[QLTB PersonInvoice] OK id=', data.Id || invoiceId); }
+                if (data.Success) { if (!isUpdate && data.Id) me._currentInvoiceId = data.Id; }
                 else console.warn('[QLTB PersonInvoice] fail:', data.Message);
             },
             error: function (er) { console.warn('[QLTB PersonInvoice] err:', er); },
@@ -2613,6 +2611,38 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.save_DeXuatHoSo && 
         var me = this;
         _origSaveDX_QLTB.call(me);
         setTimeout(function () { if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice(); }, 300);
+    };
+}
+
+// Bridge helper: #txtEmailCaNhan/#txtDienThoai → shadow #txtLienHe<typeId> (2026-08-25)
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._bridgeLienHeToShadow) {
+    DeXuatHoSo.prototype._bridgeOneLienHe = function (typeId, uiFieldId) {
+        if (!typeId) return;
+        if (!$('#txtLienHe' + typeId).length) $('body').append('<input type="hidden" id="txtLienHe' + typeId + '" />');
+        if (!$('#checkX' + typeId).length) $('body').append('<input type="checkbox" id="checkX' + typeId + '" style="display:none" checked />');
+        var val = (($('#' + uiFieldId).val() || '') + '').trim();
+        $('#txtLienHe' + typeId).val(val);
+        var existing = (this.dtLienHe || []).find(function (x) { return x.CONTACT_TYPE_CODE_ID === typeId || x.CONTACT_TYPE_CODE === typeId; });
+        if (existing && existing.ID) $('#txtLienHe' + typeId).attr('name', existing.ID);
+    };
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        var me = this;
+        var arr = me.dtLoaiLienHe || [];
+        var strip = function (s) { return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase(); };
+        arr.forEach(function (type) {
+            var text = strip(type.MA) + '|' + strip(type.TEN);
+            var isEmail = /EMAIL|E-MAIL|\bMAIL\b|THU DIEN TU/.test(text);
+            var isPhone = /PHONE|MOBILE|\bSDT\b|\bDT\b|\bTEL\b|DIEN THOAI|SO DT/.test(text);
+            if (!isEmail && !isPhone) {
+                var existing = (me.dtLienHe || []).find(function (x) { return (x.CONTACT_TYPE_CODE_ID === type.ID) || (x.CONTACT_TYPE_CODE === type.ID); });
+                var v = existing && (existing.CONTACT_VALUE || existing.VALUE) || '';
+                if (v.indexOf('@') > -1) isEmail = true;
+                else if (/^[\d\s\+\-\(\)\.]+$/.test(v) && v.replace(/\D/g, '').length >= 6) isPhone = true;
+            }
+            var uiFieldId = isEmail ? 'txtEmailCaNhan' : (isPhone ? 'txtDienThoai' : null);
+            if (!uiFieldId) return;
+            me._bridgeOneLienHe(type.ID, uiFieldId);
+        });
     };
 }
 
@@ -2639,7 +2669,6 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._bridgeCccdToShado
         $('#txtNoiCap' + cid).val(($('#txtCCCD_NoiCap').val() || '').trim());
         var existing = (this.dtDinhDanh || []).find(function (x) { return x.IDENTIFIER_TYPE_CODE === cid; });
         if (existing && existing.ID) $('#txtSoDinhDinh' + cid).attr('name', existing.ID);
-        console.log('[QLTB Bridge CCCD] cid=', cid, 'so=', $('#txtSoDinhDinh' + cid).val(), 'name=', $('#txtSoDinhDinh' + cid).attr('name'));
     };
 }
 
@@ -2654,10 +2683,10 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
             dx._saveGuardBound = true;
             $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
                 if (dx._lockedPersonId) {
-                    console.log('[QLTB Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
                     dx.strDeXuatHoSo_Id = dx._lockedPersonId;
                 }
                 if (typeof dx._bridgeCccdToShadow === 'function') dx._bridgeCccdToShadow();
+                if (typeof dx._bridgeLienHeToShadow === 'function') dx._bridgeLienHeToShadow();
             });
             // Validate: Số CCCD bắt buộc nhập — capture-phase click (2026-08-25)
             var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
@@ -2753,12 +2782,18 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadTabInfoExtras
         ];
         if (edu.util && edu.util.resetValByArrId) edu.util.resetValByArrId(arrClear);
         setTimeout(function () {
+            var strip = function (s) { return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase(); };
             (dx.dtLienHe || []).forEach(function (item) {
-                var typeName = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
-                var typeMa = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
                 var val = item.CONTACT_VALUE || item.VALUE || '';
-                if (typeMa === 'EMAIL' || typeName.indexOf('mail') > -1) edu.util.viewValById('txtEmailCaNhan', val);
-                else if (typeMa === 'PHONE' || typeMa === 'MOBILE' || typeName.indexOf('điện thoại') > -1 || typeName.indexOf('phone') > -1) edu.util.viewValById('txtDienThoai', val);
+                var text = strip(item.CONTACT_TYPE_CODE_MA || item.MA) + '|' + strip(item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME);
+                var isEmail = /EMAIL|E-MAIL|\bMAIL\b|THU DIEN TU/.test(text);
+                var isPhone = /PHONE|MOBILE|\bSDT\b|\bDT\b|\bTEL\b|DIEN THOAI|SO DT/.test(text);
+                if (!isEmail && !isPhone) {
+                    if (val.indexOf('@') > -1) isEmail = true;
+                    else if (/^[\d\s\+\-\(\)\.]+$/.test(val) && val.replace(/\D/g, '').length >= 6) isPhone = true;
+                }
+                if (isEmail) edu.util.viewValById('txtEmailCaNhan', val);
+                else if (isPhone) edu.util.viewValById('txtDienThoai', val);
             });
             (dx.dtDinhDanh || []).forEach(function (item) {
                 var typeName = ((item.IDENTIFIER_TYPE_CODE_NAME || item.IDENTIFIER_TYPE_NAME || '') + '').toUpperCase();
