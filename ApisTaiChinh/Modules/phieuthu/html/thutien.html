@@ -109,11 +109,16 @@
         padding-left: 0 !important;
     }
 
-    /* Ép action bar không xuống dòng để 8 nút nằm 1 hàng khi form expanded.
-       Dùng selector nested để đè rule `#zoneActionHoaDon { flex-wrap: wrap }` phía dưới file (specificity cao hơn). */
+    /* Trước đây ép nowrap + overflow-x auto để 8 nút nằm 1 hàng.
+       Nhưng khi trường có 6-7 nút HD/HDDT theo khu vực (Hà Nội / Thái Nguyên / Vĩnh Phúc), tổng ~15 nút
+       tràn ngang → dropdown "Liên HĐ 1/2/Tất cả" (absolute) chồng lên nút khác → user thấy "dính tùm lum".
+       ĐỔI sang wrap tự nhiên: mỗi hàng cách 10px, align-items flex-start để nút Xuất BL (42px) không kéo hàng
+       cao lệch các nút 38px khác. Vẫn giữ được layout 1 hàng khi container đủ rộng, chỉ wrap khi thật chật. */
     .aps-thutien-in:has(#zoneBienLaiHoaDon:not([style*="display: none"])) #zoneActionHoaDon {
-        flex-wrap: nowrap !important;
-        overflow-x: auto;
+        flex-wrap: wrap !important;
+        row-gap: 10px !important;
+        align-items: flex-start !important;
+        overflow-x: visible !important;
     }
 
     /* ==================================================================

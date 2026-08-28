@@ -21,6 +21,10 @@ function _zeDoInject(forceOverlay) {
         + '#zoneEdit .box-header .nav-content-left{text-align:center;margin:0 auto;}'
         + '#zoneEdit .box-header .nav-content-left p.link{margin:0;padding:0;}'
         + '#zoneEdit .box-header .nav-content-left a,#zoneEdit .box-header .zeIcon,#zoneEdit .box-header .zeIcon i{color:#fff !important;font-size:16px;font-weight:600;text-decoration:none;}'
+        + '#zoneEdit #zeHeaderBadge{display:inline-flex;flex-wrap:wrap;gap:6px 10px;margin-top:6px;justify-content:center;}'
+        + '#zoneEdit #zeHeaderBadge:empty{display:none;}'
+        + '#zoneEdit #zeHeaderBadge .ze-chip{display:inline-flex;align-items:center;padding:3px 10px;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);border-radius:20px;color:#fff !important;font-size:12.5px;font-weight:500;line-height:1.4;white-space:nowrap;max-width:340px;overflow:hidden;text-overflow:ellipsis;}'
+        + '#zoneEdit #zeHeaderBadge .ze-chip b{margin-right:4px;font-weight:600;opacity:.85;}'
         + '#zoneEdit .box-header .nav-content-right{position:absolute;right:12px;top:50%;transform:translateY(-50%);margin:0 !important;}'
         + 'body #zoneEdit .box-header .nav-content-right a.btnClose,body #zoneEdit .box-header a.btnClose{background:rgba(255,255,255,.18) !important;background-color:rgba(255,255,255,.18) !important;background-image:none !important;color:#fff !important;border:none !important;border-radius:50% !important;width:34px !important;height:34px !important;min-width:34px !important;line-height:34px !important;padding:0 !important;margin:0 !important;display:inline-flex !important;align-items:center;justify-content:center;font-size:15px !important;cursor:pointer;transition:background .15s;text-align:center !important;box-shadow:none !important;}'
         + 'body #zoneEdit .box-header a.btnClose:hover{background:rgba(255,255,255,.32) !important;background-color:rgba(255,255,255,.32) !important;}'
@@ -103,7 +107,7 @@ function _zeDoInject(forceOverlay) {
 '<div class="fake-modal zone-bus" id="zoneEdit" style="display:none;padding-top:15px">' +
     '<div class="box-shadow register-wish pt-0 position-relative modal-aps-add">' +
         '<div class="d-flex justify-content-between pt-3 px-20 box-header">' +
-            '<div class="nav-content-left"><p class="link"><a><span class="zeIcon"><i class="fa-regular fa-file-circle-question fw-bold"></i></span> Chỉnh sửa - Hồ sơ đề xuất</a></p></div>' +
+            '<div class="nav-content-left"><p class="link"><a><span class="zeIcon"><i class="fa-regular fa-file-circle-question fw-bold"></i></span> Chỉnh sửa - Hồ sơ đề xuất</a></p><div id="zeHeaderBadge"></div></div>' +
             '<div class="nav-content-right mt"><a class="d-block text-right fs-16 mt-5 color-fff btnClose"><i class="fal fa-times"></i></a></div>' +
         '</div>' +
         '<div class="zoneEdit-tabbar">' +
@@ -317,10 +321,9 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.save_PersonInvoice
             if (!pid) { console.warn('[ZE PersonInvoice] không có strPerson_Id → skip Them'); return; }
             obj_save.strPerson_Id = pid;
         }
-        console.log('[ZE PersonInvoice] save', isUpdate ? 'Sua' : 'Them', obj_save);
         edu.system.makeRequest({
             success: function (data) {
-                if (data.Success) { if (!isUpdate && data.Id) me._currentInvoiceId = data.Id; console.log('[ZE PersonInvoice] OK id=', data.Id || invoiceId); }
+                if (data.Success) { if (!isUpdate && data.Id) me._currentInvoiceId = data.Id; }
                 else console.warn('[ZE PersonInvoice] fail:', data.Message);
             },
             error: function (er) { console.warn('[ZE PersonInvoice] err:', er); },
@@ -338,6 +341,38 @@ if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.save_DeXuatHoSo && 
         _origSaveDX.call(me);
         // Fire PersonInvoice song song sau 300ms (CorePerson save đã fire, strDeXuatHoSo_Id đã có sẵn với UPDATE)
         setTimeout(function () { if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice(); }, 300);
+    };
+}
+
+// Bridge helper: #txtEmailCaNhan/#txtDienThoai → shadow #txtLienHe<typeId> (2026-08-25)
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._bridgeLienHeToShadow) {
+    DeXuatHoSo.prototype._bridgeOneLienHe = function (typeId, uiFieldId) {
+        if (!typeId) return;
+        if (!$('#txtLienHe' + typeId).length) $('body').append('<input type="hidden" id="txtLienHe' + typeId + '" />');
+        if (!$('#checkX' + typeId).length) $('body').append('<input type="checkbox" id="checkX' + typeId + '" style="display:none" checked />');
+        var val = (($('#' + uiFieldId).val() || '') + '').trim();
+        $('#txtLienHe' + typeId).val(val);
+        var existing = (this.dtLienHe || []).find(function (x) { return x.CONTACT_TYPE_CODE_ID === typeId || x.CONTACT_TYPE_CODE === typeId; });
+        if (existing && existing.ID) $('#txtLienHe' + typeId).attr('name', existing.ID);
+    };
+    DeXuatHoSo.prototype._bridgeLienHeToShadow = function () {
+        var me = this;
+        var arr = me.dtLoaiLienHe || [];
+        var strip = function (s) { return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase(); };
+        arr.forEach(function (type) {
+            var text = strip(type.MA) + '|' + strip(type.TEN);
+            var isEmail = /EMAIL|E-MAIL|\bMAIL\b|THU DIEN TU/.test(text);
+            var isPhone = /PHONE|MOBILE|\bSDT\b|\bDT\b|\bTEL\b|DIEN THOAI|SO DT/.test(text);
+            if (!isEmail && !isPhone) {
+                var existing = (me.dtLienHe || []).find(function (x) { return (x.CONTACT_TYPE_CODE_ID === type.ID) || (x.CONTACT_TYPE_CODE === type.ID); });
+                var v = existing && (existing.CONTACT_VALUE || existing.VALUE) || '';
+                if (v.indexOf('@') > -1) isEmail = true;
+                else if (/^[\d\s\+\-\(\)\.]+$/.test(v) && v.replace(/\D/g, '').length >= 6) isPhone = true;
+            }
+            var uiFieldId = isEmail ? 'txtEmailCaNhan' : (isPhone ? 'txtDienThoai' : null);
+            if (!uiFieldId) return;
+            me._bridgeOneLienHe(type.ID, uiFieldId);
+        });
     };
 }
 
@@ -364,7 +399,44 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._bridgeCccdToShado
         $('#txtNoiCap' + cid).val(($('#txtCCCD_NoiCap').val() || '').trim());
         var existing = (this.dtDinhDanh || []).find(function (x) { return x.IDENTIFIER_TYPE_CODE === cid; });
         if (existing && existing.ID) $('#txtSoDinhDinh' + cid).attr('name', existing.ID);
-        console.log('[ZE Bridge CCCD] cid=', cid, 'so=', $('#txtSoDinhDinh' + cid).val(), 'name=', $('#txtSoDinhDinh' + cid).attr('name'));
+    };
+}
+
+// Populate header badge (2026-08-28) — fallback nếu server có dexuathoso.js cũ
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._populateHeaderBadge) {
+    DeXuatHoSo.prototype._populateHeaderBadge = function (person) {
+        var el = document.getElementById('zeHeaderBadge');
+        if (!el) return;
+        el.innerHTML = '';
+        if (!person) return;
+        var pick = function (obj, keys) {
+            if (!obj) return '';
+            var lookup = {};
+            for (var k in obj) { if (Object.prototype.hasOwnProperty.call(obj, k)) lookup[k.toUpperCase()] = obj[k]; }
+            for (var i = 0; i < keys.length; i++) {
+                var v = lookup[keys[i].toUpperCase()];
+                if (v !== null && v !== undefined && v !== '') return v;
+            }
+            return '';
+        };
+        var a = person.aData || {};
+        var ma = person.ma || pick(a, ['MA', 'MASO', 'MA_NGUOI_HOC', 'MA_SV', 'STUDENT_CODE', 'CURRENT_EMPLOYEE_CODE', 'QLSV_NGUOIHOC_MA', 'MA_HS']);
+        var hoTen = person.hoTen || pick(a, ['FULL_NAME', 'FULLNAME', 'HOTEN', 'HO_TEN', 'HOVATEN', 'HO_VA_TEN', 'QLSV_NGUOIHOC_HOTEN', 'QLSV_NGUOIHOC_FULLNAME']);
+        if (!hoTen) {
+            var _parts = [person.hoDem || pick(a, ['HODEM', 'HO_DEM', 'QLSV_NGUOIHOC_HODEM']), person.ten || pick(a, ['TEN', 'FIRST_NAME', 'QLSV_NGUOIHOC_TEN'])];
+            hoTen = _parts.filter(function (x) { return x; }).join(' ').replace(/\s+/g, ' ').trim();
+        }
+        var lop = person.lop || pick(a, ['DAOTAO_LOPQUANLY_TEN', 'LOP_TEN', 'LOP', 'QLSV_NGUOIHOC_LOPQUANLY_TEN', 'DAOTAO_LOPQUANLY_MA', 'LOP_MA']);
+        var nganh = person.nganh || pick(a, ['DAOTAO_NGANH_TEN', 'NGANH_TEN', 'NGANH', 'QLSV_NGUOIHOC_NGANH_TEN', 'DAOTAO_NGANHDAOTAO_TEN']);
+        var khoa = person.khoa || pick(a, ['DAOTAO_KHOAQUANLY_TEN', 'KHOA_TEN', 'KHOA', 'QLSV_NGUOIHOC_KHOAQUANLY_TEN', 'DAOTAO_KHOADAOTAO_TEN', 'KHOAHOC']);
+        var esc = function (s) { return (s + '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+        var chips = [];
+        if (ma) chips.push('<span class="ze-chip"><b>Mã:</b>' + esc(ma) + '</span>');
+        if (hoTen) chips.push('<span class="ze-chip"><b>Họ tên:</b>' + esc(hoTen) + '</span>');
+        if (lop) chips.push('<span class="ze-chip"><b>Lớp:</b>' + esc(lop) + '</span>');
+        if (nganh) chips.push('<span class="ze-chip"><b>Ngành:</b>' + esc(nganh) + '</span>');
+        if (khoa) chips.push('<span class="ze-chip"><b>Khóa:</b>' + esc(khoa) + '</span>');
+        el.innerHTML = chips.join('');
     };
 }
 
@@ -380,10 +452,10 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
             dx._saveGuardBound = true;
             $(document).on('mousedown', '#btnSave_DeXuatHoSo', function () {
                 if (dx._lockedPersonId) {
-                    console.log('[ZE Save Guard] force strDeXuatHoSo_Id=', dx._lockedPersonId, ', was=', dx.strDeXuatHoSo_Id);
                     dx.strDeXuatHoSo_Id = dx._lockedPersonId;
                 }
                 if (typeof dx._bridgeCccdToShadow === 'function') dx._bridgeCccdToShadow();
+                if (typeof dx._bridgeLienHeToShadow === 'function') dx._bridgeLienHeToShadow();
             });
             // Validate: Số CCCD bắt buộc nhập — capture-phase click để chặn direct click handler (2026-08-25)
             var _btnSave = document.getElementById('btnSave_DeXuatHoSo');
@@ -416,6 +488,7 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
         edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(person.anh));
         var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(person.anh), constant.setting.EnumImageType.ACCOUNT);
         $("#srcuploadPicture_SV").attr("src", strAnh);
+        if (typeof dx._populateHeaderBadge === 'function') dx._populateHeaderBadge(person);
         var isInline = $('#zoneEdit').hasClass('ze-inline');
         if (!isInline) {
             dx.toggle_edit();
@@ -591,12 +664,18 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadTabInfoExtras
         ];
         if (edu.util && edu.util.resetValByArrId) edu.util.resetValByArrId(arrClear);
         setTimeout(function () {
+            var strip = function (s) { return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase(); };
             (dx.dtLienHe || []).forEach(function (item) {
-                var typeName = ((item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME || '') + '').toLowerCase();
-                var typeMa = ((item.CONTACT_TYPE_CODE_MA || item.MA || '') + '').toUpperCase();
                 var val = item.CONTACT_VALUE || item.VALUE || '';
-                if (typeMa === 'EMAIL' || typeName.indexOf('mail') > -1) edu.util.viewValById('txtEmailCaNhan', val);
-                else if (typeMa === 'PHONE' || typeMa === 'MOBILE' || typeName.indexOf('điện thoại') > -1 || typeName.indexOf('phone') > -1) edu.util.viewValById('txtDienThoai', val);
+                var text = strip(item.CONTACT_TYPE_CODE_MA || item.MA) + '|' + strip(item.CONTACT_TYPE_CODE_NAME || item.CONTACT_TYPE_NAME);
+                var isEmail = /EMAIL|E-MAIL|\bMAIL\b|THU DIEN TU/.test(text);
+                var isPhone = /PHONE|MOBILE|\bSDT\b|\bDT\b|\bTEL\b|DIEN THOAI|SO DT/.test(text);
+                if (!isEmail && !isPhone) {
+                    if (val.indexOf('@') > -1) isEmail = true;
+                    else if (/^[\d\s\+\-\(\)\.]+$/.test(val) && val.replace(/\D/g, '').length >= 6) isPhone = true;
+                }
+                if (isEmail) edu.util.viewValById('txtEmailCaNhan', val);
+                else if (isPhone) edu.util.viewValById('txtDienThoai', val);
             });
             (dx.dtDinhDanh || []).forEach(function (item) {
                 var typeName = ((item.IDENTIFIER_TYPE_CODE_NAME || item.IDENTIFIER_TYPE_NAME || '') + '').toUpperCase();

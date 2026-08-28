@@ -6137,12 +6137,21 @@ PhieuThu.prototype = {
         
         // CSS tập trung vào việc căn giữa và hiển thị đúng
         var css = ''
-            + '@page { size: A5 landscape; margin: 0; }'
+            /* User yêu cầu mẫu phải đúng định dạng A5 landscape (mẫu 02GTTT2/001 Bộ Tài chính chuẩn A5).
+               margin 0.3cm nhỏ để container 200mm căn giữa được trong A5 landscape 210mm (dư 10mm chia đều 2 bên).
+               Note: khách in trên A4 sẽ thấy phiếu chiếm 1 phần giấy — đây là trade-off vì user chọn A5.
+               Nếu cần in A4 flexibly, đổi lại `@page { margin: 0.5cm }` không set size. */
+            + '@page { size: A5 landscape; margin: 0.3cm; }'
             + 'html, body { margin: 0; padding: 0; width: 100%; }'
-            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.45; color: #000; padding: 0.4cm 0.7cm; width: 100%; background: #fff; text-align: center; }'
+            + 'body { font-family: "Times New Roman", Cambria, serif; font-size: 10pt; line-height: 1.25; color: #000; padding: 0.15cm 0.5cm; width: 100%; background: #fff; text-align: center; }'
             + '* { font-family: "Times New Roman", Cambria, serif; box-sizing: border-box; }'
-            + '#MauInPhieuThu { width: 100%; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; }'
-            + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { width: 100%; max-width: 100%; margin: 0.02cm auto; padding: 0; }'
+            /* Container width cố định 200mm để: (a) `margin: 0 auto` căn giữa được trên mọi khổ giấy;
+               (b) fit trong A5 landscape 210mm, A4 portrait 210mm và A4 landscape 297mm.
+               page-break-inside: avoid → phòng khi content vẫn hơi tràn, browser vẫn cố nén 1 trang thay vì cắt */
+            + '#MauInPhieuThu { width: 200mm; max-width: 100%; margin: 0 auto; padding: 0; text-align: left; page-break-inside: avoid; break-inside: avoid; }'
+            /* Bỏ `width: 100%` cho descendants → nếu template có wrapper width < 200mm, `margin: 0 auto !important` sẽ căn giữa nó trong container.
+               `!important` để override inline style `margin-left: XXpx` mà template server có thể set. */
+            + '#MauInPhieuThu > div, #MauInPhieuThu > table, #MauInPhieuThu > p, #MauInPhieuThu > center, #MauInPhieuThu > span, #MauInPhieuThu > h1, #MauInPhieuThu > h2, #MauInPhieuThu > h3, #MauInPhieuThu > h4 { max-width: 100%; margin: 0.02cm auto !important; padding: 0; }'
             + '#MauInPhieuThu table { border-collapse: collapse; width: 100%; margin: 1px auto; border: none; }'
             + '#MauInPhieuThu table td, #MauInPhieuThu table th { border: none; padding: 2px 4px; vertical-align: middle; font-size: 10pt; line-height: 1.5; text-align: left; }'
             + '#MauInPhieuThu table.tblHangHoa { border: 1.2px solid #000; }'
@@ -6150,7 +6159,7 @@ PhieuThu.prototype = {
             + '#MauInPhieuThu table.tblHangHoa th { text-align: center; font-weight: bold; }'
             + '#MauInPhieuThu h1, #MauInPhieuThu h2 { font-size: 13pt; margin: 0.08cm 0; text-align: center; text-transform: uppercase; font-weight: bold; }'
             + '#MauInPhieuThu h3, #MauInPhieuThu h4 { font-size: 10.5pt; margin: 0.06cm 0; text-align: center; text-transform: uppercase; font-weight: bold; }'
-            + '#MauInPhieuThu p { line-height: 1.55; margin: 0.04cm 0; font-size: 10pt; }'
+            + '#MauInPhieuThu p { line-height: 1.3; margin: 0.02cm 0; font-size: 10pt; }'
             + '#MauInPhieuThu [class*="txtHoTen_BenB_"], #MauInPhieuThu [class*="txtMa_BenB_"], #MauInPhieuThu [class*="txtNgaySinh_BenB_"], #MauInPhieuThu [class*="txtMaSoThue"] { display: inline; white-space: nowrap; margin: 0; padding: 0; font-weight: bold; }'
             + '#MauInPhieuThu [class*="txtLop_BenB_"], #MauInPhieuThu [class*="txtNganh_BenB_"], #MauInPhieuThu [class*="txtKhoa_BenB_"] { display: inline; word-break: keep-all; margin: 0; padding: 0; }'
             + '#MauInPhieuThu [class*="txtTongTien"] { font-weight: bold; }'
@@ -6613,23 +6622,78 @@ PhieuThu.prototype = {
             console.log('[Lớp inject] Không tìm được anchor "Mã SV". Các class txt* có trong template:', arrClasses);
         }, 300);
 
-        // Hardcode địa chỉ đơn vị cho biên lai của trường CMC.
-        // BE đang trả DIACHI bị trùng "Tây Mỗ" 2 lần → override tạm ở FE cho đến khi BE fix.
-        // Detect template CMC bằng text "CMC" trong #MauInPhieuThu (mẫu C45-BB-CMC / tên trường).
+        // Override cho biên lai trường UTT (ĐH Công nghệ Giao thông Vận tải):
+        //  (a) Địa chỉ đơn vị: BE trả sai (địa chỉ CMC Hà Nội) → hardcode lại theo địa chỉ Phú Thọ user cung cấp
+        //  (b) Strip 2 dòng ghi chú cuối template ("Công ty cung cấp phần mềm CMC..." + "Phải giữ cẩn thận hóa đơn...")
+        //      do user yêu cầu bỏ hẳn — không phải phần mẫu 02GTTT2/001 chuẩn.
+        // Detect trường UTT dùng tên trường / mã số thuế (KHÔNG dùng "CMC" vì text CMC nằm ở dòng bị strip).
         setTimeout(function () {
             var $mauIn = $('#MauInPhieuThu');
             if (!$mauIn.length) return;
-            var strTemplate = ($mauIn.text() || '').toUpperCase();
-            if (strTemplate.indexOf('CMC') === -1) return; // không phải biên lai CMC → bỏ qua
-            if ($mauIn.find('.txtDiaChiCMC_Override').length) return; // idempotent
+            var strAllText = ($mauIn.text() || '').toUpperCase();
+            var isTruongUTT = strAllText.indexOf('GIAO THÔNG VẬN TẢI') !== -1
+                           || strAllText.indexOf('2500224668') !== -1;
+            if (!isTruongUTT) return;
 
-            var strDiaChiCMC = 'Tây Mỗ, phường Xuân Phương, thành phố Hà Nội, Việt Nam';
-            var $addr = $mauIn.find('[class*="txtDiaChi_BenA_"]');
-            if ($addr.length) {
-                $addr.html(strDiaChiCMC).addClass('txtDiaChiCMC_Override');
-                console.log('[CMC address override] Đã hardcode', $addr.length, 'field địa chỉ:', strDiaChiCMC);
-            } else {
-                console.log('[CMC address override] Không tìm thấy .txtDiaChi_BenA_* trong template CMC. Kiểm tra class thực tế.');
+            // (a) Override địa chỉ
+            if (!$mauIn.find('.txtDiaChiUTT_Override').length) {
+                var strDiaChiUTT = '278 Đường Lam Sơn, Phường Vĩnh Yên, Tỉnh Phú Thọ, Việt Nam';
+                var $addr = $mauIn.find('[class*="txtDiaChi_BenA_"]');
+                if ($addr.length) {
+                    $addr.html(strDiaChiUTT).addClass('txtDiaChiUTT_Override');
+                    console.log('[UTT address override] Đã hardcode', $addr.length, 'field địa chỉ:', strDiaChiUTT);
+                } else {
+                    console.log('[UTT address override] Không tìm thấy .txtDiaChi_BenA_* trong template. Kiểm tra class thực tế.');
+                }
+            }
+
+            // (b) Strip 2 dòng ghi chú footer CMC.
+            // Dùng TreeWalker duyệt TEXT NODE (không phải element) — vì template thường có text node
+            // trực tiếp trong <p>/<div> (không wrap trong span/i), khiến loop leaf-element không match.
+            // Regex match cả "cung cấp phần mềm" (dòng 1) và "phải giữ cẩn thận hóa đơn" (dòng 2).
+            // Tìm text node match → đi lên block cha (p/div/tr) → nếu block chỉ chứa text footer thì remove block;
+            // nếu block có nội dung khác không liên quan thì chỉ remove text node đó.
+            if (!$mauIn.data('utt-footer-stripped')) {
+                var reFooter = /cung cấp phần mềm|phải giữ cẩn thận hóa đơn/i;
+                var walker = document.createTreeWalker($mauIn[0], NodeFilter.SHOW_TEXT, null, false);
+                var footerNodes = [];
+                var tnode;
+                while ((tnode = walker.nextNode())) {
+                    if (reFooter.test(tnode.nodeValue || '')) footerNodes.push(tnode);
+                }
+                var removedCount = 0;
+                footerNodes.forEach(function (node) {
+                    // Đi lên đến block-level cha
+                    var target = node.parentNode;
+                    while (target && target !== $mauIn[0]) {
+                        var tn = (target.tagName || '').toUpperCase();
+                        if (tn === 'P' || tn === 'DIV' || tn === 'TR' || tn === 'TD') break;
+                        target = target.parentNode;
+                    }
+                    if (!target || target === $mauIn[0]) {
+                        // Không tìm được block cha → remove text node và <br> trước/sau
+                        var br = node.previousSibling;
+                        if (br && br.nodeName === 'BR' && br.parentNode) br.parentNode.removeChild(br);
+                        if (node.parentNode) node.parentNode.removeChild(node);
+                        removedCount++;
+                        return;
+                    }
+                    // Check block cha có text nào KHÔNG khớp footer không
+                    var otherText = (target.textContent || '').replace(node.nodeValue || '', '').replace(/\s+/g, ' ').trim();
+                    var hasOtherContent = otherText.length > 3 && !reFooter.test(otherText);
+                    if (hasOtherContent) {
+                        // Block cha có content khác → chỉ remove text node + <br> siblings gần đó
+                        var brPrev = node.previousSibling;
+                        if (brPrev && brPrev.nodeName === 'BR' && brPrev.parentNode) brPrev.parentNode.removeChild(brPrev);
+                        if (node.parentNode) node.parentNode.removeChild(node);
+                    } else {
+                        // Block toàn text footer → remove cả block
+                        if (target.parentNode) target.parentNode.removeChild(target);
+                    }
+                    removedCount++;
+                });
+                $mauIn.data('utt-footer-stripped', true);
+                console.log('[UTT footer strip] Đã xóa', removedCount, 'text node ghi chú CMC/hóa đơn cuối phiếu (tổng', footerNodes.length, 'match).');
             }
         }, 350);
 

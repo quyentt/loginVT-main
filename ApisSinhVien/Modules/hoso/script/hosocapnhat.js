@@ -41,7 +41,8 @@ HoSoCapNhat.prototype = {
                     gioiTinhMa: aData.GIOITINH_MA || '',
                     danTocMa: aData.DANTOC_MA || '',
                     tonGiaoMa: aData.TONGIAO_MA || '',
-                    quocTichMa: aData.QUOCTICH_MA || ''
+                    quocTichMa: aData.QUOCTICH_MA || '',
+                    aData: aData
                 });
                 return;
             }

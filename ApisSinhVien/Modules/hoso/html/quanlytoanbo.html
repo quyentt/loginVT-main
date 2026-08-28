@@ -109,6 +109,7 @@
                                     <th class="td-center">Tên</th>
                                     <th class="td-center">Ngày sinh</th>
                                     <th class="td-center">Tình trạng</th>
+                                    <th class="td-center">Tài chính</th>
                                     <th class="td-center">Lớp</th>
                                     <th class="td-center">Chương trình</th>
                                     <th class="td-center">Khóa học</th>
@@ -885,9 +886,110 @@
         </div>
     </div>
 </div>
-<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.16"></script>
-<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.20"></script>
-<script src="Modules/hoso/script/QuanLyToanBo.js?v=1.0.0.22"></script>
+<!-- Modal Chi tiết tài chính (2026-08-27) — port từ ApisCongCanBo/inbangdiem, adapt BS3 -->
+<div class="modal fade" id="myModalXemThongTinAll" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width: 95%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="flex:1 1 auto; text-align:center; margin:0 12px !important;"><i class="fa fa-money"></i> <span class="lang" key="">Chi tiết tài chính</span> - <span class="lblTaiChinh_SinhVien"></span></h4>
+                <button type="button" class="close" data-dismiss="modal" style="flex:0 0 auto; order:2;"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+            </div>
+            <div class="modal-body" id="modal_body_taichinh">
+                <div class="row">
+                    <div class="col-sm-6" style="padding-left: 0">
+                        <h4 class="mb-1 color-active btn btn-default pointer" id="btnShowHidetblChiTietKhoanPhaiNop_XemThongTinAll" style="padding:5px"><i class="fa fa-money"></i> Phải nộp</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanPhaiNop_XemThongTinAll">
+                            <table id="tblChiTietKhoanPhaiNop_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <h4 class="mb-1 color-red btn btn-default pointer" id="btnShowHideChiTietKhoanPhaiNopChung_XemThongTinAll" style="padding:5px"><i class="fa fa-file-text-o"></i> Phải nộp chung</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanPhaiNopChung_XemThongTinAll">
+                            <table id="tblChiTietKhoanPhaiNopChung_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <h4 class="mb-1 color-red btn btn-default pointer" id="btnShowHideChiTietKhoanPhaiNopRieng_XemThongTinAll" style="padding:5px"><i class="fa fa-file-text-o"></i> Phải nộp riêng</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanPhaiNopRieng_XemThongTinAll">
+                            <table id="tblChiTietKhoanPhaiNopRieng_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+
+                    <div class="col-sm-6" style="padding-right: 0">
+                        <h4 class="mb-1 color-active btn btn-default pointer" id="btnShowHideChiTietKhoanDaNop_XemThongTinAll" style="padding:5px"><i class="fa fa-check-circle"></i> Đã nộp</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanDaNop_XemThongTinAll">
+                            <table id="tblChiTietKhoanDaNop_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <h4 class="mb-1 color-green btn btn-default pointer" id="btnShowHideChiTietKhoanDuocMien_XemThongTinAll" style="padding:5px"><i class="fa fa-gift"></i> Được miễn</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanDuocMien_XemThongTinAll">
+                            <table id="tblChiTietKhoanDuocMien_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <h4 class="mb-1 color-active btn btn-default pointer" id="btnShowHideChiTietKhoanDaRut_XemThongTinAll" style="padding:5px"><i class="fa fa-undo"></i> Đã rút</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanDaRut_XemThongTinAll">
+                            <table id="tblChiTietKhoanDaRut_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <h4 class="mb-1 color-red btn btn-default pointer" id="btnShowHideKhoanThuaChung_XemThongTinAll" style="padding:5px"><i class="fa fa-plus-square-o"></i> Thừa chung</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanThuaChung_XemThongTinAll">
+                            <table id="tblChiTietKhoanThuaChung_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+
+                        <h4 class="mb-1 color-active btn btn-default pointer" id="btnShowHideKhoanThuaRieng_XemThongTinAll" style="padding:5px"><i class="fa fa-plus-square"></i> Thừa riêng</h4>
+                        <div class="scroll-table-x" id="zoneChiTietKhoanThuaRieng_XemThongTinAll">
+                            <table id="tblChiTietKhoanThuaRieng_XemThongTinAll" class="table table-hover table-bordered">
+                                <thead></thead>
+                                <tbody></tbody>
+                                <tfoot></tfoot>
+                            </table>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times-circle-o"></i> <span class="lang" key="">Đóng</span></button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="Modules/hoso/script/dexuathoso.js?v=1.0.0.25"></script>
+<script src="Modules/hoso/script/zoneEditModal_inject.js?v=1.0.0.27"></script>
+<script src="Modules/hoso/script/QuanLyToanBo.js?v=1.0.0.30"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['QuanLyToanBo'] = new QuanLyToanBo();
