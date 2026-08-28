@@ -35,7 +35,15 @@ HoSoDanhSach.prototype = {
             edu.util.setOne_BgRow(me.strSinhVien_Id, "tblDSSV_NhanSu");
             // Mở modal chỉnh sửa mới (2026-08-21)
             var personId = me.strSinhVien_Id;
-            var aData = (me.dt_HS || []).find(function (x) { return x.ID == personId; }) || {};
+            // 1 SV có thể học nhiều ngành → lookup theo MASO ở dòng click (2026-08-28)
+            var $tr = $(this).closest('tr');
+            var rowText = ($tr.text() || '').trim();
+            var candidates = (me.dt_HS || []).filter(function (x) { return x.ID == personId; });
+            var aData = candidates.find(function (x) { return x.MASO && rowText.indexOf(x.MASO) > -1; })
+                || (me.dt_HS || []).find(function (x) { return x.MASO && rowText.indexOf(x.MASO) > -1; })
+                || candidates[0]
+                || (me.dt_HS || []).find(function (x) { return x.ID == personId; })
+                || {};
             if (window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson) {
                 main_doc.DeXuatHoSo.openEditByPerson({
                     id: personId,
