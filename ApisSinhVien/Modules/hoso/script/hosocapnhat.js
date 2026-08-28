@@ -27,8 +27,15 @@ HoSoCapNhat.prototype = {
         $("#tblSinhVien_CN").delegate(".btnView", "click", function () {
             var strId = this.id;
             strId = edu.util.cutPrefixId(/view_/g, strId);
-            // Mở modal chỉnh sửa mới (2026-08-21)
-            var aData = (me.dtSinhVien || []).find(function (x) { return x.ID == strId; }) || {};
+            // 1 SV có thể học nhiều ngành → lookup theo MASO ở dòng click (2026-08-28)
+            var $tr = $(this).closest('tr');
+            var rowText = ($tr.text() || '').trim();
+            var candidates = (me.dtSinhVien || []).filter(function (x) { return x.ID == strId; });
+            var aData = candidates.find(function (x) { return x.MASO && rowText.indexOf(x.MASO) > -1; })
+                || (me.dtSinhVien || []).find(function (x) { return x.MASO && rowText.indexOf(x.MASO) > -1; })
+                || candidates[0]
+                || (me.dtSinhVien || []).find(function (x) { return x.ID == strId; })
+                || {};
             if (window.main_doc && main_doc.DeXuatHoSo && main_doc.DeXuatHoSo.openEditByPerson) {
                 main_doc.DeXuatHoSo.openEditByPerson({
                     id: strId,
