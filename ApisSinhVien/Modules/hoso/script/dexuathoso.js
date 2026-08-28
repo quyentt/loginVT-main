@@ -5487,8 +5487,40 @@ DeXuatHoSo.prototype.save_PersonInvoice = function () {
 };
 
 /*----------------------------------------------
+-- Populate header badge (Mã - HoTen - Lop - Nganh - Khoa) từ person.aData (2026-08-28)
+----------------------------------------------*/
+DeXuatHoSo.prototype._populateHeaderBadge = function (person) {
+    var el = document.getElementById('zeHeaderBadge');
+    if (!el) return;
+    el.innerHTML = '';
+    if (!person) return;
+    var pick = function (obj, keys) {
+        if (!obj) return '';
+        for (var i = 0; i < keys.length; i++) {
+            var v = obj[keys[i]];
+            if (v !== null && v !== undefined && v !== '') return v;
+        }
+        return '';
+    };
+    var a = person.aData || {};
+    var ma = person.ma || pick(a, ['MA', 'MASO', 'MA_NGUOI_HOC', 'MA_SV', 'STUDENT_CODE', 'CURRENT_EMPLOYEE_CODE', 'QLSV_NGUOIHOC_MA', 'MA_HS']);
+    var hoTen = person.hoTen || pick(a, ['HOTEN', 'HO_TEN', 'FULL_NAME', 'FULLNAME', 'QLSV_NGUOIHOC_HOTEN', 'HOVATEN']);
+    var lop = person.lop || pick(a, ['DAOTAO_LOPQUANLY_TEN', 'LOP_TEN', 'LOP', 'QLSV_NGUOIHOC_LOPQUANLY_TEN', 'DAOTAO_LOPQUANLY_MA', 'LOP_MA']);
+    var nganh = person.nganh || pick(a, ['DAOTAO_NGANH_TEN', 'NGANH_TEN', 'NGANH', 'QLSV_NGUOIHOC_NGANH_TEN', 'DAOTAO_NGANHDAOTAO_TEN']);
+    var khoa = person.khoa || pick(a, ['DAOTAO_KHOAQUANLY_TEN', 'KHOA_TEN', 'KHOA', 'QLSV_NGUOIHOC_KHOAQUANLY_TEN', 'DAOTAO_KHOADAOTAO_TEN', 'KHOAHOC']);
+    var esc = function (s) { return (s + '').replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+    var chips = [];
+    if (ma) chips.push('<span class="ze-chip"><b>Mã:</b>' + esc(ma) + '</span>');
+    if (hoTen) chips.push('<span class="ze-chip">' + esc(hoTen) + '</span>');
+    if (lop) chips.push('<span class="ze-chip"><b>Lớp:</b>' + esc(lop) + '</span>');
+    if (nganh) chips.push('<span class="ze-chip"><b>Ngành:</b>' + esc(nganh) + '</span>');
+    if (khoa) chips.push('<span class="ze-chip"><b>Khóa:</b>' + esc(khoa) + '</span>');
+    el.innerHTML = chips.join('');
+};
+
+/*----------------------------------------------
 -- Shared API: mở modal #zoneEdit từ bên ngoài (2026-08-21)
--- Chuẩn hoá input: { id, hoDem, ten, ngaySinh_Ngay, ngaySinh_Thang, ngaySinh_Nam, anh }
+-- Chuẩn hoá input: { id, hoDem, ten, ngaySinh_Ngay, ngaySinh_Thang, ngaySinh_Nam, anh, aData? }
 -- Dùng cho: hoso_taomoi (HoSoTaoMoi.openEditModal wrapper) + quanlytoanbo (click .btnEdit)
 ----------------------------------------------*/
 DeXuatHoSo.prototype.openEditByPerson = function (person) {
@@ -5541,6 +5573,9 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
     edu.util.viewValById("uploadPicture_SV", edu.util.returnEmpty(person.anh));
     var strAnh = edu.system.getRootPathImg(edu.util.returnEmpty(person.anh), constant.setting.EnumImageType.ACCOUNT);
     $("#srcuploadPicture_SV").attr("src", strAnh);
+
+    // Populate header badge (Mã-HoTen-Lop-Nganh-Khoa) (2026-08-28)
+    if (typeof dx._populateHeaderBadge === 'function') dx._populateHeaderBadge(person);
 
     // Mở modal + backdrop + reset về tab đầu
     dx.toggle_edit();

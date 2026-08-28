@@ -176,7 +176,8 @@ HoSoTaoMoi.prototype = {
             gioiTinhMa: d.GIOITINH_MA || '',
             danTocMa: d.DANTOC_MA || '',
             tonGiaoMa: d.TONGIAO_MA || '',
-            quocTichMa: d.QUOCTICH_MA || ''
+            quocTichMa: d.QUOCTICH_MA || '',
+            aData: d
         };
         if (dx && typeof dx.openEditByPerson === 'function') {
             dx.openEditByPerson(person);
