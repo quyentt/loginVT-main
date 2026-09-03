@@ -1029,33 +1029,79 @@
         background: #223771 !important;
         color: #ffffff !important;
         border-bottom: 0 !important;
-        padding: 12px 20px !important;
+        padding: 12px 55px !important;
         min-height: 52px !important;
         border-top-left-radius: 12px !important;
         border-top-right-radius: 12px !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: center !important;
+        position: relative !important;
       }
 
+      /* FIX 2026-08-26: Chu title TRANG DAM ro, khong bi color inherit tu style.css.
+         Ep font-weight 600 + text-shadow nhe de tuong phan cao tren nen navy #223771. */
       html body.skin-blue .modal .modal-header .modal-title,
       html body.skin-blue .modal .modal-header .modal-title *,
+      html body.skin-blue .modal .modal-header .modal-title span,
+      html body.skin-blue .modal .modal-header .modal-title i,
       html body.skin-blue .modal .modal-header h4,
+      html body.skin-blue .modal .modal-header h4 *,
       html body.skin-blue .modal .modal-header h5,
-      html body.skin-blue .modal .modal-header i {
+      html body.skin-blue .modal .modal-header h5 *,
+      html body.skin-blue .modal .modal-header i,
+      html body.skin-blue .modal .modal-header .myModalLabel,
+      html body.skin-blue .modal .modal-header .myModalLabel *,
+      html body.skin-blue .modal .modal-header .myModalLabel1,
+      html body.skin-blue .modal .modal-header .myModalLabel1 *,
+      html body.skin-blue .modal .modal-header .myModalLabel2,
+      html body.skin-blue .modal .modal-header .myModalLabel2 * {
         color: #ffffff !important;
-        font-weight: 400 !important;
+        font-weight: 600 !important;
         margin: 0 !important;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+      }
+      html body.skin-blue .modal .modal-header .modal-title {
+        font-size: 16px !important;
+        line-height: 1.4 !important;
+        flex: 1 1 auto !important;
+        text-align: center !important;
       }
 
+      /* Nut X: LUON o goc phai, canh giua doc, chu trang dam, hover do nhat */
       html body.skin-blue .modal .modal-header .close,
-      html body.skin-blue .modal .modal-header .btn-close {
+      html body.skin-blue .modal .modal-header .btn-close,
+      html body.skin-blue .modal .modal-header button.close {
+        position: absolute !important;
+        right: 14px !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        left: auto !important;
+        float: none !important;
         color: #ffffff !important;
-        opacity: 0.85 !important;
+        opacity: 0.9 !important;
         background: transparent !important;
         border: 0 !important;
         font-size: 24px !important;
-        font-weight: 300 !important;
+        font-weight: 400 !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 4px 10px !important;
+        text-shadow: none !important;
+        cursor: pointer !important;
+      }
+      html body.skin-blue .modal .modal-header .close:hover,
+      html body.skin-blue .modal .modal-header .btn-close:hover,
+      html body.skin-blue .modal .modal-header button.close:hover {
+        opacity: 1 !important;
+        color: #ffdcdc !important;
+      }
+      html body.skin-blue .modal .modal-header .close span,
+      html body.skin-blue .modal .modal-header .close *,
+      html body.skin-blue .modal .modal-header button.close span,
+      html body.skin-blue .modal .modal-header button.close * {
+        color: inherit !important;
+        text-shadow: none !important;
       }
 
       /* ═══ Alert & Confirm modal (myModalAlert): title CENTERED, × sat phai
