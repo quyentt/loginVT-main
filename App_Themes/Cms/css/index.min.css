@@ -435,8 +435,8 @@ blockquote {
 }
 
 .navbar-nav>li>a {
-    padding-bottom: 20px;
-    padding-top: 15px
+    padding-bottom: 12px;
+    padding-top: 20px
 }
 
 .modal-body>.row {

@@ -128,15 +128,18 @@
       }
 
       html body.skin-blue .main-header .logo:hover {
-        background-color: #1c2e5f !important;
+        /* background-color: #1c2e5f !important; */
       }
-
+      html body.skin-blue .main-header .logo:hover .logo-lg span,
+html body.skin-blue .main-header .navbar .sidebar-toggle:hover {
+        color: var(--color-yellow) !important;
+        background: transparent !important;
+      }
       html body.skin-blue .main-header .navbar .sidebar-toggle,
       html body.skin-blue .main-header .navbar .nav>li>a {
-        color: #ffffff !important;
+        color: #ffffff;
       }
 
-      html body.skin-blue .main-header .navbar .sidebar-toggle:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:active,
       html body.skin-blue .main-header .navbar .nav>li>a:focus,
@@ -144,7 +147,7 @@
       html body.skin-blue .main-header .navbar .nav .open>a:hover,
       html body.skin-blue .main-header .navbar .nav .open>a:focus {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #ffffff !important;
+        color: var(--color-yellow) !important;
       }
 
       html body.skin-blue .main-header li.user-header {
