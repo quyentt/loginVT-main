@@ -4,7 +4,7 @@ constant.prototype = {
     init: function () {
         var me = this;
         me.lang = "VI";//get from sytemroot
-        ASG()
+        ASG();
     },
     getting: function (parentNode, node) {
         var me = this;

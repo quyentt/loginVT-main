@@ -18069,3 +18069,9 @@ html body.skin-blue .modal.myModalLabel .modal-footer,.modal .modal-footer {
     margin-right: 0px !important;
     margin-left: 0px !important;
 }
+.aps-list-btn .btn {
+    display: flex;
+}
+.aps-list-btn .btn i{
+    padding-right: 8px;
+}
