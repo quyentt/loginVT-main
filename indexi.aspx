@@ -128,18 +128,15 @@
       }
 
       html body.skin-blue .main-header .logo:hover {
-        /* background-color: #1c2e5f !important; */
-      }
-      html body.skin-blue .main-header .logo:hover .logo-lg span,
-html body.skin-blue .main-header .navbar .sidebar-toggle:hover {
-        color: var(--color-yellow) !important;
-        background: transparent !important;
-      }
-      html body.skin-blue .main-header .navbar .sidebar-toggle,
-      html body.skin-blue .main-header .navbar .nav>li>a {
-        color: #ffffff;
+        background-color: #1c2e5f !important;
       }
 
+      html body.skin-blue .main-header .navbar .sidebar-toggle,
+      html body.skin-blue .main-header .navbar .nav>li>a {
+        color: #ffffff !important;
+      }
+
+      html body.skin-blue .main-header .navbar .sidebar-toggle:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:active,
       html body.skin-blue .main-header .navbar .nav>li>a:focus,
@@ -147,7 +144,7 @@ html body.skin-blue .main-header .navbar .sidebar-toggle:hover {
       html body.skin-blue .main-header .navbar .nav .open>a:hover,
       html body.skin-blue .main-header .navbar .nav .open>a:focus {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: var(--color-yellow) !important;
+        color: #ffffff !important;
       }
 
       html body.skin-blue .main-header li.user-header {
@@ -1821,12 +1818,12 @@ html body.skin-blue .main-header .navbar .sidebar-toggle:hover {
         // Container submenu: trong suốt, phân cấp bằng border-left mỏng
         // (khớp NewUI sidebar.tsx style, không tạo "bóng đen")
         var SUB_UL = {
-          'background': 'transparent',
-          'background-color': 'transparent',
+          'background': '#1a2b5c !importantansparent',
+          'background-color': '#1a2b5c !important',
           'background-image': 'none',
           'border-radius': '0',
           'border-left': '1px solid rgba(210, 221, 253, 0.18)',
-          'margin': '2px 0 4px 26px',
+          'margin': '2px 0 4px 0px',
           'padding': '2px 0 2px 6px'
         };
 
