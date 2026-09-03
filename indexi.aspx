@@ -177,9 +177,9 @@
         color: #d2ddfd !important;
         background: transparent !important;
         background-image: none !important;
-        border-radius: 6px !important;
-        margin: 2px 6px !important;
-        padding: 8px 10px 8px 12px !important;
+        border-radius:0 6px 6px 0!important;
+        margin: 2px 6px 2px 0 !important;
+        padding: 10px 10px 10px 12px !important;
       }
 
       html body.skin-blue #menu_vertical>li:hover>a,
@@ -194,7 +194,7 @@
       html body.skin-blue #menu_vertical>li.menu-open>a,
       html body.skin-blue .sidebar-menu>li.active>a,
       html body.skin-blue .sidebar-menu>li.menu-open>a {
-        color: #f8843d !important;
+        color: #fff !important;
         background: rgba(248, 132, 61, 0.12) !important;
         background-image: none !important;
         border-left-color: #f8843d !important;
@@ -741,8 +741,8 @@
       }
 
       html body.skin-blue #main-content-wrapper .btn.btn-primary:hover {
-        background: #1c2e5f !important;
-        border-color: #1c2e5f !important;
+        background: #121d3b !important;
+        border-color: #121d3b !important;
       }
 
       /* .btn-search / .btnSearch: styles.css:3272 set nen xam #e1e1e1 !important +
@@ -798,7 +798,7 @@
              color: var(--color-green) -> chu xanh la mo tit tren nen trang). */
       html body.skin-blue #main-content-wrapper .table-hover>tbody>tr:hover,
       html body.skin-blue #main-content-wrapper .table-hover>tbody>tr:hover>td {
-        background: #f8fafc !important;
+        background: #e1e1e1 !important;
         color: #0f172a !important;
       }
 
@@ -1044,7 +1044,7 @@
       html body.skin-blue .modal .modal-header h5,
       html body.skin-blue .modal .modal-header i {
         color: #ffffff !important;
-        font-weight: 600 !important;
+        font-weight: 400 !important;
         margin: 0 !important;
       }
 
@@ -1769,7 +1769,7 @@
           // KEY: styles.css:2987 co .menu-open { background: #fff !important } rat broad
           // - ep transparent trong scope sidebar de khong bi nen trang chen ngang.
           'html body.skin-blue .main-sidebar .menu-open, html body.skin-blue #menu_vertical .menu-open, html body.skin-blue #menu_vertical li { background: transparent !important; background-color: transparent !important; }',
-          'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background: transparent !important; background-color: transparent !important; border-radius: 0 !important; margin: 2px 0 4px 26px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
+          'html body.skin-blue #menu_vertical .treeview-menu, html body.skin-blue .sidebar-menu .treeview-menu { background:#1a2b5c !important; background-color:#1a2b5c !important; border-radius: 0 !important; margin: 2px 0 4px 0px !important; padding: 2px 0 2px 6px !important; border-left: 1px solid rgba(210,221,253,0.18) !important; box-shadow: none !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a { color: #ffffff !important; font-weight: 500 !important; background: transparent !important; background-image: none !important; border-left: 0 !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li.active > a, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open > a, html body.skin-blue #menu_vertical .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active > a, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open > a, html body.skin-blue .sidebar-menu .treeview-menu > li > a:hover, html body.skin-blue .sidebar-menu .treeview-menu > li.active, html body.skin-blue .sidebar-menu .treeview-menu > li.menu-open, html body.skin-blue #menu_vertical .treeview-menu > li.active, html body.skin-blue #menu_vertical .treeview-menu > li.menu-open { color: #f8843d !important; background: transparent !important; background-color: transparent !important; border-color: transparent !important; outline: none !important; box-shadow: none !important; border-radius: 0 !important; }',
           'html body.skin-blue #menu_vertical .treeview-menu > li > a::before, html body.skin-blue #menu_vertical .treeview-menu > li > a::after { background-color: rgba(210,221,253,0.4) !important; }',
@@ -1789,10 +1789,10 @@
 
         // Style cho top-level (có border-left orange indicator)
         var TOP_ACTIVE = {
-          'background': 'rgba(248, 132, 61, 0.12)',
+          'background': 'rgba(29, 78, 216, 1)',
           'background-image': 'none',
-          'color': '#f8843d',
-          'border-left': '3px solid #f8843d',
+          'color': '#fff',
+          'border-left': '0px solid #f8843d',
           'font-weight': '700'
         };
         var TOP_DEFAULT = {

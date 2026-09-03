@@ -2705,7 +2705,7 @@ input:active,
 .sidebar-menu {
   margin: 0px 0px !important;
   /* border-top: 1px solid #00206d !important; */
-  padding: 5px 5px 0 0;
+  padding: 0;
 }
 
 .sidebar-menu .treeview-menu .menu-open {
@@ -7815,4 +7815,7 @@ input[type="radio"] {
 }
 #main-content-wrapper .card.today-card, #main-content-wrapper .today-card{
   z-index: 10 !important;
+}
+.pd-0{
+  padding: 0 !important;
 }

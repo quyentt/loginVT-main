@@ -4154,8 +4154,8 @@ a.other-action_item:hover {
   align-items: center;
   display: flex;
   padding: 0 15px;
-  height: 44px;
-  border-radius:0 8px 8px 0;
+  height: 42px;
+  border-radius:0 6px 6px 0;
   color: var(--color-text-3);
   font-weight: 600;
 }

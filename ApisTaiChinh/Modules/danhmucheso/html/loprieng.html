@@ -3,7 +3,7 @@
         <div class="col-lg-12">
             <div class="box box-solid zone-bus pd0">
                 <!-- Bộ tìm kiếm -->
-                <div class="box box-solid box-search pd20 pb10">
+                <div class="box box-solid box-search pd20" style="padding-bottom: 0 !important;margin-bottom: 0 !important;">
                     <div class="box-header with-border d-none">
                         <h3 class="box-title"><i class="fa fa-window-restore"></i> Tìm kiếm</h3>
                     </div>
@@ -29,11 +29,11 @@
                     </div>
                 </div>
                 <!-- Danh sách -->
-                <div class="box box-solid aps-loprieng-list pd20">
-                    <div class="box-header">
+                <div class="box box-solid aps-loprieng-list pd20 pt-0">
+                    <div class="box-header pd-0">
                         <h3 class="box-title line-38">
                             <i class="fa-light fa-list-timeline line-38"></i> Danh sách
-                            <span class="badge bg-light-blue" style="margin-top: 8px;">
+                            <span class="badge bg-light-blue" style="margin-top: 8px !important;">
                                 <span id="lblLopRieng_Tong"></span>
                             </span>
                             <span id="lblLopRieng_DaChon" class="badge lblLopRieng_DaChon" style="margin-left:8px;display:none;"></span>
@@ -73,9 +73,14 @@
         </div>
     </div>
 </section>
-
+<!-- ---------- -->
+<div class="aps-all-button ml-20 aps-gap-10 btn-show" style="display: none !important;">
+    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#modalKetQua_LopRieng">
+        Kết quả
+    </button>    
+</div>
 <!-- Modal kết quả chốt/chốt lại -->
-<div class="modal fade" id="modalKetQua_LopRieng" tabindex="-1" role="dialog">
+<div class="modal fade modalKetQua_LopRieng" id="modalKetQua_LopRieng" tabindex="-1" role="dialog">
     <div class="modal-dialog" style="width:95%;max-width:1400px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -88,7 +93,7 @@
             <div class="modal-body">
                 <div id="zoneKetQua_LopRieng_Summary" style="margin-bottom:10px;"></div>
                 <div style="max-height:60vh;overflow:auto;">
-                    <table class="table table-bordered table-hover" id="tblKetQua_LopRieng" style="margin-bottom:0;">
+                    <table class="table table-bordered table-hover tblKetQua_LopRieng table-noborder" id="tblKetQua_LopRieng" style="margin-bottom:0;">
                         <thead style="background:#f4f4f4;">
                             <tr>
                                 <th style="text-align:center;width:50px;">Stt</th>
