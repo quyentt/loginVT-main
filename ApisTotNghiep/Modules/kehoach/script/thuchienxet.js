@@ -2101,7 +2101,12 @@ ThucHienXet.prototype = {
         edu.system.loadToTable_data(jsonForm);
         for (var i = 0; i < me.dtDat_ChiTiet.rsDuLieu.length; i++) {
             var aData = me.dtDat_ChiTiet.rsDuLieu[i];
-            $("#zone_" + aData.TN_KETQUA_ID + "_" + aData.ID).html(edu.util.returnEmpty(aData.GIATRI));
+            try {
+                $("#zone_" + aData.TN_KETQUA_ID + "_" + aData.ID).html(edu.util.returnEmpty(aData.GIATRI));
+
+            } catch{
+
+            }
         }
         /*III. Callback*/
     },

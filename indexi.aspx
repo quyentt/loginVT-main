@@ -25,7 +25,7 @@
     <link href="App_Themes/Plugins/pagination/simplePagination.min.css" rel="stylesheet" /><!-- editor -->
     <link href="App_Themes/Plugins/jstree/dist/themes/default/style.min.css" rel="stylesheet" /><!-- editor -->
     <link href="App_Themes/Plugins/datepicker/datepicker3.min.css" rel="stylesheet" /><!-- editor -->
-    <link href="App_Themes/Cms/css/index.css?v=2" rel="stylesheet" /><!-- editor -->
+    <link href="App_Themes/Cms/css/index.css?v=3" rel="stylesheet" /><!-- editor -->
     <link href="App_Themes/Cms/css/index.min.css?v=2" rel="stylesheet" /><!-- editor -->
     <!-- custom theme v1- bich -->
     <link href="App_Themes/Cms/Custom_V1/styles.css?v=4" rel="stylesheet" />
@@ -1736,10 +1736,9 @@
       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <!-- <script type="text/javascript" src="Scripts/MathJax/MathJax.js"></script> -->
     <!--  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" -->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/Core/uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
-      %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
+    
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload") %>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload") %>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
 
     <script type="text/javascript" src="Corei/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
