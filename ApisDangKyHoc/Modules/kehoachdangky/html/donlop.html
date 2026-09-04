@@ -123,6 +123,20 @@
         font-weight: 900 !important;
         font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'FontAwesome' !important;
     }
+
+    /* FIX 2026-09-04: nut Dong y/Dong trong modal confirm (systemroot.js) bi lech icon-text
+       do khong co flex align. Scoped rieng cho trang don lop (chi ton tai khi trang nay load),
+       khong dung tren shared Corei/systemroot.js. */
+    #myModalAlert .modal-footer .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    #myModalAlert .modal-footer .btn i {
+        margin: 0;
+        line-height: 1;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-donlop">
