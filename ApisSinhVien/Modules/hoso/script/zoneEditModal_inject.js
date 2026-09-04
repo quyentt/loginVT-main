@@ -13,26 +13,27 @@ function _zeDoInject(forceOverlay) {
 
     var css = ''
         /* Compact centered modal (2026-08-28) — smaller than full-viewport, van co margin quanh de thay backdrop
-           Display:flex CHI ap khi body.zoneEdit-open active — tranh auto-mo tai page load */
-        + '#zoneEdit.fake-modal{position:fixed !important;top:3vh !important;left:50% !important;right:auto !important;bottom:auto !important;transform:translateX(-50%) !important;width:88vw !important;max-width:1280px !important;height:auto !important;max-height:94vh !important;overflow:hidden !important;z-index:2147483000 !important;background:#ffffff !important;border-radius:10px !important;box-shadow:0 25px 70px rgba(15,23,42,.45) !important;padding:0 !important;flex-direction:column !important;}'
-        + 'body.zoneEdit-open #zoneEdit.fake-modal{display:flex !important;}'
+           :not(.ze-inline) — inline mode van dung .ze-inline rule (position:static, display:block) khong bi de */
+        + '#zoneEdit.fake-modal:not(.ze-inline){position:fixed !important;top:3vh !important;left:50% !important;right:auto !important;bottom:auto !important;transform:translateX(-50%) !important;width:88vw !important;max-width:1280px !important;height:auto !important;max-height:94vh !important;overflow:hidden !important;z-index:2147483000 !important;background:#ffffff !important;border-radius:10px !important;box-shadow:0 25px 70px rgba(15,23,42,.45) !important;padding:0 !important;flex-direction:column !important;}'
+        + 'body.zoneEdit-open #zoneEdit.fake-modal:not(.ze-inline){display:flex !important;}'
         + 'body.zoneEdit-open::before{content:"";position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:2147482900;pointer-events:auto;}'
         + 'body.zoneEdit-open{overflow:hidden;}'
-        + 'body.zoneEdit-open .select2-container{z-index:2147483100 !important;}'
-        /* Force sidebar/header xuong duoi khi modal mo — fix truong hop sidebar override z-index cao (2026-08-28) */
-        + 'body.zoneEdit-open .main-sidebar,body.zoneEdit-open .main-header,body.zoneEdit-open aside.main-sidebar,body.zoneEdit-open .content-header,body.zoneEdit-open .navbar-custom-menu{z-index:1 !important;position:relative !important;}'
+        /* CHI boost select2 dropdown DANG MO (--open) + popup dropdown (.select2-dropdown, append vao <body>)
+           KHONG boost .select2-container tinh (container dong o trang nen) — neu boost tinh se de "xuyen"
+           qua modal vi container tinh cua trang nen van nam trong luong DOM binh thuong (2026-08-28 fix) */
+        + 'body.zoneEdit-open .select2-container--open,body.zoneEdit-open .select2-dropdown{z-index:2147483100 !important;}'
         /* Dam bao modal luon interactive */
         + '#zoneEdit.fake-modal *{pointer-events:auto;}'
         /* Flex layout: header + tabbar (top, co dinh) — pane active (giua, scroll) — footer (duoi, sticky) */
-        + '#zoneEdit.fake-modal > .box-shadow.register-wish{display:flex !important;flex-direction:column !important;flex:1 1 auto !important;min-height:0 !important;height:100% !important;box-shadow:none !important;border-radius:0 !important;overflow:hidden !important;}'
-        + '#zoneEdit.fake-modal .box-header{flex:0 0 auto !important;border-radius:10px 10px 0 0 !important;}'
-        + '#zoneEdit.fake-modal .zoneEdit-tabbar{flex:0 0 auto !important;position:static !important;}'
-        + '#zoneEdit.fake-modal .zoneEdit-pane{min-height:0;}'
-        + '#zoneEdit.fake-modal .zoneEdit-pane.active{flex:1 1 auto !important;min-height:0 !important;overflow-y:auto !important;overflow-x:hidden !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) > .box-shadow.register-wish{display:flex !important;flex-direction:column !important;flex:1 1 auto !important;min-height:0 !important;height:100% !important;box-shadow:none !important;border-radius:0 !important;overflow:hidden !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) .box-header{flex:0 0 auto !important;border-radius:10px 10px 0 0 !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) .zoneEdit-tabbar{flex:0 0 auto !important;position:static !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) .zoneEdit-pane{min-height:0;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) .zoneEdit-pane.active{flex:1 1 auto !important;min-height:0 !important;overflow-y:auto !important;overflow-x:hidden !important;}'
         /* Footer container-fluid cuoi cung (chua Dong/Luu) — sticky duoi, luon visible */
-        + '#zoneEdit.fake-modal > .box-shadow.register-wish > .container-fluid:last-child{flex:0 0 auto !important;background:#ffffff !important;border-top:1px solid #e2e8f0 !important;box-shadow:0 -2px 12px rgba(15,23,42,.06) !important;padding:12px 24px !important;margin:0 !important;z-index:5 !important;border-radius:0 0 10px 10px !important;}'
-        + '#zoneEdit.fake-modal > .box-shadow.register-wish > .container-fluid:last-child > hr{display:none !important;}'
-        + '#zoneEdit.fake-modal > .box-shadow.register-wish > .container-fluid:last-child .d-flex.align-items-center.mt-4{padding:0 !important;margin:0 !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) > .box-shadow.register-wish > .container-fluid:last-child{flex:0 0 auto !important;background:#ffffff !important;border-top:1px solid #e2e8f0 !important;box-shadow:0 -2px 12px rgba(15,23,42,.06) !important;padding:12px 24px !important;margin:0 !important;z-index:5 !important;border-radius:0 0 10px 10px !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) > .box-shadow.register-wish > .container-fluid:last-child > hr{display:none !important;}'
+        + '#zoneEdit.fake-modal:not(.ze-inline) > .box-shadow.register-wish > .container-fluid:last-child .d-flex.align-items-center.mt-4{padding:0 !important;margin:0 !important;}'
         + '#zoneEdit .box-shadow.register-wish{box-shadow:none !important;border-radius:12px !important;padding:0 !important;}'
         + '#zoneEdit .box-header{background:linear-gradient(135deg,#2563eb 0%,#1e40af 100%);color:#fff !important;border-radius:12px 12px 0 0;margin:0 !important;padding:14px 24px !important;min-height:56px;display:flex !important;align-items:center;justify-content:center !important;position:relative;}'
         + '#zoneEdit .box-header .nav-content-left{text-align:center;margin:0 auto;}'
