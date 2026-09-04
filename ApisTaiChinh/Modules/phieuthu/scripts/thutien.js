@@ -1569,8 +1569,10 @@ PhieuThu.prototype = {
         //????????????????????????????????????????????????????
 
         //[2]. TinhTrang — mỗi case có text fallback riêng để không phụ thuộc BE trả TEN
-        var strTrangThai_TenBE = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
-        var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
+        // Field đúng theo response PKG_CORE_NGUOIHOC_01.LayDSNguoiHoc_All là QLSV_TRANGTHAINGUOIHOC_MA/_TEN
+        // (TRANGTHAINGUOIHOC_N1_MA/_TEN không tồn tại trong response -> luôn rỗng -> rơi vào default "Đang học").
+        var strTrangThai_TenBE = edu.util.checkEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
+        var strTrangThai_Ma = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_MA);
         var colorLable = '';
         var icon = '';
         var strTrangThai_Ten = '';
@@ -1602,6 +1604,9 @@ PhieuThu.prototype = {
                 colorLable = 'label-warning'; icon = 'fa-ban'; strTrangThai_Ten = 'Đình chỉ'; break;
             default:
                 colorLable = 'label-success'; icon = 'fa-graduation-cap'; strTrangThai_Ten = 'Đang học'; break;
+        }
+        if (!["CHUYENTRUONGDI", "NORMAL", "CHUYENTRUONG", "KHONGXACDINH", "GRADUATE", "FORCEDROPOUT", "CANHBAO", "RESERVE", "DROPOUT", "XOATEN", "REPEATE", "DUNGHOC"].includes(strTrangThai_Ma)) {
+            console.warn('%c[thutien.viewForm_DoiTuong] TinhTrang MA "' + strTrangThai_Ma + '" KHÔNG khớp case nào -> rơi vào default "Đang học" (label-success). MASO=' + data.MASO, 'color:#F44336;font-weight:bold');
         }
         // Ưu tiên text từ BE nếu có (có trường hợp BE customize label), fallback hard-coded ở trên
         if (strTrangThai_TenBE && strTrangThai_TenBE.trim() !== '' && strTrangThai_TenBE !== '-') {

@@ -798,8 +798,8 @@ HoaDonKhac.prototype = {
         if (edu.util.checkValue(strSoDienThoai)) strHienThi += " - " + strSoDienThoai;
         $("#txtTen_Ma_NS_SDT").html(strHienThi);
         //
-        var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
-        var strTrangThai_Ma = data.TRANGTHAINGUOIHOC_N1_MA;
+        var strTrangThai_Ten = edu.util.checkEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
+        var strTrangThai_Ma = data.QLSV_TRANGTHAINGUOIHOC_MA;
         var strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-success"><i class="fa fa-graduation-cap"></i> ' + strTrangThai_Ten + '</span>';
         switch (strTrangThai_Ma) {
             case "CHUYENTRUONGDI":
