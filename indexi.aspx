@@ -1863,12 +1863,12 @@
         // Container submenu: trong suốt, phân cấp bằng border-left mỏng
         // (khớp NewUI sidebar.tsx style, không tạo "bóng đen")
         var SUB_UL = {
-          'background': 'transparent',
-          'background-color': 'transparent',
+          'background': '#1a2b5c !importantansparent',
+          'background-color': '#1a2b5c !important',
           'background-image': 'none',
           'border-radius': '0',
           'border-left': '1px solid rgba(210, 221, 253, 0.18)',
-          'margin': '2px 0 4px 26px',
+          'margin': '2px 0 4px 0px',
           'padding': '2px 0 2px 6px'
         };
 
