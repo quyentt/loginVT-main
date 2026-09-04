@@ -702,8 +702,8 @@ TinhHinhHocPhi.prototype = {
         //????????????????????????????????????????????????????
 
         //[2]. TinhTrang
-        var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
-        var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
+        var strTrangThai_Ten = edu.util.checkEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
+        var strTrangThai_Ma = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_MA);
         var colorLable = '';
         var icon = '';
 
