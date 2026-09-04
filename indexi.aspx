@@ -128,15 +128,19 @@
       }
 
       html body.skin-blue .main-header .logo:hover {
-        background-color: #1c2e5f !important;
+        /* background-color: #1c2e5f !important; */
       }
-
+      html body.skin-blue .main-header .logo:hover .logo-mini span,
+      html body.skin-blue .main-header .logo:hover span {
+        /* background-color: #1c2e5f !important; */
+        color: #ffc107 !important;
+      }
       html body.skin-blue .main-header .navbar .sidebar-toggle,
       html body.skin-blue .main-header .navbar .nav>li>a {
         color: #ffffff !important;
       }
 
-      html body.skin-blue .main-header .navbar .sidebar-toggle:hover,
+      
       html body.skin-blue .main-header .navbar .nav>li>a:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:active,
       html body.skin-blue .main-header .navbar .nav>li>a:focus,
@@ -144,9 +148,11 @@
       html body.skin-blue .main-header .navbar .nav .open>a:hover,
       html body.skin-blue .main-header .navbar .nav .open>a:focus {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #ffffff !important;
+        color: #ffc107  !important;
       }
-
+      html body.skin-blue .main-header .navbar .sidebar-toggle:hover{
+        color: #ffc107  !important;
+      }
       html body.skin-blue .main-header li.user-header {
         background-color: #223771 !important;
       }
@@ -177,7 +183,7 @@
         color: #d2ddfd !important;
         background: transparent !important;
         background-image: none !important;
-        border-radius:0 6px 6px 0!important;
+        border-radius: 0 6px 6px 0 !important;
         margin: 2px 6px 2px 0 !important;
         padding: 10px 10px 10px 12px !important;
       }
@@ -720,6 +726,8 @@
         border-radius: 6px !important;
         padding: 8px 12px !important;
         box-shadow: none !important;
+        display: inline-flex;
+    gap: 8px;
       }
 
       html body.skin-blue #main-content-wrapper .btn.btn-default {
@@ -738,6 +746,8 @@
         background: #223771 !important;
         color: #fff !important;
         border: 1px solid #223771 !important;
+        gap: 8px;
+        display: inline-flex;
       }
 
       html body.skin-blue #main-content-wrapper .btn.btn-primary:hover {
@@ -756,7 +766,7 @@
         color: #ffffff !important;
         border: 1px solid #223771 !important;
         border-radius: 8px !important;
-        padding: 9px 12px 11px 12px !important;
+        padding: 12px 12px 10px 12px !important;
         font-weight: 500 !important;
         box-shadow: none !important;
       }
@@ -775,7 +785,7 @@
       html body.skin-blue #main-content-wrapper .btnSearch i,
       html body.skin-blue #main-content-wrapper .btnSearch .lang {
         color: #ffffff !important;
-        padding-right: 5px;
+        /* padding-right: 5px; */
       }
 
       /* Table headers — khop tone role picker table (nen tim nhat, font dam) */
@@ -1061,6 +1071,7 @@
         margin: 0 !important;
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
       }
+
       html body.skin-blue .modal .modal-header .modal-title {
         font-size: 16px !important;
         line-height: 1.4 !important;
@@ -1090,12 +1101,14 @@
         text-shadow: none !important;
         cursor: pointer !important;
       }
+
       html body.skin-blue .modal .modal-header .close:hover,
       html body.skin-blue .modal .modal-header .btn-close:hover,
       html body.skin-blue .modal .modal-header button.close:hover {
         opacity: 1 !important;
         color: #ffdcdc !important;
       }
+
       html body.skin-blue .modal .modal-header .close span,
       html body.skin-blue .modal .modal-header .close *,
       html body.skin-blue .modal .modal-header button.close span,
@@ -1736,9 +1749,11 @@
       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <!-- <script type="text/javascript" src="Scripts/MathJax/MathJax.js"></script> -->
     <!--  src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=MML_HTMLorMML" -->
-    
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload") %>/Core/uploadfile.js?v=1.0.0.12"></script><!--CORE JS-->
-    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString("RootPathUpload") %>/Core/uploadavatar.js?v=1.0.0.12"></script><!--CORE JS-->
+
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
+      %>/Core/uploadfile.js ? v = 1.0.0.12"></script><!--CORE JS-->
+    <script src="<%= Apis.CommonV1.Base.AppSetting.GetString(" RootPathUpload")
+      %>/ Core / uploadavatar.js ? v = 1.0.0.12"></script><!--CORE JS-->
 
     <script type="text/javascript" src="Corei/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->

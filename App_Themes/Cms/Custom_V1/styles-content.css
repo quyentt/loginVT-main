@@ -18075,3 +18075,14 @@ html body.skin-blue .modal.myModalLabel .modal-footer,.modal .modal-footer {
 .aps-list-btn .btn i{
     padding-right: 8px;
 }
+
+.item-search.aps-choose-sv {
+   padding-top:15px;
+}
+.aps-thuchienin .inputSearch .item-search:nth-child(8){
+    padding-right: 0 !important;
+}
+.zoneTestPhoi .box-header{
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+}
