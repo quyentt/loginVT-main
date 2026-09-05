@@ -328,10 +328,10 @@ HoSoDanhSach.prototype = {
             aaData: data,
             bPaginate: {
                 strFuntionName: "main_doc.HoSoDanhSach.getList_HSSV()",
-                iDataRow: iPager,
-                bInfo: false,
-                bChange: false,
-                bLeft: false
+                iDataRow: iPager
+                // FIX 2026-09-05: enable info label + page-size dropdown + search filter
+                // (truoc day bi tat het → 7650 trang khong the tang pageSize).
+                // Bo bInfo/bChange/bLeft = default true de user thay 'Hien thi X du lieu'.
             },
             colPos: {
                 left: [1],

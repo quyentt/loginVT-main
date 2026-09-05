@@ -76,6 +76,9 @@ Import_PhaiNop.prototype = {
         //$("[id$=chkSelectAll_Import]").on("click", function () {
         //    edu.util.checkedAll_BgRow(this, { table_id: "tblDaImport" });
         //});
+        // Handler goc: chi tick visible page. Smart select-all da chuyen ra
+        // indexi.aspx global handler (fix 2026-09-05) — tu dong hoi user
+        // load tat ca khi total > visible, khong can lam per-file nua.
         $("#chkSelectAll_Import").on("click", function () {
             var checked_status = $(this).is(':checked');
             $("#tblDaImport tbody").find('input:checkbox').each(function () {
@@ -141,7 +144,18 @@ Import_PhaiNop.prototype = {
             me.report_Data("ImportThatBai", "tblImport_ThatBai", [0, 1, 2, 3, 4, 5]);
         });
         $("#btnTaiFileMau").click(function (e) {
+            // FIX 2026-09-05: Kiem tra mau import da chon chua truoc khi tai file,
+            // tranh location.href = undefined -> nhay 404 /undefined page.
+            var strMau = $("#dropMauImport").val();
+            if (strMau == "" || strMau == null || strMau == undefined) {
+                edu.system.alert("Vui lòng chọn mẫu import trước khi tải file mẫu!");
+                return;
+            }
             var url_report = $("#dropMauImport option:selected").attr("name");
+            if (!url_report || url_report === 'undefined' || url_report === 'null') {
+                edu.system.alert("Mẫu import này chưa cấu hình file mẫu để tải. Vui lòng liên hệ quản trị viên!");
+                return;
+            }
             location.href = url_report;
         });
         $("#tblDaImport").delegate('input', 'click', function (e) {
