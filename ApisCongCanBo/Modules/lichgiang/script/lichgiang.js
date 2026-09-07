@@ -923,7 +923,7 @@ LichGiang.prototype = {
             var html = '';
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU*60 - e.PHUTBATDAU;
 
-            html += '<div class="task task-1 btnLichHoc" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer" title="' + JSON.stringify(arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) +'">';
+            html += '<div class="task task-1 btnLichHoc" id="' + e.ID + '" style="top:' + e.PHUTBATDAU + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer" title="' + JSON.stringify(arrLopHocPhanMau.find(ele => ele.ID == e.IDLOPHOCPHAN)) +'">';
             html += '<div class="task-header">';
             html += '<div class="text">';
             html += '<div class="title">' + e.TENHOCPHAN + '</div>';

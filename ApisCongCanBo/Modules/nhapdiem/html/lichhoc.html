@@ -1,6 +1,6 @@
 ﻿<style>
     .hour-row {
-        height: 60px;
+        height: 100px;
     }
 
     .date-body {
@@ -25,6 +25,58 @@
             max-width: 90%;
         }
     }*/
+
+    .aps-lichhoc .block-calendar ul.weekdays,
+    .aps-lichhoc .block-calendar ul.days {
+        display: grid !important;
+        grid-template-columns: repeat(7, 1fr) !important;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+    }
+
+    .aps-lichhoc .block-calendar ul.weekdays > li,
+    .aps-lichhoc .block-calendar ul.days > li {
+        width: auto !important;
+        max-width: none !important;
+        min-width: 0 !important;
+        flex: unset !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 9px 0;
+        cursor: pointer;
+    }
+
+    .aps-lichhoc .block-calendar ul.days > li.today:not(.active) span {
+        width: 100%;
+        max-width: 32px;
+        aspect-ratio: 1 / 1;
+        background-color: var(--color-link, #2f55a4);
+        color: #fff;
+        border-radius: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Khối sự kiện quá ngắn (thi 30-90 phút) khiến tiêu đề + mô tả + thanh
+       đánh giá cảm xúc (- icon +) đè lên nhau, chữ bị cắt khó đọc.
+       Scoped riêng trang này, không sửa calendar.css dùng chung. */
+    .aps-lichhoc .day-of-week .task {
+        min-height: 112px;
+    }
+
+    .aps-lichhoc .day-of-week .task .task-description {
+        padding-bottom: 28px;
+    }
+
+    .aps-lichhoc .day-of-week .task .task-description .eval {
+        bottom: 3px;
+        right: 3px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    }
 </style>
 <div class="one-door study-space aps-lichhoc">
     <div class="row register-school my-calendar">
