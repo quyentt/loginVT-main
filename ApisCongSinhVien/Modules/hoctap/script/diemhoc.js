@@ -42,6 +42,10 @@ DiemHoc.prototype = {
         //    me.popover_DiemThanhPhan(id, point);
         //});
         $("#zone_bangdiem").delegate('.btnXemDiemThanhPhan', 'click', function (e) {
+            // Ngăn <a href="#"> bên trong điều hướng làm hash rỗng -> hashchange trong
+            // index.aspx reset về dashboard/location.reload() -> văng khỏi màn hình.
+            e.preventDefault();
+            e.stopPropagation();
             var point = this;
             var id = this.id;
             me.getList_DiemThanhPhan(id, point);
@@ -310,7 +314,7 @@ DiemHoc.prototype = {
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Điểm chữ:</em><span>' + edu.util.returnEmpty(e.DIEMQUYDOI_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Đánh giá:</em><span>' + edu.util.returnEmpty(e.DANHGIA_TEN) + '</span></td>';
                 htmlBangDiem += '<td class="text-center"><em class="show-in-mobi">Ghi chú:</em><span>' + edu.util.returnEmpty(e.GHICHU) + '</span></td>';
-                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '"><em class="show-in-mobi">Chi tiết:</em><a href="#">Chi tiết</a></td>';
+                htmlBangDiem += '<td class="btnXemDiemThanhPhan" id="' + e.ID + '" style="cursor:pointer;"><em class="show-in-mobi">Chi tiết:</em><a href="javascript:void(0);">Chi tiết</a></td>';
                 htmlBangDiem += '</tr>';
             });
 
