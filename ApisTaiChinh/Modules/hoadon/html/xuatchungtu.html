@@ -138,6 +138,207 @@
     .activeLien {
         background: rgba(0, 0, 0, 0) -moz-linear-gradient(center top, #bbbbbb 0%, #efefef 100%) repeat scroll 0 0 !important;
     }
+
+    /* ═══════════ Màn hình HÓA ĐƠN — phôi in ở giữa + action bar cố định đáy ═══════════ */
+    #zoneThongTinHoaDon .aps-hd-phoi {
+        background: #fff;
+        margin: 0 auto 120px auto;
+        padding: 24px 28px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.08);
+        width: fit-content;
+        min-width: 720px;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    /* Action bar chia HẲN 2 BÊN: trái = Hủy + phương thức xuất | phải = In/Liên/Đổi mẫu + Đóng */
+    #zoneThongTinHoaDon .aps-hd-actionbar {
+        position: fixed;
+        bottom: 0;
+        left: 300px;
+        right: 0;
+        z-index: 999;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        background: #fff;
+        padding: 14px 28px;
+        border-top: 2px solid #e2e8f0;
+        box-shadow: 0 -4px 16px rgba(15, 23, 42, 0.10);
+    }
+
+    body.sidebar-collapse #zoneThongTinHoaDon .aps-hd-actionbar {
+        left: 50px;
+    }
+
+    #zoneThongTinHoaDon .aps-hd-left,
+    #zoneThongTinHoaDon .aps-hd-right,
+    #zoneThongTinHoaDon .aps-hd-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Nhóm phải LUÔN dính lề phải, kể cả khi bên trái đang bị ẩn hết */
+    #zoneThongTinHoaDon .aps-hd-right {
+        margin-left: auto;
+    }
+
+    /* Kích thước chuẩn: TO, dễ bấm. Thẻ BỌC NGOÀI làm nút, 2 thẻ <a> con là thành phần bên trong */
+    #zoneThongTinHoaDon .btnXuat_HDDT,
+    #zoneThongTinHoaDon #btnSaveHD,
+    #zoneThongTinHoaDon #btnHuyHoaDon,
+    #zoneThongTinHoaDon #btnInHoaDon,
+    #zoneThongTinHoaDon #btnCloseHoaDon,
+    #zoneThongTinHoaDon #btnLienHoaDon,
+    #zoneThongTinHoaDon #btnChuyenMauIn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 10px;
+        width: auto !important;
+        height: 48px;
+        padding: 0 22px !important;
+        margin: 0 !important;
+        font-size: 15px !important;
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all .15s ease;
+        text-align: left !important;
+    }
+
+    #zoneThongTinHoaDon .aps-hd-actionbar .btn,
+    #zoneThongTinHoaDon .aps-hd-actionbar .lbsymbolHD {
+        height: auto !important;
+        width: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        color: inherit !important;
+        font-family: inherit !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
+        line-height: 1 !important;
+        display: inline-flex !important;
+        align-items: center;
+        float: none !important;
+    }
+
+    /* Icon fa-4x của phôi cũ -> về cỡ thường, ăn màu của nút cha */
+    #zoneThongTinHoaDon .aps-hd-actionbar .btn i,
+    #zoneThongTinHoaDon .aps-hd-actionbar .fa-4x {
+        font-size: 18px !important;
+        color: inherit !important;
+        margin-right: 10px;
+    }
+
+    /* PHƯƠNG THỨC XUẤT (HĐĐT / nháp) — CTA chính, filled navy */
+    #zoneThongTinHoaDon .btnXuat_HDDT,
+    #zoneThongTinHoaDon #btnSaveHD {
+        background: #223771 !important;
+        color: #fff !important;
+        border: 2px solid #223771 !important;
+        box-shadow: 0 3px 10px rgba(34, 55, 113, 0.28);
+    }
+
+    #zoneThongTinHoaDon .btnXuat_HDDT:hover,
+    #zoneThongTinHoaDon #btnSaveHD:hover {
+        background: #162550 !important;
+        border-color: #162550 !important;
+        box-shadow: 0 5px 16px rgba(34, 55, 113, 0.40);
+    }
+
+    /* In / Liên / Đổi mẫu in — outline cùng tone navy */
+    #zoneThongTinHoaDon #btnInHoaDon,
+    #zoneThongTinHoaDon #btnLienHoaDon,
+    #zoneThongTinHoaDon #btnChuyenMauIn {
+        background: #fff !important;
+        color: #223771 !important;
+        border: 2px solid #223771 !important;
+    }
+
+    #zoneThongTinHoaDon #btnInHoaDon:hover,
+    #zoneThongTinHoaDon #btnLienHoaDon:hover,
+    #zoneThongTinHoaDon #btnChuyenMauIn:hover {
+        background: #223771 !important;
+        color: #fff !important;
+    }
+
+    /* Đóng — grey outline, nhẹ nhất */
+    #zoneThongTinHoaDon #btnCloseHoaDon {
+        background: #fff !important;
+        color: #475569 !important;
+        border: 2px solid #cbd5e1 !important;
+    }
+
+    #zoneThongTinHoaDon #btnCloseHoaDon:hover {
+        background: #f1f5f9 !important;
+        border-color: #94a3b8 !important;
+        color: #0f172a !important;
+    }
+
+    /* Hủy — destructive, filled đỏ, ngoài cùng bên trái */
+    #zoneThongTinHoaDon #btnHuyHoaDon {
+        background: #dc2626 !important;
+        color: #fff !important;
+        border: 2px solid #dc2626 !important;
+        box-shadow: 0 3px 10px rgba(220, 38, 38, 0.28);
+    }
+
+    #zoneThongTinHoaDon #btnHuyHoaDon:hover {
+        background: #b91c1c !important;
+        border-color: #b91c1c !important;
+    }
+
+    #zoneThongTinHoaDon #btnHuyHoaDon .color-red {
+        color: #fff !important;
+    }
+
+    /* Danh sách liên / menu đổi mẫu in bung LÊN TRÊN vì bar nằm sát đáy */
+    #zoneThongTinHoaDon #btnLienHoaDon,
+    #zoneThongTinHoaDon #btnChuyenMauIn {
+        position: relative;
+    }
+
+    #zoneThongTinHoaDon #zoneLienHoaDon:not(:empty) {
+        position: absolute;
+        bottom: 58px;
+        right: 0;
+        min-width: 180px;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.12);
+        padding: 6px;
+        z-index: 1000;
+    }
+
+    #zoneThongTinHoaDon #btnChuyenMauIn .dropdown-menu {
+        bottom: 58px;
+        top: auto;
+        right: 0;
+        left: auto;
+        border-radius: 8px;
+    }
+
+    #zoneThongTinHoaDon .aps-hd-notify {
+        text-align: center;
+    }
+
+    @media (max-width: 1200px) {
+        #zoneThongTinHoaDon .aps-hd-actionbar {
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+    }
 </style>
 <div id="MainContent">
     <!-- Main content -->
@@ -671,6 +872,7 @@
                         </div>
                     </div>
                 </div>
+                <!-- OLD: các nút float quanh phôi in, khối dọc 85px + icon fa-4x -> chữ đè icon.
                 <div style="float:left; margin-right: 3px;">
                     <div id="btnHuyHoaDon" style="width:85px; text-align:center; background-color: #fff">
                         <a title="Hủy Hóa đơn" class="btn"><i class="fa fa-trash-o fa-4x color-red"></i></a>
@@ -681,26 +883,44 @@
                     <div id="MauInHoaDon"></div>
                 </div>
                 <div id="zoneActionHoaDon" style="float:left; margin-left: 3px">
-                    <div id="btnInHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
-                        <a title="In Hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-print fa-4x"></i></a>
-                        <a class="color-active bold lbsymbolHD">In Hóa đơn</a>
+                    <div id="btnInHoaDon" style="width:85px; ...">...</div>
+                    <div id="btnCloseHoaDon" style="width:85px; ...">...</div>
+                    <div id="btnLienHoaDon" style="width:85px; ...">...</div>
+                    <div id="btnChuyenMauIn" class="btnMauInChungTu" style="display: none">...</div>
+                </div>
+                -->
+                <div id="MauInHoaDon" class="aps-hd-phoi"></div>
+
+                <div class="aps-hd-actionbar">
+                    <!-- trái: hành động phá hủy -->
+                    <div class="aps-hd-left">
+                        <div id="btnHuyHoaDon">
+                            <a title="Hủy Hóa đơn" class="btn"><i class="fa fa-trash-o color-red"></i></a>
+                            <a class="lbsymbolHD">Hủy hóa đơn</a>
+                        </div>
                     </div>
-                    <div id="btnCloseHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
-                        <a title="Đóng Hóa đơn" class="btn"><i style="color: #337ab7" class="fa fa-angle-double-down fa-4x"></i></a>
-                        <a class="color-active bold lbsymbolHD">Đóng Hóa đơn</a>
-                    </div>
-                    <div id="btnLienHoaDon" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1">
-                        <a title="Liên Hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa fa-copy fa-4x"></i></a>
-                        <div id="zoneLienHoaDon"></div>
-                        <div class="clear"></div>
-                        <a class="color-active bold lbsymbolHD">Liên hóa đơn</a>
-                    </div>
-                    <div id="btnChuyenMauIn" class="btnMauInChungTu" style="display: none">
-                        <div class="dropdown">
-                            <a class="color-active bold lbsymbolHD dropdown-toggle" data-toggle="dropdown">Đổi mẫu in <span class="caret"></span></a>
-                            <ul class="dropdown-menu" id="zoneMauInChungTu">
-                            </ul>
-                        </div> 
+                    <!-- phải: thao tác trên chứng từ + đóng -->
+                    <div class="aps-hd-right">
+                        <div id="zoneActionHoaDon" class="aps-hd-group">
+                            <div id="btnLienHoaDon">
+                                <a title="Liên Hóa đơn" class="btn"><i class="fa fa-copy"></i></a>
+                                <a class="lbsymbolHD">Liên hóa đơn</a>
+                                <div id="zoneLienHoaDon"></div>
+                            </div>
+                            <div id="btnChuyenMauIn" class="btnMauInChungTu" style="display: none">
+                                <a class="btn"><i class="fa fa-exchange"></i></a>
+                                <a class="lbsymbolHD dropdown-toggle" data-toggle="dropdown">Đổi mẫu in <span class="caret"></span></a>
+                                <ul class="dropdown-menu" id="zoneMauInChungTu"></ul>
+                            </div>
+                            <div id="btnInHoaDon">
+                                <a title="In Hóa đơn" class="btn"><i class="fa fa-print"></i></a>
+                                <a class="lbsymbolHD">In hóa đơn</a>
+                            </div>
+                            <div id="btnCloseHoaDon">
+                                <a title="Đóng Hóa đơn" class="btn"><i class="fa fa-times-circle"></i></a>
+                                <a class="lbsymbolHD">Đóng</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -708,7 +928,7 @@
     </section>
 </div>
 <!-- page script -->
-<script src="modules/hoadon/scripts/xuathoadon.js?v=1.0.0.19"></script>
+<script src="modules/hoadon/scripts/xuathoadon.js?v=1.0.1.0"></script>
 <script src="modules/hoadon/scripts/n2vi.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};

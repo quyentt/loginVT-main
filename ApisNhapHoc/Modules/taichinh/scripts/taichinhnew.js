@@ -6,6 +6,16 @@
 --Output:
 --Note:
 ----------------------------------------------*/
+/*----------------------------------------------
+-- Công tắc log của trang Thu tiền.
+-- Mặc định TẮT: không in gì ra Console.
+-- Khi cần debug, gõ trong Console:  apsLogThuTien.on = true
+----------------------------------------------*/
+var apsLogThuTien = { on: false };
+function apsLog() {
+    if (!apsLogThuTien.on) return;
+    console.log.apply(console, arguments);
+}
 function ThuTien() { };
 ThuTien.prototype = {
     dtNguoiHoc: [],
@@ -26,8 +36,14 @@ ThuTien.prototype = {
     strHoaDon_Id: '',
     strDiaChiNguoiMua: '',
 
+    strVersion: "1.0.9.2",
     init: function () {
         var me = this;
+        //Log version để biết chắc trình duyệt đang chạy file mới hay còn cache file cũ
+        apsLog("%c[ThuTien] taichinhnew.js v" + me.strVersion + " đã load", "color:#fff;background:#223771;padding:2px 6px");
+        //Số element trùng id -> nếu > 1 nghĩa là fragment HTML bị nạp nhiều lần, bind trực tiếp sẽ trượt
+        apsLog("[ThuTien] số #btnAddnewHoaDon trong DOM =", $("#btnAddnewHoaDon").length,
+            "| số #btnSave_HoaDon =", $("#btnSave_HoaDon").length);
         /*------------------------------------------
         --Discription: Initial system
         -------------------------------------------*/
@@ -36,7 +52,8 @@ ThuTien.prototype = {
         --Discription: Initial local 
         -------------------------------------------*/
         me.page_load();
-        $(".btnClose").click(function () {
+        //OLD: $(".btnClose").click(...) -> bind trực tiếp, mất tác dụng nếu DOM được nạp lại
+        $(document).on("click", ".aps-nhapHoc .btnClose", function () {
             me.showHide_Box("zone-bus", "zoneInput_ThuTien");
             me.showHide_Box("zone-action", "zoneAction_Save_ThuTien");
         });
@@ -53,7 +70,7 @@ ThuTien.prototype = {
             if (edu.util.checkValue(strNguoiHoc_Id)) {
                 me.reset_NguoiHoc_TTTS();
                 me.strNguoiHoc_Id = strNguoiHoc_Id;
-                console.log(2222);
+                apsLog(2222);
                 me.dtNguoiHoc_Print = me.dtNguoiHoc.find(e => e.ID === strNguoiHoc_Id);
                 me.checkCondition_ThuTien(me.dtNguoiHoc_Print);
             }
@@ -148,7 +165,7 @@ ThuTien.prototype = {
         $("#listPhieuThu_ThuTien").delegate(".btnDetail_PhieuThu", "click", function () {
             var strId = this.id;
             strId = edu.util.cutPrefixId(/detail_phieuthu/g, strId);
-            console.log("detail_phieuthu: " + strId);
+            apsLog("detail_phieuthu: " + strId);
             if (edu.util.checkValue(strId)) {
                 me.strPhieuThu_Id = strId;
                 me.showHide_Box("zone-box", "zoneList_PhieuDaThu");
@@ -181,7 +198,7 @@ ThuTien.prototype = {
         $("#listPhieuThu_Huy_ThuTien").delegate(".btnDetail_PhieuHuy", "click", function () {
             var strId = this.id;
             strId = edu.util.cutPrefixId(/detail_phieuhuy/g, strId);
-            console.log("detail_phieuhuy: " + strId);
+            apsLog("detail_phieuhuy: " + strId);
             if (edu.util.checkValue(strId)) {
                 me.strPhieuThu_Id = strId;
                 me.showHide_Box("zone-box", "zoneList_PhieuDaThu");
@@ -194,19 +211,28 @@ ThuTien.prototype = {
         --Discription: [3] Action HoaDon
         -------------------------------------------*/
 
-        $("#chkSelectAll_PhieuXuatHoaDon").on("click", function () {
+        //OLD: bind trực tiếp -> nếu fragment HTML bị nạp nhiều lần thì jQuery chỉ bind vào
+        //     element ĐẦU TIÊN (đang ẩn), nút đang nhìn thấy bấm không ăn. Chuyển sang delegate.
+        //$("#chkSelectAll_PhieuXuatHoaDon").on("click", function () {
+        //    edu.util.checkedAll_BgRow(this, { table_id: "tblEdit_PhieuXuatHoaDon" });
+        //});
+        $(document).on("click", "#chkSelectAll_PhieuXuatHoaDon", function () {
             edu.util.checkedAll_BgRow(this, { table_id: "tblEdit_PhieuXuatHoaDon" });
         });
 
-        $("#btnAddnewHoaDon").click(function (e) {
+        //OLD: $("#btnAddnewHoaDon").click(function (e) { ... });
+        //Lớp 1: delegate trên document (sống sót khi DOM render lại)
+        $(document).on("click", "#btnAddnewHoaDon", function (e) {
             e.preventDefault();
-            var arrChecked_Id = edu.util.getArrCheckedIds("tblEdit_PhieuXuatHoaDon", "checkX");
-            if (arrChecked_Id.length == 0) {
-                edu.system.alert("Vui lòng chọn đối tượng?");
-                return;
-            }
-            me.genHTML_NoiDung_HoaDon('tblEdit_PhieuXuatHoaDon');
-            return false;
+            return me.onClick_XuatHoaDon("delegate-document");
+        });
+        //Bắt mọi click trong panel "Chọn khoản cần xuất hóa đơn" để biết click rơi vào đâu
+        $(document).on("click", "#zoneEdit_PhieuXuatHoaDon", function (e) {
+            var t = e.target;
+            apsLog("[XuatHoaDon][click] thẻ =", t.tagName,
+                "| id =", t.id || "(không có)",
+                "| class =", (typeof t.className === "string" ? t.className : "") || "(không có)",
+                "| cha =", t.parentNode ? (t.parentNode.tagName + "#" + (t.parentNode.id || "")) : "-");
         });
         edu.system.loadToCombo_DanhMucDuLieu("TAICHINH.NUTHDDT", "", "", me.genHTML_HDDT);
         $("#zoneThongTinHoaDon").delegate(".btnXuat_HDDT", "click", function (e) {
@@ -242,8 +268,19 @@ ThuTien.prototype = {
             });
             return false;
         });
-        $("#btnSave_HoaDon").click(function (e) {
+        //OLD: bind trực tiếp -> mất handler nếu vùng action bar bị render lại
+        //$("#btnSave_HoaDon").click(function (e) {
+        //    me.getList_KhoanDaThu_XuatHoaDon(me.strPhieuThu_Id);
+        //});
+        $(document).on("click", "#btnSave_HoaDon", function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            if (!edu.util.checkValue(me.strPhieuThu_Id)) {
+                edu.system.alert("Vui lòng chọn Phiếu thu cần xuất hóa đơn!", "w");
+                return false;
+            }
             me.getList_KhoanDaThu_XuatHoaDon(me.strPhieuThu_Id);
+            return false;
         });
 
 
@@ -295,13 +332,70 @@ ThuTien.prototype = {
         $("." + cl).slideUp();
         $("#" + id).slideDown();
     },
+    /*------------------------------------------
+    --Discription: Hiển/ẩn màn hình xuất hóa đơn (#zoneThongTinHoaDon).
+    --Note: element này vừa mang class .d-flex (styles.css -> display:flex !important)
+            vừa có inline style "display:none !important" nên jQuery .show()/.slideDown()
+            KHÔNG thắng được !important. Phải set trực tiếp qua setProperty(...,'important').
+    -------------------------------------------*/
+    showZoneHoaDon: function () {
+        var el = document.getElementById("zoneThongTinHoaDon");
+        //block (không phải flex): phôi in canh giữa theo luồng thường, action bar tự fixed ở đáy
+        if (el) el.style.setProperty("display", "block", "important");
+    },
+    hideZoneHoaDon: function () {
+        var el = document.getElementById("zoneThongTinHoaDon");
+        if (el) el.style.setProperty("display", "none", "important");
+    },
+    /*------------------------------------------
+    --Discription: Xử lý click nút "Xuất" (mở màn hình hóa đơn).
+    --Note: nút này được gắn 3 lớp (inline onclick trong html + delegate document + bind trực tiếp
+            khi render bảng) vì đã gặp trường hợp click không kích hoạt được handler nào.
+            dLastClick_XuatHoaDon chặn chạy trùng khi nhiều lớp cùng bắn.
+    -------------------------------------------*/
+    dLastClick_XuatHoaDon: 0,
+    onClick_XuatHoaDon: function (strNguon) {
+        var me = main_doc.ThuTien;
+        var iNow = new Date().getTime();
+        if (iNow - me.dLastClick_XuatHoaDon < 800) {
+            apsLog("[XuatHoaDon] Bỏ qua click trùng từ '" + strNguon + "'");
+            return false;
+        }
+        me.dLastClick_XuatHoaDon = iNow;
+        var arrChecked_Id = edu.util.getArrCheckedIds("tblEdit_PhieuXuatHoaDon", "checkX");
+        apsLog("[XuatHoaDon] Click nút 'Xuất' (nguồn: " + strNguon + ") | số khoản đã tick =",
+            arrChecked_Id.length, arrChecked_Id);
+        if (arrChecked_Id.length == 0) {
+            edu.system.alert("Vui lòng chọn khoản cần xuất hóa đơn!", "w");
+            return false;
+        }
+        me.genHTML_NoiDung_HoaDon('tblEdit_PhieuXuatHoaDon');
+        return false;
+    },
+    //Quay lại màn hình tìm kiếm/phiếu thu khi dựng hóa đơn thất bại.
+    //Bắt buộc phải có: loadPhieu() ẩn hết .beforeActive TRƯỚC khi dựng nội dung,
+    //nên mọi nhánh "return" giữa chừng đều để lại MÀN HÌNH TRẮNG nếu không rollback.
+    backToTimKiem: function () {
+        var me = this;
+        me.hideZoneHoaDon();
+        $(".btnXuat_HDDT").remove();
+        $("#zoneTimKiemSinhVien").show();
+    },
+    //Cuộn tới vùng vừa được mở (đợi slideUp/slideDown 400ms chạy xong)
+    scrollToZone: function (id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        setTimeout(function () {
+            try { el.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (ex) { el.scrollIntoView(); }
+        }, 450);
+    },
     reset_NguoiHoc_TTTS: function () {
         var me = this;
         me.strNguoiHoc_Id = "";
         me.strPhieuThu_Id = "";
         me.dtKhoanThu = [];
         me.dtKhoanDaThu = [];
-        console.log(11111);
+        apsLog(11111);
         me.dtNguoiHoc_Print = [];
         me.genList_PhieuPhu([]);
         me.genTable_KhoanNhapHoc([]);
@@ -660,7 +754,7 @@ ThuTien.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    console.log(4444)
+                    apsLog(4444)
                     me.dtNguoiHoc_Print = data.Data[0];
                     me.getList_KhoanDaThu_Rut(strPhieuThu_Id);                    
                     edu.util.viewHTMLById("lblNganhLop_ThuTien", data.Data[0].DAOTAO_LOPQUANLY_TEN);
@@ -871,9 +965,9 @@ ThuTien.prototype = {
 
             me.reset_NguoiHoc_TTTS();
             me.strNguoiHoc_Id = strNguoiHoc_Id;
-            console.log(strNguoiHoc_Id);
-            console.log(me.dtNguoiHoc);
-            console.log("3333");
+            apsLog(strNguoiHoc_Id);
+            apsLog(me.dtNguoiHoc);
+            apsLog("3333");
             me.dtNguoiHoc_Print = me.dtNguoiHoc.find(e => e.ID === strNguoiHoc_Id);
             me.checkCondition_ThuTien(me.dtNguoiHoc_Print);
             //return new Promise(function (resolve, reject) {
@@ -1102,9 +1196,9 @@ ThuTien.prototype = {
 
         var dataPhieuIn = me.dtNguoiHoc_Print;
         if (data.length > 0 && dataPhieuIn != undefined) {
-            console.log(data[0].MAUIN_MASO);
+            apsLog(data[0].MAUIN_MASO);
             if (data[0].MAUIN_MASO && data[0].MAUIN_MASO.indexOf("BAOCAO_") == 0) {
-                console.log(1111111111);
+                apsLog(1111111111);
                 var strDuongDan = edu.system.dtMauBaoCao.find(e => data[0].MAUIN_MASO == e.MAUIMPORT_MA);
                 if (strDuongDan) strDuongDan = strDuongDan.MAUIMPORT_DUONGDAN;
                 edu.system.report(data[0].MAUIN_MASO, strDuongDan, function (addKeyValue) {
@@ -1122,8 +1216,8 @@ ThuTien.prototype = {
             dataPhieuIn["KHOAHOC_N1_TEN"] = dataPhieuIn.DAOTAO_KHOADAOTAO_TEN;
         }
         dataPhieuIn["MAUIN_MASO"] = data[0].MAUIN_MASO;
-        console.log(dataPhieuIn.DAOTAO_LOPQUANLY_TEN);
-        console.log(dataPhieuIn);
+        apsLog(dataPhieuIn.DAOTAO_LOPQUANLY_TEN);
+        apsLog(dataPhieuIn);
         edu.extend.genData_PhieuThu(data, [dataPhieuIn], "print_hoadon", "", objKhoanThu => {
             var strMauIn_MaSo = data[0].MAUIN_MASO;
             var strIDMoRong = objKhoanThu.CHUNGTU_ID;
@@ -1222,6 +1316,7 @@ ThuTien.prototype = {
     -------------------------------------------*/
     getList_KhoanDaThu_XuatHoaDon: function (strPhieuThu_Id) {
         var me = this;
+        apsLog("[XuatHoaDon] Bước 1 - lấy khoản đã thu của phiếu:", strPhieuThu_Id);
         var obj_save = {
             'action': 'SV_Core_NhapHoc_ThuTien_MH/DSA4BRIKKS4gLwUgFSk0DykgMQkuIgPP',
             'func': 'PKG_CORE_NhapHoc_ThuTien.LayDSKhoanDaThuNhapHoc',
@@ -1232,13 +1327,23 @@ ThuTien.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data.Success) {
-                    me.dtHoaDon = data.Data;
-                    if (data.Data.length > 0) {
-                        me.showHide_Box("zone-bus", "zoneEdit_PhieuXuatHoaDon");
-                        $("#zoneList_PhieuDaThu").slideUp();
-                        $("#zoneAction_Phieu").slideUp();
+                    me.dtHoaDon = edu.util.checkValue(data.Data) ? data.Data : [];
+                    //OLD: chỉ mở panel khi Data.length > 0 -> API trả rỗng thì click "Xuất hóa đơn"
+                    //     không hiện gì cả, người dùng tưởng nút bị hỏng. Giữ lại để tham chiếu.
+                    //if (data.Data.length > 0) {
+                    //    me.showHide_Box("zone-bus", "zoneEdit_PhieuXuatHoaDon");
+                    //    $("#zoneList_PhieuDaThu").slideUp();
+                    //    $("#zoneAction_Phieu").slideUp();
+                    //}
+                    //me.genTable_XuatHoaDon(data.Data);
+                    me.showHide_Box("zone-bus", "zoneEdit_PhieuXuatHoaDon");
+                    $("#zoneList_PhieuDaThu").slideUp();
+                    $("#zoneAction_Phieu").slideUp();
+                    me.genTable_XuatHoaDon(me.dtHoaDon);
+                    me.scrollToZone("zoneEdit_PhieuXuatHoaDon");
+                    if (me.dtHoaDon.length === 0) {
+                        edu.system.alert("Phiếu thu này không có khoản nào để xuất hóa đơn!", "w");
                     }
-                    me.genTable_XuatHoaDon(data.Data);
                 }
                 else {
                     edu.system.alert(data.Message, "w");
@@ -1269,12 +1374,17 @@ ThuTien.prototype = {
         var arrDonViTinh = [];
         var idem = 0;
         //Lấy dữ liệu theo các check box đã chọn
-        var x = document.getElementById(strTable_id).getElementsByTagName('tbody')[0].rows;
+        var elTableHD = document.getElementById(strTable_id);
+        if (!elTableHD || !elTableHD.getElementsByTagName('tbody')[0]) {
+            edu.system.alert("Không tìm thấy bảng nội dung hóa đơn (" + strTable_id + "). Vui lòng gọi GM.", "w");
+            return;
+        }
+        var x = elTableHD.getElementsByTagName('tbody')[0].rows;
         for (var i = 0; i < x.length; i++) {
             var strId = x[i].id;
             if (!edu.util.checkValue(strId)) {
-                console.log("Có vấn đề");
-                console.log(x[i]);
+                apsLog("Có vấn đề");
+                apsLog(x[i]);
                 continue;
             }
             strIds += strId + ",";
@@ -1528,6 +1638,14 @@ ThuTien.prototype = {
             ]
         };
         edu.system.loadToTable_data(jsonForm);
+        //Lớp 2: bind TRỰC TIẾP lên nút. Handler trực tiếp chạy trước khi event bubble lên document,
+        //nên vẫn ăn kể cả khi có handler nào đó chặn bubbling giữa đường.
+        $("#btnAddnewHoaDon").off("click.xuathoadon").on("click.xuathoadon", function (e) {
+            e.preventDefault();
+            return me.onClick_XuatHoaDon("bind-truc-tiep");
+        });
+        apsLog("[XuatHoaDon] Đã gắn handler trực tiếp cho #btnAddnewHoaDon —",
+            $("#btnAddnewHoaDon").length, "element | hiển thị =", $("#btnAddnewHoaDon").is(":visible"));
     },
     genHTML_NoiDung_HoaDon: function (strTableId) {
         var me = this;
@@ -1535,18 +1653,50 @@ ThuTien.prototype = {
         var zoneMauIn = "MauInHoaDon";
         var strDuongDan = edu.system.rootPath + '/Upload/Files/PrintTemplate/';
         var strMauXem = "Edit_DHCNTTTN_HOADON_2018";
-        $("#" + zoneMauIn).load(strDuongDan + strMauXem + '.html?v=2', function () {
+        var strUrlMauIn = strDuongDan + strMauXem + '.html?v=2';
+        apsLog("[XuatHoaDon] Đang load mẫu hóa đơn: " + strUrlMauIn);
+        $("#" + zoneMauIn).load(strUrlMauIn, function () {
             if (document.getElementById(zoneMauIn).innerHTML == "" && document.getElementById(zoneMauIn).innerHTML.length == 0) {
-                edu.extend.notifyBeginLoading("Không thể load phiếu sửa!. Vui lòng gọi GM", "w");
+                //Không load được phôi -> báo rõ đường dẫn để check file trên server, tránh "click không hiện gì"
+                edu.extend.notifyBeginLoading("Không thể load mẫu hóa đơn!. Vui lòng gọi GM", "w");
+                edu.system.alert("Không load được mẫu hóa đơn tại:<br/>" + strUrlMauIn + "<br/>Vui lòng kiểm tra file phôi in trên server.", "w");
+                return;
             }
             else {
-                loadPhieu();
+                //Bọc try/catch: mọi exception giữa chừng trước đây đều để lại MÀN HÌNH TRẮNG
+                //vì .beforeActive đã bị ẩn ở đầu loadPhieu(). Giờ báo rõ lỗi + quay về màn hình cũ.
+                try {
+                    loadPhieu();
+                } catch (ex) {
+                    apsLog("[XuatHoaDon] loadPhieu() lỗi:", ex);
+                    edu.system.alert("Lỗi khi dựng hóa đơn:<br/>" + (ex && ex.message ? ex.message : ex), "w");
+                    me.backToTimKiem();
+                    return;
+                }
             }
-            me.changeWidthPrint();
+            try { me.changeWidthPrint(); } catch (ex2) { apsLog("[XuatHoaDon] changeWidthPrint lỗi:", ex2); }
         });
         function loadPhieu() {
             //Hiển thị thông tin đối tượng thu
             var data = me.dtNguoiHoc_Print;
+            //GUARD: phôi hóa đơn BẮT BUỘC phải có bảng "tbldataPhieuThuPopup_PT_Edit".
+            //Thiếu bảng này thì tinhHeSoGiaTien()/insertSumAfterTable() sẽ throw giữa chừng,
+            //sau khi .beforeActive đã bị ẩn --> màn hình trắng, click xong "mất hết".
+            if (!document.getElementById('tbldataPhieuThuPopup_PT_Edit')) {
+                apsLog("[XuatHoaDon] Phôi '" + strMauXem + "' không có bảng #tbldataPhieuThuPopup_PT_Edit");
+                edu.system.alert("Phôi hóa đơn \"" + strMauXem + "\" không đúng định dạng (thiếu bảng nội dung).<br/>Kiểm tra file: " + strUrlMauIn, "w");
+                me.backToTimKiem();
+                return;
+            }
+            //Phôi thiếu <tbody> thì append <tr> sẽ rơi thẳng vào <table>, khiến
+            //insertSumAfterTable()/tinhHeSoGiaTien() (đều đọc tbody[0]) throw -> màn hình trắng
+            if (document.getElementById('tbldataPhieuThuPopup_PT_Edit').getElementsByTagName('tbody').length === 0) {
+                $('#tbldataPhieuThuPopup_PT_Edit').append('<tbody></tbody>');
+                apsLog("[XuatHoaDon] Phôi thiếu <tbody> -> đã tạo bổ sung");
+            }
+            //Xóa các dòng do lần xuất trước sinh ra (chỉ dòng có class row-hd-added)
+            //KHÔNG xóa cả tbody vì phôi có sẵn dòng đánh số cột "1 2 3 4 5 6=4x5"
+            $('#tbldataPhieuThuPopup_PT_Edit tbody tr.row-hd-added').remove();
             $(".txtMaNCSPTC_PT_Edit").html(data.MASO);
             $(".txtHoTenPTC_PT_Edit").html(data.HODEM + " " + data.TEN);
             $(".iNgayPTC_PT_Edit").html(edu.util.thisDay());
@@ -1561,13 +1711,18 @@ ThuTien.prototype = {
             me.strDiaChiNguoiMua = data.NOIOHIENNAY;
             //Các thao tác chuyển sang mẫu viết phiếu
             $(".beforeActive").hide();
-            $("#zoneThongTinHoaDon").slideDown();
+            //OLD: slideDown() không thắng được "display:none !important" + .d-flex -> màn hình
+            //     xuất hóa đơn (kèm các nút nháp/HĐĐT) không hiện ra. Giữ lại để tham chiếu.
+            //$("#zoneThongTinHoaDon").slideDown();
+            me.showZoneHoaDon();
             $("#zoneTimKiemSinhVien").slideUp();
             $("#btnInHoaDon").hide();
             $("#btnHuyHoaDon").hide();
             $("#zoneActionXuatHoaDon").html(me.strHDDT);
             if (document.getElementById('btnSaveHD') == undefined) {
-                $("#zoneActionHoaDon").prepend('<div id="btnSaveHD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Lưu hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất Hóa đơn</a></div>');
+                //OLD: khối dọc 85px + icon fa-4x, lệch hẳn so với các nút còn lại
+                //$("#zoneActionHoaDon").prepend('<div id="btnSaveHD" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="Lưu hóa đơn" class="btn"><i style="color: #00a65a" class="fa fa-save fa-4x"></i></a><a class="color-active bold lbsymbolHD">Xuất Hóa đơn</a></div>');
+                $("#zoneActionHoaDon").prepend('<div id="btnSaveHD"><a title="Lưu hóa đơn" class="btn"><i class="fa fa-save"></i></a><a class="lbsymbolHD">Xuất hóa đơn</a></div>');
 
                 $("#btnSaveHD").click(function (e) {
                     e.stopImmediatePropagation(); edu.system.confirm('Bạn có chắc chắn muốn lưu chứng từ không!', 'w');
@@ -1583,13 +1738,18 @@ ThuTien.prototype = {
             var strHinhThucThu_Ma = "";
             //Lấy dữ liệu theo các check box đã chọn
             var arrcheck = [];
-            console.log(x);
+            apsLog(x);
             for (var i = 0; i < x.length; i++) {
                 //if (arrcheck.indexOf(x[i].id) != -1) continue;
                 if ($(x[i]).is(':checked')) {
                     var strId = x[i].id.replace("checkX", "");
-                    console.log(strId);
+                    apsLog(strId);
                     var jsonHT = edu.util.objGetDataInData(strId, me.dtHoaDon, "ID")[0];
+                    //Guard: không tìm thấy bản ghi tương ứng -> bỏ qua dòng, KHÔNG để throw làm trắng màn hình
+                    if (!jsonHT) {
+                        apsLog("[XuatHoaDon] Không tìm thấy khoản thu ID=" + strId + " trong dtHoaDon");
+                        continue;
+                    }
                     if (strHinhThucThu_Ma == "") {
                         strHinhThucThu_Ma = jsonHT.HINHTHUCTHU_MA;
                         me.strHinhThucThu_Ma = jsonHT.HINHTHUCTHU_MA;
@@ -1604,7 +1764,7 @@ ThuTien.prototype = {
                     if (dSoTien == 0) continue;
                     idem++;
                     var rows = '';
-                    rows += '<tr id="' + strId + '" name="' + jsonHT.DAOTAO_THOIGIANDAOTAO_ID + '" khoanthugoc_id="' + jsonHT.TAICHINH_CACKHOANTHU_ID +'">';//name: DAOTAO_THOIGIANDAOTAO_ID
+                    rows += '<tr id="' + strId + '" class="row-hd-added" name="' + jsonHT.DAOTAO_THOIGIANDAOTAO_ID + '" khoanthugoc_id="' + jsonHT.TAICHINH_CACKHOANTHU_ID +'">';//name: DAOTAO_THOIGIANDAOTAO_ID
                     rows += '<td>' + idem + '</td>';
                     rows += '<td>' + strKhoanThu + '</td>';
                     rows += '<td id="lbNoiDung' + strId + '">' + strNoiDung + '</td>';
@@ -1615,13 +1775,33 @@ ThuTien.prototype = {
                     $('#tbldataPhieuThuPopup_PT_Edit tbody').append(rows);
                 }
             }
+            //Không dựng được dòng nào -> dừng sớm, trả về màn hình cũ thay vì để trắng
+            if (idem == 0) {
+                apsLog("[XuatHoaDon] Không dựng được dòng nào cho hóa đơn. checkbox=" + x.length);
+                edu.system.alert("Không lấy được nội dung khoản thu để xuất hóa đơn.<br/>Vui lòng kiểm tra lại số tiền của các khoản đã chọn!", "w");
+                me.backToTimKiem();
+                return;
+            }
+            //Phôi in có thể KHÔNG có sẵn <tfoot>. edu.system.insertSumAfterTable() chỉ ghi bằng
+            //$("#tbl tfoot").html(...) nên thiếu tfoot => không có dòng tổng => td:eq(5) undefined
+            //=> code cũ return giữa chừng và để lại màn hình trắng. Tạo sẵn tfoot cho chắc.
+            var elTblHD = document.getElementById('tbldataPhieuThuPopup_PT_Edit');
+            if (elTblHD && elTblHD.getElementsByTagName('tfoot').length === 0) {
+                $(elTblHD).append('<tfoot></tfoot>');
+                apsLog("[XuatHoaDon] Phôi thiếu <tfoot> -> đã tạo bổ sung");
+            }
             //Hiển thị tổng tiền đã chọn trên cùng bên trái
             me.tinhHeSoGiaTien('tbldataPhieuThuPopup_PT_Edit', 3, 4, 5);
             edu.system.move_ThroughInTable("tbldataPhieuThuPopup_PT_Edit");
             edu.system.insertSumAfterTable("tbldataPhieuThuPopup_PT_Edit", [3, 4, 5]);
             var x = $("#tbldataPhieuThuPopup_PT_Edit tfoot td:eq(5)").html();//Lấy tổng tiền từ cuối bảng
             if (x == 0 || x == '0' || x == undefined) {
-                $("#btnClose_HDBL").trigger('click');
+                //OLD: $("#btnClose_HDBL").trigger('click');
+                //     #btnClose_HDBL KHÔNG tồn tại ở trang nhập học -> trigger vô tác dụng,
+                //     hàm return luôn trong khi .beforeActive đã bị ẩn => MÀN HÌNH TRẮNG.
+                apsLog("[XuatHoaDon] tfoot td:eq(5) =", x, "-> không lấy được tổng tiền");
+                edu.system.alert("Không tính được tổng tiền trên phôi hóa đơn.<br/>Phôi \"" + strMauXem + "\" có thể sai số cột. Vui lòng gọi GM.", "w");
+                me.backToTimKiem();
                 return;
             }
             $(".txtTongTien_PT_Edit").html(x);
@@ -1629,6 +1809,13 @@ ThuTien.prototype = {
             var strSoTien = to_vietnamese(x) + ".";
             strSoTien = strSoTien[1].toUpperCase() + strSoTien.substring(2);
             $(".txtSoTienPTC_PT_Edit").html(strSoTien);
+            //Log kết quả cuối để biết màn hình hóa đơn đã thực sự hiện hay chưa
+            var elZone = document.getElementById("zoneThongTinHoaDon");
+            apsLog("[XuatHoaDon] ✓ Dựng xong " + idem + " dòng | tổng=" + x
+                + " | #zoneThongTinHoaDon display=" + (elZone ? window.getComputedStyle(elZone).display : "KHÔNG CÓ")
+                + " | offsetHeight=" + (elZone ? elZone.offsetHeight : "-")
+                + " | #MauInHoaDon length=" + $("#MauInHoaDon").html().length
+                + " | nút HĐĐT (strHDDT) length=" + (me.strHDDT ? me.strHDDT.length : 0));
         }
     },
     /*------------------------------------------
@@ -1639,7 +1826,8 @@ ThuTien.prototype = {
         var me = this;
         edu.extend.remove_PhoiIn("MauInHoaDon");
         edu.util.printHTML('MauInHoaDon');
-        $("#zoneThongTinHoaDon").slideUp('slow');
+        //$("#zoneThongTinHoaDon").slideUp('slow'); //OLD: không thắng được !important
+        me.hideZoneHoaDon();
         $("#zoneTimKiemSinhVien").slideDown('slow');
         $("#zoneThongTinDoiTuong").slideDown('slow');
         me.save_TinhTrangHoaDon(me.strHoaDon_Id);
@@ -1647,39 +1835,51 @@ ThuTien.prototype = {
     },
     closePhieu: function () {
         var me = this;
-        $("#zoneThongTinHoaDon").slideUp('slow');
+        //$("#zoneThongTinHoaDon").slideUp('slow'); //OLD: không thắng được !important
+        me.hideZoneHoaDon();
         $("#zoneTimKiemSinhVien").slideDown('slow');
         $(".btnXuat_HDDT").remove();
     },
     changeWidthPrint: function () {
-        //Thay đổi vùng in
-        var lMauInPhieuThu = document.getElementById("MauInHoaDon").offsetWidth;
-        if (lMauInPhieuThu > 700) lMauInPhieuThu += 240;
-        else {
-            lMauInPhieuThu = 1250;
-        }
-        var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
-        if (lMainPrint > lMauInPhieuThu) {
-            document.getElementById('zoneThongTinHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
-            document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
-        }
-        else {
-            document.getElementById('zoneThongTinHoaDon').style.paddingLeft = "20px";
-            document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
-        }
+        //Layout do CSS lo: phôi in canh giữa (.aps-hd-phoi) + action bar cố định đáy (.aps-hd-actionbar).
+        //OLD: tự tính paddingLeft cho #zoneThongTinHoaDon và ghi đè .style của #zoneActionHoaDon
+        //     (float:left / position:fixed) -> đè lên CSS mới làm các nút văng lung tung.
+        //var lMauInPhieuThu = document.getElementById("MauInHoaDon").offsetWidth;
+        //if (lMauInPhieuThu > 700) lMauInPhieuThu += 240;
+        //else { lMauInPhieuThu = 1250; }
+        //var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
+        //if (lMainPrint > lMauInPhieuThu) {
+        //    document.getElementById('zoneThongTinHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
+        //    document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
+        //}
+        //else {
+        //    document.getElementById('zoneThongTinHoaDon').style.paddingLeft = "20px";
+        //    document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
+        //}
+        if (!document.getElementById("MauInHoaDon")) return;
         edu.extend.genChonLien("MauInHoaDon", "zoneLienHoaDon");
     },
     genHTML_HDDT: function (data) {
         var me = main_doc.ThuTien;
         var row = '';
         for (var i = 0; i < data.length; i++) {
-            row += '<div class="btnXuat_HDDT" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            //OLD: khối dọc 85px, icon fa-4x, màu icon lấy từ THONGTIN3 -> mỗi nút một cỡ, rời rạc.
+            //row += '<div class="btnXuat_HDDT" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            row += '<div class="btnXuat_HDDT" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '">'
+                + '<a title="' + data[i].TEN + '" class="btn"><i class="' + data[i].THONGTIN1 + '"></i></a>'
+                + '<a class="lbsymbolHD">' + data[i].TEN + '</a></div>';
         }
         me.strHDDT = row;
     },
     tinhHeSoGiaTien: function (strTable_Id, iColHeSo, iColGiaTien, iColHienThi) {
         var me = this;
-        var x = document.getElementById(strTable_Id).getElementsByTagName('tbody')[0].rows;
+        //Guard: bảng nằm trong phôi in nạp động, thiếu bảng/tbody sẽ throw và làm trắng màn hình
+        var elTable = document.getElementById(strTable_Id);
+        if (!elTable || !elTable.getElementsByTagName('tbody')[0]) {
+            apsLog("[XuatHoaDon] tinhHeSoGiaTien: không tìm thấy bảng/tbody " + strTable_Id);
+            return;
+        }
+        var x = elTable.getElementsByTagName('tbody')[0].rows;
         for (var i = 0; i < x.length; i++) {
             var dHeSo = x[i].cells[iColHeSo].innerHTML;
             var dGiaTien = x[i].cells[iColGiaTien].innerHTML;
@@ -1764,7 +1964,7 @@ ThuTien.prototype = {
         mywindow.focus();
         mywindow.print();
         setTimeout(function () {
-            console.log(111111);
+            apsLog(111111);
             mywindow.close();//chrome bị lỗi phải comment lại
         }, 2000);
         return true;
