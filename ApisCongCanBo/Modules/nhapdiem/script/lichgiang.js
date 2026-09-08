@@ -492,12 +492,14 @@ LichGiang.prototype = {
         $("#datebody").html(html);
 
         var arrMau = ["#223771", "#f26522", "#ec4c00", "#5a7adb", "#3c5398"];
+        var iRowPx = 100; // phải khớp với .hour-row { height } trong lichhoc.html (60 phút = iRowPx px)
+        var iScale = iRowPx / 60;
         data.forEach((e, nRow) => {
             var html = '';
-            var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU * 60 - e.PHUTBATDAU;
+            var iTop = (e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU * 60 - e.PHUTBATDAU) * iScale;
             var temp = e.PHANLOAI == "LICHTHI" ? "btnLichThi" : "btnLichHoc";
 
-            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + arrMau[nRow % 5] + '; cursor: pointer">';
+            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + (e.PHUTBATDAU * iScale) + 'px; height: ' + iTop + 'px; background-color: ' + arrMau[nRow % 5] + '; cursor: pointer">';
             //html += '<div class="client">';
             html += '<div class="task-header">';
             html += '<div class="text">';

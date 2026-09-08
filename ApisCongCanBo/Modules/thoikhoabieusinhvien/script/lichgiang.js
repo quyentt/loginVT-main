@@ -568,7 +568,7 @@ LichGiang.prototype = {
             var iTop = e.GIOKETTHUC * 60 + e.PHUTKETTHUC - e.GIOBATDAU * 60 - e.PHUTBATDAU;
             var temp = e.PHANLOAI == "LICHTHI" ? "btnLichThi" : "btnLichHoc";
 
-            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + (30 + e.PHUTBATDAU) + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
+            html += '<div class="task task-1 ' + temp + '" id="' + e.ID + '" style="top:' + e.PHUTBATDAU + 'px; height: ' + iTop + 'px; background-color: ' + strMauNen + '; cursor: pointer">';
             //html += '<div class="client">';
             html += '<div class="task-header">';
             html += '<div class="text">';

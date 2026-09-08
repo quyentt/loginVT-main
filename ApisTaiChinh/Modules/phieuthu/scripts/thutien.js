@@ -1510,7 +1510,8 @@ PhieuThu.prototype = {
         row += '<p class="pcard"><i class="fa-solid fa-chalkboard-user colorcard"></i> <span class="lang" key="">Khóa</span>: ' + edu.util.checkEmpty(data.KHOAHOC_N1_MA) + '</p>';
         row += '<p class="pcard"><i class="fa-solid fa-graduation-cap colorcard"></i> <span class="lang" key="">Hệ</span>: ' + edu.util.checkEmpty(data.TENHEDAOTAO) + '</p>';
         row += '<p class="pcard"><i class="fa-solid fa-location-dot colorcard"></i> <span class="lang" key="">Địa chỉ</span>: ' + edu.util.checkEmpty(data.TTLL_KHICANBAOTINCHOAI_ODAU) + '</p>';
-        row += '<p class="pcard" style="padding-bottom: 20px !important"><i class="fa fa-phone colorcard"></i> <span class="lang" key="">Số điện thoại</span>: ' + edu.util.checkEmpty(data.TTLL_DIENTHOAICANHAN) + '</p>';
+        row += '<p class="pcard"><i class="fa fa-phone colorcard"></i> <span class="lang" key="">Số điện thoại</span>: ' + edu.util.checkEmpty(data.SODIENTHOAI_CANHAN) + '</p>';
+        row += '<p class="pcard" style="padding-bottom: 20px !important"><i class="fa-solid fa-id-card colorcard"></i> <span class="lang" key="">CCCD</span>: ' + edu.util.checkEmpty(data.DINHDANH_CHINH_SO || data.CCCD || data.IDENTIFIER_NO) + '</p>';
         row += '</div>';
         row += '</div>';
         $(point).popover({
