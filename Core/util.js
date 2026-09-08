@@ -1271,6 +1271,7 @@ util.prototype = {
         if (checkId) {
             var idName = "#" + id;
             result = $(idName).val();
+            if (result && typeof (result) == "string") result = result.trim();
             if (result && id.indexOf("drop") == 0 && $(idName).attr("multiple")) {
                 result = result.toString().replace("SELECTALL,", "");
                 if (result.indexOf(",") == 0) {
