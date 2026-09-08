@@ -1779,7 +1779,7 @@
 
     <script type="text/javascript" src="Corei/constant.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemroot.js?v=<%= Guid.NewGuid().ToString() %>"></script> <!--CORE JS-->
-    <script type="text/javascript" src="Corei/util.js?v=1.3.1.14"></script> <!--CORE JS-->
+    <script type="text/javascript" src="Corei/util.js?v=1.3.1.17"></script> <!--CORE JS-->
     <script type="text/javascript" src="Corei/systemextend.js?v=<%= Guid.NewGuid().ToString() %>"></script>
     <!--CORE JS-->
     <script type="text/javascript" src="Config.js?v=1.3.1.6"></script><!--CORE JS-->
