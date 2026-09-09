@@ -504,7 +504,7 @@
 
 .zone-bus .box-header .btn-default.btnClose {
     position: absolute;
-    top: 8px;
+    top: 15px;
     right: 5px;
     background: #fff !important;
 }
@@ -18073,5 +18073,44 @@ html body.skin-blue .modal.myModalLabel .modal-footer,.modal .modal-footer {
     display: flex;
 }
 .aps-list-btn .btn i{
-    padding-right: 8px;
+    /* padding-right: 8px; */
+}
+
+.item-search.aps-choose-sv {
+   padding-top:5px;
+}
+.aps-thuchienin .inputSearch .item-search:nth-child(8){
+    padding-right: 0 !important;
+}
+.zoneTestPhoi .box-header.with-border,.zoneTestPhoi .box-body.pd10{
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+    padding-bottom: 10px !important;
+}
+.aps-quyetdinh .box-solid.box-search{
+    margin-bottom: 0 !important;
+}
+.light-paginationtblQuyetDinh.compact-theme.simple-pagination ul{
+    overflow-x: hidden !important;
+}
+.aps-table-select .zone-pag-headertblQuyetDinh .select2-container--default .select2-selection--single {
+    padding: 5px 10px !important;
+    height: 28px !important;
+}
+.zone-pag-headertblQuyetDinh{
+    margin-bottom: 5px !important;
+}
+.box-solid.aps-quyetdinh-list{
+    padding-top: 0 !important;
+}
+.zone-pag-footertblQuyetDinh{
+    margin-top: 0 !important;
+    align-items: flex-start !important;
+}
+.zone-pag-footertblQuyetDinh .info-tblHopDongDuKien,
+.zone-pag-footertblQuyetDinh .info-tblQuyetDinh {
+    margin-bottom: 0 !important;
+}
+.box-solid.add-quyetdinh .box-header.with-border .btn.btn-default.btnClose {
+    padding: 12px 14px !important;
 }

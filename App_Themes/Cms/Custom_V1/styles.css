@@ -7798,7 +7798,7 @@ input[type="radio"] {
   padding-right: 10px !important;
 }
 .btn.btn-success.dropdown-toggle i {
-  padding-right: 8px;
+  padding-right: 0px;
   margin-top: 2px;
 }
 .btn.btn-success.dropdown-toggle .caret {
