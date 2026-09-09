@@ -22,6 +22,7 @@ InHoaDonTuDong.prototype = {//1
     iPhaiNop: 0,
     dtChungTu: '',
     strHDDT: '',
+    dtThieu_ChuaXuat: [],   // kết quả rà soát bản ghi thiếu thông tin (tab 3)
 
     init: function () {
         var me = this;
@@ -331,6 +332,19 @@ InHoaDonTuDong.prototype = {//1
             });
         });
 
+
+        /*------------------------------------------
+        --Discription: Rà soát bản ghi thiếu thông tin (tab 3 - DS khoản đã nộp chưa xuất HĐ)
+        -------------------------------------------*/
+        $("#btnCheckThieu_IHD").click(function () {
+            me.checkThieu_ChuaXuat();
+        });
+        $("#btnCheckThieu_Clear").click(function () {
+            me.clearCheckThieu_ChuaXuat();
+        });
+        $("#btnCheckThieu_Export").click(function () {
+            me.exportThieu_ChuaXuat();
+        });
 
         edu.system.loadToCombo_DanhMucDuLieu("QLTC.HTTHU", "dropSearch_HinhThucThu_IHD");
     },
@@ -1049,6 +1063,9 @@ InHoaDonTuDong.prototype = {//1
         }, false, false, false, null);
     },
     getList_KhoanThu_ChuaXuat: function (strTuKhoa) {
+        // Về danh sách bình thường → tắt trạng thái "đang lọc thiếu" để không hiểu nhầm số liệu cũ
+        $("#lblCheckThieu_Info").html('');
+        $("#btnCheckThieu_Export, #btnCheckThieu_Clear").addClass('d-none');
         strTuKhoa = edu.util.getValById('txtSearch_DT').trim();
         var strLoaiKhoanThu = edu.extend.getCheckedCheckBoxByClassName('ckbLKT_IHD').toString();
         var strTrangThaiNguoiHoc_Id = edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_LHD').toString();
@@ -2640,5 +2657,174 @@ InHoaDonTuDong.prototype = {//1
         edu.util.printHTML('DSHoaDon');
         $("#zoneThongTinPhieuThu").slideUp('slow');
         $("#MainContent").slideDown('slow');
+    },
+
+    /*------------------------------------------
+    --Discription: [6] Rà soát bản ghi thiếu thông tin (tab "DS khoản đã nộp chưa xuất HĐ")
+    --Note: Xuất hóa đơn cần đủ CCCD + Địa chỉ. Tiện ích này quét TOÀN BỘ dữ liệu theo bộ
+    --      lọc hiện tại (pageSize lớn, không phụ thuộc trang đang xem) rồi giữ lại các bản
+    --      ghi trống ở cột người dùng tick, để bổ sung trước khi sinh số hàng loạt.
+    -------------------------------------------*/
+    _thieu_ColLabel: {
+        'CCCD': 'CCCD',
+        'DIACHICOQUANCONGTAC': 'Địa chỉ',
+        'NOIDUNG': 'Nội dung',
+        'SOTIEN': 'Số tiền',
+        'LOP': 'Lớp'
+    },
+
+    checkThieu_ChuaXuat: function () {
+        var me = this;
+        var arrCol = [];
+        $(".chkThieu_Col:checked").each(function () { arrCol.push($(this).val()); });
+        if (arrCol.length === 0) {
+            edu.system.alert("Vui lòng tick ít nhất 1 cột cần kiểm tra", "w");
+            return;
+        }
+        var strLoaiKhoanThu = edu.extend.getCheckedCheckBoxByClassName('ckbLKT_IHD').toString();
+        var strTrangThaiNguoiHoc_Id = edu.extend.getCheckedCheckBoxByClassName('ckbDSTrangThaiSV_LHD').toString();
+        if (strLoaiKhoanThu == '') {
+            edu.system.alert('Vui lòng chọn khoản thu trước khi rà soát!', 'w');
+            return;
+        }
+        // Cùng bộ lọc với getList_KhoanThu_ChuaXuat, chỉ khác pageSize để lấy hết bản ghi
+        var obj_list = {
+            'action': 'TC_HoaDon/LayDSKhoanDaNopChuaXuatHoaDon2',
+            'versionAPI': 'v1.0',
+            'pageIndex': 1,
+            'pageSize': 1000000,
+            'strTAICHINH_CacKhoanThu_Ids': strLoaiKhoanThu,
+            'strHeDaoTao_Id': edu.util.getValCombo('dropSearch_HeDaoTao_IHD'),
+            'strKhoaDaoTao_Id': edu.util.getValCombo('dropSearch_KhoaDaoTao_IHD'),
+            'strChuongTrinh_Id': edu.util.getValCombo('dropSearch_ChuongTrinh_IHD'),
+            'strLopQuanLy_Id': edu.util.getValCombo('dropSearch_Lop_IHD'),
+            'strTuKhoa': edu.util.getValById('txtSearch_DT').trim(),
+            'strNguoiDung_Id': edu.util.getValCombo('dropSearch_NguoiThu_IHD'),
+            'strTuNgay': edu.util.getValById('txtSearch_TuNgay_IHD'),
+            'strDenNgay': edu.util.getValById('txtSearch_DenNgay_IHD'),
+            'strTrangThaiNguoiHoc_Id': strTrangThaiNguoiHoc_Id,
+            'strNamNhapHoc': edu.util.getValCombo('dropSearch_NamNhapHoc_IHD'),
+            'strKhoaQuanLy_Id': edu.util.getValCombo('dropSearch_KhoaQuanLy_IHD'),
+            'strHinhThucThu_Id': edu.util.getValById('dropSearch_HinhThucThu_IHD'),
+        };
+        $("#lblCheckThieu_Info").html('<i class="fa fa-spinner fa-spin"></i> Đang quét dữ liệu...');
+        edu.system.beginLoading();
+        edu.system.makeRequest({
+            success: function (data) {
+                edu.system.endLoading();
+                if (!data || !data.Success) {
+                    $("#lblCheckThieu_Info").html('');
+                    edu.system.alert("Không lấy được dữ liệu để rà soát: " + ((data && data.Message) || ''), "w");
+                    return;
+                }
+                var rows = edu.util.checkValue(data.Data) ? data.Data : [];
+                var isEmpty = function (v) {
+                    return v === null || v === undefined || String(v).trim() === '';
+                };
+                var dtThieu = [];
+                var dem = {};
+                arrCol.forEach(function (c) { dem[c] = 0; });
+                rows.forEach(function (r) {
+                    var cotThieu = [];
+                    arrCol.forEach(function (c) {
+                        if (isEmpty(r[c])) { cotThieu.push(me._thieu_ColLabel[c] || c); dem[c]++; }
+                    });
+                    if (cotThieu.length) {
+                        r._COTTHIEU = cotThieu.join(', ');
+                        dtThieu.push(r);
+                    }
+                });
+                me.dtThieu_ChuaXuat = dtThieu;
+                me.genTable_KhoanThu_ChuaXuat(dtThieu, dtThieu.length);
+
+                var chiTiet = arrCol.map(function (c) {
+                    return (me._thieu_ColLabel[c] || c) + ': <b>' + dem[c] + '</b>';
+                }).join(' · ');
+                if (dtThieu.length === 0) {
+                    $("#lblCheckThieu_Info").html('<span style="color:#0a7d3d;"><i class="fa fa-check-circle"></i> '
+                        + 'Đã quét <b>' + rows.length + '</b> bản ghi — không có bản ghi nào thiếu thông tin.</span>');
+                    $("#btnCheckThieu_Export").addClass('d-none');
+                } else {
+                    $("#lblCheckThieu_Info").html('<span style="color:#b32020;"><i class="fa fa-exclamation-triangle"></i> '
+                        + 'Thiếu <b>' + dtThieu.length + '</b>/<b>' + rows.length + '</b> bản ghi &nbsp;(' + chiTiet + ')</span>');
+                    $("#btnCheckThieu_Export").removeClass('d-none');
+                }
+                $("#btnCheckThieu_Clear").removeClass('d-none');
+            },
+            error: function (er) {
+                edu.system.endLoading();
+                $("#lblCheckThieu_Info").html('');
+                edu.system.alert("Lỗi khi rà soát: " + JSON.stringify(er), "w");
+            },
+            type: "GET",
+            action: obj_list.action,
+            versionAPI: obj_list.versionAPI,
+            contentType: true,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    --Discription: Bỏ chế độ lọc thiếu, tải lại danh sách bình thường
+    -------------------------------------------*/
+    clearCheckThieu_ChuaXuat: function () {
+        var me = this;
+        me.dtThieu_ChuaXuat = [];
+        $("#lblCheckThieu_Info").html('');
+        $("#btnCheckThieu_Export, #btnCheckThieu_Clear").addClass('d-none');
+        me.getList_KhoanThu_ChuaXuat();
+    },
+
+    /*------------------------------------------
+    --Discription: Xuất danh sách thiếu ra Excel để gửi đi bổ sung.
+    --Note: Trang này KHÔNG load SheetJS → tạo file .xls từ bảng HTML bằng Blob (Excel đọc được),
+    --      tránh phụ thuộc CDN ngoài.
+    -------------------------------------------*/
+    exportThieu_ChuaXuat: function () {
+        var me = this;
+        var dt = me.dtThieu_ChuaXuat || [];
+        if (!dt.length) {
+            edu.system.alert("Không có bản ghi thiếu để xuất", "w");
+            return;
+        }
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var cols = [
+            ['Mã số', 'MASONGUOIHOC'], ['Họ tên', 'HOTENNGUOIHOC'], ['CCCD', 'CCCD'],
+            ['Số tiền', 'SOTIEN'], ['Nội dung', 'NOIDUNG'], ['Địa chỉ', 'DIACHICOQUANCONGTAC'],
+            ['Lớp', 'LOP'], ['Học kỳ', 'DAOTAO_THOIGIANDAOTAO'], ['Khoản thu', 'TAICHINH_CACKHOANTHU_TEN'],
+            ['Người tạo', 'NGUOITAO_TENDAYDU'], ['Ngày tạo', 'NGAYTAO_DD_MM_YYYY']
+        ];
+        var html = '<table border="1"><thead><tr><th>Stt</th>';
+        cols.forEach(function (c) { html += '<th>' + c[0] + '</th>'; });
+        html += '<th>Cột đang thiếu</th></tr></thead><tbody>';
+        dt.forEach(function (r, i) {
+            html += '<tr><td>' + (i + 1) + '</td>';
+            cols.forEach(function (c) {
+                var v = r[c[1]];
+                html += '<td>' + esc(v == null ? '' : v) + '</td>';
+            });
+            html += '<td>' + esc(r._COTTHIEU || '') + '</td></tr>';
+        });
+        html += '</tbody></table>';
+
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var d = new Date();
+        var stamp = d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate())
+            + '_' + pad(d.getHours()) + pad(d.getMinutes()) + pad(d.getSeconds());
+        var fname = 'ThieuThongTin_' + dt.length + 'banghi_' + stamp + '.xls';
+        // BOM để Excel đọc đúng tiếng Việt
+        var blob = new Blob(['﻿<html><head><meta charset="utf-8"></head><body>' + html + '</body></html>'],
+            { type: 'application/vnd.ms-excel;charset=utf-8' });
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fname;
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(function () {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+        }, 1000);
+        edu.system.alert("Đã xuất " + dt.length + " bản ghi thiếu ra file " + fname, "s");
     }
 }
