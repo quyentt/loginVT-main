@@ -3489,14 +3489,36 @@ KeHoachTuyenSinhNew.prototype = {
     _loadNguonKhaiThac: function (cb) {
         var me = main_doc.KeHoachTuyenSinhNew;
         var $sel = $('#ddlKQ_NguonKhaiThac');
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        // Lấy giá trị đầu tiên không rỗng theo danh sách alias
+        var pick = function (d, keys) {
+            for (var i = 0; i < keys.length; i++) {
+                var v = d[keys[i]];
+                if (v != null && String(v).trim() !== '') return String(v).trim();
+            }
+            return '';
+        };
+        // Cột TEN của danh mục chỉ chứa TÊN RIÊNG ("Anh", "Hùng"...) nên nhiều dòng trông
+        // giống hệt nhau → phải dựng họ tên đầy đủ: ưu tiên cột họ tên có sẵn, không có
+        // thì ghép Họ + Đệm + Tên.
+        var buildHoTen = function (d) {
+            var full = pick(d, ['HOTEN', 'HO_TEN', 'HOVATEN', 'HO_VA_TEN', 'TENDAYDU', 'TEN_DAYDU',
+                'FULL_NAME', 'FULLNAME', 'HoTen', 'FullName']);
+            if (full) return full;
+            var parts = [
+                pick(d, ['HO', 'LAST_NAME', 'Ho']),
+                pick(d, ['HODEM', 'HO_DEM', 'TENDEM', 'TEN_DEM', 'DEM', 'MIDDLE_NAME', 'HoDem']),
+                pick(d, ['TEN', 'FIRST_NAME', 'Ten'])
+            ];
+            return parts.filter(function (x) { return x; }).join(' ').replace(/\s+/g, ' ').trim();
+        };
         var render = function (rows) {
-            var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
             $sel.html('<option value="">-- Chọn nguồn khai thác --</option>');
             (rows || []).forEach(function (d) {
                 var id = d.ID || d.Id || d.id || '';
                 if (!id) return;
-                var ten = d.TEN || d.Ten || d.TEN_HIENTHI || '';
-                var ma = d.MA || d.Ma || '';
+                var ten = buildHoTen(d) || pick(d, ['TEN_HIENTHI', 'TEN_DONVI', 'TENDONVI']);
+                var ma = pick(d, ['MA', 'Ma', 'MA_HIENTHI']);
                 var display = ten || ma || id;
                 if (ten && ma && ma !== ten) display = ten + ' (' + ma + ')';
                 $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
