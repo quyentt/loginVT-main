@@ -994,12 +994,11 @@ DeXuatHoSo.prototype = {
                 if (data.Success) {
                     var strDeXuatHoSo_Id = "";
 
-                    if (!obj_save.strId) {
-                        //edu.system.alert("Thêm mới thành công!");
+                    var bThemMoi = !obj_save.strId;
+                    if (bThemMoi) {
                         strDeXuatHoSo_Id = data.Id;
                     }
                     else {
-                        //edu.system.alert("Cập nhật thành công!");
                         strDeXuatHoSo_Id = obj_save.strId
                     }
                     me.strDeXuatHoSo_Id = strDeXuatHoSo_Id;
@@ -1011,6 +1010,12 @@ DeXuatHoSo.prototype = {
                     }
                     // Save PersonInvoice (XHĐ tab) sau khi CorePerson save xong (2026-08-25)
                     if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice();
+                    // Save Person_Profile (Dân tộc / Tôn giáo) — 2 field này KHÔNG thuộc CorePerson
+                    // nên trước đây chọn xong bấm Lưu là mất trắng (2026-09-09)
+                    if (typeof me.save_PersonProfile === 'function') me.save_PersonProfile();
+                    // Báo kết quả — trước đây 2 alert này bị comment nên lưu xong im lặng,
+                    // người dùng không biết đã lưu hay chưa.
+                    edu.system.alert(bThemMoi ? "Thêm mới thành công!" : "Cập nhật thành công!", "s");
                 }
                 else {
                     edu.system.alert(data.Message);
@@ -5605,6 +5610,21 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
         }
     }
 
+    // Mở hồ sơ mới → xoá cờ của hồ sơ trước, nếu không cờ cũ sẽ chặn việc đổ dữ liệu hồ sơ này
+    $('#dropGioiTinh, #dropDanToc, #dropTonGiao, #dropQuocTich')
+        .removeAttr('data-user-touched').removeAttr('data-from-profile');
+    // Đánh dấu ô nào người dùng tự chọn. Chỉ đánh dấu khi có originalEvent / select2:select
+    // (thao tác thật) — .trigger('change') gọi từ code không có originalEvent nên không dính cờ.
+    if (!dx._userTouchBound) {
+        dx._userTouchBound = true;
+        $(document).on('change.zeUserTouch', '#dropGioiTinh, #dropDanToc, #dropTonGiao, #dropQuocTich', function (e) {
+            if (e.originalEvent) $(this).attr('data-user-touched', '1');
+        });
+        $(document).on('select2:select.zeUserTouch', '#dropGioiTinh, #dropDanToc, #dropTonGiao, #dropQuocTich', function () {
+            $(this).attr('data-user-touched', '1');
+        });
+    }
+
     // Populate dropdown — accept ID hoặc MA
     var _pickIdByMa = function (selectId, ma) {
         if (!ma) return '';
@@ -5612,15 +5632,24 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
         if (opt) return opt.value;
         return '';
     };
+    // _setDrop chạy lại ở mốc 500ms + 1500ms (chờ danh mục nạp xong). Trước đây nó ghi đè
+    // vô điều kiện nên: (1) người dùng đổi Dân tộc/Tôn giáo trong 1.5s đầu là bị trả về giá trị cũ
+    // → bấm Lưu ghi lại đúng giá trị cũ; (2) đè luôn giá trị lấy từ PERSON_PROFILE (nguồn chuẩn).
+    // Nay bỏ qua ô nào đã được người dùng sửa (data-user-touched) hoặc đã set từ profile
+    // (data-from-profile). Xem _applyProfileToDrops.
+    var _canSet = function (id) {
+        var $el = $('#' + id);
+        return !$el.attr('data-user-touched') && !$el.attr('data-from-profile');
+    };
     var _setDrop = function () {
         var gt = person.gioiTinh || _pickIdByMa('dropGioiTinh', person.gioiTinhMa);
         var dt = person.danToc || _pickIdByMa('dropDanToc', person.danTocMa);
         var tg = person.tonGiao || _pickIdByMa('dropTonGiao', person.tonGiaoMa);
         var qt = person.quocTich || _pickIdByMa('dropQuocTich', person.quocTichMa);
-        if (gt) { $('#dropGioiTinh').val(gt).trigger('change'); }
-        if (dt) { $('#dropDanToc').val(dt).trigger('change'); }
-        if (tg) { $('#dropTonGiao').val(tg).trigger('change'); }
-        if (qt) { $('#dropQuocTich').val(qt).trigger('change'); }
+        if (gt && _canSet('dropGioiTinh')) { $('#dropGioiTinh').val(gt).trigger('change'); }
+        if (dt && _canSet('dropDanToc')) { $('#dropDanToc').val(dt).trigger('change'); }
+        if (tg && _canSet('dropTonGiao')) { $('#dropTonGiao').val(tg).trigger('change'); }
+        if (qt && _canSet('dropQuocTich')) { $('#dropQuocTich').val(qt).trigger('change'); }
     };
     _setDrop();
     setTimeout(_setDrop, 500);
@@ -5631,6 +5660,153 @@ DeXuatHoSo.prototype.openEditByPerson = function (person) {
 
     // Load tab TT cơ bản extras (DMDL Quốc tịch/Dân tộc/Tôn giáo + Cascade tỉnh/huyện/xã + populate)
     if (typeof dx._loadTabInfoExtras === 'function') dx._loadTabInfoExtras(person.id);
+
+    // Lấy PERSON_PROFILE_ID để lúc Lưu biết gọi Them_ hay Sua_Person_Profile (Dân tộc/Tôn giáo)
+    if (typeof dx._loadPersonProfile === 'function') dx._loadPersonProfile(person.id);
+};
+
+/*------------------------------------------
+-- Origin: PKG_CORE_NGUOIHOC_01.LayTTPerson_Profile
+-- Lấy hồ sơ chính sách của person để biết đã có bản ghi profile chưa.
+-- Dân tộc / Tôn giáo nằm ở bảng PERSON_PROFILE (không phải CORE_PERSON), nên phải
+-- lưu riêng qua Them_/Sua_Person_Profile — xem save_PersonProfile.
+-------------------------------------------*/
+DeXuatHoSo.prototype._loadPersonProfile = function (personId) {
+    var dx = this;
+    dx._currentProfileId = '';
+    dx._currentProfile = null;
+    if (!personId) return;
+    edu.system.makeRequest({
+        success: function (data) {
+            var rows = (data && data.Data) || [];
+            if (data && data.Success && rows.length) {
+                var p = rows[0];
+                dx._currentProfile = p;
+                dx._currentProfileId = p.PERSON_PROFILE_ID || p.PROFILE_ID || p.ID || '';
+                // Dân tộc/Tôn giáo lưu ở PERSON_PROFILE, không phải SV_HoSo/LayDanhSach mà
+                // _setDrop đang đọc → phải đổ lại từ đây, nếu không form hiển thị sai nguồn.
+                if (typeof dx._applyProfileToDrops === 'function') dx._applyProfileToDrops();
+            }
+        },
+        error: function (er) { console.warn('[DXHS] LayTTPerson_Profile err:', er); },
+        type: 'POST',
+        contentType: true,
+        action: 'SV_NGUOIHOC_01_MH/DSA4FRURJDMyLi8eETMuJygtJAPP',
+        data: {
+            'action': 'SV_NGUOIHOC_01_MH/DSA4FRURJDMyLi8eETMuJygtJAPP',
+            'func': 'PKG_CORE_NGUOIHOC_01.LayTTPerson_Profile',
+            'iM': edu.system.iM,
+            'strId': '',
+            'strPerson_Id': personId,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+            'strHanhDong_Code': ''
+        },
+        fakedb: []
+    }, false, false, false, null);
+};
+
+/*------------------------------------------
+-- Đổ Dân tộc / Tôn giáo từ PERSON_PROFILE vào 2 dropdown.
+-- Danh mục (NS.DATO / NS.TOGI) nạp bất đồng bộ nên phải retry tới khi <option> có mặt.
+-- Không đè lên ô người dùng đã tự chọn (data-user-touched).
+-------------------------------------------*/
+DeXuatHoSo.prototype._applyProfileToDrops = function () {
+    var dx = this;
+    var p = dx._currentProfile;
+    if (!p) return;
+    var map = [
+        { id: 'dropDanToc', val: p.ETHNICITY_ID || '' },
+        { id: 'dropTonGiao', val: p.RELIGION_ID || '' }
+    ];
+    var tries = 0;
+    var apply = function () {
+        var conLai = false;
+        map.forEach(function (m) {
+            if (!m.val) return;
+            var $el = $('#' + m.id);
+            if (!$el.length) { conLai = true; return; }
+            if ($el.attr('data-user-touched')) return;          // người dùng đã tự chọn → giữ nguyên
+            if ($el.find('option[value="' + m.val + '"]').length) {
+                $el.val(m.val).trigger('change');
+                $el.attr('data-from-profile', '1');             // chặn _setDrop ghi đè
+            } else {
+                conLai = true;                                   // danh mục chưa nạp xong
+            }
+        });
+        if (conLai && ++tries < 25) setTimeout(apply, 200);
+    };
+    apply();
+};
+
+/*------------------------------------------
+-- Origin: PKG_CORE_NGUOIHOC_01.Them_/Sua_Person_Profile
+-- Lưu Dân tộc (ParamEthnicity_Id) + Tôn giáo (ParamReligion_Id).
+-- Trước đây save_DeXuatHoSo chỉ gọi UpdateCorePerson (họ tên/ngày sinh/giới tính/ảnh)
+-- nên 2 dropdown này hiển thị được nhưng KHÔNG bao giờ được lưu (2026-09-09).
+-- Các field khác của profile (thành phần GĐ, hôn nhân, đối tượng CS, nhóm máu, Đoàn/Đảng)
+-- form này chưa có input → giữ nguyên giá trị cũ khi Sửa, gửi rỗng khi Thêm mới.
+-------------------------------------------*/
+DeXuatHoSo.prototype.save_PersonProfile = function () {
+    var me = this;
+    // Chống gọi trùng: save_DeXuatHoSo gọi trực tiếp, đồng thời quanlytoanbo.js cũng chain
+    // vào nút Lưu → không guard sẽ bắn 2 request (bản ghi thứ 2 có thể tạo profile trùng).
+    var _now = Date.now();
+    if (me._lastProfileSaveAt && (_now - me._lastProfileSaveAt) < 1500) return;
+    me._lastProfileSaveAt = _now;
+    var ethnicity = ($('#dropDanToc').val() || '') + '';
+    var religion = ($('#dropTonGiao').val() || '') + '';
+    var profileId = me._currentProfileId || '';
+    var old = me._currentProfile || {};
+    // Không có gì để lưu và cũng chưa có profile → bỏ qua, tránh tạo bản ghi rỗng
+    if (!ethnicity && !religion && !profileId) return;
+
+    var personId = me.strDeXuatHoSo_Id || me._lockedPersonId || '';
+    if (!personId) { console.warn('[DXHS PersonProfile] thiếu strPerson_Id → skip'); return; }
+
+    var isUpdate = !!(profileId && profileId.length === 32);
+    var keep = function (v) { return (v === null || v === undefined) ? '' : v; };
+    var obj_save = {
+        'iM': edu.system.iM,
+        'strReligion_Id': religion,
+        'strEthnicity_Id': ethnicity,
+        // Giữ nguyên các field profile mà form này không hiển thị
+        'strFamilyBackground_Id': keep(old.FAMILY_BACKGROUND_ID),
+        'strMaritalStatus_Id': keep(old.MARITAL_STATUS_ID),
+        'strPolicyObject_Id': keep(old.POLICY_OBJECT_ID),
+        'strBloodType_Code': keep(old.BLOOD_TYPE_CODE),
+        'strUnionJoinDate': keep(old.UNION_JOIN_DATE),
+        'strPartyJoinDate': keep(old.PARTY_JOIN_DATE),
+        'strPartyOfficialDate': keep(old.PARTY_OFFICIAL_DATE),
+        'dIsActive': 1,
+        'strNguoiThucHien_Id': edu.system.userId,
+        'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+        'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+        'strHanhDong_Code': ''
+    };
+    if (isUpdate) {
+        obj_save.action = 'SV_NGUOIHOC_01_MH/EjQgHhEkMzIuLx4RMy4nKC0k';
+        obj_save.func = 'PKG_CORE_NGUOIHOC_01.Sua_Person_Profile';
+        obj_save.strId = profileId;
+    } else {
+        obj_save.action = 'SV_NGUOIHOC_01_MH/FSkkLB4RJDMyLi8eETMuJygtJAPP';
+        obj_save.func = 'PKG_CORE_NGUOIHOC_01.Them_Person_Profile';
+        obj_save.strPerson_Id = personId;
+    }
+    edu.system.makeRequest({
+        success: function (data) {
+            if (data && data.Success) {
+                if (!isUpdate && data.Id) me._currentProfileId = data.Id;
+            } else {
+                edu.system.alert('Lưu Dân tộc/Tôn giáo lỗi: ' + ((data && data.Message) || ''), 'w');
+            }
+        },
+        error: function (er) {
+            edu.system.alert('Lưu Dân tộc/Tôn giáo lỗi (er): ' + JSON.stringify(er), 'w');
+        },
+        type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
+    }, false, false, false, null);
 };
 
 DeXuatHoSo.prototype._loadTabInfoExtras = function (personId) {

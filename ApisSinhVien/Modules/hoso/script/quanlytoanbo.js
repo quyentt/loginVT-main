@@ -2365,6 +2365,10 @@ QuanLyToanBo.prototype = {
            KHONG boost .select2-container tinh (container dong o trang nen) — neu boost tinh se de "xuyen"
            qua modal vi container tinh cua trang nen van nam trong luong DOM binh thuong (2026-08-28 fix) */
         + 'body.zoneEdit-open .select2-container--open,body.zoneEdit-open .select2-dropdown{z-index:2147483100 !important;}'
+        /* Modal thông báo/confirm của hệ thống (BS3, z-index mặc định ~1050) bị #zoneEdit (2147483000)
+           che mất → user bấm Lưu không thấy báo gì. Đẩy lên trên #zoneEdit khi modal này đang mở. */
+        + 'body.zoneEdit-open #myModalAlert,body.zoneEdit-open #myModalConfirm{z-index:2147483200 !important;}'
+        + 'body.zoneEdit-open #myModalAlert ~ .modal-backdrop,body.zoneEdit-open .modal-backdrop.in{z-index:2147483150 !important;}'
         /* Dam bao modal luon interactive */
         + '#zoneEdit.fake-modal *{pointer-events:auto;}'
         /* Flex layout: header + tabbar (top, co dinh) — pane active (giua, scroll) — footer (duoi, sticky) */
@@ -2629,14 +2633,105 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.save_PersonInvoice
     };
 }
 
-// Monkey-patch save_DeXuatHoSo → chain save_PersonInvoice (2026-08-25)
+// Save Person_Profile (Dân tộc / Tôn giáo) — fallback (2026-09-09)
+// 2 field này thuộc bảng PERSON_PROFILE, không nằm trong CorePerson, nên save_DeXuatHoSo
+// bản cũ không lưu chúng: chọn xong bấm Lưu là mất. Xem PKG_CORE_NGUOIHOC_01.Them_/Sua_Person_Profile.
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadPersonProfile) {
+    DeXuatHoSo.prototype._loadPersonProfile = function (personId) {
+        var dx = this;
+        dx._currentProfileId = '';
+        dx._currentProfile = null;
+        if (!personId) return;
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success && data.Data && data.Data.length) {
+                    var p = data.Data[0];
+                    dx._currentProfile = p;
+                    dx._currentProfileId = p.PERSON_PROFILE_ID || p.PROFILE_ID || p.ID || '';
+                }
+            },
+            error: function (er) { console.warn('[QLTB PersonProfile] load err:', er); },
+            type: 'POST', contentType: true,
+            action: 'SV_NGUOIHOC_01_MH/DSA4FRURJDMyLi8eETMuJygtJAPP',
+            data: {
+                'action': 'SV_NGUOIHOC_01_MH/DSA4FRURJDMyLi8eETMuJygtJAPP',
+                'func': 'PKG_CORE_NGUOIHOC_01.LayTTPerson_Profile',
+                'iM': edu.system.iM, 'strId': '', 'strPerson_Id': personId,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
+    console.warn('[QLTB v2] DeXuatHoSo.prototype._loadPersonProfile patched');
+}
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.save_PersonProfile) {
+    DeXuatHoSo.prototype.save_PersonProfile = function () {
+        var me = this;
+        var _now = Date.now();
+        if (me._lastProfileSaveAt && (_now - me._lastProfileSaveAt) < 1500) return;
+        me._lastProfileSaveAt = _now;
+        var ethnicity = ($('#dropDanToc').val() || '') + '';
+        var religion = ($('#dropTonGiao').val() || '') + '';
+        var profileId = me._currentProfileId || '';
+        var old = me._currentProfile || {};
+        if (!ethnicity && !religion && !profileId) return;
+        var personId = me.strDeXuatHoSo_Id || me._lockedPersonId || '';
+        if (!personId) { console.warn('[QLTB PersonProfile] thiếu strPerson_Id → skip'); return; }
+        var isUpdate = !!(profileId && profileId.length === 32);
+        var keep = function (v) { return (v === null || v === undefined) ? '' : v; };
+        var obj_save = {
+            'iM': edu.system.iM,
+            'strReligion_Id': religion,
+            'strEthnicity_Id': ethnicity,
+            'strFamilyBackground_Id': keep(old.FAMILY_BACKGROUND_ID),
+            'strMaritalStatus_Id': keep(old.MARITAL_STATUS_ID),
+            'strPolicyObject_Id': keep(old.POLICY_OBJECT_ID),
+            'strBloodType_Code': keep(old.BLOOD_TYPE_CODE),
+            'strUnionJoinDate': keep(old.UNION_JOIN_DATE),
+            'strPartyJoinDate': keep(old.PARTY_JOIN_DATE),
+            'strPartyOfficialDate': keep(old.PARTY_OFFICIAL_DATE),
+            'dIsActive': 1,
+            'strNguoiThucHien_Id': edu.system.userId,
+            'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+            'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+            'strHanhDong_Code': ''
+        };
+        if (isUpdate) {
+            obj_save.action = 'SV_NGUOIHOC_01_MH/EjQgHhEkMzIuLx4RMy4nKC0k';
+            obj_save.func = 'PKG_CORE_NGUOIHOC_01.Sua_Person_Profile';
+            obj_save.strId = profileId;
+        } else {
+            obj_save.action = 'SV_NGUOIHOC_01_MH/FSkkLB4RJDMyLi8eETMuJygtJAPP';
+            obj_save.func = 'PKG_CORE_NGUOIHOC_01.Them_Person_Profile';
+            obj_save.strPerson_Id = personId;
+        }
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) { if (!isUpdate && data.Id) me._currentProfileId = data.Id; }
+                else edu.system.alert('Lưu Dân tộc/Tôn giáo lỗi: ' + ((data && data.Message) || ''), 'w');
+            },
+            error: function (er) { edu.system.alert('Lưu Dân tộc/Tôn giáo lỗi (er): ' + JSON.stringify(er), 'w'); },
+            type: 'POST', contentType: true, action: obj_save.action, data: obj_save, fakedb: []
+        }, false, false, false, null);
+    };
+    console.warn('[QLTB v2] DeXuatHoSo.prototype.save_PersonProfile patched');
+}
+
+// Monkey-patch save_DeXuatHoSo → chain save_PersonInvoice + save_PersonProfile (2026-08-25 / 2026-09-09)
 if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.save_DeXuatHoSo && !DeXuatHoSo.prototype._invoiceChainHooked) {
     DeXuatHoSo.prototype._invoiceChainHooked = true;
     var _origSaveDX_QLTB = DeXuatHoSo.prototype.save_DeXuatHoSo;
     DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
         var me = this;
         _origSaveDX_QLTB.call(me);
-        setTimeout(function () { if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice(); }, 300);
+        setTimeout(function () {
+            if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice();
+            // save_PersonProfile có guard 1.5s nên gọi trùng với bản trong dexuathoso.js là vô hại
+            if (typeof me.save_PersonProfile === 'function') me.save_PersonProfile();
+        }, 300);
     };
 }
 
@@ -2818,6 +2913,8 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
         setTimeout(_setDrop, 1500);
         if (typeof dx._loadXHD_Section === 'function') dx._loadXHD_Section(person.id);
         if (typeof dx._loadTabInfoExtras === 'function') dx._loadTabInfoExtras(person.id);
+        // Lấy PERSON_PROFILE_ID để lúc Lưu biết gọi Them_ hay Sua_Person_Profile (Dân tộc/Tôn giáo)
+        if (typeof dx._loadPersonProfile === 'function') dx._loadPersonProfile(person.id);
     };
     console.warn('[QLTB v2] DeXuatHoSo.prototype.openEditByPerson patched (server file dexuathoso.js is old)');
 }

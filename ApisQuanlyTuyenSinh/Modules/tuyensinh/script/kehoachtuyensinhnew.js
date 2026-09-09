@@ -1552,7 +1552,6 @@ KeHoachTuyenSinhNew.prototype = {
             || me._kqPickFuzzy(d, /DOT.*_ID$/i);
         var dotTen = pick(d, ['HOSO_KH_TS_DOT_TEN', 'DOT_TEN', 'TEN_DOT']);
         if (dotId) me.strDot_Id_ForKQ = dotId;
-        console.log('%c[openSuaHoSo] Đợt của hồ sơ', 'color:#7c3aed;font-weight:bold', { dotId: dotId, dotTen: dotTen });
 
         me._ensureDotTuyenSinh(function () {
             me._loadDotToKhai();                      // đổ option + preselect theo strDot_Id_ForKQ
@@ -2208,20 +2207,6 @@ KeHoachTuyenSinhNew.prototype = {
                     count: (data && data.Data && data.Data.length) || 0,
                     message: data && data.Message
                 });
-                // Liệt kê field API thực sự trả về — dùng để biết form Sửa bind được tới đâu,
-                // và field nào còn thiếu cần BE bổ sung vào view của LayDS_HoSo_TS.
-                if (data && data.Data && data.Data.length) {
-                    var _r0 = data.Data[0];
-                    var _keys = Object.keys(_r0);
-                    var _coValue = _keys.filter(function (k) {
-                        return _r0[k] !== null && _r0[k] !== undefined && String(_r0[k]).trim() !== '';
-                    });
-                    console.log('%c[loadKQDK] FIELDS: ' + _keys.length + ' cột, ' + _coValue.length + ' cột có giá trị',
-                        'color:#b45309;font-weight:bold');
-                    console.log('  → có giá trị :', _coValue.join(', '));
-                    console.log('  → rỗng       :', _keys.filter(function (k) { return _coValue.indexOf(k) === -1; }).join(', '));
-                    console.log('  → record[0]  :', _r0);
-                }
                 if (data && data.Success) {
                     var rows = edu.util.checkValue(data.Data) ? data.Data : [];
                     me.dtKQDK_HoSo = rows;

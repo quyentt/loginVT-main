@@ -22,6 +22,10 @@ function _zeDoInject(forceOverlay) {
            KHONG boost .select2-container tinh (container dong o trang nen) — neu boost tinh se de "xuyen"
            qua modal vi container tinh cua trang nen van nam trong luong DOM binh thuong (2026-08-28 fix) */
         + 'body.zoneEdit-open .select2-container--open,body.zoneEdit-open .select2-dropdown{z-index:2147483100 !important;}'
+        /* Modal thông báo/confirm của hệ thống (BS3, z-index mặc định ~1050) bị #zoneEdit (2147483000)
+           che mất → user bấm Lưu không thấy báo gì. Đẩy lên trên #zoneEdit khi modal này đang mở. */
+        + 'body.zoneEdit-open #myModalAlert,body.zoneEdit-open #myModalConfirm{z-index:2147483200 !important;}'
+        + 'body.zoneEdit-open #myModalAlert ~ .modal-backdrop,body.zoneEdit-open .modal-backdrop.in{z-index:2147483150 !important;}'
         /* Dam bao modal luon interactive */
         + '#zoneEdit.fake-modal *{pointer-events:auto;}'
         /* Flex layout: header + tabbar (top, co dinh) — pane active (giua, scroll) — footer (duoi, sticky) */
