@@ -1473,9 +1473,9 @@ InHoaDonTuDong.prototype = {//1
             //    iDataRow: iPager,
             //},
             colPos: {
-                left: [1, 7],
-                center: [0, 7, 9 , 10],
-                right: [3]
+                left: [1, 8],
+                center: [0, 8, 10 , 11],
+                right: [4]
             },
             "aoColumns": [
                 {
@@ -1483,6 +1483,9 @@ InHoaDonTuDong.prototype = {//1
                 },
                 {
                     "mDataProp": "HOTENNGUOIHOC"
+                }
+                , {
+                    "mDataProp": "CCCD"
                 }
                 , {
                     "mData": "SOTIEN",
@@ -1513,8 +1516,8 @@ InHoaDonTuDong.prototype = {//1
         };
         edu.system.loadToTable_data(jsonForm);
         if (data != undefined && data.length > 0) {
-            edu.system.insertSumAfterTable(strTable_Id, [3]);
-            $("#" + strTable_Id + " tfoot td:eq(3)").attr("style", "text-align: right")
+            edu.system.insertSumAfterTable(strTable_Id, [4]);
+            $("#" + strTable_Id + " tfoot td:eq(4)").attr("style", "text-align: right")
         } else {
             $("#" + strTable_Id + " tfoot").html('');
         }
