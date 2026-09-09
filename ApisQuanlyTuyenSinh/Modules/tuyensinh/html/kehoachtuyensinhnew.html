@@ -1913,6 +1913,7 @@
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_trungtuyen"><span class="aps-sv-tab-num">4</span><i class="fa-light fa-award"></i> Trúng tuyển</button>
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_giadinh"><span class="aps-sv-tab-num">5</span><i class="fa-light fa-people-roof"></i> Gia đình</button>
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_hoadon"><span class="aps-sv-tab-num">6</span><i class="fa-light fa-file-invoice-dollar"></i> Xuất hóa đơn</button>
+                            <button type="button" class="aps-sv-tab" data-target="kqdk_tab_nguonkt"><span class="aps-sv-tab-num">7</span><i class="fa-light fa-share-nodes"></i> Nguồn khai thác</button>
                         </div>
 
                         <div class="aps-sv-body">
@@ -2376,6 +2377,33 @@
                                 </div>
                             </div>
 
+                            <!-- ============ TAB 7: NGUỒN KHAI THÁC (đối tác tuyển sinh) ============
+                                 Lưu riêng qua PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS, gọi SAU CÙNG khi
+                                 hồ sơ đã được tạo (cần Core_Person_Id). Không nằm trong Them_HoSo_TS. -->
+                            <div class="aps-sv-panel" id="kqdk_tab_nguonkt">
+                                <div class="aps-sv-section">
+                                    <div class="aps-sv-section-title"><i class="fa-light fa-share-nodes"></i> Thông tin nguồn khai thác</div>
+                                    <div class="aps-sv-grid">
+                                        <div class="aps-sv-field aps-sv-col-full">
+                                            <label class="aps-sv-label">Nguồn khai thác</label>
+                                            <div class="aps-sv-select">
+                                                <i class="fa-light fa-chevron-down"></i>
+                                                <select class="aps-sv-input" id="ddlKQ_NguonKhaiThac"><option value="">-- Chọn nguồn khai thác --</option></select>
+                                            </div>
+                                            <div style="margin-top:6px;font-size:12px;color:#94a3b8;line-height:1.5;">
+                                                <i class="fa-light fa-circle-info"></i>
+                                                Đối tác / nguồn giới thiệu thí sinh. Danh sách lấy từ
+                                                <code>LayDS_TS_DoiTacTuyenSinh</code>; được ghi nhận sau khi hồ sơ lưu xong.
+                                            </div>
+                                        </div>
+                                        <div class="aps-sv-field aps-sv-col-full">
+                                            <label class="aps-sv-label">Ghi chú nguồn khai thác</label>
+                                            <input class="aps-sv-input" id="txtKQ_NguonKhaiThac_GhiChu" placeholder="Ghi chú thêm về nguồn khai thác (nếu có)">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
 
                         <div class="aps-sv-actionbar">
@@ -2744,7 +2772,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.90"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.91"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

@@ -1539,6 +1539,8 @@ KeHoachTuyenSinhNew.prototype = {
 
         me.strSuaHoSo_Id = strId;
         me._suaMode = true;
+        // Core_Person_Id — dùng cho tab 7 (ghi nhận nguồn khai thác) lúc bấm Cập nhật
+        me.strSuaHoSo_CorePersonId = pick(d, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'Core_Person_Id', 'PERSON_ID', 'Person_Id']);
 
         // Reset form + init DM (lazy, chỉ chạy lần đầu)
         me.resetKhai_HoSo();
@@ -1558,6 +1560,10 @@ KeHoachTuyenSinhNew.prototype = {
             me._setSelectByIdOrText('#ddlKQ_DotTuyenSinh', dotId, dotTen);   // bảo hiểm + fallback theo tên
             me._loadNguyenVongDauRa();
             me._loadPhuongThucTuyenSinh();
+            // Tab 7 — nạp danh mục rồi bind nguồn khai thác đã ghi nhận (nếu có)
+            me._loadNguonKhaiThac(function () {
+                me._loadHoSoDoiTacTS(me.strSuaHoSo_CorePersonId);
+            });
         });
 
         // Chuyển sang screen Khai
@@ -2086,6 +2092,9 @@ KeHoachTuyenSinhNew.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data && data.Success) {
+                    // Tab 7 — ghi nhận nguồn khai thác SAU CÙNG. Chế độ Sửa đã biết sẵn
+                    // Core_Person_Id của hồ sơ đang mở (lưu ở openSuaHoSo).
+                    me.save_HoSoDoiTacTS(me.strSuaHoSo_CorePersonId || '');
                     edu.system.alert("Cập nhật hồ sơ thành công", "s");
                     me._exitSuaMode();
                     // Về lại screen list và refresh
@@ -2750,6 +2759,8 @@ KeHoachTuyenSinhNew.prototype = {
                     edu.extend.genDropTinhThanh('ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa');
                 }
                 me._bindCascadeNative();
+                // Tab 7 - Nguồn khai thác (đối tác tuyển sinh), nạp riêng qua PKG_CORE_TS_HOSO
+                me._loadNguonKhaiThac();
                 // Bật select2 (có ô tìm kiếm) cho mọi dropdown của form Khai.
                 // Phải chạy SAU _bindCascadeNative để handler change.kqnat (lock/unlock Huyện/Xã)
                 // fire trước handler change.kqrep (re-apply select2) — xem _bindCascadeReapply.
@@ -3113,7 +3124,9 @@ KeHoachTuyenSinhNew.prototype = {
             // Tab 4 - Trúng tuyển (nạp async → _load* sẽ _reapplyKQSelect2 lại sau khi có option)
             'ddlKQ_DotTuyenSinh', 'ddlKQ_NguyenVongDauRa', 'ddlKQ_LopDuKien', 'ddlKQ_CoSoDaoTao',
             // Tab 6 - Xuất hóa đơn
-            'ddlKQ_HD_DoiTuong', 'ddlKQ_HD_HinhThucTT'
+            'ddlKQ_HD_DoiTuong', 'ddlKQ_HD_HinhThucTT',
+            // Tab 7 - Nguồn khai thác
+            'ddlKQ_NguonKhaiThac'
         ];
         for (var i = 0; i < dropIds.length; i++) {
             me._applyKQSelect2(dropIds[i]);
@@ -3167,7 +3180,8 @@ KeHoachTuyenSinhNew.prototype = {
             'txtKQ_Me_HoTen', 'txtKQ_Me_NamSinh', 'txtKQ_Me_SDT', 'txtKQ_Me_NoiO',
             'txtKQ_HD_NguoiMua', 'txtKQ_HD_TenDonVi', 'txtKQ_HD_MST', 'txtKQ_HD_MaQHNS',
             'txtKQ_HD_SDT', 'txtKQ_HD_Email', 'txtKQ_HD_DiaChi',
-            'txtKQ_HD_NganHang', 'txtKQ_HD_SoTK', 'txtKQ_HD_ChuTK', 'txtKQ_HD_GhiChu'
+            'txtKQ_HD_NganHang', 'txtKQ_HD_SoTK', 'txtKQ_HD_ChuTK', 'txtKQ_HD_GhiChu',
+            'txtKQ_NguonKhaiThac_GhiChu'
         ];
         edu.util.resetValByArrId(arrTxt);
         // .trigger('change') để select2 vẽ lại placeholder — nếu chỉ .val('') thì ô chọn
@@ -3176,7 +3190,8 @@ KeHoachTuyenSinhNew.prototype = {
             + '#ddlKQ_PhuongThuc, #ddlKQ_DoiTuongTS, #ddlKQ_DoiTuongUT,'
             + '#ddlKQ_KhuVucUT, #ddlKQ_HocLuc, #ddlKQ_HanhKiem,'
             + '#ddlKQ_NguyenVongDauRa, #ddlKQ_CoSoDaoTao,'
-            + '#ddlKQ_HD_DoiTuong, #ddlKQ_HD_HinhThucTT').val('').trigger('change');
+            + '#ddlKQ_HD_DoiTuong, #ddlKQ_HD_HinhThucTT,'
+            + '#ddlKQ_NguonKhaiThac').val('').trigger('change');
 
         // Lớp dự kiến: reset về placeholder disabled (chờ chọn NV đầu ra)
         $('#ddlKQ_LopDuKien').html('<option value="">-- Chọn nguyện vọng đầu ra trước --</option>')
@@ -3438,6 +3453,10 @@ KeHoachTuyenSinhNew.prototype = {
         edu.system.makeRequest({
             success: function (data) {
                 if (data && data.Success) {
+                    // Tab 7 — ghi nhận nguồn khai thác SAU CÙNG, cần Core_Person_Id do
+                    // Them_HoSo_TS trả ra (out param ParamCorePerson_Id_Out).
+                    // Gọi trước resetKhai_HoSo vì reset sẽ xoá giá trị dropdown.
+                    me.save_HoSoDoiTacTS(me._pickCorePersonIdFromResp(data));
                     edu.system.alert("Đã lưu hồ sơ thành công", "s");
                     me.resetKhai_HoSo();
                 } else {
@@ -3453,6 +3472,190 @@ KeHoachTuyenSinhNew.prototype = {
             data: payload,
             fakedb: []
         }, false, false, false, null);
+    },
+
+    /*==========================================================================
+    == TAB 7 — THÔNG TIN NGUỒN KHAI THÁC (đối tác tuyển sinh)
+    == Tách hoàn toàn khỏi luồng Them_HoSo_TS / Sua_HoSo_TS đang chạy:
+    ==   - Danh mục   : PKG_CORE_TS_HOSO.LayDS_TS_DoiTacTuyenSinh
+    ==   - Đọc đã lưu : PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS  (bind selected)
+    ==   - Ghi        : PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS   (gọi SAU CÙNG,
+    ==                  vì cần Core_Person_Id do Them_HoSo_TS trả ra)
+    ==========================================================================*/
+
+    /*------------------------------------------
+    -- Nạp danh mục nguồn khai thác vào #ddlKQ_NguonKhaiThac (1 lần, có cache).
+    -------------------------------------------*/
+    _loadNguonKhaiThac: function (cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $sel = $('#ddlKQ_NguonKhaiThac');
+        var render = function (rows) {
+            var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+            $sel.html('<option value="">-- Chọn nguồn khai thác --</option>');
+            (rows || []).forEach(function (d) {
+                var id = d.ID || d.Id || d.id || '';
+                if (!id) return;
+                var ten = d.TEN || d.Ten || d.TEN_HIENTHI || '';
+                var ma = d.MA || d.Ma || '';
+                var display = ten || ma || id;
+                if (ten && ma && ma !== ten) display = ten + ' (' + ma + ')';
+                $sel.append('<option value="' + esc(id) + '">' + esc(display) + '</option>');
+            });
+            me._reapplyKQSelect2('ddlKQ_NguonKhaiThac');
+            if (typeof cb === 'function') cb();
+        };
+        if (me._dtNguonKhaiThac && me._dtNguonKhaiThac.length) { render(me._dtNguonKhaiThac); return; }
+        var obj_list = {
+            'action': 'SV_Core_TS_HoSo_MH/DSA4BRIeFRIeBS4oFSAiFTQ4JC8SKC8p',
+            'func': 'PKG_CORE_TS_HOSO.LayDS_TS_DoiTacTuyenSinh',
+            'iM': edu.system.iM,
+            'strTuKhoa': '',
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                me._dtNguonKhaiThac = rows;
+                render(rows);
+            },
+            error: function (er) {
+                console.warn('[NguonKhaiThac] LayDS_TS_DoiTacTuyenSinh err:', er);
+                render([]);
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_list.action,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Đọc nguồn khai thác đã ghi nhận của hồ sơ → bind selected vào dropdown.
+    -- Gọi khi mở form ở chế độ Sửa. Lọc theo KH + Đợt + NV đầu ra + Core_Person_Id.
+    -------------------------------------------*/
+    // ⚠ CHƯA CÓ action mã hoá cho LayDS_TS_HoSo_DoiTacTS — BE chưa cung cấp (2026-09-09).
+    // Điền chuỗi action vào đây là chạy được ngay, phần còn lại đã sẵn sàng.
+    _ACTION_LayDS_HoSo_DoiTacTS: '',
+
+    _loadHoSoDoiTacTS: function (corePersonId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(corePersonId)) return;
+        if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) {
+            console.warn('[NguonKhaiThac] chưa có action cho LayDS_TS_HoSo_DoiTacTS → bỏ qua bước bind giá trị đã lưu');
+            return;
+        }
+        var obj_list = {
+            'action': me._ACTION_LayDS_HoSo_DoiTacTS,
+            'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
+            'iM': edu.system.iM,
+            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+            'strNguyenVong_DauRa_Id': edu.system.getValById('ddlKQ_NguyenVongDauRa') || '',
+            'strCore_Person_Id': corePersonId,
+            'strTS_DoiTacTuyenSinh_Id': '',
+            // Convention Oracle: param prefix 'd' là NUMBER → rỗng phải gửi null,
+            // gửi '' sẽ dính PLS-00306 wrong number or types of arguments.
+            'dIs_Primary': null,
+            'dIs_Current': null,
+            'dIs_Active': 1,
+            'strTuKhoa': '',
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data || !data.Success || !edu.util.checkValue(data.Data) || !data.Data.length) return;
+                var r = data.Data[0];
+                var id = r.TS_DOITACTUYENSINH_ID || r.Ts_DoiTacTuyenSinh_Id || '';
+                var ghiChu = r.GHICHU || r.GhiChu || '';
+                if (ghiChu) edu.util.viewValById('txtKQ_NguonKhaiThac_GhiChu', ghiChu);
+                if (!id) return;
+                // Danh mục nạp async → set qua _setSelectByIdOrText để có retry chờ <option>
+                me._setSelectByIdOrText('#ddlKQ_NguonKhaiThac', id, '');
+            },
+            error: function (er) { console.warn('[NguonKhaiThac] LayDS_TS_HoSo_DoiTacTS err:', er); },
+            type: 'POST',
+            contentType: true,
+            action: obj_list.action,
+            data: obj_list,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Ghi nhận nguồn khai thác. GỌI SAU CÙNG trong luồng lưu hồ sơ.
+    -- corePersonId: khi Thêm mới lấy từ out param của Them_HoSo_TS;
+    --               khi Sửa lấy Core_Person_Id của hồ sơ đang mở.
+    -- Không chọn nguồn → bỏ qua, không gọi API.
+    -------------------------------------------*/
+    save_HoSoDoiTacTS: function (corePersonId) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var strDoiTac_Id = edu.system.getValById('ddlKQ_NguonKhaiThac') || '';
+        if (!edu.util.checkValue(strDoiTac_Id)) return;   // không chọn thì thôi
+        if (!edu.util.checkValue(corePersonId)) {
+            console.warn('[NguonKhaiThac] thiếu Core_Person_Id → không ghi nhận được nguồn khai thác');
+            return;
+        }
+        var obj_save = {
+            'action': 'SV_Core_TS_HoSo_MH/FSkkLB4VEh4JLhIuHgUuKBUgIhUS',
+            'func': 'PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS',
+            'iM': edu.system.iM,
+            // 3 tham số context giống Them_HoSo_TS
+            'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+            'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+            'strNguyenVong_DauRa_Id': edu.system.getValById('ddlKQ_NguyenVongDauRa') || '',
+            'strCore_Person_Id': corePersonId,
+            'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
+            'strNgay_Ghi_Nhan': '',
+            'dIs_Primary': 1,
+            'dIs_Current': 1,
+            'strNguon_Ghi_Nhan_Code': '',
+            'strNguoi_Ghi_Nhan_Id': edu.system.userId,
+            'strGhiChu': edu.system.getValById('txtKQ_NguonKhaiThac_GhiChu') || '',
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        edu.system.makeRequest({
+            success: function (data) {
+                if (!data || !data.Success) {
+                    edu.system.alert('Ghi nhận nguồn khai thác lỗi: ' + ((data && data.Message) || ''), 'w');
+                }
+            },
+            error: function (er) {
+                edu.system.alert('Ghi nhận nguồn khai thác lỗi (er): ' + JSON.stringify(er), 'w');
+            },
+            type: 'POST',
+            contentType: true,
+            action: obj_save.action,
+            data: obj_save,
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Lấy Core_Person_Id từ response của Them_HoSo_TS.
+    -- BE trả qua out param ParamCorePerson_Id_Out; tuỳ cách C# map có thể nằm ở
+    -- Data / Id / Message → thử lần lượt các key thường gặp.
+    -------------------------------------------*/
+    _pickCorePersonIdFromResp: function (data) {
+        if (!data) return '';
+        var tryVal = function (v) {
+            if (v == null) return '';
+            var s = String(v).trim();
+            return (s.length === 32) ? s : '';   // ID hệ thống là chuỗi 32 ký tự
+        };
+        var d = data.Data;
+        if (d && !Array.isArray(d) && typeof d === 'object') {
+            var keys = ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'Core_Person_Id',
+                'CorePerson_Id_Out', 'PERSON_ID', 'Person_Id'];
+            for (var i = 0; i < keys.length; i++) {
+                var got = tryVal(d[keys[i]]);
+                if (got) return got;
+            }
+        }
+        if (Array.isArray(d) && d.length && typeof d[0] === 'object') {
+            return main_doc.KeHoachTuyenSinhNew._pickCorePersonIdFromResp({ Data: d[0] });
+        }
+        return tryVal(d) || tryVal(data.Id) || '';
     },
 
     /*------------------------------------------
