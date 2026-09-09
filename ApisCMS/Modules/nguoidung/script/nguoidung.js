@@ -134,7 +134,7 @@ NguoiDung.prototype = {
         $("#detailInitial_ND").delegate("#btnIntital_SinhVien", "click", function () {
             me.toggle_initial_SV();
             me.strLoaiDoiTuong = "SINHVIEN";
-            me.getList_SinhVien();
+            //me.getList_SinhVien();
         });
         $("#detailInitial_ND").delegate("#btnIntital_NCS", "click", function () {
 
@@ -239,16 +239,16 @@ NguoiDung.prototype = {
 
         $("#dropSearch_HeDaoTao").on("select2:select", function () {
             me.getList_KhoaDaoTao();
-            me.getList_SinhVien();
+            // me.getList_SinhVien();
         });
         $("#dropSearch_KhoaDaoTao").on("select2:select", function () {
             me.getList_ChuongTrinhDaoTao();
             me.getList_LopQuanLy();
-            me.getList_SinhVien();
+            // me.getList_SinhVien();
         });
         $("#dropSearch_ChuongTrinhDaoTao").on("select2:select", function () {
             me.getList_LopQuanLy();
-            me.getList_SinhVien();
+            // me.getList_SinhVien();
         });
         $("#dropSearch_LopQuanLy").on("select2:select", function () {
             me.getList_SinhVien();

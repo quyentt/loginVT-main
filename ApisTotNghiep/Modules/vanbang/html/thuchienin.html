@@ -35,6 +35,70 @@
         font-family: monospace;
         font-size: 11px;
     }
+
+    /* Nút "In lần lượt" / "Tải file ảnh" bị rule global trong indexi.aspx
+       (".box-header .pull-right>.btn.btn-default" — vốn chỉ định cho header
+       màu xanh) ép background:transparent + color:#fff, mà header trang này
+       lại nền trắng -> chữ trắng trên nền trắng, nút biến mất hoàn toàn.
+       Rule đó dùng selector có #main-content-wrapper (1 ID) nên phải đè bằng
+       selector có ĐỘ ƯU TIÊN CAO HƠN (2 ID) mới thắng được, không sửa file
+       indexi.aspx dùng chung để tránh ảnh hưởng các trang khác. */
+    #zonebatdau .box-tools .btn {
+        display: inline-flex !important;
+        align-items: center;
+        gap: 6px;
+        border-radius: 6px !important;
+        padding: 7px 14px !important;
+        font-weight: 600 !important;
+        opacity: 1 !important;
+        min-width: 0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+    }
+
+    #zonebatdau .box-tools .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* In lần lượt: CTA chính của toolbar -> filled xanh dương đậm */
+    #zonebatdau #btnThucHienIn {
+        background: #2563eb !important;
+        border: 1px solid #2563eb !important;
+        color: #ffffff !important;
+    }
+
+    #zonebatdau #btnThucHienIn:hover {
+        background: #1d4ed8 !important;
+        border-color: #1d4ed8 !important;
+        color: #ffffff !important;
+    }
+
+    #zonebatdau #btnThucHienIn i {
+        color: #ffffff !important;
+    }
+
+    /* Tải file ảnh: hành động phụ, cùng tone xanh dương nhưng dạng outline */
+    #zonebatdau #btnLuuAnh {
+        background: #ffffff !important;
+        border: 1px solid #2563eb !important;
+        color: #2563eb !important;
+    }
+
+    #zonebatdau #btnLuuAnh:hover {
+        background: #eff6ff !important;
+        border-color: #1d4ed8 !important;
+        color: #1d4ed8 !important;
+    }
+
+    #zonebatdau #btnLuuAnh i {
+        color: #2563eb !important;
+    }
+
+    /* Chế độ test: tone cam cảnh báo, tách biệt hẳn 2 nút trên */
+    #zonebatdau #btnCheDoTest {
+        border: 1px solid #d97706 !important;
+    }
 </style>
 <section class="content aps-TotNghiep">
     <div class="row aps-thuchienin">

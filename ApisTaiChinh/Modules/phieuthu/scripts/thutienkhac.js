@@ -1411,8 +1411,8 @@ PhieuThuKhac.prototype = {
         //????????????????????????????????????????????????????
 
         //[2]. TinhTrang
-        var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
-        var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
+        var strTrangThai_Ten = edu.util.checkEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
+        var strTrangThai_Ma = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_MA);
         var strTrangThaiHienThi = '';
         var colorLable = '';
         var icon = '';
@@ -3307,7 +3307,7 @@ PhieuThuKhac.prototype = {
                         edu.extend.notifyBeginLoading('Thực hiện thu tiền thành công', 'notifications_PhieuThu');
                     }
                     else {
-                        edu.system.alert("Lỗi: " + d.Message, "w");
+                        //edu.system.alert("Lỗi: " + data.Message, "w");
                         edu.extend.notifyBeginLoading(data.Message);
                     }
                     edu.system.endLoading();
@@ -3633,7 +3633,7 @@ PhieuThuKhac.prototype = {
                             obj_save.strTaiChinh_CacKhoanThu_Ids = strIDS;
                             saveHDDT(obj_save);
                         } else {
-                            edu.system.alert("Lỗi: " + d.Message, "w");
+                            //edu.system.alert("Lỗi: " + data.Message, "w");
                             informSaveSuccess(data.Message);
                         }
                     }

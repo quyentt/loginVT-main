@@ -11,7 +11,7 @@
                 sessionStorage.clear();
             } catch (e) { }
             try {
-                var lsKeys = ['iShk', 'strIM', 'strRootPath', 'pendingThuVaiSV', 'reload'];
+                var lsKeys = ['strIM', 'strRootPath', 'pendingThuVaiSV', 'reload'];
                 for (var i = 0; i < lsKeys.length; i++) {
                     localStorage.removeItem(lsKeys[i]);
                 }

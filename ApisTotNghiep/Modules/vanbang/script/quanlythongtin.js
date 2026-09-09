@@ -95,10 +95,12 @@ QuanLyThongTin.prototype = {
             $("#btnYes").click(function (e) {
                 edu.system.alert('<div id="zoneprocessQuanLyThongTin"></div>');
                 edu.system.genHTML_Progress("zoneprocessQuanLyThongTin", arrChecked_Id.length);
-                edu.system.iGioiHanLuong = 1;
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_SinhTuDongSoHieu(arrChecked_Id[i]);
-                }
+                //edu.system.iGioiHanLuong = 1;
+                //me.save_SinhTuDongSoHieu(arrChecked_Id[i]);
+                me.save_SinhTuDongSoHieu(arrChecked_Id, 0);
+                //for (var i = 0; i < arrChecked_Id.length; i++) {
+                //    me.save_SinhTuDongSoHieu(arrChecked_Id[i]);
+                //}
             });
         });
         $("#btnSinhSoVaoSo").click(function () {
@@ -111,10 +113,11 @@ QuanLyThongTin.prototype = {
             $("#btnYes").click(function (e) {
                 edu.system.alert('<div id="zoneprocessQuanLyThongTin"></div>');
                 edu.system.genHTML_Progress("zoneprocessQuanLyThongTin", arrChecked_Id.length);
-                edu.system.iGioiHanLuong = 1;
-                for (var i = 0; i < arrChecked_Id.length; i++) {
-                    me.save_SinhSoVaoSo(arrChecked_Id[i]);
-                }
+                me.save_SinhSoVaoSo(arrChecked_Id, 0);
+                //edu.system.iGioiHanLuong = 1;
+                //for (var i = 0; i < arrChecked_Id.length; i++) {
+                //    me.save_SinhSoVaoSo(arrChecked_Id[i]);
+                //}
             });
         });
 
@@ -780,14 +783,14 @@ QuanLyThongTin.prototype = {
             ]
         }, false, false, false, null);
     },
-    save_SinhTuDongSoHieu: function (strTN_KetQua_CongNhan_VB_Id) {
+    save_SinhTuDongSoHieu: function (arrChecked_Id, iThuTu) {
         var me = this;
         //--Edit
         var obj_save = {
             'action': 'TN_KetQua_CongNhan_VB/SinhSoHieuVanBang',
             'strNgayThucHien': edu.util.getValById('txtAAAA'),
             'strPhanLoai_Id': edu.util.getValById('dropSearch_PhanLoai'),
-            'strTN_KetQua_CongNhan_VB_Id': strTN_KetQua_CongNhan_VB_Id,
+            'strTN_KetQua_CongNhan_VB_Id': arrChecked_Id[iThuTu],
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //default
@@ -810,8 +813,10 @@ QuanLyThongTin.prototype = {
 
             contentType: true,
             complete: function () {
+                if (arrChecked_Id.length > ++iThuTu)
+                me.save_SinhTuDongSoHieu(arrChecked_Id, iThuTu);
                 edu.system.start_Progress("zoneprocessQuanLyThongTin", function () {
-                    edu.system.iGioiHanLuong = 10;
+                    //edu.system.iGioiHanLuong = 10;
                     me.getList_QuanLyThongTin();
                 });
             },
@@ -822,14 +827,14 @@ QuanLyThongTin.prototype = {
             ]
         }, false, false, false, null);
     },
-    save_SinhSoVaoSo: function (strTN_KetQua_CongNhan_VB_Id) {
+    save_SinhSoVaoSo: function (arrChecked_Id, iThuTu) {
         var me = this;
         //--Edit
         var obj_save = {
             'action': 'TN_KetQua_CongNhan_VB/SinhSoVaoSo',
             'strNgayThucHien': edu.util.getValById('txtAAAA'),
             'strPhanLoai_Id': edu.util.getValById('dropSearch_PhanLoai'),
-            'strTN_KetQua_CongNhan_VB_Id': strTN_KetQua_CongNhan_VB_Id,
+            'strTN_KetQua_CongNhan_VB_Id': arrChecked_Id[iThuTu],
             'strNguoiThucHien_Id': edu.system.userId,
         };
         //default
@@ -853,8 +858,10 @@ QuanLyThongTin.prototype = {
 
             contentType: true,
             complete: function () {
+                if (arrChecked_Id.length > ++iThuTu)
+                me.save_SinhSoVaoSo(arrChecked_Id, iThuTu);
                 edu.system.start_Progress("zoneprocessQuanLyThongTin", function () {
-                    edu.system.iGioiHanLuong = 10;
+                    //edu.system.iGioiHanLuong = 10;
                     me.getList_QuanLyThongTin();
                 });
             },

@@ -408,13 +408,28 @@ QuyetDinh.prototype = {
         });
         $("#btnSave_ApDung").click(function (e) {
             var strCoSo_Id = $("#dropSearch_CoSoDaoTao").val();
+            if (!edu.util.checkValue(strCoSo_Id)) {
+                edu.system.alert("Vui lòng chọn cơ sở công nhận điểm trước khi điền?");
+                return;
+            }
             var arrChecked_Id = edu.util.getArrCheckedIds("tblHPCongNhan", "checkX");
+            if (arrChecked_Id.length == 0) {
+                edu.system.alert("Vui lòng tích chọn ô học phần cần điền (dùng ô check ở đầu bảng để chọn tất cả, hoặc ô check trên tiêu đề từng cột học phần)?");
+                return;
+            }
+            var iDaDien = 0, iBoQua = 0;
             arrChecked_Id.forEach(strId => {
-                var strTemp = $("#dropCoSo" + strId).val();
+                var $drop = $("#dropCoSo" + strId);
+                if (!$drop.length) return;
+                var strTemp = $drop.val();
                 if (!strTemp) {
-                    $("#dropCoSo" + strId).val(strCoSo_Id).trigger("change");
+                    $drop.val(strCoSo_Id).trigger("change");
+                    iDaDien++;
+                } else {
+                    iBoQua++;
                 }
             })
+            edu.system.alert("Đã điền " + iDaDien + " ô." + (iBoQua > 0 ? " Bỏ qua " + iBoQua + " ô đã có cơ sở." : ""));
         });
 
         $("#btnAddKyHieuLuc").click(function () {
@@ -2087,12 +2102,18 @@ QuyetDinh.prototype = {
 
         var jsonForm = {
             strTable_Id: "tblHPCongNhan",
-            
+
             aaData: data,
             colPos: {
-                center: [0],
+                center: [0, 1],
             },
             aoColumns: [
+                {
+                    // Check all theo hàng (SV) - để ngay sau Stt, khớp với th chkSystemSelectAll ở đầu thead
+                    "mRender": function (nRow, aData) {
+                        return '<input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + aData.ID + '"/>';
+                    }
+                },
                 {
                     "mDataProp": "QLSV_NGUOIHOC_MASO"
                 },
@@ -2128,11 +2149,6 @@ QuyetDinh.prototype = {
                 }
             });
         }
-        jsonForm.aoColumns.push({
-            "mRender": function (nRow, aData) {
-                return '<input type="checkbox" class="chkSelectAll" id="chkSelectAll_' + aData.ID + '"/>';
-            }
-        });
         edu.system.loadToTable_data(jsonForm);
         data.forEach(e => {
             dtView.forEach(ele => {

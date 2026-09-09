@@ -416,6 +416,10 @@
                         <thead>
                             <tr>
                                 <th class="td-fixed td-center" rowspan="2">Stt</th>
+                                <!-- Check all toàn bảng: đưa lên đầu để không phải cuộn ngang qua N cột học phần -->
+                                <th class="td-fixed td-center" rowspan="2"><input type="checkbox" id=""
+                                        class="chkSystemSelectAll" />
+                                </th>
                                 <th class="td-center" rowspan="2">Mã số</th>
                                 <th class="td-center" rowspan="2">Họ đệm</th>
                                 <th class="td-center" rowspan="2">Tên</th>
@@ -425,9 +429,6 @@
                                 <th class="td-center" rowspan="2">Hệ</th>
                                 <th class="td-center" rowspan="2">Khoa quản lý</th>
                                 <th class="td-center" id="lblHPCongNhan">Danh sách học phần công nhận điểm</th>
-                                <th class="td-center" rowspan="2"><input type="checkbox" id=""
-                                        class="chkSystemSelectAll" />
-                                </th>
                             </tr>
                             <tr></tr>
                         </thead>
@@ -757,5 +758,46 @@
     .modal .select2-results__options {
         max-height: 220px !important;
         overflow-y: auto !important;
+    }
+
+    /* Bảng công nhận điểm có N cột học phần -> cho cuộn ngang và ghim 2 cột đầu
+       (Stt + ô check all) để luôn tích chọn được, không phải cuộn về đầu bảng. */
+    #zoneViewHocPhan .aps-table-select {
+        display: block;
+        overflow-x: auto;
+    }
+
+    #zoneViewHocPhan #tblHPCongNhan thead tr:first-child th:nth-child(1),
+    #zoneViewHocPhan #tblHPCongNhan tbody td:nth-child(1) {
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        min-width: 46px;
+        width: 46px;
+    }
+
+    #zoneViewHocPhan #tblHPCongNhan thead tr:first-child th:nth-child(2),
+    #zoneViewHocPhan #tblHPCongNhan tbody td:nth-child(2) {
+        position: sticky;
+        left: 46px;
+        background-color: #fff;
+        min-width: 44px;
+        width: 44px;
+    }
+
+    #zoneViewHocPhan #tblHPCongNhan tbody td:nth-child(1),
+    #zoneViewHocPhan #tblHPCongNhan tbody td:nth-child(2) {
+        z-index: 2;
+    }
+
+    #zoneViewHocPhan #tblHPCongNhan thead tr:first-child th:nth-child(1),
+    #zoneViewHocPhan #tblHPCongNhan thead tr:first-child th:nth-child(2) {
+        z-index: 3;
+    }
+
+    /* Ô check all trên tiêu đề từng cột học phần - tách khỏi tên học phần cho dễ bấm */
+    #zoneViewHocPhan #tblHPCongNhan thead .chkSelectAll {
+        display: block;
+        margin: 4px auto 0;
     }
 </style>

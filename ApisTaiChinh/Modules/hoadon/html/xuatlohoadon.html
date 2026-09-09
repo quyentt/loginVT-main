@@ -358,6 +358,31 @@
                             <!-- Danh sách khoản thu -->
                             <div class="tab-pane" id="tab_khoanthu_chuaxuat">
                                 <div class="row row-tab row-align">
+                                    <!-- Tiện ích: rà soát bản ghi thiếu thông tin trước khi xuất hóa đơn.
+                                         Quét TOÀN BỘ dữ liệu theo bộ lọc hiện tại (không chỉ trang đang xem). -->
+                                    <div id="zoneCheckThieu_IHD" class="d-flex align-items-center flex-wrap mb-10"
+                                         style="gap:10px; padding:10px 12px; background:#fff8e6; border:1px solid #ffe0a3; border-radius:6px;">
+                                        <span style="font-weight:600; color:#8a5a00;">
+                                            <i class="fa-light fa-triangle-exclamation"></i> Rà soát thiếu thông tin:
+                                        </span>
+                                        <label class="mb-0" style="font-weight:normal; cursor:pointer;">
+                                            <input type="checkbox" class="chkThieu_Col" value="CCCD" checked> CCCD</label>
+                                        <label class="mb-0" style="font-weight:normal; cursor:pointer;">
+                                            <input type="checkbox" class="chkThieu_Col" value="DIACHICOQUANCONGTAC" checked> Địa chỉ</label>
+                                        <label class="mb-0" style="font-weight:normal; cursor:pointer;">
+                                            <input type="checkbox" class="chkThieu_Col" value="NOIDUNG"> Nội dung</label>
+                                        <label class="mb-0" style="font-weight:normal; cursor:pointer;">
+                                            <input type="checkbox" class="chkThieu_Col" value="SOTIEN"> Số tiền</label>
+                                        <label class="mb-0" style="font-weight:normal; cursor:pointer;">
+                                            <input type="checkbox" class="chkThieu_Col" value="LOP"> Lớp</label>
+                                        <a id="btnCheckThieu_IHD" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-search"></i> Kiểm tra</a>
+                                        <a id="btnCheckThieu_Export" class="btn btn-success btn-sm d-none">
+                                            <i class="fa fa-file-excel-o"></i> Xuất Excel</a>
+                                        <a id="btnCheckThieu_Clear" class="btn btn-default btn-sm d-none">
+                                            <i class="fa fa-times-circle"></i> Xem lại tất cả</a>
+                                        <span id="lblCheckThieu_Info" class="ml-10" style="font-size:13px;"></span>
+                                    </div>
                                     <div class="zone-content-table scroll-table-x">
                                         <table id="tbldata_KhoanThu_ChuaXuat_IHD" class="table table-hover  table-bordered table-noborder">
                                             <thead>
@@ -365,6 +390,7 @@
                                                     <th class="td-fixed">Stt</th>
                                                     <th class="td-left"><span class="lang" key="">Mã số</span></th>
                                                     <th class="td-left"><span class="lang" key="">Họ tên</span></th>
+                                                    <th class="td-left"><span class="lang" key="">CCCD</span></th>
                                                     <th class="td-right"><span class="lang" key="">Số tiền</span>
                                                     </th>
                                                     <th class="td-left"><span class="lang" key="">Nội dung</span>

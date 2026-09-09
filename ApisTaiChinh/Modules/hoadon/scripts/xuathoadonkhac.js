@@ -629,7 +629,11 @@ HoaDonKhac.prototype = {
         me["dtNutHDDT"] = data;
         var row = '';
         for (var i = 0; i < data.length; i++) {
-            row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            //OLD: khối dọc 85px, icon fa-4x -> chữ đè lên icon, cỡ lệch nhau.
+            //row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '" style="width:85px; text-align:center; background-color: #fff; border-bottom: 1px solid #f1f1f1"><a title="' + data[i].TEN + '" class="btn" ><i style="' + data[i].THONGTIN3 + '" class="' + data[i].THONGTIN1 + ' fa-4x"></i></a><a class="color-active bold lbsymbolHD">' + data[i].TEN + '</a></div>';
+            row += '<div class="btnXuat_HDDT" id="' + data[i].ID + '" title="' + data[i].MA + '" name="' + data[i].THONGTIN2 + '">'
+                + '<a title="' + data[i].TEN + '" class="btn"><i class="' + data[i].THONGTIN1 + '"></i></a>'
+                + '<a class="lbsymbolHD">' + data[i].TEN + '</a></div>';
         }
         me.strHDDT = row;
     },
@@ -798,8 +802,8 @@ HoaDonKhac.prototype = {
         if (edu.util.checkValue(strSoDienThoai)) strHienThi += " - " + strSoDienThoai;
         $("#txtTen_Ma_NS_SDT").html(strHienThi);
         //
-        var strTrangThai_Ten = edu.util.checkEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
-        var strTrangThai_Ma = data.TRANGTHAINGUOIHOC_N1_MA;
+        var strTrangThai_Ten = edu.util.checkEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
+        var strTrangThai_Ma = data.QLSV_TRANGTHAINGUOIHOC_MA;
         var strTrangThaiHienThi = '<span id="txtTinhTrang" class="trangthaiHS label label-success"><i class="fa fa-graduation-cap"></i> ' + strTrangThai_Ten + '</span>';
         switch (strTrangThai_Ma) {
             case "CHUYENTRUONGDI":
@@ -2102,22 +2106,25 @@ HoaDonKhac.prototype = {
         $(".btnXuat_HDDT").remove();
     },
     changeWidthPrint: function () {
-        //Thay đổi vùng in
-        var lMauInPhieuThu = document.getElementById("MauInHoaDon").offsetWidth;
-        console.log(lMauInPhieuThu);
-        if (lMauInPhieuThu > 700) lMauInPhieuThu += 240;
-        else {
-            lMauInPhieuThu = 1250;
-        }
-        var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
-        if (lMainPrint > lMauInPhieuThu) {
-            document.getElementById('zoneThongTinHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
-            document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
-        }
-        else {
-            document.getElementById('zoneThongTinHoaDon').style.paddingLeft = "20px";
-            document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
-        }
+        //Layout do CSS lo: phôi in canh giữa (.aps-hd-phoi) + action bar cố định đáy (.aps-hd-actionbar).
+        //OLD: tự tính paddingLeft cho #zoneThongTinHoaDon và ghi đè .style của #zoneActionHoaDon
+        //     (float:left / position:fixed) -> đè lên CSS mới làm các nút văng lung tung.
+        //var lMauInPhieuThu = document.getElementById("MauInHoaDon").offsetWidth;
+        //console.log(lMauInPhieuThu);
+        //if (lMauInPhieuThu > 700) lMauInPhieuThu += 240;
+        //else {
+        //    lMauInPhieuThu = 1250;
+        //}
+        //var lMainPrint = document.getElementById("main-content-wrapper").offsetWidth;
+        //if (lMainPrint > lMauInPhieuThu) {
+        //    document.getElementById('zoneThongTinHoaDon').style.paddingLeft = (lMainPrint - lMauInPhieuThu) / 2 + "px";
+        //    document.getElementById('zoneActionHoaDon').style = "float:left; margin-left: 3px";
+        //}
+        //else {
+        //    document.getElementById('zoneThongTinHoaDon').style.paddingLeft = "20px";
+        //    document.getElementById('zoneActionHoaDon').style = "position: fixed; right: 10px !important";
+        //}
+        if (!document.getElementById("MauInHoaDon")) return;
         edu.extend.genChonLien("MauInHoaDon", "zoneLienHoaDon");
     },
     countCheckTable: function (strTable_Id) {

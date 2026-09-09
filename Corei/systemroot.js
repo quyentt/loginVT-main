@@ -928,6 +928,7 @@ systemroot.prototype = {
                 // user can override it through ajaxSetup method
                 type: type || "GET",
                 dataType: "html",
+                cache: false, // (2026-08-28) tránh browser cache HTML module cũ — mọi lần deploy đều load bản mới nhất
                 data: params
             }).done(function (responseText) {
                 me["urlPageLength"] = responseText.length;

@@ -123,6 +123,20 @@
         font-weight: 900 !important;
         font-family: 'Font Awesome 6 Free', 'Font Awesome 5 Free', 'FontAwesome' !important;
     }
+
+    /* FIX 2026-09-04: nut Dong y/Dong trong modal confirm (systemroot.js) bi lech icon-text
+       do khong co flex align. Scoped rieng cho trang don lop (chi ton tai khi trang nay load),
+       khong dung tren shared Corei/systemroot.js. */
+    #myModalAlert .modal-footer .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+    #myModalAlert .modal-footer .btn i {
+        margin: 0;
+        line-height: 1;
+    }
 </style>
 <section class="content aps-dangkyhoc">
     <div class="row aps-donlop">
@@ -278,10 +292,15 @@
                                 <span class="badge color-blue fz16" style="padding-left: 0 !important;">Thông tin lớp
                                     học phần cần dồn</span>
                             </p>
+                            <!-- FIX 2026-09-04: trung id voi nut Xoa duoi bang (dong ~307) khien
+                            jQuery $("#btnDeleteLopHocPhan") chi bind vao nut d-none nay, nut that
+                            khong bat su kien. Comment lai thay vi xoa han theo quy uoc an UI. -->
+                            <!--
                             <div class="box-tools pull-right d-none">
                                 <a class="btn btn-soft-danger" id="btnDeleteLopHocPhan" href="#">
                                     <i class="fa fa-trash"></i>Xóa</a>
                             </div>
+                            -->
                         </div>
                         <div class="row aps-form-tabel">
                             <table id="tblSinhVien"

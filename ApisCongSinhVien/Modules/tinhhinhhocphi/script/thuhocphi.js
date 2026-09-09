@@ -123,8 +123,8 @@ TinhHinhHocPhi.prototype = {
         $("#lblSDT").html(strSoDienThoai);
         
         //[2]. TinhTrang
-        var strTrangThai_Ten = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_TEN);
-        var strTrangThai_Ma = edu.util.returnEmpty(data.TRANGTHAINGUOIHOC_N1_MA);
+        var strTrangThai_Ten = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_TEN);
+        var strTrangThai_Ma = edu.util.returnEmpty(data.QLSV_TRANGTHAINGUOIHOC_MA);
         var colorLable = '';
 
         switch (strTrangThai_Ma) {
