@@ -415,8 +415,7 @@
       html body.skin-blue .simple-pagination ul,
       html body.skin-blue .light-theme,
       html body.skin-blue .light-theme ul,
-      html body.skin-blue .compact-theme,
-      html body.skin-blue .compact-theme ul {
+      html body.skin-blue .compact-theme {
         display: flex !important;
         flex-wrap: nowrap !important;
         white-space: nowrap !important;
@@ -426,7 +425,16 @@
         overflow-x: auto !important;
         max-width: 100% !important;
       }
-
+      html body.skin-blue .compact-theme ul {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        white-space: nowrap !important;
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+      }
       html body.skin-blue .simple-pagination li,
       html body.skin-blue .light-theme li,
       html body.skin-blue .compact-theme li {
@@ -1864,10 +1872,10 @@
         };
         // Style cho submenu (không border-left, tương phản cao hơn)
         var SUB_ACTIVE = {
-          'background': 'rgba(248, 132, 61, 0.18)',
+          'background': 'transparent',
           'background-image': 'none',
           'color': '#f8843d',
-          'font-weight': '700'
+          'font-weight': '400'
         };
         var SUB_DEFAULT = {
           'background': 'transparent',
