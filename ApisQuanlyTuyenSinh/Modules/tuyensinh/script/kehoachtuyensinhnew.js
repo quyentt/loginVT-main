@@ -3761,21 +3761,39 @@ KeHoachTuyenSinhNew.prototype = {
             }
         });
 
-        // Chụp Nơi sinh / Hộ khẩu trước khi gửi — resetKhai_HoSo() ở success sẽ xoá trắng form,
-        // mà save_PersonAddress chạy async nên lúc callback về không còn gì để đọc.
-        var addrBlocks = me._collectAddrBlocks();
+        // Chụp TOÀN BỘ form trước khi gửi. resetKhai_HoSo() ở success xoá trắng form ngay,
+        // trong khi các hàm lưu phụ chạy async → lúc callback về không còn gì để đọc.
+        var snap = {
+            addr: me._collectAddrBlocks(),
+            invoice: me._collectInvoice(),
+            bank: me._collectBank(),
+            profile: me._collectProfile(),
+            family: me._collectFamily(),
+            iden: me._collectIden(),
+            nguon: {
+                doiTacId: g('ddlKQ_NguonKhaiThac'),
+                ghiChu: g('txtKQ_NguonKhaiThac_GhiChu'),
+                nguyenVong: g('ddlKQ_NguyenVongDauRa')
+            },
+            cccd: g('txtKQ_SoCCCD'),
+            hoTen: hoTen
+        };
 
         edu.system.makeRequest({
             success: function (data) {
                 if (data && data.Success) {
-                    // Tab 7 — ghi nhận nguồn khai thác SAU CÙNG, cần Core_Person_Id do
-                    // Them_HoSo_TS trả ra (out param ParamCorePerson_Id_Out).
-                    // Gọi trước resetKhai_HoSo vì reset sẽ xoá giá trị dropdown.
+                    // ⚠ Controller Them_HoSo_TS KHÔNG gán 3 out param vào response
+                    // (không có this.response.Id = strCorePerson_Id_Out) → FE luôn nhận Id null.
+                    // Thử đọc trước, không có thì tra ngược từ danh sách theo CCCD.
                     var newPersonId = me._pickCorePersonIdFromResp(data);
-                    me.save_HoSoDoiTacTS(newPersonId);
-                    // Nơi sinh / Hộ khẩu: Them_HoSo_TS không ghi ra PERSON_ADDRESS
-                    me.save_PersonAddress(newPersonId, addrBlocks);
-                    edu.system.alert("Đã lưu hồ sơ thành công" + me._addrWarnText(addrBlocks), "s");
+                    if (newPersonId) {
+                        me._saveKhai_PhuThuoc(newPersonId, snap);
+                    } else {
+                        me._findNewPersonId(snap.cccd, snap.hoTen, function (pid) {
+                            me._saveKhai_PhuThuoc(pid, snap);
+                        });
+                    }
+                    edu.system.alert("Đã lưu hồ sơ thành công" + me._addrWarnText(snap.addr), "s");
                     me.resetKhai_HoSo();
                 } else {
                     edu.system.alert("Them_HoSo_TS: " + ((data && data.Message) || 'Lỗi không xác định'), "w");
@@ -5066,6 +5084,9 @@ KeHoachTuyenSinhNew.prototype = {
     _loadPersonInvoice: function (personId) {
         var me = main_doc.KeHoachTuyenSinhNew;
         me._currentInvoiceId = '';
+        // Ghi nhớ id này thuộc về AI. Không có nó thì mở hồ sơ A (có hóa đơn) rồi sang
+        // hồ sơ B là _currentInvoiceId còn của A → save gọi Sua_ lên bản ghi của A.
+        me._currentInvoicePersonId = personId || '';
         if (!edu.util.checkValue(personId)) return;
         edu.system.makeRequest({
             success: function (data) {
@@ -5105,18 +5126,29 @@ KeHoachTuyenSinhNew.prototype = {
     -- Lưu thông tin hóa đơn. Đã có bản ghi → Sua_, chưa có → Them_.
     -- Không nhập gì và cũng chưa có bản ghi → bỏ qua, không tạo dòng rỗng.
     -------------------------------------------*/
-    save_PersonInvoice: function (personId) {
+    _collectInvoice: function () {
+        var g = function (id) { return ((edu.system.getValById(id) || '') + '').trim(); };
+        return {
+            tenDonVi: g('txtKQ_HD_TenDonVi'), nguoiMua: g('txtKQ_HD_NguoiMua'),
+            diaChi: g('txtKQ_HD_DiaChi'), mst: g('txtKQ_HD_MST'),
+            maQHNS: g('txtKQ_HD_MaQHNS'), email: g('txtKQ_HD_Email'),
+            sdt: g('txtKQ_HD_SDT'), doiTuong: g('ddlKQ_HD_DoiTuong')
+        };
+    },
+
+    /*------------------------------------------
+    -- snap: ảnh chụp form. Luồng Thêm mới bắt buộc truyền vào, vì lúc callback về
+    -- thì resetKhai_HoSo() đã xoá trắng form (xem saveKhai_HoSo).
+    -------------------------------------------*/
+    save_PersonInvoice: function (personId, snap) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var g = function (id) { return (edu.system.getValById(id) || '') + ''; };
-        var tenDonVi = g('txtKQ_HD_TenDonVi').trim();
-        var nguoiMua = g('txtKQ_HD_NguoiMua').trim();
-        var diaChi = g('txtKQ_HD_DiaChi').trim();
-        var mst = g('txtKQ_HD_MST').trim();
-        var maQHNS = g('txtKQ_HD_MaQHNS').trim();
-        var email = g('txtKQ_HD_Email').trim();
-        var sdt = g('txtKQ_HD_SDT').trim();
-        var doiTuong = g('ddlKQ_HD_DoiTuong');
-        var invoiceId = me._currentInvoiceId || '';
+        var s = snap || me._collectInvoice();
+        var tenDonVi = s.tenDonVi, nguoiMua = s.nguoiMua, diaChi = s.diaChi;
+        var mst = s.mst, maQHNS = s.maQHNS, email = s.email, sdt = s.sdt;
+        var doiTuong = s.doiTuong;
+        // Chỉ dùng lại invoiceId khi nó ĐÚNG của người đang lưu. Khác người → coi như
+        // chưa có, đi đường Them_. Đây là chỗ đã làm hồ sơ khai mới gọi nhầm Sua_.
+        var invoiceId = (me._currentInvoicePersonId === personId) ? (me._currentInvoiceId || '') : '';
         if (!(tenDonVi || nguoiMua || diaChi || mst || maQHNS || email || sdt || doiTuong) && !invoiceId) return;
         if (!edu.util.checkValue(personId)) {
             console.warn('[HoaDon] thiếu Person_Id → không lưu được thông tin hóa đơn');
@@ -5299,6 +5331,9 @@ KeHoachTuyenSinhNew.prototype = {
 
     _loadHoSoDoiTacTS: function (corePersonId) {
         var me = main_doc.KeHoachTuyenSinhNew;
+        // Gắn bản ghi đang nhớ vào đúng chủ của nó — xem chú thích ở _loadPersonInvoice.
+        // Ở đây hậu quả nặng hơn: nhớ nhầm là XOÁ bản ghi của người khác.
+        me._currentDoiTacPersonId = corePersonId || '';
         if (!edu.util.checkValue(corePersonId)) return;
         if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) return;
         var obj_list = {
@@ -5348,13 +5383,18 @@ KeHoachTuyenSinhNew.prototype = {
     --               khi Sửa lấy Core_Person_Id của hồ sơ đang mở.
     -- Không chọn nguồn → bỏ qua, không gọi API.
     -------------------------------------------*/
-    save_HoSoDoiTacTS: function (corePersonId) {
+    save_HoSoDoiTacTS: function (corePersonId, snap) {
         var me = main_doc.KeHoachTuyenSinhNew;
-        var strDoiTac_Id = edu.system.getValById('ddlKQ_NguonKhaiThac') || '';
+        var strDoiTac_Id = snap ? (snap.doiTacId || '')
+            : (edu.system.getValById('ddlKQ_NguonKhaiThac') || '');
+        // Bản ghi đang nhớ chỉ dùng được khi nó thuộc đúng người đang lưu
+        var cuaNguoiNay = (me._currentDoiTacPersonId === corePersonId);
         if (!edu.util.checkValue(strDoiTac_Id)) {
             // Bỏ chọn nguồn khai thác → phải GỠ bản ghi cũ. Trước đây hàm return thẳng
             // ở đây nên bấm Cập nhật xong nguồn cũ vẫn còn nguyên.
-            if (edu.util.checkValue(me._currentDoiTacRowId)) me._xoaDoiTacTS(me._currentDoiTacRowId);
+            if (cuaNguoiNay && edu.util.checkValue(me._currentDoiTacRowId)) {
+                me._xoaDoiTacTS(me._currentDoiTacRowId);
+            }
             return;
         }
         if (!edu.util.checkValue(corePersonId)) {
@@ -5363,8 +5403,9 @@ KeHoachTuyenSinhNew.prototype = {
         }
         // PKG_CORE_TS_HOSO không có Sua_TS_HoSo_DoiTacTS → đổi nguồn phải Thêm bản mới
         // rồi Xóa bản cũ. Không đổi gì thì thôi, tránh mỗi lần bấm Cập nhật lại đẻ 1 dòng.
-        var rowCu = me._currentDoiTacRowId || '';
-        var ghiChuMoi = edu.system.getValById('txtKQ_NguonKhaiThac_GhiChu') || '';
+        var rowCu = cuaNguoiNay ? (me._currentDoiTacRowId || '') : '';
+        var ghiChuMoi = snap ? (snap.ghiChu || '')
+            : (edu.system.getValById('txtKQ_NguonKhaiThac_GhiChu') || '');
         if (rowCu && strDoiTac_Id === me._currentDoiTacPartnerId
             && ghiChuMoi === (me._currentDoiTacGhiChu || '')) return;
         var obj_save = {
@@ -5375,7 +5416,8 @@ KeHoachTuyenSinhNew.prototype = {
             // 3 tham số context giống Them_HoSo_TS
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
-            'strNguyenVong_DauRa_Id': edu.system.getValById('ddlKQ_NguyenVongDauRa') || '',
+            'strNguyenVong_DauRa_Id': snap ? (snap.nguyenVong || '')
+                : (edu.system.getValById('ddlKQ_NguyenVongDauRa') || ''),
             'strCore_Person_Id': corePersonId,
             'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
             // Ngày ghi nhận: gửi ngày hiện tại dd/MM/yyyy thay vì rỗng — proc có thể
@@ -5389,7 +5431,7 @@ KeHoachTuyenSinhNew.prototype = {
             'dIs_Current': 1,
             'strNguon_Ghi_Nhan_Code': '',
             'strNguoi_Ghi_Nhan_Id': edu.system.userId,
-            'strGhiChu': edu.system.getValById('txtKQ_NguonKhaiThac_GhiChu') || '',
+            'strGhiChu': ghiChuMoi,
             'strNguoiThucHien_Id': edu.system.userId
         };
         edu.system.makeRequest({
@@ -5418,6 +5460,85 @@ KeHoachTuyenSinhNew.prototype = {
     -- BE trả qua out param ParamCorePerson_Id_Out; tuỳ cách C# map có thể nằm ở
     -- Data / Id / Message → thử lần lượt các key thường gặp.
     -------------------------------------------*/
+    /*------------------------------------------
+    -- Chạy các hàm lưu phụ cho hồ sơ VỪA KHAI MỚI.
+    -- Trước đây luồng Thêm chỉ gọi nguồn khai thác + địa chỉ, còn hóa đơn / ngân hàng /
+    -- dân tộc / gia đình / CCCD thì phó mặc cho Them_HoSo_TS — mà proc đó không ghi
+    -- (đúng hiện tượng "nhập hóa đơn lúc khai mới, mở ra không thấy").
+    -------------------------------------------*/
+    _saveKhai_PhuThuoc: function (personId, snap) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(personId) || !snap) return;
+        // Hồ sơ mới → chắc chắn chưa có bản ghi hóa đơn/nguồn nào của người này.
+        // Gán luôn chủ sở hữu để guard "đúng người" ở save_* hiểu là đã biết trạng thái.
+        me._currentInvoiceId = '';
+        me._currentInvoicePersonId = personId;
+        me._currentDoiTacRowId = '';
+        me._currentDoiTacPersonId = personId;
+        me._currentDoiTacPartnerId = '';
+        me._currentDoiTacGhiChu = '';
+        me.save_PersonInvoice(personId, snap.invoice);
+        me.save_PersonBank(personId, snap.bank);
+        me.save_PersonProfile(personId, snap.profile);
+        me.save_PersonFamily(personId, snap.family);
+        me.save_PersonIden(personId, snap.iden);
+        me.save_PersonAddress(personId, snap.addr);
+        me.save_HoSoDoiTacTS(personId, snap.nguon);
+    },
+
+    /*------------------------------------------
+    -- Tra Core_Person_Id của hồ sơ vừa thêm. Cần vì controller Them_HoSo_TS bỏ rơi
+    -- out param strCorePerson_Id_Out (so sánh: Them_Person_Profile có this.response.Id).
+    -- Cách tra: nạp lại danh sách hồ sơ của KH + Đợt vừa khai rồi khớp theo CCCD.
+    -------------------------------------------*/
+    _findNewPersonId: function (cccd, hoTen, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var xong = function (id) { if (typeof cb === 'function') cb(id || ''); };
+        if (!edu.util.checkValue(cccd) && !edu.util.checkValue(hoTen)) { xong(''); return; }
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                if (rows && rows.length === undefined) rows = [rows];
+                var chuan = function (s) { return ((s || '') + '').trim().toLowerCase(); };
+                var hit = null;
+                if (edu.util.checkValue(cccd)) {
+                    hit = (rows || []).filter(function (r) {
+                        return chuan(me._pickLoose(r, ['PERSONIDEN_SOCCCD', 'SOCCCD', 'CCCD'])) === chuan(cccd);
+                    })[0];
+                }
+                // CCCD trùng là chắc chắn; khớp theo họ tên chỉ dùng khi không có CCCD
+                if (!hit && edu.util.checkValue(hoTen)) {
+                    hit = (rows || []).filter(function (r) {
+                        return chuan(me._pickLoose(r, ['COREPERSON_HOTEN', 'HOTEN'])) === chuan(hoTen);
+                    })[0];
+                }
+                xong(hit ? me._pickLoose(hit, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID']) : '');
+            },
+            error: function () { xong(''); },
+            type: 'POST',
+            contentType: true,
+            action: 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
+            data: {
+                'action': 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
+                'func': 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS',
+                'iM': edu.system.iM,
+                'strTuKhoa': edu.util.checkValue(cccd) ? cccd : (hoTen || ''),
+                'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
+                'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
+                'strHoSo_KH_Dot_PT_Id': '',
+                'strNguyenVong_DauRa_Id': '',
+                'strHoSo_KetQuaCode': '',
+                'strHoSo_TuNgay': '',
+                'strHoSo_DenNgay': '',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.strVaiTro_Id || '',
+                'strChucNangHeThong_Id': edu.system.strChucNang_Id || '',
+                'strHanhDong_Code': 'XEM'
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
     _pickCorePersonIdFromResp: function (data) {
         if (!data) return '';
         var tryVal = function (v) {
