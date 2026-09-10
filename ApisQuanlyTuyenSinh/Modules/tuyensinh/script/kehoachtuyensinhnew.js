@@ -2328,14 +2328,74 @@ KeHoachTuyenSinhNew.prototype = {
         try {
             var C = (window.constant && constant.setting && constant.setting.CATOR) ? constant.setting.CATOR : {};
             var NS = C.NS || {};
-            if (!NS.GITI) return;
-            edu.system.loadToCombo_DanhMucDuLieu(NS.GITI, "ddlKQ_GioiTinh", "", function () {
-                // DM đã sẵn sàng → nếu list đang hiển thị và có data thì re-render để lookup TEN
+            // Re-render sau khi mỗi DM nạp xong để cột lookup theo ID hiện ra tên
+            var reRender = function () {
                 if (!$('#kqdk_list').hasClass('d-none') && me.dtKQDK_HoSo && me.dtKQDK_HoSo.length) {
                     me.renderKQDK_Table(me.dtKQDK_HoSo);
                 }
-            });
+            };
+            if (NS.GITI) edu.system.loadToCombo_DanhMucDuLieu(NS.GITI, "ddlKQ_GioiTinh", "", reRender);
+            // Dân tộc / Tôn giáo: view LayDS_HoSo_TS không trả về, phải lấy ID từ PERSON_PROFILE
+            // (_ensureProfileMapForList) rồi tra tên qua 2 DM này.
+            if (NS.DATO) edu.system.loadToCombo_DanhMucDuLieu(NS.DATO, "ddlKQ_DanToc", "", reRender);
+            if (NS.TOGI) edu.system.loadToCombo_DanhMucDuLieu(NS.TOGI, "ddlKQ_TonGiao", "", reRender);
         } catch (ex) { }
+    },
+
+    /*------------------------------------------
+    -- Nạp PERSON_PROFILE cho toàn bộ hồ sơ đang hiển thị → map PERSON_ID → profile.
+    -- Dùng PKG_CORE_NGUOIHOC_01.LayDSPerson_Profile (nhận strPerson_Ids nhiều giá trị)
+    -- nên chỉ tốn 1 request cho cả trang thay vì gọi lẻ từng hồ sơ.
+    -- Phục vụ 2 cột Dân tộc / Tôn giáo mà view LayDS_HoSo_TS chưa trả về.
+    -------------------------------------------*/
+    _ensureProfileMapForList: function (rows, cb) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var done = function () { if (typeof cb === 'function') cb(); };
+        me._kqProfileMap = me._kqProfileMap || {};
+        var ids = [], seen = {};
+        (rows || []).forEach(function (d) {
+            var pid = me._kqPick(d, ['COREPERSON_ID', 'CorePerson_Id', 'CORE_PERSON_ID', 'Core_Person_Id', 'PERSON_ID', 'Person_Id']);
+            if (pid && !seen[pid] && !me._kqProfileMap[pid]) { seen[pid] = 1; ids.push(pid); }
+        });
+        if (!ids.length) { done(); return; }
+        // Chia lô để chuỗi strPerson_Ids không quá dài khi danh sách lớn
+        var BATCH = 300, batches = [];
+        for (var i = 0; i < ids.length; i += BATCH) batches.push(ids.slice(i, i + BATCH));
+        var remain = batches.length;
+        batches.forEach(function (b) {
+            edu.system.makeRequest({
+                success: function (data) {
+                    var arr = (data && data.Success && edu.util.checkValue(data.Data)) ? data.Data : [];
+                    arr.forEach(function (p) {
+                        var pid = p.PERSON_ID || p.Person_Id || '';
+                        if (pid) me._kqProfileMap[pid] = p;
+                    });
+                    if (--remain === 0) done();
+                },
+                error: function (er) {
+                    console.warn('[KQDK] LayDSPerson_Profile err:', er);
+                    if (--remain === 0) done();
+                },
+                type: 'POST',
+                contentType: true,
+                action: 'SV_NGUOIHOC_01_MH/DSA4BRIRJDMyLi8eETMuJygtJAPP',
+                data: {
+                    'action': 'SV_NGUOIHOC_01_MH/DSA4BRIRJDMyLi8eETMuJygtJAPP',
+                    'func': 'PKG_CORE_NGUOIHOC_01.LayDSPerson_Profile',
+                    'iM': edu.system.iM,
+                    'strPerson_Ids': b.join(','),
+                    'strEthnicity_Id': '',
+                    'strReligion_Id': '',
+                    'strPolicyObject_Id': '',
+                    'dIsActive': 1,
+                    'strNguoiThucHien_Id': edu.system.userId,
+                    'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                    'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                    'strHanhDong_Code': ''
+                },
+                fakedb: []
+            }, false, false, false, null);
+        });
     },
 
     /*------------------------------------------
@@ -2387,12 +2447,14 @@ KeHoachTuyenSinhNew.prototype = {
                     // Response KHÔNG có field NGÀNH → phải lookup 2 bước:
                     //   NGUYENVONG_DAURA_ID → đầu ra (Pr_Ts_Kh_Dau_Ra_Get_Ds) → NGANH_TS_ID/TEN
                     //   → _nganhMaLookup (DM TUYENSINH.NGANHNGHE) → MA_NGANH
-                    var remaining = 2;
+                    var remaining = 3;
                     var afterAll = function () {
                         if (--remaining === 0) me.renderKQDK_Table(rows);
                     };
                     me._ensureKQDK_DauRaMap(afterAll);
                     me._ensureNganhMaLookup(afterAll);
+                    // Dân tộc / Tôn giáo không có trong view → lấy từ PERSON_PROFILE (1 request cho cả trang)
+                    me._ensureProfileMapForList(rows, afterAll);
                 } else {
                     me.dtKQDK_HoSo = [];
                     me.renderKQDK_Table([]);
@@ -2595,8 +2657,20 @@ KeHoachTuyenSinhNew.prototype = {
             pick(d, ['COREPERSON_HOTEN', 'CorePerson_HoTen', 'HOTEN', 'FULL_NAME']),
             ngaySinh,
             giTen,
-            pick(d, ['PERSONPROFILE_DANTOC_TEN', 'DANTOC_TEN', 'PersonProfile_DanToc_Ten']),
-            pick(d, ['PERSONPROFILE_TONGIAO_TEN', 'TONGIAO_TEN', 'PersonProfile_TonGiao_Ten']),
+            // Dân tộc / Tôn giáo: view chưa trả tên → fallback lấy ID từ PERSON_PROFILE
+            // (đã nạp sẵn ở _ensureProfileMapForList) rồi tra tên qua DM đã load.
+            (function () {
+                var t = pick(d, ['PERSONPROFILE_DANTOC_TEN', 'DANTOC_TEN', 'PersonProfile_DanToc_Ten']);
+                if (t) return t;
+                var pf = (me._kqProfileMap || {})[pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID'])];
+                return pf ? me._kqLookupById(pf.ETHNICITY_ID, 'ddlKQ_DanToc') : '';
+            })(),
+            (function () {
+                var t = pick(d, ['PERSONPROFILE_TONGIAO_TEN', 'TONGIAO_TEN', 'PersonProfile_TonGiao_Ten']);
+                if (t) return t;
+                var pf = (me._kqProfileMap || {})[pick(d, ['COREPERSON_ID', 'CORE_PERSON_ID', 'PERSON_ID'])];
+                return pf ? me._kqLookupById(pf.RELIGION_ID, 'ddlKQ_TonGiao') : '';
+            })(),
             pick(d, ['PERSONPROFILE_QUOCTICH_TEN', 'QUOCTICH_TEN', 'PersonProfile_QuocTich_Ten']),
             pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
             pick(d, ['PERSONCONTACT_EMAIL', 'PersonContact_Email', 'EMAIL']),
