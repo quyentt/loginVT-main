@@ -1686,19 +1686,19 @@
                     </div>
 
                     <div class="alert alert-info fz14 mb-15" style="background:#d1ecf1;border-left:4px solid #17a2b8;padding:10px 14px;">
-                        <b>Cấu trúc file Excel/CSV:</b> sheet đầu tiên, hàng 1 là header. Tên cột đặt đúng tên param của
-                        <code>PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS</code>, ví dụ:
-                        <code>strCorePerson_HoTen</code>, <code>strCorePerson_NgaySinh</code>, <code>strCorePerson_GioiTinh_Ma</code>,
-                        <code>strPersonProfile_DanToc_Ma</code>, <code>strPersonIden_SoCCCD</code>, <code>strPersonContact_DienThoai</code>,
-                        <code>strHoSo_MaHoSo</code>, <code>strHoSo_SoBaoDanh</code>, <code>strHoSo_DoiTuong_TS_Ma</code>,
-                        <code>strHoSo_KH_Dot_PT_Ma</code>, <code>strMaNganhTrungTuyen</code>, <code>strMaCTDT</code>,
-                        <code>strDaoTao_CoSoDaoTao</code>, <code>strSoTienNopTruoc</code>, <code>strXetTuyen_TohopMon_Ma</code>,
-                        <code>dXetTuyen_DiemTongXT</code>, <code>strKetQua_QuyetDinh_Ma</code>...
-                        Từ hàng 2 trở đi mỗi hàng là 1 hồ sơ trúng tuyển.
-                        Các field <code>_Ma</code>/<code>_Mas</code> user có thể gõ <b>Mã hoặc Tên</b>, BE tự tra cứu ra ID.
-                        Kế hoạch tuyển sinh, Đợt lấy từ form (không cần trong file).
-                        <b>Cơ sở đào tạo</b>: chọn ở dropdown bên dưới làm mặc định chung cho batch — nếu cột
-                        <code>strDaoTao_CoSoDaoTao</code> trong file có value thì <b>value trong file ưu tiên</b>.
+                        <b>Cách dùng:</b> bấm <b>“Tải file mẫu”</b> → mở file, <b>giữ nguyên hàng 1 (tên cột tiếng Việt)</b>,
+                        xoá dòng ví dụ rồi điền dữ liệu từ hàng 2 trở đi, mỗi hàng là 1 hồ sơ trúng tuyển.
+                        <br>
+                        <b>Cách điền một số cột:</b>
+                        <b>Giới tính</b> gõ <b>Nam</b> / <b>Nữ</b>;
+                        <b>Ngày sinh</b> và <b>Ngày cấp CCCD</b> theo dạng <b>dd/mm/yyyy</b> (ví dụ 15/03/2007);
+                        <b>Dân tộc / Tôn giáo / Quốc tịch / Tỉnh / Xã / Phương thức / Đối tượng…</b> gõ thẳng
+                        <b>tên hoặc mã</b> (ví dụ “Kinh”, “Hà Nội”) — hệ thống tự tra cứu.
+                        Cột nào không có dữ liệu thì để trống.
+                        <br>
+                        <b>Kế hoạch tuyển sinh</b> và <b>Đợt</b> lấy theo lựa chọn ở form, không cần trong file.
+                        <b>Cơ sở đào tạo</b> chọn ở ô bên dưới làm mặc định chung cho cả lần nhập — nếu trong file có điền
+                        thì giá trị trong file được ưu tiên.
                         <!-- Ẩn note "Ngày sinh format" (2026-08-09) — gây hiểu nhầm khi format BE đổi.
                              FE đã tự handle cả 2 format + auto-fill NgayS/ThangS/NamS.
                         <br><b style="color:#b91c1c;">⚠ Ngày sinh</b>: chấp nhận cả 2 format
@@ -2772,7 +2772,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.92"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.0.96"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

@@ -676,19 +676,178 @@ KeHoachTuyenSinhNew.prototype = {
         me.initDocAPI_Bindings();
     },
 
+    /*==========================================================================
+    == BẢNG CỘT FILE IMPORT TRÚNG TUYỂN — nguồn duy nhất cho:
+    ==   1) Header file Excel mẫu (dùng NHÃN TIẾNG VIỆT, không phải tên param)
+    ==   2) Dòng dữ liệu ví dụ
+    ==   3) Map ngược nhãn → tên param khi đọc file (_normalizeImportRow)
+    == Lý do: trước đây header là tên param API (strCorePerson_HoTen,
+    == dCorePerson_NgayS, GENDER_NAM_ID...) — người nhập liệu không hiểu.
+    ==   l  = nhãn hiển thị trên file Excel
+    ==   p  = tên param của PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS
+    ==   vd = giá trị ví dụ
+    ==   an = true → vẫn nhận nếu file có cột này, nhưng KHÔNG đưa vào file mẫu
+    ==        (field kỹ thuật / FE tự suy ra) cho file gọn, dễ nhìn.
+    ==========================================================================*/
+    _IMPORT_COLS: [
+        // --- Thông tin cá nhân ---
+        { l: 'Họ và tên', p: 'strCorePerson_HoTen', vd: 'Nguyễn Văn A' },
+        { l: 'Họ', p: 'strCorePerson_Ho', vd: 'Nguyễn' },
+        { l: 'Tên đệm', p: 'strCorePerson_Dem', vd: 'Văn' },
+        { l: 'Tên', p: 'strCorePerson_Ten', vd: 'A' },
+        { l: 'Ngày sinh (dd/mm/yyyy)', p: 'strCorePerson_NgaySinh', vd: '15/03/2007' },
+        // 3 cột số dưới đây FE tự tách từ "Ngày sinh" → không bắt người dùng nhập
+        { l: 'Ngày sinh - Ngày (số)', p: 'dCorePerson_NgayS', vd: '', an: true },
+        { l: 'Ngày sinh - Tháng (số)', p: 'dCorePerson_ThangS', vd: '', an: true },
+        { l: 'Ngày sinh - Năm (số)', p: 'dCorePerson_NamS', vd: '', an: true },
+        { l: 'Giới tính (Nam/Nữ)', p: 'strCorePerson_GioiTinh_Ma', vd: 'Nam' },
+        { l: 'Dân tộc', p: 'strPersonProfile_DanToc_Ma', vd: 'Kinh' },
+        { l: 'Tôn giáo', p: 'strPersonProfile_TonGiao_Ma', vd: 'Không' },
+        { l: 'Quốc tịch', p: 'strPersonProfile_QuocTich_Ma', vd: 'Việt Nam' },
+        { l: 'Điện thoại', p: 'strPersonContact_DienThoai', vd: '0912345678' },
+        { l: 'Email', p: 'strPersonContact_Email', vd: 'nguyenvana@example.com' },
+        // --- CCCD ---
+        { l: 'Số CCCD', p: 'strPersonIden_SoCCCD', vd: '012345678901' },
+        { l: 'Ngày cấp CCCD (dd/mm/yyyy)', p: 'strPersonIden_NgayCap', vd: '01/01/2022' },
+        { l: 'Nơi cấp CCCD', p: 'strPersonIden_NoiCap', vd: 'Cục Cảnh sát QLHC về TTXH' },
+        // --- Nơi sinh / Hộ khẩu ---
+        { l: 'Nơi sinh - Tỉnh/Thành phố', p: 'strPersonAddr_NS_Tinh_Ma', vd: 'Hà Nội' },
+        { l: 'Nơi sinh - Xã/Phường', p: 'strPersonAddr_NS_Xa_Ma', vd: 'Phường Dịch Vọng' },
+        { l: 'Nơi sinh - Chi tiết', p: 'strPersonAddr_NoiSinh', vd: 'Số 12, Ngõ 45' },
+        { l: 'Hộ khẩu - Tỉnh/Thành phố', p: 'strPersonAddr_HK_Tinh_Ma', vd: 'Hà Nội' },
+        { l: 'Hộ khẩu - Xã/Phường', p: 'strPersonAddr_HK_Xa_Ma', vd: 'Phường Dịch Vọng' },
+        { l: 'Hộ khẩu - Số nhà/Thôn/Xóm', p: 'strPersonAddr_HK_SoNha', vd: 'Số 12, Ngõ 45, Thôn Đông' },
+        // --- Trường lớp 12 ---
+        { l: 'Trường lớp 12 - Tỉnh/Thành phố', p: 'strPersonEdu_Tinh_Ma', vd: 'Hà Nội' },
+        { l: 'Trường lớp 12 - Mã/Tên trường', p: 'strPersonEdu_TruongMaTen', vd: '12345 - THPT Chu Văn An' },
+        { l: 'Học lực lớp 12', p: 'strPersonEdu_HocLuc', vd: 'Giỏi' },
+        { l: 'Hạnh kiểm lớp 12', p: 'strPersonEdu_HanhKiem', vd: 'Tốt' },
+        // --- Gia đình ---
+        { l: 'Bố - Họ tên', p: 'strPersonFam_Bo_HoTen', vd: 'Nguyễn Văn B' },
+        { l: 'Bố - Năm sinh', p: 'dPersonFam_Bo_NamSinh', vd: 1975 },
+        { l: 'Bố - Nơi ở', p: 'strPersonFam_Bo_NoiO', vd: 'Hà Nội' },
+        { l: 'Bố - Điện thoại', p: 'strPersonFam_Bo_SDT', vd: '0912111111' },
+        { l: 'Mẹ - Họ tên', p: 'strPersonFam_Me_HoTen', vd: 'Trần Thị C' },
+        { l: 'Mẹ - Năm sinh', p: 'dPersonFam_Me_NamSinh', vd: 1978 },
+        { l: 'Mẹ - Nơi ở', p: 'strPersonFam_Me_NoiO', vd: 'Hà Nội' },
+        { l: 'Mẹ - Điện thoại', p: 'strPersonFam_Me_SDT', vd: '0913222222' },
+        // --- Xét tuyển ---
+        { l: 'Phương thức tuyển sinh', p: 'strHoSo_KH_Dot_PT_Ma', vd: 'Xét điểm thi THPT' },
+        { l: 'Đối tượng tuyển sinh', p: 'strHoSo_DoiTuong_TS_Ma', vd: 'Thí sinh phổ thông' },
+        { l: 'Đối tượng ưu tiên (nhiều giá trị cách nhau dấu phẩy)', p: 'strHoSo_DoiTuong_UT_Mas', vd: '' },
+        { l: 'Khu vực ưu tiên', p: 'strHoSo_KhuVuc_UT_Ma', vd: 'KV1' },
+        { l: 'Tổ hợp môn', p: 'strXetTuyen_TohopMon_Ma', vd: 'A00' },
+        { l: 'Tên tổ hợp môn', p: 'strXetTuyen_TohopMon_Ten', vd: 'Toán - Lý - Hóa' },
+        { l: 'Tổ hợp môn - Code', p: 'strXetTuyen_TohopMon_Code', vd: '', an: true },
+        { l: 'Điểm ưu tiên', p: 'dXetTuyen_DiemUuTien', vd: 1.0 },
+        { l: 'Tổng điểm môn', p: 'dXetTuyen_DiemTongMon', vd: 24.5 },
+        { l: 'Tổng điểm xét tuyển', p: 'dXetTuyen_DiemTongXT', vd: 25.5 },
+        { l: 'Điểm từng môn (Mã~Điểm~1~STT~Tên, cách nhau dấu |)', p: 'strXT_Mon_Data', vd: 'TOAN~8.0~1~1~Toan|LY~7.5~1~2~Vat ly|HOA~9.0~1~3~Hoa hoc' },
+        // --- Hồ sơ / Trúng tuyển ---
+        { l: 'Mã hồ sơ', p: 'strHoSo_MaHoSo', vd: 'TS2026001234' },
+        { l: 'Số báo danh', p: 'strHoSo_SoBaoDanh', vd: 'SBD001234' },
+        { l: 'Mã ngành trúng tuyển', p: 'strMaNganhTrungTuyen', vd: '7480201' },
+        { l: 'Mã chương trình đào tạo', p: 'strMaCTDT', vd: '' },
+        { l: 'Số quyết định trúng tuyển', p: 'strKetQua_QuyetDinh_Ma', vd: '' },
+        { l: 'Mã số sinh viên (nếu có)', p: 'strMaSo', vd: '' },
+        { l: 'Lớp dự kiến', p: 'strDaoTao_LopQuanLy_DuKien', vd: '' },
+        { l: 'Cơ sở đào tạo (để trống = lấy theo lựa chọn ở form)', p: 'strDaoTao_CoSoDaoTao', vd: '' },
+        { l: 'Số tiền nộp trước', p: 'strSoTienNopTruoc', vd: 5000000 },
+        { l: 'Mã đợt nhập học', p: 'strIntake_IntakeCode', vd: '' },
+        { l: 'Loại đợt nhập học', p: 'strIntake_IntakeTypeCode', vd: '' },
+        { l: 'Mã lô import', p: 'strHoSo_Import_Batch_Ma', vd: '', an: true },
+        // --- Xuất hóa đơn ---
+        { l: 'Hóa đơn - Đối tượng', p: 'strPersonInvoice_TypeLoai', vd: '' },
+        { l: 'Hóa đơn - Người mua', p: 'strPersonInvoice_NguoiMua', vd: 'Nguyễn Văn A' },
+        { l: 'Hóa đơn - Tên đơn vị', p: 'strPersonInvoice_TenDonVi', vd: '' },
+        { l: 'Hóa đơn - Mã số thuế', p: 'strPersonInvoice_MST', vd: '' },
+        { l: 'Hóa đơn - Mã quan hệ ngân sách', p: 'strPersonInvoice_MaQHNS', vd: '' },
+        { l: 'Hóa đơn - Điện thoại', p: 'strPersonInvoice_SDT', vd: '' },
+        { l: 'Hóa đơn - Địa chỉ', p: 'strPersonInvoice_DiaChi', vd: '' },
+        { l: 'Hóa đơn - Email', p: 'strPersonInvoice_Email', vd: '' },
+        // --- Ngân hàng ---
+        { l: 'Ngân hàng - Loại tài khoản', p: 'strPersonBank_HinhThucTT', vd: '' },
+        { l: 'Ngân hàng - Tên ngân hàng', p: 'strPersonBank_TenNganHang', vd: 'Vietcombank' },
+        { l: 'Ngân hàng - Số tài khoản', p: 'strPersonBank_SoTaiKhoan', vd: '' },
+        { l: 'Ngân hàng - Chủ tài khoản', p: 'strPersonBank_ChuTaiKhoan', vd: '' },
+        { l: 'Ngân hàng - Ghi chú', p: 'strPersonBank_GhiChu', vd: '' },
+        // --- Kỹ thuật (không đưa vào file mẫu) ---
+        { l: 'Dữ liệu mở rộng - Cá nhân (JSON)', p: 'strExtra_Person_Data', vd: '', an: true },
+        { l: 'Dữ liệu mở rộng - Hồ sơ (JSON)', p: 'strExtra_HoSo_Data', vd: '', an: true },
+        { l: 'Dữ liệu mở rộng - Nhập học (JSON)', p: 'strExtra_Intake_Data', vd: '', an: true }
+    ],
+
+    /*------------------------------------------
+    -- Chuẩn hoá tên cột: bỏ dấu cách thừa, thường hoá → so khớp không phân biệt hoa/thường.
+    -------------------------------------------*/
+    _normHeader: function (s) {
+        return String(s == null ? '' : s).trim().toLowerCase().replace(/\s+/g, ' ');
+    },
+
+    /*------------------------------------------
+    -- Bảng tra: nhãn tiếng Việt HOẶC tên param → tên param.
+    -- Nhận cả 2 để file mẫu cũ (header là tên param) vẫn import được bình thường.
+    -------------------------------------------*/
+    _getImportHeaderMap: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._importHeaderMap) return me._importHeaderMap;
+        var map = {};
+        me._IMPORT_COLS.forEach(function (c) {
+            map[me._normHeader(c.l)] = c.p;
+            map[me._normHeader(c.p)] = c.p;
+        });
+        me._importHeaderMap = map;
+        return map;
+    },
+
+    /*------------------------------------------
+    -- Đổi key của 1 dòng Excel từ nhãn tiếng Việt sang tên param API.
+    -- Cột lạ (không có trong bảng) giữ nguyên key để không mất dữ liệu.
+    -------------------------------------------*/
+    _normalizeImportRow: function (row) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var map = me._getImportHeaderMap();
+        var out = {};
+        for (var k in row) {
+            if (!Object.prototype.hasOwnProperty.call(row, k)) continue;
+            var p = map[me._normHeader(k)];
+            out[p || k] = row[k];
+        }
+        return out;
+    },
+
     /*------------------------------------------
     -- Tải file Excel mẫu cho Import trúng tuyển.
-    -- Dùng SheetJS đã load sẵn. Header khớp 100% tên param API của Them_HoSo_TS,
-    -- 1 dòng dữ liệu ví dụ để user copy format. User xóa row ví dụ + điền data thực.
+    -- Header dùng NHÃN TIẾNG VIỆT (xem _IMPORT_COLS) để người nhập liệu đọc hiểu ngay;
+    -- lúc import FE tự map ngược về tên param API.
+    -- Các cột đánh dấu an:true không xuất ra file mẫu (field kỹ thuật / FE tự suy ra).
     -------------------------------------------*/
     downloadMauImport_TrungTuyen: function () {
         if (typeof XLSX === 'undefined') {
             edu.system.alert("Thư viện Excel chưa load xong, vui lòng thử lại sau vài giây.", "w");
             return;
         }
-        // Header: khớp danh sách apiFields ở _buildImportPayload (signature PKG_CORE_TS_HOSO_IMPORT.Them_HoSo_TS).
-        // Convention: field từ file dùng _Ma/_Mas (BE tự tra cứu ID), user gõ Mã hoặc Tên đều được.
-        // Context (KH/Đợt/Cơ sở) không cho file ghi đè — chọn ở modal khi bấm Import.
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var cols = me._IMPORT_COLS.filter(function (c) { return !c.an; });
+        var headers = cols.map(function (c) { return c.l; });
+        var sampleRow = cols.map(function (c) { return c.vd === undefined ? '' : c.vd; });
+        var ws_data = [headers, sampleRow];
+        var ws = XLSX.utils.aoa_to_sheet(ws_data);
+        // Độ rộng cột theo độ dài nhãn (nhãn tiếng Việt dài hơn tên param)
+        ws['!cols'] = headers.map(function (h) {
+            return { wch: Math.max(16, Math.min(46, h.length + 4)) };
+        });
+        ws['!freeze'] = { xSplit: 0, ySplit: 1 };
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'DuLieuTrungTuyen');
+        var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+        var now = new Date();
+        var fname = 'Mau_Import_TrungTuyen_' + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate()) + '.xlsx';
+        XLSX.writeFile(wb, fname);
+    },
+
+    /* ===== Bản cũ (header = tên param API) — giữ lại phòng khi cần đối chiếu =====
+    _downloadMauImport_TrungTuyen_Old: function () {
         var headers = [
             'strCorePerson_HoTen', 'strCorePerson_Ho', 'strCorePerson_Dem', 'strCorePerson_Ten',
             'strCorePerson_NgaySinh', 'dCorePerson_NgayS', 'dCorePerson_ThangS', 'dCorePerson_NamS',
@@ -780,6 +939,7 @@ KeHoachTuyenSinhNew.prototype = {
         var fname = 'Mau_Import_TrungTuyen_' + now.getFullYear() + pad(now.getMonth() + 1) + pad(now.getDate()) + '.xlsx';
         XLSX.writeFile(wb, fname);
     },
+    ===== hết bản cũ ===== */
 
     /*------------------------------------------
     -- Reset trạng thái nội bộ modal #ket-qua-dk (Import counters, file, log).
@@ -987,7 +1147,9 @@ KeHoachTuyenSinhNew.prototype = {
                 var myIdx = nextDispatch++;
                 inFlight++;
                 var rowNo = myIdx + 2;   // hàng 1 = header
-                var row = rows[myIdx];
+                // Header file mẫu là NHÃN TIẾNG VIỆT → đổi về tên param API trước khi build payload.
+                // File cũ (header = tên param) vẫn chạy vì bảng tra nhận cả 2 dạng.
+                var row = me._normalizeImportRow(rows[myIdx]);
                 var rowCoSo = row['strDaoTao_CoSoDaoTao'];
                 var ctxCoSo = (rowCoSo && String(rowCoSo).trim()) ? String(rowCoSo).trim() : strCoSo_Default;
                 var payload = me._buildImportPayload(row, rowNo, { Dot: strDotId_Batch, CoSo: ctxCoSo });
@@ -1325,6 +1487,9 @@ KeHoachTuyenSinhNew.prototype = {
                 return;
             }
             if (!fileRows.length) { edu.system.alert("File không có dữ liệu (hàng 1 phải là header)", "w"); return; }
+            // Header file mẫu là nhãn tiếng Việt ("Số CCCD"...) → đổi về tên param để so khớp.
+            // File cũ (header = tên param) không bị ảnh hưởng.
+            fileRows = fileRows.map(function (r) { return me._normalizeImportRow(r); });
 
             // Build map hệ thống: normalized CCCD → array records (chuẩn detect trùng)
             var sysMap = {};
@@ -3556,17 +3721,12 @@ KeHoachTuyenSinhNew.prototype = {
     -- Đọc nguồn khai thác đã ghi nhận của hồ sơ → bind selected vào dropdown.
     -- Gọi khi mở form ở chế độ Sửa. Lọc theo KH + Đợt + NV đầu ra + Core_Person_Id.
     -------------------------------------------*/
-    // ⚠ CHƯA CÓ action mã hoá cho LayDS_TS_HoSo_DoiTacTS — BE chưa cung cấp (2026-09-09).
-    // Điền chuỗi action vào đây là chạy được ngay, phần còn lại đã sẵn sàng.
-    _ACTION_LayDS_HoSo_DoiTacTS: '',
+    _ACTION_LayDS_HoSo_DoiTacTS: 'SV_Core_TS_HoSo_MH/DSA4BRIeFRIeCS4SLh4FLigVICIVEgPP',
 
     _loadHoSoDoiTacTS: function (corePersonId) {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (!edu.util.checkValue(corePersonId)) return;
-        if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) {
-            console.warn('[NguonKhaiThac] chưa có action cho LayDS_TS_HoSo_DoiTacTS → bỏ qua bước bind giá trị đã lưu');
-            return;
-        }
+        if (!edu.util.checkValue(me._ACTION_LayDS_HoSo_DoiTacTS)) return;
         var obj_list = {
             'action': me._ACTION_LayDS_HoSo_DoiTacTS,
             'func': 'PKG_CORE_TS_HOSO.LayDS_TS_HoSo_DoiTacTS',
@@ -3622,13 +3782,20 @@ KeHoachTuyenSinhNew.prototype = {
             'action': 'SV_Core_TS_HoSo_MH/FSkkLB4VEh4JLhIuHgUuKBUgIhUS',
             'func': 'PKG_CORE_TS_HOSO.Them_TS_HoSo_DoiTacTS',
             'iM': edu.system.iM,
+            'strId': '',   // entity có strId (thêm mới → rỗng)
             // 3 tham số context giống Them_HoSo_TS
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
             'strNguyenVong_DauRa_Id': edu.system.getValById('ddlKQ_NguyenVongDauRa') || '',
             'strCore_Person_Id': corePersonId,
             'strTS_DoiTacTuyenSinh_Id': strDoiTac_Id,
-            'strNgay_Ghi_Nhan': '',
+            // Ngày ghi nhận: gửi ngày hiện tại dd/MM/yyyy thay vì rỗng — proc có thể
+            // TO_DATE tham số này, chuỗi rỗng dễ làm insert fail ngầm (Success=true, Id rỗng).
+            'strNgay_Ghi_Nhan': (function () {
+                var d = new Date();
+                var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+                return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear();
+            })(),
             'dIs_Primary': 1,
             'dIs_Current': 1,
             'strNguon_Ghi_Nhan_Code': '',
