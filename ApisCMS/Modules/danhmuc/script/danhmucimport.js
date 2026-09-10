@@ -425,7 +425,7 @@ DanhMucImport.prototype = {
         var node = "";
         node += '<ul>';
         for (var i = 0; i < data.length; i++) {
-            node += '<li class="btnEvent jstree-open" id="' + data[i].ID + '" title="' + data[i].MADANHMUC + '">' + edu.util.splitString(data[i].TENDANHMUC, 20) + '<b style="display: none"><p class="fa fa-edit btnEdit_Func" style="margin-left: 10px"></p><p class="fa fa-download btnDownload_Func" style="margin-left: 10px"></p><p class="fa fa-remove btnDelete_Func" style="margin-left: 10px"></p><p class="fa fa-download btnDownload_DM" style="margin-left: 10px"></p></b>';
+            node += '<li class="btnEvent jstree-open" id="' + data[i].ID + '" title="' + data[i].MADANHMUC + '">' + data[i].MADANHMUC.replace(/IMPORTWITHPROC_/g, '') + "_" + data[i].TENDANHMUC + '<b style="display: none"><p class="fa fa-download btnDownload_Func" style="margin-left: 10px"></p><p class="fa fa-remove btnDelete_Func" style="margin-left: 10px"></p><p class="fa fa-download btnDownload_DM" style="margin-left: 10px"></p></b>';
             node += '</li>';
         }
         node += '</ul>';
