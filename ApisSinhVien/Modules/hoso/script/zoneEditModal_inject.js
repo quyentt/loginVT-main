@@ -1716,3 +1716,161 @@ window._zeXemDoiTuong = function () {
 
 
 
+
+/*==============================================================================
+== BADGE MÃ SỐ + HỌ TÊN TRÊN ĐẦU MODAL  (2026-09-11)
+==
+== Yêu cầu: đầu modal Chỉnh sửa hồ sơ phải hiện Mã số + Họ tên (kèm Lớp/Ngành/
+== Khoa nếu có) — giống thanh thông tin sinh viên ở trang Thu tiền
+== (ApisTaiChinh/phieuthu: #txtTen_Ma_NS_SDT + #txtSV_Lop/Nganh/Khoa).
+==
+== _populateHeaderBadge của dexuathoso.js đã làm việc này nhưng thực tế vẫn trống.
+== Thay vì đoán chỗ nó hụt, vẽ lại badge SAU khi modal mở xong, và lấy họ tên
+== thẳng từ các ô đã điền trên form — nguồn chắc chắn có, không phụ thuộc việc
+== danh sách đặt tên cột kiểu gì. Chạy ở vài mốc thời gian để không bị luồng
+== nạp chậm ghi đè.
+==
+== Chỉ ghi khi dựng được ít nhất 1 chip, nên nếu bản gốc đã vẽ đúng thì không
+== bao giờ xoá mất nội dung đang có.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.openEditByPerson
+    && !DeXuatHoSo.prototype._zeBadgeHooked) {
+    DeXuatHoSo.prototype._zeBadgeHooked = true;
+
+    /*------------------------------------------
+    -- Lấy giá trị theo danh sách tên cột, không phân biệt hoa thường.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeLay = function (obj, keys) {
+        if (!obj) return '';
+        var tra = {};
+        for (var k in obj) {
+            if (Object.prototype.hasOwnProperty.call(obj, k)) tra[k.toUpperCase()] = obj[k];
+        }
+        for (var i = 0; i < keys.length; i++) {
+            var v = tra[keys[i].toUpperCase()];
+            if (v !== null && v !== undefined && (v + '').trim() !== '') return (v + '').trim();
+        }
+        return '';
+    };
+
+    /*------------------------------------------
+    -- Tìm chỗ đặt badge, KHÔNG có thì tự tạo.
+    -- Cần thiết vì không phải trang nào cũng dùng markup do file này dựng:
+    -- quanlytoanbo.html và hoso_taomoi.html có sẵn <div id="zoneEdit"> kiểu cũ
+    -- (chưa có <div id="zeHeaderBadge">), nên inject bỏ qua không dựng lại →
+    -- badge không có chỗ bám và hàm vẽ thoát ngay. Tự chèn vào header thì form
+    -- nào cũng hiện được.
+    -- Kèm style inline tối thiểu phòng khi trang đó không có CSS của file này.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeOBadge = function () {
+        var el = document.getElementById('zeHeaderBadge');
+        if (el) return el;
+        var header = document.querySelector('#zoneEdit .box-header .nav-content-left')
+            || document.querySelector('#zoneEdit .box-header')
+            || document.querySelector('#zoneEdit .modal-header')
+            || document.querySelector('#zoneEdit');
+        if (!header) return null;
+        el = document.createElement('div');
+        el.id = 'zeHeaderBadge';
+        // Đánh dấu là do mình tự tạo: trang đó không dùng markup của file này nên
+        // nhiều khả năng cũng không có CSS .ze-chip → lúc vẽ sẽ tự thêm style inline.
+        el.setAttribute('data-ze-tudao', '1');
+        el.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px 10px;margin-top:6px;'
+            + 'justify-content:center;width:100%;';
+        header.appendChild(el);
+        return el;
+    };
+
+    DeXuatHoSo.prototype._zeVeBadge = function (person) {
+        var dx = this;
+        var el = dx._zeOBadge();
+        if (!el) return;
+        person = person || {};
+        var a = person.aData || {};
+        var lay = function (keys) { return dx._zeLay(a, keys); };
+        var chuoi = function (v) { return ((v === null || v === undefined) ? '' : v + '').trim(); };
+
+        var ma = chuoi(person.ma) || lay(['MASO', 'MA', 'MA_NGUOI_HOC', 'MA_SV', 'STUDENT_CODE',
+            'QLSV_NGUOIHOC_MASO', 'QLSV_NGUOIHOC_MA', 'MA_HS', 'CURRENT_EMPLOYEE_CODE']);
+        // Dự phòng: luồng mở modal kiểu cũ (getDetail_HSSV) không truyền aData nhưng
+        // có điền mã số vào ô này, nên vẫn lấy ra được.
+        if (!ma) ma = chuoi($('#txt_MaSoSV').val()) || chuoi($('#txtMaSoSV').val());
+
+        var hoTen = chuoi(person.hoTen) || lay(['FULL_NAME', 'FULLNAME', 'HOTEN', 'HO_TEN',
+            'HOVATEN', 'HO_VA_TEN', 'QLSV_NGUOIHOC_HOTEN']);
+        if (!hoTen) {
+            // Nguồn chắc chắn nhất: chính các ô đã được điền trên form
+            var tuForm = chuoi($('#txtHoVaTen').val());
+            if (!tuForm) {
+                tuForm = [chuoi($('#txtHo').val()), chuoi($('#txtTenDem').val()), chuoi($('#txtTen').val())]
+                    .filter(function (x) { return x; }).join(' ');
+            }
+            hoTen = tuForm;
+        }
+        if (!hoTen) {
+            hoTen = [chuoi(person.hoDem) || lay(['HODEM', 'HO_DEM']),
+            chuoi(person.ten) || lay(['TEN', 'FIRST_NAME'])]
+                .filter(function (x) { return x; }).join(' ');
+        }
+        hoTen = hoTen.replace(/\s+/g, ' ').trim();
+
+        var lop = chuoi(person.lop) || lay(['DAOTAO_LOPQUANLY_TEN', 'LOP_TEN', 'LOP',
+            'QLSV_NGUOIHOC_LOPQUANLY_TEN', 'DAOTAO_LOPQUANLY_MA']);
+        var nganh = chuoi(person.nganh) || lay(['DAOTAO_NGANH_TEN', 'NGANH_TEN', 'NGANH',
+            'DAOTAO_NGANHDAOTAO_TEN', 'DAOTAO_NGANHNHAPHOC']);
+        var khoa = chuoi(person.khoa) || lay(['DAOTAO_KHOAQUANLY_TEN', 'KHOA_TEN', 'KHOA',
+            'DAOTAO_KHOADAOTAO_TEN', 'KHOAHOC']);
+
+        var esc = function (s) {
+            return (s + '').replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        };
+        // Trang tự tạo badge thì chưa chắc có CSS .ze-chip — thêm style inline cho chắc.
+        var styleChip = el.getAttribute('data-ze-tudao')
+            ? ' style="display:inline-flex;align-items:center;padding:3px 10px;'
+            + 'background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.28);'
+            + 'border-radius:20px;color:#fff;font-size:12.5px;font-weight:500;line-height:1.4;'
+            + 'white-space:nowrap;"'
+            : '';
+        var chip = function (nhan, gt) {
+            return '<span class="ze-chip"' + styleChip + '><b>' + nhan + '</b>' + esc(gt) + '</span>';
+        };
+        var chips = [];
+        // Họ tên đứng trước, in đậm — giống thanh bên trang Thu tiền
+        if (hoTen) chips.push(chip('Họ tên:', hoTen.toUpperCase()));
+        if (ma) chips.push(chip('Mã số:', ma));
+        if (lop) chips.push(chip('Lớp:', lop));
+        if (nganh) chips.push(chip('Ngành:', nganh));
+        if (khoa) chips.push(chip('Khoa:', khoa));
+
+        // Không dựng được gì thì để nguyên, không xoá nội dung bản gốc đã vẽ
+        if (!chips.length) return;
+        el.innerHTML = chips.join('');
+    };
+
+    var _origOpenBadge = DeXuatHoSo.prototype.openEditByPerson;
+    DeXuatHoSo.prototype.openEditByPerson = function (person) {
+        var dx = this;
+        _origOpenBadge.call(dx, person);
+        var ve = function () { try { dx._zeVeBadge(person); } catch (e) { } };
+        ve();
+        setTimeout(ve, 400);
+        setTimeout(ve, 1200);
+    };
+
+    /*------------------------------------------
+    -- Chốt thứ hai: bấm nút sửa ở danh sách thì vẽ lại badge, KHÔNG phụ thuộc
+    -- việc trang đó mở modal bằng openEditByPerson hay bằng luồng cũ
+    -- (getDetail_HSSV + slideDown). Lúc này lấy họ tên từ form và mã số từ ô
+    -- #txt_MaSoSV — đều là thứ luồng cũ có điền.
+    -- Vẽ trễ để form kịp nạp xong; hàm vẽ không dựng được chip nào thì tự bỏ qua.
+    -------------------------------------------*/
+    $(document).on('click.zebadge', '.btnEdit, .btnSelect_NguoiHoc_ThuHS', function () {
+        var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+        if (!dx || typeof dx._zeVeBadge !== 'function') return;
+        [300, 900, 1800].forEach(function (ms) {
+            setTimeout(function () { try { dx._zeVeBadge({}); } catch (e) { } }, ms);
+        });
+    });
+}
