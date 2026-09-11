@@ -1257,8 +1257,10 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
         var laGuid = function (s) { return /^[0-9A-Fa-f]{32}$/.test(((s || '') + '').trim()); };
         var opt = $dt.find('option:selected')[0];
         var ma = opt ? (((opt.getAttribute('name') || opt.getAttribute('data-ma') || '') + '')).trim() : '';
-        if (ma && !laGuid(ma)) return ma;
         var val = (($dt.val() || '') + '').trim();
+        // Bỏ qua "mã" nếu nó là GUID, hoặc trùng luôn với value — cả hai đều là dấu
+        // hiệu danh mục không khai mã riêng, khung nhét id vào cả 2 chỗ.
+        if (ma && !laGuid(ma) && ma !== val) return ma;
         var txt = opt ? (((opt.textContent || '') + '')).trim() : '';
         // value rỗng = dòng placeholder ("-- Chọn đối tượng --"), không phải lựa chọn thật
         if (val && txt && !laGuid(txt)) return txt;
