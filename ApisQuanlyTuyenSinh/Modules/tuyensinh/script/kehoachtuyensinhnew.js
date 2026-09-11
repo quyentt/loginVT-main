@@ -544,6 +544,15 @@ KeHoachTuyenSinhNew.prototype = {
         $('#tblKQDK_HoSo').on('click', '.btnSuaHoSo', function () {
             me.openSuaHoSo($(this).attr('data-id'));
         });
+        // Bấm vào dòng → mở form hồ sơ. Bỏ qua click lên nút/checkbox/link để không
+        // vừa xóa vừa mở, và bỏ qua khi user đang bôi đen để copy chữ.
+        $('#tblKQDK_HoSo').on('click', 'tbody tr', function (ev) {
+            if ($(ev.target).closest('a,button,input,label,select').length) return;
+            var sel = window.getSelection && window.getSelection();
+            if (sel && String(sel).length > 0) return;
+            var id = $(this).attr('data-id');
+            if (edu.util.checkValue(id)) me.openSuaHoSo(id);
+        });
         $('#tblKQDK_HoSo').on('click', '.btnXoaHoSo', function () {
             var id = $(this).attr('data-id');
             if (!edu.util.checkValue(id)) return;
@@ -555,11 +564,14 @@ KeHoachTuyenSinhNew.prototype = {
 
         // Click tab bar (style aps-sv-tab): toggle class active + hiện panel tương ứng
         $('#kqdkKhaiTabs').on('click', '.aps-sv-tab', function () {
-            var target = $(this).attr('data-target');
+            // data-panels: 1 tab có thể gom nhiều panel (chế độ Gộp nhóm)
+            var ds = $(this).attr('data-panels') || $(this).attr('data-target') || '';
             $('#kqdkKhaiTabs .aps-sv-tab').removeClass('active');
             $(this).addClass('active');
             $('#kqdk_khai .aps-sv-panel').removeClass('active');
-            $('#' + target).addClass('active');
+            ds.split(',').forEach(function (p) {
+                if (p) $('#' + p.trim()).addClass('active');
+            });
         });
 
         // Tabs Prev/Next dựa vào class active của .aps-sv-tab
@@ -2468,9 +2480,14 @@ KeHoachTuyenSinhNew.prototype = {
             me.renderKQDK_Table([]);
             return;
         }
+        // Ưu tiên bản FULL: view thường không trả Điện thoại / Email (và nhiều cột khác),
+        // nên bảng để trống dù hồ sơ có dữ liệu. Bản FULL lỗi hoặc rỗng thì lùi về bản thường.
+        var dungBanGon = !!arguments[0];
         var obj_save = {
-            'action': 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP',
-            'func': 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS',
+            'action': dungBanGon ? 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEgPP'
+                : 'SV_Core_TS_HoSo_MH/DSA4BRIeCS4SLh4VEh4HFA0N',
+            'func': dungBanGon ? 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS'
+                : 'PKG_CORE_TS_HOSO.LayDS_HoSo_TS_FULL',
             'iM': edu.system.iM,
             'strTuKhoa': '',
             'strNguoiThucHien_Id': edu.system.userId,
@@ -2480,26 +2497,18 @@ KeHoachTuyenSinhNew.prototype = {
             'strHoSo_KH_TS_Id': me.strKeHoachTuyenSinh_Id || '',
             'strHoSo_KH_TS_Dot_Id': me.strDot_Id_ForKQ || '',
             'strHoSo_KH_Dot_PT_Id': '',
+            'strNguyenVong_DauRa_Id': '',
             'strDaoTao_LopQuanLy_DuKien': '',
             'strHoSo_KetQuaCode': '',
             'strHoSo_TuNgay': '',
             'strHoSo_DenNgay': ''
         };
-        // === DEBUG LOG: filter params khi load list ===
-        console.log('%c[loadKQDK] REQUEST', 'color:#7c3aed;font-weight:bold', {
-            KH_TS_Id: obj_save.strHoSo_KH_TS_Id,
-            Dot_Id: obj_save.strHoSo_KH_TS_Dot_Id
-        });
 
         edu.system.makeRequest({
             success: function (data) {
-                console.log('%c[loadKQDK] RESPONSE', 'color:#059669;font-weight:bold', {
-                    success: data && data.Success,
-                    count: (data && data.Data && data.Data.length) || 0,
-                    message: data && data.Message
-                });
                 if (data && data.Success) {
                     var rows = edu.util.checkValue(data.Data) ? data.Data : [];
+                    if (!dungBanGon && !rows.length) { me.loadKQDK_List(true); return; }
                     me.dtKQDK_HoSo = rows;
                     // Response KHÔNG có field NGÀNH → phải lookup 2 bước:
                     //   NGUYENVONG_DAURA_ID → đầu ra (Pr_Ts_Kh_Dau_Ra_Get_Ds) → NGANH_TS_ID/TEN
@@ -2513,12 +2522,14 @@ KeHoachTuyenSinhNew.prototype = {
                     // Dân tộc / Tôn giáo không có trong view → lấy từ PERSON_PROFILE (1 request cho cả trang)
                     me._ensureProfileMapForList(rows, afterAll);
                 } else {
+                    if (!dungBanGon) { me.loadKQDK_List(true); return; }
                     me.dtKQDK_HoSo = [];
                     me.renderKQDK_Table([]);
                     edu.system.alert("LayDS_HoSo_TS: " + ((data && data.Message) || 'Không lấy được danh sách'), "w");
                 }
             },
             error: function (er) {
+                if (!dungBanGon) { me.loadKQDK_List(true); return; }
                 me.dtKQDK_HoSo = [];
                 me.renderKQDK_Table([]);
                 edu.system.alert("LayDS_HoSo_TS (ex): " + JSON.stringify(er), "w");
@@ -2582,6 +2593,7 @@ KeHoachTuyenSinhNew.prototype = {
         me._kqViewData = data || [];
         me._kqPageIdx = 1;
         $('#lblKQDK_Total').text(me._kqViewData.length);
+        me._kqInitTableMode();      // tự guard; lần đầu sẽ dựng thead theo chế độ đã nhớ
         me._kqRenderPage();
     },
 
@@ -2624,6 +2636,73 @@ KeHoachTuyenSinhNew.prototype = {
     -- STT là chỉ số toàn cục (offset + i + 1) để nhất quán khi lật trang.
     -- Escape HTML để tránh XSS từ raw API/import.
     -------------------------------------------*/
+    /*==========================================================================
+    == BẢNG KẾT QUẢ ĐĂNG KÝ — CHẾ ĐỘ GỌN / ĐẦY ĐỦ (yêu cầu khách 11/09/2026)
+    == "Phần kết quả quá nhiều thông tin không cần thiết, chi tiết sẽ nhấn vào
+    ==  từng người xem."
+    == Bảng gốc 51 cột chia 8 nhóm (thead 2 tầng có colspan). Ẩn từng cột bằng CSS
+    == sẽ vỡ colspan của hàng nhóm, nên chế độ Gọn thay hẳn thead bằng 1 tầng và
+    == chỉ render đúng các cột trong _KQ_COT_GON. Dữ liệu nạp về KHÔNG đổi —
+    == Xuất kết quả vẫn ra đủ 51 cột.
+    ==========================================================================*/
+    // i = chỉ số trong mảng của _kqRowToArray (0=STT, 1=checkbox, 2=Họ tên...)
+    _KQ_COT_GON: [
+        { i: 2, ten: 'Họ và tên', css: 'td-left', w: 200 },
+        { i: 3, ten: 'Ngày sinh', css: 'td-center', w: 110 },
+        { i: 4, ten: 'Giới tính', css: 'td-center', w: 90 },
+        { i: 5, ten: 'Dân tộc', css: 'td-center', w: 100 },
+        { i: 11, ten: 'Số CCCD', css: 'td-center', w: 140 },
+        { i: 8, ten: 'Điện thoại', css: 'td-center', w: 120 },
+        { i: 9, ten: 'Email', css: 'td-left', w: 200 },
+        { i: 43, ten: 'Mã ngành', css: 'td-center', w: 110 },
+        { i: 44, ten: 'Mã lớp QL', css: 'td-center', w: 110 },
+        { i: 41, ten: 'Ngày BH QĐ', css: 'td-center', w: 130 }
+    ],
+
+    _kqTableMode: '',
+
+    _kqApplyTableMode: function (mode) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (mode !== 'gon' && mode !== 'full') mode = 'gon';
+        me._kqTableMode = mode;
+        try { localStorage.setItem('kqdk_tbmode', mode); } catch (e) { }
+        $('#kqdkTableMode .kqdk-tbopt').removeClass('active')
+            .filter('[data-tbmode="' + mode + '"]').addClass('active');
+
+        var $tbl = $('#tblKQDK_HoSo');
+        // Giữ lại thead gốc để quay về Đầy đủ mà không phải dựng lại tay
+        if (!me._kqTheadFull) me._kqTheadFull = $tbl.find('thead').html();
+
+        if (mode === 'full') {
+            $tbl.find('thead').html(me._kqTheadFull);
+            $tbl.removeClass('kqdk-clickrow');
+        } else {
+            var ths = me._KQ_COT_GON.map(function (c) {
+                return '<th class="' + c.css + '" style="min-width:' + c.w + 'px;">' + c.ten + '</th>';
+            }).join('');
+            $tbl.find('thead').html('<tr>'
+                + '<th class="td-fixed td-center kqdk-col1">STT</th>'
+                + '<th class="td-center kqdk-col2"><input type="checkbox" id="chkKQDK_All"></th>'
+                + '<th class="td-center kqdk-col3">Thao tác</th>'
+                + ths + '</tr>');
+            $tbl.addClass('kqdk-clickrow');
+        }
+        // Chỉ vẽ lại khi đã có dữ liệu — lần init đầu tiên renderKQDK_Table sẽ tự vẽ
+        if (me._kqViewData) me._kqRenderPage();
+    },
+
+    _kqInitTableMode: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._kqTbBound) return;
+        me._kqTbBound = true;
+        $('#kqdkTableMode').on('click', '.kqdk-tbopt', function () {
+            me._kqApplyTableMode($(this).attr('data-tbmode'));
+        });
+        var mode = 'gon';
+        try { mode = localStorage.getItem('kqdk_tbmode') || 'gon'; } catch (e) { }
+        me._kqApplyTableMode(mode);
+    },
+
     _kqRenderPage: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
         var $tbody = $('#tblKQDK_HoSo tbody');
@@ -2667,8 +2746,14 @@ KeHoachTuyenSinhNew.prototype = {
                 + '<a class="btn btn-sm btn-primary btnSuaHoSo" data-id="' + idAttr + '" title="Sửa hồ sơ" style="padding:4px 8px;margin-right:4px;"><i class="fa fa-pencil"></i></a>'
                 + '<a class="btn btn-sm btn-danger btnXoaHoSo" data-id="' + idAttr + '" title="Xóa hồ sơ" style="padding:4px 8px;"><i class="fa fa-trash"></i></a>'
                 + '</td>';
-            for (var j = 2; j < arr.length; j++) {
-                tds += '<td>' + esc(arr[j]) + '</td>';
+            if (me._kqTableMode === 'gon') {
+                me._KQ_COT_GON.forEach(function (c) {
+                    tds += '<td class="' + c.css + '">' + esc(arr[c.i]) + '</td>';
+                });
+            } else {
+                for (var j = 2; j < arr.length; j++) {
+                    tds += '<td>' + esc(arr[j]) + '</td>';
+                }
             }
             rows += '<tr data-id="' + idAttr + '" data-kq-idx="' + i + '" data-core-person-id="' + corePersonIdAttr + '">' + tds + '</tr>';
         }
@@ -2729,8 +2814,15 @@ KeHoachTuyenSinhNew.prototype = {
                 return pf ? me._kqLookupById(pf.RELIGION_ID, 'ddlKQ_TonGiao') : '';
             })(),
             pick(d, ['PERSONPROFILE_QUOCTICH_TEN', 'QUOCTICH_TEN', 'PersonProfile_QuocTich_Ten']),
-            pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI']),
-            pick(d, ['PERSONCONTACT_EMAIL', 'PersonContact_Email', 'EMAIL']),
+            // Điện thoại / Email: view thường không trả, bản FULL có thể đặt tên khác →
+            // thử alias rồi mới quét mờ. Quét mờ phải LOẠI TRỪ BO_/ME_/BUYER_ để không
+            // lấy nhầm SĐT của bố mẹ hay số trên hóa đơn vào cột của thí sinh.
+            (pick(d, ['PERSONCONTACT_DIENTHOAI', 'PersonContact_DienThoai', 'DIENTHOAI',
+                'SODIENTHOAI', 'SO_DIEN_THOAI', 'SDT', 'PHONE', 'PHONE_NUMBER', 'MOBILE'])
+                || me._kqPickFuzzy(d, /^(?!.*(BO_|ME_|FAM|PARENT|INVOICE|BUYER|EMERGENCY)).*(DIENTHOAI|DIEN_THOAI|SDT|PHONE|MOBILE).*$/i)),
+            (pick(d, ['PERSONCONTACT_EMAIL', 'PersonContact_Email', 'EMAIL',
+                'CONTACT_EMAIL', 'EMAIL_LIENHE', 'MAIL'])
+                || me._kqPickFuzzy(d, /^(?!.*(BO_|ME_|FAM|PARENT|INVOICE|BUYER)).*(EMAIL|MAIL).*$/i)),
             pick(d, ['PERSONADDR_NOISINH', 'PersonAddr_NoiSinh', 'NOISINH']),
             // CCCD — thử alias biết trước, fallback fuzzy quét mọi key chứa "CCCD"/"CMND"
             (pick(d, ['PERSONIDEN_SOCCCD', 'PersonIden_SoCCCD', 'SOCCCD', 'SO_CCCD', 'CCCD', 'CCCD_SO', 'SoCCCD', 'strPersonIden_SoCCCD', 'SOCMND', 'SO_CMND', 'CMND'])
@@ -3018,6 +3110,7 @@ KeHoachTuyenSinhNew.prototype = {
     -------------------------------------------*/
     initKhai_DanhMuc: function () {
         var me = main_doc.KeHoachTuyenSinhNew;
+        me._initViewMode();     // tự guard, gọi nhiều lần không sao
         if (me._khaiDMLoaded) return;
         me._khaiDMLoaded = true;
         // Danh mục Loại địa chỉ — không gắn vào dropdown nào, chỉ để đối chiếu
@@ -3376,6 +3469,7 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     _bindCascadeNative: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
         // Chỉ enable/disable Huyện + Xã theo Tỉnh/Huyện (native <select>, không select2).
         // genDropTinhThanh đã handle empty+populate options; ta chỉ bổ sung UX lock/unlock.
         var lockDrop = function (id, msg) {
@@ -3393,14 +3487,86 @@ KeHoachTuyenSinhNew.prototype = {
                     lockDrop(huyenId, 'Vui lòng chọn Tỉnh trước');
                     lockDrop(xaId, 'Vui lòng chọn Quận/Huyện trước');
                 }
+                // genDropTinhThanh đổ option ở handler khác → đợi nó xong rồi mới xét
+                // tỉnh 2 cấp. Chạy ở 2 mốc cho chắc vì nguồn data có thể async.
+                setTimeout(function () { me._apply2Cap(tinhId, huyenId, xaId); }, 0);
+                setTimeout(function () { me._apply2Cap(tinhId, huyenId, xaId); }, 250);
             });
             $('#' + huyenId).off('change.kqnat').on('change.kqnat', function () {
                 if ($(this).val()) unlockDrop(xaId);
-                else lockDrop(xaId, 'Vui lòng chọn Quận/Huyện trước');
+                else if (!$('#' + huyenId).attr('data-2cap')) {
+                    lockDrop(xaId, 'Vui lòng chọn Quận/Huyện trước');
+                }
             });
         };
         bind('ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa');
         bind('ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa');
+        me._bindAddrTouched();
+    },
+
+    /*------------------------------------------
+    -- Đánh dấu người dùng ĐÃ TỰ TAY đụng vào cụm địa chỉ.
+    -- Cần để phân biệt 2 trường hợp ô trống, vốn trông y hệt nhau lúc lưu:
+    --   a) form chưa nạp kịp  → phải GIỮ giá trị cũ, không thì mất dữ liệu
+    --   b) user bấm × xoá đi  → phải GHI RỖNG, không thì xoá không được
+    -- Dùng select2:select/clear/unselect vì mấy sự kiện này chỉ phát khi user thao tác,
+    -- còn .val().trigger('change') của code thì không phát → không đánh dấu nhầm.
+    -------------------------------------------*/
+    _bindAddrTouched: function () {
+        var danhDau = function () { $(this).attr('data-user-touched', '1'); };
+        ['ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa',
+            'ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa'].forEach(function (id) {
+                $('#' + id).off('.kqtouch')
+                    .on('select2:select.kqtouch select2:clear.kqtouch select2:unselect.kqtouch', danhDau);
+            });
+        ['txtKQ_NoiSinh', 'txtKQ_HK_SoNha'].forEach(function (id) {
+            $('#' + id).off('.kqtouch').on('input.kqtouch', danhDau);
+        });
+    },
+
+    _clearAddrTouched: function () {
+        $('#ddlKQ_NS_Tinh, #ddlKQ_NS_Huyen, #ddlKQ_NS_Xa,'
+            + '#ddlKQ_HK_Tinh, #ddlKQ_HK_Huyen, #ddlKQ_HK_Xa,'
+            + '#txtKQ_NoiSinh, #txtKQ_HK_SoNha').removeAttr('data-user-touched');
+    },
+
+    /*------------------------------------------
+    -- Nghị định bỏ cấp huyện: nhiều tỉnh giờ chỉ còn 2 cấp Tỉnh → Xã.
+    -- Với các tỉnh đó, genDropTinhThanh vẫn đổ con của Tỉnh vào ô "Quận/Huyện" —
+    -- tức là ô Quận/Huyện đang chứa danh sách XÃ, còn ô Xã thì rỗng vĩnh viễn.
+    -- Người dùng chọn xong lưu ra WARD_ID rỗng → "nhập vào lưu xong mất xã".
+    --
+    -- Nhận diện bằng chính dữ liệu, không hardcode danh sách tỉnh: nếu con của Tỉnh
+    -- KHÔNG có cháu thì tỉnh đó 2 cấp. Tỉnh nào còn 3 cấp vẫn chạy như cũ.
+    -------------------------------------------*/
+    _apply2Cap: function (tinhSel, huyenSel, xaSel) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var dt = (edu.extend && edu.extend.dtTinhThanh) || [];
+        var $huyen = $('#' + huyenSel);
+        var tinhId = $('#' + tinhSel).val() || '';
+        if (!tinhId || !dt.length) { $huyen.removeAttr('data-2cap'); return; }
+        var con = dt.filter(function (e) { return e.QUANHECHA_ID === tinhId; });
+        if (!con.length) { $huyen.removeAttr('data-2cap'); return; }
+        var coChau = con.some(function (c) {
+            return dt.some(function (e) { return e.QUANHECHA_ID === c.ID; });
+        });
+        if (coChau) { $huyen.removeAttr('data-2cap'); return; }   // tỉnh 3 cấp → giữ nguyên
+
+        // --- Tỉnh 2 cấp ---
+        // KHÔNG khoá ô Quận/Huyện: dữ liệu đang lẫn cả tỉnh cũ lẫn tỉnh mới, người dùng
+        // chọn được tới đâu thì lưu tới đó. Chỉ đánh dấu để handler cascade đừng khoá ô Xã.
+        $huyen.attr('data-2cap', '1');
+        // Giữ lại lựa chọn hiện có nếu vẫn hợp lệ (tránh xoá khi hàm chạy lại ở mốc 250ms)
+        var dangChon = $('#' + xaSel).val() || '';
+        var conHopLe = con.some(function (c) { return c.ID === dangChon; });
+        edu.system.loadToCombo_data({
+            data: con,
+            renderInfor: { id: 'ID', parentId: '', name: 'TEN', code: '', default_val: conHopLe ? dangChon : '' },
+            renderPlace: [xaSel], type: '', title: 'Chọn phường/xã'
+        });
+        $('#' + xaSel).prop('disabled', false);
+        me._reapplyKQSelect2(huyenSel);
+        me._reapplyKQSelect2(xaSel);
     },
 
     /*------------------------------------------
@@ -3410,6 +3576,127 @@ KeHoachTuyenSinhNew.prototype = {
     -- placeholder + templateResult: ẩn option value="" khỏi dropdown list (option này chỉ
     -- làm placeholder ở field, không nên xuất hiện như 1 item chọn được).
     -------------------------------------------*/
+    /*==========================================================================
+    == CÁCH XEM FORM KHAI (yêu cầu khách hàng 11/09/2026)
+    == "Gom tab 1,2,5,7 vào 1 tab — thông tin dàn trải cả trang khó nhìn —
+    ==  cấu trúc xử lý không thay đổi, cho option các cách view."
+    ==
+    == Cách làm: các panel vốn đã là anh em cùng cấp trong .aps-sv-body nên chỉ cần
+    == bật/tắt class active, KHÔNG dời DOM. Dời panel sẽ làm select2 đứt container
+    == (select2 render ra thẻ anh em, tách khỏi <select> là hỏng), và id field đổi chỗ
+    == thì mọi hàm lưu/nạp phải sửa theo. Bật/tắt thì không đụng gì tới luồng xử lý.
+    ==========================================================================*/
+    _PANEL_META: {
+        kqdk_tab_canhan: { so: 1, icon: 'fa-id-badge', ten: 'Cá nhân' },
+        kqdk_tab_cccd: { so: 2, icon: 'fa-address-card', ten: 'CCCD & Hộ khẩu' },
+        kqdk_tab_xettuyen: { so: 3, icon: 'fa-file-pen', ten: 'Xét tuyển' },
+        kqdk_tab_trungtuyen: { so: 4, icon: 'fa-award', ten: 'Trúng tuyển' },
+        kqdk_tab_giadinh: { so: 5, icon: 'fa-people-roof', ten: 'Gia đình' },
+        kqdk_tab_hoadon: { so: 6, icon: 'fa-file-invoice-dollar', ten: 'Xuất hóa đơn' },
+        kqdk_tab_nguonkt: { so: 7, icon: 'fa-share-nodes', ten: 'Nguồn khai thác' }
+    },
+
+    // Thứ tự gốc 7 bước — các chỗ validate cũ đang tham chiếu theo CHỈ SỐ của mảng này
+    _PANEL_ORDER: ['kqdk_tab_canhan', 'kqdk_tab_cccd', 'kqdk_tab_xettuyen',
+        'kqdk_tab_trungtuyen', 'kqdk_tab_giadinh', 'kqdk_tab_hoadon', 'kqdk_tab_nguonkt'],
+
+    _viewMode: '',
+
+    _nhomTheoCheDo: function (mode) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (mode === 'gom') {
+            return [
+                {
+                    ten: 'Hồ sơ cá nhân', icon: 'fa-id-badge',
+                    panels: ['kqdk_tab_canhan', 'kqdk_tab_cccd', 'kqdk_tab_giadinh', 'kqdk_tab_nguonkt']
+                },
+                { ten: 'Xét tuyển', icon: 'fa-file-pen', panels: ['kqdk_tab_xettuyen'] },
+                { ten: 'Trúng tuyển', icon: 'fa-award', panels: ['kqdk_tab_trungtuyen'] },
+                { ten: 'Xuất hóa đơn', icon: 'fa-file-invoice-dollar', panels: ['kqdk_tab_hoadon'] }
+            ];
+        }
+        return me._PANEL_ORDER.map(function (pid) {
+            var m = me._PANEL_META[pid] || {};
+            return { ten: m.ten, icon: m.icon, so: m.so, panels: [pid] };
+        });
+    },
+
+    _applyViewMode: function (mode) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (['buoc', 'gom', 'motrang'].indexOf(mode) < 0) mode = 'buoc';
+        me._viewMode = mode;
+        try { localStorage.setItem('kqdk_viewmode', mode); } catch (e) { }
+        $('#kqdkViewOpts .kqdk-viewopt').removeClass('active')
+            .filter('[data-view="' + mode + '"]').addClass('active');
+
+        var $tabs = $('#kqdkKhaiTabs');
+        if (mode === 'motrang') {
+            $tabs.addClass('d-none').empty();
+            $('#kqdk_khai .aps-sv-panel').addClass('active');
+            return;
+        }
+        $tabs.removeClass('d-none');
+        var nhom = me._nhomTheoCheDo(mode);
+        var esc = function (s) { return $('<div>').text(s == null ? '' : s).html(); };
+        var html = nhom.map(function (n, i) {
+            return '<button type="button" class="aps-sv-tab' + (i === 0 ? ' active' : '') + '"'
+                + ' data-panels="' + esc(n.panels.join(',')) + '"'
+                + ' data-target="' + esc(n.panels[0]) + '">'
+                + '<span class="aps-sv-tab-num">' + (i + 1) + '</span>'
+                + '<i class="fa-light ' + esc(n.icon) + '"></i> ' + esc(n.ten) + '</button>';
+        }).join('');
+        $tabs.html(html);
+        $('#kqdk_khai .aps-sv-panel').removeClass('active');
+        nhom[0].panels.forEach(function (p) { $('#' + p).addClass('active'); });
+    },
+
+    /*------------------------------------------
+    -- Nhảy tới panel theo ID, dùng chung cho validate. Chế độ nào cũng chạy:
+    -- có tab thì click đúng tab chứa panel, chế độ Một trang thì cuộn tới nơi.
+    -------------------------------------------*/
+    _goToPanel: function (panelId) {
+        if (!panelId) return;
+        var $btn = $('#kqdkKhaiTabs .aps-sv-tab').filter(function () {
+            var ds = ',' + ($(this).attr('data-panels') || $(this).attr('data-target') || '') + ',';
+            return ds.indexOf(',' + panelId + ',') >= 0;
+        }).first();
+        if ($btn.length) $btn.trigger('click');
+        var el = document.getElementById(panelId);
+        if (el && el.scrollIntoView) {
+            try { el.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) { el.scrollIntoView(); }
+        }
+    },
+
+    // Giữ nguyên cách gọi cũ theo chỉ số 0..6 của 7 bước gốc
+    _goToTabByIndex: function (idx) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        me._goToPanel(me._PANEL_ORDER[idx] || me._PANEL_ORDER[0]);
+    },
+
+    _initViewMode: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (me._viewBound) return;
+        me._viewBound = true;
+        $('#kqdkViewOpts').on('click', '.kqdk-viewopt', function () {
+            me._applyViewMode($(this).attr('data-view'));
+        });
+        $('#kqdkWidthToggle').on('click', function () {
+            var $f = $('#kqdk_khai .aps-sv-form').toggleClass('kqdk-narrow');
+            var hep = $f.hasClass('kqdk-narrow');
+            $(this).find('span').text(hep ? 'Khổ vừa' : 'Khổ rộng');
+            try { localStorage.setItem('kqdk_narrow', hep ? '1' : '0'); } catch (e) { }
+        });
+        var mode = 'buoc', hep = '1';
+        try {
+            mode = localStorage.getItem('kqdk_viewmode') || 'buoc';
+            hep = localStorage.getItem('kqdk_narrow');
+            if (hep === null) hep = '1';        // mặc định bó khổ cho dễ đọc
+        } catch (e) { }
+        $('#kqdk_khai .aps-sv-form').toggleClass('kqdk-narrow', hep === '1');
+        $('#kqdkWidthToggle').find('span').text(hep === '1' ? 'Khổ vừa' : 'Khổ rộng');
+        me._applyViewMode(mode);
+    },
+
     initKhai_Select2: function () {
         if (typeof $.fn.select2 !== 'function') return;
         var me = main_doc.KeHoachTuyenSinhNew;
@@ -3475,6 +3762,8 @@ KeHoachTuyenSinhNew.prototype = {
         main_doc.KeHoachTuyenSinhNew._currentDoiTacRowId = '';
         main_doc.KeHoachTuyenSinhNew._currentDoiTacPartnerId = '';
         main_doc.KeHoachTuyenSinhNew._currentDoiTacGhiChu = '';
+        // Sang hồ sơ khác → quên dấu "user đã sửa địa chỉ" của hồ sơ trước
+        main_doc.KeHoachTuyenSinhNew._clearAddrTouched();
         // Text/number/date inputs (list ID để tránh clear nhầm input khác trong page)
         var arrTxt = [
             'txtKQ_HoTen', 'txtKQ_NgaySinh', 'txtKQ_DienThoai', 'txtKQ_Email', 'txtKQ_NoiSinh',
@@ -3546,7 +3835,9 @@ KeHoachTuyenSinhNew.prototype = {
             return;
         }
         // Validate theo thứ tự tab (tránh nhảy tab lung tung). Mỗi lỗi: nhảy đúng tab + focus field.
-        var goTab = function (idx) { $('#kqdkKhaiTabs .aps-sv-tab').eq(idx).trigger('click'); };
+        // Nhảy theo PANEL chứ không theo chỉ số tab: chế độ Gộp nhóm chỉ có 4 tab,
+        // chế độ Một trang thì không có tab nào.
+        var goTab = function (idx) { me._goToTabByIndex(idx); };
         var warn = function (msg, tabIdx, fieldId) {
             edu.system.alert(msg, "w");
             goTab(tabIdx);
@@ -3941,13 +4232,16 @@ KeHoachTuyenSinhNew.prototype = {
                 var hoKhau = pick('HK');
                 // Không phân loại được mà chỉ có 1 dòng → coi là hộ khẩu thường trú
                 if (!noiSinh && !hoKhau && rows.length === 1) hoKhau = rows[0];
+                var huyenCua = function (r) {
+                    return me._pickLoose(r, ['DISTRICT_ID', 'QUANHUYEN_ID', 'HUYEN_ID']);
+                };
                 if (noiSinh) {
                     me._fillDiaChi('ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa', 'txtKQ_NoiSinh',
-                        noiSinh.PROVINCE_ID, noiSinh.WARD_ID, noiSinh.ADDRESS_LINE1);
+                        noiSinh.PROVINCE_ID, huyenCua(noiSinh), noiSinh.WARD_ID, noiSinh.ADDRESS_LINE1);
                 }
                 if (hoKhau) {
                     me._fillDiaChi('ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa', 'txtKQ_HK_SoNha',
-                        hoKhau.PROVINCE_ID, hoKhau.WARD_ID, hoKhau.ADDRESS_LINE1);
+                        hoKhau.PROVINCE_ID, huyenCua(hoKhau), hoKhau.WARD_ID, hoKhau.ADDRESS_LINE1);
                 }
             });
         });
@@ -3985,27 +4279,28 @@ KeHoachTuyenSinhNew.prototype = {
 
     /*------------------------------------------
     -- Đổ 1 cụm địa chỉ (Tỉnh → Huyện → Xã → chi tiết) vào form.
-    -- API chỉ có PROVINCE_ID + WARD_ID; huyện được tra ngược từ cây tỉnh/thành
-    -- (edu.extend.dtTinhThanh: mảng phẳng {ID, TEN, QUANHECHA_ID}) vì dropdown Xã
-    -- chỉ đổ được sau khi biết Huyện.
+    -- districtId: lấy thẳng từ DISTRICT_ID nếu API có trả. Trước đây hàm này chỉ suy
+    -- Huyện NGƯỢC từ Xã, nên hồ sơ chọn Huyện mà bỏ trống Xã thì mở lại mất Huyện
+    -- dù DB vẫn lưu đủ. Không có districtId thì mới tra ngược từ Xã như cũ
+    -- (edu.extend.dtTinhThanh: mảng phẳng {ID, TEN, QUANHECHA_ID}).
     -- Tự retry chờ cache tỉnh/thành nạp xong (genDropTinhThanh nạp bất đồng bộ).
     -------------------------------------------*/
-    _fillDiaChi: function (elTinh, elHuyen, elXa, elChiTiet, provinceId, wardId, chiTiet, _try) {
+    _fillDiaChi: function (elTinh, elHuyen, elXa, elChiTiet, provinceId, districtId, wardId, chiTiet, _try) {
         var me = main_doc.KeHoachTuyenSinhNew;
         if (chiTiet) edu.util.viewValById(elChiTiet, chiTiet);
-        if (!provinceId && !wardId) return;
+        if (!provinceId && !districtId && !wardId) return;
         var dt = (edu.extend && edu.extend.dtTinhThanh) || [];
         if (!dt.length) {                       // cache chưa sẵn sàng → chờ rồi thử lại
             _try = (_try || 0) + 1;
             if (_try > 25) return;
             setTimeout(function () {
-                me._fillDiaChi(elTinh, elHuyen, elXa, elChiTiet, provinceId, wardId, '', _try);
+                me._fillDiaChi(elTinh, elHuyen, elXa, elChiTiet, provinceId, districtId, wardId, '', _try);
             }, 200);
             return;
         }
         var find = function (id) { return dt.filter(function (e) { return e.ID === id; })[0]; };
         var xa = wardId ? find(wardId) : null;
-        var huyenId = xa ? xa.QUANHECHA_ID : '';
+        var huyenId = districtId || (xa ? xa.QUANHECHA_ID : '');
         var tinhId = provinceId || (huyenId ? ((find(huyenId) || {}).QUANHECHA_ID || '') : '');
         var fill = function (elId, list, defVal, title) {
             edu.system.loadToCombo_data({
@@ -4021,16 +4316,20 @@ KeHoachTuyenSinhNew.prototype = {
         // Tỉnh 2 cấp (sau sáp nhập): Xã treo thẳng vào Tỉnh, không có cấp Huyện ở giữa
         // → cha của Xã chính là Tỉnh. Nếu vẫn coi nó là Huyện thì cả 2 ô đều trống.
         var haiCap = !!(huyenId && tinhId && huyenId === tinhId);
+        // Tỉnh 2 cấp: vẫn để ô Huyện dùng được, chỉ đánh dấu để cascade không khoá ô Xã
+        if (haiCap) $('#' + elHuyen).attr('data-2cap', '1').prop('disabled', false);
         if (huyenId && !haiCap) {
             fill(elHuyen, dt.filter(function (e) { return e.QUANHECHA_ID === tinhId; }), huyenId, 'Chọn quận/huyện');
             $('#' + elHuyen).prop('disabled', false);
         }
-        if (wardId) {
-            var chaCuaXa = haiCap ? tinhId : huyenId;
-            if (chaCuaXa) {
-                fill(elXa, dt.filter(function (e) { return e.QUANHECHA_ID === chaCuaXa; }), wardId, 'Chọn phường/xã');
-                $('#' + elXa).prop('disabled', false);
-            }
+        // Luôn đổ danh sách Xã khi đã biết cấp cha — kể cả hồ sơ chưa chọn Xã.
+        // Nếu không, ô Xã đứng nguyên ở trạng thái khoá "Vui lòng chọn Quận/Huyện trước"
+        // và người dùng không bổ sung được.
+        var chaCuaXa = haiCap ? tinhId : huyenId;
+        if (chaCuaXa) {
+            fill(elXa, dt.filter(function (e) { return e.QUANHECHA_ID === chaCuaXa; }),
+                wardId || '', 'Chọn phường/xã');
+            $('#' + elXa).prop('disabled', false);
         }
     },
 
@@ -4137,6 +4436,7 @@ KeHoachTuyenSinhNew.prototype = {
         var txt = function (id, val) {
             return val ? ($('#' + id + ' option:selected').text() || '').trim() : '';
         };
+        var cham = function (id) { return !!$('#' + id).attr('data-user-touched'); };
         var build = function (kind, pre, lineId) {
             var b = {
                 kind: kind,
@@ -4145,6 +4445,12 @@ KeHoachTuyenSinhNew.prototype = {
                 xa: g('ddlKQ_' + pre + '_Xa'),
                 line: g(lineId)
             };
+            // Chạm vào bất kỳ ô nào của cụm = user đang chủ động sửa cụm này.
+            // Gom chung vì xoá Tỉnh sẽ khiến cascade tự dọn Huyện/Xã bằng code —
+            // 2 ô đó không được đánh dấu nhưng vẫn phải coi là user cố ý xoá.
+            b.daCham = cham('ddlKQ_' + pre + '_Tinh') || cham('ddlKQ_' + pre + '_Huyen')
+                || cham('ddlKQ_' + pre + '_Xa');
+            b.chamLine = cham(lineId);
             b.full = [b.line,
                 txt('ddlKQ_' + pre + '_Xa', b.xa),
                 txt('ddlKQ_' + pre + '_Huyen', b.huyen),
@@ -4152,9 +4458,12 @@ KeHoachTuyenSinhNew.prototype = {
                 .filter(function (x) { return x; }).join(', ');
             return b;
         };
-        // Chỉ giữ cụm người dùng có nhập; cụm trống thì không đụng tới bản ghi cũ
+        // Giữ cụm có nhập, HOẶC cụm user vừa xoá sạch (phải gửi đi để ghi rỗng).
+        // Cụm vừa trống vừa không ai đụng vào thì bỏ qua, không chạm bản ghi cũ.
         return [build('NS', 'NS', 'txtKQ_NoiSinh'), build('HK', 'HK', 'txtKQ_HK_SoNha')]
-            .filter(function (b) { return b.tinh || b.xa || b.line; });
+            .filter(function (b) {
+                return b.tinh || b.xa || b.line || b.daCham || b.chamLine;
+            });
     },
 
     /*------------------------------------------
@@ -4177,9 +4486,10 @@ KeHoachTuyenSinhNew.prototype = {
                     // số nhà có giá trị (xem _collectAddrBlocks), nên nếu form chưa kịp nạp
                     // Huyện/Xã mà user bấm Cập nhật thì ghi thẳng b.huyen/b.xa xuống sẽ
                     // XOÁ TRẮNG dữ liệu đang có. Ô nào trống thì giữ nguyên giá trị cũ.
-                    var giu = function (moi, cu) {
+                    var giu = function (moi, cu, daCham) {
                         if (edu.util.checkValue(moi)) return moi;
-                        return isUpd ? (cu || '') : '';
+                        if (daCham) return '';              // user chủ động xoá → ghi rỗng
+                        return isUpd ? (cu || '') : '';     // form chưa nạp → giữ nguyên
                     };
                     var payload = {
                         'action': isUpd ? me._ACTION_Addr_Sua : me._ACTION_Addr_Them,
@@ -4193,12 +4503,12 @@ KeHoachTuyenSinhNew.prototype = {
                         'strAddress_Type_Code': typeId,
                         'strAddress_Status_Code': '',
                         'strCountry_Id': '',
-                        'strProvince_Id': giu(b.tinh, old && old.PROVINCE_ID),
-                        'strDistrict_Id': giu(b.huyen, old && old.DISTRICT_ID),
-                        'strWard_Id': giu(b.xa, old && old.WARD_ID),
-                        'strAddress_Line1': giu(b.line, old && old.ADDRESS_LINE1),
+                        'strProvince_Id': giu(b.tinh, old && old.PROVINCE_ID, b.daCham),
+                        'strDistrict_Id': giu(b.huyen, old && old.DISTRICT_ID, b.daCham),
+                        'strWard_Id': giu(b.xa, old && old.WARD_ID, b.daCham),
+                        'strAddress_Line1': giu(b.line, old && old.ADDRESS_LINE1, b.chamLine),
                         'strAddress_Line2': '',
-                        'strFull_Address': giu(b.full, old && old.FULL_ADDRESS),
+                        'strFull_Address': giu(b.full, old && old.FULL_ADDRESS, b.daCham || b.chamLine),
                         'strPostal_Code': '',
                         // Hộ khẩu thường trú là địa chỉ chính; d* = NUMBER nên gửi số, không gửi ''
                         'dIs_Primary': (b.kind === 'HK') ? 1 : 0,
@@ -4932,6 +5242,10 @@ KeHoachTuyenSinhNew.prototype = {
         // không có → phải thêm cả cột.
         call('LayTTPerson_Profile', me._ACTION_Profile_LayTT, 'PKG_CORE_NGUOIHOC_01.LayTTPerson_Profile',
             { 'strId': '', 'strPerson_Id': me.strSuaHoSo_CorePersonId });
+        // Dùng để trả lời: view địa chỉ có trả cột DISTRICT_ID không?
+        // Không có cột đó thì hồ sơ chỉ chọn Huyện (bỏ trống Xã) sẽ không đọc lại được.
+        call('Get_Person_Address', me._ACTION_Addr_LayDS, 'PKG_CORE_HOSONHANSU_06.Get_Person_Address',
+            { 'strPerson_Id': me.strSuaHoSo_CorePersonId, 'strVaiTro_Id': '' });
     },
 
     _bindHoSoDetail_ForEdit: function (d) {
