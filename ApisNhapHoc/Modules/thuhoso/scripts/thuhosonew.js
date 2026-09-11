@@ -545,7 +545,7 @@ ThuHoSo.prototype = {
         edu.util.viewHTMLById("lblNganhHoc_ThuHoSo", strNganhHoc);
         // Hồ sơ khai qua form tuyển sinh ghi hộ khẩu xuống bảng PERSON_ADDRESS, các
         // cột HOKHAU_* của view này không có → Quê quán trống. Đọc bù từ đúng bảng đó.
-        if (!strQueQuan) me._buQueQuan_TuPersonAddress(data.ID);
+        if (!strQueQuan) me._docBuDiaChi(data.ID);
     },
 
     /*------------------------------------------
@@ -558,12 +558,47 @@ ThuHoSo.prototype = {
     },
 
     /*------------------------------------------
-    -- Lấy hộ khẩu từ PERSON_ADDRESS (PKG_CORE_HOSONHANSU_06) để hiện vào ô Quê quán.
-    -- Đây đúng là nguồn mà ô "Địa chỉ trên hóa đơn" bên form khai hồ sơ đang dùng,
-    -- nên 2 nơi sẽ hiện giống nhau.
+    -- Đọc bù địa chỉ khi view trả các cột HOKHAU_* rỗng.
+    -- Ưu tiên LẤY ĐÚNG ĐOẠN TEXT Ở Ô "Địa chỉ trên hoá đơn" (PERSON_INVOICE_INFO,
+    -- cột BUYER_ADDR) — đó là cái người dùng nhìn thấy và đã nhập.
+    -- Không có mới lùi về hộ khẩu trong PERSON_ADDRESS.
+    -- Chỉ đọc, lỗi thì im lặng để không phá màn hình thu hồ sơ.
+    -------------------------------------------*/
+    _docBuDiaChi: function (strPerson_Id) {
+        var me = main_doc.ThuHoSo;
+        if (!edu.util.checkValue(strPerson_Id)) return;
+        var strAction = 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P';
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                var inv = rows.length ? rows[0] : null;
+                var strDC = inv ? (((inv.BUYER_ADDR_DIACHI || inv.BUYER_ADDR || '') + '').trim()) : '';
+                if (strDC) { edu.util.viewHTMLById("lblQueQuan_ThuHoSo", strDC); return; }
+                me._buQueQuan_TuPersonAddress(strPerson_Id);
+            },
+            error: function () { me._buQueQuan_TuPersonAddress(strPerson_Id); },
+            type: 'POST',
+            contentType: true,
+            action: strAction,
+            data: {
+                'action': strAction,
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': strPerson_Id,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Bước lùi: hộ khẩu từ PERSON_ADDRESS (PKG_CORE_HOSONHANSU_06).
     -- Ưu tiên FULL_ADDRESS do form ghi sẵn; không có thì tự ghép tên tỉnh/huyện/xã
     -- từ cây tỉnh thành (edu.extend.dtTinhThanh).
-    -- Chỉ đọc, lỗi thì im lặng để không phá màn hình thu hồ sơ.
     -------------------------------------------*/
     _buQueQuan_TuPersonAddress: function (strPerson_Id) {
         var me = main_doc.ThuHoSo;

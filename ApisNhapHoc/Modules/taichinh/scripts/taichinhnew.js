@@ -1028,12 +1028,54 @@ ThuTien.prototype = {
     },
 
     /*------------------------------------------
-    -- Hồ sơ khai qua form tuyển sinh ghi hộ khẩu xuống bảng PERSON_ADDRESS, các cột
-    -- HOKHAU_* của view này không có → ô Quê quán trống. Đọc bù từ đúng bảng đó —
-    -- cũng chính là nguồn của ô "Địa chỉ trên hoá đơn" nên 2 nơi hiện giống nhau.
-    -- Nhớ lại vào me._queQuanBu để lúc IN PHIẾU dùng được ngay (in chạy đồng bộ,
-    -- không kịp đợi request).
+    -- Đọc bù địa chỉ khi view LayDSQLSV_NguoiHoc_TTTS trả các cột HOKHAU_* rỗng.
+    -- Thứ tự đúng theo yêu cầu: LẤY ĐÚNG ĐOẠN TEXT Ở Ô "Địa chỉ trên hoá đơn"
+    -- (bảng PERSON_INVOICE_INFO, cột BUYER_ADDR) TRƯỚC — đó mới là cái người dùng
+    -- nhìn thấy và đã nhập. Không có mới lùi về hộ khẩu trong PERSON_ADDRESS.
+    -- Kết quả nhớ vào me._queQuanBu để lúc IN PHIẾU dùng được ngay (in chạy đồng
+    -- bộ, không kịp đợi request).
     -- Chỉ đọc; lỗi thì im lặng, không phá màn hình thu tiền.
+    -------------------------------------------*/
+    _docBuDiaChi: function (strPerson_Id) {
+        var me = main_doc.ThuTien;
+        if (!edu.util.checkValue(strPerson_Id)) return;
+        var strAction = 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P';
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                var inv = rows.length ? rows[0] : null;
+                var strDC = inv ? (((inv.BUYER_ADDR_DIACHI || inv.BUYER_ADDR || '') + '').trim()) : '';
+                if (strDC) {
+                    me._queQuanBu = strDC;
+                    edu.util.viewHTMLById("lblQueQuan_ThuTien", strDC);
+                    return;
+                }
+                // Hồ sơ chưa khai địa chỉ hoá đơn → lùi về hộ khẩu
+                me._buQueQuan_TuPersonAddress(strPerson_Id);
+            },
+            error: function () { me._buQueQuan_TuPersonAddress(strPerson_Id); },
+            type: 'POST',
+            contentType: true,
+            action: strAction,
+            data: {
+                'action': strAction,
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': strPerson_Id,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    },
+
+    /*------------------------------------------
+    -- Bước lùi: hộ khẩu trong PERSON_ADDRESS (form tuyển sinh ghi xuống bảng này,
+    -- các cột HOKHAU_* của view không có).
+    -- Chỉ đọc; lỗi thì im lặng.
     -------------------------------------------*/
     _buQueQuan_TuPersonAddress: function (strPerson_Id) {
         var me = main_doc.ThuTien;
@@ -1105,7 +1147,7 @@ ThuTien.prototype = {
         edu.util.viewHTMLById("lblNgaySinh_ThuTien", strNgaySinh);
         edu.util.viewHTMLById("lblSoDienThoai_ThuTien", strSoDienThoai);
         edu.util.viewHTMLById("lblQueQuan_ThuTien", strQueQuan);
-        if (!strQueQuan) me._buQueQuan_TuPersonAddress(data.ID);
+        if (!strQueQuan) me._docBuDiaChi(data.ID);
         edu.util.viewHTMLById("lblNganhNhapHoc_ThuTien", strNganhNhapHoc);
         edu.util.viewHTMLById("lblNganhLop_ThuTien", strDAOTAO_LOPQUANLY_TEN);
         edu.util.viewHTMLById("lblSoBaoDanh_ThuTien", strSoBaoDanh);
