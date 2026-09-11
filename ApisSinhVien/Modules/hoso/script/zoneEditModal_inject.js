@@ -1,3 +1,6 @@
+/* Tat log chay nen — doi ve ham rong thay vi xoa, can bat lai thi sua 1 cho */
+function zeNoLog() { }
+
 /*----------------------------------------------
 -- zoneEditModal_inject.js (2026-08-21)
 -- Tự động inject modal #zoneEdit (Chỉnh sửa - Hồ sơ đề xuất, 3 tabs) + CSS vào page.
@@ -5,10 +8,10 @@
 -- Dùng cho các trang muốn mở modal chỉnh sửa hồ sơ từ dexuathoso.js openEditByPerson().
 ----------------------------------------------*/
 function _zeDoInject(forceOverlay) {
-    if (document.getElementById('zoneEdit')) { console.log('[ZE-Inject] skip: #zoneEdit exists'); return; }
+    if (document.getElementById('zoneEdit')) { zeNoLog('[ZE-Inject] skip: #zoneEdit exists'); return; }
     // Inline mode nếu page có `<div id="zeInlineHost">` — render trực tiếp vào đó, không overlay
     var inlineHost = document.getElementById('zeInlineHost');
-    console.log('[ZE-Inject] running, inlineHost=', inlineHost ? 'FOUND' : 'not found', ', forceOverlay=', !!forceOverlay);
+    zeNoLog('[ZE-Inject] running');
     if (!inlineHost && !forceOverlay) { return; } // Chưa có host, defer retry — không fallback overlay ngay
 
     var css = ''
@@ -292,7 +295,7 @@ function _zeDoInject(forceOverlay) {
             _zeDoInject(false);  // inline mode
         } else if (tries > 20) {  // 20 × 100ms = 2s
             clearInterval(timer);
-            console.log('[ZE-Inject] timeout waiting for #zeInlineHost → fallback overlay');
+            zeNoLog('[ZE-Inject] timeout → fallback overlay');
             _zeDoInject(true);   // fallback overlay
         }
     }, 100);
@@ -562,7 +565,7 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.openEditByPerson) 
         if (typeof dx._loadXHD_Section === 'function') dx._loadXHD_Section(person.id);
         if (typeof dx._loadTabInfoExtras === 'function') dx._loadTabInfoExtras(person.id);
     };
-    console.warn('[ZE-Inject] DeXuatHoSo.prototype.openEditByPerson patched');
+    zeNoLog('[ZE-Inject] openEditByPerson patched');
 }
 if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadXHD_Section) {
     DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
@@ -1151,12 +1154,317 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeAddrHooked) {
         var _prevSaveDX = DeXuatHoSo.prototype.save_DeXuatHoSo;
         DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
             var dx = this;
-            var blocks = dx._zeCollectAddrBlocks();
+            // try/catch: chụp form phải chạy TRƯỚC bản gốc, nên nếu ở đây ném lỗi thì
+            // cả lần lưu chết câm. Địa chỉ hỏng thì bỏ địa chỉ, không được kéo theo
+            // phần lưu chính.
+            var blocks = null;
+            try { blocks = dx._zeCollectAddrBlocks(); } catch (e) { console.warn('[ZE Address] collect err:', e); }
             var personId = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
             _prevSaveDX.call(dx);
+            if (!blocks || !blocks.length) return;
             setTimeout(function () {
-                dx._zeSaveAddress(dx.strDeXuatHoSo_Id || dx._lockedPersonId || personId, blocks);
+                try {
+                    dx._zeSaveAddress(dx.strDeXuatHoSo_Id || dx._lockedPersonId || personId, blocks);
+                } catch (e) { console.warn('[ZE Address] save err:', e); }
             }, 300);
         };
     }
 }
+
+/*==============================================================================
+== TAB XUẤT HOÁ ĐƠN — 3 lỗi lưu, vá cho khớp với kehoachtuyensinhnew.js
+== (2026-09-11)
+==
+== 1) "Họ tên người mua hàng" (txtKQ_HD_NguoiMua) được đọc lên để xét hasData
+==    rồi VỨT ĐI — payload Them_/Sua_PersonInvoiceInfo không có param nào chứa
+==    nó. Bảng PERSON_INVOICE_INFO chỉ có BUYER_NAME nên bên tuyển sinh gửi
+==    "strBuyer_Name = tên đơn vị HOẶC họ tên người mua"; làm y như vậy.
+==
+== 2) Cụm "Thông tin thanh toán" (5 ô ngân hàng) CHỈ được nạp lên bằng
+==    Get_Person_Bank_Account, không có chỗ nào ghi xuống → nhập xong mất trắng.
+==
+== 3) _currentInvoiceId / _currentBankId không gắn với hồ sơ nào. Mở hồ sơ A
+==    (đã có hoá đơn) rồi chuyển sang hồ sơ B (chưa có) thì 2 biến này VẪN GIỮ
+==    id của A → bấm Lưu chạy Sua_PersonInvoiceInfo và GHI ĐÈ dữ liệu của B lên
+==    bản ghi của A. Xoá sạch mỗi lần mở hồ sơ khác là hết.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
+    DeXuatHoSo.prototype._zeXhdHooked = true;
+
+    // Lấy nguyên của dexuathoso.js (_loadXHD_Section + save_TaiKhoanNH) — không tự bịa
+    var _ZE_BANK_GET = 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4DIC8qHgAiIi40LzUP';
+    var _ZE_BANK_INS = 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4DIC8qHgAiIi40LzUP';
+    var _ZE_BANK_UPD = 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4DIC8qHgAiIi40LzUP';
+
+    /*------------------------------------------
+    -- (1) Bridge "Họ tên người mua" sang ô Tên đơn vị ngay trước khi bản gốc đọc
+    -- form, rồi trả lại nguyên trạng. Cùng kiểu với _bridgeLienHeToShadow /
+    -- _bridgeCccdToShadow đang dùng trong file này — giữ được bản gốc, sếp cập
+    -- nhật dexuathoso.js sau này cũng không đụng độ.
+    -------------------------------------------*/
+    if (DeXuatHoSo.prototype.save_PersonInvoice) {
+        var _origSaveInv = DeXuatHoSo.prototype.save_PersonInvoice;
+        DeXuatHoSo.prototype.save_PersonInvoice = function () {
+            var $don = $('#txtKQ_HD_TenDonVi');
+            var nguoiMua = (($('#txtKQ_HD_NguoiMua').val() || '') + '').trim();
+            var cu = ($don.val() || '') + '';
+            var daMuon = false;
+            if (!cu.trim() && nguoiMua) { $don.val(nguoiMua); daMuon = true; }
+            try { _origSaveInv.call(this); }
+            finally { if (daMuon) $don.val(cu); }
+        };
+    }
+
+    /*------------------------------------------
+    -- (2) Chụp cụm Thanh toán khỏi form (đồng bộ) — phải gọi TRƯỚC luồng lưu gốc.
+    -- Cả 5 ô đều trống → trả null để không tạo dòng ngân hàng rỗng, và cũng là
+    -- cách tránh ghi đè khi form chưa kịp nạp xong.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeCollectBank = function () {
+        var g = function (id) { return ((edu.system.getValById(id) || '') + '').trim(); };
+        var b = {
+            loai: g('ddlKQ_HD_HinhThucTT'),
+            nganHang: g('txtKQ_HD_NganHang'),
+            soTK: g('txtKQ_HD_SoTK'),
+            chuTK: g('txtKQ_HD_ChuTK'),
+            ghiChu: g('txtKQ_HD_GhiChu')
+        };
+        return (b.loai || b.nganHang || b.soTK || b.chuTK || b.ghiChu) ? b : null;
+    };
+
+    /*------------------------------------------
+    -- Ghi cụm Thanh toán xuống PERSON_BANK_ACCOUNT.
+    -- Đã có bản ghi (_currentBankId của ĐÚNG người này) → Upd, chưa có → Ins.
+    -- Các cột không có ô nhập trên modal (chi nhánh, loại tiền, ngày hiệu lực...)
+    -- giữ nguyên giá trị cũ, không ghi rỗng đè lên.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeSaveBank = function (personId, b) {
+        var dx = this;
+        if (!edu.util.checkValue(personId) || !b) return;
+        var oldId = (dx._zeXhdPersonId === personId) ? (dx._currentBankId || '') : '';
+        var old = (dx._zeBankRow && dx._zeXhdPersonId === personId) ? dx._zeBankRow : {};
+        var isUpd = !!(oldId && (oldId + '').length === 32);
+        var giu = function (v) { return edu.util.checkValue(v) ? v : ''; };
+        var so = function (v, mac) {
+            var n = Number(v);
+            return (v === null || v === undefined || v === '' || isNaN(n)) ? mac : n;
+        };
+        var payload = {
+            'action': isUpd ? _ZE_BANK_UPD : _ZE_BANK_INS,
+            'func': 'PKG_CORE_HOSONHANSU_06.' + (isUpd ? 'Upd_Person_Bank_Account' : 'Ins_Person_Bank_Account'),
+            'iM': edu.system.iM,
+            'strChucNang_Id': edu.system.strChucNang_Id,
+            'strVaiTro_Id': '',
+            'strPerson_Id': personId,
+            'strAccount_Type_Code': b.loai,
+            'strAccount_Status_Code': giu(old.ACCOUNT_STATUS_CODE),
+            'strBank_Id': giu(old.BANK_ID),
+            'strBank_Code': giu(old.BANK_CODE),
+            'strBank_Name': b.nganHang,
+            'strBranch_Id': giu(old.BRANCH_ID),
+            'strBranch_Code': giu(old.BRANCH_CODE),
+            'strBranch_Name': giu(old.BRANCH_NAME),
+            'strAccount_Number': b.soTK,
+            'strAccount_Name': b.chuTK,
+            'strAccount_Currency_Code': giu(old.ACCOUNT_CURRENCY_CODE),
+            // d* là NUMBER bên Oracle → luôn gửi số, không gửi chuỗi rỗng
+            'dIs_Primary': so(old.IS_PRIMARY, 1),
+            'dIs_Payroll_Default': so(old.IS_PAYROLL_DEFAULT, 0),
+            'dIs_Verified': so(old.IS_VERIFIED, 0),
+            'dIs_Active': 1,
+            'strEffective_From': giu(old.EFFECTIVE_FROM),
+            'strEffective_To': giu(old.EFFECTIVE_TO),
+            'strNote': b.ghiChu,
+            'strNguoiThucHien_Id': edu.system.userId
+        };
+        if (isUpd) payload.strId = oldId;
+        edu.system.makeRequest({
+            success: function (data) {
+                if (data && data.Success) { if (!isUpd && data.Id) dx._currentBankId = data.Id; }
+                else console.warn('[ZE Bank] fail:', data && data.Message);
+            },
+            error: function (er) { console.warn('[ZE Bank] err:', er); },
+            type: 'POST',
+            contentType: true,
+            action: payload.action,
+            data: payload,
+            fakedb: []
+        }, false, false, false, null);
+    };
+
+    /*------------------------------------------
+    -- Nạp lại cụm Thanh toán. Bản gốc đã đổ 4 ô text rồi, nhưng ô "Loại tài khoản"
+    -- nó chỉ tra theo option[name=MA] — dữ liệu cũ lưu MA thì đúng, dữ liệu mới
+    -- (ô này lưu ID danh mục như mọi dropdown khác) thì tra trượt, ô trống hoài.
+    -- Ở đây tra cả MA lẫn ID, và chỉ điền khi ô đang trống nên không đè bản gốc.
+    -- Tiện thể giữ lại nguyên bản ghi để lúc Upd không ghi rỗng lên các cột
+    -- không có ô nhập trên modal.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeLoadBank = function (personId) {
+        var dx = this;
+        dx._zeBankRow = null;
+        if (!edu.util.checkValue(personId)) return;
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                if (rows && rows.length === undefined) rows = [rows];
+                var b = rows.filter(function (r) {
+                    return r && r.PERSON_ID == personId && (r.IS_ACTIVE === undefined || r.IS_ACTIVE == 1);
+                }).sort(function (x, y) {
+                    return (y.IS_PRIMARY == 1 ? 1 : 0) - (x.IS_PRIMARY == 1 ? 1 : 0);
+                })[0];
+                if (!b) return;
+                dx._zeBankRow = b;
+                dx._currentBankId = b.ID || '';
+                var datLoai = function () {
+                    var $d = $('#ddlKQ_HD_HinhThucTT');
+                    if (!$d.length || $d.val()) return;               // bản gốc đặt được rồi
+                    var ma = b.ACCOUNT_TYPE_CODE;
+                    if (!edu.util.checkValue(ma)) return;
+                    var opt = document.querySelector('#ddlKQ_HD_HinhThucTT option[name="' + ma + '"]')
+                        || document.querySelector('#ddlKQ_HD_HinhThucTT option[data-ma="' + ma + '"]')
+                        || document.querySelector('#ddlKQ_HD_HinhThucTT option[value="' + ma + '"]');
+                    if (opt && opt.value) $d.val(opt.value).trigger('change');
+                };
+                datLoai();
+                setTimeout(datLoai, 600);
+                setTimeout(datLoai, 1600);
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: _ZE_BANK_GET,
+            data: {
+                'action': _ZE_BANK_GET,
+                'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Bank_Account',
+                'iM': edu.system.iM,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strVaiTro_Id': '',
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strPerson_Id': personId
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
+
+    /*------------------------------------------
+    -- (3) Mở hồ sơ nào thì id hoá đơn / ngân hàng phải là của hồ sơ ĐÓ.
+    -- Xoá trước khi bản gốc nạp: hồ sơ mới chưa có bản ghi thì 2 biến ở lại rỗng
+    -- và luồng lưu tự đi đường Them_, không còn Sua_ nhầm sang hồ sơ trước.
+    -------------------------------------------*/
+    if (DeXuatHoSo.prototype._loadXHD_Section) {
+        var _origLoadXHD = DeXuatHoSo.prototype._loadXHD_Section;
+        DeXuatHoSo.prototype._loadXHD_Section = function (personId) {
+            var dx = this;
+            dx._currentInvoiceId = '';
+            dx._currentBankId = '';
+            dx._zeBankRow = null;
+            dx._zeXhdPersonId = personId || '';
+            _origLoadXHD.call(dx, personId);
+            dx._zeLoadBank(personId);
+            dx._zeSuaPlaceholderXHD();
+        };
+    }
+
+    /*------------------------------------------
+    -- 2 combo của tab Xuất hoá đơn gọi loadToCombo_DanhMucDuLieu mà KHÔNG truyền
+    -- tham số thứ 5 (tiêu đề), nên dòng placeholder hiện thẳng mã bảng danh mục:
+    -- "Chọn ts.doituonghoadon", "Chọn person_bank_account.account_type_code".
+    -- Chỉ sửa chữ hiển thị của option rỗng, không đụng tới danh sách phía dưới.
+    -- Chạy ở nhiều mốc vì danh mục nạp bất đồng bộ.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeSuaPlaceholderXHD = function () {
+        var dat = function () {
+            [['ddlKQ_HD_DoiTuong', '-- Chọn đối tượng --'],
+            ['ddlKQ_HD_HinhThucTT', '-- Chọn loại tài khoản --']].forEach(function (c) {
+                var o = document.querySelector('#' + c[0] + ' option[value=""]');
+                if (o && o.textContent !== c[1]) o.textContent = c[1];
+            });
+        };
+        dat();
+        setTimeout(dat, 400);
+        setTimeout(dat, 1200);
+        setTimeout(dat, 2500);
+    };
+
+    // --- Móc vào luồng Lưu: chụp cụm ngân hàng ĐỒNG BỘ rồi ghi sau khi CorePerson xong.
+    if (DeXuatHoSo.prototype.save_DeXuatHoSo && !DeXuatHoSo.prototype._bankChainHooked) {
+        DeXuatHoSo.prototype._bankChainHooked = true;
+        var _prevSaveBank = DeXuatHoSo.prototype.save_DeXuatHoSo;
+        DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
+            var dx = this;
+            // try/catch: xem chú thích cùng loại ở wrapper địa chỉ phía trên
+            var bank = null;
+            try { bank = dx._zeCollectBank(); } catch (e) { console.warn('[ZE Bank] collect err:', e); }
+            var personId = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+            _prevSaveBank.call(dx);
+            if (!bank) return;
+            setTimeout(function () {
+                try {
+                    dx._zeSaveBank(dx.strDeXuatHoSo_Id || dx._lockedPersonId || personId, bank);
+                } catch (e) { console.warn('[ZE Bank] save err:', e); }
+            }, 350);
+        };
+    }
+}
+
+/*==============================================================================
+== BẤM LƯU MÀ KHÔNG CÓ GÌ XẢY RA — CHỐT AN TOÀN (2026-09-11)
+==
+== Chuỗi lưu gốc KHÔNG gọi thẳng save_DeXuatHoSo. Nó đi đường vòng:
+==   btnSave → genHTML_Progress('zoneprocessXXXX', N)   (vẽ thanh tiến trình
+==             vào trong modal thông báo #myModalAlert)
+==           → N lần save_KiemTraDinhDanh / save_KiemTraLienHe
+==           → mỗi lần gọi start_Progress(...) đếm lên 1
+==           → đếm đủ N mới chạy callback = save_DeXuatHoSo()
+==
+== start_Progress (Corei/systemroot.js:6795) đếm như sau:
+==   var x     = $('#zoneprocessXXXX #zonepercentInDS');
+==   var iDem  = parseInt(x.attr('title')) + 1;
+==   var iTotal= x.attr('name');
+==   if (iDem == iTotal) { callback(); }
+==
+== Nếu thanh tiến trình KHÔNG có trong DOM (modal thông báo chưa mở kịp, bị
+== modal khác chồng lên làm đóng, hoặc #alert_content bị ghi đè) thì:
+==   parseInt(undefined) + 1 = NaN,  iTotal = undefined,  NaN == undefined = false
+== → luôn rơi vào nhánh else, callback KHÔNG BAO GIỜ chạy, và tuyệt nhiên không
+== có lỗi nào hiện ra. Người dùng bấm Lưu, form im lặng, mở lại thì trắng trơn.
+==
+== Chốt này KHÔNG đoán mò theo thời gian: nó kiểm tra đúng điều kiện hỏng — sau
+== 600ms mà thanh tiến trình không tồn tại và save_DeXuatHoSo cũng chưa được gọi
+== thì gọi thẳng 1 lần. Chuỗi gốc chạy bình thường thì chốt tự im.
+== save_DeXuatHoSo vẫn tự chặn bằng `if (!me.icheck) return;` nên trường hợp
+== trùng định danh vẫn không lưu — chốt này không phá validate.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeSaveWatchdogHooked) {
+    DeXuatHoSo.prototype._zeSaveWatchdogHooked = true;
+
+    // Đánh dấu chuỗi gốc đã chạy tới nơi
+    var _prevSaveWD = DeXuatHoSo.prototype.save_DeXuatHoSo;
+    DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
+        this._zeDaGoiSave = true;
+        _prevSaveWD.call(this);
+    };
+
+    // mousedown chứ không phải click: phải đặt lại cờ TRƯỚC khi handler lưu chạy,
+    // vì có nhánh gọi save_DeXuatHoSo đồng bộ ngay trong click.
+    $(document).on('mousedown.zesavewd', '#btnSave_DeXuatHoSo', function () {
+        var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+        if (!dx || typeof dx.save_DeXuatHoSo !== 'function') return;
+        dx._zeDaGoiSave = false;
+        // Không có loại định danh/liên hệ nào → chuỗi gốc đi nhánh hỏi xác nhận
+        // ("Chưa có thông tin định danh. Bạn có muốn lưu không?"). Để người dùng
+        // tự quyết, chốt không được tự lưu thay.
+        var soLoai = (dx.dtLoaiDinhDanh || []).length + (dx.dtLoaiLienHe || []).length;
+        if (!soLoai) return;
+        clearTimeout(dx._zeSaveWDTimer);
+        dx._zeSaveWDTimer = setTimeout(function () {
+            if (dx._zeDaGoiSave) return;   // chuỗi gốc đã lưu rồi
+            // Thanh tiến trình còn đó = chuỗi gốc đang chạy đúng, cứ để nó lo
+            if (document.querySelector('#zoneprocessXXXX #zonepercentInDS')) return;
+            dx.save_DeXuatHoSo();
+        }, 600);
+    });
+}
+
+
