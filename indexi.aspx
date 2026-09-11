@@ -130,17 +130,19 @@
       html body.skin-blue .main-header .logo:hover {
         /* background-color: #1c2e5f !important; */
       }
+
       html body.skin-blue .main-header .logo:hover .logo-mini span,
       html body.skin-blue .main-header .logo:hover span {
         /* background-color: #1c2e5f !important; */
         color: #ffc107 !important;
       }
+
       html body.skin-blue .main-header .navbar .sidebar-toggle,
       html body.skin-blue .main-header .navbar .nav>li>a {
         color: #ffffff !important;
       }
 
-      
+
       html body.skin-blue .main-header .navbar .nav>li>a:hover,
       html body.skin-blue .main-header .navbar .nav>li>a:active,
       html body.skin-blue .main-header .navbar .nav>li>a:focus,
@@ -148,11 +150,13 @@
       html body.skin-blue .main-header .navbar .nav .open>a:hover,
       html body.skin-blue .main-header .navbar .nav .open>a:focus {
         background-color: rgba(255, 255, 255, 0.08) !important;
-        color: #ffc107  !important;
+        color: #ffc107 !important;
       }
-      html body.skin-blue .main-header .navbar .sidebar-toggle:hover{
-        color: #ffc107  !important;
+
+      html body.skin-blue .main-header .navbar .sidebar-toggle:hover {
+        color: #ffc107 !important;
       }
+
       html body.skin-blue .main-header li.user-header {
         background-color: #223771 !important;
       }
@@ -397,17 +401,18 @@
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-end !important;
         gap: 8px 12px !important;
         row-gap: 8px !important;
         width: 100% !important;
       }
+
       /* 2 child cua zone-pag-header/footer: auto-width, khong ep col-lg-6 (50%) */
-      html body.skin-blue [class*="zone-pag-"] > .col-lg-6,
-      html body.skin-blue [class*="zone-pag-"] > [class*="change-"],
-      html body.skin-blue [class*="zone-pag-"] > [class*="filter-"],
-      html body.skin-blue [class*="zone-pag-"] > [class*="info-"],
-      html body.skin-blue [class*="zone-pag-"] > [class*="light-pagination"] {
+      html body.skin-blue [class*="zone-pag-"]>.col-lg-6,
+      html body.skin-blue [class*="zone-pag-"]>[class*="change-"],
+      html body.skin-blue [class*="zone-pag-"]>[class*="filter-"],
+      html body.skin-blue [class*="zone-pag-"]>[class*="info-"],
+      html body.skin-blue [class*="zone-pag-"]>[class*="light-pagination"] {
         width: auto !important;
         min-width: 0 !important;
         max-width: 100% !important;
@@ -417,6 +422,7 @@
         padding-right: 0 !important;
         margin: 0 !important;
       }
+
       /* Dropdown "Hien thi" (aps-hienthi-input) — khoang cach voi nhan */
       html body.skin-blue [class*="change-"] .aps-hienthi,
       html body.skin-blue [class*="change-"] .aps-hienthi-input,
@@ -427,6 +433,7 @@
         vertical-align: middle !important;
         margin: 0 !important;
       }
+
       html body.skin-blue [class*="change-"] {
         display: inline-flex !important;
         align-items: center !important;
@@ -462,6 +469,7 @@
         overflow-x: auto !important;
         max-width: 100% !important;
       }
+
       html body.skin-blue .compact-theme ul {
         display: flex !important;
         flex-wrap: nowrap !important;
@@ -472,6 +480,7 @@
         overflow-x: hidden !important;
         max-width: 100% !important;
       }
+
       html body.skin-blue .simple-pagination li,
       html body.skin-blue .light-theme li,
       html body.skin-blue .compact-theme li {
@@ -676,7 +685,7 @@
 
       html body.skin-blue #main-content-wrapper .select2-container--default .select2-selection--single .select2-selection__arrow {
         height: 100% !important;
-        top: 0 !important;
+        top: 2px !important;
         right: 8px !important;
         width: 20px !important;
         display: flex !important;
@@ -772,7 +781,8 @@
         padding: 8px 12px !important;
         box-shadow: none !important;
         display: inline-flex;
-    gap: 8px;
+        align-items: center;
+        gap: 8px;
       }
 
       html body.skin-blue #main-content-wrapper .btn.btn-default {
@@ -1084,13 +1094,13 @@
         background: #223771 !important;
         color: #ffffff !important;
         border-bottom: 0 !important;
-        padding: 12px 55px !important;
+        padding: 15px 20px 10px 20px !important;
         min-height: 52px !important;
         border-top-left-radius: 12px !important;
         border-top-right-radius: 12px !important;
         display: flex !important;
         align-items: center !important;
-        justify-content: center !important;
+        justify-content: flex-start !important;
         position: relative !important;
       }
 
@@ -1232,6 +1242,7 @@
 
       html body.skin-blue .modal .modal-footer .pull-right {
         float: right !important;
+        gap: 0 !important;
       }
 
       html body.skin-blue #myModalAlert .modal-footer {
@@ -1809,69 +1820,69 @@
     <script type="text/javascript" src="App_Themes/Cms/Custom_V1/customs.js"></script><!-- custom -->
 
     <script type="text/javascript">
-      /* FIX 2026-09-05: SMART SELECT-ALL cho MOI bang phan trang server-side.
-         Van de: ~150 file JS co handler #chkSelectAll_XXX chi tick 10 dong visible;
-         voi bang co 24 / 800 / 29K dong (nhieu trang) user phai bam tung trang.
-         Giai phap: Bind delegated GLOBAL cho MOI checkbox id^="chkSelectAll_" trong
-         <thead> — sau khi handler goc chay xong, phat hien tong > visible thi hoi
-         user co muon TAI VA CHON HET, force pageSize=100000, reload, auto-tick het.
-         Chay o document level nen chan MOI cai click bat ke bind sau khi trang load. */
-      (function () {
-        if (typeof jQuery === 'undefined') return;
-        var $ = jQuery;
-        $(document).off('click.smartSelectAll')
-          .on('click.smartSelectAll',
+        /* FIX 2026-09-05: SMART SELECT-ALL cho MOI bang phan trang server-side.
+           Van de: ~150 file JS co handler #chkSelectAll_XXX chi tick 10 dong visible;
+           voi bang co 24 / 800 / 29K dong (nhieu trang) user phai bam tung trang.
+           Giai phap: Bind delegated GLOBAL cho MOI checkbox id^="chkSelectAll_" trong
+           <thead> — sau khi handler goc chay xong, phat hien tong > visible thi hoi
+           user co muon TAI VA CHON HET, force pageSize=100000, reload, auto-tick het.
+           Chay o document level nen chan MOI cai click bat ke bind sau khi trang load. */
+        (function () {
+          if (typeof jQuery === 'undefined') return;
+          var $ = jQuery;
+          $(document).off('click.smartSelectAll')
+            .on('click.smartSelectAll',
               'thead input[type=checkbox][id^="chkSelectAll_"]', function () {
-            var $ck = $(this);
-            if (!$ck.is(':checked')) return; // bo tick -> khong lam gi
-            var $tbl = $ck.closest('table');
-            var tblId = $tbl.attr('id');
-            if (!tblId) return;
-            // Parse tong dong tu label ".info-{tblId}" render boi systemroot pagination
-            var $info = $('.info-' + tblId);
-            var infoText = ($info.text() || '').trim();
-            var m = infoText.match(/(\d+)\s*d[ữu]\s*li[ệe]u/i);
-            var totalRows = m ? parseInt(m[1], 10) : 0;
-            var visibleRows = $tbl.find('tbody input:checkbox').length;
-            if (!totalRows || totalRows <= visibleRows) return; // ok da du -> skip
-            // Delay 10ms de handler goc (checkedAll_BgRow) chay xong roi moi hoi
-            setTimeout(function () {
-              var msg = 'Trang hiện chỉ hiển thị ' + visibleRows + '/' + totalRows +
-                ' dòng.\n\nBạn có muốn TẢI VÀ CHỌN HẾT ' + totalRows +
-                ' dòng không? (có thể mất vài giây)';
-              if (!confirm(msg)) return; // user cancel -> giu 10 dong visible
-              // Force pageSize = 100000 va trigger reload qua dropdown change
-              var $ddl = $('[id$=dropPageSizechange' + tblId + ']');
-              if (!$ddl.length) $ddl = $('#dropPageSizechange' + tblId);
-              if ($ddl.length) {
-                if ($ddl.find('option[value="100000"]').length === 0) {
-                  $ddl.append('<option value="100000">Tất cả</option>');
-                }
-                if (typeof edu !== 'undefined' && edu.system) {
-                  edu.system.pageSize_default = 100000;
-                  edu.system.pageIndex_default = 1;
-                }
-                $ddl.val('100000').trigger('change');
-              }
-              // Poll cho toi khi bang co so dong moi (> old + 2 de tranh false trigger)
-              var tries = 0;
-              var oldCount = visibleRows;
-              var timer = setInterval(function () {
-                tries++;
-                var nowCount = $tbl.find('tbody input:checkbox').length;
-                if (nowCount > oldCount + 2 || tries > 120) {
-                  clearInterval(timer);
-                  setTimeout(function () {
-                    $tbl.find('tbody input:checkbox')
-                      .prop('checked', true).attr('checked', true);
-                    $tbl.find('tbody tr').addClass('active');
-                    $ck.prop('checked', true);
-                  }, 150);
-                }
-              }, 250);
-            }, 10);
-          });
-      })();
+                var $ck = $(this);
+                if (!$ck.is(':checked')) return; // bo tick -> khong lam gi
+                var $tbl = $ck.closest('table');
+                var tblId = $tbl.attr('id');
+                if (!tblId) return;
+                // Parse tong dong tu label ".info-{tblId}" render boi systemroot pagination
+                var $info = $('.info-' + tblId);
+                var infoText = ($info.text() || '').trim();
+                var m = infoText.match(/(\d+)\s*d[ữu]\s*li[ệe]u/i);
+                var totalRows = m ? parseInt(m[1], 10) : 0;
+                var visibleRows = $tbl.find('tbody input:checkbox').length;
+                if (!totalRows || totalRows <= visibleRows) return; // ok da du -> skip
+                // Delay 10ms de handler goc (checkedAll_BgRow) chay xong roi moi hoi
+                setTimeout(function () {
+                  var msg = 'Trang hiện chỉ hiển thị ' + visibleRows + '/' + totalRows +
+                    ' dòng.\n\nBạn có muốn TẢI VÀ CHỌN HẾT ' + totalRows +
+                    ' dòng không? (có thể mất vài giây)';
+                  if (!confirm(msg)) return; // user cancel -> giu 10 dong visible
+                  // Force pageSize = 100000 va trigger reload qua dropdown change
+                  var $ddl = $('[id$=dropPageSizechange' + tblId + ']');
+                  if (!$ddl.length) $ddl = $('#dropPageSizechange' + tblId);
+                  if ($ddl.length) {
+                    if ($ddl.find('option[value="100000"]').length === 0) {
+                      $ddl.append('<option value="100000">Tất cả</option>');
+                    }
+                    if (typeof edu !== 'undefined' && edu.system) {
+                      edu.system.pageSize_default = 100000;
+                      edu.system.pageIndex_default = 1;
+                    }
+                    $ddl.val('100000').trigger('change');
+                  }
+                  // Poll cho toi khi bang co so dong moi (> old + 2 de tranh false trigger)
+                  var tries = 0;
+                  var oldCount = visibleRows;
+                  var timer = setInterval(function () {
+                    tries++;
+                    var nowCount = $tbl.find('tbody input:checkbox').length;
+                    if (nowCount > oldCount + 2 || tries > 120) {
+                      clearInterval(timer);
+                      setTimeout(function () {
+                        $tbl.find('tbody input:checkbox')
+                          .prop('checked', true).attr('checked', true);
+                        $tbl.find('tbody tr').addClass('active');
+                        $ck.prop('checked', true);
+                      }, 150);
+                    }
+                  }, 250);
+                }, 10);
+              });
+        })();
     </script>
 
     <script type="text/javascript">
