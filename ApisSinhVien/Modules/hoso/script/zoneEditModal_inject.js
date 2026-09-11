@@ -1467,4 +1467,65 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeSaveWatchdogHoo
     });
 }
 
+/*==============================================================================
+== TÁCH HOÁ ĐƠN / NGÂN HÀNG / ĐỊA CHỈ RA LƯU ĐỘC LẬP  (2026-09-11)
+==
+== Đây là khác biệt CỐT LÕI giữa trang này và kehoachtuyensinhnew.js, và là lý do
+== "2 form giống hệt nhau mà bên kia lưu được, bên này không".
+==
+== Bên tuyển sinh: mỗi cụm tự gọi API của nó, không phụ thuộc nhau.
+== Bên này: save_PersonInvoice bị chôn BÊN TRONG success của CorePerson
+==          (dexuathoso.js:1012), mà CorePerson lại phải đi qua chuỗi
+==          genHTML_Progress → start_Progress → callback. Chỉ cần một mắt xích
+==          trong đó tắc là hoá đơn + ngân hàng + địa chỉ chết theo, dù người
+==          dùng chỉ nhập đúng 2 ô của tab Xuất hoá đơn.
+==
+== Cách xử lý: bấm Lưu là chụp form ngay, rồi tự gọi thẳng 3 hàm lưu đó — không
+== chờ CorePerson. Phần lưu Thông tin cơ bản vẫn chạy đường cũ của nó.
+==
+== Chống lưu 2 lần: mỗi lần bấm Lưu là 1 "lượt". Ba hàm lưu được bọc lại để mỗi
+== lượt chỉ chạy đúng 1 lần — đường nào tới trước thì thắng, đường sau tự bỏ qua.
+== Nhờ vậy chuỗi gốc chạy được hay không thì kết quả vẫn là lưu đúng 1 lần.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeLuuDocLapHooked) {
+    DeXuatHoSo.prototype._zeLuuDocLapHooked = true;
+
+    // --- Bọc chống chạy trùng trong cùng 1 lượt bấm Lưu ---
+    ['_zeSaveAddress', '_zeSaveBank', 'save_PersonInvoice'].forEach(function (ten) {
+        var goc = DeXuatHoSo.prototype[ten];
+        if (typeof goc !== 'function') return;
+        var co = '_zeLuotCua_' + ten;
+        DeXuatHoSo.prototype[ten] = function () {
+            var luot = this._zeLuotLuu || 0;
+            if (this[co] === luot) return;          // lượt này đã chạy rồi
+            this[co] = luot;
+            return goc.apply(this, arguments);
+        };
+    });
+
+    // --- Đường lưu độc lập, không qua CorePerson ---
+    $(document).on('mousedown.zeluudoclap', '#btnSave_DeXuatHoSo', function () {
+        var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+        if (!dx) return;
+        dx._zeLuotLuu = (dx._zeLuotLuu || 0) + 1;
+
+        // Chụp form NGAY (đồng bộ) — 500ms nữa form có thể đã bị reset/đóng
+        var pid = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+        var blocks = null, bank = null;
+        try { blocks = dx._zeCollectAddrBlocks(); } catch (e) { console.warn('[ZE] collect addr:', e); }
+        try { bank = dx._zeCollectBank(); } catch (e) { console.warn('[ZE] collect bank:', e); }
+
+        clearTimeout(dx._zeLuuTimer);
+        dx._zeLuuTimer = setTimeout(function () {
+            var id = dx.strDeXuatHoSo_Id || dx._lockedPersonId || pid;
+            if (!id) { console.warn('[ZE] không có Person_Id → bỏ qua lưu phụ thuộc'); return; }
+            // Mỗi cụm bọc try riêng: cụm này lỗi không được kéo 2 cụm kia chết theo
+            try { if (blocks && blocks.length) dx._zeSaveAddress(id, blocks); } catch (e) { console.warn('[ZE] save addr:', e); }
+            try { if (bank) dx._zeSaveBank(id, bank); } catch (e) { console.warn('[ZE] save bank:', e); }
+            try { if (typeof dx.save_PersonInvoice === 'function') dx.save_PersonInvoice(); } catch (e) { console.warn('[ZE] save invoice:', e); }
+        }, 500);
+    });
+}
+
+
 
