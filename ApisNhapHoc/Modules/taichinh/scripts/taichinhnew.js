@@ -1221,9 +1221,10 @@ ThuTien.prototype = {
         edu.extend.genData_PhieuThu(data, [dataPhieuIn], "print_hoadon", "", objKhoanThu => {
             var strMauIn_MaSo = data[0].MAUIN_MASO;
             var strIDMoRong = objKhoanThu.CHUNGTU_ID;
-            var strDiaChi = dataPhieuIn.HOKHAU_TINHTHANH_TEN;
-            if (dataPhieuIn.HOKHAU_QUANHUYEN_TEN) strDiaChi = dataPhieuIn.HOKHAU_QUANHUYEN_TEN + ", " + strDiaChi;
-            if (dataPhieuIn.HOKHAU_PHUONGXA_TEN) strDiaChi = dataPhieuIn.HOKHAU_PHUONGXA_TEN + ", " + strDiaChi;
+            var strDiaChi = dataPhieuIn.DIACHINGUOIMUA;
+            //var strDiaChi = dataPhieuIn.HOKHAU_TINHTHANH_TEN;
+            //if (dataPhieuIn.HOKHAU_QUANHUYEN_TEN) strDiaChi = dataPhieuIn.HOKHAU_QUANHUYEN_TEN + ", " + strDiaChi;
+            //if (dataPhieuIn.HOKHAU_PHUONGXA_TEN) strDiaChi = dataPhieuIn.HOKHAU_PHUONGXA_TEN + ", " + strDiaChi;
             $(".txtDiaChi_BenB_" + strIDMoRong).html(strDiaChi);
             switch (strMauIn_MaSo) {
                 case "CKVINHPHUC_BIENLAITHU": {
