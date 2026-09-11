@@ -154,6 +154,15 @@
                 <div class="area-search pb20">
                     <div id="search" class="inputSearch collapse in">
                         <!-- Bộ tìm kiếm -->
+                        <!-- THEM 2026-09-11: Cơ sở đào tạo — data lấy từ proc business
+                             pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao (giống module TS),
+                             qua edu.system.getList_CoSoDaoTao. -->
+                        <div class="col-sm-3 item-search">
+                            <select id="dropSearch_CoSoDaoTao_IHD" class="select-opt" style="width:100% !important"
+                                multiple="multiple">
+                                <option id="" value=""> --Chọn cơ sở đào tạo-- </option>
+                            </select>
+                        </div>
                         <div class="col-sm-3 item-search">
                             <select id="dropSearch_HeDaoTao_IHD" class="select-opt" style="width:100% !important"
                                 multiple="multiple">
@@ -1078,7 +1087,7 @@
     </div>
 </div>
 
-<script src="modules/baocao/scripts/baocao.js?v=1.0.0.26"></script>
+<script src="modules/baocao/scripts/baocao.js?v=1.0.0.27"></script>
 <script src="modules/hoadon/scripts/n2vi.min.js"></script>
 <script type="text/javascript">
     var main_doc = {};

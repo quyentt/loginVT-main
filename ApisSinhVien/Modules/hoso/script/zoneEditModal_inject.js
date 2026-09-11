@@ -358,9 +358,16 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype.save_PersonInvoice
 if (typeof DeXuatHoSo === 'function' && DeXuatHoSo.prototype.save_DeXuatHoSo && !DeXuatHoSo.prototype._invoiceChainHooked) {
     DeXuatHoSo.prototype._invoiceChainHooked = true;
     var _origSaveDX = DeXuatHoSo.prototype.save_DeXuatHoSo;
+    // dexuathoso.js bản mới đã tự gọi save_PersonInvoice trong success của CorePerson.
+    // Nếu vẫn gọi thêm ở đây thì hồ sơ CHƯA có hoá đơn sẽ bị INSERT trùng 2 dòng: lần
+    // gọi thứ 2 (mốc 300ms) chạy trước khi lần 1 kịp trả _currentInvoiceId nên cả hai
+    // đều tính là "chưa có" → cùng chạy Them_PersonInvoiceInfo. Chỉ chain khi bản gốc
+    // chưa gọi (server còn dexuathoso.js cũ).
+    var _goc_daChain = _origSaveDX.toString().indexOf('save_PersonInvoice') > -1;
     DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
         var me = this;
         _origSaveDX.call(me);
+        if (_goc_daChain) return;
         // Fire PersonInvoice song song sau 300ms (CorePerson save đã fire, strDeXuatHoSo_Id đã có sẵn với UPDATE)
         setTimeout(function () { if (typeof me.save_PersonInvoice === 'function') me.save_PersonInvoice(); }, 300);
     };
@@ -710,4 +717,446 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._loadTabInfoExtras
             });
         }, 800);
     };
+}
+
+/*==============================================================================
+== NƠI SINH / HỘ KHẨU — NẠP & GHI THẬT XUỐNG BẢNG PERSON_ADDRESS  (2026-09-11)
+==
+== Bug: modal #zoneEdit có đủ 8 ô địa chỉ (dropNS_Tinh/Huyen/Xa + txtNS_ChiTiet,
+== dropHK_Tinh/Huyen/Xa + txtHK_SoNha), có cascade Tỉnh→Huyện→Xã, _loadTabInfoExtras còn xoá trắng
+== chúng mỗi lần mở — nhưng KHÔNG có chỗ nào đọc lên từ PERSON_ADDRESS và cũng
+== KHÔNG có chỗ nào ghi xuống. Nhập bao nhiêu cũng mất, mở lại luôn trắng.
+==
+== save_DiaChi của dexuathoso.js không dùng lại được: nó bám vào form con
+== #tblDiaChi (dropLoaiDiaChi/dropTinh/dropPhuong/txtDiaChiChiTiet1...) với
+== luồng "thêm từng địa chỉ một", trong khi modal này là 2 cụm cố định NS/HK.
+== Vì vậy port nguyên logic đã chạy ổn bên kehoachtuyensinhnew.js, DÙNG LẠI
+== đúng 3 action string của dexuathoso.js (Ins/Upd) — không tự bịa mã.
+==============================================================================*/
+if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeAddrHooked) {
+    DeXuatHoSo.prototype._zeAddrHooked = true;
+
+    // Lấy nguyên từ dexuathoso.js save_DiaChi/getList_DiaChi — action string chính là
+    // khoá XOR để BE giải mã, sai 1 ký tự là hỏng nên tuyệt đối không sửa/đoán.
+    var _ZE_ADDR_GET = 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4AJSUzJDIy';
+    var _ZE_ADDR_INS = 'NS_HoSoNhanSu6_MH/CC8yHhEkMzIuLx4AJSUzJDIy';
+    var _ZE_ADDR_UPD = 'NS_HoSoNhanSu6_MH/FDElHhEkMzIuLx4AJSUzJDIy';
+
+    // 2 cụm địa chỉ của modal. NS = nơi sinh, HK = hộ khẩu thường trú.
+    var _ZE_O = {
+        NS: { tinh: 'dropNS_Tinh', huyen: 'dropNS_Huyen', xa: 'dropNS_Xa', line: 'txtNS_ChiTiet' },
+        HK: { tinh: 'dropHK_Tinh', huyen: 'dropHK_Huyen', xa: 'dropHK_Xa', line: 'txtHK_SoNha' }
+    };
+
+    var _zeStrip = function (s) {
+        return ((s || '') + '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+            .replace(/đ/g, 'd').replace(/Đ/g, 'D').toUpperCase();
+    };
+
+    /*------------------------------------------
+    -- Danh mục Loại địa chỉ. PERSON_ADDRESS.ADDRESS_TYPE_CODE lưu ID (GUID) của
+    -- danh mục chứ không phải mã chữ, nên bắt buộc có bảng này mới biết đâu là
+    -- Nơi sinh, đâu là Hộ khẩu. Nạp 1 lần rồi cache trên instance.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeEnsureAddrTypeDM = function (cb) {
+        var dx = this;
+        if (dx.dtDM_AddressType && dx.dtDM_AddressType.length) { if (cb) cb(); return; }
+        edu.system.makeRequest({
+            success: function (data) {
+                dx.dtDM_AddressType = (data && data.Success && data.Data) || [];
+                if (cb) cb();
+            },
+            error: function () { dx.dtDM_AddressType = []; if (cb) cb(); },
+            type: 'GET',
+            contentType: true,
+            action: 'CMS_DanhMucThuocTinh/LayDanhSachDuLieuTheoBangDM',
+            data: {
+                'strMaBangDanhMuc': 'PERSON_ADDRESS.ADDRESS_TYPE_CODE',
+                'strTieuChiSapXep': '',
+                'dTrangThai': 1
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
+
+    /*------------------------------------------
+    -- kind: 'NS' | 'HK' → ID danh mục tương ứng.
+    -- Trả '' nếu danh mục chưa khai báo mục đó (khi đó không ghi xuống được).
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeAddrTypeId = function (kind) {
+        var dt = this.dtDM_AddressType || [];
+        if (!dt.length) return '';
+        var rx = (kind === 'NS') ? /NOI SINH|BIRTH/ : /HO KHAU|THUONG TRU|PERMANENT/;
+        var found = dt.filter(function (e) {
+            return rx.test(_zeStrip(e.TEN) + ' ' + _zeStrip(e.MA));
+        })[0];
+        return found ? (found.ID || '') : '';
+    };
+
+    DeXuatHoSo.prototype._zeGetAddrList = function (personId, cb) {
+        if (!edu.util.checkValue(personId)) { cb([]); return; }
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                // Bỏ bản ghi đã xoá mềm, y như genTable_DiaChi của dexuathoso.js
+                cb(rows.filter(function (r) {
+                    return r && (r.IS_ACTIVE === undefined || r.IS_ACTIVE == 1);
+                }));
+            },
+            error: function () { cb([]); },
+            type: 'POST',
+            contentType: true,
+            action: _ZE_ADDR_GET,
+            data: {
+                'action': _ZE_ADDR_GET,
+                'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Address',
+                'iM': edu.system.iM,
+                'strPerson_Id': personId,
+                'strChucNang_Id': edu.system.strChucNang_Id,
+                'strVaiTro_Id': '',
+                'strNguoiThucHien_Id': edu.system.userId
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
+
+    /*------------------------------------------
+    -- Đổ 1 cụm địa chỉ (Tỉnh → Huyện → Xã → chi tiết) vào form.
+    -- districtId: lấy thẳng từ DISTRICT_ID nếu API trả. Không có mới tra ngược
+    -- Huyện từ Xã (edu.extend.dtTinhThanh: mảng phẳng {ID, TEN, QUANHECHA_ID}) —
+    -- nếu chỉ tra ngược thì hồ sơ chọn Huyện mà bỏ trống Xã sẽ mất Huyện khi mở lại.
+    -- Tự retry chờ cache tỉnh/thành (genDropTinhThanh nạp bất đồng bộ).
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeFillDiaChi = function (o, provinceId, districtId, wardId, chiTiet, _try) {
+        var dx = this;
+        if (chiTiet) edu.util.viewValById(o.line, chiTiet);
+        if (!provinceId && !districtId && !wardId) return;
+        var dt = (edu.extend && edu.extend.dtTinhThanh) || [];
+        if (!dt.length) {                       // cache chưa sẵn sàng → chờ rồi thử lại
+            _try = (_try || 0) + 1;
+            if (_try > 25) return;
+            setTimeout(function () {
+                dx._zeFillDiaChi(o, provinceId, districtId, wardId, '', _try);
+            }, 200);
+            return;
+        }
+        var find = function (id) { return dt.filter(function (e) { return e.ID === id; })[0]; };
+        var xa = wardId ? find(wardId) : null;
+        var huyenId = districtId || (xa ? xa.QUANHECHA_ID : '');
+        var tinhId = provinceId || (huyenId ? ((find(huyenId) || {}).QUANHECHA_ID || '') : '');
+        var fill = function (elId, list, defVal, title) {
+            edu.system.loadToCombo_data({
+                data: list,
+                renderInfor: { id: 'ID', parentId: '', name: 'TEN', code: '', default_val: defVal },
+                renderPlace: [elId], type: '', title: title
+            });
+        };
+        if (tinhId) {
+            $('#' + o.tinh).val(tinhId).trigger('change');
+            $('#' + o.tinh).prop('disabled', false);
+        }
+        // Tỉnh 2 cấp (sau sáp nhập): Xã treo thẳng vào Tỉnh, không có cấp Huyện ở giữa
+        // → cha của Xã chính là Tỉnh. Nếu vẫn coi nó là Huyện thì cả 2 ô đều trống.
+        var haiCap = !!(huyenId && tinhId && huyenId === tinhId);
+        if (haiCap) $('#' + o.huyen).attr('data-2cap', '1').prop('disabled', false);
+        if (huyenId && !haiCap) {
+            fill(o.huyen, dt.filter(function (e) { return e.QUANHECHA_ID === tinhId; }),
+                huyenId, 'Chọn quận/huyện');
+            $('#' + o.huyen).prop('disabled', false);
+        }
+        // Luôn đổ danh sách Xã khi đã biết cấp cha — kể cả hồ sơ chưa chọn Xã. Nếu không,
+        // ô Xã đứng nguyên ở "Vui lòng chọn Quận/Huyện trước" và không bổ sung được.
+        var chaCuaXa = haiCap ? tinhId : huyenId;
+        if (chaCuaXa) {
+            fill(o.xa, dt.filter(function (e) { return e.QUANHECHA_ID === chaCuaXa; }),
+                wardId || '', 'Chọn phường/xã');
+            $('#' + o.xa).prop('disabled', false);
+        }
+    };
+
+    /*------------------------------------------
+    -- Nghị định bỏ cấp huyện: nhiều tỉnh giờ chỉ còn 2 cấp Tỉnh → Xã.
+    -- Với các tỉnh đó genDropTinhThanh vẫn đổ con của Tỉnh vào ô "Quận/Huyện" —
+    -- tức ô Quận/Huyện đang chứa danh sách XÃ, còn ô Xã rỗng vĩnh viễn, lưu ra
+    -- WARD_ID rỗng → "nhập vào lưu xong mất xã".
+    -- Nhận diện bằng chính dữ liệu, không hardcode danh sách tỉnh: con của Tỉnh
+    -- KHÔNG có cháu thì tỉnh đó 2 cấp. Tỉnh còn 3 cấp chạy y như cũ.
+    -- KHÔNG khoá ô Quận/Huyện: dữ liệu đang lẫn cả tỉnh cũ lẫn tỉnh mới, người
+    -- dùng chọn được tới đâu thì lưu tới đó.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeApply2Cap = function (o) {
+        var dt = (edu.extend && edu.extend.dtTinhThanh) || [];
+        var $huyen = $('#' + o.huyen);
+        var tinhId = $('#' + o.tinh).val() || '';
+        if (!tinhId || !dt.length) { $huyen.removeAttr('data-2cap'); return; }
+        var con = dt.filter(function (e) { return e.QUANHECHA_ID === tinhId; });
+        if (!con.length) { $huyen.removeAttr('data-2cap'); return; }
+        var coChau = con.some(function (c) {
+            return dt.some(function (e) { return e.QUANHECHA_ID === c.ID; });
+        });
+        if (coChau) { $huyen.removeAttr('data-2cap'); return; }   // tỉnh 3 cấp → giữ nguyên
+
+        $huyen.attr('data-2cap', '1');
+        // Giữ lựa chọn hiện có nếu vẫn hợp lệ (tránh xoá khi hàm chạy lại ở mốc 250ms)
+        var dangChon = $('#' + o.xa).val() || '';
+        var conHopLe = con.some(function (c) { return c.ID === dangChon; });
+        edu.system.loadToCombo_data({
+            data: con,
+            renderInfor: { id: 'ID', parentId: '', name: 'TEN', code: '', default_val: conHopLe ? dangChon : '' },
+            renderPlace: [o.xa], type: '', title: 'Chọn phường/xã'
+        });
+        $('#' + o.xa).prop('disabled', false);
+    };
+
+    /*------------------------------------------
+    -- Đánh dấu người dùng ĐÃ TỰ TAY đụng vào cụm địa chỉ.
+    -- Cần để phân biệt 2 trường hợp ô trống trông y hệt nhau lúc lưu:
+    --   a) form chưa nạp kịp     → phải GIỮ giá trị cũ, không thì mất dữ liệu
+    --   b) user cố ý xoá lựa chọn → phải GHI RỖNG, không thì xoá mãi không được
+    -- Các ô này là <select> thường (không select2) nên phân biệt bằng originalEvent:
+    -- .trigger('change') trong code không có originalEvent, người dùng bấm chọn thì có.
+    -- Vẫn bắt thêm sự kiện select2 phòng khi về sau có gắn select2 vào modal.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeBindAddrTouched = function () {
+        var dx = this;
+        var danhDau = function () { $(this).attr('data-user-touched', '1'); };
+        Object.keys(_ZE_O).forEach(function (kind) {
+            var o = _ZE_O[kind];
+            // Người dùng vừa đụng cụm nào thì lấy cụm đó điền sang địa chỉ hoá đơn.
+            // setTimeout 0 để chờ cascade đổ xong Huyện/Xã rồi mới ghép chuỗi.
+            var dienSangHD = function () {
+                setTimeout(function () { dx._zeAutoFillHoaDon(kind); }, 0);
+            };
+            ['tinh', 'huyen', 'xa'].forEach(function (cap) {
+                $('#' + o[cap]).off('.zetouch')
+                    .on('change.zetouch', function (e) {
+                        if (!e || !e.originalEvent) return;   // code tự set, không phải user
+                        danhDau.call(this); dienSangHD();
+                    })
+                    .on('select2:select.zetouch select2:clear.zetouch select2:unselect.zetouch',
+                        function () { danhDau.call(this); dienSangHD(); });
+            });
+            $('#' + o.line).off('.zetouch').on('input.zetouch',
+                function () { danhDau.call(this); dienSangHD(); });
+            // genDropTinhThanh đổ option ở handler khác → đợi nó xong rồi mới xét tỉnh
+            // 2 cấp. Chạy ở 2 mốc cho chắc vì nguồn data có thể async.
+            $('#' + o.tinh).off('.zecap').on('change.zecap', function () {
+                setTimeout(function () { dx._zeApply2Cap(o); }, 0);
+                setTimeout(function () { dx._zeApply2Cap(o); }, 250);
+            });
+        });
+        // Gõ vào ô địa chỉ hoá đơn = tự quyết → từ đó không tự điền đè lên nữa
+        $('#txtKQ_HD_DiaChi').off('.zetouch').on('input.zetouch', danhDau);
+    };
+
+    DeXuatHoSo.prototype._zeClearAddrTouched = function () {
+        var ids = [];
+        Object.keys(_ZE_O).forEach(function (kind) {
+            var o = _ZE_O[kind];
+            ids.push('#' + o.tinh, '#' + o.huyen, '#' + o.xa, '#' + o.line);
+        });
+        ids.push('#txtKQ_HD_DiaChi');
+        $(ids.join(',')).removeAttr('data-user-touched').removeAttr('data-ze-auto');
+        $('#' + _ZE_O.NS.huyen + ',#' + _ZE_O.HK.huyen).removeAttr('data-2cap');
+    };
+
+    /*------------------------------------------
+    -- Tự điền "Địa chỉ trên hoá đơn" theo cụm địa chỉ vừa chọn, cho đỡ gõ lại.
+    -- KHÔNG đè khi: người dùng đã tự sửa ô đó, hoặc ô đang mang giá trị lấy từ DB
+    -- (hoá đơn có thể xuất cho đơn vị ở địa chỉ khác nên không được ép đồng bộ).
+    -- Giá trị do chính hàm này điền thì được phép cập nhật tiếp.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeAutoFillHoaDon = function (kind) {
+        var dx = this;
+        var $hd = $('#txtKQ_HD_DiaChi');
+        if (!$hd.length || $hd.attr('data-user-touched')) return;
+        if (edu.util.checkValue($hd.val()) && !$hd.attr('data-ze-auto')) return;  // giá trị từ DB
+        var b = (dx._zeCollectAddrBlocks() || []).filter(function (x) { return x.kind === kind; })[0];
+        if (!b || !edu.util.checkValue(b.full)) return;
+        edu.util.viewValById('txtKQ_HD_DiaChi', b.full);
+        $hd.attr('data-ze-auto', '1');
+    };
+
+    /*------------------------------------------
+    -- Chụp giá trị 2 cụm địa chỉ từ form NGAY LẬP TỨC (đồng bộ).
+    -- Bắt buộc gọi TRƯỚC khi luồng lưu gốc chạy, vì hàm ghi chạy async — lúc
+    -- callback về thì form có thể đã bị reset/đóng, đọc ra sẽ toàn rỗng.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeCollectAddrBlocks = function () {
+        var g = function (id) { return edu.system.getValById(id) || ''; };
+        // Lấy tên option ĐANG CHỌN THẬT. Bám vào value rỗng để nhận ra option
+        // placeholder, không so khớp chữ: bỏ dấu thì "Chơn Thành" cũng thành
+        // "Chon..." và sẽ bị loại nhầm cùng với "-- Chọn --".
+        var txt = function (id, val) {
+            return val ? ($('#' + id + ' option:selected').text() || '').trim() : '';
+        };
+        var cham = function (id) { return !!$('#' + id).attr('data-user-touched'); };
+        var build = function (kind) {
+            var o = _ZE_O[kind];
+            var b = {
+                kind: kind,
+                tinh: g(o.tinh), huyen: g(o.huyen), xa: g(o.xa), line: g(o.line)
+            };
+            // Chạm vào bất kỳ ô nào của cụm = user đang chủ động sửa cụm này. Gom chung
+            // vì xoá Tỉnh sẽ khiến cascade tự dọn Huyện/Xã bằng code — 2 ô đó không được
+            // đánh dấu nhưng vẫn phải coi là user cố ý xoá.
+            b.daCham = cham(o.tinh) || cham(o.huyen) || cham(o.xa);
+            b.chamLine = cham(o.line);
+            b.full = [b.line, txt(o.xa, b.xa), txt(o.huyen, b.huyen), txt(o.tinh, b.tinh)]
+                .filter(function (x) { return x; }).join(', ');
+            return b;
+        };
+        // Giữ cụm có nhập, HOẶC cụm user vừa xoá sạch (phải gửi đi để ghi rỗng).
+        // Cụm vừa trống vừa không ai đụng vào thì bỏ qua, không chạm bản ghi cũ.
+        return [build('NS'), build('HK')].filter(function (b) {
+            return b.tinh || b.xa || b.line || b.daCham || b.chamLine;
+        });
+    };
+
+    /*------------------------------------------
+    -- Ghi 2 cụm địa chỉ xuống PERSON_ADDRESS.
+    -- Đã có bản ghi cùng loại → Upd_Person_Address, chưa có → Ins_Person_Address.
+    -- blocks: kết quả _zeCollectAddrBlocks() chụp trước đó.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeSaveAddress = function (personId, blocks) {
+        var dx = this;
+        blocks = blocks || [];
+        if (!edu.util.checkValue(personId) || !blocks.length) return;
+        dx._zeEnsureAddrTypeDM(function () {
+            var thieu = blocks.filter(function (b) { return !dx._zeAddrTypeId(b.kind); })
+                .map(function (b) { return b.kind === 'NS' ? 'Nơi sinh' : 'Hộ khẩu thường trú'; });
+            if (thieu.length) {
+                console.warn('[ZE Address] Danh mục "Loại địa chỉ" '
+                    + '(PERSON_ADDRESS.ADDRESS_TYPE_CODE) chưa khai báo: ' + thieu.join(', ')
+                    + ' → không ghi xuống được.');
+            }
+            dx._zeGetAddrList(personId, function (rows) {
+                blocks.forEach(function (b) {
+                    var typeId = dx._zeAddrTypeId(b.kind);
+                    if (!typeId) return;
+                    var old = rows.filter(function (r) { return r.ADDRESS_TYPE_CODE === typeId; })[0];
+                    var isUpd = !!(old && old.ID);
+                    var id = ((isUpd ? old.ID : edu.util.uuid()) + '').toUpperCase();
+                    // Chống ghi đè rỗng. Cụm địa chỉ được giữ lại khi CHỈ CẦN tỉnh hoặc số
+                    // nhà có giá trị (xem _zeCollectAddrBlocks), nên nếu form chưa kịp nạp
+                    // Huyện/Xã mà user bấm Lưu thì ghi thẳng b.huyen/b.xa xuống sẽ XOÁ
+                    // TRẮNG dữ liệu đang có. Ô nào trống thì giữ nguyên giá trị cũ.
+                    var giu = function (moi, cu, daCham) {
+                        if (edu.util.checkValue(moi)) return moi;
+                        if (daCham) return '';              // user chủ động xoá → ghi rỗng
+                        return isUpd ? (cu || '') : '';     // form chưa nạp → giữ nguyên
+                    };
+                    var payload = {
+                        'action': isUpd ? _ZE_ADDR_UPD : _ZE_ADDR_INS,
+                        'func': 'PKG_CORE_HOSONHANSU_06.' + (isUpd ? 'Upd_Person_Address' : 'Ins_Person_Address'),
+                        'iM': edu.system.iM,
+                        'Id': id,
+                        'strId': id,
+                        'strChucNang_Id': edu.system.strChucNang_Id,
+                        'strVaiTro_Id': '',
+                        'strPerson_Id': personId,
+                        'strAddress_Type_Code': typeId,
+                        'strAddress_Status_Code': '',
+                        'strCountry_Id': '',
+                        'strProvince_Id': giu(b.tinh, old && old.PROVINCE_ID, b.daCham),
+                        'strDistrict_Id': giu(b.huyen, old && old.DISTRICT_ID, b.daCham),
+                        'strWard_Id': giu(b.xa, old && old.WARD_ID, b.daCham),
+                        'strAddress_Line1': giu(b.line, old && old.ADDRESS_LINE1, b.chamLine),
+                        'strAddress_Line2': '',
+                        'strFull_Address': giu(b.full, old && old.FULL_ADDRESS, b.daCham || b.chamLine),
+                        'strPostal_Code': '',
+                        // Hộ khẩu thường trú là địa chỉ chính; d* là NUMBER nên gửi số, không gửi ''
+                        'dIs_Primary': (b.kind === 'HK') ? 1 : 0,
+                        'dIs_Verified': 0,
+                        'dIs_Active': 1,
+                        'strEffective_From': '',
+                        'strEffective_To': '',
+                        'strNote': '',
+                        'strNguoiThucHien_Id': edu.system.userId
+                    };
+                    edu.system.makeRequest({
+                        success: function (data) {
+                            if (data && !data.Success) console.warn('[ZE Address] fail:', data.Message);
+                        },
+                        error: function (er) { console.warn('[ZE Address] err:', er); },
+                        type: 'POST',
+                        contentType: true,
+                        action: payload.action,
+                        data: payload,
+                        fakedb: []
+                    }, false, false, false, null);
+                });
+            });
+        });
+    };
+
+    /*------------------------------------------
+    -- Nạp 2 cụm địa chỉ lên form khi mở modal.
+    -- Get_Person_Address chỉ chắc chắn trả PROVINCE_ID + WARD_ID; DISTRICT_ID có
+    -- thì dùng, không có mới tra ngược từ Xã (xem _zeFillDiaChi).
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeLoadAddress = function (personId) {
+        var dx = this;
+        if (!edu.util.checkValue(personId)) return;
+        dx._zeEnsureAddrTypeDM(function () {
+            dx._zeGetAddrList(personId, function (rows) {
+                if (!rows.length) return;
+                var pick = function (kind) {
+                    var typeId = dx._zeAddrTypeId(kind);
+                    var found = typeId && rows.filter(function (it) {
+                        return it.ADDRESS_TYPE_CODE === typeId;
+                    })[0];
+                    if (found) return found;
+                    // Danh mục chưa có mục tương ứng → đoán theo tên loại trả kèm bản ghi
+                    var rx = (kind === 'NS') ? /NOI SINH|BIRTH/ : /HO KHAU|THUONG TRU|PERMANENT/;
+                    return rows.filter(function (it) {
+                        return rx.test(_zeStrip(it.ADDRESS_TYPE_CODE_NAME || it.ADDRESS_TYPE_NAME || ''));
+                    })[0];
+                };
+                var noiSinh = pick('NS');
+                var hoKhau = pick('HK');
+                // Không phân loại được mà chỉ có 1 dòng → coi là hộ khẩu thường trú
+                if (!noiSinh && !hoKhau && rows.length === 1) hoKhau = rows[0];
+                var huyenCua = function (r) {
+                    return r.DISTRICT_ID || r.QUANHUYEN_ID || r.HUYEN_ID || '';
+                };
+                if (noiSinh) {
+                    dx._zeFillDiaChi(_ZE_O.NS, noiSinh.PROVINCE_ID, huyenCua(noiSinh),
+                        noiSinh.WARD_ID, noiSinh.ADDRESS_LINE1);
+                }
+                if (hoKhau) {
+                    dx._zeFillDiaChi(_ZE_O.HK, hoKhau.PROVINCE_ID, huyenCua(hoKhau),
+                        hoKhau.WARD_ID, hoKhau.ADDRESS_LINE1);
+                }
+            });
+        });
+    };
+
+    // --- Móc vào luồng mở modal: _loadTabInfoExtras xoá trắng 8 ô địa chỉ (đồng bộ,
+    // --- ngay đầu hàm) nên nạp lại NGAY SAU khi gọi bản gốc là an toàn.
+    if (DeXuatHoSo.prototype._loadTabInfoExtras) {
+        var _origLoadTabInfo = DeXuatHoSo.prototype._loadTabInfoExtras;
+        DeXuatHoSo.prototype._loadTabInfoExtras = function (personId) {
+            var dx = this;
+            _origLoadTabInfo.call(dx, personId);
+            dx._zeClearAddrTouched();
+            dx._zeBindAddrTouched();
+            dx._zeLoadAddress(personId);
+        };
+    }
+
+    // --- Móc vào luồng Lưu: chụp form ĐỒNG BỘ trước khi bản gốc chạy, rồi mới ghi.
+    if (DeXuatHoSo.prototype.save_DeXuatHoSo && !DeXuatHoSo.prototype._addrChainHooked) {
+        DeXuatHoSo.prototype._addrChainHooked = true;
+        var _prevSaveDX = DeXuatHoSo.prototype.save_DeXuatHoSo;
+        DeXuatHoSo.prototype.save_DeXuatHoSo = function () {
+            var dx = this;
+            var blocks = dx._zeCollectAddrBlocks();
+            var personId = dx.strDeXuatHoSo_Id || dx._lockedPersonId || '';
+            _prevSaveDX.call(dx);
+            setTimeout(function () {
+                dx._zeSaveAddress(dx.strDeXuatHoSo_Id || dx._lockedPersonId || personId, blocks);
+            }, 300);
+        };
+    }
 }

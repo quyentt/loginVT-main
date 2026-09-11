@@ -1421,6 +1421,37 @@
     #ket-qua-dk .modal-body { display:flex; flex-direction:column; padding:0; }
     #kqdk_khai { flex:1; display:flex; flex-direction:column; min-height:0; }
     .aps-sv-body { flex:1 1 auto; }
+    /* ---- Thanh chọn cách xem form ---- */
+    /* Gọn / Đầy đủ cho bảng Kết quả đăng ký */
+    .kqdk-tbmode { display:inline-flex; background:#fff; border:1px solid #e2e8f0; border-radius:8px; overflow:hidden; }
+    .kqdk-tbopt { border:none; background:transparent; padding:7px 16px; font-size:13px; font-weight:600; color:#475569; cursor:pointer; border-right:1px solid #e2e8f0; }
+    .kqdk-tbopt:last-child { border-right:none; }
+    .kqdk-tbopt:hover { background:#eaf1ff; color:#2563eb; }
+    .kqdk-tbopt.active { background:#2563eb; color:#fff; }
+    /* Chế độ Gọn: cả dòng bấm được để mở hồ sơ */
+    #tblKQDK_HoSo.kqdk-clickrow tbody tr { cursor:pointer; }
+
+    .kqdk-viewbar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; padding:10px 18px; background:#f1f5f9; border-bottom:1px solid var(--aps-sv-border); }
+    .kqdk-viewbar-lb { font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase; color:#64748b; display:inline-flex; align-items:center; gap:6px; }
+    .kqdk-viewopts { display:inline-flex; background:#fff; border:1px solid var(--aps-sv-border); border-radius:8px; overflow:hidden; }
+    .kqdk-viewopt { border:none; background:transparent; padding:7px 14px; font-size:13px; font-weight:600; color:#475569; cursor:pointer; border-right:1px solid var(--aps-sv-border); transition:background .15s ease,color .15s ease; }
+    .kqdk-viewopt:last-child { border-right:none; }
+    .kqdk-viewopt:hover { background:var(--aps-sv-primary-soft); color:var(--aps-sv-primary); }
+    .kqdk-viewopt.active { background:var(--aps-sv-primary); color:#fff; }
+    .kqdk-widthbtn { margin-left:auto; border:1px solid var(--aps-sv-border); background:#fff; border-radius:8px; padding:7px 12px; font-size:13px; font-weight:600; color:#475569; cursor:pointer; display:inline-flex; align-items:center; gap:6px; }
+    .kqdk-widthbtn:hover { border-color:var(--aps-sv-primary); color:var(--aps-sv-primary); }
+    /* Chặn bề rộng ở CẢ HAI khổ, khác nhau ở số cột form tự xếp được:
+       khổ rộng 1500px ≈ 4 cột, khổ vừa 1180px ≈ 3 cột. Không để tràn hết màn hình
+       vì màn 1900px sẽ thành 5-6 cột, nhìn loãng hơn là dễ đọc. */
+    /* ⚠ .aps-sv-form là flex column. Đặt margin-left/right:auto lên flex item sẽ HỦY
+       align-items:stretch → item co lại bằng nội dung, form tụt về 1 cột hẹp giữa trang.
+       Phải khai width:100% + align-self:center thì mới vừa căn giữa vừa ăn hết bề ngang. */
+    .aps-sv-form .aps-sv-body { align-self:center; width:100%; max-width:1500px; box-sizing:border-box; }
+    .aps-sv-form.kqdk-narrow .aps-sv-body { max-width:1180px; }
+    /* Chế độ gộp nhóm / một trang: nhiều panel hiện cùng lúc → cần vạch ngăn giữa các nhóm */
+    .aps-sv-panel.active + .aps-sv-panel.active { border-top:1px solid var(--aps-sv-border); margin-top:18px; padding-top:22px; }
+    .aps-sv-tabs.d-none { display:none !important; }
+
     .aps-sv-tabs { display:flex; flex-wrap:wrap; gap:6px; padding:14px 18px 0; border-bottom:1px solid var(--aps-sv-border); background:#f8fafc; }
     .aps-sv-tab { display:inline-flex; align-items:center; gap:8px; padding:11px 18px; border:none; background:transparent; color:var(--aps-sv-label); font-size:14px; font-weight:600; cursor:pointer; border-radius:10px 10px 0 0; border-bottom:3px solid transparent; transition:all .18s ease; white-space:nowrap; }
     .aps-sv-tab i { font-size:15px; }
@@ -1432,15 +1463,19 @@
     .aps-sv-panel { display:none; animation:apsSvFade .25s ease; }
     .aps-sv-panel.active { display:block; }
     @keyframes apsSvFade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
-    .aps-sv-section-title { display:flex; align-items:center; gap:9px; font-size:14px; font-weight:700; color:var(--aps-sv-primary); text-transform:uppercase; letter-spacing:.3px; margin:6px 0 18px; }
+    .aps-sv-section-title { display:flex; align-items:center; gap:9px; font-size:15px; font-weight:700; color:var(--aps-sv-primary); text-transform:uppercase; letter-spacing:.3px; margin:6px 0 18px; }
     .aps-sv-section-title::after { content:""; flex:1; height:1px; background:linear-gradient(90deg, var(--aps-sv-border), transparent); }
     .aps-sv-section-title i { color:var(--aps-sv-primary); }
     .aps-sv-section + .aps-sv-section { margin-top:30px; }
-    .aps-sv-grid { display:grid; grid-template-columns:repeat(2, minmax(0, 1fr)); gap:18px 26px; }
+    /* Tự xếp số cột theo bề rộng thay vì cứng 2 cột: màn rộng thì 3-4 cột, ô ngắn
+       (ngày sinh, giới tính, dân tộc...) không còn bị kéo dài nửa màn hình. */
+    .aps-sv-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:18px 26px; }
     .aps-sv-field.aps-sv-col-full { grid-column:1 / -1; }
-    .aps-sv-label { display:block; font-size:13px; font-weight:600; color:var(--aps-sv-label); margin-bottom:7px; }
+    /* Ô dài (họ tên, email, địa chỉ chi tiết) vẫn full nhưng có trần để không loãng chữ */
+    .aps-sv-field.aps-sv-col-full .aps-sv-input { max-width:760px; }
+    .aps-sv-label { display:block; font-size:14px; font-weight:600; color:var(--aps-sv-label); margin-bottom:8px; }
     .aps-sv-label .aps-sv-req { color:#ef4444; margin-left:2px; }
-    .aps-sv-form .aps-sv-input { width:100%; height:38px; padding:0 14px; font-size:14px; color:var(--aps-sv-text); background:#fff; border:1px solid var(--aps-sv-border); border-radius:var(--aps-sv-radius); transition:border-color .15s, box-shadow .15s; outline:none; box-sizing:border-box; }
+    .aps-sv-form .aps-sv-input { width:100%; height:42px; padding:0 14px; font-size:15px; color:var(--aps-sv-text); background:#fff; border:1px solid var(--aps-sv-border); border-radius:var(--aps-sv-radius); transition:border-color .15s, box-shadow .15s; outline:none; box-sizing:border-box; }
     .aps-sv-form textarea.aps-sv-input { height:auto; min-height:90px; padding:12px 14px; resize:vertical; }
     .aps-sv-form .aps-sv-input::placeholder { color:#94a3b8; }
     .aps-sv-form .aps-sv-input:focus { border-color:var(--aps-sv-primary); box-shadow:0 0 0 3px rgba(37, 99, 235, .14); }
@@ -1470,9 +1505,11 @@
     .btn-close-custom:active { transform:translateY(1px); }
 
     /* select2 override — match style aps-sv-input để dropdown có ô search */
-    .aps-sv-form .select2-container--default .select2-selection--single { height:38px !important; padding:0; border:1px solid var(--aps-sv-border) !important; border-radius:var(--aps-sv-radius); background:#fff; }
-    .aps-sv-form .select2-container--default .select2-selection--single .select2-selection__rendered { line-height:36px; padding-left:14px; padding-right:38px; color:var(--aps-sv-text); font-size:14px; }
-    .aps-sv-form .select2-container--default .select2-selection--single .select2-selection__arrow { height:36px; right:8px; }
+    /* Chiều cao/cỡ chữ phải khớp .aps-sv-input (42px/15px), nếu không ô chọn sẽ
+       thấp hơn ô gõ và cả hàng nhìn so le. */
+    .aps-sv-form .select2-container--default .select2-selection--single { height:42px !important; padding:0; border:1px solid var(--aps-sv-border) !important; border-radius:var(--aps-sv-radius); background:#fff; }
+    .aps-sv-form .select2-container--default .select2-selection--single .select2-selection__rendered { line-height:40px; padding-left:14px; padding-right:38px; color:var(--aps-sv-text); font-size:15px; }
+    .aps-sv-form .select2-container--default .select2-selection--single .select2-selection__arrow { height:40px; right:8px; }
     .aps-sv-form .select2-container--default.select2-container--focus .select2-selection--single,
     .aps-sv-form .select2-container--default.select2-container--open .select2-selection--single { border-color:var(--aps-sv-primary) !important; box-shadow:0 0 0 3px rgba(37, 99, 235, .14); }
     .aps-sv-form .select2-container--default .select2-selection--single .select2-selection__placeholder { color:#94a3b8; }
@@ -1545,6 +1582,12 @@
                             <button id="btnKQDK_AutoClass" class="btn btn-warning" type="button" title="Phân lớp tự động cho các hồ sơ đã tick">
                                 <i class="fa-regular fa-people-arrows"></i><span> Phân lớp tự động</span>
                             </button>
+                            <!-- Gọn / Đầy đủ: chỉ đổi số cột hiển thị, dữ liệu nạp về vẫn nguyên
+                                 (Xuất kết quả vẫn xuất đủ 51 cột) -->
+                            <div class="kqdk-tbmode" id="kqdkTableMode">
+                                <button type="button" class="kqdk-tbopt" data-tbmode="gon">Gọn</button>
+                                <button type="button" class="kqdk-tbopt" data-tbmode="full">Đầy đủ</button>
+                            </div>
                             <div class="ms-auto" style="margin-left:auto;">
                                 <b>Tổng:</b> <span id="lblKQDK_Total" class="badge bg-light-blue" style="background:#0ea5e9;color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">0</span>
                             </div>
@@ -1906,6 +1949,19 @@
                         <b>Đang sửa hồ sơ.</b> Các field bạn thay đổi sẽ được lưu qua API <code>Sua_HoSo_TS</code>.
                     </div>
                     <div class="aps-sv-form">
+                        <!-- Chọn cách xem form. Chỉ bật/tắt panel, KHÔNG dời DOM và không
+                             đụng vào id field nào → luồng lưu/nạp giữ nguyên. -->
+                        <div class="kqdk-viewbar">
+                            <span class="kqdk-viewbar-lb"><i class="fa-light fa-table-layout"></i> Cách xem</span>
+                            <div class="kqdk-viewopts" id="kqdkViewOpts">
+                                <button type="button" class="kqdk-viewopt" data-view="buoc">Theo bước</button>
+                                <button type="button" class="kqdk-viewopt" data-view="gom">Gộp nhóm</button>
+                                <button type="button" class="kqdk-viewopt" data-view="motrang">Một trang</button>
+                            </div>
+                            <button type="button" class="kqdk-widthbtn" id="kqdkWidthToggle">
+                                <i class="fa-light fa-arrows-left-right"></i> <span>Khổ vừa</span>
+                            </button>
+                        </div>
                         <div class="aps-sv-tabs" id="kqdkKhaiTabs">
                             <button type="button" class="aps-sv-tab active" data-target="kqdk_tab_canhan"><span class="aps-sv-tab-num">1</span><i class="fa-light fa-id-badge"></i> Cá nhân</button>
                             <button type="button" class="aps-sv-tab" data-target="kqdk_tab_cccd"><span class="aps-sv-tab-num">2</span><i class="fa-light fa-address-card"></i> CCCD &amp; Hộ khẩu</button>
@@ -2105,7 +2161,13 @@
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Trường lớp 12</label>
-                                            <input class="aps-sv-input" id="txtKQ_TruongMaTen" placeholder="Mã | Tên trường THPT">
+                                            <div class="aps-sv-select">
+                                                <select class="aps-sv-input" id="ddlKQ_Truong12"></select>
+                                                <i class="fa-light fa-chevron-down"></i>
+                                            </div>
+                                            <!-- Giá trị gửi xuống BE vẫn là TEXT "Mã | Tên" (param strPersonEdu_TruongMaTen).
+                                                 Giữ input ẩn cùng id cũ để toàn bộ luồng lưu/nạp không phải sửa theo. -->
+                                            <input type="hidden" id="txtKQ_TruongMaTen">
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Học lực</label>
@@ -2248,10 +2310,14 @@
                                             <label class="aps-sv-label">Họ và tên</label>
                                             <input class="aps-sv-input" id="txtKQ_Bo_HoTen" placeholder="Họ và tên bố">
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026 — giữ code để mở lại khi cần.
+                                             Dữ liệu cũ trong PERSON_FAMILY KHÔNG bị xoá: _writeFamily giữ nguyên
+                                             BIRTH_YEAR / ADDRESS_TEXT khi form không còn 2 ô này.
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Năm sinh</label>
                                             <input type="number" min="1900" max="2100" class="aps-sv-input" id="txtKQ_Bo_NamSinh" placeholder="Ví dụ: 1975">
                                         </div>
+                                        -->
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Số điện thoại liên hệ</label>
                                             <div class="aps-sv-input-icon">
@@ -2259,10 +2325,12 @@
                                                 <input class="aps-sv-input" id="txtKQ_Bo_SDT" placeholder="09xx xxx xxx">
                                             </div>
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Nơi ở hiện nay</label>
                                             <input class="aps-sv-input" id="txtKQ_Bo_NoiO" placeholder="Địa chỉ hiện tại">
                                         </div>
+                                        -->
                                     </div>
                                 </div>
 
@@ -2273,10 +2341,12 @@
                                             <label class="aps-sv-label">Họ và tên</label>
                                             <input class="aps-sv-input" id="txtKQ_Me_HoTen" placeholder="Họ và tên mẹ">
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026 — xem chú thích ở phần Bố
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Năm sinh</label>
                                             <input type="number" min="1900" max="2100" class="aps-sv-input" id="txtKQ_Me_NamSinh" placeholder="Ví dụ: 1978">
                                         </div>
+                                        -->
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Số điện thoại liên hệ</label>
                                             <div class="aps-sv-input-icon">
@@ -2284,10 +2354,12 @@
                                                 <input class="aps-sv-input" id="txtKQ_Me_SDT" placeholder="09xx xxx xxx">
                                             </div>
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Nơi ở hiện nay</label>
                                             <input class="aps-sv-input" id="txtKQ_Me_NoiO" placeholder="Địa chỉ hiện tại">
                                         </div>
+                                        -->
                                     </div>
                                 </div>
                             </div>
@@ -2335,7 +2407,11 @@
                                         </div>
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Địa chỉ trên hóa đơn</label>
-                                            <input class="aps-sv-input" id="txtKQ_HD_DiaChi" placeholder="Địa chỉ ghi trên hóa đơn">
+                                            <input class="aps-sv-input" id="txtKQ_HD_DiaChi" placeholder="Tự điền theo Nơi sinh / Hộ khẩu — sửa lại được">
+                                            <div style="margin-top:6px;font-size:12.5px;color:#64748b;">
+                                                <i class="fa-light fa-wand-magic-sparkles"></i>
+                                                Chọn địa chỉ ở tab Cá nhân hoặc Hộ khẩu là ô này tự điền. Gõ vào đây thì giữ nguyên theo bạn.
+                                            </div>
                                         </div>
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Email nhận hóa đơn điện tử</label>
@@ -2772,7 +2848,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.3.1"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.7.2"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
