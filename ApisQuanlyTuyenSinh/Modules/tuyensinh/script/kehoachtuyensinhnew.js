@@ -3238,6 +3238,9 @@ KeHoachTuyenSinhNew.prototype = {
             toLoad.push(["TS.DOITUONGDUTUYEN", "ddlKQ_DoiTuongTS", "-- Chọn đối tượng --"]);
             toLoad.push(["QLSV.DOITUONG", "ddlKQ_DoiTuongUT", "-- Chọn đối tượng ưu tiên --"]);
             toLoad.push(["QLSV.KHUVUC", "ddlKQ_KhuVucUT", "-- Chọn khu vực ưu tiên --"]);
+            // Trường lớp 12: dropdown có ô tìm kiếm (select2) thay cho gõ tay.
+            // Cùng danh mục mà hosotuyensinh.js / xettuyen.js đang dùng.
+            toLoad.push(["TUYENSINH.TRUONGHOC", "ddlKQ_Truong12", "-- Chọn trường THPT --"]);
             toLoad.push(["TUYENSINH.HOCLUC", "ddlKQ_HocLuc", "-- Chọn học lực --"]);
             toLoad.push(["TUYENSINH.HANHKIEM", "ddlKQ_HanhKiem", "-- Chọn hạnh kiểm --"]);
             // Tab Trúng tuyển — Cơ sở đào tạo: KHÔNG dùng DM `KHCT.COSODAOTAO` (CMC trả rỗng),
@@ -3274,7 +3277,12 @@ KeHoachTuyenSinhNew.prototype = {
             var pending = toLoad.length;
             var onOne = function () { if (--pending <= 0) finalize(); };
             toLoad.forEach(function (p) {
-                edu.system.loadToCombo_DanhMucDuLieu(p[0], p[1], "", onOne, p[2]);
+                edu.system.loadToCombo_DanhMucDuLieu(p[0], p[1], "", function (rows) {
+                    // Giữ lại data thô của danh mục Trường THPT để dựng chuỗi "Mã | Tên"
+                    // (option chỉ render TEN, không có MA trong DOM).
+                    if (p[1] === 'ddlKQ_Truong12') me._dtTruong12 = rows || [];
+                    onOne();
+                }, p[2]);
             });
         } catch (ex) {
             kqdkNoLog('[KQĐK] Nạp danh mục lỗi:', ex);
@@ -3607,6 +3615,7 @@ KeHoachTuyenSinhNew.prototype = {
         bind('ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa');
         bind('ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa');
         me._bindAddrTouched();
+        me._bindTruong12();
     },
 
     /*------------------------------------------
@@ -3617,6 +3626,65 @@ KeHoachTuyenSinhNew.prototype = {
     -- Dùng select2:select/clear/unselect vì mấy sự kiện này chỉ phát khi user thao tác,
     -- còn .val().trigger('change') của code thì không phát → không đánh dấu nhầm.
     -------------------------------------------*/
+    /*==========================================================================
+    == TRƯỜNG LỚP 12 — dropdown có tìm kiếm thay cho gõ tay (yêu cầu 11/09/2026)
+    == Danh mục TUYENSINH.TRUONGHOC, đúng nguồn hosotuyensinh.js/xettuyen.js dùng.
+    == BE vẫn nhận TEXT qua strPersonEdu_TruongMaTen nên giá trị thật nằm ở input
+    == ẩn #txtKQ_TruongMaTen — dropdown chỉ là cách chọn. Nhờ vậy mọi hàm lưu/nạp
+    == và cột bảng danh sách không phải sửa gì.
+    ==========================================================================*/
+    _truong12TuId: function (id) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        if (!edu.util.checkValue(id)) return '';
+        var r = (me._dtTruong12 || []).filter(function (e) { return e.ID === id; })[0];
+        if (!r) return '';
+        var ma = ((r.MA || '') + '').trim();
+        var ten = ((r.TEN || '') + '').trim();
+        return (ma && ten) ? (ma + ' | ' + ten) : (ten || ma);
+    },
+
+    /*------------------------------------------
+    -- Đổ text đã lưu ngược lên dropdown. Trường không có trong danh mục (dữ liệu cũ
+    -- gõ tay, hoặc trường mới) thì chèn 1 option tạm mang đúng text đó — KHÔNG được
+    -- để trống, vì bấm Cập nhật sau đó sẽ ghi rỗng đè lên dữ liệu đang có.
+    -------------------------------------------*/
+    _setTruong12FromText: function (text, _try) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $sel = $('#ddlKQ_Truong12');
+        if (!$sel.length || !edu.util.checkValue(text)) return;
+        var dt = me._dtTruong12 || [];
+        if (!dt.length) {                       // danh mục nạp async → chờ rồi thử lại
+            _try = (_try || 0) + 1;
+            if (_try > 25) return;
+            setTimeout(function () { me._setTruong12FromText(text, _try); }, 200);
+            return;
+        }
+        var chuan = function (s) { return ((s || '') + '').trim().toLowerCase(); };
+        var t = chuan(text);
+        var hit = dt.filter(function (e) {
+            return chuan(me._truong12TuId(e.ID)) === t
+                || chuan(e.TEN) === t || chuan(e.MA) === t;
+        })[0];
+        if (hit) { $sel.val(hit.ID); }
+        else {
+            if (!$sel.find('option[value="__khac__"]').length) $sel.append('<option value="__khac__"></option>');
+            $sel.find('option[value="__khac__"]').text(text);
+            $sel.val('__khac__');
+        }
+        me._reapplyKQSelect2('ddlKQ_Truong12');
+    },
+
+    _bindTruong12: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        $('#ddlKQ_Truong12').off('change.kqtr').on('change.kqtr', function () {
+            var v = $(this).val() || '';
+            var txt = (v === '__khac__')
+                ? ($(this).find('option[value="__khac__"]').text() || '')
+                : me._truong12TuId(v);
+            edu.util.viewValById('txtKQ_TruongMaTen', txt);
+        });
+    },
+
     _bindAddrTouched: function () {
         var danhDau = function () { $(this).attr('data-user-touched', '1'); };
         ['ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa',
@@ -3813,7 +3881,7 @@ KeHoachTuyenSinhNew.prototype = {
             'ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa',
             // Tab 3 - Xét tuyển
             'ddlKQ_PhuongThuc', 'ddlKQ_DoiTuongTS', 'ddlKQ_DoiTuongUT',
-            'ddlKQ_KhuVucUT', 'ddlKQ_HocLuc', 'ddlKQ_HanhKiem',
+            'ddlKQ_KhuVucUT', 'ddlKQ_Truong12', 'ddlKQ_HocLuc', 'ddlKQ_HanhKiem',
             // Tab 4 - Trúng tuyển (nạp async → _load* sẽ _reapplyKQSelect2 lại sau khi có option)
             'ddlKQ_DotTuyenSinh', 'ddlKQ_NguyenVongDauRa', 'ddlKQ_LopDuKien', 'ddlKQ_CoSoDaoTao',
             // Tab 6 - Xuất hóa đơn
@@ -3891,7 +3959,7 @@ KeHoachTuyenSinhNew.prototype = {
         // vẫn hiển thị giá trị cũ dù value đã rỗng.
         $('#ddlKQ_GioiTinh, #ddlKQ_QuocTich, #ddlKQ_DanToc, #ddlKQ_TonGiao,'
             + '#ddlKQ_PhuongThuc, #ddlKQ_DoiTuongTS, #ddlKQ_DoiTuongUT,'
-            + '#ddlKQ_KhuVucUT, #ddlKQ_HocLuc, #ddlKQ_HanhKiem,'
+            + '#ddlKQ_KhuVucUT, #ddlKQ_Truong12, #ddlKQ_HocLuc, #ddlKQ_HanhKiem,'
             + '#ddlKQ_NguyenVongDauRa, #ddlKQ_CoSoDaoTao,'
             + '#ddlKQ_HD_DoiTuong, #ddlKQ_HD_HinhThucTT,'
             + '#ddlKQ_NguonKhaiThac').val('').trigger('change');
@@ -5418,7 +5486,10 @@ KeHoachTuyenSinhNew.prototype = {
         setDrop('#ddlKQ_HanhKiem', V(['PERSONEDU_HANHKIEM', 'EDU_HANHKIEM', 'HANHKIEM'], /HANHKIEM/), T(/HANHKIEM/));
         // 'TINH_ID' trần dễ ăn nhầm tỉnh của Nơi sinh/Hộ khẩu → chỉ nhận cột có tiền tố EDU
         setTxt('txtKQ_MaTinh12', V(['PERSONEDU_TINH_ID', 'EDU_TINH_ID', 'PERSONEDU_TINH_MA'], /EDU.*TINH|TINH.*12/));
-        setTxt('txtKQ_TruongMaTen', VT(['PERSONEDU_TRUONGMATEN', 'EDU_TRUONGMATEN', 'TRUONGMATEN', 'TRUONG_MA_TEN'], /TRUONG/));
+        var truong12 = VT(['PERSONEDU_TRUONGMATEN', 'EDU_TRUONGMATEN', 'TRUONGMATEN', 'TRUONG_MA_TEN'], /TRUONG/);
+        setTxt('txtKQ_TruongMaTen', truong12);
+        // Input đã ẩn → phải đổ ngược lên dropdown cho người dùng nhìn thấy
+        if (edu.util.checkValue(truong12)) me._setTruong12FromText(truong12);
         setTxt('txtKQ_ToHopMa', V(['XETTUYEN_TOHOPMON_CODE', 'TOHOPMON_CODE', 'TOHOPMON_MA', 'TOHOP_MA'], /TOHOP.*(CODE|MA)$/));
         setTxt('txtKQ_ToHopTen', V(['XETTUYEN_TOHOPMON_TEN', 'TOHOPMON_TEN', 'TOHOP_TEN']) || T(/TOHOP/));
         setTxt('txtKQ_DiemUT', V(['XETTUYEN_DIEMUUTIEN', 'DIEMUUTIEN', 'DIEM_UU_TIEN'], /DIEM.*UUTIEN|DIEMUT$/));

@@ -2161,7 +2161,13 @@
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Trường lớp 12</label>
-                                            <input class="aps-sv-input" id="txtKQ_TruongMaTen" placeholder="Mã | Tên trường THPT">
+                                            <div class="aps-sv-select">
+                                                <select class="aps-sv-input" id="ddlKQ_Truong12"></select>
+                                                <i class="fa-light fa-chevron-down"></i>
+                                            </div>
+                                            <!-- Giá trị gửi xuống BE vẫn là TEXT "Mã | Tên" (param strPersonEdu_TruongMaTen).
+                                                 Giữ input ẩn cùng id cũ để toàn bộ luồng lưu/nạp không phải sửa theo. -->
+                                            <input type="hidden" id="txtKQ_TruongMaTen">
                                         </div>
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Học lực</label>
@@ -2838,7 +2844,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.6.1"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.7.0"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();
