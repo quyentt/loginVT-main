@@ -1205,15 +1205,94 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
     if (DeXuatHoSo.prototype.save_PersonInvoice) {
         var _origSaveInv = DeXuatHoSo.prototype.save_PersonInvoice;
         DeXuatHoSo.prototype.save_PersonInvoice = function () {
+            // (1a) Mượn ô Tên đơn vị để gửi Họ tên người mua (xem chú thích ở trên)
             var $don = $('#txtKQ_HD_TenDonVi');
             var nguoiMua = (($('#txtKQ_HD_NguoiMua').val() || '') + '').trim();
             var cu = ($don.val() || '') + '';
             var daMuon = false;
             if (!cu.trim() && nguoiMua) { $don.val(nguoiMua); daMuon = true; }
+
+            // (1b) Đối tượng xuất hoá đơn: BE trả "BUYER_TYPE_LOAI khong hop le" vì
+            // bản gốc gửi VALUE của option = ID danh mục (GUID), trong khi proc chờ
+            // MÃ CHỮ (bảng tham số bên tuyển sinh ghi ví dụ 'CN'). loadToCombo_DanhMucDuLieu
+            // đặt mã vào thuộc tính name của option, nên lấy từ đó.
+            // <select> không giữ được giá trị không thuộc option nào → thêm tạm 1 option
+            // mang đúng mã, chọn nó, gọi bản gốc, xong thì gỡ và trả lại như cũ.
+            var $dt = $('#ddlKQ_HD_DoiTuong');
+            var idCu = ($dt.val() || '') + '';
+            var ma = DeXuatHoSo.prototype._zeMaDoiTuong();
+            var daDoi = false, daThemOpt = false;
+            if (ma && ma !== idCu) {
+                if (!$dt.find('option[value="' + ma + '"]').length) {
+                    $dt.append('<option value="' + ma + '" data-ze-tam="1"></option>');
+                    daThemOpt = true;
+                }
+                $dt.val(ma);
+                daDoi = true;
+            }
+
             try { _origSaveInv.call(this); }
-            finally { if (daMuon) $don.val(cu); }
+            finally {
+                if (daMuon) $don.val(cu);
+                if (daDoi) {
+                    $dt.val(idCu);
+                    if (daThemOpt) $dt.find('option[data-ze-tam="1"]').remove();
+                }
+            }
         };
     }
+
+    /*------------------------------------------
+    -- Giá trị gửi cho strBuyer_Type_Loai. BE từ chối GUID ("BUYER_TYPE_LOAI khong
+    -- hop le") nên phải ra MÃ CHỮ. Thứ tự ưu tiên:
+    --   1) thuộc tính name của option = mã danh mục, NHƯNG bỏ qua nếu nó cũng là
+    --      GUID 32 ký tự (danh mục ở đây khai như vậy);
+    --   2) chữ hiển thị của option — chính là "CA_NHAN" / "TO_CHUC";
+    --   3) chưa chọn gì thì mặc định CA_NHAN (yêu cầu của người dùng 11/09/2026,
+    --      đại đa số hồ sơ sinh viên xuất hoá đơn cho cá nhân).
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeMAC_DINH_DOITUONG = 'CA_NHAN';
+    DeXuatHoSo.prototype._zeMaDoiTuong = function () {
+        var $dt = $('#ddlKQ_HD_DoiTuong');
+        var laGuid = function (s) { return /^[0-9A-Fa-f]{32}$/.test(((s || '') + '').trim()); };
+        var opt = $dt.find('option:selected')[0];
+        var ma = opt ? (((opt.getAttribute('name') || opt.getAttribute('data-ma') || '') + '')).trim() : '';
+        if (ma && !laGuid(ma)) return ma;
+        var val = (($dt.val() || '') + '').trim();
+        var txt = opt ? (((opt.textContent || '') + '')).trim() : '';
+        // value rỗng = dòng placeholder ("-- Chọn đối tượng --"), không phải lựa chọn thật
+        if (val && txt && !laGuid(txt)) return txt;
+        return DeXuatHoSo.prototype._zeMAC_DINH_DOITUONG;
+    };
+
+    /*------------------------------------------
+    -- Chiều ngược lại: DB lưu BUYER_TYPE_LOAI là MÃ CHỮ, nhưng bản gốc đổ lên bằng
+    -- $('#ddlKQ_HD_DoiTuong').val(<mã>) — <select> không có option nào mang value đó
+    -- nên ô luôn trắng, mở lại tưởng như chưa lưu. Tra mã → id rồi mới chọn.
+    -- Chỉ điền khi ô đang trống nên không đè lên thao tác của người dùng.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeFixDoiTuongTuMa = function (maHoacId) {
+        if (!edu.util.checkValue(maHoacId)) return;
+        var dat = function () {
+            var $d = $('#ddlKQ_HD_DoiTuong');
+            if (!$d.length || $d.val()) return;
+            var opt = document.querySelector('#ddlKQ_HD_DoiTuong option[name="' + maHoacId + '"]')
+                || document.querySelector('#ddlKQ_HD_DoiTuong option[data-ma="' + maHoacId + '"]')
+                || document.querySelector('#ddlKQ_HD_DoiTuong option[value="' + maHoacId + '"]');
+            if (!opt) {
+                // Danh mục ở đây không khai mã riêng — giá trị lưu xuống chính là chữ
+                // hiển thị ("CA_NHAN"), nên phải dò thêm theo text của option.
+                var ds = document.querySelectorAll('#ddlKQ_HD_DoiTuong option');
+                for (var i = 0; i < ds.length; i++) {
+                    if (((ds[i].textContent || '') + '').trim() === ((maHoacId || '') + '').trim()) { opt = ds[i]; break; }
+                }
+            }
+            if (opt && opt.value) $d.val(opt.value).trigger('change');
+        };
+        dat();
+        setTimeout(dat, 600);
+        setTimeout(dat, 1600);
+    };
 
     /*------------------------------------------
     -- (2) Chụp cụm Thanh toán khỏi form (đồng bộ) — phải gọi TRƯỚC luồng lưu gốc.
@@ -1360,11 +1439,60 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
             dx._currentBankId = '';
             dx._zeBankRow = null;
             dx._zeXhdPersonId = personId || '';
+            if (typeof window._zeXoaLoiLuu === 'function') window._zeXoaLoiLuu();
             _origLoadXHD.call(dx, personId);
             dx._zeLoadBank(personId);
+            dx._zeLoadInvoiceFix(personId);
             dx._zeSuaPlaceholderXHD();
         };
     }
+
+    /*------------------------------------------
+    -- Đọc lại bản ghi hoá đơn để chữa ô "Đối tượng" (mã chữ → id) và điền
+    -- "Họ tên người mua" khi hoá đơn xuất cho cá nhân — bản gốc luôn đổ BUYER_NAME
+    -- vào ô Tên đơn vị, nên hoá đơn cá nhân mở lại nằm sai ô.
+    -- Chỉ điền vào ô đang trống, không đè bản gốc.
+    -------------------------------------------*/
+    DeXuatHoSo.prototype._zeLoadInvoiceFix = function (personId) {
+        var dx = this;
+        if (!edu.util.checkValue(personId)) return;
+        edu.system.makeRequest({
+            success: function (data) {
+                var rows = (data && data.Success && data.Data) || [];
+                if (!rows.length) return;
+                var inv = rows[0];
+                if (dx._zeXhdPersonId === personId) dx._currentInvoiceId = inv.ID || '';
+                dx._zeFixDoiTuongTuMa(inv.BUYER_TYPE_LOAI);
+                // Hoá đơn cá nhân: không có MST và không có tên đơn vị kiểu tổ chức
+                // → BUYER_NAME chính là họ tên người mua.
+                var ten = inv.BUYER_NAME_TENNM || inv.BUYER_NAME || '';
+                if (edu.util.checkValue(ten) && !edu.util.checkValue(inv.BUYER_TAX_MST)) {
+                    var dat = function () {
+                        if (!$('#txtKQ_HD_NguoiMua').val()) edu.util.viewValById('txtKQ_HD_NguoiMua', ten);
+                    };
+                    dat();
+                    setTimeout(dat, 700);
+                    setTimeout(dat, 1700);
+                }
+            },
+            error: function () { },
+            type: 'POST',
+            contentType: true,
+            action: 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+            data: {
+                'action': 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P',
+                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
+                'iM': edu.system.iM,
+                'strPerson_Id': personId,
+                'dChiHienHanh': 1,
+                'strNguoiThucHien_Id': edu.system.userId,
+                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
+                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
+                'strHanhDong_Code': ''
+            },
+            fakedb: []
+        }, false, false, false, null);
+    };
 
     /*------------------------------------------
     -- 2 combo của tab Xuất hoá đơn gọi loadToCombo_DanhMucDuLieu mà KHÔNG truyền
@@ -1526,6 +1654,89 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeLuuDocLapHooked
         }, 500);
     });
 }
+
+/*==============================================================================
+== HIỆN LỖI BE RA MÀN HÌNH THAY VÌ NUỐT IM  (2026-09-11)
+==
+== Cả 3 luồng lưu (hoá đơn / ngân hàng / địa chỉ) khi BE trả Success = false đều
+== chỉ console.warn. Người dùng bấm Lưu, không thấy gì, tưởng đã lưu xong —
+== mất rất nhiều thời gian mới phát hiện BE đang từ chối ("BUYER_TYPE_LOAI
+== khong hop le"). Từ giờ in thẳng câu từ chối của BE lên đầu tab Xuất hoá đơn.
+==
+== Dùng banner ngay trong tab, KHÔNG dùng edu.system.alert: alert của BS3 chồng
+== lên nhau sẽ gỡ body.modal-open và làm form đang mở tự đóng.
+==============================================================================*/
+if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.system._zeBaoLoiHooked) {
+    edu.system._zeBaoLoiHooked = true;
+
+    var _zeHienLoi = function (msg) {
+        var host = document.getElementById('zoneXHD') || document.getElementById('zoneCaNhan');
+        if (!host) return;
+        var el = document.getElementById('zeLoiLuu');
+        if (!el) {
+            el = document.createElement('div');
+            el.id = 'zeLoiLuu';
+            el.style.cssText = 'margin:0 0 16px;padding:10px 14px;border:1px solid #fca5a5;'
+                + 'background:#fef2f2;color:#b91c1c;border-radius:6px;font-size:13.5px;line-height:1.5;';
+            host.insertBefore(el, host.firstChild);
+        }
+        el.textContent = msg;
+        el.style.display = '';
+    };
+    window._zeXoaLoiLuu = function () {
+        var el = document.getElementById('zeLoiLuu');
+        if (el) el.style.display = 'none';
+    };
+
+    var _TEN_LUU = /Them_PersonInvoiceInfo|Sua_PersonInvoiceInfo|Ins_Person_Bank_Account|Upd_Person_Bank_Account|Ins_Person_Address|Upd_Person_Address/;
+    var _NHAN = {
+        PersonInvoiceInfo: 'Thông tin hoá đơn',
+        Person_Bank_Account: 'Thông tin thanh toán',
+        Person_Address: 'Địa chỉ'
+    };
+    var _mrGoc = edu.system.makeRequest;
+    edu.system.makeRequest = function (o) {
+        try {
+            var f = (o && o.data && o.data.func) || '';
+            if (_TEN_LUU.test(f) && typeof o.success === 'function') {
+                var sGoc = o.success;
+                o.success = function (data) {
+                    try {
+                        if (data && data.Success === false) {
+                            var nhan = 'Lưu';
+                            for (var k in _NHAN) { if (f.indexOf(k) > -1) { nhan = _NHAN[k]; break; } }
+                            _zeHienLoi('Chưa lưu được ' + nhan + ': '
+                                + ((data.Message || '').trim() || 'máy chủ từ chối, không kèm lý do')
+                                + '  [' + f.split('.').pop() + ']');
+                        }
+                    } catch (e) { }
+                    return sGoc.apply(this, arguments);
+                };
+            }
+        } catch (e) { }
+        return _mrGoc.apply(this, arguments);
+    };
+}
+
+/*------------------------------------------
+-- Tiện ích xem nhanh danh mục "Đối tượng xuất hoá đơn" đang có những mã nào.
+-- Gõ trong Console:  _zeXemDoiTuong()
+-- Dùng để đối chiếu với giá trị mà proc Them_PersonInvoiceInfo chấp nhận.
+-------------------------------------------*/
+window._zeXemDoiTuong = function () {
+    var opts = document.querySelectorAll('#ddlKQ_HD_DoiTuong option');
+    var ds = [];
+    for (var i = 0; i < opts.length; i++) {
+        ds.push({
+            'Hiển thị (TEN)': opts[i].textContent,
+            'Mã (MA) — gửi lên BE': opts[i].getAttribute('name') || opts[i].getAttribute('data-ma') || '(KHÔNG CÓ)',
+            'Id danh mục': opts[i].value
+        });
+    }
+    if (console.table) console.table(ds); else console.log(ds);
+    return ds;
+};
+
 
 
 
