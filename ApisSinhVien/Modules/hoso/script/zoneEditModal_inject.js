@@ -1212,60 +1212,17 @@ if (typeof DeXuatHoSo === 'function' && !DeXuatHoSo.prototype._zeXhdHooked) {
             var daMuon = false;
             if (!cu.trim() && nguoiMua) { $don.val(nguoiMua); daMuon = true; }
 
-            // (1b) Đối tượng xuất hoá đơn: BE trả "BUYER_TYPE_LOAI khong hop le" vì
-            // bản gốc gửi VALUE của option = ID danh mục (GUID), trong khi proc chờ
-            // MÃ CHỮ (bảng tham số bên tuyển sinh ghi ví dụ 'CN'). loadToCombo_DanhMucDuLieu
-            // đặt mã vào thuộc tính name của option, nên lấy từ đó.
-            // <select> không giữ được giá trị không thuộc option nào → thêm tạm 1 option
-            // mang đúng mã, chọn nó, gọi bản gốc, xong thì gỡ và trả lại như cũ.
-            var $dt = $('#ddlKQ_HD_DoiTuong');
-            var idCu = ($dt.val() || '') + '';
-            var ma = DeXuatHoSo.prototype._zeMaDoiTuong();
-            var daDoi = false, daThemOpt = false;
-            if (ma && ma !== idCu) {
-                if (!$dt.find('option[value="' + ma + '"]').length) {
-                    $dt.append('<option value="' + ma + '" data-ze-tam="1"></option>');
-                    daThemOpt = true;
-                }
-                $dt.val(ma);
-                daDoi = true;
-            }
+            // (1b) GỠ BỎ 11/09/2026 — trước đây ở đây đổi giá trị "Đối tượng xuất hoá
+            // đơn" từ ID danh mục sang mã chữ ("CA_NHAN"), và mặc định CA_NHAN khi bỏ
+            // trống. SAI: kiểm tra thẳng trong DB cho thấy PERSON_INVOICE_INFO.
+            // BUYER_TYPE_LOAI phải là ID DANH MỤC (GUID) — đúng như VALUE của option
+            // mà bản gốc vẫn gửi. Bản vá đó đã đẻ ra một dòng rác mang 'CA_NHAN'.
+            // Giữ nguyên giá trị người dùng chọn, không đổi, không mặc định gì cả.
 
             try { _origSaveInv.call(this); }
-            finally {
-                if (daMuon) $don.val(cu);
-                if (daDoi) {
-                    $dt.val(idCu);
-                    if (daThemOpt) $dt.find('option[data-ze-tam="1"]').remove();
-                }
-            }
+            finally { if (daMuon) $don.val(cu); }
         };
     }
-
-    /*------------------------------------------
-    -- Giá trị gửi cho strBuyer_Type_Loai. BE từ chối GUID ("BUYER_TYPE_LOAI khong
-    -- hop le") nên phải ra MÃ CHỮ. Thứ tự ưu tiên:
-    --   1) thuộc tính name của option = mã danh mục, NHƯNG bỏ qua nếu nó cũng là
-    --      GUID 32 ký tự (danh mục ở đây khai như vậy);
-    --   2) chữ hiển thị của option — chính là "CA_NHAN" / "TO_CHUC";
-    --   3) chưa chọn gì thì mặc định CA_NHAN (yêu cầu của người dùng 11/09/2026,
-    --      đại đa số hồ sơ sinh viên xuất hoá đơn cho cá nhân).
-    -------------------------------------------*/
-    DeXuatHoSo.prototype._zeMAC_DINH_DOITUONG = 'CA_NHAN';
-    DeXuatHoSo.prototype._zeMaDoiTuong = function () {
-        var $dt = $('#ddlKQ_HD_DoiTuong');
-        var laGuid = function (s) { return /^[0-9A-Fa-f]{32}$/.test(((s || '') + '').trim()); };
-        var opt = $dt.find('option:selected')[0];
-        var ma = opt ? (((opt.getAttribute('name') || opt.getAttribute('data-ma') || '') + '')).trim() : '';
-        var val = (($dt.val() || '') + '').trim();
-        // Bỏ qua "mã" nếu nó là GUID, hoặc trùng luôn với value — cả hai đều là dấu
-        // hiệu danh mục không khai mã riêng, khung nhét id vào cả 2 chỗ.
-        if (ma && !laGuid(ma) && ma !== val) return ma;
-        var txt = opt ? (((opt.textContent || '') + '')).trim() : '';
-        // value rỗng = dòng placeholder ("-- Chọn đối tượng --"), không phải lựa chọn thật
-        if (val && txt && !laGuid(txt)) return txt;
-        return DeXuatHoSo.prototype._zeMAC_DINH_DOITUONG;
-    };
 
     /*------------------------------------------
     -- Chiều ngược lại: DB lưu BUYER_TYPE_LOAI là MÃ CHỮ, nhưng bản gốc đổ lên bằng
@@ -1700,6 +1657,23 @@ if (typeof edu !== 'undefined' && edu.system && edu.system.makeRequest && !edu.s
     edu.system.makeRequest = function (o) {
         try {
             var f = (o && o.data && o.data.func) || '';
+            /*--------------------------------------------------------------
+            -- BUYER_REF_TYPE_NGUON / BUYER_REF_ID_NGUON (11/09/2026)
+            -- dexuathoso.js gửi cứng 2 param này bằng rỗng, nên dòng ghi ra DB
+            -- thiếu nguồn tham chiếu. Đối chiếu bản ghi đúng trong
+            -- PERSON_INVOICE_INFO: BUYER_REF_TYPE_NGUON = 'CORE_PERSON' và
+            -- BUYER_REF_ID_NGUON = chính person_id. Điền vào đây vì modal không
+            -- có ô nhập nào cho 2 cột đó.
+            --------------------------------------------------------------*/
+            if (/PersonInvoiceInfo/.test(f) && o.data) {
+                var dx = (window.main_doc && window.main_doc.DeXuatHoSo) || null;
+                var pid = ((o.data.strPerson_Id || '') + '').trim()
+                    || (dx ? ((dx.strDeXuatHoSo_Id || dx._lockedPersonId || '') + '').trim() : '');
+                if (pid) {
+                    if (!((o.data.strBuyer_Ref_Type || '') + '').trim()) o.data.strBuyer_Ref_Type = 'CORE_PERSON';
+                    if (!((o.data.strBuyer_Ref_Id || '') + '').trim()) o.data.strBuyer_Ref_Id = pid;
+                }
+            }
             if (_TEN_LUU.test(f) && typeof o.success === 'function') {
                 var sGoc = o.success;
                 o.success = function (data) {
