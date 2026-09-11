@@ -2304,10 +2304,14 @@
                                             <label class="aps-sv-label">Họ và tên</label>
                                             <input class="aps-sv-input" id="txtKQ_Bo_HoTen" placeholder="Họ và tên bố">
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026 — giữ code để mở lại khi cần.
+                                             Dữ liệu cũ trong PERSON_FAMILY KHÔNG bị xoá: _writeFamily giữ nguyên
+                                             BIRTH_YEAR / ADDRESS_TEXT khi form không còn 2 ô này.
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Năm sinh</label>
                                             <input type="number" min="1900" max="2100" class="aps-sv-input" id="txtKQ_Bo_NamSinh" placeholder="Ví dụ: 1975">
                                         </div>
+                                        -->
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Số điện thoại liên hệ</label>
                                             <div class="aps-sv-input-icon">
@@ -2315,10 +2319,12 @@
                                                 <input class="aps-sv-input" id="txtKQ_Bo_SDT" placeholder="09xx xxx xxx">
                                             </div>
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Nơi ở hiện nay</label>
                                             <input class="aps-sv-input" id="txtKQ_Bo_NoiO" placeholder="Địa chỉ hiện tại">
                                         </div>
+                                        -->
                                     </div>
                                 </div>
 
@@ -2329,10 +2335,12 @@
                                             <label class="aps-sv-label">Họ và tên</label>
                                             <input class="aps-sv-input" id="txtKQ_Me_HoTen" placeholder="Họ và tên mẹ">
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026 — xem chú thích ở phần Bố
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Năm sinh</label>
                                             <input type="number" min="1900" max="2100" class="aps-sv-input" id="txtKQ_Me_NamSinh" placeholder="Ví dụ: 1978">
                                         </div>
+                                        -->
                                         <div class="aps-sv-field">
                                             <label class="aps-sv-label">Số điện thoại liên hệ</label>
                                             <div class="aps-sv-input-icon">
@@ -2340,10 +2348,12 @@
                                                 <input class="aps-sv-input" id="txtKQ_Me_SDT" placeholder="09xx xxx xxx">
                                             </div>
                                         </div>
+                                        <!-- Ẩn theo yêu cầu khách 11/09/2026
                                         <div class="aps-sv-field aps-sv-col-full">
                                             <label class="aps-sv-label">Nơi ở hiện nay</label>
                                             <input class="aps-sv-input" id="txtKQ_Me_NoiO" placeholder="Địa chỉ hiện tại">
                                         </div>
+                                        -->
                                     </div>
                                 </div>
                             </div>
@@ -2828,7 +2838,7 @@
         tryNext();
     })();
 </script>
-<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.5.2"></script>
+<script src="modules/tuyensinh/script/kehoachtuyensinhnew.js?v=1.0.6.1"></script>
 <script type="text/javascript">
     var main_doc = {};
     main_doc['KeHoachTuyenSinhNew'] = new KeHoachTuyenSinhNew();

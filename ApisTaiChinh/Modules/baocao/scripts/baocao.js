@@ -44,6 +44,7 @@ BaoCao.prototype = {
         me.getList_NguoiThu();
         me.getList_TrangThaiSV();
 
+        me.getList_CoSoDaoTao();
         me.getList_HeDaoTao();
         me.getList_KhoaDaoTao();
         me.getList_ChuongTrinhDaoTao();
@@ -72,6 +73,10 @@ BaoCao.prototype = {
         });
         edu.system.loadToCombo_DanhMucDuLieu("KHCT.NCN", "dropSearch_NganhHoc");
         console.log(11111);
+        $('#dropSearch_CoSoDaoTao_IHD').on('select2:select', function (e) {
+
+            me.resetCombobox(this);
+        });
         $('#dropSearch_HeDaoTao_IHD').on('select2:select', function (e) {
             //console.log($('#dropSearch_HeDaoTao_IHD').length)
             me.getList_KhoaDaoTao();
@@ -217,6 +222,7 @@ BaoCao.prototype = {
             }
             addKeyValue("strTrangThaiNguoiHoc_Id", strTrangThaiNguoiHoc_Id);
             addKeyValue("strNganhHoc_Id", edu.util.getValCombo("dropSearch_NganhHoc"));
+            addKeyValue("strDaoTao_CoSoDaoTao_Id", edu.util.getValCombo("dropSearch_CoSoDaoTao_IHD"));
         });
 
 
@@ -461,6 +467,23 @@ BaoCao.prototype = {
     --Discription: [1] ACCESS DB ==>Systemroot
     --ULR: Modules
     -------------------------------------------*/
+    /*------------------------------------------
+    --Discription: Cơ sở đào tạo.
+    --Note: edu.system.getList_CoSoDaoTao gọi proc business
+            `pkg_kehoach_thongtin.LayDSDaoTao_CoSoDaoTao` — đúng proc module TS
+            (kehoachtuyensinhnew.js: loadCoSoDaoTao_ToSelect) dùng. KHÔNG dùng
+            danh mục KHCT.COSODAOTAO vì trả rỗng ở CMC.
+    -------------------------------------------*/
+    getList_CoSoDaoTao: function () {
+        var me = this;
+        var objList = {
+            strNguoiThucHien_Id: "",
+            strTuKhoa: "",
+            pageIndex: 1,
+            pageSize: 100000
+        }
+        edu.system.getList_CoSoDaoTao(objList, "", "", me.cbGenCombo_CoSoDaoTao);
+    },
     getList_HeDaoTao: function () {
         var me = this;
         var objList = {
@@ -686,6 +709,31 @@ BaoCao.prototype = {
     --Discription: [0] GEN HTML ==> Systemroot
     --ULR: Modules
     -------------------------------------------*/
+    cbGenCombo_CoSoDaoTao: function (data) {
+        var me = this;
+        var obj = {
+            data: data,
+            renderInfor: {
+                id: "ID",
+                parentId: "",
+                name: "TEN",
+                code: "MA",
+                avatar: "",
+                //Hiển thị "TEN (MA)" theo chuẩn dropdown danh mục
+                mRender: function (j, aData) {
+                    var strTen = edu.util.returnEmpty(aData.TEN);
+                    var strMa = edu.util.returnEmpty(aData.MA);
+                    if (strMa && strMa != strTen) return strTen + " (" + strMa + ")";
+                    return strTen ? strTen : strMa;
+                }
+            },
+            renderPlace: ["dropSearch_CoSoDaoTao_IHD"],
+            type: "",
+            title: "Tất cả cơ sở đào tạo",
+        }
+        edu.system.loadToCombo_data(obj);
+        if (data.length != 1) $("#dropSearch_CoSoDaoTao_IHD").val("").trigger("change");
+    },
     cbGenCombo_HeDaoTao: function (data) {
         var me = this;
         var obj = {
@@ -1064,6 +1112,7 @@ BaoCao.prototype = {
             'strPhanLoaiChungTu_Id': edu.util.getValCombo("dropSearch_PhanLoai"),
             'strPhanLoaiCSDT': edu.util.getValCombo("dropSearch_PhanLoaiCSDT"),
             'strNganhHoc_Id': edu.util.getValCombo("dropSearch_NganhHoc"),
+            'strDaoTao_CoSoDaoTao_Id': edu.util.getValCombo("dropSearch_CoSoDaoTao_IHD"),
         }
 
         edu.system.beginLoading();
@@ -1141,6 +1190,7 @@ BaoCao.prototype = {
             'strPhanLoaiCSDT': edu.util.getValCombo("dropSearch_PhanLoaiCSDT"),
             'strNganhHoc_Id': edu.util.getValCombo("dropSearch_NganhHoc"),
             'strDangKy_KeHoach_Id': edu.util.getValById('dropKeHoachDangKy_TP'),
+            'strDaoTao_CoSoDaoTao_Id': edu.util.getValCombo("dropSearch_CoSoDaoTao_IHD"),
         }
 
         edu.system.beginLoading();
@@ -1588,7 +1638,7 @@ BaoCao.prototype = {
             'strPhanLoaiChungTu_Id': edu.util.getValCombo("dropSearch_PhanLoai"),
             'strPhanLoaiCSDT': edu.util.getValCombo("dropSearch_PhanLoaiCSDT"),
             
-            'strDaoTao_CoSoDaoTao_Id': edu.util.getValById('dropAAAA'),
+            'strDaoTao_CoSoDaoTao_Id': edu.util.getValCombo('dropSearch_CoSoDaoTao_IHD'),
             'strOrderBy': edu.util.getValById('txtAAAA'),
             'strChucNang_Id': edu.system.strChucNang_Id,
             'strAPI_DoiTac_Id': edu.util.getValById('dropSearch_BangKetNoiKeToan'),

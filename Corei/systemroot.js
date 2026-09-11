@@ -595,10 +595,13 @@ systemroot.prototype = {
                         } else {
                             onSuccess(result);
                         }
-                        if ((me["iShk"] || me.clientIP =="14.232.210.131") && dtShow.iM) {
-                            dtShow["data"] = result;
-                            console.log(dtShow)
-                        }
+                        // Log mọi request/response — TẮT theo yêu cầu 11/09/2026.
+                        // Bật lại: bỏ comment 3 dòng dưới (điều kiện gốc giữ nguyên,
+                        // gồm localStorage "iShk" = "true" và IP 14.232.210.131).
+                        // if ((me["iShk"] || me.clientIP =="14.232.210.131") && dtShow.iM) {
+                        //     dtShow["data"] = result;
+                        //     console.log(dtShow)
+                        // }
                     } catch (ex) {
                         onSuccess(result);
                     }
