@@ -7811,8 +7811,8 @@ input#tblInput_DTSV_SinhVien_input {
 
 .pull-right-absolute {
     position: absolute;
-    top: 0;
-    right: 5px;
+    top: 2px;
+    right: 2px;
 }
 
 .pull-right-absolute .btnCloseToggle,
@@ -9078,6 +9078,7 @@ input#tblInput_DTSV_SinhVien_input {
     position: absolute;
     top: 0px;
     width: 99% !important;
+    z-index: 999999 !important;
 }
 
 .aps-add-donviphi .box-search {
@@ -17991,9 +17992,11 @@ html body.skin-blue .aps-list-hocphan.sidebar-menu>li:hover>a {
     color: var(--color-red) !important;
 }
 
-.zone_edithocphan .box-footer .btn i,.zoneViewHocPhan  .box-footer .btn i,
-.zone_inputhocphan_khoituchondon .box-footer .btn i,.modal-footer .btn i {
-    padding-right: 6px !important;
+.zone_edithocphan .box-footer .btn i,
+.zoneViewHocPhan .box-footer .btn i,
+.zone_inputhocphan_khoituchondon .box-footer .btn i,
+.modal-footer .btn i {
+    padding-right: 0 !important;
 }
 
 .zone_ketquahocphan .box-footer .btn i {
@@ -18018,15 +18021,17 @@ html body.skin-blue .aps-modal-nhansu.aps-modal-sinhvien.modal .modal-body {
     padding: 0 !important;
 }
 
-.aps-modal-nhansu.aps-modal-sinhvien.modal .modal-header .close ,
-.modal.myModalLabel .modal-header .close,.modal .modal-header .close{
+.aps-modal-nhansu.aps-modal-sinhvien.modal .modal-header .close,
+.modal.myModalLabel .modal-header .close,
+.modal .modal-header .close {
     position: absolute;
     margin-top: 0px !important;
     right: 15px;
 }
 
 .aps-modal-nhansu.aps-modal-sinhvien.modal .modal-header .modal-title,
-.modal.myModalLabel .modal-header .modal-title ,.modal .modal-header .modal-title{
+.modal.myModalLabel .modal-header .modal-title,
+.modal .modal-header .modal-title {
     position: absolute;
 }
 
@@ -18054,63 +18059,138 @@ html body.skin-blue .aps-modal-nhansu.aps-modal-sinhvien.modal .compact-theme ul
     justify-content: end !important;
 }
 
-html body.skin-blue .modal.myModalLabel .modal-footer,.modal .modal-footer {
+html body.skin-blue .modal.myModalLabel .modal-footer,
+.modal .modal-footer {
     gap: 0px !important;
     justify-content: flex-end !important;
 }
+
 .modal .modal-body .row.aps-add-new.box-view {
     padding-left: 20px !important;
     padding-right: 20px !important;
 }
+
 #btnAnhXaThuTuKy {
     display: flex;
 }
+
 .row.aps-form-table.scroll-table-x.DSHocPhan {
     margin-right: 0px !important;
     margin-left: 0px !important;
 }
+
 .aps-list-btn .btn {
     display: flex;
 }
-.aps-list-btn .btn i{
+
+.aps-list-btn .btn i {
     /* padding-right: 8px; */
 }
 
 .item-search.aps-choose-sv {
-   padding-top:5px;
+    padding-top: 5px;
 }
-.aps-thuchienin .inputSearch .item-search:nth-child(8){
+
+.aps-thuchienin .inputSearch .item-search:nth-child(8) {
     padding-right: 0 !important;
 }
-.zoneTestPhoi .box-header.with-border,.zoneTestPhoi .box-body.pd10{
+
+.zoneTestPhoi .box-header.with-border,
+.zoneTestPhoi .box-body.pd10 {
     padding-right: 0 !important;
     padding-left: 0 !important;
     padding-bottom: 10px !important;
 }
-.aps-quyetdinh .box-solid.box-search{
+
+.aps-quyetdinh .box-solid.box-search {
     margin-bottom: 0 !important;
 }
-.light-paginationtblQuyetDinh.compact-theme.simple-pagination ul{
+
+.light-paginationtblQuyetDinh.compact-theme.simple-pagination ul {
     overflow-x: hidden !important;
 }
+
 .aps-table-select .zone-pag-headertblQuyetDinh .select2-container--default .select2-selection--single {
     padding: 5px 10px !important;
     height: 28px !important;
 }
-.zone-pag-headertblQuyetDinh{
+
+.zone-pag-headertblQuyetDinh {
     margin-bottom: 5px !important;
 }
-.box-solid.aps-quyetdinh-list{
+
+.box-solid.aps-quyetdinh-list {
     padding-top: 0 !important;
 }
-.zone-pag-footertblQuyetDinh{
+
+.zone-pag-footertblQuyetDinh {
     margin-top: 0 !important;
     align-items: flex-start !important;
 }
+
 .zone-pag-footertblQuyetDinh .info-tblHopDongDuKien,
 .zone-pag-footertblQuyetDinh .info-tblQuyetDinh {
     margin-bottom: 0 !important;
 }
+
 .box-solid.add-quyetdinh .box-header.with-border .btn.btn-default.btnClose {
     padding: 12px 14px !important;
+}
+
+/* -----fix-t9-2026--------- */
+html body.skin-blue .modal .modal-header button {
+    font-size: 16px !important;
+    display: contents;
+}
+html body.skin-blue #main-content-wrapper .box-view.aps-add-new .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered,
+html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .box-view.aps-add-new .aps-form-input .select2-container--default .select2-selection--single .select2-selection__rendered,
+html body.skin-blue #main-content-wrapper .modal_add_phamVi_doiTuong .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding: 0 32px 0 0px !important;
+}
+html body.skin-blue #main-content-wrapper .modal_add_phamVi_doiTuong .select2-container--default .select2-selection--single .select2-selection__arrow {
+    top: 0px !important;
+}
+
+html body.skin-blue .aps-list-dangky-dongphuc .box-title .badge,
+html body.skin-blue .aps-list-dangky-dongphuc .box-title .badge.bg-light-blue {
+    margin-top: 7px !important;
+}
+
+html body.skin-blue .aps-list-dangky-dongphuc .box-header.pt20 {
+    padding-top: 10px !important;
+}
+
+#zoneEdit_KeHoach .form-container .radio-inline, html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .radio-inline,
+html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 0px !important;
+}
+
+#zoneEdit_KeHoach .form-container .radio-inline input[type="radio"],
+html body.skin-blue #main-content-wrapper .modal_add_loaikhoan_donGia .radio-inline input[type="radio"] {
+    margin: 4px 0 0 !important;
+}
+
+#zoneEdit_KeHoach .form-container .radio-inline span,.modal_add_loaikhoan_donGia .radio-inline span {
+    margin-left: 20px !important;
+}
+.modal_add_loaikhoan_donGia .aps-add-new .radio-inline {
+    margin-top: 8px !important;
+}
+html body .select2-container--default.select2-container--open .select2-dropdown {
+    border-radius: 5px !important;
+}
+#zoneEdit_KeHoach .myModalLabel{
+    padding-right: 5px;
+}
+
+html body.skin-blue #main-content-wrapper .modal_Loaikhoan_donGia .btn {
+    gap: 5px !important;
+}
+
+html body.skin-blue #main-content-wrapper .modal_ketQua_dangKy_mua .aps-add-new .box-solid.box-search{
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+}
+.btnThemMoi_PhamVi_DoiTuong{
+    gap: 4px !important;
 }

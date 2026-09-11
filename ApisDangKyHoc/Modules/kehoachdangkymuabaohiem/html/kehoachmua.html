@@ -12,12 +12,12 @@
     margin: 30px auto !important;
     height: auto !important;
   }
-  #add_phamVi_doiTuong .modal-dialog {
+  /* #add_phamVi_doiTuong .modal-dialog {
     max-width: 1280px !important;
     width: min(1280px, 96vw) !important;
     margin: 20px auto !important;
     height: auto !important;
-  }
+  } */
   #ketQua_dangKy_mua .modal-dialog {
     max-width: 1500px !important;
     width: min(1500px, 95vw) !important;
@@ -176,7 +176,7 @@
                 mua
               </h3>
             </div>
-            <div class="box box-solid box-search pb10" style="background:transparent !important; box-shadow:none !important; border:0 !important;">
+            <div class="box box-solid box-search" style="background:transparent !important; box-shadow:none !important; border:0 !important;margin-bottom: 0 !important; padding-bottom: 0 !important;">
               <div class="box-body pd0" style="background:transparent !important;">
                 <div class="col-sm-3 item-search">
                   <select id="dropSearch_LoaiKeHoach" class="select-opt"></select>
@@ -199,7 +199,7 @@
                 </div>
               </div>
             </div>
-            <div class="box box-solid mt-15 aps-list-dangky-dongphuc">
+            <div class="box box-solid aps-list-dangky-dongphuc">
               <div class="box-header d-flex pt20 pl20 pr20 pb0">
                 <h3 class="box-title line-38" style="padding: 0 !important">
                   <i class="fa-light fa-list-timeline line-38"></i> Danh sách kế
@@ -496,7 +496,7 @@
       id="add_loaikhoan_donGia"
     >
       <div
-        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680"
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-860"
       >
         <div class="modal-content">
           <div class="modal-header">
@@ -728,7 +728,7 @@
 
     <!-- modal Thêm mới Phạm vi đối tượng nào -->
     <div class="modal fade modal_add_phamVi_doiTuong" id="add_phamVi_doiTuong">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-1140">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-680">
         <div class="modal-content">
           <div class="modal-header">
             <div class="modal-header-wrap">
@@ -756,7 +756,7 @@
                 </div>
                 <div class="col-sm-9 d-flex aps-form-input" style="gap:6px;">
                   <select id="dropPV_KhoaQuanLy" class="select-opt" style="width:100% !important"></select>
-                  <a id="addPV_KhoaQuanLy" class="btn btn-primary addPhamVi_PV" data-loai="KHOAQUANLY" title="Thêm phạm vi">
+                  <a id="addPV_KhoaQuanLy" class="btn btn-soft-success addPhamVi_PV" data-loai="KHOAQUANLY" title="Thêm phạm vi">
                     <i class="fa fa-plus"></i> Thêm
                   </a>
                 </div>
@@ -770,7 +770,7 @@
                   <select id="dropPV_HeDaoTao" class="select-opt" style="width:100% !important">
                     <option value="">--Chọn hệ đào tạo--</option>
                   </select>
-                  <a id="addPV_HeDaoTao" class="btn btn-primary addPhamVi_PV" data-loai="HEDAOTAO" title="Thêm phạm vi">
+                  <a id="addPV_HeDaoTao" class="btn btn-soft-success addPhamVi_PV" data-loai="HEDAOTAO" title="Thêm phạm vi">
                     <i class="fa fa-plus"></i> Thêm
                   </a>
                 </div>
@@ -784,7 +784,7 @@
                   <select id="dropPV_KhoaDaoTao" class="select-opt" style="width:100% !important">
                     <option value="">--Chọn khóa đào tạo--</option>
                   </select>
-                  <a id="addPV_KhoaDaoTao" class="btn btn-primary addPhamVi_PV" data-loai="KHOADAOTAO" title="Thêm phạm vi">
+                  <a id="addPV_KhoaDaoTao" class="btn btn-soft-success addPhamVi_PV" data-loai="KHOADAOTAO" title="Thêm phạm vi">
                     <i class="fa fa-plus"></i> Thêm
                   </a>
                 </div>
@@ -798,7 +798,7 @@
                   <select id="dropPV_ChuongTrinh" class="select-opt" style="width:100% !important">
                     <option value="">--Chọn chương trình--</option>
                   </select>
-                  <a id="addPV_ChuongTrinh" class="btn btn-primary addPhamVi_PV" data-loai="CHUONGTRINH" title="Thêm phạm vi">
+                  <a id="addPV_ChuongTrinh" class="btn btn-soft-success addPhamVi_PV" data-loai="CHUONGTRINH" title="Thêm phạm vi">
                     <i class="fa fa-plus"></i> Thêm
                   </a>
                 </div>
@@ -812,7 +812,7 @@
                   <select id="dropPV_Lop" class="select-opt" style="width:100% !important">
                     <option value="">--Chọn lớp--</option>
                   </select>
-                  <a id="addPV_Lop" class="btn btn-primary addPhamVi_PV" data-loai="LOP" title="Thêm phạm vi">
+                  <a id="addPV_Lop" class="btn btn-soft-success addPhamVi_PV" data-loai="LOP" title="Thêm phạm vi">
                     <i class="fa fa-plus"></i> Thêm
                   </a>
                 </div>
@@ -826,7 +826,7 @@
                   <select id="dropPV_HocVien" class="select-opt" style="width:100% !important">
                     <option value="">--Chọn người học--</option>
                   </select>
-                  <a id="addPV_HocVien" class="btn btn-primary addPhamVi_PV" data-loai="NGUOIHOC" title="Thêm phạm vi">
+                  <a id="addPV_HocVien" class="btn btn-soft-success addPhamVi_PV" data-loai="NGUOIHOC" title="Thêm phạm vi">
                     <i class="fa fa-plus"></i> Thêm
                   </a>
                 </div>
@@ -890,7 +890,7 @@
                   </select>
                 </div>
                 <div class="col-sm-2 item-search pr0">
-                  <a id="btnClearSearch_KetQua" href="javascript:void(0)" class="btn btn-default" style="width:100%">
+                  <a id="btnClearSearch_KetQua" href="javascript:void(0)" class="btn btn-soft-danger">
                     <i class="fa fa-times-circle"></i> Xóa lọc
                   </a>
                 </div>

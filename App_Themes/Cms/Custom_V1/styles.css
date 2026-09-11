@@ -7216,14 +7216,17 @@ input[type="radio"] {
 }
 
 /* --btn-soft-success-- */
-.btn-soft-success,.dropdown .btn-outline-success {
+.btn-soft-success,.dropdown .btn-outline-success,
+html body.skin-blue #main-content-wrapper .btn-soft-success.addPhamVi_PV {
   background: rgba(34, 166, 82, 0.1) !important;
   color: var(--color-green) !important;
   border: 1px solid rgba(34, 166, 82, 0.3) !important;
   font-weight: bold !important;
+  gap: 3px !important;
 }
 
-.btn-soft-success:hover,.dropdown .btn-outline-success:hover {
+.btn-soft-success:hover,.dropdown .btn-outline-success:hover,
+html body.skin-blue #main-content-wrapper .btn-soft-success.addPhamVi_PV:hover {
   background: var(--color-green) !important;
   color: #fff !important;
 }
@@ -7232,17 +7235,21 @@ input[type="radio"] {
   border: 1px solid rgba(34, 166, 82, 0.3) !important;
 }
 
-.btn-soft-success i,.dropdown .btn-outline-success i {
+.btn-soft-success i,.dropdown .btn-outline-success i,
+html body.skin-blue #main-content-wrapper .btn-soft-success.addPhamVi_PV i {
   font-weight: bold !important;
 }
 
-.btn-soft-success .lang {
+.btn-soft-success .lang,html body.skin-blue #main-content-wrapper .btn-soft-success.addPhamVi_PV .lang {
   color: var(--color-green) !important;
 }
 
-.btn-soft-success:hover .lang,.btn-soft-success:hover i,.dropdown .btn-outline-success:hover,.dropdown .btn-outline-success:hover i {
+.btn-soft-success:hover .lang,.btn-soft-success:hover i,
+.dropdown .btn-outline-success:hover,.dropdown .btn-outline-success:hover i,
+html body.skin-blue #main-content-wrapper .btn-soft-success.addPhamVi_PV:hover  .lang,
+html body.skin-blue #main-content-wrapper .btn-soft-success.addPhamVi_PV:hover  i{
   color: #fff !important;
-}
+} 
 
 /* --btn-soft-primary-- */
 .btn-soft-primary {
