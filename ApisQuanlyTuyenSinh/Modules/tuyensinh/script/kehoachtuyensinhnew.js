@@ -3686,21 +3686,47 @@ KeHoachTuyenSinhNew.prototype = {
     },
 
     _bindAddrTouched: function () {
+        var me = main_doc.KeHoachTuyenSinhNew;
         var danhDau = function () { $(this).attr('data-user-touched', '1'); };
-        ['ddlKQ_NS_Tinh', 'ddlKQ_NS_Huyen', 'ddlKQ_NS_Xa',
-            'ddlKQ_HK_Tinh', 'ddlKQ_HK_Huyen', 'ddlKQ_HK_Xa'].forEach(function (id) {
-                $('#' + id).off('.kqtouch')
-                    .on('select2:select.kqtouch select2:clear.kqtouch select2:unselect.kqtouch', danhDau);
+        [['NS', 'txtKQ_NoiSinh'], ['HK', 'txtKQ_HK_SoNha']].forEach(function (c) {
+            var kind = c[0];
+            // Người dùng vừa đụng cụm nào thì lấy cụm đó điền sang hóa đơn.
+            // setTimeout 0 để chờ cascade đổ xong Huyện/Xã rồi mới ghép chuỗi.
+            var dienSangHD = function () {
+                setTimeout(function () { me._autoFillHoaDonDiaChi(kind); }, 0);
+            };
+            ['Tinh', 'Huyen', 'Xa'].forEach(function (cap) {
+                $('#ddlKQ_' + kind + '_' + cap).off('.kqtouch')
+                    .on('select2:select.kqtouch select2:clear.kqtouch select2:unselect.kqtouch',
+                        function () { danhDau.call(this); dienSangHD(); });
             });
-        ['txtKQ_NoiSinh', 'txtKQ_HK_SoNha'].forEach(function (id) {
-            $('#' + id).off('.kqtouch').on('input.kqtouch', danhDau);
+            $('#' + c[1]).off('.kqtouch').on('input.kqtouch',
+                function () { danhDau.call(this); dienSangHD(); });
         });
+        // Gõ vào ô địa chỉ hóa đơn = tự quyết → từ đó không tự điền đè lên nữa
+        $('#txtKQ_HD_DiaChi').off('.kqtouch').on('input.kqtouch', danhDau);
+    },
+
+    /*------------------------------------------
+    -- Tự điền "Địa chỉ trên hóa đơn" theo cụm địa chỉ vừa chọn, cho đỡ gõ lại.
+    -- KHÔNG đè khi: người dùng đã tự sửa ô đó, hoặc hồ sơ đã có địa chỉ hóa đơn
+    -- lưu sẵn trong DB (_loadPersonInvoice đánh dấu luôn khi đổ lên).
+    -- Hóa đơn có thể xuất cho đơn vị ở địa chỉ khác nên không được ép đồng bộ.
+    -------------------------------------------*/
+    _autoFillHoaDonDiaChi: function (kind) {
+        var me = main_doc.KeHoachTuyenSinhNew;
+        var $hd = $('#txtKQ_HD_DiaChi');
+        if (!$hd.length || $hd.attr('data-user-touched')) return;
+        var b = (me._collectAddrBlocks() || []).filter(function (x) { return x.kind === kind; })[0];
+        if (!b || !edu.util.checkValue(b.full)) return;
+        edu.util.viewValById('txtKQ_HD_DiaChi', b.full);
     },
 
     _clearAddrTouched: function () {
         $('#ddlKQ_NS_Tinh, #ddlKQ_NS_Huyen, #ddlKQ_NS_Xa,'
             + '#ddlKQ_HK_Tinh, #ddlKQ_HK_Huyen, #ddlKQ_HK_Xa,'
-            + '#txtKQ_NoiSinh, #txtKQ_HK_SoNha').removeAttr('data-user-touched');
+            + '#txtKQ_NoiSinh, #txtKQ_HK_SoNha,'
+            + '#txtKQ_HD_DiaChi').removeAttr('data-user-touched');
     },
 
     /*------------------------------------------
@@ -5438,6 +5464,14 @@ KeHoachTuyenSinhNew.prototype = {
             }, false, false, false, null);
         };
         console.log('HoSo_Id =', me.strSuaHoSo_Id, '| CorePerson_Id =', me.strSuaHoSo_CorePersonId);
+        // Danh mục Loại địa chỉ — thiếu mục "Nơi sinh" là Nơi sinh KHÔNG BAO GIỜ lưu được
+        me._ensureAddrTypeDM(function () {
+            var dt = me.dtDM_AddrType || [];
+            console.log('=== Danh mục PERSON_ADDRESS.ADDRESS_TYPE_CODE ===', dt.length + ' mục');
+            dt.forEach(function (e) { console.log('   ' + (e.MA || '(không mã)') + ' — ' + e.TEN); });
+            console.log('   → Id "Nơi sinh"      =', me._addrTypeId('NS') || '(KHÔNG TÌM THẤY)');
+            console.log('   → Id "Hộ khẩu TT"    =', me._addrTypeId('HK') || '(KHÔNG TÌM THẤY)');
+        });
         call('LayTT_HoSo_TS', me._ACTION_LayTT_HoSo, 'PKG_CORE_TS_HOSO.LayTT_HoSo_TS',
             { 'strHoSo_Id': me.strSuaHoSo_Id });
         call('LayDS_Bank_TS', me._ACTION_LayDS_Bank, 'PKG_CORE_TS_HOSO.LayDS_Bank_TS',
@@ -5618,6 +5652,11 @@ KeHoachTuyenSinhNew.prototype = {
                 var setVal = function (id, v) { if (v) edu.util.viewValById(id, v); };
                 setVal('txtKQ_HD_TenDonVi', inv.BUYER_NAME_TENNM);
                 setVal('txtKQ_HD_DiaChi', inv.BUYER_ADDR_DIACHI);
+                // Đã có địa chỉ lưu sẵn → khoá tự-điền, không để chọn lại Nơi sinh
+                // là ghi đè mất địa chỉ xuất hóa đơn cũ.
+                if (edu.util.checkValue(inv.BUYER_ADDR_DIACHI)) {
+                    $('#txtKQ_HD_DiaChi').attr('data-user-touched', '1');
+                }
                 setVal('txtKQ_HD_MST', inv.BUYER_TAX_MST);
                 setVal('txtKQ_HD_MaQHNS', inv.BUYER_BUDGET_MAQHNS);
                 setVal('txtKQ_HD_Email', inv.BUYER_EMAIL);
