@@ -5,7 +5,8 @@
       "Bash(node test_zeaddr.js)",
       "Bash(node test_zedoituong.js)",
       "Bash(node test_zexhd.js)",
-      "Bash(node test_quequan_taichinh.js)"
+      "Bash(node test_quequan_taichinh.js)",
+      "Bash(git checkout *)"
     ]
   }
 }

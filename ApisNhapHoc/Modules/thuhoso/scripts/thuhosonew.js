@@ -524,10 +524,7 @@ ThuHoSo.prototype = {
         var strNgaySinh         = edu.util.returnEmpty(data.NGAYSINH_NGAY) + "/" + edu.util.returnEmpty(data.NGAYSINH_THANG) + "/" + edu.util.returnEmpty(data.NGAYSINH_NAM);
         var strSoBaoDanh        = edu.util.returnEmpty(data.SOBAODANH);
         var strSoDienThoai      = edu.util.returnEmpty(data.SODIENTHOAICANHAN);
-        // Quê quán: bỏ phần rỗng rồi mới nối, nếu không hồ sơ thiếu dữ liệu sẽ hiện
-        // trơ ra " - - ". Nghị định bỏ cấp huyện cũng làm ô Quận/Huyện trống ở rất
-        // nhiều tỉnh, nối cứng 3 phần là ra "Xã Đại Đình -  - Tỉnh Phú Thọ".
-        var strQueQuan          = me._qqGhep([data.HOKHAU_PHUONGXAKHOIXOM, data.HOKHAU_QUANHUYEN_TEN, data.HOKHAU_TINHTHANH_TEN]);
+        var strQueQuan          = edu.util.returnEmpty(data.HOKHAU_PHUONGXAKHOIXOM) + " - " + edu.util.returnEmpty(data.HOKHAU_QUANHUYEN_TEN) + " - " + edu.util.returnEmpty(data.HOKHAU_TINHTHANH_TEN);
         var strKhuVuc           = edu.util.returnEmpty(data.KHUVUC_TEN);
         var strDoiTuong         = edu.util.returnEmpty(data.DOITUONGDUTHI_TEN);
         var strPhanTramMienGiam = edu.util.returnZero(data.PHANTRAMMIENGIAM);
@@ -543,102 +540,6 @@ ThuHoSo.prototype = {
         edu.util.viewHTMLById("lblPhanTramMienGiam_ThuHoSo", strPhanTramMienGiam);
         edu.util.viewHTMLById("lblCMT", edu.util.returnEmpty(data.CMTND_SO));
         edu.util.viewHTMLById("lblNganhHoc_ThuHoSo", strNganhHoc);
-        // Hồ sơ khai qua form tuyển sinh ghi hộ khẩu xuống bảng PERSON_ADDRESS, các
-        // cột HOKHAU_* của view này không có → Quê quán trống. Đọc bù từ đúng bảng đó.
-        if (!strQueQuan) me._docBuDiaChi(data.ID);
-    },
-
-    /*------------------------------------------
-    -- Nối các phần địa chỉ, bỏ phần rỗng.
-    -------------------------------------------*/
-    _qqGhep: function (arr) {
-        return (arr || []).map(function (x) { return ((x === null || x === undefined) ? '' : x + '').trim(); })
-            .filter(function (x) { return x; })
-            .join(' - ');
-    },
-
-    /*------------------------------------------
-    -- Đọc bù địa chỉ khi view trả các cột HOKHAU_* rỗng.
-    -- Ưu tiên LẤY ĐÚNG ĐOẠN TEXT Ở Ô "Địa chỉ trên hoá đơn" (PERSON_INVOICE_INFO,
-    -- cột BUYER_ADDR) — đó là cái người dùng nhìn thấy và đã nhập.
-    -- Không có mới lùi về hộ khẩu trong PERSON_ADDRESS.
-    -- Chỉ đọc, lỗi thì im lặng để không phá màn hình thu hồ sơ.
-    -------------------------------------------*/
-    _docBuDiaChi: function (strPerson_Id) {
-        var me = main_doc.ThuHoSo;
-        if (!edu.util.checkValue(strPerson_Id)) return;
-        var strAction = 'SV_NGUOIHOC_01_MH/DSA4BRIeESQzMi4vCC83LigiJAgvJy4P';
-        edu.system.makeRequest({
-            success: function (data) {
-                var rows = (data && data.Success && data.Data) || [];
-                var inv = rows.length ? rows[0] : null;
-                var strDC = inv ? (((inv.BUYER_ADDR_DIACHI || inv.BUYER_ADDR || '') + '').trim()) : '';
-                if (strDC) { edu.util.viewHTMLById("lblQueQuan_ThuHoSo", strDC); return; }
-                me._buQueQuan_TuPersonAddress(strPerson_Id);
-            },
-            error: function () { me._buQueQuan_TuPersonAddress(strPerson_Id); },
-            type: 'POST',
-            contentType: true,
-            action: strAction,
-            data: {
-                'action': strAction,
-                'func': 'PKG_CORE_NGUOIHOC_01.LayDS_PersonInvoiceInfo',
-                'iM': edu.system.iM,
-                'strPerson_Id': strPerson_Id,
-                'dChiHienHanh': 1,
-                'strNguoiThucHien_Id': edu.system.userId,
-                'strVaiTroDangNhap_Id': edu.system.vaiTroDangNhap_Id || '',
-                'strChucNangHeThong_Id': edu.system.chucNangHeThong_Id || edu.system.strChucNang_Id,
-                'strHanhDong_Code': ''
-            },
-            fakedb: []
-        }, false, false, false, null);
-    },
-
-    /*------------------------------------------
-    -- Bước lùi: hộ khẩu từ PERSON_ADDRESS (PKG_CORE_HOSONHANSU_06).
-    -- Ưu tiên FULL_ADDRESS do form ghi sẵn; không có thì tự ghép tên tỉnh/huyện/xã
-    -- từ cây tỉnh thành (edu.extend.dtTinhThanh).
-    -------------------------------------------*/
-    _buQueQuan_TuPersonAddress: function (strPerson_Id) {
-        var me = main_doc.ThuHoSo;
-        if (!edu.util.checkValue(strPerson_Id)) return;
-        var strAction = 'NS_HoSoNhanSu6_MH/BiQ1HhEkMzIuLx4AJSUzJDIy';
-        edu.system.makeRequest({
-            success: function (data) {
-                if (!data || !data.Success || !edu.util.checkValue(data.Data) || !data.Data.length) return;
-                var rows = data.Data.filter(function (r) {
-                    return r && (r.IS_ACTIVE === undefined || r.IS_ACTIVE == 1);
-                });
-                if (!rows.length) return;
-                // Ưu tiên bản ghi được đánh dấu là địa chỉ chính (hộ khẩu thường trú)
-                var r = rows.filter(function (x) { return x.IS_PRIMARY == 1; })[0] || rows[0];
-                var strQQ = ((r.FULL_ADDRESS || '') + '').trim();
-                if (!strQQ) {
-                    var dt = (edu.extend && edu.extend.dtTinhThanh) || [];
-                    var ten = function (id) {
-                        var o = id ? dt.filter(function (e) { return e.ID === id; })[0] : null;
-                        return o ? o.TEN : '';
-                    };
-                    strQQ = me._qqGhep([r.ADDRESS_LINE1, ten(r.WARD_ID), ten(r.DISTRICT_ID), ten(r.PROVINCE_ID)]);
-                }
-                if (strQQ) edu.util.viewHTMLById("lblQueQuan_ThuHoSo", strQQ);
-            },
-            error: function () { },
-            type: 'POST',
-            contentType: true,
-            action: strAction,
-            data: {
-                'action': strAction,
-                'func': 'PKG_CORE_HOSONHANSU_06.Get_Person_Address',
-                'iM': edu.system.iM,
-                'strPerson_Id': strPerson_Id,
-                'strChucNang_Id': edu.system.strChucNang_Id,
-                'strVaiTro_Id': '',
-                'strNguoiThucHien_Id': edu.system.userId
-            },
-            fakedb: []
-        }, false, false, false, null);
     },
     cbGenTable_NguoiHoc_TTTS: function (data, iPager) {
         //(0-chua nhap, 1- da nhap, -1 toan bo)
