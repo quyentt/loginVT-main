@@ -195,6 +195,7 @@ BaoCao.prototype = {
             }
             //
             addKeyValue("strMaTruong", strMaTruong);
+            addKeyValue("strDaoTao_CoSoDaoTao_Id", edu.util.getValCombo("dropSearch_CoSoDaoTao_IHD"));
             addKeyValue("strNguoiDangNhap_Id", strNguoiDangNhap_Id);
             addKeyValue("strNguoiThucHien_Id", strNguoiThucHien_Id);
             addKeyValue("strNguoiDung_Id", strNguoiThucHien_Id);
